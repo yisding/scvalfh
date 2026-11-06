@@ -7,6 +7,7 @@ import { capitalized } from '../../words/capitalized';
 import { getClubs } from '../../../lib/players/clubs';
 import { listWords, numberWord, plural } from '../../../lib/format';
 import { getLeague, getSection, isIndependentLeague } from '../../../lib/leagues';
+import { SDS_BRACKET_SHEET_URL } from '../../../lib/league-config/sections';
 import { SOURCE_LINKS } from '../../../lib/season';
 import { isQuotedLeague, leagueRef, rulesDocument, type AboutSources } from '../about-view';
 import { officialSourceLabel } from '../LeagueHealthCard';
@@ -279,11 +280,19 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
                   {sectionGroups.length > 0 ? ', and the independents play in no league' : ''}.{' '}
                   {section.noChampionshipNote ??
                     `The ${section.name} holds its own field hockey playoffs; see Postseason below.`}
+                  {section.id === 'sds'
+                    ? ' MaxPreps does not get every one of its playoff games, so a playoff game MaxPreps has no contest or no score for takes the score the Section posts on its bracket sheet, marked † with the words “Score via the CIF San Diego Section”. Where MaxPreps has a final, its score stands.'
+                    : ''}
                 </span>
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={section.officialUrl} className="sx-pill">
                     {section.shortName} field hockey
                   </ExternalLink>
+                  {section.id === 'sds' ? (
+                    <ExternalLink href={SDS_BRACKET_SHEET_URL} className="sx-pill">
+                      {section.shortName} bracket sheet
+                    </ExternalLink>
+                  ) : null}
                   <ExternalLink href={section.rulesSource.url} className="sx-pill">
                     {`${section.rulesSource.name} (${section.rulesSource.format})`}
                   </ExternalLink>

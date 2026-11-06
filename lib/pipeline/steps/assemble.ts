@@ -7,7 +7,8 @@
 
 import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
-import { byDateThenId } from '../../format';
+import { byDateThenId, dayDiff } from '../../format';
+import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
 import { CCS } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
 import { buildSeason } from '../../snapshot/season-build';
@@ -42,7 +43,8 @@ export function budgetLabel(bytes: number): string {
 
 /**
  * D2 rule 10: a `sblive:<id>` game an earlier run published that a MaxPreps contest now supersedes
- * (the contest matched the same official fixture) maps to that contest, and the mapping is carried
+ * (the contest matched the same official fixture) maps to that contest, as does a `cifsds:` game (the San
+ * Diego Section's bracket sheet) MaxPreps has since posted; the mapping is carried
  * for the rest of the season. Only keys that are no longer games and values that are games survive
  * (snapshot refinement 10).
  */
@@ -60,6 +62,22 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
     if (!g.contestId.startsWith('sblive:') || ids.has(g.contestId) || !g.official) continue;
     const winner = byFixture.get(g.official.fixtureId);
     if (winner) out[g.contestId] = winner;
+  }
+  // A San Diego bracket sheet game (`cifsds:`) MaxPreps has posted since: the contest of the same two teams
+  // the sheet's step matched it to (lib/postseason/sds-sheet-results.ts, within SDS_SHEET_DATE_TOLERANCE_DAYS).
+  for (const g of previous?.games ?? []) {
+    if (!isCifsdsContest(g.contestId) || ids.has(g.contestId)) continue;
+    const pair = [g.home.slug, g.away.slug].sort().join('~');
+    const now = games
+      .filter(
+        (c) =>
+          !isCifsdsContest(c.contestId) &&
+          !c.contestId.startsWith('sblive:') &&
+          [c.home.slug, c.away.slug].sort().join('~') === pair &&
+          Math.abs(dayDiff(c.dateKey, g.dateKey)) <= SDS_SHEET_DATE_TOLERANCE_DAYS,
+      )
+      .sort((a, b) => Math.abs(dayDiff(a.dateKey, g.dateKey)) - Math.abs(dayDiff(b.dateKey, g.dateKey)) || a.contestId.localeCompare(b.contestId));
+    if (now[0]) out[g.contestId] = now[0].contestId;
   }
   return out;
 }

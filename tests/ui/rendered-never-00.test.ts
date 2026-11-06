@@ -276,11 +276,11 @@ describe('every league, rendered', () => {
     expect(plain, 'components/ui/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
   });
 
-  it('links every game through gameHref (sblive ids become sblive-<n>)', () => {
+  it('links every game through gameHref (sblive ids become sblive-<n>, cifsds ids cifsds-<away>-at-<home>)', () => {
     for (const game of games) {
       const html = renderToStaticMarkup(createElement(GameCard, { game }));
       expect(html, `components/ui/GameRow.tsx ${game.contestId}`).toContain(
-        `href="/game/${game.contestId.replace(/^sblive:/, 'sblive-')}"`,
+        `href="/game/${game.contestId.replace(/^(sblive|cifsds):/, '$1-')}"`,
       );
     }
   });

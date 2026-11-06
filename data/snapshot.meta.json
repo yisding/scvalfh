@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 761,
+    "agreements": 762,
     "cifssOnlyScored": 1,
-    "compared": 767,
+    "compared": 768,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "13d6e54efa79af3f059dd19f3c332e97c3f5445cef83e2d02613f182c24f0334",
+  "contentHash": "0cb5355ef03e8a4c17c1f21002e9f486e0083cdbf382143adb211c8dc03cbc51",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,8 +19,8 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 172,
-        "games": 175,
+        "finals": 177,
+        "games": 183,
         "leagueGames": 60,
         "teams": 12
       },
@@ -47,15 +47,15 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 107,
-        "games": 110,
+        "finals": 108,
+        "games": 112,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 263,
-        "games": 266,
+        "finals": 266,
+        "games": 274,
         "leagueGames": 102,
         "teams": 19
       },
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 933,
-    "games": 949,
+    "finals": 939,
+    "games": 960,
     "leagueGames": 551,
-    "mismatches": 29,
+    "mismatches": 31,
     "pending": 3,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 176,
+    "agreements": 155,
     "backfilled": 4,
-    "compared": 210,
+    "compared": 192,
     "conflicts": 8,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-05T20:56:55.438Z",
+  "fetchedAt": "2026-11-06T09:27:36.769Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -653,7 +653,7 @@
     },
     {
       "label": "canyon-hills schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -698,7 +698,7 @@
     },
     {
       "label": "point-loma schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -733,7 +733,7 @@
     },
     {
       "label": "la-costa-canyon schedule",
-      "rowCount": 31,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -803,7 +803,7 @@
     },
     {
       "label": "sage-creek schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -853,12 +853,12 @@
     },
     {
       "label": "helix schedule",
-      "rowCount": 30,
+      "rowCount": 31,
       "status": "ok"
     },
     {
       "label": "olympian schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -909,11 +909,6 @@
     {
       "label": "thousand-oaks schedule",
       "rowCount": 14,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-10-22",
-      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -974,6 +969,11 @@
     {
       "label": "sblive scoreboard 2026-11-05",
       "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-06",
+      "rowCount": 6,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 772,
+      "rowCount": 774,
       "status": "ok"
     },
     {
@@ -1065,13 +1065,28 @@
       "label": "ccs bracket",
       "rowCount": 2,
       "status": "ok"
+    },
+    {
+      "label": "sds bracket sheet open",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "sds bracket sheet division-1",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "sds bracket sheet division-2",
+      "rowCount": 4,
+      "status": "ok"
     }
   ],
-  "today": "2026-11-05",
-  "warnings": 44,
+  "today": "2026-11-06",
+  "warnings": 43,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
-    "lastGame": "2026-11-07T13:00:00",
+    "lastGame": "2026-11-10T16:00:00",
     "lastLeagueGame": "2026-11-05T18:00:00"
   }
 }

@@ -11,7 +11,9 @@ export type TeamId = string;
 
 /**
  * MaxPreps `contestId` GUID, or `sblive:<digits>` for a game that only si.com has and that D2 rule 2
- * published (lib/crosscheck/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
+ * published (lib/crosscheck/backfill.ts), or `cifsds:<away>-at-<home>` for a San Diego Section playoff game
+ * that only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). URL params map ':' to '-'
+ * (lib/game-id.ts).
  */
 export type ContestId = string;
 
@@ -60,7 +62,9 @@ export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
   | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived'
   /** A JV result transcribed from a school's own athletics site (lib/jv/jv-school-sites.ts); JV only. */
-  | 'school-site';
+  | 'school-site'
+  /** The CIF San Diego Section's bracket sheet: a playoff result MaxPreps lacks (lib/postseason/sds-sheet-results.ts). */
+  | 'cifsds-sheet';
 
 // ---------- season ----------
 
@@ -336,6 +340,13 @@ export interface OfficialStamp {
   pass: 'same-date' | 'same-date-swapped' | 'rescheduled';
 }
 
+/** How the San Diego Section's bracket sheet entered a published game (lib/postseason/sds-sheet-results.ts). */
+export interface SectionSheetProvenance {
+  rule: 'absent-game' | 'score-pending';
+  /** The sentence the game page prints after "Score via the CIF San Diego Section's bracket sheet:". */
+  note: string;
+}
+
 /** How a si.com value entered a published game (owner decision D2, rules 2-4). */
 export interface BackfillProvenance {
   rule: 'absent-fixture' | 'score-pending' | 'contradictory-result' | 'off-schedule-date' | 'phantom-tie';
@@ -396,6 +407,8 @@ export interface Game {
     sblive?: string;
     /** The school athletics page a JV score came from (lib/jv/jv-school-sites.ts). */
     school?: string;
+    /** The San Diego Section's bracket sheet, when the published score is the Section's (`provenance.scores === 'cifsds-sheet'`). */
+    cifsds?: string;
     nfhsStream: string | null;
     goFan: string | null;
   };
@@ -407,6 +420,12 @@ export interface Game {
     scoreConflict?: { sblive: { home: number; away: number }; note: string };
     /** NEW. Set on every game whose published score came from si.com. */
     backfill?: BackfillProvenance;
+    /**
+     * Set on every game whose published score is the San Diego Section's, from its bracket sheet
+     * (lib/postseason/sds-sheet-results.ts): 'absent-game' when MaxPreps has no contest for the game (a
+     * `cifsds:` game), 'score-pending' when MaxPreps has the contest without a score; the note says which.
+     */
+    sectionSheet?: SectionSheetProvenance;
     fetchedAt: string;
     maxprepsModifiedOn?: string;
     /**
@@ -720,7 +739,7 @@ export type SourceKind =
   | 'bootstrap' | 'league-meta' | 'reported-standings' | 'team-schedule'
   | 'official-schedule' | 'official-revision-check' | 'standings-index'
   | 'sblive-scoreboard' | 'sblive-team-games'
-  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar' | 'cifss-scores';
+  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar' | 'cifss-scores' | 'sds-bracket-sheet';
 
 export interface SourceStatus {
   id: SourceId;

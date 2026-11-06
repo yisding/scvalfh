@@ -9,7 +9,8 @@
  * because its league is not in the run — the previous snapshot's games involving that team that
  * this run does not have are carried forward, with three guards against counting one fixture twice:
  *  - never a si.com `sblive:` game (step 08 decides those again, carrying them only while still
- *    eligible) nor a contest another feed reported Deleted this run;
+ *    eligible), a San Diego bracket sheet `cifsds:` game (step 09 decides those again) nor a contest another
+ *    feed reported Deleted this run;
  *  - the earlier run's classification is cleared (official stamp, countsFor, postseason), so step 07
  *    and step 10 decide the carried game exactly as they decide a fresh one;
  *  - the same-division phantom dedupe runs again over this run's games plus the carried ones, always
@@ -19,6 +20,7 @@
 import { byDateThenId } from '../../format';
 import { DATA_QUALITY } from '../../league-config/data-quality';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../normalize';
+import { isCifsdsContest } from '../../postseason/sds-sheet-results';
 import type { Game } from '../../types';
 import type { PipelineContext, RunState } from '../ledger';
 
@@ -63,6 +65,7 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
       .filter(
         (g) =>
           !g.contestId.startsWith('sblive:') &&
+          !isCifsdsContest(g.contestId) &&
           !have.has(g.contestId) &&
           !droppedIds.has(g.contestId) &&
           !deleted.has(g.contestId) &&

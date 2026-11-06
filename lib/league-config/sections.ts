@@ -33,9 +33,27 @@ export const SS_FIELD_HOCKEY_URL = 'https://cifss.org/sports/field-hockey/';
 export const SDS_FIELD_HOCKEY_URL = 'https://www.cifsds.org/sports/fh/index';
 /** [V] the CIFSDS Green Book 2026-27 ("Revised June 16, 2026"), a Google Doc; Bylaw 2000.1 is Girls Field Hockey. */
 export const SDS_GREEN_BOOK_URL = 'https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit';
-/** [V] the CIFSDS 2026-27 League Alignment workbook (field hockey blocks on the CITY, NORTH COUNTY and METRO tabs). */
 /** [V] the Section's 2026 bracket sheet, "2026 CIFSDS Field Hockey Championship Bracket" (read 2026-11-03). */
 export const SDS_BRACKET_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit';
+/**
+ * [V] the bracket sheet's tabs, by division id of data/sds-brackets-2026.json (the sheet's own `gid`s, read
+ * 2026-11-06; the 2025 sheet used the same three). The pipeline reads each as CSV (sdsBracketSheetCsvUrl) for the
+ * results MaxPreps lacks (lib/sources/sds-bracket-sheet.ts); a tab whose title is not its division's is not read.
+ */
+export const SDS_BRACKET_SHEET_TABS: Readonly<Record<string, string>> = {
+  open: '53658003',
+  'division-1': '1795050195',
+  'division-2': '742825713',
+};
+
+/** One bracket tab's CSV export (public, no key), from SDS_BRACKET_SHEET_URL. */
+export function sdsBracketSheetCsvUrl(division: string): string {
+  const gid = SDS_BRACKET_SHEET_TABS[division];
+  if (!gid) throw new Error(`lib/league-config/sections.ts: no bracket sheet tab for ${division}`);
+  return `${SDS_BRACKET_SHEET_URL.replace(/\/edit.*$/, '')}/export?format=csv&gid=${gid}`;
+}
+
+/** [V] the CIFSDS 2026-27 League Alignment workbook (field hockey blocks on the CITY, NORTH COUNTY and METRO tabs). */
 export const SDS_ALIGNMENT_URL = 'https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms1idHy-n1zHwq7D06o1vfoFC7_cGgaI/edit#gid=1838785864';
 /** [V] the Section's power-rankings page (it embeds the cifsdshome.org widget the Commissioner places teams from). */
 export const SDS_POWER_RANKINGS_URL = 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings';
