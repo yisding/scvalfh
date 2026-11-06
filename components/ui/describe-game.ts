@@ -29,6 +29,7 @@ import {
 import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
+import type { SourceMark } from './source-mark';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
@@ -96,9 +97,11 @@ export interface GameDisplay {
   postseasonTag: string | null;
   /**
    * 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. 'school site'
-   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), marked † with its own words.
+   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), and 'CIF-SDS' for a San Diego
+   * Section playoff score from the Section's bracket sheet (lib/postseason/sds-sheet-results.ts), each marked †
+   * with its own words (sourceMarkWords).
    */
-  sourceMark: 'si.com' | 'school site' | null;
+  sourceMark: SourceMark | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
   isForfeit: boolean;
   /** true ⇒ render the two score cells. false ⇒ the time/label takes the column. */
@@ -243,13 +246,18 @@ export function gameKindLabel(game: Pick<Game, 'countsFor' | 'postseason'>): 'Le
   return GAME_KIND_LABEL[gameKind(game)];
 }
 
+const SOURCE_MARKS: Partial<Record<Game['provenance']['scores'], SourceMark>> = {
+  sblive: 'si.com',
+  'school-site': 'school site',
+  'cifsds-sheet': 'CIF-SDS',
+};
+
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
   return {
     isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
-    sourceMark:
-      game.provenance.scores === 'sblive' ? 'si.com' : game.provenance.scores === 'school-site' ? 'school site' : null,
+    sourceMark: SOURCE_MARKS[game.provenance.scores] ?? null,
   };
 }
 

@@ -2150,8 +2150,8 @@ teams and round dates into `data/sds-brackets-2026.json` (about 20 minutes; cont
 `lib/postseason/sds-brackets-schema.ts`, which checks every school against the registry and the field sizes, the play-in,
 the rounds inside Nov 2–14 and every Open Division school against `playoffDivisionOf`) and runs `pnpm test` before
 committing it; the site then draws that published bracket with MaxPreps' results joined to it (`lib/postseason/sds-bracket.ts`,
-DESIGN §31). There is no sheet parser: the 2026 layout is inferred from 2025's and docs.google.com has never been
-read from the Actions runner. MaxPreps' 2026 SDS tournament page (`AkXf4_tRkUCSmOSRZxp7DQ` = `e3df4502-51fb-4091-9298-e491671a7b0d`,
+DESIGN §31). The placed teams stay hand-entered; the RESULTS are read from the sheet on every run since
+2026-11-06 (see "The San Diego Section's bracket sheet as a results source" below). MaxPreps' 2026 SDS tournament page (`AkXf4_tRkUCSmOSRZxp7DQ` = `e3df4502-51fb-4091-9298-e491671a7b0d`,
 Open `494a605b-…`, Division I `a4ab20c1-…`, Division II `826dea99-…`) is an empty shell with no `not-published`
 marker, and the 2025 pages never went live, so it is not read (`readTournamentPage` reports it not recognised:
 it carries no CCS bracket id). The 2026-27 power rankings are plain HTML at
@@ -2160,6 +2160,34 @@ it carries no CCS bracket id). The 2026-27 power rankings are plain HTML at
 `playoffDivisionOf` school for school. The HomeCampus schedule-score widget's `game_type_id=5` rows carry a playoff
 game's facility and time. Playoff overtime differs from the regular season (all goals in a first 10-minute
 period count, then sudden victory, then a shootout; the 2025 sheet writes "1-1 (2-1 SO)").
+
+**The San Diego Section's bracket sheet as a results source** (2026-11-06). MaxPreps does not get every San
+Diego playoff game. On 2026-11-06 it had no contest at all for three the Section had posted: Mission Bay 3-2 (OT)
+La Jolla Country Day (Division I first round, Nov 3), San Pasqual 5-0 Mira Mesa (Division II first round, Nov 4)
+and Torrey Pines 4-0 Del Norte (Open quarterfinal, Nov 5); nor for the Nov 6 quarterfinals Clairemont v Poway,
+San Dieguito Academy v Rancho Bernardo and San Marcos v Mission Bay. In 2025 it lacked four of 30 (the Division II
+play-in, Bonita Vista v Westview, Rancho Buena Vista v Helix and Rancho Buena Vista v Olympian). Where else:
+si.com listed the three 2026 pairs with no score; cifsshome.org's San Diego listing (§1.2a) did not have them;
+the Section asks schools to report scores to SCORES@CIFSDS.ORG and writes them into the bracket sheet, the one
+place every result reached **[V, 2026-11-06]**. So the pipeline reads it (step 09, `lib/pipeline/steps/sds-sheet.ts`):
+- the 2026 sheet `https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit` has
+  the 2025 sheet's tabs and `gid`s (Open Division `53658003`, Division I `1795050195`, Division II `742825713`;
+  `SDS_BRACKET_SHEET_TABS`), each read as `export?format=csv&gid=<gid>` (public, ~1 KB, three requests a run from
+  Nov 2 while a San Diego league is in the run) **[V, 2026-11-06]**;
+- `lib/sources/sds-bracket-sheet.ts` reads the grid: row 2 dates each round's column, a column lists its teams two
+  to a game, the winner is written into the next column between the two with the score under it, winner's
+  goals first ("3-1", "3-2(OT)", "1-0 (2OT)", "1-1 (2-1 SO)"); "Game Moved to Wednesday, November 4th", "Game
+  Time: 5:30 PM" and "@ Vista High School" between the two teams date, time and place the game. Both sheets'
+  results are test fixtures (`tests/fixtures/sds/sheet-2025/`, `sheet-2026/`): 2026's eleven posted results and
+  2025's 27 (every game but the three finals, whose scores the 2025 sheet never posted; every winner matches the
+  Record Book). A cell it cannot place makes its column unread, with a warning, rather than risk a wrong pair;
+- `lib/postseason/sds-sheet-results.ts` applies them with MaxPreps first: a MaxPreps final stands (a different
+  score is a run-log warning); a MaxPreps contest with no score takes the sheet's (`provenance.sectionSheet.rule
+  'score-pending'`); a game MaxPreps has no contest for within two days becomes `cifsds:<away>-at-<home>`
+  (`'absent-game'`), the better-placed team hosting as "@ Higher Seed" says. Each carries `provenance.scores
+  'cifsds-sheet'` and `urls.cifsds`, prints † "Score via the CIF San Diego Section", and says on its game page
+  why. A tab not read keeps the previous snapshot's results for its division; a `cifsds:` game MaxPreps posts
+  later is superseded (`supersededGames`).
 
 **The EAL Super Regional's site and streams** (read 2026-10-29): the NFHS Network's CIFNS field hockey
 page (`https://www.nfhsnetwork.com/associations/cifns/field-hockey`) lists two events at Pleasant Valley
@@ -3216,7 +3244,8 @@ Super Regional rows (Nov 1 2025, `contestType` 5 and `homeAwayType` 2 on both si
 `tests/fixtures/maxpreps/postseason-2025/`) are what the window and the `/playoffs#eal` results list are
 tested against. **The San Diego Section's brackets are not polled**: the owner transcribes the published sheet
 into `data/sds-brackets-2026.json` (§1.4), and the Section's playoff games arrive in the team feeds like any
-other, tagged `section-playoffs` from Nov 2.
+other, tagged `section-playoffs` from Nov 2. The sheet's RESULTS are read every run from Nov 2 (three CSV tabs,
+§1.4 "as a results source"), for the games MaxPreps lacks or has no score for.
 
 ## 6. Legal / robots posture and attribution
 
@@ -3291,7 +3320,10 @@ rules clause.)
   Oct 31 meeting, from the Section's sheet) are transcriptions: the schemas refuse a wrong count, a repeated or
   out-of-league school, an impossible play-in or a round outside the playoffs' dates, but not a team typed into
   the wrong numbered place. Run `pnpm test` before committing either. No parser exists for the published MaxPreps
-  page (never captured) or the Section's sheet (2026 id unknown, docs.google.com unproven from Actions) (§1.4).
+  page (never captured); the Section's sheet is parsed for results only, not for the placed teams (§1.4).
+- **The San Diego bracket sheet's layout is the Section's to change.** The parser reads the 2025 and 2026 layout
+  (§1.4); a new wording or a moved cell leaves that column unread with a run-log warning, so results stop arriving
+  from it rather than arriving wrong, and the previous run's stay published.
 - **The CCS bracket path is proven on 2025's rows, not on a live 2026 bracket.** The feed fields were read from
   Los Gatos's 2025 rows through WebFetch (a transcription, §5.5), and the tag and model tests run on 2025's games
   moved to 2026's dates. If MaxPreps names the 2026 divisions differently, a game whose division neither

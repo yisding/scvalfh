@@ -1,5 +1,6 @@
 import Tag from './Tag';
 import type { GameDisplay, StatusTone } from './describe-game';
+import { sourceMarkWords } from './source-mark';
 
 /**
  * The written label beside every score: FINAL · SCORE NOT REPORTED · POSTPONED ·
@@ -47,12 +48,13 @@ function deciderLabel(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel'>
 }
 
 /**
- * The † beside a score published from si.com, or (JV only) from a school's own athletics site: a title
+ * The † beside a score published from si.com, from the San Diego Section's bracket sheet, or (JV only) from a
+ * school's own athletics site: a title
  * for a pointer, words for a screen reader.
  */
 function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
   if (display.sourceMark === null) return null;
-  const words = display.sourceMark === 'si.com' ? 'Score via si.com' : 'Score via the school’s athletics site';
+  const words = sourceMarkWords(display.sourceMark);
   return (
     <span className="font-sans text-micro font-semibold text-ink-3" title={words}>
       <span aria-hidden="true">&dagger;</span>

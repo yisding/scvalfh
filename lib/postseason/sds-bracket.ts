@@ -17,6 +17,9 @@
  *   - Then the top two quarterfinals' winners meet in one semifinal and the bottom two in the other.
  * A team that skips a round reaches its next card from the template, never from a MaxPreps row.
  *
+ * The games: MaxPreps' rows, and since 2026-11-06 the games MaxPreps lacks or has no score for, from the Section's
+ * own bracket sheet (lib/postseason/sds-sheet-results.ts, in the pipeline), which are ordinary snapshot games here.
+ *
  * The join: a card takes the `section-playoffs`-tagged game between the two teams that can stand in its
  * places, dated from the day before its round to the day before the next round (the Section moves single
  * games by a day: 2025's Clairemont v Rancho Bernardo quarterfinal was played Thu Nov 6, not Fri Nov 7).
@@ -32,12 +35,12 @@
  * final-08's (components/playoffs/), not this module's.
  */
 
-import bundledFile from '../../data/sds-brackets-2026.json';
 import { getGames } from '../data';
 import { shiftDateKey } from '../format';
 import { getTeamBySlug } from '../teams';
-import { failValidation } from '../schema-primitives';
-import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile, type SdsDivisionId } from './sds-brackets-schema';
+import { winnerOf } from './game-winner';
+import { SDS_BRACKETS_FILE } from './sds-brackets-file';
+import type { SdsBracketsDivision, SdsBracketsFile, SdsDivisionId } from './sds-brackets-schema';
 import type { Game, TeamSlug } from '../types';
 
 /** One place on a card: a placed team with the Section's number, or a place still to be decided. */
@@ -80,22 +83,7 @@ export interface LiveBracketDivision {
 
 // ---------------------------------------------------------------- the result of one game
 
-/**
- * The winner of a game: the higher score; a level score goes to the side MaxPreps marks 'W' (the San Diego
- * shootout convention); null when the game is not final or nothing decides it. Kept here, pure, rather
- * than widening lib/postseason/postseason.ts's MCAL helper, which reads a TournamentGame.
- */
-export function winnerOf(game: Game): TeamSlug | null {
-  if (game.status !== 'final') return null;
-  const h = game.home.score;
-  const a = game.away.score;
-  if (h === null || a === null) return null;
-  if (h > a) return game.home.slug;
-  if (a > h) return game.away.slug;
-  if (game.home.result === 'W' && game.away.result !== 'W') return game.home.slug;
-  if (game.away.result === 'W' && game.home.result !== 'W') return game.away.slug;
-  return null;
-}
+export { winnerOf } from './game-winner';
 
 // ---------------------------------------------------------------- the template
 
@@ -381,18 +369,8 @@ export function buildSdsBrackets(file: SdsBracketsFile, games: readonly Game[]):
 
 // ---------------------------------------------------------------- the committed file
 
-/**
- * data/sds-brackets-2026.json, imported so the build bundles it (a Worker has no project filesystem; see
- * lib/data.ts) and validated once at module scope, so a slip in the hand-entered file fails the build
- * rather than drawing a wrong bracket.
- */
-function loadFile(): SdsBracketsFile {
-  const parsed = SdsBracketsSchema.safeParse(bundledFile);
-  if (!parsed.success) failValidation('sds-brackets-2026', parsed.error.issues);
-  return parsed.data;
-}
-
-const file = loadFile();
+/** data/sds-brackets-2026.json, validated (lib/postseason/sds-brackets-file.ts). */
+const file = SDS_BRACKETS_FILE;
 
 /** The Section's published brackets joined to the snapshot's games; null while the file is the placeholder. */
 export function getSdsBrackets(): LiveBracketDivision[] | null {

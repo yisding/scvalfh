@@ -14,7 +14,8 @@ import type { GameModel } from './game-view';
  * `GameSourceLine` is owner decision D2's transparency rule on one contest: when the published score
  * is High School on SI's (si.com) — MaxPreps had no contest for an official fixture, had the
  * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note:
- * `Score via High School on SI (si.com): <rule note>.` Both sources are linked, but a link that is
+ * `Score via High School on SI (si.com): <rule note>.` A San Diego Section playoff score from the Section's
+ * bracket sheet (MaxPreps had no contest, or no score) says so the same way, and links the sheet. Both sources are linked, but a link that is
  * already one of the final's result pills directly above (`GameModel.resultLinks`, where si.com's
  * game page is the accent pill) is not repeated here.
  *
@@ -53,6 +54,7 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
   const sbliveUrl = source.sbliveUrl && !pills.has(source.sbliveUrl) ? source.sbliveUrl : null;
   const maxprepsUrl =
     source.maxprepsUrl && !pills.has(source.maxprepsUrl) ? source.maxprepsUrl : null;
+  const sheetUrl = source.sheetUrl && !pills.has(source.sheetUrl) ? source.sheetUrl : null;
   return (
     <aside
       className={['sx-inset max-w-prose text-ink', className].filter(Boolean).join(' ')}
@@ -62,8 +64,13 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
         <span aria-hidden="true">&dagger; </span>
         {source.text}
       </p>
-      {sbliveUrl || maxprepsUrl ? (
+      {sbliveUrl || maxprepsUrl || sheetUrl ? (
         <p className="m-0 flex flex-wrap gap-x-4">
+          {sheetUrl ? (
+            <ExternalLink href={sheetUrl} className="sx-action no-underline">
+              The Section&rsquo;s bracket sheet
+            </ExternalLink>
+          ) : null}
           {sbliveUrl ? (
             <ExternalLink href={sbliveUrl} className="sx-action no-underline">
               si.com&rsquo;s page

@@ -594,7 +594,7 @@ describe('every league’s games in the bundled snapshot (invariants)', () => {
       const league = g.countsFor ? findLeague(findDivision(g.countsFor)?.leagueId ?? '') : undefined;
       expect(d.leagueTag, `components/ui/describe-game.ts leagueTag ${g.contestId}`).toBe(league?.shortName ?? null);
       expect(d.sourceMark, `components/ui/describe-game.ts sourceMark ${g.contestId}`).toBe(
-        g.provenance.scores === 'sblive' ? 'si.com' : null,
+        g.provenance.scores === 'sblive' ? 'si.com' : g.provenance.scores === 'cifsds-sheet' ? 'CIF-SDS' : null,
       );
     }
   });

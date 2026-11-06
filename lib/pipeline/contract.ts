@@ -26,13 +26,15 @@ export type ResourceKey =
   | { kind: 'ccs-ical' }
   | { kind: 'ccs-bracket' }
   /** One page of a Section's cifsshome.org listing, season start through `through` (YYYY-MM-DD). */
-  | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string };
+  | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string }
+  /** One tab of the San Diego Section's bracket sheet, as CSV (a division id of data/sds-brackets-2026.json). */
+  | { kind: 'sds-bracket-sheet'; division: string };
 
 /**
  * 'maxpreps/bootstrap', 'maxpreps/league-meta/<division>', 'maxpreps/standings/<division>',
  * 'maxpreps/schedule/<slug>', 'scval/pdf-text/<division>', 'scval/standings-index',
  * 'official/revision/<division>', 'official/changes/<league>', 'sblive/scores/<date>', 'sblive/team-games/<slug>',
- * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'cifss/<section>/<page>'
+ * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'cifss/<section>/<page>', 'sds/bracket-sheet/<division>'
  */
 export function resourcePath(key: ResourceKey): string {
   switch (key.kind) {
@@ -64,6 +66,8 @@ export function resourcePath(key: ResourceKey): string {
       return 'ccs/bracket';
     case 'cifss-scores':
       return `cifss/${key.section}/${key.page}`;
+    case 'sds-bracket-sheet':
+      return `sds/bracket-sheet/${key.division}`;
   }
 }
 

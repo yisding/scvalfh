@@ -15,8 +15,13 @@ describe('game ids in URLs', () => {
     expect(paramToGameId('sblive-123')).toBe('sblive:123');
   });
 
-  it('round-trips both kinds', () => {
-    for (const id of [GUID, 'sblive:6541425', 'sblive:0']) {
+  it("maps a San Diego bracket sheet id's ':' to '-' and back", () => {
+    expect(gameIdToParam('cifsds:la-jolla-country-day-at-mission-bay')).toBe('cifsds-la-jolla-country-day-at-mission-bay');
+    expect(paramToGameId('cifsds-la-jolla-country-day-at-mission-bay')).toBe('cifsds:la-jolla-country-day-at-mission-bay');
+  });
+
+  it('round-trips every kind', () => {
+    for (const id of [GUID, 'sblive:6541425', 'sblive:0', 'cifsds:del-norte-at-torrey-pines']) {
       expect(paramToGameId(gameIdToParam(id))).toBe(id);
     }
   });
@@ -24,10 +29,13 @@ describe('game ids in URLs', () => {
   it('builds the game href', () => {
     expect(gameHref(GUID)).toBe(`/game/${GUID}`);
     expect(gameHref('sblive:6541425')).toBe('/game/sblive-6541425');
+    expect(gameHref('cifsds:mira-mesa-at-san-pasqual')).toBe('/game/cifsds-mira-mesa-at-san-pasqual');
   });
 
   it('leaves anything else alone', () => {
     expect(gameIdToParam('sblive:abc')).toBe('sblive:abc');
     expect(paramToGameId('sblive-abc')).toBe('sblive-abc');
+    expect(gameIdToParam('cifsds:no-pair')).toBe('cifsds:no-pair');
+    expect(paramToGameId('cifsds-no-pair')).toBe('cifsds-no-pair');
   });
 });

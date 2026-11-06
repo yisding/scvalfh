@@ -7,7 +7,8 @@
  * Why a hand-entered file (decided 2026-10-29, plan final-07): the 2026 sheet's id is unknown until the
  * Section publishes it, its layout is inferred from 2025's, and docs.google.com has never been read from
  * the Actions runner, so there is no parser; MaxPreps' 2026 Section tournament is an empty shell that never
- * published in 2025. The owner copies the placed teams in once (about 20 minutes) and runs `pnpm test`
+ * published in 2025. (Since 2026-11-06 the pipeline does read the published sheet, for its RESULTS only:
+ * lib/sources/sds-bracket-sheet.ts; the placed teams stay here.) The owner copies the placed teams in once (about 20 minutes) and runs `pnpm test`
  * before committing. Until then the file is the placeholder `{ season, retrievedOn: null, source: null,
  * divisions: [] }` and the site draws no San Diego bracket (lib/postseason/sds-bracket.ts getSdsBrackets is null).
  *

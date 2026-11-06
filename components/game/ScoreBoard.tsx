@@ -10,6 +10,7 @@ import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel, { GameChips } from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
+import { sourceMarkWords } from '../ui/source-mark';
 
 /**
  * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the
@@ -30,10 +31,11 @@ import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-g
  * the N teams this site follows", from GameRow), written here rather than in game-view so the
  * page title and OG card, which share that model, are untouched.
  *
- * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) carries a
- * `†` with the words `Score via si.com`, never the mark alone (SPEC §10.6): StatusLabel prints the
- * mark in the status line (it reads `sourceMark`), the line ends with its legend `† Score via
- * si.com`, and the board's screen-reader sentence ends with the same words.
+ * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) or from the San
+ * Diego Section's bracket sheet ('CIF-SDS') carries a `†` with its words (`Score via si.com`, `Score via
+ * the CIF San Diego Section`), never the mark alone (SPEC §10.6): StatusLabel prints the mark in the status
+ * line (it reads `sourceMark`), the line ends with its legend, and the board's screen-reader sentence ends
+ * with the same words.
  *
  * Names WRAP (two lines at most, balanced) instead of truncating: a long name was once cut
  * mid-word on a phone. Between 768 and 1023px, where the three-column board leaves each name the
@@ -166,7 +168,7 @@ export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
     >
       <p className="sr-only">
         {display.sentence}
-        {display.sourceMark === 'si.com' ? ' Score via si.com.' : ''}
+        {display.sourceMark !== null ? ` ${sourceMarkWords(display.sourceMark)}.` : ''}
       </p>
       <p
         className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-ink-3 md:justify-center"
@@ -191,11 +193,11 @@ export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
             <span>{game.venue.name}</span>
           </>
         ) : null}
-        {display.sourceMark === 'si.com' ? (
+        {display.sourceMark !== null ? (
           <>
             <span>&middot;</span>
             {/* The legend for StatusLabel's † (a footnote mark is never left unexplained). */}
-            <span>&dagger; Score via si.com</span>
+            <span>&dagger; {sourceMarkWords(display.sourceMark)}</span>
           </>
         ) : null}
       </p>

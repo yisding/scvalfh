@@ -306,7 +306,7 @@ async function readBoxScores(
 function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
   const out = new Map<string, Set<string>>();
   for (const g of games) {
-    if (g.status !== 'final' || g.contestId.startsWith('sblive:')) continue;
+    if (g.status !== 'final' || g.contestId.startsWith('sblive:') || g.contestId.startsWith('cifsds:')) continue;
     for (const side of [g.home, g.away]) {
       if (!side.slug) continue;
       const set = out.get(side.slug) ?? new Set<string>();
