@@ -111,6 +111,25 @@ export function profileLabel(x: Pick<PlayerProfile, 'platform' | 'sport'>): stri
   return link.replace(/ profile$/, ` ${SPORT_WORDS[x.sport]} profile`);
 }
 
+/**
+ * A row's profile links in the roster's order, NCSA first and field hockey first; shared with the
+ * JV roster (components/jv/jv-roster-view.ts), so both lists word and order them the same.
+ */
+export function profileLinks(profiles: readonly PlayerProfile[]): RosterProfileLink[] {
+  return [...profiles]
+    .sort(
+      (a, b) =>
+        PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform) ||
+        (a.sport ?? '').localeCompare(b.sport ?? ''),
+    )
+    .map((x) => ({ label: profileLabel(x), url: x.url }));
+}
+
+/** The words a footnote lists the platforms in ("NCSA", "SportsRecruits"), in the links' order. */
+export function profilePlatformWords(platforms: readonly ProfilePlatform[]): string[] {
+  return PROFILE_ORDER.filter((k) => k !== 'maxpreps' && platforms.includes(k)).map((k) => PROFILE_WORDS[k].footnote);
+}
+
 const FIELD_WORDS: Record<RosterConflict['field'], string> = {
   jersey: 'number',
   grade: 'grade',
@@ -308,13 +327,7 @@ function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
         : { text: p.jersey, elsewhere: elsewhereSource(p.provenance.jersey) !== null },
     captain: p.isCaptain,
     facts,
-    profiles: [...p.profiles]
-      .sort(
-        (a, b) =>
-          PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform) ||
-          (a.sport ?? '').localeCompare(b.sport ?? ''),
-      )
-      .map((x) => ({ label: profileLabel(x), url: x.url })),
+    profiles: profileLinks(p.profiles),
     clubs: playerClubGroups(team, p.athleteId),
     commitment: playerCommitLine(team, p.athleteId),
   };

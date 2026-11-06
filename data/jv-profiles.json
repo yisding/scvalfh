@@ -1,0 +1,26 @@
+{
+  "season": "26-27",
+  "builtBy": "research by hand, 2026-11-06: NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe for the 746 JV players the team pages list, each kept page re-read by an independent refuter. A SportsRecruits profile-address probe for the JV players was still running (SportsRecruits answered HTTP 429) and is not in this file yet.",
+  "capturedAt": "2026-11-06",
+  "notes": [
+    "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial."
+  ],
+  "teams": [
+    {
+      "slug": "scripps-ranch",
+      "players": [
+        {
+          "name": "Katie Todd",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/scripps-ranch-high-school/katherine-todd",
+              "classOf": 2029,
+              "note": "NCSA field hockey profile, titled 'Katherine Todd '29': class of 2029, San Diego, CA; it names Scripps Ranch High School. MaxPreps' JV roster, which the team page shows, lists her as Katie Todd (grade 10); the school's own JV list names her Katherine Todd. Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

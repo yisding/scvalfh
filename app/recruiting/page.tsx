@@ -97,11 +97,19 @@ export default function RecruitingPage() {
         <SectionHeader id="how-matched" kicker="How this page is built" />
         <div className="max-w-prose text-meta text-ink-2">
           <p className="m-0">
-            Only players on the {view.trackedTeams} varsity rosters this site tracks are listed, under
-            the roster&rsquo;s own spelling; rows a school marks JV are left out. A player is listed
-            when a public page shows at least one of three things for them, and each school&rsquo;s
-            page shows the same lines on its roster, beside the rest of the player&rsquo;s facts and
-            the sources they came from.
+            Players on the {view.trackedTeams} varsity rosters this site tracks are listed under the
+            roster&rsquo;s own spelling; rows a school marks JV are left out of them. A player is
+            listed when a public page shows at least one of three things for them, and each
+            school&rsquo;s page shows the same lines on its roster, beside the rest of the
+            player&rsquo;s facts and the sources they came from.
+            {(view.counts.jvWithProfile ?? 0) > 0 ? (
+              <>
+                {' '}
+                After them come the JV players with a recruiting profile, marked &ldquo;JV&rdquo;, from
+                the JV lists the team pages show; commitments and clubs are looked for on the varsity
+                rosters only.
+              </>
+            ) : null}
           </p>
           <p className="mt-2 mb-0">
             <strong className="font-semibold text-ink">Recruiting profiles</strong> are

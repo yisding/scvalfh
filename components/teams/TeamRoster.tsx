@@ -97,7 +97,7 @@ function Facts({ facts }: { facts: RosterFact[] }) {
  */
 export type RecruitingLineRow = Pick<RosterRow, 'name' | 'commitment' | 'clubs' | 'profiles'>;
 
-export function Profiles({ row }: { row: RecruitingLineRow }) {
+export function Profiles({ row }: { row: Pick<RecruitingLineRow, 'name' | 'profiles'> }) {
   return (
     <span className="block text-meta text-ink-2">
       {row.profiles.map((profile, i) => (
