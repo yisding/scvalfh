@@ -1,6 +1,6 @@
 {
   "season": "26-27",
-  "builtBy": "research by hand, 2026-11-06: a SportsRecruits profile-address probe in every sport for the JV players the team pages list (in progress), and NCSA, Hudl and FieldLevel searches",
+  "builtBy": "research by hand, 2026-11-06: NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe for the 746 JV players the team pages list, each kept page re-read by an independent refuter. A SportsRecruits profile-address probe for the JV players was still running (SportsRecruits answered HTTP 429) and is not in this file yet.",
   "capturedAt": "2026-11-06",
   "notes": [
     "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial."
