@@ -85,13 +85,21 @@ describe('SCVAL girls soccer', () => {
     expect(scval.rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
   });
 
-  it('leaves the CCS facts only its own bylaws give null, and dates the rest from the SCVAL schedules', () => {
-    const { CCS, ccsWindowStart } = m.sections;
+  it('dates the CCS rounds from the CCS calendar, and leaves the field size and hosting null', () => {
+    const { CCS, ccsRoundDays, ccsLastDay } = m.sections;
     expect(CCS.autoQualifiers).toEqual({ scval: 4, atLarge: null, total: null });
-    expect(CCS.keyDates.quarterfinals).toBeNull();
-    expect(CCS.keyDates.semifinals).toBeNull();
-    expect(CCS.keyDates.finals).toBe('2027-02-27');
-    expect(ccsWindowStart(CCS.keyDates)).toBe('2027-02-20');
+    expect(CCS.keyDates).toMatchObject({
+      seedingMeeting: '2027-02-18T15:00:00',
+      quarterfinals: '2027-02-20',
+      semifinals: '2027-02-23',
+      semifinalsLast: '2027-02-24',
+      finals: '2027-02-26',
+      finalsLast: '2027-02-27',
+      evaluationMeeting: '2027-03-10T16:00:00',
+    });
+    expect(ccsRoundDays(CCS.keyDates, 'semifinals', (d) => d)).toBe('2027-02-23 to 2027-02-24');
+    expect(ccsLastDay(CCS.keyDates)).toBe('2027-02-27');
+    expect(CCS.highSeedHostsThrough).toBeNull();
     expect(CCS.tournament).toBeNull();
   });
 });

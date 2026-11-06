@@ -414,12 +414,13 @@ export const PlayoffsSchema = z.object({
   keyDates: z.object({
     entriesDue: z.string(),
     seedingMeeting: z.string(),
-    // null where the CCS's own bylaws are the only source (soccer; lib/league-config/soccer/sections.ts).
-    quarterfinals: dateOnly.nullable(),
-    semifinals: dateOnly.nullable(),
+    quarterfinals: dateOnly,
+    semifinals: dateOnly,
     finals: dateOnly,
-    firstGames: dateOnly.optional(),
-    evaluationMeeting: z.string().nullable(),
+    // A round some divisions play later (soccer); absent for field hockey.
+    semifinalsLast: dateOnly.optional(),
+    finalsLast: dateOnly.optional(),
+    evaluationMeeting: z.string(),
     endOfLeagueSeason: dateOnly,
   }),
   ccsCalendar: z.array(CcsCalendarEventSchema).optional(),

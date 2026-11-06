@@ -1143,9 +1143,9 @@ What the soccer build has: SCVAL's two divisions from the official 2026-27 girls
 `data/soccer/official/scval-2026.json`), the SCVAL Soccer By-Laws' 3-1-0 points, head-to-head tiebreak and
 CCS ladder (De Anza 1-3 and El Camino 1 are automatic), standings, schedules, scores, team and game pages,
 leaders, JV and /playoffs. What it leaves out: /history/2025-26, /clubs, /commits and /recruiting (field
-hockey's research; each renders a 404), si.com, the VNN calendars and the region toggle. The CCS facts only
-the CCS's own soccer bylaws give (field size, at-large count, round dates, hosting) are `null` in
-`lib/league-config/soccer/sections.ts` until someone reads them: cifccs.org refuses automated reads.
+hockey's research; each renders a 404), si.com, the VNN calendars and the region toggle. The CCS dates come
+from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
+rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sections.ts`.
 
 ## Tests
 

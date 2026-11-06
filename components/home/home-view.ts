@@ -65,7 +65,7 @@ import { hasHistory } from '../../lib/history/history';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
-import { CCS, REGIONS, ccsWindowStart } from '../../lib/league-config/sections';
+import { CCS, REGIONS, ccsRoundDays } from '../../lib/league-config/sections';
 import type {
   DivisionConfig,
   LeagueConfig,
@@ -344,24 +344,22 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
 
   // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
   if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
-    const { quarterfinals, semifinals } = keyDates;
-    if (today < ccsWindowStart(keyDates)) {
-      // Rounds and field size the config leaves null (soccer: the CCS bylaws are unread) are not printed.
+    if (today < keyDates.quarterfinals) {
+      // A field the config does not size (soccer: the CCS allocation is not transcribed) is not counted.
       const seeds = CCS.autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${CCS.autoQualifiers.total}-team field`;
-      const first = quarterfinals !== null ? `quarterfinals are ${shortDate(quarterfinals)}` : `CCS games start ${shortDate(ccsWindowStart(keyDates))}`;
       return {
         lead: `${short} league play is over.`,
-        body: `${seeds} on ${shortDate(keyDates.seedingMeeting)}; ${first}.`,
+        body: `${seeds} on ${shortDate(keyDates.seedingMeeting)}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
         link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
       };
     }
     return {
       lead: 'The CCS tournament is under way.',
-      body: `${
-        quarterfinals !== null && semifinals !== null
-          ? `Quarterfinals ${shortDate(quarterfinals)}, semifinals ${shortDate(semifinals)}, final ${shortDate(keyDates.finals)}.`
-          : `CCS games ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}.`
-      } League standings below are final.`,
+      body: `Quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${ccsRoundDays(
+        keyDates,
+        'semifinals',
+        shortDate,
+      )}, final ${ccsRoundDays(keyDates, 'finals', shortDate)}. League standings below are final.`,
       link: { href: `/playoffs#${league.id}`, label: 'Bracket' },
     };
   }
@@ -650,18 +648,12 @@ function ccsLadderView(
     leagueId: league.id,
     intro,
     meter: { claimed: ps.autoBerths, total, label },
-    dates:
-      CCS.keyDates.quarterfinals !== null && CCS.keyDates.semifinals !== null
-        ? [
-            { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
-            { term: 'Semifinals', date: CCS.keyDates.semifinals },
-            { term: 'Final', date: CCS.keyDates.finals },
-          ]
-        : [
-            { term: 'Seeding', date: CCS.keyDates.seedingMeeting.slice(0, 10) },
-            { term: 'First games', date: ccsWindowStart(CCS.keyDates) },
-            { term: 'Final', date: CCS.keyDates.finals },
-          ],
+    // Each round's first day: where divisions play a round on different days (soccer), the earliest.
+    dates: [
+      { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
+      { term: 'Semifinals', date: CCS.keyDates.semifinals },
+      { term: 'Final', date: CCS.keyDates.finals },
+    ],
     bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl ?? CCS.sources.index },
     official,
     link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },

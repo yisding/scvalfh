@@ -58,7 +58,7 @@ import {
   sectionOf,
 } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
-import { CCS, ccsWindowStart } from '../../lib/league-config/sections';
+import { CCS, ccsLastDay, ccsRoundDays } from '../../lib/league-config/sections';
 import { SPORT } from '../../lib/sports/current';
 
 /**
@@ -124,20 +124,16 @@ export async function generateMetadata(): Promise<Metadata> {
   // The same test the page uses: a path to draw, from the bracket games or the seed file (never the page flag alone).
   const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
   const shares = field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ');
-  // Rounds the config does not date (soccer: the CCS bylaws are unread) read as one span from the first CCS games.
-  const rounds =
-    keyDates.quarterfinals !== null && keyDates.semifinals !== null
-      ? { bracket: `quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${shortDate(keyDates.semifinals)}, final ${shortDate(keyDates.finals)}`,
-          field: `quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${shortDate(keyDates.finals)}` }
-      : { bracket: `${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}`,
-          field: `CCS games ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}` };
+  // A round some divisions play later (soccer) reads as its first to its last day.
+  const semis = ccsRoundDays(keyDates, 'semifinals', shortDate);
+  const final = ccsRoundDays(keyDates, 'finals', shortDate);
   const fieldWords =
     field.total === null
       ? `The CCS ${SPORT.noun} field’s automatic berths: ${shares}.`
       : `The ${field.total}-team CCS field: ${shares}, ${field.atLarge} at-large.`;
   const description = seeded
-    ? `The CCS ${SPORT.noun} bracket: ${rounds.bracket}. Unofficial, computed from published results.`
-    : `${fieldWords} Seeding meeting ${shortDate(keyDates.seedingMeeting)}; ${rounds.field}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
+    ? `The CCS ${SPORT.noun} bracket: quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${semis}, final ${final}. Unofficial, computed from published results.`
+    : `${fieldWords} Seeding meeting ${shortDate(keyDates.seedingMeeting)}; quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${final}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
   const all = `${description} Every league’s postseason: ${postseasonWords()}.`;
   return {
     title: PAGE_TITLE,
@@ -262,8 +258,8 @@ export default function PlayoffsPage() {
           <SectionHeader id="ccs-playoffs" kicker="CCS playoffs" meta={fieldMeta} />
           <p className="m-0 max-w-prose text-body text-ink-2">
             {met
-              ? `Central Coast Section championships, ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
-              : `Central Coast Section championships, ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
+              ? `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(ccsLastDay(keyDates))}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
+              : `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(ccsLastDay(keyDates))}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
           </p>
         </section>
 

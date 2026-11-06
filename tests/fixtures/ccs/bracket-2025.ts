@@ -33,8 +33,8 @@ import { game } from '../../game-builder';
 
 /** 2025's round dates → 2026's (CCS.keyDates). */
 const DATE_2026: Readonly<Record<string, string>> = {
-  '2025-11-05': CCS.keyDates.quarterfinals!,
-  '2025-11-08': CCS.keyDates.semifinals!,
+  '2025-11-05': CCS.keyDates.quarterfinals,
+  '2025-11-08': CCS.keyDates.semifinals,
   '2025-11-12': CCS.keyDates.finals,
 };
 

@@ -169,11 +169,13 @@ aside), and the field hockey tests, golden files and asserts pass as they were.
   league, so El Camino's table has seven rows and `maxprepsMissing: ['fremont']`). `lib/leagues.ts`,
   `lib/teams.ts`, `lib/league-config/sections.ts` (`SECTIONS`, `REGIONS`, `CCS`) and `data-quality.ts`
   pick the sport's entries.
-- **The CCS block.** `lib/league-config/soccer/sections.ts`. cifccs.org refuses automated reads, so the
-  facts only the CCS soccer bylaws give are null: `autoQualifiers.atLarge` / `total`, `quarterfinals`,
-  `semifinals`, `evaluationMeeting`, `highSeedHostsThrough`, `tournament`, `bracketUrl`. Those fields are
-  nullable in `CcsConfig`, the snapshot schema and every reader; `keyDates.firstGames` and
-  `ccsWindowStart()` date the first CCS games where no round is known.
+- **The CCS block.** `lib/league-config/soccer/sections.ts`, from the CCS 2026-27 Playoff Calendar, the
+  Soccer Committee report of March 11, 2026 and the 2026-27 league alignments. Division 1 plays its
+  semifinals and final a day before Divisions 2-5, so `CcsKeyDates` gained optional `semifinalsLast` /
+  `finalsLast`, and `ccsRoundDays()` / `ccsLastDay()` print a round's days. What none of those documents
+  says is null: the field's size and at-large count (`autoQualifiers.atLarge` / `total`), who hosts
+  (`highSeedHostsThrough`), and MaxPreps' tournament (`tournament`, `bracketUrl`). Those fields are nullable
+  in `CcsConfig`, the snapshot schema and every reader.
 - **Data.** Under `data/soccer/`: the snapshot, JV, rosters, player stats and last season's games come
   from the usual fetchers (README, "Girls soccer"); the official fixtures are transcribed; clubs,
   commits, history and the bracket files are empty placeholders the loaders serve without field hockey's
@@ -187,7 +189,8 @@ Not done yet, for the owner to decide or schedule:
 - **Deploy and refresh.** No workflow builds, deploys or refreshes the soccer site. It needs its own origin
   (a Worker name and domain, `cloudflare.config.ts`) and a cron job like `update-data.yml` that runs
   Nov-Mar with `SCVAL_SPORT=soccer`, writes `data/soccer/*` and is pinned by `tests/workflows.test.ts`.
-- **The CCS soccer bylaws**, read by a person, to fill the nulls above.
+- **The CCS Soccer Bylaws' allocation and hosting rule**, read by a person, to fill the nulls above, and
+  MaxPreps' 2027 CCS tournament page once it exists.
 - **Mascot tiles** for Gunn, Mountain View, MacDonald, Milpitas and Wilcox: MaxPreps' image host answered
   `pnpm fetch-mascots` with 403, so `NO_MASCOT_TILE` (`lib/schools/mascots.ts`) draws their initials.
 - **Steps 2-5 below** still stand; the soccer build's per-module switches are what they would replace.

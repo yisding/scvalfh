@@ -246,6 +246,8 @@ const FIELD_HOCKEY_CCS: CcsConfig = {
     change: 'CCS Field Hockey Committee report 2025-11-20 §IV (PCAL reduced from 3 automatic berths to 2)',
   },
   // SPEC §10.7 item 8, verbatim.
+  laterDivisions: null,
+  roundDaysNote: null,
   atLargeParagraph:
     'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.',
   sources: {
@@ -259,14 +261,20 @@ const FIELD_HOCKEY_CCS: CcsConfig = {
 export const CCS: CcsConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_CCS : SOCCER_CCS;
 
 /**
- * The first day a CCS playoff game may be played: the quarterfinals where the config knows them, else the
- * config's `firstGames`, else the day after the seeding meeting (soccer, whose rounds are the CCS bylaws', unread). A game from this day on that
- * MaxPreps tags as postseason belongs to the CCS bracket window.
+ * A CCS round's days as copy prints them: one day ('Tue Feb 23'), or first to last where divisions play it on
+ * different days (soccer: 'Tue Feb 23 to Wed Feb 24'). `fmt` formats each day.
  */
-export function ccsWindowStart(keyDates: Pick<CcsKeyDates, 'quarterfinals' | 'seedingMeeting' | 'firstGames'>): string {
-  if (keyDates.quarterfinals !== null) return keyDates.quarterfinals;
-  if (keyDates.firstGames !== undefined) return keyDates.firstGames;
-  const day = new Date(`${keyDates.seedingMeeting.slice(0, 10)}T12:00:00Z`);
-  day.setUTCDate(day.getUTCDate() + 1);
-  return day.toISOString().slice(0, 10);
+export function ccsRoundDays(
+  keyDates: Pick<CcsKeyDates, 'semifinals' | 'finals' | 'semifinalsLast' | 'finalsLast'>,
+  round: 'semifinals' | 'finals',
+  fmt: (date: string) => string,
+): string {
+  const first = keyDates[round];
+  const last = round === 'semifinals' ? keyDates.semifinalsLast : keyDates.finalsLast;
+  return last === undefined || last === first ? fmt(first) : `${fmt(first)} to ${fmt(last)}`;
+}
+
+/** The last day of CCS games: the last finals day. */
+export function ccsLastDay(keyDates: Pick<CcsKeyDates, 'finals' | 'finalsLast'>): string {
+  return keyDates.finalsLast ?? keyDates.finals;
 }

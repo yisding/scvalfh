@@ -604,5 +604,12 @@ export interface CcsConfig {
   citations: { allocation: string; change: string };
   /** /playoffs' at-large paragraph: who decides the at-large berths and whom each league submits. */
   atLargeParagraph: string;
+  /**
+   * The divisions that play a round later where keyDates has `semifinalsLast` / `finalsLast` ('Divisions 2-5'), and
+   * one sentence for /about saying which plays when, from the CCS calendar; null where every division plays a round
+   * the same day.
+   */
+  laterDivisions: string | null;
+  roundDaysNote: string | null;
   sources: { bylaws: string; index: string; ical: string };
 }

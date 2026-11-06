@@ -76,7 +76,6 @@ function dateOnly(value: string): string {
 // ---------------------------------------------------------------- key dates
 
 export type KeyDateKey =
-  | 'first-games'
   | 'entries'
   | 'seeding'
   | 'quarterfinals'
@@ -130,6 +129,11 @@ export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedH
  * The round's detail line: who hosts, with the calendar's own words, and for a neutral round that each game's
  * site appears once MaxPreps lists it (the calendar names no venue).
  */
+/** A round's detail, led by the later divisions' day where some play it later (soccer: CcsConfig.laterDivisions). */
+function laterDays(last: string | undefined, detail: string): string {
+  return last === undefined || CCS.laterDivisions === null ? detail : `${CCS.laterDivisions} play it ${shortDate(last)}. ${detail}`;
+}
+
 function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough']): string {
   const site = ccsRoundSite(round, hostsThrough);
   if (site === null) return 'CCS sets the site; each game’s site appears here once MaxPreps lists it.';
@@ -191,14 +195,10 @@ export function keyDateRows(
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
     ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', seeded ? SEEDING_DONE_DETAIL : SEEDING_AHEAD_DETAIL, { time: true }),
-    // A round or meeting the config leaves null (soccer: the CCS bylaws are unread) has no row; its first games do.
-    ...(k.quarterfinals === null && k.firstGames !== undefined
-      ? [ccs('first-games', k.firstGames, 'First CCS games', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
-      : []),
-    ...(k.quarterfinals === null ? [] : [ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]),
-    ...(k.semifinals === null ? [] : [ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true })]),
-    ccs('finals', k.finals, 'Finals', roundSiteDetail('finals', hostsThrough), { isRound: true }),
-    ...(k.evaluationMeeting === null ? [] : [ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true })]),
+    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
+    ccs('semifinals', k.semifinals, 'Semifinals', laterDays(k.semifinalsLast, roundSiteDetail('semifinals', hostsThrough)), { isRound: true }),
+    ccs('finals', k.finals, 'Finals', laterDays(k.finalsLast, roundSiteDetail('finals', hostsThrough)), { isRound: true }),
+    ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true }),
     ...leagueDates.map(
       (d): KeyDateRow => ({
         key: `league:${d.id}`,

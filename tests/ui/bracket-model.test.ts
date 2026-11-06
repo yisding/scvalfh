@@ -42,8 +42,8 @@ const playoffs: CcsPlayoffs = {
   bracketUrl: CCS.bracketUrl!,
   games: [],
 };
-const QF = playoffs.keyDates.quarterfinals!.slice(0, 10);
-const SF = playoffs.keyDates.semifinals!.slice(0, 10);
+const QF = playoffs.keyDates.quarterfinals.slice(0, 10);
+const SF = playoffs.keyDates.semifinals.slice(0, 10);
 const F = playoffs.keyDates.finals.slice(0, 10);
 
 function withGames(games: Game[]): CcsPlayoffs {

@@ -151,14 +151,13 @@ export function confirmKeyDates(
     if (!summaryByKind.has(e.kind)) summaryByKind.set(e.kind, e.summary);
   }
 
-  // A date the config leaves null (soccer: only the CCS bylaws give it) is not compared.
-  const pairs = ([
+  const pairs: Array<[CcsEventKind, string, string]> = [
     ['entries-due', expected.entriesDue.slice(0, 10), 'entries due'],
     ['quarterfinals', expected.quarterfinals, 'quarterfinals'],
     ['semifinals', expected.semifinals, 'semifinals'],
     ['finals', expected.finals, 'finals'],
-    ['evaluation', expected.evaluationMeeting?.slice(0, 10) ?? null, 'evaluation meeting'],
-  ] as Array<[CcsEventKind, string | null, string]>).filter((p): p is [CcsEventKind, string, string] => p[1] !== null);
+    ['evaluation', expected.evaluationMeeting.slice(0, 10), 'evaluation meeting'],
+  ];
 
   const differences: string[] = [];
   for (const [kind, ours, label] of pairs) {

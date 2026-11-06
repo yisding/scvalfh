@@ -2,31 +2,42 @@
  * The soccer build's sections and CCS block (lib/league-config/sections.ts picks these when
  * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL only.
  *
- * What the SCVAL documents state is filled in; what only the CCS's own 2026-27 Soccer Bylaws would state is
- * null. cifccs.org refuses automated reads (HTTP 403 to every page under /sports/, 2026-11-06), so the CCS's
- * allocation, field size, rounds and hosting rule are not transcribed: each null is one of those, and copy
- * that would print it says the CCS has not been read instead.
- *  - SCVAL's automatic berths (4): SCVAL Soccer By-Laws Article V §2 (De Anza 1-3, El Camino 1).
- *  - Dates: the footers of SCVAL's two 2026-27 girls schedules (entry forms due by noon and the seeding
- *    meeting, girls 3:00, on Thu Feb 18; first CCS event Sat Feb 20; last CCS event Sat Feb 27, the finals;
- *    last SCVAL event Wed Feb 17).
+ * Sources (the three CCS documents read 2026-11-06 from the links on cifccs.org's soccer page):
+ *  - CCS_PLAYOFF_DATES, the CCS 2026-27 Playoff Calendar ("Updated 5/28/26"; sha256 28557c36…): soccer entry forms
+ *    due Thu Feb 18 at noon and the seeding meeting at 3:00 pm; quarterfinals Sat Feb 20; Division 1 semifinals
+ *    Tue Feb 23, Divisions 2-5 Wed Feb 24; Division 1 finals Fri Feb 26, Divisions 2-5 Sat Feb 27; the committee
+ *    evaluation meeting Wed Mar 10 at 4:00 pm. The calendar opens the bracket at the quarterfinals.
+ *  - CCS_SOCCER_REPORT, the CCS Soccer Committee report of March 11, 2026 (sha256 65852a97…): seeding Thu Feb 18
+ *    and evaluation Wed Mar 10, 2027; the tournaments Feb 20-27, 2027; five girls divisions (the 2026 champions
+ *    are listed for Divisions 1-5).
+ *  - CCS_ALIGNMENTS, League Placement and Classification by Sport 2026-27 ("Updated: 9/29/2026"; sha256
+ *    f8e7c635…): SCVAL girls soccer is De Anza (A) and El Camino (B), the same 15 schools as
+ *    lib/registry/soccer/scval.ts.
+ *  - SCVAL Soccer By-Laws Article V §2: SCVAL's automatic berths (De Anza 1-3, El Camino 1).
+ *
+ * Still null, because none of these documents says it: the field's size and at-large count (the CCS Soccer
+ * Bylaws' allocation), who hosts which round, and MaxPreps' tournament page and bracket ids.
  */
 
 import type { CcsConfig, SectionConfig } from '../shape';
 
 const CCS_SOCCER_INDEX = 'https://cifccs.org/sports/soccer/index';
+export const CCS_PLAYOFF_DATES = 'https://d2o2figo6ddd0g.cloudfront.net/7/5/gmi4496wp9uph8/2026-27_CCS_Playoff_Dates.pdf';
+export const CCS_SOCCER_REPORT = 'https://d2o2figo6ddd0g.cloudfront.net/0/f/0o2l2sadue3ja2/SOCCER_2026_COMMITTEE_REPORT.pdf';
+export const CCS_ALIGNMENTS = 'https://d2o2figo6ddd0g.cloudfront.net/x/6/oveyqe9ewyzm4m/League_Alignments_2026-27.pdf';
 
 export const SOCCER_SECTIONS = [
   {
     id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
-    // The CCS holds a girls soccer championship (its soccer page lists the 2026 girls brackets).
+    // The CCS holds a girls soccer championship in five divisions (CCS_SOCCER_REPORT).
     holdsFieldHockeyChampionship: true,
     officialUrl: CCS_SOCCER_INDEX,
-    rulesSource: { name: 'CCS Soccer Bylaws 2026-27 (on the CCS soccer page)', url: CCS_SOCCER_INDEX, format: 'web page' },
+    rulesSource: { name: 'CCS Soccer Committee report, March 11, 2026', url: CCS_SOCCER_REPORT, format: 'PDF' },
     shootout: null,
-    // First contest allowed Nov 23; last CCS event Feb 27 (the SCVAL schedules). CIF NorCal (Mar 2-6) is not covered.
-    seasonWindow: { start: '2026-11-01', end: '2027-02-28' },
+    // First contest allowed Nov 23 (the SCVAL schedules); the evaluation meeting (Wed Mar 10) closes the season.
+    // CIF NorCal (Mar 2-6) is not covered.
+    seasonWindow: { start: '2026-11-01', end: '2027-03-10' },
     noChampionshipNote: null,
     outsideTournament: null,
   },
@@ -34,26 +45,31 @@ export const SOCCER_SECTIONS = [
 
 export const SOCCER_CCS: CcsConfig = {
   autoQualifiers: { scval: 4, atLarge: null, total: null },
-  // The CCS seeds girls soccer into several divisions at its Feb 18 meeting; which, and how many teams each, is
-  // the CCS bylaws' (unread), so no division is named before a bracket is.
+  // Five divisions (CCS_SOCCER_REPORT), each seeded on its own: CcsDivisionName names field hockey's two, so none
+  // is named here, and the bracket is drawn by round until MaxPreps' feed names a division.
   ccsDivisions: [],
   keyDates: {
     entriesDue: '2027-02-18T12:00:00', seedingMeeting: '2027-02-18T15:00:00',
-    quarterfinals: null, semifinals: null, finals: '2027-02-27', firstGames: '2027-02-20',
-    evaluationMeeting: null, endOfLeagueSeason: '2027-02-17',
+    quarterfinals: '2027-02-20',
+    semifinals: '2027-02-23', semifinalsLast: '2027-02-24',
+    finals: '2027-02-26', finalsLast: '2027-02-27',
+    evaluationMeeting: '2027-03-10T16:00:00', endOfLeagueSeason: '2027-02-17',
   },
   highSeedHostsThrough: null,
   bracketUrl: null,
   tournament: null,
   pollFrom: '2027-02-10',
   citations: {
-    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team); the CCS’s own allocation is in its 2026-27 Soccer Bylaws, not read here',
+    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team); the CCS’s own allocation of the field is in its Soccer Bylaws, not transcribed here',
     change: 'SCVAL Soccer By-Laws Article V §4 (a team at .500 or better may apply for an at-large berth)',
   },
+  laterDivisions: 'Divisions 2-5',
+  roundDaysNote:
+    'Division 1 plays its semifinals on Tue Feb 23 and its final on Fri Feb 26; Divisions 2-5 play theirs on Wed Feb 24 and Sat Feb 27 (the CCS 2026-27 Playoff Calendar).',
   atLargeParagraph:
     'At-large berths are the CCS committee’s call. Any SCVAL team at .500 or better in league or overall may apply, and CCS orders the applicants by its power points (SCVAL Soccer By-Laws Article V §4).',
   sources: {
-    bylaws: CCS_SOCCER_INDEX,
+    bylaws: CCS_SOCCER_REPORT,
     index: CCS_SOCCER_INDEX,
     ical: 'https://cifccs.org/calendar/Soccer?print=ical',
   },

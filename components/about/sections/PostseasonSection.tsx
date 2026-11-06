@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
 import { dateWithYear, monthDay, timeOfDayPT } from '../../../lib/format';
-import { CCS } from '../../../lib/league-config/sections';
+import { CCS, ccsRoundDays } from '../../../lib/league-config/sections';
 import { getLeague, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
 import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
@@ -88,34 +88,23 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             </span>{' '}
             / <span className="tabular-nums">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
           </li>
-          {/* A date the config leaves null (soccer: the CCS bylaws are unread) is left out, and the first games stand in. */}
-          {playoffs.keyDates.quarterfinals === null && playoffs.keyDates.firstGames !== undefined ? (
-            <li>
-              First CCS games: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.firstGames)}</span>
-            </li>
-          ) : null}
-          {playoffs.keyDates.quarterfinals === null ? null : (
-            <li>
-              Quarterfinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
-            </li>
-          )}
-          {playoffs.keyDates.semifinals === null ? null : (
-            <li>
-              Semifinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.semifinals)}</span>
-            </li>
-          )}
           <li>
-            Final: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.finals)}</span>
+            Quarterfinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
           </li>
-          {playoffs.keyDates.evaluationMeeting === null ? null : (
-            <li>
-              Committee evaluation:{' '}
-              <span className="tabular-nums">
-                {dateWithYear(playoffs.keyDates.evaluationMeeting)}, {timeOfDayPT(playoffs.keyDates.evaluationMeeting)}
-              </span>
-            </li>
-          )}
+          <li>
+            Semifinals: <span className="tabular-nums">{ccsRoundDays(playoffs.keyDates, 'semifinals', dateWithYear)}</span>
+          </li>
+          <li>
+            Final: <span className="tabular-nums">{ccsRoundDays(playoffs.keyDates, 'finals', dateWithYear)}</span>
+          </li>
+          <li>
+            Committee evaluation:{' '}
+            <span className="tabular-nums">
+              {dateWithYear(playoffs.keyDates.evaluationMeeting)}, {timeOfDayPT(playoffs.keyDates.evaluationMeeting)}
+            </span>
+          </li>
         </ul>
+        {CCS.roundDaysNote ? <p>{CCS.roundDaysNote}</p> : null}
         <p className="text-meta text-ink-3">
           {ccsCalendar === undefined
             ? `The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it ${IS_FIELD_HOCKEY ? 'in late October' : `on ${monthDay(CCS.pollFrom)}`} and will note here whether it confirms the dates above.`

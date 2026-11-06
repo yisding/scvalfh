@@ -143,9 +143,8 @@ function participantKeys(game: Game): string[] {
  */
 export function roundKeyFor(dateKey: string, keyDates: CcsPlayoffs['keyDates']): RoundKey {
   if (dateKey >= isoDateKey(keyDates.finals)) return 'finals';
-  // A round the config does not date (soccer) is never inferred from a date.
-  if (keyDates.semifinals !== null && dateKey >= isoDateKey(keyDates.semifinals)) return 'semifinals';
-  if (keyDates.quarterfinals !== null && dateKey >= isoDateKey(keyDates.quarterfinals)) return 'quarterfinals';
+  if (dateKey >= isoDateKey(keyDates.semifinals)) return 'semifinals';
+  if (dateKey >= isoDateKey(keyDates.quarterfinals)) return 'quarterfinals';
   return 'other';
 }
 
@@ -157,9 +156,8 @@ const ROUND_NAMES: Record<Exclude<RoundKey, 'other'>, string> = {
 
 const NAMED_ROUNDS: ReadonlyArray<Exclude<RoundKey, 'other'>> = ['quarterfinals', 'semifinals', 'finals'];
 
-function roundDate(key: Exclude<RoundKey, 'other'>, keyDates: CcsPlayoffs['keyDates']): string | null {
-  const date = keyDates[key];
-  return date === null ? null : isoDateKey(date);
+function roundDate(key: Exclude<RoundKey, 'other'>, keyDates: CcsPlayoffs['keyDates']): string {
+  return isoDateKey(keyDates[key]);
 }
 
 /** What an unplayed card prints under its two lines. */
@@ -339,7 +337,6 @@ function seededRounds(games: Game[], division: DivisionSeeds, keyDates: CcsPlayo
   ];
   for (const [key, cards] of named) {
     const dateKey = roundDate(key, keyDates);
-    if (dateKey === null) continue; // a round the config does not date (soccer) is not drawn
     rounds.push({ key, name: ROUND_NAMES[key], dateKey, dateLabel: shortDate(dateKey), cards: [...cards, ...unplaced(key)] });
   }
   return rounds;
@@ -368,7 +365,6 @@ function unseededRounds(games: Game[], keyDates: CcsPlayoffs['keyDates']): Brack
     const cards = byKey.get(key);
     if (!cards) continue;
     const dateKey = roundDate(key, keyDates);
-    if (dateKey === null) continue; // a round the config does not date (soccer) is not drawn
     rounds.push({ key, name: ROUND_NAMES[key], dateKey, dateLabel: shortDate(dateKey), cards: cards.sort(byGameOrder) });
   }
   return rounds;
@@ -497,8 +493,10 @@ export interface PendingRound {
 /** The named rounds with no game AND no pairing in any path yet — printed as a sentence, not a box. */
 export function pendingRounds(playoffs: CcsPlayoffs, paths: BracketPath[]): PendingRound[] {
   const present = new Set(paths.flatMap((p) => p.rounds.filter((r) => r.cards.length > 0).map((r) => r.key)));
-  return NAMED_ROUNDS.filter((key) => !present.has(key)).flatMap((key) => {
-    const dateKey = roundDate(key, playoffs.keyDates);
-    return dateKey === null ? [] : [{ key, name: ROUND_NAMES[key], dateKey, dateLabel: shortDate(dateKey) }];
-  });
+  return NAMED_ROUNDS.filter((key) => !present.has(key)).map((key) => ({
+    key,
+    name: ROUND_NAMES[key],
+    dateKey: roundDate(key, playoffs.keyDates),
+    dateLabel: shortDate(playoffs.keyDates[key]),
+  }));
 }

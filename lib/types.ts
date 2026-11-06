@@ -568,16 +568,17 @@ export interface Standing {
 export interface CcsKeyDates {
   entriesDue: string;          // '2026-11-02T12:00:00'
   seedingMeeting: string;      // '2026-11-02T13:00:00'
-  /** null where the CCS's own bylaws (unread for soccer, lib/league-config/soccer/sections.ts) are the only source. */
-  quarterfinals: string | null;       // '2026-11-07'
-  semifinals: string | null;          // '2026-11-11'
+  quarterfinals: string;       // '2026-11-07'
+  semifinals: string;          // '2026-11-11'
   finals: string;              // '2026-11-14'
   /**
-   * The first day of CCS games, where it is known but its round is not (soccer: the SCVAL schedules' "First C.C.S
-   * Event"). Absent for field hockey, whose first games are its quarterfinals.
+   * The last day of a round some divisions play later (soccer: Division 1's semifinal Tue Feb 23 and final Fri
+   * Feb 26, Divisions 2-5's Wed Feb 24 and Sat Feb 27). `semifinals` and `finals` stay each round's first day.
+   * Absent where every division plays a round the same day (field hockey).
    */
-  firstGames?: string;
-  evaluationMeeting: string | null;   // '2026-11-19T16:00:00'
+  semifinalsLast?: string;
+  finalsLast?: string;
+  evaluationMeeting: string;   // '2026-11-19T16:00:00'
   /** NEW: CCS end of league season. `crossover` MOVED to LEAGUES.scval (pairings + phases). */
   endOfLeagueSeason: string;   // '2026-10-31'
 }
