@@ -1,26 +1,26 @@
 {
   "cifssCrossCheck": {
-    "agreements": 762,
+    "agreements": 767,
     "cifssOnlyScored": 1,
-    "compared": 768,
-    "conflicts": 6,
+    "compared": 772,
+    "conflicts": 5,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "896040659c87285a854dc52255400a6b0760d6061611b0c1ca2bc768ac219536",
+  "contentHash": "4c89f2299fd69bf5cd3356550de8fa5cb9095acd917a1d0fe23b8d3924ffb84d",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 119,
-        "games": 124,
+        "finals": 124,
+        "games": 127,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
-        "finals": 177,
-        "games": 183,
+        "finals": 180,
+        "games": 184,
         "leagueGames": 60,
         "teams": 12
       },
@@ -47,29 +47,29 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 108,
-        "games": 112,
+        "finals": 109,
+        "games": 113,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 266,
-        "games": 274,
+        "finals": 271,
+        "games": 277,
         "leagueGames": 102,
         "teams": 19
       },
       "pcal": {
         "backfilled": 3,
-        "finals": 62,
+        "finals": 64,
         "games": 65,
         "leagueGames": 41,
         "teams": 7
       },
       "scval": {
         "backfilled": 0,
-        "finals": 166,
-        "games": 174,
+        "finals": 174,
+        "games": 179,
         "leagueGames": 98,
         "teams": 15
       },
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 939,
-    "games": 960,
+    "finals": 953,
+    "games": 969,
     "leagueGames": 551,
-    "mismatches": 31,
-    "pending": 3,
+    "mismatches": 33,
+    "pending": 5,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 155,
+    "agreements": 154,
     "backfilled": 4,
-    "compared": 192,
-    "conflicts": 8,
-    "sbliveOnlyScored": 6
+    "compared": 194,
+    "conflicts": 7,
+    "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-06T12:36:42.737Z",
+  "fetchedAt": "2026-11-08T15:46:44.266Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 21
+    "sblive": 20
   },
   "sources": [
     {
@@ -223,17 +223,17 @@
     },
     {
       "label": "st-ignatius schedule",
-      "rowCount": 21,
+      "rowCount": 23,
       "status": "ok"
     },
     {
       "label": "saint-francis schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -253,12 +253,12 @@
     },
     {
       "label": "homestead schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
       "label": "mitty schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -268,7 +268,7 @@
     },
     {
       "label": "palo-alto schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -338,7 +338,7 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 22,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -348,7 +348,7 @@
     },
     {
       "label": "leigh schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -648,12 +648,12 @@
     },
     {
       "label": "bishops schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
       "label": "canyon-hills schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -668,12 +668,12 @@
     },
     {
       "label": "mission-bay schedule",
-      "rowCount": 19,
+      "rowCount": 21,
       "status": "ok"
     },
     {
       "label": "scripps-ranch schedule",
-      "rowCount": 31,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -683,7 +683,7 @@
     },
     {
       "label": "la-jolla-country-day schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -698,7 +698,7 @@
     },
     {
       "label": "point-loma schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -748,12 +748,12 @@
     },
     {
       "label": "san-marcos schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
       "label": "torrey-pines schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -798,7 +798,7 @@
     },
     {
       "label": "mission-hills schedule",
-      "rowCount": 33,
+      "rowCount": 35,
       "status": "ok"
     },
     {
@@ -818,7 +818,7 @@
     },
     {
       "label": "westview schedule",
-      "rowCount": 32,
+      "rowCount": 33,
       "status": "ok"
     },
     {
@@ -858,7 +858,7 @@
     },
     {
       "label": "olympian schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -912,16 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-23",
-      "rowCount": 12,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-10-24",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-26",
       "rowCount": 10,
       "status": "ok"
@@ -938,7 +928,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-29",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -958,12 +948,12 @@
     },
     {
       "label": "sblive scoreboard 2026-11-03",
-      "rowCount": 3,
+      "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-11-04",
-      "rowCount": 5,
+      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -974,6 +964,11 @@
     {
       "label": "sblive scoreboard 2026-11-06",
       "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-07",
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -1018,7 +1013,7 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 1,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1028,7 +1023,7 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 222,
+      "rowCount": 224,
       "status": "ok"
     },
     {
@@ -1053,7 +1048,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 774,
+      "rowCount": 776,
       "status": "ok"
     },
     {
@@ -1068,12 +1063,12 @@
     },
     {
       "label": "sds bracket sheet open",
-      "rowCount": 3,
+      "rowCount": 4,
       "status": "ok"
     },
     {
       "label": "sds bracket sheet division-1",
-      "rowCount": 4,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -1082,11 +1077,11 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-06",
+  "today": "2026-11-08",
   "warnings": 43,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
-    "lastGame": "2026-11-10T16:00:00",
-    "lastLeagueGame": "2026-11-05T18:00:00"
+    "lastGame": "2026-11-11T18:00:00",
+    "lastLeagueGame": "2026-11-10T14:30:00"
   }
 }
