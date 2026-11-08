@@ -13,10 +13,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { countsOf } from '../../lib/snapshot/snapshot-migrate';
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
-import type { Snapshot } from '../../lib/types';
-import { game } from '../game-builder';
+import { game, withGames } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
 
 import { SEED_CLAIM } from '../../scripts/copy-rules';
@@ -630,7 +628,7 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
       ...base.games.filter((g) => g.postseason?.kind !== 'scval-crossover' && g.postseason?.kind !== 'bval-play-in'),
       playIn,
     ];
-    const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const next = withGames(base, games, { fetchedAt: '2026-10-31T19:00:00.000Z' });
     const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-play-in-')), 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
@@ -694,7 +692,7 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
       post('tamalpais', 'redwood', '2026-10-30', '16:00', mcal),
       post('huntington-beach', 'harvard-westlake', '2026-10-29', '18:00', toc),
     ];
-    const next: Snapshot = { ...base, fetchedAt: '2026-10-29T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const next = withGames(base, games, { fetchedAt: '2026-10-29T19:00:00.000Z' });
     const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-week-')), 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;

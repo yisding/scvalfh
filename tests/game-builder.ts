@@ -20,8 +20,9 @@
 
 import { classifyGame, crossDivisionNote, postseasonTag } from '../lib/classify';
 import { getDivision, getSection, leagueOfDivision } from '../lib/leagues';
+import { countsOf } from '../lib/snapshot/snapshot-migrate';
 import { resolveTeam } from '../lib/teams';
-import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '../lib/types';
+import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag, Snapshot } from '../lib/types';
 
 let seq = 0;
 
@@ -171,4 +172,21 @@ export function game(spec: GameSpec): Game {
   const classified: Game = { ...tagged, countsFor: classifyGame(tagged) };
   const note = crossDivisionNote(classified);
   return note ? { ...classified, provenance: { ...classified.provenance, classificationNote: note } } : classified;
+}
+
+/**
+ * `base` with its games replaced by `games` (and any `rest` fields, e.g. `fetchedAt` or `standings`), for a test that
+ * stages a postseason scene on the committed data/snapshot.json. The counts follow the new arrays, and
+ * `supersededGames` keeps only the mappings the new games still satisfy (snapshot refinement 10: the target is a
+ * game, the key is not). A test that drops games the daily refresh has since made the target of a mapping (a San
+ * Diego `cifsds:` bracket-sheet game MaxPreps has posted, superseded by its MaxPreps playoff contest) would otherwise
+ * fail validation on whatever the refresh fetched, and keep the refresh from committing.
+ */
+export function withGames(base: Snapshot, games: Game[], rest: Partial<Omit<Snapshot, 'games' | 'counts'>> = {}): Snapshot {
+  const ids = new Set(games.map((g) => g.contestId));
+  const standings = rest.standings ?? base.standings;
+  const supersededGames = Object.fromEntries(
+    Object.entries(rest.supersededGames ?? base.supersededGames).filter(([from, to]) => ids.has(to) && !ids.has(from)),
+  );
+  return { ...base, ...rest, games, standings, supersededGames, counts: countsOf(games, standings) };
 }

@@ -18,7 +18,7 @@ import { countsOf } from '../lib/snapshot/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import { computeStandings, leaguePairings } from '../lib/standings';
 import type { Game, Snapshot } from '../lib/types';
-import { game } from './game-builder';
+import { game, withGames } from './game-builder';
 
 type DataModule = typeof import('../lib/data');
 let data: DataModule;
@@ -833,7 +833,7 @@ describe('data: CCS ladder lines after the play-ins', () => {
       ...base.games.filter((g) => g.postseason?.kind !== 'scval-crossover' && g.postseason?.kind !== 'bval-play-in'),
       ...played,
     ];
-    const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const next = withGames(base, games, { fetchedAt: '2026-10-31T19:00:00.000Z' });
     const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-play-in-')), 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;

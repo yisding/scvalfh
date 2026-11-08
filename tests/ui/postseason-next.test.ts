@@ -18,11 +18,10 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { countsOf } from '../../lib/snapshot/snapshot-migrate';
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { leaguePairings, playoffStatusFor } from '../../lib/standings';
-import type { Snapshot, Standing } from '../../lib/types';
-import { game } from '../game-builder';
+import type { Standing } from '../../lib/types';
+import { game, withGames } from '../game-builder';
 
 type Data = typeof import('../../lib/data');
 type TeamView = typeof import('../../components/teams/team-view');
@@ -104,7 +103,7 @@ beforeAll(async () => {
     ),
     ...set,
   ];
-  const next: Snapshot = { ...base, fetchedAt: '2026-10-30T19:00:00.000Z', games, standings, counts: countsOf(games, standings) };
+  const next = withGames(base, games, { fetchedAt: '2026-10-30T19:00:00.000Z', standings });
   const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-postseason-next-')), 'snapshot.json');
   writeFileSync(file, JSON.stringify(loadSnapshot(next)));
   process.env.SCVAL_SNAPSHOT = file;
