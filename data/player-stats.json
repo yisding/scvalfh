@@ -2,11 +2,11 @@
   "counts": {
     "errors": 0,
     "goalkeepers": 144,
-    "players": 926,
+    "players": 942,
     "teams": 102,
-    "teamsWithStats": 69
+    "teamsWithStats": 70
   },
-  "fetchedAt": "2026-11-08T15:49:29.806Z",
+  "fetchedAt": "2026-11-09T13:32:36.863Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "04bcfb64-9b80-429a-b586-78a74e70d9f3",
@@ -2096,7 +2096,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0849d198-8ba8-4dbf-bae5-84a05091e8f6",
@@ -4013,7 +4013,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -4034,7 +4034,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0822b76c-ff94-473d-95cc-b00483835457",
@@ -5611,7 +5611,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "05ad4605-869c-4fa8-b254-30fd4eb2eaaf",
@@ -6683,7 +6683,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -6704,7 +6704,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "gameTotals": [
         {
           "assists": 0,
@@ -7057,7 +7057,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "029c55ad-77cf-42f0-96ff-7193d9edf29a",
@@ -8144,6 +8144,67 @@
           "warnings": []
         },
         {
+          "contestId": "de70ee70-c8e3-4d0c-b1a9-d30dc8f9b5cd",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "18",
+              "name": "Payton Burton"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Emma Traverso"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Hana Mercado"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Elizabeth Traverso"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 3
+              },
+              "jersey": "00",
+              "name": "Isabel Petterson"
+            }
+          ],
+          "rowKey": "986d84b9",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
           "contestId": "e596e377-84dd-4a2d-bde4-15dbd353e07a",
           "players": [
             {
@@ -8298,7 +8359,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-10-29T21:43:12",
+      "lastUpdated": "2026-11-08T14:41:06",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
       "players": [
@@ -8309,10 +8370,10 @@
           "field": {
             "assists": 3,
             "gameWinningGoals": 1,
-            "gamesPlayed": 11,
-            "goals": 5,
+            "gamesPlayed": 12,
+            "goals": 6,
             "minutes": null,
-            "points": 13,
+            "points": 15,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -8435,10 +8496,10 @@
           "field": {
             "assists": 4,
             "gameWinningGoals": 1,
-            "gamesPlayed": 14,
-            "goals": 19,
+            "gamesPlayed": 15,
+            "goals": 20,
             "minutes": null,
-            "points": 42,
+            "points": 44,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -8538,12 +8599,12 @@
           "careerId": "0jj4flo2uqik4",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/hana-mercado/?careerid=0jj4flo2uqik4",
           "field": {
-            "assists": 5,
+            "assists": 6,
             "gameWinningGoals": 0,
-            "gamesPlayed": 12,
+            "gamesPlayed": 13,
             "goals": 6,
             "minutes": null,
-            "points": 17,
+            "points": 18,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -8622,12 +8683,12 @@
           "careerId": "17bg01e2r2jff",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/elizabeth-traverso/?careerid=17bg01e2r2jff",
           "field": {
-            "assists": 7,
+            "assists": 8,
             "gameWinningGoals": 0,
-            "gamesPlayed": 13,
+            "gamesPlayed": 14,
             "goals": 6,
             "minutes": null,
-            "points": 19,
+            "points": 20,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -8645,13 +8706,13 @@
           "field": null,
           "fullName": "Isabel Petterson",
           "goalkeeping": {
-            "gamesPlayed": 12,
+            "gamesPlayed": 13,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 57,
+            "saves": 60,
             "shutouts": null,
             "ties": null,
             "wins": 1
@@ -8667,15 +8728,15 @@
       "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "totals": {
         "field": {
-          "assists": 53,
+          "assists": 55,
           "gameWinningGoals": 2,
-          "gamesPlayed": 20,
-          "goals": 88,
-          "points": 229
+          "gamesPlayed": 21,
+          "goals": 90,
+          "points": 235
         },
         "goalkeeping": {
-          "gamesPlayed": 20,
-          "saves": 57,
+          "gamesPlayed": 21,
+          "saves": 60,
           "wins": 1
         }
       },
@@ -8697,7 +8758,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -8718,7 +8779,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0e514547-6fda-4d35-a6ee-98c47c3a0e34",
@@ -9978,6 +10039,76 @@
           "warnings": []
         },
         {
+          "contestId": "eda99c7c-93b9-4555-9560-bc284465d50b",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Laila Joshi"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Ella Renazco-Sperling"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4,
+                "shotsOnGoal": 3
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Hannah Niebuhr"
+            },
+            {
+              "field": {
+                "shotsOnGoal": 2
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Ela Aba"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "goalsAgainst": 1,
+                "minutes": 60,
+                "opponentShotsOnGoal": 4,
+                "saves": 2,
+                "wins": 1
+              },
+              "jersey": "30",
+              "name": "Caroline Williams"
+            }
+          ],
+          "rowKey": "5e4a6b9c",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "shotsOnGoal"
+            ],
+            "goalkeeping": [
+              "minutes",
+              "opponentShotsOnGoal",
+              "saves",
+              "goalsAgainst",
+              "wins"
+            ]
+          },
+          "warnings": []
+        },
+        {
           "contestId": "f0a8d18a-e51b-4df1-b247-63ebb50d8b18",
           "players": [
             {
@@ -10245,7 +10376,7 @@
           ]
         }
       ],
-      "lastUpdated": "2026-11-01T17:23:17",
+      "lastUpdated": "2026-11-08T19:39:15",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
       "players": [
@@ -10256,7 +10387,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 15,
+            "gamesPlayed": 16,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -10298,10 +10429,10 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 16,
-            "goals": 12,
+            "gamesPlayed": 17,
+            "goals": 13,
             "minutes": null,
-            "points": 26,
+            "points": 28,
             "shots": 1,
             "shotsOnGoal": 9,
             "steals": null
@@ -10319,7 +10450,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -10340,7 +10471,7 @@
           "field": {
             "assists": 4,
             "gameWinningGoals": 0,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 2,
             "minutes": null,
             "points": 8,
@@ -10359,12 +10490,12 @@
           "careerId": "3ioeddt1qlk77",
           "careerUrl": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/athletes/ella-renazco-sperling/?careerid=3ioeddt1qlk77",
           "field": {
-            "assists": 2,
+            "assists": 3,
             "gameWinningGoals": 0,
-            "gamesPlayed": 19,
+            "gamesPlayed": 20,
             "goals": 3,
             "minutes": null,
-            "points": 8,
+            "points": 9,
             "shots": 4,
             "shotsOnGoal": 13,
             "steals": null
@@ -10382,12 +10513,12 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 9,
             "minutes": null,
             "points": 20,
             "shots": 5,
-            "shotsOnGoal": 16,
+            "shotsOnGoal": 18,
             "steals": null
           },
           "fullName": "Ela Aba",
@@ -10403,12 +10534,12 @@
           "field": {
             "assists": 10,
             "gameWinningGoals": 1,
-            "gamesPlayed": 19,
-            "goals": 28,
+            "gamesPlayed": 20,
+            "goals": 30,
             "minutes": null,
-            "points": 66,
+            "points": 70,
             "shots": 7,
-            "shotsOnGoal": 37,
+            "shotsOnGoal": 40,
             "steals": null
           },
           "fullName": "Hannah Niebuhr",
@@ -10424,7 +10555,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 16,
+            "gamesPlayed": 17,
             "goals": 1,
             "minutes": null,
             "points": 4,
@@ -10445,7 +10576,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -10466,7 +10597,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 4,
             "minutes": null,
             "points": 8,
@@ -10487,7 +10618,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 16,
+            "gamesPlayed": 17,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -10529,7 +10660,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 4,
             "minutes": null,
             "points": 10,
@@ -10550,7 +10681,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 19,
+            "gamesPlayed": 20,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -10571,7 +10702,7 @@
           "field": {
             "assists": null,
             "gameWinningGoals": 0,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 0,
             "minutes": null,
             "points": null,
@@ -10592,7 +10723,7 @@
           "field": {
             "assists": null,
             "gameWinningGoals": 0,
-            "gamesPlayed": 19,
+            "gamesPlayed": 20,
             "goals": 0,
             "minutes": null,
             "points": null,
@@ -10613,16 +10744,16 @@
           "field": null,
           "fullName": "Caroline Williams",
           "goalkeeping": {
-            "gamesPlayed": 20,
-            "goalsAgainst": 21,
+            "gamesPlayed": 21,
+            "goalsAgainst": 22,
             "losses": 6,
-            "minutes": 1200,
-            "opponentShotsOnGoal": 94,
+            "minutes": 1260,
+            "opponentShotsOnGoal": 98,
             "overtimeMinutes": null,
-            "saves": 54,
+            "saves": 56,
             "shutouts": 3,
             "ties": null,
-            "wins": 6
+            "wins": 7
           },
           "jersey": "30",
           "onRoster": true,
@@ -10635,23 +10766,23 @@
       "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "totals": {
         "field": {
-          "assists": 26,
+          "assists": 27,
           "gameWinningGoals": 1,
-          "gamesPlayed": 20,
-          "goals": 70,
-          "points": 166,
+          "gamesPlayed": 21,
+          "goals": 73,
+          "points": 173,
           "shots": 20,
-          "shotsOnGoal": 138
+          "shotsOnGoal": 143
         },
         "goalkeeping": {
-          "gamesPlayed": 20,
-          "goalsAgainst": 28,
+          "gamesPlayed": 21,
+          "goalsAgainst": 29,
           "losses": 8,
-          "minutes": 1200,
-          "opponentShotsOnGoal": 125,
-          "saves": 75,
+          "minutes": 1260,
+          "opponentShotsOnGoal": 129,
+          "saves": 77,
           "shutouts": 7,
-          "wins": 12
+          "wins": 13
         }
       },
       "tracked": {
@@ -10679,7 +10810,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "394a0f97-f724-4ab7-a2b9-8160c1f4a0f2",
@@ -11047,7 +11178,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "06dff81f-eb29-408f-8c31-99a32c3ea188",
@@ -12164,7 +12295,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -12185,7 +12316,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -12206,7 +12337,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0ba78e7d-c32b-4ab1-8fa6-5f8af479cb2c",
@@ -14143,7 +14274,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -15058,7 +15189,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -16264,7 +16395,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0630811e-fe8b-452c-8546-3f5de7122634",
@@ -18222,7 +18353,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -19405,7 +19536,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -19976,7 +20107,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "132dce81-25ee-494c-b439-ef935ed26624",
@@ -20932,7 +21063,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -20953,7 +21084,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "7dff058a-02ad-4928-aaea-0c6c1d9fc3ab",
@@ -21031,7 +21162,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "258b9301-ddeb-48f1-a1ad-2b3d01e4ab7d",
@@ -21909,7 +22040,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -21930,7 +22061,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "228e6b7e-b240-4a99-9d0e-09a97fd8983d",
@@ -22388,7 +22519,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "052883f9-a609-49f9-87bd-2c4312a37644",
@@ -23480,7 +23611,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1c87e5c3-5a06-4ed4-b661-d3fc2cb21a4f",
@@ -24663,7 +24794,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -24684,7 +24815,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "3865e937-2367-4f25-96f3-5d011e1bf9ec",
@@ -25938,7 +26069,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
@@ -25959,7 +26090,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
@@ -25980,7 +26111,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
       "name": "Santa Catalina",
@@ -26001,7 +26132,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00dbc5f4-5ea3-4ea9-9b67-62a95ef5e29f",
@@ -28081,7 +28212,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "5349e47b-baa9-466e-9e14-975bc2a5fde9",
@@ -28203,7 +28334,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "080c46eb-a736-4942-9a5a-3a0874d5820e",
@@ -29772,7 +29903,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -32553,7 +32684,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "19c1fbca-90c3-471f-8c5e-84169b0432c8",
@@ -33718,7 +33849,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "14aa4af0-d2c0-453c-8c5f-e878a4bd9efd",
@@ -36744,7 +36875,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -38728,7 +38859,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0304889a-916b-49a1-aa03-3b6ae7f5f829",
@@ -39653,7 +39784,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0129b056-f5da-4c46-81b1-ac2a5d4b842c",
@@ -41440,7 +41571,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "d575e13b-1c2a-4b28-b736-cfa1caa57147",
@@ -41578,7 +41709,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -43639,7 +43770,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1c6b0722-0e72-4e18-baf5-a330e5a61976",
@@ -46186,7 +46317,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8f1a8024-2d40-4cab-bcba-3b9b367c6873",
       "name": "Corning",
@@ -46207,7 +46338,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0c891660-1d87-44a1-8e17-b3d76e6555b3",
@@ -49025,7 +49156,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -49866,7 +49997,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0f69c9f3-660e-4f88-aa4a-9ede091bf61e",
@@ -52800,7 +52931,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "name": "Chaparral",
@@ -52821,7 +52952,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -53503,7 +53634,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "79582922-a3b0-44a5-b210-8e51f3cfb731",
       "name": "Fountain Valley",
@@ -53524,7 +53655,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "5c969601-9039-4b04-a853-8aad5388d882",
@@ -53663,7 +53794,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0576edfb-374a-4451-bb5e-fa191071058c",
@@ -55476,7 +55607,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96f0228e-b1db-4993-ad1e-5427b5592bcf",
       "name": "Marina",
@@ -55497,7 +55628,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "86009247-6ae1-40e1-acfa-58c200528743",
       "name": "Newport Harbor",
@@ -55518,7 +55649,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0994415b-6a76-45f1-8d63-0347a8f03e08",
@@ -56754,7 +56885,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "13ee596b-cb7f-42eb-8010-c8b155e67be8",
@@ -58895,7 +59026,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0b350af5-a08d-486d-b679-9701a6e9d57a",
@@ -60677,7 +60808,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -63211,7 +63342,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -65659,7 +65790,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "3299d07c-3dc0-4e5c-8121-4195e4248111",
@@ -66272,7 +66403,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1830c1da-4013-4771-bf46-c62df5a8418d",
@@ -68007,7 +68138,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "50ebec25-d857-4178-9f5a-1a6241c43b85",
       "name": "Clairemont",
@@ -68028,7 +68159,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "3f6f5373-c03e-4745-a68e-e7d0ab6ed19f",
@@ -68175,7 +68306,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e551f0f0-28a3-4c13-8ade-1b9909ffa28c",
       "name": "Mira Mesa",
@@ -68196,7 +68327,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1de2a579-ce95-4066-8c82-05993b09b96f",
@@ -69298,28 +69429,2274 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
-      "lastUpdated": null,
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
+      "games": [
+        {
+          "contestId": "2b925938-1a5a-4d62-8060-00d9564c7b02",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            }
+          ],
+          "rowKey": "604c9c0f",
+          "tracked": {
+            "field": [
+              "goals",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "3be3cccb-27c0-43f3-902f-59e48de7a8ae",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            }
+          ],
+          "rowKey": "e21b723c",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "485f5626-14c3-4722-bd41-404f03cb2cf8",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "0984da06",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "486eb443-8948-4761-a937-a1537653f302",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            }
+          ],
+          "rowKey": "5388b328",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "4c4699b1-eaf0-42c3-a33b-807a96786697",
+          "players": [
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "182e88c7",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "5afac10d-09da-4571-b835-2fda885576d2",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "goals": 3,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            }
+          ],
+          "rowKey": "12b5f8c5",
+          "tracked": {
+            "field": [
+              "goals",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "5e04c271-33e1-4d33-8a77-b809fcfe45d6",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "gameWinningGoals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            }
+          ],
+          "rowKey": "1803d8ab",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "7579e325-fe69-4371-a316-0bc9d65aa8fa",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "288b01bc",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "7c7ae94d-8706-43d4-8be8-57a2455ef6bf",
+          "players": [
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "077d170b",
+          "tracked": {
+            "field": [
+              "goals",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "8a9cb685-c137-4ccf-9d39-0caa3c2b20e9",
+          "players": [
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "f24900b3",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "b0524c69-f6ee-49c0-854c-4c301ed3395c",
+          "players": [
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "644b819e",
+          "tracked": {
+            "field": [
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "field gameWinningGoals: players add up to 16, above MaxPreps' team total of 1; both as published",
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "b627ac7e-67a0-44d4-8875-0ad440fca236",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "gameWinningGoals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "894208c5",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "b881b1bf-458a-43d5-957c-2f62bf24a457",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "goals": 3,
+                "points": 8
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "goals": 3,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 3,
+                "points": 7
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            }
+          ],
+          "rowKey": "ad7592dd",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "c65dd446-70ac-4df9-9859-b6c62a81b091",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            }
+          ],
+          "rowKey": "1649f87f",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "ca3d9de0-fc8c-40fe-a825-001b39cbcdfd",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "gameWinningGoals": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            }
+          ],
+          "rowKey": "c883b4c9",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "cb4a13e6-0e07-41df-8f07-cd5a3450cf0f",
+          "players": [
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "gameWinningGoals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Curran"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1,
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Keegan Gaudet"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Dempsey Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "I. Delfos"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Macie Pavao"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Molly Radonich"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "86a86d3b",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "I. Delfos has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "e7d18df3-9fa2-4e84-b106-dc002d65b9d4",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ellie Kay"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Abigail Smith"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Nicole Bettencourt"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lola Mezzadri"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Grace Meler"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Ana Rogers"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilyana McCollum"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Michelle MacOubray"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Elizabeth (zibby) Baker"
+            },
+            {
+              "field": {
+                "gameWinningGoals": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sylvia Kuzmich"
+            }
+          ],
+          "rowKey": "5c0ac086",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points",
+              "gameWinningGoals"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-11-08T14:10:12",
       "maxprepsTeamId": "91a74b43-700f-4e74-819e-d62b6dba12f7",
       "name": "Point Loma",
-      "players": [],
+      "players": [
+        {
+          "athleteId": "5eb1818a-1378-4500-9752-16abab062ed5",
+          "careerId": "1kjfkc9ilf4n7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/ellie-kay/?careerid=1kjfkc9ilf4n7",
+          "field": {
+            "assists": 8,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 14,
+            "goals": 14,
+            "minutes": null,
+            "points": 36,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Ellie Kay",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "E. Kay"
+        },
+        {
+          "athleteId": "ceb2ba0e-9282-4cdf-b9c5-21bd88225256",
+          "careerId": "fhaq8ll0ahr11",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/dempsey-baker/?careerid=fhaq8ll0ahr11",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 12,
+            "goals": 1,
+            "minutes": null,
+            "points": 3,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Dempsey Baker",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "D. Baker"
+        },
+        {
+          "athleteId": "a0969e8f-6332-4c31-9130-66fb2d93e791",
+          "careerId": "oe7re10ivtnaa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/lola-mezzadri/?careerid=oe7re10ivtnaa",
+          "field": {
+            "assists": 4,
+            "gameWinningGoals": 11,
+            "gamesPlayed": 14,
+            "goals": 5,
+            "minutes": null,
+            "points": 14,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Lola Mezzadri",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "L. Mezzadri"
+        },
+        {
+          "athleteId": "5e475eda-3ca6-4592-8526-bf0ad96f5418",
+          "careerId": "edjrq9upu77ee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/abigail-smith/?careerid=edjrq9upu77ee",
+          "field": {
+            "assists": 4,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 15,
+            "goals": 15,
+            "minutes": null,
+            "points": 34,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Abigail Smith",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "A. Smith"
+        },
+        {
+          "athleteId": "b807c672-f11c-41b7-b574-65e0e7a256d0",
+          "careerId": "4149jo4cloqn7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/molly-curran/?careerid=4149jo4cloqn7",
+          "field": {
+            "assists": 9,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 15,
+            "goals": 12,
+            "minutes": null,
+            "points": 33,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Molly Curran",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "M. Curran"
+        },
+        {
+          "athleteId": null,
+          "careerId": "p5oaf5luo4b55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/isabella-delfos/?careerid=p5oaf5luo4b55",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 12,
+            "goals": 4,
+            "minutes": null,
+            "points": 9,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "I. Delfos",
+          "goalkeeping": null,
+          "jersey": "10",
+          "onRoster": false,
+          "shortName": "I. Delfos"
+        },
+        {
+          "athleteId": "e24cb3ff-cd78-4508-b4f9-34dd9d3c7620",
+          "careerId": "m7jaibnk2p2dd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/keegan-gaudet/?careerid=m7jaibnk2p2dd",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 12,
+            "goals": 3,
+            "minutes": null,
+            "points": 6,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Keegan Gaudet",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "K. Gaudet"
+        },
+        {
+          "athleteId": "ed33ba9f-6c7e-423b-ab67-5e5017adffd3",
+          "careerId": "6qjjdgn8aapvf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/molly-radonich/?careerid=6qjjdgn8aapvf",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": 7,
+            "gamesPlayed": 9,
+            "goals": 1,
+            "minutes": null,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Molly Radonich",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "M. Radonich"
+        },
+        {
+          "athleteId": "ba33a7b8-d6fd-4f84-b80d-f3cdc1c82db5",
+          "careerId": "q8j7fqhe3jg99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/ana-rogers/?careerid=q8j7fqhe3jg99",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 12,
+            "goals": 1,
+            "minutes": null,
+            "points": 3,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Ana Rogers",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "A. Rogers"
+        },
+        {
+          "athleteId": "1d653f29-006b-4aa1-9415-7c50fc16041f",
+          "careerId": "mf6ggnjmhc4cc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/elizabeth-zibby-baker/?careerid=mf6ggnjmhc4cc",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 10,
+            "goals": 2,
+            "minutes": null,
+            "points": 5,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Elizabeth (zibby) Baker",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "E. Baker"
+        },
+        {
+          "athleteId": "7a77b817-0d95-4c95-896c-57aee2c1a97e",
+          "careerId": "aufiudcb9mc99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/sylvia-kuzmich/?careerid=aufiudcb9mc99",
+          "field": {
+            "assists": 2,
+            "gameWinningGoals": 11,
+            "gamesPlayed": 12,
+            "goals": 4,
+            "minutes": null,
+            "points": 10,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Sylvia Kuzmich",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "S. Kuzmich"
+        },
+        {
+          "athleteId": "e2eeaaf3-c765-4db5-8206-c643260a8aa5",
+          "careerId": "tlf9frk043sj3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/nicole-bettencourt/?careerid=tlf9frk043sj3",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": 11,
+            "gamesPlayed": 11,
+            "goals": 0,
+            "minutes": null,
+            "points": null,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Nicole Bettencourt",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "N. Bettencourt"
+        },
+        {
+          "athleteId": "9cfe444d-d035-472b-b9b9-b28f96dfa7bb",
+          "careerId": "ban0s8suvvih1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/grace-meler/?careerid=ban0s8suvvih1",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 11,
+            "goals": 0,
+            "minutes": null,
+            "points": null,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Grace Meler",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "G. Meler"
+        },
+        {
+          "athleteId": "a3b8f98c-fe9f-4c34-82ce-5bd80e206952",
+          "careerId": "sa9tt96vkval5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/macie-pavao/?careerid=sa9tt96vkval5",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": 10,
+            "gamesPlayed": 10,
+            "goals": 0,
+            "minutes": null,
+            "points": null,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Macie Pavao",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "M. Pavao"
+        },
+        {
+          "athleteId": "369425d6-b735-4aec-a80f-485d97f01027",
+          "careerId": "1h43i711hnd55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/lilyana-mccollum/?careerid=1h43i711hnd55",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": 11,
+            "gamesPlayed": 11,
+            "goals": 0,
+            "minutes": null,
+            "points": null,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Lilyana McCollum",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "L. McCollum"
+        },
+        {
+          "athleteId": "ea1baa1a-0ba2-4b25-a27a-1c4aadb8db32",
+          "careerId": "0fcoplij3vkj3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/michelle-macoubray/?careerid=0fcoplij3vkj3",
+          "field": {
+            "assists": null,
+            "gameWinningGoals": 11,
+            "gamesPlayed": 11,
+            "goals": 0,
+            "minutes": null,
+            "points": null,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Michelle MacOubray",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "M. MacOubray"
+        }
+      ],
       "slug": "point-loma",
       "statsUrl": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/field-hockey/stats/",
-      "status": "none",
+      "status": "ok",
       "teamId": "91a74b43-700f-4e74-819e-d62b6dba12f7",
       "totals": {
-        "field": {},
+        "field": {
+          "assists": 31,
+          "gameWinningGoals": 147,
+          "gamesPlayed": 17,
+          "goals": 62,
+          "points": 155
+        },
         "goalkeeping": {}
       },
       "tracked": {
-        "field": [],
+        "field": [
+          "gamesPlayed",
+          "goals",
+          "assists",
+          "points",
+          "gameWinningGoals"
+        ],
         "goalkeeping": []
       },
-      "warnings": []
+      "warnings": [
+        "field gameWinningGoals: players add up to 162, above MaxPreps' team total of 147; both as published",
+        "goalkeeping gamesPlayed: team total is 17 but no player has any; not shown rather than as zeros",
+        "I. Delfos has stats but is not on the MaxPreps roster"
+      ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "16c532a9-11de-4844-9e3d-09a30cdc40e3",
@@ -70444,7 +72821,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a207da-721f-4acf-a69c-cd7fa50a1f7a",
       "name": "Canyon Crest Academy",
@@ -70465,7 +72842,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "14fb2c49-2dc2-4972-944c-57416937595a",
@@ -71621,7 +73998,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0756fd09-d5df-47ec-959c-02a91338558c",
@@ -72095,7 +74472,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "132d806e-7fa4-4bce-b92a-9db38786cf7b",
       "name": "Rancho Bernardo",
@@ -72116,7 +74493,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00cb9691-5d6b-434f-84d9-c19e4a7ba2b0",
@@ -73643,7 +76020,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0bbaaaae-6295-4b20-b8f4-b0943109a1db",
@@ -75101,7 +77478,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "33049a94-7357-4559-bba5-366472642278",
@@ -76212,7 +78589,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7453dc74-befb-4c36-92ec-35bf99c3c718",
       "name": "Fallbrook",
@@ -76233,7 +78610,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0420a070-260d-4b62-8a5f-db24fd501107",
@@ -77816,7 +80193,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0b3cfb7d-df5e-44af-a9e3-812677ab1857",
@@ -78960,7 +81337,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f1f0e644-5c98-4d70-bd3c-ae7fb8992410",
       "name": "Rancho Buena Vista",
@@ -78981,7 +81358,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a7064567-f2fe-442d-8200-34a28326d1b9",
       "name": "San Dieguito Academy",
@@ -79002,7 +81379,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "01923d22-da93-4d90-8dc4-835264aa51d6",
@@ -80517,7 +82894,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "7551a71d-3c34-4efc-9b8c-d406ef4ba0f5",
@@ -80676,7 +83053,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00238ba3-1cd2-4a8c-a763-43eefd02acc0",
@@ -82885,7 +85262,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "045dadec-b4d3-4073-8560-114cfe0c030a",
@@ -84610,7 +86987,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a1109c06-7436-4b72-a30e-459eb6d00925",
       "name": "San Pasqual",
@@ -84631,7 +87008,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00ed1ac5-9f7b-4496-a513-3965513b56c9",
@@ -85839,7 +88216,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00a11121-c2f0-446f-9f0e-4ed88d6056dd",
@@ -87496,7 +89873,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7f4d50f0-8690-493c-b4bc-262b512e8851",
       "name": "Bonita Vista",
@@ -87517,7 +89894,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "07d1ae31-eaf9-4ac8-9302-6332336b0d8f",
@@ -88718,7 +91095,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "186dcece-fefd-4b67-b4c7-877b3e12beb2",
       "name": "Helix",
@@ -88739,7 +91116,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0dd55a09-b127-40cd-8a66-7be9c87e56cf",
@@ -90141,7 +92518,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "0775eef9-7302-4f57-84eb-112120b2b72a",
@@ -91163,7 +93540,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "15d5e874-4af2-4d24-8e6b-be895937cb8c",
       "name": "El Capitan",
@@ -91184,7 +93561,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa2f89a2-0150-4223-89b4-ac73cbf343e9",
       "name": "Granite Hills",
@@ -91205,7 +93582,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "1fb5657d-2979-4e32-817c-a1a41c6aa65c",
@@ -91931,7 +94308,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "19409229-6768-4537-b8d7-4a7d2814aaad",
       "name": "Southwest",
@@ -91952,7 +94329,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
       "name": "Bonita",
@@ -91973,7 +94350,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -92261,7 +94638,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
       "name": "Glendora",
@@ -92282,7 +94659,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "games": [
         {
           "contestId": "00b87940-3763-43a3-ad1d-df2d58bd9e21",
@@ -94147,7 +96524,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-08T15:49:29.806Z",
+      "fetchedAt": "2026-11-09T13:32:36.863Z",
       "lastUpdated": null,
       "maxprepsTeamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
       "name": "Thousand Oaks",
