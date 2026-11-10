@@ -28,7 +28,7 @@ import { DATA_QUALITY } from '../../lib/league-config/data-quality';
 import { LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { ScheduleResponseSchema, type ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings/engine';

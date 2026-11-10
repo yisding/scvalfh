@@ -18,7 +18,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { divisionsOf } from '../lib/leagues';
 import { buildCrossCheck } from '../lib/standings/cross-check';
 import { divisionGames } from '../lib/standings/engine';
-import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
 import type { DivisionId, Snapshot, Standing } from '../lib/types';
 import { REPO, corpusSnapshotPath } from './helpers';

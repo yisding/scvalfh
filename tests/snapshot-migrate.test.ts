@@ -24,7 +24,7 @@ import {
   rebuildPlayoffGames,
   reclassify,
 } from '../lib/snapshot/snapshot-migrate';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
 import { buildCrossCheck } from '../lib/standings/cross-check';
 import { computeStandings, divisionGames } from '../lib/standings/engine';

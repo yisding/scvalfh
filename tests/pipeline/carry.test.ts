@@ -14,7 +14,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { stepOfficial } from '../../lib/pipeline/steps/official';
 import { stepSblive } from '../../lib/pipeline/steps/sblive';
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { PipelineSteps } from '../../lib/pipeline/contract';
 import type { Snapshot } from '../../lib/types';
 import { REPO, corpusDir, corpusSnapshotPath } from '../helpers';

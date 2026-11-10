@@ -14,7 +14,7 @@ import { supersededGamesOf } from '../lib/pipeline/steps/assemble';
 import { keepUnread, staleTab } from '../lib/pipeline/steps/sds-sheet';
 import { describeGame } from '../components/ui/describe-game';
 import { datesAtLocal } from '../lib/format';
-import { SnapshotSchema } from '../lib/snapshot/snapshot-schema';
+import { SnapshotSchema } from '../lib/snapshot/snapshot-invariants';
 import { getSnapshot } from '../lib/data';
 import { buildSdsBrackets } from '../lib/postseason/sds-bracket';
 import { sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';

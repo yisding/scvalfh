@@ -19,7 +19,8 @@ import { z } from 'zod';
 
 import bundledFieldHockey from '../../data/schools.json';
 import bundledSoccer from '../../data/soccer/schools.json';
-import { dateKey, failValidation, isCalendarDate, slugId } from '../schema-primitives';
+import { validateData } from '../data-file';
+import { dateKey, isCalendarDate, slugId } from '../schema-primitives';
 import type { StreetAddress, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
@@ -48,9 +49,7 @@ export type SchoolsFile = z.infer<typeof SchoolsFileSchema>;
 
 /** Parse a schools file, throwing `data/schools.json failed validation: …` with the first issues. */
 export function loadSchools(input: unknown): SchoolsFile {
-  const parsed = SchoolsFileSchema.safeParse(input);
-  if (!parsed.success) failValidation('data/schools.json', parsed.error.issues);
-  return parsed.data;
+  return validateData('data/schools.json', SchoolsFileSchema, input);
 }
 
 const SCHOOLS = loadSchools(bundled);

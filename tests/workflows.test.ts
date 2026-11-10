@@ -18,7 +18,7 @@ import { describe, expect, it } from 'vitest';
 import { getClubSlugs } from '../lib/players/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
-import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { REPO, runScript } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');

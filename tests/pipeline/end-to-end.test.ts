@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Game, LeagueHealth, LeagueId, Snapshot } from '../../lib/types';
 import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '../helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';

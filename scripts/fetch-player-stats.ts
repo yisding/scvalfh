@@ -114,7 +114,7 @@ import {
 } from '../lib/sources/maxpreps-player-stats';
 import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
-import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId } from '../lib/types';

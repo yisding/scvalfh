@@ -10,11 +10,10 @@
  * Date.now() — so a build is reproducible and every "as of" label is honest (BUILD-BRIEF).
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledSnapshotFieldHockey from '../data/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
+import { readOverride } from './data-file';
 import {
   dateSpan,
   isoDateKey,
@@ -56,7 +55,7 @@ import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from 
 import { ccsOutcomeFor } from './postseason/postseason-outcomes';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
-import { loadSnapshot } from './snapshot/snapshot-schema';
+import { loadSnapshot } from './snapshot/snapshot-load';
 import { divisionGames, sortStandings } from './standings/engine';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel } from './standings/ladder';
 import { missingOfficialResults } from './standings/missing';
@@ -115,17 +114,7 @@ const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : bundledSn
  * Worker. Both paths go through `loadSnapshot`, so a v1 file is migrated in memory (SPEC §4.3).
  */
 function load(): Snapshot {
-  const override = process.env.SCVAL_SNAPSHOT;
-  if (!override) return loadSnapshot(bundledSnapshot as unknown);
-  let raw: string;
-  try {
-    raw = readFileSync(override, 'utf8');
-  } catch (err) {
-    throw new Error(
-      `lib/data.ts: cannot read SCVAL_SNAPSHOT=${override} (${(err as Error).message})`,
-    );
-  }
-  return loadSnapshot(JSON.parse(raw) as unknown);
+  return loadSnapshot(readOverride('lib/data.ts', 'SCVAL_SNAPSHOT', bundledSnapshot));
 }
 
 const snapshot = load();

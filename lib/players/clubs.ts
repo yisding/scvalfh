@@ -33,6 +33,7 @@
 
 import bundledFieldHockey from '../../data/clubs.json';
 import bundledSoccer from '../../data/soccer/clubs.json';
+import { validateData } from '../data-file';
 import {
   CLUB_REGIONS,
   ClubsFileSchema,
@@ -43,7 +44,6 @@ import {
 } from './clubs-schema';
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
-import { failValidation } from '../schema-primitives';
 import type { TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
@@ -83,9 +83,7 @@ function loadAndJoin(
   teams: readonly MergedTeamRoster[],
   season: string,
 ): { file: ClubsFile; rows: Map<string, MergedPlayer> } {
-  const parsed = ClubsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('clubs', parsed.error.issues);
-  const file = parsed.data;
+  const file = validateData('clubs', ClubsFileSchema, raw);
   if (file.season !== season) {
     throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);
   }

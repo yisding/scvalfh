@@ -287,7 +287,7 @@ jobs:
           # `git log` would stop telling anyone which refresh actually moved a score.
           #
           # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every
-          # `fetchedAt` stripped (lib/snapshot/snapshot-schema.ts). That is what "changed" means here.
+          # `fetchedAt` stripped (lib/snapshot/snapshot-hash.ts). That is what "changed" means here.
           PREV="${RUNNER_TEMP:-/tmp}/previous-snapshot-meta.json"
           git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || true
           SNAPSHOT=$(node -e '

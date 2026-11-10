@@ -22,7 +22,7 @@ import {
   divisionClassification,
   finalsMissingReason,
 } from '../../lib/pipeline/steps/guards';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { divisionGames } from '../../lib/standings/engine';
 import { teamsInLeague } from '../../lib/teams';
 import type { Game, LeagueId, Snapshot } from '../../lib/types';

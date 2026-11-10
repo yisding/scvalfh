@@ -22,9 +22,9 @@
 import bundledFileFieldHockey from '../../data/ccs-bracket-2026.json';
 import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
 import { CcsSeedFileSchema, type CcsSeedFile, type CcsSeeds } from './ccs-bracket-schema';
+import { validateData } from '../data-file';
 import { byDateThenId } from '../format';
 import type { SectionBracket } from '../history/history-brackets-schema';
-import { failValidation } from '../schema-primitives';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
@@ -54,9 +54,7 @@ export function playoffGamesStale(
 
 /** The owner file, validated once at import (a bad file fails the build and `pnpm test`, never a render). */
 function loadSeedFile(): CcsSeedFile {
-  const parsed = CcsSeedFileSchema.safeParse(bundledFile);
-  if (!parsed.success) failValidation('ccs-bracket', parsed.error.issues);
-  return parsed.data;
+  return validateData('ccs-bracket', CcsSeedFileSchema, bundledFile);
 }
 
 const seedFile = loadSeedFile();

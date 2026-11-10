@@ -27,7 +27,7 @@ import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type Ru
 import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';

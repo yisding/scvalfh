@@ -17,11 +17,10 @@
  * games this module serves carry that classification as `countsFor`.
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledFieldHockey from '../../data/jv.json';
 import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
+import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
@@ -34,7 +33,6 @@ import {
   type JvClassification,
   type JvDivisionTable,
 } from './jv-standings';
-import { failValidation } from '../schema-primitives';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
@@ -42,18 +40,7 @@ import { IS_FIELD_HOCKEY } from '../sports/current';
 const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 function load(): JvFile {
-  const override = process.env.SCVAL_JV;
-  let raw: unknown = bundled;
-  if (override) {
-    try {
-      raw = JSON.parse(readFileSync(override, 'utf8')) as unknown;
-    } catch (err) {
-      throw new Error(`lib/jv/jv.ts: cannot read SCVAL_JV=${override} (${(err as Error).message})`);
-    }
-  }
-  const parsed = JvFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('jv', parsed.error.issues);
-  return parsed.data;
+  return validateData('jv', JvFileSchema, readOverride('lib/jv/jv.ts', 'SCVAL_JV', bundled));
 }
 
 const file = load();

@@ -15,7 +15,7 @@ import { readFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import type { DivisionId, LeagueId, Snapshot, Standing } from '../lib/types';
 import { corpusSnapshotPath } from './helpers';
 

@@ -18,7 +18,7 @@ import { buildCrossCheck } from '../lib/standings/cross-check';
 import { computeStandings, divisionGames } from '../lib/standings/engine';
 import { playoffOutcomeLabel, statusBadge, statusLegend } from '../lib/standings/ladder';
 import { countsOf, migrateV1ToV2 } from '../lib/snapshot/snapshot-migrate';
-import { parseSnapshot } from '../lib/snapshot/snapshot-schema';
+import { parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
 import type {
   Game,

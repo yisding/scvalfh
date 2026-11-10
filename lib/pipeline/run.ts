@@ -27,7 +27,7 @@ import { carryCrossCheck } from '../crosscheck/crosscheck';
 import { parseFetchedAtFlag, parseLeaguesFlag } from './fetch-scope';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
-import { loadSnapshot } from '../snapshot/snapshot-schema';
+import { loadSnapshot } from '../snapshot/snapshot-load';
 import { stableStringify } from '../stable-json';
 import type { Game, OfficialFixture, Snapshot } from '../types';
 import {

@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { SnapshotSchema } from '../../lib/snapshot/snapshot-schema';
+import { SnapshotSchema } from '../../lib/snapshot/snapshot-invariants';
 import type { CcsCalendarEvent, Snapshot } from '../../lib/types';
 import { REPO } from '../helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';

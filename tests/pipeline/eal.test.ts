@@ -16,7 +16,7 @@ import { localDateKey, sideOutcome } from '../../lib/format';
 import { DATA_QUALITY } from '../../lib/league-config/data-quality';
 import { LEAGUES } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings/engine';
