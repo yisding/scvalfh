@@ -83,7 +83,7 @@ import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import { formatIssues } from '../lib/schema-primitives';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '../lib/season';
 import { HttpClient } from '../lib/sources/http';
-import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
+import { MaxPrepsClient, ScheduleResponseSchema, assertFeedHasTeam, maxprepsScheduleUrl, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '../lib/sources/sblive';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib/sources/sblive-jv';
 import { stableStringify } from '../lib/stable-json';
@@ -223,9 +223,7 @@ function loadPrevious(file: string): { previous: PreviousJv | null; unreadable: 
 /** A schedule body → its rows, with MaxPreps' routing guard: a non-empty feed must contain the school. */
 function parseSchedule(body: string, team: Team): ScheduleRow[] {
   const rows = ScheduleResponseSchema.parse(JSON.parse(body) as unknown).data;
-  if (rows.length > 0 && !rows.some((r) => r.contest.teams.some((t) => t.teamId === team.id))) {
-    throw new Error(`JV feed for ${team.id} contains no row for that teamId`);
-  }
+  assertFeedHasTeam(rows, team.id, 'JV feed');
   return rows;
 }
 
@@ -293,7 +291,7 @@ async function main(argv: readonly string[]): Promise<number> {
       const prior = priorTeam.get(team.slug);
       const had = previous?.games.filter((g) => involves(g, team.slug)).length ?? 0;
       try {
-        const url = maxpreps.scheduleUrl(team.id, JV_SPORT_SEASON_ID);
+        const url = maxprepsScheduleUrl(team.id, JV_SPORT_SEASON_ID);
         const body = args.fixtures ? read(`jv-sched-${team.slug}.json`) : (await maxpreps.text(url, 'application/json')).data;
         if (!args.fixtures) save(`jv-sched-${team.slug}.json`, body);
         const split = splitTbaRows(parseSchedule(body, team));

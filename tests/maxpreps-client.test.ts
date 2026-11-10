@@ -5,7 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import type { RawResponse } from '../lib/pipeline/contract';
+import type { RawResponse } from '../lib/sources/http';
 import {
   DEFAULT_USER_AGENT,
   MaxPrepsClient,

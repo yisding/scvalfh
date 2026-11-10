@@ -1,7 +1,8 @@
 /**
  * Transports (SPEC §7.3): where a pipeline step's raw bytes come from.
  *
- *  - LiveTransport      the network, through the frozen live resource map only (below);
+ *  - LiveTransport      the network, through the frozen live resource map only (below, held as the
+ *                       RESOURCES table of lib/pipeline/resources.ts);
  *  - FixtureTransport   a manifest-driven corpus (lib/pipeline/corpus.ts) with variant overlays;
  *  - RecordingTransport wraps another transport and writes every response into a new corpus;
  *  - MeteredTransport   wraps any of them: counts requests per host and logs every MaxPreps URL as
@@ -9,7 +10,7 @@
  *                       Mission league id can be grepped from a run log, live or offline).
  *
  * Live resource map (frozen at the end of Stage A):
- *   maxpreps-*            URL builders of lib/sources/maxpreps.ts → MaxPrepsClient.raw (its gate, retries, UA)
+ *   maxpreps-*            maxprepsLeagueMetaUrl / maxprepsStandingsUrl / maxprepsScheduleUrl (lib/sources/maxpreps.ts) → MaxPrepsClient.raw (its gate, retries, UA)
  *   scval-pdf-text        scvalScheduleUrl(d) (config official.scheduleUrl) → HttpClient.bytes → pdfToText
  *   scval-standings-index SCVAL_STANDINGS_INDEX → HttpClient.text
  *   official-revision     getDivision(d).official.revisionCheckUrl (bundled only) → bytes → sha256 hex
@@ -24,19 +25,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { CCS, sdsBracketSheetCsvUrl } from '../league-config/sections';
-import { getDivision, getLeague } from '../leagues';
-import { officialChangesCellText, sha256Hex } from '../official/validate';
-import { BOOTSTRAP_URL } from '../season';
-import { CCS_ICAL_URL } from '../sources/ccs';
-import { CIFSS_SEASON_FROM, cifssListingUrl } from '../sources/cifss';
 import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
 import { MaxPrepsClient, MaxPrepsError } from '../sources/maxpreps';
-import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '../sources/sblive';
-import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '../sources/scval-pdf';
-import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
-import { getTeamBySlug } from '../teams';
-import type { DivisionId, TeamSlug } from '../types';
+import { SBLIVE_HTTP_OPTIONS } from '../sources/sblive';
+import { pdfToText } from '../sources/scval-pdf';
 import {
   FixtureMissing,
   TransportError,
@@ -46,109 +38,24 @@ import {
   type Transport,
 } from './contract';
 import type { Corpus } from './corpus';
+import { specOf, type TextClient } from './resources';
 
 // ---------------------------------------------------------------- the resource map
-
-/** URL builders only; constructing the client opens no connection. */
-const MAXPREPS_URLS = new MaxPrepsClient();
 
 export type RequestHost = 'maxpreps' | 'sblive' | 'official' | 'other';
 
 /** Which budget a resource counts against (the summary line's `requests maxpreps:<n> sblive:<n> official:<n>`). */
 export function hostOf(key: ResourceKey): RequestHost {
-  switch (key.kind) {
-    case 'maxpreps-bootstrap':
-    case 'maxpreps-league-meta':
-    case 'maxpreps-standings':
-    case 'maxpreps-schedule':
-      return 'maxpreps';
-    case 'sblive-scores':
-    case 'sblive-team-games':
-      return 'sblive';
-    case 'scval-pdf-text':
-    case 'scval-standings-index':
-    case 'official-revision':
-    case 'official-changes':
-      return 'official';
-    default:
-      return 'other';
-  }
-}
-
-function teamOrThrow(slug: TeamSlug) {
-  const team = getTeamBySlug(slug);
-  if (!team) throw new Error(`lib/pipeline/transport.ts: unknown team slug ${slug}`);
-  return team;
+  return specOf(key).host;
 }
 
 /**
- * A division's MaxPreps league id, or a throw for a division MaxPreps publishes no table for (the
- * San Diego Section's Valley division: lib/league-config/north-county.ts sets maxprepsLeagueId null, DESIGN-socal §2.1.7).
- * Steps 03 and 04 never build a key for such a division (league-meta.ts and reported.ts skip it with
- * no request), so reaching this throw is a pipeline bug, and it surfaces before any request instead
- * of as a GET of `/leagues/null/v1`.
- */
-function maxprepsLeagueIdOrThrow(division: DivisionId): string {
-  const id = getDivision(division).maxprepsLeagueId;
-  if (id === null) throw new Error(`lib/pipeline/transport.ts: MaxPreps publishes no table for ${division}`);
-  return id;
-}
-
-/**
- * The upstream URL of a resource, from the live resource map. Pure: used by LiveTransport to fetch
- * and by every other transport to label what it serves. Throws only for a key the configuration
- * cannot address (an unknown slug, a division with no revision-check URL).
+ * The upstream URL of a resource, from the live resource map (lib/pipeline/resources.ts). Pure: used
+ * by LiveTransport to fetch and by every other transport to label what it serves. Throws only for a
+ * key the configuration cannot address (an unknown slug, a division with no revision-check URL).
  */
 export function resourceUrl(key: ResourceKey): string {
-  switch (key.kind) {
-    case 'maxpreps-bootstrap':
-      return BOOTSTRAP_URL;
-    case 'maxpreps-league-meta':
-      return MAXPREPS_URLS.leagueMetaUrl(maxprepsLeagueIdOrThrow(key.division));
-    case 'maxpreps-standings':
-      return MAXPREPS_URLS.standingsUrl(maxprepsLeagueIdOrThrow(key.division));
-    case 'maxpreps-schedule':
-      return MAXPREPS_URLS.scheduleUrl(teamOrThrow(key.team).id);
-    case 'scval-pdf-text':
-      return scvalScheduleUrl(key.division);
-    case 'scval-standings-index':
-      return SCVAL_STANDINGS_INDEX;
-    case 'official-revision': {
-      // Bundled divisions only: a live PDF is read whole and a 'none' division (EAL) has no document.
-      const official = getDivision(key.division).official;
-      const url = official.mode === 'bundled' ? official.revisionCheckUrl : null;
-      if (!url) throw new Error(`lib/pipeline/transport.ts: ${key.division} has no revision-check URL`);
-      return url;
-    }
-    case 'official-changes': {
-      const changes = getLeague(key.league).officialChanges;
-      if (!changes) throw new Error(`lib/pipeline/transport.ts: ${key.league} has no officialChanges page`);
-      return changes.url;
-    }
-    case 'sblive-scores':
-      return sbliveScoresUrl(key.date);
-    case 'sblive-team-games': {
-      // The registry's si.com page (built from the team's si.com slug; never guessed).
-      const url = teamOrThrow(key.team).external.sbliveGamesUrl;
-      if (!url) throw new Error(`lib/pipeline/transport.ts: no si.com team page is recorded for ${key.team}`);
-      return url;
-    }
-    case 'vnn-ics': {
-      const site = VNN_SITE_IDS.find((s) => s.slug === key.team);
-      const siteId = site?.siteId ?? teamOrThrow(key.team).external.vnnSiteId;
-      if (!siteId) throw new Error(`lib/pipeline/transport.ts: no VNN calendar is recorded for ${key.team}`);
-      return vnnIcsUrl(siteId);
-    }
-    case 'ccs-ical':
-      return CCS_ICAL_URL;
-    case 'ccs-bracket':
-      if (CCS.bracketUrl === null) throw new Error('no MaxPreps CCS tournament page is configured for this season');
-      return CCS.bracketUrl;
-    case 'cifss-scores':
-      return cifssListingUrl(key.section, { from: CIFSS_SEASON_FROM, to: key.through, page: key.page });
-    case 'sds-bracket-sheet':
-      return sdsBracketSheetCsvUrl(key.division);
-  }
+  return specOf(key).url(key);
 }
 
 /** Like resourceUrl, but never throws (for labels and logs). */
@@ -162,12 +69,10 @@ export function resourceUrlOrNull(key: ResourceKey): string | null {
 
 /** Bodies that are hashes by contract (§7.2): served and recorded as one bare hex line. */
 function isHashResource(key: ResourceKey): boolean {
-  return key.kind === 'official-revision' || key.kind === 'official-changes';
+  return specOf(key).hashBody === true;
 }
 
 // ---------------------------------------------------------------- live
-
-type TextClient = Pick<HttpClient, 'text' | 'bytes'>;
 
 export interface LiveTransportOptions {
   /** MaxPreps reads (default: a MaxPrepsClient, ≤3 concurrent, ≥500 ms spacing). */
@@ -213,50 +118,11 @@ export class LiveTransport implements Transport {
       throw new TransportError((err as Error).message, '', null);
     }
     try {
-      switch (key.kind) {
-        case 'maxpreps-bootstrap':
-        case 'maxpreps-league-meta':
-        case 'maxpreps-standings':
-        case 'maxpreps-schedule':
-          return await this.maxpreps.raw(url);
-        case 'scval-pdf-text': {
-          const res = await this.http.bytes(url);
-          return { url: res.url, httpStatus: res.httpStatus, body: this.toText(res.body) };
-        }
-        case 'official-revision': {
-          const res = await this.http.bytes(url, '*/*');
-          return { url: res.url, httpStatus: res.httpStatus, body: sha256Hex(res.body) };
-        }
-        case 'official-changes': {
-          const res = await this.http.text(url);
-          const marker = getLeague(key.league).officialChanges?.cellMarker ?? '';
-          const cell = officialChangesCellText(res.body, marker);
-          if (cell === null) {
-            throw new TransportError(`no <td> containing "${marker}" on the page`, url, res.httpStatus);
-          }
-          return { url: res.url, httpStatus: res.httpStatus, body: sha256Hex(cell) };
-        }
-        case 'sblive-scores':
-        case 'sblive-team-games': {
-          const res = await this.sblive.text(url);
-          return { url: res.url, httpStatus: res.httpStatus, body: res.body };
-        }
-        case 'vnn-ics':
-        case 'ccs-ical': {
-          const res = await this.http.text(url, 'text/calendar,text/plain,*/*');
-          return { url: res.url, httpStatus: res.httpStatus, body: res.body };
-        }
-        case 'scval-standings-index':
-        case 'ccs-bracket':
-        case 'cifss-scores': {
-          const res = await this.http.text(url);
-          return { url: res.url, httpStatus: res.httpStatus, body: res.body };
-        }
-        case 'sds-bracket-sheet': {
-          const res = await this.http.text(url, 'text/csv,text/plain,*/*');
-          return { url: res.url, httpStatus: res.httpStatus, body: res.body };
-        }
-      }
+      return await specOf(key).fetch(
+        { maxpreps: this.maxpreps, http: this.http, sblive: this.sblive, toText: (b) => this.toText(b) },
+        url,
+        key,
+      );
     } catch (err) {
       throw asTransportError(err, url);
     }
@@ -298,28 +164,7 @@ export interface RecordingOptions {
 
 /** File extension of a recorded resource (SPEC §7.3). */
 export function recordedExtension(key: ResourceKey): string {
-  switch (key.kind) {
-    case 'maxpreps-league-meta':
-    case 'maxpreps-standings':
-    case 'maxpreps-schedule':
-      return '.json';
-    case 'maxpreps-bootstrap': // an HTML page, whatever host it lives on
-    case 'scval-standings-index':
-    case 'sblive-scores':
-    case 'sblive-team-games':
-    case 'ccs-bracket':
-    case 'cifss-scores':
-      return '.html';
-    case 'vnn-ics':
-    case 'ccs-ical':
-      return '.ics';
-    case 'scval-pdf-text':
-    case 'official-revision':
-    case 'official-changes':
-      return '.txt';
-    case 'sds-bracket-sheet':
-      return '.csv';
-  }
+  return specOf(key).ext;
 }
 
 /**

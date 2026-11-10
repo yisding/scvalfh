@@ -5,6 +5,7 @@
  */
 
 import type { CifssSectionKey } from '../sources/cifss';
+import type { RawResponse } from '../sources/http';
 import type {
   CcsCalendarEvent, CcsDivisionName, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
@@ -71,12 +72,7 @@ export function resourcePath(key: ResourceKey): string {
   }
 }
 
-export interface RawResponse {
-  url: string;
-  httpStatus: number;
-  body: string;
-  upstreamModifiedOn?: string;
-}
+export type { RawResponse };
 
 export interface Transport {
   readonly mode: 'live' | 'fixture' | 'recording';

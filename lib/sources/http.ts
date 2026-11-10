@@ -1,9 +1,9 @@
 /**
  * Minimal HTTP transport shared by the SECONDARY sources (si.com, scval.com, cifccs.org, VNN).
  *
- * `lib/sources/maxpreps.ts` keeps its own copy of this logic on purpose: the primary client is
- * JSON-and-zod-only, carries the descriptive User-Agent, and its retry semantics are pinned by
- * tests. The secondary sources need three things it does not have — a per-source User-Agent
+ * `lib/sources/maxpreps.ts` keeps its own attempt loop on purpose (it shares only the rate gate,
+ * the backoff delay and the Retry-After reading below): the primary client is JSON-and-zod-only,
+ * carries the descriptive User-Agent, and its retry semantics are pinned by tests. The secondary sources need three things it does not have — a per-source User-Agent
  * (si.com gates on a browser UA), binary bodies (PDFs), and a `never throw` mode so a failure
  * becomes a SourceStatus row instead of aborting the cron (SPEC §5.3).
  *
@@ -82,10 +82,25 @@ export interface HttpClientOptions {
   onLog?: (line: string) => void;
 }
 
-const sleepReal = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+/**
+ * The raw body and HTTP status of one upstream resource: what a pipeline transport serves
+ * (lib/pipeline/contract.ts Transport.get) and what MaxPrepsClient.raw returns. Declared here, with
+ * the clients, so lib/sources never imports lib/pipeline.
+ */
+export interface RawResponse {
+  url: string;
+  httpStatus: number;
+  body: string;
+  upstreamModifiedOn?: string;
+}
 
-/** Concurrency limiter with a minimum spacing between request STARTS. */
-class Gate {
+export const sleepReal = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/**
+ * Concurrency limiter with a minimum spacing between request STARTS. Shared by HttpClient and
+ * MaxPrepsClient (lib/sources/maxpreps.ts); each client owns its own instance, so their budgets stay separate.
+ */
+export class RateGate {
   private active = 0;
   private lastStart = 0;
   private readonly waiting: Array<() => void> = [];
@@ -119,7 +134,7 @@ export class HttpClient {
   private readonly timeoutMs: number;
   private readonly maxAttempts: number;
   private readonly sleep: (ms: number) => Promise<void>;
-  private readonly gate: Gate;
+  private readonly gate: RateGate;
   private readonly onLog: (line: string) => void;
 
   constructor(opts: HttpClientOptions = {}) {
@@ -129,7 +144,7 @@ export class HttpClient {
     this.maxAttempts = Math.max(1, opts.attempts ?? 3);
     this.sleep = opts.sleep ?? sleepReal;
     this.onLog = opts.onLog ?? (() => {});
-    this.gate = new Gate(
+    this.gate = new RateGate(
       Math.min(3, Math.max(1, opts.concurrency ?? 2)),
       Math.max(0, opts.spacingMs ?? 500),
       this.sleep,
@@ -205,10 +220,8 @@ export class HttpClient {
   }
 
   /** 1 s → 2 s → 4 s with ±20 % jitter, or Retry-After when the server sent one. */
-  private async backoff(attempt: number, retryAfterMs: number | null): Promise<void> {
-    const base = retryAfterMs ?? 1000 * 2 ** (attempt - 1);
-    const jitter = base * 0.2 * (Math.random() * 2 - 1);
-    const ms = Math.max(0, Math.round(base + jitter));
+  private async backoff(attempt: number, retryAfter: number | null): Promise<void> {
+    const ms = backoffDelayMs(attempt, retryAfter);
     this.onLog(`retry in ${ms}ms (attempt ${attempt})`);
     await this.sleep(ms);
   }
@@ -222,10 +235,20 @@ export class HttpClient {
  */
 export const MAX_RETRY_AFTER_MS = 30_000;
 
-function retryAfterMs(res: Response): number | null {
+export function retryAfterMs(res: Response): number | null {
   const seconds = Number(res.headers.get('retry-after'));
   if (!Number.isFinite(seconds) || seconds <= 0) return null;
   return Math.min(seconds * 1000, MAX_RETRY_AFTER_MS);
+}
+
+/**
+ * The wait before retry `attempt + 1`: 1 s → 2 s → 4 s, or `retryAfter` when the server sent one,
+ * with ±20 % jitter. Pure (inject `random` in tests); both clients' backoff calls it, then log and sleep.
+ */
+export function backoffDelayMs(attempt: number, retryAfter: number | null, random: () => number = Math.random): number {
+  const base = retryAfter ?? 1000 * 2 ** (attempt - 1);
+  const jitter = base * 0.2 * (random() * 2 - 1);
+  return Math.max(0, Math.round(base + jitter));
 }
 
 /** The five named HTML entities SBLive's `data-react-props` attribute can contain (SPEC §1.2). */
