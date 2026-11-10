@@ -186,8 +186,8 @@ const commitCitedBy = (html: string) =>
   new Set(commitSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
 
 /** The pages and blocks NO_TIES_SPORT_CLAIMS is not applied to yet (see the loop below). */
-const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set(['leaders.html', 'jv.html']);
-const NO_TIES_SKIPPED_BLOCKS = ['elo', 'roster', 'player-stats', 'jv'] as const;
+const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set<string>([]);
+const NO_TIES_SKIPPED_BLOCKS: readonly string[] = [];
 /** Strings the snapshot prints verbatim, which are names and never this site's copy. */
 const PROPER_NOUNS: string[] = getSnapshot().games.flatMap((g) =>
   [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),

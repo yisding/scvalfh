@@ -1268,12 +1268,27 @@ What is basketball's own (each from a document read 2026-11-10, cited in
   (`DATE_CORRECTIONS`), which is the date MaxPreps has for all seven games.
 - **CCS**: De Anza's top three and the El Camino champion are automatic (Article VI §2.1). The playoffs open
   with a first round on Fri Feb 19 (`keyDates.firstRound`, read through `ccsFirstDay`), before the
-  quarterfinals; the Open Division's final is Fri Feb 26 and Divisions 1-5's Sat Feb 27. The field size and
+  quarterfinals, and a second on Sat Feb 20 (`keyDates.secondRound`); the Open Division's final is Fri Feb 26 and Divisions 1-5's Sat Feb 27. The field size and
   at-large count are `null`: the CCS Basketball Bylaws were not read (cifccs.org answers scripts with 405).
 - **JV**: see "JV games from the league's own schedule" above.
 - **Ratings**: the Elo constants are provisional (25 Elo points per point of margin, margins capped at 20),
   and the Elo-adjusted scoring boards are not built (`Sport.ratings.adjustedScoring: null`: that model is a
-  Poisson fit of goals).
+  Poisson fit of goals). A day-by-day replay of the 114 finals of 2025-26 picked 83% of winners at a cap of
+  15 or 20 and hinted that 30-35 Elo per point may fit better (Brier 0.1291 at 25, 0.1247 at 35); one
+  unseeded season is too little to move a constant on (`lib/sports/basketball.ts` has the numbers).
+- **Player stats**: `Sport.stats.model: 'basketball'`. A player's one line (17 keys: points, field goals,
+  three-pointers, free throws, rebounds, assists, steals, blocks, turnovers, fouls, minutes, games) is read
+  from the "Shooting" and "Totals" groups of MaxPreps' rollup; there is no goalkeeper group and game notes
+  credit nobody. The team page shows four small tables, the game page a box score per side, and /leaders has
+  points, rebounds and assists per game, steals, blocks and three-pointers, beside the school boards (record,
+  league record, points per game, points allowed, average margin, Elo). No team had 2026-27 stats on
+  2026-11-10, so the parsers are tested on Palo Alto's 2025-26 sheets with invented player names
+  (`tests/fixtures/basketball/`). A roster's positions read Guard, Forward and Center.
+- **Overtime**: a game level after regulation plays extra periods until one team leads; a third overtime
+  prints "3 OT".
+- **Copy rules**: `scripts/assert-copy.ts` fails a basketball page that says goal, tie, shutout, keeper or
+  names another build's program (`NO_TIES_SPORT_CLAIMS` in `scripts/copy-rules.ts`), a tournament's own name
+  aside.
 
 What it leaves out, as soccer does: /history/2025-26, /clubs, /commits and /recruiting, si.com, the VNN
 calendars and the region toggle. MaxPreps also has a freshman season for some of these schools; the SCVAL

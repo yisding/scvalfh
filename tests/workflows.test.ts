@@ -466,6 +466,8 @@ describe('assert:prerender on a .next that has served traffic', () => {
     // One page per club of data/clubs.json (DESIGN §17), and no OG card: the clubs pages take the
     // root one.
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
+    // One JV calendar per league (app/jv/[league]), no OG card either.
+    for (const league of LEAGUE_IDS) put(`jv/${league}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);
     return root;
   }

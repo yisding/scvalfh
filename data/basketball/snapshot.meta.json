@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "c2664c2fe866c7458b86aaded859f5c42f48ee225175da8b2fd1c8b5a076b102",
+  "contentHash": "9db1210b62736a7bb7bb04147aab5e79804728fdaecd3ad20ed2d77c1ab77d26",
   "counts": {
     "byLeague": {
       "scval": {
@@ -26,7 +26,7 @@
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-10T14:16:59.037Z",
+  "fetchedAt": "2026-11-10T14:46:56.203Z",
   "leagues": [
     {
       "backfilled": 0,

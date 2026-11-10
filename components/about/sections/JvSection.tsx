@@ -56,7 +56,7 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           <p>
             Where a league&rsquo;s own schedule sets the JV games too, this site lists them from it. SCVAL&rsquo;s
             schedules give every league fixture&rsquo;s JV starting time (5:30 before a 7:00 varsity game; 3:00 or
-            4:30 on a quad day, when the boys&rsquo; and girls&rsquo; teams play at one site) and put the last JV
+            4:30 on a quad day, when four games are played at one site) and put the last JV
             round on the Monday before the last varsity night, and its by-laws make the JV round a double round
             robin like the varsity one. So each of the {official.slots} league fixtures has a JV game here: MaxPreps&rsquo;
             own row where a coach has entered it ({official.matched + official.moved} today), and otherwise a game

@@ -1,3 +1,4 @@
+import JvHomeStrip from '../components/jv/JvHomeStrip';
 import type { Metadata } from 'next';
 import { Fragment } from 'react';
 
@@ -131,6 +132,11 @@ export default function HomePage() {
           className="mt-8 md:mt-10"
         />
       ))}
+
+      {/* The way into the JV pages, under the latest varsity results: a phone's bottom bar has no JV tab. */}
+      <div data-scope="all">
+        <JvHomeStrip className="mt-8 md:mt-10" />
+      </div>
 
       {/* ONE finder over all 99 teams, outside the region blocks; only the card grids are scoped. */}
       <FindYourTeam index={data.searchIndex} className="mt-section md:mt-section-lg">
