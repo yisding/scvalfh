@@ -86,7 +86,7 @@ Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of
 flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
 Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
-The site's words (2026-10-29/30, `lib/postseason/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
+The site's words (2026-10-29/30, `lib/postseason/postseason-outcomes.ts`, `components/playoffs/team-postseason-line.ts`): a crossover card reads "For CCS
 seeding, not qualification."; only a team with an automatic berth, the play-in or at-large consideration gets the
 crossover sentence on its team line, and 6th and lower read "No automatic berth; at-large berths are the CCS
 committee’s call."; once the play-in is final its winner reads "Won the play-in" ("Won the 4th-place play-in: an

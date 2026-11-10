@@ -121,7 +121,7 @@ export interface HomeTeamView {
   played: string | null;
   /**
    * ONE line: 'If the season ended today: <label>' in the regular phase, 'Final place: <label>'
-   * later; null for a team with no league results (getTeamPostseasonLine returns null).
+   * later; null for a team with no league results (components/playoffs/team-postseason-line.ts getTeamPostseasonLine returns null).
    */
   postseason: string | null;
   /**

@@ -11,7 +11,7 @@ import type { TeamPageView } from './team-view';
 /**
  * 'MCAL tournament' | 'Super Regional' | 'San Diego Section playoffs' | 'playoff': the event a
  * result-less team has no place in. The Sunset ('no-postseason') never reaches it: its line is the
- * league's note whatever the team has played (lib/data.ts getTeamPostseasonLine).
+ * league's note whatever the team has played (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
  */
 function postseasonPhrase(league: TeamPageView['league']): string {
   switch (league.postseasonKind) {
@@ -29,7 +29,7 @@ function postseasonPhrase(league: TeamPageView['league']): string {
 /**
  * Where this team stands in its league's postseason picture (SPEC §10.5): the CCS ladder for SCVAL,
  * BVAL and PCAL, the MCAL tournament for MCAL, the Super Regional for the EAL. The copy is `getTeamPostseasonLine(slug)` from
- * lib/data.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
+ * components/playoffs/team-postseason-line.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
  *
  * - a CCS league: the ladder label, then the league's sentence (the SCVAL crossover date, BVAL's
  *   Oct 31 play-in, or "No automatic berth; …"), and `CCS playoffs →`;

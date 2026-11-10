@@ -22,7 +22,9 @@ import type { Game, Snapshot } from '../lib/types';
 import { game, withGames } from './game-builder';
 
 type DataModule = typeof import('../lib/data');
+type LineModule = typeof import('../components/playoffs/team-postseason-line');
 let data: DataModule;
+let dataLine: LineModule;
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 
@@ -34,6 +36,7 @@ beforeAll(async () => {
   writeFileSync(file, JSON.stringify(loadSnapshot(raw)));
   process.env.SCVAL_SNAPSHOT = file;
   data = await import('../lib/data');
+  dataLine = await import('../components/playoffs/team-postseason-line');
 });
 
 afterAll(() => {
@@ -441,40 +444,40 @@ describe('data: postseason', () => {
   });
 
   it('writes a team postseason line, and none for a team without results', () => {
-    const sf = data.getTeamPostseasonLine('saint-francis')!;
+    const sf = dataLine.getTeamPostseasonLine('saint-francis')!;
     expect(sf.label).toBe('Automatic qualifier');
     expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
     expect(sf.href).toBe('/playoffs#scval');
     expect(sf.linkText).toBe('CCS playoffs');
     // The crossover sentence is for the teams those games are about: the 5th-place at-large candidate keeps it…
-    const fremont = data.getTeamPostseasonLine('fremont')!;
+    const fremont = dataLine.getTeamPostseasonLine('fremont')!;
     expect(fremont.label).toBe('At-large consideration');
     expect(fremont.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
     // …a team 6th or lower (Cupertino, 7th in De Anza) gets the ladder's own words, never the crossover's.
-    const cupertino = data.getTeamPostseasonLine('cupertino')!;
+    const cupertino = dataLine.getTeamPostseasonLine('cupertino')!;
     expect(cupertino.label).toBe('No automatic berth');
     expect(cupertino.sentence).toBe('No automatic berth; at-large berths are the CCS committee’s call.');
     expect(cupertino.sentence).not.toMatch(/crossover|eliminat/i);
-    expect(data.getTeamPostseasonLine('leigh')).toBeNull();
-    expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
-    expect(data.getTeamPostseasonLine('chico')).toBeNull();
-    expect(data.getTeamPostseasonLine('nope')).toBeNull();
+    expect(dataLine.getTeamPostseasonLine('leigh')).toBeNull();
+    expect(dataLine.getTeamPostseasonLine('tamalpais')).toBeNull();
+    expect(dataLine.getTeamPostseasonLine('chico')).toBeNull();
+    expect(dataLine.getTeamPostseasonLine('nope')).toBeNull();
     // A San Diego team with no league game yet: no place, no line (never placed by merit).
-    expect(data.getTeamPostseasonLine('la-jolla')).toBeNull();
+    expect(dataLine.getTeamPostseasonLine('la-jolla')).toBeNull();
   });
 
   it('writes the Sunset’s Tournament of Champions note for every Sunset team, played or not, and whether it is one of the eight', () => {
     const sunset = getLeague('sunset');
     if (sunset.postseason.kind !== 'no-postseason') throw new Error('the Sunset has no postseason');
     // Edison is one of the eight in the Tournament of Champions (SectionConfig.outsideTournament, DESIGN §24.12).
-    expect(data.getTeamPostseasonLine('edison')).toEqual({
+    expect(dataLine.getTeamPostseasonLine('edison')).toEqual({
       label: 'In the Tournament of Champions',
       sentence: `${sunset.postseason.note} Edison is one of its eight teams.`,
       href: '/playoffs#toc',
       linkText: 'Tournament of Champions',
       caveat: null,
     });
-    expect(data.getTeamPostseasonLine('edison')!.sentence).not.toMatch(/\btop\b/i);
+    expect(dataLine.getTeamPostseasonLine('edison')!.sentence).not.toMatch(/\btop\b/i);
   });
 
   it('draws neither a projection nor a bracket for the Sunset or a San Diego league', () => {
@@ -490,10 +493,10 @@ describe('data: postseason', () => {
     if (bval.postseason.kind !== 'ccs-ladder') throw new Error('BVAL is a CCS ladder league');
     const ps = bval.postseason;
     const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in')!;
-    expect(data.playInClause(bval, ps, playIn)).toBe(
+    expect(dataLine.playInClause(bval, ps, playIn)).toBe(
       'Mt. Hamilton #4 plays at the Santa Teresa champion Sat Oct 31, 11 AM, for BVAL’s fourth automatic CCS berth',
     );
-    expect(data.playInClause(bval, { ...ps, autoBerths: 5 }, playIn)).toMatch(/for BVAL’s fifth automatic CCS berth$/);
+    expect(dataLine.playInClause(bval, { ...ps, autoBerths: 5 }, playIn)).toMatch(/for BVAL’s fifth automatic CCS berth$/);
   });
 });
 
@@ -559,6 +562,7 @@ describe('data: the secondary-source read API', () => {
  */
 describe('data: an EAL table with results', () => {
   let eal: DataModule;
+  let ealLine: LineModule;
   let pending: Game;
 
   beforeAll(async () => {
@@ -597,6 +601,7 @@ describe('data: an EAL table with results', () => {
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
     eal = await import('../lib/data');
+    ealLine = await import('../components/playoffs/team-postseason-line');
   });
 
   it('counts the 1 v 1 win for Chico in the table and in both forms', () => {
@@ -641,14 +646,14 @@ describe('data: an EAL table with results', () => {
   });
 
   it('writes the Super Regional line for a placed EAL team, and none for one without results', () => {
-    expect(eal.getTeamPostseasonLine('chico')).toEqual({
+    expect(ealLine.getTeamPostseasonLine('chico')).toEqual({
       label: 'Super Regional place',
       sentence: 'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
       href: '/playoffs#eal',
       linkText: 'Postseason',
       caveat: null,
     });
-    expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
+    expect(ealLine.getTeamPostseasonLine('bella-vista')).toBeNull();
   });
 });
 
@@ -668,6 +673,7 @@ describe('data: an EAL table with results', () => {
  */
 describe('data: Southern California tables with results', () => {
   let socal: DataModule;
+  let socalLine: LineModule;
   let henry: Game;
   let crossDivision: Game;
 
@@ -721,6 +727,7 @@ describe('data: Southern California tables with results', () => {
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
     socal = await import('../lib/data');
+    socalLine = await import('../components/playoffs/team-postseason-line');
   });
 
   it('counts both City Western games, flagged or not, and the shootout win as a win', () => {
@@ -764,7 +771,7 @@ describe('data: Southern California tables with results', () => {
   it('writes the San Diego postseason line from the qualification line, never a "top N"', () => {
     const city = getLeague('city');
     if (city.postseason.kind !== 'section-playoffs') throw new Error('City plays the San Diego Section playoffs');
-    const first = socal.getTeamPostseasonLine('la-jolla')!;
+    const first = socalLine.getTeamPostseasonLine('la-jolla')!;
     // Two teams are level on 3 points at the top, so the first place spans 1st and 2nd.
     expect(first.label).toBe('1st: at least a play-in if named league champion or placed by the Section from its power rankings');
     expect(first.sentence).toBe(
@@ -772,12 +779,12 @@ describe('data: Southern California tables with results', () => {
     );
     expect(first.href).toBe('/playoffs#city');
     expect(first.linkText).toBe('San Diego Section playoffs');
-    const below = socal.getTeamPostseasonLine('canyon-hills')!;
+    const below = socalLine.getTeamPostseasonLine('canyon-hills')!;
     expect(below.label).toBe('Placed by the Section');
     expect(below.sentence).not.toMatch(/\btop (six|\d)/i);
-    expect(socal.getTeamPostseasonLine('mission-bay')).toBeNull();
-    expect(socal.getTeamPostseasonLine('marina')!.label).toBe('Not in the Tournament of Champions');
-    expect(socal.getTeamPostseasonLine('marina')!.sentence).toMatch(/Marina is not one of its eight teams\.$/);
+    expect(socalLine.getTeamPostseasonLine('mission-bay')).toBeNull();
+    expect(socalLine.getTeamPostseasonLine('marina')!.label).toBe('Not in the Tournament of Champions');
+    expect(socalLine.getTeamPostseasonLine('marina')!.sentence).toMatch(/Marina is not one of its eight teams\.$/);
   });
 
   it('holds the site in its regular season while Metro has not started, and completes once every league has', () => {
@@ -810,7 +817,7 @@ describe('data: Southern California tables with results', () => {
  * seat, settles it to the team that played, as a listed play-in does on the site.
  */
 describe('data: CCS ladder lines after the play-ins', () => {
-  let after: DataModule;
+  let afterLine: LineModule;
   const CCS_RESULTS = 'From the results as posted; CCS’s bracket is the official record.';
   let bvalHost = '';
   let bvalVisitor = '';
@@ -839,18 +846,18 @@ describe('data: CCS ladder lines after the play-ins', () => {
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
-    after = await import('../lib/data');
+    afterLine = await import('../components/playoffs/team-postseason-line');
   }, 600_000);
 
   it('the SCVAL play-in: Los Altos won it, Santa Clara goes to CCS for at-large consideration', () => {
-    expect(after.getTeamPostseasonLine('los-altos')).toEqual({
+    expect(afterLine.getTeamPostseasonLine('los-altos')).toEqual({
       label: 'Won the play-in',
       sentence: 'Won the 4th-place play-in: an automatic CCS qualifier.',
       href: '/playoffs#scval',
       linkText: 'CCS playoffs',
       caveat: CCS_RESULTS,
     });
-    expect(after.getTeamPostseasonLine('santa-clara')).toMatchObject({
+    expect(afterLine.getTeamPostseasonLine('santa-clara')).toMatchObject({
       label: 'Lost the play-in',
       sentence: 'Lost the play-in; SCVAL submits the loser for at-large consideration.',
       caveat: CCS_RESULTS,
@@ -861,35 +868,35 @@ describe('data: CCS ladder lines after the play-ins', () => {
     // This snapshot is Sat Oct 31: the window is over, so the sentence is in the past tense.
     const result = 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct 29; CCS uses it when it seeds.';
     for (const slug of ['mitty', 'st-ignatius']) {
-      expect(after.getTeamPostseasonLine(slug), slug).toMatchObject({
+      expect(afterLine.getTeamPostseasonLine(slug), slug).toMatchObject({
         label: 'Automatic qualifier',
         sentence: `The SCVAL crossover and the 4th-place play-in were Thu Oct 29 and Fri Oct 30. ${result}`,
         caveat: CCS_RESULTS,
       });
     }
     // Los Gatos' crossover is not in: the projected words and caveat, unchanged.
-    expect(after.getTeamPostseasonLine('los-gatos')).toMatchObject({
+    expect(afterLine.getTeamPostseasonLine('los-gatos')).toMatchObject({
       sentence: 'The SCVAL crossover and the 4th-place play-in were Thu Oct 29 and Fri Oct 30.',
       caveat: 'Projected from the table today; nothing here is official.',
     });
     // The Cupertino rule holds: a team 6th or lower gets the ladder's own words, never a crossover sentence.
-    const cupertino = after.getTeamPostseasonLine('cupertino')!;
+    const cupertino = afterLine.getTeamPostseasonLine('cupertino')!;
     expect(cupertino.sentence).toBe('No automatic berth; at-large berths are the CCS committee’s call.');
   });
 
   it('the BVAL play-in: the Santa Teresa champion took the fourth berth, Mt. Hamilton #4 has no automatic berth left', () => {
-    expect(after.getTeamPostseasonLine(bvalHost), bvalHost).toMatchObject({
+    expect(afterLine.getTeamPostseasonLine(bvalHost), bvalHost).toMatchObject({
       label: 'Won the play-in',
       sentence: 'Won the play-in: BVAL’s fourth automatic CCS berth.',
       caveat: CCS_RESULTS,
     });
-    expect(after.getTeamPostseasonLine(bvalVisitor), bvalVisitor).toMatchObject({
+    expect(afterLine.getTeamPostseasonLine(bvalVisitor), bvalVisitor).toMatchObject({
       label: 'Lost the play-in',
       sentence: 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS committee’s call.',
       caveat: CCS_RESULTS,
     });
     for (const slug of ['los-altos', 'santa-clara', bvalHost, bvalVisitor, 'mitty']) {
-      const line = after.getTeamPostseasonLine(slug)!;
+      const line = afterLine.getTeamPostseasonLine(slug)!;
       expect(`${line.label} ${line.sentence}`, slug).not.toMatch(/eliminat/i);
     }
   });

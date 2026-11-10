@@ -4356,7 +4356,7 @@ tournament winner "also receives a pennant" (General Rules, Pennants 3). The sta
 labels remain while the picture is only projected from the table; the optional play-in clause drops once its day
 has passed.
 
-**The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (lib/data.ts) replaces the component's
+**The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (components/playoffs/team-postseason-line.ts) replaces the component's
 unconditional "Projected from the table today; nothing here is official.": a CCS ladder prints it, a league
 tournament prints it while its picture is still read from the table and "From the results as posted; nothing
 here is official." once a tournament result is in, and the EAL (every team is in the six), a San Diego league (the

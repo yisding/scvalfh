@@ -1038,10 +1038,12 @@ sport definition). The rest is grouped by domain:
 | `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
 
 There are no `index.ts` barrels: several `lib/` modules read a data file or assert their config when
-imported, and a barrel would run all of that (and pull in zod) for any one symbol. Two tests hold the
+imported, and a barrel would run all of that (and pull in zod) for any one symbol. Three tests hold the
 boundaries: `tests/ui/client-boundary.test.ts` keeps every `'use client'` module to a short allowlist
-of client-safe `lib/` modules, and `tests/build-only-boundary.test.ts` keeps `app/` and
-`components/` from reaching the build-time-only folders above.
+of client-safe `lib/` modules, `tests/build-only-boundary.test.ts` keeps `app/` and
+`components/` from reaching the build-time-only folders above, and `tests/data-boundary.test.ts`
+freezes the list of `lib/` domain modules that import the `lib/data` snapshot singleton (it may
+shrink, never grow).
 
 ## Local development
 

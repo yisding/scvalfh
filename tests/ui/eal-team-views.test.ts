@@ -29,10 +29,12 @@ import { textOf } from './html-text';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
+type Line = typeof import('../../components/playoffs/team-postseason-line');
 type GameViewModule = typeof import('../../components/game/game-view');
 
 interface Loaded {
   d: Data;
+  pl: Line;
   l: Leagues;
   v: View;
   gm: GameViewModule;
@@ -55,6 +57,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   process.env.SCVAL_SNAPSHOT = snapshotPath;
   vi.resetModules();
   const d = await import('../../lib/data');
+  const pl = await import('../../components/playoffs/team-postseason-line');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
   const gm = await import('../../components/game/game-view');
@@ -63,6 +66,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   const indexPage = (await import('../../app/teams/page')).default;
   return {
     d,
+    pl,
     l,
     v,
     gm,
@@ -136,10 +140,10 @@ describe('an EAL team page (/teams/davis)', () => {
     const text = textOf(html);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain(`${ps.name} picture`);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain('Super Regional picture');
-    const line = eal.d.getTeamPostseasonLine('davis');
-    expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
+    const line = eal.pl.getTeamPostseasonLine('davis');
+    expect(line, 'components/playoffs/team-postseason-line.ts getTeamPostseasonLine').not.toBeNull();
     // Nothing is projected for the EAL (every team is in the six), so the card carries no "Projected" line.
-    expect(line?.caveat, 'lib/data.ts caveat').toBeNull();
+    expect(line?.caveat, 'components/playoffs/team-postseason-line.ts caveat').toBeNull();
     expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
       'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',

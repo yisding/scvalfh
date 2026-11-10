@@ -527,7 +527,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     expect(tam.meta, `${HV}: single-division meta`).toBe('1st · MCAL');
     for (const v of data.teamViews) {
       // A team with no result is never placed, except that a Sunset team's line is the league's "no
-      // playoffs" note whatever it has played (lib/data getTeamPostseasonLine).
+      // playoffs" note whatever it has played (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
       const noPostseason = leagues.NO_POSTSEASON_LEAGUE_IDS.includes(leagues.getLeague(cardTeamLeague(v.slug)).id);
       if (!v.hasResults && !noPostseason) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));

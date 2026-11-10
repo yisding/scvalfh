@@ -26,10 +26,12 @@ import { textOf } from './html-text';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
+type Line = typeof import('../../components/playoffs/team-postseason-line');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let corpusPath: string;
 let data: Data;
+let dataLine: Line;
 let leagues: Leagues;
 let view: View;
 let renderTeam: (slug: string) => Promise<string>;
@@ -39,12 +41,14 @@ let describeTeam: (slug: string) => Promise<string | undefined>;
 async function loadModules() {
   vi.resetModules();
   const d = await import('../../lib/data');
+  const pl = await import('../../components/playoffs/team-postseason-line');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const indexPage = (await import('../../app/teams/page')).default;
   return {
     d,
+    pl,
     l,
     v,
     renderTeam: async (slug: string) => {
@@ -64,6 +68,7 @@ beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusPath;
   const m = await loadModules();
   data = m.d;
+  dataLine = m.pl;
   leagues = m.l;
   view = m.v;
   renderTeam = m.renderTeam;
@@ -256,38 +261,38 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
   });
 });
 
-describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-view)', () => {
+describe('postseason lines per kind (components/playoffs/team-postseason-line.ts getTeamPostseasonLine via team-view)', () => {
   it('CCS ladder leagues link the CCS page; MCAL links its tournament; the EAL states its Super Regional; no CCS sentence outside CCS', () => {
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
       const line = v.postseasonLine;
       if (!v.hasResults) continue;
-      expect(line, `lib/data.ts getTeamPostseasonLine ${team.slug}`).not.toBeNull();
+      expect(line, `components/playoffs/team-postseason-line.ts getTeamPostseasonLine ${team.slug}`).not.toBeNull();
       if (!line) continue;
       if (v.league.postseasonKind === 'ccs-ladder') {
         // A team with a crossover or play-in still to play goes straight to its league's pairing cards.
-        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(
+        expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe(
           view.inOpenPairing(team, v.today) ? `/playoffs#${team.league}-pairings` : `/playoffs#${team.league}`,
         );
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('CCS playoffs');
+        expect(line.linkText, `components/playoffs/team-postseason-line.ts ${team.slug} link`).toBe('CCS playoffs');
       } else if (v.league.postseasonKind === 'unbracketed-tournament') {
-        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason');
-        expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
+        expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
+        expect(line.linkText, `components/playoffs/team-postseason-line.ts ${team.slug} link`).toBe('Postseason');
+        expect(line.sentence, `components/playoffs/team-postseason-line.ts ${team.slug} sentence`).toBe(
           'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
         );
-        expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
+        expect(`${line.label} ${line.sentence}`, `components/playoffs/team-postseason-line.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
       } else if (v.league.postseasonKind === 'no-postseason' || v.league.postseasonKind === 'section-playoffs') {
         // The Southern California kinds: their cards on /playoffs, never a CCS or "top N" word.
-        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
-        expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|top \w+ (make|qualify)/i);
+        expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
+        expect(`${line.label} ${line.sentence}`, `components/playoffs/team-postseason-line.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|top \w+ (make|qualify)/i);
       } else {
-        expect(line.href, `lib/data.ts ${team.slug} href`).toBe('/playoffs/mcal');
-        expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('MCAL tournament');
-        expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
+        expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe('/playoffs/mcal');
+        expect(line.linkText, `components/playoffs/team-postseason-line.ts ${team.slug} link`).toBe('MCAL tournament');
+        expect(line.sentence, `components/playoffs/team-postseason-line.ts ${team.slug} sentence`).toBe(
           'Top six make the MCAL tournament: quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed), final Fri Oct 30 at Tamalpais; seeds 1-2 get byes to the semifinals.',
         );
-        expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier/i);
+        expect(`${line.label} ${line.sentence}`, `components/playoffs/team-postseason-line.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier/i);
       }
     }
     const si = view.buildTeamPageView('st-ignatius')!;
@@ -324,11 +329,11 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
   });
 
   it('the honesty line is the accessor’s: a CCS ladder is projected, a tournament still read from the table too', async () => {
-    expect(data.getTeamPostseasonLine('saint-francis')!.caveat).toBe('Projected from the table today; nothing here is official.');
+    expect(dataLine.getTeamPostseasonLine('saint-francis')!.caveat).toBe('Projected from the table today; nothing here is official.');
     expect(textOf(await renderTeam('saint-francis'))).toContain('Projected from the table today; nothing here is official.');
     // The corpus snapshot predates the MCAL tournament, so its picture is still a projection from the table.
     expect(data.getLeagueTournament('mcal').status).toBe('projected');
-    expect(data.getTeamPostseasonLine('redwood')!.caveat).toBe('Projected from the table today; nothing here is official.');
+    expect(dataLine.getTeamPostseasonLine('redwood')!.caveat).toBe('Projected from the table today; nothing here is official.');
   });
 
   it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {
@@ -780,7 +785,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
 });
 
 describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
-  let zeroed: { d: Data; v: View; renderTeam: (slug: string) => Promise<string> };
+  let zeroed: { d: Data; pl: Line; v: View; renderTeam: (slug: string) => Promise<string> };
   const slug = 'marin-academy';
 
   beforeAll(async () => {
@@ -802,11 +807,11 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     writeFileSync(file, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = file;
     const m = await loadModules();
-    zeroed = { d: m.d, v: m.v, renderTeam: m.renderTeam };
+    zeroed = { d: m.d, pl: m.pl, v: m.v, renderTeam: m.renderTeam };
   }, 600_000);
 
   it('getTeamPostseasonLine is null and the block says "No results reported yet."', async () => {
-    expect(zeroed.d.getTeamPostseasonLine(slug), 'lib/data.ts getTeamPostseasonLine gp 0').toBeNull();
+    expect(zeroed.pl.getTeamPostseasonLine(slug), 'components/playoffs/team-postseason-line.ts getTeamPostseasonLine gp 0').toBeNull();
     const v = zeroed.v.buildTeamPageView(slug)!;
     expect(v.hasResults, 'components/teams/team-view.ts hasResults').toBe(false);
     const text = textOf(await zeroed.renderTeam(slug));

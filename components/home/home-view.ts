@@ -36,14 +36,13 @@ import {
   getStandingFor,
   getStandings,
   getTeamById,
-  getTeamPostseasonLine,
   getTeamSearchIndex,
   getTeams,
   getToday,
   getUpcoming,
-  playInClause,
   type LeagueSummary,
 } from '../../lib/data';
+import { getTeamPostseasonLine, playInClause } from '../playoffs/team-postseason-line';
 import {
   EM_DASH,
   dateSpan,
@@ -937,7 +936,7 @@ export function buildTeamViews(): HomeTeamView[] {
       pairingsByLeague.set(league.id, pairings);
     }
     // A Sunset or LA independent team's line is whether it is in the Tournament of Champions, not a place: no
-    // 'Final place:' lead and no short rung form (lib/data.ts getTeamPostseasonLine).
+    // 'Final place:' lead and no short rung form (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
     const outcomeLine =
       league.postseason.kind === 'no-postseason' ||
       (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||

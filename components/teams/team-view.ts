@@ -19,17 +19,16 @@ import {
   getStandings,
   getTeamBySlug,
   getTeamForm,
-  getTeamPostseasonLine,
   getTeams,
   getTeamsGrouped,
   getToday,
   type FormGame,
   type LeagueSummary,
   type StandingContext,
-  type TeamPostseasonLine,
   getLeagueTournament,
   getLeaguePairings,
 } from '../../lib/data';
+import { getTeamPostseasonLine, type TeamPostseasonLine } from '../playoffs/team-postseason-line';
 import {
   dateSpan,
   gameWhen,
