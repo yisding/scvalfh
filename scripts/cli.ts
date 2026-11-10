@@ -17,8 +17,9 @@
  * script can import it without starting a run.
  */
 
+import { realpathSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 export async function runCli(
   main: (argv: readonly string[]) => Promise<number> | number,
@@ -34,11 +35,33 @@ export async function runCli(
   process.exit(code);
 }
 
+/** The realpath of `p`, or undefined when it does not exist. */
+function realpathOrUndefined(p: string): string | undefined {
+  try {
+    return realpathSync(p);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Whether the module at `importMetaUrl` is the script node was started with (`argv1`, normally
+ * process.argv[1]). Both sides are compared as realpaths, because node's loader gives a module its
+ * realpath while argv[1] keeps the path the caller typed: a symlinked checkout, a symlinked temp
+ * directory or `tsx scripts/<name>` without the extension must all still count as the entry point.
+ */
+export function isEntryPoint(importMetaUrl: string, argv1: string | undefined = process.argv[1]): boolean {
+  if (argv1 === undefined) return false;
+  const self = fileURLToPath(importMetaUrl);
+  const selfReal = realpathOrUndefined(self) ?? self;
+  const typed = path.resolve(argv1);
+  return [typed, `${typed}.ts`].some((candidate) => realpathOrUndefined(candidate) === selfReal);
+}
+
 /** `runCli(main)` when the module at `importMetaUrl` is the script node was started with; else nothing. */
 export function runCliIfMain(
   importMetaUrl: string,
   main: (argv: readonly string[]) => Promise<number> | number,
 ): void {
-  const invokedDirectly = process.argv[1] !== undefined && importMetaUrl === pathToFileURL(path.resolve(process.argv[1])).href;
-  if (invokedDirectly) void runCli(main);
+  if (isEntryPoint(importMetaUrl)) void runCli(main);
 }
