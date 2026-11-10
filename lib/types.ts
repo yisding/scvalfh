@@ -338,6 +338,8 @@ export interface OfficialStamp {
   /** OfficialFixture.id */
   fixtureId: string;
   pass: 'same-date' | 'same-date-swapped' | 'rescheduled';
+  /** The fixture's JV game, where the league's schedule gives one (OfficialFixture.jv); lib/jv/jv-official.ts reads it. */
+  jv?: { dateKey: string; time: string | null };
 }
 
 /** How the San Diego Section's bracket sheet entered a published game (lib/postseason/sds-sheet-results.ts). */

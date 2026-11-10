@@ -1,4 +1,5 @@
-import { JvFootnote } from './TeamJvGames';
+import { JV_SCHEDULE_TAG, JvFootnote } from './TeamJvGames';
+import Tag from '../ui/Tag';
 import type { JvListSummary, JvRowView } from './jv-view';
 import { clockText, describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
@@ -15,9 +16,18 @@ import StatusLabel, { GameChips } from '../ui/StatusLabel';
 export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[] } }) {
   return (
     <>
+      <JvGameList rows={view.rows} />
+      <JvFootnote summary={view} />
+    </>
+  );
+}
+
+/** The card of rows alone, without the footnote: the /jv lists print one footnote under several days' cards. */
+export function JvGameList({ rows }: { rows: readonly JvRowView[] }) {
+  return (
       <div className="sx-card sx-flush sx-bleed md:max-w-3xl">
         <ol className="sx-list">
-          {view.rows.map(({ game, differsNote, chips, nonLeague }) => {
+          {rows.map(({ game, differsNote, chips, nonLeague, fromSchedule }) => {
             const display = describeGame(game);
             const isTime = statusLabelIsTime(game, display.statusLabel);
             return (
@@ -30,7 +40,10 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
                     .filter(Boolean)
                     .join(' ')}
                 >
-                  <span className="sr-only">{display.sentence}</span>
+                  <span className="sr-only">
+                    {display.sentence}
+                    {fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}
+                  </span>
                   {/* Two FIXED slots, as GameRow's lead has three: the clock or the status (24px,
                       room for SCORE NOT REPORTED's two 12px caps lines — 135px will not fit the
                       104px column on one), then the chips (20px, reserved when there are none).
@@ -50,6 +63,7 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
                     </span>
                     <span className="flex min-h-5 items-center">
                       {chips ? <GameChips display={display} /> : null}
+                      {fromSchedule ? <Tag className={chips ? 'ml-1' : undefined}>{JV_SCHEDULE_TAG.text}</Tag> : null}
                     </span>
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5" aria-hidden="true">
@@ -63,8 +77,6 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
           })}
         </ol>
       </div>
-      <JvFootnote summary={view} />
-    </>
   );
 }
 

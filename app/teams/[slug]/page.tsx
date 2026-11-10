@@ -362,6 +362,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 jvStanding?.line ??
                 (jv.rows.length > 0
                   ? [
+                      // The JV record over the finals listed below, once there is one.
+                      jv.record ? jv.record.overall : null,
                       `${jv.played} played`,
                       jv.toCome > 0 ? `${jv.toCome} to come` : null,
                       jv.noScore > 0 ? `${jv.noScore} no score` : null,

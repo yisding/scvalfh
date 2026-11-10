@@ -35,10 +35,15 @@ export function TeamJvGames({ view }: { view: TeamJvView }) {
       {view.slot ? <p className="mt-0 mb-3 max-w-prose text-meta text-ink-2">{view.slot.note}</p> : null}
       <div className="sx-card sx-flush sx-bleed">
         <ol className="sx-list">
-          {view.rows.map(({ game, differsNote, chips, nonLeague }) => (
+          {view.rows.map(({ game, differsNote, chips, nonLeague, fromSchedule }) => (
             <li key={game.contestId}>
               <div className={nonLeague ? `${GAME_LOG_ROW_GRID} sx-nonleague` : GAME_LOG_ROW_GRID}>
-                <GameLogRowBody game={game} perspective={perspective} showChips={chips} />
+                <GameLogRowBody
+                  game={game}
+                  perspective={perspective}
+                  showChips={chips}
+                  extraTag={fromSchedule ? JV_SCHEDULE_TAG : undefined}
+                />
               </div>
               {differsNote ? <p className="m-0 px-gutter pb-2 text-meta text-ink-3">{differsNote}</p> : null}
             </li>
@@ -66,9 +71,12 @@ export function TeamJvGames({ view }: { view: TeamJvView }) {
   );
 }
 
+/** The tag on a JV game listed from the league's own schedule, and what a screen reader hears for it. */
+export const JV_SCHEDULE_TAG = { text: 'SCHED', label: 'Listed from the league schedule; not on MaxPreps yet.' } as const;
+
 /**
  * The one line under every JV list: JV league games count only in the JV tables; where the scores
- * come from; the † when the list has one; and a link to /about#jv. The link sits inside the
+ * come from; the † when the list has one; what SCHED means when a row carries it; and a link to /about#jv. The link sits inside the
  * sentence (WCAG 2.5.8's inline exception), like the day page's legend.
  */
 export function JvFootnote({ summary, className }: { summary: JvListSummary; className?: string }) {
@@ -88,6 +96,12 @@ export function JvFootnote({ summary, className }: { summary: JvListSummary; cla
         </>
       ) : null}
       .{' '}
+      {summary.fromSchedule > 0 ? (
+        <>
+          SCHED marks a league game listed from {summary.scheduleLeague ? `${summary.scheduleLeague}’s` : 'the league’s'}{' '}
+          own schedule that MaxPreps does not have yet.{' '}
+        </>
+      ) : null}
       <Link href="/about#jv" prefetch={false} className="text-accent">
         How JV games are shown
       </Link>

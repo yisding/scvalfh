@@ -164,6 +164,8 @@ export const OfficialStampSchema = z.object({
   source: officialSourceId,
   fixtureId: z.string().min(1),
   pass: z.enum(['same-date', 'same-date-swapped', 'rescheduled']),
+  // The fixture's JV game, where the league's schedule gives one (SCVAL basketball).
+  jv: z.object({ dateKey: dateOnly, time: z.string().regex(/^\d{2}:\d{2}$/, 'expected HH:MM').nullable() }).optional(),
 });
 
 const backfillProvenance = z.object({

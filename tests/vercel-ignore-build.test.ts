@@ -63,6 +63,15 @@ describe('scripts/vercel-ignore-build.sh', () => {
     const hockeyData = commit(['data/snapshot.json', 'data/player-stats.json']);
     expect(decide('soccer', soccerData, hockeyData)).toBe(SKIP);
     expect(decide('field-hockey', soccerData, hockeyData)).toBe(BUILD);
+    expect(decide('basketball', soccerData, hockeyData)).toBe(SKIP);
+
+    const basketballData = commit(['data/basketball/snapshot.json', 'data/basketball/jv.json']);
+    expect(decide('basketball', hockeyData, basketballData)).toBe(BUILD);
+    expect(decide('field-hockey', hockeyData, basketballData)).toBe(SKIP);
+    expect(decide('soccer', hockeyData, basketballData)).toBe(SKIP);
+    // Two sports' refreshes since the last deployment: each project builds for its own.
+    expect(decide('soccer', base, basketballData)).toBe(BUILD);
+    expect(decide('basketball', base, basketballData)).toBe(BUILD);
   });
 
   it('builds both on a code change, even beside data', () => {
@@ -70,12 +79,13 @@ describe('scripts/vercel-ignore-build.sh', () => {
     const code = commit(['lib/leagues.ts', 'data/soccer/jv.json']);
     expect(decide('field-hockey', base, code)).toBe(BUILD);
     expect(decide('soccer', base, code)).toBe(BUILD);
+    expect(decide('basketball', base, code)).toBe(BUILD);
   });
 
   it('builds when it cannot decide: no previous deployment, an unknown commit, an unknown sport', () => {
     const head = git('rev-parse', 'HEAD');
     expect(decide('soccer', null, head)).toBe(BUILD);
     expect(decide('soccer', '0123456789abcdef0123456789abcdef01234567', head)).toBe(BUILD);
-    expect(decide('basketball', head, head)).toBe(BUILD);
+    expect(decide('lacrosse', head, head)).toBe(BUILD);
   });
 });

@@ -3,7 +3,7 @@
  * place for its team page.
  *
  * Every number comes from lib/jv/jv.ts (lib/jv/jv-standings.ts: JV league games take their varsity
- * counterpart's classification; tables order on points; a table is shown only once enough of the
+ * counterpart's classification; tables order as the league's varsity tables do; a table is shown only once enough of the
  * played JV league games have a score). The copy says which of those it is, in words.
  *
  * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json and the snapshot.
@@ -18,6 +18,9 @@ import {
   type JvStandingRow,
 } from '../../lib/jv/jv-standings';
 import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
+import { orderHead, orderHeadWords, orderNoun, orderValue, ordersByRecord } from '../../lib/standings/order';
+import { AGAINST_ABBR, AGAINST_WORDS, FOR_ABBR, FOR_WORDS, RECORD_HEAD } from '../words/score-words';
+import { capitalized } from '../words/capitalized';
 import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { getTeamBySlug, teamsInDivision } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
@@ -34,7 +37,35 @@ export interface JvTableView {
    * `team` is null for a JV slot team (York), which has no page; `mascot` is then its tile stem and
    * `slotHost` the school whose slot it plays (Santa Catalina), whose page lists its JV games.
    */
-  rows: Array<{ row: JvStandingRow; team: Team | null; mascot: string | null; slotHost: Team | null }>;
+  rows: Array<{
+    row: JvStandingRow;
+    team: Team | null;
+    mascot: string | null;
+    slotHost: Team | null;
+    /** The order column's cell: the row's points, or its winning percentage ('.750'). */
+    orderText: string;
+  }>;
+  /** The table's column heads, the sport's and the league's: 'W-L-T' / 'W-L', 'Pts' / 'PCT', 'GF' / 'PF', 'GA' / 'PA'. */
+  heads: {
+    record: string;
+    order: string;
+    orderTitle: string;
+    scoredFor: string;
+    scoredForTitle: string;
+    scoredAgainst: string;
+    scoredAgainstTitle: string;
+    /** 'JV league games counted', or '… of the 14 each team plays' where the league schedules the JV round. */
+    gpTitle: string;
+  };
+  /**
+   * The table lists its teams before any JV league game is played: every row unranked, no record yet. true
+   * when the division has listed JV league games and none is played (`status` 'none-played' with rows).
+   */
+  preseason: boolean;
+  /** "Ordered on the league record, as SCVAL's varsity tables are." / "Ordered on points (3 a win, 1 a tie)." */
+  orderNote: string;
+  /** "12 of the 56 games are listed from SCVAL's own schedule: MaxPreps does not have them yet." or null. */
+  scheduleNote: string | null;
   /** "York plays the JV games of Santa Catalina, which fields varsity only, …" when the table has such a team. */
   slotNote: string | null;
   /** "12 of the 18 El Camino JV league games played so far have a score (2 are si.com’s †)." */
@@ -89,7 +120,31 @@ function viewOf(t: JvDivisionTable): JvTableView {
   const absent = t.absent.map((slug) => shortNameOf(slug, slug));
   // No school of the division has a JV league game at all: one heading, one line, nothing else.
   const noneListed = t.rows.length === 0;
+  const league = getLeague(t.league);
+  const { rules } = league;
+  const listed = t.played + t.toCome;
   return {
+    heads: {
+      record: RECORD_HEAD,
+      order: ordersByRecord(rules) ? orderHead(rules) : 'Pts',
+      orderTitle: orderHeadWords(rules),
+      scoredFor: FOR_ABBR,
+      scoredForTitle: capitalized(FOR_WORDS),
+      scoredAgainst: AGAINST_ABBR,
+      scoredAgainstTitle: capitalized(AGAINST_WORDS),
+      gpTitle:
+        t.gamesPerTeam === null
+          ? 'JV league games counted'
+          : `JV league games counted, of the ${t.gamesPerTeam} each team plays`,
+    },
+    preseason: t.status === 'none-played' && t.rows.length > 0,
+    orderNote: ordersByRecord(rules)
+      ? `Ordered on the ${orderNoun(rules)}, as ${league.shortName}’s varsity tables are; teams level on it share a place.`
+      : `Ordered on points (${rules.points.win} a win, ${rules.points.tie} a tie); teams level on points share a place.`,
+    scheduleNote:
+      t.fromSchedule > 0
+        ? `${t.fromSchedule} of the ${plural(listed, 'listed game')} ${t.fromSchedule === 1 ? 'is' : 'are'} from ${league.shortName}’s own schedule, which sets the JV round too: MaxPreps does not list ${t.fromSchedule === 1 ? 'it' : 'them'} yet.`
+        : null,
     division: t.division,
     anchor: isSingleDivision(t.league) ? null : t.division,
     title,
@@ -99,6 +154,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
       team: row.slug ? getTeamBySlug(row.slug)! : null,
       mascot: row.slug ? null : (jvSlotTeamFor(row.jvFor ?? null)?.mascot ?? null),
       slotHost: !row.slug && row.jvFor ? (getTeamBySlug(row.jvFor) ?? null) : null,
+      orderText: orderValue(rules, row.record),
     })),
     slotNote: slotNoteOf(t),
     coverage: noneListed

@@ -13,7 +13,14 @@ import { clockText, describeGame, gameKind, perspectiveIsHome, statusLabelIsTime
 import type { GameBaseProps } from './props';
 
 /** `GameLogRowBody` only: the row IS the page being viewed (the season series on /game/[id]). */
-export type GameLogRowProps = GameBaseProps & { isThisGame?: boolean };
+export type GameLogRowProps = GameBaseProps & {
+  isThisGame?: boolean;
+  /**
+   * One more tag after the status and its chips, with its sentence for a screen reader: a JV row listed from
+   * the league's own schedule carries `SCHED` (components/jv/TeamJvGames.tsx).
+   */
+  extraTag?: { text: string; label: string };
+};
 
 /**
  * A dense game-log line: `Sep 24 (L) 0–7 vs Saint Francis FINAL`. ONE row for a team page's log
@@ -86,6 +93,7 @@ export function GameLogRowBody({
   perspective,
   showChips = true,
   isThisGame = false,
+  extraTag,
 }: GameLogRowProps) {
   const display = describeGame(game, perspective);
   const mineIsHome = perspectiveIsHome(game, perspective) ?? true;
@@ -97,6 +105,7 @@ export function GameLogRowBody({
       <span className="sr-only">
         {isThisGame ? 'This game. ' : ''}
         {day}: {display.sentence}
+        {extraTag ? ` ${extraTag.label}` : ''}
       </span>
       <span className="sx-num text-cell text-ink-2" aria-hidden="true">
         {day}
@@ -165,6 +174,7 @@ export function GameLogRowBody({
           ) : (
             <StatusLabel display={display} showChips={showChips} className="max-w-full" />
           )}
+          {extraTag ? <Tag>{extraTag.text}</Tag> : null}
         </span>
       </span>
     </>

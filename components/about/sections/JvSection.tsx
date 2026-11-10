@@ -5,9 +5,12 @@ import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
 import { getTeamBySlug } from '../../../lib/data';
 import { listWords, plural } from '../../../lib/format';
+import { getJvOfficialMerge } from '../../../lib/jv/jv';
 import { JV_SCHOOL_SITES } from '../../../lib/jv/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../../lib/jv/jv-standings';
+import { LEAGUES } from '../../../lib/leagues';
 import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
+import { ordersByRecord } from '../../../lib/standings/order';
 import type { AboutJv } from '../about-view';
 
 /**
@@ -17,6 +20,9 @@ import type { AboutJv } from '../about-view';
  */
 export function JvSection({ jv }: { jv: AboutJv }) {
   const { school, file, uncounted, shown, merge, corrections, rosters } = jv;
+  // The league's own JV schedule, where its document sets the JV round (lib/jv/jv-official.ts): SCVAL basketball.
+  const official = getJvOfficialMerge();
+  const byRecord = LEAGUES.every((l) => ordersByRecord(l.rules));
   return (
     <section id="jv" className="mt-16">
       <SectionHeader size="lg" kicker="JV games" meta={plural(school.games.length, 'game', 'games')} />
@@ -34,9 +40,10 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           rating or postseason picture on this site reads them. They have tables of their own, on
           the{' '}
           <Link href="/jv" prefetch={false} className="text-accent hover:underline">
-            JV standings
-          </Link>{' '}
-          page. MaxPreps&rsquo; JV league flags are unreliable and no
+            JV page
+          </Link>
+          , which also lists each league&rsquo;s latest JV results, its next JV games and every school&rsquo;s
+          JV team, and links each league&rsquo;s whole JV season by date. MaxPreps&rsquo; JV league flags are unreliable and no
           league publishes a JV schedule or JV standings during the season, but every league plays its
           JV games alongside its varsity fixtures, so a JV game counts for a JV table when its varsity
           counterpart (the same two schools within three days) counts for that division&rsquo;s varsity
@@ -45,14 +52,29 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           is not counted and is named under its table (today{' '}
           {plural(uncounted, 'game', 'games')}).
         </p>
+        {official.slots > 0 ? (
+          <p>
+            Where a league&rsquo;s own schedule sets the JV games too, this site lists them from it. SCVAL&rsquo;s
+            schedules give every league fixture&rsquo;s JV starting time (5:30 before a 7:00 varsity game; 3:00 or
+            4:30 on a quad day, when the boys&rsquo; and girls&rsquo; teams play at one site) and put the last JV
+            round on the Monday before the last varsity night, and its by-laws make the JV round a double round
+            robin like the varsity one. So each of the {official.slots} league fixtures has a JV game here: MaxPreps&rsquo;
+            own row where a coach has entered it ({official.matched + official.moved} today), and otherwise a game
+            listed from the schedule, tagged SCHED, with the schedule&rsquo;s date, time and host and no score
+            ({plural(official.added.length, 'game', 'games')} today). A SCHED game is replaced by MaxPreps&rsquo; row,
+            and its score, as soon as MaxPreps lists it.
+          </p>
+        ) : null}
         <p>
-          A JV table is ordered on points (3 a win, 1 a tie, as SCVAL orders its own JV tables); no
-          league publishes a JV tiebreak, so teams level on points share a place. Coaches enter far
-          fewer JV scores than varsity ones, so a table is shown only once{' '}
+          {byRecord
+            ? 'A JV table is ordered as the league’s varsity tables are, on the league record; no league publishes a JV tiebreak, so teams level on it share a place.'
+            : 'A JV table is ordered on points (3 a win, 1 a tie, as SCVAL orders its own JV tables); no league publishes a JV tiebreak, so teams level on points share a place.'}{' '}
+          Coaches enter far
+          fewer JV scores than varsity ones, so a table ranks its teams only once{' '}
           {Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}% of its division&rsquo;s JV league games
           played so far have a score; today that is{' '}
           {shown.length > 0 ? listWords(shown.map((t) => jvTableTitle(t.division))) : 'none'}.
-          The others say how many of their games have a score.
+          The others say how many of their games have a score, and list their teams unranked until a game is played.
         </p>
         {/* si.com, the two school sites, the hand corrections and the PCAL pairing are field hockey's sources and
             facts: the soccer build reads MaxPreps alone (lib/sports/current.ts). */}

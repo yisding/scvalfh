@@ -5,7 +5,9 @@ import { navLeagueHrefs } from './nav-targets';
 import { HAS_HISTORY } from '../../lib/sports/current';
 
 /**
- * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the
+ * The desktop nav: eight links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). JV is the junior varsity hub
+ * (/jv: tables, latest results, next games, every school's JV team), which the phone bar's five tabs have no room
+ * for: on a phone it is reached from the home page, each team page and each league's standings. It matches the
  * phone bar: Teams is the teams-and-standings page (the standings live there, and Teams stays lit
  * on every /standings page), so there is no separate Standings link. History keeps its short
  * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
@@ -14,6 +16,7 @@ const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string 
   { href: '/', label: 'Home' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },
+  { href: '/jv', label: 'JV', srSuffix: ' (junior varsity standings, scores and schedules)' },
   { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
   ...(HAS_HISTORY ? [{ href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' }] : []),

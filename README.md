@@ -17,6 +17,12 @@ builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Dep
 when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), winter 2026-27,
 from the data under `data/soccer/`. See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
 
+**Boys basketball (SCVAL only, 2026-27).** The same code builds a third site, NorCal High School Boys
+Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El Camino 8),
+winter 2026-27, from the data under `data/basketball/`, with tables ordered on the league record and a JV
+schedule read from the league's own documents. See "Boys basketball" under "Local development" and
+docs/MULTI-SPORT.md.
+
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
 Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture" below.
@@ -131,7 +137,8 @@ Per-league pages show their own region's league chips.
 | `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit (one finder over all 102, a card grid per region), then one panel per league of the region shown: latest scores, mini standings, next games, teams and the postseason card (the independents' mini standings are headed "Table" and count their games against each other, and their card's link is their schedule). In the postseason weeks each region's "This week in the postseason" strip (`#this-week`, `#this-week-socal`; at most 8 rows of games and dated events from two days back to a week ahead, outside every league panel) sits above the latest results |
 | `/standings` | Every division as a compact full table, grouped region → section → league → division; `#norcal`, `#socal`, `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal`, `#ss`, `#sds`, `#sunset`, `#independents`, `#city`, `#north-county`, `#metro`, `#city-western`, `#palomar` and the other division anchors resolve with no JavaScript (`#independents` is the group's table of their games against each other). Kept for links; the nav's Teams page carries the same tables |
 | `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points a team can finish with (the Sunset and the independents, with no fixed schedule, show GP alone); a pill links its JV tables on `/jv`. `/standings/independents` is the group's table of their games against each other, with the group's note and the no-postseason card |
-| `/jv` | JV standings: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each shown once enough of its JV league games have a score |
+| `/jv` | The JV hub: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each ranking its teams once enough of its JV league games have a score (before that it lists them unranked); under each league's tables its latest JV results, its next JV games, a link to its whole JV season and every school's JV team |
+| `/jv/[league]` | One league's whole JV season by date (one page per league): results, games with no score reported and games to come, a group per date (`#d-<date>`), including the dates only JV teams play |
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
@@ -577,10 +584,51 @@ pnpm fetch-player-stats --dry-run                            # parse and report,
 ### JV games
 
 Every team page has a "JV games" section (`#jv`) and every day page a JV block after the varsity
-games: the school's junior varsity games, **kept apart from varsity**. No varsity standings table,
+games; `/jv` is the JV hub and `/jv/<league>` a league's whole JV season by date (see "The JV pages"
+below). They are the school's junior varsity games, **kept apart from varsity**. No varsity standings table,
 record, form strip, leader board, Elo rating or postseason picture reads them; they have JV tables
 of their own on `/jv` (see "JV standings" below), and a team page's JV header names the team's JV
 place when its table is shown and links it.
+
+#### The JV pages
+
+Added 2026-11-10 for every sport's build, because a JV parent had three places to look and no way to see a
+league's JV week at once:
+
+- **`/jv`, the hub** (`app/jv/page.tsx`; in the desktop nav as "JV"). Per league: its JV tables, then
+  "Latest JV results" (the last seven days' finals, or the latest day with one) and "Next JV games" (the
+  coming seven days, or the next day with a game), at most twelve rows each by whole days
+  (`components/jv/JvHub.tsx`, `buildLeagueJvHubView` in `components/jv/jv-view.ts`), then a link to
+  `/jv/<league>`, then every school of the league as its JV team: its JV record once it has one, its next
+  JV game, and a link to the school's JV section.
+- **`/jv/<league>`, the JV calendar** (`app/jv/[league]/page.tsx`, `components/jv/JvSchedule.tsx`): every JV
+  game with a side in the league, a group per date with its own anchor, oldest first, with a jump link to
+  the next JV game day. A day page (`/scores/<date>`) exists only for a date with a varsity game, so this is
+  where a JV-only date is (in 2026-27: SCVAL basketball's Monday Feb 15 JV round, field hockey's Aug 18).
+- **A team page's JV header** gives the JV team's record over the finals listed, beside the counts.
+- **A JV table lists its teams before any league game is played**, unranked and without a record
+  (`JvTableView.preseason`), instead of an empty box; it ranks them once the 60% rule below is met.
+
+#### JV games from the league's own schedule
+
+Coaches enter JV schedules on MaxPreps far less completely than varsity ones: on 2026-11-10 the 15 SCVAL
+boys basketball JV feeds held 9 to 24 games each, where a JV team plays 12 or 14 league games alone. Where a
+league's schedule document sets the JV round itself, each official fixture carries a JV slot
+(`OfficialFixture.jv`, `jv` on a bundle fixture, `Game.official.jv` on the varsity game the fixture matched),
+and `lib/jv/jv-official.ts` (`mergeJvOfficial`, the fourth JV layer, after the school sites) makes every slot
+a JV game: MaxPreps' own row where one exists for the two schools within three days of the slot's date (or,
+with the same host, on any other day: the game moved), and otherwise a scheduled game with the schedule's
+date, time and host and no score, contest id `official-jv:<fixture id>`, tagged **SCHED** in every list and
+classified a league game without a varsity counterpart. It is gone the day MaxPreps lists the game. A
+MaxPreps JV game on the slot's date with its time still TBA takes the schedule's time.
+
+Only SCVAL boys basketball has JV slots today (98 fixtures; on 2026-11-10, 83 matched a MaxPreps JV game, 1
+was found moved and 14 are listed from the schedule, 12 of them El Camino's). Its two schedule PDFs give the
+starting times (JV 5:30 before a 7:00 varsity game; on a quad day the boys JV at 3:00 or 4:30, by the `B` or
+`G` beside the day's games) and move the last JV round to Monday Feb 15, and its By-Laws make the JV round a
+double round robin (Article V §2). The SCVAL soccer schedules give starting times by site format only, and
+no field hockey document schedules a JV round, so neither has slots; a league gets them by adding `jv` to
+its bundle's fixtures.
 
 #### JV standings
 
@@ -601,7 +649,9 @@ budget and the JV tables are a different kind of claim, stated once at the top o
   counted and is named under the table. JV rows carry the matching league or NL chip; an uncounted
   game carries none. On 2026-10-05: 197 league games (195 by varsity game, 2 by official fixture), 70
   non-league, 5 uncounted.
-- **How a table is ordered.** On 3 points a win and 1 a tie (the league's own points in the five
+- **How a table is ordered.** As the league's varsity table is (`LeagueRules.orderBy`,
+  `lib/standings/order.ts`): on the league record where the league's record orders its tables (SCVAL
+  basketball: the column is PCT), and otherwise on 3 points a win and 1 a tie (the league's own points in the five
   NorCal leagues; the Southern California leagues publish none, so it is this site's 3-1-0), which is how
   SCVAL ordered its published 2025-26 JV tables. No league publishes a JV tiebreak, so teams level on
   points share a place. A school is in the table when it has at least one JV league game; a school
@@ -1183,6 +1233,51 @@ leaders, JV and /playoffs. What it leaves out: /history/2025-26, /clubs, /commit
 hockey's research; each renders a 404), si.com, the VNN calendars and the region toggle. The CCS dates come
 from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
 rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sections.ts`.
+
+### Boys basketball
+
+`SCVAL_SPORT=basketball` builds the SCVAL boys basketball site from `data/basketball/`. Every command takes it:
+
+```bash
+SCVAL_SPORT=basketball pnpm build-scval-basketball-fixtures     # data/basketball/official/scval-2026.json, from the two schedule texts
+SCVAL_SPORT=basketball pnpm fetch-data --no-sblive --no-vnn     # data/basketball/snapshot.json
+SCVAL_SPORT=basketball pnpm fetch-rosters                        # data/basketball/rosters.json
+SCVAL_SPORT=basketball pnpm fetch-rosters --level jv             # data/basketball/jv-rosters.json
+SCVAL_SPORT=basketball pnpm fetch-jv --no-sblive                 # data/basketball/jv.json
+SCVAL_SPORT=basketball pnpm fetch-player-stats                   # data/basketball/player-stats.json
+SCVAL_SPORT=basketball pnpm fetch-prior-season                   # data/basketball/prior-season.json (2025-26, seeds the ratings)
+SCVAL_SPORT=basketball pnpm build                                # or pnpm build:vinext / build:cloudflare
+SCVAL_SPORT=basketball pnpm exec tsx scripts/assert-prerender.ts # and assert-budgets, assert-copy
+```
+
+What is basketball's own (each from a document read 2026-11-10, cited in
+`lib/league-config/basketball/scval.ts` and `lib/sports/basketball.ts`):
+
+- **The table is ordered on the league record, not on points** (SCVAL Basketball By-Laws Article VI §1: "A
+  team's league record determines their finish in league play"): `LeagueRules.orderBy: 'win-pct'`, so the
+  order column is PCT and a 3-0 team is ahead of a 3-1 team while De Anza's seven teams take turns on a bye.
+  Ties are broken by head-to-head, then by the record against each other team from first place down
+  (`record-vs-placed`), then by a blind coaches' vote and a coin flip, which this site cannot compute, so the
+  teams stay level (`coaches-vote`).
+- **No game ends level**, so records read W-L (`Sport.scoring.allowsTies`, `recordString` in `lib/format.ts`),
+  and the for/against columns are PF, PA and PD.
+- **The official schedule is a bundle built by a script**: `pnpm build-scval-basketball-fixtures` parses the
+  text of the two schedule PDFs (`tests/fixtures/official/source/scval-basketball-boys-*.txt`) into 98
+  fixtures, each with its varsity time and its JV game. Both documents head one column "FRIDAY, FEBRUARY 7";
+  February 7, 2027 is a Sunday, when the By-Laws allow no game, so the column is read as Friday Feb 5
+  (`DATE_CORRECTIONS`), which is the date MaxPreps has for all seven games.
+- **CCS**: De Anza's top three and the El Camino champion are automatic (Article VI §2.1). The playoffs open
+  with a first round on Fri Feb 19 (`keyDates.firstRound`, read through `ccsFirstDay`), before the
+  quarterfinals; the Open Division's final is Fri Feb 26 and Divisions 1-5's Sat Feb 27. The field size and
+  at-large count are `null`: the CCS Basketball Bylaws were not read (cifccs.org answers scripts with 405).
+- **JV**: see "JV games from the league's own schedule" above.
+- **Ratings**: the Elo constants are provisional (25 Elo points per point of margin, margins capped at 20),
+  and the Elo-adjusted scoring boards are not built (`Sport.ratings.adjustedScoring: null`: that model is a
+  Poisson fit of goals).
+
+What it leaves out, as soccer does: /history/2025-26, /clubs, /commits and /recruiting, si.com, the VNN
+calendars and the region toggle. MaxPreps also has a freshman season for some of these schools; the SCVAL
+fields two official boys teams, varsity and JV (By-Laws Article II), and the site covers those two.
 
 ## Tests
 
@@ -1955,6 +2050,18 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
     refresh, in the same concurrency group, and ci's `soccer` job builds and asserts the soccer site
     on every PR. The Cloudflare Worker deploy (`deploy-cloudflare.yml`) is field hockey's only; it
     lets soccer data commits through its gate so they never hold up a field hockey deploy.
+- **The boys basketball site.** A third project, set up as the soccer one is: build command `pnpm build`,
+  `SCVAL_SPORT=basketball` and its own `SITE_URL` set before the first build, and
+  `bash scripts/vercel-ignore-build.sh basketball` as its Ignored Build Step (the script now knows three
+  sports: each project skips a build whose changes are only another sport's data).
+  `update-data-basketball.yml` refreshes `data/basketball/` Nov–Mar (6:07 and 15:07 UTC, after the other two,
+  in the same concurrency group), ci's `basketball` job builds and asserts the site on every PR, and
+  `deploy-cloudflare.yml` lets its data commits through. No domain is chosen in the repo.
+- **Rosters refresh for the winter sports.** `update-data-soccer.yml` and `update-data-basketball.yml` also
+  run `pnpm fetch-rosters` and `pnpm fetch-rosters --level jv` on every run and commit
+  `data/<sport>/rosters.json` and `data/<sport>/jv-rosters.json` when their content changed: coaches post
+  rosters in the first weeks of a season, and nothing re-read them before. Field hockey's rosters are still
+  refreshed by hand (they carry hand-checked enrichment).
 - **Self-host:** `pnpm build && pnpm start` runs Next.js's own production server behind any
   reverse proxy that can talk to a Node process. Set `SITE_URL` the same way. Pair with the cron
   line under "Self-hosting the cron" above to keep data fresh without GitHub Actions at all.

@@ -1,9 +1,10 @@
 # The girls soccer site's data refresh (SCVAL_SPORT=soccer; docs/MULTI-SPORT.md): update-data.yml's job
 # for data/soccer/, narrowed to what the soccer build reads. It fetches the snapshot (MaxPreps, the
 # bundled official SCVAL fixtures, the CCS calendar and cifsshome.org; si.com and the VNN school calendars
-# are field hockey's sources), then the player stats and the JV games, tests them, and commits
-# data/soccer/snapshot.json, its meta file, data/soccer/player-stats.json and data/soccer/jv.json only
-# where the CONTENT changed (the same contentHash rule as update-data.yml).
+# are field hockey's sources), then the player stats, the JV games and the varsity and JV rosters, tests
+# them, and commits data/soccer/snapshot.json, its meta file, data/soccer/player-stats.json,
+# data/soccer/jv.json, data/soccer/rosters.json and data/soccer/jv-rosters.json only where the CONTENT
+# changed (the same contentHash rule as update-data.yml).
 #
 # Schedule: half an hour after each field hockey run (5:30 and 14:30 UTC, 10:30 PM and 7:30 AM Pacific
 # during PDT), in the soccer season's months. The scripts' own guard is the soccer season window
@@ -107,6 +108,19 @@ jobs:
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-jv "${args[@]}"
 
+      # Never fatal. The varsity and JV roster pages (maxpreps.com/…/roster/ and …/jv/roster/): coaches post
+      # them in the first weeks of the season and edit them rarely, and nothing else re-reads them, so without
+      # this a roster posted after the site was set up would never appear. Each script leaves its file alone
+      # when nothing but its stamps would change, and keeps a team's previous rows when its page fails.
+      - name: Fetch rosters
+        id: rosters
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          pnpm fetch-rosters
+          pnpm fetch-rosters --level jv
+
       # tests/soccer.test.ts loads every soccer data file through its validating loader. When it fails
       # and the stats or JV file changed in this run, both go back to the committed ones and it runs
       # again, so only a bad snapshot blocks the commit.
@@ -116,12 +130,12 @@ jobs:
           set -uo pipefail
           run() { pnpm exec vitest run tests/soccer.test.ts; }
           if run; then exit 0; fi
-          if git diff --quiet -- data/soccer/player-stats.json data/soccer/jv.json; then
+          if git diff --quiet -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json; then
             echo "::error::tests/soccer.test.ts failed and neither the soccer stats nor the soccer JV file changed in this run"
             exit 1
           fi
           echo "::warning::tests/soccer.test.ts failed; testing again with the committed stats and JV files"
-          git checkout -- data/soccer/player-stats.json data/soccer/jv.json
+          git checkout -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json
           echo "restored=true" >> "$GITHUB_OUTPUT"
           run
 
@@ -149,10 +163,12 @@ jobs:
           fi
           if git diff --quiet -- data/soccer/player-stats.json; then STATS=false; else STATS=true; fi
           if git diff --quiet -- data/soccer/jv.json; then JV=false; else JV=true; fi
+          if git diff --quiet -- data/soccer/rosters.json data/soccer/jv-rosters.json; then ROSTERS=false; else ROSTERS=true; fi
           echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
           echo "stats=$STATS" >> "$GITHUB_OUTPUT"
           echo "jv=$JV" >> "$GITHUB_OUTPUT"
-          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ]; then
+          echo "rosters=$ROSTERS" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ] && [ "$ROSTERS" != "true" ]; then
             echo "nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -167,7 +183,7 @@ jobs:
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh soccer", nothing but
-          # the four files below (tests/workflows.test.ts).
+          # the six files below (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then
@@ -178,6 +194,9 @@ jobs:
           fi
           if [ "$JV" = "true" ]; then
             git add data/soccer/jv.json
+          fi
+          if [ "$ROSTERS" = "true" ]; then
+            git add data/soccer/rosters.json data/soccer/jv-rosters.json
           fi
           git commit -m "data: refresh soccer ${DAY} · ${SUMMARY}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -201,5 +220,7 @@ jobs:
             echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
             echo "- JV games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
             echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
+            echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
+            echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
             echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
