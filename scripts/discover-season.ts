@@ -44,7 +44,7 @@ import {
 } from '../lib/season';
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Team } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 
 const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
 
@@ -108,7 +108,7 @@ function compare(label: string, ours: string | null, theirs: string | null | und
   diffs.push(`${label}: ${ours ?? 'null'} → ${t}`);
 }
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
@@ -325,4 +325,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

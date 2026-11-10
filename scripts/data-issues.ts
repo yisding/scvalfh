@@ -14,14 +14,13 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { plural } from '../lib/format';
 import type { SnapshotMeta } from '../lib/pipeline/contract';
 import { TIME_ZONE } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import type { Snapshot } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 import { DATA_DIR } from '../lib/sports/current';
 
 const REPO = path.resolve(import.meta.dirname, '..');
@@ -97,7 +96,7 @@ export function readPreviousMeta(file: string): PreviousMeta | null {
   return Array.isArray(leagues) ? { leagues: leagues as PreviousMeta['leagues'] } : null;
 }
 
-function main(argv: readonly string[]): number {
+export function main(argv: readonly string[]): number {
   const [prevPath, outDir] = argv;
   if (!prevPath || !outDir) {
     console.error('usage: pnpm exec tsx scripts/data-issues.ts <previous-meta.json> <out-dir>');
@@ -115,5 +114,4 @@ function main(argv: readonly string[]): number {
   return 0;
 }
 
-const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) runCli(main);
+runCliIfMain(import.meta.url, main);

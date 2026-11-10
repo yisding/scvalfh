@@ -53,7 +53,7 @@
  * are then not counted (lib/players/note-stats.ts counts only what it can check). The previous run's
  * totals are not carried forward for this: they may predate what the coach has entered since.
  *
- * A partial run still publishes, and failures are scoped to the team (lib/pipeline/fetch-scope.ts): a team
+ * A partial run still publishes, and failures are scoped to the team (scripts/lib/team-scope.ts): a team
  * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
  * (or 'error' when there is nothing to carry), and never stops another team or another league from
  * being read. A team outside a `--leagues` run keeps the previous file's row untouched (or is
@@ -68,23 +68,22 @@
  * teams read as absent). A file that is not JSON at all stops the run: exit 1, nothing written.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { localDateKey, monthDay } from '../lib/format';
 import { isCifsdsContestId, isSbliveContestId } from '../lib/game-id';
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../lib/cli-flags';
 import {
-  describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '../lib/pipeline/fetch-scope';
+} from './lib/team-scope';
+import { droppedTeams, loadPreviousOrFail, prepareCapture, saveCapture, validateAssembled, writeIfChanged } from './lib/team-file';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { teamsCreditedByNotes } from '../lib/players/note-stats';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
@@ -112,13 +111,11 @@ import {
   type PlayerStatsPage,
   type RosterJoinPlayer,
 } from '../lib/sources/maxpreps-player-stats';
-import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
-import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 import { DATA_DIR } from '../lib/sports/current';
 
 interface Args {
@@ -172,14 +169,13 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists, salvaged row by row (lib/pipeline/fetch-scope.ts readPreviousFile): its
+ * The previous file's text, salvaged row by row (scripts/lib/team-scope.ts readPreviousFile): its
  * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
  * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
  * pending.
  */
-function loadPrevious(file: string): PreviousFile<TeamPlayerStats, PlayerStatsFile> | null {
-  if (!existsSync(file)) return null;
-  return readPreviousFile(readFileSync(file, 'utf8'), {
+function readPrevious(text: string): PreviousFile<TeamPlayerStats, PlayerStatsFile> {
+  return readPreviousFile(text, {
     season: SEASON_YEAR,
     row: TeamPlayerStatsSchema,
     file: PlayerStatsPartialSchema,
@@ -195,11 +191,6 @@ const NOTES = [
   "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), kept only for a team a game note on one of its finals credits with goals, assists or saves (lib/players/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
   "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
 ];
-
-/** Writes a captured body as received, with a final newline. */
-function saveCapture(capture: string, name: string): (body: string) => void {
-  return (body) => writeFileSync(path.join(capture, name), body.endsWith('\n') ? body : `${body}\n`, 'utf8');
-}
 
 /**
  * The team's per-game table (lib/sources/maxpreps-game-stats.ts), or the reason it could not be
@@ -225,7 +216,7 @@ async function readGameRows(
       };
     }
     return {
-      rows: await fetchGameRows(client, maxprepsTeamId, capture ? saveCapture(capture, `game-stats-${slug}.json`) : undefined),
+      rows: await fetchGameRows(client, maxprepsTeamId, capture ? (body) => saveCapture(capture, `game-stats-${slug}.json`, body) : undefined),
     };
   } catch (err) {
     return { error: err instanceof Error ? err.message : String(err) };
@@ -277,7 +268,7 @@ async function readBoxScores(
               client,
               maxprepsTeamId,
               contestId,
-              capture ? saveCapture(capture, `box-${slug}-${contestId}.json`) : undefined,
+              capture ? (body) => saveCapture(capture, `box-${slug}-${contestId}.json`, body) : undefined,
             );
           }
           read += 1;
@@ -319,7 +310,7 @@ function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
   return out;
 }
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
@@ -331,19 +322,10 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     return 0;
   }
-  const loaded = loadPrevious(args.out);
-  if (loaded && !loaded.readable) {
-    console.error(
-      `FAILED: the previous ${path.relative(process.cwd(), args.out)} cannot be read: ${loaded.reason}. ` +
-        'Nothing written: fix or remove it, then re-run.',
-    );
-    return 1;
-  }
-  const previous = loaded;
-  if (previous) {
-    for (const line of describePrevious(previous, path.relative(process.cwd(), args.out))) console.warn(line);
-  }
-  const dropped = new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
+  const loaded = loadPreviousOrFail(args.out, readPrevious, 'Nothing written: fix or remove it, then re-run.');
+  if (!loaded.ok) return 1;
+  const previous = loaded.previous;
+  const dropped = droppedTeams(previous);
   const rosters = RostersSchema.parse(JSON.parse(readFileSync(args.rosters, 'utf8')) as unknown);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
   const snapshotGames = existsSync(args.snapshot)
@@ -364,9 +346,7 @@ async function main(argv: readonly string[]): Promise<number> {
       : `fetch-player-stats: ${teamsInScope(args.leagues).length} MaxPreps stats rollups` +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
-  // --dry-run writes nothing, --capture included.
-  const capture = args.dryRun ? null : args.capture;
-  if (capture) mkdirSync(capture, { recursive: true });
+  const capture = prepareCapture(args);
 
   const teams: TeamPlayerStats[] = await Promise.all(
     TEAMS.map(async (team): Promise<TeamPlayerStats> => {
@@ -402,14 +382,7 @@ async function main(argv: readonly string[]): Promise<number> {
             maxprepsTeamId,
             // The body exactly as MaxPreps sent it, before it is decoded or validated: a drifted or
             // non-JSON answer is captured too, and replays (--fixtures) into the same failure.
-            capture
-              ? (body) =>
-                  writeFileSync(
-                    path.join(capture, `stats-${team.slug}.json`),
-                    body.endsWith('\n') ? body : `${body}\n`,
-                    'utf8',
-                  )
-              : undefined,
+            capture ? (body) => saveCapture(capture, `stats-${team.slug}.json`, body) : undefined,
           );
         }
         if (!page) {
@@ -523,12 +496,8 @@ async function main(argv: readonly string[]): Promise<number> {
     counts: countPlayerStats(teams),
   };
 
-  const validated = PlayerStatsFileSchema.safeParse(file);
-  if (!validated.success) {
-    console.error('FAILED: the assembled file does not validate:');
-    console.error(formatIssues(validated.error.issues));
-    return 1;
-  }
+  const validated = validateAssembled(PlayerStatsFileSchema, file);
+  if (!validated) return 1;
 
   console.log('');
   for (const t of teams) {
@@ -559,22 +528,15 @@ async function main(argv: readonly string[]): Promise<number> {
       (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );
 
-  if (args.dryRun) {
-    console.log('\ndry run: nothing written');
-    return exitCode;
-  }
-  // Only a previous file that validates whole (and lost no row) can be left in place.
-  const whole = previous?.whole;
-  if (whole && playerStatsContentKey(whole) === playerStatsContentKey(validated.data)) {
-    console.log(
-      `\nno change since ${whole.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
-    );
-    return exitCode;
-  }
-  mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(file), 'utf8');
-  console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return exitCode;
+  return writeIfChanged({
+    out: args.out,
+    dryRun: args.dryRun,
+    whole: previous?.whole,
+    contentKey: playerStatsContentKey,
+    validated,
+    file,
+    exitCode,
+  });
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

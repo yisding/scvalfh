@@ -11,7 +11,14 @@
  * with no `main`: they print their own `FAIL <problem>` lines and exit 1 themselves. The plain-node
  * .mjs scripts (a11y-axe, typecheck-scope) cannot import a .ts module; a11y-axe's exit 2 ('not run:
  * dependencies missing') is deliberate.
+ *
+ * Every such script ends with `runCliIfMain(import.meta.url, main)` and exports `main`: it runs
+ * only when the file is the process's entry point (`tsx scripts/<name>.ts`), so a test or another
+ * script can import it without starting a run.
  */
+
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export async function runCli(
   main: (argv: readonly string[]) => Promise<number> | number,
@@ -25,4 +32,13 @@ export async function runCli(
     code = 1;
   }
   process.exit(code);
+}
+
+/** `runCli(main)` when the module at `importMetaUrl` is the script node was started with; else nothing. */
+export function runCliIfMain(
+  importMetaUrl: string,
+  main: (argv: readonly string[]) => Promise<number> | number,
+): void {
+  const invokedDirectly = process.argv[1] !== undefined && importMetaUrl === pathToFileURL(path.resolve(process.argv[1])).href;
+  if (invokedDirectly) void runCli(main);
 }

@@ -171,7 +171,7 @@ earlier rosters put her in the class of 2028 (MaxPreps kept, as the overlay rule
 other leagues the same day (not written) found no player added, removed or changed. The file holds 1,702 players on
 88 of the 102 teams.
 
-The previous file is salvaged row by row (`readPreviousFile` in `lib/pipeline/fetch-scope.ts`): each row is
+The previous file is salvaged row by row (`readPreviousFile` in `scripts/lib/team-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
 registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
 named in the log. That team alone has nothing to keep: it is `pending` if the run does not cover it

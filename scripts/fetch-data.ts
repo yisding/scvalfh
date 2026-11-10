@@ -22,9 +22,9 @@
  * (assertLeagues / assertRegistry, §7.5 run-abort trigger 2) is reported as an abort, not a crash.
  */
 
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const { RunAbort } = await import('../lib/pipeline/contract');
   try {
     const run = await import('../lib/pipeline/run');
@@ -57,4 +57,4 @@ async function main(argv: readonly string[]): Promise<number> {
   }
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

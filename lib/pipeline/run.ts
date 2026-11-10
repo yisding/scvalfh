@@ -24,7 +24,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import path from 'node:path';
 
 import { carryCrossCheck } from '../crosscheck/crosscheck';
-import { parseFetchedAtFlag, parseLeaguesFlag } from './fetch-scope';
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../cli-flags';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
 import { loadSnapshot } from '../snapshot/snapshot-load';

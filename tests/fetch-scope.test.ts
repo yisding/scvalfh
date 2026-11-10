@@ -1,21 +1,20 @@
-/** lib/pipeline/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
+/** scripts/lib/team-scope.ts and lib/cli-flags.ts — which teams a rosters / player-stats run covers, how it reports them, and the flags it reads. */
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../lib/cli-flags';
 import {
   describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
   teamsInScope,
-} from '../lib/pipeline/fetch-scope';
+} from '../scripts/lib/team-scope';
 import {
   RostersPartialSchema,
   TeamRosterSchema,

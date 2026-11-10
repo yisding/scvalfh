@@ -58,7 +58,7 @@ import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
 import { stableStringify } from '../lib/stable-json';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 
 interface Args {
   from: string | null;
@@ -109,7 +109,7 @@ function pick<T extends { division: string; level: string }>(
   return blocks.find((b) => b.division === division && b.level === level) ?? null;
 }
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
 
   let standings: HistoryStandingsBlock[];
@@ -448,4 +448,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);
