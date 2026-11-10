@@ -9,9 +9,7 @@
  * assertion message names the module that produced the value, so a failure routes to its owner.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -19,7 +17,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ordinal } from '../../lib/format';
 import type { Snapshot } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 // textOf: the `<main>`-equivalent text of a page (the page component renders no layout).
 import { textOf } from './html-text';
 
@@ -807,10 +805,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
       streak: null, last5: [], homeRecord: zero, awayRecord: zero, neutralRecord: zero,
     };
     row.hasReportedResults = false;
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-team-view-'));
-    const file = path.join(dir, 'snapshot.json');
-    writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'team-view');
     const m = await loadModules();
     zeroed = { d: m.d, pl: m.pl, v: m.v, renderTeam: m.renderTeam };
   }, 600_000);

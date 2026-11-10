@@ -12,8 +12,7 @@
  *   more games", even with a later game listed (the test gives the Mt. Hamilton #4 visitor, Willow Glen in 2026, a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
  * - The team page's "CCS playoffs →" goes to `/playoffs#<league>-pairings` while the team has a pairing to play.
  */
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -23,6 +22,7 @@ import { playoffStatusFor } from '../../lib/standings/ladder';
 import { leaguePairings } from '../../lib/standings/pairings';
 import type { Standing } from '../../lib/types';
 import { game, withGames } from '../game-builder';
+import { writeTempSnapshot } from '../helpers';
 
 type Data = typeof import('../../lib/data');
 type TeamView = typeof import('../../components/teams/team-view');
@@ -105,9 +105,7 @@ beforeAll(async () => {
     ...set,
   ];
   const next = withGames(base, games, { fetchedAt: '2026-10-30T19:00:00.000Z', standings });
-  const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-postseason-next-')), 'snapshot.json');
-  writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-  process.env.SCVAL_SNAPSHOT = file;
+  process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'postseason-next');
   vi.resetModules();
   data = await import('../../lib/data');
   teamView = await import('../../components/teams/team-view');

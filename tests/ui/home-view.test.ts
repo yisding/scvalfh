@@ -5,8 +5,7 @@
  * Every assertion names the module that produced the value (the repair policy routes on it).
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { createElement } from 'react';
@@ -15,7 +14,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { game, withGames } from '../game-builder';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 
 import { SEED_CLAIM } from '../../scripts/copy-rules';
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
@@ -636,9 +635,7 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
       playIn,
     ];
     const next = withGames(base, games, { fetchedAt: '2026-10-31T19:00:00.000Z' });
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-play-in-')), 'snapshot.json');
-    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'home-play-in');
     vi.resetModules();
     const fresh = (await import('../../components/home/team-card')) as TeamCard;
     views = fresh.buildTeamViews();
@@ -700,9 +697,7 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
       post('huntington-beach', 'harvard-westlake', '2026-10-29', '18:00', toc),
     ];
     const next = withGames(base, games, { fetchedAt: '2026-10-29T19:00:00.000Z' });
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-week-')), 'snapshot.json');
-    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'home-week');
     vi.resetModules();
     const fresh = (await import('../../components/home/home-view')) as HomeView;
     week = fresh.buildHomeView().thisWeek;

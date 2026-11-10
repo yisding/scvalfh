@@ -2,17 +2,19 @@
 
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, renameSync, statSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { afterAll, beforeAll, vi } from 'vitest';
 
 import { readManifest } from '../lib/pipeline/corpus';
+import { resolveFile, runtimeImports, specifierBase } from './import-graph';
 import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/players/player-stats-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
-import type { DivisionId, LeagueId } from '../lib/types';
+import type { DivisionId, LeagueId, Snapshot } from '../lib/types';
 
 export const REPO = path.resolve(import.meta.dirname, '..');
 /** The original SCVAL capture directory (2026-09-29), now also the `scval` corpus (its manifest.json). */
@@ -179,19 +181,54 @@ function treeStamp(dir: string): string[] {
   return out.sort();
 }
 
-const corpusSnapshotMemo = new Map<string, string>();
+/** Every file under `dir` (recursively) as `path:sha256`, sorted. */
+function treeContentHashes(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+  const out: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile()) continue;
+    const file = path.join(entry.parentPath, entry.name);
+    out.push(`${path.relative(REPO, file)}:${contentHash(file)}`);
+  }
+  return out.sort();
+}
+
+function contentHash(file: string): string {
+  return createHash('sha256').update(readFileSync(file)).digest('hex');
+}
+
+let pipelineJsonMemo: string[] | null = null;
 
 /**
- * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`), built
- * once into os.tmpdir() and reused afterwards — by later calls in this process and by later test
- * files and runs. The cache key hashes the manifest, the run's extra flags and the mtimes of
- * lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/official/**, so any change to the pipeline
- * or the corpus rebuilds it. A test file that renders against a corpus points lib/data at it with
- * `stubCorpusSnapshot(corpus)` below (which stubs SCVAL_SNAPSHOT to this path and resets the module
- * cache) and then dynamically imports lib/data. The meta file is beside it (`*.meta.json`).
+ * Every `.json` file in the runtime import closure of scripts/fetch-data.ts (data/schools.json, the
+ * bracket files, …), sorted: the data the pipeline bundles rather than reads from the corpus.
  */
-export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: readonly string[] } = {}): string {
-  const extraArgs = [...(opts.extraArgs ?? [])];
+function pipelineJsonImports(): string[] {
+  if (pipelineJsonMemo) return pipelineJsonMemo;
+  const json = new Set<string>();
+  const seen = new Set<string>();
+  const stack = [path.join(REPO, 'scripts', 'fetch-data.ts')];
+  while (stack.length > 0) {
+    const file = stack.pop()!;
+    if (seen.has(file)) continue;
+    seen.add(file);
+    if (file.endsWith('.json')) {
+      json.add(file);
+      continue;
+    }
+    if (!/\.(ts|tsx|js|mjs|jsx)$/.test(file)) continue;
+    for (const spec of runtimeImports(readFileSync(file, 'utf8'))) {
+      const base = specifierBase(spec, file, REPO);
+      const target = base === null ? null : resolveFile(base);
+      if (target && !seen.has(target)) stack.push(target);
+    }
+  }
+  pipelineJsonMemo = [...json].sort();
+  return pipelineJsonMemo;
+}
+
+/** The cache key of a corpus run: the corpus name and a hash of everything the run reads. */
+function corpusSnapshotKey(corpus: CorpusName, extraArgs: readonly string[]): string {
   const manifest = path.join(corpusDir(corpus), 'manifest.json');
   const hash = createHash('sha256');
   hash.update(readFileSync(manifest));
@@ -204,7 +241,31 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
     hash.update(`${line}\n`);
   }
   for (const file of [path.join(REPO, 'scripts', 'fetch-data.ts'), path.join(REPO, 'scripts', 'cli.ts')]) hash.update(`${file}:${statSync(file).mtimeMs}\n`);
-  const key = `${corpus}-${hash.digest('hex').slice(0, 16)}`;
+  // Content, not mtimes: the JSON the pipeline imports, the lockfile, and the variant overlays.
+  for (const file of [...pipelineJsonImports(), path.join(REPO, 'pnpm-lock.yaml')]) {
+    hash.update(`${path.relative(REPO, file)}:${contentHash(file)}\n`);
+  }
+  for (const line of treeContentHashes(VARIANTS_DIR)) hash.update(`${line}\n`);
+  hash.update(`SCVAL_SPORT=${process.env.SCVAL_SPORT ?? ''}\n`);
+  return `${corpus}-${hash.digest('hex').slice(0, 16)}`;
+}
+
+const corpusSnapshotMemo = new Map<string, string>();
+
+/**
+ * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`), built
+ * once into os.tmpdir() and reused afterwards — by later calls in this process and by later test
+ * files and runs. The cache key (corpusSnapshotKey) hashes the manifest, the run's extra flags, the
+ * mtimes of lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/official/**, the contents of
+ * every JSON file the cron script imports (data/schools.json, the bracket files, …), pnpm-lock.yaml
+ * and the corpus variants, and SCVAL_SPORT, so any change to the pipeline, its data or the corpus
+ * rebuilds it. A test file that renders against a corpus points lib/data at it with
+ * `stubCorpusSnapshot(corpus)` below (which stubs SCVAL_SNAPSHOT to this path and resets the module
+ * cache) and then dynamically imports lib/data. The meta file is beside it (`*.meta.json`).
+ */
+export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: readonly string[] } = {}): string {
+  const extraArgs = [...(opts.extraArgs ?? [])];
+  const key = corpusSnapshotKey(corpus, extraArgs);
 
   const memo = corpusSnapshotMemo.get(key);
   if (memo && existsSync(memo)) return memo;
@@ -221,6 +282,17 @@ export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: reado
   }
   corpusSnapshotMemo.set(key, target);
   return target;
+}
+
+/**
+ * Write a test-built snapshot to `snapshot.json` in a fresh temp directory (`scvalfh-<label>-…`) and
+ * return its path, for a test to point SCVAL_SNAPSHOT at. The object goes through `loadSnapshot`
+ * first, as lib/data reads it, so a synthetic snapshot that would not load fails here, at its writer.
+ */
+export function writeTempSnapshot(snap: Snapshot, label: string): string {
+  const file = path.join(mkdtempSync(path.join(tmpdir(), `scvalfh-${label}-`)), 'snapshot.json');
+  writeFileSync(file, JSON.stringify(loadSnapshot(snap)));
+  return file;
 }
 
 /**

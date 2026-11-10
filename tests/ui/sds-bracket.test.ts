@@ -11,9 +11,7 @@
  * mocks lib/postseason/ccs-bracket; on the placeholder nothing is drawn.
  */
 
-import { readFileSync, mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -26,7 +24,7 @@ import { buildSdsBrackets, getSdsBrackets, getSdsBracketsSource } from '../../li
 import type { Snapshot } from '../../lib/types';
 import { SEED_CLAIM, attributeText, elementById, visibleText } from '../../scripts/copy-rules';
 import { sdsGames2025, seedsFromHistory } from '../fixtures/sds/brackets-2025';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { textOf } from './html-text';
 
 const VIEW = 'components/playoffs/sds-bracket-view.ts';
@@ -157,10 +155,7 @@ describe('/playoffs with the Section’s brackets (lib/postseason/sds-bracket mo
   beforeAll(async () => {
     const snap = JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as Snapshot;
     snap.fetchedAt = '2026-11-03T12:00:00.000Z';
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-playoffs-sds-'));
-    const snapFile = path.join(dir, 'snapshot.json');
-    writeFileSync(snapFile, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = snapFile;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'playoffs-sds');
     vi.resetModules();
     vi.doMock('../../lib/postseason/sds-bracket', async (importOriginal) => {
       const actual = await importOriginal<typeof import('../../lib/postseason/sds-bracket')>();

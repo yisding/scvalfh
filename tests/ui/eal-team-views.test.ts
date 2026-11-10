@@ -14,16 +14,14 @@
  * Every assertion message names the module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '../../lib/types';
-import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+import { EAL_CORPUS, corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
@@ -121,10 +119,7 @@ beforeAll(async () => {
   final.leagueDivision = null;
   final.contestTypes = { home: 4, away: 4 };
   final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
-  const file = path.join(dir, 'snapshot.json');
-  writeFileSync(file, JSON.stringify(snap));
-  withTag = await load(file);
+  withTag = await load(writeTempSnapshot(snap, 'eal-team-views'));
   tagged = withTag.d.getGameById(target.contestId)!;
   taggedFinal = withTag.d.getGameById(final.contestId)!;
 }, 600_000);

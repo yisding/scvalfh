@@ -1046,6 +1046,13 @@ of client-safe `lib/` modules, `tests/build-only-boundary.test.ts` keeps `app/` 
 freezes the list of `lib/` domain modules that import the `lib/data` snapshot singleton (it may
 shrink, never grow).
 
+`eslint.config.mjs` adds the direct-import layer rules as lint errors (`no-restricted-imports`), so
+they show in the editor: `lib/` never imports `components/`, `app/`, `scripts/` or `tests/` (nor
+uses the `@/` alias); `lib/sources/` never imports `lib/pipeline/` or `lib/crosscheck/`;
+`lib/crosscheck/` and `lib/official/` never import `lib/pipeline/`; `app/` and `components/` never
+import `scripts/`, `tests/` or a build-only `lib/` folder (but for `lib/crosscheck/cifss-notes`);
+and `scripts/` never imports `tests/`. `tests/lint-boundaries.test.ts` checks that each zone fires.
+
 ## Local development
 
 ```bash
