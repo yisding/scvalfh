@@ -40,7 +40,7 @@ export const SDS_DIVISION_IDS = ['open', 'division-1', 'division-2'] as const;
 export type SdsDivisionId = (typeof SDS_DIVISION_IDS)[number];
 
 /** The two field sizes the Section draws (Green Book 2026-27 Bylaw 2000.1: Open 8, Divisions I and II 12). */
-export const SDS_FIELD_SIZES = [8, 12] as const;
+const SDS_FIELD_SIZES = [8, 12] as const;
 
 /** The San Diego leagues: every league whose postseason is the Section's playoffs. */
 function sdsLeagueIds(): LeagueId[] {

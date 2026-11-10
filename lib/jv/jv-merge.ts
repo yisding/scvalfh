@@ -37,7 +37,7 @@ export const JV_SBLIVE_DATE_TOLERANCE_DAYS = 1;
 export const JV_MAXPREPS_PAIR_WINDOW_DAYS = 14;
 
 export const JV_FILL_NOTE = 'MaxPreps has no score for this JV game, so the score is si.com’s.';
-export const JV_SBLIVE_ONLY_NOTE = 'MaxPreps lists no JV contest for this game, so it is si.com’s.';
+const JV_SBLIVE_ONLY_NOTE = 'MaxPreps lists no JV contest for this game, so it is si.com’s.';
 
 export type JvUnusedReason =
   | 'copies-disagree'

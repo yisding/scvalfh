@@ -52,7 +52,7 @@ export function isCifsdsContest(contestId: string): boolean {
 }
 
 /** `cifsds:<away>-at-<home>`. */
-export function cifsdsContestId(away: TeamSlug, home: TeamSlug): string {
+function cifsdsContestId(away: TeamSlug, home: TeamSlug): string {
   return `${CIFSDS_PREFIX}${away}-at-${home}`;
 }
 

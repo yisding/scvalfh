@@ -3,16 +3,17 @@
  * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL only.
  *
  * Sources (the three CCS documents read 2026-11-06 from the links on cifccs.org's soccer page):
- *  - CCS_PLAYOFF_DATES, the CCS 2026-27 Playoff Calendar ("Updated 5/28/26"; sha256 28557c36…): soccer entry forms
+ *  - The CCS 2026-27 Playoff Calendar ("Updated 5/28/26"; sha256 28557c36…;
+ *    https://d2o2figo6ddd0g.cloudfront.net/7/5/gmi4496wp9uph8/2026-27_CCS_Playoff_Dates.pdf): soccer entry forms
  *    due Thu Feb 18 at noon and the seeding meeting at 3:00 pm; quarterfinals Sat Feb 20; Division 1 semifinals
  *    Tue Feb 23, Divisions 2-5 Wed Feb 24; Division 1 finals Fri Feb 26, Divisions 2-5 Sat Feb 27; the committee
  *    evaluation meeting Wed Mar 10 at 4:00 pm. The calendar opens the bracket at the quarterfinals.
  *  - CCS_SOCCER_REPORT, the CCS Soccer Committee report of March 11, 2026 (sha256 65852a97…): seeding Thu Feb 18
  *    and evaluation Wed Mar 10, 2027; the tournaments Feb 20-27, 2027; five girls divisions (the 2026 champions
  *    are listed for Divisions 1-5).
- *  - CCS_ALIGNMENTS, League Placement and Classification by Sport 2026-27 ("Updated: 9/29/2026"; sha256
- *    f8e7c635…): SCVAL girls soccer is De Anza (A) and El Camino (B), the same 15 schools as
- *    lib/registry/soccer/scval.ts.
+ *  - League Placement and Classification by Sport 2026-27 ("Updated: 9/29/2026"; sha256 f8e7c635…;
+ *    https://d2o2figo6ddd0g.cloudfront.net/x/6/oveyqe9ewyzm4m/League_Alignments_2026-27.pdf): SCVAL girls soccer is De Anza (A) and
+ *    El Camino (B), the same 15 schools as lib/registry/soccer/scval.ts.
  *  - SCVAL Soccer By-Laws Article V §2: SCVAL's automatic berths (De Anza 1-3, El Camino 1).
  *
  * Still null, because none of these documents says it: the field's size and at-large count (the CCS Soccer
@@ -22,9 +23,7 @@
 import type { CcsConfig, SectionConfig } from '../shape';
 
 const CCS_SOCCER_INDEX = 'https://cifccs.org/sports/soccer/index';
-export const CCS_PLAYOFF_DATES = 'https://d2o2figo6ddd0g.cloudfront.net/7/5/gmi4496wp9uph8/2026-27_CCS_Playoff_Dates.pdf';
-export const CCS_SOCCER_REPORT = 'https://d2o2figo6ddd0g.cloudfront.net/0/f/0o2l2sadue3ja2/SOCCER_2026_COMMITTEE_REPORT.pdf';
-export const CCS_ALIGNMENTS = 'https://d2o2figo6ddd0g.cloudfront.net/x/6/oveyqe9ewyzm4m/League_Alignments_2026-27.pdf';
+const CCS_SOCCER_REPORT = 'https://d2o2figo6ddd0g.cloudfront.net/0/f/0o2l2sadue3ja2/SOCCER_2026_COMMITTEE_REPORT.pdf';
 
 export const SOCCER_SECTIONS = [
   {

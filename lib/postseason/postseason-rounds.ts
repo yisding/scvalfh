@@ -36,7 +36,7 @@ export function roundFromLocation(text: string | null | undefined): LocationRoun
  * The round as a reader's word, lower case, after a tournament's name ('EAL Super Regional semifinal'): the
  * game page's kicker and the "This week" strip's label say it the same way.
  */
-export const LOCATION_ROUND_WORD: Readonly<Record<LocationRound, string>> = {
+const LOCATION_ROUND_WORD: Readonly<Record<LocationRound, string>> = {
   quarterfinal: 'quarterfinal',
   semifinal: 'semifinal',
   final: 'final',

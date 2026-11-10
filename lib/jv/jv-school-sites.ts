@@ -183,7 +183,7 @@ function sitesWords(r: JvSchoolSiteResult): string {
 }
 
 /** The sentence under a final a school's page scores differently. */
-function differsNote(g: Game, r: JvSchoolSiteResult): string {
+function differsNote(_g: Game, r: JvSchoolSiteResult): string {
   const name = (slug: TeamSlug) => getTeamBySlug(slug)?.shortName ?? slug;
   const [cap, ...rest] = sitesWords(r);
   return `${cap.toUpperCase()}${rest.join('')} has ${name(r.away)} ${r.awayScore}, ${name(r.home)} ${r.homeScore}; MaxPreps’ score is shown.`;

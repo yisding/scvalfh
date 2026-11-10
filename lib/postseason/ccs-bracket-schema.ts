@@ -32,7 +32,7 @@ import { teamsInLeague } from '../teams';
 import type { CcsDivisionName } from '../types';
 
 /** Seeds per CCS division: MaxPreps and the CCS bracket sheets number each division 1-8. */
-export const CCS_DIVISION_SIZE = 8;
+const CCS_DIVISION_SIZE = 8;
 
 /** Every registry team of a CCS league, by slug (read at call time so tests can mock the leagues). */
 function ccsSlugs(): ReadonlySet<string> {

@@ -58,7 +58,7 @@ import type { Game, TeamSlug } from '../types';
 // ---------------------------------------------------------------- parsing
 
 export type NoteStatKind = 'goals' | 'assists' | 'saves';
-export const NOTE_STAT_KINDS: readonly NoteStatKind[] = ['goals', 'assists', 'saves'];
+const NOTE_STAT_KINDS: readonly NoteStatKind[] = ['goals', 'assists', 'saves'];
 
 export interface NotedName {
   /** The name as the note writes it. */

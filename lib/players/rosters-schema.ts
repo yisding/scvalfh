@@ -36,7 +36,7 @@ const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry
 const division = slugId.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
 
 /** A team entry must carry its own registry id and division, not another team's. */
-export function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
+function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
   const team = getTeamBySlug(t.slug);
   return team !== undefined && team.id === t.teamId && team.division === t.division;
 }
