@@ -41,6 +41,7 @@
  */
 
 import { isoDateKey, shortDate, timeOfDayPT } from '../../lib/format';
+import { winnerOf } from '../../lib/postseason/game-winner';
 import { getTeamBySlug } from '../../lib/teams';
 import type { CcsSeeds } from '../../lib/postseason/ccs-bracket-schema';
 import type { CcsDivisionName, CcsPlayoffs, Game, GameSide } from '../../lib/types';
@@ -219,20 +220,6 @@ function gameSeeds(card: BracketGame): number[] {
   return [card.seeds.home, card.seeds.away].filter((s): s is number => s !== null);
 }
 
-/** The winner of a final, by slug (null for a side outside the registry, a level score with no W flag, or no result). */
-/** The winner: the higher score, then a lone W on a level score (the shootout convention); null when undecided. */
-export function winnerSlug(game: Game): string | null {
-  if (game.status !== 'final') return null;
-  const h = game.home.score;
-  const a = game.away.score;
-  if (h === null || a === null) return null;
-  if (h > a) return game.home.slug;
-  if (a > h) return game.away.slug;
-  if (game.home.result === 'W' && game.away.result !== 'W') return game.home.slug;
-  if (game.away.result === 'W' && game.home.result !== 'W') return game.away.slug;
-  return null;
-}
-
 // ---------------------------------------------------------------- the seeded shape
 
 /**
@@ -295,7 +282,7 @@ function seededRounds(games: Game[], division: DivisionSeeds, keyDates: CcsPlayo
       if (isSeedSide(top) && isSeedSide(bottom)) return { winnerOf: bottom.seed < top.seed ? [bottom, top] : [top, bottom] };
       return { tbd: true };
     }
-    const slug = winnerSlug(card.game);
+    const slug = winnerOf(card.game);
     const seed = slug === null ? undefined : division.byKey.get(slug);
     if (seed !== undefined) return sideFor(division, seed);
     const sides = gameSeeds(card).sort((a, b) => a - b).map((s) => sideFor(division, s));

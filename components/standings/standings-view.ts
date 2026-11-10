@@ -46,6 +46,7 @@ import {
   getDivision,
   getLeague,
   ladderFor,
+  leagueHeading,
   leagueStandingsUrl,
   regionOf,
   sectionOf,
@@ -855,8 +856,7 @@ export function overviewOutline(
     }
     group.leagues.push({
       id,
-      // A group of independents is not a league: its heading is its name alone ('LA independents').
-      title: league.independents ? league.name : `${league.shortName} — ${league.name}`,
+      title: leagueHeading(id),
       shortName: league.shortName,
       membershipNote: league.membershipNote,
       divisions: league.divisions.map((d) => divisionOf(d.id)),

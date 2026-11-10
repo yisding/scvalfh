@@ -31,7 +31,7 @@
  * check that the school is still that league's only field hockey team; it is never counted as a change.
  */
 
-import { MaxPrepsClient, MaxPrepsError } from '../lib/sources/maxpreps';
+import { MaxPrepsClient, MaxPrepsError, TBA_TEAM_ID } from '../lib/sources/maxpreps';
 import { ALL_DIVISIONS, isIndependentDivision } from '../lib/leagues';
 import {
   ALL_SEASON_ID,
@@ -92,9 +92,6 @@ interface Row {
   sportSeasonName: string | null;
   error: string | null;
 }
-
-/** What team-context/v1 gives as `teamData.leagueId` for a team with no league this season. */
-const NO_LEAGUE_GUID = '00000000-0000-0000-0000-000000000000';
 
 const diffs: string[] = [];
 function compare(label: string, ours: string | null, theirs: string | null | undefined): void {
@@ -195,7 +192,7 @@ async function main(argv: readonly string[]): Promise<number> {
   for (const row of rows) {
     // MaxPreps gives a team with no league this season the all-zero GUID (the five Orange County Sunset
     // teams in 2026-27): that is "no league", never a league to read metadata for.
-    if (!row.leagueId || row.leagueId === NO_LEAGUE_GUID) continue;
+    if (!row.leagueId || row.leagueId === TBA_TEAM_ID) continue;
     const entry = byLeague.get(row.leagueId) ?? { name: row.leagueName ?? '', slugs: [] };
     entry.slugs.push(row.slug);
     if (!entry.name && row.leagueName) entry.name = row.leagueName;
@@ -223,7 +220,7 @@ async function main(argv: readonly string[]): Promise<number> {
     resolved.push({ leagueId, name: entry.name, slugs: entry.slugs, ok });
   }
 
-  const noLeague = rows.filter((r) => (!r.leagueId || r.leagueId === NO_LEAGUE_GUID) && !r.error).map((r) => r.slug);
+  const noLeague = rows.filter((r) => (!r.leagueId || r.leagueId === TBA_TEAM_ID) && !r.error).map((r) => r.slug);
   if (noLeague.length) console.log(`  (no leagueName — independents or not fielding: ${noLeague.join(', ')})`);
   const failed = rows.filter((r) => r.error);
   if (failed.length) console.log(`  (failed: ${failed.map((r) => r.slug).join(', ')})`);
@@ -254,7 +251,7 @@ async function main(argv: readonly string[]): Promise<number> {
       // Config says MaxPreps publishes no table for this division (the San Diego Section's Valley in
       // 2026-27: none of its members carries a MaxPreps league). Steps 03 and 04 skip it; here we only
       // say whether a probed member now carries a league, so a human can decide whether one appeared.
-      const memberLeagues = rows.filter((r) => r.leagueId && r.leagueId !== NO_LEAGUE_GUID && wanted.some((t) => t.slug === r.slug && t.division === division.id));
+      const memberLeagues = rows.filter((r) => r.leagueId && r.leagueId !== TBA_TEAM_ID && wanted.some((t) => t.slug === r.slug && t.division === division.id));
       if (!probed) {
         console.log(`  ${division.id}: no MaxPreps table in config, not probed (no --teams member is in this division)`);
       } else if (memberLeagues.length === 0) {

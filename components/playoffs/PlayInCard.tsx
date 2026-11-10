@@ -3,7 +3,8 @@ import { Fragment } from 'react';
 
 import { EM_DASH, recordString, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { playInWinnerPurpose, winningSide } from '../../lib/postseason/postseason-outcomes';
+import { winningSide } from '../../lib/postseason/game-winner';
+import { playInWinnerPurpose } from '../../lib/postseason/postseason-outcomes';
 import type { Game, Standing, Team } from '../../lib/types';
 import TeamMonogram from '../ui/TeamMonogram';
 

@@ -45,9 +45,11 @@ import {
   findLeague,
   getDivision,
   getLeague,
+  getSection,
   leagueOfDivision,
   leaguePlayEnds,
   leaguesInRegion,
+  outsideTournamentOf,
   pairingWindow,
 } from './leagues';
 import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason/postseason';
@@ -243,14 +245,8 @@ export interface LeagueSummary {
   links: ReadonlyArray<{ label: string; href: string }>;
 }
 
-function sectionConfig(id: SectionId): SectionConfig {
-  const s = SECTIONS.find((x) => x.id === id);
-  if (!s) throw new Error(`lib/data.ts: unknown section ${id}`);
-  return s;
-}
-
 function summaryOf(league: LeagueConfig): LeagueSummary {
-  const section = sectionConfig(league.sectionId);
+  const section = getSection(league.sectionId);
   const divisions = league.divisions.map((d) => ({
     id: d.id,
     label: d.label,
@@ -400,7 +396,7 @@ export function getTeamSearchIndex(): SearchIndex {
     id: l.id,
     shortName: l.shortName,
     name: l.name,
-    sectionShort: sectionConfig(l.sectionId).shortName,
+    sectionShort: getSection(l.sectionId).shortName,
     ...(l.independents ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id,
@@ -1037,7 +1033,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
     // Tournament of Champions, DESIGN §24.13). One rung covers every place; the label says whether this team is
     // one of the tournament's entrants, and the sentence is the config note (which names the event) plus one
     // sentence saying so. Never a "top N": the field is the organizer's, not a table's.
-    const event = SECTIONS.find((s) => s.id === league.sectionId)?.outsideTournament ?? null;
+    const event = outsideTournamentOf(league.sectionId);
     const entrant = event !== null && event.entrants.includes(team.slug);
     const count = event ? numberWord(event.entrants.length) : '';
     return {

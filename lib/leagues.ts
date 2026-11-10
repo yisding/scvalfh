@@ -25,7 +25,7 @@ import { SCVAL_SOCCER } from './league-config/soccer/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
   SHOOTOUT_INFERENCES,
-  type DivisionConfig, type LadderRung, type LeagueConfig, type LeagueRules, type PairingConfig,
+  type DivisionConfig, type LadderRung, type LeagueConfig, type LeagueRules, type OutsideTournamentConfig, type PairingConfig,
   type PostseasonConfig, type RegionConfig, type SectionConfig,
 } from './league-config/shape';
 import { SUNSET } from './league-config/sunset';
@@ -34,7 +34,7 @@ import type {
 } from './types';
 // Besides lib/league-config/, the runtime imports are two leaves: lib/season.ts (dependency-free constants)
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
-import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
+import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
 import { IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
@@ -110,6 +110,15 @@ export function leagueSportWords(id: LeagueId): string {
   return name.toLowerCase().includes(SPORT.noun) ? `${name}, ${PROGRAM_WORDS}` : `${name} ${SPORT_AUDIENCE}`;
 }
 
+/**
+ * A league's heading: 'SCVAL — Santa Clara Valley Athletic League'; a group of independents is headed by its name
+ * alone ('LA independents'), since its short name is an adjective.
+ */
+export function leagueHeading(id: LeagueId): string {
+  const l = getLeague(id);
+  return l.independents === true ? l.name : `${l.shortName} — ${l.name}`;
+}
+
 /** '<SHORT> standings' as a link's or a title's words ('LA standings' for the LA independents). */
 export function standingsLabel(id: LeagueId): string {
   return `${getLeague(id).shortName} standings`;
@@ -168,6 +177,11 @@ export function getSection(id: SectionId): SectionConfig {
   const s = SECTION_BY_ID.get(id);
   if (!s) throw new Error(`lib/leagues.ts: unknown section "${id}"`);
   return s;
+}
+
+/** The section's outside tournament (SectionConfig.outsideTournament), or null when it has none. */
+export function outsideTournamentOf(sectionId: SectionId): OutsideTournamentConfig | null {
+  return SECTION_BY_ID.get(sectionId)?.outsideTournament ?? null;
 }
 
 export function sectionOf(leagueId: LeagueId): SectionConfig {
@@ -320,7 +334,8 @@ export function seasonWindowBounds(): { start: string; end: string } {
 
 // ---------- assertLeagues (SPEC §2.4) ----------
 
-const UNCOMPUTABLE: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule']);
+/** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
+export const UNCOMPUTABLE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule']);
 const CCS_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
   'aq', 'play-in', 'at-large', 'out', 'no-aq-route',
 ]);
@@ -330,10 +345,12 @@ const TOURNAMENT_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffSt
 const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'below-line']);
 const NO_POSTSEASON_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['no-postseason']);
 const SECTION_PLAYOFFS_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'selection']);
-const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
+/** Stages that read the teams placed above or below the tied group. */
+export const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
   'record-vs-higher-placed', 'record-vs-lower-placed',
 ]);
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+/** Lowercase only, on purpose: config GUIDs must be written lowercase (lib/game-id.ts GUID_RE takes either case). */
+const LOWERCASE_GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** The ladder statuses a postseason kind may use. */
 function allowedStatuses(kind: PostseasonConfig['kind']): ReadonlySet<PlayoffStatus> {
@@ -572,7 +589,7 @@ export function assertLeagues(): void {
       if (chain.includes('points')) fail(`${where} contains 'points'`);
       if (chain.includes('play-in')) fail(`${where} contains 'play-in'`);
       if (dupes(chain).length) fail(`${where} repeats a stage`);
-      const uncomputable = chain.filter((s) => UNCOMPUTABLE.has(s));
+      const uncomputable = chain.filter((s) => UNCOMPUTABLE_STAGES.has(s));
       if (uncomputable.length > 1) fail(`${where} has more than one uncomputable stage`);
       if (uncomputable.length === 1 && chain[chain.length - 1] !== uncomputable[0]) {
         fail(`${where}: the uncomputable stage ${uncomputable[0]} is not last`);
@@ -692,7 +709,7 @@ export function assertLeagues(): void {
         if (d.maxprepsName !== null || d.maxprepsSlug !== null) fail(`${d.id}: maxprepsLeagueId null needs maxprepsName and maxprepsSlug null`);
         if (d.maxprepsTeamCount !== 0) fail(`${d.id}: maxprepsLeagueId null needs maxprepsTeamCount 0`);
       } else {
-        if (!GUID_RE.test(d.maxprepsLeagueId)) fail(`${d.id}: maxprepsLeagueId ${d.maxprepsLeagueId} is not a GUID`);
+        if (!LOWERCASE_GUID_RE.test(d.maxprepsLeagueId)) fail(`${d.id}: maxprepsLeagueId ${d.maxprepsLeagueId} is not a GUID`);
         if (!d.maxprepsName || !d.maxprepsSlug) fail(`${d.id}: a MaxPreps table needs maxprepsName and maxprepsSlug`);
       }
       // 13. a group of independents: a table of its members' games against each other (membership) and nothing
@@ -710,7 +727,7 @@ export function assertLeagues(): void {
       }
       // MaxPreps' table: its rows, plus the members it omits, less its known non-member rows, are the registry.
       for (const [id, reason] of Object.entries(d.maxprepsExtraRows)) {
-        if (!GUID_RE.test(id)) fail(`${d.id}: maxprepsExtraRows key ${id} is not a GUID`);
+        if (!LOWERCASE_GUID_RE.test(id)) fail(`${d.id}: maxprepsExtraRows key ${id} is not a GUID`);
         if (!reason.trim()) fail(`${d.id}: maxprepsExtraRows ${id} has no reason`);
       }
       const extra = Object.keys(d.maxprepsExtraRows).length;
@@ -738,7 +755,7 @@ export function assertLeagues(): void {
       case 'league-tournament':
         for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
         for (const [id, note] of Object.entries(ps.resultNotes)) {
-          if (!GUID_RE.test(id)) fail(`${l.id} resultNotes key ${id} is not a contest GUID`);
+          if (!LOWERCASE_GUID_RE.test(id)) fail(`${l.id} resultNotes key ${id} is not a contest GUID`);
           if (!note.trim() || !/\.$/.test(note.trim())) fail(`${l.id} resultNotes ${id}: a sourced sentence ending in a period`);
         }
         if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
@@ -823,10 +840,8 @@ export function assertLeagues(): void {
   // A date correction names its contest by GUID, a real date inside a season window, and its source; a
   // contest is never both corrected and excluded (the correction would be for nothing).
   for (const [id, o] of Object.entries(DATA_QUALITY.contestDateOverrides)) {
-    if (!GUID_RE.test(id)) fail(`contestDateOverrides: ${id} is not a contest GUID`);
-    const valid = DATE_PATTERN.test(o.dateKey) && !Number.isNaN(Date.parse(`${o.dateKey}T12:00:00Z`)) &&
-      new Date(`${o.dateKey}T12:00:00Z`).toISOString().slice(0, 10) === o.dateKey;
-    if (!valid) fail(`contestDateOverrides ${id}: dateKey ${o.dateKey} is not a valid YYYY-MM-DD date`);
+    if (!LOWERCASE_GUID_RE.test(id)) fail(`contestDateOverrides: ${id} is not a contest GUID`);
+    if (!isCalendarDate(o.dateKey)) fail(`contestDateOverrides ${id}: dateKey ${o.dateKey} is not a valid YYYY-MM-DD date`);
     else if (!SECTIONS.some((s) => o.dateKey >= s.seasonWindow.start && o.dateKey <= s.seasonWindow.end)) {
       fail(`contestDateOverrides ${id}: ${o.dateKey} is outside every section's season window`);
     }
@@ -843,9 +858,7 @@ export function assertLeagues(): void {
       fail(`fixtureMoves: ${id} is not an official fixture id of a configured division`);
       continue;
     }
-    const valid = DATE_PATTERN.test(m.dateKey) && !Number.isNaN(Date.parse(`${m.dateKey}T12:00:00Z`)) &&
-      new Date(`${m.dateKey}T12:00:00Z`).toISOString().slice(0, 10) === m.dateKey;
-    if (!valid) fail(`fixtureMoves ${id}: dateKey ${m.dateKey} is not a valid YYYY-MM-DD date`);
+    if (!isCalendarDate(m.dateKey)) fail(`fixtureMoves ${id}: dateKey ${m.dateKey} is not a valid YYYY-MM-DD date`);
     else {
       const window = SECTION_BY_ID.get(leagueOfDivision(division.id).sectionId)?.seasonWindow;
       if (window && (m.dateKey < window.start || m.dateKey > window.end)) fail(`fixtureMoves ${id}: ${m.dateKey} is outside its section's season window`);

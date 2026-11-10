@@ -91,6 +91,7 @@ import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '..
 import { gameAddress } from '../../lib/schools/venue';
 import type { LeagueChip } from '../layout/league-chips';
 import { leagueChips } from '../layout/league-chips';
+import { regionIdSuffix } from '../leaders/scope';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
@@ -1171,7 +1172,7 @@ export function buildHomeView(): HomeView {
         },
         leagueCards: leagueCards.filter((c) => c.regionId === region.id),
         latest: crossLeagueLatest(ids, leagueIds),
-        idSuffix: region.id === 'norcal' ? '' : '-socal',
+        idSuffix: regionIdSuffix(region.id),
       };
     }),
   };

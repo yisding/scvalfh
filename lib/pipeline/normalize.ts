@@ -24,6 +24,7 @@
 
 import { byDateThenId, shootoutPhrases, toLocalTimestamp } from '../format';
 import { DATA_QUALITY } from '../league-config/data-quality';
+import { GUID_RE } from '../game-id';
 import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
 import { getLeague, getSection } from '../leagues';
 import { getTeamById, resolveTeam } from '../teams';
@@ -604,8 +605,6 @@ function toGame(
   };
   return game;
 }
-
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * A MaxPreps GUID that names something: not null, not the all-zero GUID (TBA_TEAM_ID), which the feed puts in

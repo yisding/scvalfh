@@ -22,6 +22,7 @@ import { z } from 'zod';
 
 import { classifyGame } from '../classify';
 import { CCS, SECTIONS } from '../league-config/sections';
+import { GUID_RE } from '../game-id';
 import {
   CCS_LEAGUE_IDS,
   LEAGUES,
@@ -49,7 +50,6 @@ import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage
 
 /** League, division and slug ids: validated strings; membership is checked in checkAgainstConfig. */
 const id = slugId;
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
 const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;

@@ -54,6 +54,7 @@ import {
   divisionHeading,
   getDivision,
   getLeague,
+  leagueHeading,
   pairingWindow,
   getRegion,
   leaguePlayEnds,
@@ -1115,12 +1116,9 @@ export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
     id: section.id,
     name: section.name,
     leagues: leagues.map(({ league, divisions }) => {
-      // A group of independents (the LA independents) is headed by its name: its short name is
-      // an adjective.
-      const independent = getLeague(league.id).independents === true;
       return {
         league,
-        title: independent ? league.name : `${league.shortName} — ${league.name}`,
+        title: leagueHeading(league.id),
         meta: plural(league.teamCount, 'team'),
         membershipNote: getLeague(league.id).membershipNote,
         standingsHref: `/standings/${league.id}`,

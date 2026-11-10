@@ -72,6 +72,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { localDateKey, monthDay } from '../lib/format';
+import { isCifsdsContestId, isSbliveContestId } from '../lib/game-id';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -307,7 +308,7 @@ async function readBoxScores(
 function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
   const out = new Map<string, Set<string>>();
   for (const g of games) {
-    if (g.status !== 'final' || g.contestId.startsWith('sblive:') || g.contestId.startsWith('cifsds:')) continue;
+    if (g.status !== 'final' || isSbliveContestId(g.contestId) || isCifsdsContestId(g.contestId)) continue;
     for (const side of [g.home, g.away]) {
       if (!side.slug) continue;
       const set = out.get(side.slug) ?? new Set<string>();

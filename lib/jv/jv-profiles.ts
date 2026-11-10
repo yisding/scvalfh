@@ -29,7 +29,7 @@ import { z } from 'zod';
 import bundledFieldHockey from '../../data/jv-profiles.json';
 import bundledSoccer from '../../data/soccer/jv-profiles.json';
 import { classOf, getRosterEnrichment } from '../players/rosters';
-import { PlayerProfileSchema, type PlayerProfile } from '../players/rosters-schema';
+import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
 import { dateKey, failValidation } from '../schema-primitives';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import { getTeamBySlug } from '../teams';
@@ -50,7 +50,7 @@ export const JvProfilePlayerSchema = z
   })
   .strict()
   .refine(
-    (p) => new Set(p.profiles.map((x) => `${x.platform} ${x.sport ?? 'field-hockey'}`)).size === p.profiles.length,
+    (p) => new Set(p.profiles.map(profileSportKey)).size === p.profiles.length,
     'one profile per platform in each sport',
   );
 

@@ -26,10 +26,12 @@
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
+import { byDateThenId, dayDiff, recordString, shortDate, sideOutcome } from './format';
 import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './league-config/shape';
 import {
   LEAGUES,
+  PLACE_VS_STAGES,
+  UNCOMPUTABLE_STAGES,
   divisionLabel,
   drawNumberOf,
   getDivision,
@@ -232,13 +234,6 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
   return out;
 }
 
-/** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
-const UNCOMPUTABLE: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
-  'coin-flip',
-  'ccs-points',
-  'no-rule',
-]);
-
 /** Everything a stage key may read for one division. */
 interface DivisionCtx {
   division: DivisionId;
@@ -406,7 +401,7 @@ function splitChain(chain: readonly TiebreakStage[]): {
   terminal: TiebreakStage | null;
 } {
   const last = chain[chain.length - 1];
-  if (last !== undefined && UNCOMPUTABLE.has(last)) {
+  if (last !== undefined && UNCOMPUTABLE_STAGES.has(last)) {
     return { stages: chain.slice(0, -1), terminal: last };
   }
   return { stages: [...chain], terminal: null };
@@ -493,13 +488,13 @@ function pickFirst(
   narrow: (best: TeamId[]) => TeamId[],
 ): { cluster: TeamId[]; terminal: boolean } {
   for (const stage of chain) {
-    if (UNCOMPUTABLE.has(stage)) {
+    if (UNCOMPUTABLE_STAGES.has(stage)) {
       for (const id of group) ctx.resolvedBy.set(id, stage);
       return { cluster: byName(group), terminal: true };
     }
     const keys = stageKeys(stage, group, above, ctx.below, ctx);
     if (keys === HALT) {
-      const terminal = chain.find((st) => UNCOMPUTABLE.has(st)) ?? 'coin-flip';
+      const terminal = chain.find((st) => UNCOMPUTABLE_STAGES.has(st)) ?? 'coin-flip';
       for (const id of group) ctx.resolvedBy.set(id, terminal);
       return { cluster: byName(group), terminal: true };
     }
@@ -711,11 +706,6 @@ export interface ComputeOptions {
   reported?: ReadonlyMap<TeamId, ReportedRecord>;
 }
 
-const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
-  'record-vs-higher-placed',
-  'record-vs-lower-placed',
-]);
-
 /** Loops LEAGUES → divisions → teamsInDivision; per division: the SCVAL procedure, with rules from config. */
 export function computeStandings(
   games: readonly Game[],
@@ -900,7 +890,7 @@ function tiebreakNote(
   if (stage === 'play-in') {
     return `Tied on ${record.pts} points${tiedWith} for the last tournament place — ${citations.stages['play-in'] ?? ''}. We show them level.`;
   }
-  if (UNCOMPUTABLE.has(stage)) {
+  if (UNCOMPUTABLE_STAGES.has(stage)) {
     return `Tied on ${record.pts} points${tiedWith} and unresolved by every criterion — ${citations.stages[stage] ?? ''}. We show them level.`;
   }
   return `Tied on ${record.pts} points; separated by ${citations.stages[stage] ?? stage}.`;
@@ -1229,10 +1219,7 @@ export function pairingDatesLabel(pairings: readonly PairingConfig[]): string {
   const first = [...windows.map((w) => w.first)].sort()[0];
   const last = [...windows.map((w) => w.last)].sort().reverse()[0];
   if (first === last) return shortDate(first);
-  const [fy, fm, fd] = first.split('-').map(Number);
-  const [ly, lm, ld] = last.split('-').map(Number);
-  const days = Math.round((Date.UTC(ly, lm - 1, ld) - Date.UTC(fy, fm - 1, fd)) / 86_400_000);
-  return days === 1 ? `${shortDate(first)} and ${shortDate(last)}` : `${shortDate(first)} to ${shortDate(last)}`;
+  return dayDiff(first, last) === 1 ? `${shortDate(first)} and ${shortDate(last)}` : `${shortDate(first)} to ${shortDate(last)}`;
 }
 
 /** The rung's legend with '{date}' replaced by shortDate(first pairing date of the league). */

@@ -8,6 +8,7 @@
 import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
 import { byDateThenId, dayDiff } from '../../format';
+import { isSbliveContestId } from '../../game-id';
 import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
 import { CCS } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
@@ -56,10 +57,10 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
   }
   const byFixture = new Map<string, ContestId>();
   for (const g of games) {
-    if (g.official && !g.contestId.startsWith('sblive:')) byFixture.set(g.official.fixtureId, g.contestId);
+    if (g.official && !isSbliveContestId(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
   }
   for (const g of previous?.games ?? []) {
-    if (!g.contestId.startsWith('sblive:') || ids.has(g.contestId) || !g.official) continue;
+    if (!isSbliveContestId(g.contestId) || ids.has(g.contestId) || !g.official) continue;
     const winner = byFixture.get(g.official.fixtureId);
     if (winner) out[g.contestId] = winner;
   }
@@ -72,7 +73,7 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
       .filter(
         (c) =>
           !isCifsdsContest(c.contestId) &&
-          !c.contestId.startsWith('sblive:') &&
+          !isSbliveContestId(c.contestId) &&
           [c.home.slug, c.away.slug].sort().join('~') === pair &&
           Math.abs(dayDiff(c.dateKey, g.dateKey)) <= SDS_SHEET_DATE_TOLERANCE_DAYS,
       )

@@ -30,6 +30,7 @@ import type { LeagueConfig, PairingConfig } from '../league-config/shape';
 import { getLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { Game, LeaguePairing, TeamSlug } from '../types';
+import { winningSide } from './game-winner';
 
 export interface CcsOutcome {
   /** 'play-in': the team's final play-in; 'crossover': a final crossover game (SCVAL #1–#3). */
@@ -44,22 +45,6 @@ export interface CcsOutcome {
 }
 
 type CcsLadder = Extract<LeagueConfig['postseason'], { kind: 'ccs-ladder' }>;
-
-/**
- * The winning side of a final: the higher score, else the side flagged 'W' alone; null when nothing decides it.
- * Exported for the play-in card's winner line (components/playoffs/PlayInCard.tsx), so card and team line agree.
- */
-export function winningSide(game: Game): 'home' | 'away' | null {
-  if (game.status !== 'final') return null;
-  const h = game.home.score;
-  const a = game.away.score;
-  if (h === null || a === null) return null;
-  if (h > a) return 'home';
-  if (a > h) return 'away';
-  if (game.home.result === 'W' && game.away.result !== 'W') return 'home';
-  if (game.away.result === 'W' && game.home.result !== 'W') return 'away';
-  return null;
-}
 
 const nameOf = (slug: TeamSlug | null): string => (slug ? (getTeamBySlug(slug)?.name ?? slug) : 'TBD');
 
