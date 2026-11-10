@@ -36,10 +36,9 @@ import {
   type JvDivisionTable,
 } from './jv-standings';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): JvFile {
   return validateData('jv', JvFileSchema, readOverride('lib/jv/jv.ts', 'SCVAL_JV', bundled));

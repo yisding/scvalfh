@@ -50,15 +50,14 @@ import {
 } from './rosters-schema';
 import { dateKey, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
 /** Names this module in a failed override read. */
 const MODULE = 'lib/players/rosters.ts';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledEnrichment = IS_FIELD_HOCKEY ? bundledEnrichmentFieldHockey : IS_BASKETBALL ? bundledEnrichmentBasketball : bundledEnrichmentSoccer;
+const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledRosters = IS_FIELD_HOCKEY ? bundledRostersFieldHockey : IS_BASKETBALL ? bundledRostersBasketball : bundledRostersSoccer;
+const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
 
 export type {
   EnrichedGrade,

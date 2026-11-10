@@ -84,11 +84,14 @@ import type {
   TeamId,
   TeamSlug,
 } from './types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from './sports/current';
 import { compareInOrder, levelInOrder, ordersByRecord } from './standings/order';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : IS_BASKETBALL ? bundledSnapshotBasketball : bundledSnapshotSoccer;
+/**
+ * This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball:
+ * lib/sports/current.ts DATA_DIR). Chosen on the inlined SCVAL_SPORT itself, not on IS_FIELD_HOCKEY, so a bundler
+ * folds the comparison and leaves the other sports' files out of the Worker (scripts/assert-budgets.ts).
+ */
+const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:

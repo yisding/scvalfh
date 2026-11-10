@@ -33,13 +33,12 @@ import { validateData } from '../data-file';
 import { classOf, getRosterEnrichment } from '../players/rosters';
 import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
 import { dateKey } from '../schema-primitives';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export const JvProfilePlayerSchema = z
   .object({

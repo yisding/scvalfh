@@ -46,12 +46,12 @@ import { listWords } from '../format';
 import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledBrackets = IS_FIELD_HOCKEY ? bundledBracketsFieldHockey : IS_BASKETBALL ? bundledBracketsBasketball : bundledBracketsSoccer;
+const bundledBrackets = process.env.SCVAL_SPORT === 'basketball' ? bundledBracketsBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledBracketsSoccer : bundledBracketsFieldHockey;
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledHistory = IS_FIELD_HOCKEY ? bundledHistoryFieldHockey : IS_BASKETBALL ? bundledHistoryBasketball : bundledHistorySoccer;
+const bundledHistory = process.env.SCVAL_SPORT === 'basketball' ? bundledHistoryBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledHistorySoccer : bundledHistoryFieldHockey;
 
 export type {
   AvailableLeagueHistory,

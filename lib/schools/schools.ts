@@ -23,10 +23,9 @@ import bundledSoccer from '../../data/soccer/schools.json';
 import { validateData } from '../data-file';
 import { dateKey, isCalendarDate, slugId } from '../schema-primitives';
 import type { StreetAddress, TeamSlug } from '../types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const nonEmpty = z.string().trim().min(1);
 

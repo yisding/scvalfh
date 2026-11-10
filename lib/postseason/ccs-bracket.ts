@@ -28,10 +28,9 @@ import { byDateThenId } from '../format';
 import { ccsFirstDay } from '../league-config/sections';
 import type { SectionBracket } from '../history/history-brackets-schema';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : IS_BASKETBALL ? bundledFileBasketball : bundledFileSoccer;
+const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
 
 /**
  * The CCS bracket games among `games`: tagged 'ccs' and (dated on or after the quarterfinals, or marked
