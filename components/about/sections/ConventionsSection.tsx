@@ -1,3 +1,4 @@
+import { RECORD_NOUN_WORDS, SCORE_UNITS } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import type { ShootoutSection } from '../about-view';
 
@@ -46,8 +47,7 @@ export function ConventionsSection({ shootoutSections }: { shootoutSections: rea
             </li>
           ))}
           <li>
-            A forfeit counts in win-loss-tie but not in goals for/against/differential &mdash; marked
-            with a dagger everywhere a total would otherwise be misleading.
+            {`A forfeit counts in ${RECORD_NOUN_WORDS} but not in ${SCORE_UNITS} for/against/differential — marked with a dagger everywhere a total would otherwise be misleading.`}
           </li>
           <li>A game with no score posted yet shows <b className="font-semibold text-ink">SCORE NOT REPORTED</b> with an empty outline chip, never a blank or a zero.</li>
           <li>A postponed game shows <b className="font-semibold text-ink">POSTPONED</b> with the new date when one is known, or &ldquo;TBD&rdquo; when it is not.</li>

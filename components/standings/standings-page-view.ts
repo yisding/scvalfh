@@ -11,6 +11,8 @@
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
  */
 
+import { orderValueShort } from '../../lib/standings/order';
+import { EMPTY_RECORD } from '../words/score-words';
 import {
   getCoLeaders,
   getCrossCheck,
@@ -112,6 +114,7 @@ export function leaderLine(division: DivisionId, heading: string | null): Leader
       name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
       record: recordString(s.computed),
       pts: s.computed.pts,
+      order: orderValueShort(leagueOfDivision(division).rules, s.computed),
       slug: s.slug,
     })),
     tiedAtTop: top.length > 1,
@@ -165,7 +168,7 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
     heading: isIndependentLeague(leagueId)
       ? `The first game between two of ${standaloneName(leagueId)} is ${shortDate(leaguePlayStarts(leagueId))}.`
       : `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
-    body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
+    body: `These tables count league games only, so every record reads ${EMPTY_RECORD} until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
             nonLeagueFinals === 1 ? 'is' : 'are'

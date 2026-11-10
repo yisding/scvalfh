@@ -1,4 +1,8 @@
 import { notFound } from 'next/navigation';
+import { LEAGUES, leagueOfDivision } from '../../../lib/leagues';
+import { orderHead, orderValue, ordersByRecord } from '../../../lib/standings/order';
+import { SCORE_UNITS, SCORE_UNITS_TITLE } from '../../../components/words/score-words';
+import { capitalized } from '../../../components/words/capitalized';
 import { ImageResponse } from 'next/og';
 
 import { gameHeadline, officialFixtureHeadline } from '../../../components/teams/team-headlines';
@@ -36,7 +40,9 @@ import {
  * `generateImageMetadata`, which changes the image URL shape.
  */
 export const alt =
-  'Team card: league and division, place, league record, points, goals for and against, streak, last result and next game';
+  `Team card: league and division, place, league record, ${
+    LEAGUES.every((l) => ordersByRecord(l.rules)) ? 'winning percentage' : 'points'
+  }, ${SCORE_UNITS} for and against, streak, last result and next game`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
@@ -95,7 +101,8 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
       ? `${view.context.counted}`
       : `${view.context.counted}/${view.context.scheduled}`
     : EM_DASH;
-  const points = known ? `${known.computed.pts}` : EM_DASH;
+  const orderRules = leagueOfDivision(team.division).rules;
+  const points = known ? orderValue(orderRules, known.computed) : EM_DASH;
   const goals = known ? `${known.computed.gf} / ${known.computed.ga}` : EM_DASH;
   const diff = known ? signedGd(known.computed.gd) : EM_DASH;
   const streak = known ? streakString(known.computed.streak) : EM_DASH;
@@ -151,9 +158,9 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
 
         <div style={{ display: 'flex', gap: 32, borderTop: `2px solid ${OG.RULE}`, paddingTop: 24 }}>
           <Stat label="League" value={record} />
-          <Stat label="Pts" value={points} />
+          <Stat label={capitalized(orderHead(orderRules).toLowerCase())} value={points} />
           <Stat label="GP" value={gp} />
-          <Stat label="Goals F / A" value={goals} />
+          <Stat label={`${SCORE_UNITS_TITLE} F / A`} value={goals} />
           <Stat label="Diff" value={diff} />
           <Stat label="Streak" value={streak} />
         </div>

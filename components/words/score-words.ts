@@ -44,3 +44,9 @@ export const EMPTY_RECORD = S.allowsTies ? '0-0-0' : '0-0';
 export function scoreCount(n: number): string {
   return `${n} ${n === 1 ? S.unit : S.units}`;
 }
+
+/**
+ * Whether totals run to three digits and a difference to four glyphs ('+112'): a sport that scores points.
+ * The standings tables give the for / against / difference numerals one more glyph of width where it is set.
+ */
+export const WIDE_SCORES: boolean = S.unit === 'point';

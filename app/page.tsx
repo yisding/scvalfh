@@ -16,7 +16,7 @@ import { websiteJsonLd } from '../components/metadata/structured-data';
 import { listWords, shortDate } from '../lib/format';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
-import { SPORT_AUDIENCE } from '../lib/sports/current';
+import { PROGRAM_WORDS, SPORT_AUDIENCE } from '../lib/sports/current';
 
 /**
  * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
@@ -75,7 +75,7 @@ export default function HomePage() {
       <div data-scope="all">
         <PageHeader
           title={`${SITE_NAME} Teams`}
-          srTitle={` — girls varsity scores, standings and playoff pictures for ${LEAGUE_LIST}`}
+          srTitle={` — ${PROGRAM_WORDS} scores, standings and playoff pictures for ${LEAGUE_LIST}`}
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
                are named by the switcher chips right below. From 640px it fits and comes back; the

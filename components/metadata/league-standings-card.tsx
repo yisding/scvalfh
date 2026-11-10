@@ -1,5 +1,8 @@
 import { ImageResponse } from 'next/og';
 
+import { LEAGUES, getLeague } from '../../lib/leagues';
+import { orderValueShort, ordersByRecord } from '../../lib/standings/order';
+import { RECORD_HEAD } from '../words/score-words';
 import { OG, OG_SIZE } from './og-theme';
 import { SITE_WORDMARK } from '../layout/site';
 import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../lib/data';
@@ -10,7 +13,9 @@ import { formatStamp, placeMark, recordString, shortDate } from '../../lib/forma
  * the same card, so the same words. Static, because a per-league alt would need
  * `generateImageMetadata`, which changes the image URL shape.
  */
-export const LEAGUE_STANDINGS_CARD_ALT = 'League standings card: each division’s leaders with points and W-L-T';
+export const LEAGUE_STANDINGS_CARD_ALT = `League standings card: each division’s leaders with ${
+  LEAGUES.every((l) => ordersByRecord(l.rules)) ? 'winning percentage' : 'points'
+} and ${RECORD_HEAD}`;
 
 /** The card's content box: 1200 less 64 of padding a side. */
 const CONTENT_WIDTH = OG_SIZE.width - 2 * 64;
@@ -81,7 +86,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
         id: s.teamId,
         place: placeMark(s.computed.place, s.tiebreak.shared, 'table'),
         name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
-        pts: s.computed.pts,
+        pts: orderValueShort(getLeague(league.id).rules, s.computed),
         record: recordString(s.computed),
       })),
   }));
@@ -166,7 +171,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
                         color: OG.TEXT_2,
                       }}
                     >
-                      {row.pts} pts &middot; {row.record}
+                      {row.pts} &middot; {row.record}
                     </div>
                   );
                   return (

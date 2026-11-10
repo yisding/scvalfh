@@ -4,6 +4,7 @@
  * /about#cross-check, and why a division has no comparison at all.
  */
 
+import { SPORT } from '../sports/current';
 import { recordString } from '../format';
 import { getDivision, getLeague, leagueStandingsUrl } from '../leagues';
 import type { ComputedRecord, CrossCheckRow, DivisionId, ReportedRecord, Standing } from '../types';
@@ -34,7 +35,7 @@ export function compareToReported(
   }
   if (computed.gf !== reported.conferencePoints || computed.ga !== reported.conferencePointsAgainst) {
     diffs.push(
-      `league goals ${computed.gf}-${computed.ga} vs MaxPreps ` +
+      `league ${SPORT.scoring.units} ${computed.gf}-${computed.ga} vs MaxPreps ` +
         `${reported.conferencePoints}-${reported.conferencePointsAgainst}`,
     );
   }
@@ -98,8 +99,13 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     // Before a team's first league game neither table has a place for it (ours shows it unranked, MaxPreps lists
     // every team first), so places and the rest of the ordering fields are not compared yet.
     if (s.computed.gp === 0 && r.conferenceContestsPlayed === 0) continue;
+    const { rules } = getLeague(div.leagueId);
     push(
-      `place (we order on points, ${getLeague(div.leagueId).rules.citations.pointsShort}; MaxPreps orders on win pct)`,
+      // A league ordered on its league record orders as MaxPreps does until teams are level; then the
+      // league's own tiebreaks decide here and MaxPreps' order of the level teams is its own.
+      rules.orderBy === 'win-pct'
+        ? `place (we order on league record, ${rules.citations.pointsShort}, then its tiebreaks; MaxPreps’ order of level teams is its own)`
+        : `place (we order on points, ${rules.citations.pointsShort}; MaxPreps orders on win pct)`,
       String(s.computed.place),
       r.conferenceStandingPlacement === null ? '—' : String(r.conferenceStandingPlacement),
     );

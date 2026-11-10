@@ -3,9 +3,11 @@ import { EM_DASH, placeWords, recordWords } from '../../../lib/format';
 import { divisionHeading, leagueOfDivision } from '../../../lib/leagues';
 import type { DivisionId, Standing, TeamSlug } from '../../../lib/types';
 
+import { orderValueWords } from '../../../lib/standings/order';
 import MissingValue from '../../ui/MissingValue';
 import PlaceMark from '../../ui/PlaceMark';
-import { formStripName, plural } from '../../words/plural';
+import { formStripName } from '../../words/plural';
+import { DIFF_WORDS } from '../../words/score-words';
 
 import type { StandingsColumn, StandingsRowData, StandingsTableProps } from './types';
 
@@ -125,7 +127,7 @@ export function rowLabel(row: StandingsRowData): string {
   // The record in WORDS: "4-1-0" read aloud is a subtraction or a date, depending on the voice.
   return `${team.name}, ${place} in ${tableName(team.division)}, ${recordWords(
     standing.computed,
-  )}, ${plural(standing.computed.pts, 'point')}`;
+  )}, ${orderValueWords(leagueOfDivision(team.division).rules, standing.computed)}`;
 }
 
 /** The ⚑ mark, shown on any row MaxPreps publishes differently. */
@@ -140,7 +142,7 @@ export function isFlagged(row: StandingsRowData, flagged: Set<TeamSlug>): boolea
 export function NoGoalDiff() {
   return (
     <span className="sx-num text-ink-3">
-      <MissingValue words="no goal differential" glyph={`· ${EM_DASH}`} />
+      <MissingValue words={`no ${DIFF_WORDS}`} glyph={`· ${EM_DASH}`} />
     </span>
   );
 }

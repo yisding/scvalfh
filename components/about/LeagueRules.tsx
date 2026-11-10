@@ -1,3 +1,4 @@
+import { ordersByRecord } from '../../lib/standings/order';
 import Link from 'next/link';
 
 import Arrow from '../ui/Arrow';
@@ -78,17 +79,18 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
         }`;
   return (
     <div className="sx-prose">
-      <h4 className={H4}>Points &amp; standings order</h4>
+      <h4 className={H4}>{ordersByRecord(rules) ? 'Standings order' : 'Points & standings order'}</h4>
       <ul className="list-disc">
         <li>{rules.citations.points}.</li>
-        <li>{rules.citations.order}.</li>
+        {/* A league ordered on its record cites one rule for both: the same sentence is not printed twice. */}
+        {ordersByRecord(rules) ? null : <li>{rules.citations.order}.</li>}
         <li>{rules.citations.doubleRoundRobin}.</li>
         <li>{rules.citations.overtime}.</li>
         <li>{rules.citations.coChampions}.</li>
       </ul>
       <p>{counts}</p>
 
-      <h4 className={H4}>If teams are tied on points</h4>
+      <h4 className={H4}>{ordersByRecord(rules) ? 'If teams have the same league record' : 'If teams are tied on points'}</h4>
       {bucketStarts.length > 0 ? (
         <>
           {bucketStarts.map((start) => (
@@ -112,8 +114,9 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
       )}
       {anyStepSeparates ? <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p> : null}
       <p className="text-meta text-ink-3">
-        A step this site cannot compute (a coin flip, a draw, a play-in) leaves the teams level at the
-        same place, with a footnote citing the rule. Our display order is not a league ruling.
+        {`A step this site cannot compute (${
+          ordersByRecord(rules) ? 'a coaches’ vote, a coin flip' : 'a coin flip, a draw, a play-in'
+        }) leaves the teams level at the same place, with a footnote citing the rule. Our display order is not a league ruling.`}
       </p>
       {rules.citations.incomplete ? <p>If the season ends with games unplayed: {rules.citations.incomplete}.</p> : null}
 

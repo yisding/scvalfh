@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
 
+import { LEAGUES_PROPER } from '../../lib/leagues';
+import { ordersByRecord } from '../../lib/standings/order';
 import { OG_SIZE } from '../../components/metadata/og-theme';
 import { RegionCard, standingsCardProps } from '../../components/metadata/og-region-card';
 import { SITE_NAME } from '../../components/layout/site';
@@ -16,7 +18,9 @@ import { SITE_NAME } from '../../components/layout/site';
  * request (DESIGN §12.4). Division labels only through `divisionHeading()` (the summaries' own
  * `heading`): the single-division leagues print none.
  */
-export const alt = `${SITE_NAME} — standings for every league: each division’s leaders with points`;
+export const alt = `${SITE_NAME} — standings for every league: each division’s leaders with ${
+  LEAGUES_PROPER.every((l) => ordersByRecord(l.rules)) ? 'their winning percentage' : 'points'
+}`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 

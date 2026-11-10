@@ -236,6 +236,12 @@ interface DivisionCtx {
   resolvedBy: Map<TeamId, TiebreakStage>;
   /** The lower points buckets, final order, as clusters (filled bucket by bucket). */
   placedBelowOf: (bucketIndex: number) => TeamId[][];
+  /**
+   * The teams each team was left level with (a shared place), filled as a group ends unresolved under
+   * partition-restart. 'record-vs-placed' reads it: a level group above the tie has no order among its
+   * members, so it is walked as one cluster, never member by member in the order the names happen to sort.
+   */
+  levelWith?: Map<TeamId, readonly TeamId[]>;
 }
 
 /** Points team `id` earned in its meetings with `other` (win·w + tie·t over their counted games). */
@@ -362,7 +368,20 @@ function stageKeys(
       // below it, a group still level there as one cluster. The first opponent the tied teams did not all do
       // equally well against separates them; a meeting not yet played, or a level cluster they split
       // differently against, stops the walk (no invented result, no order the table does not have).
+      const walked = new Set<TeamId>();
       for (const target of above) {
+        if (walked.has(target)) continue;
+        // A group left level above the tie shares one place: the tied teams must have done equally well
+        // against every member of it, or the walk stops (as for a level cluster below).
+        const cluster = ctx.levelWith?.get(target) ?? [target];
+        for (const member of cluster) walked.add(member);
+        if (cluster.length > 1) {
+          for (const member of cluster) {
+            const k = pointsVsEach(ctx, group, member);
+            if (k === null || !allEqual(k)) return HALT;
+          }
+          continue;
+        }
         const k = pointsVsEach(ctx, group, target);
         if (k === null) return HALT;
         if (allEqual(k)) continue;
@@ -468,6 +487,7 @@ function resolveGroup(
 
   // Unresolved ⇒ an uncomputable last step (SCVAL Article VI §7's coin flip). The teams stay tied.
   for (const id of group) ctx.resolvedBy.set(id, terminal ?? 'coin-flip');
+  for (const id of group) ctx.levelWith?.set(id, group);
   return [[...group].sort((a, b) => nameOf(a).localeCompare(nameOf(b)))];
 }
 
@@ -785,6 +805,7 @@ function computeDivision(
     computed,
     resolvedBy,
     placedBelowOf: (i) => resolved.slice(i + 1).flatMap((r) => r ?? []),
+    levelWith: new Map(),
   };
 
   const resolveBucket = (i: number): void => {

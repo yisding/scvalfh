@@ -265,6 +265,43 @@ export function sunsetLeagueClaims(text: string): string[] {
 export const RULES_REQUIRE_CLAIM = /\brules require\b/i;
 
 /**
+ * Words a page of a sport that scores points and cannot end level (basketball: `Sport.scoring.allowsTies`
+ * false) may not print: they are another sport's. Each entry is what is wrong and the pattern that finds it.
+ *  - 'goal' / 'goals': a basketball team scores points;
+ *  - a tied game: 'tie' or 'ties' (but 'tie for first' and 'tiebreak', which are about level places in a table,
+ *    stay: 'tied for 2nd' is how a shared place reads in any sport), 'W-L-T', '0-0-0' and the record in words;
+ *  - a goalkeeper's words: 'keeper', 'shutout', 'clean sheet', 'shootout';
+ *  - the other builds' programs: 'girls', 'soccer', 'field hockey'.
+ * `noTiesSportClaims` applies them to a page's text after the proper nouns the data carries (a tournament called
+ * the "Double Goal Coaches Classic", an opponent's name) are taken out.
+ */
+export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp }> = [
+  { what: 'says "goal(s)"', pattern: /\bgoals?\b/gi },
+  { what: 'speaks of a tied game', pattern: /\bties?\b(?!\s+for\b)(?![-\s]?break)/gi },
+  { what: 'prints a W-L-T record', pattern: /\bW-L-T\b|\b0-0-0\b|won-lost-tied|win-loss-tie|win\/loss\/tie/gi },
+  { what: 'uses a goalkeeper’s word', pattern: /\b(?:goal)?keepers?\b|\bgoalkeeping\b|\bshutouts?\b|\bclean sheets?\b|\bshootouts?\b/gi },
+  { what: 'names another build’s program', pattern: /\bgirls\b|\bsoccer\b|\bfield hockey\b/gi },
+];
+
+/**
+ * Every NO_TIES_SPORT_CLAIMS hit in `text`, each as '<what> — “…context…”'. `properNouns` are strings the data
+ * prints verbatim (tournament names, venue notes, opponents' names): each is removed first, whatever its case, so a
+ * name is never read as copy.
+ */
+export function noTiesSportClaims(text: string, properNouns: readonly string[] = []): string[] {
+  let cleaned = text;
+  // Longest first, so a name that contains another is removed whole.
+  for (const noun of [...new Set(properNouns)].filter((n) => n.trim().length > 0).sort((a, b) => b.length - a.length)) {
+    cleaned = cleaned.replace(new RegExp(noun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'), 'gi'), ' ');
+  }
+  const out: string[] = [];
+  for (const { what, pattern } of NO_TIES_SPORT_CLAIMS) {
+    for (const m of cleaned.matchAll(pattern)) out.push(`${what} — “…${around(cleaned, m.index)}…”`);
+  }
+  return out;
+}
+
+/**
  * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
  * so these are the escapes plus the typographic names a hand-written string might carry.
  */

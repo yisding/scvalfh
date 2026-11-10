@@ -578,6 +578,8 @@ export interface CcsKeyDates {
    * the quarterfinals open it; read through `ccsFirstDay` (lib/league-config/sections.ts).
    */
   firstRound?: string;
+  /** The second round's day, where the bracket has one before the quarterfinals (basketball: Sat Feb 20). */
+  secondRound?: string;
   quarterfinals: string;       // '2026-11-07'
   semifinals: string;          // '2026-11-11'
   finals: string;              // '2026-11-14'
@@ -604,6 +606,9 @@ export interface CcsAutoQualifiers {
 /** One VEVENT from `cifccs.org/calendar/Field_Hockey?print=ical` (SPEC §1.4). */
 export type CcsEventKind =
   | 'entries-due'
+  | 'seeding'
+  | 'first-round'
+  | 'second-round'
   | 'quarterfinals'
   | 'semifinals'
   | 'finals'

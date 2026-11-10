@@ -57,8 +57,9 @@ import {
   isIndependentLeague,
   sectionOf,
 } from '../../lib/leagues';
+import { ordersByRecord } from '../../lib/standings/order';
 import type { LeagueId } from '../../lib/types';
-import { CCS, ccsLastDay, ccsRoundDays } from '../../lib/league-config/sections';
+import { CCS, ccsFirstDay, ccsLastDay, ccsRoundDays } from '../../lib/league-config/sections';
 import { SPORT } from '../../lib/sports/current';
 
 /**
@@ -127,13 +128,15 @@ export async function generateMetadata(): Promise<Metadata> {
   // A round some divisions play later (soccer) reads as its first to its last day.
   const semis = ccsRoundDays(keyDates, 'semifinals', shortDate);
   const final = ccsRoundDays(keyDates, 'finals', shortDate);
+  // The round that opens the bracket where it is not the quarterfinals (basketball's first round).
+  const opening = CCS.keyDates.firstRound ? `first round ${shortDate(CCS.keyDates.firstRound)}, ` : '';
   const fieldWords =
     field.total === null
       ? `The CCS ${SPORT.noun} field’s automatic berths: ${shares}.`
       : `The ${field.total}-team CCS field: ${shares}, ${field.atLarge} at-large.`;
   const description = seeded
-    ? `The CCS ${SPORT.noun} bracket: quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${semis}, final ${final}. Unofficial, computed from published results.`
-    : `${fieldWords} Seeding meeting ${shortDate(keyDates.seedingMeeting)}; quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${final}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
+    ? `The CCS ${SPORT.noun} bracket: ${opening}quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${semis}, final ${final}. Unofficial, computed from published results.`
+    : `${fieldWords} Seeding meeting ${shortDate(keyDates.seedingMeeting)}; ${opening}quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${final}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
   const all = `${description} Every league’s postseason: ${postseasonWords()}.`;
   return {
     title: PAGE_TITLE,
@@ -198,10 +201,11 @@ export default function PlayoffsPage() {
   const seedingDay = keyDates.seedingMeeting.slice(0, 10);
   // The meeting is over: a bracket to draw and its day reached (the seed file alone can draw one on an older snapshot).
   const met = seeded && today >= seedingDay;
+  const ORDER_WORDS = ccsLeagues.length > 0 && ccsLeagues.every((l) => ordersByRecord(getLeague(l.id).rules)) ? 'record' : 'points';
   const ladderNote =
     today < seedingDay
-      ? `Ordered by league points; nothing here is official until ${shortDate(keyDates.seedingMeeting)}.`
-      : `Ordered by league points. CCS seeded the field on ${shortDate(keyDates.seedingMeeting)}; results update twice a day.`;
+      ? `Ordered by league ${ORDER_WORDS}; nothing here is official until ${shortDate(keyDates.seedingMeeting)}.`
+      : `Ordered by league ${ORDER_WORDS}. CCS seeded the field on ${shortDate(keyDates.seedingMeeting)}; results update twice a day.`;
   // An unbracketed league's result (the EAL's Super Regional), once the game its row calls the final is played.
   const unbracketedResult = (id: LeagueId): string | null => {
     const ps = getLeague(id).postseason;
@@ -258,8 +262,8 @@ export default function PlayoffsPage() {
           <SectionHeader id="ccs-playoffs" kicker="CCS playoffs" meta={fieldMeta} />
           <p className="m-0 max-w-prose text-body text-ink-2">
             {met
-              ? `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(ccsLastDay(keyDates))}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
-              : `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(ccsLastDay(keyDates))}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
+              ? `Central Coast Section championships, ${shortDate(ccsFirstDay(CCS.keyDates))} to ${shortDate(ccsLastDay(keyDates))}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
+              : `Central Coast Section championships, ${shortDate(ccsFirstDay(CCS.keyDates))} to ${shortDate(ccsLastDay(keyDates))}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
           </p>
         </section>
 
@@ -316,7 +320,7 @@ export default function PlayoffsPage() {
             <>
               <p className="m-0 max-w-prose text-body text-ink-2">
                 <span className="text-ink">Not seeded yet:</span>{' '}
-                {`CCS seeds ${listWords(ccsDivisionLabels(playoffs))} at the ${shortDate(keyDates.seedingMeeting)} meeting; the games appear here as MaxPreps lists them, after the next update. `}
+                {`CCS seeds ${ccsDivisionLabels(playoffs).length > 0 ? listWords(ccsDivisionLabels(playoffs)) : 'the field'} at the ${shortDate(keyDates.seedingMeeting)} meeting; the games appear here as MaxPreps lists them, after the next update. `}
                 <ExternalLink href={bracketUrl ?? CCS.sources.index}>{bracketUrl ? 'Official CCS bracket' : `CCS ${SPORT.noun} page`}</ExternalLink>
                 {/* "not yet posted" only while the MaxPreps tournament page still says so (playoffs.bracketPublished). */}
                 {bracketPublished ? null : <> &mdash; not yet posted.</>}

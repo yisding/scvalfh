@@ -7,7 +7,7 @@
 import { getLeagueTournament, getNonLeagueFinalsPlayed } from '../../lib/data';
 import { dateSpan, ordinalWord, shortDate } from '../../lib/format';
 import { hasHistory } from '../../lib/history/history';
-import { CCS, ccsRoundDays } from '../../lib/league-config/sections';
+import { CCS, ccsFirstDay, ccsRoundDays } from '../../lib/league-config/sections';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import { leaguePlayStarts, standaloneName } from '../../lib/leagues';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
@@ -137,18 +137,22 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
 
   // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
   if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
-    if (today < keyDates.quarterfinals) {
+    // The bracket's first day: the quarterfinals, or a first round before them (basketball).
+    const firstRound = CCS.keyDates.firstRound;
+    if (today < ccsFirstDay(CCS.keyDates)) {
       // A field the config does not size (soccer: the CCS allocation is not transcribed) is not counted.
       const seeds = CCS.autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${CCS.autoQualifiers.total}-team field`;
       return {
         lead: `${short} league play is over.`,
-        body: `${seeds} on ${shortDate(keyDates.seedingMeeting)}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
+        body: firstRound
+          ? `${seeds} on ${shortDate(keyDates.seedingMeeting)}; the first round is ${shortDate(firstRound)}.`
+          : `${seeds} on ${shortDate(keyDates.seedingMeeting)}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
         link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
       };
     }
     return {
       lead: 'The CCS tournament is under way.',
-      body: `Quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${ccsRoundDays(
+      body: `${firstRound ? `First round ${shortDate(firstRound)}, quarterfinals` : 'Quarterfinals'} ${shortDate(keyDates.quarterfinals)}, semifinals ${ccsRoundDays(
         keyDates,
         'semifinals',
         shortDate,

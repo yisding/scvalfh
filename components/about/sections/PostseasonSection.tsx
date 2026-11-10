@@ -88,6 +88,16 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             </span>{' '}
             / <span className="tabular-nums">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
           </li>
+          {CCS.keyDates.firstRound ? (
+            <li>
+              First round: <span className="tabular-nums">{dateWithYear(CCS.keyDates.firstRound)}</span>
+            </li>
+          ) : null}
+          {CCS.keyDates.secondRound ? (
+            <li>
+              Second round: <span className="tabular-nums">{dateWithYear(CCS.keyDates.secondRound)}</span>
+            </li>
+          ) : null}
           <li>
             Quarterfinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
           </li>

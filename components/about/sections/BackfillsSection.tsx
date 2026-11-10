@@ -1,3 +1,4 @@
+import { ALLOWS_TIES } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import { plural } from '../../../lib/format';
 import type { BackfillRow } from '../../../lib/types';
@@ -32,10 +33,11 @@ export function BackfillsSection({
           <li>MaxPreps has no contest at all for a game on the league&rsquo;s official schedule;</li>
           <li>MaxPreps lists the game, its date has passed, and it has no score;</li>
           <li>
-            MaxPreps&rsquo; row is clearly wrong in a way we can check mechanically: its own win/loss
-            flags contradict its score, the official schedule shows the game was not played on
-            MaxPreps&rsquo; date, or it shows a scoreless tie that si.com reports as decided in a
-            league that plays no overtime.
+            {`MaxPreps’ row is clearly wrong in a way we can check mechanically: its own win/loss flags contradict its score${
+              ALLOWS_TIES ? ',' : ' or'
+            } the official schedule shows the game was not played on MaxPreps’ date${
+              ALLOWS_TIES ? ', or it shows a scoreless tie that si.com reports as decided in a league that plays no overtime' : ''
+            }.`}
           </li>
         </ul>
         <p>

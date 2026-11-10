@@ -375,6 +375,9 @@ export const SeasonSchema = z.object({
 
 const ccsEventKind = z.enum([
   'entries-due',
+  'seeding',
+  'first-round',
+  'second-round',
   'quarterfinals',
   'semifinals',
   'finals',
@@ -396,6 +399,7 @@ export const PlayoffsSchema = z.object({
     seedingMeeting: z.string(),
     // The first playoff day where it is before the quarterfinals (basketball); absent elsewhere.
     firstRound: dateOnly.optional(),
+    secondRound: dateOnly.optional(),
     quarterfinals: dateOnly,
     semifinals: dateOnly,
     finals: dateOnly,

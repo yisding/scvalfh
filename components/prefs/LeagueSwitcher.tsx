@@ -86,11 +86,12 @@ const REGION_WORDS: Readonly<Record<RegionId, { shortName: string; name: string 
 };
 const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
 /**
- * The soccer build covers one region (lib/league-config/sections.ts REGIONS: Northern California), so it has no
- * region to switch to. Read from the inlined SCVAL_SPORT (next.config.ts `env`), not lib/sports/current, so this
- * client module bundles no sport definition.
+ * The soccer and basketball builds cover one region (lib/league-config/sections.ts REGIONS: Northern California), so
+ * they have no region to switch to; only field hockey's build (SCVAL_SPORT unset or 'field-hockey') has two. Read
+ * from the inlined SCVAL_SPORT (next.config.ts `env`), not lib/sports/current, so this client module bundles no
+ * sport definition.
  */
-const SINGLE_REGION = process.env.SCVAL_SPORT === 'soccer';
+const SINGLE_REGION = process.env.SCVAL_SPORT !== undefined && process.env.SCVAL_SPORT !== '' && process.env.SCVAL_SPORT !== 'field-hockey';
 
 const CHIP = 'sx-league-chip';
 

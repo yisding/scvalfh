@@ -3,6 +3,12 @@ import { GoalDiffCell } from '../../ui/GoalDiffBar';
 import { StretchedRowLink } from '../../ui/PinNote';
 import TeamMonogram from '../../ui/TeamMonogram';
 import { EM_DASH, recordString, streakString, winPct } from '../../../lib/format';
+import { leagueOfDivision } from '../../../lib/leagues';
+import { ordersByRecord } from '../../../lib/standings/order';
+import {
+  AGAINST_ABBR, AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_ABBR, FOR_WORDS, WIDE_SCORES,
+} from '../../words/score-words';
+import { capitalized } from '../../words/capitalized';
 
 import {
   Abbr,
@@ -39,7 +45,8 @@ const COL = {
   overall: 'w-[4.25rem] xl:w-[5rem]', // Overall
   gf: 'w-[2.5rem] xl:w-[3rem]', // GF
   ga: 'w-[2.5rem] xl:w-[3rem]', // GA
-  gd: 'w-[6.75rem] xl:w-[7.5rem]', // GD: 64 track + 4 + 28 numeral
+  // GD: 64 track + 4 + 28 numeral; a points sport's four-glyph difference ('+112') takes 36.
+  gd: WIDE_SCORES ? 'w-[7.25rem] xl:w-[8rem]' : 'w-[6.75rem] xl:w-[7.5rem]',
   stk: 'w-[2.75rem] xl:w-[3.25rem]', // Stk
   home: 'w-[3.25rem] xl:w-[4rem]', // Home
   away: 'w-[3.25rem] xl:w-[4rem]', // Away
@@ -52,17 +59,19 @@ type DesktopCol = keyof typeof COL;
  * The desktop columns in order. With GP / LEFT / MAX on, the Home / Away / Neutral splits go (the
  * team page has them): three 3rem columns in, three 3.25rem out, so Team keeps ≈170px at 1024.
  */
-function desktopCols(gp: boolean, left: boolean, max: boolean): DesktopCol[] {
+function desktopCols(gp: boolean, left: boolean, max: boolean, byRecord: boolean): DesktopCol[] {
   const extended = gp || left || max;
   return [
     'place',
     'team',
     ...(gp ? (['gp'] as const) : []),
-    'pts',
+    // A table ordered on its league record (lib/standings/order.ts) has no points: Pct takes the ordering
+    // column's place, beside the name, and is not printed a second time further along.
+    byRecord ? 'pct' : 'pts',
     ...(left ? (['left'] as const) : []),
     ...(max ? (['max'] as const) : []),
     'league',
-    'pct',
+    ...(byRecord ? [] : (['pct'] as const)),
     'overall',
     'gf',
     'ga',
@@ -88,9 +97,9 @@ const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: 
   league: { label: 'League', right: true },
   pct: { label: 'Pct', right: true, long: 'Win percentage' },
   overall: { label: 'Overall', right: true },
-  gf: { label: 'GF', right: true, long: 'Goals for' },
-  ga: { label: 'GA', right: true, long: 'Goals against' },
-  gd: { label: 'GD', right: true, long: 'Goal difference' },
+  gf: { label: FOR_ABBR, right: true, long: capitalized(FOR_WORDS) },
+  ga: { label: AGAINST_ABBR, right: true, long: capitalized(AGAINST_WORDS) },
+  gd: { label: DIFF_ABBR, right: true, long: capitalized(DIFFERENCE_WORDS) },
   stk: { label: 'Stk', right: true, long: 'Streak' },
   home: { label: 'Home', right: true },
   away: { label: 'Away', right: true },
@@ -108,7 +117,8 @@ export function DesktopStandingsTable(props: StandingsTableProps) {
   const { gdDomain } = props;
   const { flagged, columns, ctx, fixedSchedule, cut, hrefOf, formLabel } = tableRows(props);
   const showGp = columns.has('gp');
-  const cols = desktopCols(showGp, columns.has('left'), columns.has('max'));
+  const byRecord = ordersByRecord(leagueOfDivision(props.division).rules);
+  const cols = desktopCols(showGp, columns.has('left'), columns.has('max'), byRecord);
   const rows = props.rows;
   return (
     <>
@@ -134,7 +144,13 @@ export function DesktopStandingsTable(props: StandingsTableProps) {
               <th
                 key={col}
                 scope="col"
-                title={col === 'gp' ? gpTitle(fixedSchedule) : head.title}
+                title={
+                  col === 'gp'
+                    ? gpTitle(fixedSchedule)
+                    : col === 'max' && byRecord
+                      ? 'The most league wins a team can finish with'
+                      : head.title
+                }
                 className={head.right ? 'text-right' : undefined}
               >
                 {head.long ? <Abbr short={head.label} long={head.long} /> : head.label}
@@ -170,7 +186,7 @@ export function DesktopStandingsTable(props: StandingsTableProps) {
                 );
               case 'pct':
                 return (
-                  <td key={col} className="sx-num text-right font-medium text-ink">
+                  <td key={col} className={`sx-num text-right text-ink ${byRecord ? 'text-body font-bold' : 'font-medium'}`}>
                     {winPct(s.computed.winPct)}
                   </td>
                 );
@@ -188,7 +204,7 @@ export function DesktopStandingsTable(props: StandingsTableProps) {
                       domain={gdDomain}
                       track={64}
                       thickness={8}
-                      numberWidth={28}
+                      numberWidth={WIDE_SCORES ? 36 : 28}
                     />
                   </td>
                 );
