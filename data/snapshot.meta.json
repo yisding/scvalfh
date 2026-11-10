@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "8321ba19919b0f79f80b41cd99e9b6525c84e02cb628d4e7c13415ccabff4d25",
+  "contentHash": "72dc47409fad57cbe36d8ebae5b3fe9a66600e5cc29b8992088ca886901ef652",
   "counts": {
     "byLeague": {
       "bval": {
@@ -91,11 +91,11 @@
   "crossCheck": {
     "agreements": 149,
     "backfilled": 4,
-    "compared": 183,
+    "compared": 180,
     "conflicts": 7,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-10T13:08:55.321Z",
+  "fetchedAt": "2026-11-10T20:42:15.095Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -464,7 +464,7 @@
     {
       "label": "PCAL official schedule revision check",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "marin-county league metadata",
@@ -963,7 +963,7 @@
     },
     {
       "label": "sblive scoreboard 2026-11-07",
-      "rowCount": 9,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -1078,7 +1078,7 @@
     }
   ],
   "today": "2026-11-10",
-  "warnings": 43,
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
     "lastGame": "2026-11-11T18:30:00",
