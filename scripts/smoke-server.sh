@@ -145,12 +145,12 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 # built from), never from the server: games (the superseded-game stubs are prerendered but kept
 # out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, the clubs
 # of data/clubs.json (every club has a page, one with no tied player included), and each stub as
-# `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N).
+# `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N, cifsds:A-at-B → cifsds-A-at-B).
 facts=$(node -e '
   const fs = require("fs");
   const s = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));
   const clubs = JSON.parse(fs.readFileSync("data/clubs.json", "utf8")).clubs;
-  const param = (id) => id.replace(/^sblive:(\d+)$/, "sblive-$1");
+  const param = (id) => /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+)$/.test(id) ? id.replace(":", "-") : id;
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
     s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
