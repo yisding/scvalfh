@@ -264,7 +264,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     oneGoal.countsFor = null;
     tournament = oneGoal;
     target = snap.games.find((g) => g.countsFor !== null && !g.contestId.startsWith('sblive:') && mcalIds.has(g.home.teamId ?? ''))!;
-    snap.supersededGames = { [SUPERSEDED]: target.contestId };
+    snap.supersededGames = { [SUPERSEDED]: target.contestId, 'cifsds:alpha-at-beta': target.contestId };
     // A level non-league final MaxPreps flags W/L (the Gilroy–University shape): a single meeting.
     const pairKey = (g: Game) => [g.home.slug ?? g.home.name, g.away.slug ?? g.away.name].sort().join('|');
     const pairs = new Map<string, number>();
@@ -360,6 +360,22 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     const meta = await S.metadata('sblive-999999');
     expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
     expect(S.m.buildGameView('sblive-999999'), 'components/game/game-view.ts: a stub has no game model').toBeUndefined();
+  });
+
+  it('a superseded San Diego bracket-sheet id is a stub page too', async () => {
+    // MaxPreps posting a game the bracket sheet carried as `cifsds:<away>-at-<home>` supersedes that id
+    // exactly as it does an si.com one; the param list has always included it, so the page must render.
+    expect(S.pageParams().map((p) => p.id), 'components/game/game-view.ts stub param').toContain('cifsds-alpha-at-beta');
+    const stub = S.m.buildSupersededStub('cifsds-alpha-at-beta')!;
+    expect(stub, 'components/game/game-view.ts buildSupersededStub: cifsds id').toBeDefined();
+    expect(stub.param).toBe('cifsds-alpha-at-beta');
+    expect(stub.targetHref).toBe(S.ids.gameHref(target.contestId));
+    const html = await S.renderPage('cifsds-alpha-at-beta');
+    expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
+    const meta = await S.metadata('cifsds-alpha-at-beta');
+    expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
+    // A prefixed id that is not in the map is still nothing.
+    expect(S.m.buildSupersededStub('cifsds-gamma-at-delta')).toBeUndefined();
   });
 });
 

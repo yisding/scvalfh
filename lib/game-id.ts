@@ -24,6 +24,9 @@ export const isSbliveContestId = (id: string): boolean => id.startsWith(SBLIVE_P
 export const isCifsdsContestId = (id: string): boolean => id.startsWith(CIFSDS_PREFIX);
 
 const PREFIXED_ID = /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+)$/;
+/** True for the two non-MaxPreps id families (`sblive:<n>`, `cifsds:<away>-at-<home>`): the ids a MaxPreps contest can supersede. */
+export const isPrefixedContestId = (id: string): boolean => PREFIXED_ID.test(id);
+
 const PREFIXED_PARAM = /^(sblive-\d+|cifsds-[a-z0-9-]+-at-[a-z0-9-]+)$/;
 
 /** 'sblive:123' → 'sblive-123', 'cifsds:a-at-b' → 'cifsds-a-at-b'; a GUID is returned unchanged. */
