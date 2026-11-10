@@ -1,8 +1,9 @@
 /**
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
- * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `components/words/pin-label.ts`). "Today"
+ * This is the only module the home page reads data through (with the three builders it composes: the phase lead,
+ * phase-lead.ts; the postseason card, postseason-card.ts; the pinned-team cards, team-card.ts), and it reads the
+ * snapshot ONLY through `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `components/words/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -25,15 +26,8 @@ import {
   getGoalDiffDomain,
   getLastLeagueResultDate,
   getLatestResultsDate,
-  getLeaguePairings,
   getLeagueSummaries,
-  getLeagueTournament,
-  getNonLeagueFinalsPlayed,
-  getOfficialFixtures,
-  getPlayoffs,
   getSeasonPhase,
-  getStandingContext,
-  getStandingFor,
   getStandings,
   getTeamById,
   getTeamSearchIndex,
@@ -42,35 +36,17 @@ import {
   getUpcoming,
   type LeagueSummary,
 } from '../../lib/data';
-import { getTeamPostseasonLine, playInClause } from '../playoffs/team-postseason-line';
 import {
-  EM_DASH,
-  dateSpan,
-  dateTimeAttr,
-  leagueClock,
   listWords,
-  mapsSearchHref,
-  monthDay,
-  numberWord,
-  ordinal,
-  ordinalWord,
   recordString,
   recordWords,
-  shortDate,
-  timeOfDayPT,
 } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import { hasHistory } from '../../lib/history/history';
-import { tournamentHeadline } from '../../lib/postseason/postseason';
-import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
-import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings/ladder';
-import { CCS, REGIONS, ccsRoundDays } from '../../lib/league-config/sections';
+import { postseasonHref } from '../../lib/postseason/postseason-kind';
+import { REGIONS } from '../../lib/league-config/sections';
 import type {
   DivisionConfig,
   LeagueConfig,
-  PostseasonConfig,
   RegionConfig,
-  TournamentConfig,
 } from '../../lib/league-config/shape';
 import {
   divisionHeading,
@@ -79,7 +55,6 @@ import {
   isIndependentLeague,
   standingsLabel,
   isSingleDivision,
-  leaguePlayStarts,
   sectionOf,
   standaloneName,
 } from '../../lib/leagues';
@@ -87,35 +62,25 @@ import { pickerName, pinLabel } from '../words/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
-import { gameAddress } from '../../lib/schools/venue';
 import type { LeagueChip } from '../layout/league-chips';
 import { leagueChips } from '../layout/league-chips';
 import { regionIdSuffix } from '../leaders/scope';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
-import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
-import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
+import { gameKind } from '../ui/describe-game';
 import { plural } from '../words/plural';
-import { shortNameOf } from '../words/team-short-name';
 
 import type {
-  HomeLastDisplay,
-  HomeLastGame,
-  HomeNextGame,
-  HomePairingNext,
-  HomeOfficialFixture,
   HomeTeamView,
   LeagueCardView,
   PinTileView,
 } from './home-types';
-import { POSTSEASON_LEAD, rungCardText } from './home-types';
+import { byKickoff } from './by-kickoff';
+import { phaseLead, type PhaseLeadView } from './phase-lead';
+import { postseasonView, type PostseasonView } from './postseason-card';
+import { buildTeamViews } from './team-card';
 
 // ---------------------------------------------------------------- shared helpers
-
-/** Kickoff order, then away name, so a slate is stable between builds. */
-function byKickoff(a: Game, b: Game): number {
-  return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
 
 /** The league a game is filed under on the home page: its counted division's, else the first side's in config order. */
 function homeLeagueOf(game: Game, leagueIds: readonly LeagueId[]): LeagueId | null {
@@ -221,165 +186,6 @@ function divisionLeaders(division: DivisionId): DivisionLeaders | null {
   };
 }
 
-// ---------------------------------------------------------------- phase lead
-
-export interface PhaseLeadView {
-  /** The bold opening sentence. */
-  lead: string;
-  /** The rest of the paragraph ('' when none). */
-  body: string;
-  link: { href: string; label: string } | null;
-}
-
-/** The PhaseLead copy for a league in a phase on a day (exported for tests/ui/home-view.test.ts). */
-export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: string): PhaseLeadView | null {
-  const short = league.shortName;
-  const firstLeague = leaguePlayStarts(league.id);
-  const ps = league.postseason;
-  const keyDates = CCS.keyDates;
-
-
-  if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
-    // Games played SO FAR — a non-league final later in the season has not been played yet.
-    const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
-    // A group of independents (the LA independents, DESIGN §24.10) has no league play: its table
-    // counts the games between its members, so the lead names the first of those and the body says what the
-    // table counts. 'LA' alone names a place, so the sentence names the group (standaloneName).
-    if (league.independents) {
-      return {
-        lead: `The first game between two of ${standaloneName(league.id)} is ${shortDate(firstLeague)}.`,
-        body:
-          nonLeague > 0
-            ? `The table counts only games between the independents, so the ${plural(nonLeague, 'game')} played so far against other teams ${
-                nonLeague === 1 ? 'is' : 'are'
-              } on the schedule and in the overall records, not in the standings.`
-            : 'No games have been played yet, so every record below is empty on purpose.',
-        link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
-      };
-    }
-    return {
-      lead: `${short} league play starts ${shortDate(firstLeague)}.`,
-      body:
-        nonLeague > 0
-          ? `These tables count league games only, so the ${plural(nonLeague, 'non-league game')} played so far ${
-              nonLeague === 1 ? 'is' : 'are'
-            } on the schedule and in the overall records, not in the standings.`
-          : 'No games have been played yet, so every record below is empty on purpose.',
-      link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
-    };
-  }
-
-  if (phase === 'regular') return null;
-
-  if (phase === 'crossover' && ps.kind === 'ccs-ladder') {
-    // The pairings' day(s): 'Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day.
-    const when = pairingDatesLabel(ps.pairings) || shortDate(keyDates.endOfLeagueSeason);
-    return {
-      lead: 'League play is over.',
-      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${when}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
-      link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
-    };
-  }
-
-  if (phase === 'play-in' && ps.kind === 'ccs-ladder') {
-    const playIn = ps.pairings.find((p) => p.isPlayIn);
-    if (playIn) {
-      return {
-        lead: `${short} league play is over.`,
-        body: `${playInClause(league, ps, playIn)}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
-        link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
-      };
-    }
-  }
-
-  if (phase === 'tournament' && ps.kind === 'league-tournament') {
-    // Results first (DESIGN §24.13): the champion once the final has a winner, else the next round's matchups
-    // (lib/postseason/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
-    const headline = tournamentHeadline(getLeagueTournament(league.id), league);
-    if (headline.champion) {
-      return { lead: headline.champion, body: '', link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
-    }
-    if (headline.next) {
-      return { lead: `${short} league play is over.`, body: `${headline.next}.`, link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
-    }
-    const round = (id: string) => ps.rounds.find((r) => r.id === id);
-    const qf = round('qf-1');
-    const playIn = round('play-in');
-    const final = round('final');
-    return {
-      lead: `${short} league play is over.`,
-      body: `Quarterfinals are ${qf ? shortDate(qf.date) : 'to be set'}${
-        playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''
-      }; the final is ${final ? shortDate(final.date) : 'to be set'} at ${ps.finalSite.label}.`,
-      link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
-    };
-  }
-
-  if (phase === 'tournament' && ps.kind === 'unbracketed-tournament') {
-    // No bracket and no page of its own: the dates and what is not published yet, linking to the
-    // league's pointer card on /playoffs.
-    // The site comes from a listing (config `site`, the NFHS Network), named as such; the pairings are not published.
-    const where = ps.site
-      ? `${ps.site.basis} has its games at ${ps.site.label} on ${shortDate(ps.site.day)}`
-      : 'its format and site are not published yet';
-    return {
-      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; ${where}.`,
-      body: ps.site ? 'Pairings are not published; results appear here as MaxPreps posts them.' : '',
-      link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
-    };
-  }
-
-  if (phase === 'tournament' && ps.kind === 'section-playoffs') {
-    // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): the Section places the teams and
-    // draws the brackets, and this site projects neither, so the lead says when and what is published.
-    const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
-    return {
-      lead: `${short} league play is over.`,
-      body: `The ${ps.name} are ${dateSpan(ps.dates.first, ps.dates.last)}${
-        seeding ? `; the Section posts its brackets on its field hockey page after its ${shortDate(seeding.date)} seeding meeting` : ''
-      }.`,
-      link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
-    };
-  }
-
-  // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
-  if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
-    if (today < keyDates.quarterfinals) {
-      // A field the config does not size (soccer: the CCS allocation is not transcribed) is not counted.
-      const seeds = CCS.autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${CCS.autoQualifiers.total}-team field`;
-      return {
-        lead: `${short} league play is over.`,
-        body: `${seeds} on ${shortDate(keyDates.seedingMeeting)}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
-        link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
-      };
-    }
-    return {
-      lead: 'The CCS tournament is under way.',
-      body: `Quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${ccsRoundDays(
-        keyDates,
-        'semifinals',
-        shortDate,
-      )}, final ${ccsRoundDays(keyDates, 'finals', shortDate)}. League standings below are final.`,
-      link: { href: `/playoffs#${league.id}`, label: 'Bracket' },
-    };
-  }
-
-  if (phase === 'complete') {
-    return {
-      lead: 'The season is over.',
-      // A 'site' league publishes no standings (the Sunset, the San Diego leagues): the final table is ours.
-      body:
-        league.rules.orderScope === 'site'
-          ? 'The tables below are this site’s final tables, ordered by its own points.'
-          : 'The tables below are the final league standings.',
-      // Only a league with a published 2025-26 table has a last season to link to.
-      link: hasHistory(league.id) ? { href: `/history/2025-26#${league.id}`, label: 'Last season' } : null,
-    };
-  }
-
-  return null;
-}
-
 // ---------------------------------------------------------------- mini standings
 
 export interface MiniRow {
@@ -441,222 +247,6 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
     throughDate: getLastLeagueResultDate({ division: division.id }),
     href: `/standings/${league.id}#${division.id}`,
     home: division.home,
-  };
-}
-
-// ---------------------------------------------------------------- postseason card
-
-export type PostseasonView =
-  | {
-      kind: 'ccs-ladder';
-      leagueId: LeagueId;
-      /** One sentence about this league's own pre-CCS games, or the seeding date. */
-      intro: string;
-      /** `total` null: the CCS field size is unread (soccer), so the card states the label without a meter. */
-      meter: { claimed: number; total: number | null; label: string };
-      dates: Array<{ term: string; date: string }>;
-      bracket: { published: boolean; url: string };
-      /**
-       * The card's footer sentence, dated: 'Berths are assigned by the CCS committee. Nothing here is official until
-       * the seeding meeting.' through the seeding meeting's day; from the day after, 'Berths were assigned by the CCS
-       * committee on Mon Nov 2; results update twice a day.'
-       */
-      official: string;
-      link: { href: string; label: string };
-    }
-  | {
-      kind: 'league-tournament';
-      leagueId: LeagueId;
-      /** 'MCAL tournament · Quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed) · …' */
-      line: string;
-      /** The section's no-championship note (NCS). */
-      note: string | null;
-      link: { href: string; label: string };
-    }
-  | {
-      kind: 'unbracketed-tournament';
-      leagueId: LeagueId;
-      /** 'Super Regional, Oct 30–31 — the top six qualify' */
-      line: string;
-      /** The config's postseason note: format, seeding and site not published, no further path. */
-      note: string;
-      link: { href: string; label: string };
-    }
-  | {
-      /**
-       * The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note; the note is
-       * the section's outside tournament (the Tournament of Champions, DESIGN §24.13), or null without one.
-       */
-      kind: 'no-postseason';
-      leagueId: LeagueId;
-      line: string;
-      note: string | null;
-      link: { href: string; label: string };
-    }
-  | {
-      /**
-       * A San Diego league: the Section's playoffs. The line is the config's `qualificationLine` (who the
-       * Section places, and the one place a league decides), never "the top N qualify".
-       */
-      kind: 'section-playoffs';
-      leagueId: LeagueId;
-      line: string;
-      note: string | null;
-      link: { href: string; label: string };
-    };
-
-function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: string | null): PostseasonView {
-  const ps = league.postseason;
-  switch (ps.kind) {
-    case 'league-tournament':
-      return leagueTournamentView(league, ps, sectionNote);
-    case 'unbracketed-tournament':
-      // No bracket, no rounds and no CCS dates: the event, its dates and the written qualifier count.
-      return {
-        kind: 'unbracketed-tournament',
-        leagueId: league.id,
-        line: `${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)} — the top ${numberWord(ps.qualifiers)} qualify`,
-        note: ps.note,
-        link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
-      };
-    case 'ccs-ladder':
-      return ccsLadderView(league, ps, phase);
-    case 'no-postseason':
-      // The section's outside tournament, when it has one (the Southern Section's Tournament of Champions,
-      // DESIGN §24.13): the note names the event, its dates and that CIF does not run it.
-      return {
-        kind: 'no-postseason',
-        leagueId: league.id,
-        line: ps.note,
-        note: sectionOf(league.id).outsideTournament?.note ?? null,
-        link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
-      };
-    case 'section-playoffs':
-      return {
-        kind: 'section-playoffs',
-        leagueId: league.id,
-        line: ps.qualificationLine,
-        note: sectionNote,
-        link: { href: `/playoffs#${league.id}`, label: ps.name },
-      };
-  }
-}
-
-function leagueTournamentView(
-  league: LeagueConfig,
-  ps: TournamentConfig,
-  sectionNote: string | null,
-): PostseasonView {
-  // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
-  // 'MCAL tournament · Final Fri Oct 30, 4 PM PT at Tamalpais: 3 Redwood at 1 Tamalpais'; the static round list
-  // only while the picture is projected from the table.
-  const headline = tournamentHeadline(getLeagueTournament(league.id), league);
-  const live = headline.champion ? `Champion: ${headline.champion}` : headline.next;
-  const round = (id: string) => ps.rounds.find((r) => r.id === id);
-  const qf = round('qf-1');
-  const sf = round('sf-1');
-  const final = round('final');
-  const playIn = round('play-in');
-  const parts = [ps.name];
-  if (live) parts.push(live);
-  else {
-    if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
-    if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
-    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
-  }
-  return {
-    kind: 'league-tournament',
-    leagueId: league.id,
-    line: parts.join(' · '),
-    note: sectionNote,
-    link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
-  };
-}
-
-/**
- * The CCS card's footer sentence, in the day's tense (DESIGN §8 "say what is true, say when it changes"): the CCS
- * committee assigns the berths at its seeding meeting (CCS.keyDates.seedingMeeting, Mon Nov 2, 1 PM, 2026). The past
- * tense starts the day AFTER the meeting, not on its day: an update that lands on Nov 2 runs before 1 PM Pacific
- * (the crons are 5:00 and 14:00 UTC, 9 PM and 6 AM PST after Nov 1, and run 3-6 hours late), when nothing has been
- * assigned yet. `today` is getToday(), never Date.now().
- */
-export function ccsOfficialSentence(today: string): string {
-  const seedingDay = CCS.keyDates.seedingMeeting.slice(0, 10);
-  return today > seedingDay
-    ? `Berths were assigned by the CCS committee on ${shortDate(CCS.keyDates.seedingMeeting)}; results update twice a day.`
-    : 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
-}
-
-function ccsLadderView(
-  league: LeagueConfig,
-  ps: Extract<PostseasonConfig, { kind: 'ccs-ladder' }>,
-  phase: SeasonPhase,
-): PostseasonView {
-  const short = league.shortName;
-  const total = CCS.autoQualifiers.total;
-  const aqRung = ps.ladder.find((r) => r.status === 'aq');
-  const aqTop = aqRung ? aqRung.places[1] : 0;
-  const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
-  const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
-  let label: string;
-  if (crossover) {
-    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: the top ${numberWord(
-      aqTop,
-    )} in each division, plus the winner of the fourth-place play-in (By-Laws Article VII §1–2).`;
-  } else if (playIn) {
-    const aqDivision =
-      aqRung && aqRung.divisions !== '*' && aqRung.divisions.length === 1 ? getDivision(aqRung.divisions[0]).label : null;
-    const host = getDivision(playIn.seats[0].division).label;
-    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: ${
-      aqDivision ? `${aqDivision}’s` : 'the'
-    } top ${numberWord(aqTop)}, plus the winner of the ${monthDay(playIn.date)} play-in (${playIn.seatLabels[1]} at the ${host} champion).`;
-  } else if (total === null) {
-    // Each division's own automatic places (soccer SCVAL: De Anza's top three, El Camino's champion).
-    const perDivision = ps.ladder
-      .filter((r) => r.status === 'aq' && r.divisions !== '*')
-      .flatMap((r) => (r.divisions === '*' ? [] : r.divisions).map((d) => {
-        const top = r.places[1];
-        return `${getDivision(d).label}’s ${top === 1 ? 'champion' : `top ${numberWord(top)}`}`;
-      }));
-    label = `${short} holds ${plural(ps.autoBerths, 'automatic CCS berth')}: ${
-      perDivision.length > 0 ? listWords(perDivision) : `the top ${numberWord(aqTop)} of the final standings`
-    }.`;
-  } else {
-    label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: the top ${numberWord(
-      aqTop,
-    )} of the final standings.`;
-  }
-
-  const seeding = shortDate(CCS.keyDates.seedingMeeting);
-  const beforeLeagueGames = phase === 'preseason' || phase === 'regular';
-  let intro: string;
-  if (crossover && beforeLeagueGames) {
-    intro = `Crossover and the 4-vs-4 play-in ${pairingDatesLabel(ps.pairings)}. Seeding meeting ${seeding}.`;
-  } else if (crossover && phase === 'crossover') {
-    intro = `League play is done. Crossover and the play-in are ${pairingDatesLabel(ps.pairings)}; the seeding meeting is ${seeding}.`;
-  } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
-    intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
-  } else {
-    intro = `Seeding meeting ${seeding}.`;
-  }
-
-  const official = ccsOfficialSentence(getToday());
-
-  const playoffs = getPlayoffs();
-  return {
-    kind: 'ccs-ladder',
-    leagueId: league.id,
-    intro,
-    meter: { claimed: ps.autoBerths, total, label },
-    // Each round's first day: where divisions play a round on different days (soccer), the earliest.
-    dates: [
-      { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
-      { term: 'Semifinals', date: CCS.keyDates.semifinals },
-      { term: 'Final', date: CCS.keyDates.finals },
-    ],
-    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl ?? CCS.sources.index },
-    official,
-    link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
   };
 }
 
@@ -795,217 +385,16 @@ function afterScheduleOf(league: LeagueConfig): HomeLeaguePanel['afterSchedule']
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
-      return { href: `/playoffs/${league.id}`, label: ps.name };
+      return { href: postseasonHref(league), label: ps.name };
     case 'unbracketed-tournament':
-      return { href: `/playoffs#${league.id}`, label: ps.name };
+      return { href: postseasonHref(league), label: ps.name };
     case 'ccs-ladder':
-      return { href: `/playoffs#${league.id}`, label: 'CCS playoffs' };
+      return { href: postseasonHref(league), label: 'CCS playoffs' };
     case 'no-postseason':
-      return { href: `/playoffs#${league.id}`, label: 'Postseason' };
+      return { href: postseasonHref(league), label: 'Postseason' };
     case 'section-playoffs':
-      return { href: `/playoffs#${league.id}`, label: ps.name };
+      return { href: postseasonHref(league), label: ps.name };
   }
-}
-
-// ---------------------------------------------------------------- my-team views
-
-/** One score line: the registry short name ("Mitty" on a 358px card), glyph, weight, chip. */
-function homeSide(side: SideView): HomeLastDisplay['home'] {
-  return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
-}
-
-/** `describeGame()`'s decision, slimmed to what the card draws (the team-views budget, tests/ui/home-weight.test.ts). */
-function slimDisplay(display: GameDisplay): HomeLastDisplay {
-  const marks: NonNullable<HomeLastDisplay['marks']> = {};
-  if (display.strikeTime) marks.strikeTime = true;
-  if (display.isNonLeague) marks.isNonLeague = true;
-  if (display.deciderTag) marks.deciderTag = display.deciderTag;
-  if (display.shootoutLabel) marks.shootoutLabel = display.shootoutLabel;
-  if (display.shootoutText) marks.shootoutText = display.shootoutText;
-  if (display.sourceMark) marks.sourceMark = display.sourceMark;
-  if (display.leagueTag) marks.leagueTag = display.leagueTag;
-  if (display.postseasonTag) marks.postseasonTag = display.postseasonTag;
-  return {
-    kind: display.kind === 'unreported' ? 'unreported' : 'final',
-    statusLabel: display.statusLabel,
-    statusTone: display.statusTone,
-    ...(Object.keys(marks).length > 0 ? { marks } : {}),
-    note: display.note,
-    sentence: display.sentence,
-    home: homeSide(display.home),
-    away: homeSide(display.away),
-  };
-}
-
-function lastGameView(game: Game, slug: string): HomeLastGame {
-  return {
-    display: slimDisplay(describeGame(game, slug)),
-    mineIsHome: game.home.slug === slug,
-    dateLabel: shortDate(game.dateLocal),
-    dateTime: dateTimeAttr(game),
-    href: gameHref(game.contestId),
-  };
-}
-
-function nextGameView(game: Game, slug: string): HomeNextGame {
-  const mineIsHome = game.home.slug === slug;
-  const theirs = mineIsHome ? game.away : game.home;
-  const links: HomeNextGame['links'] = [];
-  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
-  const address = gameAddress(game)?.address;
-  if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
-  if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
-  if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan });
-  return {
-    dateLabel: shortDate(game.dateLocal),
-    dateTime: dateTimeAttr(game),
-    timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
-    versus: describeGame(game, slug).versus ?? 'vs',
-    opponent: shortNameOf(theirs.slug, theirs.name),
-    kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
-    href: gameHref(game.contestId),
-    // Two external chips at most plus "Game page": three chips, one row, the same height for every
-    // team (no layout shift).
-    links: links.slice(0, 2),
-  };
-}
-
-/** The next fixture from the team's league's official schedule, for a team MaxPreps has no contest for. */
-function officialNextView(team: Team, today: string, leagueShort: string): HomeOfficialFixture | null {
-  const fixture = nextOfficialFixture(getOfficialFixtures({ slug: team.slug }), today);
-  if (!fixture) return null;
-  // A division with no official document has no fixtures; narrowing keeps the link honest anyway.
-  const official = getDivision(fixture.division).official;
-  if (official.mode === 'none') return null;
-  const { versus, opponentName } = fixtureOpponent(fixture, team);
-  return {
-    dateLabel: shortDate(fixture.dateKey),
-    dateKey: fixture.dateKey,
-    versus,
-    opponent: opponentName,
-    leagueShort,
-    scheduleUrl: official.scheduleUrl,
-  };
-}
-
-const LATER_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['preseason', 'regular']);
-
-/**
- * Every team (49), pre-serialized (DESIGN §7.12). The pin lives in the reader's browser, so the
- * server cannot know which one is wanted; shipping every compact view is the cost of the feature.
- */
-export function buildTeamViews(): HomeTeamView[] {
-  const today = getToday();
-  const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
-  const pairingsByLeague = new Map<string, ReturnType<typeof getLeaguePairings>>();
-  return getTeams().map((team) => {
-    const league = getLeague(team.league);
-    const heading = divisionHeading(team.division);
-    if (!contexts.has(team.division)) contexts.set(team.division, getStandingContext(team.division));
-    const context = contexts.get(team.division)?.get(team.id);
-    const standing = getStandingFor(team.slug);
-    const games = getGames({ teamId: team.id }).sort(byKickoff);
-    // The last PLAYED game: a final, or a game whose date has come and whose score has not
-    // (score-pending), so a card never sits on an older "Last" after a newer game was played.
-    const playedGames = games.filter(
-      (g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= today,
-    );
-    const last = playedGames.at(-1) ?? null;
-    const next =
-      games.find(
-        (g) =>
-          g.dateKey >= today &&
-          (g.status === 'scheduled' || g.status === 'live' || g.status === 'postponed'),
-      ) ?? null;
-    const hasResults = standing?.hasReportedResults ?? false;
-    const place = standing
-      ? standing.tiebreak.shared
-        ? `tied ${ordinal(standing.computed.place)}`
-        : ordinal(standing.computed.place)
-      : null;
-    const line = getTeamPostseasonLine(team.slug);
-    const projected = LATER_PHASES.has(getSeasonPhase(league.id));
-    const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
-    // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
-    // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13). The same for a CCS ladder
-    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason/postseason-outcomes.ts, plan
-    // final-10, 2026-10-30); a crossover result changes no label, so its team keeps the 'Final place:' rung.
-    let pairings = pairingsByLeague.get(league.id);
-    if (league.postseason.kind === 'ccs-ladder' && !pairings) {
-      pairings = getLeaguePairings(league.id);
-      pairingsByLeague.set(league.id, pairings);
-    }
-    // A Sunset or LA independent team's line is whether it is in the Tournament of Champions, not a place: no
-    // 'Final place:' lead and no short rung form (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
-    const outcomeLine =
-      league.postseason.kind === 'no-postseason' ||
-      (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
-      (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
-    // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
-    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ (tied)')
-    // instead of the full label with its tiebreak citation, which the team page carries.
-    const outcomes = standing ? outcomesFor(standing) : [];
-    const tieBadges =
-      line && outcomes.length > 1 ? `${outcomes.map((o) => statusBadge(team.division, o)).join(' or ')} (tied)` : null;
-    // A one-rung label too long for that line ("<who>: <what>", the San Diego Section's champion rung)
-    // gets its short form too (home-types.ts rungCardText); every other label is shown whole.
-    const oneRung =
-      line && outcomes.length === 1
-        ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
-        : null;
-    const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
-    const officialFixture = next ? null : officialNextView(team, today, league.shortName);
-    // The play-in or crossover the team is seated in that MaxPreps has not listed yet: the card never says "no game
-    // left" the day before it, and it comes before a later game or fixture (the team page's `pairing` Next card).
-    const pendingAny = pendingPairingFor(team, today);
-    const pending =
-      pendingAny &&
-      (next === null || next.isDateTba || pendingAny.dateKey < next.dateKey) &&
-      (officialFixture === null || pendingAny.dateKey <= officialFixture.dateKey)
-        ? pendingAny
-        : null;
-    const officialNext = pending ? null : officialFixture;
-    const pairingNext: HomePairingNext | null = pending
-      ? {
-          dateKey: pending.dateKey,
-          when: [shortDate(pending.dateKey), pending.timeLabel].filter(Boolean).join(' · '),
-          // The link says what it is and where it leads, the pairing card: 'BVAL play-in at Westmont'.
-          title: `${pending.kindLabel} ${pending.versus} ${pending.opponentName}`,
-          note: `From the ${league.shortName} tables today; MaxPreps has not listed this game yet.`,
-          href: pending.href,
-        }
-      : null;
-    return {
-      // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
-      slug: team.slug,
-      meta: [hasResults && place ? place : 'No results yet', heading, league.shortName]
-        .filter((part): part is string => !!part)
-        .join(' · '),
-      // 'x of y played' while games are left; a league with no fixed schedule (the Sunset) has no "of y",
-      // so its card says 'x played' once the team has played (DESIGN-socal §2.1.7).
-      played:
-        context === undefined
-          ? null
-          : context.scheduled === null || context.remaining === null
-            ? context.counted > 0
-              ? `${context.counted} played`
-              : null
-            : context.remaining > 0
-              ? `${context.counted} of ${context.scheduled} played`
-              : null,
-      postseason: line ? (outcomeLine ? line.label : `${lead.full} ${line.label}`) : null,
-      ...(shortLabel && !outcomeLine ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
-      tableHref: `/standings/${league.id}#${team.division}`,
-      hasResults,
-      leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
-      overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
-      form: hasResults && standing ? [...standing.computed.last5] : [],
-      last: last ? lastGameView(last, team.slug) : null,
-      next: next && !pending ? nextGameView(next, team.slug) : null,
-      officialNext,
-      ...(pairingNext ? { pairingNext } : {}),
-    };
-  });
 }
 
 // ---------------------------------------------------------------- cross-league latest

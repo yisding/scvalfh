@@ -7,7 +7,7 @@ import ExternalLink from '../ui/ExternalLink';
 import { NON_MEMBER_NOTE } from '../ui/GameRow';
 import GhostMonogram from '../ui/GhostMonogram';
 import TeamMonogram from '../ui/TeamMonogram';
-import { fixtureOpponent } from './team-view';
+import { fixtureOpponent } from './team-schedule';
 
 /**
  * Fixtures that exist in the league's official schedule and in NO data source (SPEC §1.3, §7.8).

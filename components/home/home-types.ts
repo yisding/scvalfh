@@ -144,7 +144,7 @@ export interface HomeTeamView {
   /** Used only when `next` is null — the official schedule still has a fixture (DESIGN §8). */
   officialNext: HomeOfficialFixture | null;
   /**
-   * The crossover or play-in the team is seated in that MaxPreps has not listed yet (team-view.ts pendingPairingFor),
+   * The crossover or play-in the team is seated in that MaxPreps has not listed yet (components/teams/team-schedule.ts pendingPairingFor),
    * when it comes before any listed game or fixture (`next` and `officialNext` are then null). Absent for every other team, so 99 views do not ship it.
    */
   pairingNext?: HomePairingNext;

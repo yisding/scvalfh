@@ -7,7 +7,7 @@ import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '../../components/layout/site';
 import TeamFinder from '../../components/search/TeamFinder';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
-import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/team-view';
+import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/teams-index-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';

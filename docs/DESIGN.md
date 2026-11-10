@@ -5037,7 +5037,7 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
 
 ### 32.5 A team's Next, and the links in
 
-- **An unlisted pairing is a team's Next** (`team-view.ts pendingPairingFor`): a team holding a crossover or play-in
+- **An unlisted pairing is a team's Next** (`team-schedule.ts pendingPairingFor`): a team holding a crossover or play-in
   seat alone, with no league game left, sees it on its page's Next card (date, time, purpose, opponent or seat words,
   host, and that the pairing follows today's tables while it can still change) and on the pinned home card
   (`pairingNext`, composed on the server so the client card only prints strings), each linking

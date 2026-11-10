@@ -26,6 +26,7 @@ import { textOf } from './html-text';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
+type Schedule = typeof import('../../components/teams/team-schedule');
 type Line = typeof import('../../components/playoffs/team-postseason-line');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -34,6 +35,7 @@ let data: Data;
 let dataLine: Line;
 let leagues: Leagues;
 let view: View;
+let schedule: Schedule;
 let renderTeam: (slug: string) => Promise<string>;
 let renderIndex: () => string;
 let describeTeam: (slug: string) => Promise<string | undefined>;
@@ -44,6 +46,7 @@ async function loadModules() {
   const pl = await import('../../components/playoffs/team-postseason-line');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
+  const ts = await import('../../components/teams/team-schedule');
   const teamPage = await import('../../app/teams/[slug]/page');
   const indexPage = (await import('../../app/teams/page')).default;
   return {
@@ -51,6 +54,7 @@ async function loadModules() {
     pl,
     l,
     v,
+    ts,
     renderTeam: async (slug: string) => {
       const el = await teamPage.default({ params: Promise.resolve({ slug }) } as never);
       return renderToStaticMarkup(el as ReactElement);
@@ -71,6 +75,7 @@ beforeAll(async () => {
   dataLine = m.pl;
   leagues = m.l;
   view = m.v;
+  schedule = m.ts;
   renderTeam = m.renderTeam;
   renderIndex = m.renderIndex;
   describeTeam = m.describeTeam;
@@ -272,7 +277,7 @@ describe('postseason lines per kind (components/playoffs/team-postseason-line.ts
       if (v.league.postseasonKind === 'ccs-ladder') {
         // A team with a crossover or play-in still to play goes straight to its league's pairing cards.
         expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe(
-          view.inOpenPairing(team, v.today) ? `/playoffs#${team.league}-pairings` : `/playoffs#${team.league}`,
+          schedule.inOpenPairing(team, v.today) ? `/playoffs#${team.league}-pairings` : `/playoffs#${team.league}`,
         );
         expect(line.linkText, `components/playoffs/team-postseason-line.ts ${team.slug} link`).toBe('CCS playoffs');
       } else if (v.league.postseasonKind === 'unbracketed-tournament') {
@@ -954,7 +959,7 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
   });
 });
 
-describe('fixtureOpponent (components/teams/team-view.ts)', () => {
+describe('fixtureOpponent (components/teams/team-schedule.ts)', () => {
   it('names a registered opponent by short name and title-cases a grid name outside the registry', () => {
     const team = data.getTeams()[0];
     const base = {
@@ -967,13 +972,13 @@ describe('fixtureOpponent (components/teams/team-view.ts)', () => {
       homeSlug: team.slug,
       source: 'scval-pdf' as const,
     };
-    const outside = view.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
+    const outside = schedule.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
     expect(outside).toMatchObject({ mineIsHome: true, versus: 'vs', opponent: undefined, opponentName: 'Valley Christian' });
     expect(view.officialFixtureHeadline({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team)).toMatch(
       /^vs Valley Christian · /,
     );
     const rival = data.getTeams().find((t) => t.slug !== team.slug)!;
-    const away = view.fixtureOpponent({ ...base, awayName: 'X', awaySlug: rival.slug }, rival);
+    const away = schedule.fixtureOpponent({ ...base, awayName: 'X', awaySlug: rival.slug }, rival);
     expect(away).toMatchObject({ mineIsHome: false, versus: 'at', opponentName: team.shortName });
   });
 });

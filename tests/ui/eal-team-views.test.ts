@@ -29,6 +29,7 @@ import { textOf } from './html-text';
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
+type TeamsIndexView = typeof import('../../components/teams/teams-index-view');
 type Line = typeof import('../../components/playoffs/team-postseason-line');
 type GameViewModule = typeof import('../../components/game/game-view');
 
@@ -37,6 +38,7 @@ interface Loaded {
   pl: Line;
   l: Leagues;
   v: View;
+  ti: TeamsIndexView;
   gm: GameViewModule;
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
@@ -60,6 +62,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   const pl = await import('../../components/playoffs/team-postseason-line');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
+  const ti = await import('../../components/teams/teams-index-view');
   const gm = await import('../../components/game/game-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const gamePage = await import('../../app/game/[id]/page');
@@ -69,6 +72,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
     pl,
     l,
     v,
+    ti,
     gm,
     renderTeam: async (slug) =>
       renderToStaticMarkup((await teamPage.default({ params: Promise.resolve({ slug }) } as never)) as ReactElement),
@@ -374,11 +378,11 @@ describe('/teams on the EAL corpus', () => {
       after.indexOf('Bella Vista'),
     );
     expect(textOf(html).split(note).length - 1, 'app/teams/page.tsx note appears once').toBe(1);
-    const groups = eal.v.buildTeamsByLeague().flatMap((s) => s.leagues);
+    const groups = eal.ti.buildTeamsByLeague().flatMap((s) => s.leagues);
     // The EAL and the Sunset (a field hockey grouping, not the all-sports league of that name) carry one.
-    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/team-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
+    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/teams-index-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
     // Nine leagues and the LA independents' group (DESIGN §24.9).
-    expect(groups.length, 'components/teams/team-view.ts nine league groups and the independents').toBe(10);
+    expect(groups.length, 'components/teams/teams-index-view.ts nine league groups and the independents').toBe(10);
   });
 
   it('states what the six EAL teams are, and carries no seed word', () => {

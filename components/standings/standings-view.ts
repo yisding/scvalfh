@@ -53,6 +53,7 @@ import {
   standaloneName,
   statusesOf,
 } from '../../lib/leagues';
+import { postseasonCitation, postseasonHref } from '../../lib/postseason/postseason-kind';
 import { crossCheckSkipReason } from '../../lib/standings/cross-check';
 import { outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend } from '../../lib/standings/ladder';
 import type {
@@ -368,32 +369,15 @@ function postseasonLinks(league: LeagueConfig): { heading: string; href: string;
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
-      return { heading: `${ps.name}, as things stand`, href: `/playoffs/${league.id}`, linkText: 'Tournament bracket' };
+      return { heading: `${ps.name}, as things stand`, href: postseasonHref(league), linkText: 'Tournament bracket' };
     case 'unbracketed-tournament':
-      return { heading: `${ps.name}, as things stand`, href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+      return { heading: `${ps.name}, as things stand`, href: postseasonHref(league), linkText: 'Postseason' };
     case 'ccs-ladder':
-      return { heading: 'CCS qualifying, as things stand', href: `/playoffs#${league.id}`, linkText: 'Playoff picture' };
+      return { heading: 'CCS qualifying, as things stand', href: postseasonHref(league), linkText: 'Playoff picture' };
     case 'no-postseason':
-      return { heading: 'Postseason', href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+      return { heading: 'Postseason', href: postseasonHref(league), linkText: 'Postseason' };
     case 'section-playoffs':
-      return { heading: `${ps.name}: the league route, as things stand`, href: `/playoffs#${league.id}`, linkText: ps.name };
-  }
-}
-
-/** The league's qualification rule, cited once in the legend (by postseason kind). */
-function postseasonCitation(league: LeagueConfig): string {
-  const ps = league.postseason;
-  switch (ps.kind) {
-    case 'ccs-ladder':
-      return ps.citation;
-    case 'league-tournament':
-      return ps.citations.format;
-    case 'unbracketed-tournament':
-      return ps.citations.qualification;
-    case 'no-postseason':
-      return ps.citations.noPlayoffs;
-    case 'section-playoffs':
-      return ps.citations.qualification;
+      return { heading: `${ps.name}: the league route, as things stand`, href: postseasonHref(league), linkText: ps.name };
   }
 }
 

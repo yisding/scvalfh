@@ -14,6 +14,7 @@
 import type { Game, LeagueId, RegionId } from '../../lib/types';
 
 import type { PostseasonPlace } from './day-summary';
+import { slugOf } from './slug';
 
 export interface LeagueCardData {
   id: LeagueId;
@@ -73,17 +74,6 @@ function sideLeagues(game: Game, leagueOf: SlugLeague): Set<LeagueId> {
     if (id) out.add(id);
   }
   return out;
-}
-
-/**
- * `ccs`, `san-diego-section-playoffs`, `tournament-of-champions`: an event group's id tail (`postseason-<slug>`,
- * the anchor the pills link to), here and on the day page (day-summary.ts).
- */
-export function slugOf(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 }
 
 /**

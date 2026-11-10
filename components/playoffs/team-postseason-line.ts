@@ -1,8 +1,8 @@
 /**
  * The team card's postseason copy (SPEC §10.5): one label, one sentence, a link and the honesty line for a
  * team's postseason, by its league's postseason kind. Read by the team view (components/teams/team-view.ts,
- * which wraps it in its pairing- and bracket-aware lines) and the home view (components/home/home-view.ts,
- * which also uses `playInClause` in its phase lead). Server-only: it reads the snapshot through lib/data.
+ * which wraps it in its pairing- and bracket-aware lines) and the home page's pinned cards (components/home/team-card.ts);
+ * its phase lead (components/home/phase-lead.ts) uses `playInClause`. Server-only: it reads the snapshot through lib/data.
  */
 
 import { getLeaguePairings, getLeagueTournament, getStandingFor, getToday } from '../../lib/data';
@@ -11,6 +11,7 @@ import { CCS } from '../../lib/league-config/sections';
 import type { LeagueConfig, PairingConfig, PostseasonConfig } from '../../lib/league-config/shape';
 import { findLeague, getDivision, outsideTournamentOf, pairingWindow } from '../../lib/leagues';
 import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
+import { postseasonHref } from '../../lib/postseason/postseason-kind';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel } from '../../lib/standings/ladder';
 import { getTeamById, getTeamBySlug } from '../../lib/teams';
@@ -66,7 +67,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       sentence: event
         ? `${ps.note} ${team.name} ${entrant ? 'is' : 'is not'} one of its ${count} teams.`
         : ps.note,
-      href: event ? `/playoffs#${event.id}` : `/playoffs#${league.id}`,
+      href: event ? `/playoffs#${event.id}` : postseasonHref(league),
       linkText: event ? event.name : 'Postseason',
       caveat: null,
     };
@@ -88,7 +89,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       return {
         label,
         sentence: `${ps.qualificationLine}${divisionSentence}`,
-        href: `/playoffs#${league.id}`,
+        href: postseasonHref(league),
         linkText: ps.name,
         caveat: null,
       };
@@ -115,7 +116,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       const words = tournamentOutcomeCopy(tournamentOutcome(projection, team.slug), team.slug, league, ladder);
       return {
         ...words,
-        href: `/playoffs/${league.id}`,
+        href: postseasonHref(league),
         linkText: ps.name,
         // A projection only until the first tournament result is in; then the picture is the results'.
         caveat: projection.status === 'projected' ? PROJECTED_CAVEAT : RESULTS_CAVEAT,
@@ -128,7 +129,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         sentence: ps.site
           ? `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}, and every ${league.shortName} team is one of the ${numberWord(ps.qualifiers)}; ${ps.site.basis} has the games at ${ps.site.label} on ${shortDate(ps.site.day)}.`
           : `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
-        href: `/playoffs#${league.id}`,
+        href: postseasonHref(league),
         linkText: 'Postseason',
         caveat: null,
       };
@@ -140,7 +141,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         return {
           label: outcome.label,
           sentence: outcome.sentence,
-          href: `/playoffs#${league.id}`,
+          href: postseasonHref(league),
           linkText: 'CCS playoffs',
           caveat: CCS_RESULTS_CAVEAT,
         };
@@ -171,7 +172,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       return {
         label,
         sentence,
-        href: `/playoffs#${league.id}`,
+        href: postseasonHref(league),
         linkText: 'CCS playoffs',
         caveat: outcome ? CCS_RESULTS_CAVEAT : PROJECTED_CAVEAT,
       };
