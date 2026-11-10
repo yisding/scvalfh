@@ -3,9 +3,10 @@
  *
  * `lib/sources/maxpreps.ts` keeps its own attempt loop on purpose (it shares only the rate gate,
  * the backoff delay and the Retry-After reading below): the primary client is JSON-and-zod-only,
- * carries the descriptive User-Agent, and its retry semantics are pinned by tests. The secondary sources need three things it does not have — a per-source User-Agent
- * (si.com gates on a browser UA), binary bodies (PDFs), and a `never throw` mode so a failure
- * becomes a SourceStatus row instead of aborting the cron (SPEC §5.3).
+ * carries the descriptive User-Agent, and its retry semantics are pinned by tests. The secondary
+ * sources need three things it does not have — a per-source User-Agent (si.com gates on a browser
+ * UA), binary bodies (PDFs), and a `never throw` mode so a failure becomes a SourceStatus row
+ * instead of aborting the cron (SPEC §5.3).
  *
  * Budget, same courtesy ceiling as the primary client (SPEC §5.2, §5.3):
  *   concurrency <= 3 · >= 500 ms between request starts · 15 s timeout · retry 429/5xx only.
