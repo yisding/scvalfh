@@ -27,7 +27,7 @@
  *    sides share a conference.
  */
 
-import { CCS } from './league-config/sections';
+import { CCS, ccsFirstDay } from './league-config/sections';
 import type { LeagueConfig, OutsideTournamentConfig } from './league-config/shape';
 import { LEAGUES, inPairingWindow, outsideTournamentOf } from './leagues';
 import { teamOfSide } from './teams';
@@ -169,7 +169,8 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     .filter((t): t is Team => t !== undefined)
     .map((t) => leagueById(t.league)?.sectionId ?? null);
   const ccsPair = sections.length > 0 && sections.every((s) => s === 'ccs');
-  const inCcsWindow = game.dateKey >= CCS.keyDates.quarterfinals;
+  // From the bracket's first day: the quarterfinals, or the first round where it opens earlier (basketball).
+  const inCcsWindow = game.dateKey >= ccsFirstDay(CCS.keyDates);
 
   // 1c. MaxPreps' own bracket fields name the CCS championship (the GUID is the exact test; the name is the
   //     fallback for a re-created tournament). Ahead of the flag: the feed says which bracket, not just "playoff".

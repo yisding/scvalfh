@@ -16,7 +16,9 @@
  * kept so the §5.2 table stays implemented end to end.
  */
 
-import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
+import {
+  EN_DASH, MINUS, SPORT_HAS_NO_TIES, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay,
+} from '../../lib/format';
 import type { SectionConfig, ShootoutInference } from '../../lib/league-config/shape';
 import {
   LEAGUES,
@@ -367,7 +369,9 @@ function deciderTagFor(game: Game): string | null {
   // `shootoutText` instead. A San Diego level W/L final gets no tag: the shootout is not verified.
   if (game.decider === 'SO') return game.shootout || shootoutInferenceOf(game) === 'unverified' ? null : 'SO';
   if (overtimeInDoubt(game)) return null;
-  if (game.decider === '2OT') return '2 OT';
+  // Basketball plays overtime periods until one team leads, so a third or fourth is named ('3 OT'); the
+  // stored decider stops at '2OT', which is as far as a sudden-victory sport goes.
+  if (game.decider === '2OT') return SPORT_HAS_NO_TIES && game.otPeriods > 2 ? `${game.otPeriods} OT` : '2 OT';
   if (game.decider === 'OT') return 'OT';
   return null;
 }
@@ -620,7 +624,11 @@ export function resultSentence(game: Game, noun: string = gameContextNoun(game))
     overtimeInDoubt(game) || (view.decider !== 'OT' && view.decider !== '2OT')
       ? ''
       : view.decider === '2OT'
-        ? ' in double overtime'
+        ? SPORT_HAS_NO_TIES && game.otPeriods > 2
+          ? game.otPeriods === 3
+            ? ' in triple overtime'
+            : ` after ${game.otPeriods} overtime periods`
+          : ' in double overtime'
         : ' in overtime';
   return `${winner.name} won ${against} ${score}${overtime}.`;
 }

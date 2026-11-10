@@ -2,7 +2,9 @@ import { leagueOfDivision } from '../../../lib/leagues';
 import type { TeamSlug } from '../../../lib/types';
 
 import ExternalLink from '../../ui/ExternalLink';
+import { orderHead } from '../../../lib/standings/order';
 import { articleFor, membershipSource } from '../../words/membership-words';
+import { AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_WORDS, RECORD_NOUN_WORDS, SCORE_UNIT } from '../../words/score-words';
 import { biggestGoalDiff } from '../standings-view';
 
 import { tableName } from './cells';
@@ -33,12 +35,12 @@ export function collectStandingsNotes(
     // (Metro South Bay before its first game) stated a goal difference nobody has (review 2026-10-06).
     const scale =
       biggestGoalDiff(rows.map((r) => r.standing.computed.gd)) > 0
-        ? `, to ${tableName(division)}’s biggest goal difference (${gdDomain})`
+        ? `, to ${tableName(division)}’s biggest ${DIFFERENCE_WORDS} (${gdDomain})`
         : '';
     legend.push(
-      `GD = league goals for minus goals against. Bars are scaled per division${scale}, so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
+      `${DIFF_ABBR} = league ${FOR_WORDS} minus ${AGAINST_WORDS}. Bars are scaled per division${scale}, so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the ${RECORD_NOUN_WORDS} record, not in the ${SCORE_UNIT} columns.`,
     );
-    legend.push(`PTS: ${leagueOfDivision(division).rules.citations.points}.`);
+    legend.push(`${orderHead(leagueOfDivision(division).rules)}: ${leagueOfDivision(division).rules.citations.points}.`);
   }
   // One note per TIED GROUP, not one per team: Cupertino's note and Homestead's note describe
   // the same coin flip. The note already cites Article VI §7, so it renders verbatim.

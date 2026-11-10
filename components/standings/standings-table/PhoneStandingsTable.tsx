@@ -3,6 +3,12 @@ import { GoalDiffCell } from '../../ui/GoalDiffBar';
 import { StretchedRowLink } from '../../ui/PinNote';
 import TeamMonogram from '../../ui/TeamMonogram';
 import { recordString, streakString, winPct } from '../../../lib/format';
+import { leagueOfDivision } from '../../../lib/leagues';
+import { orderHead, orderHeadWords, orderValue, ordersByRecord } from '../../../lib/standings/order';
+import { capitalized } from '../../words/capitalized';
+import {
+  AGAINST_ABBR, AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_ABBR, FOR_WORDS, WIDE_SCORES,
+} from '../../words/score-words';
 
 import { Abbr, FlagMark, LeagueRecord, PlaceCell, dash, gpText, isFlagged, rowLabel, tableName, tableRows } from './cells';
 import type { StandingsTableProps } from './types';
@@ -17,6 +23,33 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
   const { flagged, columns, ctx, fixedSchedule, cut, hrefOf, formLabel } = tableRows(props);
   const showGp = columns.has('gp');
   const rows = props.rows;
+  // A table ordered on its league record (lib/standings/order.ts: SCVAL basketball) prints PCT where a points
+  // table prints PTS: '.875' and '1.000' are 13px numerals in a 44px column, the W-L record gives the League
+  // column 8px back, and the Pct column of the 768 tier is not printed a second time.
+  const rules = leagueOfDivision(props.division).rules;
+  const byRecord = ordersByRecord(rules);
+  const CLS = byRecord
+    ? {
+        orderHead: 'w-11 text-right max-[389px]:pr-1',
+        leagueHead: 'w-[48px] pl-px text-right max-[389px]:tracking-normal min-[390px]:w-[60px] min-[390px]:px-1',
+        order: 'sx-num w-11 pt-3 text-right align-top font-bold text-ink max-[389px]:pr-1',
+        league:
+          'sx-num w-[48px] whitespace-nowrap pt-3 pl-px pr-2 text-right align-top font-medium text-ink min-[390px]:w-[60px] min-[390px]:pl-1',
+      }
+    : {
+        orderHead: 'w-8 text-right max-[389px]:pr-1',
+        leagueHead: 'w-[56px] pl-px text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2',
+        order: 'sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink max-[389px]:pr-1',
+        league:
+          'sx-num w-[56px] whitespace-nowrap pt-3 pl-px pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2',
+      };
+  // A points sport's difference runs to four glyphs ('+112'): 30px of numeral, not 24.
+  const diffHead = WIDE_SCORES
+    ? 'w-[50px] pr-gutter text-right min-[23.4375rem]:w-[94px]'
+    : 'w-[44px] pr-gutter text-right min-[23.4375rem]:w-[88px]';
+  const diffCell = WIDE_SCORES
+    ? 'w-[50px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[94px]'
+    : 'w-[44px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[88px]';
   return (
     <>
       <thead>
@@ -35,8 +68,8 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
             {tableName(props.division)}
             <span className="sr-only"> team</span>
           </th>
-          <th scope="col" className="w-8 text-right max-[389px]:pr-1">
-            <Abbr short="Pts" long="Points" />
+          <th scope="col" className={CLS.orderHead}>
+            <Abbr short={capitalized(orderHead(rules).toLowerCase())} long={orderHeadWords(rules)} />
           </th>
           {/* The League head (52px of 12px caps) is wider than its numerals (40px), and
               the numerals carry 8px of right padding so they never run into the GD track
@@ -53,20 +86,22 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
               fits, and the record still clears the points by 5px. */}
           <th
             scope="col"
-            className="w-[56px] pl-px text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
+            className={CLS.leagueHead}
           >
             League
           </th>
           {/* 768-1023: the phone table spans a 720px card, so it shows four more of the
               desktop columns instead of a 480px team cell with nothing in it. */}
-          <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
-            <Abbr short="Pct" long="Win percentage" />
+          {byRecord ? null : (
+            <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
+              <Abbr short="Pct" long="Win percentage" />
+            </th>
+          )}
+          <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
+            <Abbr short={FOR_ABBR} long={capitalized(FOR_WORDS)} />
           </th>
           <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
-            <Abbr short="GF" long="Goals for" />
-          </th>
-          <th scope="col" className="hidden w-14 pr-2 text-right md:table-cell">
-            <Abbr short="GA" long="Goals against" />
+            <Abbr short={AGAINST_ABBR} long={capitalized(AGAINST_WORDS)} />
           </th>
           <th scope="col" className="hidden w-16 pr-2 text-right md:table-cell">
             <Abbr short="Stk" long="Streak" />
@@ -91,9 +126,9 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
               does not). The same unit the line-2 record and the mini table's query use. */}
           <th
             scope="col"
-            className="w-[44px] pr-gutter text-right min-[23.4375rem]:w-[88px]"
+            className={diffHead}
           >
-            <Abbr short="GD" long="Goal difference" />
+            <Abbr short={DIFF_ABBR} long={capitalized(DIFFERENCE_WORDS)} />
           </th>
         </tr>
       </thead>
@@ -219,15 +254,17 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
               </th>
               {has ? (
                 <>
-                  <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink max-[389px]:pr-1">
-                    {s.computed.pts}
+                  <td className={CLS.order}>
+                    {orderValue(rules, s.computed)}
                   </td>
-                  <td className="sx-num w-[56px] whitespace-nowrap pt-3 pl-px pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
+                  <td className={CLS.league}>
                     <LeagueRecord record={recordString(s.computed)} context={ctx(row)} />
                   </td>
-                  <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
-                    {winPct(s.computed.winPct)}
-                  </td>
+                  {byRecord ? null : (
+                    <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
+                      {winPct(s.computed.winPct)}
+                    </td>
+                  )}
                   <td className="sx-num hidden w-14 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
                     {dash(s.computed.gf, has)}
                   </td>
@@ -237,12 +274,12 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
                   <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top text-ink-2 md:table-cell">
                     {streakString(s.computed.streak)}
                   </td>
-                  <td className="w-[44px] pt-3 pr-gutter text-right align-top min-[23.4375rem]:w-[88px]">
+                  <td className={diffCell}>
                     <GoalDiffCell
                       value={s.computed.gd}
                       domain={gdDomain}
                       track={44}
-                      numberWidth={24}
+                      numberWidth={WIDE_SCORES ? 30 : 24}
                       numberClassName="text-cell"
                       barClassName="hidden min-[23.4375rem]:block"
                     />
@@ -258,7 +295,7 @@ export function PhoneStandingsTable(props: StandingsTableProps) {
                   <td data-twin colSpan={3} className="pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:hidden">
                     No results yet
                   </td>
-                  <td data-twin colSpan={7} className="hidden pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:table-cell">
+                  <td data-twin colSpan={byRecord ? 6 : 7} className="hidden pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:table-cell">
                     No results yet
                   </td>
                 </>

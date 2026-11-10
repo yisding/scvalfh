@@ -1,5 +1,9 @@
 import Link from 'next/link';
 
+import { leagueOfDivision } from '../../lib/leagues';
+import { orderHead, orderValue } from '../../lib/standings/order';
+import { capitalized } from '../words/capitalized';
+import { RECORD_HEAD } from '../words/score-words';
 import { EM_DASH, recordString } from '../../lib/format';
 import { PinNote } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
@@ -55,6 +59,8 @@ export function CompactStandingsTable({
   className,
 }: CompactStandingsTableProps) {
   const lineAfter = ladderLineAfter(rows.map(ladderRow), ladderLine?.after);
+  // The order column: PTS, or PCT for a table ordered on its league record (lib/standings/order.ts).
+  const rules = rows.length > 0 ? leagueOfDivision(rows[0].standing.division).rules : null;
 
   return (
     <div className={['sx-card sx-flush sx-bleed lg:max-w-3xl', className].filter(Boolean).join(' ')}>
@@ -70,10 +76,10 @@ export function CompactStandingsTable({
               GP
             </th>
             <th scope="col" className="w-[4.5rem] text-right">
-              W-L-T
+              {RECORD_HEAD}
             </th>
             <th scope="col" className="w-12 pr-gutter text-right">
-              Pts
+              {rules ? capitalized(orderHead(rules).toLowerCase()) : 'Pts'}
             </th>
           </tr>
         </thead>
@@ -115,7 +121,7 @@ export function CompactStandingsTable({
                   {has ? recordString(s.computed) : EM_DASH}
                 </td>
                 <td className="sx-num w-12 pr-gutter text-right text-body font-bold text-ink">
-                  {has ? s.computed.pts : EM_DASH}
+                  {has && rules ? orderValue(rules, s.computed) : EM_DASH}
                 </td>
               </tr>,
               lineAfter !== null && index + 1 === lineAfter ? (

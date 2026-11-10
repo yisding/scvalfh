@@ -48,6 +48,7 @@ export const BASKETBALL_CCS: CcsConfig = {
   keyDates: {
     entriesDue: '2027-02-17T10:00:00', seedingMeeting: '2027-02-17T12:00:00',
     firstRound: '2027-02-19',
+    secondRound: '2027-02-20',
     quarterfinals: '2027-02-23',
     semifinals: '2027-02-25',
     finals: '2027-02-26', finalsLast: '2027-02-27',

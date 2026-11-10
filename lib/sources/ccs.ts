@@ -17,6 +17,7 @@
 
 import { CCS } from '../league-config/sections';
 import { SOURCE_LINKS } from '../season';
+import { SPORT } from '../sports/current';
 import type { CcsCalendarEvent, CcsDivisionName, CcsEventKind } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
@@ -49,6 +50,11 @@ function icsDateKey(value: string): string | null {
 export function classifyCcsSummary(summary: string): CcsEventKind {
   const s = summary.toLowerCase();
   if (/entry|entries/.test(s)) return 'entries-due';
+  // Basketball's feed: 'CCS Seeding Meeting', 'D1-D5 1st Round & Open Game #1', 'D1-D5 2nd Round'. The Open
+  // Division's own games ('Open Game #2') are no round of the bracket's and stay 'other'.
+  if (/seeding/.test(s)) return 'seeding';
+  if (/\b(1st|first) round\b/.test(s)) return 'first-round';
+  if (/\b(2nd|second) round\b/.test(s)) return 'second-round';
   if (/quarterfinal/.test(s)) return 'quarterfinals';
   if (/sem[i]?final/.test(s)) return 'semifinals';
   if (/\bfinals?\b/.test(s)) return 'finals';
@@ -60,10 +66,17 @@ export function classifyCcsSummary(summary: string): CcsEventKind {
  * Strip the feed's own prefixes so the text reads as a label. SUMMARY is
  * `(Field Hockey) CCS Finals…` and DESCRIPTION is `Field Hockey: (Field Hockey) CCS Finals…`.
  */
+const CALENDAR_NAME = SPORT.ccs.calendar.replace(/_/g, ' ').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** This build's sport's prefixes ('Basketball: ', '(Basketball) '), the feed's own calendar name. */
+const OWN_PREFIX = new RegExp(`^\\s*${CALENDAR_NAME}:\\s*`, 'i');
+const OWN_TAG = new RegExp(`^\\s*\\(${CALENDAR_NAME}\\)\\s*`, 'i');
+
 export function cleanCcsSummary(summary: string): string {
   return summary
     .replace(/^\s*field hockey:\s*/i, '')
     .replace(/^\s*\(field hockey\)\s*/i, '')
+    .replace(OWN_PREFIX, '')
+    .replace(OWN_TAG, '')
     .trim();
 }
 
@@ -159,9 +172,17 @@ export function confirmKeyDates(
     ['evaluation', expected.evaluationMeeting.slice(0, 10), 'evaluation meeting'],
   ];
 
+  // The rounds before the quarterfinals, where config has them (basketball).
+  if (expected.firstRound) pairs.splice(1, 0, ['first-round', expected.firstRound, 'first round']);
+  if (expected.secondRound) pairs.splice(2, 0, ['second-round', expected.secondRound, 'second round']);
+
   const differences: string[] = [];
   for (const [kind, ours, label] of pairs) {
-    const theirs = byKind.get(kind);
+    // A feed that lists the seeding meeting and no entries event (basketball) confirms the entries day when
+    // config puts both on one day.
+    const theirs =
+      byKind.get(kind) ??
+      (kind === 'entries-due' && expected.seedingMeeting.slice(0, 10) === ours ? byKind.get('seeding') : undefined);
     if (!theirs) differences.push(`CCS calendar has no ${label} event`);
     else if (theirs !== ours) differences.push(`${label}: we publish ${ours}, CCS calendar says ${theirs}`);
   }

@@ -1,3 +1,5 @@
+import { ordersByRecord } from '../../../lib/standings/order';
+import { EMPTY_RECORD } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords, numberWord } from '../../../lib/format';
 import { leagueHeading } from '../../../lib/leagues';
@@ -10,9 +12,11 @@ import LeagueRules from '../LeagueRules';
  */
 export function StandingsSection({ standings }: { standings: AboutStandings }) {
   const { siteOrdered, anyTableless, ruleLeagues, tabled, titleOnly, tableOrdered, perLeague } = standings;
+  // Every league of this build orders its table on its league record (basketball): no points to describe.
+  const byRecord = perLeague.length > 0 && perLeague.every(({ config }) => ordersByRecord(config.rules));
   return (
     <section id="standings" className="mt-16">
-      <SectionHeader size="lg" kicker="Standings, points &amp; tiebreaks" />
+      <SectionHeader size="lg" kicker={byRecord ? 'Standings & tiebreaks' : 'Standings, points & tiebreaks'} />
       <div className="sx-prose">
         <p>
           {/* The qualifiers appear only when they are needed, so a NorCal-only site reads as before:
@@ -26,7 +30,15 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
           <a href="#cross-check" className="text-accent hover:underline">
             the cross-check log
           </a>
-          ). A team with no reported results is never shown as a fabricated 0-0-0 record.{' '}
+          {`). A team with no reported results is never shown as a fabricated ${EMPTY_RECORD} record.`}{' '}
+          {byRecord ? (
+            <>
+              {tabled.length === 1 ? `${tabled[0].shortName} orders its tables` : 'Every league orders its tables'} on
+              the league record, the share of league games won, so a team that has played fewer games is not
+              behind for it; teams level on that record are separated by the league&rsquo;s own tiebreaks below.
+            </>
+          ) : (
+            <>
           {/* DESIGN-socal §2.1.7: the Southern California leagues publish no points rule, so the
               sentence names the leagues that do award points, then says this site applies the same
               3-1-0 to the rest (never that their rules require it). */}
@@ -51,6 +63,8 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
             ? `; ${listWords(siteOrdered.map(leagueRef))} publish no points rule, so this site applies the same 3-1-0`
             : null}
           ; they differ in which games count and how ties are broken.
+            </>
+          )}
         </p>
       </div>
       {perLeague.map(({ summary, config }) => (

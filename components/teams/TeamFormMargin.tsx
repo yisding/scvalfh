@@ -1,3 +1,4 @@
+import { SCORE_UNIT } from '../words/score-words';
 import EmptyState from '../ui/EmptyState';
 import FormStrip from '../ui/FormStrip';
 import SectionHeader from '../ui/SectionHeader';
@@ -77,7 +78,7 @@ export function TeamFormMargin({
     </>
   ) : (
     <section className="min-w-0 md:col-span-2">
-      <SectionHeader kicker="Form and goal margin" />
+      <SectionHeader kicker={`Form and ${SCORE_UNIT} margin`} />
       {firstLeagueGame ? (
         <EmptyState
           heading={`${team.name} has not played a ${view.scopeLabel} game yet.`}

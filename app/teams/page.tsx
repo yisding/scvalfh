@@ -1,3 +1,5 @@
+import { DIFF_ABBR, RECORD_HEAD } from '../../components/words/score-words';
+import { ordersByRecord } from '../../lib/standings/order';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -12,7 +14,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES_PROPER } from '../../lib/leagues';
-import { HAS_RECRUITING, SPORT_AUDIENCE } from '../../lib/sports/current';
+import { HAS_RECRUITING, PROGRAM_WORDS, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -75,7 +77,7 @@ export default function TeamsPage() {
     <div className="pb-section-lg" data-teams-page="">
       <PageHeader
         title="Teams and standings"
-        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. ${alignmentSentence()}`}
+        description={`All ${counts.teams} ${PROGRAM_WORDS} teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. ${alignmentSentence()}`}
       />
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays
@@ -142,11 +144,21 @@ export default function TeamsPage() {
       {/* No snapshot stamp or "computed from published results" here: the footer states both on
           every page, one line below. The alignment source is already in the page description. */}
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
+        {LEAGUES_PROPER.every((l) => ordersByRecord(l.rules)) ? (
+          <>
+            Places, GP and {RECORD_HEAD} count league games only; PCT is the share of league games won, which
+            orders every table. A dash means no results have been reported yet. Each league&rsquo;s full page
+            has its tiebreak rules, {DIFF_ABBR}, form, and the games still to play.{' '}
+          </>
+        ) : (
+          <>
         Places, GP and W-L-T count league games only; PTS is 3 for a win and 1 for a tie in every
         table{siteOrdered.length > 0
           ? ` (${listWords(siteOrdered)} publish no points rule, so there the order is this site’s own points)`
           : ''}. A dash means no results have been reported yet. Each league&rsquo;s full page has its
         tiebreak rules, GD, form, and the games still to play.{' '}
+          </>
+        )}
         <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
           How standings are computed
         </Link>

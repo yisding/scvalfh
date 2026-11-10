@@ -140,7 +140,7 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
                 {leaders.teams.length > 0 ? (
                   <>
                     <TeamNames teams={leaders.teams} conj="&" />
-                    {` ${leaders.teams.length === 1 ? 'leads' : 'lead'} the table, ${leaders.teams[0].pts} pts.`}
+                    {` ${leaders.teams.length === 1 ? 'leads' : 'lead'} the table, ${leaders.teams[0].order ?? `${leaders.teams[0].pts} pts`}.`}
                   </>
                 ) : (
                   'No league results yet.'

@@ -1,3 +1,4 @@
+import { RECORD_HEAD_WORDS } from '../words/score-words';
 import { recordString } from '../../lib/format';
 import type { Record3 } from '../../lib/types';
 import { MissingValue } from '../ui/MissingValue';
@@ -61,7 +62,7 @@ export function TeamSplits({ view }: TeamSplitsProps) {
         ))}
       </dl>
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        League games only, won-lost-tied.
+        {`League games only, ${RECORD_HEAD_WORDS}.`}
       </p>
     </div>
   );

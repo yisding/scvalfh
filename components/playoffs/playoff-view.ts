@@ -23,6 +23,7 @@
  * rule), never blank.
  */
 
+import { orderNoun, orderValueShort, orderValueWords } from '../../lib/standings/order';
 import {
   EM_DASH,
   byDateThenId,
@@ -35,7 +36,6 @@ import {
   ordinal,
   ordinalWord,
   placeWords,
-  plural,
   recordString,
   recordWords,
   shortDate,
@@ -78,6 +78,8 @@ function dateOnly(value: string): string {
 export type KeyDateKey =
   | 'entries'
   | 'seeding'
+  | 'first-round'
+  | 'second-round'
   | 'quarterfinals'
   | 'semifinals'
   | 'finals'
@@ -159,8 +161,9 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
 }
 
 /** The seeding meeting's detail before the bracket exists, and once its games (or seeds) are drawn above. */
-export const SEEDING_AHEAD_DETAIL = 'The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.';
-export const SEEDING_DONE_DETAIL = 'The committee seeded both CCS divisions; the bracket above is drawn from the games MaxPreps lists.';
+const SEEDED_DIVISIONS = CCS.keyDates.firstRound ? 'every CCS division' : 'both CCS divisions';
+export const SEEDING_AHEAD_DETAIL = `The committee seeds ${SEEDED_DIVISIONS}; the games appear here as MaxPreps lists them, after the next update.`;
+export const SEEDING_DONE_DETAIL = `The committee seeded ${SEEDED_DIVISIONS}; the bracket above is drawn from the games MaxPreps lists.`;
 
 /**
  * Every CCS key date plus each CCS league's own postseason date, in date order. The CCS dates come
@@ -195,6 +198,14 @@ export function keyDateRows(
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
     ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', seeded ? SEEDING_DONE_DETAIL : SEEDING_AHEAD_DETAIL, { time: true }),
+    // The rounds before the quarterfinals, where the bracket has them (basketball; the config's, so a snapshot
+    // written before the key was added still lists them). They are played where the quarterfinals are.
+    ...(CCS.keyDates.firstRound
+      ? [ccs('first-round', CCS.keyDates.firstRound, 'First round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
+      : []),
+    ...(CCS.keyDates.secondRound
+      ? [ccs('second-round', CCS.keyDates.secondRound, 'Second round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
+      : []),
     ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
     ccs('semifinals', k.semifinals, 'Semifinals', laterDays(k.semifinalsLast, roundSiteDetail('semifinals', hostsThrough)), { isRound: true }),
     ccs('finals', k.finals, 'Finals', laterDays(k.finalsLast, roundSiteDetail('finals', hostsThrough)), { isRound: true }),
@@ -425,7 +436,7 @@ export function buildDivisionProjection(
 /** '4-1-0 · 12 pts', or an em dash for a team with nothing reported (never 0-0-0). */
 export function recordLine(standing: Standing): string {
   if (!standing.hasReportedResults) return EM_DASH;
-  return `${recordString(standing.computed)} · ${standing.computed.pts} pts`;
+  return `${recordString(standing.computed)} · ${orderValueShort(leagueOfDivision(standing.division).rules, standing.computed)}`;
 }
 
 /**
@@ -449,9 +460,9 @@ export function projectionRowLabel(row: ProjectionRow, divisionLabel: string): s
   }
   const place = placeWords(standing.computed.place, row.shared);
   // The record in words, as on the standings table: "4-1-0" read aloud is a subtraction or a date.
-  return `${team.name}, ${place} in ${divisionLabel}, ${recordWords(standing.computed)}, ${plural(
-    standing.computed.pts,
-    'point',
+  return `${team.name}, ${place} in ${divisionLabel}, ${recordWords(standing.computed)}, ${orderValueWords(
+    leagueOfDivision(standing.division).rules,
+    standing.computed,
   )}`;
 }
 
@@ -933,7 +944,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     standing,
     shared: standing.tiebreak.shared,
     gpText: scheduled === null ? `${counted} GP` : `${counted}/${scheduled} GP`,
-    ptsText: standing.hasReportedResults ? `${standing.computed.pts} pts` : EM_DASH,
+    ptsText: standing.hasReportedResults ? orderValueShort(getLeague(p.leagueId).rules, standing.computed) : EM_DASH,
     label: standing.hasReportedResults ? label : 'No results reported',
   }));
 
@@ -950,12 +961,12 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
   if (p.playInNeeded === 'possible' && contenders.length === 2) {
     playInSentence =
       `A play-in for ${place} is possible: ${name(contenders[0])} and ${name(contenders[1])} are level ` +
-      'on points and have split or not finished their meetings.';
+      `on ${orderNoun(getLeague(p.leagueId).rules)} and have split or not finished their meetings.`;
   } else if (p.playInNeeded === 'yes' && contenders.length === 2) {
     // playIn.home is the host (the higher draw number, or the earlier meeting's winner).
     playInSentence =
       `A play-in for ${place} is needed: ${name(contenders[0])} and ${name(contenders[1])} are level on ` +
-      `points and neither won both meetings. ${name(contenders[0])} hosts.`;
+      `${orderNoun(getLeague(p.leagueId).rules)} and neither won both meetings. ${name(contenders[0])} hosts.`;
   }
 
   const siteSlug = finalSite?.slug ?? null;

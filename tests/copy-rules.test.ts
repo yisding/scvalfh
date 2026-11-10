@@ -33,6 +33,7 @@ import {
   elementById,
   historyPageProblems,
   mainElement,
+  noTiesSportClaims,
   nonMemberSectionClaims,
   restates,
   sectionById,
@@ -959,5 +960,34 @@ describe('sx-bleed: nothing cancels the phone bleed', () => {
         .map(() => file),
     );
     expect(offenders).toEqual([]);
+  });
+});
+
+describe('noTiesSportClaims (a basketball page prints no other sport’s words)', () => {
+  it('finds goals, tied games, W-L-T records, a keeper’s words and the other builds’ programs', () => {
+    const hits = (text: string) => noTiesSportClaims(text).length;
+    expect(hits('Goals for and against')).toBe(1);
+    expect(hits('3 points for a win and 1 for a tie')).toBe(1);
+    expect(hits('Forfeits count in W-L-T but not in the columns')).toBe(1);
+    expect(hits('every record reads 0-0-0')).toBe(1);
+    expect(hits('Top scorers, keepers and records')).toBe(1);
+    expect(hits('won on a shootout')).toBe(1);
+    expect(hits('All 15 girls varsity teams')).toBe(1);
+    expect(hits('this soccer site')).toBe(1);
+  });
+
+  it('leaves the words about a level place in a table', () => {
+    expect(noTiesSportClaims('Lynbrook, tied for 1st in De Anza')).toEqual([]);
+    expect(noTiesSportClaims('co-champions are declared if two or more teams tie for first')).toEqual([]);
+    expect(noTiesSportClaims('Head-to-head is the first tiebreak; the tie-break chain follows')).toEqual([]);
+    expect(noTiesSportClaims('Points for, points against and point differential; 7-1 (.875)')).toEqual([]);
+  });
+
+  it('takes a proper noun the data prints out before it reads the copy', () => {
+    const text = 'Gunn at the Double Goal Coaches Classic at Tech';
+    expect(noTiesSportClaims(text)).toHaveLength(1);
+    expect(noTiesSportClaims(text, ['Double Goal Coaches Classic at Tech'])).toEqual([]);
+    // Whatever its case, and never the same word in the site's own sentence.
+    expect(noTiesSportClaims('DOUBLE GOAL COACHES CLASSIC AT TECH: 1 goal', ['Double Goal Coaches Classic at Tech'])).toHaveLength(1);
   });
 });

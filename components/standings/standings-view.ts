@@ -37,6 +37,8 @@
  *    string here.
  */
 
+import { orderHead, ordersByRecord } from '../../lib/standings/order';
+import { EMPTY_RECORD } from '../words/score-words';
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
 import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
@@ -277,6 +279,16 @@ export function officialScheduleLabel(source: OfficialSourceId): string {
   return `Official schedule (${officialSourceFormat(source)})`;
 }
 
+/**
+ * What a league's table is ordered on, for a description: 'points (3 a win, 1 a tie)', or 'league record'
+ * where the record orders it (lib/standings/order.ts). `own` puts "this site’s" before the points of a
+ * league that publishes no points rule.
+ */
+export function orderedOnWords(league: LeagueConfig, own = false): string {
+  if (ordersByRecord(league.rules)) return 'league record';
+  return `${own ? 'this site’s ' : ''}points (3 a win, 1 a tie)`;
+}
+
 /** `3-1-0`: the league's points for a win, a tie and a loss, from config (never typed into copy). */
 export function pointsWords(league: LeagueConfig): string {
   const { win, tie, loss } = league.rules.points;
@@ -294,7 +306,9 @@ export function rankRuleText(league: LeagueConfig): string {
   const cite = league.rules.citations.pointsShort;
   switch (league.rules.orderScope) {
     case 'table':
-      return `${short} ranks by points (${cite}), and so do we.`;
+      return ordersByRecord(league.rules)
+        ? `${short} ranks by league record (${cite}), and so do we.`
+        : `${short} ranks by points (${cite}), and so do we.`;
     case 'title':
       return `${short} decides its title on points (${cite}) and publishes no standings; this site orders the whole table by the same points.`;
     case 'site':
@@ -312,7 +326,9 @@ function orderLegendText(league: LeagueConfig): string {
   switch (league.rules.orderScope) {
     case 'table': {
       const chain = league.rules.tiebreaks.default;
-      return chain[chain.length - 1] === 'coin-flip'
+      return chain[chain.length - 1] === 'coaches-vote'
+        ? `This order is our computation from published results, not a league ruling: the official tiebreak, including any coaches’ vote or coin flip, belongs to ${short}.`
+        : chain[chain.length - 1] === 'coin-flip'
         ? `This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to ${short}.`
         : `This order is our computation from published results, not a league ruling: the official tiebreak belongs to ${short}.`;
     }
@@ -587,7 +603,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     );
   }
   if (input.leagueFinals === 0) {
-    footnotes.push('No league result has been published yet, so no team is ranked and every record reads 0-0-0.');
+    footnotes.push(`No league result has been published yet, so no team is ranked and every record reads ${EMPTY_RECORD}.`);
   }
 
   const links = postseasonLinks(league);
@@ -717,14 +733,18 @@ export function rulesFootnote(leagueId: LeagueId): string {
     stages = [...byStart.flatMap(([, chain]) => chain), ...tiebreaks.default];
   }
   const cites = chainCitations(league, stages);
-  return `PTS: ${citations.points}. Ties: ${ties}${cites ? ` (${cites})` : ''}.`;
+  // 'Ties' is the level teams' tiebreak chain; in a sport where no game ends level the label says so.
+  const label = ordersByRecord(league.rules) ? 'Level teams' : 'Ties';
+  return `${orderHead(league.rules)}: ${citations.points}. ${label}: ${ties}${cites ? ` (${cites})` : ''}.`;
 }
 
 /** The uneven-GP footnote's last sentence: whose order the table is, by `rules.orderScope`. */
 function unevenOrderSentence(league: LeagueConfig): string {
   switch (league.rules.orderScope) {
     case 'table':
-      return `The order is points, as ${league.shortName} rules require.`;
+      return ordersByRecord(league.rules)
+        ? `The order is the share of league games won, as ${league.shortName} rules require.`
+        : `The order is points, as ${league.shortName} rules require.`;
     case 'title':
       return `The order is points, which ${league.shortName} uses to decide its title.`;
     case 'site':
@@ -748,10 +768,12 @@ export function unevenGamesSentence(
   spread: { min: number; max: number; scheduled: number | null },
 ): string | null {
   if (spread.max - spread.min < 2) return null;
-  if (spread.scheduled !== null) {
-    return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
-  }
   const league = getLeague(leagueId);
+  if (spread.scheduled !== null) {
+    return ordersByRecord(league.rules)
+      ? `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so a record can look better or worse than it will once the others catch up.`
+      : `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
+  }
   // 'membership' with no fixed schedule (the Sunset, the LA independents): every game between two members counts,
   // so the gap is in games played against each other; 'contest-type' with none (no league today): MaxPreps' flag.
   return league.rules.classification === 'membership'
@@ -776,7 +798,9 @@ export function unevenGpFootnote(
   const columns =
     spread.scheduled === null
       ? ''
-      : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left).';
+      : ordersByRecord(league.rules)
+        ? ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most league wins a team can finish with if it wins all of them (its final total once none are left).'
+        : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left).';
   const base = `${games}${columns} ${unevenOrderSentence(league)}`;
   const incomplete = league.rules.citations.incomplete;
   return incomplete
@@ -890,7 +914,8 @@ export interface LeaderLine {
   /** Division heading, or null for a single-division league. */
   heading: string | null;
   /** `slug`: the team's page, for a caller that links the name (the /playoffs San Diego card). */
-  teams: Array<{ name: string; record: string; pts: number; slug?: TeamSlug }>;
+  /** `order`: the team's place in the table's order as copy prints it ('18 pts', or '.875' for a league ordered on its record). */
+  teams: Array<{ name: string; record: string; pts: number; order?: string; slug?: TeamSlug }>;
   /** A tie at the top. */
   tiedAtTop: boolean;
 }
@@ -911,7 +936,7 @@ export function leaderClause(lines: readonly LeaderLine[]): string {
           : `${line.teams
               .slice(0, 2)
               .map((t) => t.name)
-              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].pts} pts`;
+              .join(' & ')}${line.teams.length > 2 ? ` +${line.teams.length - 2}` : ''} ${line.teams[0].order ?? `${line.teams[0].pts} pts`}`;
       return line.heading ? `${line.heading}: ${names}` : names;
     })
     .join(' · ');

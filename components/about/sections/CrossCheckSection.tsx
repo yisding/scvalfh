@@ -1,3 +1,4 @@
+import { RECORD_HEAD, SCORE_UNITS } from '../../words/score-words';
 import EmptyState from '../../ui/EmptyState';
 import SectionHeader from '../../ui/SectionHeader';
 import { isIndependentLeague } from '../../../lib/leagues';
@@ -17,13 +18,11 @@ export function CrossCheckSection({ crossCheck }: { crossCheck: AboutCrossCheck 
     <section id="cross-check" className="mt-16">
       <SectionHeader size="lg" kicker="Cross-check log" />
       <p className="sx-prose">
-        MaxPreps&rsquo; own standings feed already carries its computed record, points, goals and
-        placement for every team, so checking our work is a direct comparison, not a
-        reimplementation: for every team we compare our computed W-L-T, goals and place against
-        MaxPreps&rsquo; published numbers, field by field. Every disagreement is published here and
-        flagged with &#9873; on the standings row &mdash; we always show our own computation and say
-        so, rather than silently picking a side. Where a league&rsquo;s MaxPreps table differs for a
-        known reason, those rows are listed separately under the reason.
+        {`MaxPreps’ own standings feed already carries its computed record, ${
+          RECORD_HEAD === 'W-L' ? 'winning percentage' : 'points'
+        }, ${SCORE_UNITS} ${
+          RECORD_HEAD === 'W-L' ? 'scored ' : ''
+        }and placement for every team, so checking our work is a direct comparison, not a reimplementation: for every team we compare our computed ${RECORD_HEAD}, ${SCORE_UNITS} and place against MaxPreps’ published numbers, field by field. Every disagreement is published here and flagged with \u2691 on the standings row — we always show our own computation and say so, rather than silently picking a side. Where a league’s MaxPreps table differs for a known reason, those rows are listed separately under the reason.`}
       </p>
       {/* No group with no table (the LA independents): there is nothing of theirs to compare. */}
       {perLeague.filter((l) => !isIndependentLeague(l.summary.id)).map((l) => (
