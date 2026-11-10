@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { gameHref } from '../../lib/game-id';
-import { GameLogRowBody, gameLogRowClass } from '../ui/GameRow';
+import { GameLogRowBody, gameLogRowClass } from '../game-row/GameLogRow';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../words/plural';
 
@@ -59,7 +59,7 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
                 </span>
               ) : (
                 // `prefetch={false}` for the reason the nav and the standings rows carry it
-                // (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                // (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route
                 // here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
                 // the link scrolls into view, and the series is one game page per meeting.
                 // Navigation still fetches on click.

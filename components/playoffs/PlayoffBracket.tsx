@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getTeamBySlug } from '../../lib/data';
 import { gameHref } from '../../lib/game-id';
 import ExternalLink from '../ui/ExternalLink';
-import { GameRow } from '../ui/GameRow';
+import { GameRow } from '../game-row/GameRow';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -170,7 +170,7 @@ function BracketGameCard({ entry }: { entry: BracketGame }) {
   return (
     <div className="sx-card min-w-0 flex-1">
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
+          (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and a full bracket is fourteen game pages. Navigation still fetches on click. */}
       {named ? (

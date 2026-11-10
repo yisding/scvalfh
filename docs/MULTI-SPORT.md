@@ -100,7 +100,7 @@ byte-identical to the build before the seam.
     kicks (shaped like 'SO', named differently).
 - **Goal vocabulary.**
   - The `h2h-goal-diff`, `h2h-goals-against` and `division-goals-against` tiebreak stages.
-  - The GF/GA/GD columns, legend and "no goal differential" in `components/ui/StandingsTable.tsx`.
+  - The GF/GA/GD columns, legend and "no goal differential" in `components/standings/standings-table/`.
   - `GoalDiffBar`, the goal-margin strips, and the leaders' goals-per-game boards.
   - The stored keys `gf`/`ga`/`gd` are really for/against and can stay; only their labels change.
 - **Ratings.** The Elo-adjusted scoring model (`lib/ratings/adjusted-scoring.ts`) is a Poisson goal

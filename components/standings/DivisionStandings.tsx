@@ -5,12 +5,14 @@ import { leagueOfDivision } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import LeagueHealthNote from '../ui/LeagueHealthNote';
 import SectionHeader from '../ui/SectionHeader';
-import StandingsTable, { biggestGoalDiff, collectStandingsNotes, type StandingsTableProps } from '../ui/StandingsTable';
 
 import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';
 import StandingsNotes from './StandingsNotes';
-import type { DivisionView } from './standings-view';
+import { collectStandingsNotes } from './standings-table/notes';
+import StandingsTable from './standings-table/StandingsTable';
+import type { StandingsTableProps } from './standings-table/types';
+import { biggestGoalDiff, type DivisionView } from './standings-view';
 
 /**
  * One division's whole section (SPEC §10.3), in this order: the heading (the division heading,
@@ -86,7 +88,7 @@ export function DivisionStandings({
       {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
         PTS: {points}. GD bars are per division
-        {/* The scale is named only when some team has a goal difference (StandingsTable biggestGoalDiff). */}
+        {/* The scale is named only when some team has a goal difference (standings-view.ts biggestGoalDiff). */}
         {biggestGoalDiff(view.rows.map((r) => r.standing.computed.gd)) > 0 ? (
           <>
             , scaled to {view.label}&rsquo;s biggest goal difference ({view.gdDomain})

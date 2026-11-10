@@ -68,7 +68,7 @@ import type {
   TeamSlug,
   TiebreakStage,
 } from '../../lib/types';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import type { StandingsRowData } from './standings-table/types';
 
 // ---------------------------------------------------------------- shared shapes
 
@@ -254,6 +254,17 @@ export function ladderLineAfter(
   if (after === null || after === undefined) return null;
   const above = rows.filter((r) => r.ranked && r.place <= after).length;
   return above > 0 && above < rows.length ? above : null;
+}
+
+/**
+ * The biggest |goal difference| among `gds`, 0 when there is none. Not `getGoalDiffDomain`
+ * (lib/data.ts), which floors at 1 so a bar never divides by zero: that floor is a scale, never a
+ * fact to print. Every place that prints "biggest goal difference (N)" asks this first and leaves the
+ * clause out when it is 0 (StandingsTable's legend, DivisionStandings, MiniStandings, the standings
+ * page's disclosure).
+ */
+export function biggestGoalDiff(gds: readonly number[]): number {
+  return Math.max(0, ...gds.map((gd) => Math.abs(gd)));
 }
 
 /** A standings (or seeds) row as `ladderLineAfter` reads it. */

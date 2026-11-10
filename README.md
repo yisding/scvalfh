@@ -987,7 +987,7 @@ fixed pages, and `a11y-axe.mjs` checks it.
 app/                   routes: each page reads data, builds its view and composes components
 components/<feature>/  one folder per area of the site; React components (PascalCase .tsx) beside
                        the view models that decide what they show (kebab-case .ts, mostly *-view.ts)
-components/{ui,layout,metadata,prefs,words}/   shared across features (below)
+components/{ui,game-row,layout,metadata,prefs,words}/   shared across features (below)
 lib/                   data, config and engines; no React
 lib/sports/            the sport this build covers (current.ts) and its definition: ids, words,
                        rating constants, stat lines (docs/MULTI-SPORT.md)
@@ -998,7 +998,7 @@ scripts/               the data refresh, the build assertions and dev tools
 Imports run `app/` → `components/` → `lib/`, never back up: nothing in `lib/` imports a component,
 and no feature folder imports a route. Inside `components/`, features build on the shared folders,
 with two deliberate exceptions: `metadata/` draws each feature's OG card and JSON-LD, so it reads
-those features' view models, and `ui/GameRow.tsx` links a playoff game to its place in the bracket
+those features' view models, and `game-row/` links a playoff game to its place in the bracket
 through `playoffs/bracket-link.ts`.
 
 **`components/`.** Features: `about`, `clubs`, `commits`, `game`, `history`, `home`, `jv`,
@@ -1007,7 +1007,8 @@ through `playoffs/bracket-link.ts`.
 
 | Folder | Holds |
 |---|---|
-| `ui/` | presentational building blocks used by several features (game rows, standings tables, chips, strips) and `describe-game.ts`, their view model |
+| `ui/` | presentational building blocks used by several features (chips, strips, the stretched team-row link and its pin note) and `describe-game.ts`, the game rows' view model |
+| `game-row/` | the faces of one game in a list: `GameRow` (the phone row), `GameCard`, `GameLine` (one line) and `GameLogRow` (a team's log and the season series), and the summary pieces they share |
 | `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants, the league chips' targets |
 | `metadata/` | what crawlers and link previews see: the OG and icon image renderers (kebab-case, like Next's own `opengraph-image.tsx`) and JSON-LD |
 | `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint, the client hooks that read them and the controls that change them (league and region switchers, theme toggle, pin) |

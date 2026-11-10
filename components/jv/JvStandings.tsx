@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { EM_DASH, recordString } from '../../lib/format';
 import type { Team } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
+import { PinNote } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -128,7 +129,7 @@ function JvTable({ view }: { view: JvTableView }) {
                     >
                       {/* As in CompactStandingsTable: only the pinned team's row displays this. */}
                       <span className="sr-only">
-                        <span className="sx-pin-note" hidden>Your team. </span>
+                        <PinNote />
                       </span>
                       <TeamMonogram team={team} size={24} />
                       <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>

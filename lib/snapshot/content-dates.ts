@@ -167,7 +167,7 @@ export function gamePageInputs(game: Game, all: readonly Game[]): Game[] {
 /**
  * The games a `/scores/[date]` page is built from: that day's games, and for a league game with no
  * score on the board yet, every game of both its sides, because its row prints their CURRENT league
- * records (components/ui/GameRow.tsx `showRecords`, which GameList sets). A final's row prints no
+ * records (components/game-row/ `showRecords`, which GameList sets). A final's row prints no
  * record. The day's JV games are the caller's to add.
  */
 export function scoreDayInputs(day: readonly Game[], all: readonly Game[]): Game[] {

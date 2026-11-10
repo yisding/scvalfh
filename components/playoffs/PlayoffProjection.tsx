@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import { listWords } from '../../lib/format';
 import BerthMeter from '../ui/BerthMeter';
 import { articleFor, membershipSource } from '../words/membership-words';
+import { StretchedRowLink } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import StatusChip from '../ui/StatusChip';
@@ -239,23 +240,14 @@ export function PlayoffProjection({
                   <PlaceCell row={row} />
                 </td>
                 <th scope="row" className="pr-gutter font-normal md:pr-0">
-                  {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                      (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
-                      here is STATIC, so Next 16's `auto` downloads the whole linked route the
-                      moment the link scrolls into view, and every projection table is a column of
-                      stretched row links. Navigation still fetches on click. */}
-                  <Link
-                    href={`/teams/${row.team.slug}`}
-                    prefetch={false}
-                    className="absolute inset-0"
-                  >
-                    <span className="sr-only">
-                      {/* Only the pinned row's copy is displayed (app/globals.css), so the
-                          accent rule is never the only thing saying "this is your team". */}
-                      <span className="sx-pin-note" hidden>Your team. </span>
-                      {projectionRowLabel(row, divisionLabel)}
-                    </span>
-                  </Link>
+                  {/* The stretched row link never prefetches, for the reason the nav and the
+                      standings rows give (components/layout/NavLink.tsx,
+                      components/ui/PinNote.tsx): every route here is STATIC, so Next 16's `auto`
+                      downloads the whole linked route the moment the link scrolls into view, and
+                      every projection table is a column of stretched row links. Only the pinned
+                      row's pin note is displayed, so the accent rule is never the only thing
+                      saying "this is your team". */}
+                  <StretchedRowLink href={`/teams/${row.team.slug}`} label={projectionRowLabel(row, divisionLabel)} />
                   {/* The monogram shows from sm, except md-lg: there the fixed Team column is
                       117px at 768, and the 28px monogram and its 12px gap left a name 77px, so
                       eleven names truncated ("Saint Francis" needs 95, "Valley Christian" 113).

@@ -467,7 +467,7 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
   });
 
   it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
-    const { GameRow } = await import('../../components/ui/GameRow');
+    const { GameRow } = await import('../../components/game-row/GameRow');
     const { recordWords } = await import('../../lib/format');
     const today = data.getToday();
     const upcoming = data
@@ -481,7 +481,7 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
       const standing = side.slug ? data.getStandingFor(side.slug) : undefined;
       if (standing?.hasReportedResults) {
         checked += 1;
-        expect(text, `components/ui/GameRow.tsx records: ${side.slug}`).toContain(
+        expect(text, `components/game-row/GameRow.tsx records: ${side.slug}`).toContain(
           `${recordWords(standing.computed)} in league`,
         );
       }
@@ -491,7 +491,7 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
     const nonLeague = upcoming.find((g) => g.countsFor === null);
     if (nonLeague) {
       const nl = textOf(renderToStaticMarkup(createElement(GameRow, { game: nonLeague, showRecords: true })));
-      expect(nl, 'components/ui/GameRow.tsx: no records on a non-league game').not.toContain(' in league');
+      expect(nl, 'components/game-row/GameRow.tsx: no records on a non-league game').not.toContain(' in league');
     }
   });
 });

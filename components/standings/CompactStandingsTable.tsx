@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
 import { EM_DASH, recordString } from '../../lib/format';
+import { PinNote } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import type { StandingsRowData } from './standings-table/types';
 
 import { ladderLineAfter, ladderRow } from './standings-view';
 
@@ -21,7 +22,8 @@ import { ladderLineAfter, ladderRow } from './standings-view';
  *
  * The whole row is the team link: the link's `::after` stretches over the `relative` row (no cell
  * is `relative`, so the hit area is exactly the row), and a tap on the place, the record or the
- * points opens the team page too, as on the full standings tables (StandingsTable's RowLink).
+ * points opens the team page too, as on the full standings tables (StretchedRowLink,
+ * components/ui/PinNote.tsx).
  * From lg the card is capped at 48rem, left-aligned, so the numbers stay within reach of the name.
  *
  * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
@@ -99,7 +101,7 @@ export function CompactStandingsTable({
                         `data-team-slug` gets `data-pinned`), so the accent rule is never the only
                         thing saying "this is your team"; it is the link's name, before the school. */}
                     <span className="sr-only">
-                      <span className="sx-pin-note" hidden>Your team. </span>
+                      <PinNote />
                     </span>
                     <TeamMonogram team={row.team} size={24} />
                     {/* Up to two lines, broken between words only: a name never loses its second word

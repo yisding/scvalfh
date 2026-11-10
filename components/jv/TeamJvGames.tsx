@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
-import { GAME_LOG_ROW_GRID, GameLogRowBody } from '../ui/GameRow';
+import { GAME_LOG_ROW_GRID, GameLogRowBody } from '../game-row/GameLogRow';
 import type { JvListSummary, TeamJvView } from './jv-view';
 
 /**

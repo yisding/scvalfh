@@ -541,6 +541,15 @@ export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
   );
 }
 
+/**
+ * The clock a row prints for a game: its time of day ("4:00 PM"), or the row's own word for a time
+ * not yet set — `TBA` in the narrow lead and log columns, `Time TBA` on a card. One rule, so the
+ * row, the card, the line, the log and the JV day list cannot drift apart on it.
+ */
+export function clockText(game: Game, tba: 'TBA' | 'Time TBA'): string {
+  return game.isTimeTba ? tba : timeOfDay(game.dateLocal);
+}
+
 /** '+3' / '−7' / '0' for a per-game margin. */
 export function signedMargin(margin: number): string {
   if (margin === 0) return '0';

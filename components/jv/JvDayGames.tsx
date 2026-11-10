@@ -1,7 +1,6 @@
-import { timeOfDay } from '../../lib/format';
 import { JvFootnote } from './TeamJvGames';
 import type { JvListSummary, JvRowView } from './jv-view';
-import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
+import { clockText, describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel, { GameChips } from '../ui/StatusLabel';
 
@@ -43,7 +42,7 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
                     <span className="flex min-h-6 items-center">
                       {isTime ? (
                         <span className="sx-num whitespace-nowrap text-cell text-ink-2">
-                          {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
+                          {clockText(game, 'TBA')}
                         </span>
                       ) : (
                         <StatusLabel display={display} showChips={false} className="leading-3" />

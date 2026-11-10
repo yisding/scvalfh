@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ordinal } from '../../lib/format';
 import type { Standing } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import type { StandingsRowData } from './standings-table/types';
 
 import type { ComparisonView, MismatchNote, MissingRowView } from './standings-view';
 
