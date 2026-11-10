@@ -25,6 +25,7 @@ type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
 type Schedule = typeof import('../../components/teams/team-schedule');
+type Headlines = typeof import('../../components/teams/team-headlines');
 type Line = typeof import('../../components/playoffs/team-postseason-line');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -34,6 +35,7 @@ let dataLine: Line;
 let leagues: Leagues;
 let view: View;
 let schedule: Schedule;
+let headlines: Headlines;
 let renderTeam: (slug: string) => Promise<string>;
 let renderIndex: () => string;
 let describeTeam: (slug: string) => Promise<string | undefined>;
@@ -45,6 +47,7 @@ async function loadModules() {
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
   const ts = await import('../../components/teams/team-schedule');
+  const th = await import('../../components/teams/team-headlines');
   const teamPage = await import('../../app/teams/[slug]/page');
   const indexPage = (await import('../../app/teams/page')).default;
   return {
@@ -53,6 +56,7 @@ async function loadModules() {
     l,
     v,
     ts,
+    th,
     renderTeam: async (slug: string) => {
       const el = await teamPage.default({ params: Promise.resolve({ slug }) } as never);
       return renderToStaticMarkup(el as ReactElement);
@@ -74,6 +78,7 @@ beforeAll(async () => {
   leagues = m.l;
   view = m.v;
   schedule = m.ts;
+  headlines = m.th;
   renderTeam = m.renderTeam;
   renderIndex = m.renderIndex;
   describeTeam = m.describeTeam;
@@ -969,7 +974,7 @@ describe('fixtureOpponent (components/teams/team-schedule.ts)', () => {
     };
     const outside = schedule.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
     expect(outside).toMatchObject({ mineIsHome: true, versus: 'vs', opponent: undefined, opponentName: 'Valley Christian' });
-    expect(view.officialFixtureHeadline({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team)).toMatch(
+    expect(headlines.officialFixtureHeadline({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team)).toMatch(
       /^vs Valley Christian · /,
     );
     const rival = data.getTeams().find((t) => t.slug !== team.slug)!;

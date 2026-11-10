@@ -28,6 +28,7 @@ type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
 type TeamsIndexView = typeof import('../../components/teams/teams-index-view');
+type Headlines = typeof import('../../components/teams/team-headlines');
 type Line = typeof import('../../components/playoffs/team-postseason-line');
 type GameViewModule = typeof import('../../components/game/game-view');
 
@@ -37,6 +38,7 @@ interface Loaded {
   l: Leagues;
   v: View;
   ti: TeamsIndexView;
+  th: Headlines;
   gm: GameViewModule;
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
@@ -61,6 +63,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
   const ti = await import('../../components/teams/teams-index-view');
+  const th = await import('../../components/teams/team-headlines');
   const gm = await import('../../components/game/game-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const gamePage = await import('../../app/game/[id]/page');
@@ -71,6 +74,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
     l,
     v,
     ti,
+    th,
     gm,
     renderTeam: async (slug) =>
       renderToStaticMarkup((await teamPage.default({ params: Promise.resolve({ slug }) } as never)) as ReactElement),
@@ -205,8 +209,8 @@ describe('an EAL team page (/teams/davis)', () => {
 
   it('headlines the 1 v 1 game with its SO tag, from either side', () => {
     const decided = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
+    expect(eal.th.gameHeadline(decided, eal.d.getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
+    expect(eal.th.gameHeadline(decided, eal.d.getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
   });
 });
 
