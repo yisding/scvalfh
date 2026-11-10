@@ -1,3 +1,4 @@
+import { ordersByRecord } from '../../lib/standings/order';
 import { getCommitsFile } from '../../lib/players/commits';
 import {
   areKeyDatesConfirmed,
@@ -362,7 +363,12 @@ export function leagueRef(summary: Pick<LeagueSummary, 'id' | 'name' | 'shortNam
 function jumpListOf(leagues: readonly LeagueSummary[]): JumpListItem[] {
   return [
     { id: 'sources', label: 'Data sources' },
-    { id: 'standings', label: 'Standings, points & tiebreaks' },
+    {
+      id: 'standings',
+      label: leagues.length > 0 && leagues.every((l) => ordersByRecord(getLeague(l.id).rules))
+        ? 'Standings & tiebreaks'
+        : 'Standings, points & tiebreaks',
+    },
     // A group with no table (the LA independents) has no rules of its own: its entry is its name.
     ...leagues.map((l) => ({
       id: `rules-${l.id}`,

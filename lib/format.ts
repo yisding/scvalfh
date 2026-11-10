@@ -349,9 +349,21 @@ export function plural(n: number, one: string, many: string = `${one}s`): string
   return `${n} ${n === 1 ? one : many}`;
 }
 
-/** 'W-L-T', e.g. '4-1-0'. */
+/**
+ * Whether a game of this build's sport cannot end level (basketball: overtime is played until one team leads;
+ * `Sport.scoring.allowsTies` false). Read from the inlined SCVAL_SPORT (next.config.ts `env`, vite.config.ts
+ * `define`), not from lib/sports/current, so this leaf never loads a sport definition into a client bundle
+ * (docs/MULTI-SPORT.md, "Guards"); tests/sports.test.ts holds it to the sport's own `allowsTies`.
+ */
+export const SPORT_HAS_NO_TIES = process.env.SCVAL_SPORT === 'basketball';
+
+/**
+ * 'W-L-T', e.g. '4-1-0'; 'W-L' ('4-1') in a sport with no ties. A tie that a source records anyway is never
+ * hidden: the record then prints all three numbers.
+ */
 export function recordString(r: Record3 | { w: number; l: number; t: number }): string {
-  return `${r.w}-${r.l}-${r.t}`;
+  // Written as one template so the client bundles stay at their budget (/teams' first-load JS is within bytes of it).
+  return `${r.w}-${r.l}${SPORT_HAS_NO_TIES && !r.t ? '' : `-${r.t}`}`;
 }
 
 /**
@@ -359,7 +371,7 @@ export function recordString(r: Record3 | { w: number; l: number; t: number }): 
  * is "four minus one minus zero" in some voices and a date in others; the words are unambiguous.
  */
 export function recordWords(r: Record3 | { w: number; l: number; t: number }): string {
-  return `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}, ${plural(r.t, 'tie')}`;
+  return `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}${SPORT_HAS_NO_TIES && !r.t ? '' : `, ${plural(r.t, 'tie')}`}`;
 }
 
 /** '+30' / '−24' / '0' — always signed, U+2212 for negatives (DESIGN §5.6). */

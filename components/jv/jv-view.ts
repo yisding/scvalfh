@@ -9,20 +9,22 @@
  * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json.
  */
 
-import { localDateKey } from '../../lib/format';
+import { byDateThenId, localDateKey, recordString, shiftDateKey, shortDate, sideOutcome } from '../../lib/format';
 import {
   getJvClassification,
   getJvFetchedAt,
+  getJvGames,
   getJvGamesForOutsideTeam,
   getJvGamesForTeam,
   getJvGamesOn,
   getJvSchoolSiteDiffersNote,
   getJvTeam,
 } from '../../lib/jv/jv';
+import { isOfficialJvContestId } from '../../lib/jv/jv-official';
 import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
-import { regionOf } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
+import { getLeague, regionOf } from '../../lib/leagues';
+import { getTeamBySlug, teamsInLeague } from '../../lib/teams';
+import type { Game, GameSide, LeagueId, RegionId, Team, TeamSlug } from '../../lib/types';
 import type { Perspective } from '../ui/describe-game';
 
 export interface JvRowView {
@@ -33,6 +35,11 @@ export interface JvRowView {
   chips: boolean;
   /** Draw the non-league rule: the game is classified non-league. */
   nonLeague: boolean;
+  /**
+   * The game is listed from the league's own JV schedule and no source has it yet (lib/jv/jv-official.ts):
+   * the row carries a `SCHED` tag, and the footnote says what it means.
+   */
+  fromSchedule: boolean;
 }
 
 export interface JvListSummary {
@@ -42,6 +49,10 @@ export interface JvListSummary {
   schoolSiteScores: number;
   /** MaxPreps finals si.com reports differently. */
   differs: number;
+  /** Games listed from the league's own JV schedule (the `SCHED` rows). */
+  fromSchedule: number;
+  /** The league whose schedule they come from ('SCVAL'), when there is exactly one; else null. */
+  scheduleLeague: string | null;
 }
 
 export interface TeamJvView extends JvListSummary {
@@ -63,6 +74,13 @@ export interface TeamJvView extends JvListSummary {
    * `toCome` it accounts for every row, so the section header's counts add up to the list.
    */
   noScore: number;
+  /**
+   * The JV team's record over the finals listed: '3-1' overall and '2-0' in league games; null before its
+   * first result. Counted from the rows shown, so it says nothing a reader cannot check against the list.
+   */
+  record: { overall: string; league: string | null } | null;
+  /** The next game to come ('Mon Nov 23 at Leland'), or null when none is listed. */
+  next: string | null;
   /** The MaxPreps source's status for this school in the latest run. */
   status: 'ok' | 'carried-forward' | 'error' | 'pending';
   maxprepsUrl: string | null;
@@ -87,17 +105,29 @@ export function jvDiffersNote(game: Game): string | null {
 }
 
 function summarize(games: readonly Game[]): JvListSummary {
+  const scheduled = games.filter((g) => isOfficialJvContestId(g.contestId));
+  const leagues = new Set(
+    scheduled.map((g) => (g.home.slug ? getTeamBySlug(g.home.slug)?.league : undefined)).filter((l): l is LeagueId => l !== undefined),
+  );
   return {
     sbliveScores: games.filter((g) => g.provenance.scores === 'sblive').length,
     schoolSiteScores: games.filter((g) => g.provenance.scores === 'school-site').length,
     differs: games.filter((g) => jvDiffersNote(g) !== null).length,
+    fromSchedule: scheduled.length,
+    scheduleLeague: leagues.size === 1 ? getLeague([...leagues][0]).shortName : null,
   };
 }
 
 const rowsOf = (games: readonly Game[]): JvRowView[] =>
   games.map((game) => {
     const kind = getJvClassification(game.contestId)?.kind;
-    return { game, differsNote: jvDiffersNote(game), chips: kind !== 'uncounted', nonLeague: kind === 'non-league' };
+    return {
+      game,
+      differsNote: jvDiffersNote(game),
+      chips: kind !== 'uncounted',
+      nonLeague: kind === 'non-league',
+      fromSchedule: isOfficialJvContestId(game.contestId),
+    };
   });
 
 /**
@@ -137,6 +167,8 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
         }
       : null,
     perspective: slot ? { teamId: slot.maxprepsTeamId } : slug,
+    record: jvRecordOf(games, slot ? slot.maxprepsTeamId : team.id),
+    next: nextLabel(games, slot ? slot.maxprepsTeamId : team.id, today),
     rows: rowsOf(games),
     played: games.filter((g) => g.status === 'final').length,
     toCome: games.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
@@ -164,4 +196,182 @@ export function buildDayJvView(dateKey: string, region?: RegionId): JvListSummar
   };
   const games = getJvGamesOn(dateKey).filter((g) => region === undefined || inRegion(g.home) || inRegion(g.away));
   return { rows: rowsOf(games), ...summarize(games) };
+}
+
+// ---------------------------------------------------------------- records and the /jv pages
+
+type Tally = { w: number; l: number; t: number };
+
+function tally(games: readonly Game[], teamId: string): Tally {
+  const out = { w: 0, l: 0, t: 0 };
+  for (const g of games) {
+    if (g.status !== 'final') continue;
+    const mine = g.home.teamId === teamId ? 'home' : g.away.teamId === teamId ? 'away' : null;
+    if (mine === null) continue;
+    const outcome = sideOutcome(g, mine);
+    if (outcome === 'W') out.w += 1;
+    else if (outcome === 'L') out.l += 1;
+    else if (outcome === 'T') out.t += 1;
+  }
+  return out;
+}
+
+/** A JV team's record over its listed finals, overall and in its JV league games; null before the first. */
+function jvRecordOf(games: readonly Game[], teamId: string): { overall: string; league: string | null } | null {
+  const overall = tally(games, teamId);
+  if (overall.w + overall.l + overall.t === 0) return null;
+  const league = tally(games.filter((g) => g.countsFor !== null), teamId);
+  return {
+    overall: recordString(overall),
+    league: league.w + league.l + league.t > 0 ? recordString(league) : null,
+  };
+}
+
+/** 'Mon Nov 23 at Leland' / 'Wed Jan 6 vs Gunn': the team's next listed game from `today` on, or null. */
+function nextLabel(games: readonly Game[], teamId: string, today: string): string | null {
+  const next = games
+    .filter((g) => g.status !== 'final' && g.status !== 'postponed' && g.dateKey >= today)
+    .sort(byDateThenId)[0];
+  if (!next) return null;
+  const home = next.home.teamId === teamId;
+  const other = home ? next.away : next.home;
+  return `${shortDate(next.dateLocal)} ${next.site === 'neutral' ? 'vs' : home ? 'vs' : 'at'} ${shortName(other)}`;
+}
+
+/** A day's JV games under its date, for the /jv lists. */
+export interface JvDayGroup {
+  dateKey: string;
+  /** 'Mon Nov 23'. */
+  label: string;
+  rows: JvRowView[];
+}
+
+function inLeague(game: Game, league: LeagueId): boolean {
+  const of = (side: GameSide) => (side.slug ? getTeamBySlug(side.slug)?.league : undefined);
+  return of(game.home) === league || of(game.away) === league;
+}
+
+function groupByDay(games: readonly Game[]): JvDayGroup[] {
+  const days = new Map<string, Game[]>();
+  for (const g of games) days.set(g.dateKey, [...(days.get(g.dateKey) ?? []), g]);
+  return [...days.entries()].map(([dateKey, list]) => ({
+    dateKey,
+    label: shortDate(`${dateKey}T12:00:00`),
+    rows: rowsOf([...list].sort(byDateThenId)),
+  }));
+}
+
+/** How far back "latest" and how far ahead "next" look on the /jv hub, in days, and the most rows each shows. */
+export const JV_HUB_WINDOW_DAYS = 7;
+export const JV_HUB_MAX_ROWS = 12;
+
+export interface LeagueJvHubView extends JvListSummary {
+  /** Finals of the last week, newest day first; when the week has none, the latest day with a final. */
+  latest: JvDayGroup[];
+  /** Games of the coming week, soonest first; when the week has none, the next day with a game. */
+  next: JvDayGroup[];
+  /** Listed games in all, and how many are final: the link to the league's full JV list says both. */
+  games: number;
+  finals: number;
+  /** `/jv/<league>`: every JV game of the league, by date. */
+  scheduleHref: string;
+}
+
+/** Whole days, newest (or soonest) first, until adding the next day would pass the cap; always at least one day. */
+function capped(days: JvDayGroup[]): JvDayGroup[] {
+  const out: JvDayGroup[] = [];
+  let rows = 0;
+  for (const day of days) {
+    if (out.length > 0 && rows + day.rows.length > JV_HUB_MAX_ROWS) break;
+    out.push(day);
+    rows += day.rows.length;
+  }
+  return out;
+}
+
+/** One league's part of the /jv hub: its latest JV results and its next JV games. */
+export function buildLeagueJvHubView(league: LeagueId): LeagueJvHubView {
+  const today = localDateKey(getJvFetchedAt());
+  const all = getJvGames().filter((g) => inLeague(g, league));
+  const finals = all.filter((g) => g.status === 'final');
+  const upcoming = all.filter(
+    (g) => g.status !== 'final' && g.status !== 'postponed' && g.dateKey >= today,
+  );
+  const since = shiftDateKey(today, -JV_HUB_WINDOW_DAYS);
+  const until = shiftDateKey(today, JV_HUB_WINDOW_DAYS);
+  const recentFinals = finals.filter((g) => g.dateKey > since);
+  const latestDay = finals.at(-1)?.dateKey;
+  const latestGames = recentFinals.length > 0 ? recentFinals : finals.filter((g) => g.dateKey === latestDay);
+  const soon = upcoming.filter((g) => g.dateKey < until);
+  const nextDay = upcoming[0]?.dateKey;
+  const nextGames = soon.length > 0 ? soon : upcoming.filter((g) => g.dateKey === nextDay);
+  const latest = capped(groupByDay(latestGames).reverse());
+  const next = capped(groupByDay(nextGames));
+  return {
+    latest,
+    next,
+    games: all.length,
+    finals: finals.length,
+    scheduleHref: `/jv/${league}`,
+    ...summarize([...latest, ...next].flatMap((d) => d.rows.map((r) => r.game))),
+  };
+}
+
+export interface JvTeamCardView {
+  team: Team;
+  /** `/teams/<slug>#jv`. */
+  href: string;
+  /** '3-1' once the JV team has a result, else null. */
+  record: string | null;
+  /** 'Mon Nov 23 at Leland', or null. */
+  next: string | null;
+  /** Listed JV games, and how many are final. */
+  games: number;
+  finals: number;
+  /** A varsity-only school whose JV slot another team plays (Santa Catalina / York): that team's name. */
+  slotName: string | null;
+}
+
+/** Every school of a league with its JV team's record, next game and page: the /jv hub's team index. */
+export function buildLeagueJvTeams(league: LeagueId): JvTeamCardView[] {
+  return teamsInLeague(league).map((team) => {
+    const view = buildTeamJvView(team.slug);
+    return {
+      team,
+      href: `/teams/${team.slug}#jv`,
+      record: view?.record?.overall ?? null,
+      next: view?.next ?? null,
+      games: view?.rows.length ?? 0,
+      finals: view?.played ?? 0,
+      slotName: view?.slot?.name ?? null,
+    };
+  });
+}
+
+export interface LeagueJvScheduleView extends JvListSummary {
+  /** Every JV game with a side in the league, by date, oldest first. */
+  days: JvDayGroup[];
+  games: number;
+  finals: number;
+  /** Not final, dated before today: played or not, no score has been reported. */
+  noScore: number;
+  toCome: number;
+  /** The first date from today on with a game: the page's "jump to today" target, or null after the last. */
+  nextDateKey: string | null;
+}
+
+/** `/jv/<league>`: the league's whole JV season, by date. */
+export function buildLeagueJvScheduleView(league: LeagueId): LeagueJvScheduleView {
+  const today = localDateKey(getJvFetchedAt());
+  const all = getJvGames().filter((g) => inLeague(g, league));
+  const days = groupByDay(all);
+  return {
+    days,
+    games: all.length,
+    finals: all.filter((g) => g.status === 'final').length,
+    noScore: all.filter((g) => g.status !== 'final' && g.dateKey < today).length,
+    toCome: all.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
+    nextDateKey: days.find((d) => d.dateKey >= today)?.dateKey ?? null,
+    ...summarize(all),
+  };
 }

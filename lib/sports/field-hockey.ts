@@ -27,9 +27,11 @@ export const FIELD_HOCKEY = {
     marginCap: 5,
     startWeight: 1,
     carryover: 1,
+    provisionalNote: null,
     adjustedScoring: { ridgeSigma: 0.3, shrinkGames: 1, slopeSigma: 0.5 },
   },
   stats: {
+    model: 'goals',
     fieldKeys: [
       'gamesPlayed',
       'minutes',
@@ -56,6 +58,17 @@ export const FIELD_HOCKEY = {
     /** MaxPreps' field hockey points: two per goal, one per assist. */
     pointsPerGoal: 2,
     pointsPerAssist: 1,
+  },
+  scoring: {
+    allowsTies: true,
+    unit: 'goal',
+    units: 'goals',
+    forAbbr: 'GF',
+    againstAbbr: 'GA',
+    diffAbbr: 'GD',
+    forWords: 'goals for',
+    againstWords: 'goals against',
+    diffWords: 'goal differential',
   },
 } as const satisfies Sport;
 

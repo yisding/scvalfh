@@ -11,6 +11,7 @@
  */
 
 import bundledSnapshotFieldHockey from '../data/snapshot.json';
+import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
 import { readOverride } from './data-file';
@@ -83,10 +84,14 @@ import type {
   TeamId,
   TeamSlug,
 } from './types';
-import { IS_FIELD_HOCKEY } from './sports/current';
+import { compareInOrder, levelInOrder, ordersByRecord } from './standings/order';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : bundledSnapshotSoccer;
+/**
+ * This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball:
+ * lib/sports/current.ts DATA_DIR). Chosen on the inlined SCVAL_SPORT itself, not on IS_FIELD_HOCKEY, so a bundler
+ * folds the comparison and leaves the other sports' files out of the Worker (scripts/assert-budgets.ts).
+ */
+const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -638,17 +643,22 @@ const PRE_FINAL_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['presea
 export function getCoLeaders(division: DivisionId, asOf?: string): CoLeaders | null {
   const rows = getStandings(division).filter((s) => s.hasReportedResults);
   if (rows.length < 2) return null;
-  const top = Math.max(...rows.map((s) => s.computed.pts));
-  const level = rows.filter((s) => s.computed.pts === top);
-  if (level.length < 2) return null;
   const league = leagueOfDivision(division);
+  // Level in the table's own order: points, or the league record where that orders it (lib/standings/order.ts).
+  const best = [...rows].sort((a, b) => compareInOrder(league.rules, a.computed, b.computed))[0];
+  const level = rows.filter((s) => levelInOrder(league.rules, s.computed, best.computed));
+  if (level.length < 2) return null;
   const final =
     !PRE_FINAL_PHASES.has(getSeasonPhase(league.id, asOf)) &&
     missingRows(division, asOf).every((r) => r.kind !== 'missing');
   return {
     teams: level.map((s) => getTeamById(s.teamId)).filter((t): t is Team => t !== undefined),
     final,
-    label: final ? league.rules.coChampionsLabel : 'Level on points at the top',
+    label: final
+      ? league.rules.coChampionsLabel
+      : ordersByRecord(league.rules)
+        ? 'Level at the top'
+        : 'Level on points at the top',
   };
 }
 

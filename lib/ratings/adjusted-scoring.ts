@@ -81,18 +81,26 @@ import { SPORT } from '../sports/current';
 import type { Game, Team, TeamId, TeamSlug } from '../types';
 
 /** The prior standard deviation of a team's attack and defense corrections to its Elo, in log goals. */
-export const RIDGE_SIGMA = SPORT.ratings.adjustedScoring.ridgeSigma;
+/**
+ * The model's priors, or field hockey's where the sport has none (`Sport.ratings.adjustedScoring` null:
+ * basketball, whose scores a Poisson goal model does not describe). HAS_ADJUSTED_SCORING is what a reader
+ * checks before it builds an adjusted board; the fallback only keeps the constants below defined.
+ */
+export const HAS_ADJUSTED_SCORING = SPORT.ratings.adjustedScoring !== null;
+const PRIORS = SPORT.ratings.adjustedScoring ?? { ridgeSigma: 0.3, shrinkGames: 1, slopeSigma: 0.5 };
+
+export const RIDGE_SIGMA = PRIORS.ridgeSigma;
 /**
  * Games against an average defense, at the season's average rate against one, added to every team's
  * adjusted rate and schedule factor.
  */
-export const SHRINK_GAMES = SPORT.ratings.adjustedScoring.shrinkGames;
+export const SHRINK_GAMES = PRIORS.shrinkGames;
 /**
  * The prior standard deviation of the two Elo slopes a and d, centred on 0: so weak that a full
  * season's fit is unchanged (both come out near 0.4 in 2025-26 and 2026), but a season of a few
  * games, which a large slope can explain perfectly, stays near no adjustment instead of running off.
  */
-export const SLOPE_SIGMA = SPORT.ratings.adjustedScoring.slopeSigma;
+export const SLOPE_SIGMA = PRIORS.slopeSigma;
 /**
  * The fit has converged when a full Newton step moves no parameter by more than this, in log goals (a
  * millionth of a scoring rate). On the bundled season the steps fall from 1.6 to 2e-4 in five
@@ -369,9 +377,12 @@ export function computeAdjustedScoring(
 }
 
 let bundled: ReadonlyMap<TeamId, AdjustedScoring> | null = null;
+const NO_ADJUSTED_SCORING: ReadonlyMap<TeamId, AdjustedScoring> = new Map();
 
 /** The adjusted scoring over the bundled snapshot and Elo table, computed once per process; read-only, as it is shared. */
 export function getAdjustedScoring(): ReadonlyMap<TeamId, AdjustedScoring> {
+  // A sport with no scoring model (HAS_ADJUSTED_SCORING false: basketball) has no adjusted figure for anyone.
+  if (!HAS_ADJUSTED_SCORING) return NO_ADJUSTED_SCORING;
   if (!bundled) {
     const snapshot = getSnapshot();
     bundled = computeAdjustedScoring(snapshot.teams, snapshot.games, getRatings());

@@ -218,6 +218,7 @@ function ccsLadderView(
     meter: { claimed: ps.autoBerths, total, label },
     // Each round's first day: where divisions play a round on different days (soccer), the earliest.
     dates: [
+      ...(CCS.keyDates.firstRound ? [{ term: 'First round', date: CCS.keyDates.firstRound }] : []),
       { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
       { term: 'Semifinals', date: CCS.keyDates.semifinals },
       { term: 'Final', date: CCS.keyDates.finals },

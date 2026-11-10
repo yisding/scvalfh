@@ -59,6 +59,12 @@ export const BundleFixtureSchema = z.strictObject({
   /** Source spelling, verbatim. */
   awayName: z.string().min(1),
   homeName: z.string().min(1),
+  /**
+   * The JV game of this fixture, where the league's own schedule gives one (SCVAL basketball: the JV teams
+   * play the same double round robin, at 5:30 before a 7:00 varsity game, at 3:00 or 4:30 on a quad day, and
+   * on Monday Feb 15 for the varsity round of Tuesday Feb 16). Absent where the document says nothing of JV.
+   */
+  jv: z.strictObject({ date: dateKey, time: HHMM.nullable() }).optional(),
 });
 
 export const BundleEventSchema = z.strictObject({
@@ -152,6 +158,7 @@ export function serializeBundle(bundle: OfficialBundle): string {
     fixtures: parsed.fixtures.map((f) => ({
       id: f.id, division: f.division, date: f.date, originalDate: f.originalDate, time: f.time,
       away: f.away, home: f.home, awayName: f.awayName, homeName: f.homeName,
+      ...(f.jv ? { jv: { date: f.jv.date, time: f.jv.time } } : {}),
     })),
     events: parsed.events.map((e) => ({ kind: e.kind, date: e.date, time: e.time, verbatim: e.verbatim })),
   };
@@ -237,6 +244,7 @@ export function bundleToFixtures(bundle: OfficialBundle): OfficialFixture[] {
       awaySlug,
       homeSlug,
       source,
+      ...(f.jv ? { jv: { dateKey: f.jv.date, time: f.jv.time } } : {}),
     };
   });
 }

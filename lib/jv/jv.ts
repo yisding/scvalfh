@@ -18,12 +18,14 @@
  */
 
 import bundledFieldHockey from '../../data/jv.json';
+import bundledBasketball from '../../data/basketball/jv.json';
 import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
+import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
 import { mergeJvSchoolSites, type JvSchoolSiteMergeResult } from './jv-school-sites';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
@@ -34,10 +36,9 @@ import {
   type JvDivisionTable,
 } from './jv-standings';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): JvFile {
   return validateData('jv', JvFileSchema, readOverride('lib/jv/jv.ts', 'SCVAL_JV', bundled));
@@ -57,14 +58,24 @@ const schoolSites: JvSchoolSiteMergeResult = mergeJvSchoolSites({
   fetchedAt: file.fetchedAt,
 });
 const SCHOOL_SITE_DIFFERS = new Map(schoolSites.differs.map((d) => [d.contestId, d.note]));
+// The league's own JV schedule, where its document has one: lists a JV game no source has yet (lib/jv/jv-official.ts).
+const JV_SLOTS: readonly JvSlot[] = jvSlotsOf(getSnapshot().games, getOfficialFixtures());
+const official: JvOfficialMergeResult = mergeJvOfficial({
+  games: schoolSites.games,
+  slots: JV_SLOTS,
+  fetchedAt: file.fetchedAt,
+});
 const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
-  schoolSites.games,
+  official.games,
   getSnapshot().games,
   getOfficialFixtures(),
   JV_CORRECTIONS.leagueGames,
+  { claims: official.claims, divisions: new Set(JV_SLOTS.map((s) => s.division)) },
 );
-const games: Game[] = withJvClassification(schoolSites.games, classes);
-const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt));
+const games: Game[] = withJvClassification(official.games, classes);
+/** The divisions whose schedule schedules the JV round: a bundle carries a JV slot on every fixture or on none. */
+const JV_SCHEDULED_DIVISIONS: ReadonlySet<DivisionId> = new Set(JV_SLOTS.map((s) => s.division));
+const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt), JV_SCHEDULED_DIVISIONS);
 const TEAM_BY_SLUG = new Map<string, JvTeam>(file.teams.map((t) => [t.slug, t]));
 
 export function getJvFile(): JvFile {
@@ -74,6 +85,26 @@ export function getJvFile(): JvFile {
 /** The merge's outcome, before classification: every published JV game and what si.com changed. */
 export function getJvMerge(): JvMergeResult {
   return merged;
+}
+
+/** What the league's own JV schedule added, timed and matched (lib/jv/jv-official.ts), after the other merges. */
+export function getJvOfficialMerge(): JvOfficialMergeResult {
+  return official;
+}
+
+/** Every JV game the site lists, classified, oldest first. */
+export function getJvGames(): Game[] {
+  return [...games].sort(byDateThenId);
+}
+
+/** Every date (YYYY-MM-DD) with a JV game, ascending. */
+export function getJvDates(): string[] {
+  return [...new Set(games.map((g) => g.dateKey))].sort();
+}
+
+/** Whether a division's official schedule schedules its JV round (its fixtures carry JV slots). */
+export function isJvScheduledDivision(division: DivisionId): boolean {
+  return JV_SCHEDULED_DIVISIONS.has(division);
 }
 
 /** MaxPreps JV rows left out or re-pointed by lib/jv/jv-corrections.ts, before the merge. */

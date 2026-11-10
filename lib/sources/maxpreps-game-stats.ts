@@ -90,6 +90,8 @@ export interface GameRow {
 
 export interface ParseGameStatsOptions {
   expectedTeamId?: string;
+  /** The season the table must be for; this season's unless given (a test reading last season's capture). */
+  expectedSeasonId?: string;
   url?: string;
 }
 
@@ -107,7 +109,8 @@ export function parseGameRows(raw: unknown, opts: ParseGameStatsOptions = {}): G
     if (String(status) === '400' && typeof message === 'string' && /^no data was found/i.test(message.trim())) return [];
     fail(`no data and status ${String(status)}`, url);
   }
-  if (data.sportSeasonId !== SPORT_SEASON_ID) fail(`sportSeasonId ${data.sportSeasonId}, expected ${SPORT_SEASON_ID}`, url);
+  const expectedSeason = opts.expectedSeasonId ?? SPORT_SEASON_ID;
+  if (data.sportSeasonId !== expectedSeason) fail(`sportSeasonId ${data.sportSeasonId}, expected ${expectedSeason}`, url);
   if (opts.expectedTeamId && data.teamId !== opts.expectedTeamId) {
     fail(`teamId ${data.teamId}, expected ${opts.expectedTeamId}`, url);
   }

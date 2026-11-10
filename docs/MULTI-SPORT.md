@@ -2,8 +2,9 @@
 
 The owner wants the site to cover more California high school sports, with basketball and soccer first.
 This note records how the code divides between sports (an audit of every layer, 2026-11-04) and the
-order of work. The first step, the sport seam in `lib/sports/`, has landed, and so has a first soccer
-build: SCVAL girls soccer, 2026-27 ("Girls soccer: SCVAL" below). The rest is a plan.
+order of work. The first step, the sport seam in `lib/sports/`, has landed, and so have a soccer
+build, SCVAL girls soccer, 2026-27 ("Girls soccer: SCVAL" below), and a basketball build, SCVAL boys
+basketball, 2026-27 ("Boys basketball: SCVAL" below). The rest is a plan.
 
 ## Decision: one sport per build
 
@@ -197,6 +198,42 @@ Not done yet, for the owner to decide or schedule:
 - **Mascot tiles** for Gunn, Mountain View, MacDonald, Milpitas and Wilcox: MaxPreps' image host answered
   `pnpm fetch-mascots` with 403, so `NO_MASCOT_TILE` (`lib/schools/mascots.ts`) draws their initials.
 - **Steps 2-5 below** still stand; the soccer build's per-module switches are what they would replace.
+
+## Boys basketball: SCVAL (2026-11-10)
+
+The owner asked for a boys basketball site covering SCVAL, "the same as the other sites", with as much JV
+data as possible. It is the third build (`SCVAL_SPORT=basketball`), switched module by module like soccer;
+where soccer could reuse field hockey's rules, basketball could not, so parts of step 5 landed with it.
+
+- **The sport.** `lib/sports/basketball.ts` (`BASKETBALL`, `BASKETBALL_BOYS_2026`), ids read live from the
+  boys hub (`maxpreps.com/ca/basketball/`), Gunn's and Los Altos' season lists and both leagues. `current.ts`
+  gained `IS_BASKETBALL`, and every `IS_FIELD_HOCKEY ? field hockey's : soccer's` data switch became
+  three-way; `DATA_DIR` is `data/<sport>` for every sport but field hockey.
+- **Step 5, partly.** `Sport.scoring` (`allowsTies`, the unit a team scores and the three column heads) is
+  read by `components/words/score-words.ts`; `lib/format.ts` prints a record W-L for a sport with no ties
+  (from the inlined `SCVAL_SPORT`, so the leaf still loads no sport definition). `LeagueRules.orderBy` gained
+  `'win-pct'` (`lib/standings/order.ts` is the one place that knows the order column is PTS or PCT), the
+  engine two tiebreak stages (`record-vs-placed`, the uncomputable `coaches-vote`) and `leagueOvertime`
+  `'until-decided'`. `Sport.ratings.adjustedScoring` is nullable and null for basketball.
+- **The league and registry.** `lib/league-config/basketball/scval.ts` (the SCVAL Basketball By-Laws and the
+  two 2026-27 boys schedules) and `lib/registry/basketball/scval.ts` (the same 15 schools as soccer, in
+  basketball's own divisions; MaxPreps' two tables hold all 15).
+- **The official schedule and the JV schedule.** `scripts/build-scval-basketball-fixtures.ts` writes the
+  bundle from the schedules' text; each fixture carries its JV game (`jv`), which `lib/jv/jv-official.ts`
+  turns into a listed JV game wherever MaxPreps has none (README, "JV games from the league's own schedule").
+- **The CCS block.** `lib/league-config/basketball/sections.ts`, from the CCS 2026-27 Playoff Calendar and the
+  CCS basketball calendar feed. `CcsKeyDates.firstRound` and `ccsFirstDay()` carry a bracket that opens
+  before the quarterfinals.
+- **Data.** Under `data/basketball/`, from the usual fetchers; the roster parser accepts the Weight column
+  basketball roster tables carry (and never stores it), and a deleted contest with no date is dropped before
+  a schedule feed is held to its schema.
+- **Deploy.** `update-data-basketball.yml`, ci's `basketball` job, the deploy gate and
+  `scripts/vercel-ignore-build.sh` know the third sport. The hosting project and its domain are the owner's
+  to create (README, "Deploy notes").
+
+Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
+allocation and MaxPreps' 2027 tournament page; mascot tiles for Gunn, Mountain View, MacDonald, Milpitas and
+Wilcox (as for soccer); MaxPreps' freshman season; the smoke and axe passes on the basketball build.
 
 ## Guards that must keep passing
 

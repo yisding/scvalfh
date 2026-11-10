@@ -29,7 +29,7 @@
  * cross-check.ts (the MaxPreps comparison), missing.ts (missing league results) and pairings.ts.
  */
 
-import { byDateThenId, sideOutcome } from '../format';
+import { byDateThenId, recordString, sideOutcome, winPct as pctString } from '../format';
 import type { LeagueConfig, LeagueRules } from '../league-config/shape';
 import {
   LEAGUES,
@@ -236,6 +236,14 @@ interface DivisionCtx {
   resolvedBy: Map<TeamId, TiebreakStage>;
   /** The lower points buckets, final order, as clusters (filled bucket by bucket). */
   placedBelowOf: (bucketIndex: number) => TeamId[][];
+  /**
+   * The teams each team was left level with (a shared place), filled as a group ends unresolved under
+   * partition-restart. 'record-vs-placed' reads it: a level group above the tie has no order among its
+   * members, so it is walked as one cluster, never member by member in the order the names happen to sort.
+   */
+  levelWith?: Map<TeamId, readonly TeamId[]>;
+  /** Teams whose tie stopped on a meeting not yet played (HALT), not on the chain's last step: their note says so. */
+  halted?: Set<TeamId>;
 }
 
 /** Points team `id` earned in its meetings with `other` (win·w + tie·t over their counted games). */
@@ -356,6 +364,47 @@ function stageKeys(
       }
       return null;
     }
+    case 'record-vs-placed': {
+      // SCVAL basketball Art. VI §1.1: "record vs. highest placed opponent in league (descending order)". Walk
+      // every other team from first place down: the teams above the tie in their placed order, then the teams
+      // below it, a group still level there as one cluster. The first opponent the tied teams did not all do
+      // equally well against separates them; a meeting not yet played, or a level cluster they split
+      // differently against, stops the walk (no invented result, no order the table does not have).
+      const walked = new Set<TeamId>();
+      for (const target of above) {
+        if (walked.has(target)) continue;
+        // A group left level above the tie shares one place: the tied teams must have done equally well
+        // against every member of it, or the walk stops (as for a level cluster below).
+        const cluster = ctx.levelWith?.get(target) ?? [target];
+        for (const member of cluster) walked.add(member);
+        if (cluster.length > 1) {
+          for (const member of cluster) {
+            const k = pointsVsEach(ctx, group, member);
+            if (k === null || !allEqual(k)) return HALT;
+          }
+          continue;
+        }
+        const k = pointsVsEach(ctx, group, target);
+        if (k === null) return HALT;
+        if (allEqual(k)) continue;
+        group.forEach((id, i) => out.set(id, k[i]));
+        return out;
+      }
+      for (const cluster of below) {
+        if (cluster.length === 1) {
+          const k = pointsVsEach(ctx, group, cluster[0]);
+          if (k === null) return HALT;
+          if (allEqual(k)) continue;
+          group.forEach((id, i) => out.set(id, k[i]));
+          return out;
+        }
+        for (const member of cluster) {
+          const k = pointsVsEach(ctx, group, member);
+          if (k === null || !allEqual(k)) return HALT;
+        }
+      }
+      return null;
+    }
     case 'record-vs-lower-placed': {
       for (const cluster of below) {
         if (cluster.length === 1) {
@@ -381,7 +430,7 @@ function stageKeys(
       return out;
     }
     default:
-      // 'points', 'ccs-points', 'coin-flip', 'no-rule', 'play-in': never keyed.
+      // 'points', 'ccs-points', 'coin-flip', 'coaches-vote', 'no-rule', 'play-in': never keyed.
       return null;
   }
 }
@@ -415,9 +464,13 @@ function resolveGroup(
   if (group.length <= 1) return [[...group]];
   const { stages, terminal } = splitChain(chain);
 
+  let halted = false;
   for (const stage of stages) {
     const keys = stageKeys(stage, group, above, below, ctx);
-    if (keys === HALT) break;
+    if (keys === HALT) {
+      halted = true;
+      break;
+    }
     if (keys === null) continue;
     const keyed = group.map((id) => ({ id, key: keys.get(id) as number }));
     const distinct = new Set(keyed.map((k) => k.key));
@@ -429,18 +482,40 @@ function resolveGroup(
       .sort((a, b) => b - a)
       .map((key) => keyed.filter((k) => k.key === key).map((k) => k.id));
     const out: TeamId[][] = [];
-    for (const bucket of buckets) {
+    // Under 'record-vs-placed' a sub-bucket's walk also reads the tie-mates this stage has just placed beneath
+    // it (they are neither above it nor in the lower buckets): each later sub-bucket as far as the stages
+    // before the walk settle it. Other chains keep the lower places they were given.
+    const walks = chain.includes('record-vs-placed');
+    buckets.forEach((bucket, k) => {
       // Recorded now and overwritten by a deeper stage if this bucket splits again, so the note
       // always names the step that actually separated the team from its last tie-mates.
       for (const id of bucket) ctx.resolvedBy.set(id, stage);
-      out.push(...resolveGroup(bucket, chain, [...above, ...out.flat()], below, ctx));
-    }
+      const beneath = walks ? [...buckets.slice(k + 1).flatMap((b) => settledBeforeWalk(b, chain, ctx)), ...below] : below;
+      out.push(...resolveGroup(bucket, chain, [...above, ...out.flat()], beneath, ctx));
+    });
     return out;
   }
 
   // Unresolved ⇒ an uncomputable last step (SCVAL Article VI §7's coin flip). The teams stay tied.
   for (const id of group) ctx.resolvedBy.set(id, terminal ?? 'coin-flip');
+  for (const id of group) ctx.levelWith?.set(id, group);
+  if (halted) for (const id of group) ctx.halted?.add(id);
   return [[...group].sort((a, b) => nameOf(a).localeCompare(nameOf(b)))];
+}
+
+/**
+ * A tied group as far as the stages BEFORE 'record-vs-placed' settle it (SCVAL basketball: head-to-head), in
+ * order, a part still level as one cluster. It is what a higher tie's walk may read of a lower tie before
+ * that lower tie is resolved itself: those stages read nothing outside the group, so the order they give is
+ * the order the table will show, and whatever they leave level is treated as level (never guessed).
+ * Resolved on a scratch context, so nothing here reaches a note or a place.
+ */
+function settledBeforeWalk(group: readonly TeamId[], chain: readonly TiebreakStage[], ctx: DivisionCtx): TeamId[][] {
+  if (group.length <= 1) return [[...group]];
+  const before = chain.slice(0, chain.indexOf('record-vs-placed'));
+  if (before.length === 0) return [[...group]];
+  const scratch: DivisionCtx = { ...ctx, resolvedBy: new Map(), levelWith: new Map(), halted: new Set() };
+  return resolveGroup(group, [...before, 'coin-flip'], [], [], scratch);
 }
 
 // ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
@@ -720,7 +795,10 @@ function computeDivision(
     teams.map((team) => [team.id, toComputed(tallies.get(team.id)!, 0, rules.points)]),
   );
 
-  // Order by points. Teams with no reported results sort last (DESIGN §8).
+  // Order by points, or by the share of league games won where the league's record orders the table
+  // (rules.orderBy 'win-pct': SCVAL basketball). Teams with no reported results sort last (DESIGN §8).
+  const orderKey = (id: TeamId): number =>
+    rules.orderBy === 'win-pct' ? computed.get(id)!.winPct : computed.get(id)!.pts;
   const played = teams.filter((t) => computed.get(t.id)!.gp > 0).map((t) => t.id);
   const unplayed = teams
     .filter((t) => computed.get(t.id)!.gp === 0)
@@ -729,7 +807,7 @@ function computeDivision(
 
   const byPoints = new Map<number, TeamId[]>();
   for (const id of played) {
-    const pts = computed.get(id)!.pts;
+    const pts = orderKey(id);
     const bucket = byPoints.get(pts);
     if (bucket) bucket.push(id);
     else byPoints.set(pts, [id]);
@@ -754,6 +832,8 @@ function computeDivision(
     computed,
     resolvedBy,
     placedBelowOf: (i) => resolved.slice(i + 1).flatMap((r) => r ?? []),
+    levelWith: new Map(),
+    halted: new Set(),
   };
 
   const resolveBucket = (i: number): void => {
@@ -764,7 +844,11 @@ function computeDivision(
       return;
     }
     const above = resolved.slice(0, i).flatMap((r) => (r ?? []).flat());
-    const below = ctx.placedBelowOf(i);
+    // 'record-vs-placed' reads every lower bucket, a bucket not settled yet as one level cluster; the other
+    // place-relative stages read only the lower places already settled (SPEC §5.4a).
+    const below = chain.includes('record-vs-placed')
+      ? buckets.slice(i + 1).flatMap((b, k) => resolved[i + 1 + k] ?? settledBeforeWalk(b.group, b.chain, ctx))
+      : ctx.placedBelowOf(i);
     if (rules.multiTeam === 'partition-restart') {
       resolved[i] = resolveGroup(group, chain, above, below, ctx);
     } else {
@@ -809,7 +893,7 @@ function computeDivision(
     const stage = resolvedBy.get(entry.id) ?? 'points';
     const tiebreak: TiebreakInfo = {
       resolvedBy: stage,
-      note: tiebreakNote(team, record, stage, entry.cluster, rules),
+      note: tiebreakNote(team, record, stage, entry.cluster, rules, ctx.halted?.has(entry.id) ?? false),
       tiedWith: shared ? entry.cluster.filter((id) => id !== entry.id) : [],
       shared,
     };
@@ -838,8 +922,16 @@ function tiebreakNote(
   stage: TiebreakStage,
   cluster: readonly TeamId[],
   rules: LeagueRules,
+  halted = false,
 ): string {
   const { citations, points } = rules;
+  // A league ordered on its league record (rules.orderBy 'win-pct') has no points to name: its notes give
+  // the record and its percentage instead.
+  const byRecord = rules.orderBy === 'win-pct';
+  const orderWords = byRecord ? 'league record' : 'team points';
+  const level = byRecord
+    ? `Level at ${recordString(record)} (${pctString(record.winPct)})`
+    : `Tied on ${record.pts} points`;
   if (record.gp === 0) {
     // A 'site' league's team with no counted game may simply have none yet (a Sunset team plays only the
     // games MaxPreps marks as league games; Metro South Bay's first is Oct 7), so its note says the games
@@ -848,23 +940,30 @@ function tiebreakNote(
       rules.orderScope === 'site'
         ? `No ${rules.gamesWord} games counted for ${team.name} yet`
         : `No ${rules.gamesWord} results reported for ${team.name}`;
-    return `${none}, so it is listed last; ${divisionLabel(team.division)} order is the order of team points (${citations.order}).`;
+    return `${none}, so it is listed last; ${divisionLabel(team.division)} order is the order of ${orderWords} (${citations.order}).`;
   }
   if (stage === 'points') {
     // For a 'site' league (the Sunset, the San Diego leagues) `order` says no league document orders the
     // table: '3 points (3 per win, 1 per tie) — placed on points alone, no league document orders the
     // table; this site orders it by its own 3-1-0 points.' Never 'as the rules require'.
+    if (byRecord) {
+      return `${recordString(record)} in ${rules.gamesWord} games (${pctString(record.winPct)}) — placed on its league record alone, ${citations.order}.`;
+    }
     return `${record.pts} points (${points.win} per win, ${points.tie} per tie) — placed on points alone, ${citations.order}.`;
   }
   const others = cluster.filter((id) => id !== team.id).map(nameOf);
   const tiedWith = others.length ? ` with ${others.join(', ')}` : '';
   if (stage === 'play-in') {
-    return `Tied on ${record.pts} points${tiedWith} for the last tournament place — ${citations.stages['play-in'] ?? ''}. We show them level.`;
+    return `${level}${tiedWith} for the last tournament place — ${citations.stages['play-in'] ?? ''}. We show them level.`;
+  }
+  if (UNCOMPUTABLE_STAGES.has(stage) && halted) {
+    // The chain stopped on a meeting not yet played, not on its last step: say that, not "every criterion".
+    return `${level}${tiedWith}; not separable yet, because the tied teams have not all played the opponents the next step compares them on. We show them level.`;
   }
   if (UNCOMPUTABLE_STAGES.has(stage)) {
-    return `Tied on ${record.pts} points${tiedWith} and unresolved by every criterion — ${citations.stages[stage] ?? ''}. We show them level.`;
+    return `${level}${tiedWith} and unresolved by every criterion — ${citations.stages[stage] ?? ''}. We show them level.`;
   }
-  return `Tied on ${record.pts} points; separated by ${citations.stages[stage] ?? stage}.`;
+  return `${level}; separated by ${citations.stages[stage] ?? stage}.`;
 }
 
 // ---------------------------------------------------------------- UI order and table guard

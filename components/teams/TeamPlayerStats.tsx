@@ -96,7 +96,7 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
                     i === row.values.length - 1 ? 'pr-4' : ''
                   }`}
                 >
-                  {statText(v) ?? <MissingValue words="not recorded" />}
+                  {(row.texts ? row.texts[i] : statText(v)) ?? <MissingValue words="not recorded" />}
                 </td>
               ))}
             </tr>
@@ -139,7 +139,8 @@ export interface TeamPlayerStatsProps {
 
 export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
   const { teamName } = view;
-  const hasAny = view.scoring !== null || view.more !== null || view.goalies.length > 0;
+  const tables = view.tables ?? [];
+  const hasAny = view.scoring !== null || view.more !== null || view.goalies.length > 0 || tables.length > 0;
 
   if (!hasAny) {
     const action = view.statsUrl
@@ -168,8 +169,10 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
   const legend = [
     ...(view.scoring?.columns ?? []),
     ...(view.more?.columns ?? []),
+    ...tables.flatMap((t) => t.table.columns),
   ].map((c) =>
-    c.key === 'points' ? `${c.label} points (2 per goal, 1 per assist)` : `${c.label} ${c.title.toLowerCase()}`,
+    // MaxPreps' 2-per-goal points (showsPoints); basketball's points are scored and need no gloss.
+    c.key === 'points' && view.showsPoints ? `${c.label} points (2 per goal, 1 per assist)` : `${c.label} ${c.title.toLowerCase()}`,
   );
 
   return (
@@ -190,6 +193,12 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
             <StatsTable table={view.more} caption={`${teamName} shooting and other stats, this season`} />
           </div>
         ) : null}
+        {tables.map((t) => (
+          <div key={t.id}>
+            <SectionHeader as="h3" size="label" kicker={t.kicker} />
+            <StatsTable table={t.table} caption={t.caption} />
+          </div>
+        ))}
         {view.goalies.length > 0 ? (
           <div>
             <SectionHeader as="h3" size="label" kicker="Goalkeeping" />
@@ -207,6 +216,9 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
           Season totals for every varsity game, league and non-league, as the coach entered them on
           MaxPreps{view.updated ? `, last updated ${view.updated}` : ''}.
           {view.more ? ' Shooting and more lists only players with at least one of those stats.' : ''}
+          {view.showsDerived
+            ? ' The per-game figures and the percentages are worked out here from those totals: a per-game figure is over the games the player is credited with.'
+            : ''}
         </p>
         {view.goalkeepingEntered ? (
           <p className="mt-1 mb-0">

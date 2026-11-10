@@ -1,10 +1,11 @@
 import { GoalDiffCell } from '../ui/GoalDiffBar';
+import { DIFFERENCE_WORDS, DIFF_ABBR, WIDE_SCORES } from '../words/score-words';
 import { StretchedRowLink } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import { NoGoalDiff } from '../standings/standings-table/cells';
 import TeamMonogram from '../ui/TeamMonogram';
-import { EM_DASH, monthDay, placeWords, plural } from '../../lib/format';
+import { EM_DASH, monthDay, placeWords } from '../../lib/format';
 import { getDivision, getLeague, regionOf } from '../../lib/leagues';
 import { biggestGoalDiff, ladderLineAfter } from '../standings/standings-view';
 
@@ -53,10 +54,15 @@ export interface MiniStandingsProps {
 function rowLabel(row: MiniRow, where: string): string {
   if (!row.hasResults) return `${row.name}: no results reported yet`;
   // The record in words, as on the standings table: "4-1-0" read aloud is a subtraction or a date.
-  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.recordWords}, ${plural(row.pts, 'point')}`;
+  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.recordWords}, ${row.orderWords}`;
 }
 
 const COLS = 6;
+
+/** The difference column: 44px of numeral (100 with the bar), 6 more where a difference runs to four glyphs. */
+const DIFF_COL = WIDE_SCORES
+  ? 'w-[50px] pr-gutter text-right @min-[23.4375rem]:w-[106px]'
+  : 'w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]';
 
 /**
  * How many rows the mini table shows: `miniRows`, stretched to keep a place shared AT the cutoff
@@ -129,11 +135,11 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
               <th scope="col" className="w-[52px] text-right">
                 League
               </th>
-              <th scope="col" className="w-11 pr-2 text-right">
-                Pts
+              <th scope="col" className={division.orderHead === 'Pct' ? 'w-12 pr-2 text-right' : 'w-11 pr-2 text-right'}>
+                {division.orderHead}
               </th>
-              <th scope="col" className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
-                GD
+              <th scope="col" className={DIFF_COL}>
+                {DIFF_ABBR}
               </th>
             </tr>
           </thead>
@@ -144,6 +150,7 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
                 row={row}
                 where={where}
                 gdDomain={division.gdDomain}
+                byRecord={division.orderHead === 'Pct'}
                 line={index === lineAt ? home.lineLabel : null}
               />
             ))}
@@ -158,7 +165,7 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
             {biggestGoalDiff(division.rows.map((r) => r.gd)) > 0 ? (
               <span className="hidden @min-[23.4375rem]:inline">
                 {' '}
-                &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
+                &middot; bars scaled to {where}{`’s biggest ${DIFFERENCE_WORDS} (`}{division.gdDomain})
               </span>
             ) : null}
           </p>
@@ -172,8 +179,8 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
                 <span className="hidden @min-[23.4375rem]:inline">
                   {' '}
                   {showDivisionLabel
-                    ? 'GD bars are scaled per division, so two divisions’ bars are not comparable.'
-                    : 'GD bars are scaled to this table alone.'}
+                    ? `${DIFF_ABBR} bars are scaled per division, so two divisions’ bars are not comparable.`
+                    : `${DIFF_ABBR} bars are scaled to this table alone.`}
                 </span>
               </p>
             </details>
@@ -188,11 +195,14 @@ function MiniRowView({
   row,
   where,
   gdDomain,
+  byRecord,
   line,
 }: {
   row: MiniRow;
   where: string;
   gdDomain: number;
+  /** The table is ordered on its league record: the order cell is a 13px '.750' in 48px, not a 16px total. */
+  byRecord: boolean;
   line: string | null;
 }) {
   const has = row.hasResults;
@@ -216,14 +226,16 @@ function MiniRowView({
         </th>
         <td className="sx-num w-8 text-right text-[11px] text-ink-2 @max-[20rem]:hidden">{has ? row.gp : EM_DASH}</td>
         <td className="sx-num w-[52px] text-right font-medium text-ink">{has ? row.record : EM_DASH}</td>
-        <td className="sx-num w-11 pr-2 text-right text-body font-bold text-ink">{has ? row.pts : EM_DASH}</td>
-        <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
+        <td className={byRecord ? 'sx-num w-12 pr-2 text-right text-cell font-bold text-ink' : 'sx-num w-11 pr-2 text-right text-body font-bold text-ink'}>
+          {has ? row.order : EM_DASH}
+        </td>
+        <td className={DIFF_COL}>
           {has ? (
             <GoalDiffCell
               value={row.gd}
               domain={gdDomain}
               track={56}
-              numberWidth={24}
+              numberWidth={WIDE_SCORES ? 30 : 24}
               numberClassName="text-cell"
               barClassName="hidden @min-[23.4375rem]:block"
             />

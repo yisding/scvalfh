@@ -1,3 +1,7 @@
+import { leagueOfDivision } from '../../lib/leagues';
+import { orderValueShort, ordersByRecord } from '../../lib/standings/order';
+import { capitalized } from '../words/capitalized';
+import { FOR_WORDS, RECORD_HEAD, SCORE_UNITS, SCORE_UNITS_TITLE, SCORE_UNIT } from '../words/score-words';
 import { EM_DASH, perGame, placeMark, placeWords, recordString, signedGd, streakString } from '../../lib/format';
 import { plural } from '../words/plural';
 import StatTile from './StatTile';
@@ -41,6 +45,9 @@ export interface TeamStatTilesProps {
 
 export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
   const { standing, hasResults, context } = view;
+  const rules = leagueOfDivision(view.division).rules;
+  // A league ordered on its record has no points: MAX is then the most league wins still possible.
+  const byRecord = ordersByRecord(rules);
   const league = hasResults && standing ? standing.computed : null;
   const overall = hasResults && standing ? standing.overall : null;
   const left = context ? context.remaining : null;
@@ -64,7 +71,11 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
         <StatTile
           label="League"
           value={league ? recordString(league) : null}
-          sub={league ? `${plural(league.pts, 'pt', 'pts')} · ${league.gp} played` : 'league games only'}
+          sub={
+            league
+              ? `${byRecord ? orderValueShort(rules, league) : plural(league.pts, 'pt', 'pts')} · ${league.gp} played`
+              : 'league games only'
+          }
         />
         {/* A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N": GP is the
             bare count, and MAX, a ceiling over the games left, has nothing to count (DESIGN-socal §2.1.7). */}
@@ -88,8 +99,12 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
             context && context.maxPts === null
               ? 'no fixed league schedule'
               : left === 0
-                ? 'final league points'
-                : 'most points possible'
+                ? byRecord
+                  ? 'final league wins'
+                  : 'final league points'
+                : byRecord
+                  ? 'most league wins possible'
+                  : 'most points possible'
           }
         />
         <StatTile
@@ -104,14 +119,14 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
           sub="league games"
         />
         <StatTile
-          label="Goals F / A"
-          srLabel="Goals for and against"
+          label={`${SCORE_UNITS_TITLE} F / A`}
+          srLabel={`${capitalized(FOR_WORDS)} and against`}
           value={league ? `${league.gf} / ${league.ga}` : null}
           srValue={league ? `${league.gf} for, ${league.ga} against` : undefined}
           sub={league ? `${perGame(league.gf, league.gp)} scored per game` : 'league games only'}
         />
         <StatTile
-          label="Goal diff"
+          label={`${capitalized(SCORE_UNIT)} diff`}
           value={league ? signedGd(league.gd) : null}
           sub={league ? `${perGame(league.ga, league.gp)} conceded per game` : 'league games only'}
         />
@@ -126,13 +141,13 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
                 ? // The San Diego leagues publish no schedule: the N is what a full home-and-away schedule
                   // gives each team, which stays true where MaxPreps lists one meeting fewer (Bonita Vista
                   // and Helix, Metro Mesa: 7 of 8 on Oct 5; review 2026-10-06), never "N scheduled".
-                  `GP is counted results out of the ${view.leagueScheduled} a full home-and-away schedule gives each team; MAX is the points total if every remaining game were won. `
-                : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `
+                  `GP is counted results out of the ${view.leagueScheduled} a full home-and-away schedule gives each team; MAX is the ${byRecord ? 'league wins' : 'points'} total if every remaining game were won. `
+                : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the ${byRecord ? 'league wins' : 'points'} total if every remaining game were won. `
           }`}
           A real 0 shows as{' '}
           <span className="sx-num">0</span>; a number we do not have shows as{' '}
           <span aria-hidden="true">{EM_DASH}</span>
-          <span className="sr-only">an em dash</span>. Forfeits count in W-L-T but not in goals.
+          <span className="sr-only">an em dash</span>{`. Forfeits count in ${RECORD_HEAD} but not in ${SCORE_UNITS}.`}
         </p>
       </details>
     </div>

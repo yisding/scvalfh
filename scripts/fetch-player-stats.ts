@@ -88,6 +88,7 @@ import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/
 import { teamsCreditedByNotes } from '../lib/players/note-stats';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
+  GOALIE_STAT_KEYS,
   PlayerStatsFileSchema,
   PlayerStatsPartialSchema,
   TeamPlayerStatsSchema,
@@ -523,7 +524,8 @@ export async function main(argv: readonly string[]): Promise<number> {
   const c = file.counts;
   console.log(
     `\n${c.players} player stat lines on ${c.teamsWithStats} of ${c.teams} teams · ` +
-      `${c.goalkeepers} goalkeepers · ${teams.reduce((n, t) => n + (t.games?.length ?? 0), 0)} box scores ` +
+      // A sport with no goalkeeper group (basketball) has no goalkeepers to count.
+      `${GOALIE_STAT_KEYS.length > 0 ? `${c.goalkeepers} goalkeepers · ` : ''}${teams.reduce((n, t) => n + (t.games?.length ?? 0), 0)} box scores ` +
       `(${boxScoresRead} read this run) · ${failed} team(s) failed this run` +
       (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );

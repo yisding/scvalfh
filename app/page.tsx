@@ -1,3 +1,4 @@
+import JvHomeStrip from '../components/jv/JvHomeStrip';
 import type { Metadata } from 'next';
 import { Fragment } from 'react';
 
@@ -16,7 +17,7 @@ import { websiteJsonLd } from '../components/metadata/structured-data';
 import { listWords, shortDate } from '../lib/format';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
-import { SPORT_AUDIENCE } from '../lib/sports/current';
+import { PROGRAM_WORDS, SPORT_AUDIENCE } from '../lib/sports/current';
 
 /**
  * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
@@ -75,7 +76,7 @@ export default function HomePage() {
       <div data-scope="all">
         <PageHeader
           title={`${SITE_NAME} Teams`}
-          srTitle={` — girls varsity scores, standings and playoff pictures for ${LEAGUE_LIST}`}
+          srTitle={` — ${PROGRAM_WORDS} scores, standings and playoff pictures for ${LEAGUE_LIST}`}
           meta={
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
                are named by the switcher chips right below. From 640px it fits and comes back; the
@@ -131,6 +132,11 @@ export default function HomePage() {
           className="mt-8 md:mt-10"
         />
       ))}
+
+      {/* The way into the JV pages, under the latest varsity results: a phone's bottom bar has no JV tab. */}
+      <div data-scope="all">
+        <JvHomeStrip className="mt-8 md:mt-10" />
+      </div>
 
       {/* ONE finder over all 99 teams, outside the region blocks; only the card grids are scoped. */}
       <FindYourTeam index={data.searchIndex} className="mt-section md:mt-section-lg">

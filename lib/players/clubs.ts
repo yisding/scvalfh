@@ -32,6 +32,7 @@
  */
 
 import bundledFieldHockey from '../../data/clubs.json';
+import bundledBasketball from '../../data/basketball/clubs.json';
 import bundledSoccer from '../../data/soccer/clubs.json';
 import { validateData } from '../data-file';
 import {
@@ -47,8 +48,8 @@ import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRo
 import type { TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {
   AffiliationConfidence,

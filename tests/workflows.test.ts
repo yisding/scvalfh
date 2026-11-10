@@ -9,7 +9,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -25,8 +25,10 @@ const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflow
 const update = read('update-data.yml');
 /** The soccer site's refresh (SCVAL_SPORT=soccer): its commits pass the same gate. */
 const updateSoccer = read('update-data-soccer.yml');
+/** The basketball site's refresh (SCVAL_SPORT=basketball): the soccer workflow's job for data/basketball/. */
+const updateBasketball = read('update-data-basketball.yml');
 const deploy = read('deploy-cloudflare.yml');
-const updates = [update, updateSoccer];
+const updates = [update, updateSoccer, updateBasketball];
 
 /** Every path the refreshes stage: the arguments of their `git add` lines. */
 const committedFiles = new Set(
@@ -56,12 +58,20 @@ describe('the update-data commit and the deploy gate', () => {
   it('commits only files the gate accepts, and the gate accepts nothing else', () => {
     expect([...committedFiles].sort()).toEqual([...gateFiles].sort());
     expect([...gateFiles].sort()).toEqual([
+      'data/basketball/jv-rosters.json',
+      'data/basketball/jv.json',
+      'data/basketball/player-stats.json',
+      'data/basketball/rosters.json',
+      'data/basketball/snapshot.json',
+      'data/basketball/snapshot.meta.json',
       'data/jv.json',
       'data/player-stats.json',
       'data/snapshot.json',
       'data/snapshot.meta.json',
+      'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
       'data/soccer/player-stats.json',
+      'data/soccer/rosters.json',
       'data/soccer/snapshot.json',
       'data/soccer/snapshot.meta.json',
     ]);
@@ -324,7 +334,7 @@ describe('the teamViews budget gates ci, never the data cron', () => {
 
   it('update-data.yml and deploy-cloudflare.yml never set CI_GATE', () => {
     expect(stepBody(update, 'Test')).toMatch(/^\s*pnpm test$/m);
-    for (const text of [update, updateSoccer, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
+    for (const text of [update, updateSoccer, updateBasketball, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
   });
 });
 
@@ -347,6 +357,35 @@ describe('the soccer refresh', () => {
 
   it('tests the soccer data files it just wrote', () => {
     expect(stepBody(updateSoccer, 'Test')).toContain('vitest run tests/soccer.test.ts');
+  });
+});
+
+describe('the basketball refresh', () => {
+  it('builds the basketball data: SCVAL_SPORT=basketball for the whole job', () => {
+    expect(updateBasketball).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: basketball$/m);
+  });
+
+  it('commits and restores only data/basketball/ files', () => {
+    const paths = [...updateBasketball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
+    expect(paths.length).toBeGreaterThan(0);
+    for (const p of paths) expect(p.startsWith('data/basketball/'), p).toBe(true);
+  });
+
+  it('tests the basketball data files it just wrote, with test files that exist', () => {
+    const body = stepBody(updateBasketball, 'Test');
+    const files = [...body.matchAll(/tests\/[\w.-]+\.test\.ts/g)].map((m) => m[0]);
+    expect(files).toContain('tests/basketball.test.ts');
+    for (const f of new Set(files)) expect(existsSync(path.join(REPO, f)), f).toBe(true);
+  });
+
+  it('reads no si.com page and no school calendar: both are field hockey’s sources', () => {
+    expect(stepBody(updateBasketball, 'Fetch data')).toContain('--no-sblive --no-vnn');
+    expect(stepBody(updateBasketball, 'Fetch JV games')).toContain('--no-sblive');
+  });
+
+  it('runs in the basketball season’s months, after the other two refreshes', () => {
+    const crons = [...updateBasketball.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
+    expect(crons).toEqual(['7 15 * 1-3,11-12 *', '7 6 * 1-3,11-12 *']);
   });
 });
 
@@ -427,6 +466,8 @@ describe('assert:prerender on a .next that has served traffic', () => {
     // One page per club of data/clubs.json (DESIGN §17), and no OG card: the clubs pages take the
     // root one.
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
+    // One JV calendar per league (app/jv/[league]), no OG card either.
+    for (const league of LEAGUE_IDS) put(`jv/${league}.html`);
     for (const [rel, body] of Object.entries(extra)) put(rel, body);
     return root;
   }

@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
 import Arrow from '../ui/Arrow';
-import { plural } from '../words/plural';
+// From lib/format itself, not the words/plural re-export: that module's other helpers then stay out of this
+// client chunk, which sits within bytes of /teams' first-load budget (scripts/assert-budgets.ts).
+import { plural } from '../../lib/format';
 import { usePinnedTeam } from '../prefs/use-pinned-team';
 import { listWords } from '../../lib/format';
 import { pinLabel } from '../words/pin-label';

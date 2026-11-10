@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { CCS_LEAGUE_IDS, getLeague } from '../../lib/leagues';
+import { ordersByRecord } from '../../lib/standings/order';
 import { Fragment } from 'react';
 
 import { listWords } from '../../lib/format';
@@ -75,6 +77,9 @@ export interface PlayoffProjectionProps {
   id?: string;
 }
 
+/** The CCS leagues of this build order their tables on the league record (basketball), not on points. */
+const CCS_BY_RECORD = CCS_LEAGUE_IDS.length > 0 && CCS_LEAGUE_IDS.every((id) => ordersByRecord(getLeague(id).rules));
+
 function PlaceCell({ row }: { row: ProjectionRow }) {
   const ranked = row.standing.hasReportedResults;
   // `T7`, the US tie mark this audience reads on every standings page, rather than the British
@@ -137,8 +142,9 @@ export function ProjectionKey({
         </p>
         {/* True while no model feeds this page (DESIGN §19.2): a change that adds one rewrites it. */}
         <p className="m-0">
-          Every status in the tables is a written word. There are no probabilities on this page, because
-          there is no model behind it &mdash; only the league points played so far.
+          {`Every status in the tables is a written word. There are no probabilities on this page, because there is no model behind it — only the league ${
+            CCS_BY_RECORD ? 'results' : 'points played'
+          } so far.`}
         </p>
         <p className="m-0">
           <Link href={rulesHref} className="sx-action text-accent hover:underline">
@@ -213,7 +219,7 @@ export function PlayoffProjection({
             column is not drawn and Team simply takes what the place column leaves. */}
         <table className="sx-table text-meta md:table-fixed">
           <caption className="sr-only">
-            {divisionLabel} projected CCS qualification, from league points {asOfLabel}.
+            {divisionLabel}{` projected CCS qualification, from league ${CCS_BY_RECORD ? 'record' : 'points'} `}{asOfLabel}.
             Unofficial.
           </caption>
           <thead>

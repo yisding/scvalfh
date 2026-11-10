@@ -188,7 +188,21 @@ export const ScheduleRowSchema = z.looseObject({
 });
 export type ScheduleRow = z.infer<typeof ScheduleRowSchema>;
 
-export const ScheduleResponseSchema = envelope(z.array(ScheduleRowSchema));
+/**
+ * A deleted contest (contestState 1) that never had a date: MaxPreps serves it with `contestDateInGMT` null
+ * (Gunn's 2025-26 boys basketball feed, read 2026-11-10). Every reader drops a deleted row anyway
+ * (lib/pipeline/normalize.ts), and this one cannot be placed on a day, so it is left out before the rows are
+ * held to the schema: a null date on any other row is still schema drift.
+ */
+function dropDeletedUndatedRows(rows: unknown): unknown {
+  if (!Array.isArray(rows)) return rows;
+  return rows.filter((row) => {
+    const cf = (row as { calculatedFields?: { contestState?: unknown; contestDateInGMT?: unknown } } | null)?.calculatedFields;
+    return !(cf && cf.contestState === 1 && cf.contestDateInGMT === null);
+  });
+}
+
+export const ScheduleResponseSchema = envelope(z.preprocess(dropDeletedUndatedRows, z.array(ScheduleRowSchema)));
 
 /** MaxPreps' placeholder GUID for an unnamed side. */
 export const TBA_TEAM_ID = '00000000-0000-0000-0000-000000000000';

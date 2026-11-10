@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { SCORE_UNITS } from '../words/score-words';
 import { ordinal } from '../../lib/format';
 import type { Standing } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
@@ -87,8 +88,8 @@ const isPlaceField = (field: string) => field.startsWith('place');
 const FIELD_WORDS: Record<string, string> = {
   'league record': 'league record',
   'overall record': 'overall record',
-  'league goals for': 'league goals scored',
-  'league goals against': 'league goals conceded',
+  'league goals for': `league ${SCORE_UNITS} scored`,
+  'league goals against': `league ${SCORE_UNITS} conceded`,
   'win pct': 'league win percentage',
 };
 

@@ -25,13 +25,14 @@ import { METRO_SEEDS } from './registry/metro';
 import { NORTH_COUNTY_SEEDS } from './registry/north-county';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
+import { SCVAL_BASKETBALL_SEEDS } from './registry/basketball/scval';
 import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import { SCHOOL_ADDRESSES } from './schools/schools';
 import { MAXPREPS_WEB, SBLIVE_WEB } from './season';
-import { IS_FIELD_HOCKEY } from './sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from './sports/current';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = MAXPREPS_WEB;
@@ -111,7 +112,7 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HO
   metro: METRO_SEEDS,
   independents: INDEPENDENTS_SEEDS,
 } : {
-  scval: SCVAL_SOCCER_SEEDS,
+  scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : SCVAL_SOCCER_SEEDS,
 };
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
@@ -296,10 +297,10 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
  */
 const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
   ? ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS']
-  : // The soccer registry's 15 SCVAL schools: Mountain View and Monta Vista are both MVHS.
+  : // The soccer and basketball registries' 15 SCVAL schools: Mountain View and Monta Vista are both MVHS.
     ['MVHS'];
 
-/** The registry's size: field hockey's 102 teams, or soccer's 15 (SCVAL only). */
+/** The registry's size: field hockey's 102 teams, or soccer's or basketball's 15 (SCVAL only). */
 const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : 15;
 
 function assertRegistry(): void {

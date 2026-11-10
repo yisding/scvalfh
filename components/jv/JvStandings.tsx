@@ -50,8 +50,9 @@ function SlotTeamCell({ name, mascot, host }: { name: string; mascot: string | n
  * One league's JV tables on `/jv` (`#<division>` each): its divisions' blocks, in config order.
  *
  * A shown table is the compact table's shape (CompactStandingsTable: place, team with its monogram
- * and the pinned row's hidden "Your team." note, the whole row one link, GP, W-L-T, PTS, capped at
- * 48rem from lg) plus GF and GA, with no ladder line: no JV place leads anywhere. GF and GA hide
+ * and the pinned row's hidden "Your team." note, the whole row one link, GP, the record, the order column —
+ * points, or the winning percentage where the league's record orders its tables — capped at
+ * 48rem from lg) plus the for and against columns, with no ladder line: no JV place leads anywhere. They hide
  * below 25.9375rem (415px: under that, beside the monogram, they would squeeze the name into
  * an ellipsis), where Pts becomes the last column and takes the 16px right gutter.
  * Under it, one coverage sentence (how many played JV league games have a score, and how many are
@@ -65,16 +66,17 @@ export function JvStandings({ views, multi }: { views: readonly JvTableView[]; m
       {views.map((view, index) => (
         <div key={view.division} id={view.anchor ?? undefined} className={index === 0 ? undefined : 'mt-8'}>
           {multi ? <SectionHeader as="h3" kicker={view.title} /> : null}
-          {view.status === 'shown' ? (
+          {view.status === 'shown' || view.preseason ? (
             <>
               <JvTable view={view} />
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-                {[view.through, view.coverage].filter(Boolean).join(' ')}
+                {[view.through, view.coverage, view.preseason ? null : view.orderNote].filter(Boolean).join(' ')}
               </p>
             </>
           ) : (
             <EmptyState heading={view.emptyHeading ?? ''}>{view.coverage}</EmptyState>
           )}
+          {view.scheduleNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.scheduleNote}</p> : null}
           {view.slotNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.slotNote}</p> : null}
           {view.absentNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.absentNote}</p> : null}
           {view.uncountedNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.uncountedNote}</p> : null}
@@ -88,32 +90,34 @@ function JvTable({ view }: { view: JvTableView }) {
   return (
     <div className="sx-card sx-flush sx-bleed lg:max-w-3xl">
       <table className="sx-table text-cell">
-        <caption className="sr-only">{`${view.title} standings, unofficial`}</caption>
+        <caption className="sr-only">
+          {view.preseason ? `${view.title} teams; no league game played yet` : `${view.title} standings, unofficial`}
+        </caption>
         <thead className="[&_th]:static">
           <tr>
             <th scope="col" className="w-[2.75rem] pl-gutter pr-2">
               #
             </th>
             <th scope="col">Team</th>
-            <th scope="col" className="w-10 text-right" title="JV league games counted">
+            <th scope="col" className="w-10 text-right" title={view.heads.gpTitle}>
               GP
             </th>
             <th scope="col" className="w-[4.5rem] text-right">
-              W-L-T
+              {view.heads.record}
             </th>
-            <th scope="col" className="w-12 text-right max-[25.9375rem]:pr-gutter">
-              Pts
+            <th scope="col" className="w-12 text-right max-[25.9375rem]:pr-gutter" title={view.heads.orderTitle}>
+              {view.heads.order}
             </th>
-            <th scope="col" className="w-10 text-right max-[25.9375rem]:hidden" title="Goals for">
-              GF
+            <th scope="col" className="w-10 text-right max-[25.9375rem]:hidden" title={view.heads.scoredForTitle}>
+              {view.heads.scoredFor}
             </th>
-            <th scope="col" className="w-10 pr-gutter text-right max-[25.9375rem]:hidden" title="Goals against">
-              GA
+            <th scope="col" className="w-10 pr-gutter text-right max-[25.9375rem]:hidden" title={view.heads.scoredAgainstTitle}>
+              {view.heads.scoredAgainst}
             </th>
           </tr>
         </thead>
         <tbody>
-          {view.rows.map(({ row, team, mascot, slotHost }) => {
+          {view.rows.map(({ row, team, mascot, slotHost, orderText }) => {
             const has = row.record.gp > 0;
             return (
               <tr key={row.teamId} data-team-slug={team?.slug} className="relative">
@@ -145,7 +149,7 @@ function JvTable({ view }: { view: JvTableView }) {
                 <td className="sx-num w-[4.5rem] text-right font-medium text-ink">
                   {has ? recordString(row.record) : EM_DASH}
                 </td>
-                <td className="sx-num w-12 text-right text-body font-bold text-ink max-[25.9375rem]:pr-gutter">{has ? row.record.pts : EM_DASH}</td>
+                <td className="sx-num w-12 text-right text-body font-bold text-ink max-[25.9375rem]:pr-gutter">{has ? orderText : EM_DASH}</td>
                 <td className="sx-num w-10 text-right text-ink-2 max-[25.9375rem]:hidden">{has ? row.record.gf : EM_DASH}</td>
                 <td className="sx-num w-10 pr-gutter text-right text-ink-2 max-[25.9375rem]:hidden">
                   {has ? row.record.ga : EM_DASH}

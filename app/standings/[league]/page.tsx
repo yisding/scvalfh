@@ -9,7 +9,11 @@ import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
-import { biggestGoalDiff, leaderClause } from '../../../components/standings/standings-view';
+import { biggestGoalDiff, leaderClause, orderedOnWords } from '../../../components/standings/standings-view';
+import {
+  AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_WORDS, RECORD_NOUN_WORDS, SCORE_UNIT,
+} from '../../../components/words/score-words';
+import { ordersByRecord } from '../../../lib/standings/order';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
@@ -63,7 +67,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const title = `${summary.shortName} ${SPORT.noun} standings`;
   // A 'site' league publishes no points rule (the Sunset, the San Diego leagues): the points are this site's.
   const site = getLeague(summary.id).rules.orderScope === 'site';
-  const description = `${leagueSportWords(summary.id)} standings, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
+  const description = `${leagueSportWords(summary.id)} standings, ordered on ${orderedOnWords(getLeague(summary.id), site)}. ${leaderClause(leaders)}.${
     through ? ` League games through ${shortDate(through)}.` : ''
   } Computed from published results; unofficial.`;
   return {
@@ -89,17 +93,19 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   // list: its `gdDomain` is the bar floor of 1, not a goal difference (standings-view.ts biggestGoalDiff).
   const scaled = data.views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
   const gdScale = multi
-    ? `Bars are scaled to each division’s own biggest goal difference${
+    ? `Bars are scaled to each division’s own biggest ${DIFFERENCE_WORDS}${
         scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}’s is ${v.gdDomain}`).join(', ')})` : ''
       }, so bars in different divisions are not comparable.`
-    : `Bars are scaled to the league’s biggest goal difference${
+    : `Bars are scaled to the league’s biggest ${DIFFERENCE_WORDS}${
         scaled.length > 0 ? ` (${scaled[0]!.gdDomain})` : ''
       }.`;
   const legend = [
-    `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
+    `${DIFF_ABBR} = league ${FOR_WORDS} minus ${AGAINST_WORDS}. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the ${RECORD_NOUN_WORDS} record, not in the ${SCORE_UNIT} columns.`,
     // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.
     data.views.every((view) => view.fixedSchedule)
-      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left): a ceiling, not a projection.'
+      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most ' +
+        (ordersByRecord(getLeague(summary.id).rules) ? 'league wins' : 'points') +
+        ' a team can finish with if it wins all of them (its final total once none are left): a ceiling, not a projection.'
       : `GP is league games counted. ${summary.shortName} has no fixed league schedule, so there is no LEFT or MAX column.`,
     ...new Set(data.views.flatMap((view) => view.legendNotes)),
   ];

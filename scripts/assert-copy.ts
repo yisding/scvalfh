@@ -116,6 +116,7 @@ import {
   elementById,
   historyPageProblems,
   mainElement,
+  noTiesSportClaims,
   nonMemberSectionClaims,
   sectionById,
   sunsetLeagueClaims,
@@ -124,7 +125,7 @@ import {
   withoutLink,
 } from './copy-rules';
 import { ARCHIVE_LINES, PUBLIC_TERMS } from './public-terms';
-import { HAS_HISTORY, HAS_RECRUITING } from '../lib/sports/current';
+import { HAS_HISTORY, HAS_RECRUITING, SPORT } from '../lib/sports/current';
 
 const APP = '.next/server/app';
 
@@ -184,6 +185,14 @@ const commitSourceUrls = [...new Set(commitsFile.commitments.flatMap((c) => c.so
 const commitCitedBy = (html: string) =>
   new Set(commitSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
 
+/** The pages and blocks NO_TIES_SPORT_CLAIMS is not applied to yet (see the loop below). */
+const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set<string>([]);
+const NO_TIES_SKIPPED_BLOCKS: readonly string[] = [];
+/** Strings the snapshot prints verbatim, which are names and never this site's copy. */
+const PROPER_NOUNS: string[] = getSnapshot().games.flatMap((g) =>
+  [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
+);
+
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');
   forbid(file, html, /Gabilan/, 'contains "Gabilan"');
@@ -225,6 +234,21 @@ for (const file of files) {
       fail(file, `says "Sunset League" without setting it apart as the all-sports league${where} — “${c}”`);
     }
     forbid(file, text, SUNSET_SCHOOL_CLAIM, `says "Sunset school(s)" or "Sunset member(s)"${where} (say "Sunset teams")`);
+  }
+  // A sport that scores points and cannot end level (basketball) prints no other sport's words
+  // (NO_TIES_SPORT_CLAIMS). Not yet held to it, each a block another change owns: /leaders and /jv, and on the
+  // other pages the #elo, #roster, #player-stats and #jv blocks. Remove an entry here as its copy is done.
+  if (!SPORT.scoring.allowsTies && !NO_TIES_SKIPPED_FILES.has(file)) {
+    let scoped = html;
+    for (const id of NO_TIES_SKIPPED_BLOCKS) {
+      for (const tag of ['section', 'div', 'details']) {
+        const block = elementById(scoped, id, tag);
+        if (block) scoped = scoped.replace(block, '');
+      }
+    }
+    for (const [text, where] of [[visibleText(scoped), ''], [attributeText(scoped), ' (in a title, description or attribute)']]) {
+      for (const claim of noTiesSportClaims(text, PROPER_NOUNS)) fail(file, `${claim}${where}`);
+    }
   }
 }
 

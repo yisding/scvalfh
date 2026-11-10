@@ -9,19 +9,25 @@
  * BVAL and MCAL give a JV time per fixture), so a JV game takes the classification the varsity
  * pipeline already gave its varsity counterpart:
  *
- *   0. a game lib/jv/jv-corrections.ts names (leagueGames, each with its evidence) counts for that division;
+ *   0. a game lib/jv/jv-corrections.ts names (leagueGames, each with its evidence) counts for that division.
+ *      Where the league's own schedule sets the JV round (lib/jv/jv-official.ts), the schedule decides for its
+ *      division: the game each fixture's JV slot claimed, or the game listed from the slot, is the league game,
+ *      and any other game between two schools of that division is non-league;
  *   1. a varsity game between the same two schools within ±3 days (the nearest; two equally near
  *      decide nothing): the JV game counts for that game's division table when the varsity game
  *      does (`countsFor`), is non-league when the varsity game is, and is left uncounted when the
  *      varsity game is a postseason game;
  *   2. otherwise a fixture on the league's official schedule that no varsity contest matched
- *      (`snapshot.officialFixtures`), same pair, within ±3 days: it counts for that division;
+ *      (`snapshot.officialFixtures`), same pair, within ±3 days of its date or of the JV date the schedule
+ *      gives it (OfficialFixture.jv): it counts for that division;
  *   3. otherwise a game between two schools of different divisions or leagues, or against a school
  *      outside the registry, is non-league, exactly as a varsity game would be;
  *   4. and a game between two schools of one division with no varsity counterpart is left
  *      uncounted and named on the standings page, never guessed into a table.
  *
- * How a JV table is ordered. By 3 points a win and 1 a tie in all nine leagues. For the five NorCal
+ * How a JV table is ordered. As the league's varsity table is (LeagueRules.orderBy): on the league record
+ * where the league's record orders its tables (SCVAL basketball, By-Laws Article VI §1; its end-of-season
+ * meeting compiles the JV standings too, Article V §1.2), else by 3 points a win and 1 a tie in all nine leagues. For the five NorCal
  * leagues that is the league's own points rule (SCVAL also ordered its published 2025-26 JV tables
  * that way); the Sunset and the San Diego Section's City, North County and Metro conferences publish
  * no points rule, varsity or JV, so this site applies its own 3-1-0, as it does to their varsity
@@ -43,9 +49,11 @@
  */
 
 import { byDateThenId, dayDiff } from '../format';
+import { officialJvFixtureId } from './jv-official';
 import { jvOutsideTeamByMaxprepsId, jvSlotTeamFor } from './jv-teams';
 import { LEAGUES, getLeague } from '../leagues';
 import { recordOver } from '../standings/engine';
+import { compareInOrder, levelInOrder } from '../standings/order';
 import { getTeamBySlug, teamsInDivision } from '../teams';
 import type { ComputedRecord, ContestId, DivisionId, Game, GameSide, LeagueId, OfficialFixture, TeamSlug } from '../types';
 
@@ -56,7 +64,7 @@ export const JV_STANDINGS_MIN_REPORTED_SHARE = 0.6;
 
 export type JvClassification =
   | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture' | 'correction'; ref: string }
-  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' }
+  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' | 'off-jv-schedule' }
   | { kind: 'uncounted'; reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason'; division: DivisionId };
 
 function pairOf(g: { home: { slug: string | null }; away: { slug: string | null } }): string | null {
@@ -89,16 +97,28 @@ export function classifyJvGames(
   officialFixtures: readonly OfficialFixture[],
   /** Rule 0: a JV league game a source shows that no rule below can (lib/jv/jv-corrections.ts leagueGames). */
   leagueGames: Readonly<Record<ContestId, { division: DivisionId; source: string }>> = {},
+  /**
+   * The league's own JV schedule (lib/jv/jv-official.ts): the listed games its slots claimed, and the divisions
+   * that have slots. In such a division the schedule decides: a claimed game is that fixture's league game, and
+   * any other game between two of its schools is non-league, whatever varsity game is near it.
+   */
+  jvSchedule: {
+    claims: ReadonlyMap<ContestId, { division: DivisionId; fixtureId: string }>;
+    divisions: ReadonlySet<DivisionId>;
+  } = { claims: new Map(), divisions: new Set() },
 ): Map<ContestId, JvClassification> {
   const varsityByPair = new Map<string, Game[]>();
   for (const g of varsityGames) {
     const key = pairOf(g);
     if (key) varsityByPair.set(key, [...(varsityByPair.get(key) ?? []), g]);
   }
-  const fixturesByPair = new Map<string, OfficialFixture[]>();
+  // A fixture is a candidate on its own date and on the JV date its schedule gives it, when that is another day.
+  const fixturesByPair = new Map<string, Array<{ dateKey: string; fixture: OfficialFixture }>>();
   for (const f of officialFixtures) {
     const key = f.homeSlug && f.awaySlug ? [f.homeSlug, f.awaySlug].sort().join('~') : null;
-    if (key) fixturesByPair.set(key, [...(fixturesByPair.get(key) ?? []), f]);
+    if (!key) continue;
+    const dates = f.jv && f.jv.dateKey !== f.dateKey ? [f.dateKey, f.jv.dateKey] : [f.dateKey];
+    fixturesByPair.set(key, [...(fixturesByPair.get(key) ?? []), ...dates.map((dateKey) => ({ dateKey, fixture: f }))]);
   }
 
   const out = new Map<ContestId, JvClassification>();
@@ -106,6 +126,12 @@ export function classifyJvGames(
     const named = leagueGames[g.contestId];
     if (named) {
       out.set(g.contestId, { kind: 'league', division: named.division, via: 'correction', ref: named.source });
+      continue;
+    }
+    // A game listed from the league's JV schedule is that fixture's JV game (its division is the fixture's).
+    const slotFixtureId = officialJvFixtureId(g.contestId);
+    if (slotFixtureId !== null && g.leagueDivision !== null) {
+      out.set(g.contestId, { kind: 'league', division: g.leagueDivision, via: 'official-fixture', ref: slotFixtureId });
       continue;
     }
     const homeSlug = slotSlug(g.home);
@@ -118,6 +144,15 @@ export function classifyJvGames(
       continue;
     }
     const sameDivision = home.division === away.division;
+    const claimedBy = jvSchedule.claims.get(g.contestId);
+    if (claimedBy) {
+      out.set(g.contestId, { kind: 'league', division: claimedBy.division, via: 'official-fixture', ref: claimedBy.fixtureId });
+      continue;
+    }
+    if (sameDivision && jvSchedule.divisions.has(home.division)) {
+      out.set(g.contestId, { kind: 'non-league', reason: 'off-jv-schedule' });
+      continue;
+    }
     const twin = nearest(g.dateKey, varsityByPair.get(key) ?? []);
     if (twin === 'ambiguous') {
       out.set(
@@ -138,9 +173,15 @@ export function classifyJvGames(
       }
       continue;
     }
-    const fixture = nearest(g.dateKey, fixturesByPair.get(key) ?? []);
+    const candidates = fixturesByPair.get(key) ?? [];
+    let fixture = nearest(g.dateKey, candidates);
+    // One fixture near on both of its dates (the varsity day and the JV day) is one candidate, not two.
+    if (fixture === 'ambiguous') {
+      const near = candidates.filter((c) => Math.abs(dayDiff(g.dateKey, c.dateKey)) <= JV_COUNTERPART_WINDOW_DAYS);
+      if (new Set(near.map((c) => c.fixture.id)).size === 1) fixture = near[0];
+    }
     if (fixture && fixture !== 'ambiguous') {
-      out.set(g.contestId, { kind: 'league', division: fixture.division, via: 'official-fixture', ref: fixture.id });
+      out.set(g.contestId, { kind: 'league', division: fixture.fixture.division, via: 'official-fixture', ref: fixture.fixture.id });
       continue;
     }
     out.set(
@@ -196,6 +237,13 @@ export interface JvDivisionTable {
   schoolSiteScores: number;
   /** League games still to come (not final, dated today or later). */
   toCome: number;
+  /** Of every listed league game, those listed from the league's own JV schedule (lib/jv/jv-official.ts). */
+  fromSchedule: number;
+  /**
+   * The league games each JV team plays, where the league's schedule schedules the JV round itself (every
+   * fixture of the division carries a JV slot); null where no document says how many.
+   */
+  gamesPerTeam: number | null;
   /** Same-division JV games with no varsity counterpart, which no table counts. */
   uncounted: Game[];
   /** The latest counted final's date, or null. */
@@ -207,15 +255,22 @@ export function computeJvStandings(
   games: readonly Game[],
   classes: ReadonlyMap<ContestId, JvClassification>,
   today: string,
+  /** The divisions whose official schedule schedules the JV round (each of their fixtures has a JV slot). */
+  jvScheduledDivisions: ReadonlySet<DivisionId> = new Set(),
 ): JvDivisionTable[] {
   const out: JvDivisionTable[] = [];
   for (const league of LEAGUES) {
-    const points = getLeague(league.id).rules.points;
+    const { rules } = getLeague(league.id);
+    const { points } = rules;
     for (const div of league.divisions) {
       const leagueGames = games.filter((g) => g.countsFor === div.id).sort(byDateThenId);
       const finals = leagueGames.filter((g) => g.status === 'final');
+      // A game listed only from the league's schedule is not known to have been played: it never counts
+      // against the share of played games that have a score.
       const played = leagueGames.filter(
-        (g) => g.status === 'final' || (g.dateKey < today && g.status !== 'postponed'),
+        (g) =>
+          g.status === 'final' ||
+          (g.dateKey < today && g.status !== 'postponed' && officialJvFixtureId(g.contestId) === null),
       ).length;
       const members = new Set(
         leagueGames.flatMap((g) => [slotSlug(g.home), slotSlug(g.away)]).filter((s): s is string => s !== null),
@@ -230,18 +285,18 @@ export function computeJvStandings(
             : { slug: t.slug, id: t.id, name: t.name };
           return { team, record: recordOver(finals, team.id, points, 0) };
         });
-      // By points; level teams share a place (no league publishes a JV tiebreak); teams with no
-      // result yet go last, by name.
+      // In the league's own order (points, or the league record: lib/standings/order.ts); level teams share
+      // a place (no league publishes a JV tiebreak); teams with no result yet go last, by name.
       records.sort(
         (a, b) =>
           Number(b.record.gp > 0) - Number(a.record.gp > 0) ||
-          b.record.pts - a.record.pts ||
+          compareInOrder(rules, a.record, b.record) ||
           a.team.name.localeCompare(b.team.name),
       );
       const rows: JvStandingRow[] = [];
       records.forEach(({ team, record }, i) => {
         const prev = rows[i - 1];
-        const level = prev !== undefined && record.gp > 0 && prev.record.gp > 0 && prev.record.pts === record.pts;
+        const level = prev !== undefined && record.gp > 0 && prev.record.gp > 0 && levelInOrder(rules, prev.record, record);
         const place = level ? prev.record.place : i + 1;
         if (level) prev.shared = true;
         rows.push({
@@ -266,6 +321,8 @@ export function computeJvStandings(
         sbliveScores: finals.filter((g) => g.provenance.scores === 'sblive').length,
         schoolSiteScores: finals.filter((g) => g.provenance.scores === 'school-site').length,
         toCome: leagueGames.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
+        fromSchedule: leagueGames.filter((g) => officialJvFixtureId(g.contestId) !== null).length,
+        gamesPerTeam: jvScheduledDivisions.has(div.id) ? div.gamesPerTeam : null,
         uncounted: games
           .filter((g) => {
             const c = classes.get(g.contestId);

@@ -396,11 +396,19 @@ export interface NoteSources {
 const total = (c: Pick<NoteCredit, NoteStatKind>) => c.goals + c.assists + c.saves;
 
 /**
+ * Whether game notes are read for stats in this build's sport: only where a note's goals, assists and saves
+ * are the sport's stats (`Sport.stats.model` 'goals'). In basketball a note that says "3 assists" names a
+ * different stat on a different sheet, so no note credits anyone and nothing below adds to a line.
+ */
+export const NOTE_STATS_APPLY = SPORT.stats.model === 'goals';
+
+/**
  * The teams whose players a game note on a final credits: the ones whose per-game MaxPreps totals
  * scripts/fetch-player-stats.ts reads, to tell whether those stats are on the sheet already.
  */
 export function teamsCreditedByNotes(sources: NoteSources): Set<TeamSlug> {
   const sides = new Set<TeamSlug>();
+  if (!NOTE_STATS_APPLY) return sides;
   for (const g of sources.games) {
     if (g.status !== 'final' || g.isForfeit || !hasStats(parseStatNote(g.venue.text))) continue;
     for (const side of [g.home, g.away]) if (side.slug) sides.add(side.slug);
@@ -414,6 +422,7 @@ export function noteStatsFor(slug: TeamSlug, sources: NoteSources): TeamNoteStat
   const credits: NoteCredit[] = [];
   const warnings: string[] = [];
   let goalsFor = 0;
+  if (!NOTE_STATS_APPLY) return { slug, credits, goalsFor, warnings };
 
   const games = sources.games
     .filter((g) => g.home.slug === slug || g.away.slug === slug)

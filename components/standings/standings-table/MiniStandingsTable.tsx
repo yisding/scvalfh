@@ -3,6 +3,10 @@ import { StretchedRowLink } from '../../ui/PinNote';
 import TeamMonogram from '../../ui/TeamMonogram';
 import { EM_DASH, recordString } from '../../../lib/format';
 
+import { leagueOfDivision } from '../../../lib/leagues';
+import { orderHead, orderHeadWords, orderValue, ordersByRecord } from '../../../lib/standings/order';
+import { capitalized } from '../../words/capitalized';
+import { DIFFERENCE_WORDS, DIFF_ABBR, WIDE_SCORES } from '../../words/score-words';
 import { Abbr, LeagueRecord, NoGoalDiff, PlaceCell, gpText, gpTitle, rowLabel, tableRows } from './cells';
 import type { StandingsTableProps } from './types';
 
@@ -21,6 +25,24 @@ export function MiniStandingsTable(props: StandingsTableProps) {
   const { columns, ctx, fixedSchedule, hrefOf } = tableRows(props);
   const showGp = columns.has('gp');
   const rows = props.rows.slice(0, props.limit ?? 4);
+  // A table ordered on its league record prints PCT ('.875', 13px, 44px) where a points table prints PTS, and
+  // its W-L record needs 8px less; a points sport's four-glyph difference takes 30px (PhoneStandingsTable).
+  const rules = leagueOfDivision(props.division).rules;
+  const byRecord = ordersByRecord(rules);
+  const orderHeadCls = byRecord ? 'relative w-11 text-right' : 'relative w-8 text-right';
+  const orderCls = byRecord
+    ? 'sx-num w-11 text-right text-cell font-bold text-ink'
+    : 'sx-num w-8 text-right text-body font-bold text-ink';
+  const leagueHeadCls = byRecord ? 'w-[60px] px-1 text-right' : 'w-[68px] px-2 text-right';
+  const leagueCls = byRecord
+    ? 'sx-num w-[60px] px-1 text-right font-medium text-ink'
+    : 'sx-num w-[68px] px-2 text-right font-medium text-ink';
+  const diffHeadCls = WIDE_SCORES
+    ? 'relative w-[50px] pr-gutter text-right @min-[23.4375rem]:w-[106px]'
+    : 'relative w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]';
+  const diffCls = WIDE_SCORES
+    ? 'w-[50px] pr-gutter text-right @min-[23.4375rem]:w-[106px]'
+    : 'w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]';
   return (
     <>
       {/* A VISIBLE head, static (`[&_th]:static`): the mini table is four rows on the home
@@ -47,17 +69,17 @@ export function MiniStandingsTable(props: StandingsTableProps) {
               GP
             </th>
           ) : null}
-          <th scope="col" className="relative w-8 text-right">
-            <Abbr short="Pts" long="Points" />
+          <th scope="col" className={orderHeadCls}>
+            <Abbr short={capitalized(orderHead(rules).toLowerCase())} long={orderHeadWords(rules)} />
           </th>
-          <th scope="col" className="w-[68px] px-2 text-right">
+          <th scope="col" className={leagueHeadCls}>
             League
           </th>
           <th
             scope="col"
-            className="relative w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]"
+            className={diffHeadCls}
           >
-            <Abbr short="GD" long="Goal difference" />
+            <Abbr short={DIFF_ABBR} long={capitalized(DIFFERENCE_WORDS)} />
           </th>
         </tr>
       </thead>
@@ -94,19 +116,19 @@ export function MiniStandingsTable(props: StandingsTableProps) {
                   {gpText(ctx(row))}
                 </td>
               ) : null}
-              <td className="sx-num w-8 text-right text-body font-bold text-ink">
-                {has ? s.computed.pts : EM_DASH}
+              <td className={orderCls}>
+                {has ? orderValue(rules, s.computed) : EM_DASH}
               </td>
-              <td className="sx-num w-[68px] px-2 text-right font-medium text-ink">
+              <td className={leagueCls}>
                 {has ? <LeagueRecord record={recordString(s.computed)} context={ctx(row)} /> : EM_DASH}
               </td>
-              <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
+              <td className={diffCls}>
                 {has ? (
                   <GoalDiffCell
                     value={s.computed.gd}
                     domain={gdDomain}
                     track={56}
-                    numberWidth={24}
+                    numberWidth={WIDE_SCORES ? 30 : 24}
                     numberClassName="text-cell"
                     barClassName="hidden @min-[23.4375rem]:block"
                   />

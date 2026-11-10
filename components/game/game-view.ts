@@ -21,6 +21,7 @@
  * stay free of it.
  */
 
+import { orderNoun } from '../../lib/standings/order';
 import {
   getGameById,
   getGames,
@@ -857,7 +858,7 @@ function tiebreakNoteFor(division: DivisionId): string | null {
   const { tiebreaks, citations } = league.rules;
   const first = tiebreaks.default.find((s) => s !== 'points');
   if (first && H2H_STAGES.includes(first) && citations.stages[first]) {
-    return `Head-to-head is the first tiebreak when two teams finish level on points — ${citations.stages[first]}.`;
+    return `Head-to-head is the first tiebreak when two teams finish level on ${orderNoun(league.rules)} — ${citations.stages[first]}.`;
   }
   for (const chain of Object.values(tiebreaks.byBucketStart ?? {})) {
     const stage = chain?.find((s) => H2H_STAGES.includes(s));

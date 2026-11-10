@@ -87,6 +87,11 @@ export const COL = Object.fromEntries(ROSTER_KEYS.map((k, i) => [k, i])) as Reco
 
 /** The table header the cross-check expects, in order. Anything else is a redesign: stop. */
 export const ROSTER_TABLE_HEADERS = ['#', 'Player', 'Grade', 'Position', 'Height'] as const;
+/**
+ * A sixth column some sports' roster tables carry after Height (boys basketball: Lynbrook and Los Altos,
+ * read 2026-11-10). It is accepted and never read: this site does not publish a student's weight.
+ */
+export const ROSTER_TABLE_OPTIONAL_HEADER = 'Weight';
 
 export type GradeClass = (typeof GRADE_CLASSES)[number];
 
@@ -211,7 +216,9 @@ export function parseRosterTable(html: string): RosterTableRow[] | null {
   const table = /<table[\s>][\s\S]*?<\/table>/.exec(html);
   if (!table) return null;
   const headers = [...table[0].matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)].map((m) => collapse(m[1]));
-  if (headers.join('|') !== ROSTER_TABLE_HEADERS.join('|')) {
+  const withWeight = headers.length === ROSTER_TABLE_HEADERS.length + 1 && headers[headers.length - 1] === ROSTER_TABLE_OPTIONAL_HEADER;
+  const columns = withWeight ? headers.slice(0, -1) : headers;
+  if (columns.join('|') !== ROSTER_TABLE_HEADERS.join('|')) {
     throw new MaxPrepsError(
       `roster table headers changed: [${headers.join(', ')}] — expected [${ROSTER_TABLE_HEADERS.join(', ')}]`,
       { url: 'roster-table' },
@@ -222,9 +229,9 @@ export function parseRosterTable(html: string): RosterTableRow[] | null {
   for (const tr of (body ? body[1] : table[0]).matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
     const tds = [...tr[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => m[1]);
     if (tds.length === 0) continue; // the header row, when there is no <tbody>
-    if (tds.length !== ROSTER_TABLE_HEADERS.length) {
+    if (tds.length !== headers.length) {
       throw new MaxPrepsError(
-        `roster table row has ${tds.length} cells, expected ${ROSTER_TABLE_HEADERS.length}`,
+        `roster table row has ${tds.length} cells, expected ${headers.length}`,
         { url: 'roster-table' },
       );
     }

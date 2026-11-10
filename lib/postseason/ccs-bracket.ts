@@ -20,25 +20,26 @@
  */
 
 import bundledFileFieldHockey from '../../data/ccs-bracket-2026.json';
+import bundledFileBasketball from '../../data/basketball/ccs-bracket-2026.json';
 import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
 import { CcsSeedFileSchema, type CcsSeedFile, type CcsSeeds } from './ccs-bracket-schema';
 import { validateData } from '../data-file';
 import { byDateThenId } from '../format';
+import { ccsFirstDay } from '../league-config/sections';
 import type { SectionBracket } from '../history/history-brackets-schema';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
 
 /**
  * The CCS bracket games among `games`: tagged 'ccs' and (dated on or after the quarterfinals, or marked
  * published by MaxPreps' feed). The same objects, sorted by date then id. A crossover or play-in is never one,
  * whatever its date: its tag is its league's.
  */
-export function ccsBracketGames(games: readonly Game[], keyDates: Pick<CcsKeyDates, 'quarterfinals'>): Game[] {
+export function ccsBracketGames(games: readonly Game[], keyDates: Pick<CcsKeyDates, 'quarterfinals' | 'firstRound'>): Game[] {
   return games
-    .filter((g) => g.postseason?.kind === 'ccs' && (g.bracket?.published === true || g.dateKey >= keyDates.quarterfinals))
+    .filter((g) => g.postseason?.kind === 'ccs' && (g.bracket?.published === true || g.dateKey >= ccsFirstDay(keyDates)))
     .sort(byDateThenId);
 }
 

@@ -69,6 +69,7 @@ function stampOf(fixture: OfficialFixture, pass: Pass): OfficialStamp {
     source: fixture.source,
     fixtureId: fixture.id,
     pass,
+    ...(fixture.jv ? { jv: fixture.jv } : {}),
   };
 }
 

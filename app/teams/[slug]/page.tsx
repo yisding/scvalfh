@@ -1,3 +1,6 @@
+import { SCORE_UNIT } from '../../../components/words/score-words';
+import { leagueOfDivision } from '../../../lib/leagues';
+import { orderValueShort, ordersByRecord } from '../../../lib/standings/order';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -143,7 +146,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   const { team, standing, hasResults } = view;
   const record =
     hasResults && standing
-      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${plural(standing.computed.pts, 'pt', 'pts')})`
+      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${ordersByRecord(leagueOfDivision(team.division).rules) ? orderValueShort(leagueOfDivision(team.division).rules, standing.computed) : plural(standing.computed.pts, 'pt', 'pts')})`
       : `${view.scopeLabel} — no results reported`;
   const extras = rosterExtras(
     buildPlayerStatsView(team.slug, [...view.leagueLog, ...view.nonLeagueLog]),
@@ -153,7 +156,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
     // With the mascot, as the school's teams are known and searched ("Fremont Firebirds"): the bare
     // name is ambiguous for a school named for its city (Fremont, Christopher, Prospect).
     title: `${team.name} ${team.mascot} ${SPORT.noun}`,
-    description: `${team.name} ${team.mascot} ${SPORT_AUDIENCE} (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
+    description: `${team.name} ${team.mascot} ${SPORT_AUDIENCE} (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}${SCORE_UNIT} margins and ${postseasonDescription(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -362,6 +365,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 jvStanding?.line ??
                 (jv.rows.length > 0
                   ? [
+                      // The JV record over the finals listed below, once there is one.
+                      jv.record ? jv.record.overall : null,
                       `${jv.played} played`,
                       jv.toCome > 0 ? `${jv.toCome} to come` : null,
                       jv.noScore > 0 ? `${jv.noScore} no score` : null,

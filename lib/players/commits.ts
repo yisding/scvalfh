@@ -31,6 +31,7 @@
  */
 
 import bundledFieldHockey from '../../data/commits.json';
+import bundledBasketball from '../../data/basketball/commits.json';
 import bundledSoccer from '../../data/soccer/commits.json';
 import { validateData } from '../data-file';
 import {
@@ -45,10 +46,9 @@ import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {
   College,

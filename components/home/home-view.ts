@@ -42,6 +42,7 @@ import {
   recordWords,
 } from '../../lib/format';
 import { postseasonHref } from '../../lib/postseason/postseason-kind';
+import { orderHead, orderValue, orderValueWords, ordersByRecord } from '../../lib/standings/order';
 import { REGIONS } from '../../lib/league-config/sections';
 import type {
   DivisionConfig,
@@ -200,6 +201,9 @@ export interface MiniRow {
   /** '7 wins, 1 loss, 0 ties' — the record for the row link's accessible name. */
   recordWords: string;
   pts: number;
+  /** The order column's cell and its words: '13' and '13 points', or '.750' and 'winning percentage .750'. */
+  order: string;
+  orderWords: string;
   gd: number;
 }
 
@@ -208,6 +212,8 @@ export interface MiniDivisionView {
   /** null for a single-division league: no division label anywhere. */
   heading: string | null;
   leagueShort: string;
+  /** The order column's head: 'Pts', or 'Pct' for a table ordered on its league record (lib/standings/order.ts). */
+  orderHead: 'Pts' | 'Pct';
   /** Every row, table order; the component shows `home.miniRows` of them. */
   rows: MiniRow[];
   total: number;
@@ -234,6 +240,8 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
       record: recordString(s.computed),
       recordWords: recordWords(s.computed),
       pts: s.computed.pts,
+      order: orderValue(league.rules, s.computed),
+      orderWords: orderValueWords(league.rules, s.computed),
       gd: s.computed.gd,
     };
   });
@@ -241,6 +249,7 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
     id: division.id,
     heading: divisionHeading(division.id),
     leagueShort: league.shortName,
+    orderHead: ordersByRecord(league.rules) ? 'Pct' : 'Pts',
     rows,
     total: rows.length,
     gdDomain: getGoalDiffDomain(division.id),
@@ -348,7 +357,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
     nextLeague: slateDate ? nextLeagueDay(league.id, slateDate, today) : null,
     firstGame,
     divisions: league.divisions.map((d) => miniDivision(league, d)),
-    pointsLegend: `PTS: ${league.rules.citations.points}.`,
+    pointsLegend: `${orderHead(league.rules)}: ${league.rules.citations.points}.`,
     teams: {
       leagueId: league.id,
       shortName: league.shortName,

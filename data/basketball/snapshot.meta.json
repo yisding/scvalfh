@@ -1,0 +1,217 @@
+{
+  "cifssCrossCheck": {
+    "agreements": 0,
+    "cifssOnlyScored": 0,
+    "compared": 0,
+    "conflicts": 0,
+    "notOnMaxPreps": 0
+  },
+  "commitSummary": "SCVAL +0 finals",
+  "contentHash": "9db1210b62736a7bb7bb04147aab5e79804728fdaecd3ad20ed2d77c1ab77d26",
+  "counts": {
+    "byLeague": {
+      "scval": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 188,
+        "leagueGames": 96,
+        "teams": 15
+      }
+    },
+    "finals": 0,
+    "games": 188,
+    "leagueGames": 96,
+    "mismatches": 0,
+    "pending": 0,
+    "teams": 15
+  },
+  "crossCheck": null,
+  "fetchedAt": "2026-11-10T14:46:56.203Z",
+  "leagues": [
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "scval",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    }
+  ],
+  "officialFixturesUnmatched": 2,
+  "officialStandingsPdfUrl": null,
+  "requests": {
+    "maxpreps": 20,
+    "official": 2,
+    "sblive": 0
+  },
+  "sources": [
+    {
+      "label": "season bootstrap",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "de-anza league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "de-anza reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino reported standings",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "gunn schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "homestead schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "los-gatos schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "lynbrook schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "milpitas schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "mountain-view schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "palo-alto schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "cupertino schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "fremont schedule",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "los-altos schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "macdonald schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "monta-vista schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "santa-clara schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "saratoga schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "wilcox schedule",
+      "rowCount": 16,
+      "status": "ok"
+    },
+    {
+      "label": "SCVAL · De Anza official schedule (bundled copy)",
+      "rowCount": 42,
+      "status": "ok"
+    },
+    {
+      "label": "SCVAL · De Anza official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "SCVAL · El Camino official schedule (bundled copy)",
+      "rowCount": 56,
+      "status": "ok"
+    },
+    {
+      "label": "SCVAL · El Camino official schedule revision check",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org Central Coast Section field hockey",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org North Coast Section field hockey",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org Northern Section field hockey",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org SAC-Joaquin Section field hockey",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org Southern Section field hockey",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org San Diego Section field hockey",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "ccs calendar",
+      "rowCount": null,
+      "status": "skipped"
+    },
+    {
+      "label": "ccs bracket",
+      "rowCount": null,
+      "status": "skipped"
+    }
+  ],
+  "today": "2026-11-10",
+  "warnings": 3,
+  "window": {
+    "firstGame": "2026-11-19T19:00:00",
+    "lastGame": "2027-02-16T19:00:00",
+    "lastLeagueGame": "2027-02-16T19:00:00"
+  }
+}

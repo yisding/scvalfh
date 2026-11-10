@@ -1,0 +1,229 @@
+# The boys basketball site's data refresh (SCVAL_SPORT=basketball; docs/MULTI-SPORT.md): update-data.yml's job
+# for data/basketball/, narrowed to what the basketball build reads, as update-data-soccer.yml is for soccer.
+# It fetches the snapshot (MaxPreps, the bundled official SCVAL fixtures, the CCS calendar and cifsshome.org;
+# si.com and the VNN school calendars are field hockey's sources), then the player stats and the JV games,
+# then the varsity and JV rosters, tests them, and commits data/basketball/snapshot.json, its meta file,
+# data/basketball/player-stats.json, data/basketball/jv.json, data/basketball/rosters.json and data/basketball/jv-rosters.json only where the CONTENT changed (the same contentHash rule as update-data.yml).
+#
+# Schedule: after the other two refreshes (6:07 and 15:07 UTC: 10:07 PM and 7:07 AM Pacific during standard
+# time, when the season is played), in the basketball season's months. A league night's varsity game tips at
+# 7:00, or 7:45 on a quad day, so the evening run is the latest of the three. The scripts' own guard is the
+# basketball season window (lib/league-config/basketball/sections.ts: Nov 1 – Mar 11 Pacific;
+# lib/pipeline/steps/window.ts), so a run outside it writes nothing.
+#
+# All three refreshes share the `update-data` concurrency group, so they never push at the same time, and each
+# rebases before it pushes. The commit messages start "data: refresh basketball", which deploy-cloudflare.yml
+# accepts as a data commit, so a basketball refresh never holds back field hockey's Worker deploy
+# (tests/workflows.test.ts holds the files and messages to the gate). The push is what makes the hosting
+# rebuild the basketball project; the other projects skip a build that touched only data/basketball/
+# (scripts/vercel-ignore-build.sh).
+
+name: update-data-basketball
+
+on:
+  schedule:
+    - cron: '7 15 * 1-3,11-12 *'
+    - cron: '7 6 * 1-3,11-12 *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even outside the Nov 1 - Mar 11 basketball season window'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Shared with update-data.yml: one refresh at a time on main, whichever sport.
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # 15 schedule feeds and two league tables, the official revision checks, the CCS calendar and the
+    # cifsshome.org listings; then 15 stats rollups (and a box score per new final) and 15 JV feeds.
+    timeout-minutes: 30
+
+    env:
+      SCVAL_SPORT: basketball
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # pnpm BEFORE setup-node (see update-data.yml).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Exit 1 only on a run abort (nothing written, the previous snapshot stays). The official SCVAL
+      # fixtures are bundled (data/basketball/official/), so no pdftotext is needed.
+      - name: Fetch data
+        timeout-minutes: 15
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=(--no-sblive --no-vnn)
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-data "${args[@]}"
+
+      # Never fatal, as in update-data.yml: a stats outage must not cost the day's scores.
+      - name: Fetch player stats
+        id: stats
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-player-stats "${args[@]}"
+
+      # Never fatal either. MaxPreps' JV feeds only: the basketball build reads no si.com page. The JV games the
+      # league's own schedule lists are not in this file: the build adds them from the snapshot (lib/jv/jv-official.ts).
+      - name: Fetch JV games
+        id: jv
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=(--no-sblive)
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-jv "${args[@]}"
+
+      # Never fatal. The varsity and JV roster pages (maxpreps.com/…/roster/ and …/jv/roster/): coaches post
+      # them in the first weeks of the season and edit them rarely, and nothing else re-reads them, so without
+      # this a roster posted after the site was set up would never appear. Each script leaves its file alone
+      # when nothing but its stamps would change, and keeps a team's previous rows when its page fails.
+      - name: Fetch rosters
+        id: rosters
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          set -uo pipefail
+          # Each script exits 1 when any team's page failed (it still writes its file, keeping that team's
+          # previous rows), so the JV pages are read whatever the varsity run said.
+          rc=0
+          pnpm fetch-rosters || rc=1
+          pnpm fetch-rosters --level jv || rc=1
+          exit "$rc"
+
+      # The basketball test files load every basketball data file through its validating loader (and hold the
+      # JV schedule to one JV game per league fixture). When they fail and the stats or JV file changed in this
+      # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
+      - name: Test
+        id: test
+        run: |
+          set -uo pipefail
+          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts; }
+          if run; then exit 0; fi
+          if git diff --quiet -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json; then
+            echo "::error::the basketball tests failed and neither the basketball stats nor the basketball JV file changed in this run"
+            exit 1
+          fi
+          echo "::warning::the basketball tests failed; testing again with the committed stats and JV files"
+          git checkout -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json
+          echo "restored=true" >> "$GITHUB_OUTPUT"
+          run
+
+      - name: Commit the data that changed
+        id: commit
+        run: |
+          set -euo pipefail
+          # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff
+          # never is quiet).
+          PREV="${RUNNER_TEMP:-/tmp}/previous-basketball-meta.json"
+          git show HEAD:data/basketball/snapshot.meta.json > "$PREV" 2>/dev/null || true
+          SNAPSHOT=$(node -e '
+            const fs = require("node:fs");
+            const hashOf = (p) => {
+              try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
+              catch { return null; }
+            };
+            const next = hashOf("data/basketball/snapshot.meta.json");
+            const prev = hashOf(process.argv[1]);
+            process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
+          ' "$PREV")
+          if [ "$SNAPSHOT" != "true" ]; then
+            echo "no snapshot change — only the run timestamp moved"
+            git checkout -- data/basketball/snapshot.json data/basketball/snapshot.meta.json
+          fi
+          if git diff --quiet -- data/basketball/player-stats.json; then STATS=false; else STATS=true; fi
+          if git diff --quiet -- data/basketball/jv.json; then JV=false; else JV=true; fi
+          if git diff --quiet -- data/basketball/rosters.json data/basketball/jv-rosters.json; then ROSTERS=false; else ROSTERS=true; fi
+          echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
+          echo "stats=$STATS" >> "$GITHUB_OUTPUT"
+          echo "jv=$JV" >> "$GITHUB_OUTPUT"
+          echo "rosters=$ROSTERS" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ] && [ "$ROSTERS" != "true" ]; then
+            echo "nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
+          SUMMARY=$(node -e '
+            const meta = require("./data/basketball/snapshot.meta.json");
+            const s = require("./data/basketball/player-stats.json").counts;
+            const j = require("./data/basketball/jv.json").counts;
+            const c = meta.counts;
+            process.stdout.write(`${c.games} games, ${c.finals} finals · ${s.players} players · JV ${j.games} games, ${j.finals} final`);
+          ')
+          # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
+          # author github-actions[bot], one parent, a message starting "data: refresh basketball", nothing but
+          # the six files below (tests/workflows.test.ts).
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$SNAPSHOT" = "true" ]; then
+            git add data/basketball/snapshot.json data/basketball/snapshot.meta.json
+          fi
+          if [ "$STATS" = "true" ]; then
+            git add data/basketball/player-stats.json
+          fi
+          if [ "$JV" = "true" ]; then
+            git add data/basketball/jv.json
+          fi
+          if [ "$ROSTERS" = "true" ]; then
+            git add data/basketball/rosters.json data/basketball/jv-rosters.json
+          fi
+          git commit -m "data: refresh basketball ${DAY} · ${SUMMARY}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Rebase-then-push so a commit landed in between (another sport's refresh, a human) is not clobbered.
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-data-basketball"
+            echo ""
+            echo "- snapshot changed: \`${{ steps.commit.outputs.snapshot || 'false' }}\`"
+            echo "- player stats changed: \`${{ steps.commit.outputs.stats || 'false' }}\`"
+            echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
+            echo "- JV games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
+            echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
+            echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
+            echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
+            echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

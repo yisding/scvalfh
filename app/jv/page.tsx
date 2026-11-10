@@ -4,17 +4,22 @@ import Link from 'next/link';
 import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { JvLeagueGames, JvTeamIndex } from '../../components/jv/JvHub';
 import JvStandings from '../../components/jv/JvStandings';
 import { buildJvTablesView } from '../../components/jv/jv-standings-view';
+import { buildLeagueJvHubView, buildLeagueJvTeams } from '../../components/jv/jv-view';
 import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords } from '../../lib/format';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '../../lib/leagues';
+import { ordersByRecord } from '../../lib/standings/order';
 import { GENDER_NAME, SPORT } from '../../lib/sports/current';
 
 /**
- * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv/jv-standings.ts) and
- * unofficial: one section per league (`#scval`, …), one block per division (`#de-anza`, …). Each
+ * `/jv` — "Where does our JV stand, how did it do, and when does it play?" The JV hub: every league's JV
+ * tables, computed (lib/jv/jv-standings.ts) and unofficial, one section per league (`#scval`, …), one block per
+ * division (`#de-anza`, …); under them the league's latest JV results and next JV games
+ * (components/jv/JvHub.tsx), a link to its whole JV season (`/jv/<league>`), and every school's JV team. Each
  * league's section carries its region's `data-region-scope` (DESIGN-socal §2.4), so the reader's region
  * shows; a deep link into the other region opens it (components/prefs/league-scope-css.ts).
  *
@@ -31,11 +36,13 @@ import { GENDER_NAME, SPORT } from '../../lib/sports/current';
  */
 
 const SHORT_NAMES = listWords(LEAGUES_PROPER.map((l) => l.shortName));
-const PAGE_TITLE = 'JV standings';
+const PAGE_TITLE = 'JV standings and scores';
+/** Every league's table is ordered the same way in a build: on points, or on the league record (basketball). */
+const BY_RECORD = LEAGUES.every((l) => ordersByRecord(l.rules));
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `${GENDER_NAME} junior varsity ${SPORT.noun} standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps’ JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
+  description: `${GENDER_NAME} junior varsity ${SPORT.noun} for ${SHORT_NAMES}: unofficial JV standings computed from MaxPreps’ JV results, the latest JV scores, the next JV games and every school’s JV team.`,
   alternates: { canonical: '/jv' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/jv' },
 };
@@ -45,16 +52,19 @@ export default function JvStandingsPage() {
     <div className="pb-section-lg">
       <PageHeader
         title={PAGE_TITLE}
-        description="Junior varsity league games only · computed from published results&nbsp;· unofficial"
+        description="Junior varsity tables, latest results and next games · computed from published results&nbsp;· unofficial"
       />
       {/* The region control, its own row (DESIGN-socal §2.4); each league's section is region-scoped. */}
       <RegionSwitcher className="mt-4" />
       <p className="m-0 mt-4 max-w-prose text-body text-ink-2">
-        No league publishes JV standings during the season, so these are computed: a JV game counts when
-        its varsity counterpart (the same two schools within three days) counts for the varsity table, or
-        when it matches a fixture on the league&rsquo;s official schedule. Teams are ordered on points (3 a
-        win, 1 a tie), and teams level on points share a place. A division&rsquo;s table appears once enough
-        of its JV league games played so far have a score.{' '}
+        No league publishes JV standings during the season, so these tables are computed from the JV
+        results coaches enter: a JV game counts when its varsity counterpart counts, or when it is on the
+        league&rsquo;s own schedule.{' '}
+        {BY_RECORD
+          ? 'Teams are ordered on their league record, as the varsity tables are.'
+          : 'Teams are ordered on points (3 a win, 1 a tie).'}{' '}
+        Under each league&rsquo;s tables are its latest JV results, its next JV games and every
+        school&rsquo;s JV team.{' '}
         <Link href="/about#jv" prefetch={false} className="font-medium text-accent hover:underline">
           How JV tables are built <Arrow />
         </Link>
@@ -80,6 +90,8 @@ export default function JvStandingsPage() {
               className="lg:max-w-3xl"
             />
             <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
+            <JvLeagueGames view={buildLeagueJvHubView(league.id)} leagueShort={league.shortName} idPrefix={`${league.id}-jv`} />
+            <JvTeamIndex teams={buildLeagueJvTeams(league.id)} id={`${league.id}-jv-teams`} leagueShort={league.shortName} />
         </section>
       ))}
     </div>

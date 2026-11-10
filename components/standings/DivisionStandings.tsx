@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { orderHead } from '../../lib/standings/order';
+import { DIFFERENCE_WORDS, DIFF_ABBR } from '../words/score-words';
 import { ordinal } from '../../lib/format';
 import { leagueOfDivision } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
@@ -72,7 +74,8 @@ export function DivisionStandings({
     footnotes: [],
     statedElsewhere: view.comparison.agreement ? [] : view.mismatches.map((m) => m.slug),
   });
-  const points = leagueOfDivision(view.division).rules.citations.points;
+  const { rules } = leagueOfDivision(view.division);
+  const points = rules.citations.points;
 
   return (
     <section id={view.division} aria-labelledby={`${view.division}-heading`} className={className}>
@@ -87,11 +90,11 @@ export function DivisionStandings({
       </div>
       {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        PTS: {points}. GD bars are per division
+        {`${orderHead(rules)}: `}{points}{`. ${DIFF_ABBR} bars are per division`}
         {/* The scale is named only when some team has a goal difference (standings-view.ts biggestGoalDiff). */}
         {biggestGoalDiff(view.rows.map((r) => r.standing.computed.gd)) > 0 ? (
           <>
-            , scaled to {view.label}&rsquo;s biggest goal difference ({view.gdDomain})
+            , scaled to {view.label}{`’s biggest ${DIFFERENCE_WORDS} (`}{view.gdDomain})
           </>
         ) : null}
         {view.berthRuleAfter && view.ladderLineLabel ? (

@@ -11,8 +11,14 @@ import { buildStandingsOverviewView } from '../../components/standings/standings
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
-import { getLeague, isIndependentLeague, standaloneName } from '../../lib/leagues';
+import { DIFF_ABBR, RECORD_HEAD } from '../../components/words/score-words';
+import { LEAGUES_PROPER, getLeague, isIndependentLeague, standaloneName } from '../../lib/leagues';
+import { ordersByRecord } from '../../lib/standings/order';
 import type { LeagueId } from '../../lib/types';
+
+/** Every league of this build orders its table on its league record (basketball), not on points. */
+const BY_RECORD = LEAGUES_PROPER.length > 0 && LEAGUES_PROPER.every((l) => ordersByRecord(l.rules));
+const ORDERED_ON = BY_RECORD ? 'league record' : 'points (3 a win, 1 a tie)';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as
@@ -38,7 +44,7 @@ export function generateMetadata(): Metadata {
   const summary = leaders
     .map(({ league, lines }) => `${league.shortName}: ${leaderClause(lines)}`)
     .join('. ');
-  const description = `Every division, ordered on points (3 a win, 1 a tie). ${summary}.${
+  const description = `Every division, ordered on ${ORDERED_ON}. ${summary}.${
     throughDate ? ` League games through ${shortDate(throughDate)}.` : ''
   } Computed from published results; unofficial.`;
   return {
@@ -111,11 +117,21 @@ export default function StandingsPage() {
       ))}
 
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3 md:mt-section-lg">
+        {BY_RECORD ? (
+          <>
+            Places, GP and {RECORD_HEAD} count league games only; PCT is the share of league games won, which
+            orders every table. Each league&rsquo;s full page has its tiebreak rules, {DIFF_ABBR}, form, and the
+            games still to play.{' '}
+          </>
+        ) : (
+          <>
         Places, GP and W-L-T count league games only; PTS is 3 for a win and 1 for a tie in every
         table{siteOrdered.length > 0
           ? ` (${listWords(siteOrdered)} publish no points rule, so there the order is this site’s own points)`
           : ''}. Each league&rsquo;s full page has its tiebreak rules, GD, form, and the games still
         to play.{' '}
+          </>
+        )}
         <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
           How standings are computed
         </Link>

@@ -32,6 +32,11 @@ export interface SportRatings {
   /** The share of last season's strength a team starts this season with. */
   readonly carryover: number;
   /**
+   * One sentence the Elo board's method note adds where `eloPerUnit` and `marginCap` were not fitted to
+   * finished seasons of the sport (basketball); null where they were, or where the copy says nothing yet.
+   */
+  readonly provisionalNote: string | null;
+  /**
    * The Elo-adjusted scoring model's priors (lib/ratings/adjusted-scoring.ts), a Poisson fit of each
    * team's scoring rate, which suits a low-scoring sport only.
    */
@@ -42,15 +47,48 @@ export interface SportRatings {
     readonly shrinkGames: number;
     /** The prior standard deviation of the two Elo slopes, centred on 0. */
     readonly slopeSigma: number;
-  };
+  } | null;
+}
+
+/**
+ * How the sport scores, and the words for it: what a team scores (a goal, a point), whether a game may end
+ * level, and the labels of the for / against / difference columns. The stored keys stay `gf`, `ga` and `gd`
+ * in every sport (docs/MULTI-SPORT.md, "Goal vocabulary"); only what a reader sees changes.
+ */
+export interface SportScoring {
+  /** Whether a game may end level. false (basketball): overtime is played until one team leads, so a record is W-L. */
+  readonly allowsTies: boolean;
+  /** What a team scores, singular and plural: 'goal' / 'goals', 'point' / 'points'. */
+  readonly unit: string;
+  readonly units: string;
+  /** The three column heads: 'GF' 'GA' 'GD', or 'PF' 'PA' 'PD'. */
+  readonly forAbbr: string;
+  readonly againstAbbr: string;
+  readonly diffAbbr: string;
+  /** The same three in words, lower case: 'goals for', 'goals against', 'goal differential'. */
+  readonly forWords: string;
+  readonly againstWords: string;
+  readonly diffWords: string;
 }
 
 export interface SportStats {
-  /** What a field player's line can hold, in display order (MaxPreps' stat names). */
+  /**
+   * The stat model a player's line follows: 'goals' (field hockey, soccer: a field line of goals, assists and
+   * shots, and a goalkeeper line) or 'basketball' (one line of points, shooting, rebounds and the rest, no
+   * goalkeeper group). The parser's column maps, the team and game tables and the leader boards branch on it.
+   */
+  readonly model: 'goals' | 'basketball';
+  /**
+   * What a player's main line can hold, in display order (our keys for MaxPreps' stat names): a field
+   * player's line in a 'goals' sport, every player's line in basketball. Stored as `field` in every sport.
+   */
   readonly fieldKeys: readonly string[];
-  /** What a goalkeeper's line can hold, in display order. */
+  /** What a goalkeeper's line can hold, in display order; empty where the sport has no goalkeeper. */
   readonly goalieKeys: readonly string[];
-  /** The points a goal and an assist add to a player's points, where a game note is the only source. */
+  /**
+   * The points a goal and an assist add to a player's points, where a game note is the only source
+   * (lib/players/note-stats.ts). 0 and 0 where notes are not read for stats (basketball).
+   */
   readonly pointsPerGoal: number;
   readonly pointsPerAssist: number;
 }
@@ -83,13 +121,17 @@ export interface Sport {
     readonly seasonFrom: string;
   };
   readonly ccs: {
-    /** The cifccs.org sport code: cifccs.org/sports/<code>/index. */
-    readonly code: string;
+    /**
+     * The cifccs.org sport code: cifccs.org/sports/<code>/index. null where the sport's page was never read
+     * (basketball: cifccs.org answers scripts with 405), so the section link is the calendar page instead.
+     */
+    readonly code: string | null;
     /** The cifccs.org calendar name: cifccs.org/calendar/<calendar>?print=ical. */
     readonly calendar: string;
   };
   readonly ratings: SportRatings;
   readonly stats: SportStats;
+  readonly scoring: SportScoring;
 }
 
 /**
@@ -102,7 +144,7 @@ export interface SportSeason {
   /** Only varsity is verified end to end. */
   readonly level: 'Varsity';
   /** MaxPreps' `genderSport` ('girls,fieldhockey'). */
-  readonly genderSport: string;
+  readonly genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball';
   /** MaxPreps' `year` ('26-27'). */
   readonly year: string;
   /** MaxPreps' `sportSeasonName` ('Girls Varsity Field Hockey Fall 26-27'). */

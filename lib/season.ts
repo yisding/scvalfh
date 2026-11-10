@@ -62,7 +62,7 @@ export const CCS_BRACKET_URL: string | null =
 export const SOURCE_LINKS = {
   maxpreps: BOOTSTRAP_URL,
   sblive: SBLIVE_WEB,
-  ccs: `https://cifccs.org/sports/${SPORT.ccs.code}/index`,
+  ccs: SPORT.ccs.code === null ? `https://cifccs.org/calendar/${SPORT.ccs.calendar}` : `https://cifccs.org/sports/${SPORT.ccs.code}/index`,
   ccsCalendar: `https://cifccs.org/calendar/${SPORT.ccs.calendar}?print=ical`,
   cifss: 'https://www.cifsshome.org/widget/schedule-score',
 } as const;

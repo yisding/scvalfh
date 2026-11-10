@@ -17,7 +17,12 @@
 import type { AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { listWords, recordString, recordWords, signedGd, winPct } from '../../lib/format';
 import type { ComputedRecord, Game, Standing, Team, TeamId } from '../../lib/types';
+import { SPORT } from '../../lib/sports/current';
+import { capitalized } from '../words/capitalized';
 import { plural } from '../words/plural';
+import {
+  AGAINST_ABBR, ALLOWS_TIES, DIFFERENCE_WORDS, DIFF_ABBR, FOR_ABBR, AGAINST_WORDS, FOR_WORDS, RECORD_HEAD, SCORE_UNITS, SCORE_UNITS_TITLE,
+} from '../words/score-words';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';
@@ -61,8 +66,15 @@ const gdCell = (r: ComputedRecord): LeaderCell => {
   const text = signedGd(r.gd);
   return { text, sr: r.gd === 0 ? 'even' : r.gd > 0 ? `plus ${r.gd}` : `minus ${-r.gd}` };
 };
+/**
+ * Whether this build's boards are basketball's (`Sport.stats.model`): points per game to one decimal, an
+ * average-margin board, and no clean-sheet or Elo-adjusted board (a basketball team is never held scoreless,
+ * and the adjusted model is a goal model: lib/ratings/adjusted-scoring.ts HAS_ADJUSTED_SCORING).
+ */
+const BASKETBALL = SPORT.stats.model === 'basketball';
 const rate = (goals: number, games: number) => (games > 0 ? goals / games : 0);
-const rateText = (goals: number, games: number) => rate(goals, games).toFixed(2);
+/** A rate as a board prints it: two places for goals a game, one for points a game. */
+const rateText = (goals: number, games: number) => rate(goals, games).toFixed(BASKETBALL ? 1 : 2);
 
 /** Win percentage, then more wins, then goal difference; the name orders what is left. */
 function recordBoard(
@@ -89,9 +101,9 @@ function recordBoard(
       same: (a, b) =>
         record(a).winPct === record(b).winPct && record(a).w === record(b).w && record(a).gd === record(b).gd,
       columns: [
-        { key: 'record', label: 'W-L-T', title: 'Wins, losses and ties', cell: (l) => recordCell(record(l)) },
+        { key: 'record', label: RECORD_HEAD, title: ALLOWS_TIES ? 'Wins, losses and ties' : 'Wins and losses', cell: (l) => recordCell(record(l)) },
         { key: 'pct', label: 'Pct', title: 'Win percentage', cell: (l) => pctCell(record(l)) },
-        { key: 'gd', label: 'GD', title: 'Goal difference', cell: (l) => gdCell(record(l)) },
+        { key: 'gd', label: DIFF_ABBR, title: capitalized(DIFFERENCE_WORDS), cell: (l) => gdCell(record(l)) },
       ],
       rankedBy: 1,
       note: spec.note,
@@ -132,12 +144,12 @@ function rateBoard(
       columns: [
         { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
         scored
-          ? { key: 'gf', label: 'GF', title: 'Goals for', cell: (l) => num(l.gf) }
-          : { key: 'ga', label: 'GA', title: 'Goals against', cell: (l) => num(l.ga) },
+          ? { key: 'gf', label: FOR_ABBR, title: capitalized(FOR_WORDS), cell: (l) => num(l.gf) }
+          : { key: 'ga', label: AGAINST_ABBR, title: capitalized(AGAINST_WORDS), cell: (l) => num(l.ga) },
         {
           key: 'perGame',
           label: 'Avg',
-          title: scored ? 'Goals for per game' : 'Goals against per game',
+          title: scored ? `${capitalized(FOR_WORDS)} per game` : `${capitalized(AGAINST_WORDS)} per game`,
           cell: (l) => ({ text: rateText(l[side], l.goalGames) }),
         },
       ],
@@ -152,6 +164,54 @@ function rateBoard(
   );
 }
 
+/**
+ * Basketball's `#best-margin` board: the average winning (or losing) margin over the finals with a score,
+ * past the record minimum. Equal averages are split by more games played, as the rate boards split them.
+ */
+function marginBoard(lines: readonly SchoolLine[], min: number, scope: BoardScope): LeaderBoard {
+  const diff = (l: SchoolLine) => l.gf - l.ga;
+  const signed = (v: number, text: string) => (v > 0 ? `+${text}` : v < 0 ? `\u2212${text}` : text);
+  const played = lines.filter((l) => l.goalGames >= min);
+  return schoolBoard(
+    {
+      id: 'best-margin',
+      title: 'Best average margin',
+      navLabel: 'Margin',
+      meta: `At least ${plural(min, 'game')}`,
+      sorted: [...played].sort(
+        (a, b) => rate(diff(b), b.goalGames) - rate(diff(a), a.goalGames) || b.goalGames - a.goalGames || byName(a.team.name, b.team.name),
+      ),
+      same: (a, b) => diff(a) * b.goalGames === diff(b) * a.goalGames && a.goalGames === b.goalGames,
+      columns: [
+        { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
+        {
+          key: 'gd',
+          label: DIFF_ABBR,
+          title: capitalized(DIFFERENCE_WORDS),
+          cell: (l) => {
+            const d = diff(l);
+            return { text: signed(d, String(Math.abs(d))), sr: d === 0 ? 'even' : d > 0 ? `plus ${d}` : `minus ${-d}` };
+          },
+        },
+        {
+          key: 'perGame',
+          label: 'Avg',
+          title: `${capitalized(DIFFERENCE_WORDS)} per game`,
+          cell: (l) => {
+            const avg = rate(diff(l), l.goalGames);
+            const text = Math.abs(avg).toFixed(1);
+            const shown = Number(text) === 0 ? 0 : avg;
+            return { text: signed(shown, text), sr: shown === 0 ? 'even' : shown > 0 ? `plus ${text}` : `minus ${text}` };
+          },
+        },
+      ],
+      rankedBy: 2,
+      note: `${SCORE_UNITS_TITLE} scored less ${SCORE_UNITS} allowed in every completed game, divided by the games played. Equal averages are split by more games played. A forfeit has no score, so it is left out.`,
+      empty: `No team has played ${plural(min, 'game')} yet.`,
+    },
+    scope,
+  );
+}
 /**
  * The `#adjusted-goals` board: goals per game against an average team (lib/ratings/adjusted-scoring.ts), over the
  * games the Elo board counts and past its minimum `min`, with the raw rate over the same games beside it.
@@ -240,7 +300,7 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   const overallMin = qualifyingMinimum(lines.map((l) => l.overall.gp));
   const leagueMin = qualifyingMinimum(lines.map((l) => l.league.gp));
 
-  const boards: LeaderBoard[] = [
+  const recordBoards: LeaderBoard[] = [
     recordBoard(
       {
         id: 'best-record',
@@ -249,7 +309,9 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
         record: (l) => l.overall,
         min: overallMin.min,
         unitWord: 'game',
-        note: 'Every completed game, league and non-league, postseason included: the overall record on each team’s page. A tie counts as half a win; equal percentages are split by more wins, then goal difference.',
+        note:
+          'Every completed game, league and non-league, postseason included: the overall record on each team’s page. ' +
+          `${ALLOWS_TIES ? 'A tie counts as half a win; e' : 'E'}qual percentages are split by more wins, then ${DIFFERENCE_WORDS}.`,
       },
       lines,
       scope,
@@ -264,36 +326,46 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
         unitWord: 'league game',
         note:
           `League games only, as the standings count them${scope.independents > 0 ? '; the independents’ table counts their games against each other' : ''}. ` +
-          'Leagues play different numbers of league games, so this compares percentages, not points.',
+          // One league (basketball: SCVAL alone) has nothing to compare across.
+          (BASKETBALL ? 'Divisions play different numbers of league games, so this compares percentages.' : 'Leagues play different numbers of league games, so this compares percentages, not points.'),
       },
       lines,
       scope,
     ),
-    rateBoard(
-      {
-        id: 'most-goals',
-        title: 'Most goals per game',
-        navLabel: 'Goals',
-        side: 'gf',
-        min: overallMin.min,
-        note: 'Goals scored in every completed game, divided by the games played. Equal rates are split by more games played. Forfeits count in records but not in goals, so a forfeit is left out of both numbers here.',
-      },
-      lines,
-      scope,
-    ),
+  ];
+  const scoredBoard = rateBoard(
+    {
+      id: `most-${SCORE_UNITS}`,
+      title: `Most ${SCORE_UNITS} per game`,
+      navLabel: BASKETBALL ? 'Points scored' : 'Goals',
+      side: 'gf',
+      min: overallMin.min,
+      note: `${SCORE_UNITS_TITLE} scored in every completed game, divided by the games played. Equal rates are split by more games played. Forfeits count in records but not in ${SCORE_UNITS}, so a forfeit is left out of both numbers here.`,
+    },
+    lines,
+    scope,
+  );
+  const allowedBoard = rateBoard(
+    {
+      id: `fewest-${SCORE_UNITS}-allowed`,
+      title: `Fewest ${SCORE_UNITS} allowed per game`,
+      navLabel: `${SCORE_UNITS_TITLE} allowed`,
+      side: 'ga',
+      min: overallMin.min,
+      note: `${SCORE_UNITS_TITLE} ${BASKETBALL ? 'allowed' : 'conceded'} in every completed game, divided by the games played. Equal rates are split by more games played.`,
+    },
+    lines,
+    scope,
+  );
+  // Basketball: records, the two scoring rates, the average margin, Elo. No Elo-adjusted board (no scoring
+  // model for the sport) and no clean sheets (no basketball team is held scoreless).
+  const boards: LeaderBoard[] = BASKETBALL
+    ? [...recordBoards, scoredBoard, allowedBoard, marginBoard(lines, overallMin.min, scope), elo.board]
+    : [
+    ...recordBoards,
+    scoredBoard,
     adjustedGoalsBoard(teams, adjusted, elo.minimum.min, scope, unadjusted),
-    rateBoard(
-      {
-        id: 'fewest-goals-allowed',
-        title: 'Fewest goals allowed per game',
-        navLabel: 'Goals allowed',
-        side: 'ga',
-        min: overallMin.min,
-        note: 'Goals conceded in every completed game, divided by the games played. Equal rates are split by more games played.',
-      },
-      lines,
-      scope,
-    ),
+    allowedBoard,
     schoolBoard(
       {
         id: 'school-clean-sheets',
@@ -328,11 +400,11 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   if (overallMin.median > 0) {
     const lead = `need at least ${plural(overallMin.min, 'result')}, half the median of ${overallMin.median}`;
     if (rateBelow.join() === overallBelow.join()) {
-      notes.push(`Records and goals per game ${lead}${notYet(overallBelow)}`);
+      notes.push(`Records and ${SCORE_UNITS} per game ${lead}${notYet(overallBelow)}`);
     } else {
       notes.push(`Records ${lead}${notYet(overallBelow)}`);
       notes.push(
-        `Goals per game need at least ${plural(overallMin.min, 'game')} with goals counted (a forfeit has none)${notYet(rateBelow)}`,
+        `${SCORE_UNITS_TITLE} per game need at least ${plural(overallMin.min, 'game')} with ${SCORE_UNITS} counted (a forfeit has none)${notYet(rateBelow)}`,
       );
     }
   }
@@ -343,7 +415,7 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   }
   if (elo.minimum.median > 0) {
     notes.push(
-      `The Elo-adjusted goals board and the Elo board need at least ${plural(elo.minimum.min, 'game')} against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `${BASKETBALL ? 'The Elo board needs' : 'The Elo-adjusted goals board and the Elo board need'} at least ${plural(elo.minimum.min, 'game')} against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
   return { boards, notes };

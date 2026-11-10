@@ -26,8 +26,10 @@ import {
   type RatingTable,
   type TeamRating,
 } from '../../lib/ratings/ratings';
+import { SPORT } from '../../lib/sports/current';
 import type { Game, RegionId, Team, TeamSlug } from '../../lib/types';
 import { plural } from '../words/plural';
+import { SCORE_UNIT, SCORE_UNITS } from '../words/score-words';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, THE_LEAGUES, regionScope } from './scope';
@@ -37,7 +39,15 @@ import type { CrossRegionFinals, LeaderBoard } from './types';
  * What an Elo number means, without trailing punctuation: the board's note and the team page's
  * Elo disclosure (components/teams/TeamElo.tsx) both say it, so the two always read the same.
  */
-export const ELO_SCALE = `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal`;
+export const ELO_SCALE =
+  SCORE_UNIT === 'goal'
+    ? `${ELO_BASE} is an average team and ${ELO_PER_GOAL} points is about a goal`
+    : // Where the sport scores points, "25 points is about a point" would name two things one word.
+      `${ELO_BASE} is an average team and ${ELO_PER_GOAL} Elo points is about one ${SCORE_UNIT} of winning margin`;
+/** 'goal margin', or 'scoring margin' where a 'point margin' would be read as Elo points. */
+export const MARGIN_WORDS = SCORE_UNIT === 'goal' ? 'goal margin' : 'scoring margin';
+/** The sport's note on constants not fitted to finished seasons (lib/sports/shape.ts `provisionalNote`), with its leading space, or ''. */
+const PROVISIONAL_NOTE = SPORT.ratings.provisionalNote === null ? '' : ` ${SPORT.ratings.provisionalNote}`;
 
 export interface EloBoardView {
   /** The `#elo-rating` board (`#elo-rating-socal` for SoCal): the top 10 places among the teams past the minimum. */
@@ -110,7 +120,7 @@ export function buildEloBoard(
   const seeded = table.seededFrom
     ? ` Each team started the season from its ${table.seededFrom} rating (worked out the same way from last season’s ${plural(table.priorGames, 'game')})${unseeded ? `, or from average if it had no counted ${table.seededFrom} game` : ''}; that start counts for one game and fades as this season’s results come in.`
     : '';
-  const homeEdge = table.homeEdge > 0 ? `, allowing a home edge of ${plural(table.homeEdge, 'point')}` : '';
+  const homeEdge = table.homeEdge > 0 ? `, allowing a home edge of ${plural(table.homeEdge, SCORE_UNIT === 'goal' ? 'point' : 'Elo point')}` : '';
   // The fit spans every registry team, not just this board's: say how many it spans.
   const fitTeams = opts.fitTeams ?? teams.length;
   const across = opts.crossRegion ? ` ${opts.crossRegion.sentence}` : '';
@@ -134,8 +144,8 @@ export function buildEloBoard(
         `Every completed game between two of the ${plural(fitTeams, 'team')}, league or not, rated together. ` +
         `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.`,
       method:
-        `The ratings are the ones that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}.` +
-        `${seeded}${across} Forfeits and games against schools outside ${THE_LEAGUES}${AND_INDEPENDENTS} are left out.`,
+        `The ratings are the ones that best explain each game’s ${MARGIN_WORDS}, counted up to ${MARGIN_CAP} ${SCORE_UNITS}${homeEdge}.` +
+        `${seeded}${across} Forfeits and games against schools outside ${THE_LEAGUES}${AND_INDEPENDENTS} are left out.${PROVISIONAL_NOTE}`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No completed game between two of the ${plural(fitTeams, 'team')} yet this season.`,

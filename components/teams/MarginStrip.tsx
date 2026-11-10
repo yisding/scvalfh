@@ -1,3 +1,4 @@
+import { SCORE_UNIT } from '../words/score-words';
 import Link from 'next/link';
 
 import { EN_DASH, monthDay } from '../../lib/format';
@@ -225,7 +226,7 @@ export function MarginStrip({
                 `${entry.opponent}: ` +
                 (entry.margin === null
                   ? entry.excludedFromMargin
-                    ? 'forfeit, no goal margin'
+                    ? `forfeit, no ${SCORE_UNIT} margin`
                     : isUnreported(entry)
                       ? 'score not reported'
                       : 'not played yet'
@@ -294,7 +295,7 @@ export function MarginStrip({
         ) : null}
         .
         {forfeits > 0
-          ? ` ${forfeits === 1 ? '1 forfeit is' : `${forfeits} forfeits are`} excluded — a forfeit has no goal margin.`
+          ? ` ${forfeits === 1 ? '1 forfeit is' : `${forfeits} forfeits are`} excluded — a forfeit has no ${SCORE_UNIT} margin.`
           : ''}
       </p>
 
@@ -303,7 +304,7 @@ export function MarginStrip({
         {/* `overflow-wrap: anywhere` lowers each cell's min-content width, so at large text sizes
             on a 320px phone the table wraps inside its column instead of running off the page. */}
         <table className="sx-table mt-2 text-meta [overflow-wrap:anywhere]">
-          <caption className="sr-only">{teamName} league goal margin by game</caption>
+          <caption className="sr-only">{teamName}{` league ${SCORE_UNIT} margin by game`}</caption>
           <thead>
             <tr>
               <th scope="col">Date</th>

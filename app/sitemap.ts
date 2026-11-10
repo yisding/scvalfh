@@ -1,3 +1,4 @@
+import { LEAGUE_IDS } from '../lib/leagues';
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '../components/layout/site';
@@ -85,6 +86,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.5,
     },
+    // Each league's JV calendar (app/jv/[league]), stamped as /jv is.
+    ...LEAGUE_IDS.map((league) => ({
+      url: url(`/jv/${league}`),
+      lastModified: new Date(Math.max(Date.parse(getJvFetchedAt()), lastModified.getTime())),
+      changeFrequency: 'daily' as const,
+      priority: 0.4,
+    })),
     ...(HAS_HISTORY
       ? [{ url: url('/history/2025-26'), lastModified: new Date(getHistoryLastChecked()), changeFrequency: 'yearly' as const, priority: 0.3 }]
       : []),
