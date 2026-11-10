@@ -127,7 +127,7 @@ jobs:
         id: test
         run: |
           set -uo pipefail
-          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts; }
+          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts; }
           if run; then exit 0; fi
           if git diff --quiet -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json; then
             echo "::error::the basketball tests failed and neither the basketball stats nor the basketball JV file changed in this run"

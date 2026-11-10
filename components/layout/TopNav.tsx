@@ -16,7 +16,8 @@ const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string 
   { href: '/', label: 'Home' },
   { href: '/schedule', label: 'Schedule' },
   { href: '/teams', label: 'Teams' },
-  { href: '/jv', label: 'JV', srSuffix: ' (junior varsity standings, scores and schedules)' },
+  // The suffix is short on purpose: the nav is in every page's first-load JS, and /teams sits at its budget.
+  { href: '/jv', label: 'JV', srSuffix: ' (junior varsity)' },
   { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
   ...(HAS_HISTORY ? [{ href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' }] : []),
