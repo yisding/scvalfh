@@ -54,6 +54,7 @@ import {
 } from '../players/player-stats-schema';
 import type { Team } from '../types';
 import { MAXPREPS_API, SPORT_SEASON_ID } from '../season';
+import { SPORT } from '../sports/current';
 
 // ---------------------------------------------------------------- the columns we keep
 
@@ -97,13 +98,77 @@ export const DERIVED_COLUMNS = new Set([
   'GoalsAgainstAverage',
 ]);
 
+/**
+ * Basketball (`Sport.stats.model` 'basketball'): MaxPreps column name → our key, for the "Shooting" group's
+ * two subgroups and the "Totals" group [V] Palo Alto 2025-26, read 2026-11-10. All three tables carry
+ * GamesPlayed, MinutesPlayed and Points, which must agree, as a 'goals' sport's two field subgroups must.
+ * Two-point field goals (TwoPointsMade, TwoPointAttempts) are field goals less three-pointers and are dropped
+ * with the other arithmetic.
+ */
+export const BASKETBALL_SHOOTING_COLUMNS = {
+  GamesPlayed: 'gamesPlayed',
+  MinutesPlayed: 'minutes',
+  Points: 'points',
+  FieldGoalsMade: 'fieldGoalsMade',
+  FieldGoalAttempts: 'fieldGoalAttempts',
+  ThreePointsMade: 'threePointsMade',
+  ThreePointAttempts: 'threePointAttempts',
+  FreeThrowsMade: 'freeThrowsMade',
+  FreeThrowAttempts: 'freeThrowAttempts',
+} as const satisfies Record<string, FieldStatKey>;
+
+export const BASKETBALL_TOTALS_COLUMNS = {
+  GamesPlayed: 'gamesPlayed',
+  MinutesPlayed: 'minutes',
+  Points: 'points',
+  OffensiveRebounds: 'offensiveRebounds',
+  DefensiveRebounds: 'defensiveRebounds',
+  Rebounds: 'rebounds',
+  Assists: 'assists',
+  Steals: 'steals',
+  BlockedShots: 'blocks',
+  Turnovers: 'turnovers',
+  PersonalFouls: 'personalFouls',
+} as const satisfies Record<string, FieldStatKey>;
+
+/** Basketball's arithmetic columns, dropped like DERIVED_COLUMNS. */
+export const BASKETBALL_DERIVED_COLUMNS = new Set([
+  'FieldGoalPercentage',
+  'PointsPerShot',
+  'AdjustedFGPercentage',
+  'ThreePointPercentage',
+  'FreeThrowPercentage',
+  'TwoPointsMade',
+  'TwoPointAttempts',
+  'TwoPointPercentage',
+]);
+
+/**
+ * Basketball groups that are read for nothing: "Game Stats" and "Per 32" are per-game and per-32-minute
+ * arithmetic on the totals, and "Misc Totals" holds ratios and a few counts (charges, deflections, technical
+ * fouls, double-doubles) this site does not show. Named here so they are skipped silently; any OTHER group
+ * still leaves an "ignored stats group" warning, in every sport.
+ */
+export const BASKETBALL_SKIPPED_GROUPS = new Set(['Game Stats', 'Misc Totals', 'Per 32']);
+
 /** Minutes can be fractional; every other kept stat is a whole count. */
 const FRACTIONAL = new Set(['minutes', 'overtimeMinutes']);
 
-const GROUPS = {
-  'Field Stats': { kind: 'field', columns: FIELD_COLUMNS },
-  'Goaltending Stats': { kind: 'goalkeeping', columns: GOALIE_COLUMNS },
-} as const;
+type GroupSpec = { kind: 'field' | 'goalkeeping'; columns: Readonly<Record<string, string>> };
+
+const BASKETBALL = SPORT.stats.model === 'basketball';
+
+const GROUPS: Readonly<Record<string, GroupSpec>> = BASKETBALL
+  ? {
+      Shooting: { kind: 'field', columns: BASKETBALL_SHOOTING_COLUMNS },
+      Totals: { kind: 'field', columns: BASKETBALL_TOTALS_COLUMNS },
+    }
+  : {
+      'Field Stats': { kind: 'field', columns: FIELD_COLUMNS },
+      'Goaltending Stats': { kind: 'goalkeeping', columns: GOALIE_COLUMNS },
+    };
+const SKIPPED_GROUPS: ReadonlySet<string> = BASKETBALL ? BASKETBALL_SKIPPED_GROUPS : new Set();
+const DERIVED: ReadonlySet<string> = BASKETBALL ? BASKETBALL_DERIVED_COLUMNS : DERIVED_COLUMNS;
 
 // ---------------------------------------------------------------- the wire format
 
@@ -288,9 +353,9 @@ export function parsePlayerStats(
   const recordsOf = new Map<string, string[]>();
 
   for (const group of data.groups) {
-    const spec = GROUPS[group.name as keyof typeof GROUPS];
+    const spec = GROUPS[group.name];
     if (!spec) {
-      warnings.push(`ignored stats group "${group.name}"`);
+      if (!SKIPPED_GROUPS.has(group.name)) warnings.push(`ignored stats group "${group.name}"`);
       continue;
     }
     for (const sub of group.subgroups) {
@@ -304,8 +369,8 @@ export function parsePlayerStats(
       // Which columns this subgroup contributes, and which of them the team actually tracks.
       const kept: Array<{ at: number; key: string }> = [];
       cols.forEach((c, at) => {
-        if (at === nameAt || at === jerseyAt || DERIVED_COLUMNS.has(c.name)) return;
-        const key = (spec.columns as Record<string, string>)[c.name];
+        if (at === nameAt || at === jerseyAt || DERIVED.has(c.name)) return;
+        const key = spec.columns[c.name];
         if (!key) {
           warnings.push(`${where}: ignored unknown column ${c.name}`);
           return;
@@ -374,7 +439,8 @@ export function parsePlayerStats(
   }
 
   const players = mergeDuplicateRecords(order.map((k) => [playerKeyOf.get(k)!, byKey.get(k)!] as const), warnings);
-  for (const p of players) {
+  // MaxPreps' points in a 'goals' sport are 2 per goal and 1 per assist; basketball's points are scored.
+  for (const p of BASKETBALL ? [] : players) {
     const f = p.field;
     if (f && f.points !== null && f.goals !== null && f.assists !== null && f.points !== 2 * f.goals + f.assists) {
       warnings.push(`${p.shortName}: points ${f.points} is not 2 × ${f.goals} goals + ${f.assists} assists`);
@@ -442,6 +508,9 @@ function mergeLines<T extends Record<string, number | null>>(a: T | null, b: T |
 /** Counts that add up across players; games, minutes and overtime minutes do not, so are not compared. */
 const ADDITIVE_FIELD = new Set<FieldStatKey>([
   'goals', 'assists', 'points', 'shots', 'shotsOnGoal', 'gameWinningGoals', 'steals',
+  // basketball's counts
+  'fieldGoalsMade', 'fieldGoalAttempts', 'threePointsMade', 'threePointAttempts', 'freeThrowsMade',
+  'freeThrowAttempts', 'offensiveRebounds', 'defensiveRebounds', 'rebounds', 'blocks', 'turnovers', 'personalFouls',
 ]);
 const ADDITIVE_GOALIE = new Set<GoalieStatKey>([
   'opponentShotsOnGoal', 'saves', 'goalsAgainst', 'shutouts', 'wins', 'losses', 'ties',
@@ -473,7 +542,7 @@ export function reconcileTotals<
 >(page: T): T {
   const warnings = [...page.warnings];
   const kinds = [
-    { kind: 'field', additive: ADDITIVE_FIELD as ReadonlySet<string>, label: 'field' },
+    { kind: 'field', additive: ADDITIVE_FIELD as ReadonlySet<string>, label: BASKETBALL ? 'player' : 'field' },
     { kind: 'goalkeeping', additive: ADDITIVE_GOALIE as ReadonlySet<string>, label: 'goalkeeping' },
   ] as const;
   const tracked = { field: [...page.tracked.field], goalkeeping: [...page.tracked.goalkeeping] };

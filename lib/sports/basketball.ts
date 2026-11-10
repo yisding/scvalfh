@@ -37,8 +37,12 @@ export const BASKETBALL = {
   /**
    * Not fitted: no finished basketball season has been replayed through lib/ratings/ratings.ts yet. A margin
    * counts up to 20 points and a point of expected margin is 25 Elo points (docs/MULTI-SPORT.md, "Ratings"), so
-   * a 100-point favorite is expected to win by about four. Refit on a finished season before trusting the
-   * ratings' second digit. `adjustedScoring` is null: that model is a Poisson fit of goals, which does not
+   * a 100-point favorite is expected to win by about four. A day-by-day replay of 2025-26 (the 114 finals
+   * between these 15 teams in data/basketball/prior-season.json, unseeded, the 84 games after the first 30,
+   * 2026-11-10) picked 83% of winners at a cap of 15 or 20 and 81-82% at 10, 25, 30 and no cap; at a cap of
+   * 20 the Brier score was 0.129 at 25 Elo points per point and 0.125 at 30-40, too small a gap over one
+   * unseeded season to move a constant on. Refit on two seeded seasons before trusting the ratings' second
+   * digit; `provisionalNote` says so on the Elo board. `adjustedScoring` is null: that model is a Poisson fit of goals, which does not
    * describe basketball scores, so the Elo-adjusted boards are not built.
    */
   ratings: {
@@ -46,14 +50,37 @@ export const BASKETBALL = {
     marginCap: 20,
     startWeight: 1,
     carryover: 1,
+    provisionalNote:
+      'For basketball the scale and the margin limit are set by rule of thumb and checked against one season only, so read a rating to the nearest 50.',
     adjustedScoring: null,
   },
   /**
-   * Basketball has no goalkeeper group and its own stat names (lib/players/player-stats-schema.ts
-   * `basketball`): `fieldKeys` and `goalieKeys` are empty, and `basketballKeys` is what a player's line holds.
+   * [V] One line per player (stored in the `field` slot, lib/players/player-stats-schema.ts), from the
+   * "Shooting" and "Totals" groups of MaxPreps' rollup (Palo Alto's 2025-26 sheet, read 2026-11-10):
+   * the counts only, since every per-game figure and percentage is recomputed from them. No goalkeeper
+   * group, and game notes are not read for stats (`pointsPerGoal` 0).
    */
   stats: {
-    fieldKeys: [],
+    model: 'basketball',
+    fieldKeys: [
+      'gamesPlayed',
+      'minutes',
+      'points',
+      'fieldGoalsMade',
+      'fieldGoalAttempts',
+      'threePointsMade',
+      'threePointAttempts',
+      'freeThrowsMade',
+      'freeThrowAttempts',
+      'offensiveRebounds',
+      'defensiveRebounds',
+      'rebounds',
+      'assists',
+      'steals',
+      'blocks',
+      'turnovers',
+      'personalFouls',
+    ],
     goalieKeys: [],
     pointsPerGoal: 0,
     pointsPerAssist: 0,

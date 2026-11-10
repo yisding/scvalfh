@@ -34,7 +34,11 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '../../lib/players/player-stats-schema';
+import { SPORT } from '../../lib/sports/current';
 import type { Game, TeamSlug } from '../../lib/types';
+
+/** Whether this build's stat line is basketball's (`Sport.stats.model`): one line per player, no goalkeepers. */
+const BASKETBALL = SPORT.stats.model === 'basketball';
 
 export interface StatColumn {
   key: string;
@@ -50,6 +54,11 @@ export interface StatRow {
   jersey: string | null;
   /** One per column; null prints as a dash. */
   values: Array<number | null>;
+  /**
+   * What each cell prints, where that is not the value rounded to a whole number: a per-game figure or a
+   * percentage to one decimal ('14.2'), or a made-attempted pair ('3-6'). Absent where every cell is a count.
+   */
+  texts?: Array<string | null>;
   /** Some of these numbers come from a game note, not the stats sheet. */
   noted: boolean;
 }
@@ -57,6 +66,15 @@ export interface StatRow {
 export interface StatTable {
   columns: StatColumn[];
   rows: StatRow[];
+}
+
+/** One of basketball's stat tables on the team page, with its heading and its screen-reader caption. */
+export interface NamedStatTable {
+  id: string;
+  kicker: string;
+  /** "Palo Alto scoring, this season" */
+  caption: string;
+  table: StatTable;
 }
 
 export interface GoalieCard {
@@ -94,6 +112,13 @@ export interface PlayerStatsView {
   scoring: StatTable | null;
   more: StatTable | null;
   goalies: GoalieCard[];
+  /**
+   * Basketball's tables (scoring, shooting, rebounds and assists, defense and more), in order; absent in a
+   * sport whose line is field hockey's, where `scoring`, `more` and `goalies` are the section.
+   */
+  tables?: NamedStatTable[];
+  /** Some table shows a figure this site works out from the entered totals (a per-game rate, a percentage). */
+  showsDerived?: boolean;
   /** Points are on the scoring table: the legend explains MaxPreps' 2-per-goal rule. */
   showsPoints: boolean;
   /** Some goalkeeper card shows a Save %, which this site works out: the footnote says how. */
@@ -328,6 +353,138 @@ export function gamesSinceUpdate(lastUpdated: string | null, games: readonly Gam
   ).size;
 }
 
+// ---------------------------------------------------------------- basketball
+
+/** One decimal, as a stat table prints a rate: '14.2', '0.0'. */
+export function oneDecimal(value: number): string {
+  return value.toFixed(1);
+}
+
+/** A per-game rate, or null where either half is missing or no game is counted. */
+export function perGameRate(total: number | null | undefined, games: number | null | undefined): number | null {
+  return typeof total === 'number' && typeof games === 'number' && games > 0 ? total / games : null;
+}
+
+/** Made over attempted as a percentage (0-100), or null where either is missing or nothing was attempted. */
+export function shootingPercent(made: number | null | undefined, attempts: number | null | undefined): number | null {
+  return typeof made === 'number' && typeof attempts === 'number' && attempts > 0 ? (made / attempts) * 100 : null;
+}
+
+type Line = Record<string, number | null | undefined>;
+interface BasketballColumn extends StatColumn {
+  /** The stats the column needs the team to track. */
+  needs: readonly string[];
+  /** The cell's number, from a player's line. */
+  value: (f: Line) => number | null;
+  /** Printed to one decimal (a rate or a percentage) rather than as a whole count. */
+  derived?: boolean;
+}
+const total = (key: string): Pick<BasketballColumn, 'needs' | 'value'> => ({ needs: [key], value: (f) => f[key] ?? null });
+const rate = (key: string): Pick<BasketballColumn, 'needs' | 'value' | 'derived'> => ({
+  needs: [key, 'gamesPlayed'],
+  value: (f) => perGameRate(f[key], f.gamesPlayed),
+  derived: true,
+});
+const pct = (made: string, attempts: string): Pick<BasketballColumn, 'needs' | 'value' | 'derived'> => ({
+  needs: [made, attempts],
+  value: (f) => shootingPercent(f[made], f[attempts]),
+  derived: true,
+});
+
+/**
+ * Basketball's team-page tables. Each keeps to five numeric columns so it fits 320px without a scroller
+ * (DESIGN §10.8), which is why one wide stat sheet is four tables here. A column appears only when the team
+ * tracks every stat it needs.
+ */
+const BASKETBALL_TABLES: ReadonlyArray<{ id: string; kicker: string; captionWords: string; columns: readonly BasketballColumn[] }> = [
+  {
+    id: 'scoring', kicker: 'Scoring', captionWords: 'scoring',
+    columns: [
+      { key: 'gamesPlayed', label: 'GP', title: 'Games played', ...total('gamesPlayed') },
+      { key: 'points', label: 'PTS', title: 'Points', ...total('points') },
+      { key: 'pointsPerGame', label: 'PPG', title: 'Points per game', ...rate('points') },
+      { key: 'threePointsMade', label: '3PM', title: 'Three-pointers made', ...total('threePointsMade') },
+    ],
+  },
+  {
+    id: 'shooting', kicker: 'Shooting', captionWords: 'shooting percentages',
+    columns: [
+      { key: 'fieldGoalPercent', label: 'FG%', title: 'Field goal percentage', ...pct('fieldGoalsMade', 'fieldGoalAttempts') },
+      { key: 'threePointPercent', label: '3P%', title: 'Three-point percentage', ...pct('threePointsMade', 'threePointAttempts') },
+      { key: 'freeThrowPercent', label: 'FT%', title: 'Free throw percentage', ...pct('freeThrowsMade', 'freeThrowAttempts') },
+      { key: 'freeThrowsMade', label: 'FTM', title: 'Free throws made', ...total('freeThrowsMade') },
+    ],
+  },
+  {
+    id: 'rebounds', kicker: 'Rebounds and assists', captionWords: 'rebounds and assists',
+    columns: [
+      { key: 'rebounds', label: 'REB', title: 'Rebounds', ...total('rebounds') },
+      { key: 'reboundsPerGame', label: 'RPG', title: 'Rebounds per game', ...rate('rebounds') },
+      { key: 'assists', label: 'AST', title: 'Assists', ...total('assists') },
+      { key: 'assistsPerGame', label: 'APG', title: 'Assists per game', ...rate('assists') },
+    ],
+  },
+  {
+    id: 'defense', kicker: 'Defense and more', captionWords: 'steals, blocks, turnovers and fouls',
+    columns: [
+      { key: 'steals', label: 'STL', title: 'Steals', ...total('steals') },
+      { key: 'blocks', label: 'BLK', title: 'Blocks', ...total('blocks') },
+      { key: 'turnovers', label: 'TO', title: 'Turnovers', ...total('turnovers') },
+      { key: 'personalFouls', label: 'PF', title: 'Personal fouls', ...total('personalFouls') },
+      { key: 'minutes', label: 'MIN', title: 'Minutes', ...total('minutes') },
+    ],
+  },
+];
+
+/** Most points first, then rebounds, assists and games; the name breaks what is left. */
+function byPoints(a: PlayerStatLine, b: PlayerStatLine): number {
+  const v = (p: PlayerStatLine, k: string) => (p.field as Line | null)?.[k] ?? -1;
+  return (
+    v(b, 'points') - v(a, 'points') ||
+    v(b, 'rebounds') - v(a, 'rebounds') ||
+    v(b, 'assists') - v(a, 'assists') ||
+    v(b, 'gamesPlayed') - v(a, 'gamesPlayed') ||
+    a.fullName.localeCompare(b.fullName)
+  );
+}
+
+/**
+ * Basketball's tables for a team: every player with a line, most points first, the same order in every
+ * table so a reader can follow one player down the page. A table none of whose columns the team tracks is
+ * left out.
+ */
+export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' | 'players'>): NamedStatTable[] {
+  const tracked = new Set<string>(team.tracked.field);
+  const players = team.players.filter((p) => p.field !== null).sort(byPoints);
+  const out: NamedStatTable[] = [];
+  for (const spec of BASKETBALL_TABLES) {
+    const columns = spec.columns.filter((c) => c.needs.every((k) => tracked.has(k)));
+    if (columns.length === 0) continue;
+    const rows: StatRow[] = players.map((p, i) => {
+      const values = columns.map((c) => c.value(p.field as Line));
+      return {
+        key: p.careerId ?? `${p.shortName}-${i}`,
+        name: p.fullName,
+        jersey: p.jersey,
+        values,
+        texts: columns.map((c, at) => (values[at] === null ? null : c.derived ? oneDecimal(values[at]!) : String(Math.round(values[at]!)))),
+        noted: false,
+      };
+    });
+    if (rows.length === 0) continue;
+    out.push({
+      id: spec.id,
+      kicker: spec.kicker,
+      caption: `${team.name} ${spec.captionWords}, this season`,
+      table: { columns: columns.map(({ key, label, title }) => ({ key, label, title })), rows },
+    });
+  }
+  return out;
+}
+
+/** Whether a basketball column is worked out here rather than entered (a per-game rate, a percentage). */
+const BASKETBALL_DERIVED = new Set(BASKETBALL_TABLES.flatMap((t) => t.columns.filter((c) => c.derived).map((c) => c.key)));
+
 /**
  * The player stats section for any registry team, in every league. null only for a slug
  * data/player-stats.json does not hold (not a registry team). A team whose coach enters no stats
@@ -355,6 +512,25 @@ export function buildPlayerStatsView(
 
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
   const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
+  if (BASKETBALL) {
+    const tables = basketballTables(team);
+    return {
+      teamName: team.name,
+      status: team.status,
+      statsUrl: team.statsUrl,
+      updated: updatedDay ? shortDate(updatedDay) : null,
+      gamesSince,
+      scoring: null,
+      more: null,
+      goalies: [],
+      tables,
+      showsDerived: tables.some((t) => t.table.columns.some((c) => BASKETBALL_DERIVED.has(c.key))),
+      showsPoints: false,
+      showsSavePercent: false,
+      notedGames: [],
+      goalkeepingEntered: false,
+    };
+  }
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
   const scoring = table(team, SCORING, field, () => true, notedScoring);

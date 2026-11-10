@@ -1,12 +1,18 @@
 /**
- * The site's one vocabulary for a field hockey position: Forward, Midfield, Defense, Goalkeeper.
+ * The site's one vocabulary for a position. In field hockey and soccer: Forward, Midfield, Defense,
+ * Goalkeeper. In basketball: Guard, Forward, Center and the five numbered spots' names, so MaxPreps' "G" is
+ * a guard there and never a goalkeeper.
  * The roster prints MaxPreps' codes with it (components/teams/roster-view.ts) and the 2025-26
  * archive prints the all-league documents' free text with it (components/history/history-view.ts),
  * so "D", "Defender" and "Defense" all read "Defense" wherever a position appears.
+ *
+ * Server-side: it reads the build's sport (lib/sports/current.ts `Sport.stats.model`).
  */
 
-/** MaxPreps' field hockey position codes. */
-export const POSITION_WORDS: Readonly<Record<string, string>> = {
+import { SPORT } from '../../lib/sports/current';
+
+/** MaxPreps' field hockey (and soccer) position codes. */
+const GOAL_SPORT_POSITION_WORDS: Readonly<Record<string, string>> = {
   F: 'Forward',
   M: 'Midfield',
   D: 'Defense',
@@ -14,16 +20,43 @@ export const POSITION_WORDS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * MaxPreps' basketball position codes: G, F and C on the 2026-27 boys rosters read 2026-11-10 (Lynbrook, Los
+ * Altos: "G", "F", "C", "G, F", "F, C"); the five numbered spots are MaxPreps' other basketball choices.
+ */
+const BASKETBALL_POSITION_WORDS: Readonly<Record<string, string>> = {
+  G: 'Guard',
+  F: 'Forward',
+  C: 'Center',
+  PG: 'Point guard',
+  SG: 'Shooting guard',
+  SF: 'Small forward',
+  PF: 'Power forward',
+};
+
+const BASKETBALL = SPORT.stats.model === 'basketball';
+
+/** The build's sport's position codes, in words. */
+export const POSITION_WORDS: Readonly<Record<string, string>> = BASKETBALL
+  ? BASKETBALL_POSITION_WORDS
+  : GOAL_SPORT_POSITION_WORDS;
+
+/**
  * Every spelling the all-league documents use for one position, lower-cased, with its code. "Mid
  * Center" and "Center Left" are midfield spots (center mid, left mid). A spelling not listed here is
  * printed as the document wrote it.
  */
-const SPELLINGS: Readonly<Record<string, keyof typeof POSITION_WORDS>> = {
-  f: 'F', forward: 'F', attack: 'F',
-  m: 'M', mid: 'M', midfield: 'M', midfielder: 'M', midfiled: 'M', 'mid center': 'M', 'center left': 'M',
-  d: 'D', defense: 'D', defender: 'D',
-  g: 'G', gk: 'G', goalie: 'G', goalkeeper: 'G',
-};
+const SPELLINGS: Readonly<Record<string, string>> = BASKETBALL
+  ? {
+      g: 'G', guard: 'G', f: 'F', forward: 'F', wing: 'F', c: 'C', center: 'C', post: 'C',
+      pg: 'PG', 'point guard': 'PG', sg: 'SG', 'shooting guard': 'SG',
+      sf: 'SF', 'small forward': 'SF', pf: 'PF', 'power forward': 'PF',
+    }
+  : {
+      f: 'F', forward: 'F', attack: 'F',
+      m: 'M', mid: 'M', midfield: 'M', midfielder: 'M', midfiled: 'M', 'mid center': 'M', 'center left': 'M',
+      d: 'D', defense: 'D', defender: 'D',
+      g: 'G', gk: 'G', goalie: 'G', goalkeeper: 'G',
+    };
 
 /** Positions joined the way the roster joins them: "Forward / Midfield". */
 export function positionWords(codes: readonly string[]): string {

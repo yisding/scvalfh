@@ -61,9 +61,13 @@ import type { Game, Team, TeamId, TeamSlug } from '../types';
 
 /** The average rated team. */
 export const ELO_BASE = 1500;
-/** Elo points per goal of expected margin (see above for how it was set). */
+/**
+ * Elo points per unit of expected margin: per goal in field hockey and soccer (see above for how it was set),
+ * per point in basketball, whose value is a rule of thumb checked on one season (lib/sports/basketball.ts).
+ * The name is from when every sport here scored goals.
+ */
 export const ELO_PER_GOAL = SPORT.ratings.eloPerUnit;
-/** A margin counts up to this many goals either way. */
+/** A margin counts up to this many goals (points, in basketball) either way. */
 export const MARGIN_CAP = SPORT.ratings.marginCap;
 /** How hard the fit pulls a team toward its start, in games' worth. */
 export const START_WEIGHT = SPORT.ratings.startWeight;

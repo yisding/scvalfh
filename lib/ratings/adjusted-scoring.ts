@@ -377,9 +377,12 @@ export function computeAdjustedScoring(
 }
 
 let bundled: ReadonlyMap<TeamId, AdjustedScoring> | null = null;
+const NO_ADJUSTED_SCORING: ReadonlyMap<TeamId, AdjustedScoring> = new Map();
 
 /** The adjusted scoring over the bundled snapshot and Elo table, computed once per process; read-only, as it is shared. */
 export function getAdjustedScoring(): ReadonlyMap<TeamId, AdjustedScoring> {
+  // A sport with no scoring model (HAS_ADJUSTED_SCORING false: basketball) has no adjusted figure for anyone.
+  if (!HAS_ADJUSTED_SCORING) return NO_ADJUSTED_SCORING;
   if (!bundled) {
     const snapshot = getSnapshot();
     bundled = computeAdjustedScoring(snapshot.teams, snapshot.games, getRatings());

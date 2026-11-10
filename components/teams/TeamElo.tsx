@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { placeWords } from '../../lib/format';
-import { ELO_SCALE } from '../leaders/elo-board';
+import { ELO_SCALE, MARGIN_WORDS } from '../leaders/elo-board';
 import { AND_INDEPENDENTS, THE_LEAGUES_POSSESSIVE } from '../leaders/scope';
 import { plural } from '../words/plural';
 import type { TeamEloView } from './team-view';
@@ -46,7 +46,7 @@ export function TeamElo({ elo, className }: TeamEloProps) {
       ? `A rating needs at least one completed game against another of ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}. `
       : elo.preseason
         ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, worked out from last season’s games. ${scale}`
-        : `Worked out from every completed game between two of ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS} this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each goal margin.${
+        : `Worked out from every completed game between two of ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS} this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each ${MARGIN_WORDS}.${
             elo.seeded
               ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
               : elo.seededFrom

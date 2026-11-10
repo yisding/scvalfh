@@ -35,7 +35,13 @@ export type LeaderColumnKey =
   | 'adjustedPoints'
   | 'saves'
   | 'savePct'
-  | 'shutouts';
+  | 'shutouts'
+  // basketball's player boards
+  | 'rebounds'
+  | 'steals'
+  | 'blocks'
+  | 'threePointsMade'
+  | 'threePointPct';
 
 export interface LeaderColumn {
   key: LeaderColumnKey;

@@ -41,6 +41,7 @@ import { getGameStatsEntry, type GameStatsEntry } from '../../lib/players/player
 import type { NoteCredit } from '../../lib/players/note-stats';
 import type { BoxScore, BoxScoreLine, FieldStatKey, GoalieStatKey } from '../../lib/players/player-stats-schema';
 import { SHOOTOUT_NOTE } from '../../lib/postseason/postseason';
+import { SPORT } from '../../lib/sports/current';
 import type { TeamSlug } from '../../lib/types';
 import type { StatColumn, StatRow, StatTable } from '../teams/player-stats-view';
 import { overtimeInDoubt } from '../ui/describe-game';
@@ -71,12 +72,18 @@ export const TIEBREAK_CAVEAT =
 export const UNREAD_WITH_NOTE =
   'The coach’s entries for this game could not be read in the latest update, so only what the game note adds is shown.';
 
+/** Whether this build's box score is basketball's (`Sport.stats.model`): two tables per side, no goalkeepers. */
+const BASKETBALL = SPORT.stats.model === 'basketball';
+
 export interface GameStatsSide {
   key: string;
   /** The display name, as the page prints it. */
   name: string;
   scoring: StatTable | null;
+  /** The side's second table: goalkeeping, or in basketball rebounds, assists and the rest. */
   goalies: StatTable | null;
+  /** What the second table is, for its caption: 'goalkeeping' unless given ('rebounds, assists and defense'). */
+  secondCaption?: string;
   /** Why there is no table, when there is none; null when there is one. */
   empty: string | null;
   /** Where the entries and the score disagree, in a sentence; otherwise empty. */
@@ -199,6 +206,77 @@ function goalieTable(box: Entries): StatTable | null {
   return rows.length ? { columns, rows } : null;
 }
 
+// ---------------------------------------------------------------- basketball
+
+type BoxLine = Record<string, number | undefined>;
+interface BasketballBoxColumn extends StatColumn {
+  needs: readonly string[];
+  /** The number the rows are sorted and kept on. */
+  value: (f: BoxLine) => number | null;
+  /** The cell: a count, or made-attempted ('3-6'). */
+  text: (f: BoxLine) => string | null;
+}
+const boxCount = (key: string): Pick<BasketballBoxColumn, 'needs' | 'value' | 'text'> => ({
+  needs: [key],
+  value: (f) => f[key] ?? null,
+  text: (f) => (f[key] === undefined ? null : String(Math.round(f[key]))),
+});
+const madeOf = (made: string, attempts: string): Pick<BasketballBoxColumn, 'needs' | 'value' | 'text'> => ({
+  needs: [made, attempts],
+  value: (f) => f[made] ?? null,
+  text: (f) => (f[made] === undefined || f[attempts] === undefined ? null : `${f[made]}-${f[attempts]}`),
+});
+/** Basketball's box score, two tables of at most five columns each (320px, DESIGN §10.8). */
+const BASKETBALL_SCORING: readonly BasketballBoxColumn[] = [
+  { key: 'points', label: 'PTS', title: 'Points', ...boxCount('points') },
+  { key: 'fieldGoals', label: 'FG', title: 'Field goals made-attempted', ...madeOf('fieldGoalsMade', 'fieldGoalAttempts') },
+  { key: 'threePointers', label: '3PT', title: 'Three-pointers made-attempted', ...madeOf('threePointsMade', 'threePointAttempts') },
+  { key: 'freeThrows', label: 'FT', title: 'Free throws made-attempted', ...madeOf('freeThrowsMade', 'freeThrowAttempts') },
+  { key: 'personalFouls', label: 'PF', title: 'Personal fouls', ...boxCount('personalFouls') },
+];
+const BASKETBALL_MORE: readonly BasketballBoxColumn[] = [
+  { key: 'rebounds', label: 'REB', title: 'Rebounds', ...boxCount('rebounds') },
+  { key: 'assists', label: 'AST', title: 'Assists', ...boxCount('assists') },
+  { key: 'steals', label: 'STL', title: 'Steals', ...boxCount('steals') },
+  { key: 'blocks', label: 'BLK', title: 'Blocks', ...boxCount('blocks') },
+  { key: 'turnovers', label: 'TO', title: 'Turnovers', ...boxCount('turnovers') },
+];
+
+/**
+ * One of a side's basketball tables: every player the coach entered a line for, most points first (then
+ * rebounds, assists, MaxPreps' order), the same order in both tables. Unlike a goals sport's scoring table,
+ * a player with a line of zeros stays: they played, and a 0-for-4 night is part of the box score.
+ */
+function basketballTable(box: Entries, spec: readonly BasketballBoxColumn[]): StatTable | null {
+  const tracked = new Set<string>(box.tracked.field);
+  const columns = spec.filter((c) => c.needs.every((k) => tracked.has(k)));
+  if (!columns.length) return null;
+  const n = (p: Line, k: string) => (p.field as BoxLine | null)?.[k] ?? -1;
+  const rows: StatRow[] = box.players
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => p.field !== null && Object.keys(p.field).length > 0)
+    .sort((a, b) => n(b.p, 'points') - n(a.p, 'points') || n(b.p, 'rebounds') - n(a.p, 'rebounds') || n(b.p, 'assists') - n(a.p, 'assists') || a.i - b.i)
+    .map(({ p, i }) => ({
+      key: `${i}`,
+      name: p.name,
+      jersey: p.jersey,
+      values: columns.map((c) => c.value(p.field as BoxLine)),
+      texts: columns.map((c) => c.text(p.field as BoxLine)),
+      noted: false,
+    }));
+  return rows.length ? { columns: columns.map(({ key, label, title }) => ({ key, label, title })), rows } : null;
+}
+
+/** The note under a basketball side whose entered points are not its score, or null. */
+function pointsNote(box: Entries, score: number | null): string | null {
+  if (score === null || !box.tracked.field.includes('points' as FieldStatKey)) return null;
+  const credited = box.players.reduce((sum, p) => sum + ((p.field as BoxLine | null)?.points ?? 0), 0);
+  if (credited === score) return null;
+  return credited < score
+    ? `The entries add up to ${credited} of the ${score} points on the scoreboard.`
+    : `The entries add up to ${credited} points, more than the ${score} on the scoreboard.`;
+}
+
 /** The note under a side whose entered goals are not its score, or null. */
 function goalsNote(box: Entries, score: number | null): string | null {
   if (score === null) return null;
@@ -237,6 +315,14 @@ function sideView(
       notes: [],
     };
   }
+  if (BASKETBALL) {
+    const scoring = basketballTable(box, BASKETBALL_SCORING);
+    const more = basketballTable(box, BASKETBALL_MORE);
+    const second = { goalies: more, secondCaption: 'rebounds, assists and defense' };
+    if (!scoring && !more) return { ...base, scoring, ...second, empty: 'No stats entered on MaxPreps for this game.', notes: [] };
+    const note = model.game.forfeitBy ? null : pointsNote(box, model.game[which].score);
+    return { ...base, scoring, ...second, empty: null, notes: note ? [note] : [] };
+  }
   const scoring = scoringTable(box);
   const goalies = goalieTable(box);
   if (!scoring && !goalies) {
@@ -254,7 +340,8 @@ function sideView(
 /** The section's model, or null when there is nothing to show: not a final, or no table on either side. */
 export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = getGameStatsEntry): GameStatsView | null {
   if (model.game.status !== 'final') return null;
-  const caveat = tiebreakInDoubt(model);
+  // Basketball's score is its points, overtime included: no tiebreak sits outside it.
+  const caveat = !BASKETBALL && tiebreakInDoubt(model);
   const sides = [
     sideView(model, model.away, 'away', lookup, caveat),
     sideView(model, model.home, 'home', lookup, caveat),
@@ -262,7 +349,7 @@ export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = g
   if (!sides.some((s) => s.scoring || s.goalies)) return null;
   const marked = sides.some((s) => [...(s.scoring?.rows ?? []), ...(s.goalies?.rows ?? [])].some((r) => r.noted));
   const shown = new Set(sides.flatMap((s) => [...(s.scoring?.columns ?? []), ...(s.goalies?.columns ?? [])]).map((c) => c.label));
-  const legend = [...FIELD_COLUMNS, ...GOALIE_COLUMNS]
+  const legend = (BASKETBALL ? [...BASKETBALL_SCORING, ...BASKETBALL_MORE] : [...FIELD_COLUMNS, ...GOALIE_COLUMNS])
     .filter((c) => shown.has(c.label))
     .map((c) => `${c.label} ${c.title.toLowerCase()}`);
   return {
