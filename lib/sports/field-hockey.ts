@@ -27,9 +27,11 @@ export const FIELD_HOCKEY = {
     marginCap: 5,
     startWeight: 1,
     carryover: 1,
+    provisionalNote: null,
     adjustedScoring: { ridgeSigma: 0.3, shrinkGames: 1, slopeSigma: 0.5 },
   },
   stats: {
+    model: 'goals',
     fieldKeys: [
       'gamesPlayed',
       'minutes',

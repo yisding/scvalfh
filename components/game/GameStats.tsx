@@ -53,7 +53,7 @@ export function GameStats({ model, className, lookup }: GameStatsProps) {
             ) : null}
             {side.goalies ? (
               <div className={side.scoring ? 'mt-3' : undefined}>
-                <StatsTable table={side.goalies} caption={`${side.name} goalkeeping in this game`} />
+                <StatsTable table={side.goalies} caption={`${side.name} ${side.secondCaption ?? 'goalkeeping'} in this game`} />
               </div>
             ) : null}
             {side.empty ? <p className="m-0 text-meta text-ink-3">{side.empty}</p> : null}

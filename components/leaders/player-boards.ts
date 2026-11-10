@@ -22,8 +22,9 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '../../lib/players/player-stats-schema';
+import { SPORT } from '../../lib/sports/current';
 import type { Game, Team, TeamId } from '../../lib/types';
-import { gamesSinceUpdate, savePercent } from '../teams/player-stats-view';
+import { gamesSinceUpdate, oneDecimal, perGameRate, savePercent, shootingPercent } from '../teams/player-stats-view';
 import { plural } from '../words/plural';
 import { positionWords } from '../words/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
@@ -68,11 +69,13 @@ interface PlayerBoardSpec {
   lead: string;
   /** LeaderBoard.method: how a derived number is worked out. */
   method?: string;
-  /**
-   * What the board ranks on, when it is not `stat` itself; null leaves the player off. A board with
-   * one ranks only players whose team has a schedule factor, and names the teams without one.
-   */
+  /** What the board ranks on, when it is not `stat` itself; null leaves the player off. */
   value?: (e: PlayerEntry) => number | null;
+  /**
+   * An Elo-adjusted board: it ranks only players whose team has a schedule factor, and names the teams
+   * without one.
+   */
+  adjusted?: boolean;
 }
 
 const statOf = (p: PlayerStatLine, ref: StatRef): number | null =>
@@ -145,6 +148,7 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
       'The factor is how much harder the defenses the team met, and where, were than average, from their Elo ratings and the goals they have allowed. ' +
       'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals, and the factor covers all its counted games even where its totals lag.',
     value: adjustedPoints,
+    adjusted: true,
   },
   {
     id: 'most-assists',
@@ -204,6 +208,105 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
   },
 ];
 
+// ---------------------------------------------------------------- basketball
+
+/**
+ * A per-game board lists a player credited with at least half the games of their team's busiest player
+ * (rounded up), so two big nights do not lead a season board; before a team's sheet tracks games played
+ * nobody on it has a per-game figure.
+ */
+function enoughGames(e: PlayerEntry): boolean {
+  const games = e.player.field?.gamesPlayed ?? null;
+  if (games === null || games <= 0) return false;
+  const most = Math.max(0, ...e.stats.players.map((p) => p.field?.gamesPlayed ?? 0));
+  return games >= Math.ceil(most / 2);
+}
+const PER_GAME_RULE = 'A player needs at least half as many games as the teammate credited with the most.';
+/** A per-game figure as the board prints and ranks it (one decimal), or null under the games rule. */
+const perGame = (key: FieldStatKey) => (e: PlayerEntry): number | null => {
+  const v = enoughGames(e) ? perGameRate(e.player.field?.[key], e.player.field?.gamesPlayed) : null;
+  return v === null ? null : tenths(v);
+};
+const perGameCell = (key: FieldStatKey) => (e: PlayerEntry) => {
+  const v = perGameRate(e.player.field?.[key], e.player.field?.gamesPlayed);
+  return { text: v === null ? null : oneDecimal(v) };
+};
+const GP_COLUMN: LeaderColumnSpec<PlayerEntry> = { key: 'gamesPlayed', label: 'GP', title: 'Games played', cell: field('gamesPlayed') };
+
+function perGameBoard(spec: { id: string; title: string; navLabel: string; statWord: string; key: FieldStatKey; column: LeaderColumnSpec<PlayerEntry>; per: { label: string; title: string } }): PlayerBoardSpec {
+  return {
+    id: spec.id,
+    title: spec.title,
+    navLabel: spec.navLabel,
+    statWord: spec.statWord,
+    who: ['player', 'players'],
+    stat: { block: 'field', key: spec.key },
+    columns: [GP_COLUMN, spec.column, { key: 'perGame', label: spec.per.label, title: spec.per.title, cell: perGameCell(spec.key) }],
+    rankedBy: 2,
+    lead: `${spec.per.title} from the season totals the coach entered. ${PER_GAME_RULE}`,
+    value: perGame(spec.key),
+  };
+}
+function totalBoard(spec: { id: string; title: string; navLabel: string; statWord: string; column: LeaderColumnSpec<PlayerEntry>; key: FieldStatKey; extra?: LeaderColumnSpec<PlayerEntry>; lead: string }): PlayerBoardSpec {
+  return {
+    id: spec.id,
+    title: spec.title,
+    navLabel: spec.navLabel,
+    statWord: spec.statWord,
+    who: ['player', 'players'],
+    stat: { block: 'field', key: spec.key },
+    columns: [GP_COLUMN, spec.column, ...(spec.extra ? [spec.extra] : [])],
+    rankedBy: 1,
+    lead: spec.lead,
+  };
+}
+
+/** Basketball's player boards (`Sport.stats.model` 'basketball'): three per-game rates, then three season totals. */
+const BASKETBALL_PLAYER_BOARDS: PlayerBoardSpec[] = [
+  perGameBoard({
+    id: 'points-per-game', title: 'Most points per game', navLabel: 'Points', statWord: 'points', key: 'points',
+    column: { key: 'points', label: 'PTS', title: 'Points', cell: field('points') },
+    per: { label: 'PPG', title: 'Points per game' },
+  }),
+  perGameBoard({
+    id: 'rebounds-per-game', title: 'Most rebounds per game', navLabel: 'Rebounds', statWord: 'rebounds', key: 'rebounds',
+    column: { key: 'rebounds', label: 'REB', title: 'Rebounds', cell: field('rebounds') },
+    per: { label: 'RPG', title: 'Rebounds per game' },
+  }),
+  perGameBoard({
+    id: 'assists-per-game', title: 'Most assists per game', navLabel: 'Assists', statWord: 'assists', key: 'assists',
+    column: { key: 'assists', label: 'AST', title: 'Assists', cell: field('assists') },
+    per: { label: 'APG', title: 'Assists per game' },
+  }),
+  totalBoard({
+    id: 'most-steals', title: 'Most steals', navLabel: 'Steals', statWord: 'steals', key: 'steals',
+    column: { key: 'steals', label: 'STL', title: 'Steals', cell: field('steals') },
+    lead: 'Steals as the coach entered them, for the season.',
+  }),
+  totalBoard({
+    id: 'most-blocks', title: 'Most blocks', navLabel: 'Blocks', statWord: 'blocks', key: 'blocks',
+    column: { key: 'blocks', label: 'BLK', title: 'Blocks', cell: field('blocks') },
+    lead: 'Blocked shots as the coach entered them, for the season.',
+  }),
+  totalBoard({
+    id: 'most-three-pointers', title: 'Most three-pointers made', navLabel: 'Three-pointers', statWord: 'three-pointers', key: 'threePointsMade',
+    column: { key: 'threePointsMade', label: '3PM', title: 'Three-pointers made', cell: field('threePointsMade') },
+    extra: {
+      key: 'threePointPct',
+      label: '3P%',
+      title: 'Three-point percentage',
+      cell: (e) => {
+        const v = shootingPercent(e.player.field?.threePointsMade, e.player.field?.threePointAttempts);
+        return { text: v === null ? null : oneDecimal(v) };
+      },
+    },
+    lead: 'Three-pointers made, for the season; 3P% is made over attempted, where the coach enters both.',
+  }),
+];
+
+/** The build's sport's boards. */
+const BOARDS: readonly PlayerBoardSpec[] = SPORT.stats.model === 'basketball' ? BASKETBALL_PLAYER_BOARDS : PLAYER_BOARDS;
+
 /** The grade and position(s) the team page's roster prints for a player, only those it has. */
 function playerFacts(p: RosterSource['players'][number]): string[] {
   const facts: string[] = [];
@@ -258,7 +361,7 @@ function playerBoard(
           : `Of the ${plural(withStats.length, 'team')} with player stats, ${listWords(names(notTracking.map((t) => t.team)))} ${notTracking.length === 1 ? 'does' : 'do'} not enter ${spec.statWord}.`;
 
   // An adjusted board names the teams that enter the stat but have no schedule factor yet.
-  const unfactored = spec.value ? tracking.filter((t) => t.factor === null).map((t) => t.team) : [];
+  const unfactored = spec.adjusted ? tracking.filter((t) => t.factor === null).map((t) => t.team) : [];
   const unfactoredNote = unfactored.length
     ? ` ${listWords(names(unfactored))} ${unfactored.length === 1 ? 'has' : 'have'} not played enough counted games for a schedule factor yet.`
     : '';
@@ -281,7 +384,7 @@ function playerBoard(
           rows: extra,
         }
       : null,
-    note: `${spec.lead} ${coverage}${unfactoredNote}${spec.value && unadjusted ? UNADJUSTED_NOTE : ''}`,
+    note: `${spec.lead} ${coverage}${unfactoredNote}${spec.adjusted && unadjusted ? UNADJUSTED_NOTE : ''}`,
     method: spec.method ?? null,
     empty:
       tracking.length === 0
@@ -347,7 +450,7 @@ export function buildPlayerBoards(input: PlayerBoardsInput): PlayerBoards {
       factor,
     })),
   );
-  const boards = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope, unadjusted));
+  const boards = BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope, unadjusted));
 
   const statSlugs = new Set(withStats.map((t) => t.team.slug));
   const noStats = teams.filter((t) => !statSlugs.has(t.slug));

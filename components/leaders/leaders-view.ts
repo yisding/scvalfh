@@ -18,7 +18,7 @@
  * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  */
 
-import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
+import { HAS_ADJUSTED_SCORING, computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { getSnapshot } from '../../lib/data';
 import { shortDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
@@ -121,7 +121,12 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
   const prior = bundled ? getPriorSeason() : (src.prior ?? null);
   const table = bundled ? getRatings() : computeRatings(teams, games, prior);
   const crossRegion = bundled ? getCrossRegionFinals() : crossRegionFinals(teams, games, prior);
-  const adjusted = bundled ? getAdjustedScoring() : computeAdjustedScoring(teams, games, table, src.goalModelIterations);
+  // No scoring model for the sport (basketball): no adjusted figure, and no adjusted board is built.
+  const adjusted: ReadonlyMap<TeamId, AdjustedScoring> = !HAS_ADJUSTED_SCORING
+    ? new Map()
+    : bundled
+      ? getAdjustedScoring()
+      : computeAdjustedScoring(teams, games, table, src.goalModelIterations);
   const teamsByRegion = REGIONS.map((config) => ({
     region: config.id,
     teams: teams.filter((t) => regionOf(t.league) === config.id),

@@ -32,6 +32,11 @@ export interface SportRatings {
   /** The share of last season's strength a team starts this season with. */
   readonly carryover: number;
   /**
+   * One sentence the Elo board's method note adds where `eloPerUnit` and `marginCap` were not fitted to
+   * finished seasons of the sport (basketball); null where they were, or where the copy says nothing yet.
+   */
+  readonly provisionalNote: string | null;
+  /**
    * The Elo-adjusted scoring model's priors (lib/ratings/adjusted-scoring.ts), a Poisson fit of each
    * team's scoring rate, which suits a low-scoring sport only.
    */
@@ -67,11 +72,23 @@ export interface SportScoring {
 }
 
 export interface SportStats {
-  /** What a field player's line can hold, in display order (MaxPreps' stat names). */
+  /**
+   * The stat model a player's line follows: 'goals' (field hockey, soccer: a field line of goals, assists and
+   * shots, and a goalkeeper line) or 'basketball' (one line of points, shooting, rebounds and the rest, no
+   * goalkeeper group). The parser's column maps, the team and game tables and the leader boards branch on it.
+   */
+  readonly model: 'goals' | 'basketball';
+  /**
+   * What a player's main line can hold, in display order (our keys for MaxPreps' stat names): a field
+   * player's line in a 'goals' sport, every player's line in basketball. Stored as `field` in every sport.
+   */
   readonly fieldKeys: readonly string[];
-  /** What a goalkeeper's line can hold, in display order. */
+  /** What a goalkeeper's line can hold, in display order; empty where the sport has no goalkeeper. */
   readonly goalieKeys: readonly string[];
-  /** The points a goal and an assist add to a player's points, where a game note is the only source. */
+  /**
+   * The points a goal and an assist add to a player's points, where a game note is the only source
+   * (lib/players/note-stats.ts). 0 and 0 where notes are not read for stats (basketball).
+   */
   readonly pointsPerGoal: number;
   readonly pointsPerAssist: number;
 }
