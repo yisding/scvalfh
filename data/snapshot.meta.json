@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 767,
+    "agreements": 768,
     "cifssOnlyScored": 1,
-    "compared": 772,
+    "compared": 773,
     "conflicts": 5,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "89f57891fa2f32cbca3fd6f37b2f7b1fb3327b2d0603cf2c57a2a4918524ae8a",
+  "contentHash": "8321ba19919b0f79f80b41cd99e9b6525c84e02cb628d4e7c13415ccabff4d25",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 179,
+        "finals": 180,
         "games": 183,
         "leagueGames": 60,
         "teams": 12
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 271,
+        "finals": 272,
         "games": 277,
         "leagueGames": 102,
         "teams": 19
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 952,
+    "finals": 953,
     "games": 967,
     "leagueGames": 551,
-    "mismatches": 33,
-    "pending": 5,
+    "mismatches": 30,
+    "pending": 4,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 154,
+    "agreements": 149,
     "backfilled": 4,
-    "compared": 192,
+    "compared": 183,
     "conflicts": 7,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-09T23:16:27.116Z",
+  "fetchedAt": "2026-11-10T13:08:55.321Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -753,12 +753,12 @@
     },
     {
       "label": "torrey-pines schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
       "label": "del-norte schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-26",
-      "rowCount": 10,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-27",
       "rowCount": 24,
       "status": "ok"
@@ -963,12 +958,17 @@
     },
     {
       "label": "sblive scoreboard 2026-11-06",
-      "rowCount": 6,
+      "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-11-07",
       "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-10",
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1008,7 +1008,7 @@
     },
     {
       "label": "sblive santa-catalina games",
-      "rowCount": 12,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -1048,7 +1048,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 776,
+      "rowCount": 777,
       "status": "ok"
     },
     {
@@ -1077,7 +1077,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-09",
+  "today": "2026-11-10",
   "warnings": 43,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
