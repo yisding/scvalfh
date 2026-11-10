@@ -7,7 +7,7 @@ import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
   mayHideShootout, tournamentHeadline, tournamentOutcome, tournamentOutcomeCopy,
-  fixedSiteHost, tournamentGameLine, winnerOf,
+  fixedSiteHost, tournamentGameLine, tournamentGameWinner,
 } from '../lib/postseason/postseason';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, Standing, TiebreakStage } from '../lib/types';
@@ -462,15 +462,15 @@ describe('buildLeagueTournament', () => {
     expect(tournamentGameLine(qf1, ps.finalSite.slug)).toMatch(/^5 .+ at 4 .+$/);
   });
 
-  it('names the winner of a matched game by score, else by the W flag MaxPreps sets (winnerOf)', () => {
+  it('names the winner of a matched game by score, else by the W flag MaxPreps sets (tournamentGameWinner)', () => {
     const bracket = [finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL)];
     const [won] = matchTournamentGames([game(TM, RW, 1, 3, '2026-10-30', { postseason: true })], bracket);
-    expect(winnerOf(won)).toBe(RW);
+    expect(tournamentGameWinner(won)).toBe(RW);
     const levelFlag: Game = { ...game(TM, RW, 1, 1, '2026-10-30', { postseason: true }) };
     levelFlag.home = { ...levelFlag.home, result: 'W' };
-    expect(winnerOf(matchTournamentGames([levelFlag], bracket)[0])).toBe(TM);
-    expect(winnerOf(matchTournamentGames([game(TM, RW, 1, 1, '2026-10-30', { postseason: true })], bracket)[0])).toBeNull();
-    expect(winnerOf(bracket[0])).toBeNull();
+    expect(tournamentGameWinner(matchTournamentGames([levelFlag], bracket)[0])).toBe(TM);
+    expect(tournamentGameWinner(matchTournamentGames([game(TM, RW, 1, 1, '2026-10-30', { postseason: true })], bracket)[0])).toBeNull();
+    expect(tournamentGameWinner(bracket[0])).toBeNull();
   });
 
   it('attaches the shootout caveat only where a shootout may hide, and a sourced result note where config has one', () => {

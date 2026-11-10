@@ -9,6 +9,11 @@ import type { StandingsTableProps } from './types';
  * The `archive` face of the league table: final records only — place, team, League, Overall — with
  * no GD bars and no form. StandingsTable renders it inside the card. No page renders this variant
  * today.
+ *
+ * NO CALLER: this is not a supported, live variant. It was carried over from the single-file
+ * StandingsTable unchanged; removing it (with its StandingsVariant member and, for mini, the `limit`
+ * prop) is a follow-up, because the deletion also drops entries from every standings page's RSC
+ * payload, which this behaviour-preserving split must not change.
  */
 export function ArchiveStandingsTable(props: StandingsTableProps) {
   const { hrefOf } = tableRows(props);

@@ -81,10 +81,6 @@ export interface LiveBracketDivision {
   rounds: LiveBracketRound[];
 }
 
-// ---------------------------------------------------------------- the result of one game
-
-export { winnerOf } from './game-winner';
-
 // ---------------------------------------------------------------- the template
 
 type Entry = { seed: number; slug: TeamSlug };

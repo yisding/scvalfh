@@ -36,6 +36,7 @@ import {
 } from '../../lib/leagues';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { tournamentGameLine } from '../../lib/postseason/postseason';
+import { pairingsHref, postseasonHref } from '../../lib/postseason/postseason-kind';
 import { withLocationRound } from '../../lib/postseason/postseason-rounds';
 import type { CcsPlayoffs, ContestId, Game, LeagueId, RegionId } from '../../lib/types';
 
@@ -156,7 +157,7 @@ export function norcalEvents(
         // The pairing sentence without its "Play-in, Sat Oct 31, 11 AM PT:" head: the strip prints the day and time.
         detail: pairingSentence(p).replace(/^[^:]*:\s*/, ''),
         // The league's pairing cards, where the team pages' postseason link lands too (DESIGN §32.5).
-        href: `/playoffs#${block.summary.id}-pairings`,
+        href: pairingsHref(block.summary.id),
         leagueId: block.summary.id,
       });
     }
@@ -173,7 +174,7 @@ export function norcalEvents(
       time: times[0] ? `${times[0]} PT` : null,
       title: `${league.shortName} ${ps.name}`,
       detail: [ps.site?.label ?? null, streams].filter((x): x is string => x !== null).join(' · ') || null,
-      href: `/playoffs#${league.id}`,
+      href: postseasonHref(league),
       leagueId: league.id,
     });
   }
@@ -203,7 +204,7 @@ export function norcalEvents(
         time: leagueClockPT(tg.time),
         title: `${league.shortName} ${ROUND_WORD[tg.round]}`,
         detail: tournamentGameLine(tg, ps.finalSite.slug),
-        href: `/playoffs/${league.id}`,
+        href: postseasonHref(league),
         leagueId: league.id,
       });
     }

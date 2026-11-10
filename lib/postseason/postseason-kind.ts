@@ -14,6 +14,11 @@ export function postseasonHref(league: LeagueConfig): string {
   return league.postseason.kind === 'league-tournament' ? `/playoffs/${league.id}` : `/playoffs#${league.id}`;
 }
 
+/** A CCS-ladder league's pairing cards on /playoffs (`#<league>-pairings`), where the team pages' postseason link lands. */
+export function pairingsHref(leagueId: string): string {
+  return `/playoffs#${leagueId}-pairings`;
+}
+
 /** The league's qualification rule, cited once in the standings legend (by postseason kind). */
 export function postseasonCitation(league: LeagueConfig): string {
   const ps = league.postseason;

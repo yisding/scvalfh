@@ -10,6 +10,11 @@ import type { StandingsTableProps } from './types';
  * The `mini` face of the league table: the top `limit` rows (default 4) under a visible static
  * head. StandingsTable renders it inside the card. No page renders this variant today; the home
  * page's top-of-table is components/home/MiniStandings.tsx.
+ *
+ * NO CALLER: this is not a supported, live variant. It was carried over from the single-file
+ * StandingsTable unchanged; removing it (with its StandingsVariant member and, for mini, the `limit`
+ * prop) is a follow-up, because the deletion also drops entries from every standings page's RSC
+ * payload, which this behaviour-preserving split must not change.
  */
 export function MiniStandingsTable(props: StandingsTableProps) {
   const { gdDomain } = props;

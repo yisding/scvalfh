@@ -44,7 +44,7 @@ import {
 import { CCS } from '../../lib/league-config/sections';
 import { SPORT } from '../../lib/sports/current';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
+import { fixedSiteHost, tournamentGameWinner } from '../../lib/postseason/postseason';
 import type { CcsConfig, LeagueConfig, OutsideTournamentConfig, SectionPlayoffsConfig } from '../../lib/league-config/shape';
 import type {
   CcsKeyDates,
@@ -734,7 +734,7 @@ export interface TournamentGameView {
   /** '5 Convent at 4 Marin Catholic' — what the page prints. */
   line: string;
   /**
-   * The side that won the matched game (lib/postseason/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
+   * The side that won the matched game (lib/postseason/postseason.ts tournamentGameWinner: the higher score, else the side MaxPreps marks
    * W), as this view's `home`/`away`; null with no result or a level game with no W flag. The bracket marks it with
    * the site's winner rule (600 weight and the 2px left rule, DESIGN §8 accessibility).
    */
@@ -893,7 +893,7 @@ export function tournamentGameView(
   const home = slotView(homeSlot, teamOf, seeds);
   const away = slotView(awaySlot, teamOf, seeds);
   const connector = tg.site !== null && host === null ? 'vs' : 'at';
-  const winnerSlug = winnerOf(tg);
+  const winnerSlug = tournamentGameWinner(tg);
   const holds = (v: TournamentSlotView) => winnerSlug !== null && v.teams.length === 1 && v.teams[0].slug === winnerSlug;
   const winner = holds(home) ? 'home' : holds(away) ? 'away' : null;
   let outcome: string | null = null;

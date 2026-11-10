@@ -1019,7 +1019,7 @@ A component used by one feature lives in that feature's folder, not in `ui/`.
 **`lib/`.** The modules the rest of the site leans on sit at the root: `types`, `season`, `leagues`
 (the league table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the
 snapshot, SPEC §13.3), `data-file` (the bundled-or-override read and validation every data file goes
-through), `format`, `classify`, `standings`, `schema-primitives`, `stable-json`,
+through), `format`, `classify`, `schema-primitives`, `stable-json`,
 `game-id`, `search` and `time-zone` (the IANA zone, an import-free leaf so `format` does not load the
 sport definition). The rest is grouped by domain:
 
@@ -1028,6 +1028,7 @@ sport definition). The rest is grouped by domain:
 | `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
 | `registry/` | each league's teams, assembled by `lib/teams.ts` |
 | `snapshot/` | the snapshot's Zod schema, its config invariants, the load path and its migrations, the content hash, the season build and the content dates |
+| `standings/` | the tiebreak engine, the playoff-ladder copy, the MaxPreps cross-check, missing official results and postseason pairings |
 | `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
 | `jv/` | the JV games file, its merge, corrections and standings |
 | `history/` | the 2025-26 archive and last season's records |

@@ -8,6 +8,7 @@
 import { getLeaguePairings, getStandingContext, getTeamBySlug } from '../../lib/data';
 import { leagueClockPT, listWords } from '../../lib/format';
 import { getLeague } from '../../lib/leagues';
+import { pairingsHref } from '../../lib/postseason/postseason-kind';
 import type { DivisionId, Game, LeagueId, OfficialFixture, Team } from '../../lib/types';
 import { capitalized } from '../words/capitalized';
 
@@ -90,7 +91,7 @@ export function pendingPairingFor(team: Team, today: string): PendingPairing | n
           : `the ${p.seatLabels[theirs]} team`,
       seats,
       settled: opponent !== undefined && divisionDone(team.division) && divisionDone(opponent.division),
-      href: `/playoffs#${league.id}-pairings`,
+      href: pairingsHref(league.id),
     };
   }
   return null;

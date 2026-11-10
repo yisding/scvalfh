@@ -3,14 +3,8 @@
  * lib/leagues, which tests/ui/client-boundary.test.ts keeps out of client modules, so it cannot
  * live in the client NavLink.tsx beside the nav logic that consumes its output.
  */
-import {
-  CCS_LEAGUE_IDS,
-  LEAGUE_IDS,
-  NO_POSTSEASON_LEAGUE_IDS,
-  SECTION_PLAYOFFS_LEAGUE_IDS,
-  TOURNAMENT_LEAGUE_IDS,
-  UNBRACKETED_LEAGUE_IDS,
-} from '../../lib/leagues';
+import { LEAGUE_IDS, getLeague } from '../../lib/leagues';
+import { postseasonHref } from '../../lib/postseason/postseason-kind';
 import type { LeagueId } from '../../lib/types';
 
 /**
@@ -37,15 +31,6 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
   return {
     '/schedule': per((id) => `/schedule/${id}`),
     '/teams': per((id) => `/teams#${id}`),
-    '/playoffs': per((id) =>
-      TOURNAMENT_LEAGUE_IDS.includes(id)
-        ? `/playoffs/${id}`
-        : CCS_LEAGUE_IDS.includes(id) ||
-            UNBRACKETED_LEAGUE_IDS.includes(id) ||
-            SECTION_PLAYOFFS_LEAGUE_IDS.includes(id) ||
-            NO_POSTSEASON_LEAGUE_IDS.includes(id)
-          ? `/playoffs#${id}`
-          : null,
-    ),
+    '/playoffs': per((id) => postseasonHref(getLeague(id))),
   };
 }

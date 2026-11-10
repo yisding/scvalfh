@@ -5,7 +5,7 @@
  * Read only from a pairing's MATCHED game (lib/standings/pairings.ts leaguePairings: the pairing's tag, inside its window,
  * one seat contender on each side) once that game is final. Until then there is no outcome and every surface keeps
  * the ladder's projected words. The winner is the higher score, else the side MaxPreps marks 'W' (the convention
- * lib/postseason/postseason.ts winnerOf and lib/postseason/sds-bracket.ts winnerOf follow); a level final with no flag decides nothing,
+ * lib/postseason/game-winner.ts winnerOf and lib/postseason/postseason.ts tournamentGameWinner follow); a level final with no flag decides nothing,
  * so it is no outcome either.
  *
  * Copy (DESIGN §15.8: never "eliminat…"; CCS words are fine here, these are CCS-ladder surfaces only):

@@ -52,6 +52,7 @@ import {
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../words/pin-label';
+import { pairingsHref } from '../../lib/postseason/postseason-kind';
 import { outcomesFor, pairingDatesLabel } from '../../lib/standings/ladder';
 import type {
   DivisionId,
@@ -788,7 +789,7 @@ function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: re
 /** The postseason line, its link pointed at the pairing cards while the team has a crossover or play-in to play. */
 function pairingAwareLine(line: TeamPostseasonLine | null, team: Team, today: string): TeamPostseasonLine | null {
   if (!line || !inOpenPairing(team, today)) return line;
-  return { ...line, href: `/playoffs#${team.league}-pairings` };
+  return { ...line, href: pairingsHref(team.league) };
 }
 
 export function buildTeamPageView(slug: string): TeamPageView | undefined {

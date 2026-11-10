@@ -297,8 +297,12 @@ export function matchTournamentGames(
  * The winner of a matched tournament game: the higher score, else the side MaxPreps marks 'W'. Exported for the
  * bracket's winner mark (components/playoffs/playoff-view.ts tournamentGameView), so the page and the engine
  * never disagree on who advanced.
+ *
+ * Not lib/postseason/game-winner.ts winnerOf: on a level final where MaxPreps marks both sides 'W' this one names
+ * the home side, where that one decides nothing. The MCAL tournament has always read it this way, so it keeps its
+ * own rule under its own name.
  */
-export function winnerOf(tg: TournamentGame): TeamSlug | null {
+export function tournamentGameWinner(tg: TournamentGame): TeamSlug | null {
   const g = tg.game;
   if (!hasResult(g)) return null;
   const h = g.home.score as number;
@@ -315,7 +319,7 @@ function seedNumberOf(slot: TournamentSlot, slug: TeamSlug): number | null {
 }
 
 function winnerWithSeed(tg: TournamentGame): { seed: number; slug: TeamSlug } | null {
-  const w = winnerOf(tg);
+  const w = tournamentGameWinner(tg);
   if (w === null) return null;
   const seed = seedNumberOf(tg.home, w) ?? seedNumberOf(tg.away, w);
   return seed === null ? null : { seed, slug: w };
@@ -348,7 +352,7 @@ export function buildLeagueTournament(
       null,
     );
     [playIn] = matchTournamentGames(games, [playIn], ps.resultNotes);
-    const winner = winnerOf(playIn);
+    const winner = tournamentGameWinner(playIn);
     if (winner !== null) {
       const idx = seeds.findIndex((s) => s.seed === L);
       seeds[idx] = { seed: L, seat: [refOf(winner, seeds)] };
@@ -425,19 +429,19 @@ export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug)
   // The latest decided game this team played, by round order (play-in, quarterfinal, semifinal, final). Read
   // before the seat check: a play-in loser holds no seat afterwards, and still "lost the play-in".
   const played = all.filter(
-    (tg) => tg.game !== null && winnerOf(tg) !== null && (tg.game.home.slug === slug || tg.game.away.slug === slug),
+    (tg) => tg.game !== null && tournamentGameWinner(tg) !== null && (tg.game.home.slug === slug || tg.game.away.slug === slug),
   );
   const last = played[played.length - 1];
   if (last && last.game) {
     const g = last.game;
-    const won = winnerOf(last) === slug;
+    const won = tournamentGameWinner(last) === slug;
     const opponent = (g.home.slug === slug ? g.away.slug : g.home.slug) ?? '';
     if (last.round === 'final') return won ? { kind: 'champion', game: g, opponent } : { kind: 'runner-up', game: g, opponent };
     if (!won) return { kind: 'lost', round: last.round, game: g, opponent };
   }
   if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line' };
   // Not out: the next game whose slot names this team and has no winner yet (unplayed, or posted level).
-  const next = all.find((tg) => winnerOf(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
+  const next = all.find((tg) => tournamentGameWinner(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
   if (next && next.round === 'final') return { kind: 'in-final', next, opponent: opponentIn(next, slug) };
   return { kind: 'alive', next };
 }

@@ -12,7 +12,8 @@
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { getPlayoffs } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { getSdsBrackets, winnerOf, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
+import { winnerOf } from '../../lib/postseason/game-winner';
+import { getSdsBrackets, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 

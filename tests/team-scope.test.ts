@@ -53,7 +53,7 @@ describe('parseFetchedAtFlag', () => {
   });
 });
 
-describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
+describe('the team-scope CLIs read flags by fetch-data\'s rules', () => {
   const run = (script: string, ...args: string[]) => runScript(`scripts/${script}`, args);
 
   for (const script of ['fetch-rosters.ts', 'fetch-player-stats.ts']) {
