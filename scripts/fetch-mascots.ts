@@ -45,7 +45,7 @@ import { MASCOT_FILE_SIZES } from '../lib/schools/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
 import type { Team } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 import { IS_FIELD_HOCKEY } from '../lib/sports/current';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';
@@ -221,7 +221,7 @@ async function mascotTiles(source: Uint8Array): Promise<Buffer[]> {
   );
 }
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
@@ -272,4 +272,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-void runCli(main);
+runCliIfMain(import.meta.url, main);

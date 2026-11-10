@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import { listWords, placeWords, plural, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import ExternalLink from '../ui/ExternalLink';
+import { StretchedRowLink } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -125,16 +126,10 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                   <PlaceCell row={row} />
                 </td>
                 <th scope="row" className="pr-3 font-normal sm:pr-4 md:pr-0">
-                  {/* One stretched row link per team; `prefetch={false}` like every per-row link
-                      (components/layout/NavLink.tsx has the reasoning). */}
-                  <Link href={`/teams/${row.team.slug}`} prefetch={false} className="absolute inset-0">
-                    <span className="sr-only">
-                      {/* Marked like every other team list: only the pinned row's note is
-                          displayed (app/globals.css), so the accent rule never speaks alone. */}
-                      <span className="sx-pin-note" hidden>Your team. </span>
-                      {rowSentence(row, leagueShort)}
-                    </span>
-                  </Link>
+                  {/* One stretched row link per team, never prefetched and marked like every
+                      other team list (StretchedRowLink: only the pinned row's note is displayed,
+                      so the accent rule never speaks alone). */}
+                  <StretchedRowLink href={`/teams/${row.team.slug}`} label={rowSentence(row, leagueShort)} />
                   <span className="flex items-center gap-3">
                     <TeamMonogram team={row.team} size={28} />
                     <span className="min-w-0 flex-1">

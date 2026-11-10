@@ -23,7 +23,7 @@ import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
 import { CIFSS_SECTIONS } from '../../lib/sources/cifss';
 import { SDS_BRACKETS_FILE } from '../../lib/postseason/sds-brackets-file';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { stableStringify } from '../../lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';

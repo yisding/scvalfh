@@ -987,7 +987,7 @@ fixed pages, and `a11y-axe.mjs` checks it.
 app/                   routes: each page reads data, builds its view and composes components
 components/<feature>/  one folder per area of the site; React components (PascalCase .tsx) beside
                        the view models that decide what they show (kebab-case .ts, mostly *-view.ts)
-components/{ui,layout,metadata,prefs,words}/   shared across features (below)
+components/{ui,game-row,layout,metadata,prefs,words}/   shared across features (below)
 lib/                   data, config and engines; no React
 lib/sports/            the sport this build covers (current.ts) and its definition: ids, words,
                        rating constants, stat lines (docs/MULTI-SPORT.md)
@@ -998,7 +998,7 @@ scripts/               the data refresh, the build assertions and dev tools
 Imports run `app/` → `components/` → `lib/`, never back up: nothing in `lib/` imports a component,
 and no feature folder imports a route. Inside `components/`, features build on the shared folders,
 with two deliberate exceptions: `metadata/` draws each feature's OG card and JSON-LD, so it reads
-those features' view models, and `ui/GameRow.tsx` links a playoff game to its place in the bracket
+those features' view models, and `game-row/` links a playoff game to its place in the bracket
 through `playoffs/bracket-link.ts`.
 
 **`components/`.** Features: `about`, `clubs`, `commits`, `game`, `history`, `home`, `jv`,
@@ -1007,7 +1007,8 @@ through `playoffs/bracket-link.ts`.
 
 | Folder | Holds |
 |---|---|
-| `ui/` | presentational building blocks used by several features (game rows, standings tables, chips, strips) and `describe-game.ts`, their view model |
+| `ui/` | presentational building blocks used by several features (chips, strips, the stretched team-row link and its pin note) and `describe-game.ts`, the game rows' view model |
+| `game-row/` | the faces of one game in a list: `GameRow` (the phone row), `GameCard`, `GameLine` (one line) and `GameLogRow` (a team's log and the season series), and the summary pieces they share |
 | `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants, the league chips' targets |
 | `metadata/` | what crawlers and link previews see: the OG and icon image renderers (kebab-case, like Next's own `opengraph-image.tsx`) and JSON-LD |
 | `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint, the client hooks that read them and the controls that change them (league and region switchers, theme toggle, pin) |
@@ -1017,7 +1018,8 @@ A component used by one feature lives in that feature's folder, not in `ui/`.
 
 **`lib/`.** The modules the rest of the site leans on sit at the root: `types`, `season`, `leagues`
 (the league table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the
-snapshot, SPEC §13.3), `format`, `classify`, `standings`, `schema-primitives`, `stable-json`,
+snapshot, SPEC §13.3), `data-file` (the bundled-or-override read and validation every data file goes
+through), `format`, `classify`, `schema-primitives`, `stable-json`,
 `game-id`, `search` and `time-zone` (the IANA zone, an import-free leaf so `format` does not load the
 sport definition). The rest is grouped by domain:
 
@@ -1025,7 +1027,8 @@ sport definition). The rest is grouped by domain:
 |---|---|
 | `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
 | `registry/` | each league's teams, assembled by `lib/teams.ts` |
-| `snapshot/` | the snapshot's Zod schema, its migrations, the season build and the content dates |
+| `snapshot/` | the snapshot's Zod schema, its config invariants, the load path and its migrations, the content hash, the season build and the content dates |
+| `standings/` | the tiebreak engine, the playoff-ladder copy, the MaxPreps cross-check, missing official results and postseason pairings |
 | `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
 | `jv/` | the JV games file, its merge, corrections and standings |
 | `history/` | the 2025-26 archive and last season's records |
@@ -1037,10 +1040,19 @@ sport definition). The rest is grouped by domain:
 | `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
 
 There are no `index.ts` barrels: several `lib/` modules read a data file or assert their config when
-imported, and a barrel would run all of that (and pull in zod) for any one symbol. Two tests hold the
+imported, and a barrel would run all of that (and pull in zod) for any one symbol. Three tests hold the
 boundaries: `tests/ui/client-boundary.test.ts` keeps every `'use client'` module to a short allowlist
-of client-safe `lib/` modules, and `tests/build-only-boundary.test.ts` keeps `app/` and
-`components/` from reaching the build-time-only folders above.
+of client-safe `lib/` modules, `tests/build-only-boundary.test.ts` keeps `app/` and
+`components/` from reaching the build-time-only folders above, and `tests/data-boundary.test.ts`
+freezes the list of `lib/` domain modules that import the `lib/data` snapshot singleton (it may
+shrink, never grow).
+
+`eslint.config.mjs` adds the direct-import layer rules as lint errors (`no-restricted-imports`), so
+they show in the editor: `lib/` never imports `components/`, `app/`, `scripts/` or `tests/` (nor
+uses the `@/` alias); `lib/sources/` never imports `lib/pipeline/` or `lib/crosscheck/`;
+`lib/crosscheck/` and `lib/official/` never import `lib/pipeline/`; `app/` and `components/` never
+import `scripts/`, `tests/` or a build-only `lib/` folder (but for `lib/crosscheck/cifss-notes`);
+and `scripts/` never imports `tests/`. `tests/lint-boundaries.test.ts` checks that each zone fires.
 
 ## Local development
 
@@ -1282,14 +1294,14 @@ points rule, no standings and no table order that we could find, so the order is
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
-by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
+by-law citation next to it) and one engine in `lib/standings/engine.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
 
 ### SCVAL
 
 Per the **SCVAL Field Hockey By-Laws 2026-27, Article VI** (verified copy in
-`docs/BYLAWS-2026-27.md`; implementation in `lib/standings.ts`):
+`docs/BYLAWS-2026-27.md`; implementation in `lib/standings/engine.ts`):
 
 - **§1** — double round robin; only games between two members of the *same* division count
   toward the division record.

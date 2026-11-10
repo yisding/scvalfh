@@ -24,7 +24,7 @@ import { ALL_DIVISIONS, LEAGUES, getLeague } from '../lib/leagues';
 import type { SnapshotMeta } from '../lib/pipeline/contract';
 import { readManifest } from '../lib/pipeline/corpus';
 import { SPORT_SEASON_ID } from '../lib/season';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { FETCHABLE_TEAMS, TEAMS } from '../lib/teams';
 import type { Snapshot, Standing } from '../lib/types';
 import { REPO, corpusDir, corpusSnapshotPath, runFixtureCli, type CliRun } from './helpers';

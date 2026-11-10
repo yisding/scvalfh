@@ -14,16 +14,11 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { classifyGames } from '../lib/classify';
 import { divisionsOf } from '../lib/leagues';
 import { buildSeason } from '../lib/snapshot/season-build';
-import {
-  buildCrossCheck,
-  computeStandings,
-  divisionGames,
-  playoffOutcomeLabel,
-  statusBadge,
-  statusLegend,
-} from '../lib/standings';
+import { buildCrossCheck } from '../lib/standings/cross-check';
+import { computeStandings, divisionGames } from '../lib/standings/engine';
+import { playoffOutcomeLabel, statusBadge, statusLegend } from '../lib/standings/ladder';
 import { countsOf, migrateV1ToV2 } from '../lib/snapshot/snapshot-migrate';
-import { parseSnapshot } from '../lib/snapshot/snapshot-schema';
+import { parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
 import type {
   Game,

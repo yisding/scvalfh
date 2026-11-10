@@ -12,27 +12,28 @@
  *   more games", even with a later game listed (the test gives the Mt. Hamilton #4 visitor, Willow Glen in 2026, a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
  * - The team page's "CCS playoffs →" goes to `/playoffs#<league>-pairings` while the team has a pairing to play.
  */
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
-import { leaguePairings, playoffStatusFor } from '../../lib/standings';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
+import { playoffStatusFor } from '../../lib/standings/ladder';
+import { leaguePairings } from '../../lib/standings/pairings';
 import type { Standing } from '../../lib/types';
 import { game, withGames } from '../game-builder';
+import { writeTempSnapshot } from '../helpers';
 
 type Data = typeof import('../../lib/data');
 type TeamView = typeof import('../../components/teams/team-view');
-type HomeView = typeof import('../../components/home/home-view');
+type TeamCard = typeof import('../../components/home/team-card');
 type Describe = typeof import('../../components/ui/describe-game');
 type GameView = typeof import('../../components/game/game-view');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let data: Data;
 let teamView: TeamView;
-let homeView: HomeView;
+let teamCard: TeamCard;
 let describeGame: Describe;
 let gameView: GameView;
 
@@ -104,13 +105,11 @@ beforeAll(async () => {
     ...set,
   ];
   const next = withGames(base, games, { fetchedAt: '2026-10-30T19:00:00.000Z', standings });
-  const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-postseason-next-')), 'snapshot.json');
-  writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-  process.env.SCVAL_SNAPSHOT = file;
+  process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'postseason-next');
   vi.resetModules();
   data = await import('../../lib/data');
   teamView = await import('../../components/teams/team-view');
-  homeView = await import('../../components/home/home-view');
+  teamCard = await import('../../components/home/team-card');
   describeGame = await import('../../components/ui/describe-game');
   gameView = await import('../../components/game/game-view');
 }, 600_000);
@@ -133,8 +132,8 @@ describe('the round label of a CCS league crossover-day game', () => {
   });
 
   it('the home card of a team in the play-in names it', () => {
-    const losAltos = homeView.buildTeamViews().find((v) => v.slug === 'los-altos')!;
-    expect(losAltos.next?.kindLabel, 'components/home/home-view.ts kindLabel').toBe('SCVAL play-in');
+    const losAltos = teamCard.buildTeamViews().find((v) => v.slug === 'los-altos')!;
+    expect(losAltos.next?.kindLabel, 'components/home/team-card.ts kindLabel').toBe('SCVAL play-in');
   });
 });
 
@@ -158,7 +157,7 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
   });
 
   it('the home card shows it too, and only teams with one carry the field', () => {
-    const views = homeView.buildTeamViews();
+    const views = teamCard.buildTeamViews();
     const wg = views.find((v) => v.slug === bvalVisitor)!;
     expect(wg.next).toBeNull();
     expect(wg.pairingNext).toMatchObject({

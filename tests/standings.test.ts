@@ -3,16 +3,15 @@ import { describe, expect, it } from 'vitest';
 import { classifyGames } from '../lib/classify';
 import { ALL_DIVISIONS, divisionsOf } from '../lib/leagues';
 import { normalizeGames } from '../lib/pipeline/normalize';
+import { computeStandings, divisionGames } from '../lib/standings/engine';
 import {
-  computeStandings,
-  divisionGames,
-  leaguePairings,
-  missingOfficialResults,
   outcomesFor,
   playoffOutcomeLabel,
   playoffOutcomes,
   playoffStatusFor,
-} from '../lib/standings';
+} from '../lib/standings/ladder';
+import { missingOfficialResults } from '../lib/standings/missing';
+import { leaguePairings } from '../lib/standings/pairings';
 import { TEAMS, resolveTeam, teamsInLeague } from '../lib/teams';
 import type { Game, Standing } from '../lib/types';
 import { game } from './game-builder';

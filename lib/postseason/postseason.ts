@@ -14,26 +14,26 @@
  * upset #4 Lick-Wilmerding and the semifinals were #5 University at #1 Redwood, #3 Marin Catholic at #2 Tamalpais.
  *
  * `sixthPlaceRule` takes the play-in pair (or the 2-0 sweep) from the standings engine itself
- * (lib/standings.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
+ * (lib/standings/engine.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
  * so its contenders are exactly the teams the table shows sharing 6th with `resolvedBy: 'play-in'`.
  *
  * Only a 'league-tournament' league (MCAL) reaches this module. Of the nine leagues, SCVAL, BVAL and PCAL go
  * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
  * bracket, so none is drawn for it. The two Southern California kinds get no projection either, and their
- * standings statuses come from their ladders alone (lib/standings.ts playoffStatusFor): the Sunset
+ * standings statuses come from their ladders alone (lib/standings/ladder.ts playoffStatusFor): the Sunset
  * ('no-postseason': the CIF Southern Section holds no field hockey playoffs, Blue Book 2026-27 Bylaws
  * 2011.1 and 3500.2) has one rung, 'no-postseason', for every place; the San Diego leagues
  * ('section-playoffs': the Section places Open 8, Division I 12 and Division II 12 from its power
  * rankings, Green Book 2026-27 Bylaw 2000.1) have 'tournament' for 1st (a designated champion's
  * guaranteed play-in) and 'selection' below, and no bracket is drawn before the Section publishes one.
  *
- * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types (lib/league-config/shape.ts, lib/types.ts).
+ * Imports the standings engine (lib/standings/engine.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types (lib/league-config/shape.ts, lib/types.ts).
  */
 
 import { EN_DASH, byDateThenId, leagueClockPT, numberWord, shortDate, sideOutcome } from '../format';
 import type { LeagueConfig, TournamentConfig } from '../league-config/shape';
 import { drawNumberOf } from '../leagues';
-import { lastSpotOutcome } from '../standings';
+import { lastSpotOutcome } from '../standings/engine';
 import { getTeamById, getTeamBySlug } from '../teams';
 import type {
   CrossoverSeat, Game, LeagueTournamentProjection, SeasonPhase, Standing, TeamId, TeamSlug, TournamentGame,
@@ -129,7 +129,7 @@ const nameOfSlug = (slug: TeamSlug): string => getTeamBySlug(slug)?.name ?? slug
 const NO_PLAY_IN: SixthPlaceDecision = { playInNeeded: 'no', contenders: [], host: null, seats: [], note: null };
 
 /**
- * The last tournament place (SPEC §6.2, §5.4b). The engine (lib/standings.ts `lastSpotOutcome`) decides
+ * The last tournament place (SPEC §6.2, §5.4b). The engine (lib/standings/engine.ts `lastSpotOutcome`) decides
  * whether a play-in is needed and between whom, or that a 2-0 sweep settled it; this adds what only the
  * bracket needs: 'possible' while a league meeting the case depends on is unplayed, the host (the higher
  * draw number, or in the three-way 5-7 case the winner of the pair's earlier meeting) and the notes.
@@ -297,8 +297,12 @@ export function matchTournamentGames(
  * The winner of a matched tournament game: the higher score, else the side MaxPreps marks 'W'. Exported for the
  * bracket's winner mark (components/playoffs/playoff-view.ts tournamentGameView), so the page and the engine
  * never disagree on who advanced.
+ *
+ * Not lib/postseason/game-winner.ts winnerOf: on a level final where MaxPreps marks both sides 'W' this one names
+ * the home side, where that one decides nothing. The MCAL tournament has always read it this way, so it keeps its
+ * own rule under its own name.
  */
-export function winnerOf(tg: TournamentGame): TeamSlug | null {
+export function tournamentGameWinner(tg: TournamentGame): TeamSlug | null {
   const g = tg.game;
   if (!hasResult(g)) return null;
   const h = g.home.score as number;
@@ -315,7 +319,7 @@ function seedNumberOf(slot: TournamentSlot, slug: TeamSlug): number | null {
 }
 
 function winnerWithSeed(tg: TournamentGame): { seed: number; slug: TeamSlug } | null {
-  const w = winnerOf(tg);
+  const w = tournamentGameWinner(tg);
   if (w === null) return null;
   const seed = seedNumberOf(tg.home, w) ?? seedNumberOf(tg.away, w);
   return seed === null ? null : { seed, slug: w };
@@ -348,7 +352,7 @@ export function buildLeagueTournament(
       null,
     );
     [playIn] = matchTournamentGames(games, [playIn], ps.resultNotes);
-    const winner = winnerOf(playIn);
+    const winner = tournamentGameWinner(playIn);
     if (winner !== null) {
       const idx = seeds.findIndex((s) => s.seed === L);
       seeds[idx] = { seed: L, seat: [refOf(winner, seeds)] };
@@ -425,19 +429,19 @@ export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug)
   // The latest decided game this team played, by round order (play-in, quarterfinal, semifinal, final). Read
   // before the seat check: a play-in loser holds no seat afterwards, and still "lost the play-in".
   const played = all.filter(
-    (tg) => tg.game !== null && winnerOf(tg) !== null && (tg.game.home.slug === slug || tg.game.away.slug === slug),
+    (tg) => tg.game !== null && tournamentGameWinner(tg) !== null && (tg.game.home.slug === slug || tg.game.away.slug === slug),
   );
   const last = played[played.length - 1];
   if (last && last.game) {
     const g = last.game;
-    const won = winnerOf(last) === slug;
+    const won = tournamentGameWinner(last) === slug;
     const opponent = (g.home.slug === slug ? g.away.slug : g.home.slug) ?? '';
     if (last.round === 'final') return won ? { kind: 'champion', game: g, opponent } : { kind: 'runner-up', game: g, opponent };
     if (!won) return { kind: 'lost', round: last.round, game: g, opponent };
   }
   if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line' };
   // Not out: the next game whose slot names this team and has no winner yet (unplayed, or posted level).
-  const next = all.find((tg) => winnerOf(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
+  const next = all.find((tg) => tournamentGameWinner(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
   if (next && next.round === 'final') return { kind: 'in-final', next, opponent: opponentIn(next, slug) };
   return { kind: 'alive', next };
 }

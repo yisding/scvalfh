@@ -28,9 +28,10 @@ import { z } from 'zod';
 
 import bundledFieldHockey from '../../data/jv-profiles.json';
 import bundledSoccer from '../../data/soccer/jv-profiles.json';
+import { validateData } from '../data-file';
 import { classOf, getRosterEnrichment } from '../players/rosters';
-import { PlayerProfileSchema, type PlayerProfile } from '../players/rosters-schema';
-import { dateKey, failValidation } from '../schema-primitives';
+import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
+import { dateKey } from '../schema-primitives';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
@@ -50,7 +51,7 @@ export const JvProfilePlayerSchema = z
   })
   .strict()
   .refine(
-    (p) => new Set(p.profiles.map((x) => `${x.platform} ${x.sport ?? 'field-hockey'}`)).size === p.profiles.length,
+    (p) => new Set(p.profiles.map(profileSportKey)).size === p.profiles.length,
     'one profile per platform in each sport',
   );
 
@@ -93,9 +94,7 @@ const OVERLAY_JV: ReadonlyMap<string, readonly PlayerProfile[]> = new Map(
 );
 
 function load(): JvProfilesFile {
-  const parsed = JvProfilesFileSchema.safeParse(bundled);
-  if (!parsed.success) failValidation('jv-profiles', parsed.error.issues);
-  const file = parsed.data;
+  const file = validateData('jv-profiles', JvProfilesFileSchema, bundled);
   const enrichment = getRosterEnrichment();
   if (file.season !== enrichment.season) {
     throw new Error(`jv-profiles is for season ${file.season}, the rosters for ${enrichment.season}`);

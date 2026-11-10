@@ -3,16 +3,15 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { snapshotContentHash } from '../lib/snapshot/snapshot-hash';
+import { SnapshotSchema } from '../lib/snapshot/snapshot-invariants';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-load';
 import {
   GameSchema,
   LeagueHealthSchema,
   PostseasonTagSchema,
   SeasonSchema,
-  SnapshotSchema,
   TeamSchema,
-  loadSnapshot,
-  parseSnapshot,
-  snapshotContentHash,
 } from '../lib/snapshot/snapshot-schema';
 import { TEAMS } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';

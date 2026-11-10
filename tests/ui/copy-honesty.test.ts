@@ -7,7 +7,8 @@
  *                                                 team views (one per registry team)
  *   components/standings/standings-page-view.ts   buildStandingsPageView(league) (division views
  *                                                 built by components/standings/standings-view.ts)
- *   components/teams/team-view.ts                 buildTeamPageView(slug), buildTeamsByLeague()
+ *   components/teams/team-view.ts                 buildTeamPageView(slug)
+ *   components/teams/teams-index-view.ts          buildTeamsByLeague()
  *   components/game/game-view.ts                  buildGameView(param) for every game,
  *                                                 buildSupersededStub
  *
@@ -69,11 +70,13 @@ type Leagues = typeof import('../../lib/leagues');
 type Home = typeof import('../../components/home/home-view');
 type Standings = typeof import('../../components/standings/standings-page-view');
 type TeamView = typeof import('../../components/teams/team-view');
+type TeamsIndexView = typeof import('../../components/teams/teams-index-view');
 type GameView = typeof import('../../components/game/game-view');
 
 const HV = 'components/home/home-view.ts';
 const SPV = 'components/standings/standings-page-view.ts (via components/standings/standings-view.ts)';
 const TV = 'components/teams/team-view.ts';
+const TIV = 'components/teams/teams-index-view.ts';
 const GV = 'components/game/game-view.ts';
 const SP = 'app/schedule/[league]/page.tsx (rendered)';
 const PP = 'app/playoffs/page.tsx (rendered)';
@@ -84,6 +87,7 @@ let leagues: Leagues;
 let home: ReturnType<Home['buildHomeView']>;
 let standings: Standings;
 let teamView: TeamView;
+let teamsIndexView: TeamsIndexView;
 let gameView: GameView;
 
 /** One view model under test: who produced it, which league it belongs to, the value. */
@@ -113,6 +117,7 @@ beforeAll(async () => {
   const h = await import('../../components/home/home-view');
   standings = await import('../../components/standings/standings-page-view');
   teamView = await import('../../components/teams/team-view');
+  teamsIndexView = await import('../../components/teams/teams-index-view');
   gameView = await import('../../components/game/game-view');
   home = h.buildHomeView();
   const sections = await import('../../lib/league-config/sections');
@@ -150,7 +155,7 @@ beforeAll(async () => {
   for (const t of data.getTeams()) {
     s.push({ producer: TV, label: `team page ${t.slug}`, league: t.league, value: teamView.buildTeamPageView(t.slug) });
   }
-  s.push({ producer: TV, label: 'teams index', league: null, value: teamView.buildTeamsByLeague() });
+  s.push({ producer: TIV, label: 'teams index', league: null, value: teamsIndexView.buildTeamsByLeague() });
 
   for (const { id: param } of gameView.gameStaticParams()) {
     const model = gameView.buildGameView(param);

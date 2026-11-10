@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Game, LeagueHealth, LeagueId, Snapshot } from '../../lib/types';
 import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '../helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
@@ -113,7 +113,7 @@ describe('pcal-standings-empty: MaxPreps answers the PCAL table with zero rows',
     expect(row?.carriedFrom, 'lib/pipeline/steps/reported.ts: carriedFrom').toBe(corpus.fetchedAt);
     // Scores and the computed table stay current; the carried reported rows feed the cross-check.
     const pcalRows = (s: Snapshot) => s.standings.filter((r) => r.division === 'pcal');
-    expect(pcalRows(snapshot).map((r) => r.computed), 'lib/standings.ts: PCAL computed rows').toEqual(pcalRows(corpus).map((r) => r.computed));
+    expect(pcalRows(snapshot).map((r) => r.computed), 'lib/standings/engine.ts: PCAL computed rows').toEqual(pcalRows(corpus).map((r) => r.computed));
     expect(pcalRows(snapshot).map((r) => r.reported), 'lib/pipeline/steps/reported.ts: carried reported rows').toEqual(
       pcalRows(corpus).map((r) => r.reported),
     );

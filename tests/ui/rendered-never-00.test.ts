@@ -28,7 +28,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { buildGameView, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
-import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/GameRow';
+import { GameCard } from '../../components/game-row/GameCard';
+import { GameLine } from '../../components/game-row/GameLine';
+import { GameLogRow } from '../../components/game-row/GameLogRow';
+import { GameRow } from '../../components/game-row/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
 import type { Game } from '../../lib/types';
 import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
@@ -199,7 +202,10 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       vi.resetModules();
       const data = await import('../../lib/data');
       const model = await import('../../components/game/game-view');
-      const row = await import('../../components/ui/GameRow');
+      const row = await import('../../components/game-row/GameRow');
+      const card = await import('../../components/game-row/GameCard');
+      const line = await import('../../components/game-row/GameLine');
+      const log = await import('../../components/game-row/GameLogRow');
       corpus = {
         games: data.getGames(),
         buildGameView: model.buildGameView,
@@ -207,9 +213,9 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
         gameDescription: model.gameDescription,
         gameKicker: model.gameKicker,
         GameRow: row.GameRow,
-        GameCard: row.GameCard,
-        GameLine: row.GameLine,
-        GameLogRow: row.GameLogRow,
+        GameCard: card.GameCard,
+        GameLine: line.GameLine,
+        GameLogRow: log.GameLogRow,
       };
     }, 600_000);
 
@@ -254,9 +260,9 @@ describe('every league, rendered', () => {
     for (const game of games) {
       const text = textOf(renderToStaticMarkup(createElement(GameRow, { game })));
       if (game.countsFor === null && game.postseason === null) {
-        expect(text, `components/ui/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
+        expect(text, `components/game-row/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
       } else if (game.countsFor !== null) {
-        expect(text, `components/ui/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
+        expect(text, `components/game-row/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
       }
     }
   });
@@ -271,15 +277,15 @@ describe('every league, rendered', () => {
     const homeLeague = getTeamBySlug(cross.home.slug!)!.league;
     const awayShort = getLeagueSummaries().find((l) => l.id === getTeamBySlug(cross.away.slug!)!.league)!.shortName;
     const scoped = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
-    expect(scoped, 'components/ui/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
+    expect(scoped, 'components/game-row/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
     const plain = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross })));
-    expect(plain, 'components/ui/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
+    expect(plain, 'components/game-row/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
   });
 
   it('links every game through gameHref (sblive ids become sblive-<n>, cifsds ids cifsds-<away>-at-<home>)', () => {
     for (const game of games) {
       const html = renderToStaticMarkup(createElement(GameCard, { game }));
-      expect(html, `components/ui/GameRow.tsx ${game.contestId}`).toContain(
+      expect(html, `components/game-row/GameCard.tsx ${game.contestId}`).toContain(
         `href="/game/${game.contestId.replace(/^(sblive|cifsds):/, '$1-')}"`,
       );
     }

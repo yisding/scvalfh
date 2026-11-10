@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import EmptyState from '../ui/EmptyState';
-import { GameLine } from '../ui/GameRow';
+import { GameLine } from '../game-row/GameLine';
 import SectionHeader from '../ui/SectionHeader';
 import { plural } from '../words/plural';
 import { gameKind } from '../ui/describe-game';

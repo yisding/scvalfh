@@ -5,17 +5,16 @@
  * Every assertion names the module that produced the value (the repair policy routes on it).
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { game, withGames } from '../game-builder';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 
 import { SEED_CLAIM } from '../../scripts/copy-rules';
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
@@ -24,8 +23,13 @@ import { textOf } from './html-text';
 import { width } from './text-metrics';
 
 type HomeView = typeof import('../../components/home/home-view');
+type PhaseLead = typeof import('../../components/home/phase-lead');
+type PostseasonCard = typeof import('../../components/home/postseason-card');
+type TeamCard = typeof import('../../components/home/team-card');
 
 let home: HomeView;
+let phaseLeadModule: PhaseLead;
+let postseasonCard: PostseasonCard;
 let data: ReturnType<HomeView['buildHomeView']>;
 let leagues: typeof import('../../lib/leagues');
 let pageHtml = '';
@@ -37,6 +41,8 @@ const HV = 'components/home/home-view.ts';
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   home = await import('../../components/home/home-view');
+  phaseLeadModule = await import('../../components/home/phase-lead');
+  postseasonCard = await import('../../components/home/postseason-card');
   leagues = await import('../../lib/leagues');
   const { default: HomePage } = await import('../../app/page');
   const { LeaguePanel } = await import('../../components/home/LeaguePanel');
@@ -139,10 +145,10 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
 
   it('the CCS card footer changes tense the day after the seeding meeting (ccsOfficialSentence)', () => {
     const before = 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
-    expect(home.ccsOfficialSentence('2026-10-29'), HV).toBe(before);
+    expect(postseasonCard.ccsOfficialSentence('2026-10-29'), HV).toBe(before);
     // On Nov 2 itself the updates land before the 1 PM meeting: still the present tense.
-    expect(home.ccsOfficialSentence('2026-11-02'), HV).toBe(before);
-    expect(home.ccsOfficialSentence('2026-11-03'), HV).toBe(
+    expect(postseasonCard.ccsOfficialSentence('2026-11-02'), HV).toBe(before);
+    expect(postseasonCard.ccsOfficialSentence('2026-11-03'), HV).toBe(
       'Berths were assigned by the CCS committee on Mon Nov 2; results update twice a day.',
     );
   });
@@ -270,8 +276,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('writes the phase copy per league (dates from config)', () => {
-    const lead = (id: string, phase: Parameters<HomeView['phaseLead']>[1], today: string) =>
-      home.phaseLead(leagues.getLeague(id), phase, today);
+    const lead = (id: string, phase: Parameters<PhaseLead['phaseLead']>[1], today: string) =>
+      phaseLeadModule.phaseLead(leagues.getLeague(id), phase, today);
     expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
     // The independents (DESIGN §24.10): the lead names the first game between two of them, never "Independent
     // league play", and the body says the table counts only games between them.
@@ -527,7 +533,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     expect(tam.meta, `${HV}: single-division meta`).toBe('1st · MCAL');
     for (const v of data.teamViews) {
       // A team with no result is never placed, except that a Sunset team's line is the league's "no
-      // playoffs" note whatever it has played (lib/data getTeamPostseasonLine).
+      // playoffs" note whatever it has played (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
       const noPostseason = leagues.NO_POSTSEASON_LEAGUE_IDS.includes(leagues.getLeague(cardTeamLeague(v.slug)).id);
       if (!v.hasResults && !noPostseason) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
@@ -610,7 +616,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
  * already built.
  */
 describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason/postseason-outcomes.ts)', () => {
-  let views: ReturnType<HomeView['buildTeamViews']>;
+  let views: ReturnType<TeamCard['buildTeamViews']>;
   const prior = process.env.SCVAL_SNAPSHOT;
 
   beforeAll(async () => {
@@ -629,11 +635,9 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
       playIn,
     ];
     const next = withGames(base, games, { fetchedAt: '2026-10-31T19:00:00.000Z' });
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-play-in-')), 'snapshot.json');
-    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'home-play-in');
     vi.resetModules();
-    const fresh = (await import('../../components/home/home-view')) as HomeView;
+    const fresh = (await import('../../components/home/team-card')) as TeamCard;
     views = fresh.buildTeamViews();
   }, 600_000);
 
@@ -693,9 +697,7 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
       post('huntington-beach', 'harvard-westlake', '2026-10-29', '18:00', toc),
     ];
     const next = withGames(base, games, { fetchedAt: '2026-10-29T19:00:00.000Z' });
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-week-')), 'snapshot.json');
-    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(next, 'home-week');
     vi.resetModules();
     const fresh = (await import('../../components/home/home-view')) as HomeView;
     week = fresh.buildHomeView().thisWeek;

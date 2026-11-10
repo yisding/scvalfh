@@ -24,6 +24,7 @@
 
 import { byDateThenId, shootoutPhrases, toLocalTimestamp } from '../format';
 import { DATA_QUALITY } from '../league-config/data-quality';
+import { GUID_RE } from '../game-id';
 import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
 import { getLeague, getSection } from '../leagues';
 import { getTeamById, resolveTeam } from '../teams';
@@ -477,7 +478,7 @@ function toGame(
   // covers every varsity game in the Section: of the eight level W/L finals in the inventory read Mon Oct 5 Pacific,
   // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
   // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
-  // level finals stay ties or contradictions. lib/snapshot/snapshot-schema.ts checks the same rule.
+  // level finals stay ties or contradictions. lib/snapshot/snapshot-invariants.ts checks the same rule.
   // A JV row never qualifies (NormalizeOptions.level): the sections' shootout rules are varsity rules.
   // Nor does a tournament row (contestType 2 on either side) in a section whose rule does not reach
   // tournaments (SectionConfig.shootout.coversTournaments false: the SDFHOA procedures cover the regular
@@ -604,8 +605,6 @@ function toGame(
   };
   return game;
 }
-
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * A MaxPreps GUID that names something: not null, not the all-zero GUID (TBA_TEAM_ID), which the feed puts in

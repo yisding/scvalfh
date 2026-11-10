@@ -31,6 +31,7 @@
  */
 
 import { byDateKey, datesOf, dayDiff, monthDay, shootoutPhrases } from '../format';
+import { isSbliveContestId, sbliveContestId } from '../game-id';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import type { SectionConfig } from '../league-config/shape';
 import { LEAGUES, getLeague, getSection, leagueOfDivision } from '../leagues';
@@ -154,7 +155,6 @@ export function playedFixture(f: OfficialFixture): { dateKey: string; homeSlug: 
   };
 }
 
-const isSbliveContest = (id: string) => id.startsWith('sblive:');
 
 // ---------------------------------------------------------------- si.com rows
 
@@ -384,7 +384,7 @@ function hasPairContestNear(
 ): Game[] {
   return games.filter(
     (g) =>
-      !isSbliveContest(g.contestId) &&
+      !isSbliveContestId(g.contestId) &&
       gamePair(g) === pairKey &&
       within(g.dateKey, date, days) &&
       !(g.official && g.official.fixtureId !== fixtureId),
@@ -394,7 +394,7 @@ function hasPairContestNear(
 /** A si.com row that is the same game as an existing MaxPreps contest (reconcile's join: same date, same pair). */
 function isMaxprepsGame(games: readonly Game[], row: SbliveGame): boolean {
   const pairKey = sblivePairKey(row.sides);
-  return games.some((g) => !isSbliveContest(g.contestId) && g.dateKey === row.dateKey && gamePair(g) === pairKey);
+  return games.some((g) => !isSbliveContestId(g.contestId) && g.dateKey === row.dateKey && gamePair(g) === pairKey);
 }
 
 /** Every item D2 could act on this run, whether or not si.com has it. */
@@ -405,7 +405,7 @@ export function eligibleItems(
 ): EligibleItem[] {
   const out: EligibleItem[] = [];
   for (const g of games) {
-    if (isSbliveContest(g.contestId)) continue;
+    if (isSbliveContestId(g.contestId)) continue;
     const pairKey = gamePair(g);
     if (!pairKey) continue;
     if (g.status === 'score-pending' && g.dateKey < today) {
@@ -517,7 +517,7 @@ function absentFixtureGame(
   const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.${moved ? ` ${moved}` : ''}`;
   const backfill: BackfillProvenance = { rule: 'absent-fixture', sbliveGameId: row.sbliveGameId, maxpreps: null, note };
   return {
-    contestId: `sblive:${row.sbliveGameId}`,
+    contestId: sbliveContestId(row.sbliveGameId),
     dateLocal: dates.dateLocal,
     dateUtc: dates.dateUtc,
     dateKey: dates.dateKey,
@@ -658,7 +658,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   } else {
     // ---- rules 3 and 4: MaxPreps contests
     games = games.map((g) => {
-      if (isSbliveContest(g.contestId)) return g;
+      if (isSbliveContestId(g.contestId)) return g;
       const pairKey = gamePair(g);
       if (!pairKey || !g.home.slug || !g.away.slug) return g;
       const label = labelOf(g);
@@ -811,7 +811,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         stillUnmatched.push(f);
         warnings.push(`si.com has ${pick.rows.length} different scores for the ${date} fixture ${label}; not filled`);
         const s = scoreFor(pick.rows[0], played.homeSlug, played.awaySlug);
-        if (s) skipped.push(skippedRow(`sblive:${pick.rows[0].sbliveGameId}`, date, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
+        if (s) skipped.push(skippedRow(sbliveContestId(pick.rows[0].sbliveGameId), date, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
         continue;
       }
       if (pick.kind === 'none') {
@@ -823,7 +823,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         const row = loose ?? outside;
         const s = row ? scoreFor(row, played.homeSlug, played.awaySlug) : null;
         if (row && s) {
-          skipped.push(skippedRow(`sblive:${row.sbliveGameId}`, row.dateKey, label, s, row.url, null, 'scheduled', loose ? NAME_ONLY_NOTE : OUTSIDE_NOTE));
+          skipped.push(skippedRow(sbliveContestId(row.sbliveGameId), row.dateKey, label, s, row.url, null, 'scheduled', loose ? NAME_ONLY_NOTE : OUTSIDE_NOTE));
         }
         continue;
       }
@@ -906,7 +906,7 @@ function carryForward(
   const out = games.map((g) => {
     const prev = prevById.get(g.contestId);
     const b = prev?.provenance.backfill;
-    if (!prev || !b || isSbliveContest(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
+    if (!prev || !b || isSbliveContestId(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
     if (g.provenance.backfill) return g;
     const pairKey = gamePair(g);
     const itemDate = b.rule === 'off-schedule-date' ? (offScheduleDate(g) ?? g.dateKey) : g.dateKey;
@@ -945,7 +945,7 @@ function carryForward(
   const added: Game[] = [];
   const filled = new Set<string>();
   for (const prev of previous.games) {
-    if (!isSbliveContest(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
+    if (!isSbliveContestId(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
     if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;

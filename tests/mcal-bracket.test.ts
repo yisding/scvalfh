@@ -36,7 +36,7 @@ function rowsOf(table: ReadonlyArray<{ teamId: string; w: number; l: number; t: 
   return table.map((r, i) => {
     const place = places?.[i] ?? 1 + pts.filter((p) => p > pts[i]).length;
     const gp = r.w + r.l + r.t;
-    const tied = table.filter((o, j) => j !== i && (places ? places[j] === place : pts[j] === pts[i])).map((o) => o.teamId);
+    const tied = table.filter((_o, j) => j !== i && (places ? places[j] === place : pts[j] === pts[i])).map((o) => o.teamId);
     const computed = {
       gp, w: r.w, l: r.l, t: r.t, winPct: (r.w + r.t / 2) / gp, pts: pts[i], gf: 0, ga: 0, gd: 0,
       streak: null, last5: [], homeRecord: rec3, awayRecord: rec3, neutralRecord: rec3, place,

@@ -4,7 +4,7 @@ import { longDate, plural, shortDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
 import type { RegionId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
-import { GameRow } from '../ui/GameRow';
+import { GameRow } from '../game-row/GameRow';
 import SectionHeader from '../ui/SectionHeader';
 import { gameWord } from '../words/plural';
 import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-view';

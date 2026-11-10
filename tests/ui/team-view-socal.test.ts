@@ -21,13 +21,16 @@ stubCorpusSnapshot(SOCAL_CORPUS);
 
 type Data = typeof import('../../lib/data');
 type View = typeof import('../../components/teams/team-view');
+type Line = typeof import('../../components/playoffs/team-postseason-line');
 
 let data: Data;
+let dataLine: Line;
 let view: View;
 let renderTeam: (slug: string) => Promise<string>;
 
 beforeAll(async () => {
   data = await import('../../lib/data');
+  dataLine = await import('../../components/playoffs/team-postseason-line');
   view = await import('../../components/teams/team-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   renderTeam = async (slug: string) => {
@@ -63,8 +66,8 @@ describe('San Diego team pages (socal corpus)', () => {
 
   it('a San Diego team’s postseason card never says "Projected from the table today": the Section places teams', async () => {
     const placed = data.getStandings('palomar').find((r) => r.computed.gp > 0)!;
-    const line = data.getTeamPostseasonLine(placed.slug)!;
-    expect(line.caveat, 'lib/data.ts caveat').toBeNull();
+    const line = dataLine.getTeamPostseasonLine(placed.slug)!;
+    expect(line.caveat, 'components/playoffs/team-postseason-line.ts caveat').toBeNull();
     const text = textOf(await renderTeam(placed.slug));
     expect(text, 'components/teams/TeamPlayoffLine.tsx').toContain('San Diego Section playoffs');
     expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');

@@ -45,7 +45,7 @@
 import { byDateThenId, dayDiff } from '../format';
 import { jvOutsideTeamByMaxprepsId, jvSlotTeamFor } from './jv-teams';
 import { LEAGUES, getLeague } from '../leagues';
-import { recordOver } from '../standings';
+import { recordOver } from '../standings/engine';
 import { getTeamBySlug, teamsInDivision } from '../teams';
 import type { ComputedRecord, ContestId, DivisionId, Game, GameSide, LeagueId, OfficialFixture, TeamSlug } from '../types';
 

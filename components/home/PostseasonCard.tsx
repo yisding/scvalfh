@@ -6,7 +6,7 @@ import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { monthDay, shortDate } from '../../lib/format';
 
-import type { PostseasonView } from './home-view';
+import type { PostseasonView } from './postseason-card';
 
 /**
  * A league panel's postseason block (SPEC §10.1; replaces the SCVAL-only PlayoffsCard).
@@ -15,7 +15,7 @@ import type { PostseasonView } from './home-view';
  *   ratio against a limit, so a meter, not a chart — its qualification sentence, the CCS dates and
  *   `CCS playoffs →` to the league's section of /playoffs. The meter is the allocation, not a
  *   projection: the CCS committee, not this site, assigns berths. The footer says so in the day's tense
- *   (home-view.ts ccsLadderView `official`): "Nothing here is official until the seeding meeting" before it,
+ *   (postseason-card.ts ccsLadderView `official`): "Nothing here is official until the seeding meeting" before it,
  *   "Berths were assigned by the CCS committee on Mon Nov 2; results update twice a day." after it.
  * - A league tournament (MCAL, North Coast Section): NO meter and no CCS date or word at all — the
  *   NCS holds no field hockey championship. One line of rounds and dates, the section's note and

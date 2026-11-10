@@ -61,7 +61,7 @@ byte-identical to the build before the seam.
 - **The domain types.** These are in `lib/types.ts`: ids, `Team`, `Game` and its sides, status,
   provenance and venue, `Standing`, `TiebreakInfo`, the health and cross-check rows.
 - **The engines.**
-  - The standings accumulation and stage interpreter in `lib/standings.ts`. A league's points rule is
+  - The standings accumulation and stage interpreter in `lib/standings/engine.ts`. A league's points rule is
     already config (`LeagueRules.points`).
   - The season-phase and window logic.
   - The least-squares rating fit in `lib/ratings/ratings.ts`. Its model is generic; only its constants
@@ -100,7 +100,7 @@ byte-identical to the build before the seam.
     kicks (shaped like 'SO', named differently).
 - **Goal vocabulary.**
   - The `h2h-goal-diff`, `h2h-goals-against` and `division-goals-against` tiebreak stages.
-  - The GF/GA/GD columns, legend and "no goal differential" in `components/ui/StandingsTable.tsx`.
+  - The GF/GA/GD columns, legend and "no goal differential" in `components/standings/standings-table/`.
   - `GoalDiffBar`, the goal-margin strips, and the leaders' goals-per-game boards.
   - The stored keys `gf`/`ga`/`gd` are really for/against and can stay; only their labels change.
 - **Ratings.** The Elo-adjusted scoring model (`lib/ratings/adjusted-scoring.ts`) is a Poisson goal

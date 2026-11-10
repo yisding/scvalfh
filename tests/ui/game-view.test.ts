@@ -10,16 +10,14 @@
  * entry. Every assertion message names the module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
@@ -266,7 +264,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     oneGoal.countsFor = null;
     tournament = oneGoal;
     target = snap.games.find((g) => g.countsFor !== null && !g.contestId.startsWith('sblive:') && mcalIds.has(g.home.teamId ?? ''))!;
-    snap.supersededGames = { [SUPERSEDED]: target.contestId };
+    snap.supersededGames = { [SUPERSEDED]: target.contestId, 'cifsds:alpha-at-beta': target.contestId };
     // A level non-league final MaxPreps flags W/L (the Gilroy–University shape): a single meeting.
     const pairKey = (g: Game) => [g.home.slug ?? g.home.name, g.away.slug ?? g.away.name].sort().join('|');
     const pairs = new Map<string, number>();
@@ -304,10 +302,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     flagged.away.result = 'W';
     flagged.provenance.resultConflict = `MaxPreps marks ${flagged.home.name} L and ${flagged.away.name} W on a 0-0 score.`;
     flagged.provenance.scoreConflict = undefined;
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-game-view-'));
-    const file = path.join(dir, 'snapshot.json');
-    writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'game-view');
     S = await loadModules();
   }, 600_000);
 
@@ -366,6 +361,22 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
     expect(S.m.buildGameView('sblive-999999'), 'components/game/game-view.ts: a stub has no game model').toBeUndefined();
   });
+
+  it('a superseded San Diego bracket-sheet id is a stub page too', async () => {
+    // MaxPreps posting a game the bracket sheet carried as `cifsds:<away>-at-<home>` supersedes that id
+    // exactly as it does an si.com one; the param list has always included it, so the page must render.
+    expect(S.pageParams().map((p) => p.id), 'components/game/game-view.ts stub param').toContain('cifsds-alpha-at-beta');
+    const stub = S.m.buildSupersededStub('cifsds-alpha-at-beta')!;
+    expect(stub, 'components/game/game-view.ts buildSupersededStub: cifsds id').toBeDefined();
+    expect(stub.param).toBe('cifsds-alpha-at-beta');
+    expect(stub.targetHref).toBe(S.ids.gameHref(target.contestId));
+    const html = await S.renderPage('cifsds-alpha-at-beta');
+    expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
+    const meta = await S.metadata('cifsds-alpha-at-beta');
+    expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
+    // A prefixed id that is not in the map is still nothing.
+    expect(S.m.buildSupersededStub('cifsds-gamma-at-delta')).toBeUndefined();
+  });
 });
 
 describe('Southern California games (corpus copy with synthetic SoCal games, DESIGN-socal §2.1)', () => {
@@ -379,8 +390,8 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
 
   beforeAll(async () => {
     const { game } = await import('../game-builder');
-    const { loadSnapshot } = await import('../../lib/snapshot/snapshot-schema');
-    const { computeStandings } = await import('../../lib/standings');
+    const { loadSnapshot } = await import('../../lib/snapshot/snapshot-load');
+    const { computeStandings } = await import('../../lib/standings/engine');
     const { countsOf } = await import('../../lib/snapshot/snapshot-migrate');
     const { getLeague } = await import('../../lib/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);
@@ -401,9 +412,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     const rows = new Map(computeStandings(games).filter((r) => socal.has(r.division)).map((r) => [r.teamId, r]));
     const standings = base.standings.map((r) => rows.get(r.teamId) ?? r);
     const snap: Snapshot = { ...base, games, standings, counts: countsOf(games, standings) };
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-game-view-socal-')), 'snapshot.json');
-    writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'game-view-socal');
     C = await loadModules();
   }, 600_000);
 

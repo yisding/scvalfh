@@ -321,7 +321,7 @@ export interface PairingConfig {
    * The dates, inclusive, a contest for this pairing may actually be played on when schools move it off
    * `date` (SCVAL 2026: MaxPreps lists #1 Mitty v St. Ignatius and #3 Valley Christian v Palo Alto on Thu Oct 29
    * and #2 and #4 on Fri Oct 30). A De Anza–El Camino game dated inside the window is this pairing's kind
-   * (lib/classify.ts rule 1) and seats the pairing (lib/standings.ts leaguePairings). Omitted ⇒ `date` alone.
+   * (lib/classify.ts rule 1) and seats the pairing (lib/standings/pairings.ts leaguePairings). Omitted ⇒ `date` alone.
    * The copy that names the pairings' day ("The SCVAL crossover and the 4th-place play-in are …") reads the
    * whole window (`pairingDatesLabel`); `date` stays the written schedule's day for the key-dates row.
    */

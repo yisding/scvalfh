@@ -14,27 +14,31 @@
  * Every assertion message names the module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '../../lib/types';
-import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+import { EAL_CORPUS, corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
 type Leagues = typeof import('../../lib/leagues');
 type View = typeof import('../../components/teams/team-view');
+type TeamsIndexView = typeof import('../../components/teams/teams-index-view');
+type Headlines = typeof import('../../components/teams/team-headlines');
+type Line = typeof import('../../components/playoffs/team-postseason-line');
 type GameViewModule = typeof import('../../components/game/game-view');
 
 interface Loaded {
   d: Data;
+  pl: Line;
   l: Leagues;
   v: View;
+  ti: TeamsIndexView;
+  th: Headlines;
   gm: GameViewModule;
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
@@ -55,16 +59,22 @@ async function load(snapshotPath: string): Promise<Loaded> {
   process.env.SCVAL_SNAPSHOT = snapshotPath;
   vi.resetModules();
   const d = await import('../../lib/data');
+  const pl = await import('../../components/playoffs/team-postseason-line');
   const l = await import('../../lib/leagues');
   const v = await import('../../components/teams/team-view');
+  const ti = await import('../../components/teams/teams-index-view');
+  const th = await import('../../components/teams/team-headlines');
   const gm = await import('../../components/game/game-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const gamePage = await import('../../app/game/[id]/page');
   const indexPage = (await import('../../app/teams/page')).default;
   return {
     d,
+    pl,
     l,
     v,
+    ti,
+    th,
     gm,
     renderTeam: async (slug) =>
       renderToStaticMarkup((await teamPage.default({ params: Promise.resolve({ slug }) } as never)) as ReactElement),
@@ -113,10 +123,7 @@ beforeAll(async () => {
   final.leagueDivision = null;
   final.contestTypes = { home: 4, away: 4 };
   final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
-  const file = path.join(dir, 'snapshot.json');
-  writeFileSync(file, JSON.stringify(snap));
-  withTag = await load(file);
+  withTag = await load(writeTempSnapshot(snap, 'eal-team-views'));
   tagged = withTag.d.getGameById(target.contestId)!;
   taggedFinal = withTag.d.getGameById(final.contestId)!;
 }, 600_000);
@@ -136,10 +143,10 @@ describe('an EAL team page (/teams/davis)', () => {
     const text = textOf(html);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain(`${ps.name} picture`);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain('Super Regional picture');
-    const line = eal.d.getTeamPostseasonLine('davis');
-    expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
+    const line = eal.pl.getTeamPostseasonLine('davis');
+    expect(line, 'components/playoffs/team-postseason-line.ts getTeamPostseasonLine').not.toBeNull();
     // Nothing is projected for the EAL (every team is in the six), so the card carries no "Projected" line.
-    expect(line?.caveat, 'lib/data.ts caveat').toBeNull();
+    expect(line?.caveat, 'components/playoffs/team-postseason-line.ts caveat').toBeNull();
     expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
       'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
@@ -202,8 +209,8 @@ describe('an EAL team page (/teams/davis)', () => {
 
   it('headlines the 1 v 1 game with its SO tag, from either side', () => {
     const decided = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
+    expect(eal.th.gameHeadline(decided, eal.d.getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
+    expect(eal.th.gameHeadline(decided, eal.d.getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
   });
 });
 
@@ -370,11 +377,11 @@ describe('/teams on the EAL corpus', () => {
       after.indexOf('Bella Vista'),
     );
     expect(textOf(html).split(note).length - 1, 'app/teams/page.tsx note appears once').toBe(1);
-    const groups = eal.v.buildTeamsByLeague().flatMap((s) => s.leagues);
+    const groups = eal.ti.buildTeamsByLeague().flatMap((s) => s.leagues);
     // The EAL and the Sunset (a field hockey grouping, not the all-sports league of that name) carry one.
-    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/team-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
+    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/teams-index-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
     // Nine leagues and the LA independents' group (DESIGN §24.9).
-    expect(groups.length, 'components/teams/team-view.ts nine league groups and the independents').toBe(10);
+    expect(groups.length, 'components/teams/teams-index-view.ts nine league groups and the independents').toBe(10);
   });
 
   it('states what the six EAL teams are, and carries no seed word', () => {

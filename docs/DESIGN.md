@@ -1951,7 +1951,7 @@ every section on every page. This is the entire brand.
 type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
 interface StandingsTableProps {
   division: Division;
-  rows: StandingsRow[];            // already sorted & ranked by lib/standings.ts
+  rows: StandingsRow[];            // already sorted & ranked by lib/standings/engine.ts
   gdDomain: number;                // max |gd| for THIS division — never global
   variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
   caption: string;                 // "De Anza Division league standings through Sep 24"
@@ -2458,7 +2458,7 @@ source at all** — not "0-0-0", not last place: *absent*. Official 2026-27 memb
 eight. Any design that derives its rows from the feed array silently drops a school from the
 league, which is the worst bug this site could ship.
 
-**Resolution:** `lib/teams.ts` holds a hand-maintained membership constant. `lib/standings.ts`
+**Resolution:** `lib/teams.ts` holds a hand-maintained membership constant. `lib/standings/engine.ts`
 **left-joins** it against the feed, so the table always has 16 rows across two divisions and a
 missing school lands in the designed no-results state (§8) rather than vanishing. A Zod
 invariant asserts `snapshot.teams.length === 16` and CI asserts it again.
@@ -4356,7 +4356,7 @@ tournament winner "also receives a pennant" (General Rules, Pennants 3). The sta
 labels remain while the picture is only projected from the table; the optional play-in clause drops once its day
 has passed.
 
-**The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (lib/data.ts) replaces the component's
+**The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (components/playoffs/team-postseason-line.ts) replaces the component's
 unconditional "Projected from the table today; nothing here is official.": a CCS ladder prints it, a league
 tournament prints it while its picture is still read from the table and "From the results as posted; nothing
 here is official." once a tournament result is in, and the EAL (every team is in the six), a San Diego league (the
@@ -5037,7 +5037,7 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
 
 ### 32.5 A team's Next, and the links in
 
-- **An unlisted pairing is a team's Next** (`team-view.ts pendingPairingFor`): a team holding a crossover or play-in
+- **An unlisted pairing is a team's Next** (`team-schedule.ts pendingPairingFor`): a team holding a crossover or play-in
   seat alone, with no league game left, sees it on its page's Next card (date, time, purpose, opponent or seat words,
   host, and that the pairing follows today's tables while it can still change) and on the pinned home card
   (`pairingNext`, composed on the server so the client card only prints strings), each linking

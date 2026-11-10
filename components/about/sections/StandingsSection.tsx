@@ -1,6 +1,6 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords, numberWord } from '../../../lib/format';
-import { isIndependentLeague } from '../../../lib/leagues';
+import { leagueHeading } from '../../../lib/leagues';
 import { leagueRef, type AboutStandings } from '../about-view';
 import LeagueRules from '../LeagueRules';
 
@@ -64,7 +64,7 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
           <SectionHeader
             as="h3"
             id={`rules-${summary.id}-heading`}
-            kicker={isIndependentLeague(summary.id) ? summary.name : `${summary.shortName} — ${summary.name}`}
+            kicker={leagueHeading(summary.id)}
           />
           <LeagueRules league={config} />
         </section>

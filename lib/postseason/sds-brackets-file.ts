@@ -8,7 +8,7 @@
 
 import bundledFileFieldHockey from '../../data/sds-brackets-2026.json';
 import bundledFileSoccer from '../../data/soccer/sds-brackets-2026.json';
-import { failValidation } from '../schema-primitives';
+import { validateData } from '../data-file';
 import type { TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile } from './sds-brackets-schema';
@@ -17,9 +17,7 @@ import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile } fro
 const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
 
 function loadFile(): SdsBracketsFile {
-  const parsed = SdsBracketsSchema.safeParse(bundledFile);
-  if (!parsed.success) failValidation('sds-brackets-2026', parsed.error.issues);
-  return parsed.data;
+  return validateData('sds-brackets-2026', SdsBracketsSchema, bundledFile);
 }
 
 export const SDS_BRACKETS_FILE: SdsBracketsFile = loadFile();

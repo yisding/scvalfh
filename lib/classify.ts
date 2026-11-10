@@ -27,9 +27,9 @@
  *    sides share a conference.
  */
 
-import { CCS, SECTIONS } from './league-config/sections';
+import { CCS } from './league-config/sections';
 import type { LeagueConfig, OutsideTournamentConfig } from './league-config/shape';
-import { LEAGUES, inPairingWindow } from './leagues';
+import { LEAGUES, inPairingWindow, outsideTournamentOf } from './leagues';
 import { teamOfSide } from './teams';
 import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 
@@ -88,7 +88,7 @@ function sectionPlayoffsPair(
  */
 function outsideTournamentPair(home: Team | undefined, away: Team | undefined, dateKey: string): OutsideTournamentConfig | null {
   if (!home || !away || home.section !== away.section) return null;
-  const event = SECTIONS.find((s) => s.id === home.section)?.outsideTournament ?? null;
+  const event = outsideTournamentOf(home.section);
   if (!event || dateKey < event.window.first || dateKey > event.window.last) return null;
   // Both sides must be entrants: a game in the window involving a team not in the tournament is not one of its
   // games (the /playoffs cards and the team pages say which teams are not in it).

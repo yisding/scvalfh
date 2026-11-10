@@ -36,7 +36,7 @@ const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry
 const division = slugId.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
 
 /** A team entry must carry its own registry id and division, not another team's. */
-export function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
+function agreesWithRegistry(t: { slug: string; teamId: string; division: string }): boolean {
   const team = getTeamBySlug(t.slug);
   return team !== undefined && team.id === t.teamId && team.division === t.division;
 }
@@ -336,6 +336,9 @@ export const PlayerProfileSchema = z
   }, 'url is not a valid URL on the platform it names')
   .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none');
 
+/** A profile's uniqueness key, platform and sport (field hockey when it names none): one profile per pair. */
+export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? 'field-hockey'}`;
+
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({
   field: z.enum(['jersey', 'grade', 'position', 'height']),
@@ -374,7 +377,7 @@ export const EnrichedPlayerSchema = z
   )
   .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together')
   .refine(
-    (p) => new Set(p.profiles.map((x) => `${x.platform} ${x.sport ?? 'field-hockey'}`)).size === p.profiles.length,
+    (p) => new Set(p.profiles.map(profileSportKey)).size === p.profiles.length,
     'one profile per platform in each sport',
   );
 

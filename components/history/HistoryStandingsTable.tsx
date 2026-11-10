@@ -121,7 +121,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
                 <td className="sx-num pl-4 pr-2 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                      (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                      (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and /history/2025-26 stacks one of these
                       tables per division and level of every league with standings — dozens of

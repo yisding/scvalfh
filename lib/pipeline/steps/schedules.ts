@@ -14,7 +14,7 @@
  */
 
 import { getLeague } from '../../leagues';
-import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../../sources/maxpreps';
+import { ScheduleResponseSchema, assertFeedHasTeam, splitTbaRows, type ScheduleRow } from '../../sources/maxpreps';
 import { FETCHABLE_TEAMS, TEAMS } from '../../teams';
 import type { LeagueId, SourceStatus, Team } from '../../types';
 import {
@@ -61,9 +61,7 @@ async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Prom
     state.tbaDropped.push(...split.dropped);
     const rows = split.rows;
     // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
-    if (rows.length > 0 && !rows.some((row) => row.contest.teams.some((t) => t.teamId === team.id))) {
-      throw new Error(`feed for ${team.id} contains no row for that teamId`);
-    }
+    assertFeedHasTeam(rows, team.id);
     // A 200 with no rows for a team we ALREADY hold games for is indistinguishable from an upstream
     // blip; taking it at face value would delete that team's non-league games with no warning.
     const had = previousGameCount(ctx, team);

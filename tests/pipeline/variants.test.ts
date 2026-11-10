@@ -15,7 +15,7 @@ import { TransportError } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { FixtureTransport } from '../../lib/pipeline/transport';
 import { SPORT_SEASON_ID } from '../../lib/season';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import { ScheduleResponseSchema } from '../../lib/sources/maxpreps';
 import { corpusDir, variantDir } from '../helpers';
 import {

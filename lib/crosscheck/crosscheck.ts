@@ -18,7 +18,7 @@
  * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree, as do a San
  * Diego Section shootout win MaxPreps records 0-0 and si.com's 0-0.
  *
- * This is the si.com SCORE comparison only. The MaxPreps STANDINGS comparison is lib/standings.ts
+ * This is the si.com SCORE comparison only. The MaxPreps STANDINGS comparison is lib/standings/cross-check.ts
  * buildCrossCheck, which skips a division MaxPreps publishes no table for (the San Diego Section's Valley:
  * crossCheckSkipReason); nothing here reads a MaxPreps league table, so nothing here changes for it.
  *
@@ -26,6 +26,7 @@
  */
 
 import { byDateKey, dayNumber } from '../format';
+import { isSbliveContestId, sbliveContestId } from '../game-id';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from '../sources/sblive';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from '../teams';
 import type { BackfillRow, Game, SbliveCrossCheck, ScoreConflictRow, SbliveOnlyRow } from '../types';
@@ -235,7 +236,7 @@ export function reconcile(
         ? NOT_PUBLISHED.nameOnly
         : NOT_PUBLISHED.notOfficial;
     sbliveOnlyScored.push({
-      contestId: `sblive:${sb.sbliveGameId}`,
+      contestId: sbliveContestId(sb.sbliveGameId),
       dateKey: sb.dateKey,
       // si.com's scoreboard does not say who hosted: the pair is named without a host.
       label: `${displayName(a)} vs ${displayName(b)}`,
@@ -281,7 +282,7 @@ export function withBackfill(
   ]);
   const only = new Map<string, SbliveOnlyRow>();
   for (const r of report.sbliveOnlyScored) {
-    if (r.contestId.startsWith('sblive:') && r.sbliveUrl && handledUrls.has(r.sbliveUrl)) continue;
+    if (isSbliveContestId(r.contestId) && r.sbliveUrl && handledUrls.has(r.sbliveUrl)) continue;
     only.set(r.contestId, r);
   }
   for (const r of backfill.skipped) only.set(r.contestId, r);
@@ -329,7 +330,7 @@ export function carryCrossCheck(
   });
   const sbliveOnlyScored = prior.sbliveOnlyScored.filter((r) => {
     if (published.has(r.contestId)) return false;
-    if (r.contestId.startsWith('sblive:')) {
+    if (isSbliveContestId(r.contestId)) {
       return !byId.has(r.contestId) && !(r.sbliveUrl !== null && publishedUrls.has(r.sbliveUrl));
     }
     const g = byId.get(r.contestId);

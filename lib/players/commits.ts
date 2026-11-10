@@ -32,6 +32,7 @@
 
 import bundledFieldHockey from '../../data/commits.json';
 import bundledSoccer from '../../data/soccer/commits.json';
+import { validateData } from '../data-file';
 import {
   COLLEGE_DIVISIONS,
   CommitsFileSchema,
@@ -42,7 +43,6 @@ import {
 } from './commits-schema';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
-import { failValidation } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
@@ -84,9 +84,7 @@ function loadAndJoin(
   teams: readonly MergedTeamRoster[],
   season: string,
 ): { file: CommitsFile; rows: Map<string, MergedPlayer> } {
-  const parsed = CommitsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('commits', parsed.error.issues);
-  const file = parsed.data;
+  const file = validateData('commits', CommitsFileSchema, raw);
   if (file.season !== season) {
     throw new Error(`commits.json is for season ${file.season}, rosters for ${season}`);
   }

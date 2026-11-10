@@ -1,13 +1,12 @@
-import Link from 'next/link';
-
 import { GoalDiffCell } from '../ui/GoalDiffBar';
+import { StretchedRowLink } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
-import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
+import { NoGoalDiff } from '../standings/standings-table/cells';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords, plural } from '../../lib/format';
 import { getDivision, getLeague, regionOf } from '../../lib/leagues';
-import { ladderLineAfter } from '../standings/standings-view';
+import { biggestGoalDiff, ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
 
@@ -206,12 +205,7 @@ function MiniRowView({
         <th scope="row" className="max-w-0 text-left font-normal">
           {/* The stretched row link (prefetch off: a static team route is downloaded in full on
               viewport entry otherwise). Only the pinned row's sr-only note is displayed. */}
-          <Link href={`/teams/${row.slug}`} prefetch={false} className="absolute inset-0">
-            <span className="sr-only">
-              <span className="sx-pin-note" hidden>Your team. </span>
-              {rowLabel(row, where)}
-            </span>
-          </Link>
+          <StretchedRowLink href={`/teams/${row.slug}`} label={rowLabel(row, where)} />
           <span className="flex items-center gap-2">
             <TeamMonogram team={row} size={24} className="@max-[18rem]:hidden" />
             {/* Up to two lines, broken between words only: a name never loses its second word

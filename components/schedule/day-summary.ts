@@ -26,7 +26,7 @@ import { gameWord, plural } from '../words/plural';
 import { shortNameOf } from '../words/team-short-name';
 
 import { countGames, type ScheduleCounts } from './filter-data';
-import { slugOf } from './schedule-view';
+import { slugOf } from './slug';
 import { capitalized } from '../words/capitalized';
 import { SPORT_AUDIENCE } from '../../lib/sports/current';
 

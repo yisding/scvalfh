@@ -202,7 +202,7 @@ export interface LeaderSources {
   teams: readonly Team[];
   /** data/player-stats.json's per-team entries. */
   stats: readonly TeamPlayerStats[];
-  /** One Standing per team (lib/standings.ts). */
+  /** One Standing per team (lib/standings/engine.ts). */
   standings: readonly Standing[];
   /** Every contest. */
   games: readonly Game[];

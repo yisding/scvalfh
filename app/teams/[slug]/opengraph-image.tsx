@@ -1,13 +1,9 @@
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
-import {
-  buildTeamPageView,
-  gameHeadline,
-  nextOfficialFixture,
-  officialFixtureHeadline,
-  placeScope,
-} from '../../../components/teams/team-view';
+import { gameHeadline, officialFixtureHeadline } from '../../../components/teams/team-headlines';
+import { nextOfficialFixture } from '../../../components/teams/team-schedule';
+import { buildTeamPageView, placeScope } from '../../../components/teams/team-view';
 import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getFetchedAt, getTeamSlugs } from '../../../lib/data';

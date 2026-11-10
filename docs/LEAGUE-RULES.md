@@ -11,7 +11,7 @@ Harvard-Westlake and Thousand Oaks) are not a league; the site tables their game
 own 3-1-0 points: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/league-config/` (a file per league) with the
-by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
+by-law citation beside it; one engine (`lib/standings/engine.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
 It never guesses an order.
@@ -86,7 +86,7 @@ Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of
 flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
 Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
-The site's words (2026-10-29/30, `lib/postseason/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
+The site's words (2026-10-29/30, `lib/postseason/postseason-outcomes.ts`, `components/playoffs/team-postseason-line.ts`): a crossover card reads "For CCS
 seeding, not qualification."; only a team with an automatic berth, the play-in or at-large consideration gets the
 crossover sentence on its team line, and 6th and lower read "No automatic berth; at-large berths are the CCS
 committee’s call."; once the play-in is final its winner reads "Won the play-in" ("Won the 4th-place play-in: an

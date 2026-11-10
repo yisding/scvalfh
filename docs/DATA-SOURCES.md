@@ -171,7 +171,7 @@ earlier rosters put her in the class of 2028 (MaxPreps kept, as the overlay rule
 other leagues the same day (not written) found no player added, removed or changed. The file holds 1,702 players on
 88 of the 102 teams.
 
-The previous file is salvaged row by row (`readPreviousFile` in `lib/pipeline/fetch-scope.ts`): each row is
+The previous file is salvaged row by row (`readPreviousFile` in `scripts/lib/team-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
 registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
 named in the log. That team alone has nothing to keep: it is `pending` if the run does not cover it
@@ -2072,7 +2072,7 @@ Vista on 2026-10-14 is the same date in the grid, both MaxPreps feeds and the um
 sheet.
 
 Without fixtures, "a league result is missing" has its own definition (`missingOfficialResults`
-in `lib/standings.ts`, the single definition the pipeline and the pages share): a game MaxPreps
+in `lib/standings/missing.ts`, the single definition the pipeline and the pages share): a game MaxPreps
 counts for the division, dated before today, that is `scheduled`, `live` or `score-pending` is
 **missing**, and one that is `postponed` is listed as postponed. On 2026-10-04 there were two: the
 2026-09-29 Pleasant Valley at Corning game (`a0350ae9-…`) and the 2026-10-01 Corning at Chico game
@@ -2939,7 +2939,8 @@ classification evidence says it is a league game. This is decided once, in the p
 
 The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `LeagueHealth`,
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
-`lib/snapshot/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
+`lib/snapshot/snapshot-schema.ts`, with the config cross-checks in `lib/snapshot/snapshot-invariants.ts` and the
+load path in `lib/snapshot/snapshot-load.ts` (schema version 2; a version-1 single-league file migrates in memory, a
 version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
 version-2 file whose games no longer classify under the current rules or registry (a `countsFor`, a
 `leagueDivision` or a `postseason` tag that differs from what the config gives today) is reclassified on load,

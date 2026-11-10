@@ -16,10 +16,10 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type RawResponse,
   type ResourceKey,
   type Transport,
 } from '../../lib/pipeline/contract';
+import type { RawResponse } from '../../lib/sources/http';
 import { loadCorpus, readManifest } from '../../lib/pipeline/corpus';
 import {
   FixtureTransport,
@@ -179,12 +179,15 @@ describe('the live resource map', () => {
     expect(getDivision('valley').maxprepsLeagueId).toBeNull();
     for (const kind of ['maxpreps-league-meta', 'maxpreps-standings'] as const) {
       expect(() => resourceUrl({ kind, division: 'valley' })).toThrow(/MaxPreps publishes no table for valley/);
+      // The message keeps the module prefix it had before the resource table moved out of transport.ts.
+      expect(() => resourceUrl({ kind, division: 'valley' })).toThrow('lib/pipeline/transport.ts: MaxPreps publishes no table for valley');
     }
   });
 
   it('has no official URL for a division whose league publishes no schedule (EAL)', () => {
     expect(getDivision('eal').official.mode).toBe('none');
     expect(() => resourceUrl({ kind: 'official-revision', division: 'eal' })).toThrow(/eal has no revision-check URL/);
+    expect(() => resourceUrl({ kind: 'official-revision', division: 'eal' })).toThrow('lib/pipeline/transport.ts: eal has no revision-check URL');
     expect(() => resourceUrl({ kind: 'scval-pdf-text', division: 'eal' })).toThrow(/eal publishes no official schedule/);
   });
 

@@ -11,8 +11,7 @@
 
 import { z } from 'zod';
 
-import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from './http';
-import type { RawResponse } from '../pipeline/contract';
+import { POLITE_USER_AGENT, RateGate, backoffDelayMs, retryAfterMs, sleepReal, type RawResponse } from './http';
 import { BOOTSTRAP_URL, MAXPREPS_API, SPORT_SEASON_ID } from '../season';
 import type { DroppedContest } from '../types';
 
@@ -337,6 +336,43 @@ export function parseBootstrap(html: string): Bootstrap {
   };
 }
 
+// ---------------------------------------------------------------- URLs
+
+/** GET /leagues/{leagueId}/v1. Free functions, so a URL needs no client (lib/pipeline/resources.ts, scripts/fetch-jv.ts). */
+export function maxprepsLeagueMetaUrl(leagueId: string): string {
+  return `${MAXPREPS_API}/leagues/${leagueId}/v1`;
+}
+
+export function maxprepsStandingsUrl(leagueId: string, sportSeasonId = SPORT_SEASON_ID): string {
+  // Lowercase `sportseasonid` is the spelling the bundle uses and the one that is verified.
+  return `${MAXPREPS_API}/leagues/${leagueId}/standings/v1?sportseasonid=${sportSeasonId}`;
+}
+
+export function maxprepsScheduleUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
+  return `${MAXPREPS_API}/gatewayweb/react/schedule-calculated/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
+}
+
+export function maxprepsTeamContextUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
+  return `${MAXPREPS_API}/gatewayweb/react/team-context/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
+}
+
+/**
+ * Guard the Presentation/Los Gatos class of routing bug: a team's schedule feed must contain that
+ * team (SPEC §7.2). An empty feed is legitimate (a school that has published nothing). Throws
+ * `${label} for ${teamId} contains no row for that teamId`, as `fail(message)` (default: an Error).
+ * Used by MaxPrepsClient.getSchedule, lib/pipeline/steps/schedules.ts and scripts/fetch-jv.ts ('JV feed').
+ */
+export function assertFeedHasTeam(
+  rows: readonly ScheduleRow[],
+  teamId: string,
+  label = 'feed',
+  fail: (message: string) => Error = (message) => new Error(message),
+): void {
+  if (rows.length > 0 && !rows.some((row) => row.contest.teams.some((t) => t.teamId === teamId))) {
+    throw fail(`${label} for ${teamId} contains no row for that teamId`);
+  }
+}
+
 // ---------------------------------------------------------------- transport
 
 export class MaxPrepsError extends Error {
@@ -366,7 +402,7 @@ export class MaxPrepsError extends Error {
 /**
  * Re-exported, not re-declared: two literals of the same string is how the `+` contact URL came to
  * be a placeholder in both places at once. `lib/sources/http.ts` owns it and explains the format;
- * this client still keeps its own TRANSPORT (see that file's header for why).
+ * this client still keeps its own attempt loop (see that file's header for why).
  */
 export { POLITE_USER_AGENT as DEFAULT_USER_AGENT };
 
@@ -387,37 +423,6 @@ export interface ClientOptions {
   onLog?: (line: string) => void;
 }
 
-const sleepReal = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-
-/** Concurrency limiter with a minimum spacing between request STARTS. */
-class Gate {
-  private active = 0;
-  private lastStart = 0;
-  private queue: Array<() => void> = [];
-
-  constructor(
-    private readonly concurrency: number,
-    private readonly spacingMs: number,
-    private readonly sleep: (ms: number) => Promise<void>,
-  ) {}
-
-  async run<T>(fn: () => Promise<T>): Promise<T> {
-    if (this.active >= this.concurrency) {
-      await new Promise<void>((resolve) => this.queue.push(resolve));
-    }
-    this.active += 1;
-    try {
-      const wait = this.lastStart + this.spacingMs - Date.now();
-      if (wait > 0) await this.sleep(wait);
-      this.lastStart = Date.now();
-      return await fn();
-    } finally {
-      this.active -= 1;
-      this.queue.shift()?.();
-    }
-  }
-}
-
 export interface RequestMeta {
   url: string;
   httpStatus: number;
@@ -435,7 +440,7 @@ export class MaxPrepsClient {
   private readonly timeoutMs: number;
   private readonly attempts: number;
   private readonly sleep: (ms: number) => Promise<void>;
-  private readonly gate: Gate;
+  private readonly gate: RateGate;
   private readonly onLog: (line: string) => void;
 
   constructor(opts: ClientOptions = {}) {
@@ -445,7 +450,7 @@ export class MaxPrepsClient {
     this.attempts = Math.max(1, opts.attempts ?? 3);
     this.sleep = opts.sleep ?? sleepReal;
     this.onLog = opts.onLog ?? (() => {});
-    this.gate = new Gate(
+    this.gate = new RateGate(
       Math.min(3, Math.max(1, opts.concurrency ?? 3)),
       Math.max(0, opts.spacingMs ?? 500),
       this.sleep,
@@ -563,10 +568,8 @@ export class MaxPrepsClient {
   }
 
   /** 1 s → 2 s → 4 s with ±20 % jitter, or Retry-After when the server sent one. */
-  private async backoff(attempt: number, retryAfterMs: number | null): Promise<void> {
-    const base = retryAfterMs ?? 1000 * 2 ** (attempt - 1);
-    const jitter = base * 0.2 * (Math.random() * 2 - 1);
-    const ms = Math.max(0, Math.round(base + jitter));
+  private async backoff(attempt: number, retryAfter: number | null): Promise<void> {
+    const ms = backoffDelayMs(attempt, retryAfter);
     this.onLog(`retry in ${ms}ms (attempt ${attempt})`);
     await this.sleep(ms);
   }
@@ -574,16 +577,15 @@ export class MaxPrepsClient {
   // -------------------------------------------------------------- endpoints
 
   leagueMetaUrl(leagueId: string): string {
-    return `${MAXPREPS_API}/leagues/${leagueId}/v1`;
+    return maxprepsLeagueMetaUrl(leagueId);
   }
 
   standingsUrl(leagueId: string, sportSeasonId = SPORT_SEASON_ID): string {
-    // Lowercase `sportseasonid` is the spelling the bundle uses and the one that is verified.
-    return `${MAXPREPS_API}/leagues/${leagueId}/standings/v1?sportseasonid=${sportSeasonId}`;
+    return maxprepsStandingsUrl(leagueId, sportSeasonId);
   }
 
   scheduleUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
-    return `${MAXPREPS_API}/gatewayweb/react/schedule-calculated/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
+    return maxprepsScheduleUrl(teamId, sportSeasonId);
   }
 
   async getBootstrap(): Promise<Fetched<Bootstrap>> {
@@ -601,24 +603,14 @@ export class MaxPrepsClient {
   async getSchedule(teamId: string, sportSeasonId = SPORT_SEASON_ID): Promise<Fetched<ScheduleRow[]>> {
     const url = this.scheduleUrl(teamId, sportSeasonId);
     const res = await this.json(url, ScheduleResponseSchema);
-    // Guard the Presentation/Los Gatos class of routing bug: a team's feed must contain that
-    // team (SPEC §7.2). An empty feed is legitimate (a school that has published nothing).
-    if (res.data.data.length > 0) {
-      const present = res.data.data.some((row) =>
-        row.contest.teams.some((t) => t.teamId === teamId),
-      );
-      if (!present) {
-        throw new MaxPrepsError(`feed for ${teamId} contains no row for that teamId`, {
-          url,
-          httpStatus: res.meta.httpStatus,
-        });
-      }
-    }
+    assertFeedHasTeam(res.data.data, teamId, 'feed', (message) =>
+      new MaxPrepsError(message, { url, httpStatus: res.meta.httpStatus }),
+    );
     return { data: res.data.data, meta: res.meta };
   }
 
   teamContextUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
-    return `${MAXPREPS_API}/gatewayweb/react/team-context/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
+    return maxprepsTeamContextUrl(teamId, sportSeasonId);
   }
 
   /** ~738 KB. Season bootstrap only — never in the daily sweep (SPEC §5.4). */
@@ -630,11 +622,4 @@ export class MaxPrepsClient {
     const res = await this.json(url, TeamContextSchema);
     return { data: res.data.data, meta: res.meta };
   }
-}
-
-/** `Retry-After` in milliseconds, capped — see MAX_RETRY_AFTER_MS in lib/sources/http.ts. */
-function retryAfterMs(res: Response): number | null {
-  const seconds = Number(res.headers.get('retry-after'));
-  if (!Number.isFinite(seconds) || seconds <= 0) return null;
-  return Math.min(seconds * 1000, MAX_RETRY_AFTER_MS);
 }

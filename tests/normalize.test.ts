@@ -444,7 +444,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
   });
 
   it('flags a final whose winner is marked L', () => {
-    const flipped = editTeams(finalRow, (t, i) => ({ result: i === winnerIdx ? 'L' : 'W' }));
+    const flipped = editTeams(finalRow, (_t, i) => ({ result: i === winnerIdx ? 'L' : 'W' }));
     const [g] = normalizeGames([flipped], { fetchedAt: FETCHED_AT }).games;
     expect(g.status).toBe('final');
     expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks .+ on a \d+-\d+ score\.$/);
@@ -458,7 +458,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
 
   it('never flags a non-final, a final with no flags, or two agreeing copies', () => {
     const pending = {
-      ...editTeams(finalRow, (t, i) => ({ result: i === winnerIdx ? 'L' : 'W' })),
+      ...editTeams(finalRow, (_t, i) => ({ result: i === winnerIdx ? 'L' : 'W' })),
       calculatedFields: { ...finalRow.calculatedFields, contestState: 5 },
     };
     const unflagged = editTeams(finalRow, () => ({ result: null }));

@@ -9,10 +9,9 @@ import { OG_BASE } from '../../../components/layout/site';
 import DivisionStandings from '../../../components/standings/DivisionStandings';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
-import { leaderClause } from '../../../components/standings/standings-view';
+import { biggestGoalDiff, leaderClause } from '../../../components/standings/standings-view';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
-import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history/history';
@@ -87,7 +86,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   // scale is in words ("De Anza's is 36"), not "|GD| max 36"; a single-division league names no
   // division (SPEC §10.3).
   // A division where every |GD| is 0 (Metro South Bay before its first game) is left out of the
-  // list: its `gdDomain` is the bar floor of 1, not a goal difference (StandingsTable biggestGoalDiff).
+  // list: its `gdDomain` is the bar floor of 1, not a goal difference (standings-view.ts biggestGoalDiff).
   const scaled = data.views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
   const gdScale = multi
     ? `Bars are scaled to each division’s own biggest goal difference${

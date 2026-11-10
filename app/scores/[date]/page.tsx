@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import DayNav from '../../../components/schedule/DayNav';
 import GameList from '../../../components/schedule/GameList';
 import JvDayGames from '../../../components/jv/JvDayGames';
+import { regionIdSuffix } from '../../../components/leaders/scope';
 import ScoresRegionBlock, { MovedNote } from '../../../components/schedule/ScoresRegionBlock';
 import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
 import { dayDescription, dayRegions, daySummary, leaguesInvolved } from '../../../components/schedule/day-summary';
@@ -110,7 +111,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const jvBlocks = REGIONS.map((region) => ({
     region: region.id,
     shortName: region.shortName,
-    idSuffix: region.id === 'norcal' ? '' : '-socal',
+    idSuffix: regionIdSuffix(region.id),
     view: buildDayJvView(date, region.id),
   })).filter((block) => block.view.rows.length > 0);
   /* The leagues whose /schedule/<league> lists this date: every league with a side in one of the

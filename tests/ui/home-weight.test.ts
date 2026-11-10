@@ -29,7 +29,7 @@
  *    otherwise warns past 90 %: this suite also gates update-data.yml's commit, and a view that grows
  *    with the season (link chips, form, postseason lines) must never stop the day's scores from being
  *    published. So data-driven growth fails a CI run, never the data cron.
- * Failures route to components/home/home-view.ts, which builds the views.
+ * Failures route to components/home/team-card.ts, which builds the views.
  */
 
 import { describe, expect, it, vi } from 'vitest';
@@ -50,25 +50,25 @@ async function teamViewBytes(snapshotPath: string | undefined): Promise<{ bytes:
   vi.resetModules();
   if (snapshotPath) process.env.SCVAL_SNAPSHOT = snapshotPath;
   else delete process.env.SCVAL_SNAPSHOT;
-  const { buildTeamViews } = await import('../../components/home/home-view');
+  const { buildTeamViews } = await import('../../components/home/team-card');
   const views = buildTeamViews();
   return { bytes: Buffer.byteLength(JSON.stringify(views), 'utf8'), count: views.length };
 }
 
-describe('home team views weight (components/home/home-view.ts)', () => {
+describe('home team views weight (components/home/team-card.ts)', () => {
   it('stays ≤ 73 KiB on the corpus snapshot (deterministic)', async () => {
     const { bytes, count } = await teamViewBytes(corpusSnapshotPath('all-2026-10-02'));
-    expect(count, 'components/home/home-view.ts: one view per team').toBe(102);
+    expect(count, 'components/home/team-card.ts: one view per team').toBe(102);
     expect(
       bytes,
-      `components/home/home-view.ts: serialized teamViews are ${bytes} bytes on the corpus (budget ${CORPUS_BUDGET})`,
+      `components/home/team-card.ts: serialized teamViews are ${bytes} bytes on the corpus (budget ${CORPUS_BUDGET})`,
     ).toBeLessThanOrEqual(CORPUS_BUDGET);
   }, 600_000);
 
   it('stays ≤ 121 KiB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {
     const { bytes, count } = await teamViewBytes(undefined);
-    expect(count, 'components/home/home-view.ts: one view per team').toBe(102);
-    const message = `components/home/home-view.ts: serialized teamViews are ${bytes} bytes on the bundled snapshot (budget ${BUDGET})`;
+    expect(count, 'components/home/team-card.ts: one view per team').toBe(102);
+    const message = `components/home/team-card.ts: serialized teamViews are ${bytes} bytes on the bundled snapshot (budget ${BUDGET})`;
     if (liveBudgetGates(process.env)) {
       expect(bytes, message).toBeLessThanOrEqual(BUDGET);
     } else if (bytes > BUDGET * WARN_AT) {

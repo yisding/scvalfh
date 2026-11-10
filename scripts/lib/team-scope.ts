@@ -1,8 +1,8 @@
 /**
  * What scripts/fetch-rosters.ts and scripts/fetch-player-stats.ts share: which registry teams a
  * run covers, and how a run reports its teams league by league. The flag parsers for `--leagues`
- * and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts parseRunArgs), so the
- * three CLIs read those flags by one rule.
+ * and `--fetched-at` live in lib/cli-flags.ts, shared with fetch-data (lib/pipeline/run.ts
+ * parseRunArgs), so the CLIs read those flags by one rule.
  *
  * Both scripts walk the whole 102-team registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
@@ -21,27 +21,9 @@
 
 import type { ZodType } from 'zod';
 
-import { LEAGUES, LEAGUE_IDS, getLeague, isLeagueId } from '../leagues';
-import { TEAMS, getTeamBySlug } from '../teams';
-import type { LeagueId, Team } from '../types';
-
-/** `scval,bval` → ['scval', 'bval']; an unknown id or an empty list throws. */
-export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] {
-  const ids = value.split(',').map((s) => s.trim()).filter(Boolean);
-  if (ids.length === 0) throw new Error(`${flag} needs at least one league id`);
-  for (const id of ids) {
-    if (!isLeagueId(id)) throw new Error(`${flag}: unknown league ${id} (known: ${LEAGUE_IDS.join(', ')})`);
-  }
-  return [...new Set(ids)] as LeagueId[];
-}
-
-/** `--fetched-at <iso>`: an ISO timestamp ('2026-10-04T00:00:00.000Z'), returned as given; anything else throws. */
-export function parseFetchedAtFlag(value: string, flag = '--fetched-at'): string {
-  if (!/^\d{4}-\d{2}-\d{2}T/.test(value) || Number.isNaN(Date.parse(value))) {
-    throw new Error(`${flag}: not an ISO timestamp: ${value}`);
-  }
-  return value;
-}
+import { LEAGUES, getLeague } from '../../lib/leagues';
+import { TEAMS, getTeamBySlug } from '../../lib/teams';
+import type { LeagueId, Team } from '../../lib/types';
 
 /** The registry teams a run covers, in registry order: all 102, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {
@@ -98,7 +80,8 @@ export type PreviousFile<Row, Whole> =
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-function describeIssues(issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>): string {
+/** The first three issues of a failed parse, `path: message`, for a log line. */
+export function describeIssues(issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>): string {
   return issues
     .slice(0, 3)
     .map((i) => `${i.path.map(String).join('.') || '(row)'}: ${i.message}`)

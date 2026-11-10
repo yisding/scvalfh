@@ -35,7 +35,7 @@
  * written.
  *
  * The previous file is salvaged row by row, as fetch-rosters and fetch-player-stats salvage theirs
- * (lib/pipeline/fetch-scope.ts readPreviousFile): each team row, each game and each si.com row is held to its
+ * (scripts/lib/team-scope.ts readPreviousFile): each team row, each game and each si.com row is held to its
  * own schema, and one that fails costs only itself, named in the log. The whole-file schema fails
  * whenever the registry grows (it wants one row per registry team, in registry order), and before
  * this salvage a `--leagues` run over such a file carried nothing: every team outside the run went
@@ -45,23 +45,24 @@
  * stops the run (exit 1, nothing written), since nothing in it can be told apart from a wipe.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { ZodType } from 'zod';
 
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../lib/cli-flags';
 import {
+  describeIssues,
   describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
   teamsInScope,
   type PreviousRows,
-} from '../lib/pipeline/fetch-scope';
+} from './lib/team-scope';
+import { droppedTeams, loadPreviousOrFail, prepareCapture, saveCapture, validateAssembled, writeIfChanged } from './lib/team-file';
 import { byDateThenId, localDateKey, monthDay } from '../lib/format';
 import { mergeJv } from '../lib/jv/jv-merge';
 import {
@@ -80,16 +81,14 @@ import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { normalizeGames } from '../lib/pipeline/normalize';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
-import { formatIssues } from '../lib/schema-primitives';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '../lib/season';
 import { HttpClient } from '../lib/sources/http';
-import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
+import { MaxPrepsClient, ScheduleResponseSchema, assertFeedHasTeam, maxprepsScheduleUrl, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '../lib/sources/sblive';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib/sources/sblive-jv';
-import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId, Team } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 import { DATA_DIR } from '../lib/sports/current';
 
 interface Args {
@@ -146,8 +145,11 @@ const NOTES = [
 
 /** What a run may take from the previous file: its team rows (PreviousRows), games and si.com rows. */
 interface PreviousJv extends PreviousRows<JvTeam, JvFile> {
+  readable: true;
   games: Game[];
   sblive: JvSbliveRow[];
+  /** The log lines naming every row, game and si.com row not kept. */
+  log: string[];
 }
 
 /**
@@ -169,13 +171,7 @@ function salvageList<T>(
   list.forEach((entry, i) => {
     const parsed = schema.safeParse(entry);
     if (parsed.success) kept.push(parsed.data);
-    else {
-      const why = parsed.error.issues
-        .slice(0, 3)
-        .map((issue) => `${issue.path.map(String).join('.') || '(row)'}: ${issue.message}`)
-        .join('; ');
-      log.push(`WARN previous ${label}[${i}] does not validate and is dropped: ${why}`);
-    }
+    else log.push(`WARN previous ${label}[${i}] does not validate and is dropped: ${describeIssues(parsed.error.issues)}`);
   });
   const times = new Map<string, number>();
   for (const row of kept) times.set(idOf(row), (times.get(idOf(row)) ?? 0) + 1);
@@ -184,16 +180,13 @@ function salvageList<T>(
 }
 
 /**
- * The previous file, salvaged (see the header): null when there is none, `unreadable` when the run
- * must stop. The log lines name every row, game and si.com row not kept.
+ * The previous file's text, salvaged (see the header): `readable: false` when the run must stop.
+ * Its log names every row, game and si.com row not kept.
  */
-function loadPrevious(file: string): { previous: PreviousJv | null; unreadable: string | null; log: string[] } {
-  if (!existsSync(file)) return { previous: null, unreadable: null, log: [] };
-  const text = readFileSync(file, 'utf8');
+function readPrevious(text: string, label: string): PreviousJv | { readable: false; reason: string } {
   const read = readPreviousFile(text, { season: SEASON_YEAR, row: JvTeamSchema, file: JvFileSchema });
-  if (!read.readable) return { previous: null, unreadable: read.reason, log: [] };
+  if (!read.readable) return { readable: false, reason: read.reason };
   const json = JSON.parse(text) as Record<string, unknown>;
-  const label = path.relative(process.cwd(), file);
   // This season's year with another JV season id is another season's games, as readPreviousFile treats
   // another year: every row is ignored and named.
   const rows: PreviousRows<JvTeam, JvFile> =
@@ -214,18 +207,16 @@ function loadPrevious(file: string): { previous: PreviousJv | null; unreadable: 
         }
       : read;
   const log = describePrevious(rows, label);
-  if (rows.otherSeason !== null) return { previous: { ...rows, games: [], sblive: [] }, unreadable: null, log };
+  if (rows.otherSeason !== null) return { ...rows, readable: true, games: [], sblive: [], log };
   const games = salvageList(json.games, JvGameSchema, (g) => g.contestId, `${label} games`, log);
   const sblive = salvageList(json.sblive, JvSbliveRowSchema, (r) => r.sbliveGameId, `${label} sblive`, log);
-  return { previous: { ...rows, games, sblive }, unreadable: null, log };
+  return { ...rows, readable: true, games, sblive, log };
 }
 
 /** A schedule body → its rows, with MaxPreps' routing guard: a non-empty feed must contain the school. */
 function parseSchedule(body: string, team: Team): ScheduleRow[] {
   const rows = ScheduleResponseSchema.parse(JSON.parse(body) as unknown).data;
-  if (rows.length > 0 && !rows.some((r) => r.contest.teams.some((t) => t.teamId === team.id))) {
-    throw new Error(`JV feed for ${team.id} contains no row for that teamId`);
-  }
+  assertFeedHasTeam(rows, team.id, 'JV feed');
   return rows;
 }
 
@@ -243,7 +234,7 @@ const UNAVAILABLE: JvSourceState = { status: 'unavailable', rowCount: null, fetc
 
 const involves = (g: Pick<Game, 'home' | 'away'>, slug: string) => g.home.slug === slug || g.away.slug === slug;
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
@@ -255,23 +246,19 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     return 0;
   }
-  const { previous, unreadable, log } = loadPrevious(args.out);
-  if (unreadable) {
-    console.error(`FAILED: the previous ${path.relative(process.cwd(), args.out)} cannot be read: ${unreadable}. Nothing written.`);
-    return 1;
-  }
-  for (const line of log) console.warn(line);
+  const loaded = loadPreviousOrFail(args.out, readPrevious, 'Nothing written.', (p) => p.log);
+  if (!loaded.ok) return 1;
+  const previous = loaded.previous;
   const priorTeam: ReadonlyMap<string, JvTeam> = previous?.rows ?? new Map();
   // Registry teams whose previous row was dropped: nothing of theirs is carried, and one outside the
   // run is 'pending' and fails the run (summarizeByLeague / runExitCode).
-  const dropped = new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
+  const dropped = droppedTeams(previous);
 
   const maxpreps = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
   const sblive = new HttpClient({ ...SBLIVE_HTTP_OPTIONS, onLog: (l) => console.log(`  ${l}`) });
-  const capture = args.dryRun ? null : args.capture;
-  if (capture) mkdirSync(capture, { recursive: true });
+  const capture = prepareCapture(args);
   const save = (name: string, body: string) => {
-    if (capture) writeFileSync(path.join(capture, name), body.endsWith('\n') ? body : `${body}\n`, 'utf8');
+    if (capture) saveCapture(capture, name, body);
   };
   const read = (name: string) => readFileSync(path.join(args.fixtures as string, name), 'utf8');
 
@@ -293,7 +280,7 @@ async function main(argv: readonly string[]): Promise<number> {
       const prior = priorTeam.get(team.slug);
       const had = previous?.games.filter((g) => involves(g, team.slug)).length ?? 0;
       try {
-        const url = maxpreps.scheduleUrl(team.id, JV_SPORT_SEASON_ID);
+        const url = maxprepsScheduleUrl(team.id, JV_SPORT_SEASON_ID);
         const body = args.fixtures ? read(`jv-sched-${team.slug}.json`) : (await maxpreps.text(url, 'application/json')).data;
         if (!args.fixtures) save(`jv-sched-${team.slug}.json`, body);
         const split = splitTbaRows(parseSchedule(body, team));
@@ -402,12 +389,8 @@ async function main(argv: readonly string[]): Promise<number> {
     sblive: sbliveRows,
     counts: countJv(teams, games, sbliveRows),
   };
-  const validated = JvFileSchema.safeParse(file);
-  if (!validated.success) {
-    console.error('FAILED: the assembled file does not validate:');
-    console.error(formatIssues(validated.error.issues));
-    return 1;
-  }
+  const validated = validateAssembled(JvFileSchema, file);
+  if (!validated) return 1;
 
   const merged = mergeJv({ games, sblive: sbliveRows, today, fetchedAt });
   console.log('');
@@ -436,20 +419,15 @@ async function main(argv: readonly string[]): Promise<number> {
   // row was dropped (it is pending now), as in fetch-rosters and fetch-player-stats.
   const exitCode = runExitCode(byLeague, previous?.dropped ?? []);
 
-  if (args.dryRun) {
-    console.log('\ndry run: nothing written');
-    return exitCode;
-  }
-  // Only a previous file that validates whole (and lost no row) can be left in place.
-  const whole = previous?.whole;
-  if (whole && jvContentKey(whole) === jvContentKey(validated.data)) {
-    console.log(`\nno change since ${whole.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`);
-    return exitCode;
-  }
-  mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(file), 'utf8');
-  console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return exitCode;
+  return writeIfChanged({
+    out: args.out,
+    dryRun: args.dryRun,
+    whole: previous?.whole,
+    contentKey: jvContentKey,
+    validated,
+    file,
+    exitCode,
+  });
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

@@ -4,7 +4,7 @@ import { shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 
-import { NON_MEMBER_NOTE } from '../ui/GameRow';
+import { NON_MEMBER_NOTE } from '../game-row/summary';
 import GhostMonogram from '../ui/GhostMonogram';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel, { GameChips } from '../ui/StatusLabel';

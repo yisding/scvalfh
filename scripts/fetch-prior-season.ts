@@ -46,7 +46,7 @@ import { DATA_DIR, GENDER_NAME, SPORT, SPORT_AUDIENCE, SPORT_SEASON } from '../l
 import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { TeamSlug } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 
 const USAGE =
   'Usage: pnpm fetch-prior-season [--year <yy-yy>] [--ssid <sportSeasonId>] [--out <path>] [--dry-run]';
@@ -119,7 +119,7 @@ function render(file: PriorSeason): string {
 }
 
 /** Fetch every registry team's feed for the season, normalize, validate, write (all or nothing). */
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);
@@ -202,4 +202,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

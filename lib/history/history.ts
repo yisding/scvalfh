@@ -13,8 +13,6 @@
  * way), so a bad file fails at import time rather than half-way through a render.
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledBracketsFieldHockey from '../../data/history-brackets-2025-26.json';
 import bundledBracketsSoccer from '../../data/soccer/history-brackets-2025-26.json';
 import bundledHistoryFieldHockey from '../../data/history-2025-26.json';
@@ -41,9 +39,9 @@ import {
   type LeagueHistory,
   type UnavailableLeagueHistory,
 } from './history-schema';
+import { readOverride, validateData } from '../data-file';
 import { listWords } from '../format';
 import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
-import { failValidation } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
@@ -83,22 +81,11 @@ export type {
  * still swaps in another file through node:fs (Node only; never set it on a Worker).
  */
 function load(): History {
-  const override = process.env.SCVAL_HISTORY;
-  let raw: unknown = bundledHistory;
-  if (override) {
-    let text: string;
-    try {
-      text = readFileSync(override, 'utf8');
-    } catch (err) {
-      throw new Error(
-        `lib/history/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
-      );
-    }
-    raw = JSON.parse(text) as unknown;
-  }
-  const parsed = HistorySchema.safeParse(raw);
-  if (!parsed.success) failValidation('history', parsed.error.issues);
-  return parsed.data;
+  return validateData(
+    'history',
+    HistorySchema,
+    readOverride('lib/history/history.ts', 'SCVAL_HISTORY', bundledHistory),
+  );
 }
 
 // The 2025-26 archive is field hockey's alone: the soccer build's file (data/soccer/history-2025-26.json) is an
@@ -269,9 +256,7 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
  * module scope, like the standings above.
  */
 function loadBrackets() {
-  const parsed = HistoryBracketsSchema.safeParse(bundledBrackets);
-  if (!parsed.success) failValidation('history brackets', parsed.error.issues);
-  return parsed.data;
+  return validateData('history brackets', HistoryBracketsSchema, bundledBrackets);
 }
 
 const brackets = IS_FIELD_HOCKEY

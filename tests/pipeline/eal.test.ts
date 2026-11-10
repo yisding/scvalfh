@@ -16,10 +16,10 @@ import { localDateKey, sideOutcome } from '../../lib/format';
 import { DATA_QUALITY } from '../../lib/league-config/data-quality';
 import { LEAGUES } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
-import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/sources/sblive';
-import { divisionGames } from '../../lib/standings';
+import { divisionGames } from '../../lib/standings/engine';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
 import type { Game, Snapshot } from '../../lib/types';
 import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
@@ -116,7 +116,7 @@ describe('the EAL corpus run', () => {
     expect(d.official, 'lib/pipeline/steps/standings.ts: official').toBeNull();
     expect(d.classification, 'lib/pipeline/steps/classify.ts').toBe('contest-type');
     expect(d.countedFinals, 'lib/pipeline/steps/standings.ts').toBe(divisionGames(snapshot.games, DIVISION).length);
-    expect(d.missingLeaguePast, 'lib/standings.ts missingOfficialResults').toBe(missingFromCorpus().length);
+    expect(d.missingLeaguePast, 'lib/standings/missing.ts missingOfficialResults').toBe(missingFromCorpus().length);
   });
 
   it('read the reported table (members plus the known extra row) and logged no unknown school', () => {
@@ -156,10 +156,10 @@ describe('the EAL corpus run', () => {
       const team = members.get(row.schoolId);
       if (!team) continue; // a school in MaxPreps' table that is not a registry team (Red Bluff)
       const s = snapshot.standings.find((x) => x.teamId === team.id);
-      expect(s, `lib/standings.ts: no row for ${team.slug}`).toBeDefined();
+      expect(s, `lib/standings/engine.ts: no row for ${team.slug}`).toBeDefined();
       expect(
         [s!.computed.w, s!.computed.l, s!.computed.t],
-        `lib/standings.ts: ${team.slug} league W-L-T`,
+        `lib/standings/engine.ts: ${team.slug} league W-L-T`,
       ).toEqual([row.conferenceWins, row.conferenceLosses, row.conferenceTies]);
       checked += 1;
     }
@@ -242,7 +242,7 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
       .filter((r) => r.kind === 'missing')
       .map((r) => r.game?.contestId ?? '')
       .sort();
-    expect(listed, 'lib/standings.ts missingOfficialResults').toEqual(expected);
+    expect(listed, 'lib/standings/missing.ts missingOfficialResults').toEqual(expected);
   });
 
   it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {

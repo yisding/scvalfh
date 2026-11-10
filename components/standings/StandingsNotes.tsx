@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ordinal } from '../../lib/format';
 import type { Standing } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import type { StandingsRowData } from './standings-table/types';
 
 import type { ComparisonView, MismatchNote, MissingRowView } from './standings-view';
 
@@ -80,7 +80,7 @@ export interface StandingsNotesProps {
   className?: string;
 }
 
-/** lib/standings.ts `buildCrossCheck` field names: the place row starts with "place". */
+/** lib/standings/cross-check.ts `buildCrossCheck` field names: the place row starts with "place". */
 const isPlaceField = (field: string) => field.startsWith('place');
 
 /** The log's terse field names, in words. Anything unknown is printed as it comes. */

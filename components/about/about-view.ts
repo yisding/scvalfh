@@ -46,7 +46,7 @@ import {
   leagueStandingsUrl,
   regionOf,
 } from '../../lib/leagues';
-import { crossCheckSkipReason } from '../../lib/standings';
+import { crossCheckSkipReason } from '../../lib/standings/cross-check';
 import type {
   BackfillRow,
   CcsCalendarEvent,
@@ -102,7 +102,7 @@ export interface HealthDivision {
    * cross-check is skipped, instead of linking anything.
    */
   maxprepsUrl: string | null;
-  /** Why there is no table (lib/standings.ts crossCheckSkipReason); null when there is one. */
+  /** Why there is no table (lib/standings/cross-check.ts crossCheckSkipReason); null when there is one. */
   skipReason?: string | null;
   /**
    * The division's standings rows that carry MaxPreps' reported record: the member rows its table

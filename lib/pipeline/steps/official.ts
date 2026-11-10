@@ -36,11 +36,11 @@ import {
   listFieldHockeyLinks,
   parseSchedulePdfText,
 } from '../../sources/scval-pdf';
+import type { RawResponse } from '../../sources/http';
 import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
 import {
   type OfficialStep,
   type OfficialStepResult,
-  type RawResponse,
   type ResourceKey,
   type RunContext,
 } from '../contract';

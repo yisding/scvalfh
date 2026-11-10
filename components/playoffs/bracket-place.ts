@@ -12,12 +12,13 @@
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { getPlayoffs } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { getSdsBrackets, winnerOf, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
+import { winnerOf } from '../../lib/postseason/game-winner';
+import { getSdsBrackets, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 
 import { getBracketLink, type BracketLink } from './bracket-link';
-import { buildBrackets, isSeedSide, isWinnerOf, winnerSlug, type BracketRound, type PairingSide } from './bracket-model';
+import { buildBrackets, isSeedSide, isWinnerOf, type BracketRound, type PairingSide } from './bracket-model';
 
 export interface BracketPlace {
   /** 'CCS Division 2 quarterfinal · 8 v 1', 'Division II first round'; null when the game's round is not known. */
@@ -60,8 +61,8 @@ function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
     const card = round.cards.find((c) => c.kind === 'game' && c.game.contestId === game.contestId);
     const seeds = card?.kind === 'game' && card.seeds.away !== null && card.seeds.home !== null ? ` · ${card.seeds.away} v ${card.seeds.home}` : '';
     const label = round.key === 'other' ? path.name : `${path.name} ${singular(round.name)}${seeds}`;
-    // Score first, then a lone W (bracket-model.ts winnerSlug), so the words agree with the side the bracket advances.
-    const winner = winnerSlug(game);
+    // Score first, then a lone W (lib/postseason/game-winner.ts winnerOf), so the words agree with the side the bracket advances.
+    const winner = winnerOf(game);
     const later: BracketRound | undefined = path.rounds[r + 1];
     if (!later) {
       // Only the final names a division winner: without the seed file a bracket has only the rounds MaxPreps lists,

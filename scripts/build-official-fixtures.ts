@@ -23,7 +23,6 @@
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { plural } from '../lib/format';
 import { getDivision, getLeague } from '../lib/leagues';
@@ -44,7 +43,7 @@ import {
 import { assertDoubleRoundRobin } from '../lib/official/validate';
 import { resolveOfficialName } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
@@ -285,7 +284,7 @@ export function outputFileOf(leagueId: BundledLeague, outDir = DEFAULT_OUT_DIR):
 
 // ---------------------------------------------------------------- CLI
 
-function main(argv: readonly string[]): number {
+export function main(argv: readonly string[]): number {
   let sourceDir = DEFAULT_SOURCE_DIR;
   let outDir = DEFAULT_OUT_DIR;
   let bvalTexts: string[] | null = null;
@@ -336,5 +335,4 @@ function main(argv: readonly string[]): number {
   return differs > 0 ? 1 : 0;
 }
 
-const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) runCli(main);
+runCliIfMain(import.meta.url, main);

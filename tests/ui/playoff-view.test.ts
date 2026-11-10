@@ -12,9 +12,7 @@
  * module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
@@ -24,7 +22,7 @@ import type { ProjectionRow } from '../../components/playoffs/playoff-view';
 import { listWords } from '../../lib/format';
 import type { PlayoffStatus, Snapshot } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025 } from '../fixtures/ccs/bracket-2025';
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
@@ -691,10 +689,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     snap.playoffs.divisionsPublished = { 'Division 1': true, 'Division 2': true };
     snap.playoffs.games = [];
     snap.fetchedAt = '2026-11-03T12:00:00.000Z';
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-playoffs-seeded-'));
-    const file = path.join(dir, 'snapshot.json');
-    writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
+    process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'playoffs-seeded');
     vi.resetModules();
     vi.doMock('../../lib/postseason/ccs-bracket', async (importOriginal) => {
       const actual = await importOriginal<typeof import('../../lib/postseason/ccs-bracket')>();

@@ -7,7 +7,7 @@ import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, isIndependentLeague } from '../../
 import { SEASON_YEARS_DISPLAY } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 
-import { OG, OG_SIZE } from './og-theme';
+import { OG } from './og-theme';
 import { SITE_WORDMARK } from '../layout/site';
 
 /**
@@ -36,13 +36,13 @@ import { SITE_WORDMARK } from '../layout/site';
  * (DESIGN §12.4), and no league or region hue.
  */
 
-export interface RegionCardRow {
+interface RegionCardRow {
   id: LeagueId;
   shortName: string;
   text: string;
 }
 
-export interface RegionCardColumn {
+interface RegionCardColumn {
   region: RegionId;
   /** 'Northern California' | 'Southern California'. */
   heading: string;
@@ -112,7 +112,7 @@ export interface RegionCardProps {
 }
 
 /** The minimum space between the title block, the columns and the footer in `'natural'` sizing. */
-export const REGION_CARD_MIN_GAP = 16;
+const REGION_CARD_MIN_GAP = 16;
 
 export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }: RegionCardProps) {
   const C = REGION_CARD;
@@ -201,9 +201,6 @@ export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }
     </div>
   );
 }
-
-/** The card's canvas: the same 1200×630 every card uses. */
-export const REGION_CARD_SIZE = OG_SIZE;
 
 // ---------------------------------------------------------------- the two cards' words
 // Kept here rather than in the route files: an `opengraph-image` route exports only its image function

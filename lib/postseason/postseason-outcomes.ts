@@ -2,10 +2,10 @@
  * What a CCS league's own postseason games did to a team (plan final-10, 2026-10-30): the SCVAL 4th-place
  * play-in and crossover (Fri Oct 30; two crossovers moved to Thu Oct 29) and the BVAL play-in (Sat Oct 31).
  *
- * Read only from a pairing's MATCHED game (lib/standings.ts leaguePairings: the pairing's tag, inside its window,
+ * Read only from a pairing's MATCHED game (lib/standings/pairings.ts leaguePairings: the pairing's tag, inside its window,
  * one seat contender on each side) once that game is final. Until then there is no outcome and every surface keeps
  * the ladder's projected words. The winner is the higher score, else the side MaxPreps marks 'W' (the convention
- * lib/postseason/postseason.ts winnerOf and lib/postseason/sds-bracket.ts winnerOf follow); a level final with no flag decides nothing,
+ * lib/postseason/game-winner.ts winnerOf and lib/postseason/postseason.ts tournamentGameWinner follow); a level final with no flag decides nothing,
  * so it is no outcome either.
  *
  * Copy (DESIGN §15.8: never "eliminat…"; CCS words are fine here, these are CCS-ladder surfaces only):
@@ -30,6 +30,7 @@ import type { LeagueConfig, PairingConfig } from '../league-config/shape';
 import { getLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { Game, LeaguePairing, TeamSlug } from '../types';
+import { winningSide } from './game-winner';
 
 export interface CcsOutcome {
   /** 'play-in': the team's final play-in; 'crossover': a final crossover game (SCVAL #1–#3). */
@@ -44,22 +45,6 @@ export interface CcsOutcome {
 }
 
 type CcsLadder = Extract<LeagueConfig['postseason'], { kind: 'ccs-ladder' }>;
-
-/**
- * The winning side of a final: the higher score, else the side flagged 'W' alone; null when nothing decides it.
- * Exported for the play-in card's winner line (components/playoffs/PlayInCard.tsx), so card and team line agree.
- */
-export function winningSide(game: Game): 'home' | 'away' | null {
-  if (game.status !== 'final') return null;
-  const h = game.home.score;
-  const a = game.away.score;
-  if (h === null || a === null) return null;
-  if (h > a) return 'home';
-  if (a > h) return 'away';
-  if (game.home.result === 'W' && game.away.result !== 'W') return 'home';
-  if (game.away.result === 'W' && game.home.result !== 'W') return 'away';
-  return null;
-}
 
 const nameOf = (slug: TeamSlug | null): string => (slug ? (getTeamBySlug(slug)?.name ?? slug) : 'TBD');
 

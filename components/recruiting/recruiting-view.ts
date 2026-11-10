@@ -29,10 +29,10 @@
 
 import { getClubsFile } from '../../lib/players/clubs';
 import { getCommitsFile } from '../../lib/players/commits';
-import { getTeamsGrouped, type LeagueSummary } from '../../lib/data';
+import { getTeamsGrouped } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
-import { getLeague } from '../../lib/leagues';
+import { leagueHeading } from '../../lib/leagues';
 import { getRosterEnrichment, getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { buildTeamJvRosterView, type JvRosterRow } from '../jv/jv-roster-view';
@@ -224,7 +224,7 @@ export function buildRecruitingView(): RecruitingView {
         return [
           {
             id: league.id,
-            title: leagueTitle(league),
+            title: leagueHeading(league.id),
             meta: `${plural(players, 'player')} at ${plural(schools.length, 'school')}`,
             schools,
           },
@@ -245,9 +245,4 @@ export function buildRecruitingView(): RecruitingView {
     clubsCheckedOn: dateWithYear(getClubsFile().capturedAt),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
   };
-}
-
-/** /teams' league heading: "SCVAL — Santa Clara Valley Athletic League", a group of independents by its name. */
-function leagueTitle(league: LeagueSummary): string {
-  return getLeague(league.id).independents === true ? league.name : `${league.shortName} — ${league.name}`;
 }

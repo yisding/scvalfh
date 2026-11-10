@@ -20,7 +20,7 @@
  * so this runs by hand or from a weekly schedule. The budget is the MaxPreps client's own
  * (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
  *
- * A partial run still publishes, and failures are scoped to the team (lib/pipeline/fetch-scope.ts): a team
+ * A partial run still publishes, and failures are scoped to the team (scripts/lib/team-scope.ts): a team
  * whose page fails to fetch or to parse keeps the previous file's rows with status
  * 'carried-forward' (or 'error' when there is nothing to carry), and never stops another team or
  * another league from being read. A team outside a `--leagues` run keeps the previous file's row
@@ -37,21 +37,20 @@
  * written.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { parseFetchedAtFlag, parseLeaguesFlag } from '../lib/cli-flags';
 import {
-  describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '../lib/pipeline/fetch-scope';
+} from './lib/team-scope';
+import { droppedTeams, loadPreviousOrFail, prepareCapture, validateAssembled, writeIfChanged } from './lib/team-file';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
 import { jvRosterUrl, parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
 import {
@@ -64,12 +63,10 @@ import {
   type TeamRoster,
 } from '../lib/players/rosters-schema';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
-import { formatIssues } from '../lib/schema-primitives';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
-import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
-import { runCli } from './cli';
+import { runCliIfMain } from './cli';
 import { DATA_DIR } from '../lib/sports/current';
 
 type Level = 'varsity' | 'jv';
@@ -124,14 +121,13 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists, salvaged row by row (lib/pipeline/fetch-scope.ts readPreviousFile): its
+ * The previous file's text, salvaged row by row (scripts/lib/team-scope.ts readPreviousFile): its
  * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
  * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
  * pending.
  */
-function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
-  if (!existsSync(file)) return null;
-  return readPreviousFile(readFileSync(file, 'utf8'), {
+function readPrevious(text: string): PreviousFile<TeamRoster, Rosters> {
+  return readPreviousFile(text, {
     season: SEASON_YEAR,
     row: TeamRosterSchema,
     file: RostersPartialSchema,
@@ -155,26 +151,17 @@ const JV_NOTES = [
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
-async function main(argv: readonly string[]): Promise<number> {
+export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   const jv = args.level === 'jv';
   const sportSeasonId = jv ? JV_SPORT_SEASON_ID : SPORT_SEASON_ID;
   const pageUrl = jv ? jvRosterUrl : rosterUrl;
   const filePrefix = jv ? 'jv-roster' : 'roster';
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
-  const loaded = loadPrevious(args.out);
-  if (loaded && !loaded.readable) {
-    console.error(
-      `FAILED: the previous ${path.relative(process.cwd(), args.out)} cannot be read: ${loaded.reason}. ` +
-        'Nothing written: fix or remove it, then re-run.',
-    );
-    return 1;
-  }
-  const previous = loaded;
-  if (previous) {
-    for (const line of describePrevious(previous, path.relative(process.cwd(), args.out))) console.warn(line);
-  }
-  const dropped = new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
+  const loaded = loadPreviousOrFail(args.out, readPrevious, 'Nothing written: fix or remove it, then re-run.');
+  if (!loaded.ok) return 1;
+  const previous = loaded.previous;
+  const dropped = droppedTeams(previous);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
 
   console.log(
@@ -183,9 +170,7 @@ async function main(argv: readonly string[]): Promise<number> {
       : `fetch-rosters: ${teamsInScope(args.leagues).length} MaxPreps ${jv ? 'JV ' : ''}roster pages` +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
-  // --dry-run writes nothing, --capture included.
-  const capture = args.dryRun ? null : args.capture;
-  if (capture) mkdirSync(capture, { recursive: true });
+  const capture = prepareCapture(args);
 
   const teams: TeamRoster[] = await Promise.all(
     TEAMS.map(async (team): Promise<TeamRoster> => {
@@ -279,12 +264,8 @@ async function main(argv: readonly string[]): Promise<number> {
     counts: countRosters(teams),
   };
 
-  const validated = RostersSchema.safeParse(rosters);
-  if (!validated.success) {
-    console.error('FAILED: the assembled file does not validate:');
-    console.error(formatIssues(validated.error.issues));
-    return 1;
-  }
+  const validated = validateAssembled(RostersSchema, rosters);
+  if (!validated) return 1;
 
   console.log('');
   for (const t of teams) {
@@ -316,22 +297,15 @@ async function main(argv: readonly string[]): Promise<number> {
       (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );
 
-  if (args.dryRun) {
-    console.log('\ndry run: nothing written');
-    return exitCode;
-  }
-  // Only a previous file that validates whole (and lost no row) can be left in place.
-  const whole = previous?.whole;
-  if (whole && rostersContentKey(whole) === rostersContentKey(validated.data)) {
-    console.log(
-      `\nno change since ${whole.fetchedAt}: ${path.relative(process.cwd(), args.out)} left as it was`,
-    );
-    return exitCode;
-  }
-  mkdirSync(path.dirname(args.out), { recursive: true });
-  writeFileSync(args.out, stableStringify(rosters), 'utf8');
-  console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
-  return exitCode;
+  return writeIfChanged({
+    out: args.out,
+    dryRun: args.dryRun,
+    whole: previous?.whole,
+    contentKey: rostersContentKey,
+    validated,
+    file: rosters,
+    exitCode,
+  });
 }
 
-runCli(main);
+runCliIfMain(import.meta.url, main);

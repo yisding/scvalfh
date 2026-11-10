@@ -18,6 +18,7 @@
  */
 
 import { byDateThenId } from '../../format';
+import { isSbliveContestId } from '../../game-id';
 import { DATA_QUALITY } from '../../league-config/data-quality';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../normalize';
 import { isCifsdsContest } from '../../postseason/sds-sheet-results';
@@ -64,7 +65,7 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
     const candidates = ctx.previous.games
       .filter(
         (g) =>
-          !g.contestId.startsWith('sblive:') &&
+          !isSbliveContestId(g.contestId) &&
           !isCifsdsContest(g.contestId) &&
           !have.has(g.contestId) &&
           !droppedIds.has(g.contestId) &&

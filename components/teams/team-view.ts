@@ -1,5 +1,6 @@
 /**
- * Everything /teams and /teams/[slug] need, derived once per page.
+ * Everything /teams/[slug] needs, derived once per page (the /teams index is teams-index-view.ts; the team's
+ * pending pairing, next official fixture and Last/Next predicates are team-schedule.ts).
  *
  * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
  * lib/format's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
@@ -12,32 +13,22 @@
 import {
   getGames,
   getHeadToHead,
-  getLastLeagueResultDate,
   getOfficialFixtures,
   getStandingContext,
   getStandingFor,
-  getStandings,
   getTeamBySlug,
   getTeamForm,
-  getTeamPostseasonLine,
   getTeams,
-  getTeamsGrouped,
   getToday,
   type FormGame,
-  type LeagueSummary,
   type StandingContext,
-  type TeamPostseasonLine,
   getLeagueTournament,
-  getLeaguePairings,
 } from '../../lib/data';
+import { getTeamPostseasonLine, type TeamPostseasonLine } from '../playoffs/team-postseason-line';
 import {
   dateSpan,
-  gameWhen,
-  leagueClockPT,
-  listWords,
   monthDay,
   ordinal,
-  plural,
   recordString,
   renderScore,
   scoreSentence,
@@ -48,7 +39,7 @@ import {
   mapsSearchHref,
   noMoreGamesSentence,
 } from '../../lib/format';
-import { CCS, REGIONS } from '../../lib/league-config/sections';
+import { CCS } from '../../lib/league-config/sections';
 import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
   divisionHeading,
@@ -57,12 +48,12 @@ import {
   pairingWindow,
   getRegion,
   leaguePlayEnds,
-  leaguesInRegion,
   regionOf,
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../words/pin-label';
-import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
+import { pairingsHref } from '../../lib/postseason/postseason-kind';
+import { outcomesFor, pairingDatesLabel } from '../../lib/standings/ladder';
 import type {
   DivisionId,
   Game,
@@ -71,7 +62,6 @@ import type {
   OfficialFixture,
   Outcome,
   Record3,
-  RegionId,
   SectionId,
   Standing,
   Team,
@@ -80,12 +70,20 @@ import type {
 import { gameAddress } from '../../lib/schools/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { getBracketPlace } from '../playoffs/bracket-place';
-import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
-import { capitalized } from '../words/capitalized';
 import { maxPrepsLabel } from '../words/maxpreps-label';
-import { IS_FIELD_HOCKEY, SPORT_AUDIENCE } from '../../lib/sports/current';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
+import {
+  fixtureOpponent,
+  inOpenPairing,
+  isPlayedBy,
+  isUpcomingFrom,
+  nextOfficialFixture,
+  pendingPairingFor,
+  playedPairing,
+  type PendingPairing,
+} from './team-schedule';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -333,111 +331,6 @@ export type NextCard =
       body: string;
     };
 
-/**
- * A crossover or play-in a team is seated in, by the league table today, that MaxPreps has not listed as a game
- * yet (lib/data.ts getLeaguePairings: `game` null). Its date is today or later. The team must hold its seat alone
- * and have played every league game of its own; a seat other teams' games can still move (`settled` false) is
- * shown as the table has it today, and the card says the pairing can still change.
- */
-export interface PendingPairing {
-  leagueId: LeagueId;
-  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason/postseason-round-label.ts). */
-  kindLabel: string;
-  /** 'Play-in for BVAL’s 4th automatic CCS berth': the config label's purpose. */
-  purpose: string;
-  dateKey: string;
-  /** '11:00 AM PT', or null when the league publishes no start time (SCVAL). */
-  timeLabel: string | null;
-  versus: 'vs' | 'at';
-  /** The opponent when one team holds its seat today. */
-  opponent: Team | undefined;
-  /** Its short name; 'Prospect or Westmont' when level teams share the seat; the seat's label when nobody holds it. */
-  opponentName: string;
-  /** 'Mt. Hamilton #4 at Santa Teresa #1' (a host is named) | 'De Anza #4 v El Camino #4'. */
-  seats: string;
-  /** false while either seat can still change: level teams share one, or either division has league games left. */
-  settled: boolean;
-  /** `/playoffs#<league>-pairings`: the league's pairing cards on /playoffs. */
-  href: string;
-}
-
-function divisionDone(division: DivisionId): boolean {
-  return [...getStandingContext(division).values()].every((c) => c.remaining === null || c.remaining === 0);
-}
-
-export function pendingPairingFor(team: Team, today: string): PendingPairing | null {
-  const league = getLeague(team.league);
-  if (league.postseason.kind !== 'ccs-ladder') return null;
-  for (const p of getLeaguePairings(league.id)) {
-    if (p.game || p.date < today) continue;
-    const mine = p.seats.findIndex((seat) => seat.length === 1 && seat[0].teamId === team.id);
-    // The team has played every league game, so no game of its own can move it; others in its division still may.
-    if (mine < 0 || getStandingContext(team.division).get(team.id)?.remaining !== 0) continue;
-    const theirs = mine === 0 ? 1 : 0;
-    const others = p.seats[theirs].flatMap((ref) => {
-      const t = getTeamBySlug(ref.slug);
-      return t ? [t] : [];
-    });
-    const opponent = others.length === 1 ? others[0] : undefined;
-    const at = p.label.indexOf(' \u2014 ');
-    const tail = at < 0 ? (p.isPlayIn ? 'play-in' : 'crossover') : p.label.slice(at + 3);
-    const seats =
-      p.host === null
-        ? `${p.seatLabels[0]} v ${p.seatLabels[1]}`
-        : `${p.seatLabels[p.host === 0 ? 1 : 0]} at ${p.seatLabels[p.host]}`;
-    return {
-      leagueId: league.id,
-      kindLabel: `${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
-      purpose: capitalized(tail),
-      dateKey: p.date,
-      // The league's own clock words ('11 AM PT'), as the pairing card and the strip on /playoffs print it.
-      timeLabel: p.time ? leagueClockPT(p.time) : null,
-      versus: p.host !== null && p.host === theirs ? 'at' : 'vs',
-      opponent,
-      opponentName: opponent
-        ? opponent.shortName
-        : others.length > 1
-          ? listWords(others.map((t) => t.shortName), 'or')
-          : `the ${p.seatLabels[theirs]} team`,
-      seats,
-      settled: opponent !== undefined && divisionDone(team.division) && divisionDone(opponent.division),
-      href: `/playoffs#${league.id}-pairings`,
-    };
-  }
-  return null;
-}
-
-/**
- * True when the team is in a crossover or play-in not played yet: a listed game that is not final, or a seat the team
- * holds alone in one MaxPreps has not listed. The team page's "CCS playoffs →" then goes straight to the league's
- * pairing cards on /playoffs (`#<league>-pairings`), not the top of its section.
- */
-export function inOpenPairing(team: Team, today: string): boolean {
-  if (getLeague(team.league).postseason.kind !== 'ccs-ladder') return false;
-  return getLeaguePairings(team.league).some((p) => {
-    if (p.game) {
-      const mine = p.game.home.slug === team.slug || p.game.away.slug === team.slug;
-      return mine && p.game.status !== 'final' && p.game.dateKey >= today;
-    }
-    return p.date >= today && p.seats.some((seat) => seat.length === 1 && seat[0].teamId === team.id);
-  });
-}
-
-/**
- * The team's own crossover or play-in once it is final ('the SCVAL crossover', Thu Oct 29), for the empty Next
- * card: the league's 'the SCVAL crossover is Thu Oct 29 and Fri Oct 30' would describe a game this team has played.
- */
-function playedPairing(team: Team): { word: string; dateKey: string } | null {
-  const league = getLeague(team.league);
-  if (league.postseason.kind !== 'ccs-ladder') return null;
-  for (const p of getLeaguePairings(league.id)) {
-    if (p.game?.status !== 'final') continue;
-    if (p.game.home.slug !== team.slug && p.game.away.slug !== team.slug) continue;
-    return { word: `the ${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`, dateKey: p.game.dateKey };
-  }
-  return null;
-}
-
 /** The empty Next card's sentences (TeamNextGame), from the league copy and the team's own played pairing. */
 function noneCard(team: Team, league: TeamLeagueCopy): Extract<NextCard, { kind: 'none' }> {
   let seasonEnd = league.seasonEndSentence;
@@ -673,17 +566,6 @@ function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOp
     });
 }
 
-/** The next official fixture we have no contest for, at or after `today`. */
-export function nextOfficialFixture(
-  fixtures: readonly OfficialFixture[],
-  today: string,
-): OfficialFixture | null {
-  const ahead = fixtures
-    .filter((f) => f.dateKey >= today)
-    .sort((a, b) => a.dateKey.localeCompare(b.dateKey));
-  return ahead.length > 0 ? ahead[0] : null;
-}
-
 /** 'Today · Fri Oct 2' when the day is `today` (getToday(), never the clock), else 'Fri Oct 2'. */
 function dateLabelFor(dateKey: string, dateLocal: string, today: string): string {
   return dateKey === today ? `Today \u00b7 ${shortDate(dateLocal)}` : shortDate(dateLocal);
@@ -875,36 +757,6 @@ export function buildNextCard(
 }
 
 /**
- * 'VALLEY CHRISTIAN' → 'Valley Christian', 'LICK-WILMERDING' → 'Lick-Wilmerding', for a grid name
- * with no registry row behind it.
- */
-function titleCase(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/(^|[\s.\-/(])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
-}
-
-/**
- * 'vs' / 'at' and the opponent of an official fixture, seen from `team`'s side. The one place a
- * fixture's opponent is named (the team page, its OG card and home's pinned card): the registry
- * short name, or the schedule's own spelling title-cased for a school outside the registry.
- */
-export function fixtureOpponent(
-  fixture: OfficialFixture,
-  team: Pick<Team, 'slug'>,
-): { mineIsHome: boolean; versus: 'vs' | 'at'; opponent: Team | undefined; opponentName: string } {
-  const mineIsHome = fixture.homeSlug === team.slug;
-  const opponentSlug = mineIsHome ? fixture.awaySlug : fixture.homeSlug;
-  const opponent = opponentSlug ? getTeamBySlug(opponentSlug) : undefined;
-  return {
-    mineIsHome,
-    versus: mineIsHome ? 'vs' : 'at',
-    opponent,
-    opponentName: opponent ? opponent.shortName : titleCase(mineIsHome ? fixture.awayName : fixture.homeName),
-  };
-}
-
-/**
  * The postseason line once the team is in a drawn bracket (2026-11-03): a CCS or San Diego Section game of its, the
  * next one still to play or else its latest, names the round, the game and what comes next, and the link goes to the
  * team's card (components/playoffs/bracket-place.ts): "CCS Division 2 quarterfinal · 5 v 4: at Homestead, Sat Nov 7,
@@ -937,7 +789,7 @@ function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: re
 /** The postseason line, its link pointed at the pairing cards while the team has a crossover or play-in to play. */
 function pairingAwareLine(line: TeamPostseasonLine | null, team: Team, today: string): TeamPostseasonLine | null {
   if (!line || !inOpenPairing(team, today)) return line;
-  return { ...line, href: `/playoffs#${team.league}-pairings` };
+  return { ...line, href: pairingsHref(team.league) };
 }
 
 export function buildTeamPageView(slug: string): TeamPageView | undefined {
@@ -965,14 +817,8 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   // LAST is the most recent thing that HAPPENED, which includes a game played and not yet scored:
   // that row renders SCORE NOT REPORTED with two en dashes, never 0-0 (DESIGN §5.2, §8). NEXT is
   // the next thing that has NOT happened, so a score-pending game never poses as an upcoming one.
-  const played = all.filter(
-    (g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= today,
-  );
-  const upcoming = all.filter(
-    (g) =>
-      (g.status === 'scheduled' || g.status === 'live' || g.status === 'postponed') &&
-      g.dateKey >= today,
-  );
+  const played = all.filter(isPlayedBy(today));
+  const upcoming = all.filter(isUpcomingFrom(today));
   const officialFixtures = getOfficialFixtures({ slug: team.slug });
   const next = upcoming.length > 0 ? upcoming[0] : null;
 
@@ -1030,149 +876,4 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     elo: teamElo(team),
     today,
   };
-}
-
-// ---------------------------------------------------------------- /teams
-
-export interface TeamsLeagueGroup {
-  league: LeagueSummary;
-  /** `SCVAL — Santa Clara Valley Athletic League` */
-  title: string;
-  /** `15 teams` */
-  meta: string;
-  /** Who the league's schools are, when that is not one section's (config `membershipNote`); null for most. */
-  membershipNote: string | null;
-  /** `/standings/<league>` */
-  standingsHref: string;
-  /** `SCVAL standings` */
-  standingsLabel: string;
-  /**
-   * Each division's compact standings table: every team of the division in the engine's order,
-   * with its anchor, h4 heading, ladder line and `Full <division> table →` link — the /standings
-   * overview's own division view (components/standings/standings-view.ts), so the two pages can
-   * never disagree about a place.
-   */
-  divisions: OverviewDivision[];
-}
-
-export interface TeamsSectionGroup {
-  id: SectionId;
-  /** `Central Coast Section` — the h2 kicker, sentence case as written. */
-  name: string;
-  leagues: TeamsLeagueGroup[];
-}
-
-/** One region's half of /teams (DESIGN-socal §2.4): its sections, in a `<div id="<region>">` wrapper. */
-export interface TeamsRegionGroup {
-  id: RegionId;
-  name: string;
-  sections: TeamsSectionGroup[];
-}
-
-/** /teams: region → section → league → division → standings table, config order (NorCal, then SoCal). */
-export function buildTeamsByRegion(): TeamsRegionGroup[] {
-  return REGIONS.map((region) => ({
-    id: region.id,
-    name: region.name,
-    sections: buildTeamsByLeague(region.id),
-  }));
-}
-
-/**
- * The sentence that says where each league's membership comes from (DESIGN-socal §2.1.7,
- * `LeagueConfig.alignmentSource`), grouped. NorCal's half is today's sentence word for word: its four
- * leagues' official schedules, and the EAL, which publishes none (its six are MaxPreps' EAL table less
- * Red Bluff). The SoCal half names each source with the leagues that use it, in config order.
- */
-export function alignmentSentence(): string {
-  // The EAL clause is field hockey's (the soccer build covers SCVAL, whose official schedules give the alignment).
-  const norcal = IS_FIELD_HOCKEY
-    ? 'League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.'
-    : 'League and division alignment comes from each league’s official schedule.';
-  const groups: Array<{ source: string; leagues: string[] }> = [];
-  for (const league of leaguesInRegion('socal')) {
-    const group = groups.find((g) => g.source === league.alignmentSource);
-    // 'the Sunset' reads as a league name; the San Diego conferences read as names already; a group of
-    // independents is named in full ('the LA independents'): its short name is an adjective.
-    const name =
-      league.independents
-        ? `the ${league.name}`
-        : league.divisions.length === 1
-          ? `the ${league.shortName}`
-          : league.shortName;
-    if (group) group.leagues.push(name);
-    else groups.push({ source: league.alignmentSource, leagues: [name] });
-  }
-  if (groups.length === 0) return norcal;
-  const socal = groups.map((g) => `from ${g.source} for ${listWords(g.leagues)}`);
-  return `${norcal} In Southern California it comes ${listWords(socal)}.`;
-}
-
-/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18); `region` keeps one region's. */
-export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
-  const teams = getTeams();
-  return getTeamsGrouped(region).map(({ section, leagues }) => ({
-    id: section.id,
-    name: section.name,
-    leagues: leagues.map(({ league, divisions }) => {
-      // A group of independents (the LA independents) is headed by its name: its short name is
-      // an adjective.
-      const independent = getLeague(league.id).independents === true;
-      return {
-        league,
-        title: independent ? league.name : `${league.shortName} — ${league.name}`,
-        meta: plural(league.teamCount, 'team'),
-        membershipNote: getLeague(league.id).membershipNote,
-        standingsHref: `/standings/${league.id}`,
-        standingsLabel: standingsLabel(league.id),
-        divisions: divisions.map((d) =>
-          buildOverviewDivision({
-            division: d.id,
-            standings: getStandings(d.id),
-            teams,
-            throughDate: getLastLeagueResultDate({ division: d.id }),
-          }),
-        ),
-      };
-    }),
-  }));
-}
-
-// ---------------------------------------------------------------- one-line headlines (OG card)
-
-/**
- * One line describing a game from this team's side: `L 0–7 vs Saint Francis`, or
- * `at Los Altos · Tue Sep 29, 4:00 PM PT` when it has not been played.
- *
- * Every glyph comes from describeGame, so the never-0-0 rule holds here too: an unreported game
- * prints its written status and two en dashes, never a zero (DESIGN §5.2, §5.3).
- */
-export function gameHeadline(game: Game, team: Team): string {
-  const display = describeGame(game, team.slug);
-  const mineIsHome = game.home.slug === team.slug;
-  const mine = mineIsHome ? display.home : display.away;
-  const theirs = mineIsHome ? display.away : display.home;
-  const opponentTeam = theirs.slug ? getTeamBySlug(theirs.slug) : undefined;
-  const opponent = opponentTeam ? opponentTeam.shortName : theirs.name;
-  const where = `${display.versus ?? 'vs'} ${opponent}`;
-  if (display.kind === 'final') {
-    const letter = display.perspectiveOutcome ?? 'T';
-    const tag = display.deciderTag ? ` ${display.deciderTag}` : '';
-    return `${letter} ${mine.glyph}–${theirs.glyph} ${where}${tag}`;
-  }
-  if (display.kind === 'scheduled') {
-    return `${where} · ${gameWhen(game)}`;
-  }
-  return `${display.statusLabel} · ${where}`;
-}
-
-/**
- * The same one-line shape as `gameHeadline`, for a fixture that exists only in the league's
- * official schedule. It is labelled as such — `(BVAL schedule)` — because there is no contest, no
- * start time and no game page, so it must never read like a scheduled game we have details for.
- */
-export function officialFixtureHeadline(fixture: OfficialFixture, team: Team): string {
-  const { versus, opponentName } = fixtureOpponent(fixture, team);
-  const short = getLeague(fixture.league).shortName;
-  return `${versus} ${opponentName} · ${shortDate(fixture.dateKey)} (${short} schedule)`;
 }

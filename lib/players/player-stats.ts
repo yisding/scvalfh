@@ -12,11 +12,10 @@
  * status 'pending'; one whose coach entered nothing is status 'none'.
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledFieldHockey from '../../data/player-stats.json';
 import bundledSoccer from '../../data/soccer/player-stats.json';
 import { getSnapshot } from '../data';
+import { readOverride, validateData } from '../data-file';
 import {
   noteStatsFor,
   withNoteStats,
@@ -31,7 +30,6 @@ import {
   type TeamPlayerStats,
 } from './player-stats-schema';
 import { getTeamRoster } from './rosters';
-import { failValidation } from '../schema-primitives';
 import type { TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
@@ -39,20 +37,11 @@ import { IS_FIELD_HOCKEY } from '../sports/current';
 const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 function load(): PlayerStatsFile {
-  const override = process.env.SCVAL_PLAYER_STATS;
-  let raw: unknown = bundled;
-  if (override) {
-    try {
-      raw = JSON.parse(readFileSync(override, 'utf8')) as unknown;
-    } catch (err) {
-      throw new Error(
-        `lib/players/player-stats.ts: cannot read SCVAL_PLAYER_STATS=${override} (${(err as Error).message})`,
-      );
-    }
-  }
-  const parsed = PlayerStatsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('player-stats', parsed.error.issues);
-  return parsed.data;
+  return validateData(
+    'player-stats',
+    PlayerStatsFileSchema,
+    readOverride('lib/players/player-stats.ts', 'SCVAL_PLAYER_STATS', bundled),
+  );
 }
 
 const file = load();

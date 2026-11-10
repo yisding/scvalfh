@@ -35,6 +35,7 @@
  */
 
 import { datesAtLocal, dayDiff } from '../format';
+import { CIFSDS_PREFIX, isCifsdsContestId } from '../game-id';
 import { getTeamBySlug, normalizeTeamKey } from '../teams';
 import type { Decider, Game, GameSide, Outcome, SectionSheetProvenance, Team, TeamSlug } from '../types';
 import { winnerOf } from './game-winner';
@@ -45,14 +46,12 @@ import type { SdsSheetFixture, SdsSheetResult } from '../sources/sds-bracket-she
 /** A MaxPreps contest within this many days of the sheet's date is the same game. */
 export const SDS_SHEET_DATE_TOLERANCE_DAYS = 2;
 
-const CIFSDS_PREFIX = 'cifsds:';
-
 export function isCifsdsContest(contestId: string): boolean {
-  return contestId.startsWith(CIFSDS_PREFIX);
+  return isCifsdsContestId(contestId);
 }
 
 /** `cifsds:<away>-at-<home>`. */
-export function cifsdsContestId(away: TeamSlug, home: TeamSlug): string {
+function cifsdsContestId(away: TeamSlug, home: TeamSlug): string {
   return `${CIFSDS_PREFIX}${away}-at-${home}`;
 }
 

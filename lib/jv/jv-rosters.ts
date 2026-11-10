@@ -33,17 +33,16 @@
  * once at module scope, so a bad file fails at import time rather than half-way through a render.
  */
 
-import { readFileSync } from 'node:fs';
-
 import { z } from 'zod';
 
 import bundledMaxPrepsFieldHockey from '../../data/jv-rosters.json';
 import bundledSitesFieldHockey from '../../data/jv-rosters-school-sites.json';
 import bundledMaxPrepsSoccer from '../../data/soccer/jv-rosters.json';
 import bundledSitesSoccer from '../../data/soccer/jv-rosters-school-sites.json';
+import { readOverride, validateData } from '../data-file';
 import { getEnrichedTeamRoster } from '../players/rosters';
 import { RostersSchema, type Rosters, type TeamRoster } from '../players/rosters-schema';
-import { dateKey, failValidation, httpUrl } from '../schema-primitives';
+import { dateKey, httpUrl } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import type { TeamSlug } from '../types';
@@ -130,24 +129,15 @@ export interface JvRoster {
 }
 
 function loadMaxPreps(): Rosters {
-  const override = process.env.SCVAL_JV_ROSTERS;
-  let raw: unknown = bundledMaxPreps;
-  if (override) {
-    try {
-      raw = JSON.parse(readFileSync(override, 'utf8')) as unknown;
-    } catch (err) {
-      throw new Error(`lib/jv/jv-rosters.ts: cannot read SCVAL_JV_ROSTERS=${override} (${(err as Error).message})`);
-    }
-  }
-  const parsed = RostersSchema.safeParse(raw);
-  if (!parsed.success) failValidation('jv-rosters', parsed.error.issues);
-  return parsed.data;
+  return validateData(
+    'jv-rosters',
+    RostersSchema,
+    readOverride('lib/jv/jv-rosters.ts', 'SCVAL_JV_ROSTERS', bundledMaxPreps),
+  );
 }
 
 function loadSites(): JvSiteRostersFile {
-  const parsed = JvSiteRostersFileSchema.safeParse(bundledSites);
-  if (!parsed.success) failValidation('jv-rosters-school-sites', parsed.error.issues);
-  return parsed.data;
+  return validateData('jv-rosters-school-sites', JvSiteRostersFileSchema, bundledSites);
 }
 
 const maxpreps = loadMaxPreps();

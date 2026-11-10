@@ -5,6 +5,11 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -30,5 +35,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", ".vinext", ".cloudflare", ".claude", "out"]
 }

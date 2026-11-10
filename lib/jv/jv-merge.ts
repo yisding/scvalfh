@@ -26,6 +26,7 @@
  */
 
 import { byDateThenId, datesOf, dayDiff } from '../format';
+import { sbliveContestId } from '../game-id';
 import type { JvSbliveRow } from './jv-schema';
 import { JV_OUTSIDE_TEAMS, jvSlotTeamFor, type JvSlotTeam } from './jv-teams';
 import { getTeamBySlug } from '../teams';
@@ -37,7 +38,7 @@ export const JV_SBLIVE_DATE_TOLERANCE_DAYS = 1;
 export const JV_MAXPREPS_PAIR_WINDOW_DAYS = 14;
 
 export const JV_FILL_NOTE = 'MaxPreps has no score for this JV game, so the score is si.com’s.';
-export const JV_SBLIVE_ONLY_NOTE = 'MaxPreps lists no JV contest for this game, so it is si.com’s.';
+const JV_SBLIVE_ONLY_NOTE = 'MaxPreps lists no JV contest for this game, so it is si.com’s.';
 
 export type JvUnusedReason =
   | 'copies-disagree'
@@ -178,7 +179,7 @@ function sbliveOnlyGame(row: JvSbliveRow, fetchedAt: string): Game | null {
   const [home, away, homeTeam, awayTeam] = bHosts ? [b, a, tb, ta] : [a, b, ta, tb];
   const dates = datesOf(row);
   return {
-    contestId: `sblive:${row.sbliveGameId}`,
+    contestId: sbliveContestId(row.sbliveGameId),
     dateLocal: dates.dateLocal,
     dateUtc: dates.dateUtc,
     dateKey: dates.dateKey,

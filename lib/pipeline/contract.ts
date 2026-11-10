@@ -5,6 +5,7 @@
  */
 
 import type { CifssSectionKey } from '../sources/cifss';
+import type { RawResponse } from '../sources/http';
 import type {
   CcsCalendarEvent, CcsDivisionName, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
@@ -69,13 +70,6 @@ export function resourcePath(key: ResourceKey): string {
     case 'sds-bracket-sheet':
       return `sds/bracket-sheet/${key.division}`;
   }
-}
-
-export interface RawResponse {
-  url: string;
-  httpStatus: number;
-  body: string;
-  upstreamModifiedOn?: string;
 }
 
 export interface Transport {

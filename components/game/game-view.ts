@@ -43,7 +43,7 @@ import {
   sideOutcome,
   timeOfDayPT,
 } from '../../lib/format';
-import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
+import { gameHref, gameIdToParam, isPrefixedContestId, paramToGameId } from '../../lib/game-id';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import {
   divisionDisplay,
@@ -308,7 +308,7 @@ export interface RecordAsOf {
  * league, so the caption says "to date" (`recordsCaptionFor`).
  *
  * Only results with an outcome count (a played game with no published score is neither a W nor an
- * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
+ * L) — the rule `lib/standings/engine.ts` tallies `computed` by — so for a team's latest league final this
  * equals `standing.computed` (tests/ui/game-view-asof.test.ts holds that).
  *
  * `undefined` for a side outside the team registry.
@@ -976,15 +976,16 @@ export function buildGameView(param: string): GameModel | undefined {
 }
 
 /**
- * The stub for a superseded si.com game (`/game/sblive-<id>` whose result MaxPreps now has):
+ * The stub for a superseded si.com or bracket-sheet game (`/game/sblive-<id>`, `/game/cifsds-<away>-at-<home>`, whose result MaxPreps now has):
  * `<SHORT> game — this result is now on MaxPreps.`, linking and canonical to the MaxPreps game.
  * undefined for any other param.
  */
 export function buildSupersededStub(param: string): SupersededStub | undefined {
   const contestId = paramToGameId(param);
-  // Only an si.com id can be superseded, and the map is a plain JSON object: an own-property
-  // lookup, so 'constructor' or '__proto__' never reads Object.prototype as a "target".
-  if (!/^sblive:\d+$/.test(contestId)) return undefined;
+  // Only a non-MaxPreps id (an si.com game, or a San Diego bracket-sheet game) can be superseded,
+  // and the map is a plain JSON object: an own-property lookup, so 'constructor' or '__proto__'
+  // never reads Object.prototype as a "target".
+  if (!isPrefixedContestId(contestId)) return undefined;
   const map = getSupersededGames();
   const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
   if (typeof target !== 'string' || target === '') return undefined;

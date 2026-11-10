@@ -6,12 +6,12 @@
  * per-row context, missing official results) and returns strings and arrays, so it never touches
  * `fs` or lib/data and can be exercised from a test over any snapshot. League FACTS — headings,
  * ladders, citations, official sources, the cross-check trust — come from config (lib/leagues),
- * and the ladder's badges and legends from lib/standings, never from a map keyed by division id.
+ * and the ladder's badges and legends from lib/standings/ladder.ts, never from a map keyed by division id.
  *
  * Everything it decides is a by-law, not a preference:
  *
  *  - Order and points are the league's (3 for a win, 1 for a tie in all five NorCal leagues) —
- *    lib/standings has already ranked the rows, so this module never re-sorts them. The EAL uses its
+ *    lib/standings/engine.ts has already ranked the rows, so this module never re-sorts them. The EAL uses its
  *    points only to decide its title and publishes no standings (`rules.orderScope: 'title'`); the
  *    site orders its table by the same points and says so. The Sunset and the three San Diego
  *    leagues publish no points rule and no standings at all (`orderScope: 'site'`, DESIGN-socal
@@ -46,20 +46,16 @@ import {
   getDivision,
   getLeague,
   ladderFor,
+  leagueHeading,
   leagueStandingsUrl,
   regionOf,
   sectionOf,
   standaloneName,
   statusesOf,
 } from '../../lib/leagues';
-import {
-  crossCheckSkipReason,
-  outcomesFor,
-  playoffOutcomeLabel,
-  statusBadge,
-  statusLegend,
-  unevenGamesSentence,
-} from '../../lib/standings';
+import { postseasonCitation, postseasonHref } from '../../lib/postseason/postseason-kind';
+import { crossCheckSkipReason } from '../../lib/standings/cross-check';
+import { outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend } from '../../lib/standings/ladder';
 import type {
   CrossCheckRow,
   DivisionId,
@@ -72,7 +68,7 @@ import type {
   TeamSlug,
   TiebreakStage,
 } from '../../lib/types';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import type { StandingsRowData } from './standings-table/types';
 
 // ---------------------------------------------------------------- shared shapes
 
@@ -260,6 +256,17 @@ export function ladderLineAfter(
   return above > 0 && above < rows.length ? above : null;
 }
 
+/**
+ * The biggest |goal difference| among `gds`, 0 when there is none. Not `getGoalDiffDomain`
+ * (lib/data.ts), which floors at 1 so a bar never divides by zero: that floor is a scale, never a
+ * fact to print. Every place that prints "biggest goal difference (N)" asks this first and leaves the
+ * clause out when it is 0 (StandingsTable's legend, DivisionStandings, MiniStandings, the standings
+ * page's disclosure).
+ */
+export function biggestGoalDiff(gds: readonly number[]): number {
+  return Math.max(0, ...gds.map((gd) => Math.abs(gd)));
+}
+
 /** A standings (or seeds) row as `ladderLineAfter` reads it. */
 export function ladderRow(row: { standing: Standing }): { ranked: boolean; place: number } {
   return { ranked: row.standing.hasReportedResults, place: row.standing.computed.place };
@@ -373,32 +380,15 @@ function postseasonLinks(league: LeagueConfig): { heading: string; href: string;
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
-      return { heading: `${ps.name}, as things stand`, href: `/playoffs/${league.id}`, linkText: 'Tournament bracket' };
+      return { heading: `${ps.name}, as things stand`, href: postseasonHref(league), linkText: 'Tournament bracket' };
     case 'unbracketed-tournament':
-      return { heading: `${ps.name}, as things stand`, href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+      return { heading: `${ps.name}, as things stand`, href: postseasonHref(league), linkText: 'Postseason' };
     case 'ccs-ladder':
-      return { heading: 'CCS qualifying, as things stand', href: `/playoffs#${league.id}`, linkText: 'Playoff picture' };
+      return { heading: 'CCS qualifying, as things stand', href: postseasonHref(league), linkText: 'Playoff picture' };
     case 'no-postseason':
-      return { heading: 'Postseason', href: `/playoffs#${league.id}`, linkText: 'Postseason' };
+      return { heading: 'Postseason', href: postseasonHref(league), linkText: 'Postseason' };
     case 'section-playoffs':
-      return { heading: `${ps.name}: the league route, as things stand`, href: `/playoffs#${league.id}`, linkText: ps.name };
-  }
-}
-
-/** The league's qualification rule, cited once in the legend (by postseason kind). */
-function postseasonCitation(league: LeagueConfig): string {
-  const ps = league.postseason;
-  switch (ps.kind) {
-    case 'ccs-ladder':
-      return ps.citation;
-    case 'league-tournament':
-      return ps.citations.format;
-    case 'unbracketed-tournament':
-      return ps.citations.qualification;
-    case 'no-postseason':
-      return ps.citations.noPlayoffs;
-    case 'section-playoffs':
-      return ps.citations.qualification;
+      return { heading: `${ps.name}: the league route, as things stand`, href: postseasonHref(league), linkText: ps.name };
   }
 }
 
@@ -429,7 +419,7 @@ function missingRowView(row: MissingOfficialResult, teams: readonly Team[], inde
 
 export interface DivisionViewInput {
   division: DivisionId;
-  /** Already sorted and ranked by lib/standings.ts. */
+  /** Already sorted and ranked by lib/standings/engine.ts. */
   standings: readonly Standing[];
   teams: readonly Team[];
   /** Cross-check rows of the league (filtered to this division's teams here). */
@@ -742,11 +732,37 @@ function unevenOrderSentence(league: LeagueConfig): string {
 }
 
 /**
+ * The games-played sentence of the uneven-GP footnote (SPEC §10.3), or null when every team with results
+ * has played within one game of the others. With a fixed schedule (`scheduled` = DivisionConfig.gamesPerTeam)
+ * it is the sentence the standings page has always printed: 'Teams have played between 9 and 12 of 16
+ * league games, so points favour teams that have played more.' A league with no fixed schedule
+ * (gamesPerTeam null: the Sunset, whose ten teams meet 0, 1 or 2 times and play only the games MaxPreps
+ * marks as league games) has no "of N" to say, and no LEFT or MAX column to explain; its sentence says
+ * what the gap is instead (DESIGN-socal §2.1.7). The rest of the footnote — LEFT, MAX and how the table
+ * is ordered — is unevenGpFootnote's below, which reads this.
+ */
+export function unevenGamesSentence(
+  leagueId: LeagueId,
+  spread: { min: number; max: number; scheduled: number | null },
+): string | null {
+  if (spread.max - spread.min < 2) return null;
+  if (spread.scheduled !== null) {
+    return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
+  }
+  const league = getLeague(leagueId);
+  // 'membership' with no fixed schedule (the Sunset, the LA independents): every game between two members counts,
+  // so the gap is in games played against each other; 'contest-type' with none (no league today): MaxPreps' flag.
+  return league.rules.classification === 'membership'
+    ? `Teams have played between ${spread.min} and ${spread.max} games against other ${league.shortName} teams, and there is no fixed league schedule, so points favour teams that have played more.`
+    : `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
+}
+
+/**
  * The uneven-GP footnote (SPEC §10.3), or null when every team has played within one game of the
  * others. MCAL adds its incomplete-schedule rule; a league whose points decide only its title (EAL)
  * does not say its rules require the order, and a 'site' league says the order is the site's. A league
  * with no fixed schedule (`scheduled` null: the Sunset) has no LEFT or MAX column, so its footnote
- * explains neither; its first sentence is lib/standings.ts unevenGamesSentence's no-"of N" variant.
+ * explains neither; its first sentence is unevenGamesSentence's no-"of N" variant.
  */
 export function unevenGpFootnote(
   leagueId: LeagueId,
@@ -855,8 +871,7 @@ export function overviewOutline(
     }
     group.leagues.push({
       id,
-      // A group of independents is not a league: its heading is its name alone ('LA independents').
-      title: league.independents ? league.name : `${league.shortName} — ${league.name}`,
+      title: leagueHeading(id),
       shortName: league.shortName,
       membershipNote: league.membershipNote,
       divisions: league.divisions.map((d) => divisionOf(d.id)),

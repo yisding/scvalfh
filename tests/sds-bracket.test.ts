@@ -12,11 +12,11 @@ import {
   buildSdsBrackets,
   getSdsBrackets,
   getSdsBracketsSource,
-  winnerOf,
   type LiveBracketCard,
   type LiveBracketDivision,
   type LiveBracketSlot,
 } from '../lib/postseason/sds-bracket';
+import { winnerOf } from '../lib/postseason/game-winner';
 import { SEED_CLAIM } from '../scripts/copy-rules';
 import { sdsGames2025, sdsPlayIn2025, seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { game } from './game-builder';
