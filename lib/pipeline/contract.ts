@@ -72,8 +72,6 @@ export function resourcePath(key: ResourceKey): string {
   }
 }
 
-export type { RawResponse };
-
 export interface Transport {
   readonly mode: 'live' | 'fixture' | 'recording';
   /** Throws FixtureMissing (fixture mode: not in the corpus) or TransportError (network/HTTP). Never returns a 4xx/5xx silently. */

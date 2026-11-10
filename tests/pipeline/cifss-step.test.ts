@@ -9,7 +9,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { TransportError, type RawResponse, type ResourceKey, type Transport } from '../../lib/pipeline/contract';
+import { TransportError, type ResourceKey, type Transport } from '../../lib/pipeline/contract';
+import type { RawResponse } from '../../lib/sources/http';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
 import { createPipelineContext, parseRunArgs } from '../../lib/pipeline/run';
 import { stepCifss } from '../../lib/pipeline/steps/cifss';

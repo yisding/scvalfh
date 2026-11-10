@@ -21,8 +21,16 @@ import { SCVAL_STANDINGS_INDEX, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, TeamSlug } from '../types';
-import { TransportError, type RawResponse, type ResourceKey } from './contract';
+import type { RawResponse } from '../sources/http';
+import { TransportError, type ResourceKey } from './contract';
 import type { RequestHost } from './transport';
+
+/**
+ * The prefix of the misconfiguration errors thrown while resolving a key. It keeps the module name
+ * these messages carried before the table moved out of transport.ts, since LiveTransport copies them
+ * into a SourceStatus `error` that is committed with the snapshot.
+ */
+const ERR = 'lib/pipeline/transport.ts';
 
 export type ResourceKind = ResourceKey['kind'];
 export type KeyOf<K extends ResourceKind> = Extract<ResourceKey, { kind: K }>;
@@ -53,7 +61,7 @@ export interface ResourceSpec<Key extends ResourceKey> {
 
 function teamOrThrow(slug: TeamSlug) {
   const team = getTeamBySlug(slug);
-  if (!team) throw new Error(`lib/pipeline/resources.ts: unknown team slug ${slug}`);
+  if (!team) throw new Error(`${ERR}: unknown team slug ${slug}`);
   return team;
 }
 
@@ -66,7 +74,7 @@ function teamOrThrow(slug: TeamSlug) {
  */
 function maxprepsLeagueIdOrThrow(division: DivisionId): string {
   const id = getDivision(division).maxprepsLeagueId;
-  if (id === null) throw new Error(`lib/pipeline/resources.ts: MaxPreps publishes no table for ${division}`);
+  if (id === null) throw new Error(`${ERR}: MaxPreps publishes no table for ${division}`);
   return id;
 }
 
@@ -127,7 +135,7 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
       // Bundled divisions only: a live PDF is read whole and a 'none' division (EAL) has no document.
       const official = getDivision(key.division).official;
       const url = official.mode === 'bundled' ? official.revisionCheckUrl : null;
-      if (!url) throw new Error(`lib/pipeline/resources.ts: ${key.division} has no revision-check URL`);
+      if (!url) throw new Error(`${ERR}: ${key.division} has no revision-check URL`);
       return url;
     },
     fetch: async (c, url) => {
@@ -141,7 +149,7 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     hashBody: true,
     url: (key) => {
       const changes = getLeague(key.league).officialChanges;
-      if (!changes) throw new Error(`lib/pipeline/resources.ts: ${key.league} has no officialChanges page`);
+      if (!changes) throw new Error(`${ERR}: ${key.league} has no officialChanges page`);
       return changes.url;
     },
     fetch: async (c, url, key) => {
@@ -166,7 +174,7 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     url: (key) => {
       // The registry's si.com page (built from the team's si.com slug; never guessed).
       const url = teamOrThrow(key.team).external.sbliveGamesUrl;
-      if (!url) throw new Error(`lib/pipeline/resources.ts: no si.com team page is recorded for ${key.team}`);
+      if (!url) throw new Error(`${ERR}: no si.com team page is recorded for ${key.team}`);
       return url;
     },
     fetch: (c, url) => httpText(c.sblive, url),
@@ -177,7 +185,7 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     url: (key) => {
       const site = VNN_SITE_IDS.find((s) => s.slug === key.team);
       const siteId = site?.siteId ?? teamOrThrow(key.team).external.vnnSiteId;
-      if (!siteId) throw new Error(`lib/pipeline/resources.ts: no VNN calendar is recorded for ${key.team}`);
+      if (!siteId) throw new Error(`${ERR}: no VNN calendar is recorded for ${key.team}`);
       return vnnIcsUrl(siteId);
     },
     fetch: (c, url) => httpText(c.http, url, 'text/calendar,text/plain,*/*'),

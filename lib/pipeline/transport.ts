@@ -25,7 +25,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
+import { HttpClient, HttpError, type HttpClientOptions, type RawResponse } from '../sources/http';
 import { MaxPrepsClient, MaxPrepsError } from '../sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '../sources/sblive';
 import { pdfToText } from '../sources/scval-pdf';
@@ -33,7 +33,6 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type RawResponse,
   type ResourceKey,
   type Transport,
 } from './contract';
