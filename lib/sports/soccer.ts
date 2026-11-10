@@ -69,6 +69,17 @@ export const SOCCER = {
     pointsPerGoal: 2,
     pointsPerAssist: 1,
   },
+  scoring: {
+    allowsTies: true,
+    unit: 'goal',
+    units: 'goals',
+    forAbbr: 'GF',
+    againstAbbr: 'GA',
+    diffAbbr: 'GD',
+    forWords: 'goals for',
+    againstWords: 'goals against',
+    diffWords: 'goal differential',
+  },
 } as const satisfies Sport;
 
 /** Girls varsity soccer, winter 2026-27. */

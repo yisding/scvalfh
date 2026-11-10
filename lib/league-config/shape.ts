@@ -219,7 +219,13 @@ export interface DivisionConfig {
 
 export interface LeagueRules {
   points: { win: number; tie: number; loss: number };
-  orderBy: 'points';
+  /**
+   * What orders the table. 'points' (every field hockey and soccer league): the league's points, 3-1-0.
+   * 'win-pct' (SCVAL basketball, Art. VI §1: "A team's league record determines their finish"): the share of
+   * league games won, so a 3-0 team is ahead of a 3-1 team; `points` is then { win: 1, tie: 0, loss: 0 }, a
+   * team's `pts` is its league wins, and no reader prints a points column (lib/standings/order.ts).
+   */
+  orderBy: 'points' | 'win-pct';
   /**
    * 'table' = the league's document orders the table by points (SCVAL, BVAL, PCAL, MCAL); 'title' = it uses
    * points only to decide the champion and this site extends the same points to the table (EAL); 'site' = no
@@ -277,8 +283,9 @@ export interface LeagueRules {
    * tournaments): overtime, then a shootout to a winner, so a league game does not end level, and the section's
    * SectionConfig.shootout says how (asserted both ways). D2 rule 4c (phantom tie) applies only
    * when 'none'.
+   * 'until-decided' (basketball, NFHS rules: extra periods are played until one team leads): no game ends level.
    */
-  leagueOvertime: 'none' | 'sudden-victory' | 'shootout';
+  leagueOvertime: 'none' | 'sudden-victory' | 'shootout' | 'until-decided';
   /** Every string the engine prints. SCVAL's are the original BYLAW_CITATIONS, verbatim (golden-gated). */
   citations: {
     points: string;

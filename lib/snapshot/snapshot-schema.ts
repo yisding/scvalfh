@@ -73,6 +73,8 @@ const tiebreakStage = z.enum([
   'draw-number',
   'ccs-points',
   'coin-flip',
+  'record-vs-placed',
+  'coaches-vote',
   'no-rule',
   'play-in',
 ]);
@@ -340,7 +342,7 @@ export const SeasonSchema = z.object({
   label: z.string(),
   sportSeasonId: z.string(),
   allSeasonId: z.string(),
-  genderSport: z.enum(['girls,fieldhockey', 'girls,soccer']),
+  genderSport: z.enum(['girls,fieldhockey', 'girls,soccer', 'boys,basketball']),
   teamLevel: z.enum(['Varsity', 'JV']),
   sections: z.array(
     z.object({
@@ -390,6 +392,8 @@ export const PlayoffsSchema = z.object({
   keyDates: z.object({
     entriesDue: z.string(),
     seedingMeeting: z.string(),
+    // The first playoff day where it is before the quarterfinals (basketball); absent elsewhere.
+    firstRound: dateOnly.optional(),
     quarterfinals: dateOnly,
     semifinals: dateOnly,
     finals: dateOnly,
@@ -518,6 +522,8 @@ export const OfficialFixtureSchema = z.object({
   awaySlug: id.nullable(),
   homeSlug: id.nullable(),
   source: officialSourceId,
+  // The fixture's JV game, where the league's schedule gives one (SCVAL basketball).
+  jv: z.object({ dateKey: dateOnly, time: z.string().regex(/^\d{2}:\d{2}$/, 'expected HH:MM').nullable() }).optional(),
 });
 
 // ---------------------------------------------------------------- cross-checks

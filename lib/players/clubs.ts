@@ -32,6 +32,7 @@
  */
 
 import bundledFieldHockey from '../../data/clubs.json';
+import bundledBasketball from '../../data/basketball/clubs.json';
 import bundledSoccer from '../../data/soccer/clubs.json';
 import { validateData } from '../data-file';
 import {
@@ -45,10 +46,10 @@ import {
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import type { TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
 
 export type {
   AffiliationConfidence,

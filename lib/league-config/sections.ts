@@ -6,9 +6,10 @@
  */
 
 import { CCS_BRACKET_URL } from '../season';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 import type { CcsKeyDates, RegionId } from '../types';
 import type { CcsConfig, OutsideTournamentConfig, RegionConfig, SectionConfig } from './shape';
+import { BASKETBALL_CCS, BASKETBALL_SECTIONS } from './basketball/sections';
 import { SOCCER_CCS, SOCCER_SECTIONS } from './soccer/sections';
 
 /** NorCal first: it is the default view (DEFAULT_REGION) and the reading order with JavaScript off. */
@@ -17,7 +18,7 @@ const ALL_REGIONS = [
   { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
 ] as const satisfies readonly RegionConfig[];
 
-/** The regions this build covers: both for field hockey, Northern California alone for soccer (SCVAL only). */
+/** The regions this build covers: both for field hockey, Northern California alone for soccer and basketball (SCVAL only). */
 export const REGIONS: readonly RegionConfig[] = IS_FIELD_HOCKEY ? ALL_REGIONS : ALL_REGIONS.slice(0, 1);
 
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
@@ -204,8 +205,12 @@ const FIELD_HOCKEY_SECTIONS = [
   },
 ] as const satisfies readonly SectionConfig[];
 
-/** The sections this build covers (lib/sports/current.ts): field hockey's five, or soccer's one. */
-export const SECTIONS: readonly SectionConfig[] = IS_FIELD_HOCKEY ? FIELD_HOCKEY_SECTIONS : SOCCER_SECTIONS;
+/** The sections this build covers (lib/sports/current.ts): field hockey's five, or soccer's or basketball's one. */
+export const SECTIONS: readonly SectionConfig[] = IS_FIELD_HOCKEY
+  ? FIELD_HOCKEY_SECTIONS
+  : IS_BASKETBALL
+    ? BASKETBALL_SECTIONS
+    : SOCCER_SECTIONS;
 
 // ---------- Southern California (DESIGN-socal §2.1; research-cifss.md, research-cifsds.md) ----------
 //
@@ -258,7 +263,7 @@ const FIELD_HOCKEY_CCS: CcsConfig = {
 };
 
 /** The CCS block of this build's sport. */
-export const CCS: CcsConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_CCS : SOCCER_CCS;
+export const CCS: CcsConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_CCS : IS_BASKETBALL ? BASKETBALL_CCS : SOCCER_CCS;
 
 /**
  * A CCS round's days as copy prints them: one day ('Tue Feb 23'), or first to last where divisions play it on
@@ -272,6 +277,15 @@ export function ccsRoundDays(
   const first = keyDates[round];
   const last = round === 'semifinals' ? keyDates.semifinalsLast : keyDates.finalsLast;
   return last === undefined || last === first ? fmt(first) : `${fmt(first)} to ${fmt(last)}`;
+}
+
+/**
+ * The first day of CCS games: the quarterfinals, or the first round where the bracket opens before them
+ * (basketball: `keyDates.firstRound`). The CCS window, the bracket's games and every "CCS, <first> to <last>"
+ * read it.
+ */
+export function ccsFirstDay(keyDates: Pick<CcsKeyDates, 'quarterfinals' | 'firstRound'>): string {
+  return keyDates.firstRound ?? keyDates.quarterfinals;
 }
 
 /** The last day of CCS games: the last finals day. */

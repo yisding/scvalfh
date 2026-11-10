@@ -13,6 +13,7 @@
  */
 
 import bundledFieldHockey from '../../data/player-stats.json';
+import bundledBasketball from '../../data/basketball/player-stats.json';
 import bundledSoccer from '../../data/soccer/player-stats.json';
 import { getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
@@ -31,10 +32,10 @@ import {
 } from './player-stats-schema';
 import { getTeamRoster } from './rosters';
 import type { TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
 
 function load(): PlayerStatsFile {
   return validateData(

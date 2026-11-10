@@ -14,8 +14,10 @@
  */
 
 import bundledBracketsFieldHockey from '../../data/history-brackets-2025-26.json';
+import bundledBracketsBasketball from '../../data/basketball/history-brackets-2025-26.json';
 import bundledBracketsSoccer from '../../data/soccer/history-brackets-2025-26.json';
 import bundledHistoryFieldHockey from '../../data/history-2025-26.json';
+import bundledHistoryBasketball from '../../data/basketball/history-2025-26.json';
 import bundledHistorySoccer from '../../data/soccer/history-2025-26.json';
 import {
   BRACKET_SECTION_IDS,
@@ -44,12 +46,12 @@ import { listWords } from '../format';
 import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledBrackets = IS_FIELD_HOCKEY ? bundledBracketsFieldHockey : bundledBracketsSoccer;
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledHistory = IS_FIELD_HOCKEY ? bundledHistoryFieldHockey : bundledHistorySoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledBrackets = IS_FIELD_HOCKEY ? bundledBracketsFieldHockey : IS_BASKETBALL ? bundledBracketsBasketball : bundledBracketsSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledHistory = IS_FIELD_HOCKEY ? bundledHistoryFieldHockey : IS_BASKETBALL ? bundledHistoryBasketball : bundledHistorySoccer;
 
 export type {
   AvailableLeagueHistory,

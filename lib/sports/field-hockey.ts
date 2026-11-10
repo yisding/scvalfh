@@ -57,6 +57,17 @@ export const FIELD_HOCKEY = {
     pointsPerGoal: 2,
     pointsPerAssist: 1,
   },
+  scoring: {
+    allowsTies: true,
+    unit: 'goal',
+    units: 'goals',
+    forAbbr: 'GF',
+    againstAbbr: 'GA',
+    diffAbbr: 'GD',
+    forWords: 'goals for',
+    againstWords: 'goals against',
+    diffWords: 'goal differential',
+  },
 } as const satisfies Sport;
 
 /** Girls varsity field hockey, fall 2026. [V] marks a value read from a live response (lib/season.ts). */

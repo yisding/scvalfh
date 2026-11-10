@@ -661,6 +661,8 @@ const STAGE_WORDS: Readonly<Record<TiebreakStage, string>> = {
   'h2h-win-pct': 'head-to-head winning percentage',
   'record-above-tie': 'record against the teams above the tie',
   'draw-number': 'spring draw numbers',
+  'record-vs-placed': 'record against each other team from first place down',
+  'coaches-vote': 'a blind coaches’ vote, then a coin flip',
   'ccs-points': 'the CCS-points step, then a coin flip or blind draw',
   'coin-flip': 'a coin flip',
   'no-rule': 'no tiebreak',

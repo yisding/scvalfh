@@ -24,8 +24,10 @@
 
 import { z } from 'zod';
 import bundledEnrichmentFieldHockey from '../../data/rosters-enrichment.json';
+import bundledEnrichmentBasketball from '../../data/basketball/rosters-enrichment.json';
 import bundledEnrichmentSoccer from '../../data/soccer/rosters-enrichment.json';
 import bundledRostersFieldHockey from '../../data/rosters.json';
+import bundledRostersBasketball from '../../data/basketball/rosters.json';
 import bundledRostersSoccer from '../../data/soccer/rosters.json';
 import { readOverride, validateData } from '../data-file';
 import {
@@ -48,15 +50,15 @@ import {
 } from './rosters-schema';
 import { dateKey, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
 /** Names this module in a failed override read. */
 const MODULE = 'lib/players/rosters.ts';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledEnrichment = IS_FIELD_HOCKEY ? bundledEnrichmentFieldHockey : bundledEnrichmentSoccer;
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledRosters = IS_FIELD_HOCKEY ? bundledRostersFieldHockey : bundledRostersSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledEnrichment = IS_FIELD_HOCKEY ? bundledEnrichmentFieldHockey : IS_BASKETBALL ? bundledEnrichmentBasketball : bundledEnrichmentSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledRosters = IS_FIELD_HOCKEY ? bundledRostersFieldHockey : IS_BASKETBALL ? bundledRostersBasketball : bundledRostersSoccer;
 
 export type {
   EnrichedGrade,

@@ -18,6 +18,7 @@
  */
 
 import bundledFieldHockey from '../../data/jv.json';
+import bundledBasketball from '../../data/basketball/jv.json';
 import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
@@ -34,10 +35,10 @@ import {
   type JvDivisionTable,
 } from './jv-standings';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : IS_BASKETBALL ? bundledBasketball : bundledSoccer;
 
 function load(): JvFile {
   return validateData('jv', JvFileSchema, readOverride('lib/jv/jv.ts', 'SCVAL_JV', bundled));

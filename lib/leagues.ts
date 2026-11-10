@@ -21,6 +21,7 @@ import { METRO } from './league-config/metro';
 import { NORTH_COUNTY } from './league-config/north-county';
 import { PCAL } from './league-config/pcal';
 import { SCVAL } from './league-config/scval';
+import { SCVAL_BASKETBALL } from './league-config/basketball/scval';
 import { SCVAL_SOCCER } from './league-config/soccer/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
@@ -36,7 +37,7 @@ import type {
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
-import { IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
 /**
  * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
@@ -44,8 +45,10 @@ import { IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/
  */
 export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
-  : // The soccer build (SCVAL_SPORT=soccer) covers SCVAL alone for now.
-    [SCVAL_SOCCER];
+  : // The soccer build (SCVAL_SPORT=soccer) and the basketball build (SCVAL_SPORT=basketball) cover SCVAL alone for now.
+    IS_BASKETBALL
+    ? [SCVAL_BASKETBALL]
+    : [SCVAL_SOCCER];
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
@@ -335,7 +338,7 @@ export function seasonWindowBounds(): { start: string; end: string } {
 // ---------- assertLeagues (SPEC §2.4) ----------
 
 /** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
-export const UNCOMPUTABLE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule']);
+export const UNCOMPUTABLE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule', 'coaches-vote']);
 const CCS_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
   'aq', 'play-in', 'at-large', 'out', 'no-aq-route',
 ]);
@@ -347,8 +350,14 @@ const NO_POSTSEASON_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus
 const SECTION_PLAYOFFS_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'selection']);
 /** Stages that read the teams placed above or below the tied group. */
 export const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
-  'record-vs-higher-placed', 'record-vs-lower-placed',
+  'record-vs-higher-placed', 'record-vs-lower-placed', 'record-vs-placed',
 ]);
+/**
+ * The place-relative stage any bucket's chain may hold: 'record-vs-placed' walks every other team from first
+ * place down, reading the buckets above as placed and a lower bucket still level as one cluster
+ * (lib/standings/engine.ts), so it needs no settled lower place and no byBucketStart restriction.
+ */
+const ANY_BUCKET_PLACE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['record-vs-placed']);
 /** Lowercase only, on purpose: config GUIDs must be written lowercase (lib/game-id.ts GUID_RE takes either case). */
 const LOWERCASE_GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
@@ -602,7 +611,7 @@ export function assertLeagues(): void {
       }
       // 11. place-relative stages only for buckets starting at 1st or 2nd
       for (const s of chain) {
-        if (PLACE_VS_STAGES.has(s) && start !== 1 && start !== 2) {
+        if (PLACE_VS_STAGES.has(s) && !ANY_BUCKET_PLACE_STAGES.has(s) && start !== 1 && start !== 2) {
           fail(`${where}: ${s} is allowed only in byBucketStart chains for 1 and 2`);
         }
       }

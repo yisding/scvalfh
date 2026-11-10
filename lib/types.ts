@@ -129,7 +129,7 @@ export interface Season {
   label: string;
   sportSeasonId: string;
   allSeasonId: string;
-  genderSport: 'girls,fieldhockey' | 'girls,soccer';
+  genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball';
   teamLevel: 'Varsity' | 'JV';
   /** Config order: ccs, ncs, ns, ss, sds. */
   sections: SeasonSection[];
@@ -471,6 +471,8 @@ export type TiebreakStage =
   | 'h2h-win-pct'              // MCAL criterion 1
   | 'record-above-tie'         // MCAL criterion 2
   | 'draw-number'              // MCAL criterion 3 — lowest spring draw number wins; always resolves
+  | 'record-vs-placed'         // SCVAL basketball Art. VI §1.1 — record vs. each other team from 1st place down
+  | 'coaches-vote'             // SCVAL basketball Art. VI §1.1 — a blind coaches' vote, then a coin flip; uncomputable terminal
   | 'ccs-points'               // PCAL — uncomputable terminal; teams stay level
   | 'coin-flip'                // SCVAL §7, BVAL §6f — uncomputable terminal; teams stay level
   | 'no-rule'                  // PCAL ties whose points bucket starts at 3rd or lower — no tiebreak; teams stay level
@@ -568,6 +570,12 @@ export interface Standing {
 export interface CcsKeyDates {
   entriesDue: string;          // '2026-11-02T12:00:00'
   seedingMeeting: string;      // '2026-11-02T13:00:00'
+  /**
+   * The first playoff day where the bracket opens before the quarterfinals (basketball: Divisions 1-5 play a
+   * first round Fri Feb 19 and a second Sat Feb 20, and the Open Division its first game Feb 19). Absent where
+   * the quarterfinals open it; read through `ccsFirstDay` (lib/league-config/sections.ts).
+   */
+  firstRound?: string;
   quarterfinals: string;       // '2026-11-07'
   semifinals: string;          // '2026-11-11'
   finals: string;              // '2026-11-14'
@@ -741,6 +749,12 @@ export interface OfficialFixture {
   awaySlug: TeamSlug | null;
   homeSlug: TeamSlug | null;
   source: OfficialSourceId;
+  /**
+   * The JV game the league's schedule gives for this fixture: its date (the varsity date, or another day
+   * where the document moves the JV round) and its start 'HH:MM'. Absent where the document says nothing of
+   * JV. lib/jv/jv-official.ts lists it as a JV game until MaxPreps has the game itself.
+   */
+  jv?: { dateKey: string; time: string | null };
 }
 
 // ---------- pipeline health ----------

@@ -11,6 +11,7 @@
  */
 
 import bundledSnapshotFieldHockey from '../data/snapshot.json';
+import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
 import { readOverride } from './data-file';
@@ -83,10 +84,10 @@ import type {
   TeamId,
   TeamSlug,
 } from './types';
-import { IS_FIELD_HOCKEY } from './sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from './sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
-const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : bundledSnapshotSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : IS_BASKETBALL ? bundledSnapshotBasketball : bundledSnapshotSoccer;
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:

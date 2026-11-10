@@ -4,7 +4,7 @@
  * lib/leagues.ts assertLeagues() checks them against the config.
  */
 
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
 import type { DataQualityConfig } from './shape';
 
 /** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
@@ -129,4 +129,19 @@ const SOCCER_DATA_QUALITY: DataQualityConfig = {
 };
 
 /** This build's sport's corrections (lib/sports/current.ts). */
-export const DATA_QUALITY: DataQualityConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_DATA_QUALITY : SOCCER_DATA_QUALITY;
+/** Basketball's: nothing yet either. */
+const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
+  ghostTeamIds: {},
+  excludedContestIds: {},
+  sbliveIgnoredTeamIds: {},
+  ignoredMaxprepsLeagueIds: {},
+  contestDateOverrides: {},
+  fixtureMoves: {},
+  notCovered: [],
+};
+
+export const DATA_QUALITY: DataQualityConfig = IS_FIELD_HOCKEY
+  ? FIELD_HOCKEY_DATA_QUALITY
+  : IS_BASKETBALL
+    ? BASKETBALL_DATA_QUALITY
+    : SOCCER_DATA_QUALITY;
