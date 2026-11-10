@@ -7,26 +7,26 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "e07bb339e9a58000962d39cdf8b3e59f253b4e81e159302f60438a366aafbceb",
+  "contentHash": "8c1a11dded9b23f8461397e317c867a79facb5aa17f50d81a83a1ff997fe534d",
   "counts": {
     "byLeague": {
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 150,
+        "games": 152,
         "leagueGames": 84,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 150,
+    "games": 152,
     "leagueGames": 84,
     "mismatches": 0,
     "pending": 0,
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-10T13:43:10.756Z",
+  "fetchedAt": "2026-11-10T20:58:23.145Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -98,7 +98,7 @@
     },
     {
       "label": "palo-alto schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -143,7 +143,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 12,
+      "rowCount": 14,
       "status": "ok"
     },
     {
