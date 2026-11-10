@@ -1,7 +1,7 @@
 /**
  * The league-tournament view (SPEC §6.2, §10.7 `/playoffs/<league>`; MCAL):
  * `buildTournamentView` in components/playoffs/playoff-view.ts over the ENGINE's output
- * (lib/standings computeStandings → lib/postseason/postseason buildLeagueTournament), and the rendered page.
+ * (lib/standings/engine.ts computeStandings → lib/postseason/postseason buildLeagueTournament), and the rendered page.
  *
  * The synthetic seasons run through the real standings engine, so the shared 6th the table shows
  * (`resolvedBy: 'play-in'`) and the play-in pair the bracket uses are the engine's own, not a
@@ -17,7 +17,8 @@ import { buildTournamentView, type TournamentView } from '../../components/playo
 import { getDivision, getLeague } from '../../lib/leagues';
 import { buildLeagueTournament, SHOOTOUT_NOTE } from '../../lib/postseason/postseason';
 import { schoolAddress } from '../../lib/schools/schools';
-import { computeStandings, outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
+import { computeStandings } from '../../lib/standings/engine';
+import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings/ladder';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '../../lib/types';
 import { game } from '../game-builder';
@@ -104,7 +105,7 @@ describe('buildTournamentView — the engine’s shared 6th (a play-in is needed
 
   it('seeds from the table with the shared 6th level and the tournament line after both', () => {
     const shared = rows.filter((r) => r.tiebreak.resolvedBy === 'play-in').map((r) => r.slug).sort();
-    expect(shared, 'lib/standings.ts: the engine shares 6th by play-in').toEqual([MC, UN].sort());
+    expect(shared, 'lib/standings/engine.ts: the engine shares 6th by play-in').toEqual([MC, UN].sort());
     expect(p.playInNeeded, 'lib/postseason/postseason.ts').toBe('yes');
     expect(v.seedRows.map((r) => `${r.standing.computed.place}${r.shared ? '=' : ''}`), VIEW).toEqual([
       '1', '2', '3', '4', '5', '6=', '6=', '8', '9',

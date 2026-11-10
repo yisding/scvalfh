@@ -64,7 +64,7 @@ import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history/history';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
-import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings/ladder';
 import { CCS, REGIONS, ccsRoundDays } from '../../lib/league-config/sections';
 import type {
   DivisionConfig,

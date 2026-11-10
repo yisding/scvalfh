@@ -2,7 +2,7 @@
  * What a CCS league's own postseason games did to a team (plan final-10, 2026-10-30): the SCVAL 4th-place
  * play-in and crossover (Fri Oct 30; two crossovers moved to Thu Oct 29) and the BVAL play-in (Sat Oct 31).
  *
- * Read only from a pairing's MATCHED game (lib/standings.ts leaguePairings: the pairing's tag, inside its window,
+ * Read only from a pairing's MATCHED game (lib/standings/pairings.ts leaguePairings: the pairing's tag, inside its window,
  * one seat contender on each side) once that game is final. Until then there is no outcome and every surface keeps
  * the ladder's projected words. The winner is the higher score, else the side MaxPreps marks 'W' (the convention
  * lib/postseason/postseason.ts winnerOf and lib/postseason/sds-bracket.ts winnerOf follow); a level final with no flag decides nothing,

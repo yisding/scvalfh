@@ -36,7 +36,8 @@ import { classifyGame, classifyGames, postseasonTag } from '../classify';
 import { CCS } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
-import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from '../standings';
+import { buildCrossCheck } from '../standings/cross-check';
+import { assertFullTable, computeStandings, divisionGames } from '../standings/engine';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '../teams';
 import type {
   DivisionHealth,

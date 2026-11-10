@@ -19,7 +19,8 @@ import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
-import { leaguePairings, playoffStatusFor } from '../../lib/standings';
+import { playoffStatusFor } from '../../lib/standings/ladder';
+import { leaguePairings } from '../../lib/standings/pairings';
 import type { Standing } from '../../lib/types';
 import { game, withGames } from '../game-builder';
 

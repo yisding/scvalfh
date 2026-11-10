@@ -2072,7 +2072,7 @@ Vista on 2026-10-14 is the same date in the grid, both MaxPreps feeds and the um
 sheet.
 
 Without fixtures, "a league result is missing" has its own definition (`missingOfficialResults`
-in `lib/standings.ts`, the single definition the pipeline and the pages share): a game MaxPreps
+in `lib/standings/missing.ts`, the single definition the pipeline and the pages share): a game MaxPreps
 counts for the division, dated before today, that is `scheduled`, `live` or `score-pending` is
 **missing**, and one that is `postponed` is listed as postponed. On 2026-10-04 there were two: the
 2026-09-29 Pleasant Valley at Corning game (`a0350ae9-…`) and the 2026-10-01 Corning at Chico game

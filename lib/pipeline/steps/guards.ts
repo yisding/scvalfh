@@ -22,7 +22,7 @@ import { classifyGames } from '../../classify';
 import { byDateThenId } from '../../format';
 import type { LeagueConfig } from '../../league-config/shape';
 import { LEAGUES, getLeague } from '../../leagues';
-import { divisionGames } from '../../standings';
+import { divisionGames } from '../../standings/engine';
 import { teamsInLeague } from '../../teams';
 import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';
 import { RunAbort } from '../contract';

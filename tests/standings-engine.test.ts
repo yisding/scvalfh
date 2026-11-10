@@ -6,22 +6,20 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { unevenGamesSentence } from '../components/standings/standings-view';
 import { getLeague } from '../lib/leagues';
 import { sixthPlaceRule } from '../lib/postseason/postseason';
+import { buildCrossCheck, crossCheckSkipReason } from '../lib/standings/cross-check';
+import { computeStandings, lastSpotOutcome } from '../lib/standings/engine';
 import {
-  buildCrossCheck,
-  computeStandings,
-  crossCheckSkipReason,
-  unevenGamesSentence,
-  lastSpotOutcome,
-  leaguePairings,
-  missingOfficialResults,
   outcomesFor,
   playoffOutcomeLabel,
   playoffStatusFor,
   statusBadge,
   statusLegend,
-} from '../lib/standings';
+} from '../lib/standings/ladder';
+import { missingOfficialResults } from '../lib/standings/missing';
+import { leaguePairings } from '../lib/standings/pairings';
 import type { Game, OfficialFixture, ReportedRecord, Standing } from '../lib/types';
 import { game } from './game-builder';
 

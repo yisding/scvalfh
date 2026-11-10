@@ -16,7 +16,8 @@ import { getLeague } from '../lib/leagues';
 import { buildSeason } from '../lib/snapshot/season-build';
 import { countsOf } from '../lib/snapshot/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
-import { computeStandings, leaguePairings } from '../lib/standings';
+import { computeStandings } from '../lib/standings/engine';
+import { leaguePairings } from '../lib/standings/pairings';
 import type { Game, Snapshot } from '../lib/types';
 import { game, withGames } from './game-builder';
 

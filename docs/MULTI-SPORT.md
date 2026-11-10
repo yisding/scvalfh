@@ -61,7 +61,7 @@ byte-identical to the build before the seam.
 - **The domain types.** These are in `lib/types.ts`: ids, `Team`, `Game` and its sides, status,
   provenance and venue, `Standing`, `TiebreakInfo`, the health and cross-check rows.
 - **The engines.**
-  - The standings accumulation and stage interpreter in `lib/standings.ts`. A league's points rule is
+  - The standings accumulation and stage interpreter in `lib/standings/engine.ts`. A league's points rule is
     already config (`LeagueRules.points`).
   - The season-phase and window logic.
   - The least-squares rating fit in `lib/ratings/ratings.ts`. Its model is generic; only its constants

@@ -1282,14 +1282,14 @@ points rule, no standings and no table order that we could find, so the order is
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
-by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
+by-law citation next to it) and one engine in `lib/standings/engine.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
 
 ### SCVAL
 
 Per the **SCVAL Field Hockey By-Laws 2026-27, Article VI** (verified copy in
-`docs/BYLAWS-2026-27.md`; implementation in `lib/standings.ts`):
+`docs/BYLAWS-2026-27.md`; implementation in `lib/standings/engine.ts`):
 
 - **§1** — double round robin; only games between two members of the *same* division count
   toward the division record.

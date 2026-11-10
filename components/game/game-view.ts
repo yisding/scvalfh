@@ -308,7 +308,7 @@ export interface RecordAsOf {
  * league, so the caption says "to date" (`recordsCaptionFor`).
  *
  * Only results with an outcome count (a played game with no published score is neither a W nor an
- * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
+ * L) — the rule `lib/standings/engine.ts` tallies `computed` by — so for a team's latest league final this
  * equals `standing.computed` (tests/ui/game-view-asof.test.ts holds that).
  *
  * `undefined` for a side outside the team registry.

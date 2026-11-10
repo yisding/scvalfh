@@ -25,7 +25,7 @@ import type { LeagueConfig, TournamentConfig } from '../../lib/league-config/sha
 import { getDivision, getLeague } from '../../lib/leagues';
 import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
 import { schoolAddress } from '../../lib/schools/schools';
-import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
+import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings/ladder';
 import type { LeagueTournamentProjection, Team } from '../../lib/types';
 
 import { buildTournamentView, type TournamentView } from './playoff-view';

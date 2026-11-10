@@ -14,26 +14,26 @@
  * upset #4 Lick-Wilmerding and the semifinals were #5 University at #1 Redwood, #3 Marin Catholic at #2 Tamalpais.
  *
  * `sixthPlaceRule` takes the play-in pair (or the 2-0 sweep) from the standings engine itself
- * (lib/standings.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
+ * (lib/standings/engine.ts `lastSpotOutcome`: seed-one-restart + MCAL's last tournament place, SPEC §5.4/§5.4b),
  * so its contenders are exactly the teams the table shows sharing 6th with `resolvedBy: 'play-in'`.
  *
  * Only a 'league-tournament' league (MCAL) reaches this module. Of the nine leagues, SCVAL, BVAL and PCAL go
  * to CCS ('ccs-ladder'), and the EAL's Super Regional ('unbracketed-tournament') publishes no format or
  * bracket, so none is drawn for it. The two Southern California kinds get no projection either, and their
- * standings statuses come from their ladders alone (lib/standings.ts playoffStatusFor): the Sunset
+ * standings statuses come from their ladders alone (lib/standings/ladder.ts playoffStatusFor): the Sunset
  * ('no-postseason': the CIF Southern Section holds no field hockey playoffs, Blue Book 2026-27 Bylaws
  * 2011.1 and 3500.2) has one rung, 'no-postseason', for every place; the San Diego leagues
  * ('section-playoffs': the Section places Open 8, Division I 12 and Division II 12 from its power
  * rankings, Green Book 2026-27 Bylaw 2000.1) have 'tournament' for 1st (a designated champion's
  * guaranteed play-in) and 'selection' below, and no bracket is drawn before the Section publishes one.
  *
- * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types (lib/league-config/shape.ts, lib/types.ts).
+ * Imports the standings engine (lib/standings/engine.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types (lib/league-config/shape.ts, lib/types.ts).
  */
 
 import { EN_DASH, byDateThenId, leagueClockPT, numberWord, shortDate, sideOutcome } from '../format';
 import type { LeagueConfig, TournamentConfig } from '../league-config/shape';
 import { drawNumberOf } from '../leagues';
-import { lastSpotOutcome } from '../standings';
+import { lastSpotOutcome } from '../standings/engine';
 import { getTeamById, getTeamBySlug } from '../teams';
 import type {
   CrossoverSeat, Game, LeagueTournamentProjection, SeasonPhase, Standing, TeamId, TeamSlug, TournamentGame,
@@ -129,7 +129,7 @@ const nameOfSlug = (slug: TeamSlug): string => getTeamBySlug(slug)?.name ?? slug
 const NO_PLAY_IN: SixthPlaceDecision = { playInNeeded: 'no', contenders: [], host: null, seats: [], note: null };
 
 /**
- * The last tournament place (SPEC §6.2, §5.4b). The engine (lib/standings.ts `lastSpotOutcome`) decides
+ * The last tournament place (SPEC §6.2, §5.4b). The engine (lib/standings/engine.ts `lastSpotOutcome`) decides
  * whether a play-in is needed and between whom, or that a 2-0 sweep settled it; this adds what only the
  * bracket needs: 'possible' while a league meeting the case depends on is unplayed, the host (the higher
  * draw number, or in the three-way 5-7 case the winner of the pair's earlier meeting) and the notes.

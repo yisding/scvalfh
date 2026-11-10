@@ -43,7 +43,7 @@ import {
   type GoalieStats,
   type TeamPlayerStats,
 } from '../../lib/players/player-stats-schema';
-import { computeStandings } from '../../lib/standings';
+import { computeStandings } from '../../lib/standings/engine';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { game } from '../helpers';

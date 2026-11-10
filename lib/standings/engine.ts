@@ -24,38 +24,27 @@
  * MaxPreps' own row is kept verbatim on every Standing for the published cross-check: its De Anza
  * arithmetic is internally suspect (Homestead and Cupertino both report 0 league goals for),
  * which is exactly why we compute and publish the disagreement instead of trusting it.
+ *
+ * Its neighbours in lib/standings/ hold the rest: ladder.ts (playoff statuses and their copy),
+ * cross-check.ts (the MaxPreps comparison), missing.ts (missing league results) and pairings.ts.
  */
 
-import { byDateThenId, dayDiff, recordString, shortDate, sideOutcome } from './format';
-import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './league-config/shape';
+import { byDateThenId, sideOutcome } from '../format';
+import type { LeagueConfig, LeagueRules } from '../league-config/shape';
 import {
   LEAGUES,
   PLACE_VS_STAGES,
   UNCOMPUTABLE_STAGES,
   divisionLabel,
   drawNumberOf,
-  getDivision,
-  getLeague,
-  inPairingWindow,
-  ladderFor,
-  ladderRung,
-  leagueOfDivision,
-  leagueStandingsUrl,
-  pairingWindow,
   tiebreakChainFor,
-} from './leagues';
-import { TEAMS, getTeamById, teamsInDivision } from './teams';
+} from '../leagues';
+import { TEAMS, getTeamById, teamsInDivision } from '../teams';
 import type {
   ComputedRecord,
-  CrossCheckRow,
-  CrossoverSeat,
   DivisionId,
   Game,
-  LeagueId,
-  LeaguePairing,
-  OfficialFixture,
   Outcome,
-  PlayoffStatus,
   Record3,
   ReportedRecord,
   Standing,
@@ -64,7 +53,9 @@ import type {
   TeamSlug,
   TiebreakInfo,
   TiebreakStage,
-} from './types';
+} from '../types';
+import { compareToReported } from './cross-check';
+import { playoffStatusFor } from './ladder';
 
 // ---------------------------------------------------------------- accumulation
 
@@ -669,29 +660,9 @@ function slugOfId(id: TeamId): TeamSlug {
 
 // ---------------------------------------------------------------- reported rows
 
-export function toReportedRecord(row: {
-  conferenceWins: number;
-  conferenceLosses: number;
-  conferenceTies: number;
-  overallWins: number;
-  overallLosses: number;
-  overallTies: number;
-  conferencePoints: number;
-  conferencePointsAgainst: number;
-  points: number;
-  pointsAgainst: number;
-  conferenceContestsPlayed: number;
-  overallContestsPlayed: number;
-  conferenceStandingPlacement: number | null;
-  conferenceWinningPercentage: number;
-  winningPercentage: number;
-  streak: number;
-  streakResult: string | null;
-  homeWins: number; homeLosses: number; homeTies: number;
-  awayWins: number; awayLosses: number; awayTies: number;
-  neutralWins: number; neutralLosses: number; neutralTies: number;
-  modifiedOn: string;
-}): ReportedRecord {
+export function toReportedRecord(
+  row: Omit<ReportedRecord, 'streakResult'> & { streakResult: string | null },
+): ReportedRecord {
   const streakResult =
     row.streakResult === 'W' || row.streakResult === 'L' || row.streakResult === 'T'
       ? row.streakResult
@@ -896,409 +867,7 @@ function tiebreakNote(
   return `Tied on ${record.pts} points; separated by ${citations.stages[stage] ?? stage}.`;
 }
 
-function compareToReported(
-  computed: ComputedRecord,
-  overall: ComputedRecord,
-  reported: ReportedRecord | null,
-): { mismatch: boolean; detail?: string } {
-  if (!reported) return { mismatch: false };
-  const diffs: string[] = [];
-  const ours = recordString(computed);
-  const theirs = recordString({
-    w: reported.conferenceWins,
-    l: reported.conferenceLosses,
-    t: reported.conferenceTies,
-  });
-  if (ours !== theirs) diffs.push(`league record ${ours} vs MaxPreps ${theirs}`);
-
-  const oursOverall = recordString(overall);
-  const theirsOverall = recordString({
-    w: reported.overallWins,
-    l: reported.overallLosses,
-    t: reported.overallTies,
-  });
-  if (oursOverall !== theirsOverall) {
-    diffs.push(`overall record ${oursOverall} vs MaxPreps ${theirsOverall}`);
-  }
-  if (computed.gf !== reported.conferencePoints || computed.ga !== reported.conferencePointsAgainst) {
-    diffs.push(
-      `league goals ${computed.gf}-${computed.ga} vs MaxPreps ` +
-        `${reported.conferencePoints}-${reported.conferencePointsAgainst}`,
-    );
-  }
-  // Place is deliberately NOT a mismatch: MaxPreps orders on win percentage while the by-laws
-  // order on points (Article VI §2), so a place difference is a rules difference, not an
-  // arithmetic error. It is still published as a cross-check row.
-  return diffs.length ? { mismatch: true, detail: diffs.join('; ') } : { mismatch: false };
-}
-
-/**
- * Why a division has no MaxPreps comparison at all: MaxPreps publishes no table for it (the San Diego
- * Section's Valley, whose six teams all carry MaxPreps' zero-GUID "no league"; DivisionConfig.maxprepsLeagueId
- * null). The same words as the pipeline's DivisionHealth reason (lib/pipeline/steps/league-meta.ts
- * NO_MAXPREPS_TABLE_REASON), so /about and the health card say one thing. null for every other division.
- */
-export function crossCheckSkipReason(division: DivisionId): string | null {
-  return leagueStandingsUrl(division) === null ? 'MaxPreps publishes no table for this division' : null;
-}
-
-/**
- * Field-by-field cross-check rows for /about#cross-check (DESIGN §9), by the division's
- * `reportedTrust` (SPEC §5.8): 'full' = all six fields; 'records-only' = records and league
- * goals; 'informational' = league record only. Rows of a division with a known cause carry it.
- * A division with no MaxPreps table (`crossCheckSkipReason`) is skipped: it has no reported rows
- * and no page to link, so no row is ever built for it.
- */
-export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[] {
-  const rows: CrossCheckRow[] = [];
-  for (const s of standings) {
-    const r = s.reported;
-    if (!r) continue;
-    const div = getDivision(s.division);
-    const trust = div.reportedTrust;
-    const url = leagueStandingsUrl(s.division);
-    if (url === null) continue;
-    const push = (field: string, ours: string, theirs: string) => {
-      if (ours === theirs) return;
-      rows.push({
-        slug: s.slug,
-        field,
-        ours,
-        theirs,
-        url,
-        ...(div.knownCause ? { knownCause: div.knownCause } : {}),
-      });
-    };
-    push(
-      'league record',
-      recordString(s.computed),
-      recordString({ w: r.conferenceWins, l: r.conferenceLosses, t: r.conferenceTies }),
-    );
-    if (trust === 'informational') continue;
-    push(
-      'overall record',
-      recordString(s.overall),
-      recordString({ w: r.overallWins, l: r.overallLosses, t: r.overallTies }),
-    );
-    push('league goals for', String(s.computed.gf), String(r.conferencePoints));
-    push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));
-    if (trust === 'records-only') continue;
-    // Before a team's first league game neither table has a place for it (ours shows it unranked, MaxPreps lists
-    // every team first), so places and the rest of the ordering fields are not compared yet.
-    if (s.computed.gp === 0 && r.conferenceContestsPlayed === 0) continue;
-    push(
-      `place (we order on points, ${getLeague(div.leagueId).rules.citations.pointsShort}; MaxPreps orders on win pct)`,
-      String(s.computed.place),
-      r.conferenceStandingPlacement === null ? '—' : String(r.conferenceStandingPlacement),
-    );
-    push(
-      'win pct',
-      s.computed.winPct.toFixed(3),
-      r.conferenceWinningPercentage.toFixed(3),
-    );
-  }
-  return rows;
-}
-
-// ---------------------------------------------------------------- uneven games played
-
-/**
- * The games-played sentence of the uneven-GP footnote (SPEC §10.3), or null when every team with results
- * has played within one game of the others. With a fixed schedule (`scheduled` = DivisionConfig.gamesPerTeam)
- * it is the sentence the standings page has always printed: 'Teams have played between 9 and 12 of 16
- * league games, so points favour teams that have played more.' A league with no fixed schedule
- * (gamesPerTeam null: the Sunset, whose ten teams meet 0, 1 or 2 times and play only the games MaxPreps
- * marks as league games) has no "of N" to say, and no LEFT or MAX column to explain; its sentence says
- * what the gap is instead (DESIGN-socal §2.1.7). The rest of the footnote — LEFT, MAX and how the table
- * is ordered — is components/standings/standings-view.ts unevenGpFootnote's, which reads this.
- */
-export function unevenGamesSentence(
-  leagueId: LeagueId,
-  spread: { min: number; max: number; scheduled: number | null },
-): string | null {
-  if (spread.max - spread.min < 2) return null;
-  if (spread.scheduled !== null) {
-    return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
-  }
-  const league = getLeague(leagueId);
-  // 'membership' with no fixed schedule (the Sunset, the LA independents): every game between two members counts,
-  // so the gap is in games played against each other; 'contest-type' with none (no league today): MaxPreps' flag.
-  return league.rules.classification === 'membership'
-    ? `Teams have played between ${spread.min} and ${spread.max} games against other ${league.shortName} teams, and there is no fixed league schedule, so points favour teams that have played more.`
-    : `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
-}
-
-// ---------------------------------------------------------------- missing official results
-
-export interface MissingOfficialRow {
-  kind: 'missing' | 'postponed';
-  dateKey: string;
-  awayName: string;
-  homeName: string;
-  awaySlug: TeamSlug | null;
-  homeSlug: TeamSlug | null;
-  game: Game | null;
-}
-
-const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
-  'scheduled',
-  'live',
-  'score-pending',
-]);
-
-/**
- * THE single definition of 'league result missing', used by the pipeline's DivisionHealth
- * (`official.missingPast`; `missingLeaguePast` for a division with no official schedule) AND by
- * lib/data getMissingOfficialResults/getStandingContext. Pure. Sorted by dateKey, then fixture id
- * (the contest id where there is no fixture).
- *
- * A fixture-backed division: unmatched fixtures of `division` dated before `today` (kind 'missing',
- * game null), plus matched contests (official.division === division, official.scheduledDate < today)
- * with status 'scheduled' | 'live' | 'score-pending' (kind 'missing') or 'postponed' (kind
- * 'postponed', never counted as missing).
- *
- * A division whose league publishes no schedule (`official.mode === 'none'`: the EAL, the Sunset,
- * the San Diego divisions): there are no fixtures, so the rows are its classified games
- * (countsFor === division) dated before `today`, with the same status rule and the contest id in
- * place of a fixture id. What "classified" means is the league's rule (lib/classify.ts): under
- * 'contest-type' (EAL) a game MaxPreps flags as a league game between two members; under
- * 'membership' (Sunset, San Diego, the LA independents) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
- * flagged or not — the double round robin is the schedule, so an unflagged Patrick Henry game
- * dated before today with no score is a missing league result too.
- */
-export function missingOfficialResults(
-  games: readonly Game[],
-  unmatched: readonly OfficialFixture[],
-  division: DivisionId,
-  today: string,
-): MissingOfficialRow[] {
-  const rows: Array<MissingOfficialRow & { fixtureId: string }> = [];
-  if (getDivision(division).official.mode === 'none') {
-    for (const g of games) {
-      if (g.countsFor !== division || !(g.dateKey < today)) continue;
-      const kind = missingKindOf(g);
-      if (kind === null) continue;
-      rows.push({
-        kind,
-        dateKey: g.dateKey,
-        awayName: g.away.name,
-        homeName: g.home.name,
-        awaySlug: g.away.slug,
-        homeSlug: g.home.slug,
-        game: g,
-        fixtureId: g.contestId,
-      });
-    }
-    return sortMissing(rows);
-  }
-  for (const f of unmatched) {
-    if (f.division !== division || !(f.dateKey < today)) continue;
-    rows.push({
-      kind: 'missing',
-      dateKey: f.dateKey,
-      awayName: f.awayName,
-      homeName: f.homeName,
-      awaySlug: f.awaySlug,
-      homeSlug: f.homeSlug,
-      game: null,
-      fixtureId: f.id,
-    });
-  }
-  for (const g of games) {
-    const o = g.official;
-    if (!o || o.division !== division || !(o.scheduledDate < today)) continue;
-    const kind = missingKindOf(g);
-    if (kind === null) continue;
-    rows.push({
-      kind,
-      dateKey: o.scheduledDate,
-      awayName: g.away.name,
-      homeName: g.home.name,
-      awaySlug: g.away.slug,
-      homeSlug: g.home.slug,
-      game: g,
-      fixtureId: o.fixtureId,
-    });
-  }
-  return sortMissing(rows);
-}
-
-/** 'postponed' for a postponed game, 'missing' for one not yet reported, null once it has a result. */
-function missingKindOf(g: Game): MissingOfficialRow['kind'] | null {
-  if (g.status === 'postponed') return 'postponed';
-  if (NOT_YET_REPORTED.has(g.status)) return 'missing';
-  return null;
-}
-
-function sortMissing(rows: Array<MissingOfficialRow & { fixtureId: string }>): MissingOfficialRow[] {
-  rows.sort((a, b) =>
-    a.dateKey === b.dateKey ? a.fixtureId.localeCompare(b.fixtureId) : a.dateKey.localeCompare(b.dateKey),
-  );
-  return rows.map((row) => ({
-    kind: row.kind,
-    dateKey: row.dateKey,
-    awayName: row.awayName,
-    homeName: row.homeName,
-    awaySlug: row.awaySlug,
-    homeSlug: row.homeSlug,
-    game: row.game,
-  }));
-}
-
-// ---------------------------------------------------------------- ladder (SPEC §5.7)
-
-/** The rung of `ladderFor(division)` whose places cover `place`. */
-export function playoffStatusFor(division: DivisionId, place: number): PlayoffStatus {
-  return ladderRung(division, place).status;
-}
-
-/**
- * Every status a team could still take, best first.
- *
- * Places use standard competition ranking, so `place` is the team's 1-based finishing SLOT and a
- * cluster left level by an uncomputable step spans as many slots as it has teams. Two SCVAL teams
- * level on 3rd therefore hold the third automatic berth AND the 4th-place play-in spot between
- * them: reading `place` alone would label both of them "AQ" and make the play-in slot — and the
- * Oct 30 pairing built from it — disappear from the division. Neither slot is ever dropped here;
- * the tied teams carry both possibilities until the league decides.
- */
-export function playoffOutcomes(division: DivisionId, place: number, clusterSize = 1): PlayoffStatus[] {
-  const size = Math.max(1, clusterSize);
-  const out: PlayoffStatus[] = [];
-  for (let slot = place; slot < place + size; slot += 1) {
-    const status = playoffStatusFor(division, slot);
-    if (!out.includes(status)) out.push(status);
-  }
-  return out;
-}
-
-/** `playoffOutcomes` for a ranked row: the cluster size is the tied group it belongs to. */
-export function outcomesFor(row: Standing): PlayoffStatus[] {
-  return playoffOutcomes(row.division, row.computed.place, row.tiebreak.tiedWith.length + 1);
-}
-
-/** The division's rung for a status (falling back to the league's ladder); throws when none exists. */
-function rungFor(division: DivisionId, status: PlayoffStatus): LadderRung {
-  const rung =
-    ladderFor(division).find((r) => r.status === status) ??
-    leagueOfDivision(division).postseason.ladder.find((r) => r.status === status);
-  if (!rung) throw new Error(`lib/standings.ts: no ladder rung ${status} for ${division}`);
-  return rung;
-}
-
-/**
- * 'Automatic qualifier', or '<label> or <phrase> <unresolvedSuffix>' when a level place straddles
- * rungs (SCVAL: 'Automatic qualifier or the Oct 30 play-in — Article VI §7 decides it with a coin flip').
- */
-export function playoffOutcomeLabel(division: DivisionId, outcomes: readonly PlayoffStatus[]): string {
-  const [first, ...rest] = outcomes;
-  if (first === undefined) {
-    const ladder = ladderFor(division);
-    return ladder[ladder.length - 1].label;
-  }
-  const label = rungFor(division, first).label;
-  if (rest.length === 0) return label;
-  const tail = rest.map((status) => rungFor(division, status).phrase).join(' or ');
-  const suffix = leagueOfDivision(division).rules.unresolvedSuffix;
-  return suffix ? `${label} or ${tail} ${suffix}` : `${label} or ${tail}`;
-}
-
-/** The first pairing date of the league (the `{date}` in ladder legends), if it has pairings. */
-function firstPairingDate(league: LeagueConfig): string | null {
-  return league.postseason.kind === 'ccs-ladder' ? (league.postseason.pairings[0]?.date ?? null) : null;
-}
-
-/**
- * The day, or days, a league's pairings are played, for a sentence ("The SCVAL crossover and the 4th-place
- * play-in are …"): 'Fri Oct 30' when every pairing's window is that one day; 'Thu Oct 29 and Fri Oct 30'
- * across two consecutive days; 'Thu Oct 29 to Sat Oct 31' across more. '' for a league with no pairings.
- */
-export function pairingDatesLabel(pairings: readonly PairingConfig[]): string {
-  if (pairings.length === 0) return '';
-  const windows = pairings.map(pairingWindow);
-  const first = [...windows.map((w) => w.first)].sort()[0];
-  const last = [...windows.map((w) => w.last)].sort().reverse()[0];
-  if (first === last) return shortDate(first);
-  return dayDiff(first, last) === 1 ? `${shortDate(first)} and ${shortDate(last)}` : `${shortDate(first)} to ${shortDate(last)}`;
-}
-
-/** The rung's legend with '{date}' replaced by shortDate(first pairing date of the league). */
-export function statusLegend(division: DivisionId, status: PlayoffStatus): string {
-  const legend = rungFor(division, status).legend;
-  const date = firstPairingDate(leagueOfDivision(division));
-  return date ? legend.replace('{date}', shortDate(date)) : legend;
-}
-
-export function statusBadge(division: DivisionId, status: PlayoffStatus): string {
-  return rungFor(division, status).badge;
-}
-
-// ---------------------------------------------------------------- pairings (SPEC §5.7)
-
-/**
- * Generalized crossoverPairings(): the league's config pairings (SCVAL crossover ×4, BVAL play-in),
- * each seat filled by the team whose cluster COVERS that slot, not by an exact `place ===` match:
- * with two teams level on 3rd nobody carries place 4, and an exact match would quietly render the
- * play-in pairing as empty. Such a seat returns every contender for it, and the UI says in words
- * that the tie has not been decided. `game` is the matched contest once MaxPreps has it: a game
- * carrying the pairing's tag, dated inside the pairing's window (`PairingConfig.window`, else its
- * date), with one seat's contender on each side. A matched game SETTLES its seats: the league has
- * paired the teams, so a seat two level teams spanned narrows to the one that played (El Camino
- * co-leaders Mitty and Los Gatos: Mitty v St. Ignatius is #1 v #1, Los Gatos v Saint Francis #2 v
- * #2), and `date` becomes the day the game is actually played (two 2026 crossovers moved to Oct 29).
- */
-export function leaguePairings(
-  standings: readonly Standing[],
-  games: readonly Game[],
-  leagueId: LeagueId,
-): LeaguePairing[] {
-  const league = getLeague(leagueId);
-  if (league.postseason.kind !== 'ccs-ladder') return [];
-  const at = (division: DivisionId, seed: number): CrossoverSeat =>
-    standings
-      .filter(
-        (row) =>
-          row.division === division &&
-          row.hasReportedResults &&
-          row.computed.place <= seed &&
-          seed < row.computed.place + row.tiebreak.tiedWith.length + 1,
-      )
-      .map((row) => ({ teamId: row.teamId, slug: row.slug }));
-  return league.postseason.pairings.map((p) => {
-    const seats: [CrossoverSeat, CrossoverSeat] = [
-      at(p.seats[0].division, p.seats[0].place),
-      at(p.seats[1].division, p.seats[1].place),
-    ];
-    const ids0 = new Set(seats[0].map((s) => s.teamId));
-    const ids1 = new Set(seats[1].map((s) => s.teamId));
-    const game =
-      games.find((g) => {
-        if (g.postseason?.kind !== p.tag || !inPairingWindow(p, g.dateKey)) return false;
-        const h = g.home.teamId ?? '';
-        const a = g.away.teamId ?? '';
-        return (ids0.has(h) && ids1.has(a)) || (ids0.has(a) && ids1.has(h));
-      }) ?? null;
-    // The league's own pairing settles a seat the table left level: keep the contender that played.
-    const played = game ? new Set([game.home.teamId ?? '', game.away.teamId ?? '']) : null;
-    const settled = (seat: CrossoverSeat): CrossoverSeat => {
-      if (!played || seat.length < 2) return seat;
-      const hit = seat.filter((s) => played.has(s.teamId));
-      return hit.length === 1 ? hit : seat;
-    };
-    return {
-      id: p.id,
-      leagueId,
-      date: game ? game.dateKey : p.date,
-      time: p.time,
-      seats: [settled(seats[0]), settled(seats[1])],
-      seatLabels: [p.seatLabels[0], p.seatLabels[1]],
-      host: p.host,
-      isPlayIn: p.isPlayIn,
-      label: p.label,
-      game,
-    };
-  });
-}
+// ---------------------------------------------------------------- UI order and table guard
 
 /** Sort helper for the UI: place, then name. */
 export function sortStandings(rows: readonly Standing[]): Standing[] {

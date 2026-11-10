@@ -26,7 +26,8 @@ import {
 } from '../lib/snapshot/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
-import { buildCrossCheck, computeStandings, divisionGames } from '../lib/standings';
+import { buildCrossCheck } from '../lib/standings/cross-check';
+import { computeStandings, divisionGames } from '../lib/standings/engine';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import type { Game, ReportedRecord, Snapshot, TeamId } from '../lib/types';
 import { game } from './game-builder';
@@ -81,7 +82,7 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.hasReportedResults, s.slug).toBe(false);
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
-      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
+      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings/engine.ts
       // tiebreakNote: SoCal copy avoids the word 'results').
       expect(s.tiebreak.note, s.slug).toMatch(
         /^No (division|league) (results reported|games counted) for /,

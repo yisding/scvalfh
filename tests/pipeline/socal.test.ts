@@ -31,7 +31,7 @@ import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
-import { divisionGames } from '../../lib/standings';
+import { divisionGames } from '../../lib/standings/engine';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '../../lib/teams';
 import type { Game, Snapshot } from '../../lib/types';
 import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
@@ -201,7 +201,7 @@ describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table',
       'lib/pipeline/steps/reported.ts',
     ).toEqual([]);
     expect(snapshot.standings.filter((s) => s.division === 'valley').every((s) => s.reported === null)).toBe(true);
-    expect(snapshot.crossCheck.filter((r) => getTeamBySlug(r.slug)?.division === 'valley'), 'lib/standings.ts buildCrossCheck').toEqual(
+    expect(snapshot.crossCheck.filter((r) => getTeamBySlug(r.slug)?.division === 'valley'), 'lib/standings/cross-check.ts buildCrossCheck').toEqual(
       [],
     );
   });
@@ -392,7 +392,7 @@ describeIfCaptured('missing league results and the si.com sides', () => {
           .filter((r) => r.kind === 'missing')
           .map((r) => r.game?.contestId ?? '')
           .sort();
-        expect(listed, `lib/standings.ts missingOfficialResults: ${d.id}`).toEqual(expected);
+        expect(listed, `lib/standings/missing.ts missingOfficialResults: ${d.id}`).toEqual(expected);
         const health = data.getLeagueHealth(l.id).divisions.find((x) => x.divisionId === d.id)!;
         expect(health.missingLeaguePast, `lib/pipeline/steps/standings.ts: ${d.id}`).toBe(listed.length);
       }

@@ -57,16 +57,11 @@ import { ccsOutcomeFor } from './postseason/postseason-outcomes';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { loadSnapshot } from './snapshot/snapshot-schema';
-import {
-  divisionGames,
-  leaguePairings,
-  missingOfficialResults,
-  outcomesFor,
-  pairingDatesLabel,
-  playoffOutcomeLabel,
-  sortStandings,
-} from './standings';
-import type { MissingOfficialRow } from './standings';
+import { divisionGames, sortStandings } from './standings/engine';
+import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel } from './standings/ladder';
+import { missingOfficialResults } from './standings/missing';
+import type { MissingOfficialRow } from './standings/missing';
+import { leaguePairings } from './standings/pairings';
 import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
 import type {
   CcsCalendarEvent,
@@ -615,7 +610,7 @@ export interface StandingContext {
   remaining: number | null;
   /** pts + points.win × remaining. A ceiling, not a projection. null with `scheduled`. */
   maxPts: number | null;
-  /** Rows of kind 'missing' from missingOfficialResults() (lib/standings.ts) that involve this team. */
+  /** Rows of kind 'missing' from missingOfficialResults() (lib/standings/missing.ts) that involve this team. */
   missingPast: number;
   /** Counted games whose score came from si.com (provenance.scores === 'sblive'). */
   backfilled: number;
@@ -709,13 +704,13 @@ export function getMissingOfficialResults(division: DivisionId, asOf?: string): 
 
 /**
  * Spread of games played across EVERY member of a division (uneven-GP footnote when max − min ≥ 2;
- * lib/standings.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
+ * components/standings/standings-view.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
  * (the Sunset), whose sentence then has no "of N".
  *
  * A member with no counted game is in the spread at 0. The sentence says "Teams have played between {min}
  * and {max}", and the table it sits under lists that member with GP 0: leaving it out printed "between 1 and
  * 5" over a Sunset table whose Newport Harbor row reads 0 (its four finals against Sunset teams, Aug 26 –
- * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/standings.ts),
+ * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/standings/engine.ts),
  * so the old filter only ever dropped zeros.
  */
 export function getGamesPlayedSpread(division: DivisionId): { min: number; max: number; scheduled: number | null } {

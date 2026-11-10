@@ -3,7 +3,7 @@
  * rows for the cross-check), `assertFullTable`, the kept win-percentage log check, the published
  * cross-check, and one `LeagueHealth` row per configured league in config order.
  *
- * `DivisionHealth.official.missingPast` comes from `missingOfficialResults()` (lib/standings.ts) —
+ * `DivisionHealth.official.missingPast` comes from `missingOfficialResults()` (lib/standings/missing.ts) —
  * the same function lib/data.ts uses, never a second implementation. A division whose league
  * publishes no schedule (official mode 'none': EAL) has `official: null` and carries the same count,
  * from the same function, as `missingLeaguePast`; no other division has that field.
@@ -11,13 +11,9 @@
 
 import type { LeagueConfig } from '../../league-config/shape';
 import { LEAGUES } from '../../leagues';
-import {
-  assertFullTable,
-  buildCrossCheck,
-  computeStandings,
-  divisionGames,
-  missingOfficialResults,
-} from '../../standings';
+import { buildCrossCheck } from '../../standings/cross-check';
+import { assertFullTable, computeStandings, divisionGames } from '../../standings/engine';
+import { missingOfficialResults } from '../../standings/missing';
 import { teamsInLeague } from '../../teams';
 import type { CrossCheckRow, DivisionHealth, LeagueHealth, Standing } from '../../types';
 import { previousDivisionHealth, previousLeagueHealth, type PipelineContext, type RunState } from '../ledger';

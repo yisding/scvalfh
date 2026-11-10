@@ -20,7 +20,7 @@
 
 import { divisionLabel, getLeague } from '../../leagues';
 import { StandingsResponseSchema, type StandingsRow } from '../../sources/maxpreps';
-import { toReportedRecord } from '../../standings';
+import { toReportedRecord } from '../../standings/engine';
 import { resolveTeam, teamsInDivision } from '../../teams';
 import type { DivisionConfig } from '../../league-config/shape';
 import type { LeagueId, SourceStatus } from '../../types';

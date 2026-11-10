@@ -380,7 +380,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   beforeAll(async () => {
     const { game } = await import('../game-builder');
     const { loadSnapshot } = await import('../../lib/snapshot/snapshot-schema');
-    const { computeStandings } = await import('../../lib/standings');
+    const { computeStandings } = await import('../../lib/standings/engine');
     const { countsOf } = await import('../../lib/snapshot/snapshot-migrate');
     const { getLeague } = await import('../../lib/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);

@@ -1951,7 +1951,7 @@ every section on every page. This is the entire brand.
 type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
 interface StandingsTableProps {
   division: Division;
-  rows: StandingsRow[];            // already sorted & ranked by lib/standings.ts
+  rows: StandingsRow[];            // already sorted & ranked by lib/standings/engine.ts
   gdDomain: number;                // max |gd| for THIS division — never global
   variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
   caption: string;                 // "De Anza Division league standings through Sep 24"
@@ -2458,7 +2458,7 @@ source at all** — not "0-0-0", not last place: *absent*. Official 2026-27 memb
 eight. Any design that derives its rows from the feed array silently drops a school from the
 league, which is the worst bug this site could ship.
 
-**Resolution:** `lib/teams.ts` holds a hand-maintained membership constant. `lib/standings.ts`
+**Resolution:** `lib/teams.ts` holds a hand-maintained membership constant. `lib/standings/engine.ts`
 **left-joins** it against the feed, so the table always has 16 rows across two divisions and a
 missing school lands in the designed no-results state (§8) rather than vanishing. A Zod
 invariant asserts `snapshot.teams.length === 16` and CI asserts it again.

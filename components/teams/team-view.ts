@@ -63,7 +63,7 @@ import {
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../words/pin-label';
-import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
+import { outcomesFor, pairingDatesLabel } from '../../lib/standings/ladder';
 import type {
   DivisionId,
   Game,

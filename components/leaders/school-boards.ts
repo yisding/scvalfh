@@ -6,7 +6,7 @@
  * is its record everywhere. The independents' table is their league (DESIGN §29): their games against
  * each other are their league record, so they rank on the league-record board like any league's teams.
  * Clean sheets and the per-game rates come from the same finals, with forfeits
- * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
+ * left out of goals as lib/standings/engine.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
  * number of results (ranking.ts qualifyingMinimum); the teams below it are named in the notes.
  *
  * The Elo-adjusted goals board (lib/ratings/adjusted-scoring.ts) weighs each game by the opponent's defense: its

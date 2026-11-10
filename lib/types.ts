@@ -458,7 +458,7 @@ export interface Game {
 
 // ---------- standings ----------
 
-/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/league-config/). */
+/** Each member is code in lib/standings/engine.ts. The ORDER of a chain is config (lib/league-config/). */
 export type TiebreakStage =
   | 'points'                   // placed on points alone
   | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — SCVAL's original stage
