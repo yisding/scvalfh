@@ -91,7 +91,8 @@ const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
  * from the inlined SCVAL_SPORT (next.config.ts `env`), not lib/sports/current, so this client module bundles no
  * sport definition.
  */
-const SINGLE_REGION = process.env.SCVAL_SPORT !== undefined && process.env.SCVAL_SPORT !== '' && process.env.SCVAL_SPORT !== 'field-hockey';
+// Unset (a test, a script) is field hockey, as in lib/sports/current.ts; the builds always inline a value.
+const SINGLE_REGION = !!process.env.SCVAL_SPORT && process.env.SCVAL_SPORT !== 'field-hockey';
 
 const CHIP = 'sx-league-chip';
 

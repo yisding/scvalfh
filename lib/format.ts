@@ -362,7 +362,8 @@ export const SPORT_HAS_NO_TIES = process.env.SCVAL_SPORT === 'basketball';
  * hidden: the record then prints all three numbers.
  */
 export function recordString(r: Record3 | { w: number; l: number; t: number }): string {
-  return SPORT_HAS_NO_TIES && r.t === 0 ? `${r.w}-${r.l}` : `${r.w}-${r.l}-${r.t}`;
+  // Written as one template so the client bundles stay at their budget (/teams' first-load JS is within bytes of it).
+  return `${r.w}-${r.l}${SPORT_HAS_NO_TIES && !r.t ? '' : `-${r.t}`}`;
 }
 
 /**
@@ -370,8 +371,7 @@ export function recordString(r: Record3 | { w: number; l: number; t: number }): 
  * is "four minus one minus zero" in some voices and a date in others; the words are unambiguous.
  */
 export function recordWords(r: Record3 | { w: number; l: number; t: number }): string {
-  const wl = `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}`;
-  return SPORT_HAS_NO_TIES && r.t === 0 ? wl : `${wl}, ${plural(r.t, 'tie')}`;
+  return `${plural(r.w, 'win')}, ${plural(r.l, 'loss', 'losses')}${SPORT_HAS_NO_TIES && !r.t ? '' : `, ${plural(r.t, 'tie')}`}`;
 }
 
 /** '+30' / '−24' / '0' — always signed, U+2212 for negatives (DESIGN §5.6). */
