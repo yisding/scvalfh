@@ -116,9 +116,13 @@ jobs:
         continue-on-error: true
         timeout-minutes: 10
         run: |
-          set -euo pipefail
-          pnpm fetch-rosters
-          pnpm fetch-rosters --level jv
+          set -uo pipefail
+          # Each script exits 1 when any team's page failed (it still writes its file, keeping that team's
+          # previous rows), so the JV pages are read whatever the varsity run said.
+          rc=0
+          pnpm fetch-rosters || rc=1
+          pnpm fetch-rosters --level jv || rc=1
+          exit "$rc"
 
       # The basketball test files load every basketball data file through its validating loader (and hold the
       # JV schedule to one JV game per league fixture). When they fail and the stats or JV file changed in this

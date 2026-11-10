@@ -209,8 +209,43 @@ describe('basketball: teams level on their record (Article VI §1.1)', () => {
     expect(gunn.tiebreak.resolvedBy).toBe('coaches-vote');
     expect(gunn.tiebreak.tiedWith).toEqual([homestead.teamId]);
     expect(gunn.tiebreak.note).toBe(
-      'Level at 1-1 (.500) with Homestead and unresolved by every criterion — Article VI §1.1 (a blind coaches’ vote of the division, then a coin flip — we cannot compute either, so the teams stay level). We show them level.',
+      'Level at 1-1 (.500) with Homestead; not separable yet, because the tied teams have not all played the opponents the next step compares them on. We show them level.',
     );
+  });
+
+  // Two cases an adversarial review found (2026-11-10): both ended the walk on the wrong opponent.
+  const [A, B, C, D, E, F, G] = ['gunn', 'homestead', 'los-gatos', 'lynbrook', 'milpitas', 'mountain-view', 'palo-alto'];
+
+  it('a lower tie that head-to-head settles is read in its settled order, not as a level group', () => {
+    // Gunn and Homestead (4-3) split and are level against first-place Milpitas. Los Gatos and Lynbrook are
+    // level at 3-3 beneath them, and Los Gatos swept Lynbrook, so Los Gatos is the next opponent down: Gunn is
+    // 2-0 against it, Homestead 1-1.
+    const rows = table([
+      win(A, B), win(B, A),
+      win(A, C), win(A, C), win(D, A),
+      win(B, C), win(C, B), win(B, D),
+      win(C, D), win(C, D),
+      win(E, A), win(E, B), win(D, F), win(D, F), win(A, F), win(B, F),
+    ]);
+    expect([A, B, C, D].map((slug) => row(rows, slug).computed.place)).toEqual([2, 3, 4, 5]);
+    expect(row(rows, A).tiebreak).toMatchObject({ resolvedBy: 'record-vs-placed', shared: false });
+    expect(row(rows, C).tiebreak.resolvedBy).toBe('head-to-head');
+  });
+
+  it('after head-to-head splits a tie, the upper teams’ walk reads the tie-mates placed beneath them first', () => {
+    // Four teams at .500: head-to-head puts Gunn and Homestead (3-2 among the four) above Los Gatos and
+    // Lynbrook. The two split and are level against Milpitas, so the next opponent down is Los Gatos (Gunn 2-0,
+    // Homestead 1-1), not sixth-place Palo Alto, which beat Gunn and lost to Homestead.
+    const rows = table([
+      win(A, B), win(B, A),
+      win(A, C), win(A, C), win(D, A),
+      win(B, C), win(C, B), win(B, D),
+      win(C, D), win(C, D),
+      win(E, A), win(E, B), win(D, F), win(D, F),
+      win(A, F), win(F, B), win(G, A), win(B, G), win(E, G),
+    ]);
+    expect([A, B, C, D].map((slug) => row(rows, slug).computed.place)).toEqual([2, 3, 4, 5]);
+    expect(row(rows, A).tiebreak.resolvedBy).toBe('record-vs-placed');
   });
 
   it('teams that split against a level group do not separate, above the group or below it', () => {

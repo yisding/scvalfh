@@ -1,6 +1,6 @@
 /**
  * lib/jv/jv-official.ts: the league's own JV schedule as JV games. Synthetic slots over two registry schools
- * (the default build's: Los Altos and Saratoga), with listed games made from a real JV row so every field a
+ * (the default build's: Los Altos and Homestead, both De Anza), with listed games made from a real JV row so every field a
  * reader touches is there.
  */
 import { describe, expect, it } from 'vitest';
@@ -20,7 +20,7 @@ import { getTeamBySlug } from '../lib/teams';
 import type { Game, OfficialFixture } from '../lib/types';
 
 const HOME = getTeamBySlug('los-altos')!;
-const AWAY = getTeamBySlug('saratoga')!;
+const AWAY = getTeamBySlug('homestead')!;
 const TEMPLATE = getJvFile().games.find((g) => g.home.slug && g.away.slug)!;
 const FETCHED_AT = '2026-11-10T14:00:00.000Z';
 
@@ -126,6 +126,55 @@ describe('mergeJvOfficial', () => {
     const out = mergeJvOfficial({ games: [first], slots, fetchedAt: FETCHED_AT });
     expect(out).toMatchObject({ matched: 1, moved: 0 });
     expect(out.added).toEqual([`${OFFICIAL_JV_PREFIX}${slots[1].fixtureId}`]);
+  });
+});
+
+describe('mergeJvOfficial: cases an adversarial review found (2026-11-10)', () => {
+  const both = [slot('2027-01-06'), slot('2027-01-27', '17:30', true)];
+
+  it('never takes a meeting outside the JV league window as a slot’s game, same host or not', () => {
+    // A December tournament meeting with the slot's own host, and one three days before the first slot.
+    for (const game of [listed('g1', '2026-12-05'), listed('g2', '2027-01-03', { swap: true })]) {
+      const out = mergeJvOfficial({ games: [game], slots: both, fetchedAt: FETCHED_AT });
+      expect(out, game.dateKey).toMatchObject({ matched: 0, moved: 0 });
+      expect(out.added).toHaveLength(2);
+      expect(out.claims.size).toBe(0);
+    }
+  });
+
+  it('reads a game moved past the window with its host swapped as the slot’s game, once the return fixture is claimed', () => {
+    const returnGame = listed('g1', '2027-01-27', { swap: true });
+    const madeUp = listed('g2', '2027-02-05', { swap: true });
+    const out = mergeJvOfficial({ games: [returnGame, madeUp], slots: both, fetchedAt: FETCHED_AT });
+    expect(out).toMatchObject({ matched: 1, moved: 1, added: [] });
+    expect(out.claims.get('g1')?.fixtureId).toBe(both[1].fixtureId);
+    expect(out.claims.get('g2')?.fixtureId).toBe(both[0].fixtureId);
+  });
+
+  it('prefers the slot’s own host when two games are equally near', () => {
+    const swapped = listed('a-swapped', '2027-01-06', { swap: true });
+    const own = listed('b-own', '2027-01-06');
+    const out = mergeJvOfficial({ games: [swapped, own], slots: [slot('2027-01-06')], fetchedAt: FETCHED_AT });
+    expect([...out.claims.keys()]).toEqual(['b-own']);
+  });
+
+  it('makes the claim the classification: the claimed game is the league game, a third meeting is not', () => {
+    const s = slot('2027-01-06');
+    const claimed = listed('g1', '2027-02-10');
+    const extra = listed('g2', '2026-12-05');
+    const out = mergeJvOfficial({ games: [claimed, extra], slots: [s, slot('2027-01-27', '17:30', true)], fetchedAt: FETCHED_AT });
+    expect(out.claims.get('g1')?.fixtureId).toBe(s.fixtureId);
+    // A varsity game right beside the extra meeting that counts for the division: without the schedule it
+    // would make the JV game a league game.
+    const varsity: Game = { ...listed('v1', '2026-12-05'), countsFor: s.division };
+    const classes = classifyJvGames(out.games, [varsity], [], {}, {
+      claims: new Map([...out.claims].map(([id, c]) => [id, { division: c.division, fixtureId: c.fixtureId }])),
+      divisions: new Set([s.division]),
+    });
+    expect(classes.get('g1')).toEqual({ kind: 'league', division: s.division, via: 'official-fixture', ref: s.fixtureId });
+    expect(classes.get('g2')).toEqual({ kind: 'non-league', reason: 'off-jv-schedule' });
+    // And without a JV schedule the varsity counterpart still decides, as before.
+    expect(classifyJvGames([extra], [varsity], []).get('g2')).toMatchObject({ kind: 'league', via: 'varsity-game' });
   });
 });
 

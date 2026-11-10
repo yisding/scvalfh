@@ -983,6 +983,13 @@ describe('noTiesSportClaims (a basketball page prints no other sport’s words)'
     expect(noTiesSportClaims('Points for, points against and point differential; 7-1 (.875)')).toEqual([]);
   });
 
+  it('leaves basketball’s own field goals and the table’s ties, and still finds a goalie and a clean sheet', () => {
+    expect(noTiesSportClaims('Field goals made-attempted; Field goal percentage')).toEqual([]);
+    expect(noTiesSportClaims('Ties are broken by head-to-head; a two-way tie; ties broken in order')).toEqual([]);
+    expect(noTiesSportClaims('a goalie with a clean-sheet')).toHaveLength(2);
+    expect(noTiesSportClaims('a field of goals')).toHaveLength(1);
+  });
+
   it('takes a proper noun the data prints out before it reads the copy', () => {
     const text = 'Gunn at the Double Goal Coaches Classic at Tech';
     expect(noTiesSportClaims(text)).toHaveLength(1);

@@ -10,7 +10,8 @@ import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import { getGameDates } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
-import { LEAGUE_IDS, getLeague, standaloneName } from '../../../lib/leagues';
+import { regionIdSuffix } from '../../../components/leaders/scope';
+import { LEAGUE_IDS, getLeague, regionOf, standaloneName } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
 import { GENDER_NAME, SPORT } from '../../../lib/sports/current';
 
@@ -91,7 +92,7 @@ export default async function JvLeagueSchedulePage({ params }: PageProps<'/jv/[l
             later, and less often, than varsity ones.
           </EmptyState>
         ) : (
-          <JvSchedule view={view} varsityDates={varsityDates} />
+          <JvSchedule view={view} varsityDates={varsityDates} dayAnchor={`jv${regionIdSuffix(regionOf(league))}`} />
         )}
       </div>
     </div>

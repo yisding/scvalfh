@@ -117,9 +117,13 @@ jobs:
         continue-on-error: true
         timeout-minutes: 10
         run: |
-          set -euo pipefail
-          pnpm fetch-rosters
-          pnpm fetch-rosters --level jv
+          set -uo pipefail
+          # Each script exits 1 when any team's page failed (it still writes its file, keeping that team's
+          # previous rows), so the JV pages are read whatever the varsity run said.
+          rc=0
+          pnpm fetch-rosters || rc=1
+          pnpm fetch-rosters --level jv || rc=1
+          exit "$rc"
 
       # tests/soccer.test.ts loads every soccer data file through its validating loader, and tests/jv-hub.test.ts
       # (which reads the job's SCVAL_SPORT) holds the JV pages to the JV games just fetched. When they fail

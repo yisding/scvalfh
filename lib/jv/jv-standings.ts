@@ -9,9 +9,10 @@
  * BVAL and MCAL give a JV time per fixture), so a JV game takes the classification the varsity
  * pipeline already gave its varsity counterpart:
  *
- *   0. a game lib/jv/jv-corrections.ts names (leagueGames, each with its evidence) counts for that division,
- *      and so does a game listed from the league's own JV schedule (lib/jv/jv-official.ts: the fixture is its
- *      evidence);
+ *   0. a game lib/jv/jv-corrections.ts names (leagueGames, each with its evidence) counts for that division.
+ *      Where the league's own schedule sets the JV round (lib/jv/jv-official.ts), the schedule decides for its
+ *      division: the game each fixture's JV slot claimed, or the game listed from the slot, is the league game,
+ *      and any other game between two schools of that division is non-league;
  *   1. a varsity game between the same two schools within ±3 days (the nearest; two equally near
  *      decide nothing): the JV game counts for that game's division table when the varsity game
  *      does (`countsFor`), is non-league when the varsity game is, and is left uncounted when the
@@ -63,7 +64,7 @@ export const JV_STANDINGS_MIN_REPORTED_SHARE = 0.6;
 
 export type JvClassification =
   | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture' | 'correction'; ref: string }
-  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' }
+  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' | 'off-jv-schedule' }
   | { kind: 'uncounted'; reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason'; division: DivisionId };
 
 function pairOf(g: { home: { slug: string | null }; away: { slug: string | null } }): string | null {
@@ -96,6 +97,15 @@ export function classifyJvGames(
   officialFixtures: readonly OfficialFixture[],
   /** Rule 0: a JV league game a source shows that no rule below can (lib/jv/jv-corrections.ts leagueGames). */
   leagueGames: Readonly<Record<ContestId, { division: DivisionId; source: string }>> = {},
+  /**
+   * The league's own JV schedule (lib/jv/jv-official.ts): the listed games its slots claimed, and the divisions
+   * that have slots. In such a division the schedule decides: a claimed game is that fixture's league game, and
+   * any other game between two of its schools is non-league, whatever varsity game is near it.
+   */
+  jvSchedule: {
+    claims: ReadonlyMap<ContestId, { division: DivisionId; fixtureId: string }>;
+    divisions: ReadonlySet<DivisionId>;
+  } = { claims: new Map(), divisions: new Set() },
 ): Map<ContestId, JvClassification> {
   const varsityByPair = new Map<string, Game[]>();
   for (const g of varsityGames) {
@@ -134,6 +144,15 @@ export function classifyJvGames(
       continue;
     }
     const sameDivision = home.division === away.division;
+    const claimedBy = jvSchedule.claims.get(g.contestId);
+    if (claimedBy) {
+      out.set(g.contestId, { kind: 'league', division: claimedBy.division, via: 'official-fixture', ref: claimedBy.fixtureId });
+      continue;
+    }
+    if (sameDivision && jvSchedule.divisions.has(home.division)) {
+      out.set(g.contestId, { kind: 'non-league', reason: 'off-jv-schedule' });
+      continue;
+    }
     const twin = nearest(g.dateKey, varsityByPair.get(key) ?? []);
     if (twin === 'ambiguous') {
       out.set(
@@ -246,8 +265,12 @@ export function computeJvStandings(
     for (const div of league.divisions) {
       const leagueGames = games.filter((g) => g.countsFor === div.id).sort(byDateThenId);
       const finals = leagueGames.filter((g) => g.status === 'final');
+      // A game listed only from the league's schedule is not known to have been played: it never counts
+      // against the share of played games that have a score.
       const played = leagueGames.filter(
-        (g) => g.status === 'final' || (g.dateKey < today && g.status !== 'postponed'),
+        (g) =>
+          g.status === 'final' ||
+          (g.dateKey < today && g.status !== 'postponed' && officialJvFixtureId(g.contestId) === null),
       ).length;
       const members = new Set(
         leagueGames.flatMap((g) => [slotSlug(g.home), slotSlug(g.away)]).filter((s): s is string => s !== null),

@@ -71,6 +71,7 @@ const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
   getSnapshot().games,
   getOfficialFixtures(),
   JV_CORRECTIONS.leagueGames,
+  { claims: official.claims, divisions: new Set(JV_SLOTS.map((s) => s.division)) },
 );
 const games: Game[] = withJvClassification(official.games, classes);
 /** The divisions whose schedule schedules the JV round: a bundle carries a JV slot on every fixture or on none. */

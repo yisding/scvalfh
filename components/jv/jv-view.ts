@@ -302,7 +302,7 @@ export function buildLeagueJvHubView(league: LeagueId): LeagueJvHubView {
   const recentFinals = finals.filter((g) => g.dateKey > since);
   const latestDay = finals.at(-1)?.dateKey;
   const latestGames = recentFinals.length > 0 ? recentFinals : finals.filter((g) => g.dateKey === latestDay);
-  const soon = upcoming.filter((g) => g.dateKey <= until);
+  const soon = upcoming.filter((g) => g.dateKey < until);
   const nextDay = upcoming[0]?.dateKey;
   const nextGames = soon.length > 0 ? soon : upcoming.filter((g) => g.dateKey === nextDay);
   const latest = capped(groupByDay(latestGames).reverse());

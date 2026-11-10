@@ -95,6 +95,9 @@ interface Column {
   jvRoundTime: string | null;
   games: Array<{ away: string; home: string }>;
   quad: 'B' | 'G' | null;
+  /** How many of its games carry the letter, and whether its head says "(QUAD)". */
+  marked: number;
+  saysQuad: boolean;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -119,7 +122,7 @@ export function parseGrid(text: string): Column[] {
         const weekday = WEEKDAYS[new Date(`${dateKey}T12:00:00Z`).getUTCDay()];
         if (weekday !== m[1]) throw new Error(`"${head}": ${dateKey} is a ${weekday}; add it to DATE_CORRECTIONS with its evidence`);
         const jv = m[4] ? JV_ROUND_HEAD.exec(`(${m[4]})`) : null;
-        return { head, dateKey, jvRoundTime: jv ? to24h(jv[1]) : null, games: [], quad: null };
+        return { head, dateKey, jvRoundTime: jv ? to24h(jv[1]) : null, games: [], quad: null, marked: 0, saysQuad: m[4] === 'QUAD' };
       });
       columns.push(...block);
       continue;
@@ -134,17 +137,22 @@ export function parseGrid(text: string): Column[] {
       if (m[3] === 'B' || m[3] === 'G') {
         if (block[i].quad !== null && block[i].quad !== m[3]) throw new Error(`"${block[i].head}" is marked both B and G`);
         block[i].quad = m[3];
+        block[i].marked += 1;
       }
     });
   }
-  // The quad letter is printed once per line, after the line's last quad column: every game of a quad column
-  // carries it, so a column with one unmarked game is a misread.
   return columns;
 }
 
 /** The division's fixtures: every varsity column's games, each with its JV game. */
 export function fixturesOf(division: DivisionId, text: string): BundleFixture[] {
   const columns = parseGrid(text);
+  // Every game of a quad column carries its letter, and a column headed "(QUAD)" has one: anything else is a
+  // misread that would give a quad day a night game's times.
+  for (const c of columns) {
+    if (c.quad !== null && c.marked !== c.games.length) throw new Error(`${division} "${c.head}": ${c.marked} of ${c.games.length} games carry its ${c.quad}`);
+    if (c.saysQuad && c.quad === null) throw new Error(`${division} "${c.head}" is headed QUAD and carries no B or G`);
+  }
   const jvRounds = columns.filter((c) => c.jvRoundTime !== null);
   const varsity = columns.filter((c) => c.jvRoundTime === null);
   const pairKey = (g: { away: string; home: string }) => `${g.away}@${g.home}`;

@@ -9,7 +9,16 @@ import type { LeagueJvScheduleView } from './jv-view';
  * Monday JV round, a JV tournament day) has no day page, which is why this list exists. One footnote under
  * the whole list.
  */
-export function JvSchedule({ view, varsityDates }: { view: LeagueJvScheduleView; varsityDates: ReadonlySet<string> }) {
+export function JvSchedule({
+  view,
+  varsityDates,
+  dayAnchor,
+}: {
+  view: LeagueJvScheduleView;
+  varsityDates: ReadonlySet<string>;
+  /** The day page's JV block for this league's region: `jv`, or `jv-socal`. */
+  dayAnchor: string;
+}) {
   return (
     <>
       {view.days.map((day) => (
@@ -17,7 +26,7 @@ export function JvSchedule({ view, varsityDates }: { view: LeagueJvScheduleView;
           <DateHeader
             date={day.dateKey}
             count={day.rows.length}
-            dayHref={varsityDates.has(day.dateKey) ? `/scores/${day.dateKey}#jv` : undefined}
+            dayHref={varsityDates.has(day.dateKey) ? `/scores/${day.dateKey}#${dayAnchor}` : undefined}
             className="md:max-w-3xl"
           />
           <JvGameList rows={day.rows} />

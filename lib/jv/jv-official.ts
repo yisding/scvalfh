@@ -12,13 +12,19 @@
  *   1. a JV game already listed for the same two schools within ±JV_OFFICIAL_WINDOW_DAYS of the slot's date is
  *      that game (the nearest; a game is claimed by one slot only). It keeps everything MaxPreps says; only a
  *      start time MaxPreps leaves TBA is taken from the schedule, when the game is on the slot's own date;
- *   2. otherwise a listed JV game of the same two schools with the same host, anywhere in the season, that no
- *      slot claimed is the slot's game moved to another day, and nothing is added (so a rescheduled game is
- *      never listed twice);
+ *   2. otherwise a listed JV game of the same two schools that no slot claimed, dated inside the division's
+ *      JV league window (its first slot to JV_OFFICIAL_MOVED_DAYS after its last), is the slot's game moved to
+ *      another day, and nothing is added (so a rescheduled game is never listed twice): with the slot's host,
+ *      or with the other host when that host's own slots of the pair are already claimed. A meeting outside
+ *      the window (a December tournament) is never a slot's game;
  *   3. otherwise the slot is added as a scheduled JV game: the schedule's date, time and host, no score,
  *      contest id `official-jv:<fixture id>`, `provenance.schedule` the league document. It is a league game
  *      by definition (lib/jv/jv-standings.ts classifies it without a varsity counterpart), and it disappears
  *      the day MaxPreps lists the game, which then carries the score.
+ *
+ * The slots also decide what counts: in a division with JV slots, the JV league games are exactly the games
+ * the slots claimed and the games added (`claims`; lib/jv/jv-standings.ts), so a third meeting of two schools
+ * is never a league game because a varsity game happens to be near it.
  *
  * A slot whose schools are not both registry teams is skipped. Pure: no I/O, no clock.
  */
@@ -30,6 +36,8 @@ import type { ContestId, DivisionId, Game, GameSide, OfficialFixture, OfficialSo
 export const OFFICIAL_JV_PREFIX = 'official-jv:';
 /** A listed JV game this many days either side of a schedule slot is the slot's game. */
 export const JV_OFFICIAL_WINDOW_DAYS = 3;
+/** A slot's game moved to another day is looked for from the division's first JV slot to this many days after its last. */
+export const JV_OFFICIAL_MOVED_DAYS = 14;
 
 export const isOfficialJvContestId = (id: ContestId): boolean => id.startsWith(OFFICIAL_JV_PREFIX);
 
@@ -89,6 +97,12 @@ export interface JvOfficialMergeResult {
   moved: number;
   /** Fixtures that carry a JV slot. */
   slots: number;
+  /**
+   * The listed games the slots claimed (rules 1 and 2), each with its slot: lib/jv/jv-standings.ts counts
+   * exactly these, and the games added, as the division's JV league games, so "the slot's game" and "a league
+   * game" are one decision.
+   */
+  claims: ReadonlyMap<ContestId, JvSlot>;
 }
 
 const pairKey = (a: TeamSlug, b: TeamSlug): string => [a, b].sort().join('~');
@@ -153,42 +167,76 @@ export function mergeJvOfficial(input: {
     byPair.set(key, [...(byPair.get(key) ?? []), g]);
   }
 
-  const claimed = new Set<ContestId>();
+  // A division's JV league window: its first slot to its last, and JV_OFFICIAL_MOVED_DAYS after it for a game
+  // made up late. A game of the pair outside it (a December tournament meeting) is never a slot's game.
+  const windowOf = new Map<DivisionId, { first: string; last: string }>();
+  for (const f of slots) {
+    const w = windowOf.get(f.division);
+    windowOf.set(f.division, {
+      first: w && w.first < f.dateKey ? w.first : f.dateKey,
+      last: w && w.last > f.dateKey ? w.last : f.dateKey,
+    });
+  }
+  const inWindow = (f: JvSlot, g: Game): boolean => {
+    const w = windowOf.get(f.division)!;
+    return g.dateKey >= w.first && dayDiff(w.last, g.dateKey) <= JV_OFFICIAL_MOVED_DAYS;
+  };
+  const candidates = (f: JvSlot): Game[] =>
+    (byPair.get(pairKey(f.homeSlug, f.awaySlug)) ?? []).filter((g) => !claims.has(g.contestId) && inWindow(f, g));
+
+  const claims = new Map<ContestId, JvSlot>();
+  const claimedSlots = new Set<string>();
+  const claim = (f: JvSlot, g: Game): void => {
+    claims.set(g.contestId, f);
+    claimedSlots.add(f.fixtureId);
+  };
   const timeOf = new Map<ContestId, string>();
-  const open: JvSlot[] = [];
   let matched = 0;
 
-  // Rule 1: the nearest unclaimed listed game of the pair within the window.
+  // Rule 1: the nearest unclaimed listed game of the pair within the window, the slot's own host first when
+  // two are equally near.
   for (const f of slots) {
-    const near = (byPair.get(pairKey(f.homeSlug, f.awaySlug)) ?? [])
-      .filter((g) => !claimed.has(g.contestId))
+    const near = candidates(f)
       .map((g) => ({ g, d: Math.abs(dayDiff(f.dateKey, g.dateKey)) }))
       .filter(({ d }) => d <= JV_OFFICIAL_WINDOW_DAYS)
-      .sort((a, b) => a.d - b.d || byDateThenId(a.g, b.g));
-    if (near.length === 0) {
-      open.push(f);
-      continue;
-    }
+      .sort(
+        (a, b) =>
+          a.d - b.d ||
+          Number(b.g.home.slug === f.homeSlug) - Number(a.g.home.slug === f.homeSlug) ||
+          byDateThenId(a.g, b.g),
+      );
+    if (near.length === 0) continue;
     const { g, d } = near[0];
-    claimed.add(g.contestId);
+    claim(f, g);
     matched += 1;
     if (d === 0 && g.isTimeTba && f.time !== null && g.status === 'scheduled') timeOf.set(g.contestId, f.time);
   }
 
-  // Rule 2: the same pair with the same host on another day is the slot's game, moved.
-  const added: Game[] = [];
+  // Rule 2: a game of the pair on another day inside the league window is the slot's game, moved. With the
+  // slot's own host it is taken as it stands; with the other host only when that host's own slots of the pair
+  // are all claimed already (so it cannot be the return fixture).
   let moved = 0;
-  for (const f of open) {
-    const elsewhere = (byPair.get(pairKey(f.homeSlug, f.awaySlug)) ?? [])
-      .filter((g) => !claimed.has(g.contestId) && g.home.slug === f.homeSlug)
-      .sort(byDateThenId);
-    if (elsewhere.length > 0) {
-      claimed.add(elsewhere[0].contestId);
+  for (const sameHost of [true, false]) {
+    for (const f of slots) {
+      if (claimedSlots.has(f.fixtureId)) continue;
+      const elsewhere = candidates(f)
+        .filter((g) => {
+          if (g.home.slug === f.homeSlug) return sameHost;
+          if (sameHost) return false;
+          const theirs = slots.filter(
+            (s) => s.homeSlug === g.home.slug && pairKey(s.homeSlug, s.awaySlug) === pairKey(f.homeSlug, f.awaySlug),
+          );
+          return theirs.length > 0 && theirs.every((s) => claimedSlots.has(s.fixtureId));
+        })
+        .sort(byDateThenId);
+      if (elsewhere.length === 0) continue;
+      claim(f, elsewhere[0]);
       moved += 1;
-      continue;
     }
-    added.push(slotGame(f, input.fetchedAt));
   }
+
+  // Rule 3: what is left is listed from the schedule.
+  const added: Game[] = slots.filter((f) => !claimedSlots.has(f.fixtureId)).map((f) => slotGame(f, input.fetchedAt));
 
   const games = input.games.map((g) => {
     const time = timeOf.get(g.contestId);
@@ -204,5 +252,6 @@ export function mergeJvOfficial(input: {
     matched,
     moved,
     slots: slots.length,
+    claims,
   };
 }

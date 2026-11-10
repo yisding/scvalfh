@@ -276,10 +276,12 @@ export const RULES_REQUIRE_CLAIM = /\brules require\b/i;
  * the "Double Goal Coaches Classic", an opponent's name) are taken out.
  */
 export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp }> = [
-  { what: 'says "goal(s)"', pattern: /\bgoals?\b/gi },
-  { what: 'speaks of a tied game', pattern: /\bties?\b(?!\s+for\b)(?![-\s]?break)/gi },
+  // "Field goal" is basketball's own word (the stat tables' FG columns); every other goal is another sport's.
+  { what: 'says "goal(s)"', pattern: /(?<!\bfield\s)\bgoals?\b/gi },
+  // A tie in the table (a tie for 2nd, a tiebreak, a two-way tie, ties are broken by…) is not a tied game.
+  { what: 'speaks of a tied game', pattern: /(?<!-way\s)\bties?\b(?!\s+for\b)(?![-\s]?break)(?!\s+(?:are\s+)?broken\b)/gi },
   { what: 'prints a W-L-T record', pattern: /\bW-L-T\b|\b0-0-0\b|won-lost-tied|win-loss-tie|win\/loss\/tie/gi },
-  { what: 'uses a goalkeeper’s word', pattern: /\b(?:goal)?keepers?\b|\bgoalkeeping\b|\bshutouts?\b|\bclean sheets?\b|\bshootouts?\b/gi },
+  { what: 'uses a goalkeeper’s word', pattern: /\b(?:goal)?keepers?\b|\bgoalies?\b|\bgoalkeeping\b|\bshutouts?\b|\bclean[ -]sheets?\b|\bshootouts?\b/gi },
   { what: 'names another build’s program', pattern: /\bgirls\b|\bsoccer\b|\bfield hockey\b/gi },
 ];
 

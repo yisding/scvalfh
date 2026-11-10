@@ -74,6 +74,14 @@ beforeAll(async () => {
     (g) => (g.home.slug === 'palo-alto' || g.away.slug === 'palo-alto') && g.home.teamId !== null && g.away.teamId !== null,
   );
   if (!game) throw new Error('tests/basketball-stats.test.ts: the snapshot lists no Palo Alto game to stage');
+  // Every other game is put back to unplayed, so the boards below hold whatever the live season has done:
+  // update-data-basketball.yml runs this file on each day's snapshot, and a real 82-point final or a second
+  // Palo Alto final would otherwise move the leaders this file pins.
+  for (const g of snapshot.games) {
+    Object.assign(g, { status: 'scheduled', decider: null, isOt: false, otPeriods: 0, isForfeit: false, forfeitBy: null, shootout: null });
+    Object.assign(g.home, { score: null, result: null });
+    Object.assign(g.away, { score: null, result: null });
+  }
   const paloAlto = game.home.slug === 'palo-alto' ? game.home : game.away;
   const opponent = game.home.slug === 'palo-alto' ? game.away : game.home;
   Object.assign(game, { status: 'final', decider: 'REG', isForfeit: false, forfeitBy: null });
@@ -87,6 +95,9 @@ beforeAll(async () => {
   for (const team of snapshot.teams) {
     if (team.slug !== 'palo-alto' && team.slug !== 'gunn') cpSync(path.join(FIXTURES, 'stats-gunn.json'), path.join(dir, `stats-${team.slug}.json`));
   }
+  // The standings of the staged games alone, as the pipeline would compute them.
+  const { computeStandings } = await import('../lib/standings/engine');
+  snapshot.standings = computeStandings(snapshot.games);
   writeFileSync(path.join(dir, 'snapshot.json'), JSON.stringify(snapshot));
   staged = { snapshot, game, dir };
 
