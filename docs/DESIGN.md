@@ -111,8 +111,8 @@
 grafts the ideas both judges flagged from `editorial` and `data-dense`, and resolves every
 weakness either judge named. Every weakness resolution is marked **[R-n]** and indexed in §13.
 
-**Verified stack in this repo** (`/home/yi/Code/scvalfh`): `next@16.3.6`,
-`tailwindcss@4.3.3`, React 19, TypeScript. Geist + Geist_Mono are present in
+**Verified stack in this repo** (`/home/yi/Code/scvalfh`): `next@16.4.6`,
+`tailwindcss@4.3.5`, React 19, TypeScript. Geist + Geist_Mono are present in
 `next/font/google`'s font data. No UI kit, no chart library — inline SVG and CSS only.
 One static JSON snapshot, rebuilt twice daily by cron (.github/workflows/update-data.yml).
 
@@ -2892,7 +2892,7 @@ On a game row the † is StatusLabel's SourceMark, a sans footnote mark, not a `
 Fail CI (`scripts/assert-budgets.ts`), against baselines captured from `main` before the change:
 `data/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
 most 2.2 x baseline (2.0 x until 2026-10-03; see §16.4); first-load client JS for `/`, `/schedule/<league>`, `/teams` and
-`/standings/<league>` each at most baseline + 20 KB (this catches the config, registry or zod
+`/standings/<league>` each at most baseline + 20 KB (24 KB since the dependency update of 2026-11-10: `scripts/assert-budgets.ts`; this catches the config, registry or zod
 leaking into the browser: the client boundary forbids it); `/standings` (overview) at most 1.0 x its
 baseline gzip; each `/standings/<league>` and `/schedule/<league>` at most 1.25 x; the `/schedule`
 index at most 0.5 x; `/teams` at most 3.0 x; `/playoffs` at most 2.0 x; the Cloudflare Worker at
@@ -2971,7 +2971,7 @@ back to what it was.)
 
 `/leaders` HTML gzip at most 1.0 x the `standings` baseline (about 28 KB on 2026-10-03; nine boards
 of at most 15 rows cannot grow with the season), and its first-load JS at most the `standings`
-baseline + 20 KB. The page ships no client component of its own. (The HTML line is 1.2 x since §23.)
+baseline + 20 KB (24 KB since 2026-11-10). The page ships no client component of its own. (The HTML line is 1.2 x since §23.)
 
 The home page's budget moved from 2.0 x to 2.2 x its baseline the same day. The 2026-10-03 data
 refresh had taken `/` to 51.2 KB HTML gzip, over the 49.9 KB line, before any of this. Two savings

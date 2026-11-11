@@ -58,12 +58,32 @@ allowBuilds:
 #    backport on the 0.7 line, and satori does not call unzipSync, so the override is API-neutral.
 #  - miniflare 5.20260926.0-alpha (the Workers runtime `vite preview --mode cloudflare` and
 #    `cf deploy` run) pins undici 7.29.0 exactly; eleven advisories on it, two high
-#    (GHSA-rfgv-xxqx-mfg5, GHSA-w293-vg96-wgc3), are fixed in 7.29.1, a patch release. undici is
-#    dev-time only here (the deployed Worker uses workerd's own fetch), but Sourcery blocks the PR
-#    on it.
+#    (GHSA-rfgv-xxqx-mfg5, GHSA-w293-vg96-wgc3), are fixed in 7.29.1, and ten more on 7.29.1, four
+#    high (GHSA-xjj6-f33q-929c, GHSA-4w7w-5xrc-9h26, GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm), in
+#    7.30.1, the version later miniflare builds pin. undici is dev-time only here (the deployed
+#    Worker uses workerd's own fetch), but Sourcery blocks the PR on it.
+#  - that miniflare also pins sharp 0.35.4 (GHSA-wq5f-xc86-pv6w, high, fixed in 0.35.5, a patch
+#    release and the version the site itself depends on).
+#  - @cloudflare/config 0.20.0 (cloudflare.config.ts's schema, via cf and the Vite plugin) pins zod
+#    4.4.3 (GHSA-mrhx-c7xc-m3w5, high, fixed in 4.6.6); it shares the site's own zod.
+#  - typescript-eslint (via eslint-config-next) takes minimatch 10 (GHSA-g3hv-75wg-m249, moderate:
+#    a slow match on a crafted glob), fixed only on the 11 line. Lint-time only, on this repo's own
+#    globs; `pnpm lint` and tests/lint-boundaries.test.ts pass on it.
+# Held back, not a security backport: rolldown (Vite's bundler; vite 8.3.x takes it by range) stays at
+# the 1.2.11 the Workers build was developed on. From some release after it (1.2.18 is the one tried)
+# rolldown moves the Worker's entry code out of bundle/index.js into a chunk under
+# bundle/_next/static/, and that chunk still imports "./__vinext_cacheability_manifest.js", the path
+# vinext 1.0.0 writes relative to the bundle root, so `pnpm build:cloudflare` dies at its prerender
+# with ERR_MODULE_NOT_FOUND (measured 2026-11-10: vite 8.3.7 with rolldown 1.2.18 fails, the same
+# tree with rolldown 1.2.11 builds). Drop this with the vinext upgrade, or once vinext resolves that
+# import from the chunk's own folder.
 overrides:
+  rolldown: 1.2.11
   'fflate@<0.7.5': 0.7.5
-  'undici@<7.29.1': 7.29.1
+  'minimatch@>=10.0.0 <11.0.1': 11.0.5
+  'sharp@<0.35.5': 0.35.5
+  'undici@<7.30.1': 7.30.1
+  'zod@>=4.0.0 <4.6.6': 4.6.7
 patchedDependencies:
   '@vinext/cloudflare@1.0.0': patches/@vinext__cloudflare@1.0.0.patch
   vinext@1.0.0: patches/vinext@1.0.0.patch
