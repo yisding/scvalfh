@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 768,
+    "agreements": 770,
     "cifssOnlyScored": 1,
-    "compared": 773,
+    "compared": 775,
     "conflicts": 5,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "72dc47409fad57cbe36d8ebae5b3fe9a66600e5cc29b8992088ca886901ef652",
+  "contentHash": "84b714423ebdc1895ec87670383c6caca828f8a7335a3e651852906e66bb9753",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,8 +19,8 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 180,
-        "games": 183,
+        "finals": 182,
+        "games": 184,
         "leagueGames": 60,
         "teams": 12
       },
@@ -54,8 +54,8 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 272,
-        "games": 277,
+        "finals": 275,
+        "games": 278,
         "leagueGames": 102,
         "teams": 19
       },
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 953,
-    "games": 967,
+    "finals": 957,
+    "games": 969,
     "leagueGames": 551,
-    "mismatches": 30,
+    "mismatches": 32,
     "pending": 4,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 149,
+    "agreements": 129,
     "backfilled": 4,
-    "compared": 180,
-    "conflicts": 7,
+    "compared": 162,
+    "conflicts": 6,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-10T20:42:15.095Z",
+  "fetchedAt": "2026-11-11T12:18:13.289Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -464,7 +464,7 @@
     {
       "label": "PCAL official schedule revision check",
       "rowCount": null,
-      "status": "error"
+      "status": "ok"
     },
     {
       "label": "marin-county league metadata",
@@ -648,12 +648,12 @@
     },
     {
       "label": "bishops schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "canyon-hills schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -678,7 +678,7 @@
     },
     {
       "label": "clairemont schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -748,7 +748,7 @@
     },
     {
       "label": "san-marcos schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -773,7 +773,7 @@
     },
     {
       "label": "poway schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -783,7 +783,7 @@
     },
     {
       "label": "san-dieguito-academy schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-27",
-      "rowCount": 24,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-28",
       "rowCount": 13,
       "status": "ok"
@@ -963,12 +958,17 @@
     },
     {
       "label": "sblive scoreboard 2026-11-07",
-      "rowCount": 5,
+      "rowCount": 4,
       "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-11-10",
-      "rowCount": 1,
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-11",
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -1023,7 +1023,7 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 224,
+      "rowCount": 226,
       "status": "ok"
     },
     {
@@ -1048,7 +1048,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 777,
+      "rowCount": 779,
       "status": "ok"
     },
     {
@@ -1063,12 +1063,12 @@
     },
     {
       "label": "sds bracket sheet open",
-      "rowCount": 4,
+      "rowCount": 6,
       "status": "ok"
     },
     {
       "label": "sds bracket sheet division-1",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -1077,11 +1077,11 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-10",
-  "warnings": 44,
+  "today": "2026-11-11",
+  "warnings": 42,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
-    "lastGame": "2026-11-11T18:30:00",
+    "lastGame": "2026-11-14T18:00:00",
     "lastLeagueGame": "2026-11-10T14:30:00"
   }
 }
