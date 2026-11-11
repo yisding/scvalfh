@@ -1,4 +1,4 @@
-import { NO_MASCOT_TILE, mascotFile, type MascotTileSize } from '../../lib/schools/mascots';
+import { mascotFile, type MascotTileSize } from '../../lib/schools/mascots';
 import type { Team } from '../../lib/types';
 
 /**
@@ -54,22 +54,6 @@ export function TeamMonogram({
   decorative = true,
   className,
 }: TeamMonogramProps) {
-  if (NO_MASCOT_TILE.has(team.slug)) {
-    // No tile yet (lib/schools/mascots.ts): the school's initials, as GhostMonogram draws a school we do not track.
-    const initials = Array.from(team.name.replace(/[^\p{L}\p{N}]/gu, '')).slice(0, 2).join('');
-    return (
-      <span
-        className={['sx-monogram bg-surface-2 text-ink-2', className].filter(Boolean).join(' ')}
-        style={{ width: size, height: size, borderRadius: monogramRadius(size), fontSize: LETTER_SIZE[size] }}
-        role={decorative ? undefined : 'img'}
-        aria-label={decorative ? undefined : team.name}
-        aria-hidden={decorative ? true : undefined}
-      >
-        {initials.charAt(0).toUpperCase()}
-        {initials.charAt(1).toLowerCase()}
-      </span>
-    );
-  }
   return (
     // A static, pre-sized square from public/: next/image would add a loader and markup for nothing.
     // eslint-disable-next-line @next/next/no-img-element

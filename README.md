@@ -1384,14 +1384,22 @@ mascot is too small or distorted to draw well, `SOURCE_OVERRIDES` in scripts/fet
 the same mark from a better source instead: the school's own site for Monta Vista (whose MaxPreps
 mascot is a 68px gif), Lassen, Mira Mesa, Redwood and Saratoga, plus Patrick Henry's crest (the
 emblem the school uses on its site and social media), and SBLive/SI for Rancho Bernardo, La Costa
-Canyon, Marina, Live Oak and Huntington Beach.
-The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the
-registry (`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
+Canyon, Marina, Live Oak and Huntington Beach. Three of the five schools only the soccer and basketball
+registries hold are overrides too: Mountain View from the school's own site (MaxPreps' helmet is a
+screenshot with a frame around it), MacDonald from Santa Clara Unified's site (MaxPreps' is a screenshot
+of an image search; the district's is the condor without the wordmark), and Wilcox from the head of the
+school's own basketball schedule (MaxPreps' is a small JPEG blown up). That schedule is a Google Doc
+with no image address that lasts, so its logo is kept in `scripts/mascot-sources/wilcox.png` and the
+override names the file. Gunn's and Milpitas' are MaxPreps'.
+The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins a
+registry (`tests/mascots.test.ts` fails until its tiles exist, for every sport's registry) or a school
+changes its logo:
 
 ```bash
 pnpm fetch-mascots                       # all 102 teams
 pnpm fetch-mascots --only los-altos      # one team (repeatable)
 pnpm fetch-mascots --dry-run             # fetch and process, write nothing
+SCVAL_SPORT=soccer pnpm fetch-mascots --only gunn   # a school only the soccer and basketball registries hold
 ```
 
 ## How standings are computed

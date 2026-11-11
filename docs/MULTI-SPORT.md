@@ -198,8 +198,6 @@ Not done yet, for the owner to decide or schedule:
   hockey's leagues and regions).
 - **The CCS Soccer Bylaws' allocation and hosting rule**, read by a person, to fill the nulls above, and
   MaxPreps' 2027 CCS tournament page once it exists.
-- **Mascot tiles** for Gunn, Mountain View, MacDonald, Milpitas and Wilcox: MaxPreps' image host answered
-  `pnpm fetch-mascots` with 403, so `NO_MASCOT_TILE` (`lib/schools/mascots.ts`) draws their initials.
 - **Steps 2-5 below** still stand; the soccer build's per-module switches are what they would replace.
 
 ## Boys basketball: SCVAL (2026-11-10)
@@ -235,8 +233,15 @@ where soccer could reuse field hockey's rules, basketball could not, so parts of
   to create (README, "Deploy notes").
 
 Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
-allocation and MaxPreps' 2027 tournament page; mascot tiles for Gunn, Mountain View, MacDonald, Milpitas and
-Wilcox (as for soccer); MaxPreps' freshman season; the smoke and axe passes on the basketball build.
+allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
+basketball build.
+
+**Mascot tiles (2026-11-11).** The five schools the winter registries added (Gunn, Mountain View, MacDonald,
+Milpitas and Wilcox) have their tiles in `public/mascots/`, fetched with `SCVAL_SPORT=soccer pnpm fetch-mascots
+--only <slug>`; `NO_MASCOT_TILE`, which drew their initials while MaxPreps' image host answered 403, is gone.
+Gunn's and Milpitas' are MaxPreps'; the other three are `SOURCE_OVERRIDES` (README, "School mascots"),
+Wilcox's a file in `scripts/mascot-sources/`, the owner's choice of logo.
+`tests/mascots.test.ts` holds every sport's registry to its tiles from the one field hockey test run.
 
 ## Guards that must keep passing
 
