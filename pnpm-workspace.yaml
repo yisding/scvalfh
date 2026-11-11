@@ -14,27 +14,27 @@ allowBuilds:
 # all four, so bump the two together and re-run the Workers build, preview and `--dry-run` deploy.
 # cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile
 # pins the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
-# Eleven vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
+# Eight vinext 1.4.5 gaps and one @vinext/cloudflare 1.3.4 gap, each fixed where it lives (see the
 # comments inside the two patches and README "The vinext patch"); drop each patch once upstream
-# ships all of its fixes:
-#  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
-#    `\..*`), so the `/:path((?!_next/static/).*)` Cache-Control rule matched only paths starting
-#    with `/.` under `vinext start`, none of this site's routes;
+# ships all of its fixes. Ported from the 1.0.0 patches on 2026-11-10; what 1.4.5 fixed upstream
+# (the nested-group header source, the no-store header on a 404 rendered on request, the root
+# not-found for a `dynamicParams = false` miss, static Route Handlers reading the cache) was
+# dropped then.
 #  - `notFound()` in a metadata route (the per-game/date/team OG images) was a 500, not a 404;
-#  - the prerender read that same Cache-Control rule back as the page's ISR lifetime
-#    (revalidate=300 in dist/server/vinext-prerender.json), so `vinext start` re-rendered every
-#    "static" page at request time after five minutes; Next keeps them `revalidate: false`;
-#  - the rule also overwrote the no-store header on 404 pages, so a CDN could cache a 404;
+#  - a page whose prerender ended in notFound() (the field-hockey-only pages of a soccer or
+#    basketball build) is stored with its 404 and served from the cache, where the headers() rule
+#    replaced its policy, so that 404 went out cacheable; it gets Next's never-cache header
+#    (server/app-page-cache.js, server/app-rsc-response-finalizer.js);
+#  - the prerender read a next.config headers() Cache-Control rule back as the page's ISR lifetime,
+#    so a rule with `s-maxage` re-rendered every "static" page at request time; Next keeps them
+#    `revalidate: false` (dormant under today's `max-age=0, must-revalidate` rule);
 #  - pages served from the cache carried no ETag, so revalidation never got a 304 (Next sends one;
-#    like Next, cached metadata route and Route Handler bodies get none);
+#    like Next, cached metadata route and Route Handler bodies get none), on the Node server
+#    (server/prod-server.js) and on Workers (server/app-router-entry.js);
 #  - metadata routes (unless `"use cache"`) and static GET Route Handlers were never prerendered,
 #    so the icons, every OG image, manifest, sitemap and robots rendered per request; `next build`
 #    prerenders all of them (build/prerender.js, server/metadata-route-response.js,
 #    server/seed-cache.js);
-#  - an unknown param under `dynamicParams = false` rendered the 404 inside the matched route, so
-#    its og:image/twitter:image pointed at that segment's OG image for the bad param (itself a
-#    404); Next treats it as a route miss and serves the root not-found
-#    (server/app-page-dispatch.js, server/app-fallback-renderer.js);
 #  - vinext refused every build without the cloudflare() plugin whenever cloudflare.config.ts
 #    exists, so `pnpm build:vinext` (Node) could not run beside the Workers target; a Vite config
 #    that imports and calls cloudflare() (the text scan `vinext-cloudflare deploy` uses) now
@@ -45,12 +45,9 @@ allowBuilds:
 #  - a Cloudflare build's prerender, which runs the Worker bundle in Node, could not import
 #    next/og's .wasm the workerd way and died on the first OG image or icon
 #    (build/prerender-cloudflare-loader.js);
-#  - on Workers the internal x-vinext-app-page-cache marker leaked on every cached page, and cached
-#    pages carried no ETag, so revalidation never got the 304 it gets on Node
-#    (server/app-router-entry.js);
 #  - @vinext/cloudflare's staticAssetsAdapter packaged prerendered pages and metadata routes but
 #    not Route Handlers, so the Worker rendered /icon-192 and /icon-512 per request
-#    (patches/@vinext__cloudflare@1.0.0.patch, dist/cache/static-assets-adapter.build.js).
+#    (patches/@vinext__cloudflare@1.3.4.patch, dist/cache/static-assets-adapter.build.js).
 # Security backports the resolved versions do not reach on their own (`pnpm audit` is clean with
 # these; drop each once the dependant moves past the vulnerable range):
 #  - satori (next/og's renderer, via vinext -> @vercel/og) pins fflate 0.7.3 exactly;
@@ -69,21 +66,15 @@ allowBuilds:
 #  - typescript-eslint (via eslint-config-next) takes minimatch 10 (GHSA-g3hv-75wg-m249, moderate:
 #    a slow match on a crafted glob), fixed only on the 11 line. Lint-time only, on this repo's own
 #    globs; `pnpm lint` and tests/lint-boundaries.test.ts pass on it.
-# Held back, not a security backport: rolldown (Vite's bundler; vite 8.3.x takes it by range) stays at
-# the 1.2.11 the Workers build was developed on. From some release after it (1.2.18 is the one tried)
-# rolldown moves the Worker's entry code out of bundle/index.js into a chunk under
-# bundle/_next/static/, and that chunk still imports "./__vinext_cacheability_manifest.js", the path
-# vinext 1.0.0 writes relative to the bundle root, so `pnpm build:cloudflare` dies at its prerender
-# with ERR_MODULE_NOT_FOUND (measured 2026-11-10: vite 8.3.7 with rolldown 1.2.18 fails, the same
-# tree with rolldown 1.2.11 builds). Drop this with the vinext upgrade, or once vinext resolves that
-# import from the chunk's own folder.
+minimumReleaseAgeExclude:
+  - '@vinext/cloudflare@1.3.4'
+  - vinext@1.4.5
 overrides:
-  rolldown: 1.2.11
   'fflate@<0.7.5': 0.7.5
   'minimatch@>=10.0.0 <11.0.1': 11.0.5
   'sharp@<0.35.5': 0.35.5
   'undici@<7.30.1': 7.30.1
   'zod@>=4.0.0 <4.6.6': 4.6.7
 patchedDependencies:
-  '@vinext/cloudflare@1.0.0': patches/@vinext__cloudflare@1.0.0.patch
-  vinext@1.0.0: patches/vinext@1.0.0.patch
+  '@vinext/cloudflare@1.3.4': patches/@vinext__cloudflare@1.3.4.patch
+  vinext@1.4.5: patches/vinext@1.4.5.patch

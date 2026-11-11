@@ -36,7 +36,7 @@
  * seed a cache from: staticAssetsAdapter() (vite.config.ts) copies each prerendered file into the
  * Workers Static Assets output under /_vinext/static-cache/ and lists it in index.json, and the
  * Worker reads only what is listed. So every staged file must be listed, kind for kind (a Route
- * Handler body left out was rendered per request, see patches/@vinext__cloudflare@1.0.0.patch),
+ * Handler body left out was rendered per request, see patches/@vinext__cloudflare@1.3.4.patch),
  * and every listed file must be there beside index.json, and nothing unlisted (a listed file that
  * is missing is a payload the Worker renders on request); `_headers` must hold a /_next/static/*
  * rule giving it the immutable Cache-Control (no Node server sets it on Workers); no .br/.gz/.zst
@@ -56,7 +56,11 @@ import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample, SKIPPED_ROUTE
 
 interface PrerenderRoute {
   route: string;
+  /** The concrete URL when it differs from the route pattern. */
+  path?: string;
   status: string;
+  /** The stored HTTP status of a page render: 404 for a page whose prerender ended in notFound(). */
+  responseStatus?: number;
   revalidate: number | false;
 }
 interface CacheEntry {
@@ -102,18 +106,27 @@ allFamilies(expected);
 console.log(`prerendered: ${routes.length} routes; ${counts.join('; ')} ` +
   `(game = ${gameParams.length} games + ${stubParams.length} superseded stubs)`);
 
-// The prerendered sitemap lists exactly the prerendered pages (every page but the 404 and the
-// superseded-game stubs, which point at their MaxPreps game and are left out of the sitemap), one
-// for one: a page left out of either is one a crawler never finds or one the server renders on request.
+// The prerendered sitemap lists exactly the prerendered pages (every page but the 404, the
+// superseded-game stubs, which point at their MaxPreps game and are left out of the sitemap, and the
+// pages whose prerender ended in notFound()), one for one: a page left out of either is one a crawler
+// never finds or one the server renders on request. vinext 1.4.5 stores a notFound() page with its
+// 404 and serves it from the build (the field-hockey-only pages of a soccer or basketball build:
+// lib/sports/current.ts HAS_HISTORY, HAS_RECRUITING); such a page is no sitemap entry.
 const sitemapPaths = fileSet.has('sitemap.xml.route')
   ? [...fs.readFileSync(`${dir}/sitemap.xml.route`, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, loc]) => new URL(loc).pathname)
   : [];
 const stubFiles = new Set(stubParams.map((p) => `game/${p}.html`));
-const pageFiles = new Set(files.filter((f) => f.endsWith('.html') && f !== '404.html' && !stubFiles.has(f)));
+const notFoundFiles = new Set(
+  routes.filter((r) => r.status === 'rendered' && r.responseStatus === 404).map((r) => (r.path ?? r.route).slice(1) + '.html'),
+);
+const pageFiles = new Set(files.filter((f) => f.endsWith('.html') && f !== '404.html' && !stubFiles.has(f) && !notFoundFiles.has(f)));
 const sitemapFiles = sitemapPaths.map((p) => (p === '/' ? 'index' : p.slice(1)) + '.html');
 const unlisted = [...pageFiles].filter((f) => !sitemapFiles.includes(f));
 const unrendered = sitemapFiles.filter((f) => !pageFiles.has(f));
-console.log(`sitemap: ${sitemapPaths.length} URLs; prerendered pages: ${pageFiles.size} (+ ${stubFiles.size} superseded stubs)`);
+console.log(`sitemap: ${sitemapPaths.length} URLs; prerendered pages: ${pageFiles.size} (+ ${stubFiles.size} superseded stubs` +
+  `${notFoundFiles.size ? `, ${notFoundFiles.size} prerendered 404s` : ''})`);
+const listedNotFound = sitemapFiles.filter((f) => notFoundFiles.has(f));
+if (listedNotFound.length) fail('in the sitemap but prerendered as a 404: ' + sample(listedNotFound));
 if (unrendered.length) fail('in the sitemap but not prerendered: ' + sample(unrendered));
 if (unlisted.length) fail('prerendered but not in the sitemap: ' + sample(unlisted));
 if (new Set(sitemapFiles).size !== sitemapFiles.length) fail('the sitemap lists a URL twice');

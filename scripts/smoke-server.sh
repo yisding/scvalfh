@@ -37,8 +37,8 @@
 # /playoffs/eal/opengraph-image and /playoffs/sunset/opengraph-image included),
 # rendered with the same SITE_URL and build instant as the prerendered pages and marked noindex; pages carry an ETag
 # and answer a revalidation with 304; HEAD, POST and a trailing slash get the framework's answers;
-# poweredByHeader stays off; and vinext's internal x-vinext-app-page-cache marker never leaves the
-# server (checked on every response above, 304s included).
+# poweredByHeader stays off; and the patch's two internal headers (x-vinext-prerender-page-cache-control,
+# x-vinext-cached-not-found-page) never leave the server (checked on every response above, 304s included).
 #
 # The target names the deploy, for the few checks that differ by design:
 # - next/node: hashed CSS goes out gzipped (`next start` compresses; vinext's Node target serves
@@ -48,9 +48,11 @@
 #   `Cache-Control: no-cache` to it (see the revalidation checks at the end).
 # - node/workers: /icon-192 and /icon-512 must be a cache HIT, served from the build rather than
 #   rendered per request with satori/resvg. Next has no such header contract for Route Handlers.
-# - node/workers: a page's RSC payload (/<path>.rsc, what vinext's client router fetches on
-#   navigation) is served from the build with the page's cache rule. Next's flight requests carry
-#   a hash of the router-state headers in `_rsc` (any other value is a 307), so none is made here.
+# - node/workers: a page's RSC payload, what vinext's client router fetches on navigation, is served
+#   from the build with the page's cache rule. vinext asks for it as Next does, the page's URL with
+#   `RSC: 1` and a `_rsc` hash of the router-state headers; a request without the hash is a 307 to
+#   the URL that has it, which is how this script learns that URL. Next's own flight requests are
+#   not made here.
 # - workers: the raw static-cache files the Worker reads through its ASSETS binding are not public.
 #   (Build metadata, /.vite/ and vinext's client-entry manifest, is a 404 on all three.)
 
@@ -92,10 +94,11 @@ expect() {
   [ -z "$type" ] || [[ "$(header content-type)" == "$type"* ]] || fail "$path" "content-type '$(header content-type)', expected $type"
   [ -z "$cache" ] || [ "$(header cache-control)" = "$cache" ] || fail "$path" "cache-control '$(header cache-control)', expected '$cache'"
   [ -z "$(header x-powered-by)" ] || fail "$path" "sends x-powered-by"
-  # vinext marks page payloads served from its cache with this header for the server's own ETag
-  # step; it is internal and must be removed before the response leaves (the Workers entry only
-  # does so with patches/vinext@1.0.0.patch, server/app-router-entry.js).
-  [ -z "$(header x-vinext-app-page-cache)" ] || fail "$path" "leaks x-vinext-app-page-cache"
+  # The two side channels of patches/vinext@1.4.5.patch never leave the server: the build
+  # prerender's header is only set while VINEXT_PRERENDER=1, and the marker on a 404 page served
+  # from the cache is removed by the response finalizer (server/app-rsc-response-finalizer.js).
+  [ -z "$(header x-vinext-prerender-page-cache-control)" ] || fail "$path" "leaks x-vinext-prerender-page-cache-control"
+  [ -z "$(header x-vinext-cached-not-found-page)" ] || fail "$path" "leaks x-vinext-cached-not-found-page"
   [ "$quiet" = 1 ] || echo "$got $path"
 }
 # from_build PATH — on the vinext targets, the response just fetched came from the build's
@@ -252,9 +255,15 @@ grep -qxF 'User-Agent: *' "$tmp/b" || grep -qxF 'User-agent: *' "$tmp/b" || fail
 grep -qxF 'Allow: /' "$tmp/b" || fail /robots.txt "no 'Allow: /' line"
 
 if [ "$target" != next ]; then
-  expect /standings.rsc 200 text/x-component "$public"
-  from_build /standings.rsc
-  [ -s "$tmp/b" ] || fail /standings.rsc "empty RSC payload"
+  expect /standings 307 '' '' -H 'RSC: 1'
+  rsc=$(header location)
+  if [[ "$rsc" == /standings\?_rsc* ]]; then
+    expect "$rsc" 200 text/x-component "$public" -H 'RSC: 1'
+    from_build "$rsc"
+    [ -s "$tmp/b" ] || fail "$rsc" "empty RSC payload"
+  else
+    fail /standings "RSC redirect to '$rsc', expected /standings?_rsc…"
+  fi
 fi
 
 expect / 200 text/html "$public"
@@ -314,7 +323,7 @@ expect /standings/ 308 '' ''
 
 # Build metadata the vinext builds leave beside their assets is never public: Vite's manifest
 # (vinext start refuses /.vite/; the Workers upload leaves it out through .assetsignore) and
-# vinext's client-entry manifest (left out of the Workers upload by patches/vinext@1.0.0.patch,
+# vinext's client-entry manifest (left out of the Workers upload by patches/vinext@1.4.5.patch,
 # index.js). On Next both are plain misses.
 for path in /.vite/manifest.json /vinext-client-entry-manifest.json; do expect "$path" 404 '' ''; done
 
