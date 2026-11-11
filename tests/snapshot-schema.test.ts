@@ -559,6 +559,45 @@ describe('snapshotContentHash', () => {
     expect(snapshotContentHash(a)).toBe(snapshotContentHash(b));
   });
 
+  /**
+   * cifsshome.org's request URL ends `date_to=<today>` and a season-gated source's error names today,
+   * so out of season every soccer and basketball refresh committed a snapshot whose only change was
+   * the date; a fresh league's lastFreshAt is the run's clock too.
+   */
+  it('ignores the run date in source URLs and errors, and a fresh league’s lastFreshAt', () => {
+    const a = baseSnapshot();
+    expect(a.sources.length).toBeGreaterThan(0);
+    expect(a.leagueHealth.length).toBeGreaterThan(0);
+    const b: Snapshot = {
+      ...a,
+      sources: a.sources.map((s) => ({
+        ...s,
+        url: `${s.url}?date_to=11%2F10%2F2026`,
+        error: 'season gate: polling opens 2027-02-10 (today 2026-11-10)',
+      })),
+      leagueHealth: a.leagueHealth.map((h) => ({ ...h, lastFreshAt: '2026-11-10T13:43:10.756Z' })),
+    };
+    const c: Snapshot = {
+      ...b,
+      sources: b.sources.map((s) => ({ ...s, url: s.url.replace('11%2F10', '11%2F11'), error: s.error!.replace('11-10', '11-11') })),
+      leagueHealth: b.leagueHealth.map((h) => ({ ...h, lastFreshAt: '2026-11-11T13:43:10.756Z' })),
+    };
+    expect(snapshotContentHash(b)).toBe(snapshotContentHash(c));
+  });
+
+  it('still moves when a source’s outcome changes, or a league gains or loses its lastFreshAt', () => {
+    const a = baseSnapshot();
+    const [first, ...rest] = a.sources;
+    const failed: Snapshot = { ...a, sources: [{ ...first, status: 'error', rowCount: 0 }, ...rest] };
+    expect(snapshotContentHash(a)).not.toBe(snapshotContentHash(failed));
+    const [h, ...others] = a.leagueHealth;
+    const flipped: Snapshot = {
+      ...a,
+      leagueHealth: [{ ...h, lastFreshAt: h.lastFreshAt === null ? '2026-11-10T13:43:10.756Z' : null }, ...others],
+    };
+    expect(snapshotContentHash(a)).not.toBe(snapshotContentHash(flipped));
+  });
+
   it('still moves when the SBLive report says something different', () => {
     const a = baseSnapshot();
     const b: Snapshot = {

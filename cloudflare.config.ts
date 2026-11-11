@@ -17,10 +17,22 @@ import { bindings, defineConfig, defineWorker } from 'cf/config';
  * - No vars: SITE_URL and SCVAL_BUILD_AT are inlined at build time (vite.config.ts). Never set
  *   SCVAL_SNAPSHOT or SCVAL_HISTORY here: a Worker has no filesystem to read them from.
  * - No accountId: a deploy takes it from CLOUDFLARE_ACCOUNT_ID (README "Cloudflare Workers").
+ * - name: one Worker per sport, as each sport is its own build (lib/sports/current.ts). Field hockey
+ *   keeps the original name, so its Worker and workers.dev URL are unchanged; SCVAL_SPORT picks the
+ *   others, and an unknown sport throws here as lib/sports/current.ts does.
  */
+const WORKER_NAMES: Record<string, string> = {
+  'field-hockey': 'scvalfh',
+  soccer: 'scvalfh-soccer',
+  basketball: 'scvalfh-basketball',
+};
+const sport = process.env.SCVAL_SPORT || 'field-hockey';
+const name = WORKER_NAMES[sport];
+if (!name) throw new Error(`cloudflare.config.ts: SCVAL_SPORT=${sport} has no Worker name`);
+
 export default defineConfig({
   worker: defineWorker({
-    name: 'scvalfh',
+    name,
     entrypoint: 'vinext/server/fetch-handler',
     compatibilityDate: '2026-09-26',
     compatibilityFlags: ['nodejs_compat'],

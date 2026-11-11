@@ -23,7 +23,8 @@
 # validates the deploy setup with a dry run (no credentials needed), builds the Worker, checks
 # that every prerendered route was packaged into its Static Assets upload, and runs the Worker
 # locally in workerd (`vite preview`) for the smoke and axe passes. The upload itself is
-# deploy-cloudflare.yml's job, and needs the account's secrets.
+# deploy-cloudflare.yml's job, and needs the account's secrets. The soccer and basketball jobs also
+# build their sport's Worker and check it is packaged under its own name (one Worker per sport).
 #
 # All three servers — `next start` in a11y, `vinext start` in vinext, workerd in cloudflare — are
 # held to one response contract by the same script, scripts/smoke-server.sh, which names the few
@@ -427,6 +428,23 @@ jobs:
       - name: Assert every route is prerendered (vinext)
         run: pnpm exec tsx scripts/assert-vinext-prerender.ts
 
+      # This sport's Cloudflare Worker (deploy-cloudflare.yml deploys one per sport): built as the
+      # cloudflare job builds field hockey's, and checked for every route packaged and for its own
+      # Worker name (cloudflare.config.ts WORKER_NAMES), since a second sport uploaded under field
+      # hockey's name would replace that site.
+      - name: Build the Worker
+        run: pnpm build:cloudflare
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+          SITE_URL: https://scvalfh.example.invalid
+
+      - name: Assert every route is packaged, under this sport's Worker name
+        run: |
+          set -euo pipefail
+          pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
+          name=$(node -p 'require("./.cloudflare/output/v0/workers/default/worker.config.json").name')
+          [ "$name" = "scvalfh-$SCVAL_SPORT" ] || { echo "Worker name '$name', expected scvalfh-$SCVAL_SPORT"; exit 1; }
+
   basketball:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -476,3 +494,20 @@ jobs:
 
       - name: Assert every route is prerendered (vinext)
         run: pnpm exec tsx scripts/assert-vinext-prerender.ts
+
+      # This sport's Cloudflare Worker (deploy-cloudflare.yml deploys one per sport): built as the
+      # cloudflare job builds field hockey's, and checked for every route packaged and for its own
+      # Worker name (cloudflare.config.ts WORKER_NAMES), since a second sport uploaded under field
+      # hockey's name would replace that site.
+      - name: Build the Worker
+        run: pnpm build:cloudflare
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+          SITE_URL: https://scvalfh.example.invalid
+
+      - name: Assert every route is packaged, under this sport's Worker name
+        run: |
+          set -euo pipefail
+          pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
+          name=$(node -p 'require("./.cloudflare/output/v0/workers/default/worker.config.json").name')
+          [ "$name" = "scvalfh-$SCVAL_SPORT" ] || { echo "Worker name '$name', expected scvalfh-$SCVAL_SPORT"; exit 1; }

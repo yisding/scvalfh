@@ -3,6 +3,12 @@
 # workflow can own end to end: `pnpm run deploy:cloudflare` builds in mode `cloudflare`, prerenders
 # every route and uploads the Worker and its Static Assets with `cf deploy`.
 #
+# One Worker per sport. Each sport is its own build (lib/sports/current.ts), so the job is a matrix
+# over the three: field hockey's Worker keeps the name 'scvalfh', soccer's and basketball's are
+# 'scvalfh-soccer' and 'scvalfh-basketball' (cloudflare.config.ts). Each sport has its own SITE_URL
+# variable, its own GitHub Deployment environment and its own concurrency group, so one sport's
+# deploy never waits on, or is recorded as, another's.
+#
 # When it runs. Like the hosting rebuild the README describes ("Deploy notes"), a new commit on
 # main is what redeploys — including update-data.yml's snapshot commit, which is the whole point of
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
@@ -26,7 +32,8 @@
 #     since, main's tip only once that commit's own ci has passed);
 #   - after update-data: main's tip (its new data, or commits whose ci has passed). A data commit
 #     rebased onto a human commit whose ci is still running waits for that ci.
-# Every successful deploy is recorded as a GitHub Deployment (environment "cloudflare") for the
+# Every successful deploy is recorded as a GitHub Deployment (environment "cloudflare", or
+# "cloudflare-soccer" and "cloudflare-basketball" for the other sports) for the
 # commit it shipped, and a workflow_run deploy skips a tip that already has one. That record, not
 # the triggering run, decides: a run that finds the tip undeployed deploys it, whichever workflow
 # finished first and whatever happened to the run queued before it. Deploying the tip, never the
@@ -38,14 +45,17 @@
 # Configuration (repository Settings → Secrets and variables → Actions):
 #   - secret CLOUDFLARE_API_TOKEN: a token from the "Edit Cloudflare Workers" template;
 #   - variable CLOUDFLARE_ACCOUNT_ID (or a secret of that name; it is not secret): the account the
-#     Worker 'scvalfh' (cloudflare.config.ts) is deployed to;
-#   - variable SITE_URL: the Worker's public origin (https://scvalfh.<subdomain>.workers.dev, or the
-#     custom domain routed to it). vite.config.ts inlines it at build time into every canonical
-#     URL, og:image, the sitemap and robots.txt; unset it would fall back to http://localhost:3000
-#     (components/layout/site.ts), so it is required here rather than defaulted.
+#     three Workers (cloudflare.config.ts) are deployed to;
+#   - variables SITE_URL (field hockey), SITE_URL_SOCCER and SITE_URL_BASKETBALL: each Worker's
+#     public origin (https://scvalfh.<subdomain>.workers.dev, or the custom domain routed to it).
+#     vite.config.ts inlines it at build time into every canonical URL, og:image, the sitemap and
+#     robots.txt; unset it would fall back to http://localhost:3000 (components/layout/site.ts), so
+#     it is required here rather than defaulted.
 # With no CLOUDFLARE_API_TOKEN the run is a green no-op with a notice saying so: a fork, or this
-# repo before an account is connected, is not a failure. A token without the account ID or
-# SITE_URL is a half-done setup, and fails naming what is missing.
+# repo before an account is connected, is not a failure. A token without the account ID or field
+# hockey's SITE_URL is a half-done setup, and fails naming what is missing. Soccer's or
+# basketball's SITE_URL unset is a green skip of that sport alone, so the sites can be moved over
+# one at a time.
 #
 # SCVAL_BUILD_AT is deliberately NOT pinned as in ci.yml: a production build should stamp the
 # instant it really ran (vite.config.ts takes the clock once per build), because that is what the
@@ -68,16 +78,6 @@ permissions:
   actions: read
   deployments: write
 
-# One deploy at a time, and never cancelled halfway through an upload. Two data refreshes (or a
-# refresh and a human commit) landing close together queue here instead of racing; the queued run
-# then finds main's tip itself, so the last deploy to finish is always the newest commit. GitHub
-# keeps only one pending run per group (a newer one replaces it); that loses nothing: the run
-# that replaces it deploys the same tip unless a Deployment already records it, so a tested commit
-# whose pending deploy was displaced (by a refresh that committed nothing, say) still ships.
-concurrency:
-  group: deploy-cloudflare
-  cancel-in-progress: false
-
 jobs:
   deploy:
     # A failed or cancelled ci/update-data run deploys nothing; a pull_request run of ci never does
@@ -88,11 +88,46 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    # One Worker per sport (see the top). `environment` is the GitHub Deployment environment the
+    # gate reads and the record step writes: field hockey keeps "cloudflare", which already holds
+    # its history. `site_url` names the variable holding the sport's origin; `optional` makes an
+    # unset one a skip rather than a failure.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - sport: field-hockey
+            environment: cloudflare
+            site_url: SITE_URL
+            optional: ''
+          - sport: soccer
+            environment: cloudflare-soccer
+            site_url: SITE_URL_SOCCER
+            optional: '1'
+          - sport: basketball
+            environment: cloudflare-basketball
+            site_url: SITE_URL_BASKETBALL
+            optional: '1'
+
+    # One deploy per sport at a time, and never cancelled halfway through an upload. Two data
+    # refreshes (or a refresh and a human commit) landing close together queue here instead of
+    # racing; the queued run then finds main's tip itself, so the last deploy to finish is always
+    # the newest commit. GitHub keeps only one pending run per group (a newer one replaces it); that
+    # loses nothing: the run that replaces it deploys the same tip unless a Deployment already
+    # records it, so a tested commit whose pending deploy was displaced (by a refresh that committed
+    # nothing, say) still ships. Field hockey keeps the group's original name.
+    concurrency:
+      group: ${{ matrix.sport == 'field-hockey' && 'deploy-cloudflare' || format('deploy-cloudflare-{0}', matrix.sport) }}
+      cancel-in-progress: false
+
     # Non-secret settings for every step. The API token is passed only to the two steps that need
-    # it (the check below and the deploy), not to the install's postinstall scripts.
+    # it (the check below and the deploy), not to the install's postinstall scripts. SCVAL_SPORT
+    # picks the build's data (lib/sports/current.ts) and the Worker's name (cloudflare.config.ts).
     env:
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
-      SITE_URL: ${{ vars.SITE_URL }}
+      SITE_URL: ${{ vars[matrix.site_url] }}
+      SCVAL_SPORT: ${{ matrix.sport }}
+      ENVIRONMENT: ${{ matrix.environment }}
 
     steps:
       # Decides whether this run deploys, and which commit. `ready` gates every later step, so a
@@ -106,15 +141,20 @@ jobs:
           REF: ${{ github.ref }}
           SOURCE: ${{ github.event.workflow_run.name }}
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SITE_URL_VAR: ${{ matrix.site_url }}
+          OPTIONAL: ${{ matrix.optional }}
         run: |
           set -euo pipefail
           skip() { echo "::notice title=deploy-cloudflare skipped::$1"; echo "ready=false" >> "$GITHUB_OUTPUT"; exit 0; }
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             skip "skipped: no CLOUDFLARE_API_TOKEN secret, so nothing is deployed. Add it, the CLOUDFLARE_ACCOUNT_ID variable and the SITE_URL variable to deploy (README \"Cloudflare Workers\")."
           fi
+          if [ -z "$SITE_URL" ] && [ -n "$OPTIONAL" ]; then
+            skip "skipped $SCVAL_SPORT: no $SITE_URL_VAR variable, so its Worker is not set up. Add it to deploy $SCVAL_SPORT."
+          fi
           missing=''
           [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing+=' CLOUDFLARE_ACCOUNT_ID'
-          [ -n "$SITE_URL" ] || missing+=' SITE_URL'
+          [ -n "$SITE_URL" ] || missing+=" $SITE_URL_VAR"
           if [ -n "$missing" ]; then
             echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; README \"Cloudflare Workers\")"
             exit 1
@@ -124,7 +164,7 @@ jobs:
           # characters only, an optional port, nothing after but one slash.
           origin_re='^https?://[A-Za-z0-9.-]+(:[0-9]+)?/?$'
           if [[ ! "$SITE_URL" =~ $origin_re ]]; then
-            echo "::error title=deploy-cloudflare misconfigured::SITE_URL '$SITE_URL' must be an origin such as https://scvalfh.example.workers.dev (scheme, host and optional port; no path, query or spaces)"
+            echo "::error title=deploy-cloudflare misconfigured::$SITE_URL_VAR '$SITE_URL' must be an origin such as https://scvalfh.example.workers.dev (scheme, host and optional port; no path, query or spaces)"
             exit 1
           fi
           if [ "$EVENT" = workflow_dispatch ] && [ "$REF" != refs/heads/main ]; then
@@ -142,9 +182,30 @@ jobs:
           # this build. A run that finds none deploys, whichever run came before it; by hand, a
           # redeploy of the same tip is wanted (new SITE_URL, a failed promotion), so only a
           # workflow_run skips.
-          deployed=$(gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$tip&environment=cloudflare&per_page=1" --jq length)
+          deployed=$(gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$tip&environment=$ENVIRONMENT&per_page=1" --jq length)
           if [ "$EVENT" = workflow_run ] && [ "$deployed" != 0 ]; then
             skip "skipped: main's tip $tip is already deployed (a GitHub Deployment records it), so the live Worker is current."
+          fi
+          # Nothing this sport's build reads changed? Every refresh commit triggers all three
+          # sports' runs, but a build reads only its own sport's data (lib/sports/current.ts
+          # DATA_DIR), so a change that is only another sport's data files leaves this Worker's
+          # build as it is: the rule of scripts/vercel-ignore-build.sh, against this sport's last
+          # recorded deploy. Not recorded, so the next run compares from the same deploy. Anything
+          # undecidable (no deploy yet, a compare that is not "ahead") deploys.
+          last=$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=$ENVIRONMENT&per_page=1" --jq '.[0].sha // ""')
+          if [ "$EVENT" = workflow_run ] && [ -n "$last" ]; then
+            changed=$(gh api "repos/$GITHUB_REPOSITORY/compare/$last...$tip" \
+              --jq 'if .status == "ahead" then .files[]?.filename else "(not ahead)" end' 2>/dev/null || echo '(the compare failed)')
+            own=''
+            while IFS= read -r file; do
+              [ -n "$file" ] || continue
+              case "$SCVAL_SPORT" in
+                field-hockey) case "$file" in data/soccer/* | data/basketball/*) ;; *) own="$file" ;; esac ;;
+                *) case "$file" in "data/$SCVAL_SPORT/"*) own="$file" ;; data/*) ;; *) own="$file" ;; esac ;;
+              esac
+              [ -z "$own" ] || break
+            done <<< "$changed"
+            [ -n "$own" ] || [ -z "$changed" ] || skip "skipped $SCVAL_SPORT: only another sport's data changed since its last deploy ($last)."
           fi
           # base: the newest commit at or below main's tip that is not an update-data data commit
           # (update-data.yml, update-data-soccer.yml and update-data-basketball.yml "Commit the data that
@@ -235,9 +296,9 @@ jobs:
         run: |
           set -euo pipefail
           id=$(gh api -X POST "repos/$GITHUB_REPOSITORY/deployments" --input - --jq .id <<JSON
-          {"ref": "$SHA", "environment": "cloudflare", "production_environment": true,
+          {"ref": "$SHA", "environment": "$ENVIRONMENT", "production_environment": true,
            "auto_merge": false, "required_contexts": [],
-           "description": "vinext Cloudflare Worker, by deploy-cloudflare.yml"}
+           "description": "vinext Cloudflare Worker ($SCVAL_SPORT), by deploy-cloudflare.yml"}
           JSON
           )
           gh api -X POST "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" --input - >/dev/null <<JSON
@@ -250,7 +311,7 @@ jobs:
         if: steps.gate.outputs.ready == 'true'
         run: |
           {
-            echo "### deploy-cloudflare"
+            echo "### deploy-cloudflare ($SCVAL_SPORT)"
             echo ""
             echo "- commit: \`${{ steps.gate.outputs.sha }}\`"
             echo "- site: $SITE_URL"
