@@ -25,26 +25,6 @@ const STAMP_KEY_RE = /fetchedat$/i;
  * therefore has to compare content, not bytes; this hash is what it compares, and it is published
  * in snapshot.meta.json so the comparison needs nothing but the previous commit's meta file.
  */
-/**
- * The same run-clock leak in fields that are not stamps by name, so STAMP_KEY_RE cannot see them.
- *
- * - A source row's `url` and `error` text can carry the run's DATE: cifsshome.org's request asks for
- *   `date_to=<today>`, and a season-gated source's error reads "polling opens … (today <date>)". A row
- *   whose fetch really changed still moves the hash through `status`, `httpStatus` and `rowCount`.
- * - A league's `lastFreshAt` is the run's clock on every fresh run, but whether it is set at all is a
- *   fact (lib/pipeline/ledger.ts reads null as "no data to carry"), so only that is kept.
- *
- * Without this the soccer and basketball refreshes committed (and every host rebuilt) a snapshot whose
- * only change was the date, every day of the off-season gate.
- */
-function withoutRunDate(snapshot: Snapshot): unknown {
-  return {
-    ...snapshot,
-    sources: snapshot.sources.map((row) => ({ ...row, url: undefined, error: undefined })),
-    leagueHealth: snapshot.leagueHealth.map((h) => ({ ...h, lastFreshAt: h.lastFreshAt !== null })),
-  };
-}
-
 export function snapshotContentHash(snapshot: Snapshot): string {
   const strip = (node: unknown): unknown => {
     if (Array.isArray(node)) return node.map(strip);
@@ -58,5 +38,5 @@ export function snapshotContentHash(snapshot: Snapshot): string {
     }
     return node;
   };
-  return createHash('sha256').update(stableStringify(strip(withoutRunDate(snapshot)))).digest('hex');
+  return createHash('sha256').update(stableStringify(strip(snapshot))).digest('hex');
 }
