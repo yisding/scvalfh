@@ -7,26 +7,26 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "9db1210b62736a7bb7bb04147aab5e79804728fdaecd3ad20ed2d77c1ab77d26",
+  "contentHash": "8a44eec435da7c8f7be2252cdf792f3dbdebf919e560148f225d493afb97797e",
   "counts": {
     "byLeague": {
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 188,
+        "games": 194,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 188,
+    "games": 194,
     "leagueGames": 96,
     "mismatches": 0,
     "pending": 0,
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-10T14:46:56.203Z",
+  "fetchedAt": "2026-11-11T14:02:05.534Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -83,7 +83,7 @@
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -93,7 +93,7 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": 21,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -128,7 +128,7 @@
     },
     {
       "label": "monta-vista schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -207,10 +207,10 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-10",
+  "today": "2026-11-11",
   "warnings": 3,
   "window": {
-    "firstGame": "2026-11-19T19:00:00",
+    "firstGame": "2026-11-17T18:00:00",
     "lastGame": "2027-02-16T19:00:00",
     "lastLeagueGame": "2027-02-16T19:00:00"
   }
