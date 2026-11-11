@@ -89,6 +89,21 @@ describe('the update-data commit and the deploy gate', () => {
     }
   });
 
+  /**
+   * A refresh pushes with GITHUB_TOKEN, which starts no `push` workflow, so the deploy only ever hears of
+   * a refresh through workflow_run: a refresh missing from that list never ships its data.
+   */
+  it('deploys after every refresh workflow, by its name', () => {
+    const listed = /workflow_run:\s*\n\s*workflows: \[([^\]]+)\]/.exec(deploy)?.[1].split(',').map((w) => w.trim());
+    expect(listed).toBeDefined();
+    for (const u of updates) {
+      const name = /^name: (\S+)$/m.exec(u)?.[1];
+      expect(name).toBeDefined();
+      expect(listed, `deploy-cloudflare.yml never runs after ${name}`).toContain(name);
+    }
+    expect(listed).toContain('ci');
+  });
+
   it('commits as the bot the gate looks for', () => {
     for (const u of updates) expect(u).toMatch(/git config user\.name {2}"github-actions\[bot\]"/);
     expect(deploy).toContain('(.author.login // "") == "github-actions[bot]"');

@@ -190,7 +190,10 @@ Not done yet, for the owner to decide or schedule:
 - **Deploy.** The soccer site is a second Vercel project on soccer.ncfh.net (README, "Deploy notes"):
   `SCVAL_SPORT=soccer`, its own `SITE_URL`, and `scripts/vercel-ignore-build.sh` as each project's Ignored
   Build Step. `update-data-soccer.yml` refreshes `data/soccer/` Nov–Mar, and ci's `soccer` job builds and
-  asserts it. Not done: a soccer Cloudflare Worker (`cloudflare.config.ts` names one Worker), and the
+  asserts it. Each sport also has its own Cloudflare Worker (`cloudflare.config.ts` names it from
+  `SCVAL_SPORT`: `scvalfh`, `scvalfh-soccer`, `scvalfh-basketball`), deployed by `deploy-cloudflare.yml`'s
+  per-sport matrix once its `SITE_URL` variable is set (README, "Cloudflare Workers"), and ci's `soccer` and
+  `basketball` jobs build and package it. Not done: the
   smoke and axe passes on the soccer build (`scripts/smoke-server.sh` and `scripts/a11y-axe.mjs` name field
   hockey's leagues and regions).
 - **The CCS Soccer Bylaws' allocation and hosting rule**, read by a person, to fill the nulls above, and

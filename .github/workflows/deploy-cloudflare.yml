@@ -13,8 +13,9 @@
 # main is what redeploys — including update-data.yml's snapshot commit, which is the whole point of
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
 # `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
-# the two workflows that put commits on main, ci (a green run on main, never a pull_request run)
-# and update-data (a green run), and every run deploys main's tip as it is when the run starts.
+# the workflows that put commits on main, ci (a green run on main, never a pull_request run) and
+# the three refreshes, update-data, update-data-soccer and update-data-basketball (a green run),
+# and every run deploys main's tip as it is when the run starts.
 #
 # What may ship. The code that ships must have passed ci on main; update-data's data commits only
 # replace data/snapshot.json, its meta file, data/player-stats.json and data/jv.json, after running
@@ -66,7 +67,7 @@ name: deploy-cloudflare
 
 on:
   workflow_run:
-    workflows: [ci, update-data]
+    workflows: [ci, update-data, update-data-soccer, update-data-basketball]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -191,11 +192,12 @@ jobs:
           # DATA_DIR), so a change that is only another sport's data files leaves this Worker's
           # build as it is: the rule of scripts/vercel-ignore-build.sh, against this sport's last
           # recorded deploy. Not recorded, so the next run compares from the same deploy. Anything
-          # undecidable (no deploy yet, a compare that is not "ahead") deploys.
+          # undecidable (no deploy yet, a compare that is not "ahead", or one at the API's 300-file
+          # cap, where this sport's own files could be among those left out) deploys.
           last=$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=$ENVIRONMENT&per_page=1" --jq '.[0].sha // ""')
           if [ "$EVENT" = workflow_run ] && [ -n "$last" ]; then
             changed=$(gh api "repos/$GITHUB_REPOSITORY/compare/$last...$tip" \
-              --jq 'if .status == "ahead" then .files[]?.filename else "(not ahead)" end' 2>/dev/null || echo '(the compare failed)')
+              --jq 'if .status != "ahead" then "(not ahead)" elif (.files | length) >= 300 then "(300 files or more)" else .files[].filename end' 2>/dev/null || echo '(the compare failed)')
             own=''
             while IFS= read -r file; do
               [ -n "$file" ] || continue

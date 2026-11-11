@@ -2222,7 +2222,8 @@ A real deploy needs:
   build time.
 
 `.github/workflows/deploy-cloudflare.yml` runs that deploy from GitHub Actions. It follows the `ci`
-and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, because `update-data`
+workflow and the three refreshes, `update-data`, `update-data-soccer` and `update-data-basketball`
+(`workflow_run`, on `main`), rather than `push`, because each refresh
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
 `main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a
