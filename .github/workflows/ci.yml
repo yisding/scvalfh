@@ -214,7 +214,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
-      # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
+      # This also applies patches/vinext@1.4.5.patch (patchedDependencies in pnpm-workspace.yaml,
       # which lists the gaps it closes). Without it the build below is refused outright: stock
       # vinext stops any build that lacks the cloudflare() plugin while cloudflare.config.ts
       # exists. A patch that applies only in part is caught after the build: the assertions fail

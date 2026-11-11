@@ -2097,7 +2097,7 @@ it, `SCVAL_BUILD_AT` and the six file overrides; copy it to `.env` for a local p
 
 ### vinext
 
-The same source also builds and serves on [vinext](https://github.com/cloudflare/vinext) 1.0.0, a
+The same source also builds and serves on [vinext](https://github.com/cloudflare/vinext) 1.4.5, a
 reimplementation of the Next.js API surface on Vite 8, wired in by `vite.config.ts`. It runs
 beside the Next toolchain, not instead of it, with two targets: vinext's Node server, here, and
 Cloudflare Workers (next section).
@@ -2276,36 +2276,38 @@ authentication token found". CI's `cloudflare` job checks the same without crede
 
 ### The vinext patch
 
-`patches/vinext@1.0.0.patch` is applied by pnpm at install (`patchedDependencies` in
-`pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes eleven
-vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start` or kept one of
+`patches/vinext@1.4.5.patch` is applied by pnpm at install (`patchedDependencies` in
+`pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes eight
+vinext 1.4.5 gaps that broke this site's contract with `next build`/`next start` or kept one of
 the two vinext targets from building or serving it; each fix carries a comment citing the
 behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are under
 `node_modules/vinext/dist/`):
 
-- **Header source parsing** (`config/config-matchers.js`): a nested group such as
-  `/:path((?!_next/static/).*)` was mis-parsed, so the Cache-Control rule matched only paths
-  starting with `/.`, none of this site's routes.
 - **`notFound()` in a metadata route** (`server/metadata-route-response.js`): the per-game, date
   and team OG images answered an unknown param with a 500 instead of a 404.
-- **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`): the prerender read the
-  `headers()` Cache-Control rule back as each page's revalidate time, so under the earlier
-  `s-maxage=300` rule `vinext start` re-rendered every "static" page after five minutes; pages are `revalidate: false`, as on Next.
-- **404 caching** (`server/app-rsc-response-finalizer.js`, `server/app-fallback-renderer.js`):
-  the same rule overwrote the no-store header on 404 pages, so a CDN could cache a 404. A Route
-  Handler's own 404 keeps its headers, as on Next.
-- **ETags** (`server/prod-server.js`, `server/app-page-cache.js`): pages served from the cache
-  had no validator, so revalidation never got a 304; they now carry Next's FNV-1a ETag. Cached
-  Route Handler and metadata route bodies get none, as on Next.
+- **Prerendered 404s** (`server/app-page-cache.js`, `server/app-rsc-response-finalizer.js`): a
+  page whose prerender ends in `notFound()` (the field-hockey-only pages of a soccer or basketball
+  build) is stored with its 404 and served from the cache, where the `headers()` rule replaced its
+  policy, so that 404 went out with the pages' cache rule. It now gets the never-cache header a 404
+  rendered on request has. One case is left on the Node server only: there the build skips those
+  pages, so the first request for one after a start renders it and still carries the pages' rule
+  (`public, max-age=0, must-revalidate`, which no cache may reuse without asking); every later
+  request is served from the cache with the never-cache header.
+- **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`,
+  `server/app-route-handler-dispatch.js`): the prerender read a `headers()` Cache-Control rule back
+  as each page's revalidate time, so under the earlier `s-maxage=300` rule `vinext start`
+  re-rendered every "static" page after five minutes; pages are `revalidate: false`, as on Next.
+  Dormant under today's rule, which has no `s-maxage`.
+- **ETags and 304s** (`server/app-page-cache.js`, `server/prod-server.js`,
+  `server/app-router-entry.js`): pages served from the cache had no validator, so revalidation
+  never got a 304; they now carry Next's FNV-1a ETag, and both the Node server and the Worker
+  entry answer a matching `If-None-Match` with 304. Cached Route Handler and metadata route bodies
+  get none, as on Next.
 - **Metadata and Route Handler prerendering** (`build/prerender.js`,
-  `server/metadata-route-response.js`, `server/app-route-handler-*.js`, `server/seed-cache.js`):
+  `server/metadata-route-response.js`, `server/prerender-manifest.js`, `server/seed-cache.js`):
   only `"use cache"` metadata routes were prerendered and no Route Handler was, so the icons,
   every OG image, the manifest, sitemap and robots rendered per request. A Route Handler with a
   numeric `revalidate` keeps it as its ISR lifetime, as on Next.
-- **`dynamicParams = false` misses** (`server/app-page-dispatch.js`,
-  `server/app-fallback-renderer.js`): an unknown param rendered the 404 inside the matched route,
-  pointing its `og:image` at that segment's OG image for the bad param (itself a 404); it now gets
-  the root not-found, as on Next.
 - **One config, two targets** (`index.js`): with `cloudflare.config.ts` in the repo, vinext
   refused every build that lacked the `cloudflare()` plugin, so `pnpm build:vinext` could not run
   at all. A Vite config that imports `cloudflare` from `@cloudflare/vite-plugin` and calls it now
@@ -2320,22 +2322,30 @@ behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are
   prerender runs the Worker bundle in Node, which could not import next/og's `.wasm` modules the
   workerd way, so `pnpm build:cloudflare` died on the first OG image or icon. A loader hook now
   loads each one as a compiled `WebAssembly.Module`, as workerd does.
-- **The Worker's cache marker and 304s** (`server/app-rsc-response-finalizer.js`,
-  `server/app-router-entry.js`): only the Node server removed the internal
-  `x-vinext-app-page-cache` header and answered a revalidation, so the Worker sent the header on
-  every cached page and never a 304. The shared finalizer now strips it on every target, and the
-  Worker entry answers a matching `If-None-Match` with 304, as `vinext start`.
 
-`patches/@vinext__cloudflare@1.0.0.patch` makes one change, in
+`patches/@vinext__cloudflare@1.3.4.patch` makes one change, in
 `node_modules/@vinext/cloudflare/dist/cache/static-assets-adapter.build.js`:
 `staticAssetsAdapter()` packaged the prerendered pages and metadata routes but not Route
 Handlers, so the Worker rendered `/icon-192` and `/icon-512` with satori/resvg on every request.
 It now packages them as it does metadata routes, under the cache key the Worker reads.
 
-Both patches are pinned to exact versions (`package.json` pins vinext 1.0.0 and
-`@vinext/cloudflare` 1.0.0, and the `patchedDependencies` keys name them), so a version bump
+The patches were ported from vinext 1.0.0 on 2026-11-10. Four of the 1.0.0 patch's fixes were
+dropped then, because 1.4.5 ships them: the header source with a nested group
+(`/:path((?!_next/static/).*)`) is parsed correctly, a 404 rendered on request keeps its no-store
+header against a `headers()` rule, an unknown param under `dynamicParams = false` gets the root
+not-found, and a static Route Handler reads the cache. `scripts/smoke-server.sh` still checks each
+of those on all three servers, and that the patch's two internal headers
+(`x-vinext-prerender-page-cache-control`, `x-vinext-cached-not-found-page`) never leave the server.
+vinext 1.4.5's client router also asks for a page's RSC payload as Next does (the page's URL with
+`RSC: 1` and a `_rsc` hash; a request without the hash is a 307 to the URL that has it), where
+1.0.0 fetched `/<path>.rsc`; the smoke script follows that redirect.
+
+Both patches are pinned to exact versions (`package.json` pins vinext 1.4.5 and
+`@vinext/cloudflare` 1.3.4, and the `patchedDependencies` keys name them), so a version bump
 means re-checking each hunk against upstream: drop the ones upstream has fixed and re-port the
-rest. Drop each patch entirely once upstream ships all of its fixes. The Cloudflare tooling is
+rest. The way that worked for 1.4.5: install the new versions unpatched, run both builds, both
+prerender assertions and `scripts/smoke-server.sh` on both targets, and port only what fails.
+Drop each patch entirely once upstream ships all of its fixes. The Cloudflare tooling is
 pre-release and pinned exactly too: `@cloudflare/vite-plugin` 2.0.0-beta.sha-ad79608dd and `cf`
 1.0.0-beta.6 share miniflare, `@cloudflare/config` and the workerd that `cloudflare.config.ts`'s
 compatibility date follows, so bump the two together and re-run the Workers build, preview and

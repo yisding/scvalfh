@@ -18,7 +18,7 @@ import { defineConfig, loadEnv } from 'vite';
  * One file rather than a vite.cloudflare.config.ts: `vinext-cloudflare deploy` only reads the
  * default vite.config.* (it looks for the cloudflare() call in it and builds with it). Stock vinext
  * refuses a build without that plugin whenever cloudflare.config.ts exists, which is every Node
- * build here; patches/vinext@1.0.0.patch (index.js) lets a config that calls the plugin choose,
+ * build here; patches/vinext@1.4.5.patch (index.js) lets a config that calls the plugin choose,
  * except under `vinext-cloudflare deploy`, which refuses a mode that leaves cloudflare() out.
  * Both targets clean and reuse dist/ (the Workers build stages its prerender there), so run
  * `pnpm build:vinext` again before `pnpm start:vinext` after a Workers build.
@@ -31,9 +31,9 @@ import { defineConfig, loadEnv } from 'vite';
  * images, and one OG image per game, date and team from each segment's `generateStaticParams`) and
  * the two `force-static` Route Handlers (/icon-192, /icon-512) are prerendered as well, one
  * `.route` file per URL, as `next build` writes its `.body` files under .next/server/app. Stock
- * vinext 1.0.0 prerenders a metadata route only when its default export is `"use cache"` (which
+ * vinext 1.4.5 prerenders a metadata route only when its default export is `"use cache"` (which
  * needs `cacheComponents`, off here — see next.config.ts) and skips every Route Handler, so each
- * one rendered per request, the images through satori/resvg; patches/vinext@1.0.0.patch closes
+ * one rendered per request, the images through satori/resvg; patches/vinext@1.4.5.patch closes
  * that gap (see pnpm-workspace.yaml).
  */
 export default defineConfig(({ mode }) => {

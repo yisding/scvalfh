@@ -3,7 +3,7 @@ import { bindings, defineConfig, defineWorker } from 'cf/config';
 /**
  * The Cloudflare Workers target (see vite.config.ts): read by @cloudflare/vite-plugin under
  * `--mode cloudflare` and by `cf deploy`, both of which require this exact file name at the repo
- * root. Its presence does not change the Node build (patches/vinext@1.0.0.patch, index.js).
+ * root. Its presence does not change the Node build (patches/vinext@1.4.5.patch, index.js).
  *
  * - entrypoint: vinext's Worker fetch handler (server/app-router-entry.js).
  * - compatibilityDate: pinned to the workerd release the plugin bundles (1.20260926.1), not the
