@@ -2215,13 +2215,15 @@ A real deploy needs:
 - `CLOUDFLARE_API_TOKEN`, a token made from the "Edit Cloudflare Workers" template (or
   `pnpm exec cf auth login` on a workstation);
 - `CLOUDFLARE_ACCOUNT_ID`, or a top-level `accountId` in `cloudflare.config.ts`;
-- the Worker name, `scvalfh`, which is set in `cloudflare.config.ts` (`--name` is refused for a
-  `cloudflare.config.ts` project);
+- the Worker name, which `cloudflare.config.ts` picks from `SCVAL_SPORT` (`--name` is refused for a
+  `cloudflare.config.ts` project): `scvalfh` for field hockey, `scvalfh-soccer` and
+  `scvalfh-basketball` for the other two, one Worker per sport as each sport is its own build;
 - `SITE_URL` set to the Worker's public origin in the build environment, since it is baked in at
   build time.
 
 `.github/workflows/deploy-cloudflare.yml` runs that deploy from GitHub Actions. It follows the `ci`
-and `update-data` workflows (`workflow_run`, on `main`) rather than `push`, because `update-data`
+workflow and the three refreshes, `update-data`, `update-data-soccer` and `update-data-basketball`
+(`workflow_run`, on `main`), rather than `push`, because each refresh
 pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOKEN` starts no
 `push` workflow. Every run deploys `main`'s tip, and only when the code there has passed `ci` on
 `main`: it walks down from the tip past `update-data`'s data commits (by the bot, one parent, a
@@ -2246,6 +2248,25 @@ notice saying so; a token without the other two fails, naming what is missing. I
 pin `SCVAL_BUILD_AT`, so the footer's stale-snapshot notice measures from the instant the deploy
 really built. Cloudflare's own Git integration (Workers Builds) could run `pnpm deploy:cloudflare`
 on each push instead; that path has not been tried here.
+
+**One Worker per sport.** The workflow's job is a matrix over field hockey, soccer and basketball.
+Each sport builds with its own `SCVAL_SPORT`, uploads to its own Worker, reads its own origin from
+its own variable (`SITE_URL`, `SITE_URL_SOCCER`, `SITE_URL_BASKETBALL`), is recorded in its own
+GitHub Deployment environment (`cloudflare`, `cloudflare-soccer`, `cloudflare-basketball`) and
+queues in its own concurrency group. Soccer's or basketball's variable unset skips that sport
+alone (green, with a notice), so the sites can move over one at a time. A run also skips a sport
+when everything that changed since that sport's last recorded deploy is another sport's data, the
+rule `scripts/vercel-ignore-build.sh` applies on Vercel. CI's `soccer` and `basketball` jobs build
+their sport's Worker and check its packaging and name.
+
+**Why the sites are moving here from Vercel.** The Vercel team was paused in November 2026 for
+going over the Hobby plan's 10 GB of Fast Origin Transfer, the bytes Vercel's CDN fetches from
+behind itself on a cache miss. Every page here is prerendered, but Vercel's CDN cache is per
+deployment, each sport redeploys after every data refresh (about 4 a day per project), and most of
+the ~1,000 pages per sport (games, dates, teams) are each requested rarely, so nearly every request,
+crawlers' included, was a miss. Workers Static Assets and Worker requests are not billed by the
+byte: the free plan allows 100,000 Worker requests a day (every page and RSC request is one;
+`/_next/static/**` is free), and the $5 paid plan 10 million a month.
 
 No upload was made while this target was developed, since no Cloudflare account was available:
 what was verified is the dry run, the local workerd smoke and axe passes, and a full

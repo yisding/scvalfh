@@ -331,7 +331,10 @@ if [ "$target" = workers ]; then
     date=$(grep -oE "compatibilityDate: '[0-9-]+'" cloudflare.config.ts | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
     problems=$(node -e '
       const c = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")), p = [];
-      if (c.name !== "scvalfh") p.push(`name ${JSON.stringify(c.name)}`);
+      // cloudflare.config.ts WORKER_NAMES: one Worker per sport, field hockey keeping the original name.
+      const sport = process.env.SCVAL_SPORT || "field-hockey";
+      const want = sport === "field-hockey" ? "scvalfh" : `scvalfh-${sport}`;
+      if (c.name !== want) p.push(`name ${JSON.stringify(c.name)}, expected ${JSON.stringify(want)} for ${sport}`);
       if (c.compatibilityDate !== process.argv[2]) p.push(`compatibilityDate ${c.compatibilityDate}, cloudflare.config.ts has ${process.argv[2]}`);
       if (!c.compatibilityFlags?.includes("nodejs_compat")) p.push("no nodejs_compat flag");
       if (c.assets?.notFoundHandling !== "none") p.push(`assets.notFoundHandling ${c.assets?.notFoundHandling}`);
