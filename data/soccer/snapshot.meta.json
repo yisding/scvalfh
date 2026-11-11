@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "8c1a11dded9b23f8461397e317c867a79facb5aa17f50d81a83a1ff997fe534d",
+  "contentHash": "8fb602ec2137f0ef5f96d8d12ef28df820e8d9c4403a680417da4db5e2818280",
   "counts": {
     "byLeague": {
       "scval": {
@@ -26,7 +26,7 @@
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-10T20:58:23.145Z",
+  "fetchedAt": "2026-11-11T12:54:49.746Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -173,7 +173,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 1,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -207,7 +207,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-10",
+  "today": "2026-11-11",
   "warnings": 6,
   "window": {
     "firstGame": "2026-11-20T18:30:00",
