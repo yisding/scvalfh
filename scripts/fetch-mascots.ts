@@ -24,7 +24,8 @@
  * address the standings and schedule feeds publish as `schoolMascotUrl` / `mascotUrl`, without its
  * size query (see `mascotUrl`). A school MaxPreps has no mascot for answers 404, which fails the run
  * rather than writing a placeholder. A school whose MaxPreps mascot is too small or blurred to draw
- * well takes the same mark from SOURCE_OVERRIDES instead, each entry naming its source and why.
+ * well takes the same mark from SOURCE_OVERRIDES instead, each entry naming its source and why. A logo
+ * with no address that lasts (Wilcox's, from a Google Doc) is a file in scripts/mascot-sources/.
  *
  * Every MaxPreps gif is an opaque logo on white (an override with transparency is flattened onto
  * white the same way). The tile keeps the white (a logo drawn for a white page loses its outline on
@@ -39,7 +40,7 @@
  * Node's built-in fetch ignores HTTPS_PROXY; behind a proxy run it with NODE_USE_ENV_PROXY=1.
  */
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
@@ -56,13 +57,17 @@ import { IS_FIELD_HOCKEY } from '../lib/sports/current';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';
 
-const MASCOT_DIR = path.resolve(import.meta.dirname, '..', 'public', 'mascots');
+const SCRIPTS_DIR = import.meta.dirname;
+const MASCOT_DIR = path.resolve(SCRIPTS_DIR, '..', 'public', 'mascots');
 
 const WHITE = { r: 255, g: 255, b: 255, alpha: 1 };
 /** The art's inset on each side, as a fraction of the tile: clears a quarter-side corner radius. */
 const INSET = 0.08;
 
 const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
+
+/** Where one school's logo is read from: an address, or a file under scripts/ for a logo with no lasting address. */
+type MascotSource = { url: string; file?: undefined } | { file: string; url?: undefined };
 
 /**
  * Schools drawn from another source than MaxPreps, by slug. Only for a MaxPreps mascot that does
@@ -76,7 +81,7 @@ const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
  * true proportions it is used (Huntington Beach); Lassen, Mira Mesa, Redwood and Saratoga use the
  * school's own site, as Monta Vista does.
  */
-const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
+const SOURCE_OVERRIDES: Readonly<Record<string, MascotSource & { why: string }>> = {
   'monta-vista': {
     // The school's own site footer logo (1788×1371 PNG, the matador with "MV").
     url: 'https://mvhs.fuhsd.org/uploaded/themes/default_17/images/monta_vista_footer.png',
@@ -140,23 +145,26 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     why: "MaxPreps' is a squeezed screenshot of an image search, its close and lens buttons over the condor; the district's is the same condor, without the wordmark",
   },
   wilcox: {
-    // Santa Clara Unified's own Wilcox mascot (1080×1080; f_auto serves a JPEG for this Accept).
-    url: 'https://resources.finalsite.net/images/f_auto,q_auto/v1691613256/santaclarausdorg/hypz3eeyaimihl8k4ifr/WilcoxHighSchoolMascot.png',
-    why: "MaxPreps' is a small JPEG blown up to 400×294, blurred and blocky; the district's is the same W and bolt, without the lettering around it",
+    // The logo at the head of the school's own basketball schedule (288×160 PNG), a Google Doc with no image
+    // address that lasts, so the file is kept here. Chosen by the site owner over Santa Clara Unified's copy
+    // (the W and bolt without the lettering around them), 2026-11-11:
+    // https://docs.google.com/document/d/11blNJqJgnrz_vsAoR_q-C3eSv9wlOXxTCRJccGl2clg
+    file: 'mascot-sources/wilcox.png',
+    why: "MaxPreps' is a small JPEG blown up to 400×294, blurred and blocky; the school's schedule has the same lettered W and bolt, drawn cleanly",
   },
 };
 
 /** Every slug the two winter registries hold: an override may name one in a build whose registry does not. */
 const WINTER_SLUGS: ReadonlySet<string> = new Set([...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS].map((s) => s.slug));
 
-function mascotUrl(team: Pick<Team, 'id' | 'slug'>): string {
+function mascotSource(team: Pick<Team, 'id' | 'slug'>): MascotSource {
   const override = SOURCE_OVERRIDES[team.slug];
-  if (override) return override.url;
+  if (override) return override;
   const id = team.id.toLowerCase();
   // No width/height query: with both, MaxPreps crops a non-square logo to fill the square (cover,
   // not contain), which cut the sides off Cupertino's 1012×903 logo and pushed the art off centre.
   // The bare URL serves the file at its native size and sharp does the resizing.
-  return `https://image.maxpreps.io/school-mascot/${id[0]}/${id[1]}/${id[2]}/${id}.gif`;
+  return { url: `https://image.maxpreps.io/school-mascot/${id[0]}/${id[1]}/${id[2]}/${id}.gif` };
 }
 
 interface Args {
@@ -254,9 +262,9 @@ export async function main(argv: readonly string[]): Promise<number> {
   }
   // Every registry team, then each JV slot team (York), which has no MaxPreps mascot of its own: its tiles
   // are drawn from the logo lib/jv/jv-teams.ts names.
-  const targets: ReadonlyArray<{ slug: string; url: string }> = [
-    ...TEAMS.map((t) => ({ slug: t.slug, url: mascotUrl(t) })),
-    ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, url: t.mascotSource })),
+  const targets: ReadonlyArray<{ slug: string; source: MascotSource }> = [
+    ...TEAMS.map((t) => ({ slug: t.slug, source: mascotSource(t) })),
+    ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, source: { url: t.mascotSource } })),
   ];
   // The overrides name every sport's schools. A field hockey build checks each is one of its own or a winter
   // registry's; a soccer or basketball build (SCVAL alone) checks only the slugs it was given.
@@ -271,7 +279,8 @@ export async function main(argv: readonly string[]): Promise<number> {
   const sblive = new HttpClient({ onLog, userAgent: CHROME_USER_AGENT });
   const results = await Promise.all(
     teams.map(async (team) => {
-      const url = team.url;
+      const { url, file } = team.source;
+      if (file !== undefined) return { team, tiles: await mascotTiles(readFileSync(path.join(SCRIPTS_DIR, file))) };
       const res = await (url.startsWith(SBLIVE) ? sblive : http).bytes(url, 'image/gif,image/png,image/webp,image/*');
       if (!res.contentType?.startsWith('image/')) {
         throw new Error(`${team.slug}: ${res.url} answered ${res.contentType ?? 'no content type'}`);

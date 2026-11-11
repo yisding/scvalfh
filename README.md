@@ -1386,9 +1386,11 @@ mascot is a 68px gif), Lassen, Mira Mesa, Redwood and Saratoga, plus Patrick Hen
 emblem the school uses on its site and social media), and SBLive/SI for Rancho Bernardo, La Costa
 Canyon, Marina, Live Oak and Huntington Beach. Three of the five schools only the soccer and basketball
 registries hold are overrides too: Mountain View from the school's own site (MaxPreps' helmet is a
-screenshot with a frame around it), and MacDonald and Wilcox from Santa Clara Unified's site (MaxPreps'
-MacDonald is a screenshot of an image search, its Wilcox a small JPEG blown up). Those two are the
-school's mark without the lettering MaxPreps' copy has around it. Gunn's and Milpitas' are MaxPreps'.
+screenshot with a frame around it), MacDonald from Santa Clara Unified's site (MaxPreps' is a screenshot
+of an image search; the district's is the condor without the wordmark), and Wilcox from the head of the
+school's own basketball schedule (MaxPreps' is a small JPEG blown up). That schedule is a Google Doc
+with no image address that lasts, so its logo is kept in `scripts/mascot-sources/wilcox.png` and the
+override names the file. Gunn's and Milpitas' are MaxPreps'.
 The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins a
 registry (`tests/mascots.test.ts` fails until its tiles exist, for every sport's registry) or a school
 changes its logo:

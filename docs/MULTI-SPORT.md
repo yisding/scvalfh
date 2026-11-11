@@ -239,7 +239,8 @@ basketball build.
 **Mascot tiles (2026-11-11).** The five schools the winter registries added (Gunn, Mountain View, MacDonald,
 Milpitas and Wilcox) have their tiles in `public/mascots/`, fetched with `SCVAL_SPORT=soccer pnpm fetch-mascots
 --only <slug>`; `NO_MASCOT_TILE`, which drew their initials while MaxPreps' image host answered 403, is gone.
-Gunn's and Milpitas' are MaxPreps'; the other three are `SOURCE_OVERRIDES` (README, "School mascots").
+Gunn's and Milpitas' are MaxPreps'; the other three are `SOURCE_OVERRIDES` (README, "School mascots"),
+Wilcox's a file in `scripts/mascot-sources/`, the owner's choice of logo.
 `tests/mascots.test.ts` holds every sport's registry to its tiles from the one field hockey test run.
 
 ## Guards that must keep passing
