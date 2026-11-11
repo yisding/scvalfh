@@ -391,9 +391,13 @@ export interface HistoryStandingsBlock {
   rows: HistoryStandingRow[];
 }
 
-/** `Field Hockey   DeAnza  V  St. Ignatius  11-0-1` — the first row carries the block header. */
+/**
+ * `Field Hockey   DeAnza  V  St. Ignatius  11-0-1` — the first row carries the block header. The sport cell
+ * is whatever the file prints there, or nothing: the girls soccer PDF names its sport on the first block
+ * only, and the boys basketball PDF truncates it on one ("Boys’ Basketbal").
+ */
 const HISTORY_HEAD_RE =
-  /^Field Hockey\s+(DeAnza|El Camino)\s+(JV|V)\s+(.*?[A-Za-z.])\s{2,}(\d+-\d+(?:-\d+)?)\s*$/;
+  /^(?:\S.*?)?\s*(DeAnza|El Camino)\s+(JV|V)\s+(.*?[A-Za-z.])\s{2,}(\d+-\d+(?:-\d+)?)\s*$/;
 /** Subsequent rows are an indented school + record pair. */
 const HISTORY_ROW_RE = /^\s+(.*?[A-Za-z.])\s{2,}(\d+-\d+(?:-\d+)?)\s*$/;
 

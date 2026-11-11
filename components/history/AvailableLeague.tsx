@@ -30,6 +30,23 @@ const SPAN_CLASS: Record<number, string> = {
   8: 'lg:row-span-8',
 };
 
+/**
+ * One link per all-league PDF, in division order: "De Anza" when one PDF covers both levels of a division,
+ * "De Anza varsity" and "De Anza JV" when each level has its own.
+ */
+function allLeagueLinks(
+  pdfs: Record<string, { varsity: string | null; jv: string | null }>,
+): Array<{ key: string; label: string; url: string }> {
+  return Object.entries(pdfs).flatMap(([division, { varsity, jv }]) => {
+    const label = getDivision(division)?.label ?? division;
+    if (varsity && varsity === jv) return [{ key: division, label, url: varsity }];
+    return [
+      ...(varsity ? [{ key: `${division}-varsity`, label: `${label} varsity`, url: varsity }] : []),
+      ...(jv ? [{ key: `${division}-jv`, label: `${label} JV`, url: jv }] : []),
+    ];
+  });
+}
+
 function Champions({ leagueId }: { leagueId: LeagueId }) {
   const champions = getHistoryChampions(leagueId);
   if (champions.length === 0) return null;
@@ -151,7 +168,22 @@ export default function AvailableLeague({
       </div>
 
       <div className="mt-section max-w-prose space-y-3 text-meta text-ink-3 md:mt-section-lg">
-        {p.source === 'scval-pdf' ? (
+        {p.source === 'scval-documents' ? (
+          <p className="m-0">
+            Source: scval.com &mdash;{' '}
+            <ExternalLink href={p.standingsPdf}>{season} final standings (PDF)</ExternalLink> and the all-league
+            awards (PDF):{' '}
+            {allLeagueLinks(p.allLeaguePdfs).map(({ key, label, url }, i, all) => (
+              <span key={key}>
+                <ExternalLink href={url}>{label}</ExternalLink>
+                {i < all.length - 1 ? ' · ' : ''}
+              </span>
+            ))}
+            . Read on {p.retrievedOn}. This page comes from those PDFs, not from the MaxPreps data the rest of the
+            site uses &mdash; MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDF
+            lists league records only; its overall-record column was empty for this season.
+          </p>
+        ) : p.source === 'scval-pdf' ? (
           <p className="m-0">
             Source: scval.com &mdash;{' '}
             <ExternalLink href={p.standingsPdf}>{season} final standings (PDF)</ExternalLink> and{' '}

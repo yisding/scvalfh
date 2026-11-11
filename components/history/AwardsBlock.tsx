@@ -145,6 +145,13 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
         <PlayerList title="First team" players={awards.firstTeam} columns="lg" />
         <PlayerList title="Second team" players={awards.secondTeam} columns="lg" />
       </dl>
+      {awards.thirdTeam && awards.thirdTeam.length > 0 ? (
+        // A third team (SCVAL's boys basketball) takes the full width, like honorable mention: in the
+        // sm-md two-column grid above it would sit alone under the first team.
+        <dl className="m-0">
+          <PlayerList title="Third team" players={awards.thirdTeam} columns="sm" />
+        </dl>
+      ) : null}
       {awards.honorableMention.length > 0 ? (
         <dl className="m-0">
           <PlayerList title="Honorable mention" players={awards.honorableMention} columns="sm" />

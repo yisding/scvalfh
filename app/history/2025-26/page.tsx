@@ -23,8 +23,7 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { listWords } from '../../../lib/format';
 import { TOC } from '../../../lib/league-config/sections';
 import { getSection, regionOf } from '../../../lib/leagues';
-import { HAS_HISTORY, SPORT, SPORT_SEASON } from '../../../lib/sports/current';
-import { notFound } from 'next/navigation';
+import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
@@ -47,11 +46,23 @@ import { notFound } from 'next/navigation';
  * page is the only place last season's numbers live, and it is not part of the snapshot the
  * scheduled update rebuilds.
  *
+ * The soccer and basketball builds cover SCVAL alone: their archive (data/<sport>/history-2025-26.json) is
+ * SCVAL's two divisions from its standings and all-league PDFs, with no bracket (a CCS bracket's other schools
+ * are not in those builds' registries), and the jump pills go to the two divisions.
+ *
  * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
  * never from a literal list, so a league cannot be dropped or invented here. The header says only
  * what a reader needs before the tables in a short lede; provenance detail sits in each league's
  * source note. A long lede here pushed the first standings row under the phone tab bar.
  */
+
+/**
+ * The one league of a one-league archive (SCVAL, in the soccer and basketball builds, where it has final
+ * standings), or null.
+ */
+const SINGLE_LEAGUE = HISTORY_LEAGUES.length === 1 && AVAILABLE.length === 1 ? AVAILABLE[0] : null;
+const OWN_DOCUMENTS = HISTORY_LEAGUES.length === 1 ? 'the league’s own documents' : 'each league’s own documents';
+const JUMP_LABEL = SINGLE_LEAGUE ? 'Jump to a division' : 'Jump to a league';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = `${SEASON} final standings`;
@@ -60,8 +71,8 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => leagueShortName(l.id)))} ${SPORT_SEASON.gender} ${SPORT.noun} standings` +
-    ` and all-league awards from the ${SEASON} season, from each league’s own documents, and` +
-    ` ${BRACKET_WORDS}.` +
+    ` and all-league awards from the ${SEASON} season, from ${OWN_DOCUMENTS}` +
+    (BRACKET_WORDS ? `, and ${BRACKET_WORDS}.` : '.') +
     (UNAVAILABLE_SUBJECT
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : '') +
@@ -71,11 +82,12 @@ export const metadata: Metadata = {
 };
 
 export default function HistoryPage() {
-  // Field hockey's alone (the 2025-26 archive): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_HISTORY).
-  if (!HAS_HISTORY) notFound();
   // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
-  // A section's bracket pill follows its last league's, as the block does.
-  const tabs = HISTORY_LEAGUES.flatMap(({ id }) => [
+  // A section's bracket pill follows its last league's, as the block does. A one-league archive (the soccer
+  // and basketball builds: SCVAL) jumps to its divisions instead, since a single league pill goes nowhere.
+  const tabs = SINGLE_LEAGUE
+    ? SINGLE_LEAGUE.entry.divisions.map((d) => ({ href: `#${d.division}`, label: d.label, region: regionOf(SINGLE_LEAGUE.id) }))
+    : HISTORY_LEAGUES.flatMap(({ id }) => [
     { href: `#${id}`, label: leagueShortName(id), region: regionOf(id) },
     ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => ({
       href: `#${b.id}`,
@@ -99,8 +111,8 @@ export default function HistoryPage() {
         title={`${SEASON} final standings`}
         description={
           <>
-            Final standings and all-league awards for {available}, from each league&rsquo;s own documents,
-            and {BRACKET_WORDS}.{' '}
+            Final standings and all-league awards for {available}, from {OWN_DOCUMENTS}
+            {BRACKET_WORDS ? <>, and {BRACKET_WORDS}</> : null}.{' '}
             {UNAVAILABLE_SUBJECT ? (
               <>
                 {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
@@ -110,7 +122,7 @@ export default function HistoryPage() {
             This page doesn&rsquo;t change.
           </>
         }
-        aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a league" />}
+        aside={<DivisionTabs variant="inline" tabs={tabs} label={JUMP_LABEL} />}
         asideClassName="hidden md:block"
       />
 
@@ -120,7 +132,7 @@ export default function HistoryPage() {
       {/* Jump bar: a long page with a section per league to reach. Sticky under the top bar below
           md; from md the pills sit in the title row, or under the title when they do not fit
           beside it. */}
-      <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
+      <DivisionTabs variant="bar" tabs={tabs} label={JUMP_LABEL} className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
         {HISTORY_LEAGUES.flatMap(({ id, entry }) => [

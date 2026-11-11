@@ -1,6 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * Build data/history-2025-26.json: one entry per league.
+ * Build data/history-2025-26.json: one entry per league. With SCVAL_SPORT=soccer or basketball, build
+ * data/<sport>/history-2025-26.json instead: SCVAL alone, from its standings PDF and the hand transcription of
+ * the sport's all-league PDFs (scripts/lib/history-scval-documents.ts; `--from tests/fixtures/<sport>/scval-history`
+ * rebuilds it offline).
  *
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
@@ -57,8 +60,10 @@ import { HttpClient } from '../lib/sources/http';
 import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
+import { DATA_DIR, IS_FIELD_HOCKEY } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
+import { buildScvalDocumentsHistory, transcriptionPath, type Transcription } from './lib/history-scval-documents';
 
 interface Args {
   from: string | null;
@@ -73,7 +78,7 @@ function parseArgs(argv: readonly string[]): Args {
     from: null,
     bvalFrom: null,
     retrievedOn: null,
-    out: path.join(process.cwd(), 'data', 'history-2025-26.json'),
+    out: path.join(process.cwd(), DATA_DIR, 'history-2025-26.json'),
     dryRun: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
@@ -109,8 +114,50 @@ function pick<T extends { division: string; level: string }>(
   return blocks.find((b) => b.division === division && b.level === level) ?? null;
 }
 
+/**
+ * Another sport's build (SCVAL_SPORT=soccer or basketball) covers SCVAL alone: its file has the one SCVAL
+ * entry, built from scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
+ * (scripts/lib/history-scval-documents.ts). `--from` is a folder holding the standings PDF's text
+ * (tests/fixtures/<sport>/scval-history); `--bval-from` and `--retrieved-on` are field hockey's.
+ */
+async function mainOtherSport(args: Args): Promise<number> {
+  if (args.bvalFrom) {
+    console.error('FAILED: --bval-from is field hockey\'s: this build covers SCVAL alone');
+    return 1;
+  }
+  const transcription = JSON.parse(readFileSync(transcriptionPath(DATA_DIR), 'utf8')) as Transcription;
+  let built: Awaited<ReturnType<typeof buildScvalDocumentsHistory>>;
+  try {
+    built = await buildScvalDocumentsHistory({ from: args.from, transcription, log: (l) => console.log(l) });
+  } catch (e) {
+    console.error(`FAILED: ${(e as Error).message}`);
+    return 1;
+  }
+  const { entry, problems } = built;
+  const history = { season: transcription.season, sport: transcription.sport, leagues: { scval: entry } };
+  const json = stableStringify(history);
+  const parsed = HistorySchema.safeParse(JSON.parse(json));
+  if (!parsed.success) {
+    for (const i of parsed.error.issues.slice(0, 10)) problems.push(`schema: ${i.path.join('.') || '(root)'}: ${i.message}`);
+  }
+  if (problems.length) {
+    console.error(`\nFAILED: ${problems.length} problem(s), nothing written:`);
+    for (const p of problems) console.error(`  ${p}`);
+    return 1;
+  }
+  if (args.dryRun) {
+    console.log('\ndry run: valid, nothing written');
+    return 0;
+  }
+  mkdirSync(path.dirname(args.out), { recursive: true });
+  writeFileSync(args.out, json, 'utf8');
+  console.log(`\nwrote ${path.relative(process.cwd(), args.out)}`);
+  return 0;
+}
+
 export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
+  if (!IS_FIELD_HOCKEY) return mainOtherSport(args);
 
   let standings: HistoryStandingsBlock[];
   let allLeague: AllLeagueBlock[];

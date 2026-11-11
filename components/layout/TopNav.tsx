@@ -2,7 +2,6 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
-import { HAS_HISTORY } from '../../lib/sports/current';
 
 /**
  * The desktop nav: eight links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). JV is the junior varsity hub
@@ -20,7 +19,7 @@ const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string 
   { href: '/jv', label: 'JV', srSuffix: ' (junior varsity)' },
   { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
-  ...(HAS_HISTORY ? [{ href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' }] : []),
+  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
   { href: '/about', label: 'About' },
 ];
 

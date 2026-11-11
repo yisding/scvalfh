@@ -1,0 +1,913 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Soccer",
+  "retrievedOn": "2026-11-11",
+  "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-26%20Girls%27%20Soccer%20Standings.pdf",
+  "transcription": "By hand, from pdftotext -layout and pdftotext (reading order) of each PDF; each row is [player, school, position, year] as printed.",
+  "notes": [
+    "JV membership differs from varsity: El Camino JV has 6 teams (no Saratoga, no Lynbrook).",
+    "The El Camino document names two players for Most Valuable Offensive Player (Grace Kochman of MacDonald, Sophia Yamada of Monta Vista) and one for its Co-Most Valuable Goalkeeper award (Melanie Adler of Wilcox); both are kept as printed.",
+    "The De Anza document gives Teagan Kaefer M on the award line and D on the first team; both are kept as printed.",
+    "Names are as printed, including the De Anza JV second team's single name \"Stina\" (Palo Alto)."
+  ],
+  "blocks": [
+    {
+      "division": "de-anza",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20DA%20Girls%27%20all%20LeagueAll%20League%202026.pdf",
+      "overall": [
+        {
+          "award": "Most Valuable Player",
+          "player": "Abby Nelson",
+          "school": "Los Gatos",
+          "position": "M",
+          "year": "Jr"
+        },
+        {
+          "award": "Co Most Valuable Defensive Player",
+          "player": "Teagan Kaefer",
+          "school": "Los Gatos",
+          "position": "M",
+          "year": "Jr"
+        },
+        {
+          "award": "Co Most Valuable Defensive Player",
+          "player": "Avery Edson",
+          "school": "Los Gatos",
+          "position": "D",
+          "year": "Jr"
+        },
+        {
+          "award": "Most Valuable Offensive Player",
+          "player": "Parisa Abedi",
+          "school": "Los Altos",
+          "position": "F",
+          "year": "Sr"
+        },
+        {
+          "award": "Most Valuable Goalkeeper",
+          "player": "Myley Markley",
+          "school": "Homestead",
+          "position": "GK",
+          "year": "Sr"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Abby Nelson",
+          "Los Gatos",
+          "M",
+          "Jr"
+        ],
+        [
+          "Ale Munneke",
+          "Los Gatos",
+          "F",
+          "Sr"
+        ],
+        [
+          "Avery Edson",
+          "Los Gatos",
+          "D",
+          "Jr"
+        ],
+        [
+          "Bella Cain",
+          "Los Gatos",
+          "F",
+          "So"
+        ],
+        [
+          "Teagan Kaefer",
+          "Los Gatos",
+          "D",
+          "Jr"
+        ],
+        [
+          "Charlotte Higgins",
+          "Mt. View",
+          "F",
+          "So"
+        ],
+        [
+          "Olivia Peters",
+          "Mt. View",
+          "F",
+          "Fr"
+        ],
+        [
+          "Sarah Stone",
+          "Mt. View",
+          "D",
+          "Sr"
+        ],
+        [
+          "Lexie Scundi",
+          "Mt. View",
+          "M",
+          "Fr"
+        ],
+        [
+          "Parisa Abedi",
+          "Los Altos",
+          "F",
+          "Sr"
+        ],
+        [
+          "Neda Abedi",
+          "Los Altos",
+          "D",
+          "Sr"
+        ],
+        [
+          "Brooke Neschleba",
+          "Los Altos",
+          "M",
+          "Jr"
+        ],
+        [
+          "Myley Markley",
+          "Homestead",
+          "GK",
+          "Sr"
+        ],
+        [
+          "Saara Lahtela",
+          "Homestead",
+          "M",
+          "Jr"
+        ],
+        [
+          "Alaina Harlow",
+          "Homestead",
+          "D",
+          "Sr"
+        ],
+        [
+          "Reyes Aronson",
+          "Palo Alto",
+          "D",
+          "Sr"
+        ],
+        [
+          "Areet Rao",
+          "Palo Alto",
+          "M",
+          "Sr"
+        ],
+        [
+          "Fiona McCormick",
+          "Santa Clara",
+          "M",
+          "Sr"
+        ],
+        [
+          "Gabriella Gonzalez",
+          "Santa Clara",
+          "M",
+          "Sr"
+        ],
+        [
+          "Jennifer Cristobal Castaneda",
+          "Fremont",
+          "M",
+          "Sr"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Noe Wedemeyer",
+          "Los Gatos",
+          "D",
+          "Jr"
+        ],
+        [
+          "Darcy Armstrong",
+          "Los Gatos",
+          "M",
+          "Jr"
+        ],
+        [
+          "Sidney Nachman",
+          "Mt. View",
+          "D",
+          "So"
+        ],
+        [
+          "Madeline Huang",
+          "Mt. View",
+          "GK",
+          "Jr"
+        ],
+        [
+          "Ruby Gibson",
+          "Los Altos",
+          "D",
+          "Fr"
+        ],
+        [
+          "Sophia Stavrakos",
+          "Los Altos",
+          "M",
+          "Sr"
+        ],
+        [
+          "Michelle Zamudio",
+          "Homestead",
+          "D",
+          "Sr"
+        ],
+        [
+          "Jaina Nguyen",
+          "Homestead",
+          "F",
+          "Fr"
+        ],
+        [
+          "Mia Wong",
+          "Palo Alto",
+          "M",
+          "Fr"
+        ],
+        [
+          "Mabel McCarter",
+          "Palo Alto",
+          "M",
+          "Jr"
+        ],
+        [
+          "Malia Perez",
+          "Santa Clara",
+          "M",
+          "So"
+        ],
+        [
+          "Julia Keineth",
+          "Fremont",
+          "F",
+          "So"
+        ]
+      ],
+      "thirdTeam": [],
+      "honorableMention": []
+    },
+    {
+      "division": "de-anza",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20DA%20Girls%27%20all%20LeagueAll%20League%202026.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Elise Nyland",
+          "school": "Los Gatos",
+          "position": "F",
+          "year": "SO"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Elise Nyland",
+          "Los Gatos",
+          "F",
+          "So"
+        ],
+        [
+          "Caliana Nelson",
+          "Los Gatos",
+          "F",
+          "Fr"
+        ],
+        [
+          "Leila Rafia",
+          "Los Gatos",
+          "F",
+          "So"
+        ],
+        [
+          "Sophia Newell",
+          "Los Gatos",
+          "M",
+          "Fr"
+        ],
+        [
+          "Zoe Riggs",
+          "Los Gatos",
+          "D",
+          "Jr"
+        ],
+        [
+          "Linnea Boublik-Whiteley",
+          "Los Altos",
+          "F",
+          "Fr"
+        ],
+        [
+          "Lia Amirbekian",
+          "Los Altos",
+          "D",
+          "So"
+        ],
+        [
+          "Mia Jones",
+          "Los Altos",
+          "GK",
+          "Fr"
+        ],
+        [
+          "Brennan Lee-Asiong",
+          "Los Altos",
+          "M",
+          "Jr"
+        ],
+        [
+          "Elena Chai",
+          "Mt. View",
+          "M",
+          "So"
+        ],
+        [
+          "Hailey Schmidt",
+          "Mt. View",
+          "F",
+          "So"
+        ],
+        [
+          "Madeleine Friend",
+          "Mt. View",
+          "D",
+          "Fr"
+        ],
+        [
+          "Hailey Cutler",
+          "Homestead",
+          "M",
+          "So"
+        ],
+        [
+          "Bar Ofek",
+          "Homestead",
+          "D",
+          "Fr"
+        ],
+        [
+          "Penny MacAskill",
+          "Homestead",
+          "F",
+          "Fr"
+        ],
+        [
+          "Natalie Lopez Ramos",
+          "Fremont",
+          "M",
+          "So"
+        ],
+        [
+          "Esha Singh",
+          "Fremont",
+          "F",
+          "Fr"
+        ],
+        [
+          "Maki Liu",
+          "Palo Alto",
+          "D",
+          "So"
+        ],
+        [
+          "Lara Hadade",
+          "Palo Alto",
+          "M",
+          "Fr"
+        ],
+        [
+          "Kathelyn Garnica",
+          "Santa Clara",
+          "D",
+          "Jr"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Julia Bradish",
+          "Los Gatos",
+          "M",
+          "Fr"
+        ],
+        [
+          "Meredith Harris",
+          "Los Gatos",
+          "M",
+          "Jr"
+        ],
+        [
+          "Brynn Frei",
+          "Los Altos",
+          "F",
+          "Jr"
+        ],
+        [
+          "Rebecca Gray",
+          "Los Altos",
+          "D",
+          "Fr"
+        ],
+        [
+          "Kayla Pierson",
+          "Mt. View",
+          "GK",
+          "So"
+        ],
+        [
+          "Caroline Wilkowski",
+          "Mt. View",
+          "M",
+          "Fr"
+        ],
+        [
+          "Shira Levy",
+          "Homestead",
+          "D",
+          "Fr"
+        ],
+        [
+          "Haeil Kim",
+          "Homestead",
+          "F",
+          "So"
+        ],
+        [
+          "Kally Diaz Gonzalez",
+          "Fremont",
+          "D",
+          "So"
+        ],
+        [
+          "Samantha Quijano Guardado",
+          "Fremont",
+          "D",
+          "So"
+        ],
+        [
+          "Stina",
+          "Palo Alto",
+          "D",
+          "Fr"
+        ],
+        [
+          "Elizabeth Lopez Acosta",
+          "Santa Clara",
+          "D",
+          "Fr"
+        ]
+      ],
+      "thirdTeam": [],
+      "honorableMention": []
+    },
+    {
+      "division": "el-camino",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20EC%20Girls%20all%20League.pdf",
+      "overall": [
+        {
+          "award": "Most Valuable Player",
+          "player": "Deborah Romero",
+          "school": "Gunn",
+          "position": "M",
+          "year": "11"
+        },
+        {
+          "award": "Most Valuable Defensive Player",
+          "player": "Elise Tayaba",
+          "school": "Milpitas",
+          "position": "D",
+          "year": "12"
+        },
+        {
+          "award": "Most Valuable Offensive Player",
+          "player": "Grace Kochman",
+          "school": "MacDonald",
+          "position": "M",
+          "year": "9"
+        },
+        {
+          "award": "Most Valuable Offensive Player",
+          "player": "Sophia Yamada",
+          "school": "Monta Vista",
+          "position": "F",
+          "year": "12"
+        },
+        {
+          "award": "Co-Most Valuable Goalkeeper",
+          "player": "Melanie Adler",
+          "school": "Wilcox",
+          "position": "GK",
+          "year": "10"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Deborah Romero",
+          "Gunn",
+          "M",
+          "Junior"
+        ],
+        [
+          "Hannah Casale",
+          "Gunn",
+          "F",
+          "Senior"
+        ],
+        [
+          "Maryam Maskatia",
+          "Gunn",
+          "M",
+          "Senior"
+        ],
+        [
+          "Aliya Sidhu",
+          "Gunn",
+          "D",
+          "Senior"
+        ],
+        [
+          "Megan Tarbell",
+          "Gunn",
+          "F",
+          "Soph"
+        ],
+        [
+          "Keatyn Spendlove",
+          "Saratoga",
+          "F",
+          "Senior"
+        ],
+        [
+          "Misha Singla",
+          "Saratoga",
+          "D",
+          "Senior"
+        ],
+        [
+          "Emma Merrill",
+          "Saratoga",
+          "M",
+          "Junior"
+        ],
+        [
+          "Hailey Sordello",
+          "Saratoga",
+          "D",
+          "Soph"
+        ],
+        [
+          "Sophia Yamada",
+          "Monta Vista",
+          "F",
+          "Senior"
+        ],
+        [
+          "Isobel Schweigert",
+          "Monta Vista",
+          "M",
+          "Junior"
+        ],
+        [
+          "Grace Schweigert",
+          "Monta Vista",
+          "F",
+          "Frosh"
+        ],
+        [
+          "Leia Lorente",
+          "Milpitas",
+          "F",
+          "Senior"
+        ],
+        [
+          "Elise Tayaba",
+          "Milpitas",
+          "D",
+          "Senior"
+        ],
+        [
+          "Tea Eugenio",
+          "Milpitas",
+          "M",
+          "Junior"
+        ],
+        [
+          "Jalisse Padilla",
+          "Wilcox",
+          "M",
+          "Frosh"
+        ],
+        [
+          "Melanie Adler",
+          "Wilcox",
+          "GK",
+          "Soph"
+        ],
+        [
+          "Grace Kochman",
+          "MacDonald",
+          "M",
+          "Fresh"
+        ],
+        [
+          "Jasmine Randall",
+          "MacDonald",
+          "M/D",
+          "Senior"
+        ],
+        [
+          "Nanami Kai",
+          "Cupertino",
+          "M",
+          "10"
+        ],
+        [
+          "Pratiksha Saravanan",
+          "Lynbrook",
+          "GK",
+          "Junior"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Evelyn Luong",
+          "Gunn",
+          "D",
+          "Soph"
+        ],
+        [
+          "Maya Drews",
+          "Gunn",
+          "M",
+          "Senior"
+        ],
+        [
+          "Sienna Sordello",
+          "Saratoga",
+          "M",
+          "Soph"
+        ],
+        [
+          "Rylie Coss",
+          "Saratoga",
+          "GK",
+          "Fresh"
+        ],
+        [
+          "Marissa Chang",
+          "Monta Vista",
+          "F",
+          "Soph"
+        ],
+        [
+          "Elektra Masegian",
+          "Monta Vista",
+          "GK",
+          "Junior"
+        ],
+        [
+          "Miya Rocca",
+          "Milpitas",
+          "D",
+          "Senior"
+        ],
+        [
+          "Maya Coriell",
+          "Milpitas",
+          "G",
+          "Soph"
+        ],
+        [
+          "Breanna Plancarte",
+          "Wilcox",
+          "D",
+          "Senior"
+        ],
+        [
+          "Aniya Rosario",
+          "Wilcox",
+          "M",
+          "Frosh"
+        ],
+        [
+          "Alessandra Guerrero",
+          "MacDonald",
+          "M",
+          "Senior"
+        ],
+        [
+          "Kiana Vosooghi",
+          "Cupertino",
+          "D",
+          "12"
+        ]
+      ],
+      "thirdTeam": [],
+      "honorableMention": []
+    },
+    {
+      "division": "el-camino",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20EC%20Girls%20all%20League.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Maya Onalfo",
+          "school": "Milpitas",
+          "position": "G/M",
+          "year": "9"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Reesejilian Matsuo",
+          "Milpitas",
+          "F",
+          "10"
+        ],
+        [
+          "Maya Onalfo",
+          "Milpitas",
+          "G/M",
+          "9"
+        ],
+        [
+          "Rianna Chu",
+          "Milpitas",
+          "D",
+          "10"
+        ],
+        [
+          "Kaysie Wong",
+          "Milpitas",
+          "D/M",
+          "10"
+        ],
+        [
+          "Catalina Rodriguez Araujo",
+          "Milpitas",
+          "M",
+          "10"
+        ],
+        [
+          "Ananya Wath",
+          "Wilcox",
+          "F",
+          "9"
+        ],
+        [
+          "Kennedy Cox",
+          "Wilcox",
+          "F",
+          "9"
+        ],
+        [
+          "Jayna Shin",
+          "Wilcox",
+          "W/M",
+          "10"
+        ],
+        [
+          "Analia Nevarez",
+          "Wilcox",
+          "G",
+          "10"
+        ],
+        [
+          "Lyla Schramm",
+          "Gunn",
+          "D",
+          "9"
+        ],
+        [
+          "Diya Bhaget",
+          "Gunn",
+          "D",
+          "10"
+        ],
+        [
+          "Emilia Bauer",
+          "Gunn",
+          "D",
+          "9"
+        ],
+        [
+          "Giana Thyagarajan",
+          "Cupertino",
+          "D",
+          "10"
+        ],
+        [
+          "Zoe Jerajani",
+          "Cupertino",
+          "M",
+          "10"
+        ],
+        [
+          "Miraya Vardhan",
+          "Cupertino",
+          "M",
+          "9"
+        ],
+        [
+          "Sofia Grigolia",
+          "Monta Vista",
+          "GK/D",
+          "10"
+        ],
+        [
+          "Ritika Sane",
+          "Monta Vista",
+          "M",
+          "9"
+        ],
+        [
+          "Giana Malit",
+          "MacDonald",
+          "D",
+          "Soph"
+        ],
+        [
+          "Eliliyah Delp",
+          "MacDonald",
+          "GK",
+          "Soph"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Jovianne Salting",
+          "Milpitas",
+          "D",
+          "10"
+        ],
+        [
+          "Maliah Dajano",
+          "Milpitas",
+          "F",
+          "10"
+        ],
+        [
+          "Kayzia Amen",
+          "Wilcox",
+          "F",
+          "10"
+        ],
+        [
+          "Kayla Ha",
+          "Wilcox",
+          "M",
+          "9"
+        ],
+        [
+          "Mitchelle Tchoub",
+          "Gunn",
+          "M",
+          "9"
+        ],
+        [
+          "Maleia Griffen",
+          "Gunn",
+          "D",
+          "9"
+        ],
+        [
+          "Charlotte Gilmore",
+          "Cupertino",
+          "F",
+          "9"
+        ],
+        [
+          "Anhadh Kaur Aujla",
+          "Cupertino",
+          "F",
+          "9"
+        ],
+        [
+          "Amy Bastola",
+          "Monta Vista",
+          "D",
+          "10"
+        ],
+        [
+          "Kavya Thyagarajan",
+          "Monta VIsta",
+          "M",
+          "9"
+        ],
+        [
+          "Christina Mai",
+          "MacDonald",
+          "M",
+          "Soph"
+        ]
+      ],
+      "thirdTeam": [],
+      "honorableMention": []
+    }
+  ]
+}

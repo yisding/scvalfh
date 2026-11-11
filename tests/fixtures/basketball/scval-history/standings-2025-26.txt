@@ -1,0 +1,44 @@
+                                 2025-26 SCVAL Standings
+
+
+sport              division       level       SCHOOL by finish     League record    Overall record
+Boys’ Basketball   DeAnza                V           Milpitas           12-0
+                                                    Los Gatos           10-2
+                                                    Palo Alto           7-5
+                                                   Homestead            5-7
+                                                  Mountain View         4-8
+                                                   Monta Vista          4-8
+                                                     Wilcox             0-12
+
+
+sport                division     level      SCHOOL by finish       League record   Overall record
+Boys’ Basketbal      El Camino       V                  Gunn            11-3
+                                                     Lynbrook           11-3
+                                                     Los Altos          10-4
+                                                     Saratoga           10-4
+                                                      Fremont           8-6
+                                                     Cupertino          3-11
+                                                    MacDonald           2-12
+                                                    Santa Clara         1-13
+
+
+sport              division       level       SCHOOL by finish      League record   Overall record
+Boys’ Basketball   DeAnza            JV             Los Gatos           12-0
+                                                    Palo Alto           10-2
+                                                   Homestead            8-4
+                                                     Milpitas           6-6
+                                                  Mountain View         3-9
+                                                   Monta Vista          2-10
+                                                     Wilcox             1-11
+
+
+sport              division      level       SCHOOL by finish     League record     Overall record
+Boys’ Basketball   El Camino        JV             Los Altos           11-3
+                                                   Saratoga            11-3
+                                                   Lynbrook            10-4
+                                                  Santa Clara          7-7
+                                                      Gunn             7-7
+                                                    Fremont            5-9
+                                                   Cupertino           5-9
+                                                  MacDonald            0-14
+

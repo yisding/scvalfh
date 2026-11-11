@@ -29,12 +29,14 @@ export const BRACKETS = getHistoryBrackets();
 export const TOURNAMENTS = getHistoryTournaments();
 /**
  * "the CCS and San Diego Section playoff brackets and the Tournament of Champions": the brackets the page
- * shows, the sections' and the tournaments'.
+ * shows, the sections' and the tournaments', or null when it shows none (the soccer and basketball builds,
+ * whose registries hold SCVAL alone).
  */
-export const BRACKET_WORDS = [
-  `the ${listWords(BRACKETS.map((b) => getSection(b.id).briefLabel))} playoff brackets`,
-  ...TOURNAMENTS.map(() => `the ${TOC.name}`),
-].join(' and ');
+export const BRACKET_WORDS: string | null =
+  [
+    ...(BRACKETS.length > 0 ? [`the ${listWords(BRACKETS.map((b) => getSection(b.id).briefLabel))} playoff brackets`] : []),
+    ...TOURNAMENTS.map(() => `the ${TOC.name}`),
+  ].join(' and ') || null;
 export const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 /** 'SCVAL': a league's short name, as the page's pills and sentences name it. */

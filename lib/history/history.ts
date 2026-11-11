@@ -90,9 +90,9 @@ function load(): History {
   );
 }
 
-// The 2025-26 archive is field hockey's alone: the soccer build's file (data/soccer/history-2025-26.json) is an
-// empty placeholder with no league entries, so hasHistory() is false for every soccer league.
-const history = IS_FIELD_HOCKEY ? load() : (bundledHistory as unknown as History);
+// Every build has the 2025-26 archive: field hockey's nine leagues and its independents, and SCVAL alone in the
+// soccer and basketball builds (data/<sport>/history-2025-26.json, from SCVAL's own PDFs).
+const history = load();
 
 export function getHistorySeason(): string {
   return history.season;
@@ -100,11 +100,8 @@ export function getHistorySeason(): string {
 
 /** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
 export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
-  // A league with no entry (every league of a build without the archive: soccer) is left out.
-  return LEAGUE_IDS.flatMap((leagueId) => {
-    const entry = history.leagues[leagueId];
-    return entry === undefined ? [] : [{ id: leagueId, entry }];
-  });
+  // The schema gives every league of the build an entry.
+  return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
 }
 
 /** The leagues that have final standings, in config order. */
@@ -154,7 +151,9 @@ export function getHistoryLastChecked(): string {
         : [],
   );
   const bracketDays = [...getHistoryBrackets(), ...getHistoryTournaments()].map((b) => b.bracket.retrievedOn);
-  // Every section bracket has a `retrievedOn` (the schema requires one), so the list is never empty.
+  // Every section bracket and every league built from documents read on a day has a `retrievedOn`, and a
+  // build either has a bracket (field hockey) or a league with one (soccer and basketball: SCVAL's PDFs), so
+  // the list is never empty.
   return [...leagueDays, ...bracketDays].sort().at(-1)!;
 }
 
@@ -271,7 +270,8 @@ const brackets = IS_FIELD_HOCKEY
  * so the bracket sits after the leagues that fed it and inside their region.
  */
 export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {
-  // A section the archive has no bracket for (every section of a build without the archive: soccer) is left out.
+  // A section the archive has no bracket for (every section of the soccer and basketball builds, whose
+  // registries hold SCVAL alone, so a CCS bracket's other schools could not be keyed) is left out.
   return BRACKET_SECTION_IDS.filter((id) => brackets.sections[id] !== undefined).map((id) => {
     const leagues = LEAGUE_IDS.filter((l) => getLeague(l).sectionId === id);
     return { id, bracket: brackets.sections[id], afterLeague: leagues[leagues.length - 1] };

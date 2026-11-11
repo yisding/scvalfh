@@ -74,6 +74,8 @@ function leagueSchema(leagueId: LeagueId) {
     overall: z.array(z.object({ award: z.string().min(1), value: z.string().min(1) })),
     firstTeam: z.array(player),
     secondTeam: z.array(player),
+    /** A third team, where the document names one (SCVAL's 2025-26 boys basketball lists 1st, 2nd and 3rd). */
+    thirdTeam: z.array(player).optional(),
     honorableMention: z.array(player),
   });
 
@@ -87,6 +89,22 @@ function leagueSchema(leagueId: LeagueId) {
           builtBy: z.string(),
           standingsPdf: z.string().url(),
           allLeaguePdf: z.string().url(),
+          extraction: z.string(),
+          notes: z.array(z.string()),
+        }),
+        z.object({
+          /**
+           * SCVAL's standings PDF and one all-league PDF per division (or one per division and level), as
+           * scval.com posts them for every sport but field hockey: the standings rows parsed from the PDF's
+           * text, the awards transcribed by hand from data/<sport>/official/scval-all-league-2025-26.json.
+           */
+          source: z.literal('scval-documents'),
+          builtBy: z.string(),
+          standingsPdf: z.string().url(),
+          /** division -> level -> the all-league PDF, or null when none was published. */
+          allLeaguePdfs: z.record(division, z.object({ varsity: z.string().url().nullable(), jv: z.string().url().nullable() })),
+          /** The day the PDFs were read. */
+          retrievedOn: dateKey,
           extraction: z.string(),
           notes: z.array(z.string()),
         }),
