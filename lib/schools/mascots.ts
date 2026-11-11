@@ -21,10 +21,3 @@ export const MASCOT_FILE_SIZES: readonly number[] = [
 export function mascotFile(slug: string, px: number): string {
   return `/mascots/${slug}-${px}.webp`;
 }
-
-/**
- * Registry schools with no tile in public/mascots/ yet: the five SCVAL schools the soccer registry added
- * (lib/registry/soccer/scval.ts). `pnpm fetch-mascots --only <slug>` got HTTP 403 from MaxPreps' image host on
- * 2026-11-06, so TeamMonogram draws their initials until the tiles are fetched; then delete the slug here.
- */
-export const NO_MASCOT_TILE: ReadonlySet<string> = new Set(['gunn', 'macdonald', 'milpitas', 'mountain-view', 'wilcox']);

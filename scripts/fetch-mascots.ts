@@ -10,6 +10,10 @@
  *   pnpm fetch-mascots --only <slug>   one team (repeatable)
  *   pnpm fetch-mascots --dry-run       fetch and process, write nothing
  *
+ * The teams are this build's registry: a school only the soccer and basketball registries hold (Gunn, Mountain
+ * View, MacDonald, Milpitas, Wilcox) is fetched with `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>`.
+ * One public/mascots/ serves every sport's build.
+ *
  * Self-hosted, never hotlinked: the site makes no third-party image request. The files are
  * committed, so a page never depends on MaxPreps being up. Run it when a team joins the registry
  * (tests/mascots.test.ts fails until its tiles exist) or a school changes its logo; the twice-daily
@@ -41,6 +45,8 @@ import path from 'node:path';
 import sharp, { type Sharp } from 'sharp';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { MASCOT_FILE_SIZES } from '../lib/schools/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
@@ -122,7 +128,26 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     url: `${SBLIVE}/school/12140/image/acorn.png`,
     why: "MaxPreps' is 150×122; SBLive's is the same acorn at 245×208",
   },
+  // ----- The winter registries' schools (lib/registry/soccer/scval.ts, lib/registry/basketball/scval.ts) -----
+  'mountain-view': {
+    // The school site's header logo (163×160 PNG, transparent).
+    url: 'https://files.smartsites.parentsquare.com/10943/header_logo_img_fer16dvi67m09lapopp.png',
+    why: "MaxPreps' helmet is a screenshot with a grey margin and a black frame line around it; the school site has the same helmet on its own",
+  },
+  macdonald: {
+    // Santa Clara Unified's own MacDonald mascot (1080×1080; f_auto serves a JPEG for this Accept).
+    url: 'https://resources.finalsite.net/images/f_auto,q_auto/v1691613259/santaclarausdorg/wgahasard3c7bbxnly3a/MacDonaldHighSchoolMascot.png',
+    why: "MaxPreps' is a squeezed screenshot of an image search, its close and lens buttons over the condor; the district's is the same condor, without the wordmark",
+  },
+  wilcox: {
+    // Santa Clara Unified's own Wilcox mascot (1080×1080; f_auto serves a JPEG for this Accept).
+    url: 'https://resources.finalsite.net/images/f_auto,q_auto/v1691613256/santaclarausdorg/hypz3eeyaimihl8k4ifr/WilcoxHighSchoolMascot.png',
+    why: "MaxPreps' is a small JPEG blown up to 400×294, blurred and blocky; the district's is the same W and bolt, without the lettering around it",
+  },
 };
+
+/** Every slug the two winter registries hold: an override may name one in a build whose registry does not. */
+const WINTER_SLUGS: ReadonlySet<string> = new Set([...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS].map((s) => s.slug));
 
 function mascotUrl(team: Pick<Team, 'id' | 'slug'>): string {
   const override = SOURCE_OVERRIDES[team.slug];
@@ -233,8 +258,9 @@ export async function main(argv: readonly string[]): Promise<number> {
     ...TEAMS.map((t) => ({ slug: t.slug, url: mascotUrl(t) })),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, url: t.mascotSource })),
   ];
-  // The overrides name field hockey's schools; a soccer build (SCVAL alone) checks only the slugs it was given.
-  const overrides = IS_FIELD_HOCKEY ? Object.keys(SOURCE_OVERRIDES) : [];
+  // The overrides name every sport's schools. A field hockey build checks each is one of its own or a winter
+  // registry's; a soccer or basketball build (SCVAL alone) checks only the slugs it was given.
+  const overrides = IS_FIELD_HOCKEY ? Object.keys(SOURCE_OVERRIDES).filter((s) => !WINTER_SLUGS.has(s)) : [];
   const unknown = [...args.only, ...overrides].filter((s) => !targets.some((t) => t.slug === s));
   if (unknown.length > 0) throw new Error(`not a registry slug or JV slot team: ${unknown.join(', ')}`);
   const teams = args.only.length > 0 ? targets.filter((t) => args.only.includes(t.slug)) : targets;

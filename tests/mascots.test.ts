@@ -9,11 +9,24 @@ import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/schools/mascots';
 import { TEAMS } from '../lib/teams';
 
-/** Every tile stem: the registry's slugs, then each JV slot team's (York, lib/jv/jv-teams.ts). */
-const STEMS = [...TEAMS.map((t) => t.slug), ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot)];
+/**
+ * Every tile stem: this build's registry slugs, the two winter registries' (one public/mascots/ serves every
+ * sport's build, and a school in several registries has one set of tiles), then each JV slot team's (York,
+ * lib/jv/jv-teams.ts).
+ */
+const STEMS = [
+  ...new Set([
+    ...TEAMS.map((t) => t.slug),
+    ...SCVAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...SCVAL_BASKETBALL_SEEDS.map((s) => s.slug),
+    ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot),
+  ]),
+];
 
 const PUBLIC = path.resolve(import.meta.dirname, '..', 'public');
 const DIR = path.join(PUBLIC, 'mascots');
@@ -27,7 +40,7 @@ describe('mascot tiles', () => {
     expect(MASCOT_FILE_SIZES).toEqual([20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128]);
   });
 
-  it('every registry team and JV slot team has every file, a square WebP of exactly its size', async () => {
+  it('every registry team, in every sport, and JV slot team has every file, a square WebP of exactly its size', async () => {
     for (const stem of STEMS) {
       for (const px of MASCOT_FILE_SIZES) {
         const file = path.join(PUBLIC, mascotFile(stem, px));
@@ -38,7 +51,7 @@ describe('mascot tiles', () => {
     }
   });
 
-  it('holds no file for a team the registry no longer has, or a size no tile draws', () => {
+  it('holds no file for a team no registry has any longer, or a size no tile draws', () => {
     const expected = new Set(STEMS.flatMap((s) => MASCOT_FILE_SIZES.map((px) => `${s}-${px}.webp`)));
     expect(readdirSync(DIR).filter((f) => !expected.has(f))).toEqual([]);
   });
