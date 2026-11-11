@@ -1,5 +1,1055 @@
 {
-  "leagues": {},
+  "leagues": {
+    "scval": {
+      "divisions": [
+        {
+          "awards": {
+            "jv": {
+              "division": "de-anza",
+              "firstTeam": [
+                {
+                  "player": "Patrick Slone",
+                  "position": "G",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Rocco Loverme",
+                  "position": "F",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Noah Bush",
+                  "position": "C",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 9
+                },
+                {
+                  "player": "Daren Lee",
+                  "position": "G",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 10
+                },
+                {
+                  "player": "Matthew Johnson",
+                  "position": "G",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 10
+                },
+                {
+                  "player": "Alexi Lim",
+                  "position": "G",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Ryan Tay",
+                  "position": "C",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 10
+                }
+              ],
+              "honorableMention": [],
+              "level": "jv",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Jack Shapiro, Los Gatos, G, 9"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Vanni Loverme",
+                  "position": "F",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Jacob Domingo",
+                  "position": "F",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 10
+                },
+                {
+                  "player": "Garrett Haase",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 10
+                },
+                {
+                  "player": "Zorez Syed",
+                  "position": "C",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 10
+                },
+                {
+                  "player": "Evan Chen",
+                  "position": "F",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 9
+                },
+                {
+                  "player": "Jeremy Garcia",
+                  "position": "G",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 9
+                },
+                {
+                  "player": "Tyler Tsai",
+                  "position": "F",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 10
+                },
+                {
+                  "player": "Orion Son",
+                  "position": "G",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 10
+                }
+              ],
+              "thirdTeam": [
+                {
+                  "player": "Mason Le",
+                  "position": "G",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Lucas Chen",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 9
+                },
+                {
+                  "player": "Varun Panikkar",
+                  "position": "F",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 10
+                },
+                {
+                  "player": "Jonathan Abraham",
+                  "position": "G",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 10
+                },
+                {
+                  "player": "Veer Poswal",
+                  "position": "C",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Aneesh Vasudevan",
+                  "position": "G",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 9
+                },
+                {
+                  "player": "Eitan Litvin",
+                  "position": "C",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 10
+                }
+              ]
+            },
+            "varsity": {
+              "division": "de-anza",
+              "firstTeam": [
+                {
+                  "player": "Pranav Krishnan",
+                  "position": "G",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 11
+                },
+                {
+                  "player": "Nick Nguyen",
+                  "position": "G",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 12
+                },
+                {
+                  "player": "Rocco Smith",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 11
+                },
+                {
+                  "player": "Dionysis Maroudas",
+                  "position": "G/F",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 12
+                },
+                {
+                  "player": "Zach Otoupal",
+                  "position": "G/F",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 12
+                },
+                {
+                  "player": "Diego Inocencio",
+                  "position": "G",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 11
+                },
+                {
+                  "player": "Ryan Shen",
+                  "position": "G",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 12
+                }
+              ],
+              "honorableMention": [],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Dylan Nguyen, Milpitas, G, 12"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Ziad Elkordy",
+                  "position": "F",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 12
+                },
+                {
+                  "player": "Ben Laris",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 11
+                },
+                {
+                  "player": "Will Campbell",
+                  "position": "F",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 12
+                },
+                {
+                  "player": "Milos Grabovac",
+                  "position": "G",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 9
+                },
+                {
+                  "player": "Noah Shahraz",
+                  "position": "G",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 12
+                },
+                {
+                  "player": "Ashton Tam",
+                  "position": "G",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 11
+                },
+                {
+                  "player": "Jake Wang",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 12
+                }
+              ],
+              "thirdTeam": [
+                {
+                  "player": "Jesiah Caampued",
+                  "position": "G",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 12
+                },
+                {
+                  "player": "Aadi Tripathi",
+                  "position": "G",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 11
+                },
+                {
+                  "player": "Oliver Evans",
+                  "position": "G",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 9
+                },
+                {
+                  "player": "Jonathan Ma",
+                  "position": "G",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 11
+                },
+                {
+                  "player": "Adarsh Inampudi",
+                  "position": "G",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 11
+                },
+                {
+                  "player": "Kyle McDivitt",
+                  "position": "G",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 12
+                },
+                {
+                  "player": "Jordan Slate",
+                  "position": "G",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 12
+                }
+              ]
+            }
+          },
+          "division": "de-anza",
+          "label": "De Anza",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "Los Gatos",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "los-gatos",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "Palo Alto",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "palo-alto",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Homestead",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "homestead",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Milpitas",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "milpitas",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Mountain View",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "mountain-view",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 10,
+                "leagueRecord": "2-10",
+                "name": "Monta Vista",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "monta-vista",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "Wilcox",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "wilcox",
+                "t": 0,
+                "w": 1
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "Milpitas",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "milpitas",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "Los Gatos",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "los-gatos",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "Palo Alto",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "palo-alto",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Homestead",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "homestead",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Mountain View",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "mountain-view",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Monta Vista",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "monta-vista",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "Wilcox",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "wilcox",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": {
+              "division": "el-camino",
+              "firstTeam": [
+                {
+                  "player": "Hritish Raj",
+                  "position": "F",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 10
+                },
+                {
+                  "player": "Carter Wilson",
+                  "position": "G",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 10
+                },
+                {
+                  "player": "Elijah Udoh",
+                  "position": "G",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 9
+                },
+                {
+                  "player": "Sanshray Jaiswal",
+                  "position": "G",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 10
+                },
+                {
+                  "player": "Ian Denny",
+                  "position": "G",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Benjamin Lu",
+                  "position": "G",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Diego Lorenzo",
+                  "position": "C",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 10
+                }
+              ],
+              "honorableMention": [],
+              "level": "jv",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Albert Li, Los Altos, G, 10"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Kashap Vangala",
+                  "position": "F",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 9
+                },
+                {
+                  "player": "Gabriel Ku",
+                  "position": "F",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 10
+                },
+                {
+                  "player": "Dan Wataro",
+                  "position": "G",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 10
+                },
+                {
+                  "player": "Aaron Lung",
+                  "position": "G",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 9
+                },
+                {
+                  "player": "Amaan Khan",
+                  "position": "C",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 10
+                },
+                {
+                  "player": "Nishan Dhaliwal",
+                  "position": "F",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Noe Bile",
+                  "position": "G",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 9
+                },
+                {
+                  "player": "Jasial Desai",
+                  "position": "F",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 9
+                },
+                {
+                  "player": "Dewyond Williams",
+                  "position": "F",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 10
+                }
+              ],
+              "thirdTeam": [
+                {
+                  "player": "Sanjay Prasanna",
+                  "position": "G",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 9
+                },
+                {
+                  "player": "Andrew Onodera",
+                  "position": "G",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 10
+                },
+                {
+                  "player": "Patrick McCahill",
+                  "position": "F",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 10
+                },
+                {
+                  "player": "Evann Sun",
+                  "position": "G",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Anthony Tilghman",
+                  "position": "C",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Liam Kao",
+                  "position": "G",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 9
+                },
+                {
+                  "player": "Kayden Chang",
+                  "position": "F",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 9
+                },
+                {
+                  "player": "David Lopez",
+                  "position": "G",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 10
+                }
+              ]
+            },
+            "varsity": {
+              "division": "el-camino",
+              "firstTeam": [
+                {
+                  "player": "Anson Hulme",
+                  "position": "F",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 11
+                },
+                {
+                  "player": "Isaac Romero",
+                  "position": "G",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 12
+                },
+                {
+                  "player": "Charlie Loper",
+                  "position": "G",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 11
+                },
+                {
+                  "player": "Judah Marks",
+                  "position": "G",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 12
+                },
+                {
+                  "player": "Rian Mao",
+                  "position": "G",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 12
+                },
+                {
+                  "player": "Toby Lobell",
+                  "position": "G",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 11
+                },
+                {
+                  "player": "Kota Xu",
+                  "position": "G",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 10
+                }
+              ],
+              "honorableMention": [],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Mrinal Dwivedi, Lynbrook, F, 12"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Sean Hamby",
+                  "position": "F",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 11
+                },
+                {
+                  "player": "Keondre Warfield",
+                  "position": "F",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 12
+                },
+                {
+                  "player": "Cole Sheehy",
+                  "position": "G",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 12
+                },
+                {
+                  "player": "Kai Daron",
+                  "position": "G",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 12
+                },
+                {
+                  "player": "Mateen Mazhar",
+                  "position": "G",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 12
+                },
+                {
+                  "player": "Aidan Liu",
+                  "position": "G",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 11
+                },
+                {
+                  "player": "Paxton Pardo de Zela",
+                  "position": "F",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 11
+                }
+              ],
+              "thirdTeam": [
+                {
+                  "player": "Hima Abdelrahman",
+                  "position": "G",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Kostya Antonov",
+                  "position": "F",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 11
+                },
+                {
+                  "player": "Nate Crawford",
+                  "position": "G",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 11
+                },
+                {
+                  "player": "Kishan Shah",
+                  "position": "F",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 12
+                },
+                {
+                  "player": "Anthony Parrales",
+                  "position": "G",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 11
+                },
+                {
+                  "player": "Alex Sinton",
+                  "position": "G",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 12
+                },
+                {
+                  "player": "Evan Coleman",
+                  "position": "G",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 11
+                },
+                {
+                  "player": "Ethan Jin",
+                  "position": "G",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 12
+                }
+              ]
+            }
+          },
+          "division": "el-camino",
+          "label": "El Camino",
+          "standings": {
+            "jv": [
+              {
+                "l": 3,
+                "leagueRecord": "11-3",
+                "name": "Los Altos",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "los-altos",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 3,
+                "leagueRecord": "11-3",
+                "name": "Saratoga",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "saratoga",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 4,
+                "leagueRecord": "10-4",
+                "name": "Lynbrook",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "lynbrook",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Santa Clara",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "santa-clara",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Gunn",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "gunn",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 9,
+                "leagueRecord": "5-9",
+                "name": "Fremont",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "fremont",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 9,
+                "leagueRecord": "5-9",
+                "name": "Cupertino",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "cupertino",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 14,
+                "leagueRecord": "0-14",
+                "name": "MacDonald",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "macdonald",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 3,
+                "leagueRecord": "11-3",
+                "name": "Gunn",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "gunn",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 3,
+                "leagueRecord": "11-3",
+                "name": "Lynbrook",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "lynbrook",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 4,
+                "leagueRecord": "10-4",
+                "name": "Los Altos",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "los-altos",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "10-4",
+                "name": "Saratoga",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "saratoga",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 6,
+                "leagueRecord": "8-6",
+                "name": "Fremont",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "fremont",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 11,
+                "leagueRecord": "3-11",
+                "name": "Cupertino",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "cupertino",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "2-12",
+                "name": "MacDonald",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "macdonald",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 13,
+                "leagueRecord": "1-13",
+                "name": "Santa Clara",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "santa-clara",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
+        }
+      ],
+      "league": "Santa Clara Valley Athletic League",
+      "provenance": {
+        "allLeaguePdfs": {
+          "de-anza": {
+            "jv": "https://www.scval.com/standings/2025-26%20SCVAL%20DA%20JV%20Boys%27%20BB%20all-league.pdf",
+            "varsity": "https://www.scval.com/standings/25-26%20SCVAL%20DA%20V%20Boys%27%20All-league.pdf"
+          },
+          "el-camino": {
+            "jv": "https://www.scval.com/standings/25-26%20SCVAL%20EC%20JV%20Boys%27%20BasketballAll%20all%20League.pdf",
+            "varsity": "https://www.scval.com/standings/25-26%20El%20Camino%20Boys%20Varsity%20All%20League%20Basketball.pdf"
+          }
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Standings: pdftotext -layout. All-league awards: By hand, from pdftotext -layout of each PDF; each row is [player, school, position, year] as printed.",
+        "notes": [
+          "SCVAL boys basketball, from scval.com/standings. Rows are in the PDF's own \"SCHOOL by finish\" order; nothing is recomputed, since the PDF carries no game-level data.",
+          "The PDF's \"Overall record\" column is empty, so every overallRecord is null.",
+          "Division membership is the 2025-26 PDF's, which is not the 2026-27 alignment; the page says which teams moved.",
+          "School spellings are the documents' own (\"Mt. View\", \"Monta VIsta\"); `slug` is the join key.",
+          "Grades are stored as 9-12 whatever the document wrote (\"Jr\", \"Junior\", \"Soph\", \"Frosh\", \"11\").",
+          "An overall award is stored as \"Player, School, Position, Grade\" from the document's four cells. Two players named for one award are two entries under the same title.",
+          "Records are W-L: a basketball game cannot end level, so the PDF prints no ties and t is stored as 0.",
+          "Each all-league document names one MVP and a first, second and third team; there is no honorable mention.",
+          "JV membership is varsity's in both divisions."
+        ],
+        "retrievedOn": "2026-11-11",
+        "source": "scval-documents",
+        "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-26%20Boys%27%20Basketball%20standings.pdf"
+      },
+      "status": "available"
+    }
+  },
   "season": "2025-26",
   "sport": "Boys Basketball"
 }

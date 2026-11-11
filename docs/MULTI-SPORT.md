@@ -24,8 +24,8 @@ own origin (a subdomain such as `soccer.` is a hosting choice on top of this). W
   and may be false for another sport (for example "EAL school", Red Bluff, the Sunset "field hockey
   league"), so they are per sport by nature.
 
-The cost: `/clubs`, `/commits`, `/recruiting`, `/jv` and `/history/2025-26` exist only for field
-hockey today, so their presence must become per sport. A page that shows one school across several
+The cost: `/clubs`, `/commits` and `/recruiting` exist only for field hockey today, so their presence
+must become per sport. (`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
 sports would need links between origins.
 
 ## The seam: `lib/sports/`
@@ -178,10 +178,14 @@ aside), and the field hockey tests, golden files and asserts pass as they were.
   (`highSeedHostsThrough`), and MaxPreps' tournament (`tournament`, `bracketUrl`). Those fields are nullable
   in `CcsConfig`, the snapshot schema and every reader.
 - **Data.** Under `data/soccer/`: the snapshot, JV, rosters, player stats and last season's games come
-  from the usual fetchers (README, "Girls soccer"); the official fixtures are transcribed; clubs,
-  commits, history and the bracket files are empty placeholders the loaders serve without field hockey's
-  validation.
-- **Pages.** /history/2025-26, /clubs, /clubs/[slug], /commits and /recruiting render a 404 and are
+  from the usual fetchers (README, "Girls soccer"); the official fixtures are transcribed; the 2025-26
+  archive (`history-2025-26.json`, SCVAL alone) is built by `scripts/build-history.ts` from SCVAL's standings
+  PDF and a hand transcription of its all-league PDFs (`official/scval-all-league-2025-26.json`), and
+  validated like field hockey's; clubs, commits and the bracket files (the 2025 history brackets included: a
+  CCS bracket's other schools are not in this registry) are empty placeholders the loaders serve without field
+  hockey's validation.
+- **Pages.** /history/2025-26 shows SCVAL's two divisions (final standings, varsity and JV, and the
+  all-league teams), and its jump pills go to the divisions. /clubs, /clubs/[slug], /commits and /recruiting render a 404 and are
   linked from nowhere; the region toggle is hidden; copy that named field hockey's leagues or counted
   "N leagues" reads from config.
 

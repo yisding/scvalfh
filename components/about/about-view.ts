@@ -162,6 +162,8 @@ export interface LeagueSourceCard extends LeagueRulesEntry {
 export interface AboutArchive {
   season: string;
   available: Array<{ id: LeagueId; entry: AvailableLeagueHistory }>;
+  /** What each available league's documents are ("SCVAL’s two PDFs", "BVAL’s standings sheet and all-league documents"). */
+  sourceDocs: string[];
   /** The leagues we found no official final standings for (not the groups of independents). */
   unavailableLeagues: Array<{ id: LeagueId; entry: UnavailableLeagueHistory }>;
   /** The groups of independents, said apart (lib/history/history.ts `historyGroupsSentence`), or null. */
@@ -633,6 +635,17 @@ export function buildAboutView(): AboutView {
       archive: {
         season: historySeason,
         available: historyAvailable,
+        sourceDocs: historyAvailable.map(({ id, entry }) => {
+          const name = getLeague(id).shortName;
+          switch (entry.provenance.source) {
+            case 'scval-pdf':
+              return `${name}’s two PDFs`;
+            case 'scval-documents':
+              return `${name}’s standings and all-league PDFs`;
+            case 'bval-sheet':
+              return `${name}’s standings sheet and all-league documents`;
+          }
+        }),
         unavailableLeagues: historyUnavailableLeagues,
         groupsSentence: historyGroups,
         publishedOnly: historyPublishedOnly,

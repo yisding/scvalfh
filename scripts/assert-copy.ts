@@ -125,7 +125,7 @@ import {
   withoutLink,
 } from './copy-rules';
 import { ARCHIVE_LINES, PUBLIC_TERMS } from './public-terms';
-import { HAS_HISTORY, HAS_RECRUITING, SPORT } from '../lib/sports/current';
+import { HAS_RECRUITING, SPORT } from '../lib/sports/current';
 
 const APP = '.next/server/app';
 
@@ -152,7 +152,6 @@ const files = (readdirSync(APP, { recursive: true }) as string[])
   .map((f) => f.split(path.sep).join('/'))
   .filter((f) => f.endsWith('.html'))
   // A route only field hockey has (lib/sports/current.ts) is a 404 in another sport's build: nothing to check.
-  .filter((f) => HAS_HISTORY || !f.startsWith('history/'))
   .filter((f) => HAS_RECRUITING || !/^(clubs|commits|recruiting)(\.html$|\/)/.test(f));
 
 // The single-division labels that must never be printed ("PCAL Division", "Marin County Division").
@@ -352,9 +351,7 @@ for (const league of siteOrderedLeagues) {
 // ---------------------------------------------------------------- /history/2025-26
 const historyFile = 'history/2025-26.html';
 const historyPath = path.join(APP, historyFile);
-if (!HAS_HISTORY) {
-  // The archive is field hockey's alone: another sport's build renders the route as a 404.
-} else if (!existsSync(historyPath)) {
+if (!existsSync(historyPath)) {
   fail(historyFile, 'not prerendered');
 } else {
   const html = readFileSync(historyPath, 'utf8');

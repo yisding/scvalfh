@@ -151,7 +151,7 @@ export function splitOverallValue(
 
 /** One division's overall awards (varsity or JV), each split into a linked award line. */
 export function overallAwards(leagueId: LeagueId, awards: HistoryAwards): OverallAwardView[] {
-  const listed = [...awards.firstTeam, ...awards.secondTeam, ...awards.honorableMention];
+  const listed = [...awards.firstTeam, ...awards.secondTeam, ...(awards.thirdTeam ?? []), ...awards.honorableMention];
   return awards.overall.map((o) => {
     const award = awardTitle(o.award);
     const split = splitOverallValue(leagueId, o.value);

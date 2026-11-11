@@ -18,7 +18,7 @@
 import { getClubSlugs } from '../../lib/players/clubs';
 import { gameIdToParam } from '../../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { HAS_HISTORY, HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_RECRUITING } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
@@ -39,17 +39,16 @@ const ALL_FIXED_PAGES = [
 ] as const;
 
 /**
- * The fixed pages this build prerenders: a route only field hockey has (lib/sports/current.ts HAS_HISTORY,
- * HAS_RECRUITING) is a 404 in another sport's build, which `next build` writes as a not-found page and vinext
- * skips, so it is not expected.
+ * The fixed pages this build prerenders: a route only field hockey has (lib/sports/current.ts HAS_RECRUITING)
+ * is a 404 in another sport's build, which `next build` writes as a not-found page and vinext skips, so it is
+ * not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
-  (p) => (HAS_HISTORY || p !== 'history/2025-26') && (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)),
+  (p) => HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p),
 );
 
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
-  ...(HAS_HISTORY ? [] : ['/history/2025-26']),
   ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
 ];
@@ -182,8 +181,7 @@ export function makeFamilyChecker(
     family('teams', expected.slugs, { og: true });
     // One JV calendar per league (app/jv/[league]); it takes the root OG card.
     family('jv', expected.leagueIds, { og: false });
-    // Not checked in a build without the archive: `next build` writes its 404 there and vinext skips the route.
-    if (HAS_HISTORY) family('history', ['2025-26'], { og: false });
+    family('history', ['2025-26'], { og: false });
     // One page per club of data/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.
     family('clubs', expected.clubSlugs, { og: false });

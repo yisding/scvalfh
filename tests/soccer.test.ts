@@ -43,7 +43,7 @@ beforeAll(async () => {
 
 describe('the soccer sport switch', () => {
   it('is girls varsity soccer, winter 2026-27, with its data under data/soccer/', () => {
-    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, HAS_HISTORY, HAS_RECRUITING } = m.current;
+    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, HAS_RECRUITING } = m.current;
     expect(SPORT.id).toBe('soccer');
     expect(SPORT_SEASON.sportSeasonId).toBe('893e6888-5e0c-48eb-b952-16ac29e0ae0a');
     expect(SPORT_SEASON.label).toBe(
@@ -52,7 +52,7 @@ describe('the soccer sport switch', () => {
     expect(SPORT_SEASON.genderSport).toBe('girls,soccer');
     expect(SPORT_AUDIENCE).toBe('girls varsity soccer');
     expect(DATA_DIR).toBe('data/soccer');
-    expect([IS_FIELD_HOCKEY, HAS_HISTORY, HAS_RECRUITING]).toEqual([false, false, false]);
+    expect([IS_FIELD_HOCKEY, HAS_RECRUITING]).toEqual([false, false]);
   });
 
   it('derives the season words and source links from the soccer definition', () => {

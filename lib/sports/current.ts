@@ -45,11 +45,10 @@ export const SPORT = SPORT_SEASON.sport;
 export const DATA_DIR = IS_FIELD_HOCKEY ? 'data' : `data/${SPORT_ID}`;
 
 /**
- * The pages only field hockey has (docs/MULTI-SPORT.md, "one sport per build"): the 2025-26 archive
- * (/history/2025-26) and the hand-researched recruiting pages (/clubs, /clubs/[slug], /commits, /recruiting).
- * A soccer or basketball build renders each as a 404 and links to none of them.
+ * The pages only field hockey has (docs/MULTI-SPORT.md, "one sport per build"): the hand-researched recruiting
+ * pages (/clubs, /clubs/[slug], /commits, /recruiting). A soccer or basketball build renders each as a 404 and
+ * links to none of them. The 2025-26 archive (/history/2025-26) is every build's.
  */
-export const HAS_HISTORY = IS_FIELD_HOCKEY;
 export const HAS_RECRUITING = IS_FIELD_HOCKEY;
 
 /** 'Girls': the program's gender as MaxPreps and the schools' calendars capitalize it. */

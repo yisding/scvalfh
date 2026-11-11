@@ -6,7 +6,7 @@ import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history/history';
 import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
-import { HAS_HISTORY, IS_BASKETBALL } from '../lib/sports/current';
+import { IS_BASKETBALL } from '../lib/sports/current';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -30,13 +30,11 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/teams', name: 'Teams and standings', description: `Find your school; every table in ${LEAGUE_COUNT}` },
   { href: '/leaders', name: 'Season leaders', description: IS_BASKETBALL ? 'Top scorers, records and ratings' : 'Top scorers, keepers and records, every league' },
   { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
-  ...(HAS_HISTORY
-    ? [{
-        href: '/history/2025-26',
-        name: 'History',
-        description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
-      }]
-    : []),
+  {
+    href: '/history/2025-26',
+    name: 'History',
+    description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
+  },
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 

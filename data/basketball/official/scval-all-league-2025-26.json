@@ -1,0 +1,632 @@
+{
+  "season": "2025-26",
+  "sport": "Boys Basketball",
+  "retrievedOn": "2026-11-11",
+  "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-26%20Boys%27%20Basketball%20standings.pdf",
+  "transcription": "By hand, from pdftotext -layout of each PDF; each row is [player, school, position, year] as printed.",
+  "notes": [
+    "Records are W-L: a basketball game cannot end level, so the PDF prints no ties and t is stored as 0.",
+    "Each all-league document names one MVP and a first, second and third team; there is no honorable mention.",
+    "JV membership is varsity's in both divisions."
+  ],
+  "blocks": [
+    {
+      "division": "de-anza",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/25-26%20SCVAL%20DA%20V%20Boys%27%20All-league.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Dylan Nguyen",
+          "school": "Milpitas",
+          "position": "G",
+          "year": "12"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Pranav Krishnan",
+          "Milpitas",
+          "G",
+          "11"
+        ],
+        [
+          "Nick Nguyen",
+          "Milpitas",
+          "G",
+          "12"
+        ],
+        [
+          "Rocco Smith",
+          "Palo Alto",
+          "G",
+          "11"
+        ],
+        [
+          "Dionysis Maroudas",
+          "Los Gatos",
+          "G/F",
+          "12"
+        ],
+        [
+          "Zach Otoupal",
+          "Los Gatos",
+          "G/F",
+          "12"
+        ],
+        [
+          "Diego Inocencio",
+          "Mountain View",
+          "G",
+          "11"
+        ],
+        [
+          "Ryan Shen",
+          "Monta Vista",
+          "G",
+          "12"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Ziad Elkordy",
+          "Milpitas",
+          "F",
+          "12"
+        ],
+        [
+          "Ben Laris",
+          "Palo Alto",
+          "G",
+          "11"
+        ],
+        [
+          "Will Campbell",
+          "Los Gatos",
+          "F",
+          "12"
+        ],
+        [
+          "Milos Grabovac",
+          "Los Gatos",
+          "G",
+          "9"
+        ],
+        [
+          "Noah Shahraz",
+          "Mountain View",
+          "G",
+          "12"
+        ],
+        [
+          "Ashton Tam",
+          "Homestead",
+          "G",
+          "11"
+        ],
+        [
+          "Jake Wang",
+          "Palo Alto",
+          "G",
+          "12"
+        ]
+      ],
+      "thirdTeam": [
+        [
+          "Jesiah Caampued",
+          "Milpitas",
+          "G",
+          "12"
+        ],
+        [
+          "Aadi Tripathi",
+          "Palo Alto",
+          "G",
+          "11"
+        ],
+        [
+          "Oliver Evans",
+          "Los Gatos",
+          "G",
+          "9"
+        ],
+        [
+          "Jonathan Ma",
+          "Mountain View",
+          "G",
+          "11"
+        ],
+        [
+          "Adarsh Inampudi",
+          "Monta Vista",
+          "G",
+          "11"
+        ],
+        [
+          "Kyle McDivitt",
+          "Homestead",
+          "G",
+          "12"
+        ],
+        [
+          "Jordan Slate",
+          "Wilcox",
+          "G",
+          "12"
+        ]
+      ],
+      "honorableMention": []
+    },
+    {
+      "division": "de-anza",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20DA%20JV%20Boys%27%20BB%20all-league.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Jack Shapiro",
+          "school": "Los Gatos",
+          "position": "G",
+          "year": "9"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Patrick Slone",
+          "Los Gatos",
+          "G",
+          "10"
+        ],
+        [
+          "Rocco Loverme",
+          "Los Gatos",
+          "F",
+          "10"
+        ],
+        [
+          "Noah Bush",
+          "Palo Alto",
+          "C",
+          "9"
+        ],
+        [
+          "Daren Lee",
+          "Homestead",
+          "G",
+          "10"
+        ],
+        [
+          "Matthew Johnson",
+          "Milpitas",
+          "G",
+          "10"
+        ],
+        [
+          "Alexi Lim",
+          "Monta Vista",
+          "G",
+          "10"
+        ],
+        [
+          "Ryan Tay",
+          "Mountain View",
+          "C",
+          "10"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Vanni Loverme",
+          "Los Gatos",
+          "F",
+          "10"
+        ],
+        [
+          "Jacob Domingo",
+          "Palo Alto",
+          "F",
+          "10"
+        ],
+        [
+          "Garrett Haase",
+          "Palo Alto",
+          "G",
+          "10"
+        ],
+        [
+          "Zorez Syed",
+          "Homestead",
+          "C",
+          "10"
+        ],
+        [
+          "Evan Chen",
+          "Milpitas",
+          "F",
+          "9"
+        ],
+        [
+          "Jeremy Garcia",
+          "Monta Vista",
+          "G",
+          "9"
+        ],
+        [
+          "Tyler Tsai",
+          "Mountain View",
+          "F",
+          "10"
+        ],
+        [
+          "Orion Son",
+          "Wilcox",
+          "G",
+          "10"
+        ]
+      ],
+      "thirdTeam": [
+        [
+          "Mason Le",
+          "Los Gatos",
+          "G",
+          "10"
+        ],
+        [
+          "Lucas Chen",
+          "Palo Alto",
+          "G",
+          "9"
+        ],
+        [
+          "Varun Panikkar",
+          "Homestead",
+          "F",
+          "10"
+        ],
+        [
+          "Jonathan Abraham",
+          "Milpitas",
+          "G",
+          "10"
+        ],
+        [
+          "Veer Poswal",
+          "Monta Vista",
+          "C",
+          "10"
+        ],
+        [
+          "Aneesh Vasudevan",
+          "Mountain View",
+          "G",
+          "9"
+        ],
+        [
+          "Eitan Litvin",
+          "Wilcox",
+          "C",
+          "10"
+        ]
+      ],
+      "honorableMention": []
+    },
+    {
+      "division": "el-camino",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/25-26%20El%20Camino%20Boys%20Varsity%20All%20League%20Basketball.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Mrinal Dwivedi",
+          "school": "Lynbrook",
+          "position": "F",
+          "year": "12"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Anson Hulme",
+          "Saratoga",
+          "F",
+          "11"
+        ],
+        [
+          "Isaac Romero",
+          "Gunn",
+          "G",
+          "12"
+        ],
+        [
+          "Charlie Loper",
+          "Lynbrook",
+          "G",
+          "11"
+        ],
+        [
+          "Judah Marks",
+          "Lynbrook",
+          "G",
+          "12"
+        ],
+        [
+          "Rian Mao",
+          "Los Altos",
+          "G",
+          "12"
+        ],
+        [
+          "Toby Lobell",
+          "Gunn",
+          "G",
+          "11"
+        ],
+        [
+          "Kota Xu",
+          "Fremont",
+          "G",
+          "10"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Sean Hamby",
+          "Los Altos",
+          "F",
+          "11"
+        ],
+        [
+          "Keondre Warfield",
+          "Gunn",
+          "F",
+          "12"
+        ],
+        [
+          "Cole Sheehy",
+          "Saratoga",
+          "G",
+          "12"
+        ],
+        [
+          "Kai Daron",
+          "Fremont",
+          "G",
+          "12"
+        ],
+        [
+          "Mateen Mazhar",
+          "MacDonald",
+          "G",
+          "12"
+        ],
+        [
+          "Aidan Liu",
+          "Saratoga",
+          "G",
+          "11"
+        ],
+        [
+          "Paxton Pardo de Zela",
+          "Los Altos",
+          "F",
+          "11"
+        ]
+      ],
+      "thirdTeam": [
+        [
+          "Hima Abdelrahman",
+          "Santa Clara",
+          "G",
+          "9"
+        ],
+        [
+          "Kostya Antonov",
+          "Gunn",
+          "F",
+          "11"
+        ],
+        [
+          "Nate Crawford",
+          "Cupertino",
+          "G",
+          "11"
+        ],
+        [
+          "Kishan Shah",
+          "Fremont",
+          "F",
+          "12"
+        ],
+        [
+          "Anthony Parrales",
+          "MacDonald",
+          "G",
+          "11"
+        ],
+        [
+          "Alex Sinton",
+          "Saratoga",
+          "G",
+          "12"
+        ],
+        [
+          "Evan Coleman",
+          "Los Altos",
+          "G",
+          "11"
+        ],
+        [
+          "Ethan Jin",
+          "Lynbrook",
+          "G",
+          "12"
+        ]
+      ],
+      "honorableMention": []
+    },
+    {
+      "division": "el-camino",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/25-26%20SCVAL%20EC%20JV%20Boys%27%20BasketballAll%20all%20League.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Albert Li",
+          "school": "Los Altos",
+          "position": "G",
+          "year": "10"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Hritish Raj",
+          "Saratoga",
+          "F",
+          "10"
+        ],
+        [
+          "Carter Wilson",
+          "Saratoga",
+          "G",
+          "10"
+        ],
+        [
+          "Elijah Udoh",
+          "Los Altos",
+          "G",
+          "9"
+        ],
+        [
+          "Sanshray Jaiswal",
+          "Lynbrook",
+          "G",
+          "10"
+        ],
+        [
+          "Ian Denny",
+          "Santa Clara",
+          "G",
+          "9"
+        ],
+        [
+          "Benjamin Lu",
+          "Gunn",
+          "G",
+          "10"
+        ],
+        [
+          "Diego Lorenzo",
+          "Fremont",
+          "C",
+          "10"
+        ]
+      ],
+      "secondTeam": [
+        [
+          "Kashap Vangala",
+          "Saratoga",
+          "F",
+          "9"
+        ],
+        [
+          "Gabriel Ku",
+          "Los Altos",
+          "F",
+          "10"
+        ],
+        [
+          "Dan Wataro",
+          "Los Altos",
+          "G",
+          "10"
+        ],
+        [
+          "Aaron Lung",
+          "Lynbrook",
+          "G",
+          "9"
+        ],
+        [
+          "Amaan Khan",
+          "Santa Clara",
+          "C",
+          "10"
+        ],
+        [
+          "Nishan Dhaliwal",
+          "Gunn",
+          "F",
+          "10"
+        ],
+        [
+          "Noe Bile",
+          "Fremont",
+          "G",
+          "9"
+        ],
+        [
+          "Jasial Desai",
+          "Cupertino",
+          "F",
+          "9"
+        ],
+        [
+          "Dewyond Williams",
+          "MacDonald",
+          "F",
+          "10"
+        ]
+      ],
+      "thirdTeam": [
+        [
+          "Sanjay Prasanna",
+          "Saratoga",
+          "G",
+          "9"
+        ],
+        [
+          "Andrew Onodera",
+          "Los Altos",
+          "G",
+          "10"
+        ],
+        [
+          "Patrick McCahill",
+          "Lynbrook",
+          "F",
+          "10"
+        ],
+        [
+          "Evann Sun",
+          "Santa Clara",
+          "G",
+          "9"
+        ],
+        [
+          "Anthony Tilghman",
+          "Gunn",
+          "C",
+          "10"
+        ],
+        [
+          "Liam Kao",
+          "Fremont",
+          "G",
+          "9"
+        ],
+        [
+          "Kayden Chang",
+          "Cupertino",
+          "F",
+          "9"
+        ],
+        [
+          "David Lopez",
+          "MacDonald",
+          "G",
+          "10"
+        ]
+      ],
+      "honorableMention": []
+    }
+  ]
+}

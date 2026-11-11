@@ -112,7 +112,7 @@ export const SCVAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/mountain-view/mountain-view-spartans/soccer/girls/winter/',
-    aliases: ['Mountain View', 'MOUNTAIN VIEW', 'MTN. VIEW', 'Mtn. View', 'Mtn View', 'Mountain View Spartans', 'Mountain View High School'],
+    aliases: ['Mountain View', 'MOUNTAIN VIEW', 'MTN. VIEW', 'Mtn. View', 'Mtn View', 'Mt. View', 'Mountain View Spartans', 'Mountain View High School'],
   },
   {
     id: 'a38a628c-c65f-487f-a65e-7264b6804ce0',

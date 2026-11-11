@@ -9,7 +9,7 @@ import { listWords, numberWord, plural } from '../../../lib/format';
 import { getLeague, getSection, isIndependentLeague } from '../../../lib/leagues';
 import { SDS_BRACKET_SHEET_URL } from '../../../lib/league-config/sections';
 import { SOURCE_LINKS } from '../../../lib/season';
-import { HAS_HISTORY, HAS_RECRUITING, SPORT } from '../../../lib/sports/current';
+import { HAS_RECRUITING, SPORT } from '../../../lib/sports/current';
 import { isQuotedLeague, leagueRef, rulesDocument, type AboutSources } from '../about-view';
 import { officialSourceLabel } from '../LeagueHealthCard';
 
@@ -308,17 +308,15 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
         schedule says was scheduled &mdash; today that is {plural(officialFixtures.length, 'game', 'games')}{' '}
         &mdash; it is listed as scheduled per the league rather than silently dropped.
       </p>
-      {/* The archive and the hand-researched recruiting pages are field hockey's alone (lib/sports/current.ts). */}
-      {HAS_HISTORY ? (
       <p id="history-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
         Last season ({archive.season}): the{' '}
         <Link href="/history/2025-26" prefetch={false} className="text-accent hover:underline">
           {archive.season} archive
         </Link>{' '}
         has final standings and all-league awards for{' '}
-        {listWords(archive.available.map((l) => getLeague(l.id).shortName))}, each from that
-        league&rsquo;s own documents (SCVAL&rsquo;s two PDFs; BVAL&rsquo;s standings sheet and all-league
-        documents), because MaxPreps only ever serves the current season.
+        {listWords(archive.available.map((l) => getLeague(l.id).shortName))},{' '}
+        {archive.available.length === 1 ? 'from its own documents' : 'each from that league’s own documents'} (
+        {archive.sourceDocs.join('; ')}), because MaxPreps only ever serves the current season.
         {archive.unavailableLeagues.length > 0 ? (
           <>
             {' '}
@@ -338,7 +336,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
           </>
         ) : null}
       </p>
-      ) : null}
+      {/* The hand-researched recruiting pages are field hockey's alone (lib/sports/current.ts). */}
       {HAS_RECRUITING ? (<>
       <p id="clubs-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
         Club field hockey: the{' '}

@@ -54,14 +54,14 @@ beforeAll(async () => {
 
 describe('the basketball sport switch', () => {
   it('is boys varsity basketball, winter 2026-27, with its data under data/basketball/', () => {
-    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_HISTORY, HAS_RECRUITING } = m.current;
+    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING } = m.current;
     expect(SPORT.id).toBe('basketball');
     expect(SPORT_SEASON.sportSeasonId).toBe('a5dadf08-21fb-4889-bd84-1d0c6816e29a');
     expect(SPORT_SEASON.jvSportSeasonId).toBe('d0f0932b-e598-4b10-ba5a-f790f3fff4c3');
     expect(SPORT_SEASON.genderSport).toBe('boys,basketball');
     expect(SPORT_AUDIENCE).toBe('boys varsity basketball');
     expect(DATA_DIR).toBe('data/basketball');
-    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_HISTORY, HAS_RECRUITING]).toEqual([false, true, false, false]);
+    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING]).toEqual([false, true, false]);
   });
 
   it('scores points, never ends level, and prints a record as W-L', () => {
