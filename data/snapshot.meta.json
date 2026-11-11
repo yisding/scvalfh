@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "84b714423ebdc1895ec87670383c6caca828f8a7335a3e651852906e66bb9753",
+  "contentHash": "a2a886cbaaf334291621531ba20412757b3932a5eaec688e7049e3c81d608a3f",
   "counts": {
     "byLeague": {
       "bval": {
@@ -95,7 +95,7 @@
     "conflicts": 6,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-11T12:18:13.289Z",
+  "fetchedAt": "2026-11-11T21:03:44.405Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -1013,13 +1013,13 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 0,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "palo-alto school calendar",
-      "rowCount": 0,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
@@ -1078,7 +1078,7 @@
     }
   ],
   "today": "2026-11-11",
-  "warnings": 42,
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
     "lastGame": "2026-11-14T18:00:00",
