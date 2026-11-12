@@ -7,26 +7,26 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "0ce612af611fa13bbb946979727560d0fc45a196b45b90b460b170670e440f95",
+  "contentHash": "c1cd2b1164ea21839b9035830d79b7b27f4dcba50d91ba9b8642f76e27472964",
   "counts": {
     "byLeague": {
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 194,
+        "games": 195,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 194,
+    "games": 195,
     "leagueGames": 96,
     "mismatches": 0,
     "pending": 0,
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-11T21:52:12.243Z",
+  "fetchedAt": "2026-11-12T15:02:03.029Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -118,7 +118,7 @@
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -173,7 +173,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 0,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -207,7 +207,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-11",
+  "today": "2026-11-12",
   "warnings": 3,
   "window": {
     "firstGame": "2026-11-17T18:00:00",
