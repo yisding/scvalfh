@@ -7,26 +7,26 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "c1cd2b1164ea21839b9035830d79b7b27f4dcba50d91ba9b8642f76e27472964",
+  "contentHash": "a0ce92f9649872da437876b46f20e23698e0b7fb005f3b9ce65c194315afe374",
   "counts": {
     "byLeague": {
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 195,
+        "games": 196,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 195,
+    "games": 196,
     "leagueGames": 96,
     "mismatches": 0,
     "pending": 0,
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-12T15:02:03.029Z",
+  "fetchedAt": "2026-11-12T21:49:19.982Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -73,7 +73,7 @@
     },
     {
       "label": "gunn schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
