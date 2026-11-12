@@ -952,6 +952,7 @@
   .sx-tie-line { display: flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; padding: 0 0.625rem 0 0.5rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-text); }
   .sx-tie-line + .sx-tie-line { border-top: 1px solid var(--sx-border); }
   .sx-tie-line > .sx-game-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sx-tie-line > span.sx-game-name { pointer-events: none; }   /* a plain name lets the click through to the cell's game link */
   .sx-tie-score { margin-left: auto; font-size: 1.25rem; font-weight: 600; }
   .sx-tie-line[data-won], .sx-tie-line[data-won] > .sx-tie-score { font-weight: 700; }
   .sx-tie-line[data-lost], .sx-tie-line[data-lost] > .sx-tie-score { font-weight: 400; color: var(--sx-text-3); }

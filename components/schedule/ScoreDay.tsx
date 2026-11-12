@@ -236,26 +236,59 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
                     const suffix = regionIdSuffix(region.id);
                     const last = [...dates].reverse().find((d) => d < date && sideGames(d, region.id).length > 0);
                     const coming = dates.find((d) => d > date && sideGames(d, region.id).length > 0);
+                    /* The league tabs stay live on an off day: the All tab shows the region's last and
+                       next game day, and each league's tab its OWN last and next day, never the region's. */
+                    const regionLeagues = leagues.filter((league) => regionOf(league.id) === region.id);
                     return (
                       <div key={region.id} data-region-scope={region.id}>
-                        {last ? (
-                          <OtherDay
-                            id={`latest-results${suffix}`}
-                            heading="Latest results"
-                            date={last}
-                            games={sideGames(last, region.id)}
-                            linkLabel="All results"
-                          />
-                        ) : null}
-                        {coming ? (
-                          <OtherDay
-                            id={`next-up${suffix}`}
-                            heading="Next up"
-                            date={coming}
-                            games={sideGames(coming, region.id)}
-                            linkLabel="All games"
-                          />
-                        ) : null}
+                        <div data-scope="none">
+                          {last ? (
+                            <OtherDay
+                              id={`latest-results${suffix}`}
+                              heading="Latest results"
+                              date={last}
+                              games={sideGames(last, region.id)}
+                              linkLabel="All results"
+                            />
+                          ) : null}
+                          {coming ? (
+                            <OtherDay
+                              id={`next-up${suffix}`}
+                              heading="Next up"
+                              date={coming}
+                              games={sideGames(coming, region.id)}
+                              linkLabel="All games"
+                            />
+                          ) : null}
+                        </div>
+                        {regionLeagues.map((league) => {
+                          const days = leagueDates(league.id);
+                          const lastOwn = [...days].reverse().find((d) => d < date);
+                          const comingOwn = days.find((d) => d > date);
+                          return (
+                            <div key={league.id} data-scope={league.id}>
+                              {lastOwn ? (
+                                <OtherDay
+                                  id={`latest-results${suffix}-${league.id}`}
+                                  heading="Latest results"
+                                  date={lastOwn}
+                                  games={gamesOfLeague(getGames({ date: lastOwn }), league.id)}
+                                  linkLabel="All results"
+                                />
+                              ) : null}
+                              {comingOwn ? (
+                                <OtherDay
+                                  id={`next-up${suffix}-${league.id}`}
+                                  heading="Next up"
+                                  date={comingOwn}
+                                  games={gamesOfLeague(getGames({ date: comingOwn }), league.id)}
+                                  linkLabel="All games"
+                                />
+                              ) : null}
+                              {!lastOwn && !comingOwn ? <p className="sx-empty">{`No ${league.shortName} games this season.`}</p> : null}
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })
