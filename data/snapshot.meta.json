@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 772,
+    "agreements": 771,
     "cifssOnlyScored": 1,
     "compared": 777,
-    "conflicts": 5,
+    "conflicts": 6,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "81c58712f3bf553a06696a7fc47195d65028dfd477e012e78bf667e1602346d5",
+  "contentHash": "8fdd114e86cd1ad0a5d456158be832e43c8b5891fb4f6048ca5f0cb534b1d449",
   "counts": {
     "byLeague": {
       "bval": {
@@ -84,7 +84,7 @@
     "finals": 963,
     "games": 972,
     "leagueGames": 551,
-    "mismatches": 34,
+    "mismatches": 33,
     "pending": 4,
     "teams": 102
   },
@@ -95,7 +95,7 @@
     "conflicts": 5,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-12T13:28:08.046Z",
+  "fetchedAt": "2026-11-12T21:18:02.428Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -738,7 +738,7 @@
     },
     {
       "label": "mt-carmel schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -773,7 +773,7 @@
     },
     {
       "label": "poway schedule",
-      "rowCount": 30,
+      "rowCount": 31,
       "status": "ok"
     },
     {
