@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import LeagueSwitcher from '../../../components/prefs/LeagueSwitcher';
+import LastUpdated from '../../../components/layout/LastUpdated';
 import PageHeader from '../../../components/layout/PageHeader';
+import { BUILD_INSTANT } from '../../../components/layout/build-instant';
+import ScopeBar from '../../../components/prefs/ScopeBar';
 import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import { OG_BASE } from '../../../components/layout/site';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
@@ -16,6 +18,7 @@ import { scheduleFilterProps } from '../../../components/schedule/filter-data-se
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import {
+  getFetchedAt,
   getGamesByDate,
   getLeagueIds,
   getLeagueSummary,
@@ -23,16 +26,18 @@ import {
   getTeams,
   getToday,
 } from '../../../lib/data';
-import { monthDay, plural } from '../../../lib/format';
-import { isIndependentLeague, leagueSportWords, standaloneName } from '../../../lib/leagues';
+import { plural } from '../../../lib/format';
+import { isIndependentLeague, standaloneName } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
 import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 
 /**
- * `/schedule/<league>` — "My league's whole season" (SPEC §8.1, §10.4): every game with at least
- * one side in the league, date-grouped. A cross-league game appears in both leagues' lists, the
- * other side carrying its league's short name (`Saint Francis · SCVAL`).
+ * `/schedule/<league>` — "My league's whole season" (SPEC §8.1, §10.4; DESIGN §33): every game with at
+ * least one side in the league, date-grouped, oldest first. A cross-league game appears in both
+ * leagues' lists. The title is the page's identity ("SCVAL schedule"); under it the league row (links
+ * to the sibling leagues' schedules, then the two native selects), the month links, and per date a
+ * sticky date strip over that day's rows (two columns from 768, three where the page is wide enough).
  *
  * Rendering model, in order of importance:
  *
@@ -48,11 +53,11 @@ import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
  * Nothing on this site is marked LIVE: the snapshot is a once- or twice-daily cron, so a game
  * MaxPreps marks in progress renders as scheduled, and `/about#updates` says so in plain words.
  *
- * The LA independents (DESIGN §24.9, §24.11) get the same page; its title is "LA teams: schedule and results"
- * and its header says "the LA independents" (standaloneName).
+ * The LA independents (DESIGN §24.9, §24.11) get the same page; its `<title>` is "LA teams: … schedule
+ * and results".
  */
 
-/** 'SCVAL schedule and results'; for the LA independents, 'LA teams: schedule and results'. */
+/** The `<title>`'s words: 'SCVAL schedule and results'; for the LA independents, 'LA teams: schedule and results'. */
 function scheduleTitle(summary: { id: string; shortName: string }): string {
   return isIndependentLeague(summary.id)
     ? `${summary.shortName} teams: schedule and results`
@@ -93,112 +98,56 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
   const today = getToday();
   const { teams, divisions } = scheduleFilterProps(summary, getTeams({ league: summary.id }));
   const fixtures = getOfficialFixtures({ league: summary.id });
-  const span = dates.length > 0 ? `${monthDay(dates[0])} – ${monthDay(dates[dates.length - 1])}` : null;
-  // 'involving SCVAL teams'; the LA independents are named by their standaloneName (as in generateMetadata).
-  const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
-
   return (
     // `scroll-behavior: auto` on <html> while this page is mounted: a smooth scroll to a date
     // anchor renders the `content-visibility` groups it passes, their real heights replace the
     // estimates mid-flight, and the target slid out of view. An instant jump lands exactly.
-    <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)] [html:has(&)]:[scroll-behavior:auto]">
+    <div className="pb-section-lg [html:has(&)]:[scroll-behavior:auto]">
       <PageHeader
-        title={scheduleTitle(summary)}
-        description={
-          span ? (
-            <>
-              {leagueSportWords(summary.id)} &middot; {span} &middot; every game involving {involving},{' '}
-              league and non-league, oldest
-              first &middot; all times Pacific
-            </>
-          ) : (
-            <>{leagueSportWords(summary.id)}</>
-          )
-        }
+        title={`${summary.shortName} schedule`}
+        end={<LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" />}
       />
 
-      {/* The page league's region only, plus All → the index (DESIGN-socal §2.4). */}
-      <LeagueSwitcher
-        mode="link"
-        includeAll
-        label="Leagues"
-        leagues={leagueChips(summary.region)}
-        current={summary.id}
-        hrefs={leagueHrefs('/schedule', summary.region)}
-        className="mt-4"
+      {/* The page league's region only, plus All → the Scores page (DESIGN-socal §2.4); then the
+          filters on their own row. */}
+      <ScopeBar
+        region={false}
+        league={{
+          mode: 'link',
+          includeAll: true,
+          label: 'Leagues',
+          leagues: leagueChips(summary.region),
+          current: summary.id,
+          hrefs: leagueHrefs('/schedule', summary.region),
+        }}
+        end={
+          <Suspense fallback={<ScheduleFiltersFallback teams={teams} divisions={divisions} counts={counts} />}>
+            <ScheduleFilters teams={teams} divisions={divisions} counts={counts} listId="schedule-list" />
+          </Suspense>
+        }
       />
 
       <LeagueHealthNote leagueId={summary.id} className="mt-4" />
 
-      <Suspense
-        fallback={
-          <ScheduleFiltersFallback teams={teams} divisions={divisions} counts={counts} className="mt-6" />
-        }
-      >
-        <ScheduleFilters
-          teams={teams}
-          divisions={divisions}
-          counts={counts}
-          listId="schedule-list"
-          className="mt-6"
-        />
-      </Suspense>
-
-      {/* Bled to the screen edge on a phone so the rail scrolls under the gutter, with the chips'
-          own padding inside; 4px of room at desktop so no ring or focus outline is clipped. */}
-      <TimelineRail dates={dates} today={today} leagueId={summary.id} className="mt-4 -mx-gutter md:-mx-1" />
+      <TimelineRail dates={dates} today={today} leagueId={summary.id} />
 
       <ScheduleList id="schedule-list" groups={groups} scopeLeague={summary.id} />
 
       {fixtures.length > 0 ? (
-        <section className="mt-section md:mt-section-lg">
+        <section className="sx-section">
           <SectionHeader kicker={`Scheduled by ${summary.shortName}, not reported`} />
           <OfficialFixtures fixtures={fixtures} leagueId={summary.id} today={today} />
         </section>
       ) : null}
 
-      {/* The same width as the fixtures card above it, so the two end-of-page disclosures read
-          as one kind of thing. */}
-      <details className="sx-inset sx-disclosure mt-section max-w-3xl md:mt-section-lg">
-        {/* The same summary as every other page's legend, and no count: "(5 notes)" was a number
-            to read before the notes themselves. */}
-        <summary>How to read this page</summary>
-        <ul className="m-0 mt-2 list-disc space-y-2 pl-5">
-          <li>
-            Standings count league games only. A league game carries its league&rsquo;s tag; a
-            non-league game carries the <code>NL</code> tag and, on phones, a gray line down its left
-            edge &mdash; it counts in a team&rsquo;s overall record and nowhere else.
-          </li>
-          <li>
-            A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span>. A
-            score we do not have shows as a dash &mdash; never{' '}
-            <span className="sx-num">0-0</span>.
-          </li>
-          <li>
-            <span className="font-sans text-micro font-semibold uppercase tracking-[0.04em]">
-              score not reported
-            </span>{' '}
-            means the game was played and no score has been posted yet. It counts for nothing until
-            it is.
-          </li>
-          <li>
-            A <span aria-hidden="true">&dagger;</span>
-            <span className="sr-only">dagger</span> beside a score means it was published from High
-            School on SI (si.com) under the site&rsquo;s rules for missing or wrong scores, because MaxPreps
-            does not have it or has it wrong.
-          </li>
-          <li>
-            Every date and time is Pacific. Tap a game to expand
-            its venue, stream, ticket and box-score links; tap a date&rsquo;s Day page link to open
-            that day on its own page.
-          </li>
-        </ul>
-        <p className="mt-3 mb-0">
-          <Link href="/about#conventions" prefetch={false} className="sx-action font-medium text-accent">
-            How every score is shown
+      {/* How scores are shown lives once, on /about. */}
+      <ul className="sx-linkrow mt-6">
+        <li>
+          <Link href="/about#conventions" prefetch={false} className="sx-action">
+            About this data
           </Link>
-        </p>
-      </details>
+        </li>
+      </ul>
     </div>
   );
 }

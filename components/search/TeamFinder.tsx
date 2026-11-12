@@ -63,10 +63,12 @@ export interface TeamFinderProps {
   label?: string;
   /** pin mode default 8. */
   limit?: number;
-  /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass MyTeamCard's `focusUnpin`, which moves it to #my-team-unpin). */
+  /** pin mode: called after a result is pinned (the caller manages focus: FindYourTeam moves it to the pinned team's league tab). */
   onPin?: (slug: string, leagueId: string) => void;
   /** Cap the finder at 22rem: for a `ScopeBar` `end` slot. */
   compact?: boolean;
+  /** The field's visible prompt. Default 'Search teams'. */
+  placeholder?: string;
   className?: string;
 }
 
@@ -295,6 +297,7 @@ export function TeamFinder({
   limit = PIN_LIMIT,
   onPin,
   compact = false,
+  placeholder = PLACEHOLDER,
   className,
 }: TeamFinderProps) {
   const inputId = useId();
@@ -406,7 +409,7 @@ export function TeamFinder({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={onKeyDown}
-        placeholder={PLACEHOLDER}
+        placeholder={placeholder}
         className="sx-field"
       />
       <p id={liveId} role="status" aria-live="polite" className="sr-only">

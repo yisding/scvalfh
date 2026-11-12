@@ -1,110 +1,137 @@
 import Link from 'next/link';
 
-import type { LeagueSummary } from '../../lib/data';
-import { shortDate } from '../../lib/format';
-import { regionOf } from '../../lib/leagues';
+import { monthDay, shortDate } from '../../lib/format';
+import { REGIONS } from '../../lib/league-config/sections';
+import type { Game, RegionId } from '../../lib/types';
+import { CalendarGlyph, ChevronLeft, ChevronRight } from '../ui/glyphs';
+
+import SeasonCalendar from './SeasonCalendar';
+import { dayRegions } from './day-summary';
+import { dateBarView, dayCountWords } from './scores-page-view';
 
 /**
- * The day page's steppers and its "Full season" links, the header's aside on `/scores/[date]`.
+ * The date bar (DESIGN §33): the Scores page's filter and its visible title, and the one sticky bar
+ * on it. The selected day and the six game days nearest to it (scores-page-view.ts `dateBarView`),
+ * a step arrow each side and the Calendar button, whose panel is the season's month grids.
  *
- * This is the only way to walk the season day by day on a phone, so the steppers are 44px
- * pills (DESIGN §4.4), not bare text links. They are canvas pills (`sx-pill-ring`: the card
- * plane with the hairline ring), so in light mode they read as buttons rather than as the
- * surface-2 fact badges beside the h1; accent on surface is the strongest pairing the pill
- * has. At the ends of the season the missing pill is a short badge — "First day" / "Last day",
- * with " of the season" for screen readers only — so the steppers stay one line at 390. On a
- * day with several leagues the "Full season" group wraps under them as one unit.
+ * A cell is three lines: the weekday ("Today" on the snapshot's own day), the date, and the number
+ * of games that day in the reader's region. While a game that day is being played the count reads
+ * "2 live". Today's cell links to `/`.
+ *
+ * Each region walks ITS OWN game days: a NorCal reader never steps onto a day with only SoCal games.
+ * So the cells and the two arrows are rendered once per region, each `data-region-scope`d (the scope
+ * stylesheet shows the reader's; without JavaScript both sets read in turn, NorCal first). A
+ * one-region build renders one unscoped set.
+ *
+ * CSS counts the cells by the bar's own width (3, 5 or 7; `data-far`), so nothing scrolls and no
+ * script is needed. At the ends of the season the missing arrow is drawn disabled, not dropped: the
+ * cells keep their place.
  */
-export default function DayNav({
-  date,
-  previous,
-  next,
-  seasonLeagues,
-  twoRegions,
-}: {
+export interface DateBarProps {
+  /** The selected day, 'YYYY-MM-DD'. */
   date: string;
-  /** The previous / next date that HAS contests, or null at the ends of the season. */
-  previous: string | null;
-  next: string | null;
-  /** The leagues whose /schedule/<league> lists this date, config order. */
-  seasonLeagues: readonly LeagueSummary[];
-  /** Both regions have a game that day: each league's link carries its region's scope. */
-  twoRegions: boolean;
-}) {
+  /** Every date with a contest, ascending. */
+  dates: readonly string[];
+  /** The snapshot's Pacific day. */
+  today: string;
+  /** A day's games (lib/data `getGames({ date })`). */
+  gamesOn: (date: string) => readonly Game[];
+}
+
+function hrefOf(date: string, today: string): string {
+  return date === today ? '/' : `/scores/${date}`;
+}
+
+function Step({ to, today, next, region }: { to: string | null; today: string; next?: boolean; region?: RegionId }) {
+  const words = next ? 'Next game day' : 'Previous game day';
+  const glyph = next ? <ChevronRight /> : <ChevronLeft />;
+  if (to === null) {
+    return (
+      <span
+        className="sx-iconbtn"
+        role="link"
+        aria-disabled="true"
+        aria-label={words}
+        data-next={next ? '' : undefined}
+        data-region-scope={region}
+      >
+        {glyph}
+      </span>
+    );
+  }
   return (
-    <nav aria-label="Other days" className="sx-print-hide flex flex-wrap items-center gap-2">
-      {previous ? (
-        <Link
-          href={`/scores/${previous}`}
-          className="sx-pill sx-pill-ring min-h-11"
-        >
-          <span aria-hidden="true">&lsaquo;</span>
-          {shortDate(previous)}
-          <span className="sr-only">: the previous day with games</span>
-        </Link>
-      ) : (
-        <span className="sx-badge">
-          First day<span className="sr-only"> of the season</span>
-        </span>
-      )}
-      {next ? (
-        <Link
-          href={`/scores/${next}`}
-          className="sx-pill sx-pill-ring min-h-11"
-        >
-          {shortDate(next)}
-          <span aria-hidden="true">&rsaquo;</span>
-          <span className="sr-only">: the next day with games</span>
-        </Link>
-      ) : (
-        <span className="sx-badge">
-          Last day<span className="sr-only"> of the season</span>
-        </span>
-      )}
-      {/* The full season is a league's page (/schedule/<league>), aimed at this date's group,
-          which every league with a side in one of the day's games has (a day with no league side
-          at all would fall back to /schedule's index row for it). One league: "Full season".
-          Several: "Full season" then one short-name link per league, each named in full for
-          screen readers. Plain <a>s, document navigations on purpose: the browser keeps re-running
-          its fragment scroll while the list's content-visibility groups settle, so the date's
-          header lands under the top bar for every date. A client <Link> scrolls once, and only
-          lands for dates within ScheduleList's ±7-day laid-out window around the Scores tab's
-          date. On a day with games in both regions each league's link carries its region's
-          `data-region-scope`, so a reader sees the label and their own region's leagues (NorCal's
-          first without JS, config order). */}
-      {seasonLeagues.length <= 1 ? (
-        <a
-          href={seasonLeagues[0] ? `/schedule/${seasonLeagues[0].id}#${date}` : `/schedule#${date}`}
-          className="sx-action min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
-        >
-          Full season
-          {seasonLeagues[0] ? (
-            <span className="sr-only">{`: the ${seasonLeagues[0].shortName} schedule, at ${shortDate(date)}`}</span>
-          ) : null}
-        </a>
-      ) : (
-        <span className="inline-flex flex-wrap items-center gap-x-0.5">
-          <span aria-hidden="true" className="text-meta text-ink-3">
-            Full season
-          </span>
-          {/* The links wrap together, never one by one (tight padding and gap): if the screen
-              or the font can't hold them all beside the label, they all drop under it rather
-              than stranding the last league. */}
-          <span className="inline-flex items-center gap-x-0.5">
-            {seasonLeagues.map((league) => (
-              <a
-                key={league.id}
-                data-region-scope={twoRegions ? regionOf(league.id) : undefined}
-                href={`/schedule/${league.id}#${date}`}
-                className="sx-action min-h-11 rounded-chip px-1.5 text-meta font-medium text-accent no-underline hover:bg-surface-2"
-              >
-                {league.shortName}
-                <span className="sr-only">{` full season, at ${shortDate(date)}`}</span>
-              </a>
-            ))}
-          </span>
-        </span>
-      )}
+    <Link
+      className="sx-iconbtn"
+      href={hrefOf(to, today)}
+      prefetch={false}
+      aria-label={`${words}, ${shortDate(to)}`}
+      data-next={next ? '' : undefined}
+      data-region-scope={region}
+    >
+      {glyph}
+    </Link>
+  );
+}
+
+export function DateBar({ date, dates, today, gamesOn }: DateBarProps) {
+  const scoped = REGIONS.length > 1;
+  /** A day's games with a side in the region (every game in a one-region build). */
+  const inRegion = (d: string, region: RegionId): readonly Game[] =>
+    scoped ? (dayRegions(gamesOn(d)).regions.find((r) => r.id === region)?.withSide ?? []) : gamesOn(d);
+  const bars = REGIONS.map((region) => ({
+    region: scoped ? region.id : undefined,
+    id: region.id,
+    view: dateBarView(
+      dates.filter((d) => inRegion(d, region.id).length > 0),
+      date,
+      today,
+    ),
+  }));
+  return (
+    <nav className="sx-datebar sx-print-hide" data-sticky aria-label="Game days">
+      {bars.map((bar) => (
+        <Step key={bar.id} to={bar.view.previous} today={today} region={bar.region} />
+      ))}
+      <ul className="sx-days">
+        {bars.flatMap((bar) =>
+          bar.view.cells.map((cell) => {
+            const games = inRegion(cell.date, bar.id);
+            const count = dayCountWords(games);
+            return (
+              <li key={`${bar.id}:${cell.date}`} data-far={cell.far ?? undefined} data-region-scope={bar.region}>
+                <Link
+                  className="sx-day"
+                  href={hrefOf(cell.date, today)}
+                  prefetch={false}
+                  aria-current={cell.current ? 'date' : undefined}
+                  data-today={cell.today ? '' : undefined}
+                  data-live={count.live ? '' : undefined}
+                >
+                  {cell.today ? 'Today' : shortDate(cell.date).split(' ')[0]}
+                  <b>{monthDay(cell.date)}</b>
+                  <small>{count.text}</small>
+                </Link>
+              </li>
+            );
+          }),
+        )}
+      </ul>
+      {bars.map((bar) => (
+        <Step key={bar.id} to={bar.view.next} today={today} next region={bar.region} />
+      ))}
+      {/* The month picker. `static`: the panel is placed against the bar (the sticky nav), so it
+          opens under the whole bar, not under the button at its end. */}
+      <details className="sx-disclosure static! pb-0!">
+        <summary className="sx-btn">
+          <CalendarGlyph />
+          <span>Calendar</span>
+        </summary>
+        <div className="absolute inset-x-0 top-full z-10 max-h-[70vh] overflow-x-hidden overflow-y-auto rounded-control border border-rule bg-bg p-3">
+          <SeasonCalendar dates={dates} current={date} today={today} />
+        </div>
+      </details>
     </nav>
   );
 }
+
+export default DateBar;

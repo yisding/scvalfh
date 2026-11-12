@@ -1,32 +1,40 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { EM_DASH, recordString, scoreSentence } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
+import { EM_DASH, recordString } from '../../lib/format';
 import { winningSide } from '../../lib/postseason/game-winner';
 import { playInWinnerPurpose } from '../../lib/postseason/postseason-outcomes';
 import type { Game, Standing, Team } from '../../lib/types';
+import { GameRow } from '../game-row/GameRow';
+import { shootoutNote } from '../game-row/summary';
+import { describeGame } from '../ui/describe-game';
 import TeamMonogram from '../ui/TeamMonogram';
 
 /**
- * One two-sided postseason card: a SCVAL crossover game, the BVAL play-in, the MCAL play-in.
+ * One two-sided postseason pairing as a ROW (spec §5.6: rows, not cards): a SCVAL crossover game, the
+ * BVAL play-in. (The name is kept: LeaguePairings and the tests import it.)
  *
- * League-neutral on purpose — every word on it arrives as a prop (seat labels from config, the
- * purpose sentence from the pairing's config label), so the same card serves a CCS page and an NCS
- * page without carrying a CCS concept onto the NCS one.
+ * League-neutral on purpose: every word on it arrives as a prop (seat labels from config, the purpose
+ * sentence from the pairing's config label), so the same row serves a CCS page and an NCS page without
+ * carrying a CCS concept onto the NCS one.
  *
- * A side is EMPTY, or holds more than one contender, when the league table has not settled that
- * seat. Both render honestly: `TBD` for an empty seat, every contender named (`A or B`) when a level
- * place spans it, and the card's notes say why in words. The hosting side is marked `(host)` in
- * text — never by position or colour alone. Once the contest exists, the card links to it with
- * `gameHref`, and the link text is the score sentence (never a 0-0 for a missing score).
+ * Once the contest exists the row IS the site's game row (components/game-row/GameRow.tsx): its
+ * status, the two teams, the two scores, a link to the game page; never a sentence for a result and
+ * never a 0-0 for a missing score. Its note says what the game is ('Crossover, #1 v #1. Helps CCS
+ * ordering.') and how a shootout went.
  *
- * Under a FINAL play-in for an automatic berth the card also names the winner and what it won, one sentence:
- * 'Winner: Los Altos — SCVAL’s 7th automatic qualifier', 'Winner: Westmont — BVAL’s 4th automatic CCS berth'
- * (plan final-10, 2026-10-30). The berth words come from the purpose prop, which is the pairing's config label
- * (lib/postseason/postseason-outcomes.ts playInWinnerPurpose), so a crossover ('For CCS seeding, not qualification.') and the
- * MCAL play-in (its rule) print none: no CCS concept reaches the NCS page. The winner is the higher score, else the
- * side MaxPreps marks 'W'; a level final with no flag names nobody.
+ * Before that the row has the same shape, drawn here with the row's own classes: the start time and
+ * the day in the status slot, then one line per seat. A seat is EMPTY, or holds more than one
+ * contender, when the league table has not settled it; both render honestly: `TBD` for an empty seat,
+ * every contender named (`A or B`) when a level place spans it, and the notes under the row say why
+ * in words. The hosting seat is marked `(host)` in text, never by position or colour alone.
+ *
+ * Under a FINAL play-in for an automatic berth the row also names the winner and what it won, one
+ * sentence: 'Winner: Los Altos — SCVAL’s 7th automatic qualifier' (plan final-10, 2026-10-30). The
+ * berth words come from the purpose prop, which is the pairing's config label
+ * (lib/postseason/postseason-outcomes.ts playInWinnerPurpose), so a crossover ('For CCS seeding, not
+ * qualification.') prints none. The winner is the higher score, else the side MaxPreps marks 'W'; a
+ * level final with no flag names nobody.
  */
 export interface PlayInSide {
   /** 'Santa Teresa #1' — from config. */
@@ -49,102 +57,44 @@ export interface PlayInCardProps {
   purpose?: string | null;
   notes?: readonly string[];
   game?: Game | null;
-  /** The play-in of a pairing set (a 3px ink rule on the left edge — a position, never a hue). */
+  /** @deprecated No row is marked by an edge rule. Ignored. */
   emphasis?: boolean;
   className?: string;
 }
 
-function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
+/** One seat before its game exists: the team (or the teams still level for it, or TBD), then the seat's label. */
+function Seat({ side, which }: { side: PlayInSide; which: 'away' | 'home' }) {
   const [first, ...rest] = side.contenders;
-  // The right-hand side mirrors at md (`flex-row-reverse`, right-aligned text); on a phone the two
-  // sides STACK, each a full-width row reading left to right, so the names stay in a column.
-  const mirror = align === 'end' ? 'md:flex-row-reverse md:text-right' : null;
-  const row = ['flex min-w-0 items-center gap-2', mirror].filter(Boolean).join(' ');
-  const host = side.host ? ' (host)' : '';
-  // The sub line is sans: the seat ("Santa Teresa #1") is a label, and only the record's digits
-  // are mono (DESIGN §4.3). The seat is one unbreakable unit, so a wrap can never strand "#1" (or
-  // "(host)") on its own line.
-  const seat = (
-    <span className="whitespace-nowrap">
-      {side.label}
-      {host}
-    </span>
-  );
-  if (!first) {
-    return (
-      <span className={row}>
-        <span className="inline-block size-7 shrink-0" aria-hidden="true" />
-        <span className="min-w-0">
-          <span className="block truncate text-body text-ink-2">TBD</span>
-          <span className="block text-meta text-ink-2">{seat}</span>
-        </span>
-      </span>
-    );
-  }
-  const body = (
-    <>
-      {rest.length === 0 ? (
-        <TeamMonogram team={first.team} size={28} />
-      ) : (
-        <span className="inline-block size-7 shrink-0" aria-hidden="true" />
-      )}
-      <span className="min-w-0">
-        <span className="block text-body text-ink group-hover/side:underline md:truncate">
-          {rest.length === 0
-            ? first.team.shortName
-            : side.contenders.map((c, i) => (
-                <Fragment key={c.team.slug}>
-                  {i > 0 ? ' or ' : null}
-                  <Link
-                    href={`/teams/${c.team.slug}`}
-                    prefetch={false}
-                    tabIndex={-1}
-                    className="text-ink no-underline hover:underline"
-                  >
-                    {c.team.shortName}
-                  </Link>
-                </Fragment>
-              ))}
-        </span>
-        <span className="block text-meta text-ink-2">
-          {seat}
-          {/* In the two-up grid from lg until xl the half-width side cannot hold both on one line,
-              and a free wrap left "·" at the start of a line; the record takes its own line there
-              instead. On a phone the side is a full-width stacked row, so it fits inline. */}
-          {rest.length === 0 && first.standing?.hasReportedResults ? (
-            <>
-              <span className="lg:max-xl:hidden"> &middot;</span>{' '}
-              <span className="sx-num whitespace-nowrap lg:max-xl:block">
-                {recordString(first.standing.computed)}
-              </span>
-            </>
-          ) : rest.length > 0 ? (
-            <>
-              <span className="lg:max-xl:hidden"> &middot;</span>{' '}
-              <span className="whitespace-nowrap lg:max-xl:block">not settled</span>
-            </>
-          ) : null}
-        </span>
-      </span>
-    </>
-  );
-  // Each contender taps through to its team page, as the same teams do in the projection and
-  // tournament tables on these pages. The pairing is aria-hidden (the card's sr-only sentence speaks
-  // for it), so these links are pointer-only duplicates kept out of the tab order; the keyboard
-  // route to each team page is those tables' rows. A settled seat is one target, the whole side
-  // (tile, name and seat line, at least 24px tall per WCAG 2.5.8); a level seat links each name
-  // inside its "A or B" line.
-  return rest.length === 0 ? (
-    <Link
-      href={`/teams/${first.team.slug}`}
-      prefetch={false}
-      tabIndex={-1}
-      className={`${row} group/side text-ink no-underline`}
+  const settled = first !== undefined && rest.length === 0;
+  const seat = `${side.label}${side.host ? ' (host)' : ''}`;
+  return (
+    <span
+      className="sx-game-team"
+      data-side={which}
+      data-team-slug={settled ? first.team.slug : undefined}
+      data-undecided={settled ? undefined : ''}
     >
-      {body}
-    </Link>
-  ) : (
-    <span className={row}>{body}</span>
+      {settled ? <TeamMonogram team={first.team} size={24} /> : null}
+      {/* Each contender taps through to its team page. The seats are aria-hidden (the row's sr-only
+          sentence speaks for them), so these are pointer-only links kept out of the tab order. */}
+      {/* Two contenders' names wrap on a phone instead of being cut. */}
+      <span className={settled ? 'sx-game-name' : 'sx-game-name whitespace-normal'}>
+        {first === undefined
+          ? 'TBD'
+          : side.contenders.map((c, i) => (
+              <Fragment key={c.team.slug}>
+                {i > 0 ? ' or ' : null}
+                <Link href={`/teams/${c.team.slug}`} prefetch={false} tabIndex={-1} className="sx-teamlink relative z-[1]">
+                  {c.team.shortName}
+                </Link>
+              </Fragment>
+            ))}
+      </span>
+      <span className="sx-seed">{seat}</span>
+      {settled && first.standing?.hasReportedResults ? (
+        <span className="sx-seed sx-num">{recordString(first.standing.computed)}</span>
+      ) : null}
+    </span>
   );
 }
 
@@ -159,71 +109,40 @@ function winnerLine(game: Game | null | undefined, sides: [PlayInSide, PlayInSid
   return `Winner: ${contender ? contender.team.shortName : side.name} ${EM_DASH} ${won}`;
 }
 
-export function PlayInCard({
-  title,
-  when,
-  sides,
-  connector,
-  sentence,
-  purpose,
-  notes = [],
-  game,
-  emphasis = false,
-  className,
-}: PlayInCardProps) {
+export function PlayInCard({ title, when, sides, sentence, purpose, notes = [], game, className }: PlayInCardProps) {
   const winner = winnerLine(game, sides, purpose);
+  // 'Crossover · #1 v #1' is the view's; the note lists its two parts.
+  const what = [title ? `${title.replace(' · ', ', ')}.` : null, purpose ?? null].filter(Boolean).join(' ');
+  const decider = game ? shootoutNote(game, describeGame(game)) : null;
+  const note = [decider ? `${decider}.` : null, what || null].filter(Boolean).join(' ');
   return (
-    <div
-      className={['sx-card p-4', className].filter(Boolean).join(' ')}
-      style={
-        emphasis
-          ? { boxShadow: 'inset 3px 0 0 var(--sx-text), var(--sx-ring), var(--sx-shadow-raised)' }
-          : undefined
-      }
-    >
-      <span className="sr-only">{sentence}</span>
-      {/* A paragraph, not a heading: the card's sentence above is what a screen reader hears, and
-          the page owns the outline. */}
-      <p className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
-        {title ? <span>{title}</span> : null}
-        {when ? (
-          <span className="font-normal text-ink-2">
-            <time dateTime={when.dateKey}>{when.dateLabel}</time>
-            {when.timeLabel ? `, ${when.timeLabel}` : ''}
-          </span>
-        ) : null}
-      </p>
-      {/* Phone: the sides stack, and the connector is a divider row between them (a hairline
-          either side of the pill), so each side has the card's full width and its name and seat
-          line stay one tidy row at 320. From md: the mirrored three-column pairing. */}
-      <div
-        className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:gap-3"
-        aria-hidden="true"
-      >
-        <Side side={sides[0]} align="start" />
-        <span className="flex items-center gap-3 max-md:before:h-px max-md:before:flex-1 max-md:before:bg-divider max-md:after:h-px max-md:after:flex-1 max-md:after:bg-divider md:block">
-          <span className="sx-badge">{connector}</span>
-        </span>
-        <Side side={sides[1]} align="end" />
-      </div>
-      {purpose ? (
-        <p className="mt-3 mb-0 text-meta text-ink-2" aria-hidden="true">
-          {purpose}
-        </p>
-      ) : null}
-      {notes.map((note) => (
-        <p key={note} className="mt-3 mb-0 text-meta text-ink-2">
-          {note}
+    <div className={className}>
+      {game ? (
+        <GameRow game={game} showChips={false} showDate meta={note || undefined} />
+      ) : (
+        <div className="sx-game" data-state="upcoming">
+          <span className="sr-only">{sentence}</span>
+          <div className="sx-game-grid" aria-hidden="true">
+            <span className="sx-game-status">
+              <span className="sx-num sx-game-time">{when?.timeLabel ? when.timeLabel.replace(/ PT$/, '') : 'TBD'}</span>
+              {when ? (
+                <small>
+                  <time dateTime={when.dateKey}>{when.dateLabel}</time>
+                </small>
+              ) : null}
+            </span>
+            <Seat side={sides[0]} which="away" />
+            <Seat side={sides[1]} which="home" />
+            {note ? <span className="sx-game-note">{note}</span> : null}
+          </div>
+        </div>
+      )}
+      {notes.map((text) => (
+        <p key={text} className="sx-note pl-2">
+          {text}
         </p>
       ))}
-      {game ? (
-        <p className="mt-3 mb-0 text-meta">
-          <Link href={gameHref(game.contestId)} prefetch={false} className="sx-action text-accent hover:underline">
-            {scoreSentence(game)}
-          </Link>
-        </p>
-      ) : null}
-      {winner ? <p className="mt-1 mb-0 text-meta font-semibold text-ink">{winner}</p> : null}
+      {winner ? <p className="sx-note pl-2 font-semibold text-ink">{winner}</p> : null}
     </div>
   );
 }

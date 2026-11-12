@@ -1,5 +1,12 @@
 /**
- * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
+ * The view models of the former home feed, assembled once on the server (SPEC §10.1, DESIGN §3.1).
+ *
+ * STATUS (DESIGN §33, 2026-11-12): `/` is now the score day view (components/schedule/ScoreDay.tsx), and the
+ * components that drew these views (the league panels and cards, the pinned card, the "This week" strip) are
+ * deleted. The builders and their exports stay: other suites read them (tests/ui/copy-honesty.test.ts,
+ * home-view.test.ts, home-weight.test.ts, postseason-next.test.ts) and the score pages may. Component names in
+ * the comments below are the former consumers. What follows describes the views as they were built for `/`.
+ *
  *
  * This is the only module the home page reads data through (with the three builders it composes: the phase lead,
  * phase-lead.ts; the postseason card, postseason-card.ts; the pinned-team cards, team-card.ts), and it reads the
@@ -224,6 +231,23 @@ export interface MiniDivisionView {
   href: string;
   /** `getDivision(d).home`, never a map keyed by division id. */
   home: DivisionConfig['home'];
+}
+
+/**
+ * How many rows a short list of a division shows: `miniRows`, stretched to keep a place shared AT the
+ * cutoff whole, so a reader never sees a rival in "T4" and their own team, equally 4th, missing. Only
+ * teams with results and the SAME shared place extend it, so an unplayed table (or the next tied
+ * cluster) never stretches the list.
+ */
+export function miniShownCount(
+  rows: readonly Pick<MiniRow, 'hasResults' | 'shared' | 'place'>[],
+  miniRows: number,
+): number {
+  let n = Math.min(miniRows, rows.length);
+  const last = rows[n - 1];
+  if (!last || !last.hasResults || !last.shared) return n;
+  while (n < rows.length && rows[n].hasResults && rows[n].shared && rows[n].place === last.place) n++;
+  return n;
 }
 
 function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {

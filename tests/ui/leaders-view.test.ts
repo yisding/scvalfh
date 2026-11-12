@@ -22,6 +22,7 @@ import LeadersPage from '../../app/leaders/page';
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
 import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '../../components/leaders/elo-board';
 import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '../../components/leaders/scope';
 import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
 import { statText } from '../../components/teams/player-stats-view';
@@ -748,16 +749,14 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       'Eve Eck': [],
     });
     expect(facts('most-saves')['Gia Gray']).toEqual(['Sophomore']);
-    // Printed after the school and league, each part kept whole, as the roster prints them: on a
-    // line of their own below 640px (the first dot hidden there), on the school's line from it.
+    // DESIGN §33: a board row is the name over ONE small line, the player's school. The grade and
+    // position stay in the view model (the team page prints them); the row strings no facts together.
     const html = renderToStaticMarkup(
       createElement(LeaderBoardTable, { board: nc(v).players.find((b) => b.id === 'most-points')! }),
     );
-    expect(html).toContain(
-      '<span class="whitespace-nowrap">SCVAL</span><span class="block sm:inline">' +
-        '<span class="hidden sm:inline">\u00a0<span aria-hidden="true">·</span> </span><span class="whitespace-nowrap">Senior</span>' +
-        '\u00a0<span aria-hidden="true">·</span> <span class="whitespace-nowrap">Forward / Midfield</span></span>',
-    );
+    expect(html).toMatch(/Ana Ames<\/a><small>Mitty<\/small>/);
+    expect(html).not.toContain('·');
+    expect(html).not.toContain('Senior');
     // No rosters given: no facts, never a guess.
     expect(board('most-points').rows.every((r) => r.facts.length === 0)).toBe(true);
     for (const b of nc(v).schools) for (const r of b.rows) expect(r.facts, b.id).toEqual([]);
@@ -903,9 +902,12 @@ describe('buildLeadersView — ties, minimums and empty boards at the edges', ()
     expect(cs.rows.map((r) => [r.rank, r.tied])).toEqual(Array(31).fill([1, true]));
     expect(cs.extra).toBeNull();
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: cs }));
+    // Every tied keeper is in the DOM: five on the board, the other 26 behind "Show all".
     expect(html.match(/data-team-slug="mitty"/g)).toHaveLength(31);
     expect(html).not.toContain(cs.empty);
-    expect(html).not.toContain('<details');
+    const [top, rest] = html.split('<details');
+    expect(top.match(/data-team-slug="mitty"/g)).toHaveLength(5);
+    expect(rest.match(/data-team-slug="mitty"/g)).toHaveLength(26);
   });
 
   it('lists a long tie for 2nd on the board after the leader', () => {
@@ -1007,22 +1009,27 @@ describe('buildLeadersView — player boards past 10th', () => {
     ]);
   });
 
-  it('renders the extra rows in a closed disclosure under the board, as a second table', () => {
+  it('renders a top five, and every later row in a closed "Show all" as one continued list', () => {
     const board = pointsBoard(Array.from({ length: 30 }, (_, i) => 30 - i));
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board }));
-    expect(html).toContain('<details class="sx-disclosure mt-1"><summary>Show 15 more players</summary>');
+    expect(html).toContain('<details class="sx-disclosure"><summary><span data-when="closed">Show all</span><span data-when="open">Show fewer</span></summary><ol start="6"');
     expect(html).not.toContain('<details open');
-    expect(html.match(/<table/g)).toHaveLength(2);
+    // A list, not a table: no column heads, no second table.
+    expect(html).not.toContain('<table');
+    expect(html.match(/<ol/g)).toHaveLength(2);
+    // Every row the view lists stays in the DOM (the board's ten and the fifteen after them).
     expect(html.match(/data-team-slug="mitty"/g)).toHaveLength(25);
+    expect(html.match(/<li class="sx-leader"/g)).toHaveLength(25);
     const [top, rest] = html.split('<details');
-    expect(top).toContain('Player 10');
-    expect(top).not.toContain('Player 11');
-    expect(rest).toContain('<caption class="sr-only">Most points, players in all five NorCal leagues, this season, continued</caption>');
-    expect(rest).toContain('Player 11');
+    expect(top).toContain('Player 05');
+    expect(top).not.toContain('Player 06');
+    expect(top).toContain('<ol aria-label="Most points, players in all five NorCal leagues, this season">');
+    expect(rest).toContain('aria-label="Most points, players in all five NorCal leagues, this season, continued"');
+    expect(rest).toContain('Player 06');
     expect(rest).toContain('Player 25');
     expect(rest).not.toContain('Player 26');
-    // The board's note still closes the board, under the disclosure.
-    expect(rest).toContain(board.note);
+    // DESIGN §33: what a board counts is on /about, not under each board.
+    expect(html).not.toContain(board.note);
   });
 });
 
@@ -1044,73 +1051,103 @@ describe('LeaderBoardTable and the /leaders page', () => {
       ]),
     );
     const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: nc(view).players[0] }));
-    expect(html).toContain('<section id="most-points"');
-    expect(html).toContain('<caption class="sr-only">Most points, players in all five NorCal leagues, this season</caption>');
+    expect(html).toContain('<section id="most-points" class="sx-board min-w-0">');
+    // The strip names the board; the list carries the old caption as its accessible name.
+    expect(html).toContain('<div class="sx-strip"><h3 class="m-0 text-lead text-ink">Most points</h3></div>');
+    expect(html).toContain('<ol aria-label="Most points, players in all five NorCal leagues, this season">');
+    // rank · logo · name over school · the ONE figure the board is ranked on (12 points; no G or A column).
+    expect(html).toMatch(/<li class="sx-leader" data-team-slug="mitty"><span class="sx-num">/);
+    expect(html).toMatch(/Ana Ames<\/a><small>Mitty<\/small><\/span><span class="sx-num">12<\/span><\/li>/);
+    expect(html).not.toMatch(/<th|<td/);
     expect(html).toContain('<span aria-hidden="true">T1</span><span class="sr-only">tied for 1st</span>');
     expect(html).toContain('data-team-slug="leigh"');
     expect(html).toContain('<span class="sx-pin-note" hidden="">Your team’s player. </span>');
-    // Dee Dunn's assists are not tracked: a dash with words, not a 0.
-    expect(html).toContain('<span aria-hidden="true">—</span><span class="sr-only">not recorded</span>');
-    expect(html).toContain('href="/teams/leigh#player-stats"');
+    expect(html).toMatch(/<a class="sx-leader-name sx-rowlink" href="\/teams\/leigh#player-stats">/);
+    // Dee Dunn's assists are not tracked: on the assists board she is not ranked on a 0, and a
+    // figure that is missing prints as a dash with words.
+    const blank = structuredClone(nc(view).players[0]);
+    blank.rows[0].cells[blank.rankedBy] = { text: null };
+    expect(renderToStaticMarkup(createElement(LeaderBoardTable, { board: blank }))).toContain(
+      '<span aria-hidden="true">—</span><span class="sr-only">not recorded</span>',
+    );
   });
 
-  it('renders each region’s two sections, NorCal first, the schools first in each, every board anchor in order', () => {
+  it('renders each region’s two sections, NorCal first, the players first in each, every board anchor in order', () => {
     // The page is app/leaders/page.tsx's (DESIGN-socal §2.4): both regions render, NorCal first (the reading
     // order with JavaScript off), each region's ids suffixed as buildLeadersView names them.
     const html = renderToStaticMarkup(LeadersPage());
     const view = buildLeadersView();
     const at = (id: string) => html.indexOf(`<section id="${id}"`);
     const order = view.regions.flatMap((r) => [
-      r.schoolsId, ...r.schools.map((b) => b.id), r.playersId, ...r.players.map((b) => b.id),
+      r.playersId, ...r.players.map((b) => b.id), r.schoolsId, ...r.schools.map((b) => b.id),
     ]);
-    expect(order.slice(0, 2)).toEqual(['schools', ...SCHOOL_IDS.slice(0, 1)]);
+    expect(order.slice(0, 2)).toEqual(['players', 'most-points']);
     for (const id of order) expect(at(id), id).toBeGreaterThanOrEqual(0);
     expect(order.map(at)).toEqual(order.map(at).sort((a, b) => a - b));
-    // The jump links follow the sections.
-    expect(html.indexOf('href="#schools"')).toBeLessThan(html.indexOf('href="#players"'));
-    expect(html).toContain('<h1');
+    // The tabs follow the sections: Players, then Teams.
+    expect(html.indexOf('href="#players"')).toBeLessThan(html.indexOf('href="#schools"'));
+    // Exactly one h1, and it is the page's name.
+    expect(html.match(/<h1/g)).toHaveLength(1);
+    expect(html).toMatch(/<h1[^>]*>Leaders<\/h1>/);
     expect(html).not.toMatch(/eliminat/i);
-    // With JS off all four pills show: each names its region to a screen reader, visible text first.
+    // With JS off all four tabs show: each names its region to a screen reader, visible text first.
     for (const [id, words] of [
-      ['schools', 'Schools, Northern California'],
+      ['schools', 'Teams, Northern California'],
       ['players', 'Players, Northern California'],
-      ['schools-socal', 'Schools, Southern California'],
+      ['schools-socal', 'Teams, Southern California'],
       ['players-socal', 'Players, Southern California'],
     ] as const) {
-      const pill = html.match(new RegExp(`<a href="#${id}"[^>]*>([\\s\\S]*?)</a>`))![1];
-      // textOf puts a space where each tag was: 'Schools , Southern California'.
-      expect(textOf(pill).replace(/\s+/g, ' ').replace(/ ,/g, ',').trim(), `app/leaders/page.tsx #${id}`).toBe(words);
-      expect(pill).toContain(`<span class="sr-only">${words.slice(words.indexOf(','))}</span>`);
+      const tab = html.match(new RegExp(`<a href="#${id}"[^>]*>([\\s\\S]*?)</a>`))![1];
+      // textOf puts a space where each tag was: 'Teams , Southern California'.
+      expect(textOf(tab).replace(/\s+/g, ' ').replace(/ ,/g, ',').trim(), `app/leaders/page.tsx #${id}`).toBe(words);
+      expect(tab).toContain(`<span class="sr-only">${words.slice(words.indexOf(','))}</span>`);
+    }
+    // Each section is a region-scoped BLOCK and the grid is the element inside it (DESIGN §33, §5.8).
+    for (const r of view.regions) {
+      for (const id of [r.playersId, r.schoolsId]) {
+        expect(html, id).toMatch(
+          new RegExp(`<section id="${id}" data-region-scope="${r.region}" aria-label="[^"]+" class="sx-section[^"]*"><h2[^>]*>(Players|Teams)</h2><div class="sx-boards">`),
+        );
+      }
     }
   });
 
-  it('opens each section with an index of its boards and closes it with its notes', () => {
-    // DESIGN §28: a pill per board, in board order, before the first table; the notes after the last.
+  it('shows every board at once in a grid: no index of boards, no notes, no method disclosure', () => {
+    // DESIGN §33: the boards are a grid, so nothing needs a jump list; who qualifies, whose stats are
+    // missing and how a rating is fitted are on /about, linked once at the end.
     const html = renderToStaticMarkup(LeadersPage());
     const view = buildLeadersView();
     for (const r of view.regions) {
-      for (const [id, boards, notesTitle] of [
-        [r.schoolsId, r.schools, 'Who qualifies'],
-        [r.playersId, r.players, 'Whose stats are here'],
-      ] as const) {
-        const start = html.indexOf(`<section id="${id}"`);
-        const navEnd = html.indexOf('</nav>', start);
-        const nav = html.slice(html.indexOf('<nav', start), navEnd);
-        expect([...nav.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]), id).toEqual(boards.map((b) => b.id));
-        for (const b of boards) expect(nav, b.id).toContain(`>${b.navLabel}</a>`);
-        expect(new Set(boards.map((b) => b.navLabel)).size, id).toBe(boards.length);
-        expect(navEnd, id).toBeLessThan(html.indexOf('<table', start));
-        expect(html.indexOf(`>${notesTitle}<`, start), id).toBeGreaterThan(html.indexOf(`<section id="${boards[boards.length - 1].id}"`));
+      for (const b of [...r.schools, ...r.players]) {
+        expect(html, b.id).not.toContain(`href="#${b.id}"`);
+        // A strip carries no link; its one fact is the board's qualifier ("At least 9 games"), when it has one.
+        const qualifier = /^At least /.test(b.meta) ? `<div class="sx-strip-end"><span>${b.meta}</span></div>` : '';
+        expect(html, b.id).toContain(`<section id="${b.id}" class="sx-board min-w-0"><div class="sx-strip"><h3 class="m-0 text-lead text-ink">${b.title}</h3>${qualifier}</div>`);
+        expect(html, b.id).not.toContain(b.note.replace(/&/g, '&amp;'));
+      }
+      if (r.lagging) expect(html).not.toContain(r.lagging.summary);
+    }
+    for (const gone of ['Who qualifies', 'Whose stats are here', 'How it’s worked out', 'sx-pill']) {
+      expect(html, gone).not.toContain(gone);
+    }
+    // The only disclosures are the boards' own "Show all", all closed.
+    expect(html).not.toContain('<details open');
+    const summaries = [...html.matchAll(/<summary>(.*?)<\/summary>/g)].map((m) => m[1].replace(/<[^>]+>/g, '|'));
+    expect(summaries.length).toBeGreaterThan(0);
+    // Both states' words, one shown at a time (globals.css `[data-when]`).
+    expect(new Set(summaries)).toEqual(new Set(['|Show all||Show fewer|']));
+    // Every row of every board is in the DOM: five above the disclosure, the rest inside it.
+    for (const r of view.regions) {
+      for (const b of [...r.schools, ...r.players]) {
+        const start = html.indexOf(`<section id="${b.id}"`);
+        const block = html.slice(start, html.indexOf('</section>', start));
+        expect(block.match(/<li class="sx-leader"/g)?.length ?? 0, b.id).toBe(b.rows.length + (b.extra?.rows.length ?? 0));
       }
     }
-    // The lag list waits behind a closed disclosure that counts it; the boards' methods likewise.
-    expect(html).not.toContain('<details open');
-    for (const r of view.regions) {
-      if (r.lagging) expect(html).toContain(`<summary>${r.lagging.summary}</summary>`);
-    }
+    expect(html, 'app/leaders/page.tsx method link').toContain('<a class="sx-action" href="/about#ratings">How ratings are calculated</a>');
   });
 
-  it('keeps the long method behind "How it’s worked out", only on the boards that derive a number', () => {
+  it('keeps the long method in the view model, only on the boards that derive a number', () => {
     const view = buildLeadersView();
     for (const r of view.regions) {
       const withMethod = [...r.schools, ...r.players].filter((b) => b.method !== null).map((b) => b.id);
@@ -1118,8 +1155,9 @@ describe('LeaderBoardTable and the /leaders page', () => {
         ['adjusted-goals', 'adjusted-points', 'elo-rating'].map((id) => `${id}${r.idSuffix}`).sort(),
       );
       const elo = r.schools.find((b) => b.id === `elo-rating${r.idSuffix}`)!;
+      // The board itself prints neither (DESIGN §33: method text lives on /about).
       const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: elo }));
-      expect(html).toContain(`<summary>How it’s worked out</summary><p class="m-0 mt-1 text-ink-3">${elo.method!.replace(/&/g, '&amp;')}</p>`);
+      expect(html).not.toContain('<summary>How it’s worked out</summary>');
       // The note says what the number means; the method how it is fitted.
       expect(elo.note).toContain('1500 is an average team');
       expect(elo.method).toContain('best explain each game’s goal margin');
@@ -1127,13 +1165,17 @@ describe('LeaderBoardTable and the /leaders page', () => {
   });
 
   it('counts the leagues from config: nine and the independents on one Elo scale, five NorCal and four SoCal (and five independents) on the boards', () => {
-    const text = textOf(renderToStaticMarkup(LeadersPage()));
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues and five independents, this season/);
-    expect(text, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues and the Southern Section’s five independents');
-    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues|\bten leagues\b|\b10 leagues\b/);
-    expect(text, 'app/leaders/page.tsx eyebrow').toContain('All nine leagues and five independents');
+    // The captions are each board list's accessible name (an attribute, so read from the markup).
+    const html = renderToStaticMarkup(LeadersPage());
+    expect(html, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
+    expect(html, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
+    expect(html, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues and five independents, this season/);
+    const elo = buildLeadersView().regions[0].schools.find((b) => b.id === 'elo-rating')!;
+    expect(`${elo.note} ${elo.method}`, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues and the Southern Section’s five independents');
+    expect(html, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues|\bten leagues\b|\b10 leagues\b/);
+    // The page title has no sub-label (DESIGN §33); the count's words are still built from config.
+    expect(`All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`, 'components/leaders/scope.ts').toBe('All nine leagues and five independents');
+    expect(textOf(html), 'app/leaders/page.tsx no eyebrow').not.toContain('All nine leagues');
   });
 });
 

@@ -7,9 +7,9 @@ import { RECORD_SLASH_WORDS } from '../../words/score-words';
  */
 export function PrivacySection() {
   return (
-    <section id="a11y" className="mt-16">
+    <section id="a11y" className="sx-section">
       <span id="privacy" className="block" />
-      <SectionHeader size="lg" kicker="Privacy &amp; accessibility" />
+      <SectionHeader kicker="Privacy &amp; accessibility" />
       <div className="sx-prose">
         <p>
           This site stores exactly four things, all only in your browser: a theme choice, a pinned

@@ -13,11 +13,13 @@ import JvSection from '../../components/about/sections/JvSection';
 import NotAffiliatedSection from '../../components/about/sections/NotAffiliatedSection';
 import PostseasonSection from '../../components/about/sections/PostseasonSection';
 import PrivacySection from '../../components/about/sections/PrivacySection';
+import RatingsSection from '../../components/about/sections/RatingsSection';
+import RecruitingSection from '../../components/about/sections/RecruitingSection';
 import SourcesSection from '../../components/about/sections/SourcesSection';
 import StandingsSection from '../../components/about/sections/StandingsSection';
-import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import ExternalLink from '../../components/ui/ExternalLink';
 import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
@@ -26,9 +28,11 @@ import { SPORT_AUDIENCE } from '../../lib/sports/current';
  * generated from their config citations), each league's data health, every si.com backfill, every contest
  * dropped on purpose, the published cross-checks, the update cadence, privacy and the
  * not-affiliated disclaimer. Standings footnotes link `#rules-<league>`; the anchors are stable.
- * The sources section ends with a paragraph on the club data (`#clubs-coverage`, DESIGN §17.1),
- * which links /clubs: hand research, not part of the twice-daily update. The college commitments
- * get one after it (`#commits-coverage`, DESIGN §21.4), linking /commits, for the same reason.
+ * /about is the ONE home of method text (DESIGN §33): the other pages link its anchors
+ * (`#standings`, `#ratings`, `#playoffs`, `#updates`, `#corrections`, `#sources`, `#jv`,
+ * `#recruiting` and its `#clubs-matched` / `#commits-matched`) and say none of it themselves. The
+ * club and commitment research is under `#recruiting` (`#clubs-coverage`, `#commits-coverage`,
+ * DESIGN §17.1, §21.4): hand research, not part of the twice-daily update.
  *
  * A league that publishes no schedule document (`official.mode: 'none'`, the EAL) is never said to
  * have one: its source card names the document its rules come from and prints `official.note` (where
@@ -48,7 +52,14 @@ import { SPORT_AUDIENCE } from '../../lib/sports/current';
  * The page is a composition: components/about/about-view.ts reads the data once (`buildAboutView()`, in
  * the order the page always read it) and works out the sentences more than one section shares; each
  * `<section>` is a server component under components/about/sections/, in page order, taking its slice of
- * the view; a league's rules block is components/about/LeagueRules.tsx and the jump list AboutJumpList.
+ * the view; a league's rules block is components/about/LeagueRules.tsx and the section index AboutJumpList.
+ *
+ * Layout (DESIGN §33): the title with the long Updated line under it (the one page that shows it
+ * there), a three-sentence summary, then, from 1024, the sections beside a rail that holds the
+ * section index; below 1024 the index is a row of links between the summary and the first section.
+ * One index in the DOM, placed by the grid. Prose is capped at the reading measure. The page has no
+ * region control of its own: each league's source, rules, health and cross-check block carries its
+ * region's `data-region-scope`, and the footer and the More sheet switch it.
  */
 
 const DESCRIPTION =
@@ -69,38 +80,39 @@ export default function AboutPage() {
   const { teams, leagueWords } = view.lede;
 
   return (
-    // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
-    // (DESIGN §10.5): the title and lede, then the jump list, then the sections. The rail starts at
-    // `lg`; below it the "On this page" disclosure carries the jump list instead.
-    <div className="pb-section-lg lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-x-10">
-      <PageHeader
-        className="lg:col-start-1 lg:row-start-1"
-        title="About & sources"
-        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${teams} ${SPORT_AUDIENCE} teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
-      />
+    <div className="pb-section-lg">
+      <PageHeader title="About" stamp />
 
-      <AboutJumpList variant="disclosure" items={view.jumpList} />
+      {/* What it is, where the scores come from, how to report a mistake. */}
+      <p className="mt-2 mb-0 max-w-prose text-body text-ink">
+        This is an unofficial, fan-built scoreboard for the {teams} {SPORT_AUDIENCE} teams in {leagueWords}. Scores,
+        schedules and rosters come from MaxPreps, checked against si.com, cifsshome.org and each league&rsquo;s own
+        documents, and every disagreement between them is published below. To report a mistake, post it in the{' '}
+        <ExternalLink href={DATA_CORRECTIONS_URL}>Data errors thread on our forum</ExternalLink>.
+      </p>
 
-      <AboutJumpList variant="rail" items={view.jumpList} />
+      {/* Main + rail from 1024 (one column below it: the 400px main column `.sx-cols` gives at 768 is
+          too narrow for the source rows). DOM order is the phone's: the index, then the sections. */}
+      <div className="sx-cols max-lg:block">
+        <AboutJumpList items={view.jumpList} className="mt-4 lg:col-start-2 lg:row-start-1 lg:mt-5" />
 
-      <div className="mt-8 md:mt-10 lg:col-start-1 lg:row-start-2">
-        {/* The region control (DESIGN-socal §2.4): the first row of the content column, so the page's
-            three-child grid keeps its placement. Each league's source card, rules, health card and
-            cross-check carry its region's `data-region-scope`; the site-wide sections show for both. */}
-        <RegionSwitcher className="mb-8" />
-        <SourcesSection sources={view.sources} />
-        <StandingsSection standings={view.standings} />
-        <HealthSection leagues={view.health} />
-        <ConventionsSection shootoutSections={view.shootoutSections} />
-        <CrossCheckSection crossCheck={view.crossCheck} />
-        <BackfillsSection backfilled={view.backfilled} shootoutSections={view.shootoutSections} />
-        <JvSection jv={view.jv} />
-        <DroppedSection dropped={view.dropped} />
-        <FreshnessSection freshness={view.freshness} />
-        <PostseasonSection postseason={view.postseason} />
-        <PrivacySection />
-        <ContactSection noDocument={view.noDocument} />
-        <NotAffiliatedSection disclaimer={view.disclaimer} noDocument={view.noDocument} />
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+          <SourcesSection sources={view.sources} />
+          <StandingsSection standings={view.standings} />
+          <RatingsSection />
+          <HealthSection leagues={view.health} />
+          <ConventionsSection shootoutSections={view.shootoutSections} />
+          <CrossCheckSection crossCheck={view.crossCheck} />
+          <BackfillsSection backfilled={view.backfilled} shootoutSections={view.shootoutSections} />
+          <JvSection jv={view.jv} />
+          <DroppedSection dropped={view.dropped} />
+          <FreshnessSection freshness={view.freshness} />
+          <PostseasonSection postseason={view.postseason} />
+          <RecruitingSection commitCount={view.sources.commitCount} />
+          <PrivacySection />
+          <ContactSection noDocument={view.noDocument} />
+          <NotAffiliatedSection disclaimer={view.disclaimer} noDocument={view.noDocument} />
+        </div>
       </div>
     </div>
   );

@@ -25,9 +25,11 @@ describe('/commits with nothing found', () => {
   const html = renderToStaticMarkup(createElement(CommitsPage));
   const text = textOf(html);
 
-  it('says so in the lede and in one empty state, and leaves the regions and colleges out', () => {
+  it('says so in the view’s lede and in one plain line on the page, and leaves the regions and colleges out', () => {
     expect(buildCommitsView().regions.flatMap((r) => [...r.classes, ...r.colleges])).toEqual([]);
-    expect(text).toContain('No public page we found shows a commitment by a player here yet.');
+    // No sentence under a title (DESIGN §33): the page prints the one empty line, not the lede.
+    expect(buildCommitsView().lede).toContain('No public page we found shows a commitment by a player here yet.');
+    expect(html).toContain('<p class="sx-empty mt-4">No commitment found yet.</p>');
     expect(text).toContain('No commitment found yet.');
     expect(html).not.toMatch(/id="(norcal|socal)-colleges"/);
     expect(html).not.toMatch(/id="(norcal|socal)-class-/);
@@ -36,12 +38,12 @@ describe('/commits with nothing found', () => {
     expect(html).not.toContain('aria-label="Region"');
   });
 
-  it('keeps one h1, then the how-matched h2, with no level skipped', () => {
+  it('keeps one h1 with no level skipped, and still links how commitments are matched', () => {
     const levels = [...html.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
     expect(levels[0]).toBe(1);
     expect(levels.filter((l) => l === 1)).toHaveLength(1);
     for (let i = 1; i < levels.length; i++) expect(levels[i] - levels[i - 1]).toBeLessThanOrEqual(1);
-    expect(html).toContain('id="how-matched"');
+    expect(html).toContain('href="/about#commits-matched"');
   });
 
   it('gives no roster a commitment line or its footnote', () => {

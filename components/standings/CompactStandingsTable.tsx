@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { leagueOfDivision } from '../../lib/leagues';
 import { orderHead, orderValue } from '../../lib/standings/order';
 import { capitalized } from '../words/capitalized';
+import { formStripName } from '../words/plural';
 import { RECORD_HEAD } from '../words/score-words';
 import { EM_DASH, recordString } from '../../lib/format';
+import FormStrip, { toFormEntries } from '../ui/FormStrip';
 import { PinNote } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -13,33 +15,32 @@ import type { StandingsRowData } from './standings-table/types';
 import { ladderLineAfter, ladderRow } from './standings-view';
 
 /**
- * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team
- * (monogram + short name, a link to the team page), GP, W-L-T, PTS. Every team of the division,
- * in the engine's order — a full table, just narrow.
+ * The COMPACT table of the all-league `/standings` overview (SPEC §10.3; DESIGN §33 for the face):
+ * place, team (logo and short name, a link to the team page), W-L-T, Pts, and Last 5 where the table
+ * itself is at least 24rem wide (`sx-col-wide`: a container query on `.sx-tablewrap`, so a table in a
+ * narrow column drops it and one in a wide column shows it). Every team of the division, in the
+ * engine's order.
  *
  * After the league's ladder line (`DivisionConfig.ladderLine`: SCVAL 3 `Automatic-berth line`, Mt. Hamilton 3
- * `Automatic-berth line`, Santa Teresa 1 `Play-in host`, PCAL 2 `Automatic-berth line`, MCAL 6 `Tournament line`) a
- * LABELLED separator row: the heavier rule is never the only cue (WCAG 1.3.1). With shared places
- * the line is drawn after every row at or above it, and not at all before any result. A null
- * `ladderLine` draws no rule and no label: the EAL, whose Super Regional takes the top six of its
- * six teams, has no line to draw.
+ * `Automatic-berth line`, Santa Teresa 1 `Play-in host`, PCAL 2 `Automatic-berth line`, MCAL 6 `Tournament line`) ONE
+ * extra row, `tr.sx-cutline`: the green 2px line with its label set on it, so the line is never the
+ * only cue (WCAG 1.3.1). With shared places the line is drawn after every row at or above it, and not
+ * at all before any result. A null `ladderLine` draws no line and no label: the EAL, whose Super
+ * Regional takes the top six of its six teams, has no line to draw.
  *
- * The whole row is the team link: the link's `::after` stretches over the `relative` row (no cell
- * is `relative`, so the hit area is exactly the row), and a tap on the place, the record or the
- * points opens the team page too, as on the full standings tables (StretchedRowLink,
- * components/ui/PinNote.tsx).
- * From lg the card is capped at 48rem, left-aligned, so the numbers stay within reach of the name.
+ * The whole row is the team link: the name is the link (`.sx-rowlink`) and its `::after` stretches
+ * over the `relative` row, so a tap on the place, the record or the points opens the team page too.
  *
- * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
- * A team with no results gets an em-dash place and em dashes for W-L-T and PTS — never 0-0-0.
+ * No sticky head (a short table on a long page), no GP column, no disclosures. A team with no results
+ * gets an em-dash place and em dashes for W-L-T and Pts, never 0-0-0, and no Last 5.
  *
  * The pinned team's row (the head script and `PinnedTeamMarks` stamp `data-pinned` on its
- * `data-team-slug`) draws the accent rule and reveals a hidden "Your team." at the start of its
- * link, as the standings rows and the old /teams tiles do.
+ * `data-team-slug`) gets a bold name and the star after it, and a hidden "Your team." at the start of
+ * its link's name.
  *
- * `filterable` (the /teams page, whose `TeamFinder` filters these tables in place): each team row
- * carries `data-team-tile="<slug>"` and the ladder row `data-hide-while-searching`, the hooks the
- * finder's filter mode toggles.
+ * `filterable` (a page whose `TeamFinder` filters these tables in place): each team row carries
+ * `data-team-tile="<slug>"` and the ladder row `data-hide-while-searching`, the hooks the finder's
+ * filter mode toggles.
  */
 export interface CompactStandingsTableProps {
   rows: readonly StandingsRowData[];
@@ -51,6 +52,8 @@ export interface CompactStandingsTableProps {
   className?: string;
 }
 
+const COLUMNS = 5;
+
 export function CompactStandingsTable({
   rows,
   ladderLine,
@@ -59,27 +62,27 @@ export function CompactStandingsTable({
   className,
 }: CompactStandingsTableProps) {
   const lineAfter = ladderLineAfter(rows.map(ladderRow), ladderLine?.after);
-  // The order column: PTS, or PCT for a table ordered on its league record (lib/standings/order.ts).
+  // The order column: Pts, or Pct for a table ordered on its league record (lib/standings/order.ts).
   const rules = rows.length > 0 ? leagueOfDivision(rows[0].standing.division).rules : null;
 
   return (
-    <div className={['sx-card sx-flush sx-bleed lg:max-w-3xl', className].filter(Boolean).join(' ')}>
-      <table className="sx-table text-cell">
+    <div className={['sx-tablewrap', className].filter(Boolean).join(' ')}>
+      <table className="sx-table">
         <caption className="sr-only">{caption}</caption>
-        <thead className="[&_th]:static">
+        <thead>
           <tr>
-            <th scope="col" className="w-[2.75rem] pl-gutter pr-2">
+            <th scope="col" className="sx-col-rank">
               #
             </th>
-            <th scope="col">Team</th>
-            <th scope="col" className="w-10 text-right" title="League games counted">
-              GP
+            <th scope="col" className="sx-col-team">
+              Team
             </th>
-            <th scope="col" className="w-[4.5rem] text-right">
-              {RECORD_HEAD}
-            </th>
-            <th scope="col" className="w-12 pr-gutter text-right">
+            <th scope="col">{RECORD_HEAD}</th>
+            <th scope="col" className="sx-col-key">
               {rules ? capitalized(orderHead(rules).toLowerCase()) : 'Pts'}
+            </th>
+            <th scope="col" className="sx-col-wide">
+              Last 5
             </th>
           </tr>
         </thead>
@@ -94,40 +97,48 @@ export function CompactStandingsTable({
                 data-team-tile={filterable ? row.team.slug : undefined}
                 className="relative"
               >
-                <td className="sx-num w-[2.75rem] pl-gutter pr-2 text-ink-3">
+                <td className="sx-num sx-col-rank">
                   <PlaceMark place={s.computed.place} shared={s.tiebreak.shared} ranked={has} />
                 </td>
-                <th scope="row" className="max-w-0 text-left font-normal">
-                  <Link
-                    href={`/teams/${row.team.slug}`}
-                    prefetch={false}
-                    className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
-                  >
-                    {/* Only the pinned team's row displays this (app/globals.css: the row's
-                        `data-team-slug` gets `data-pinned`), so the accent rule is never the only
-                        thing saying "this is your team"; it is the link's name, before the school. */}
-                    <span className="sr-only">
-                      <PinNote />
-                    </span>
+                <th scope="row" className="sx-col-team">
+                  <span className="sx-teamcell">
                     <TeamMonogram team={row.team} size={24} />
-                    {/* Up to two lines, broken between words only: a name never loses its second word
-                        to an ellipsis and never breaks per letter; a single word too long for the
-                        cell ends in an ellipsis. */}
-                    <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.team.shortName}</span>
-                  </Link>
+                    <span>
+                      <Link href={`/teams/${row.team.slug}`} prefetch={false} className="sx-rowlink min-w-0">
+                        {/* Only the pinned team's row displays this (app/globals.css), so the star is
+                            never the only thing saying "this is your team": it leads the link's name. */}
+                        <span className="sr-only">
+                          <PinNote />
+                        </span>
+                        {row.team.shortName}
+                      </Link>
+                      {/* The star. aria-hidden: the link's own name already starts "Your team." */}
+                      <span className="sx-pin-note" aria-hidden="true" hidden>
+                        Your team
+                      </span>
+                    </span>
+                  </span>
                 </th>
-                <td className="sx-num w-10 text-right text-ink-2">{s.computed.gp}</td>
-                <td className="sx-num w-[4.5rem] text-right font-medium text-ink">
-                  {has ? recordString(s.computed) : EM_DASH}
-                </td>
-                <td className="sx-num w-12 pr-gutter text-right text-body font-bold text-ink">
-                  {has && rules ? orderValue(rules, s.computed) : EM_DASH}
+                <td className="sx-num">{has ? recordString(s.computed) : EM_DASH}</td>
+                <td className="sx-num sx-col-key">{has && rules ? orderValue(rules, s.computed) : EM_DASH}</td>
+                <td className="sx-col-wide">
+                  {has ? (
+                    <FormStrip
+                      entries={toFormEntries(s.computed.last5)}
+                      size={16}
+                      label={formStripName(row.team.name, s.computed.last5.length)}
+                    />
+                  ) : null}
                 </td>
               </tr>,
               lineAfter !== null && index + 1 === lineAfter ? (
-                <tr key={`${row.team.id}-line`} data-hide-while-searching={filterable ? '' : undefined}>
-                  <td colSpan={5} className="border-t-2 border-rule px-gutter text-micro text-ink-3">
-                    {ladderLine?.label}
+                <tr
+                  key={`${row.team.id}-line`}
+                  className="sx-cutline"
+                  data-hide-while-searching={filterable ? '' : undefined}
+                >
+                  <td colSpan={COLUMNS}>
+                    <span>{ladderLine?.label}</span>
                   </td>
                 </tr>
               ) : null,

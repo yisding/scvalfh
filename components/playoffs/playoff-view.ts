@@ -635,12 +635,12 @@ export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
  *
  * The third state (2026-10-30, plan final-08): once the owner has transcribed the Section's published brackets
  * (data/sds-brackets-2026.json, so lib/postseason/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
- * `#sds-bracket`), `drawn` is true and the sentence says the brackets below are the Section's, with MaxPreps'
+ * `#sds-bracket`), `drawn` is true and the sentence says the brackets above are the Section's, with MaxPreps'
  * results. Still no place is projected: the brackets are the Section's own.
  */
 export function sectionBracketSentence(ps: SectionPlayoffsConfig, seedingDate: string | null, today: string, drawn = false): string {
   const seeding = seedingDate ? shortDate(seedingDate) : null;
-  if (drawn) return 'The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.';
+  if (drawn) return 'The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.';
   if (ps.bracketSheetUrl) return 'The Section has published its brackets; this site draws no bracket and projects no places.';
   if (seedingDate && today < seedingDate) {
     return `The Section places teams at its ${seeding} seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;

@@ -1,5 +1,6 @@
 import { ordersByRecord } from '../../lib/standings/order';
 import { getCommitsFile } from '../../lib/players/commits';
+import { HAS_RECRUITING } from '../../lib/sports/current';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
@@ -377,6 +378,7 @@ function jumpListOf(leagues: readonly LeagueSummary[]): JumpListItem[] {
       label: isIndependentLeague(l.id) ? l.name : `${l.shortName} rules`,
       region: l.region,
     })),
+    { id: 'ratings', label: 'Ratings' },
     { id: 'health', label: 'Data health, by league' },
     { id: 'conventions', label: 'How a score is shown' },
     { id: 'cross-check', label: 'Cross-check log' },
@@ -385,6 +387,8 @@ function jumpListOf(leagues: readonly LeagueSummary[]): JumpListItem[] {
     { id: 'dropped', label: 'Dropped contests' },
     { id: 'freshness', label: 'How often this updates' },
     { id: 'playoffs', label: 'Postseason' },
+    // The hand-researched pages are field hockey's alone (lib/sports/current.ts).
+    ...(HAS_RECRUITING ? [{ id: 'recruiting', label: 'Clubs, commitments and recruiting' }] : []),
     { id: 'privacy', label: 'Privacy & accessibility' },
     { id: 'contact', label: 'Corrections & contact' },
     { id: 'not-affiliated', label: 'Not affiliated' },

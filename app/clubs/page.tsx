@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ClubList from '../../components/clubs/ClubList';
-import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import { buildClubsIndexView } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
 import { notFound } from 'next/navigation';
@@ -23,25 +23,24 @@ const PAGE_TITLE = 'Club teams';
  * clubs around the Southern Section and San Diego Section schools (DESIGN §24.12), plus any other
  * club a tracked player is tied to — and, for each, how many
  * players on the tracked varsity rosters a public page ties to it, current and earlier stated
- * apart, and from which schools. The lede answers the page's question in one paragraph; there is
- * no second line of bare counts.
+ * apart, and from which schools.
  *
+ * Under the title, the recruiting family's one tab row (components/recruiting/RecruitingTabs.tsx).
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
  * the South Bay, the East Bay, Marin, the Central Coast, the Sacramento area, the North State,
  * Ventura County, Los Angeles, Orange County, the Inland Empire, San Diego, then the rest:
- * lib/players/clubs-schema.ts CLUB_REGIONS), then the h2 "How players are matched"
- * (`#how-matched`, which every club page links). Within a region, the clubs with the most tied
- * players come first (DESIGN §17.5, lib/players/clubs.ts), so a reader meets the clubs that answer the
- * question before the ones that do not.
+ * lib/players/clubs-schema.ts CLUB_REGIONS). Within a region, the clubs with the most tied players
+ * come first (DESIGN §17.5, lib/players/clubs.ts), and the clubs with none are one line of names
+ * (components/clubs/ClubList.tsx). How players are matched is said once, on /about
+ * (`/about#clubs-matched`), which the last line links.
  *
  * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`
- * (lib/players/clubs-schema.ts CLUB_REGION_SITE_REGION), under the RegionSwitcher, so a reader sees the clubs
- * of their own half; `elsewhere` shows under both, and without JavaScript every section renders,
- * NorCal's first. The first section of each half gets the first section's top margin.
+ * (lib/players/clubs-schema.ts CLUB_REGION_SITE_REGION), so a reader sees the clubs of their own
+ * half; `elsewhere` shows under both, and without JavaScript every section renders, NorCal's first.
+ * The page has no region control of its own (DESIGN §33): the footer and the More sheet carry it.
  *
- * A list, not a table (DESIGN §10.8): components/clubs/ClubList.tsx. The page is not in the nav
- * (the spec keeps the navigation unchanged); /teams, every team page's roster and /about link it.
- * It takes the root OG card: there is no clubs card (DESIGN §17.6).
+ * The page is not in the nav; /teams, every team page's roster and /about link it. It takes the
+ * root OG card: there is no clubs card (DESIGN §17.6).
  */
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -57,72 +56,30 @@ export default function ClubsPage() {
 
   return (
     <div className="pb-section-lg">
-      <PageHeader title="Club teams" description={view.lede} />
-
-      <RegionSwitcher className="mt-4" />
+      <PageHeader title="Club teams">
+        <RecruitingTabs current="clubs" />
+      </PageHeader>
 
       {view.regions.map((region, i) => (
         <section
           key={region.id}
           aria-labelledby={region.id}
           data-region-scope={region.siteRegion ?? undefined}
-          className={
-            view.regions.findIndex((r) => r.siteRegion === region.siteRegion) === i
-              ? 'mt-8 md:mt-10'
-              : 'mt-section md:mt-section-lg'
-          }
+          data-first={view.regions.findIndex((r) => r.siteRegion === region.siteRegion) === i ? '' : undefined}
+          className="sx-section"
         >
           <SectionHeader id={region.id} kicker={region.heading} meta={region.meta} />
           <ClubList clubs={region.clubs} />
         </section>
       ))}
 
-      <section aria-labelledby="how-matched" className="mt-section md:mt-section-lg">
-        <SectionHeader id="how-matched" kicker="How players are matched" />
-        <div className="max-w-prose text-meta text-ink-2">
-          <p className="m-0">
-            Only players on the {view.trackedTeams} varsity rosters this site tracks are listed; rows
-            a school marks JV are left out. A club&rsquo;s own roster names many more players. They
-            are not named here: a club&rsquo;s page links its own roster where one is public.
-          </p>
-          <p className="mt-2 mb-0">
-            A player is tied to a club only when a public page names the player and a field hockey
-            club, and also either names the player&rsquo;s high school, or gives a class year that
-            matches the player&rsquo;s grade along with a location in the school&rsquo;s half of
-            the state, Northern or Southern California. A name alone
-            never counts, and a class year that disagrees with the roster rules a match out. A
-            nickname (Abby for Abigail) counts when the page otherwise meets that rule and a second
-            page, or the player&rsquo;s own, backs the match.
-            Social-media posts, and lacrosse, soccer and ice hockey clubs, do not count.
-          </p>
-          <p className="mt-2 mb-0">
-            Most ties rest on one page that names the player, the club and the school. Some rest on a
-            club roster&rsquo;s class-year heading plus the club&rsquo;s location, or on a school
-            nickname in a news story. Every tie links the pages it rests on, and each was checked
-            twice, in two separate passes, when it was added.
-          </p>
-          <p className="mt-2 mb-0">
-            &ldquo;Current&rdquo; means a source from the {view.currentSeasons} club season: a page
-            dated in one of them, a club&rsquo;s current-players page, or a live recruiting profile
-            that lists the club. &ldquo;Earlier&rdquo; means an older date, an alumni list, or a club
-            the player&rsquo;s own page lists for earlier years. &ldquo;Listed by&rdquo; means a
-            source names the club without saying whether the player is still with it, such as a
-            profile not updated since an earlier season, or one a newer page contradicts. The date
-            shown is the date or season the sources give for that listing, and such a tie is never
-            shown as current.
-          </p>
-          <p className="mt-2 mb-0">
-            Recall is partial. A player with no public page that meets the rule is not listed,
-            whatever club they play for, so a school with no one here may still have plenty of club
-            players.{view.regionsWithoutClubsSentence ? ` ${view.regionsWithoutClubsSentence}` : ''}
-            {view.regionsNotSearchedSentence ? ` ${view.regionsNotSearchedSentence}` : ''} The{' '}
-            <Link href="/recruiting" prefetch={false} className="text-accent hover:underline">
-              recruiting
-            </Link>{' '}
-            page gathers every school&rsquo;s clubs, commitments and recruiting profiles.
-          </p>
-        </div>
-      </section>
+      <ul className="sx-linkrow mt-6">
+        <li>
+          <Link href="/about#clubs-matched" prefetch={false} className="sx-action">
+            How players are matched
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

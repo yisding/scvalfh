@@ -1,42 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import LeagueSwitcher, { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
+import { BUILD_INSTANT } from '../../components/layout/build-instant';
+import LastUpdated from '../../components/layout/LastUpdated';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
 import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords, shortDate } from '../../lib/format';
-import { DIFF_ABBR, RECORD_HEAD } from '../../components/words/score-words';
-import { LEAGUES_PROPER, getLeague, isIndependentLeague, standaloneName } from '../../lib/leagues';
+import { shortDate } from '../../lib/format';
+import { LEAGUES_PROPER, isIndependentLeague } from '../../lib/leagues';
 import { ordersByRecord } from '../../lib/standings/order';
-import type { LeagueId } from '../../lib/types';
 
 /** Every league of this build orders its table on its league record (basketball), not on points. */
 const BY_RECORD = LEAGUES_PROPER.length > 0 && LEAGUES_PROPER.every((l) => ordersByRecord(l.rules));
 const ORDERED_ON = BY_RECORD ? 'league record' : 'points (3 a win, 1 a tie)';
 
 /**
- * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as
- * a COMPACT full table (place, team, GP, W-L-T, PTS), grouped section → league → division.
+ * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3; DESIGN §33): every division of every
+ * league as a COMPACT table (place, team, W-L-T, Pts, and Last 5 where the table is wide enough).
  *
- * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
- * `#el-camino` are real elements here, as are `#ccs`/`#ncs`/`#ns`/`#ss`/`#sds` (sections), every league
- * id and every division id, and `#norcal`/`#socal` (the region wrappers, DESIGN-socal §2.4: a deep link
- * into the hidden region opens it, components/prefs/league-scope-css.ts). A single-division league whose division id equals its league id (PCAL, EAL) has ONE
- * element carrying the id; every id on the page is unique.
+ * Layout. Under the title: the league row (anchor tabs, the region switch, the short "Updated"
+ * stamp). Then, per region, a grid of leagues (`sx-auto`: one column on a phone, two from 768, three
+ * at 1280). A league with several divisions takes a whole row and sets its divisions side by side,
+ * each under its own strip; a single-division league takes one column, so three of them sit in one
+ * row at 1280. Nothing is stretched across the page and no row ends in a blank third.
  *
- * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each
- * league an h3 → each division a plain h4 (omitted for a single-division league). Each table
- * links its league's full page, `/standings/<league>#<division>`. A league whose schools are not all
- * in its section (the EAL) carries its membership note under its h3. A division with no ladder line
- * (the EAL) draws no rule in its compact table.
+ * Anchors keep resolving with no JavaScript and no redirect: `#de-anza` and `#el-camino` are real
+ * elements here, as are `#ccs`/`#ncs`/`#ns`/`#ss`/`#sds` (an empty marker at the top of each section's
+ * first league), every league id and every division id, and `#norcal`/`#socal` (the region wrappers,
+ * DESIGN-socal §2.4: a deep link into the hidden region opens it,
+ * components/prefs/league-scope-css.ts). A single-division league whose division id equals its
+ * league id (PCAL, EAL) has ONE element carrying the id; every id on the page is unique.
  *
- * No sticky table head, no GD bars, no form strips, no disclosures: this page is the light index.
+ * Heading outline: h1, then each league an h2 (its short name, with "Full standings" to the league's
+ * own page), then each division an h3 inside its strip (omitted for a single-division league). A
+ * league whose schools are not all in its section (the EAL) or whose name could be mistaken (the
+ * Sunset) carries its membership note under its table. A division with no ladder line (the EAL)
+ * draws none.
+ *
+ * How the order is worked out is on /about; this page links it once, at the end.
  * Static: no search params, nothing derived from `Date.now()`.
  */
 export function generateMetadata(): Metadata {
@@ -55,87 +61,76 @@ export function generateMetadata(): Metadata {
   };
 }
 
-/**
- * 'Sunset, City, North, Metro and the independents': the leagues whose table order is this site's own points,
- * the LA independents' table among them (named by its standaloneName: 'LA' alone names a place).
- */
-function siteOrderedLeagues(leagues: readonly { id: LeagueId; shortName: string }[]): string[] {
-  return leagues
-    .filter((l) => getLeague(l.id).rules.orderScope === 'site')
-    .map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
-}
-
 export default function StandingsPage() {
-  const { leagues, regions } = buildStandingsOverviewView();
-  const siteOrdered = siteOrderedLeagues(leagues);
-  // Every table, the independents' included, named as a reader names it.
-  const tabled = leagues.map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
+  const { asOf, regions } = buildStandingsOverviewView();
 
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        title="Standings"
-        description={`Every division in ${listWords(tabled)} · league games only`}
+      <PageHeader title="Standings" />
+
+      {/* Anchor tabs: each section's list is region-scoped by the switcher itself. */}
+      <ScopeBar
+        league={{ mode: 'anchor', label: 'Leagues', leagues: leagueChips(), hrefs: leagueHrefs(null) }}
+        stamp={<LastUpdated at={asOf} now={BUILD_INSTANT} variant="time" />}
       />
 
-      {/* The region control, its own row under the header (DESIGN-socal §2.4). */}
-      <RegionSwitcher className="mt-4" />
-
-      {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
-      <LeagueJumpLinks leagues={leagues} />
-
-      {/* Anchor chips: each section's list is region-scoped by the switcher itself. */}
-      <LeagueSwitcher mode="anchor" label="Leagues" leagues={leagueChips()} hrefs={leagueHrefs(null)} className="mt-4" />
-
-      {/* One wrapper per region around its section h2s (`#norcal`, `#socal`): the scope stylesheet shows
-          the reader's region; without JS both read in turn, NorCal first, and every anchor resolves. */}
+      {/* One BLOCK wrapper per region (`#norcal`, `#socal`): the scope stylesheet shows the reader's
+          region; without JS both read in turn, NorCal first, and every anchor resolves. The grid is
+          the element inside it, never the scoped wrapper itself. */}
       {regions.map((region) => (
         <div key={region.id} id={region.id} data-region-scope={region.id}>
-          {region.sections.map((section) => (
-            <section
-              key={section.id}
-              aria-labelledby={section.id}
-              className="mt-section md:mt-section-lg"
-            >
-              <SectionHeader id={section.id} kicker={section.name} />
-              {section.leagues.map((league) => (
-                <section key={league.id} aria-labelledby={league.id} className="mt-8">
-                  <SectionHeader as="h3" id={league.id} kicker={league.title} />
-                  {/* Only where a league's schools need saying (the EAL's two sections; the Sunset is a
-                      field hockey grouping, not the all-sports league of that name). */}
-                  {league.membershipNote ? (
-                    <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{league.membershipNote}</p>
-                  ) : null}
-                  {league.divisions.map((division) => (
-                    <OverviewDivisionBlock key={division.division} division={division} />
-                  ))}
-                </section>
-              ))}
-            </section>
-          ))}
+          <div className="sx-auto">
+            {region.sections.map((section, s) =>
+              section.leagues.map((league, l) => {
+                const several = league.divisions.length > 1;
+                return (
+                  <section
+                    key={league.id}
+                    aria-labelledby={league.id}
+                    // Only a league on a row of its own may sit closer to the league row above it: one
+                    // that shares its row must keep the same offset as its neighbours.
+                    data-first={s === 0 && l === 0 && several ? '' : undefined}
+                    className={several ? 'sx-section col-span-full min-w-0' : 'sx-section min-w-0'}
+                  >
+                    {/* The section's anchor (`#ccs`, `#ncs`, …): an empty marker at the top of its first league. */}
+                    {l === 0 ? <span id={section.id} /> : null}
+                    <SectionHeader
+                      id={league.id}
+                      // The independents' short name is an adjective ('LA'); their title names the group.
+                      kicker={isIndependentLeague(league.id) ? league.title : league.shortName}
+                      action={{ href: `/standings/${league.id}`, label: 'Full standings' }}
+                    />
+                    {/* auto-FIT, not `sx-auto`'s auto-fill: two divisions share the row in halves
+                        (no empty third track); three go three across where each has 17rem. */}
+                    <div
+                      className={
+                        several
+                          ? 'grid grid-cols-[repeat(auto-fit,minmax(min(100%,17rem),1fr))] gap-x-10 gap-y-4'
+                          : undefined
+                      }
+                    >
+                      {league.divisions.map((division) => (
+                        <OverviewDivisionBlock key={division.division} division={division} />
+                      ))}
+                    </div>
+                    {/* Only where a league's schools need saying (the EAL's two sections; the Sunset is a
+                        field hockey grouping, not the all-sports league of that name). */}
+                    {league.membershipNote ? <p className="sx-note">{league.membershipNote}</p> : null}
+                  </section>
+                );
+              }),
+            )}
+          </div>
         </div>
       ))}
 
-      <p className="mt-section mb-0 max-w-prose text-meta text-ink-3 md:mt-section-lg">
-        {BY_RECORD ? (
-          <>
-            Places, GP and {RECORD_HEAD} count league games only; PCT is the share of league games won, which
-            orders every table. Each league&rsquo;s full page has its tiebreak rules, {DIFF_ABBR}, form, and the
-            games still to play.{' '}
-          </>
-        ) : (
-          <>
-        Places, GP and W-L-T count league games only; PTS is 3 for a win and 1 for a tie in every
-        table{siteOrdered.length > 0
-          ? ` (${listWords(siteOrdered)} publish no points rule, so there the order is this site’s own points)`
-          : ''}. Each league&rsquo;s full page has its tiebreak rules, GD, form, and the games still
-        to play.{' '}
-          </>
-        )}
-        <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
-          How standings are computed
-        </Link>
-      </p>
+      <ul className="sx-linkrow mt-10">
+        <li>
+          <Link href="/about#standings" prefetch={false} className="sx-action">
+            How standings are calculated
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

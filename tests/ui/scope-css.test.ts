@@ -51,7 +51,6 @@ describe('buildLeagueScopeCss', () => {
             `html[data-league="${id}"] [data-scope]:not([data-scope="${id}"]):not([data-scope="all"]):not([data-scope="none"]){display:none}`,
         ),
       ).toHaveLength(1);
-      expect(rules.filter((r) => r === `html[data-league="${id}"] .sx-jump-${id}{display:inline-flex}`)).toHaveLength(1);
       expect(rules.filter((r) => r.startsWith(`html[data-league="${id}"] [data-league-option="${id}"]{`))).toHaveLength(1);
       expect(rules.filter((r) => r === `html[data-league="${id}"] [data-league-option="${id}"]{${SELECTED}}`)).toHaveLength(1);
     });
@@ -60,7 +59,6 @@ describe('buildLeagueScopeCss', () => {
   it('has one rule per league in each family and no more', () => {
     const n = LEAGUE_IDS.length;
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \[data-scope\]:not/)).toBe(n);
-    expect(count(/^html\[data-league="[a-z0-9-]+"\] \.sx-jump-/)).toBe(n);
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \[data-league-option="[a-z0-9-]+"\]\{/)).toBe(n);
     // There are no check spans any more: the selected state is the tab itself.
     expect(css).not.toContain('sx-chip-check');
@@ -68,10 +66,11 @@ describe('buildLeagueScopeCss', () => {
     expect(css).not.toContain('visibility');
   });
 
-  it('has the fixed rules: jump base, js-only, my-team slot, the All chip', () => {
-    expect(rules).toContain('.sx-jump{display:none}');
+  it('has the fixed rules: js-only and the All chip; the retired jump links and My-team slot have none', () => {
     expect(rules).toContain('html:not([data-js]) .sx-js-only{display:none !important}');
-    expect(rules).toContain('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
+    // LeagueJumpLinks and the home My-team slot are deleted (UI refresh, spec 5.8 and 6): no rule may linger.
+    expect(css).not.toContain('sx-jump');
+    expect(css).not.toContain('sx-myteam');
     expect(rules).toContain(`html:not([data-league]) [data-league-option="all"]{${SELECTED}}`);
   });
 

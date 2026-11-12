@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Say what is true, then the way on (DESIGN §33): a title and two buttons. Every team, game and day
+ * Say what is true, then the way on (DESIGN §33): a title, one sentence and three links. Every team, game and day
  * is reachable from Scores or Standings, and the header and footer above and below carry the rest of
  * the navigation. No freshness stamp: nothing on this page is data.
  */
@@ -21,14 +21,26 @@ export default function NotFound() {
       <header className="sx-pagehead">
         <h1 className="m-0 text-h1 text-ink">Page not found</h1>
       </header>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <Link href="/" prefetch={false} className="sx-btn">
-          {NAV_LABELS.scores}
-        </Link>
-        <Link href="/standings" prefetch={false} className="sx-btn">
-          {NAV_LABELS.standings}
-        </Link>
-      </div>
+      <p className="m-0 text-body text-ink-2">Nothing on this site is at that address.</p>
+      {/* The header above and the footer below carry the full navigation as buttons and links already:
+          the way on is three plain links, not a second set of buttons. */}
+      <ul className="sx-linkrow">
+        <li>
+          <Link href="/" prefetch={false} className="sx-action">
+            {NAV_LABELS.scores}
+          </Link>
+        </li>
+        <li>
+          <Link href="/standings" prefetch={false} className="sx-action">
+            {NAV_LABELS.standings}
+          </Link>
+        </li>
+        <li>
+          <Link href="/teams" prefetch={false} className="sx-action">
+            Find a team
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }

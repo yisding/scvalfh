@@ -96,7 +96,8 @@ export function MoreMenu({ links, stamp, teamNames, mascotBase = '/mascots/' }: 
       <div className="sx-more-scrim" onClick={() => close()} />
       <div className="sx-more-sheet">
         <div className="sx-more-head">
-          <span>More</span>
+          {/* The tab that opened the sheet already says "More"; the heading is for screen readers. */}
+          <span className="sr-only">More</span>
           <button type="button" className="sx-btn sx-js-only" onClick={() => close(true)}>
             Close
           </button>
@@ -152,10 +153,11 @@ export function MoreMenu({ links, stamp, teamNames, mascotBase = '/mascots/' }: 
               )}
             </li>
           ))}
-          <li data-prefs="">
+          {/* A preference changes the page behind the sheet: the sheet closes so the change is seen. */}
+          <li data-prefs="" onClick={() => close()}>
             <ThemeToggle face="row" />
           </li>
-          <li data-region-row="">
+          <li data-region-row="" onClick={() => close()}>
             <RegionSwitcher face="text" />
           </li>
         </ul>

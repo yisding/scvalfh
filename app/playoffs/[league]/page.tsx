@@ -11,11 +11,11 @@ import {
   tournamentStaticParams,
   tournamentView,
 } from '../../../components/playoffs/tournament-league';
-import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { getCcsField, getLeagueTournament, getSections } from '../../../lib/data';
+import TeamMonogram from '../../../components/ui/TeamMonogram';
+import { getCcsField, getLeagueTournament, getSections, getTeamBySlug } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import type { LeagueConfig, TournamentConfig } from '../../../lib/league-config/shape';
@@ -28,13 +28,17 @@ import { tournamentHeadline } from '../../../lib/postseason/postseason';
  * `mcal`); every other param 404s (`dynamicParams = false`), including the CCS leagues, whose
  * postseason lives on /playoffs.
  *
- * Seven blocks: header (with the link to the CCS page), "Not a section playoff" (the section's
- * no-championship note), "Seeds" (if the season ended today), "Play-in" (only when needed or
- * possible), "Bracket" (vertical rounds with their dates), "How it works" (the league's citations,
- * the qualifier-count conflict, titles, sources); the OG card is `opengraph-image.tsx`.
+ * The blocks: the title; the champion as one row once the final has a winner; "Bracket" (the site's
+ * bracket drawer, the play-in its first round when one is needed or possible) and "Seeds" (if the
+ * season ended today), seeds first while the picture is projected; "Not a section playoff" (the
+ * section's no-championship note); "How it works" (the league's citations, the qualifier-count
+ * conflict, titles, then one row of links: the sources, the rules, the CCS page). The OG card is
+ * `opengraph-image.tsx`. The line the header used to carry (league, field, round dates, the live
+ * headline) is the metadata description's alone: read in a search result it stands by itself; on the
+ * page the bracket says all of it.
  *
  * Inside `<main>` this page carries no CCS concept (SPEC §10.9): "CCS" appears only in the
- * `CCS playoffs (…) →` link. Static: no search params, nothing derived from `Date.now()`.
+ * `CCS playoffs (…)` link. Static: no search params, nothing derived from `Date.now()`.
  */
 export const dynamicParams = false;
 
@@ -93,30 +97,28 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
   const ccsLeagues = getCcsField().byLeague.map((l) => l.shortName);
   const playInRound = ps.rounds.find((r) => r.round === 'play-in');
 
+  const champion = projection.champion ? getTeamBySlug(projection.champion.slug) : undefined;
+
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        title={ps.name}
-        description={headerMeta(summary, ps, config, { live: false })}
-        meta={
-          ccsLeagues.length > 0 ? (
-            <Link href="/playoffs" className="sx-action text-meta text-accent hover:underline">
-              {`CCS playoffs (${ccsLeagues.join(', ')})`} <Arrow />
-            </Link>
-          ) : null
-        }
-      />
+      <PageHeader title={ps.name} />
+      {/* A plain block wrapper, so the first section is a first child and sits close under the title. */}
+      <div>
 
-      {/* The result a fan came for, first (DESIGN §24.13): the champion once the final has a winner, with the
-          league's title rule applied (the regular-season points leader is MCAL Champion; a different tournament
-          winner also receives a pennant), else the next round's matchups. Nothing while the picture is projected. */}
-      {headline.champion || headline.next ? (
-        <section id="headline" className="mt-8 md:mt-10">
-          <SectionHeader kicker={headline.champion ? 'Champion' : 'Next'} />
-          <p className="m-0 max-w-prose text-lead text-ink">{headline.champion ?? `${headline.next}.`}</p>
-          {headline.champion && projection.champion ? (
-            <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">{titleSentence(projection, ps)}</p>
-          ) : null}
+      {/* The result a fan came for, first (DESIGN §24.13): the champion once the final has a winner, as one row
+          (logo, name, the label), with the league's title rule under it (the regular-season points leader is
+          MCAL Champion; a different tournament winner also receives a pennant). The next round's matchups are
+          the bracket's own cells, so nothing stands in for them here. */}
+      {headline.champion && champion ? (
+        <section id="headline" className="sx-section">
+          <p className="m-0 flex items-center gap-3" data-team-slug={champion.slug}>
+            <TeamMonogram team={champion} size={32} />
+            <Link href={`/teams/${champion.slug}`} prefetch={false} className="sx-teamlink text-body font-bold text-ink">
+              {champion.shortName}
+            </Link>
+            <span className="text-cell text-ink-2">Champion</span>
+          </p>
+          <p className="sx-note">{titleSentence(projection, ps)}</p>
         </section>
       ) : null}
 
@@ -124,19 +126,19 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         view={view}
         leagueShort={summary.shortName}
         standingsHref={`/standings/${summary.id}`}
-        beforeSeeds={<LeagueHealthNote leagueId={summary.id} className="mb-4" />}
+        beforeSeeds={<LeagueHealthNote leagueId={summary.id} className="mt-4" />}
         playInRule={playInRound ? `${playInRound.pairing}.` : null}
       />
 
-      {/* Why there is no section bracket, under the league's own (it used to sit above the seeds and the bracket). */}
+      {/* Why there is no section bracket, under the league's own. */}
       {section?.noChampionshipNote ? (
-        <section id="section" className="mt-section md:mt-section-lg">
+        <section id="section" className="sx-section sx-target">
           <SectionHeader kicker="Not a section playoff" />
           <p className="m-0 max-w-prose text-body text-ink-2">{section.noChampionshipNote}</p>
         </section>
       ) : null}
 
-      <section id="how-it-works" className="mt-section md:mt-section-lg">
+      <section id="how-it-works" className="sx-section sx-target">
         <SectionHeader kicker="How it works" />
         <div className="sx-prose">
           <ul className="list-disc">
@@ -148,28 +150,32 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
           <p>{ps.citations.qualifiersConflict}</p>
           <p>{`${ps.titleNote} Source: ${ps.citations.pennant}.`}</p>
           {config.rules.citations.incomplete ? (
-            <p className="text-meta text-ink-2">
+            <p>
               If the season ends with games unplayed: {config.rules.citations.incomplete}. The seeds above
               follow points until then.
             </p>
           ) : null}
-          <p className="text-meta text-ink-2">
-            <ExternalLink href={ps.sourceUrl}>{ps.name} play-off sheet (PDF)</ExternalLink>
-            {config.links
-              .filter((l) => l.href !== ps.sourceUrl)
-              .map((l) => (
-                <span key={l.href}>
-                  {' · '}
-                  <ExternalLink href={l.href}>{l.label}</ExternalLink>
-                </span>
-              ))}
-            {' · '}
-            <Link href={`/about#rules-${summary.id}`} className="text-accent hover:underline">
-              How {summary.shortName} standings are computed
-            </Link>
-          </p>
         </div>
+        <p className="sx-linkrow">
+          <ExternalLink href={ps.sourceUrl} className="sx-action">{`${ps.name} play-off sheet (PDF)`}</ExternalLink>
+          {config.links
+            .filter((l) => l.href !== ps.sourceUrl)
+            .map((l) => (
+              <ExternalLink key={l.href} href={l.href} className="sx-action">
+                {l.label}
+              </ExternalLink>
+            ))}
+          <Link href={`/about#rules-${summary.id}`} prefetch={false} className="sx-action">
+            {`How ${summary.shortName} standings are computed`}
+          </Link>
+          {ccsLeagues.length > 0 ? (
+            <Link href="/playoffs" prefetch={false} className="sx-action">
+              {`CCS playoffs (${ccsLeagues.join(', ')})`}
+            </Link>
+          ) : null}
+        </p>
       </section>
+      </div>
     </div>
   );
 }

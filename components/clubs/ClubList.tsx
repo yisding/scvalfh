@@ -1,59 +1,68 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 
 import { listWords } from '../../lib/format';
-import GridRowFiller from '../ui/GridRowFiller';
 import type { ClubIndexRow } from './club-view';
 
 /**
- * One region's clubs on /clubs (DESIGN §17.5): the display name linking the club's page, then the
- * full name and city, how many tracked players a public page ties to it (current and earlier
- * stated apart), and their schools.
+ * One region's clubs on /clubs (DESIGN §33): the clubs a public page ties a tracked player to, each
+ * an entry (the display name linking the club's page, the full name and city, how many players,
+ * current and earlier stated apart, and their schools), in `sx-auto` columns with a hairline under
+ * each. The clubs with no tied player follow in ONE plain line of names, each still a link to its
+ * page: an entry apiece would be a column of "none found".
  *
- * A list, not a table (DESIGN §10.8): four short lines reflow at 320px / 400% zoom, and a club with
- * no tied player simply has fewer of them. The rows sit in one card with divider rules, in the
- * same row-major grid as the team roster (components/teams/TeamRoster.tsx): one column on a phone,
- * two from 640px, three from 1024px.
- *
- * The name link is the main way into every club page from a phone, so it is 44px tall there and
- * 32px from 768px (the SectionHeader action's size), at the 600 weight of a TeamTile name. It
+ * The name link is the main way into every club page, so it is 44px tall on a touch screen. It
  * carries `prefetch={false}` for the reason every per-row link does (tests/ui/prefetch-policy):
- * Next 16 would otherwise download each club page as the list scrolls into view. Nothing here
- * wraps without a break: the full names, HTC's long city and the school list must reflow.
+ * Next would otherwise download each club page as the list scrolls into view. Nothing here is
+ * nowrap: the full names, HTC's long city and the school list must reflow at 320px.
  */
 export interface ClubListProps {
   clubs: ClubIndexRow[];
 }
 
+const NAME_LINK = 'sx-teamlink inline-flex min-h-7 items-center text-body font-semibold text-ink pointer-coarse:min-h-11';
+
 export function ClubList({ clubs }: ClubListProps) {
+  const tied = clubs.filter((club) => club.current + club.other > 0);
+  const rest = clubs.filter((club) => club.current + club.other === 0);
   return (
-    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
-      {clubs.map((club) => (
-        <li
-          key={club.slug}
-          // A rule on top of every row except the first in each column (TeamRoster's rule).
-          className="sx-gridcell"
-        >
-          <span className="block">
-            <Link
-              href={club.href}
-              prefetch={false}
-              className="sx-action min-h-11 text-body font-semibold text-accent hover:underline md:min-h-8"
-            >
-              {club.name}
-            </Link>
-          </span>
-          {/* A no-break space before each dot, so a wrapped subline never starts with one. */}
-          {club.subline ? (
-            <span className="block text-meta text-ink-2">{club.subline.replaceAll(' · ', '\u00a0· ')}</span>
-          ) : null}
-          <span className="block text-meta text-ink-2">{club.countLine}</span>
-          {club.schools.length > 0 ? (
-            <span className="block text-meta text-ink-3">Schools: {listWords(club.schools)}</span>
-          ) : null}
-        </li>
-      ))}
-      <GridRowFiller count={clubs.length} columns={{ sm: 2, lg: 3 }} />
-    </ul>
+    <>
+      {tied.length > 0 ? (
+        <ul className="sx-auto m-0 list-none p-0">
+          {tied.map((club) => (
+            <li key={club.slug} className="min-w-0 border-b border-hairline py-1.5">
+              <Link href={club.href} prefetch={false} className={NAME_LINK}>
+                {club.name}
+              </Link>
+              {club.subline ? (
+                <span className="flex flex-wrap gap-x-3 text-cell text-ink-2">
+                  {club.subline.split(' · ').map((part) => (
+                    <span key={part}>{part}</span>
+                  ))}
+                </span>
+              ) : null}
+              <span className="block text-cell text-ink">{club.countLine}</span>
+              {club.schools.length > 0 ? (
+                <span className="block text-cell text-ink-2">Schools: {listWords(club.schools)}</span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {rest.length > 0 ? (
+        <p className="sx-note max-w-prose">
+          {rest[0].countLine}:{' '}
+          {rest.map((club, i) => (
+            <Fragment key={club.slug}>
+              {i > 0 ? ', ' : null}
+              <Link href={club.href} prefetch={false}>
+                {club.name}
+              </Link>
+            </Fragment>
+          ))}
+        </p>
+      ) : null}
+    </>
   );
 }
 

@@ -32,49 +32,57 @@ function score(v: { home: number; away: number }): string {
 export function BackfillTable({ rows }: BackfillTableProps) {
   if (rows.length === 0) {
     return (
-      <p className="m-0 max-w-prose text-body text-ink-2">
+      <p className="sx-empty max-w-prose">
         No score on this site comes from si.com in the most recent run: every published result is
         MaxPreps&rsquo; own.
       </p>
     );
   }
   return (
-    <ul className="m-0 flex max-w-prose list-none flex-col gap-3 p-0">
+    <ul className="sx-list max-w-prose">
       {rows.map((row) => (
-        <li key={row.contestId} className="sx-card p-4 text-meta text-ink-2">
-          <p className="m-0 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <span className="text-body text-ink">
-              <Link href={gameHref(row.contestId)} prefetch={false} className="sx-action hover:underline">
-                {row.label}
-              </Link>
-            </span>
-            <span className="sx-num text-ink-3">
-              <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time>
-            </span>
+        <li key={row.contestId} className="py-3 text-cell text-ink-2">
+          <p className="m-0 flex flex-wrap items-baseline gap-x-3 text-body text-ink">
+            <Link href={gameHref(row.contestId)} prefetch={false} className="sx-teamlink font-semibold">
+              {row.label}
+            </Link>
+            <time dateTime={row.dateKey} className="sx-num text-ink-2">
+              {shortDate(row.dateKey)}
+            </time>
           </p>
-          <dl className="m-0 mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1">
-            <dt className="text-ink-3">si.com</dt>
-            <dd className="sx-num m-0 font-semibold text-ink">{score(row.sblive)} (published)</dd>
-            <dt className="text-ink-3">MaxPreps</dt>
-            <dd className="sx-num m-0">
-              {row.maxpreps ? score(row.maxpreps) : row.maxprepsUrl ? 'no score' : 'no MaxPreps contest'}
+          <dl className="m-0 mt-1 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-0.5">
+            <dt>si.com</dt>
+            <dd className="m-0 text-ink">
+              <span className="sx-num font-semibold">{score(row.sblive)}</span> (published)
             </dd>
-            <dt className="text-ink-3">Rule</dt>
+            <dt>MaxPreps</dt>
+            <dd className="m-0">
+              {row.maxpreps ? (
+                <span className="sx-num">{score(row.maxpreps)}</span>
+              ) : row.maxprepsUrl ? (
+                'no score'
+              ) : (
+                'no MaxPreps contest'
+              )}
+            </dd>
+            <dt>Rule</dt>
             <dd className="m-0">{BACKFILL_RULE_WORDS[row.rule]}.</dd>
           </dl>
-          <p className="m-0 mt-2">{row.note}</p>
-          {/* Standalone links: `.sx-action` gives each its own 24px box (WCAG 2.5.8); gap-1 stands in
-              for the space before the arrow, which inline-flex drops. */}
-          <p className="m-0 mt-2 flex flex-wrap gap-x-3">
-            <ExternalLink href={row.sbliveUrl} className="sx-action gap-1">
-              si.com game
-            </ExternalLink>
-            {row.maxprepsUrl ? (
-              <ExternalLink href={row.maxprepsUrl} className="sx-action gap-1">
-                MaxPreps game
+          <p className="m-0 mt-1">{row.note}</p>
+          <ul className="sx-linkrow mt-0">
+            <li>
+              <ExternalLink href={row.sbliveUrl} className="sx-action">
+                si.com game
               </ExternalLink>
+            </li>
+            {row.maxprepsUrl ? (
+              <li>
+                <ExternalLink href={row.maxprepsUrl} className="sx-action">
+                  MaxPreps game
+                </ExternalLink>
+              </li>
             ) : null}
-          </p>
+          </ul>
         </li>
       ))}
     </ul>

@@ -31,8 +31,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { buildGameView, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
-import { GameCard } from '../../components/game-row/GameCard';
-import { GameLine } from '../../components/game-row/GameLine';
 import { GameLogRow } from '../../components/game-row/GameLogRow';
 import { GameRow } from '../../components/game-row/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
@@ -46,8 +44,6 @@ interface Rendered {
   gameDescription: typeof gameDescription;
   gameKicker: typeof gameKicker;
   GameRow: typeof GameRow;
-  GameCard: typeof GameCard;
-  GameLine: typeof GameLine;
   GameLogRow: typeof GameLogRow;
 }
 
@@ -58,8 +54,6 @@ const live: Rendered = {
   gameDescription,
   gameKicker,
   GameRow,
-  GameCard,
-  GameLine,
   GameLogRow,
 };
 
@@ -102,8 +96,6 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
   const renderAllVariants = (r: Rendered, game: Game): string =>
     [
       renderToStaticMarkup(createElement(r.GameRow, { game })),
-      renderToStaticMarkup(createElement(r.GameCard, { game })),
-      renderToStaticMarkup(createElement(r.GameLine, { game })),
       renderToStaticMarkup(createElement(r.GameLogRow, { game })),
     ].join('\n');
 
@@ -211,8 +203,6 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       const data = await import('../../lib/data');
       const model = await import('../../components/game/game-view');
       const row = await import('../../components/game-row/GameRow');
-      const card = await import('../../components/game-row/GameCard');
-      const line = await import('../../components/game-row/GameLine');
       const log = await import('../../components/game-row/GameLogRow');
       corpus = {
         games: data.getGames(),
@@ -221,8 +211,6 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
         gameDescription: model.gameDescription,
         gameKicker: model.gameKicker,
         GameRow: row.GameRow,
-        GameCard: card.GameCard,
-        GameLine: line.GameLine,
         GameLogRow: log.GameLogRow,
       };
     }, 600_000);
@@ -307,8 +295,8 @@ describe('every league, rendered', () => {
 
   it('links every game through gameHref (sblive ids become sblive-<n>, cifsds ids cifsds-<away>-at-<home>)', () => {
     for (const game of games) {
-      const html = renderToStaticMarkup(createElement(GameCard, { game }));
-      expect(html, `components/game-row/GameCard.tsx ${game.contestId}`).toContain(
+      const html = renderToStaticMarkup(createElement(GameRow, { game }));
+      expect(html, `components/game-row/GameRow.tsx ${game.contestId}`).toContain(
         `href="/game/${game.contestId.replace(/^(sblive|cifsds):/, '$1-')}"`,
       );
     }

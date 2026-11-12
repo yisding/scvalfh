@@ -1,25 +1,27 @@
+import { DisclaimerProse } from '../../layout/site-prose';
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords } from '../../../lib/format';
 import type { AboutDisclaimer, AboutNoDocument } from '../about-view';
 
 /**
- * /about#not-affiliated: the disclaimer, naming every league and section, and what is the source of
- * truth for anything that matters competitively.
+ * /about#not-affiliated: foundation's short disclaimer (`DisclaimerProse`, the footer's old line), then
+ * every league and section by its full name, and what is the source of truth for anything that
+ * matters competitively.
  */
 export function NotAffiliatedSection({ disclaimer, noDocument }: { disclaimer: AboutDisclaimer; noDocument: AboutNoDocument }) {
   const { tabled, sections } = disclaimer;
   const { norcal, socal } = noDocument;
   return (
-    <section id="not-affiliated" className="mt-16 mb-2">
-      <SectionHeader size="lg" kicker="Not affiliated" />
+    <section id="not-affiliated" className="sx-section">
+      <SectionHeader kicker="Not affiliated" />
       <div className="sx-prose">
+        <DisclaimerProse />
         <p>
-          This is an unofficial fan site. It is not affiliated with, endorsed by, or operated by{' '}
-          {listWords(tabled.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
-          {listWords(sections.map((s) => `${s.name} (${s.shortName})`))}, MaxPreps or Sports
-          Illustrated. All team names, colors and marks belong to their respective schools. Records
-          here are computed from published game results and, while we cross-check them and publish
-          every disagreement we find, they may differ from an official ruling &mdash; each
+          In full, that is {listWords(tabled.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
+          {listWords(sections.map((s) => `${s.name} (${s.shortName})`))}, MaxPreps and Sports
+          Illustrated; none of them endorses or operates this site. All team names, colors and marks belong
+          to their respective schools. We cross-check the records here and publish every disagreement we
+          find, but each
           league&rsquo;s own standings
           {norcal.leagues.length > 0 &&
             ` (or, for ${norcal.who}, which ${norcal.leagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${norcal.leagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${norcal.guidelines})`}{' '}

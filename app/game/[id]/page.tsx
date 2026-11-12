@@ -5,40 +5,39 @@ import { notFound } from 'next/navigation';
 import FormGoingIn from '../../../components/game/FormGoingIn';
 import GameDetails from '../../../components/game/GameDetails';
 import GameStats from '../../../components/game/GameStats';
-import {
-  GameElsewhere,
-  GameSourceLine,
-  ResultFlagConflict,
-  SourceDisagreement,
-} from '../../../components/game/GameSources';
+import { GameSourceLine, ResultFlagConflict, SourceDisagreement } from '../../../components/game/GameSources';
 import SeasonSeries from '../../../components/game/SeasonSeries';
 import {
   buildGameView,
   buildSupersededStub,
   gameDescription,
-  gameRecap,
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-view';
 import JsonLd from '../../../components/metadata/JsonLd';
+import { BUILD_INSTANT } from '../../../components/layout/build-instant';
+import LastUpdated from '../../../components/layout/LastUpdated';
 import { OG_BASE } from '../../../components/layout/site';
 import { gameJsonLd } from '../../../components/metadata/structured-data';
 import { getBracketPlace } from '../../../components/playoffs/bracket-place';
-import Arrow from '../../../components/ui/Arrow';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import ScoreBoard from '../../../components/game/ScoreBoard';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import ScoreBoard, { GameFacts } from '../../../components/game/ScoreBoard';
+import { getFetchedAt } from '../../../lib/data';
+import { localDateKey } from '../../../lib/format';
 
 /**
- * `/game/[id]` — the shareable scoreboard (DESIGN §1.1, §3.5, R-4).
+ * `/game/[id]` — the shareable scoreboard (DESIGN §33, §1.1, R-4).
  *
- * A final score is the object people actually send to each other, and a `<details>` row inside a
- * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
- * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the
- * result sentence (`gameRecap`) with the result links under it, the venue, the real off-site links, routes to both team
- * pages, each followed side's box score as its coach entered it on MaxPreps (Game stats, a final
- * with entries only), both sides' form going in, the season series between these two schools, and the source
- * deep links — plus a text-only OG card so a link pasted into a group text previews the score
- * itself.
+ * A final score is the object people actually send to each other, so every contest gets a page.
+ * Top to bottom: one line naming the competition (its bracket or its standings linked), the
+ * scoreboard (ScoreBoard: the status, both sides with their records as of that game, the score),
+ * the facts under it (GameFacts: the date as the link back to that score day, the place, the
+ * score's source), the notes a reader must not miss (a score from another source, a disagreement
+ * between sources, what a postseason game does not count for), then the main column (next round,
+ * season series, last 5 games, game stats) beside the Details rail (address, off-site links, what
+ * the game counts for, Report an error) — plus a text-only OG card so a link pasted into a group
+ * text previews the score itself. List rows no longer expand, so every off-site link a row used
+ * to offer (Directions, Stream, Tickets, the MaxPreps game) is in Details.
  *
  * `id` is `gameIdToParam(Game.contestId)`: the MaxPreps GUID itself (the snapshot's dedupe key, so
  * it is stable across rebuilds and cannot collide on a doubleheader), or `sblive-<n>` for a game
@@ -103,6 +102,13 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
   };
 }
 
+/** `SCVAL · De Anza` → `SCVAL De Anza`; `City · City Western` → `City Western` (the division already names its league). */
+function leagueWords(contextLabel: string): string {
+  const [league, division] = contextLabel.split(' · ');
+  if (!division) return contextLabel;
+  return division.startsWith(league) ? division : `${league} ${division}`;
+}
+
 export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
   const model = buildGameView(id);
@@ -111,207 +117,99 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
     if (!stub) notFound();
     return (
       <div className="pb-section-lg">
-        <h1 className="mt-6 mb-0 text-h1 text-ink">{stub.sentence}</h1>
+        <h1 className="mt-6 mb-0">{stub.sentence}</h1>
         <p className="mt-4 mb-0">
-          <Link
-            href={stub.targetHref}
-            className="sx-pill sx-pill-ring min-h-11"
-          >
-            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} <Arrow />
+          <Link href={stub.targetHref} className="sx-action">
+            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'}
           </Link>
-        </p>
-        <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
-          This page held a score published from High School on SI (si.com) while MaxPreps had no
-          contest for the game. MaxPreps has it now, so the game&rsquo;s page is the MaxPreps one.
         </p>
       </div>
     );
   }
 
-  const { game, away, home, dayLabel, resultLinks, recordsCaption } = model;
-  // Away first, like the scoreboard; an opponent outside the registry has no page here to link to
-  // (DESIGN §8).
-  const teamLinks = [away, home].flatMap((side) => (side.team ? [side.team] : []));
-  const recap = gameRecap(model);
+  const { game, away, home, display } = model;
   // A postseason game's place in its bracket (components/playoffs/bracket-place.ts): its round in words, what its
   // winner plays next, and the link to its card on /playoffs.
   const place = getBracketPlace(game);
-  // The kicker names the round where the bracket knows it: 'CCS Division 2 quarterfinal · 8 v 1' for the bare 'CCS',
-  // 'San Diego Section playoffs · Division II first round'.
-  const contextLabel =
-    place?.round && game.postseason?.kind === 'ccs'
-      ? place.round
-      : place?.round
-        ? `${model.contextLabel} · ${place.round}`
-        : model.contextLabel;
-  // Does the main column's row 2 (recap · result links · source line · postseason notes · source
-  // disagreement · result-flag conflict) render anything? The DETAILS rail starts in that row, so
-  // it takes the recap's 24px top margin when the row is there and the section margin when it is
-  // not: either way its top lines up with the first thing in the left column — the recap, or the
-  // FORM GOING IN heading (F-27c).
-  const leadRow =
-    Boolean(recap) ||
-    resultLinks.length > 0 ||
-    Boolean(model.source) ||
-    model.postseasonNotes.length > 0 ||
-    Boolean(model.scoreNote) ||
-    Boolean(model.conflict) ||
-    Boolean(model.resultConflictNote) ||
-    place !== null;
+  // The line over the board: the competition, linked to its bracket or its standings, then the round.
+  // `CCS Division 1 quarterfinal · 7 v 2` is the bracket's name (the link), the round, and the two seeds, away first,
+  // which the board prints after the names.
+  const bracketName = place?.link.division ?? null;
+  const seedPair = / · (\d+) v (\d+)$/.exec(place?.round ?? '');
+  const roundWords = (place?.round ?? '').replace(/ · \d+ v \d+$/, '');
+  const competition: { name: string; href: string | null; round: string | null } = place
+    ? bracketName && roundWords.startsWith(bracketName)
+      ? { name: bracketName, href: place.link.href, round: roundWords.slice(bracketName.length).trim() || null }
+      : { name: model.contextLabel, href: place.link.href, round: place.round ? roundWords : null }
+    : model.division && model.league
+      ? { name: leagueWords(model.contextLabel), href: `/standings/${model.league.id}#${model.division}`, round: null }
+      : { name: model.contextLabel, href: null, round: null };
+  // "Next round" is a section when a later round exists; a final's "X won CCS Division 1." is a note under the board.
+  const nextRound = place?.next && / (plays|goes on to) /.test(place.next) ? place.next : null;
+  const wonNote = place?.next && !nextRound ? place.next : null;
+  // What the game counts for is said ONCE, in Details (`countsAs.detail`); the notes here are the rest.
+  const notes = [
+    ...(wonNote ? [wonNote] : []),
+    ...model.postseasonNotes.filter((note) => note !== model.countsAs.detail),
+    ...(model.scoreNote ? [model.scoreNote] : []),
+  ];
+  // The short stamp sits with the facts while the score can still change: a live game, or one still to play today.
+  const fresh =
+    game.status === 'live' || (display.kind === 'scheduled' && game.dateKey === localDateKey(BUILD_INSTANT));
 
   return (
     <div className="pb-section-lg">
       <JsonLd data={gameJsonLd(model)} />
-      {/* Routes out of the page (F-31): back to the day, then each registry side's team page, away
-          first. Every one is a standalone 44px target (WCAG 2.5.8). Only the first is pulled left
-          by its own padding so its arrow lines up with the gutter; the team pills have a visible
-          capsule, which a negative margin would push into the gutter. They sit on the canvas,
-          where the plain `sx-pill` fill (surface-2) barely separates from the page, so they are
-          raised to the surface with the hairline ring and hover down to surface-2 (F-56g). The
-          label is the team's SHORT name ("Mitty") and the capsule takes 12px of side padding
-          rather than the pill's 16, which keeps most pairings on one line at 390. The two team
-          pills wrap as ONE group, so when the row does not fit (St. Ignatius at Saint Francis at 390,
-          anything long at 320) they drop to a second line together instead of stranding the home
-          pill alone. */}
-      <p className="m-0 mt-4 flex flex-wrap items-center gap-2">
-        <Link
-          href={`/scores/${game.dateKey}`}
-          className="sx-action -ml-3 min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
-        >
-          <Arrow dir="left" />
-          {dayLabel} games
-        </Link>
-        {teamLinks.length > 0 ? (
-          <span className="flex flex-wrap gap-2">
-            {teamLinks.map((team) => (
-              <Link
-                key={team.slug}
-                href={`/teams/${team.slug}`}
-                prefetch={false}
-                className="sx-pill sx-pill-ring min-h-11 px-3"
-              >
-                {team.shortName}
-                <span aria-hidden="true"> &rsaquo;</span>
-                <span className="sr-only"> team page</span>
+      {/* Main column + rail from 768 (`.sx-cols`); below that Details follows the main column. The board
+          is the first thing IN the main column, so the rail starts level with it and the top right of
+          the first screen is not empty. A section that renders nothing leaves no gap: each brings its own 40px. */}
+      <div className="sx-cols">
+        <div className="min-w-0">
+          <p className="m-0 mt-3 text-meta text-ink-2">
+            {competition.href ? (
+              <Link href={competition.href} prefetch={false} className="sx-link inline-flex min-h-6 items-center">
+                {competition.name}
               </Link>
-            ))}
-          </span>
-        ) : null}
-      </p>
-
-      {/*
-        From 1024px the DETAILS card sits in a right rail beside the main column, and the DOM keeps
-        the PHONE order — scoreboard, recap, details, game stats, form, series, sources (DESIGN §10.5). Explicit
-        row placement, not two wrapper columns, is what makes those two facts compatible: a section
-        that renders nothing collapses its row to zero height, and vertical rhythm comes from
-        margins rather than a row gap so a collapsed row leaves no ghost space.
-
-        Deviation from DESIGN §3.5 (F-17): the spec put the rail beside the column from 768. In the
-        768–1023 band that left a ~400px main column — narrower than a phone held sideways — so the
-        season-series rows wrapped to two lines and each form strip dropped below its team name.
-        The tablet band is one column instead, with the DETAILS facts laid out 3-up across the full
-        width (GameDetails).
-      */}
-      <div className="mt-3 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
-        <div className="lg:col-span-2 lg:row-start-1">
-          <h1 className="sr-only">{gameTitle(model)}</h1>
-          <p className="m-0 mb-2 text-meta font-medium text-ink-3">{contextLabel}</p>
-          <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
-          {/* The records on the board are AS OF this game (G-1), so say which moment they are
-              from: on a September final, today's record would sit beside a score it already
-              counts several games back. Centred from 768, where the board itself is centred. */}
-          {recordsCaption ? (
-            <p className="mt-3 mb-0 text-micro text-ink-3 md:text-center">{recordsCaption}</p>
-          ) : null}
-        </div>
-
-        <div className="lg:col-start-1 lg:row-start-2">
-          {recap ? <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{recap}</p> : null}
-          {/* A final's result links live HERE, directly under the recap (F-73/F-85): on a phone they
-              are above the tab bar rather than at the foot of the DETAILS card, and they appear
-              once on the page (GameDetails and GameElsewhere leave them out; only the
-              disagreement notes below cite a source page again). The accent pill is the source
-              the score came from. */}
-          {resultLinks.length > 0 ? (
-            <p className={recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
-              {resultLinks.map((link) => (
-                <ExternalLink
-                  key={link.href}
-                  href={link.href}
-                  // ExternalLink adds a `text-accent` utility, which would beat the pill's
-                  // accent-ink (accent on the wash is 4.37:1 in dark); `!` keeps accent-ink. The
-                  // plain pill sits on the canvas, so it takes the raised surface fill (F-56g).
-                  className={
-                    link.accent
-                      ? 'sx-pill sx-pill-accent text-accent-ink!'
-                      : 'sx-pill sx-pill-ring'
-                  }
-                >
-                  {link.label}
-                </ExternalLink>
-              ))}
+            ) : (
+              competition.name
+            )}
+            {competition.round ? `, ${competition.round}` : ''}
+          </p>
+          <ScoreBoard
+            game={game}
+            away={{ sub: away.sub, seed: seedPair ? Number(seedPair[1]) : null }}
+            home={{ sub: home.sub, seed: seedPair ? Number(seedPair[2]) : null }}
+          />
+          <GameFacts
+            game={game}
+            stamp={fresh ? <LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" /> : undefined}
+          />
+          {notes.map((note) => (
+            <p key={note} className="sx-note">
+              {note}
             </p>
-          ) : null}
-          {/* Where the game stands in its postseason (2026-11-03): its round, what its winner plays next, and its card
-              on /playoffs. "Where it stands", not "In the bracket": the EAL's and the Tournament of Champions' games
-              have no published bracket, and their links go to the day's games instead. */}
-          {place ? (
-            <section aria-labelledby="where-it-stands" className={recap || resultLinks.length > 0 ? 'mt-4 max-w-prose' : 'mt-6 max-w-prose'}>
-              <h2 id="where-it-stands" className="m-0 text-micro font-semibold text-ink-3">
-                Where it stands
-              </h2>
-              {place.round ? <p className="mt-1 mb-0 text-body text-ink">{place.round}</p> : null}
-              {place.next ? <p className="mt-1 mb-0 text-body text-ink-2">{place.next}</p> : null}
-              <p className="mt-2 mb-0">
-                <Link href={place.link.href} prefetch={false} className="sx-pill sx-pill-ring min-h-11">
-                  {place.link.label} <Arrow />
-                </Link>
-              </p>
-            </section>
-          ) : null}
+          ))}
           <GameSourceLine model={model} className="mt-4" />
-          {model.postseasonNotes.length > 0 || model.scoreNote ? (
-            <div className="mt-4 max-w-prose text-meta text-ink-2">
-              {[...model.postseasonNotes, ...(model.scoreNote ? [model.scoreNote] : [])].map((note) => (
-                <p key={note} className="m-0">
-                  {note}
-                </p>
-              ))}
-            </div>
-          ) : null}
           <SourceDisagreement model={model} className="mt-4" />
           <ResultFlagConflict model={model} className="mt-4" />
+
+          {nextRound && place ? (
+            <section className="sx-section" aria-labelledby="game-next-kicker">
+              <SectionHeader
+                kicker="Next round"
+                id="game-next-kicker"
+                action={{ href: place.link.href, label: /bracket/i.test(place.link.label) ? 'Bracket' : place.link.label }}
+              />
+              <p className="m-0 text-body text-ink">{nextRound}</p>
+            </section>
+          ) : null}
+          <SeasonSeries model={model} className="sx-section" />
+          <FormGoingIn model={model} className="sx-section" />
+          <GameStats model={model} className="sx-section" />
         </div>
-
-        {/* Sticky only when the viewport is tall enough to hold it: the card is up to ~510px,
-            +80px of offset, and a sticky box taller than the viewport can never scroll its last
-            links into view (a focused link pill sat below a 488px-tall window). The two class
-            strings differ only in the top margin — see `leadRow`. */}
-        <GameDetails
-          model={model}
-          className={
-            leadRow
-              ? 'mt-section lg:col-start-2 lg:row-span-5 lg:row-start-2 lg:mt-6 lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
-              : 'mt-section lg:col-start-2 lg:row-span-5 lg:row-start-2 lg:mt-section-lg lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
-          }
-        />
-
-        <GameStats
-          model={model}
-          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-3"
-        />
-        <FormGoingIn
-          model={model}
-          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-4"
-        />
-        <SeasonSeries
-          model={model}
-          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-5"
-        />
-        <GameElsewhere
-          model={model}
-          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-6"
-        />
+        <aside className="sx-rail min-w-0" aria-label="Game details">
+          <GameDetails model={model} className="sx-section" />
+        </aside>
       </div>
     </div>
   );

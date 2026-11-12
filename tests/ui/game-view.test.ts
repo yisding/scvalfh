@@ -214,15 +214,22 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
     'Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for an official league game, or its row is clearly wrong, we publish si.com’s score and mark it; when both have a score and disagree, we publish MaxPreps’ and show the disagreement rather than choosing quietly.';
 
   it('is unchanged, as the whole paragraph, on a counted final of each fixture-backed league and on a non-league final', async () => {
+    // DESIGN §33: method text lives on /about, so the game PAGE no longer prints the paragraph (it links
+    // "About this data" once, in Details). The wording is still GameElsewhere's, whole, for every such game.
+    const { GameElsewhere } = await import('../../components/game/GameSources');
     const nonLeague = L.d.getGames({ status: 'final' }).find((g) => g.countsFor === null && g.postseason === null)!;
     const games: Array<[string, Game]> = [
       ...['scval', 'bval', 'pcal', 'mcal'].map((league): [string, Game] => [league, counted(league)]),
       ['non-league', nonLeague],
     ];
     for (const [label, game] of games) {
-      const html = await L.renderPage(L.ids.gameIdToParam(game.contestId));
+      const param = L.ids.gameIdToParam(game.contestId);
+      const html = renderToStaticMarkup(createElement(GameElsewhere, { model: L.m.buildGameView(param)! }));
       expect(html, `components/game/GameSources.tsx ${label} paragraph`).toContain(`>${FIXTURE_BACKED}</p>`);
       expect(html, `components/game/GameSources.tsx ${label}: no 1 v 1 clause`).not.toContain('1 v 1s');
+      const page = await L.renderPage(param);
+      expect(page, `app/game/[id]/page.tsx ${label}: the method paragraph is not on the page`).not.toContain('cross-checked against');
+      expect(page.match(/>About this data</g)?.length, `app/game/[id]/page.tsx ${label}: one About link`).toBe(1);
     }
   });
 
@@ -326,6 +333,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(model.contextLabel, 'components/game/game-view.ts MCAL tournament kicker').toMatch(/^MCAL (tournament|play-in|quarterfinal|semifinal|final)$/);
     const text = textOf(await S.renderPage(tournament.contestId));
     expect(text, 'app/game/[id]/page.tsx MCAL note').toContain('MCAL tournament game — it does not count in the league table.');
+    expect(text.split('it does not count in the league table.').length - 1, 'app/game/[id]/page.tsx: said once (DESIGN §33)').toBe(1);
     expect(text, 'app/game/[id]/page.tsx shootout caveat').toContain(SHOOTOUT_NOTE);
     expect(text, 'app/game/[id]/page.tsx MCAL: no CCS concept').not.toMatch(/automatic qualifier|at-large|CCS picture/i);
   });
@@ -463,7 +471,11 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
       },
     };
     const text = textOf(renderToStaticMarkup(createElement(GameDetails, { model: corrected })));
-    expect(text).toContain('Time TBA');
+    // The date and the time are the header's facts now (ScoreBoard.tsx GameFacts); Details keeps the correction.
+    const { GameFacts } = await import('../../components/game/ScoreBoard');
+    expect(textOf(renderToStaticMarkup(createElement(GameFacts, { game: corrected.game as Game })))).toMatch(
+      /Tuesday, September 29 ?, time TBA/,
+    );
     expect(text).toContain(`Date corrected from MaxPreps’ Sep 25 — ${source}.`);
   });
 
@@ -510,5 +522,51 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     );
     expect(C.m.gameDescription(model)).toMatch(/ City Western league game against .+\. City Conference girls varsity field hockey/);
     expect(C.m.gameDescription(model)).not.toMatch(/City Western Division/);
+  });
+});
+
+describe('the game page after the refresh (DESIGN §33; app/game/[id]/page.tsx, ScoreBoard.tsx, GameDetails.tsx)', () => {
+  it('has exactly one h1, visible, holding both sides; the status is its own line; nothing legacy', async () => {
+    const game = counted('scval');
+    const html = await L.renderPage(L.ids.gameIdToParam(game.contestId));
+    const h1s = html.match(/<h1\b[^>]*>/g) ?? [];
+    expect(h1s.length, 'one h1').toBe(1);
+    expect(h1s[0], 'the h1 is visible').not.toContain('sr-only');
+    const h1 = html.slice(html.indexOf('<h1'), html.indexOf('</h1>'));
+    expect(h1).toContain(`href="/teams/${game.away.slug}"`);
+    expect(h1).toContain(`href="/teams/${game.home.slug}"`);
+    expect(h1, 'the team links are in the tab order: the header is the route to both teams').not.toContain('tabindex');
+    expect(html).toMatch(/<div class="sx-scoreboard"><span class="sx-sb-status" aria-hidden="true"><span class="sx-status"><span>Final/);
+    // A final marks exactly one side won and the other lost, name and score alike; a tie neither.
+    const won = h1.match(/data-won=""/g)?.length ?? 0;
+    const lost = h1.match(/data-lost=""/g)?.length ?? 0;
+    expect([won, lost]).toEqual(game.home.score === game.away.score ? [0, 0] : [2, 2]);
+    expect(html, 'no pill, recap section or Elsewhere block').not.toMatch(/sx-pill|game-sources-kicker|where-it-stands/);
+  });
+
+  it('says the date once (the link back to that score day) and what the game counts for once', async () => {
+    const { longDate } = await import('../../lib/format');
+    const game = counted('scval');
+    const model = L.m.buildGameView(L.ids.gameIdToParam(game.contestId))!;
+    const html = await L.renderPage(model.param);
+    const text = textOf(html.slice(html.indexOf('<h1')));
+    const date = longDate(game.dateLocal);
+    expect(text.split(date).length - 1, 'the date appears once').toBe(1);
+    expect(html).toContain(`<a class="sx-link" href="/scores/${game.dateKey}">${date}</a>`);
+    expect(text.split(model.countsAs.detail).length - 1, 'counts-as appears once').toBe(1);
+    // The competition line links the standings the game counts in, at its division.
+    expect(html).toContain(`href="/standings/scval#${game.countsFor}"`);
+  });
+
+  it('Details carries every off-site link a list row used to offer, and Report an error', async () => {
+    const { GameDetails } = await import('../../components/game/GameDetails');
+    const game = L.d.getGames().find((g) => g.urls.maxpreps && g.home.slug && g.away.slug)!;
+    const html = renderToStaticMarkup(createElement(GameDetails, { model: L.m.buildGameView(L.ids.gameIdToParam(game.contestId))! }));
+    expect(html).toContain(`href="${game.urls.maxpreps!.replace(/&/g, '&amp;')}"`);
+    for (const url of [game.urls.nfhsStream, game.urls.goFan]) {
+      if (url) expect(html).toContain(`href="${url.replace(/&/g, '&amp;')}"`);
+    }
+    expect(textOf(html)).toContain('Report an error');
+    expect(html.match(/<dt/g)?.length ?? 0, 'a plain dl').toBeGreaterThan(0);
   });
 });

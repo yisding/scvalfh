@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ClubPlayers from '../../../components/clubs/ClubPlayers';
@@ -10,6 +9,7 @@ import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { plural } from '../../../components/words/plural';
+import RecruitingTabs from '../../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/players/clubs';
 
@@ -20,10 +20,11 @@ import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../
  * player is tied to still gets its page, with an honest empty state (DESIGN §8): what the club is,
  * what it runs and where that was read are true whether or not a public page names a player here.
  *
- * Source order is reading order: identity (the display name, the full name under it in the same
- * h1, the city and founding year, the website), then the players from the tracked rosters, then
- * the club's teams and programs, then where all of it comes from. The eyebrow links back to
- * /clubs: the page is not in the nav (DESIGN §17.1, §17.6), so this is the way back.
+ * Source order is reading order: identity (the display name as the h1; the full name, the city and
+ * the founding year in the one line under it), the recruiting family's tab row with "Clubs" lit
+ * (the way back to /clubs: the page is not in the nav), what the club is and its website, then the
+ * players from the tracked rosters, then the club's teams and programs, then where all of it comes
+ * from.
  *
  * Privacy (DESIGN §17.2). Only players already on the tracked varsity rosters are named, each by
  * the roster's own spelling. A source's verbatim quote, an affiliation's basis and its confidence
@@ -78,46 +79,35 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
   return (
     <div className="pb-section-lg">
       <PageHeader
-        eyebrow={
-          <>
-            <Link href="/clubs" prefetch={false} className="sx-action text-accent hover:underline">
-              Club teams
-            </Link>
-            {view.regionLabel ? <> &middot; {view.regionLabel}</> : null}
-          </>
-        }
-        title={
-          <>
-            {view.name}
-            {/* The space keeps the h1's accessible name from running the two names together
-                ("SF HawksSan Francisco…"): the span is a block, which adds no space of its own. */}
-            {view.fullName ? (
-              <>
-                {' '}
-                <span className="mt-1 block text-lead font-normal text-ink-2">{view.fullName}</span>
-              </>
-            ) : null}
-          </>
-        }
-        description={view.description}
+        title={view.name}
         meta={
-          view.facts.length > 0 || view.website ? (
+          view.fullName || view.regionLabel || view.facts.length > 0 ? (
             <>
-              {view.facts.length > 0 ? (
-                <span className="text-meta text-ink-2">{view.facts.join(' · ')}</span>
-              ) : null}
-              {/* A pill, never an `sx-badge`: a badge is nowrap, and the link must wrap at 320px. */}
-              {view.website ? (
-                <ExternalLink href={view.website} className="sx-pill">
-                  {view.name} website
-                </ExternalLink>
-              ) : null}
+              {view.fullName ? <span>{view.fullName}</span> : null}
+              {view.regionLabel ? <span>{view.regionLabel}</span> : null}
+              {view.facts.map((fact) => (
+                <span key={fact}>{fact}</span>
+              ))}
             </>
           ) : undefined
         }
-      />
+      >
+        <RecruitingTabs current="clubs" exact={false} />
+      </PageHeader>
 
-      <section aria-labelledby="players" className="mt-8 md:mt-10">
+      <p className="mt-4 mb-0 max-w-prose text-body text-ink-2">{view.description}</p>
+      {view.website ? (
+        <ul className="sx-linkrow">
+          <li>
+            {/* Free to wrap: a long club name must not run past a 320px screen. */}
+            <ExternalLink href={view.website} className="sx-action whitespace-normal">
+              {view.name} website
+            </ExternalLink>
+          </li>
+        </ul>
+      ) : null}
+
+      <section aria-labelledby="players" className="sx-section">
         <SectionHeader
           id="players"
           kicker="Players from tracked high school rosters"
@@ -127,13 +117,13 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
       </section>
 
       {view.programs.length > 0 ? (
-        <section aria-labelledby="programs" className="mt-section md:mt-section-lg">
+        <section aria-labelledby="programs" className="sx-section">
           <SectionHeader id="programs" kicker="Teams and programs" meta={`As listed ${view.checkedOn}`} />
           <ClubPrograms programs={view.programs} shared={view.programsSource} />
         </section>
       ) : null}
 
-      <section aria-labelledby="sources" className="mt-section md:mt-section-lg">
+      <section aria-labelledby="sources" className="sx-section">
         <SectionHeader id="sources" kicker="Where this comes from" />
         <ClubSources view={view} />
       </section>

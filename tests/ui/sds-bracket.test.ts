@@ -60,12 +60,23 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
   const played = render(buildSdsBrackets(file, games), AFTER);
   const playedText = textOf(played);
 
-  it('renders three divisions under their own h3, the Section’s labels, with one sentence and the sheet’s link above', () => {
-    expect([...played.matchAll(/<h3[^>]*>([^<]*)<\/h3>/g)].map((m) => m[1]), COMPONENT).toEqual([
+  it('renders three divisions under their own h2, the Section’s labels, each round an h3, with one sentence and the sheet’s link under them', () => {
+    expect([...played.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => m[1]), COMPONENT).toEqual([
       'Open Division',
       'Division I',
       'Division II',
     ]);
+    // A round's heading is an h3 with its day (spec §5.6): 3 rounds in the Open Division and 4 in each of the
+    // other two (a fifth round that is a play-in is drawn at the head of the first round's column, named in its note).
+    const rounds = [...played.matchAll(/<h3>([^<]*)<\/h3>/g)].map((m) => m[1]);
+    expect(rounds, COMPONENT).toHaveLength(11);
+    expect(rounds, COMPONENT).not.toContain('Play-in, Nov 3');
+    expect(playedText, COMPONENT).toMatch(/Play-in, Nov \d+/);
+    expect(rounds.slice(0, 3), COMPONENT).toEqual(['Quarterfinals, Nov 6', 'Semifinals, Nov 11', 'Final, Nov 15']);
+    expect(played, COMPONENT).not.toContain('<h4');
+    expect(played.match(/class="sx-bracket/g)?.length, COMPONENT).toBe(3);
+    // The sentence that says where the brackets come from follows the last of them.
+    expect(played.indexOf(sdsBracketIntro('2026', source.retrievedOn)), COMPONENT).toBeGreaterThan(played.lastIndexOf('class="sx-bracket'));
     expect(played.match(/id="sds-bracket"/g)?.length, COMPONENT).toBe(1);
     expect(sdsBracketIntro('2026', '2026-11-01'), VIEW).toBe(
       'The Section’s published brackets, from its 2026 Championship Brackets sheet (retrieved Sun Nov 1); results as MaxPreps posts them.',
@@ -98,8 +109,12 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
     }
     // A decided card with no score prints the missing-score dash, never a 0.
     expect(played, COMPONENT).toContain('<span class="sr-only">score not posted</span>');
-    // The winner's line: 600 weight and the 2px rule, on every decided card (29 of 30: the play-in is not).
-    expect(played.match(/box-shadow:inset 2px 0 0 var\(--sx-text\)/g)?.length, COMPONENT).toBe(29);
+    // The winner's line is marked `data-won` (bold) and the other `data-lost` (grey), on every decided card
+    // (29 of 30: the play-in is not); the 2px winner bar is retired (spec §5.6).
+    expect(played.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-won=""/g)?.length, COMPONENT).toBe(29);
+    expect(played.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-lost=""/g)?.length, COMPONENT).toBe(29);
+    expect(played, COMPONENT).not.toMatch(/inset 2px 0 0/);
+    expect(played, COMPONENT).not.toContain('sx-pin-note');
     expect(played.match(/Byes: /g)?.length, COMPONENT).toBe(2);
     expect(playedText, COMPONENT).toContain('Byes: Mt. Carmel (1), Rancho Bernardo (2), San Dieguito Academy (3), Cathedral Catholic (4)');
   });
@@ -130,7 +145,11 @@ describe('the 2025 brackets before a game is played', () => {
     expect(final.sentence.join(''), VIEW).toBe('The winner of 1/8 v 4/5 plays the winner of 3/6 v 2/7, Sat Nov 15, at La Jolla HS.');
     expect(html, COMPONENT).not.toContain('score not posted');
     expect(html, COMPONENT).not.toContain('href="/game/');
-    expect(html, COMPONENT).not.toMatch(/inset 2px 0 0/);
+    expect(html, COMPONENT).not.toMatch(/inset 2px 0 0|data-won|data-lost/);
+    // An unplayed card's start sits where its score will be: the time alone on its round's day, "TBD" with none.
+    expect(final.clock, VIEW).toBe('TBD');
+    expect(html, COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">TBD</span>');
+    expect(html, COMPONENT).not.toContain('sx-tie-score');
     expectSanDiegoCopy(html, COMPONENT);
   });
 
@@ -140,6 +159,8 @@ describe('the 2025 brackets before a game is played', () => {
     const d1 = buildSdsBrackets(file, [upcoming]).find((d) => d.id === 'division-1')!;
     const card = sdsBracketView(d1, BEFORE).rounds[0].cards[0];
     expect(card, VIEW).toMatchObject({ status: 'scheduled', href: gameHref(first.contestId), time: 'Tue Nov 4 · 3:30 PM PT' });
+    // In the cell: the time, with the weekday only when the card is not on its round's day.
+    expect(card.clock, VIEW).toMatch(/^(Tue )?3:30 PM$/);
     expect(card.sentence.join(''), VIEW).toBe('Poway (8) plays University City (9), Tue Nov 4, 3:30 PM PT.');
   });
 });
@@ -172,29 +193,32 @@ describe('/playoffs with the Section’s brackets (lib/postseason/sds-bracket mo
     vi.resetModules();
   });
 
-  it('draws #sds-bracket once, in the SoCal block, after the round dates and outside the three conference cards', () => {
+  it('draws #sds-bracket once, first in the SoCal block (bracket-first), before the round dates and outside the three conference sections', () => {
     expect(html.match(/id="sds-bracket"/g)?.length, PAGE).toBe(1);
     const socal = html.indexOf('<div id="socal" data-region-scope="socal"');
     const at = html.indexOf('id="sds-bracket"');
     expect(socal, PAGE).toBeGreaterThan(0);
     expect(at, PAGE).toBeGreaterThan(socal);
-    expect(at, PAGE).toBeGreaterThan(html.indexOf('id="sds-round-dates"'));
+    expect(at, PAGE).toBeLessThan(html.indexOf('id="sds-round-dates"'));
+    expect(at, PAGE).toBeLessThan(html.indexOf('id="sds-playoffs"'));
+    // Nothing but the wrapper's own tag sits between the SoCal block's start and the brackets.
+    expect(textOf(html.slice(socal, html.lastIndexOf('<', at))).trim(), PAGE).toBe('');
     for (const id of ['city', 'north-county', 'metro']) {
       expect(at, `${PAGE}: before #${id}`).toBeLessThan(html.indexOf(`id="${id}"`));
-      const card = elementById(html, id, 'div');
+      const card = elementById(html, id, 'section');
       expect(card, `${PAGE}: #${id}`).not.toBe('');
       expect(card, `${PAGE}: #${id} holds no bracket`).not.toContain('sds-bracket');
       expect(readable(card), `${PAGE}: #${id} SEED_CLAIM`).not.toMatch(SEED_CLAIM);
     }
     const section = elementById(html, 'sds-bracket', 'section');
-    expect(section.match(/<h3[^>]*>[^<]*<\/h3>/g)?.length, PAGE).toBe(3);
+    expect(section.match(/<h2[^>]*>[^<]*<\/h2>/g)?.length, PAGE).toBe(3);
     expect(section.match(/href="\/game\//g)?.length, PAGE).toBe(26);
   });
 
-  it('says the brackets below are the Section’s, and keeps the SoCal copy rules', () => {
+  it('says the brackets above are the Section’s, and keeps the SoCal copy rules', () => {
     const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal"'));
     const text = textOf(socal);
-    expect(text, PAGE).toContain('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
+    expect(text, PAGE).toContain('The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.');
     expect(text, PAGE).not.toContain('this site draws no bracket');
     // The SoCal block's own regex (tests/ui/playoff-view.test.ts, "the San Diego block states the Section’s rule").
     expect(text, PAGE).not.toMatch(/at-large|automatic qualifier|lowest-seeded|\bseed(ed|s)?\b(?! ?ing meeting)|eliminat/i);
@@ -225,7 +249,7 @@ describe('the committed 2026 brackets: drawn under #sds-bracket', () => {
     expect(getSdsBracketsSource(), 'lib/postseason/sds-bracket.ts').not.toBeNull();
     expect(html, PAGE).toContain('id="sds-bracket"');
     expect(textOf(html), PAGE).toContain(
-      'The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.',
+      'The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.',
     );
   });
 });

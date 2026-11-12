@@ -1,5 +1,8 @@
 /**
- * The serializable view models the home page hands to its client components (SPEC §10.1).
+ * The serializable view models the former home feed handed to its client components (SPEC §10.1).
+ *
+ * STATUS (DESIGN §33, 2026-11-12): `MyTeamCard`, `PinTile` and `SetLeagueButton` are deleted (`/` is the score
+ * day view); the types stay because home-view.ts and team-card.ts still build them.
  *
  * `MyTeamCard`, `PinTile`, `FindYourTeam` and `SetLeagueButton` are `'use client'`, so they cannot
  * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/leagues` (SPEC §0.4 client

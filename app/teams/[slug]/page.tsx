@@ -7,7 +7,6 @@ import { notFound } from 'next/navigation';
 
 import TeamElo from '../../../components/teams/TeamElo';
 import TeamElsewhere from '../../../components/teams/TeamElsewhere';
-import TeamFormMargin from '../../../components/teams/TeamFormMargin';
 import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
 import TeamJvGames from '../../../components/jv/TeamJvGames';
@@ -18,7 +17,6 @@ import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
 import TeamPlayoffLine from '../../../components/teams/TeamPlayoffLine';
 import TeamRoster from '../../../components/teams/TeamRoster';
 import TeamSplits from '../../../components/teams/TeamSplits';
-import TeamStatTiles from '../../../components/teams/TeamStatTiles';
 import TeamUnbeaten from '../../../components/teams/TeamUnbeaten';
 import { buildPlayerStatsView } from '../../../components/teams/player-stats-view';
 import { buildRosterView } from '../../../components/teams/roster-view';
@@ -30,106 +28,58 @@ import {
 } from '../../../components/teams/team-page-view';
 import { buildTeamPageView } from '../../../components/teams/team-view';
 import { regionIdSuffix } from '../../../components/leaders/scope';
-import Arrow from '../../../components/ui/Arrow';
-import EmptyState from '../../../components/ui/EmptyState';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import { gameKindLabel } from '../../../components/ui/describe-game';
-import { GameCard } from '../../../components/game-row/GameCard';
-import { GameRow } from '../../../components/game-row/GameRow';
+import { buildOverviewDivision } from '../../../components/standings/standings-view';
+import StandingsTable from '../../../components/standings/standings-table/StandingsTable';
+import { gameKind } from '../../../components/ui/describe-game';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import { plural } from '../../../components/words/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import JsonLd from '../../../components/metadata/JsonLd';
 import { OG_BASE } from '../../../components/layout/site';
 import { teamJsonLd } from '../../../components/metadata/structured-data';
-import { getTeamSlugs } from '../../../lib/data';
-import { recordString, shortDate } from '../../../lib/format';
+import { getLastLeagueResultDate, getStandings, getTeamSlugs, getTeams } from '../../../lib/data';
+import { byDateThenId, recordString } from '../../../lib/format';
 import { getLeague, regionOf } from '../../../lib/leagues';
 import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 /**
- * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
+ * /teams/[slug] — "How is MY team doing?" (DESIGN §33).
  *
- * 49 static pages, one per member of each league's official alignment. There is ONE source order
- * at every width, so the DOM order matches the visual order at every breakpoint (DESIGN §10.5):
- * identity (whose second meta line states the place: "where do we stand") → Last ("what just
- * happened") → Next ("when is the next one") → the stat tiles and their disclosure, the Elo rating
- * (collapsed, DESIGN §20.2), and the standings and official-schedule links → Form / Margin → the
- * rest. The tiles used to sit between
- * the identity card and Last, which pushed the Next game's date and opponent off the first phone
- * screen on every team.
+ * One static page per member of each league's official alignment. There is ONE source order at
+ * every width, so the DOM order matches the visual order at every breakpoint:
  *
- * Layout (modernization brief §5.7): the identity hero card and the league's health note, then ONE
- * grid whose children stay in that DOM order. One column on a phone. From 768px Last and Next pair
- * up (both cards stretch to the row, so the pair ends level) and every section after them takes
- * both columns until 1024px. Rows are separated by space, never by a rule. From 768px the Last
- * card is the `GameCard` (time, both teams, recap, and the Next card's own 44px pills: Full game
- * page / MaxPreps box score / NFHS stream) instead of the phone's expanded `GameRow`, so it fills
- * its half of the row like the Next card does and both cards word and style their links alike.
+ *  - the header (`TeamIdentity`): logo, the name as the h1, the league and division on one line,
+ *    the record as figures, the pin state and the short Updated stamp;
+ *  - the page's one tab row and its one sticky bar: Schedule, Standings, Roster, Stats (plain
+ *    in-page anchors, no scroll-spy, so none is ever marked current);
+ *  - the league's health note, only while its data is behind;
+ *  - main column: Next game (one full-width row), Schedule (ONE log: league, non-league and
+ *    postseason games merged in date order, then the fixtures that exist only on the league's
+ *    official schedule under their own strip), JV games, Player stats, Roster, JV roster;
+ *  - rail (beside the main column from 768px, after it below): the division's standings with this
+ *    team's row bold, Last 5 games (form, streak, home and away records), the postseason picture,
+ *    the opponents not beaten yet (only when there is one), the Elo rating (`#elo`), Elsewhere.
  *
- * At 1024px+ a strict pairing left 250–350px holes beside every tall section (Form beside Margin,
- * Who we haven't beaten beside the League game log). So the two tallest sections SPAN two rows
- * and the short ones stack beside them, still by plain auto-placement (no `dense`, no explicit
- * order), so reading order = DOM order = row-major visual order:
+ * A team with no results still gets this whole page: the header without figures, the schedule, the
+ * official-schedule fixtures and every empty line (DESIGN §8).
  *
- *     Last           | Next
- *     Stat tiles, the collapsed Elo rating and the standings / official-schedule links (both columns)
- *     Form           | Margin (2 rows)
- *     Splits         |   ″
- *     Postseason     | Who we haven't beaten
- *     League log (2) | On <SHORT>’s schedule only
- *        ″           | Non-league
- *     Elsewhere (both columns, or under Non-league — see `logOutweighs` below and in
- *     components/teams/team-page-view.ts)
- *     JV games (both columns)
- *     Player stats (both columns)
- *     Roster (both columns)
- *     JV roster (both columns), only for a school some source lists JV players for
+ * `id="player-stats"` comes BEFORE `id="roster"` and both are on every team page, in every league:
+ * `buildPlayerStatsView` / `buildRosterView` return null only for a slug the data files do not
+ * hold, which a registry team never is, and each prints one honest line when it has nothing. The
+ * meta description names player stats and the roster only for a team whose page lists them. The
+ * roster section links /clubs on every team page, empty rosters included (the clubs pages are not
+ * in the nav).
  *
- * The League log spans only when the official-only fixtures card exists and there are league
- * results. Without results the log is a short empty state and the official-fixtures list
- * is the long one (14 rows), so a list of more than six fixtures takes BOTH columns instead of
- * leaving a ~600px hole beside it; the short Non-league card then sits under it.
+ * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason block's heading
+ * is `CCS picture` for a CCS league, `MCAL tournament picture` for MCAL and `Super Regional
+ * picture` for the EAL, and the meta description ends the same way. An MCAL page carries no CCS
+ * concept inside `<main>` (SPEC §10.9). The standings link goes to `/standings/<league>#<division>`,
+ * and the official-schedule link (Elsewhere) to the division's own official schedule, which a
+ * league that publishes none (the EAL) does not get. The postseason block's anchor is `#postseason`
+ * on every page, so no MCAL URL carries a CCS concept either.
  *
- * With no official-only fixtures the cell beside the League log is Non-league alone. When the log
- * outweighs it by four rows or more (`logOutweighs`) that left a blank column of 200–500px with
- * Elsewhere stranded full-width under the log. So Non-league and Elsewhere (adjacent in the DOM)
- * share one wrapper, `display: contents` below 1024px and a flex column from there, and Elsewhere
- * moves up into the hole, still after Non-league in both reading and visual order:
- *
- *     Postseason     | Who we haven't beaten
- *     League log     | Non-league
- *        ″           | Elsewhere
- *
- * A team with no results still gets this whole page: identity, links, the postseason line, the
- * official-schedule fixtures and every empty state (DESIGN §8).
- *
- * The player stats and the roster come after every game section: they answer "who is on this
- * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
- * rows each they would push those below the fold. Stats lead, since they change after every game.
- * Both sections appear on every team page, in all five leagues: `buildPlayerStatsView` /
- * `buildRosterView` return null only for a slug the data files do not hold, which a registry team
- * never is. The empty states are honest about why: MaxPreps lists no players, the coach entered no
- * stats, the last update failed with nothing to fall back on, or no update has covered the team
- * yet. The meta description names player stats and the roster only for a team whose page lists
- * them. The roster section links /clubs on every team page, empty rosters included (its header
- * action, "Club teams": the clubs pages are not in the nav, DESIGN §17.4); a rostered player a
- * public page ties to a club also gets a club line in the list itself (TeamRoster). A rostered
- * player a public page says has committed to a college gets a commitment line linking their row on
- * /commits, with a footnote (TeamRoster, DESIGN §21.5); /commits adds no header action, so the
- * Roster header keeps its one.
- *
- * League-aware copy (SPEC §10.5), by the league's `postseason.kind`: the postseason section's
- * kicker is `CCS picture` for a CCS league, `MCAL tournament picture` for MCAL and `Super Regional
- * picture` for the EAL, and the meta description ends `… goal margins and CCS picture.`, `… and MCAL
- * tournament picture.` or `… and Super Regional picture.` An MCAL page carries no CCS concept
- * inside `<main>` (SPEC §10.9). The standings link goes to `/standings/<league>#<division>`, and
- * the official-schedule link to the division's own official schedule (config), which a league that
- * publishes none (the EAL) does not get. The postseason section's anchor is `#postseason` on
- * every page, so no MCAL URL carries a CCS concept either.
- *
- * A Southern Section independent (DESIGN §24.10) gets the same page as a league team: its table is the
- * group's (its games against the other four), so "League" here means those games, as the standings page says.
+ * A Southern Section independent (DESIGN §24.10) gets the same page as a league team: its table is
+ * the group's (its games against the other four).
  */
 
 /** All 99 prerendered; anything else is a 404 rather than a runtime render. */
@@ -172,176 +122,122 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const view = buildTeamPageView(slug);
   if (!view) notFound();
 
-  const { team, last, leagueLog, nonLeagueLog, officialFixtures, leaguePlayed, leagueScheduled } = view;
-  // Last season's row, the roster, JV and player-stats views and the grid's layout decisions
-  // (components/teams/team-page-view.ts).
+  const { team, leagueLog, nonLeagueLog, officialFixtures } = view;
+  // Last season's row, the roster, JV and player-stats views (components/teams/team-page-view.ts).
   const parts = buildTeamPageParts(view);
-  const {
-    roster,
-    jv,
-    jvStanding,
-    jvRoster,
-    playerStats,
-    rosterCount,
-    leagueLogSpans,
-    fixturesSpan,
-    logOutweighs,
-    maxprepsAction,
-  } = parts;
+  const { roster, jv, jvStanding, jvRoster, playerStats, rosterCount } = parts;
+
+  // ONE schedule: every game of the team's, oldest first.
+  const schedule = [...leagueLog, ...nonLeagueLog].sort(byDateThenId);
+  // The division's table, as /standings and the Scores rail draw it.
+  const table = buildOverviewDivision({
+    division: team.division,
+    standings: getStandings(team.division),
+    teams: getTeams(),
+    throughDate: getLastLeagueResultDate({ division: team.division }),
+  });
+  const next = view.nextCard.kind === 'game' ? view.nextCard.game : null;
+  const bracketHref = next && gameKind(next) === 'postseason' ? (view.postseasonLine?.href ?? null) : null;
 
   return (
     <div className="pb-section-lg">
       <JsonLd data={teamJsonLd(team, getLeague(team.league))} />
       <TeamIdentity view={view} knownSlugs={getTeamSlugs()} />
 
+      {/* The page's one tab row and its one sticky bar, on the page's own paper. Full-bleed on a
+          phone, so rows scrolling under it are covered edge to edge. */}
+      <nav
+        aria-label="Team sections"
+        className="sx-chrome-top sx-print-hide sticky top-topbar z-10 -mx-gutter bg-bg px-gutter md:top-topbar-lg md:mx-0 md:px-0"
+      >
+        <ul className="sx-tabs">
+          <li>
+            <a href="#schedule" className="sx-tab">
+              Schedule
+            </a>
+          </li>
+          <li>
+            <a href="#standings" className="sx-tab">
+              Standings
+            </a>
+          </li>
+          <li>
+            <a href="#roster" className="sx-tab">
+              Roster
+            </a>
+          </li>
+          <li>
+            <a href="#player-stats" className="sx-tab">
+              Stats
+            </a>
+          </li>
+        </ul>
+      </nav>
+
       <LeagueHealthNote leagueId={team.league} className="mt-4" />
 
-      <div className="mt-6 grid gap-y-section md:grid-cols-2 md:gap-x-6 lg:gap-x-10 lg:gap-y-section-lg">
-        {/* LAST and NEXT: the two questions a parent on the turf actually has. "All games" jumps
-            to the full league log (`#league-log`), otherwise seven sections further down. */}
-        <section className="flex min-w-0 flex-col">
-          <SectionHeader
-            kicker="Last"
-            meta={
-              last
-                ? `${shortDate(last.dateLocal)} · ${gameKindLabel(last)}`
-                : undefined
-            }
-            action={{ href: '#league-log', label: 'All games' }}
-          />
-          {last ? (
-            <>
-              <div data-twin className="sx-card sx-flush sx-bleed md:hidden">
-                <GameRow game={last} perspective={team.slug} defaultExpanded showTime={false} />
-              </div>
-              <div data-twin className="hidden md:flex md:flex-1 md:flex-col">
-                <GameCard game={last} perspective={team.slug} showStream linkStyle="pills" className="flex-1" />
-              </div>
-            </>
-          ) : (
-            <EmptyState heading={`No results reported for ${team.name}.`} action={maxprepsAction}>
-              Their schedule is below, and MaxPreps may have results we have not picked up yet.
-            </EmptyState>
-          )}
-        </section>
+      <div className="sx-cols">
+        <div className="min-w-0">
+          <TeamNextGame card={view.nextCard} teamName={team.name} league={view.league} bracketHref={bracketHref} />
 
-        <TeamNextGame card={view.nextCard} teamName={team.name} league={view.league} />
-
-        {/* The tiles, the collapsed Elo rating and the two league links are one grid item, so the
-            links keep their 16px under the tiles instead of a section gap. Both columns from 768px. */}
-        <div className="min-w-0 md:col-span-2">
-          <TeamStatTiles view={view} className="min-w-0" />
-          <TeamElo elo={view.elo} />
-          {/* On the canvas, so the pills take the card's surface and ring (surface-2 on hover):
-              the grey pill fill all but vanished there in light mode. */}
-          <p className="mt-4 mb-0 flex flex-wrap gap-2">
-            <Link
-              href={view.standingsHref}
-              prefetch={false}
-              className="sx-pill sx-pill-ring"
-            >
-              {view.standingsLabel} <Arrow />
-            </Link>
-            {view.officialScheduleUrl ? (
-              <ExternalLink
-                href={view.officialScheduleUrl}
-                className="sx-pill sx-pill-ring"
-              >
-                Official {view.league.shortName} schedule
-              </ExternalLink>
+          <section id="schedule" className="sx-section sx-target" aria-labelledby="schedule-heading">
+            <SectionHeader id="schedule-heading" kicker="Schedule" meta={schedule.length > 0 ? plural(schedule.length, 'game') : undefined} />
+            <TeamGameLog games={schedule} perspective={team.slug} emptyHeading="No games listed" />
+            {officialFixtures.length > 0 ? (
+              <>
+                <SectionHeader
+                  strip
+                  kicker={`On ${view.league.shortName}’s schedule only`}
+                  meta={plural(officialFixtures.length, 'game')}
+                  className="mt-4"
+                />
+                <TeamOfficialFixtures
+                  fixtures={officialFixtures}
+                  slug={team.slug}
+                  division={team.division}
+                  today={view.today}
+                />
+              </>
             ) : null}
-          </p>
+          </section>
+
         </div>
 
-        <TeamFormMargin
-          view={view}
-          hasPlayedLeagueGames={parts.hasPlayedLeagueGames}
-          firstLeagueGame={parts.firstLeagueGame}
-          maxprepsAction={maxprepsAction}
-        />
+        <aside className="sx-rail min-w-0" aria-label={`${team.name} standings and season`}>
+          <section id="standings" className="sx-section sx-target" aria-labelledby="standings-heading">
+            <h2 id="standings-heading">{view.divisionHeading ? `${view.divisionHeading} standings` : view.standingsLabel}</h2>
+            <StandingsTable
+              division={table.division}
+              rows={table.rows}
+              gdDomain={0}
+              variant="mini"
+              caption={table.caption}
+              berthRuleAfter={table.ladderLine?.after}
+              self={team.slug}
+              notes="none"
+            />
+            <ul className="sx-linkrow">
+              <li>
+                <Link href={view.standingsHref} prefetch={false} className="sx-action">
+                  Full standings
+                </Link>
+              </li>
+            </ul>
+          </section>
 
-        <section className="min-w-0 md:max-lg:col-span-2">
-          <SectionHeader kicker="Splits" />
-          <TeamSplits view={view} />
-        </section>
+          <section className="sx-section" aria-labelledby="form-heading">
+            <h2 id="form-heading">Last 5 games</h2>
+            <TeamSplits view={view} />
+          </section>
 
-        <section id="postseason" className="min-w-0 md:max-lg:col-span-2">
-          <SectionHeader kicker={postseasonKicker(view)} meta="Not official" />
-          <TeamPlayoffLine view={view} />
-        </section>
+          <section id="postseason" className="sx-section sx-target" aria-labelledby="postseason-heading">
+            <h2 id="postseason-heading">{postseasonKicker(view)}</h2>
+            <TeamPlayoffLine view={view} />
+          </section>
 
-        <section className="min-w-0 md:max-lg:col-span-2">
-          <SectionHeader
-            kicker="Who we haven’t beaten"
-            meta={`${view.scopeLabel} only`}
-          />
           <TeamUnbeaten view={view} />
-        </section>
 
-        <section
-          id="league-log"
-          className={
-            leagueLogSpans
-              ? 'min-w-0 md:max-lg:col-span-2 lg:row-span-2'
-              : 'min-w-0 md:max-lg:col-span-2'
-          }
-        >
-          <SectionHeader
-            kicker="League game log"
-            meta={leagueScheduled === null ? `${leaguePlayed} played` : `${leaguePlayed} of ${leagueScheduled}`}
-            action={{ href: view.standingsHref, label: 'Standings' }}
-          />
-          <TeamGameLog
-            games={leagueLog}
-            perspective={team.slug}
-            emptyHeading={`No league games are published for ${team.name}.`}
-            emptyBody={
-              view.officialScheduleUrl && leagueScheduled !== null
-                ? `The official ${view.league.shortName} schedule has ${plural(
-                    leagueScheduled,
-                    `${view.league.gamesWord} game`,
-                  )} for them; none of those fixtures has a contest in any data source.`
-                : view.league.classification === 'membership'
-                  ? // The San Diego leagues: every game between two division members is a league game.
-                    `No game between ${team.name} and another ${view.scopeLabel} team is on MaxPreps’ schedules yet.`
-                  : // No official schedule to compare with: the league games are the ones MaxPreps marks.
-                    `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
-            }
-          />
-        </section>
-
-        {officialFixtures.length > 0 ? (
-          <section
-            className={fixturesSpan ? 'min-w-0 md:col-span-2' : 'min-w-0 md:max-lg:col-span-2'}
-          >
-            <SectionHeader
-              kicker={`On ${view.league.shortName}’s schedule only`}
-              meta={plural(officialFixtures.length, 'fixture')}
-            />
-            <TeamOfficialFixtures
-              fixtures={officialFixtures}
-              slug={team.slug}
-              division={team.division}
-              today={view.today}
-            />
-          </section>
-        ) : null}
-
-        {/* Non-league + Elsewhere: two grid items, or (logOutweighs) one lg column beside the
-            League log. `contents` keeps them two grid items below 1024px either way. */}
-        <div className={logOutweighs ? 'contents lg:flex lg:flex-col lg:gap-y-section-lg' : 'contents'}>
-          <section className="min-w-0 md:max-lg:col-span-2">
-            <SectionHeader
-              kicker={view.postseasonCount > 0 ? 'Non-league and postseason' : 'Non-league'}
-              meta={plural(nonLeagueLog.length, 'game')}
-            />
-            <TeamGameLog
-              games={nonLeagueLog}
-              perspective={team.slug}
-              emptyHeading={`${team.name} has no non-league games this season.`}
-              emptyBody={`Every game on their schedule counts toward the ${view.scopeLabel} table.`}
-            />
-          </section>
+          <TeamElo elo={view.elo} />
 
           <TeamElsewhere
             team={team}
@@ -349,76 +245,68 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             history={parts.history}
             historySize={parts.historySize}
             historyScope={parts.historyScope}
-            logOutweighs={logOutweighs}
+            officialSchedule={
+              view.officialScheduleUrl ? { href: view.officialScheduleUrl, leagueShort: view.league.shortName } : null
+            }
           />
-        </div>
-
-        {/* The JV list comes after every varsity game section and before the players: it is the
-            same school's other team, and none of its games feeds the varsity sections above. Its
-            header names the team's JV place when its division's JV table is shown, and links that
-            table. Both columns from 768px, like the lists below it. */}
-        {jv ? (
-          <section className="min-w-0 md:col-span-2" id="jv">
-            <SectionHeader
-              kicker="JV games"
-              meta={
-                jvStanding?.line ??
-                (jv.rows.length > 0
-                  ? [
-                      // The JV record over the finals listed below, once there is one.
-                      jv.record ? jv.record.overall : null,
-                      `${jv.played} played`,
-                      jv.toCome > 0 ? `${jv.toCome} to come` : null,
-                      jv.noScore > 0 ? `${jv.noScore} no score` : null,
-                    ]
-                      .filter((part) => part !== null)
-                      .join(' · ')
-                  : undefined)
-              }
-              action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}
-            />
-            <TeamJvGames view={jv} />
-          </section>
-        ) : null}
-
-        {/* Player stats, then the roster, after every game section (see the docblock). Both take
-            both columns at every width from 768px: a 30-row table in half a column is not a table
-            anyone scans. */}
-        {playerStats ? (
-          <section className="min-w-0 md:col-span-2" id="player-stats">
-            <SectionHeader
-              kicker="Player stats"
-              meta="This season, from MaxPreps"
-              action={{ href: `/leaders#players${regionIdSuffix(regionOf(team.league))}`, label: 'Site leaders' }}
-            />
-            <TeamPlayerStats view={playerStats} />
-          </section>
-        ) : null}
-
-        {roster ? (
-          <section className="min-w-0 md:col-span-2" id="roster">
-            <SectionHeader
-              kicker="Roster"
-              meta={rosterCount > 0 ? plural(rosterCount, 'player') : undefined}
-              action={HAS_RECRUITING ? { href: '/clubs', label: 'Club teams' } : undefined}
-            />
-            <TeamRoster view={roster} />
-          </section>
-        ) : null}
-
-        {/* The JV roster, last: the school's other team, apart from the varsity roster above it, as
-            the JV games are apart from the varsity games. Only a school some source lists JV players
-            for has the section (components/jv/jv-roster-view.ts). */}
-        {jvRoster ? (
-          <section className="min-w-0 md:col-span-2" id="jv-roster">
-            <SectionHeader
-              kicker="JV roster"
-              meta={jvRoster.rows.length > 0 ? `${plural(jvRoster.rows.length, 'player')} · ${jvRoster.sourceLabel}` : jvRoster.sourceLabel}
-            />
-            <TeamJvRoster view={jvRoster} />
-          </section>
-        ) : null}
+        </aside>
       </div>
+
+      {/* Below the rail the page is one column again, full width: the two-column grid ends where the
+          rail does, so the right third is never blank for thousands of pixels. On a phone the rail
+          (standings, last 5, the playoff picture) therefore comes before the long lists. */}
+      {/* The JV list comes after the varsity schedule and before the players: it is the same
+          school's other team, and none of its games feeds a varsity figure. */}
+      {jv ? (
+        <section id="jv" className="sx-section sx-target" aria-labelledby="jv-heading">
+          <SectionHeader
+            id="jv-heading"
+            kicker="JV games"
+            meta={jvStanding?.line ?? (jv.rows.length > 0 && jv.record ? jv.record.overall : undefined)}
+            action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}
+          />
+          <TeamJvGames view={jv} />
+        </section>
+      ) : null}
+
+      {playerStats ? (
+        <section id="player-stats" className="sx-section sx-target" aria-labelledby="player-stats-heading">
+          <SectionHeader
+            id="player-stats-heading"
+            kicker="Player stats"
+            action={{ href: `/leaders#players${regionIdSuffix(regionOf(team.league))}`, label: 'Leaders' }}
+          />
+          <TeamPlayerStats view={playerStats} />
+        </section>
+      ) : null}
+
+      {roster ? (
+        <section id="roster" className="sx-section sx-target" aria-labelledby="roster-heading">
+          <SectionHeader
+            id="roster-heading"
+            kicker="Roster"
+            meta={rosterCount > 0 ? plural(rosterCount, 'player') : undefined}
+            action={HAS_RECRUITING ? { href: '/clubs', label: 'Club teams' } : undefined}
+          />
+          <TeamRoster view={roster} />
+        </section>
+      ) : null}
+
+      {/* The JV roster, last: only a school some source lists JV players for has the section. */}
+      {jvRoster ? (
+        <section id="jv-roster" className="sx-section sx-target" aria-labelledby="jv-roster-heading">
+          <SectionHeader
+            id="jv-roster-heading"
+            kicker="JV roster"
+            meta={jvRoster.rows.length > 0 ? plural(jvRoster.rows.length, 'player') : undefined}
+          />
+          {/* Optional data, closed by default: the school's other team, as long as the varsity list. */}
+          <details className="sx-disclosure">
+            <summary>Show JV roster</summary>
+            <TeamJvRoster view={jvRoster} />
+          </details>
+        </section>
+      ) : null}
     </div>
   );
 }

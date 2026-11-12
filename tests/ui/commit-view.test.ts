@@ -366,12 +366,17 @@ describe('the roster’s commitment line', () => {
 describe('/commits, rendered', () => {
   const html = renderIndex();
 
-  it('has one h1, skips no heading level, and ends with how commitments are matched', () => {
+  it('has one h1, skips no heading level, and ends with a link to how commitments are matched, on /about', () => {
     const levels = headings(html);
     expect(levels.filter((l) => l === 1)).toHaveLength(1);
     for (let i = 1; i < levels.length; i++) expect(levels[i] - levels[i - 1]).toBeLessThanOrEqual(1);
-    expect(html).toContain('id="how-matched"');
-    expect(html.lastIndexOf('<section')).toBe(html.indexOf('<section aria-labelledby="how-matched"'));
+    // The method is said once, on /about (DESIGN §33): no section of it here, one link to it last.
+    expect(html).not.toContain('how-matched');
+    expect(html.lastIndexOf('<a ')).toBe(html.indexOf('<a class="sx-action" href="/about#commits-matched">'));
+    const about = renderToStaticMarkup(createElement(AboutPage));
+    expect(about).toContain('<section aria-labelledby="commits-matched"><h3 id="commits-matched">How commitments are matched</h3>');
+    expect(html).toContain('<nav aria-label="Recruiting"');
+    expect(html).toContain('<a class="sx-tab" aria-current="page" href="/commits">Commitments</a>');
   });
 
   it('gives every commitment and every region’s colleges their anchors, each id once', () => {
@@ -383,15 +388,16 @@ describe('/commits, rendered', () => {
     expect(ids.length).toBe(new Set(ids).size);
   });
 
-  it('puts each region’s commitments in its own scope block, under the switcher, NorCal first', () => {
+  it('puts each region’s commitments in its own scope block, NorCal first, with no region control of its own', () => {
     if (file.commitments.length === 0) return;
     const starts = view.regions.map((r) => html.indexOf(`<div id="${r.id}" data-region-scope="${r.id}">`));
     for (const at of starts) expect(at).toBeGreaterThan(-1);
     expect(starts).toEqual([...starts].sort((a, b) => a - b));
-    expect(html.indexOf('aria-label="Region"')).toBeGreaterThan(-1);
-    expect(html.indexOf('aria-label="Region"')).toBeLessThan(starts[0]);
+    // The footer and the More sheet carry the region (DESIGN §33); the page draws no switch.
+    expect(html).not.toContain('aria-label="Region"');
+    expect(html).not.toContain('data-region-option');
     view.regions.forEach((region, i) => {
-      const block = html.slice(starts[i], starts[i + 1] ?? html.indexOf('<section aria-labelledby="how-matched"'));
+      const block = html.slice(starts[i], starts[i + 1] ?? html.length);
       expect(textOf(block)).toContain(region.summary);
       for (const row of region.classes.flatMap((g) => g.rows)) expect(block).toContain(`id="${row.anchor}"`);
       for (const c of region.colleges) expect(block).toContain(`id="${collegeAnchor(region.id, c.slug)}"`);
@@ -410,16 +416,20 @@ describe('/commits, rendered', () => {
 });
 
 describe('the pages that link /commits', () => {
-  it('a committed player’s team page shows the line and the footnote, and leaks nothing', async () => {
+  it('a committed player’s team page shows the line and leaks nothing; what the line means is on /about', async () => {
     const slugs = [...new Set(file.commitments.map((c) => c.teamSlug))];
     for (const slug of slugs) {
       const html = await renderTeam(slug);
       for (const c of file.commitments.filter((x) => x.teamSlug === slug)) {
         expect(html).toContain(`href="/commits#${commitAnchor(c)}"`);
       }
-      expect(textOf(html)).toContain('Commitment lines link to the player’s entry on the college commitments page');
+      // The roster no longer explains its lines (DESIGN §33: method text lives on /about only).
+      expect(textOf(html)).not.toContain('Commitment lines');
       expect(commitmentLeaks(html, file, { publicTerms: PUBLIC_TERMS })).toEqual([]);
     }
+    expect(textOf(renderToStaticMarkup(createElement(AboutPage))).replace(/\s+/g, ' ')).toContain(
+      'Commitment lines link the player’s entry among the college commitments, which cites a source for each one.',
+    );
   });
 
   it('a commitment in another sport names it on the roster line; a field hockey one does not', async () => {

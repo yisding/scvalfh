@@ -64,16 +64,17 @@
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
  *  - never says the archive is SCVAL-only (it was, once);
  *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="eal"`), the division
- *    anchors of every available league, and a "Unavailable" card, with the reason, in the section of
+ *    anchors of every available league, and the line "No standings available", with the reason, in the section of
  *    every league the data marks unavailable;
  *  - an unavailable league's section has no table and names no champion, winner or award, so
  *    nothing is shown for it that we could not read from an official source;
  *  - an available league's tables are the data's: every varsity row's league record is on the page.
  * `leaders.html` (the site-wide leaderboards, one half per region):
- *  - has `id="schools"`, then `id="players"` (SoCal: `schools-socal`, `players-socal`), and the
- *    anchor of every board the view model builds;
- *  - names every team that has entered no player stats, so no player board reads as if it covered
- *    every team.
+ *  - has `id="players"`, then `id="schools"` (SoCal: `players-socal`, `schools-socal`; Players first
+ *    since the 2026-11-12 refresh), and the anchor of every board the view model builds;
+ *  - links /about#ratings, and `about.html`'s `#ratings` section names every team that has entered no
+ *    player stats, so no player board reads as if it covered every team (the boards carry no notes
+ *    of their own any more; the sentence lives once, on /about).
  * And: each `playoffs/<league>.html` names its league's section (`playoffs/mcal.html`: "North Coast
  * Section"); `standings.html` keeps the old anchors `id="de-anza"` and `id="el-camino"`.
  *
@@ -407,23 +408,32 @@ if (!existsSync(historyPath)) {
       for (const id of [region.playersId, region.schoolsId, ...[...region.players, ...region.schools].map((b) => b.id)]) {
         if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
       }
-      // The Players section only: a team with no stats can still be named on a school board, which
-      // says nothing about its players. It follows the Schools section (DESIGN §23).
+      // Players first, then Teams (`schoolsId`): the order of the refresh (spec 5.4).
       const players = sectionById(main, region.playersId);
       const schools = sectionById(main, region.schoolsId);
       if (!players) fail(file, `no <section id="${region.playersId}">`);
       if (!schools) fail(file, `no <section id="${region.schoolsId}">`);
-      if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
-        fail(file, `the ${region.shortName} Schools section does not come before its Players section (DESIGN §23)`);
+      if (players && schools && main.indexOf(players) > main.indexOf(schools)) {
+        fail(file, `the ${region.shortName} Players section does not come before its Teams section`);
       }
-      if (players) {
-        // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
-        const playersText = players.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
-        const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
+    }
+    // The boards carry no notes of their own: who is missing from the player boards is said once, on
+    // /about#ratings, which /leaders links. A team with no stats can still be named on a team board,
+    // which says nothing about its players, so the sentence is looked for in that section only.
+    if (!main.includes('href="/about#ratings"')) fail(file, 'does not link /about#ratings');
+    const aboutPath = path.join(APP, 'about.html');
+    const ratings = existsSync(aboutPath) ? sectionById(mainOf('about.html', readFileSync(aboutPath, 'utf8')), 'ratings') : null;
+    if (!ratings) {
+      fail('about.html', 'no <section id="ratings"> (the anchor /leaders links)');
+    } else {
+      // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
+      const ratingsText = ratings.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
+      const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
+      for (const region of buildLeadersView().regions) {
         for (const team of snapshot.teams) {
           if (regionOf(team.league) !== region.region || statSlugs.has(team.slug)) continue;
-          if (!playersText.includes(team.name)) {
-            fail(file, `${team.name} has no player stats, and the ${region.shortName} Players section does not say so`);
+          if (!ratingsText.includes(team.name)) {
+            fail('about.html', `${team.name} has no player stats, and #ratings does not say so`);
           }
         }
       }

@@ -15,12 +15,10 @@ import type { CrossCheckGroup } from './about-view';
  * every team where our computed record disagrees with MaxPreps' own table. We always show our
  * own computation and say so; a disagreement is published, never resolved silently.
  *
- * THREE columns, not four. Every row of a team's group carries the same `url` — its division's
- * MaxPreps standings page — so a per-row Source column repeated one link per row AND made the
- * table 346px wide inside a 320px `overflow-clip` box, where the last column (that very link)
- * was cut off with nothing to scroll. DESIGN R-8 asks for a reflow at 320px with no loss of
- * content and no scrollable data table, so the link moved up to the team's own line, where it is
- * said once and reads better.
+ * THREE columns, not four. Every row of a team's group carries the same `url`, its division's
+ * MaxPreps standings page, so the link is said once, on the team's own line: a per-row Source
+ * column repeated it and made the table wider than a 320px screen. A plain `.sx-table` (untinted
+ * head over the ink rule, DESIGN §33), no box around it.
  */
 export interface CrossCheckTableProps {
   groups: CrossCheckGroup[];
@@ -36,7 +34,7 @@ export interface CrossCheckTableProps {
 export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCheckTableProps) {
   if (groups.length === 0) {
     return (
-      <p className="max-w-prose py-1 text-body text-ink-2">
+      <p className="sx-empty max-w-prose">
         {emptyText ?? (
           <>
             No disagreements in the most recent run &mdash; our computed league records match
@@ -47,91 +45,59 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
     );
   }
   return (
-    <div className="flex flex-col gap-stack">
+    <div className="flex flex-col gap-6">
       {groups.map(({ team, detail, rows }) => (
-        // The group is capped at the prose measure (`max-w-prose`, the theme's one prose token,
-        // which the ledes and the `max-w-prose` paragraphs on this page use too), so the header's
-        // right-aligned link lines up with the card edge below it and the card's right edge lines
-        // up with the paragraphs around it. A private `66ch` here once sat 10px past them.
+        // Capped at the prose measure, so the table's right edge lines up with the paragraphs around it.
         <div key={team.id} className="max-w-prose">
-          {/* The monogram holds the first line; the name, its flag and the table link wrap in
-              their own box. The flag is glued to the name's last word (a no-break space), so a
-              long name like "Convent of the Sacred Heart" never leaves it alone on a line;
-              when the link does not fit it drops under the name, still right-aligned. */}
-          <div className="flex items-start gap-x-2">
-            <TeamMonogram team={team} size={24} />
-            <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="min-w-0 text-body font-semibold text-ink">
-                {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                    (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route
-                    here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
-                    the link scrolls into view, and the table is one link per cross-checked row.
-                    Navigation still fetches on click. */}
-                {/* `py-0.5` on the inline link: its box is the font's 21px content area, and the
-                    2px above and below bring the hit area to the 24px minimum (WCAG 2.5.8)
-                    without moving the line. */}
-                <Link href={`/teams/${team.slug}`} prefetch={false} className="py-0.5 hover:underline">
-                  {team.name}
-                </Link>
-                {'\u00a0'}
-                <span aria-hidden="true" className="font-normal text-ink-3">
-                  &#9873;
-                </span>
-              </span>
-              {/* A standalone action in the header row, not a word in the sentence below it, so it
-                  carries its own 24px box (WCAG 2.5.8; see app/globals.css). */}
-              {rows[0] ? (
-                <span className="ml-auto text-meta">
-                  <ExternalLink href={rows[0].url} arrow={false} className="sx-action">
-                    MaxPreps table
-                  </ExternalLink>
-                </span>
-              ) : null}
-            </div>
+          <div className="flex flex-wrap items-center gap-x-3">
+            {/* `prefetch={false}`: one link per cross-checked team, each to a static route. */}
+            <Link
+              href={`/teams/${team.slug}`}
+              prefetch={false}
+              className="sx-teamlink inline-flex min-h-7 min-w-0 items-center gap-2 text-body font-semibold text-ink pointer-coarse:min-h-11"
+            >
+              <TeamMonogram team={team} size={24} />
+              <span>{team.name}</span>
+            </Link>
+            {/* Every row of a team's group carries the same `url`, its division's MaxPreps standings
+                page, so it is linked once, on the team's own line. */}
+            {rows[0] ? (
+              <ExternalLink href={rows[0].url} arrow={false} className="sx-action ml-auto">
+                MaxPreps table
+              </ExternalLink>
+            ) : null}
           </div>
-          {detail ? <p className="mt-1 mb-0 max-w-prose text-meta text-ink-2">{detail}</p> : null}
+          {detail ? <p className="m-0 text-cell text-ink-2">{detail}</p> : null}
           {rows.length > 0 ? (
-            <div className="sx-card sx-flush mt-3">
-              {/* Auto layout with the two value columns at fixed widths (and nowrap), the same
-                  in every table: they hold a place, a count, a win pct or a record, and Field
-                  gets the rest of the card. Shrink-wrapped (`w-px`), Ours took its own longest
-                  value, so it was 58px in a goals table, 63 in a record table and 71 for
-                  "15-2-3", and the values of the stacked tables moved up to 13px between them.
-                  Ours is 72px: "15-2-3" (6ch of 13px mono, 47px) + 12 a side. MaxPreps is 96:
-                  its 12px head (66px) + 12 + 16. Field keeps 120px at 320, enough for "league
-                  goals against" on two lines; a longer value would widen its column rather than
-                  clip, and the longest is well under the card's width, so the table still fits
-                  a 320px screen without scrolling. */}
-              <table className="sx-table text-meta">
-                <caption className="sr-only">
-                  {team.name}: our computation compared with MaxPreps&rsquo; standings table
-                </caption>
-                <thead>
-                  <tr>
-                    <th scope="col" className="pl-4">
-                      Field
-                    </th>
-                    {/* `tracking-normal`: right-aligned tracked caps leave the letter-spacing
-                        after the last letter, a visible gap before the column edge. */}
-                    <th scope="col" className="w-[4.5rem] px-3 text-right tracking-normal">
-                      Ours
-                    </th>
-                    <th scope="col" className="w-[6rem] pl-3 pr-4 text-right tracking-normal">
-                      MaxPreps
-                    </th>
+            // Three columns: the field takes the spare width and wraps ("league goals against"); the two
+            // value columns hold a place, a count or a record and stay on one line.
+            <table className="sx-table mt-1">
+              <caption className="sr-only">
+                {team.name}: our computation compared with MaxPreps&rsquo; standings table
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col" className="text-left">
+                    Field
+                  </th>
+                  <th scope="col" className="w-[4.5rem]">
+                    Ours
+                  </th>
+                  <th scope="col" className="w-[6rem]">
+                    MaxPreps
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.field}>
+                    <td className="text-left whitespace-normal text-ink-2">{row.field}</td>
+                    <td className="sx-num font-semibold">{row.ours}</td>
+                    <td className="sx-num text-ink-2">{row.theirs}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row) => (
-                    <tr key={row.field}>
-                      <td className="py-3 pl-4 text-ink-2">{row.field}</td>
-                      <td className="sx-num whitespace-nowrap px-3 py-3 text-right text-cell font-semibold text-ink">{row.ours}</td>
-                      <td className="sx-num whitespace-nowrap py-3 pl-3 pr-4 text-right text-cell text-ink-2">{row.theirs}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           ) : null}
         </div>
       ))}

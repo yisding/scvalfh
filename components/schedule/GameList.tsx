@@ -1,4 +1,5 @@
 import { GameRow } from '../game-row/GameRow';
+import { getBracketLink } from '../playoffs/bracket-link';
 import type { Game, LeagueId } from '../../lib/types';
 import { WIDE_SCORES } from '../words/score-words';
 
@@ -75,6 +76,7 @@ export function GameList({ games, solo = false, showChips = false, showDate = fa
             showChips={showChips}
             showDate={showDate}
             noteLink={noteLink}
+            seeds={getBracketLink(game)?.seeds}
           />
         ))}
       </ul>

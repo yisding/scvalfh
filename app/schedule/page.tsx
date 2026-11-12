@@ -1,56 +1,36 @@
 import type { Metadata } from 'next';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
-import ScheduleIndex from '../../components/schedule/ScheduleIndex';
-import { postseasonPlace } from '../../components/schedule/day-summary';
+import ScoreDay from '../../components/schedule/ScoreDay';
 import { countGames } from '../../components/schedule/filter-data';
-import { buildScheduleIndex } from '../../components/schedule/schedule-view';
-import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
+import { getGames, getToday } from '../../lib/data';
 import { plural } from '../../lib/format';
 import { SEASON_DISPLAY } from '../../lib/season';
 import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
- * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of
- * every league's season would be several megabytes, so each league's full, filterable season is
- * `/schedule/<league>`, and this page holds the league cards, the last and next three game days
- * grouped by league, and an index of every game day.
+ * `/schedule` — the Scores page for today's Pacific date, exactly like `/` (DESIGN §33;
+ * components/schedule/ScoreDay.tsx), so its canonical URL is `/`. The date bar walks the season day by
+ * day and its Calendar holds every game day; a league's whole season is `/schedule/<league>`, reached
+ * from the rail, `/standings/<league>` and the team pages.
  *
- * Old links keep working with no JavaScript: `/schedule#2026-09-24` lands on that day's index row
- * (`id="2026-09-24"`), which links `/scores/2026-09-24`. The cards, Recent and Next are per region
- * (DESIGN-socal §2.4, components/schedule/ScheduleIndex.tsx); the day index is one list.
+ * Old links keep working with no JavaScript: `/schedule#2026-09-24` has a target, the calendar's link
+ * to that day (`id="2026-09-24"`, components/schedule/SeasonCalendar.tsx).
  *
  * Static: no search params; "today" is the snapshot's own Pacific day, never `Date.now()`.
  */
-function indexData() {
-  const leagues = getLeagueSummaries();
-  return {
-    leagues,
-    index: buildScheduleIndex({
-      games: getGames(),
-      leagues,
-      leagueOf: (slug) => getTeamBySlug(slug)?.league,
-      today: getToday(),
-      placeOf: postseasonPlace,
-    }),
-  };
-}
-
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = coveredLeagueWords();
-  const description = `${counts.total} ${SPORT_AUDIENCE} games in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
+  const description = `${counts.total} ${SPORT_AUDIENCE} games in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Today's scores, and every game day.`;
   return {
     title: 'Schedule & results',
     description,
-    alternates: { canonical: '/schedule' },
+    alternates: { canonical: '/' },
     openGraph: {
       ...OG_BASE,
       ...ROOT_OG_IMAGE,
-      url: '/schedule',
+      url: '/',
       title: 'Schedule & results — every league',
       description,
     },
@@ -58,21 +38,5 @@ export function generateMetadata(): Metadata {
 }
 
 export default function SchedulePage() {
-  const { leagues, index } = indexData();
-  return (
-    <div className="pb-section-lg">
-      <PageHeader
-        title="Schedule"
-        description="Every league’s season, game by game: pick a league for its full schedule and filters, or a day for every game on it. All times Pacific."
-      />
-
-      {/* The region control, its own row under the header (DESIGN-socal §2.4). */}
-      <RegionSwitcher className="mt-4" />
-
-      {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
-      <LeagueJumpLinks leagues={leagues} />
-
-      <ScheduleIndex {...index} />
-    </div>
-  );
+  return <ScoreDay date={getToday()} />;
 }

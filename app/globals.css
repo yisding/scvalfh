@@ -373,6 +373,10 @@
     padding-bottom: calc(var(--spacing-tabbar) + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) { body { padding-bottom: 0; } }
+  /* A page shorter than the screen keeps its footer on the bottom edge: the body is a column and
+     <main> takes the slack. `width: 100%` because a flex item with auto side margins shrinks to fit. */
+  body { display: flex; flex-direction: column; min-height: 100dvh; }
+  body > main { flex: 1 0 auto; width: 100%; }
 
   h1, h2, h3 { text-wrap: balance; }
   p, li, dd, dt, figcaption, blockquote { text-wrap: pretty; }
@@ -397,6 +401,9 @@
   button.sx-link { appearance: none; padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
   .sx-action { display: inline-flex; align-items: center; min-height: 1.75rem; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap; }
   @media (pointer: coarse) { .sx-action { min-height: 2.75rem; } }
+  /* A team name that is a link on a line of its own (the scoreboard, an awards list) is one 20px line:
+     on touch its hit area is extended to 44px without moving anything. */
+  @media (pointer: coarse) { .sx-teamlink { position: relative; } .sx-teamlink::before { content: ""; position: absolute; inset: -0.75rem 0; } }
   .sx-rowlink, .sx-teamlink { color: inherit; text-decoration: none; }
   .sx-rowlink:hover, .sx-teamlink:hover, .sx-rowlink:focus-visible, .sx-teamlink:focus-visible {
     text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
@@ -454,6 +461,8 @@
     .sx-mast-find { display: none; }
   }
   @media (min-width: 80rem) { .sx-mast-row { padding-inline: 2rem; } }
+  /* /teams has its own search field directly under the title; the header's would be a second one. */
+  html:has([data-teams-page]) .sx-mast-search { visibility: hidden; }
   /* width-hold: the label reserves its 700-weight width so the selected state never moves a neighbour */
   .sx-weight-hold { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; }
   .sx-weight-hold::after { content: attr(data-label); height: 0; visibility: hidden; overflow: hidden; font-weight: 700; pointer-events: none; user-select: none; }
@@ -474,7 +483,7 @@
   .sx-pagehead { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; row-gap: 0.375rem; align-items: center; padding: 1rem 0 0.5rem; }
   .sx-pagehead > h1 { grid-column: 1 / -1; margin: 0; }
   .sx-pagehead-meta { grid-column: 1; grid-row: 2; display: flex; flex-wrap: wrap; column-gap: 0.75rem; margin: 0; font-size: 0.9375rem; line-height: 1.375rem; color: var(--sx-text-2); }
-  .sx-pagehead-end { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 1.125rem; }
+  .sx-pagehead-end { grid-column: 2; grid-row: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 0 1.125rem; }
   .sx-pagehead > :not(h1, .sx-pagehead-meta, .sx-pagehead-end) { grid-column: 1 / -1; }
   .sx-dateline { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }   /* the long "Updated …" line (footer, /about, stale) */
   .sx-dateline time { white-space: nowrap; }
@@ -518,6 +527,8 @@
      day (`data-far="1|2"` marks the outer cells). ── */
   .sx-datebar { container: datebar / inline-size; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; background: var(--sx-bg); border-bottom: 1px solid var(--sx-border); }
   .sx-datebar[data-sticky] { position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 10; }
+  /* A short screen (a 568px phone, a phone on its side) keeps the header and the bottom bar; the date bar scrolls away. */
+  @media (max-height: 37.5rem) { .sx-datebar[data-sticky] { position: relative; top: auto; } }   /* relative, not static: the Calendar panel is placed against the bar */
   .sx-days { display: flex; flex: 1 1 auto; min-width: 0; margin: 0; padding: 0; list-style: none; }
   .sx-days > li { display: flex; flex: 1 1 0; min-width: 0; }
   .sx-days > li[data-far] { display: none; }
@@ -547,11 +558,16 @@
     .sx-datebar :is(.sx-iconbtn, .sx-btn) { width: 2.25rem; }   /* 36 x 44 */
   }
   @media (max-width: 22.49rem) { .sx-datebar { gap: 0.25rem; } }
+  /* Without JavaScript nothing picks a region, and two regions' cells and arrows in one row overprint:
+     the bar then walks the first region's days (the Calendar panel still lists every game day). */
+  html:not([data-js]) .sx-datebar [data-region-scope]:not([data-region-scope="norcal"]) { display: none; }
   @container datebar (min-width: 34rem) { .sx-days > li[data-far="1"] { display: flex; } }
   @container datebar (min-width: 44rem) { .sx-days > li[data-far] { display: flex; } }
   /* Month picker (the SeasonCalendar inside the Calendar disclosure) */
-  .sx-cal { display: grid; grid-template-columns: repeat(7, 2.5rem); gap: 2px; font-size: 0.875rem; text-align: center; }
-  .sx-cal > :is(a, span) { display: grid; place-items: center; height: 2.5rem; border-radius: var(--sx-r-control); color: var(--sx-text-3); text-decoration: none; }
+  /* Seven columns that give way before the panel does (a 320px phone has 262px for them); a day is 44px tall. */
+  .sx-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 2.75rem)); gap: 2px; font-size: 0.875rem; text-align: center; }
+  .sx-cal > span[aria-hidden] { height: 1.75rem; }
+  .sx-cal > :is(a, span) { display: grid; place-items: center; height: 2.75rem; border-radius: var(--sx-r-control); color: var(--sx-text-3); text-decoration: none; }
   .sx-cal > a { color: var(--sx-text); font-weight: 600; }
   .sx-cal > a:hover { background: var(--sx-surface-2); }
   .sx-cal > a[data-today] { text-decoration: underline; text-decoration-color: var(--sx-accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
@@ -574,6 +590,12 @@
   .sx-tab:hover, .sx-league-chip:hover, .sx-opt:hover { color: var(--sx-text); }
   :is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], [aria-current], [aria-selected="true"]) { color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-accent); }
   .sx-tab:focus-visible, .sx-league-chip:focus-visible { outline-offset: -3px; }
+  /* The tab face means "one of these is selected". A row whose items only jump within the page has no
+     selected one, so its items wear the link face (ink, a 1px underline), as every other jump row does. */
+  :is(.sx-tabs:not(:has([aria-current], [aria-selected="true"])) .sx-tab, .sx-chips:not(:has([aria-current], [aria-pressed])) .sx-league-chip)[href^="#"] {
+    color: var(--sx-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--sx-border-strong);
+  }
+  :is(.sx-tabs:not(:has([aria-current], [aria-selected="true"])) .sx-tab, .sx-chips:not(:has([aria-current], [aria-pressed])) .sx-league-chip)[href^="#"]:hover { color: var(--sx-accent-ink); text-decoration-color: currentColor; }
   /* League row (ScopeBar). Two parts: the league tabs, and `.sx-scope-util` = the region switch
      (multi-region builds) + the "Updated …" stamp. From 768 they share one row: tabs, then at the row's
      end the stamp and the switch. Below 768 the util part is its own 44px line ABOVE the tabs (region
@@ -629,9 +651,11 @@
   .sx-strip-end { display: flex; align-items: center; gap: 0.875rem; margin-left: auto; font-size: 0.875rem; font-weight: 400; color: var(--sx-text-2); white-space: nowrap; }
   .sx-strip-end > .sx-action { min-height: 2.25rem; font-size: 0.875rem; }
   :is(.sx-strip, .sx-band) a:not(.sx-action) { color: inherit; text-decoration: none; }
+  /* A heading that is a link (a date, a division) fills the strip's height: a 17px line of text is under the 24px a target needs. */
+  :is(.sx-strip, .sx-band) :is(h2, h3, h4) a { display: inline-flex; align-items: center; min-height: 2.25rem; }
   :is(.sx-strip, .sx-band) a:not(.sx-action):hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .sx-strip ~ .sx-strip, .sx-gamelist + .sx-strip, .sx-tablewrap + .sx-strip { margin-top: 1rem; }
-  @media (pointer: coarse) { .sx-strip:has(.sx-action), .sx-strip:has(.sx-action) .sx-action { min-height: 2.75rem; } }
+  @media (pointer: coarse) { .sx-strip:has(.sx-action), .sx-strip:has(.sx-action) .sx-action, :is(.sx-strip, .sx-band):has(:is(h2, h3, h4) a), :is(.sx-strip, .sx-band) :is(h2, h3, h4) a { min-height: 2.75rem; } }
   .sx-band[data-sticky] { position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 5; }
 
   /* ── Layout: main + rail from 768 (the rail holds standings, so they are on the first screen of a
@@ -650,22 +674,15 @@
     .sx-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 
-  /* Old surfaces, flattened. Names kept so call sites and tests survive; page agents purge them. */
-  .sx-card { background: none; box-shadow: none; border-radius: 0; padding: 0; }
-  /* Inside an old card the text still wraps as it did: a prose table that is not in the new
-     `.sx-tablewrap` (the /about cross-checks) and a sentence-long `.sx-action` (the /playoffs league
-     lines) were set on one line by the new rules and ran 600 to 1080px past a 390px phone. Dead once
-     the pages drop `.sx-card`. */
-  .sx-card .sx-table:not(.sx-tablewrap > .sx-table) :is(td, tbody th) { white-space: normal; }
-  .sx-card .sx-action, p > .sx-action { white-space: normal; }   /* and a link set in a paragraph: /playoffs' NFHS link is 308px, 4px more than a 320px phone has */
-  .sx-flush { padding: 0; }
-  .sx-bleed { margin-inline: 0; }
+  /* A link set in a paragraph wraps: /playoffs' NFHS link is 308px, 4px more than a 320px phone has. */
+  p > .sx-action { white-space: normal; }
+  .sx-bleed { margin-inline: 0; } /* name kept: tests/ui/contrast.test.ts checks the selector exists */
   .sx-inset { border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); padding: 0.625rem 0.75rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
   .sx-note { margin: 0.5rem 0 0; max-width: 62ch; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
   .sx-empty { margin: 0; padding: 0.25rem 0 0.75rem; font-size: 1rem; line-height: 1.5rem; color: var(--sx-text-2); }
 
   /* ── Status text, live, result chips ──────────────────────────────────────── */
-  .sx-tag, .sx-badge, .sx-status, .sx-flag {
+  .sx-tag, .sx-status {
     display: inline; padding: 0; border: 0; border-radius: 0; background: none; min-height: 0;
     font-family: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; letter-spacing: 0; text-transform: none;
     color: var(--sx-text-2); white-space: nowrap;
@@ -687,18 +704,15 @@
   .sx-form { display: inline-flex; gap: 2px; vertical-align: middle; }
 
   /* ── Buttons, fields ──────────────────────────────────────────────────────── */
-  .sx-btn, .sx-pill {
+  .sx-btn {
     appearance: none; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; min-height: 2.5rem; padding: 0 0.875rem;
     border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); cursor: pointer;
     font: inherit; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; white-space: nowrap; color: var(--sx-text); text-decoration: none; list-style: none;
   }
   .sx-btn::-webkit-details-marker { display: none; }
-  a.sx-pill { color: var(--sx-text); }
-  .sx-btn:hover, .sx-pill:hover { border-color: var(--sx-text); }
-  .sx-btn-primary, .sx-pill-accent { border-color: var(--sx-text); background: var(--sx-text); color: var(--sx-bg); }
-  a.sx-pill-accent { color: var(--sx-bg); }
-  .sx-pill-ring, .sx-pill-card { box-shadow: none; }
-  @media (pointer: coarse) { .sx-btn, .sx-pill { min-height: 2.75rem; } }
+  .sx-btn:hover { border-color: var(--sx-text); }
+  .sx-btn-primary { border-color: var(--sx-text); background: var(--sx-text); color: var(--sx-bg); }
+  @media (pointer: coarse) { .sx-btn { min-height: 2.75rem; } }
   .sx-field {
     display: block; width: 100%; height: 2.75rem; padding: 0 0.75rem; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control);
     background: var(--sx-bg); font: inherit; font-size: 1rem; color: var(--sx-text);
@@ -824,7 +838,7 @@
   .sx-logrow > .sx-num[data-time] { font-size: 1.0625rem; }
   .sx-logrow:hover { background: var(--sx-surface-2); }
   .sx-logrow-note { font-size: 0.875rem; color: var(--sx-text-2); }
-  .sx-logrow .sx-teamcell > :is(a, span) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sx-logrow .sx-teamcell > :is(a, span) { min-width: 0; white-space: normal; line-height: 1.25rem; }   /* a long opponent wraps; it is never cut */
   .sx-nonleague { color: var(--sx-text-2); }
 
   /* ── Your team line. On the Scores page, when the reader's team has NO game on the selected day:
@@ -901,7 +915,7 @@
   .sx-leader-name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; color: var(--sx-text); }
   .sx-leader-name + small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2); }
   .sx-leader > .sx-num:last-child { font-size: 1.25rem; font-weight: 700; color: var(--sx-text); }
-  .sx-leader:first-child > .sx-num:last-child { font-size: 1.625rem; }                   /* the leader's figure is one step up */
+  .sx-board > ol > .sx-leader:first-child > .sx-num:last-child { font-size: 1.625rem; }                   /* the leader's figure is one step up */
 
   /* ── Your team (pinned): a small star after the name, and a bold name in tables. The star is drawn
      where it helps a reader scan: standings rows, game rows in lists, the live board. Not in the bracket. The words
@@ -958,10 +972,6 @@
     .sx-round-tabs { display: none; }
   }
 
-  /* ── Meters and bars ──────────────────────────────────────────────────────── */
-  .sx-meter-track { background: var(--sx-surface-3); border-radius: 0; }
-  .sx-meter-fill { background: var(--sx-text); border-radius: 0; }
-
   /* ── Footer: the same navy band as the header ─────────────────────────────── */
   .sx-foot { margin-top: 3.5rem; border-top: 1px solid var(--sx-band-edge); background: var(--sx-band); font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-band-muted); }
   .sx-foot-inner { max-width: 75rem; margin-inline: auto; padding: 1.25rem 1rem 2rem; }
@@ -997,7 +1007,8 @@
     font-size: min(0.875rem, 15px); line-height: 1; font-weight: 500; letter-spacing: 0; color: var(--sx-text-2); text-decoration: none; cursor: pointer; list-style: none; white-space: nowrap;
   }
   .sx-tabbar-tab::-webkit-details-marker { display: none; }
-  .sx-tabbar-tab:is([aria-current], [data-current]), details[open] > .sx-tabbar-tab { color: var(--sx-accent-ink); font-weight: 700; box-shadow: inset 0 3px 0 var(--sx-accent); }
+  /* Lit = where the reader IS. An open More sheet does not light its tab: two lit cells would say two places. */
+  .sx-tabbar-tab:is([aria-current], [data-current]) { color: var(--sx-accent-ink); font-weight: 700; box-shadow: inset 0 3px 0 var(--sx-accent); }
   .sx-tabbar-tab:focus-visible { outline-offset: -4px; }
   @media (max-width: 22.49rem) { .sx-tabbar-tab { font-size: min(0.8125rem, 15px); } }
   .sx-more-scrim { display: none; }
@@ -1008,7 +1019,7 @@
   }
   :root[data-theme="dark"] .sx-more-sheet { background: var(--sx-surface-2); }
   @media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .sx-more-sheet { background: var(--sx-surface-2); } }
-  .sx-more-head { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem 0.25rem; font-size: 1.125rem; font-weight: 700; color: var(--sx-text); }
+  .sx-more-head { display: flex; align-items: center; justify-content: flex-end; padding: 0.5rem 1rem 0.25rem; font-size: 1.125rem; font-weight: 700; color: var(--sx-text); }
   .sx-more-head > .sx-btn { min-height: 2.75rem; }
   .sx-more-sheet > ul { margin: 0; padding: 0 1rem; list-style: none; }
   .sx-more-sheet > ul > li + li { border-top: 1px solid var(--sx-border); }
@@ -1024,11 +1035,13 @@
   .sx-disclosure { position: relative; border: 0; background: none; border-radius: 0; }
   .sx-disclosure > summary:not(.sx-btn) { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--sx-border-strong); cursor: pointer; list-style: none; }
   .sx-disclosure > summary::-webkit-details-marker { display: none; }
+  /* A summary that names both states ("Show all" / "Show fewer") shows the one that is true. */
+  .sx-disclosure:not([open]) > summary > [data-when="open"], .sx-disclosure[open] > summary > [data-when="closed"] { display: none; }
 
   /* ── Phone adjustments ────────────────────────────────────────────────────── */
   @media (max-width: 63.99rem) {   /* below 1024 the log sits in a column of 400px or less: the note goes under the opponent */
     .sx-logrow { grid-template-columns: 3.25rem 1.25rem 4.75rem minmax(0, 1fr); padding-block: 0.375rem; }
-    .sx-logrow-note { grid-column: 4; }
+    .sx-logrow-note { grid-column: 4; min-width: 0; white-space: normal; line-height: 1.25rem; }   /* under the name on a phone: a long note wraps, it is never cut */
     .sx-logrow-note:empty { display: none; }
   }
   @media (max-width: 29.99rem) {
@@ -1041,6 +1054,9 @@
   .sx-figure { font-variant-numeric: tabular-nums lining-nums; }
   /* `.sx-rowlink` also stretches over its row (its ::after covers the positioned row and draws the ring). */
   .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
+  /* A table row is that positioned row whether or not its component says `relative`: without it the
+     ::after takes the page as its box and one team's link covers the first screen (seen on /playoffs). */
+  .sx-table tbody tr { position: relative; }
   .sx-rowlink:focus-visible { outline-style: none; }
   .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
   /* One lit item while a navigation is pending: `aria-current` only moves when the route commits,
@@ -1057,31 +1073,14 @@
   /* A league row that stands outside a ScopeBar lays its section lists out the same way. */
   .sx-chips ul { display: contents; }
   .sx-chips li { display: flex; flex: none; list-style: none; }
-  /* "Jump to <SHORT>" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's call. */
-  .sx-jump { min-height: 2.75rem; font-size: var(--text-meta); line-height: 1.25rem; }
   .sx-chip-slot { display: inline-block; flex-shrink: 0; }
-  .sx-bar  { background: var(--sx-bar); }
-  .sx-zero { background: var(--sx-zero); }
   .sx-inset > * + * { margin-top: 0.75rem; }
   .sx-inset.sx-disclosure { padding-block: 0; }
   .sx-inset.sx-disclosure[open] { padding-bottom: 0.75rem; }
   .sx-disclosure[open] { padding-bottom: 0.75rem; }
-  .sx-lift { box-shadow: none; }
 
-  /* ── TRANSITIONAL: old names un-migrated pages still use. Delete each rule with the markup it serves. ── */
-  /* The drawn check of the schedule filter pills (ScheduleFilters, P2). */
-  .sx-check {
-    display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
-    background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  }
-  .sx-chip-check { display: none; }
   /* Inside an old `.sx-list` item the item draws the hairline. */
   .sx-list > li > :is(.sx-game, .sx-logrow):first-child { margin-top: 0; border-top: 0; }
-  /* The old pill alias keeps wrapping labels; un-migrated pages force `text-accent-ink!` onto the
-     accent pill, which is ink on ink (`!important` in this layer outranks an important utility). */
-  .sx-pill { white-space: normal; padding-block: 0.3125rem; }
-  .sx-pill.sx-pill-accent { color: var(--sx-bg) !important; }
 
   .sx-pinned .sx-pin-note,
   [data-team-slug][data-pinned] .sx-pin-note { display: inline-block !important; }   /* inline-block: the note is drawn as the star, a sized box */
@@ -1127,19 +1126,15 @@
   .sx-prose li + li { margin-top: 0.5rem; }
   .sx-prose b, .sx-prose strong { font-weight: 600; color: var(--sx-text); }
 
-  /* Lists and grid cells: hairlines between rows, no box. `margin-block` only on `.sx-list`. */
+  /* Lists: hairlines between rows, no box. `margin-block` only on `.sx-list`. */
   .sx-list { list-style: none; margin-block: 0; padding: 0; }
   .sx-list > li { border-bottom: 1px solid var(--sx-border); }
   .sx-list > li:last-child { border-bottom: 0; }
-  .sx-gridcell { min-width: 0; border-top: 1px solid var(--sx-border); padding-block: 0.625rem; }
-  .sx-gridcell:first-child { border-top-width: 0; }
-  @media (width >= 40rem) { .sx-gridcell:nth-child(2) { border-top-width: 0; } }
-  @media (width >= 64rem) { .sx-gridcell:nth-child(3) { border-top-width: 0; } }
 
   /* Tap feedback; with a mouse a list row answers the pointer the way a table row does. */
   .sx-tap:active { background: var(--sx-surface-2); }
   @media (hover: hover) {
-    .sx-tap:not(.sx-card, .sx-pill, .sx-btn):hover { background: var(--sx-surface-2); }
+    .sx-tap:not(.sx-btn):hover { background: var(--sx-surface-2); }
   }
 
   /* A disclosure chevron: turned when its <details> opens; a LEADING one points right while closed. */
@@ -1184,18 +1179,13 @@
     /* The letter, the written label and the bar's side of the zero rule already carry every
        meaning, so nothing needs a fallback channel; fills and shadows need a real edge. */
     .sx-chip { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; color: CanvasText; box-shadow: none; }
-    .sx-bar  { forced-color-adjust: none; background: CanvasText; }
-    .sx-zero { forced-color-adjust: none; background: CanvasText; }
-    .sx-meter-fill { forced-color-adjust: none; background: CanvasText; }
-    .sx-meter-track { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; }
-    .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
     .sx-inset, .sx-stale > p { border: 1px solid CanvasText; }
     :is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], [aria-current], [aria-selected="true"]) { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-pin-note { forced-color-adjust: none; background: Highlight; }
     .sx-mast, .sx-foot, .sx-liveboard { border-color: CanvasText; }
     /* Any truthy `aria-current`, not only "page": the lit bar is a shadow, which forced colours drop. */
     [aria-current]:not([aria-current="false"]) .sx-indicator,
-    .sx-tabbar-tab[data-current], details[open] > .sx-tabbar-tab { outline: 2px solid Highlight; outline-offset: -2px; }
+    .sx-tabbar-tab[data-current] { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-chrome-top { border-bottom: 1px solid CanvasText; }
     .sx-chrome-bottom { border-top: 1px solid CanvasText; }
   }
@@ -1261,7 +1251,7 @@
   }
   body { background: #fff; color: #000; padding-bottom: 0; }
 
-  .sx-chrome-top, .sx-chrome-bottom, .sx-js-only, .sx-print-hide, .sx-jump { display: none !important; }
+  .sx-chrome-top, .sx-chrome-bottom, .sx-js-only, .sx-print-hide { display: none !important; }
 
   .sticky, [class*=":sticky"], .sx-table thead th { position: static !important; }
   .sx-dategroup { content-visibility: visible; }

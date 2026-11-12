@@ -141,7 +141,7 @@ describe('bottom tab labels', () => {
   });
 
   it('the selected cell is bold, accent-coloured and barred: never colour alone', () => {
-    const selected = rule('.sx-tabbar-tab:is([aria-current], [data-current]), details[open] > .sx-tabbar-tab');
+    const selected = rule('.sx-tabbar-tab:is([aria-current], [data-current])');
     expect(selected).toContain('color: var(--sx-accent-ink)');
     expect(selected).toMatch(/font-weight:\s*700/);
     expect(selected).toContain('box-shadow: inset 0 3px 0 var(--sx-accent)');

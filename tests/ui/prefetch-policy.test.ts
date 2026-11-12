@@ -170,7 +170,6 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // StretchedRowLink: the stretched team-row link of the standings tables, the home mini
       // table, the playoff projection and the league-tournament seeds.
       ['components/ui/PinNote.tsx', 'href={href}'],
-      ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
       // The /standings and /teams overviews render one block per division, each with its
@@ -183,14 +182,12 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/game/SeasonSeries.tsx', GAME_LINK],
       ['components/schedule/DateHeader.tsx', 'href={dayHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
-      // EmptyState's internal action: the home page's LeaguePanel renders one per league inside
-      // panels.map(), each to a different /schedule/<league> page.
+      // EmptyState's internal action: a list renders one per league or per group inside a `.map()`.
       ['components/ui/EmptyState.tsx', 'href={action.href}'],
       // The team finder's "Divisions and leagues" results and the link-mode league chips are
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],
       ['components/prefs/LeagueSwitcher.tsx', 'href={href}'],
-      ['components/layout/LeagueJumpLinks.tsx', 'href={href}'],
       // The clubs pages (DESIGN §17): a club line per roster row, a link per club on /clubs, and a
       // school link per player row on a club page.
       ['components/teams/TeamRoster.tsx', 'href={club.href}'],

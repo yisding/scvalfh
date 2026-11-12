@@ -10,7 +10,7 @@ import type { HealthDivision } from './about-view';
  * in words — its state, the MaxPreps league pages and whether their tables were read (counting
  * member rows only, with the division's known cause when MaxPreps' table differs on purpose, such
  * as a row for a non-member), the team schedule feeds
- * (`12 of 12 current`), the official schedule (`<source> · <n> fixtures · <m> matched · upstream
+ * (`12 of 12 current`), the official schedule (`<source>: <n> fixtures, <m> matched, upstream
  * unchanged|revised`), counted results, official results still missing, and contests dropped on
  * purpose. The pipeline's reasons are plain sentences and render verbatim.
  *
@@ -20,7 +20,8 @@ import type { HealthDivision } from './about-view';
  * (`missingLeaguePast`), in words that never say "official".
  *
  * A server component with plain props: the page reads `getLeagueHealth()`, `getSources({ league })`
- * and `getDropped()` and hands the numbers down. No hue: the state is a word.
+ * and `getDropped()` and hands the numbers down. No hue and no box: the state is a word, and the
+ * league is a plain sub-section under its h3 (DESIGN §33).
  */
 export interface LeagueHealthCardProps {
   shortName: string;
@@ -72,18 +73,16 @@ function OfficialLine({
       <ExternalLink href={doc.url}>{officialSourceLabel(shortName, doc.source)}</ExternalLink>
       {official ? (
         <>
-          {' '}
-          &middot; {plural(official.total, 'fixture', 'fixtures')} &middot; {official.matched} matched
-          &middot;{' '}
+          : {plural(official.total, 'fixture', 'fixtures')}, {official.matched} matched,{' '}
           {doc.mode === 'live-pdf'
             ? 'read live each run'
             : official.revisedUpstream
               ? `upstream revised${doc.revisedOn ? ` since our copy (${doc.revisedOn})` : ''}`
               : 'unchanged at the source'}
-          {official.carried ? ' · carried from an earlier update' : ''}
+          {official.carried ? ', carried from an earlier update' : ''}
         </>
       ) : (
-        ' · not read in this update'
+        ': not read in this update'
       )}
     </p>
   );
@@ -102,53 +101,55 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
   return (
     <article
       data-region-scope={region}
-      className={['sx-card flex flex-col p-5', className].filter(Boolean).join(' ')}
+      className={['mt-6 min-w-0', className].filter(Boolean).join(' ')}
       aria-label={`${shortName} data health`}
     >
       <header>
-        <h3 className="m-0 text-lead text-ink">{shortName}</h3>
-        <p className="m-0 mt-0.5 text-meta text-ink-3">{name}</p>
+        <div className="sx-strip">
+          <h3 className="m-0 text-lead text-ink">{shortName}</h3>
+        </div>
+        <p className="m-0 mt-2 text-cell text-ink-2">{name}</p>
       </header>
-      <dl className="m-0 mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-meta">
-        <dt className="text-ink-3">State</dt>
+      <dl className="m-0 mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-cell">
+        <dt className="text-ink-2">State</dt>
         <dd className="m-0 text-ink">
           {STATE_WORDS[health.state]}
           {health.state !== 'fresh' && health.lastFreshAt ? (
-            <span className="text-ink-2"> &middot; last current {formatStamp(health.lastFreshAt)}</span>
+            <span className="text-ink-2">, last current {formatStamp(health.lastFreshAt)}</span>
           ) : null}
         </dd>
 
-        <dt className="text-ink-3">Team schedules</dt>
+        <dt className="text-ink-2">Team schedules</dt>
         <dd className="m-0 text-ink-2">
           {feeds.ok} of {feeds.total} current
-          {feeds.carried > 0 ? ` · ${feeds.carried} carried` : ''}
-          {feeds.failed > 0 ? ` · ${feeds.failed} failed` : ''}
+          {feeds.carried > 0 ? `, ${feeds.carried} carried` : ''}
+          {feeds.failed > 0 ? `, ${feeds.failed} failed` : ''}
         </dd>
 
-        <dt className="text-ink-3">Counted results</dt>
+        <dt className="text-ink-2">Counted results</dt>
         <dd className="m-0 text-ink-2">
           {plural(counted, 'league result', 'league results')}
-          {backfilled > 0 ? ` · ${backfilled} from si.com` : ''}
+          {backfilled > 0 ? `, ${backfilled} from si.com` : ''}
         </dd>
 
-        <dt className="text-ink-3">Missing</dt>
+        <dt className="text-ink-2">Missing</dt>
         <dd className="m-0 text-ink-2">
           {missing === 0
             ? `No ${one} is missing`
             : `${plural(missing, one, many)} past their date with no counted result`}
         </dd>
 
-        <dt className="text-ink-3">Dropped</dt>
+        <dt className="text-ink-2">Dropped</dt>
         <dd className="m-0 text-ink-2">
           {dropped === 0 ? 'Nothing dropped' : `${plural(dropped, 'contest', 'contests')} dropped on purpose`} (
-          <a href="#dropped" className="text-accent hover:underline">
+          <a href="#dropped" className="sx-link">
             list
           </a>
           )
         </dd>
       </dl>
 
-      <ul className="m-0 mt-4 list-none space-y-3 p-0 text-meta text-ink-2">
+      <ul className="m-0 mt-4 list-none space-y-3 p-0 text-cell text-ink-2">
         {divisions.map((d) => {
           const h = health.divisions.find((x) => x.divisionId === d.id);
           const official = h?.official ?? null;
@@ -180,7 +181,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
       </ul>
 
       {health.reasons.length > 0 ? (
-        <div className="mt-4 sx-inset text-meta text-ink-2" role="note">
+        <div className="mt-4 sx-inset text-cell text-ink-2" role="note">
           {health.reasons.map((reason) => (
             <p key={reason} className="m-0">
               {reason}
@@ -190,7 +191,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
       ) : null}
 
       {problems.length > 0 ? (
-        <ul className="m-0 mt-3 list-disc space-y-1 pl-5 text-meta text-ink-2">
+        <ul className="m-0 mt-3 list-disc space-y-1 pl-5 text-cell text-ink-2">
           {problems.map((p) => (
             <li key={`${p.label}-${p.status}`}>
               {p.label}: {p.status}

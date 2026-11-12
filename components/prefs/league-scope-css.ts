@@ -10,12 +10,7 @@
  * - `[data-scope="<id>"]`  shown only when that league is the effective league;
  *   `[data-scope="none"]`  shown only when there is none (the first-visit view);
  *   `[data-scope="all"]`   always shown.
- * - `.sx-jump-<id>`        the "Jump to <SHORT> ↓" link of the effective league only.
  * - `.sx-js-only`          hidden without JS (nothing stamped `data-js`).
- * - `.sx-myteam-slot`      the WRAPPING `<section>` of the home My-team slot (heading included, so
- *                          it is never orphaned): hidden with no pin, no league and no stale pin.
- *                          Its HEIGHTS are not here — the component that owns the content sets them
- *                          with Tailwind arbitrary variants (SPEC §10.1).
  * - `[data-league-option="<id>"]`  the scope tabs: the effective league's tab (or `all` when
  *                          there is none) is drawn selected before hydration. Never colour alone:
  *                          weight 700 and a 3px ink bar.
@@ -89,10 +84,7 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
       `html[data-league="${id}"] [data-scope]:not([data-scope="${id}"]):not([data-scope="all"]):not([data-scope="none"]){display:none}`,
     );
   }
-  rules.push('.sx-jump{display:none}');
-  for (const id of leagueIds) rules.push(`html[data-league="${id}"] .sx-jump-${id}{display:inline-flex}`);
   rules.push('html:not([data-js]) .sx-js-only{display:none !important}');
-  rules.push('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
   for (const id of leagueIds) {
     rules.push(`html[data-league="${id}"] [data-league-option="${id}"]{${SELECTED}}`);
   }

@@ -1,51 +1,39 @@
 import Link from 'next/link';
 
-import { shortDate, timeOfDayPT } from '../../lib/format';
+import { longDate, timeOfDayPT } from '../../lib/format';
+import { gameAddress } from '../../lib/schools/venue';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 
-import { NON_MEMBER_NOTE } from '../game-row/summary';
+import { NON_MEMBER_NOTE, lostAttr, rowState, wonAttr } from '../game-row/summary';
 import GhostMonogram from '../ui/GhostMonogram';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import StatusLabel, { GameChips } from '../ui/StatusLabel';
+import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
+import { describeGame, statusLabelIsTime, type GameDisplay, type SideView } from '../ui/describe-game';
 import { sourceMarkWords } from '../ui/source-mark';
 
 /**
- * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the
- * most-shared object on this site, so this is the shareable scoreboard: a status line, then both
- * sides with the score at display size, the winner at 600 weight and the loser at 400.
+ * The /game/[id] header (DESIGN §33): the status line, then two stacked team rows, away over home,
+ * each a 56px logo, the name (a link to the team's page), what the page wants under it (the record
+ * and whose table it is from), and the score at the row's end. ONE layout at every width, left-aligned
+ * and capped at 34rem by `.sx-scoreboard`; the winner is bold and the losing side grey
+ * (`data-won` / `data-lost`), a tie, a live game and a game still to play leave both sides alone.
  *
- * ONE DOM for every width — away side, separator, home side — so the reading order never changes:
- * - phone: two stacked rows (monogram 40 · name · score) with a divider line between them;
- * - ≥768px: a three-column grid, `away | – | home`, the away side right-aligned and the home side
- *   reversed so both scores sit against the centre dash (monogram 56).
+ * The two team rows are the page's `<h1>`: its accessible name is the game's own sentence
+ * (`describeGame`), then the two names as links. The scores, seeds and records beside them are
+ * `aria-hidden`, since the sentence already says them.
  *
- * Each ScoreGlyph is wrapped in `.sx-board-score`, whose unlayered rule in globals.css sets it at
- * `--text-display`: ScoreGlyph's own class string is frozen (tests/ui/rendered-never-00.test.ts).
+ * A side outside the registry has no page here and no record: its name is plain text beside the
+ * ghost square its rows use, with NON_MEMBER_NOTE under it.
  *
- * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza" or "10-1-1 MCAL". A
- * school outside the registry has no record to show (game-view gives it no sub), so its side gets
- * a GhostMonogram tile (the same tile its rows use) and the sub line NON_MEMBER_NOTE ("Not one of
- * the N teams this site follows", from GameRow), written here rather than in game-view so the
- * page title and OG card, which share that model, are untouched.
- *
- * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) or from the San
- * Diego Section's bracket sheet ('CIF-SDS') carries a `†` with its words (`Score via si.com`, `Score via
- * the CIF San Diego Section`), never the mark alone (SPEC §10.6): StatusLabel prints the mark in the status
- * line (it reads `sourceMark`), the line ends with its legend, and the board's screen-reader sentence ends
- * with the same words.
- *
- * Names WRAP (two lines at most, balanced) instead of truncating: a long name was once cut
- * mid-word on a phone. Between 768 and 1023px, where the three-column board leaves each name the
- * least room (about 217px at 768), a name longer than 27 characters (too long for that band's
- * two-line clamp; no registry name is, today) is swapped for its short name. "Convent of the Sacred
- * Heart" (27) and "San Francisco University" (24) were measured at 768 and fit in two lines. Every
- * other name prints in full at every width.
+ * `GameFacts` is the list under the board: the date (the link back to that score day) and the start
+ * time, where it is played, the words for a score that is not MaxPreps' own (the legend of the `†`
+ * the status line carries, SPEC §7.9), and the short Updated stamp when the page passes one.
  */
 export interface ScoreBoardSideMeta {
   sub?: string | null;
+  /** The side's seed in a seeded bracket: printed as `#7` after the name. */
+  seed?: number | null;
 }
 
 export interface ScoreBoardProps {
@@ -57,175 +45,137 @@ export interface ScoreBoardProps {
 
 function BoardSide({
   side,
-  sub,
+  which,
+  meta,
+  decided,
   showScore,
-  align,
 }: {
   side: SideView;
-  sub?: string | null;
+  which: 'away' | 'home';
+  meta: ScoreBoardSideMeta | undefined;
+  decided: boolean;
   showScore: boolean;
-  align: 'away' | 'home';
 }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-  const fullName = team ? team.name : side.name;
-  // Only a name too long for the 768–1023 band's two-line clamp swaps to its short form there;
-  // "Convent of the Sacred Heart" (27 characters, the longest that fits) prints in full. A side
-  // outside the registry has its name as its shortName, so it never swaps.
-  const swapShort = fullName.length > 27 && side.shortName !== fullName;
-  const subLine = sub ?? (team ? null : NON_MEMBER_NOTE);
-  const sideClass = `flex min-w-0 items-center gap-3 py-3 md:gap-4 md:py-0 ${
-    align === 'away' ? 'md:justify-end md:text-right' : 'md:flex-row-reverse md:justify-end md:text-left'
-  }`;
-  const body = (
+  const sub = meta?.sub ?? (team ? null : NON_MEMBER_NOTE);
+  const won = decided ? wonAttr(side) : undefined;
+  const lost = decided ? lostAttr(side) : undefined;
+  return (
     <>
-      {/* Two decorative monograms, one per breakpoint: 40 on a phone row, 56 on the wide board. */}
-      <span className="inline-flex shrink-0 md:hidden">
-        {team ? (
-          <TeamMonogram team={team} size={40} />
-        ) : (
-          <GhostMonogram name={side.name} size={40} title={NON_MEMBER_NOTE} />
-        )}
-      </span>
-      <span className="hidden shrink-0 md:inline-flex">
+      <span
+        className={showScore ? 'sx-sb-team' : 'sx-sb-team col-span-full'}
+        data-side={which}
+        data-team-slug={team?.slug}
+        data-won={won}
+        data-lost={lost}
+      >
         {team ? (
           <TeamMonogram team={team} size={56} />
         ) : (
           <GhostMonogram name={side.name} size={56} title={NON_MEMBER_NOTE} />
         )}
-      </span>
-      <div className="min-w-0 flex-1 md:flex-initial">
-        {/* A long name (swapShort) gets two copies, one per band, both aria-hidden (the
-            section's sr-only sentence names the sides): the full name everywhere but 768–1023px,
-            the short name there. Any other name is one full copy at every width. Neither ever
-            truncates: `break-words` keeps a long single word inside the column and `text-balance`
-            evens the lines. From 768px `sx-clamp-2` caps a name at two lines; on a phone the
-            sides are stacked full-width rows, so the clamp is lifted (`-webkit-line-clamp:
-            none`) — at 320 a long name beside a score can need three 18px lines, and a clamp
-            there cut it mid-name. The short copy needs `-webkit-box`
-            back explicitly, because a `block` utility would beat sx-clamp-2's display (a
-            base-layer rule) and drop the clamp. */}
-        <span
-          className={`sx-clamp-2 break-words text-balance text-lead max-md:[-webkit-line-clamp:none] md:text-title ${
-            swapShort ? 'md:max-lg:hidden' : ''
-          } ${nameClass(side)}`}
-          aria-hidden="true"
-        >
-          {fullName}
+        <span className="min-w-0">
+          {team ? (
+            <Link href={`/teams/${team.slug}`} prefetch={false} className="sx-teamlink">
+              {team.name}
+            </Link>
+          ) : (
+            side.name
+          )}
+          {meta?.seed !== null && meta?.seed !== undefined ? (
+            <>
+              {' '}
+              <span className="sx-seed sx-num" aria-hidden="true">
+                #{meta.seed}
+              </span>
+            </>
+          ) : null}
+          {sub ? <small aria-hidden={team ? 'true' : undefined}>{sub}</small> : null}
         </span>
-        {swapShort ? (
-          <span
-            className={`sx-clamp-2 hidden break-words text-balance text-lead md:text-title md:max-lg:[display:-webkit-box] ${nameClass(
-              side,
-            )}`}
-            aria-hidden="true"
-          >
-            {side.shortName}
-          </span>
-        ) : null}
-        {/* tabular-nums, not sx-num: the line is mostly words ("De Anza", "No league results
-            reported"), and mono set the division name in a code face. The record's digits keep
-            fixed widths without it. */}
-        {subLine ? (
-          <span className="block text-meta tabular-nums text-ink-3">{subLine}</span>
-        ) : null}
-      </div>
+      </span>
       {showScore ? (
-        <span className="sx-board-score shrink-0">
-          <ScoreGlyph side={side} size="board" />
+        <span className="sx-num sx-sb-score" data-side={which} data-won={won} data-lost={lost} aria-hidden="true">
+          {side.glyph}
         </span>
       ) : null}
     </>
   );
-  // A registry side is a tap target to its team page, like a team's tile or row everywhere else
-  // on the site; a school outside the registry has no page here (DESIGN §8) and stays inert. The
-  // board is aria-hidden (its sr-only sentence speaks for it), so the link is a pointer-only
-  // duplicate kept out of the tab order: the keyboard and screen-reader route to each team page
-  // is the pill row above the board (app/game/[id]/page.tsx), and a focusable link inside an
-  // aria-hidden subtree would be announced as nothing.
-  if (team) {
-    return (
-      <Link
-        href={`/teams/${team.slug}`}
-        prefetch={false}
-        tabIndex={-1}
-        className={`${sideClass} group -mx-2 rounded-chip px-2 text-inherit no-underline hover:bg-surface-2 md:-my-2 md:py-2`}
-      >
-        {body}
-      </Link>
-    );
+}
+
+/** The status line's words: `Final, overtime`, `Postponed`; a start time for a game still to play; Live for one in progress. */
+function BoardStatus({ game, display }: { game: Game; display: GameDisplay }) {
+  if (game.status === 'live') return <span className="sx-live">Live</span>;
+  if (statusLabelIsTime(game, display.statusLabel)) {
+    return <span className="sx-num">{game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}</span>;
   }
-  return <div className={sideClass}>{body}</div>;
+  return <StatusLabel display={display} showChips={false} />;
 }
 
 export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
   const display = describeGame(game);
+  const decided = rowState(game, display) === 'final';
+  const showScore = display.showScores && display.away.hasScore && display.home.hasScore;
   return (
-    <section
-      // Joined, not glued: Tailwind's scanner skips a candidate that runs straight into `${`, so
-      // `md:p-8${…}` was never generated and the board kept 20px of padding on desktop.
-      className={['sx-card sx-board p-5 md:p-8', className].filter(Boolean).join(' ')}
-      aria-label="Scoreboard"
-    >
-      <p className="sr-only">
-        {display.sentence}
-        {display.sourceMark !== null ? ` ${sourceMarkWords(display.sourceMark)}.` : ''}
-      </p>
-      <p
-        className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-ink-3 md:justify-center"
-        aria-hidden="true"
-      >
-        {/* A scheduled game's status label IS its time, and the date line beside it prints the
-            time again with its zone: the board read "3:30 PM NL Fri Oct 2, 3:30 PM PT". Only the
-            chips (league / NL / postseason) are kept from the label then, as GameRow and GameCard
-            do. */}
-        {statusLabelIsTime(game, display.statusLabel) ? (
-          <GameChips display={display} />
-        ) : (
-          <StatusLabel display={display} />
-        )}
-        <span>
-          {shortDate(game.dateLocal)}
-          {game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}
+    <div className={['sx-scoreboard', className].filter(Boolean).join(' ')}>
+      <span className="sx-sb-status" aria-hidden="true">
+        <BoardStatus game={game} display={display} />
+      </span>
+      {/* The h1 takes the board's two columns (subgrid), so each score still sits at its row's end. */}
+      <h1 className="col-span-full m-0 grid grid-cols-subgrid items-center gap-y-2 font-sans">
+        <span className="sr-only">
+          {display.sentence}
+          {display.sourceMark !== null ? ` ${sourceMarkWords(display.sourceMark)}.` : ''}{' '}
         </span>
-        {game.venue.name ? (
-          <>
-            <span>&middot;</span>
-            <span>{game.venue.name}</span>
-          </>
-        ) : null}
-        {display.sourceMark !== null ? (
-          <>
-            <span>&middot;</span>
-            {/* The legend for StatusLabel's † (a footnote mark is never left unexplained). */}
-            <span>&dagger; {sourceMarkWords(display.sourceMark)}</span>
-          </>
-        ) : null}
-      </p>
-      <div
-        className="mt-3 md:mt-6 md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center md:gap-8"
-        aria-hidden="true"
-      >
         {/* Away before home, the same order as every list on the site. */}
-        <BoardSide
-          side={display.away}
-          sub={away?.sub}
-          showScore={display.showScores}
-          align="away"
-        />
-        <div className="h-px bg-divider md:h-auto md:bg-transparent">
-          <span className="hidden text-title text-ink-3 md:inline">&ndash;</span>
-        </div>
-        <BoardSide
-          side={display.home}
-          sub={home?.sub}
-          showScore={display.showScores}
-          align="home"
-        />
-      </div>
-      {display.note ? (
-        <p className="mt-3 mb-0 text-meta text-ink-3 md:mt-6 md:text-center">{display.note}</p>
-      ) : null}
-    </section>
+        <BoardSide side={display.away} which="away" meta={away} decided={decided} showScore={showScore} />
+        <BoardSide side={display.home} which="home" meta={home} decided={decided} showScore={showScore} />
+      </h1>
+    </div>
+  );
+}
+
+export interface GameFactsProps {
+  game: Game;
+  /** `<LastUpdated variant="time" … />` while the game is live or is today's; omitted on a past final. */
+  stamp?: React.ReactNode;
+  className?: string;
+}
+
+/** The facts under the board, one item each: when (the date links its score day), where, the score's source. */
+export function GameFacts({ game, stamp, className }: GameFactsProps) {
+  const display = describeGame(game);
+  // A game still to play has its start time as the board's status line; it is not said again here.
+  const timeAbove = game.status !== 'live' && statusLabelIsTime(game, display.statusLabel);
+  // Where: the venue's own name when a source gave one; else the league final's fixed site; else the host's school.
+  // The street address and Directions are in Details.
+  const at = gameAddress(game);
+  const host = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
+  const where = game.venue.name
+    ? game.venue.name
+    : at?.source === 'final-site' && at.school
+      ? `at ${at.school.name}`
+      : game.site === 'neutral'
+        ? 'Neutral site'
+        : host
+          ? // A school named for its city (Salinas, in Salinas) says the place once.
+            host.name.includes(host.city)
+            ? `at ${host.name}`
+            : `at ${host.name}, ${host.city}`
+          : `at ${game.home.name}`;
+  return (
+    <ul className={['sx-metalist', className].filter(Boolean).join(' ')}>
+      <li>
+        <Link href={`/scores/${game.dateKey}`} prefetch={false} className="sx-link">
+          {longDate(game.dateLocal)}
+        </Link>
+        {timeAbove ? '' : game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}
+      </li>
+      <li>{where}</li>
+      {display.note ? <li>{display.note}</li> : null}
+      {/* The legend for the status line's † (a footnote mark is never left unexplained). */}
+      {display.sourceMark !== null ? <li>&dagger; {sourceMarkWords(display.sourceMark)}</li> : null}
+      {stamp ? <li>{stamp}</li> : null}
+    </ul>
   );
 }
 

@@ -442,8 +442,8 @@ export interface ClubPlayerRow {
   key: string;
   /** The roster row's own spelling. */
   name: string;
-  /** The registry name, and `/teams/<slug>#roster`. */
-  school: { name: string; href: string };
+  /** The registry name, `/teams/<slug>#roster`, and the team's slug (its logo). */
+  school: { name: string; href: string; slug: string };
   /** The grade (in words) and the club team, only those that exist. */
   facts: string[];
   /** statusWords(): "Current, as of Jul 8, 2026", "Listed by NCSA, 2025". */
@@ -582,7 +582,7 @@ function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
   return {
     key: `${a.teamSlug}-${a.athleteId}`,
     name: row.fullName,
-    school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#roster` },
+    school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#roster`, slug: a.teamSlug },
     facts: [row.grade !== null ? gradeWord(row.grade) : null, a.clubTeam].filter((f): f is string => f !== null),
     status: statusWords(a, club),
     statusKind: a.status,

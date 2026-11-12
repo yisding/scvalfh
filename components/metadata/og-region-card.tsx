@@ -98,7 +98,7 @@ function leagueCountWords(): string {
 }
 
 export interface RegionCardProps {
-  /** Small uppercase line above the title (the /standings card's SITE_WORDMARK); none on the root card. */
+  /** Small line above the title (the /standings card's SITE_WORDMARK); none on the root card. */
   eyebrow?: string;
   title: string;
   columns: readonly RegionCardColumn[];
@@ -139,8 +139,6 @@ export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }
               display: 'flex',
               marginBottom: 6,
               fontSize: C.eyebrowSize,
-              letterSpacing: 4,
-              textTransform: 'uppercase',
               color: OG.TEXT_3,
             }}
           >

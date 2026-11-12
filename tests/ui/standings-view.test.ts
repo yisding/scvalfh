@@ -257,9 +257,11 @@ describe('GP, LEFT and MAX', () => {
     const note = view.unevenGpFootnote('mcal', spread);
     if (spread.max - spread.min >= 2) {
       expect(note, 'components/standings/standings-view.ts uneven-GP').toBe(
-        `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left). The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
+        `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
       );
     }
+    // DESIGN §33: the table has no LEFT or MAX column, so no footnote explains one.
+    expect(note ?? '').not.toMatch(/\bLEFT\b|\bMAX\b/);
     expect(view.unevenGpFootnote('scval', { min: 5, max: 6, scheduled: 12 })).toBeNull();
   });
 
@@ -313,40 +315,44 @@ describe('the /standings overview', () => {
     }
   });
 
-  it('follows the heading outline h2 section → h3 league → plain h4 division', () => {
+  it('follows the heading outline h2 league → h3 division, the division inside its strip (DESIGN §33)', () => {
     const html = renderOverview();
     const outline = [...html.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h\1>/g)].map((m) => `h${m[1]} ${textOf(m[2]).trim()}`);
     expect(outline, 'app/standings/page.tsx outline').toEqual([
       'h1 Standings',
-      'h2 Central Coast Section',
-      'h3 SCVAL — Santa Clara Valley Athletic League',
-      'h4 De Anza',
-      'h4 El Camino',
-      'h3 BVAL — Blossom Valley Athletic League',
-      'h4 Mt. Hamilton',
-      'h4 Santa Teresa',
-      'h3 PCAL — Pacific Coast Athletic League',
-      'h2 North Coast Section',
-      'h3 MCAL — Marin County Athletic League',
-      'h2 Northern Section',
-      'h3 EAL — Eastern Athletic League',
-      'h2 Southern Section',
-      'h3 Sunset — Sunset field hockey league',
-      // No table, so no h4: the group's note and its three teams (DESIGN §24.9).
-      'h3 LA independents',
-      'h2 San Diego Section',
-      'h3 City — City Conference',
-      'h4 City Western',
-      'h4 City Eastern',
-      'h3 North — North County Conference',
-      'h4 Avocado',
-      'h4 Palomar',
-      'h4 Valley',
-      'h3 Metro — Metro Conference',
-      'h4 Metro Mesa',
-      'h4 Metro South Bay',
+      'h2 SCVAL',
+      'h3 De Anza',
+      'h3 El Camino',
+      'h2 BVAL',
+      'h3 Mt. Hamilton',
+      'h3 Santa Teresa',
+      // A single-division league has no strip: its table sits under the league's own heading.
+      'h2 PCAL',
+      'h2 MCAL',
+      'h2 EAL',
+      'h2 Sunset',
+      'h2 LA independents',
+      'h2 City',
+      'h3 City Western',
+      'h3 City Eastern',
+      'h2 North',
+      'h3 Avocado',
+      'h3 Palomar',
+      'h3 Valley',
+      'h2 Metro',
+      'h3 Metro Mesa',
+      'h3 Metro South Bay',
     ]);
-    expect(html).toMatch(/<h4 class="m-0 mb-3 text-lead text-ink">/);
+    // The division heading is the strip's h3 and links the league's full standings at that division.
+    expect(html, 'components/standings/OverviewDivisionBlock.tsx strip').toContain(
+      '<div class="sx-strip"><h3 class="m-0 text-lead text-ink"><a class="inline-flex min-h-9 items-center pointer-coarse:min-h-11" href="/standings/scval#de-anza">De Anza</a></h3></div>',
+    );
+    expect(html).toMatch(/<h2 class="m-0 text-section text-ink">SCVAL<\/h2>/);
+    expect(html).not.toMatch(/<h4/);
+    // Each league heading carries the one way to its own page.
+    for (const id of data.getLeagueIds()) {
+      expect(html, `app/standings/page.tsx Full standings ${id}`).toContain(`<a class="sx-action" href="/standings/${id}">Full standings</a>`);
+    }
   });
 
   it('wraps each region’s sections in <div id="norcal|socal" data-region-scope> (DESIGN-socal §2.4)', () => {
@@ -359,13 +365,16 @@ describe('the /standings overview', () => {
     expect(html.indexOf('id="ns"')).toBeLessThan(socal);
     expect(html.indexOf('id="ss"')).toBeGreaterThan(socal);
     expect(html.indexOf('id="sds"')).toBeGreaterThan(socal);
-    // The Sunset's membership note under its heading; the region control under the header.
+    // The Sunset's membership note under its table; the region control in the league row.
     expect(textOf(html)).toContain(
       'The Sunset here is a field hockey grouping of eight Southern Section schools in Orange and Riverside counties, not the all-sports Sunset League.',
     );
     expect(html, 'app/standings/page.tsx region control').toContain('data-region-option="socal"');
-    // The points sentence names the 'site' leagues and never says their rules require anything.
-    expect(textOf(html)).toContain('(Sunset, City, North, Metro and the LA independents publish no points rule, so there the order is this site’s own points)');
+    expect(html, 'app/standings/page.tsx region control in the league row').toMatch(/<span class="sx-scope-util">[\s\S]*?data-region-option="socal"/);
+    // DESIGN §33: how the order is worked out lives on /about, linked once; the page carries no method
+    // sentence, and so never says a league's rules require anything.
+    expect(html, 'app/standings/page.tsx method link').toContain('href="/about#standings"');
+    expect(textOf(html)).not.toMatch(/rules require|publish no points rule/);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/standings/page.tsx duplicate ids').toEqual([]);
   });
@@ -375,14 +384,30 @@ describe('the /standings overview', () => {
     const text = textOf(html);
     for (const label of ['Automatic-berth line', 'Play-in host', 'Tournament line']) {
       expect(text, `components/standings/CompactStandingsTable.tsx ${label}`).toContain(label);
+      // The label sits ON the green line: one `tr.sx-cutline` row spanning the table's five columns.
+      expect(html, `components/standings/CompactStandingsTable.tsx ${label} row`).toContain(
+        `<tr class="sx-cutline"><td colSpan="5"><span>${label}</span></td></tr>`,
+      );
     }
+    // A multi-division league links each division's full table from its strip; a single-division
+    // league from its heading's "Full standings".
     expect(html).toContain('href="/standings/scval#de-anza"');
-    expect(html).toContain('href="/standings/mcal#marin-county"');
-    // The link is its words alone: the trailing arrow is retired (components/ui/Arrow.tsx, DESIGN §33).
-    expect(html).toMatch(/>Full De Anza table\s*<\/a>/);
-    expect(html).toMatch(/>Full PCAL table\s*<\/a>/);
-    expect(text).not.toMatch(/table\s*→/);
-    expect(html, 'components/standings/CompactStandingsTable.tsx static head').toContain('[&amp;_th]:static');
+    expect(html).toContain('href="/standings/bval#santa-teresa"');
+    expect(html).toContain('href="/standings/mcal"');
+    expect(html).toContain('href="/standings/pcal"');
+    // No arrows, and no "table" for standings in reader copy (DESIGN §33).
+    expect(text).not.toMatch(/→/);
+    expect(text).not.toMatch(/Full \S+ table/);
+    expect(html, 'components/standings/CompactStandingsTable.tsx static head').not.toContain('data-sticky-head');
+    // Every row has its logo and its team link; no card, no GP column.
+    const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)"[^>]*>([\s\S]*?)<\/tr>/g)];
+    expect(rows.length, 'app/standings/page.tsx rows').toBe(data.getTeamSlugs().length);
+    for (const [, slug, inner] of rows) {
+      expect(inner, `${slug} logo`).toMatch(/<span class="sx-teamcell">(<img|<span)/);
+      expect(inner, `${slug} link`).toContain(`href="/teams/${slug}"`);
+    }
+    expect(html).not.toMatch(/sx-card|>GP<\/th>/);
+    expect(html.match(/<div class="sx-tablewrap">/g)?.length, 'one wrapper per table').toBe(html.match(/<table/g)?.length);
     expect(text).not.toContain('Gabilan');
   });
 });
@@ -428,7 +453,14 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
     const scval = textOf(scvalHtml);
     expect(scval, 'components/standings/StandingsNotes.tsx swap').toContain('MaxPreps lists them the other way round');
     expect(scval).toContain('SCVAL ranks by points (Art. VI §2), and so do we.');
-    expect(scval, 'components/standings/PlayoffStatusBand.tsx chip').toContain('Automatic qualifier');
+    // DESIGN §33: qualification is in the table (the labelled line); the status band is not drawn.
+    expect(scval, 'components/standings/PlayoffStatusBand.tsx is not rendered').not.toContain('Automatic qualifier');
+    expect(scvalHtml, 'components/standings/standings-table cut line').toMatch(/<tr class="sx-cutline"[^>]*><td colSpan="\d+"><span>Automatic-berth line<\/span>/);
+    // One table per division (no phone/desktop twin), each a section headed by its h2.
+    expect(scvalHtml.match(/<table/g)).toHaveLength(2);
+    expect(scvalHtml).not.toContain('data-twin');
+    expect(scvalHtml).toMatch(/<section id="de-anza" aria-labelledby="de-anza-heading" data-first="" class="sx-section">/);
+    expect(scvalHtml).toMatch(/<section id="el-camino" aria-labelledby="el-camino-heading" class="sx-section">/);
     // One tie notation site-wide: `T7` / `T-7th`, never `7=`.
     expect(scvalHtml, 'app/standings/[league]/page.tsx tie mark').not.toMatch(/\d=</);
     const mcal = textOf(await renderLeague('mcal'));
@@ -521,7 +553,7 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     }
     const uneven = view.unevenGpFootnote('city', { min: 2, max: 6, scheduled: 10 })!;
     expect(uneven, `${SV} unevenGpFootnote city`).toContain('The order is this site’s 3-1-0 points; no City rule orders the table.');
-    expect(uneven).toContain('LEFT is league games');
+    expect(uneven).not.toMatch(/\bLEFT\b|\bMAX\b/);
     expect(uneven).not.toMatch(/rules require/);
   });
 
@@ -539,7 +571,12 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     );
     const html = await renderLeague('sunset');
     expect(html, 'components/standings/DivisionStandings.tsx Sunset: no Left/Max').not.toMatch(/>Left<\/th>|>Max<\/th>/);
-    expect(textOf(html)).toContain('GP is league games counted. Sunset has no fixed league schedule, so there is no LEFT or MAX column.');
+    // No column legend any more (DESIGN §33): neither column exists, so nothing explains them.
+    expect(textOf(html)).not.toMatch(/\bLEFT\b|\bMAX\b/);
+    // No postseason: one line under the table, from config, with its source; whose order it is, once.
+    expect(textOf(html)).toContain(sunset.noPostseason!.note);
+    expect(html).toContain(`>${sunset.noPostseason!.sourceLabel}<`);
+    expect(textOf(html)).toContain('The order is this site’s 3-1-0 points; no Sunset rule orders the table.');
     expect(textOf(html)).not.toMatch(/\d+\/null/);
     // Copy rules: 'Sunset League' only beside 'all-sports'; 'Sunset teams', never schools or members.
     for (const sentence of textOf(html).split(/(?<=[.!?])\s+/)) {
@@ -607,17 +644,14 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     expect(await renderLeague('bval')).toContain('Mt. Hamilton Division league standings');
   });
 
-  it('prints no "biggest goal difference" for a division where every goal difference is 0', async () => {
+  it('prints no goal-difference bar scale on any league (DESIGN §33: the table has no bars)', async () => {
     // No SoCal game is in this corpus: every Metro goal difference is 0 and gdDomain is the bar floor 1.
     expect(sd.buildStandingsPageView('metro').views.every((v) => v.gdDomain === 1)).toBe(true);
-    const text = textOf(await renderLeague('metro'));
-    expect(text).not.toMatch(/biggest goal difference \(|’s is 1\b|'s is 1\b/);
-    expect(text).toContain(
-      'Bars are scaled to each division’s own biggest goal difference, so bars in different divisions are not comparable.',
-    );
-    expect(text).not.toContain('GD bars are per division, scaled');
-    // A division with results keeps the figure.
-    expect(textOf(await renderLeague('scval'))).toMatch(/De Anza’s biggest goal difference \(\d+\)/);
+    for (const league of ['metro', 'scval']) {
+      const text = textOf(await renderLeague(league));
+      expect(text, league).not.toMatch(/biggest goal difference|Bars are scaled|GD bars|’s is 1\b|'s is 1\b/);
+      expect(text, league).not.toMatch(/How to read these tables|heavier line/);
+    }
   });
 
   it('a league page’s chips are its own region’s leagues plus All', async () => {

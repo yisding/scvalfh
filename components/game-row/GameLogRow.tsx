@@ -19,7 +19,7 @@ export type GameLogRowProps = GameBaseProps & {
   isThisGame?: boolean;
   /**
    * One more tag after the status and its chips, with its sentence for a screen reader: a JV row listed from
-   * the league's own schedule carries `SCHED` (components/jv/TeamJvGames.tsx).
+   * the league's own schedule carries "League schedule" (components/jv/TeamJvGames.tsx).
    */
   extraTag?: { text: string; label: string };
 };
@@ -82,7 +82,7 @@ export function GameLogRowBody({
   // The kind, only when it is not a league game: `Non-league`, or the postseason round.
   const kind = showChips ? (display.postseasonTag ?? (display.isNonLeague ? 'Non-league' : null)) : null;
   const notes = [
-    isThisGame ? 'this game' : null,
+    isThisGame ? 'This game' : null,
     final || upcoming ? null : statusCase(display.statusLabel),
     display.deciderTag,
     kind ? (kind === display.postseasonTag ? postseasonChipText(kind) : kind) : null,
@@ -100,9 +100,9 @@ export function GameLogRowBody({
       </span>
       {/* The chip column is always there, so the scores line up; a game still to play leaves it empty. */}
       <span aria-hidden="true">
-        {display.perspectiveOutcome || display.kind === 'unreported' ? (
-          <ResultChip kind={display.perspectiveOutcome ?? 'pending'} size={20} />
-        ) : null}
+        {/* No chip for a score nobody reported: an empty outlined square reads as a checkbox, and the
+            dash in the score column already says it. */}
+        {display.perspectiveOutcome ? <ResultChip kind={display.perspectiveOutcome} size={20} /> : null}
       </span>
       {/* Mine first. A start time takes the same column; a score nobody reported is a dash, never 0-0. */}
       {final ? (
@@ -123,11 +123,14 @@ export function GameLogRowBody({
         {team ? <TeamMonogram team={team} size={24} /> : <GhostMonogram name={opponent.name} size={24} />}
         <span>
           {display.versus ?? 'vs'} {opponent.shortName}
+          {/* With no note to follow, the source mark follows the name: a dagger alone on a line of
+              its own (the note drops under the name on a phone) reads as a stray character. */}
+          {notes.length === 0 ? <SourceMark display={display} /> : null}
         </span>
       </span>
       <span className="sx-logrow-note" aria-hidden="true">
         {notes.join(', ')}
-        <SourceMark display={display} />
+        {notes.length > 0 ? <SourceMark display={display} /> : null}
       </span>
     </>
   );

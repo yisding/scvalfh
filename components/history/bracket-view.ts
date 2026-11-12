@@ -182,6 +182,11 @@ export interface BracketCardView {
   status: 'final' | 'scheduled' | 'unreported';
   /** A scheduled card's day and time as the card prints them ('Thu Nov 5 · 4 PM PT'); null on the archive. */
   time: string | null;
+  /**
+   * A scheduled card's start as the cell prints it in the score position: '4 PM', 'Tue 3:30 PM' when it is
+   * not on its round's day, 'TBD' with no time. Absent on a card that is not scheduled (the archive).
+   */
+  clock?: string | null;
   /** The site the source names (the finals' neutral field), or null. */
   site: string | null;
   /** The game page (lib/game-id.ts gameHref) when a game is joined; null on the archive and before a game is listed. */

@@ -122,7 +122,8 @@ export function StandingsTable(props: StandingsTableProps) {
           <span className="sx-pin-note" aria-hidden="true" hidden>
             Your team
           </span>
-          {face !== 'archive' && isFlagged(row, flagged) ? <FlagMark name={row.team.name} /> : null}
+          {/* Only where the note it points at is printed: a rail table has no notes, so no mark. */}
+          {face === 'full' && isFlagged(row, flagged) ? <FlagMark name={row.team.name} /> : null}
         </span>
       </span>
     </th>

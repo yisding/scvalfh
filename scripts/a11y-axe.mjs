@@ -32,24 +32,28 @@
  *     before the SoCal leagues were added) and to 'all' (the no-league run is `/` in 1), once with
  *     only scvalfh.pinnedTeam = 'tamalpais', and the region runs (DESIGN-socal §2.4): scvalfh.region =
  *     'socal' alone (the SoCal first-visit view), and with a NorCal pin (the pin kept, no league from
- *     it). axe skips `display:none` subtrees, so each league panel and each region is checked only in
+ *     it). axe skips `display:none` subtrees, so each league’s blocks and each region are checked only in
  *     its own run; each run also asserts the pre-paint stamp (html[data-league], html[data-pin],
  *     html[data-region]) the run was meant to produce.
  *  3. `/teams` with "mar" typed into the finder (the filtered list and the live region), and with
  *     "la jolla" typed under the default (NorCal) region: the /teams lift must show the SoCal team's
  *     tile (rendered, not display:none) while the finder searches.
- *  4. A keyboard probe on `/` with no stored league: Tab to "Show BVAL here", press Enter, and
- *     document.activeElement must be inside [data-scope="bval"] (WCAG 2.4.3; SPEC §8.2). And the
- *     region probe: Tab to the "SoCal" button of the region switcher, press Enter: it is pressed, the
- *     page is stamped data-region="socal" and a [data-region-scope="socal"] element is rendered.
- *  5. The SPEC §10.1 fold targets at 390×664 and 390×844 (pinned card; Latest rows), measured and
- *     PRINTED (`fold:` lines): DESIGN §15 states the targets; a miss is reported, not failed.
- *  6. The first-visit `/` (no stored league) at 320, 360 and 390 px wide: the region switcher and the
- *     league switcher (All plus one chip per league of the region, in one list per section) and the
- *     "Find your team" league cards (two-up from 390 px, the last of an odd count spanning both
- *     columns), measured and PRINTED (`layout:` lines) for DESIGN §22.3 and DESIGN-socal §2.4: where
- *     the region switcher sits, how many rows the scope row wraps to, where each card sits and ends,
- *     and what is above the fold at 664 and 844 px tall. Reported, never failed.
+ *  4. A keyboard probe on `/` with no stored league: Tab to the BVAL tab of the league row, press
+ *     Enter: it is pressed, the page is stamped data-league="bval", the first-visit block
+ *     ([data-scope="none"]) is hidden, any [data-scope="bval"] block is rendered and focus is still on
+ *     the tab or inside a [data-scope="bval"] block (WCAG 2.4.3; SPEC §8.2). And the region probe: Tab
+ *     to the "SoCal" button of the region switch (in the league row at every width), press Enter: it
+ *     is pressed, the page is stamped data-region="socal" and a [data-region-scope="socal"] element is
+ *     rendered.
+ *  5. The fold on `/` at 390×664 and 390×844 (DESIGN §33: the first score or game row within 300px
+ *     of the top), measured and PRINTED (`fold:` lines): where the first score and the first game row
+ *     start, how many game rows end above the fold, and for a pinned reader where that team's first
+ *     row (its game, or its one-line team row) starts. A miss is reported, not failed.
+ *  6. The first-visit `/` (no stored league) at 320, 360 and 390 px wide: the region switch, the
+ *     league tabs (All plus one per league of the region) and the "Find your team" block, measured and
+ *     PRINTED (`layout:` lines): where the region switch sits, how many rows the league tabs wrap to,
+ *     where the block and its search field sit, and whether the field is above the fold at 664 and
+ *     844 px tall. Reported, never failed.
  *
  * The page loads of 1-3 run side by side, one per core (SCVAL_A11Y_CONCURRENCY overrides it; 1 runs
  * them one at a time), and each prints in the order listed. 4-6 run one at a time after them: the
@@ -369,7 +373,8 @@ for (const theme of ['light', 'dark']) {
     jobs.push({ label: typed, run: async (log) => {
       const teams = await open(context, '/teams', log);
       if (!teams) return;
-      const input = teams.locator('input[type="search"]').first();
+      // The page's own finder, not the header's team search (a plain GET form, DESIGN §33).
+      const input = teams.locator('#main input[type="search"]').first();
       if ((await input.count()) === 0) failRun(`/teams ${tag}`, 'no search field', log);
       else if (await typeIntoFinder(teams, input, 'mar', typed, log)) await check(teams, typed, log);
       await teams.close();
@@ -382,7 +387,7 @@ for (const theme of ['light', 'dark']) {
     jobs.push({ label: lifted, run: async (log) => {
       const lift = await open(context, '/teams', log);
       if (!lift) return;
-      const input = lift.locator('input[type="search"]').first();
+      const input = lift.locator('#main input[type="search"]').first();
       if ((await input.count()) === 0) failRun(lifted, 'no search field', log);
       else if (await typeIntoFinder(lift, input, SOCAL_QUERY, lifted, log)) {
         const shown = await lift.evaluate(() => {
@@ -451,32 +456,50 @@ for (const theme of ['light', 'dark']) {
 await runPool(jobs);
 for (const context of sharedContexts) await context.close();
 
-// ---------------------------------------------------------------- 4: keyboard focus after "Show BVAL here"
+// ---------------------------------------------------------------- 4: keyboard: the league row
 {
-  const label = 'keyboard: / (no stored league) Tab to "Show BVAL here", Enter';
+  const label = 'keyboard: / (no stored league) Tab to the BVAL tab, Enter';
   const ctx = await newContext({ width: 390, height: 844 });
   const page = await open(ctx, '/');
   if (page) {
-    const button = page.getByRole('button', { name: 'Show BVAL here' });
-    await button.waitFor({ state: 'visible' });
-    await page.waitForFunction(() => [...document.querySelectorAll('button')]
-      .some((b) => b.textContent.trim() === 'Show BVAL here' && !b.disabled));
+    const selector = '[role="group"][aria-label="Your league"] button[data-league-option="bval"]';
+    await page.waitForFunction((sel) => document.querySelector(sel)?.disabled === false, selector, { timeout: 5000 })
+      .catch(() => undefined);
     let reached = false;
     for (let i = 0; i < 300 && !reached; i += 1) {
       await page.keyboard.press('Tab');
-      reached = await page.evaluate(() => document.activeElement?.textContent?.trim() === 'Show BVAL here');
+      reached = await page.evaluate((sel) => document.activeElement === document.querySelector(sel), selector);
     }
-    if (!reached) failRun(label, 'Tab never reached the button');
+    if (!reached) failRun(label, 'Tab never reached the BVAL tab');
     else {
       await page.keyboard.press('Enter');
-      await page.waitForFunction(() => document.activeElement?.closest('[data-scope="bval"]') != null, null, { timeout: 3000 })
+      await page.waitForFunction(() => document.documentElement.getAttribute('data-league') === 'bval', null, { timeout: 3000 })
         .catch(() => undefined);
-      const focus = await page.evaluate(() => ({
-        inside: document.activeElement?.closest('[data-scope="bval"]') != null,
-        what: document.activeElement ? `${document.activeElement.tagName.toLowerCase()}#${document.activeElement.id}` : 'none',
-      }));
-      if (!focus.inside) failRun(label, `focus is on ${focus.what}, not inside [data-scope="bval"]`);
-      else console.log(`${label}: focus moved to ${focus.what} inside [data-scope="bval"]`);
+      const after = await page.evaluate((sel) => {
+        const rendered = (el) => el.getClientRects().length > 0;
+        const active = document.activeElement;
+        const scoped = [...document.querySelectorAll('[data-scope="bval"]')];
+        return {
+          league: document.documentElement.getAttribute('data-league'),
+          pressed: document.querySelector(sel)?.getAttribute('aria-pressed'),
+          focusOk: active === document.querySelector(sel) || active?.closest('[data-scope="bval"]') != null,
+          what: active ? `${active.tagName.toLowerCase()}#${active.id}` : 'none',
+          scoped: scoped.length,
+          scopedShown: scoped.some(rendered),
+          firstVisitShown: [...document.querySelectorAll('[data-scope="none"]')].some(rendered),
+        };
+      }, selector);
+      if (after.league !== 'bval') failRun(label, `stamped data-league=${after.league}, expected bval`);
+      if (after.pressed !== 'true') failRun(label, `aria-pressed=${after.pressed}, expected true`);
+      if (!after.focusOk) failRun(label, `focus is on ${after.what}, not on the tab or inside [data-scope="bval"]`);
+      if (after.scoped > 0 && !after.scopedShown) failRun(label, 'no [data-scope="bval"] block is rendered');
+      if (after.firstVisitShown) failRun(label, 'a [data-scope="none"] block is still rendered');
+      if (after.league === 'bval' && after.pressed === 'true' && after.focusOk && !after.firstVisitShown && (after.scoped === 0 || after.scopedShown)) {
+        console.log(
+          `${label}: data-league=bval, focus on ${after.what}, ${after.scoped} [data-scope="bval"] block(s) ` +
+            `${after.scoped > 0 ? 'rendered' : 'on this day'}, the first-visit block hidden`,
+        );
+      }
     }
     await page.close();
   }
@@ -523,10 +546,10 @@ for (const context of sharedContexts) await context.close();
   await ctx.close();
 }
 
-// ---------------------------------------------------------------- 5: the SPEC §10.1 fold, measured and printed
+// ---------------------------------------------------------------- 5: the fold on `/`, measured and printed
 /**
  * The fold is the top of the fixed bottom tab bar (the viewport bottom where there is none):
- * content under the bar is not visible without scrolling.
+ * content under the bar is not visible without scrolling. Positions are page coordinates (scroll 0).
  */
 async function measureFold(storage, height) {
   const ctx = await newContext({ width: 390, height, storage });
@@ -534,28 +557,24 @@ async function measureFold(storage, height) {
   let out = null;
   if (page) {
     out = await page.evaluate(() => {
+      const rendered = (el) => el.getClientRects().length > 0;
       const bar = document.querySelector('nav.sx-chrome-bottom');
       const barTop = bar && getComputedStyle(bar).display !== 'none' ? bar.getBoundingClientRect().top : window.innerHeight;
-      const league = document.documentElement.getAttribute('data-league');
-      const panel = league ? document.querySelector(`section[data-scope="${league}"]`) : null;
-      let list = null;
-      if (panel) {
-        for (const section of panel.querySelectorAll('section')) {
-          if (/Latest scores/.test(section.querySelector('h2, h3')?.textContent ?? '') && section.querySelector('ol')) {
-            list = section.querySelector('ol');
-            break;
-          }
-        }
-        list ??= panel.querySelector('ol');
-      }
-      const rows = list ? [...list.children].map((li) => li.getBoundingClientRect().bottom) : [];
-      const slot = document.querySelector('.sx-myteam-slot');
-      const slotRect = slot && getComputedStyle(slot).display !== 'none' ? slot.getBoundingClientRect() : null;
+      const top = (el) => (el ? Math.round(el.getBoundingClientRect().top) : null);
+      const rows = [...document.querySelectorAll('#main .sx-livegame, #main .sx-game')].filter(rendered);
+      const score = [...document.querySelectorAll('#main .sx-livegame-score, #main .sx-game-score')].find(rendered);
+      const pin = document.documentElement.getAttribute('data-pin');
+      // The pinned team's first row: its game (list or live board), else its one-line team row.
+      const mine = pin
+        ? [...document.querySelectorAll(`#main [data-team-slug="${pin}"], #main .sx-myline`)].find(rendered)
+        : null;
       return {
         fold: Math.round(barTop),
-        cardBottom: slotRect ? Math.round(slotRect.bottom) : null,
-        rowsAbove: rows.filter((b) => b <= barTop).length,
-        rowBottoms: rows.map((b) => Math.round(b)),
+        firstRow: top(rows[0]),
+        firstScore: top(score),
+        rowsAbove: rows.filter((el) => el.getBoundingClientRect().bottom <= barTop).length,
+        rows: rows.length,
+        mine: top(mine),
       };
     });
     await page.close();
@@ -563,21 +582,24 @@ async function measureFold(storage, height) {
   await ctx.close();
   return out;
 }
+const within = (y, limit) => y != null && y <= limit;
 const foldRuns = [
-  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 664, target: (m) => m.cardBottom != null && m.cardBottom <= m.fold, goal: 'whole pinned card above the fold' },
-  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 844, target: (m) => m.rowsAbove >= 2, goal: '≥ 2 Latest rows above the fold' },
-  { label: 'no pin, league=bval', storage: { 'scvalfh.league': 'bval' }, height: 664, target: (m) => m.rowsAbove >= 2, goal: '≥ 2 Latest rows above the fold' },
+  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 664, target: (m) => within(m.mine, m.fold), goal: 'the pinned team’s row starts above the fold' },
+  { label: `pinned (${PIN})`, storage: { 'scvalfh.pinnedTeam': PIN }, height: 844, target: (m) => within(m.firstRow, 300), goal: 'first game row within 300px of the top' },
+  { label: 'no pin, league=bval', storage: { 'scvalfh.league': 'bval' }, height: 664, target: (m) => within(m.firstRow, 300), goal: 'first game row within 300px of the top' },
+  { label: 'first visit', storage: {}, height: 844, target: (m) => within(m.firstRow, 300 + 120), goal: 'first game row within 420px of the top (under "Find your team")' },
 ];
 for (const run of foldRuns) {
   const m = await measureFold(run.storage, run.height);
   if (!m) continue;
   console.log(
-    `fold: ${run.label} at 390×${run.height}: fold ${m.fold}px; My-team slot bottom ${m.cardBottom ?? '—'}px; ` +
-      `Latest row bottoms [${m.rowBottoms.join(', ')}] → ${m.rowsAbove} above; target "${run.goal}": ${run.target(m) ? 'met' : 'MISSED'}`,
+    `fold: ${run.label} at 390×${run.height}: fold ${m.fold}px; first game row at ${m.firstRow ?? '—'}px, first score at ${m.firstScore ?? '—'}px; ` +
+      `${m.rowsAbove} of ${m.rows} game rows end above the fold; pinned team’s row at ${m.mine ?? '—'}px; ` +
+      `target "${run.goal}": ${run.target(m) ? 'met' : 'MISSED'}`,
   );
 }
 
-// ---------------------------------------------------------------- 6: the switcher and league cards, measured and printed
+// ---------------------------------------------------------------- 6: the league row and "Find your team", measured and printed
 /**
  * The first-visit `/` (no stored league, no pin) at one width and height. Positions are page
  * coordinates (scroll 0), so they do not depend on the height; the fold does.
@@ -593,31 +615,30 @@ async function measureLayout(width, height) {
       const bar = document.querySelector('nav.sx-chrome-bottom');
       const fold = bar && getComputedStyle(bar).display !== 'none' ? bar.getBoundingClientRect().top : window.innerHeight;
       const group = document.querySelector('[role="group"][aria-label="Your league"]');
-      // Rendered chips only: the other region's lists are display:none.
+      // Rendered tabs only: the other region's lists are display:none.
       const chips = group
         ? [...group.querySelectorAll('button[data-league-option]')].filter((b) => b.getClientRects().length > 0).map((b) => b.getBoundingClientRect())
         : [];
       const groupRect = group?.getBoundingClientRect() ?? null;
       const region = document.querySelector('[role="group"][aria-label="Region"]');
       const regionRect = region && region.getClientRects().length > 0 ? region.getBoundingClientRect() : null;
-      // Rendered cards only: the card grid is one list per region, the other region's display:none.
-      const cards = [...document.querySelectorAll('section[data-scope="none"] ul.grid > li')]
-        .filter((li) => li.getClientRects().length > 0)
-        .map((li) => li.getBoundingClientRect());
+      const span = (el) => {
+        if (!el || el.getClientRects().length === 0) return null;
+        const r = el.getBoundingClientRect();
+        return { top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) };
+      };
+      const block = document.querySelector('section[data-scope="none"][aria-labelledby="find-your-team"]');
+      const field = span(block?.querySelector('input[type="search"]'));
       return {
         fold: Math.round(fold),
         chips: chips.length,
         chipRows: new Set(chips.map((r) => Math.round(r.top))).size,
         switcherBottom: groupRect ? Math.round(groupRect.bottom) : null,
-        region: regionRect
-          ? { top: Math.round(regionRect.top), bottom: Math.round(regionRect.bottom), width: Math.round(regionRect.width) }
-          : null,
-        rowTops: [...new Set([
-          ...(regionRect ? [Math.round(regionRect.top)] : []),
-          ...chips.map((r) => Math.round(r.top)),
-        ])].length,
-        cards: cards.map((r) => ({ top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) })),
-        cardsAbove: cards.filter((r) => r.bottom <= fold).length,
+        region: span(regionRect ? region : null),
+        block: span(block),
+        field,
+        fieldAbove: field != null && field.bottom <= fold,
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
       };
     });
     await page.close();
@@ -625,17 +646,16 @@ async function measureLayout(width, height) {
   await ctx.close();
   return out;
 }
+const spanWords = (s) => (s ? `${s.top}–${s.bottom} w${s.width}` : '—');
 for (const width of [320, 360, 390]) {
   for (const height of [664, 844]) {
     const m = await measureLayout(width, height);
     if (!m) continue;
-    const rows = [...new Set(m.cards.map((c) => c.top))].length;
     console.log(
-      `layout: / (first visit) at ${width}×${height}: fold ${m.fold}px; region switcher ` +
-        `${m.region ? `${m.region.top}–${m.region.bottom} w${m.region.width}` : '—'}; switcher ${m.chips} chips in ${m.chipRows} row(s) ` +
-        `(${m.rowTops} row(s) with the region switcher), ` +
-        `bottom ${m.switcherBottom ?? '—'}px; ${m.cards.length} league cards in ${rows} row(s) ` +
-        `[${m.cards.map((c) => `${c.top}–${c.bottom} w${c.width}`).join(', ')}] → ${m.cardsAbove} wholly above the fold`,
+      `layout: / (first visit) at ${width}×${height}: fold ${m.fold}px; region switch ${spanWords(m.region)}; ` +
+        `${m.chips} league tabs in ${m.chipRows} row(s), bottom ${m.switcherBottom ?? '—'}px; ` +
+        `"Find your team" ${spanWords(m.block)}, its search field ${spanWords(m.field)} ` +
+        `(${m.fieldAbove ? 'above' : 'not above'} the fold); sideways overflow ${m.overflow}px`,
     );
   }
 }

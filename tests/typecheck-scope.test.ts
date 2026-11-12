@@ -26,7 +26,7 @@ describe('globToRegExp', () => {
   it('reads {a,b} as alternation, nested included, and an unbalanced brace literally', () => {
     const re = globToRegExp('{app,components/{ui,layout}}/**/*.tsx');
     expect(re.test('app/page.tsx')).toBe(true);
-    expect(re.test('components/ui/Tag.tsx')).toBe(true);
+    expect(re.test('components/ui/ResultChip.tsx')).toBe(true);
     expect(re.test('components/teams/TeamHero.tsx')).toBe(false);
     expect(globToRegExp('a{b.ts').test('a{b.ts')).toBe(true);
   });

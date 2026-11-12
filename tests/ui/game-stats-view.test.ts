@@ -322,7 +322,9 @@ describe('GameStats', () => {
     expect(text).toContain(`${m.home.name} scoring in this game`);
     expect(text).toContain(`${m.home.name} goalkeeping in this game`);
     expect(text).toContain('No stats entered on MaxPreps for this game.');
-    expect(text).toContain('G goals · Sv saves.');
+    // The legend is one line of items, comma-separated (DESIGN §33: no middot strings).
+    expect(text).toContain('G goals, Sv saves.');
+    expect(html, 'no middot').not.toContain('·');
     expect(text).not.toContain(TIEBREAK_CAVEAT);
     expect(renderToStaticMarkup(createElement(GameStats, { model: m, lookup: nothing }))).toBe('');
   });

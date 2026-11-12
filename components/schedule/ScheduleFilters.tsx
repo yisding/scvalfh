@@ -164,30 +164,6 @@ function retargetRail(totalGroups: number, shownDates: string[]) {
   });
 }
 
-function Chevron() {
-  return (
-    <svg
-      className="pointer-events-none absolute right-3 text-ink-3"
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m4 6 4 4 4-4" />
-    </svg>
-  );
-}
-
-// A disabled select (the static fallback, which is all a reader without JavaScript ever sees)
-// LOOKS disabled: dead controls that look live are worse than none.
-const SELECT =
-  'h-11 w-full appearance-none rounded-chip border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:cursor-not-allowed disabled:text-ink-3';
-
 function PillGroup<T extends string>({
   legend,
   value,
@@ -203,42 +179,26 @@ function PillGroup<T extends string>({
 }) {
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
-      <legend className="mb-2 p-0 text-micro font-medium text-ink-3">{legend}</legend>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => {
-          const active = option.value === value;
-          return (
-            <button
-              key={option.value}
-              type="button"
-              aria-pressed={active}
-              disabled={disabled}
-              onClick={() => onPick(option.value)}
-              // The pressed pill is inverse ink plus an aria-hidden check, exactly like the selected
-              // `.sx-league-chip` above it (DESIGN §26.1): one selected look on the page, never
-              // colour alone. box-shadow is dropped in forced colours, so each pill gets a real
-              // border there and the pressed one a Highlight ring as well as its check.
-              // Press state, for touch as much as the mouse (`.sx-tap:active` alone loses to the
-              // utility background): an unpressed pill steps one plane up from its rest fill
-              // (surface → surface-2 in the in-flow tray below 1024px, surface-2 → surface-3 in the
-              // floating one from there); the pressed one keeps its ink.
-              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center gap-1 rounded-control px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
-                active
-                  ? 'bg-ink font-semibold text-surface forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
-                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface lg:bg-surface-2 lg:shadow-none lg:active:bg-surface-3 lg:disabled:hover:bg-surface-2'
-              }`}
-            >
-              {/* Always laid out, shown only when pressed, and the label holds its semibold width
-                  at either weight (`.sx-weight-hold`, globals.css): a selection never changes a
-                  pill's width, so its neighbours and the wrapped rows stay put. Before the hold
-                  the pressed pill was 0.6–1.4px wider than at rest ("All" 66.1 against 65.5). */}
-              <span aria-hidden="true" className={active ? 'sx-check' : 'sx-check invisible'} />
-              <span className="sx-weight-hold" data-label={option.label}>
-                {option.label}
-              </span>
-            </button>
-          );
-        })}
+      <legend className="p-0 text-micro font-medium text-ink-2">{legend}</legend>
+      {/* An option row (`.sx-opts`): the pressed option is bold over the 3px bar, the one selected
+          look on the site, never colour alone. */}
+      <div className="sx-opts">
+        {options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={option.value === value}
+            disabled={disabled}
+            onClick={() => onPick(option.value)}
+            className="sx-opt disabled:cursor-not-allowed"
+          >
+            {/* The label holds its bold width at either weight (`.sx-weight-hold`, globals.css):
+                a selection never changes an option's width, so its neighbours stay put. */}
+            <span className="sx-weight-hold" data-label={option.label}>
+              {option.label}
+            </span>
+          </button>
+        ))}
       </div>
     </fieldset>
   );
@@ -258,8 +218,9 @@ interface PanelProps {
 }
 
 /**
- * The panel itself: one card holding the two selects, the "More" disclosure and the live count.
- * A plain function of its props, so the Suspense fallback renders the identical shell (no CLS).
+ * The controls themselves: the two native selects, the "More filters" disclosure and the live count,
+ * on one wrapping row (the league row's `end` slot). A plain function of its props, so the Suspense
+ * fallback renders the identical shell (no CLS).
  */
 function byName<T extends { name: string }>(rows: readonly T[]): T[] {
   return rows.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -307,31 +268,17 @@ function FiltersPanel({
   }, [inert, moreOpen]);
 
   return (
-    // One wrapping row of items. On a 390 phone that is the two selects, then "More filters", then
-    // the count on its own left-aligned row: beside the pill it needs three ragged lines at 390
-    // (and four at 320), so below 400px it always takes the row under it. From 400px the count
-    // sits beside the pill (right-aligned, at most two lines, as at 414). From 768px everything
-    // sits on one line with the count pushed right.
-    <div
-      className={[
-        // Screen-only: on paper the list is what is printed, not the controls that filter it.
-        'sx-print-hide sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      {/* From 768px each select has a fixed width rather than its longest option's: sized by its
-          options, the team select ran 159–197px and the division select 141–177px by league, so
-          "More filters" and the count sat up to 26px further along on one league's page than on
-          another's. 208px and 192px hold the longest name in every league with room to spare. */}
-      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:w-52 md:flex-none">
+    // Screen-only: on paper the list is what is printed, not the controls that filter it.
+    <div className={['sx-print-hide flex flex-1 flex-wrap items-center gap-2', className].filter(Boolean).join(' ')}>
+      {/* Native selects, each named by its first option. A disabled select (the static fallback,
+          which is all a reader without JavaScript ever sees) LOOKS disabled. */}
+      <label className="min-w-0">
         <span className="sr-only">Team</span>
         <select
           value={filters.team}
           disabled={inert}
           onChange={(event) => update?.({ team: event.target.value })}
-          className={SELECT}
+          className="sx-select disabled:cursor-not-allowed disabled:text-ink-3"
         >
           <option value="all">All teams</option>
           {divisions.length > 0
@@ -350,68 +297,48 @@ function FiltersPanel({
                 </option>
               ))}
         </select>
-        <Chevron />
       </label>
       {/* No division select for a single-division league: one option would be a dead control. */}
       {divisions.length > 0 ? (
-        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:w-48 md:flex-none">
+        <label className="min-w-0">
           <span className="sr-only">Division</span>
           <select
             value={filters.division}
             disabled={inert}
             onChange={(event) => update?.({ division: event.target.value })}
-            className={SELECT}
+            className="sx-select disabled:cursor-not-allowed disabled:text-ink-3"
           >
-            <option value="all">{divisions.length === 2 ? 'Both divisions' : 'All divisions'}</option>
+            <option value="all">All divisions</option>
             {divisions.map((division) => (
               <option key={division.id} value={division.id}>
                 {division.label}
               </option>
             ))}
           </select>
-          <Chevron />
         </label>
       ) : null}
       {/* A real `<details>`. Open below 1024px, it takes the whole row so its tray is full width,
           and the count drops below it. In the inert fallback it is `sx-js-only`: without
-          JavaScript that fallback is all a reader gets, and a tray of dead pills that look live is
-          worse than none (with JavaScript it is painted as usual, so nothing shifts on hydrate). */}
+          JavaScript that fallback is all a reader gets, and a tray of dead options that look live
+          is worse than none (with JavaScript it is painted as usual, so nothing shifts on hydrate). */}
       <details
         ref={detailsRef}
         onToggle={(event) => setMoreOpen(event.currentTarget.open)}
-        className={['peer relative max-lg:open:basis-full', inert ? 'sx-js-only' : null]
+        className={['sx-disclosure peer pb-0! max-lg:open:basis-full', inert ? 'sx-js-only' : null]
           .filter(Boolean)
           .join(' ')}
       >
-        <summary
-          ref={summaryRef}
-          className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden"
-        >
+        <summary ref={summaryRef} className="sx-btn">
           More filters
           {moreActive > 0 ? (
-            <span className="sx-badge sx-num h-6 bg-surface px-2 text-ink">
+            <span className="sx-num font-normal text-ink-2">
               {moreActive}
               <span className="sr-only"> active</span>
             </span>
           ) : null}
-          <svg
-            className="sx-chevron text-ink-3"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="m4 6 4 4 4-4" />
-          </svg>
         </summary>
-        {/* Below 1024px: an inset tray inside the panel, in flow (a floating `w-max` card ran past
-            a 768px viewport and covered the count). From 1024px: a floating card over the list. */}
-        <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-lg:rounded-card max-lg:bg-surface-2 max-lg:shadow-none lg:absolute lg:left-0 lg:z-20 lg:w-max lg:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
+        {/* Below 1024px: in flow under the row. From 1024px: a panel over the list. */}
+        <div className="mt-2 flex flex-col gap-3 rounded-control border border-rule bg-bg p-3 lg:absolute lg:left-0 lg:z-20 lg:w-max">
           <PillGroup
             legend="Game type"
             value={filters.type}
@@ -428,23 +355,17 @@ function FiltersPanel({
           />
         </div>
       </details>
-      {/* `tabIndex={-1}`: where focus goes when the last filter chip is removed (ScheduleFilters). */}
+      {/* `tabIndex={-1}`: where focus goes when the last filter chip is removed (ScheduleFilters).
+          Each "N word" part is its own element, so a phone wrap never strands a number from its noun. */}
       <p
         ref={countRef}
         tabIndex={-1}
         aria-live="polite"
-        className="m-0 min-w-[8rem] flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-lg:peer-open:ml-0 max-lg:peer-open:text-left max-[399px]:basis-full max-[399px]:text-left md:flex-none md:ml-auto"
+        className="m-0 flex flex-wrap gap-x-3 text-cell text-ink-2 max-[399px]:basis-full md:ml-auto"
       >
-        {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
-            never strands "3" from "not reported" or opens a line on "·". The text content is
-            unchanged. */}
-        {countLine.split(' · ').map((part, i, parts) => (
-          <span key={part}>
-            {i > 0 ? ' ' : null}
-            <span className="whitespace-nowrap">
-              {part}
-              {i < parts.length - 1 ? ' ·' : null}
-            </span>
+        {countLine.split(' · ').map((part) => (
+          <span key={part} className="whitespace-nowrap">
+            {part}
           </span>
         ))}
       </p>
@@ -460,7 +381,7 @@ export function ScheduleFiltersFallback({
   className,
 }: Pick<ScheduleFiltersProps, 'teams' | 'divisions' | 'counts' | 'className'>) {
   return (
-    <div className={className}>
+    <div className={['min-w-0 flex-1', className].filter(Boolean).join(' ')}>
       <FiltersPanel
         teams={teams}
         divisions={divisions}
@@ -471,7 +392,7 @@ export function ScheduleFiltersFallback({
       {/* The prerendered page leaves this boundary pending, so WITHOUT JavaScript this fallback is
           what stays on screen: its controls are disabled, and the note saying why lives here. */}
       <noscript>
-        <p className="mt-3 mb-0 text-meta text-ink-3">
+        <p className="sx-note">
           Filtering needs JavaScript. The complete season — all {counts.total}{' '}
           {gameWord(counts.total)}, oldest first — is listed below either way.
         </p>
@@ -542,11 +463,10 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
   }, [chips.length]);
 
   return (
-    <div className={className}>
-      {/* ONE card of controls. Team and division stay in the row, exactly as DESIGN §3.3 draws
-          them; game type and status sit behind one disclosure. Whatever is active echoes back as
-          removable pills below, so a filtered list can never look like the whole season. The
-          panel is not sticky at any width: the date header is the sticky thing on this page. */}
+    <div className={['min-w-0 flex-1', className].filter(Boolean).join(' ')}>
+      {/* Team and division stay in the row; game type and status sit behind one disclosure.
+          Whatever is active echoes back as removable buttons below, so a filtered list can never
+          look like the whole season. Nothing here is sticky: the date strip is the sticky bar. */}
       <FiltersPanel
         teams={teams}
         divisions={divisions}
@@ -558,14 +478,14 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
       />
 
       <noscript>
-        <p className="mt-3 mb-0 text-meta text-ink-3">
+        <p className="sx-note">
           Filtering needs JavaScript. The complete season — all {counts.total}{' '}
           {gameWord(counts.total)}, oldest first — is listed below either way.
         </p>
       </noscript>
 
       {chips.length > 0 ? (
-        <p ref={chipsRef} className="mt-3 mb-0 flex flex-wrap items-center gap-2">
+        <p ref={chipsRef} className="mt-2 mb-0 flex flex-wrap items-center gap-x-3 gap-y-2">
           {chips.map((chip, index) => (
             <button
               key={chip.key}
@@ -575,23 +495,13 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
                 removedChip.current = index;
                 update(chip.clear);
               }}
-              className="sx-pill min-h-11"
+              className="sx-btn"
             >
               {chip.label}
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                aria-hidden="true"
-                className="text-ink-3"
-              >
-                <path d="m3 3 6 6M9 3 3 9" />
-              </svg>
-              <span className="sr-only">— remove this filter</span>
+              <span className="font-normal text-ink-2">
+                <span aria-hidden="true">Remove</span>
+                <span className="sr-only">— remove this filter</span>
+              </span>
             </button>
           ))}
           <button
@@ -600,19 +510,14 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
               removedChip.current = -1;
               update(DEFAULT_FILTERS);
             }}
-            className="inline-flex min-h-11 items-center rounded-chip px-3 text-meta font-medium text-accent hover:bg-surface-2"
+            className="sx-link min-h-11"
           >
             Clear all
           </button>
         </p>
       ) : null}
 
-      {filtered && visible === 0 ? (
-        <EmptyState heading="No games match these filters." className="mt-4">
-          Remove one of the filters above — they are all still listed, and still removable — or
-          clear them all to see the whole season again.
-        </EmptyState>
-      ) : null}
+      {filtered && visible === 0 ? <EmptyState heading="No games match these filters." className="mt-2" /> : null}
     </div>
   );
 }

@@ -109,7 +109,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', fontSize: 24, letterSpacing: 4, textTransform: 'uppercase', color: OG.TEXT_3 }}>
+          <div style={{ display: 'flex', fontSize: 24, color: OG.TEXT_3 }}>
             {SITE_WORDMARK} &middot; {league.name}
           </div>
           <div style={{ display: 'flex', marginTop: 8, height: 2, background: OG.RULE }} />
@@ -133,7 +133,7 @@ export function leagueStandingsCard(leagueId: string): ImageResponse {
               }}
             >
               {column.heading ? (
-                <div style={{ display: 'flex', fontSize: 22, letterSpacing: 4, textTransform: 'uppercase', color: OG.TEXT_3 }}>
+                <div style={{ display: 'flex', fontSize: 22, color: OG.TEXT_3 }}>
                   {column.heading}
                 </div>
               ) : null}

@@ -62,13 +62,20 @@ describe('no sideways page scroll', () => {
     }
   });
 
-  it('lets text inside an old card wrap for as long as the old card exists', () => {
-    // The new `.sx-table` cells and `.sx-action` never wrap. On a page that has not been rebuilt
-    // (measured at 390px, 2026-11-12) that set /about's cross-check tables 618 to 1080px wide, which
-    // widened the whole page on a phone, and cut /playoffs' sentence-long links at the right edge.
-    // While the flattened `.sx-card` is defined, both wrap inside it; the rules go when it goes.
-    if (!/^\s*\.sx-card \{/m.test(CSS)) return;
-    expect(CSS).toContain('.sx-card .sx-table:not(.sx-tablewrap > .sx-table) :is(td, tbody th) { white-space: normal; }');
-    expect(CSS).toContain('.sx-card .sx-action, p > .sx-action { white-space: normal; }');
+  it('keeps a stretched team link inside its own table row', () => {
+    // `.sx-rowlink::after` is `position: absolute; inset: 0`: it covers the nearest positioned box. A
+    // table whose rows did not say `relative` (the MCAL seeds on /playoffs, the JV tables) left that
+    // box to the page, so one team's link lay over the whole first screen and took every tap
+    // (found in the integration sweep, 2026-11-12). The row is positioned by the shared rule.
+    expect(CSS).toContain('.sx-rowlink::after { content: ""; position: absolute; inset: 0; }');
+    expect(CSS).toContain('.sx-table tbody tr { position: relative; }');
+  });
+
+  it('has no old card left to wrap inside, and still wraps a link set in a paragraph', () => {
+    // The pages dropped `.sx-card` (integration pass, 2026-11-12), so the flattened card and the two
+    // rules that let text wrap inside it are gone together. A sentence-long `.sx-action` set in a
+    // paragraph still wraps: /playoffs' NFHS link is wider than a 320px phone.
+    expect(CSS).not.toMatch(/\.sx-card\b/);
+    expect(CSS).toContain('p > .sx-action { white-space: normal; }');
   });
 });

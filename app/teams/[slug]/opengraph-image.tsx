@@ -56,9 +56,7 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
       <div
         style={{
           display: 'flex',
-          fontSize: 20,
-          letterSpacing: 3,
-          textTransform: 'uppercase',
+          fontSize: 22,
           color: OG.TEXT_3,
         }}
       >
@@ -137,7 +135,7 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
               justifyContent: 'center',
               width: 118,
               height: 118,
-              borderRadius: 16,
+              borderRadius: 4,
               background: `#${team.colors.primary}`,
               color: team.colors.onPrimary,
               border: `2px solid ${OG.RULE}`,
@@ -170,9 +168,12 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
           <div style={{ display: 'flex', fontSize: 30, color: OG.TEXT_2 }}>Next: {nextLine}</div>
         </div>
 
-        <div style={{ display: 'flex', fontSize: 22, color: OG.TEXT_3 }}>
-          As of {formatStamp(getFetchedAt())} &middot; league games only &middot; unofficial
-          &middot; {SITE_NAME}
+        {/* Separate facts, set apart by space (DESIGN §33), not a dotted string. */}
+        <div style={{ display: 'flex', gap: 32, fontSize: 22, color: OG.TEXT_3 }}>
+          <div style={{ display: 'flex' }}>As of {formatStamp(getFetchedAt())}</div>
+          <div style={{ display: 'flex' }}>League games only</div>
+          <div style={{ display: 'flex' }}>Unofficial</div>
+          <div style={{ display: 'flex' }}>{SITE_NAME}</div>
         </div>
       </div>
     ),

@@ -31,8 +31,8 @@ export interface TeamMonogramProps {
  * are decorative and aria-hidden beside the name, so they are exempt from the 12px floor.
  */
 export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number> = {
-  20: 10,
-  24: 11,
+  20: 12,
+  24: 12,
   28: 12,
   32: 12,
   40: 15,

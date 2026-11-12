@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import { monthDay, plural, recordString } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
-import EmptyState from '../ui/EmptyState';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { TeamPageView, UnbeatenOpponent } from './team-view';
 
@@ -68,42 +67,23 @@ function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOppon
   const team = getTeamBySlug(opponent.slug);
   return (
     <li>
-      {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route here is
-          STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
-          into view, and this list is one team page per opponent still to play. Navigation still
-          fetches on click. */}
+      {/* `prefetch={false}`: every route here is STATIC, so Next's `auto` downloads the whole linked
+          route the moment the link scrolls into view, and this list is one team page per opponent. */}
       <Link
         href={`/teams/${opponent.slug}`}
         prefetch={false}
         aria-label={sentenceFor(opponent, leagueShort, fixed)}
-        className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline"
+        className="sx-tap flex min-h-11 items-center gap-2 px-2 py-1.5 text-body text-ink no-underline hover:bg-surface-2"
       >
-        <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-3">
+        <span aria-hidden="true" className="sx-teamcell flex-1">
           {team ? <TeamMonogram team={team} size={24} /> : null}
-          {/* Two lines, never an ellipsis: at 320px the fixed status column leaves the name ~110px,
-              and "Presentation" truncated to "Presenta…". */}
-          <span className="line-clamp-2 min-w-0 flex-1 break-words text-body text-ink">
-            {opponent.shortName}
-          </span>
+          <span>{opponent.shortName}</span>
         </span>
-        <span className="sx-num shrink-0 text-cell text-ink-2" aria-hidden="true">
+        <span className="sx-num shrink-0 text-ink-2" aria-hidden="true">
           {opponent.played === 0 ? '' : recordString(opponent.record)}
         </span>
-        {/* A fixed status column, so the records to its left end on one right edge down the list
-            instead of moving with the width of each status. 92px fits every status of a league
-            with a fixed schedule ("next Oct 13", "2 unreported", "no games left") on one line.
-            Without one (the Sunset) a row can read "no league game listed", 141px, which ran past
-            the card as "no league game l…". There the column is 148px from 640px, the same width
-            on every row of the page; below 640px it stays 92px and that status takes two lines
-            ("no league / game listed", a 56px row): a 148px column left a name 111px at 390
-            (five of Chaparral's seven wrapped, 64px rows) and 41px at 320. */}
-        <span
-          className={`shrink-0 text-right text-ink-3 ${
-            fixed ? 'w-[5.75rem] whitespace-nowrap' : 'w-[5.75rem] sm:w-[9.25rem] sm:whitespace-nowrap'
-          }`}
-          aria-hidden="true"
-        >
+        {/* A fixed status column, so the records to its left end on one right edge down the list. */}
+        <span className="w-[6.5rem] shrink-0 text-right text-cell text-ink-2" aria-hidden="true">
           {statusOf(opponent, fixed)}
         </span>
       </Link>
@@ -115,39 +95,24 @@ export interface TeamUnbeatenProps {
   view: TeamPageView;
 }
 
+/** Renders nothing when the team has beaten every opponent in its table at least once. */
 export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
-  const noun = view.league.gamesWord;
   const short = view.league.shortName;
   const fixed = view.leagueScheduled !== null;
-  if (view.unbeaten.length === 0) {
-    return (
-      <EmptyState
-        heading={`${view.team.name} has beaten every ${view.scopeLabel} ${noun} opponent at least once.`}
-      >
-        The full league game log is below.
-      </EmptyState>
-    );
-  }
+  if (view.unbeaten.length === 0) return null;
   return (
-    <>
-      <div className="sx-card sx-flush sx-bleed">
-        <ul className="sx-list">
-          {view.unbeaten.map((opponent) => (
-            <OpponentRow key={opponent.slug} opponent={opponent} leagueShort={short} fixed={fixed} />
-          ))}
-        </ul>
-      </div>
-      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-        {`${view.unbeaten.length} of ${view.divisionSize - 1} ${view.scopeLabel} ${noun} opponents. `}
-        {fixed
-          ? `${noun === 'league' ? 'League' : 'Division'} opponents play each other twice, home and away, so a name can be here with two meetings left, one, or none. `
-          : `${short} teams do not all play each other: a meeting is a league game when MaxPreps marks it as one, so a name can be here with no meeting at all. `}
-        {/* Only when a row actually says "unreported". */}
-        {view.unbeaten.some(readsUnreported)
-          ? `An “unreported” meeting is scheduled per ${short} with no result reported.`
-          : null}
-      </p>
-    </>
+    <section className="sx-section" aria-labelledby="unbeaten-heading">
+      <h2 id="unbeaten-heading">Not beaten yet</h2>
+      <ul className="sx-list">
+        {view.unbeaten.map((opponent) => (
+          <OpponentRow key={opponent.slug} opponent={opponent} leagueShort={short} fixed={fixed} />
+        ))}
+      </ul>
+      {/* Only when a row actually says "unreported". */}
+      {view.unbeaten.some(readsUnreported) ? (
+        <p className="sx-note">{`An “unreported” meeting is scheduled per ${short} with no result reported.`}</p>
+      ) : null}
+    </section>
   );
 }
 

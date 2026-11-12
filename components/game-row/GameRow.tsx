@@ -18,8 +18,8 @@ import {
 } from './summary';
 
 /**
- * The ONE game row (DESIGN §33), in components/game-row/ with its pieces in summary.tsx. `GameCard`
- * and `GameLine` are aliases of it; `GameLogRow` is the team-perspective log line.
+ * The ONE game row (DESIGN §33), in components/game-row/ with its pieces in summary.tsx.
+ * `GameLogRow` is the team-perspective log line.
  *
  * One DOM, one shape, one size, in every list and every state. Three columns (`.sx-game-grid`,
  * app/globals.css):

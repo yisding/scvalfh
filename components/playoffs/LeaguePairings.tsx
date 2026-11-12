@@ -10,8 +10,8 @@ import { pairingSentence, type PairingView, type SeatView } from './playoff-view
  * the Santa Teresa champion hosts Mt. Hamilton #4.
  *
  * Replaces the old SCVAL-only crossover component: seat labels come from config (`seatLabels`), there is
- * no "is this side El Camino" mirror test, and a hosting seat is marked `(host)` in words. The
- * play-in card carries a 3px ink rule — a position, never a hue. Every seat follows the table, so the
+ * no "is this side El Camino" mirror test, and a hosting seat is marked `(host)` in words. Each
+ * pairing is a row (PlayInCard.tsx): the site's game row once the game exists. Every seat follows the table, so the
  * pairings move with every result; a seat with more than one contender says so in words.
  */
 export interface LeaguePairingsProps {
@@ -69,32 +69,18 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
   if (pairings.length === 0) return null;
   const single = pairings.length === 1;
   return (
-    <ol
-      className={[
-        'm-0 list-none space-y-3 p-0',
-        single ? null : 'lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    // Rows on hairlines; a set of pairings is two columns from 1024px, and a lone one keeps to one column's width.
+    <ol className={['sx-list', single ? 'lg:max-w-[calc(50%-1.25rem)]' : 'lg:grid lg:grid-cols-2 lg:gap-x-10', className].filter(Boolean).join(' ')}>
       {pairings.map((p) => {
-        // Once the game exists the card reads as the game does (DESIGN §32.4): visitor first, then 'at' the home side
-        // ('vs' at a neutral site), so "Santa Clara at Los Altos" on the card matches its own link, and its screen-reader
-        // sentence says the same. "(host)" stays only on a config host seat the game also has at home: a game listed
-        // the other way round never marks its visitor the host. Before the game, a host seat reads "visitor at host";
-        // with no host, the config's seat order and 'vs'.
         const view = asListed(p);
         const [a, b] = view.seats;
         const sides: [PlayInSide, PlayInSide] =
           view.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
         return (
-          // The pairing's id ('scval-crossover-1', 'bval-play-in') is the anchor its game links to (bracket-link.ts).
-          <li key={p.id} id={p.id} className={single ? 'sx-target max-w-3xl' : 'sx-target'}>
-            {/* A lone play-in sits under a section header that already names it ('Play-in'), so
-                it shows only its date and time. A lone crossover sits under 'Crossover and
-                play-in', which does not, so it keeps its title (and its seeds); a set keeps every
-                title to tell the games apart. */}
+          <li key={p.id} id={p.id} className="sx-target min-w-0 pb-2">
+            {/* A lone play-in sits under a heading that already names it ('Play-in'), so its note
+                carries no title. A lone crossover sits under 'Crossover and play-in', which does not,
+                so it keeps its title (and its seeds); a set keeps every title to tell the games apart. */}
             <PlayInCard
               title={single && p.isPlayIn ? null : p.title}
               when={{ dateKey: p.dateKey, dateLabel: p.dateLabel, timeLabel: p.timeLabel }}
@@ -104,7 +90,6 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
               purpose={purposeOf(p.label, p.title)}
               notes={p.notes}
               game={p.game}
-              emphasis={p.isPlayIn && !single}
             />
           </li>
         );

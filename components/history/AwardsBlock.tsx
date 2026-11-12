@@ -4,7 +4,6 @@ import { getTeamBySlug } from '../../lib/data';
 import { gradeWord } from '../../lib/format';
 import type { HistoryAwards, HistoryPlayer } from '../../lib/history/history';
 import { leagueOfDivision } from '../../lib/leagues';
-import GridRowFiller from '../ui/GridRowFiller';
 import { awardLine, overallAwards, type AwardLine } from './history-view';
 
 /**
@@ -30,12 +29,12 @@ function AwardMeta({ line }: { line: AwardLine }) {
     (f): f is string => f !== null,
   );
   return (
-    <span className="block text-meta text-ink-2">
+    <span className="block text-cell text-ink-2">
       {/* `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads the whole
           linked route the moment the link scrolls into view, and every award names a school, so
           one block is dozens of these. Navigation still fetches on click. */}
       {team ? (
-        <Link href={`/teams/${team.slug}`} prefetch={false} className="text-accent hover:underline">
+        <Link href={`/teams/${team.slug}`} prefetch={false} className="sx-teamlink">
           {line.school}
         </Link>
       ) : (
@@ -52,53 +51,23 @@ function AwardMeta({ line }: { line: AwardLine }) {
   );
 }
 
-function PlayerList({
-  title,
-  players,
-  columns,
-}: {
-  title: string;
-  players: HistoryPlayer[];
-  /**
-   * Where the card's rows flow into two columns: `sm` for a list that has the full division
-   * width from `sm` up (honorable mention), `lg` for First/Second team, which sit side by side
-   * from `sm` to `md` and stack from `lg`, where each gets the whole ~470-550px division column.
-   */
-  columns: 'sm' | 'lg';
-}) {
+function PlayerList({ title, players }: { title: string; players: HistoryPlayer[] }) {
   if (players.length === 0) return null;
   return (
     <div>
-      <dt className="text-micro font-semibold text-ink-3">
-        {title}
-      </dt>
-      {/* The roster is data, so it sits in a card (the plane rule) with divider rows. Two
-          columns are a row-major grid with no gap: a grid row's two cells share one height and
-          the dividers run straight across, like a two-column table. Reading order is the DOM
-          order (left, then right, then down). `sx-flush` clips the cells, and a short last row's
-          square GridRowFiller with them, to the card's rounded corners. */}
-      <dd
-        className={`sx-card sx-flush m-0 mt-2 grid ${
-          columns === 'sm' ? 'sm:grid-cols-2' : 'lg:grid-cols-2'
-        }`}
-      >
+      <dt className="text-cell font-semibold text-ink-2">{title}</dt>
+      {/* A plain list of names, each on a hairline, in two columns where a division's half of the page (or a
+          phone held sideways) has room for two. Reading order is the DOM order (left, then right, then down). */}
+      <dd className="m-0 mt-1 grid gap-x-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
         {players.map((p, i) => {
           const line = awardLine(p);
           return (
-            <div
-              key={i}
-              // A rule on top of every row but the first in each column: one row in a single
-              // column, the first two once the grid has two columns.
-              className={`min-w-0 border-t border-divider px-4 py-2 first:border-t-0 ${
-                columns === 'sm' ? 'sm:[&:nth-child(2)]:border-t-0' : 'lg:[&:nth-child(2)]:border-t-0'
-              }`}
-            >
-              <span className="block text-body text-ink">{line.player}</span>
+            <div key={i} className="min-w-0 border-t border-divider px-2 py-2">
+              <span className="block text-body font-medium text-ink">{line.player}</span>
               <AwardMeta line={line} />
             </div>
           );
         })}
-        <GridRowFiller as="div" count={players.length} columns={columns === 'sm' ? { sm: 2 } : { lg: 2 }} />
       </dd>
     </div>
   );
@@ -106,27 +75,19 @@ function PlayerList({
 
 export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
   if (!awards) {
-    return (
-      <p className="py-2 text-meta text-ink-3">
-        No {levelLabel.toLowerCase()} all-league awards were published for this division.
-      </p>
-    );
+    return <p className="sx-empty">No {levelLabel.toLowerCase()} all-league awards were published for this division.</p>;
   }
   const overall = overallAwards(leagueOfDivision(awards.division).id, awards);
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 pt-2">
       {overall.length > 0 ? (
-        // A two-column grid, so every winner starts at the same x. The label column is a fixed
-        // 12rem, not `auto`: sized by its own longest title it was 184px for SCVAL ("Offensive
-        // Player of the Year") and 150 for BVAL ("Co-Senior of the Year"), so the two leagues'
-        // winners started 34px apart down the page. 12rem holds the longest title on one line
-        // with 8px to spare; a longer one would wrap inside the column. On a phone each pair
-        // stacks (small title over the winner) so a long line never wraps flush-left under its
-        // title. The title sits on the name's line.
-        <dl className="m-0 grid gap-y-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-3">
+        // A two-column grid, so every winner starts at the same x. The label column is a fixed 12rem, which
+        // holds the longest title ("Offensive Player of the Year") on one line. On a phone each pair stacks
+        // (the title over the winner).
+        <dl className="m-0 grid gap-y-3 px-2 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-x-6">
           {overall.map((o, i) => (
             <div key={i} className="sm:contents">
-              <dt className="text-micro text-ink-3 sm:pt-0.5 sm:text-meta sm:text-ink-2">{o.award}</dt>
+              <dt className="text-cell text-ink-2 sm:pt-0.5">{o.award}</dt>
               <dd className="m-0">
                 {o.winner ? (
                   <>
@@ -141,22 +102,12 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
           ))}
         </dl>
       ) : null}
-      <dl className="m-0 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-1">
-        <PlayerList title="First team" players={awards.firstTeam} columns="lg" />
-        <PlayerList title="Second team" players={awards.secondTeam} columns="lg" />
+      <dl className="m-0 flex flex-col gap-6">
+        <PlayerList title="First team" players={awards.firstTeam} />
+        <PlayerList title="Second team" players={awards.secondTeam} />
+        {awards.thirdTeam && awards.thirdTeam.length > 0 ? <PlayerList title="Third team" players={awards.thirdTeam} /> : null}
+        <PlayerList title="Honorable mention" players={awards.honorableMention} />
       </dl>
-      {awards.thirdTeam && awards.thirdTeam.length > 0 ? (
-        // A third team (SCVAL's boys basketball) takes the full width, like honorable mention: in the
-        // sm-md two-column grid above it would sit alone under the first team.
-        <dl className="m-0">
-          <PlayerList title="Third team" players={awards.thirdTeam} columns="sm" />
-        </dl>
-      ) : null}
-      {awards.honorableMention.length > 0 ? (
-        <dl className="m-0">
-          <PlayerList title="Honorable mention" players={awards.honorableMention} columns="sm" />
-        </dl>
-      ) : null}
     </div>
   );
 }

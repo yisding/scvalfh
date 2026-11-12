@@ -83,28 +83,22 @@ function FixtureRows({
         const past = fixture.dateKey < today;
         const heading = divisionHeading(fixture.division);
         return (
-          // Two fixed tracks, as a game row's: a 5.25rem lead (the date, then the status under
-          // it) and the matchup (its division a line under it). As one wrapping flex line —
-          // date · matchup · division · status flush right — whether "No result" fitted beside
-          // the matchup depended on the matchup's and the division's length, so phone rows were
-          // 52, 58 or 63px and the label hopped between the end of line 1 and line 2. A third
-          // fixed track for the status at the row's end held it still but cost the matchup
-          // 88px, which then wrapped on a phone instead.
+          // Two fixed tracks, as a game row's: a lead (the date, then the status under it) and the
+          // matchup (its division a line under it), so the status never hops between lines.
           <li
             key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
-            className="grid min-h-row-1 grid-cols-[5.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2"
+            className="grid min-h-row-1 grid-cols-[5.25rem_minmax(0,1fr)] items-center gap-x-3 px-2 py-2"
           >
             <span className="flex flex-col">
               {showDate ? (
-                <time dateTime={fixture.dateKey} className="sx-num text-cell text-ink-2">
+                <time dateTime={fixture.dateKey} className="text-cell text-ink">
                   {shortDate(fixture.dateKey)}
                 </time>
               ) : null}
               {/* The status reads as a label, never a score slot. Visible as one word; the
-                  sr-only line says whose schedule it is on, the same words as the team page.
-                  "No result" and "Upcoming" are both 69.6px, inside the 84px lead. */}
+                  sr-only line says whose schedule it is on, the same words as the team page. */}
               <span
-                className="whitespace-nowrap text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
+                className="whitespace-nowrap text-micro font-semibold text-ink-2"
                 aria-hidden="true"
               >
                 {past ? 'No result' : 'Upcoming'}
@@ -117,7 +111,7 @@ function FixtureRows({
                 {name(fixture.awaySlug, fixture.awayName)} at{' '}
                 {name(fixture.homeSlug, fixture.homeName)}
               </span>
-              {heading ? <span className="block text-meta text-ink-3">{heading}</span> : null}
+              {heading ? <span className="block text-cell text-ink-2">{heading}</span> : null}
             </span>
             <span className="sr-only">
               {`On ${short}’s schedule only, ${past ? 'no result' : 'not played yet'}`}
@@ -148,8 +142,8 @@ export function OfficialFixtures({
     <>
       {links.map((link, i) => (
         <span key={link.href}>
-          {i > 0 ? ' · ' : null}
-          <ExternalLink href={link.href}>
+          {i > 0 ? ', ' : null}
+          <ExternalLink href={link.href} className="sx-link">
             {link.label}
             <span className="sr-only"> ({short})</span>
           </ExternalLink>
@@ -177,15 +171,9 @@ export function OfficialFixtures({
   if (variant === 'plain') {
     return (
       <div className={className}>
-        {lead ? (
-          <p className="m-0 mb-4 max-w-prose text-body text-ink-2">{lead}</p>
-        ) : (
-          <p className="m-0 mb-4 max-w-prose text-meta text-ink-2">{note}</p>
-        )}
-        {/* Full content width: on /scores/[date] it shares the right edge of the day's cards,
-            the pager and the line under it. */}
-        <div className="sx-card sx-flush sx-bleed">{rows}</div>
-        {lead ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">{followUp}</p> : null}
+        {lead ? <p className="sx-note mb-2">{lead}</p> : null}
+        {rows}
+        <p className="sx-note">{lead ? followUp : note}</p>
       </div>
     );
   }
@@ -193,30 +181,13 @@ export function OfficialFixtures({
   return (
     <div className={className}>
       {/* Always visible, above the list: what these rows are and where the league publishes them. */}
-      <p className="m-0 mb-4 max-w-prose text-meta text-ink-2">{note}</p>
-      {/* Capped at the width of the "How to read" disclosure that follows it. */}
-      <details className="sx-card sx-flush sx-bleed md:max-w-3xl">
-        <summary className="sx-tap flex min-h-row-1 cursor-pointer list-none items-center gap-2.5 px-gutter py-2 text-body font-medium text-ink [&::-webkit-details-marker]:hidden">
-          {/* A LEADING chevron points right at rest and down when open (`.sx-chevron-lead`,
-              globals.css), like the CSS chevron on every `.sx-disclosure`; a trailing one points
-              down and flips up. */}
-          <svg
-            className="sx-chevron sx-chevron-lead shrink-0 text-ink-3"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="m4 6 4 4 4-4" />
-          </svg>
+      <p className="sx-note mb-2">{note}</p>
+      {/* Optional data: the list opens on request. */}
+      <details className="sx-disclosure">
+        <summary>
           {`${plural(fixtures.length, `official ${short} fixture`, `official ${short} fixtures`)} with no published result`}
         </summary>
-        <div className="border-t border-divider">{rows}</div>
+        {rows}
       </details>
     </div>
   );

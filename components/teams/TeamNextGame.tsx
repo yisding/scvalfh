@@ -1,240 +1,156 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, timeOfDayPT } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import EmptyState from '../ui/EmptyState';
+import { monthDay } from '../../lib/format';
+import { GAME_LOG_ROW_GRID } from '../game-row/GameLogRow';
+import GameList from '../schedule/GameList';
 import ExternalLink from '../ui/ExternalLink';
-import ResultChip from '../ui/ResultChip';
-import SectionHeader from '../ui/SectionHeader';
-import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, gameKindLabel } from '../ui/describe-game';
 import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**
- * The NEXT block (DESIGN §3.7, modernization brief §5.7). Presentational: every string comes from
- * `buildNextCard` in team-view.ts. The heading says Next and whether it is a league game; the card
- * holds, top to bottom:
+ * The team page's first block, "Next game" (DESIGN §33). Presentational: every string comes from
+ * `buildNextCard` in team-view.ts.
  *
- * - the date (18px, "Today · Fri Oct 2" on the day itself) and the start time (13px sans,
- *   tabular figures);
- * - the opponent's short name beside a 32px monogram, with their league record and place under it
- *   for a registry team ("3-3-1 · 4th in El Camino", "2nd in MCAL", or the opponent's league named
- *   too when it is another league's): "can we beat them?" is the question a parent asks next, and
- *   the answer used to be two taps away;
- * - where it is, when we can say so honestly (a venue, "Neutral site", or the host school's city);
- * - the last time the two met, as one link to that game ("Earlier: lost 0–7 at home, Sep 10");
- * - when the league's official schedule lists a fixture before this game that no source has
- *   published, one plain line naming it: the fixture list below marks it Upcoming, and without the
- *   line the page would name two different "next" games;
- * - a pill row pinned to the bottom: "Full game page" first (the opponent's name was the only way
- *   there, and nothing said it was a link), then only the external links that really exist. A
- *   dead affordance is worse than an absent one, so a game with no stream has no stream chip.
+ * A listed game is ONE full-width game row (`GameList solo`): the start time with the date under it
+ * in the status slot, the two teams, and one note line that says what kind of game it is when it is
+ * not a league game and where it is played, ending in the link "Bracket" for a postseason game.
+ * Under the row, only the outside links that really exist (directions, a stream, tickets, MaxPreps):
+ * a dead affordance is worse than an absent one.
  *
- * The league copy comes from config (`league`): the official-fixture card names the league's own
- * schedule, and the empty state is the league's end-of-season and bracket sentences (built in
- * team-view.ts noneCard, its heading shared with home's MyTeamCard) — an MCAL page never mentions CCS
- * (SPEC §10.5). A CCS team seated in a crossover or play-in MaxPreps has not listed yet gets that game
- * instead of the empty state (`pairing`: date, purpose, opponent or the seat's contenders, and one pill
- * to its pairing card on /playoffs), so the card never says "no more games" the day before a play-in. The heading's meta is League / Postseason / Non-league from
- * `countsFor` and `postseason` (SPEC §10.4).
+ * Two kinds of next game have no game page, so they are drawn on the schedule's row grid instead,
+ * with one line that says why:
+ * - a fixture that exists only on the league's official schedule (no start time, no venue);
+ * - a CCS league's crossover or play-in the team is seated in that MaxPreps has not listed yet
+ *   (`pairing`), with the link to the pairing on /playoffs.
+ * When the official schedule lists a fixture BEFORE the listed game that no source has published,
+ * one line names it, so the page never shows two different "next" games without saying so.
  *
- * There is no score here and never a `0-0`: a scheduled game's score slot does not exist, the
- * time takes its place (DESIGN §5.2).
+ * With nothing ahead the block reads "No upcoming games"; the league's season-end words are the
+ * Playoffs block's. There is no score here and never a `0-0`.
  */
 export interface TeamNextGameProps {
   card: NextCard;
-  /** Unused since the empty state's words moved into the card (team-view.ts noneCard); kept so callers need not change. */
+  /** Unused; kept so callers need not change. */
   teamName?: string;
-  /** The team's league copy (config): the end-of-season and bracket sentences, the short name. */
+  /** The team's league copy (config): the short name the official-fixture lines use. */
   league: TeamLeagueCopy;
+  /** Where a postseason game's "Bracket" link goes; no link without it. */
+  bracketHref?: string | null;
 }
 
-/** Monogram + "at Santa Clara" over the record line. Shared by the contest and fixture cards. */
-function Opponent({ card }: { card: Exclude<NextCard, { kind: 'none' }> }) {
+/** A next game with no game page: date, what stands where the time would be, the opponent, a note. */
+function PlainRow({
+  card,
+  dateKey,
+  time,
+  note,
+}: {
+  card: Exclude<NextCard, { kind: 'none' }>;
+  dateKey: string;
+  time: string | null;
+  note: string;
+}) {
+  const name = card.opponent ? (
+    <Link href={`/teams/${card.opponent.slug}`} prefetch={false} className="sx-rowlink">
+      {card.versus} {card.opponentName}
+    </Link>
+  ) : (
+    <span>
+      {card.versus} {card.opponentName}
+    </span>
+  );
   return (
-    <div className="mt-3 flex items-center gap-3">
-      {card.opponent ? <TeamMonogram team={card.opponent} size={32} /> : null}
-      <p className="m-0 min-w-0">
-        {/* The space sits OUTSIDE the span: Chrome drops a trailing space inside an inline child
-            when it builds an accessible name, which read "atSt. Ignatius…". */}
-        <span className="block text-body text-ink">
-          <span className="text-ink-2">{card.versus}</span>{' '}
-          {/* A registry opponent's name goes to its team page, like an opponent in the unbeaten list
-              (TeamUnbeaten); a school outside the registry has no page here. */}
-          {card.opponent ? (
-            <Link
-              href={`/teams/${card.opponent.slug}`}
-              prefetch={false}
-              className="text-ink no-underline hover:underline"
-            >
-              {card.opponentName}
-            </Link>
-          ) : (
-            card.opponentName
-          )}
+    <div className={GAME_LOG_ROW_GRID}>
+      <time dateTime={dateKey} className="sx-num">
+        {monthDay(dateKey)}
+      </time>
+      <span />
+      {time ? (
+        <span className="sx-num" data-time="">
+          {time}
         </span>
-        {card.record ? (
-          <span className="block text-meta text-ink-2">
-            <span className="sr-only">Their record: </span>
-            {card.record}
-          </span>
-        ) : null}
-      </p>
+      ) : (
+        <span className="text-cell text-ink-2">No time</span>
+      )}
+      <span className="sx-teamcell">
+        {card.opponent ? <TeamMonogram team={card.opponent} size={24} /> : null}
+        {name}
+      </span>
+      <span className="sx-logrow-note">{note}</span>
     </div>
   );
 }
 
-export function TeamNextGame({ card, league }: TeamNextGameProps) {
-  if (card.kind === 'official') {
-    return (
-      <section className="flex min-w-0 flex-col">
-        <SectionHeader kicker="Next" meta="League" />
-        <div className="sx-card flex-1 p-5">
-          <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <time dateTime={card.fixture.dateKey} className="text-lead text-ink">
-              {card.dateLabel}
-            </time>
-            <span className="text-meta text-ink-2">No start time published</span>
-          </p>
-          <Opponent card={card} />
-          <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-            From the official {league.shortName} schedule. No source has published a contest for
-            this fixture, so there is no start time, no venue and no game page for it &mdash; and
-            there will be no score unless one is reported.
-          </p>
-        </div>
-      </section>
+export function TeamNextGame({ card, league, bracketHref }: TeamNextGameProps) {
+  let body: React.ReactNode;
+  if (card.kind === 'none') {
+    body = <p className="sx-empty">No upcoming games</p>;
+  } else if (card.kind === 'official') {
+    body = (
+      <>
+        <PlainRow card={card} dateKey={card.fixture.dateKey} time={null} note="League" />
+        <p className="sx-note">
+          From the official {league.shortName} schedule. No source has published this game, so it has no start
+          time and no venue here.
+        </p>
+      </>
     );
-  }
-
-  if (card.kind === 'pairing') {
+  } else if (card.kind === 'pairing') {
     const { pairing } = card;
     return (
-      <section className="flex min-w-0 flex-col">
-        <SectionHeader kicker="Next" meta="Postseason" />
-        <div className="sx-card flex flex-1 flex-col p-5">
-          <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <time dateTime={pairing.dateKey} className="text-lead text-ink">
-              {card.dateLabel}
-            </time>
-            <span className="text-cell text-ink-2 tabular-nums">
-              {pairing.timeLabel ?? 'No start time published'}
-            </span>
-          </p>
-          <p className="mt-1 mb-0 text-meta text-ink-2">{pairing.purpose}</p>
-          <Opponent card={card} />
-          <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-            {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
-            {`${pairing.seats}, from the ${league.shortName} tables today${pairing.settled ? '' : '; the pairing can still change'}. MaxPreps has not listed this game yet, so it has no game page here.`}
-          </p>
-          <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
-            <Link href={pairing.href} prefetch={false} className="sx-pill sx-pill-accent min-h-11">
-              The pairing<span className="sr-only">: {pairing.kindLabel} on the playoffs page</span>
-            </Link>
-          </p>
-        </div>
-      </section>
-    );
-  }
-
-  if (card.kind === 'none') {
-    return (
-      <section className="min-w-0">
-        <SectionHeader kicker="Next" />
-        <EmptyState heading={card.heading}>{card.body}</EmptyState>
-      </section>
-    );
-  }
-
-  const { game } = card;
-  const display = describeGame(game);
-  // The start time is always shown when the date is known (struck through when the game is
-  // postponed or cancelled, as everywhere else). A scheduled game's status label IS that time, so
-  // it adds nothing; anything else (POSTPONED, CANCELLED, SCORE NOT REPORTED) follows the
-  // time as the written status, so neither the word nor the time is dropped (DESIGN §5.2). The
-  // time is sans with tabular figures, not mono: it sits on the 18px date's baseline, alone, and
-  // stacks with nothing.
-  const scheduled = display.kind === 'scheduled';
-  const timeClass = ['text-cell text-ink-2 tabular-nums', display.strikeTime ? 'line-through' : null]
-    .filter(Boolean)
-    .join(' ');
-
-  return (
-    <section className="flex min-w-0 flex-col">
-      <SectionHeader
-        kicker="Next"
-        meta={gameKindLabel(game)}
-      />
-      {/* `flex-1`: in the two-column grid the card fills its row beside the Last card, with the
-          pill row pinned to its bottom edge (`mt-auto`), so the pair ends level. */}
-      <div className="sx-card flex flex-1 flex-col p-5">
-        <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <time dateTime={dateTimeAttr(game)} className="text-lead text-ink">
-            {card.dateLabel}
-          </time>
-          {game.isDateTba ? null : (
-            <span className={timeClass}>
-              {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
-            </span>
-          )}
-          {scheduled ? null : (
-            <StatusLabel display={display} showChips={false} className="shrink-0" />
-          )}
+      <section className="sx-section" data-first="" aria-labelledby="next-heading">
+        <h2 id="next-heading">Next game</h2>
+        <PlainRow
+          card={card}
+          dateKey={pairing.dateKey}
+          time={pairing.timeLabel ? pairing.timeLabel.replace(/ PT$/, '') : null}
+          note={pairing.kindLabel}
+        />
+        <p className="sx-note">
+          {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
+          {`${pairing.purpose}. ${pairing.seats}, from the ${league.shortName} standings today${pairing.settled ? '' : '; the pairing can still change'}. MaxPreps has not listed this game yet.`}{' '}
+          <Link href={pairing.href} prefetch={false} className="sx-link">
+            Playoffs<span className="sr-only">: {pairing.kindLabel}</span>
+          </Link>
         </p>
-        <Opponent card={card} />
-        {card.place ? <p className="mt-2 mb-0 text-meta text-ink-2">{card.place}</p> : null}
-        {game.isTimeTba ? (
-          <p className="mt-1 mb-0 text-meta text-ink-3">
-            No source has published a start time for this game yet.
-          </p>
-        ) : null}
-        {card.earlier ? (
-          <p className="mt-2 mb-0">
-            {/* One link, chip and words together. The chip is decoration here: the words already
-                say won / lost / tied, so it is hidden rather than read as a second "Loss". */}
-            <Link
-              href={gameHref(card.earlier.contestId)}
-              prefetch={false}
-              className="sx-action gap-2 text-meta text-ink-2 no-underline hover:underline"
-            >
-              <span aria-hidden="true" className="inline-flex">
-                <ResultChip kind={card.earlier.outcome} size={20} />
-              </span>
-              {card.earlier.text}
-            </Link>
-          </p>
-        ) : null}
+      </section>
+    );
+  } else {
+    body = (
+      <>
+        <GameList
+          games={[card.game]}
+          solo
+          showChips
+          showDate
+          noteLink={bracketHref ? { href: bracketHref, label: 'Bracket' } : undefined}
+        />
         {card.officialBefore ? (
-          <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
-            {/* A league that publishes a start time (PCAL, BVAL) has it named; only a fixture
-                without one (SCVAL) is said to have none. */}
+          <p className="sx-note">
+            {/* A league that publishes a start time (PCAL, BVAL) has it named. */}
             {league.shortName}&rsquo;s schedule also lists {card.officialBefore.dateLabel}
             {card.officialBefore.timeLabel ? `, ${card.officialBefore.timeLabel},` : null}{' '}
-            {card.officialBefore.versus} {card.officialBefore.opponentName}, but no source does, so
-            {card.officialBefore.timeLabel ? ' it has no game page here.' : ' it has no start time here.'}
+            {card.officialBefore.versus} {card.officialBefore.opponentName}, but no source has published that game.
           </p>
         ) : null}
-        <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
-          <Link
-            href={gameHref(game.contestId)}
-            prefetch={false}
-            className="sx-pill sx-pill-accent min-h-11"
-          >
-            {/* The Last card's pill (GameCard `linkStyle="pills"` from 768px, GameRow's panel
-                below it) has the same visible words, so the opponent is added for a screen
-                reader's links list and for voice control. */}
-            Full game page<span className="sr-only">: {card.versus} {card.opponent?.name ?? card.opponentName}</span>
-          </Link>
-          {/* 44px like the game-page pill beside it: the bare pill was 40px, so one row of
-              targets stood at two heights. */}
-          {card.chips.map((chip) => (
-            <ExternalLink key={chip.href} href={chip.href} className="sx-pill min-h-11">
-              {chip.label}
-            </ExternalLink>
-          ))}
-        </p>
-      </div>
+        {card.chips.length > 0 ? (
+          <ul className="sx-linkrow">
+            {card.chips.map((chip) => (
+              <li key={chip.href}>
+                <ExternalLink href={chip.href} className="sx-action">
+                  {chip.label}
+                </ExternalLink>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </>
+    );
+  }
+  return (
+    <section className="sx-section" data-first="" aria-labelledby="next-heading">
+      <h2 id="next-heading">Next game</h2>
+      {body}
     </section>
   );
 }

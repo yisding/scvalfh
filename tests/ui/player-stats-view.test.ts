@@ -188,8 +188,11 @@ describe('buildPlayerStatsView — the 2026-10-02 captures', () => {
 
   it('says a team with no stats has none, rather than rendering an empty table', () => {
     const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view: at('saratoga').view }));
-    expect(html).toContain('No player stats for Saratoga.');
-    expect(html).toContain('Nobody has entered any on MaxPreps this season.');
+    // ONE plain line (DESIGN §33), with the way to check for oneself.
+    expect(html).toMatch(/^<p class="sx-empty">No stats reported/);
+    expect(html).toContain('Check MaxPreps');
+    expect(html).not.toContain('could not be read');
+    expect(html).not.toContain('have not been collected yet');
     expect(html).not.toContain('<table');
   });
 
@@ -202,7 +205,7 @@ describe('buildPlayerStatsView — the 2026-10-02 captures', () => {
       expect(view.status, slug).toBe('pending');
       const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view }));
       expect(html, slug).toContain('player stats have not been collected yet');
-      expect(html, slug).not.toContain('No player stats for');
+      expect(html, slug).not.toContain('No stats reported');
       expect(html, slug).not.toContain('<table');
     }
   });
@@ -350,7 +353,8 @@ describe('goalkeeping — entered figures, a computed save %, and the keeper fir
     const view = buildPlayerStatsView('valley-christian', [], data)!;
     expect(view.goalies[0].stats.find((s) => s.label === 'Minutes')!.text).toBeNull();
     const html = renderToStaticMarkup(createElement(TeamPlayerStats, { view }));
-    expect(html).toContain('<dd class="sx-num m-0 text-lead font-semibold text-ink"><span aria-hidden="true">—</span><span class="sr-only">not recorded</span></dd>');
+    // Up to four goalkeeping figures are a table (Player, then one column each); more keep the cells.
+    expect(html).toContain('<td class="sx-num text-right"><span aria-hidden="true">—</span><span class="sr-only">not recorded</span></td>');
     expect(html).not.toMatch(/>—<\/dd>/);
   });
 

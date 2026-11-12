@@ -239,7 +239,10 @@ function sideFor(division: DivisionSeeds, seed: number): SeedSide {
  * home; otherwise the first feed is the bottom.
  */
 function pairing(id: string, first: PairingSide, second: PairingSide): BracketPairing {
-  const hostFirst = !(isSeedSide(first) && isSeedSide(second)) || first.seed <= second.seed;
+  // A side still to be decided has no host yet: the card keeps its feeders' order (the upper game's side on
+  // top), so the lines into it never cross.
+  if (!(isSeedSide(first) && isSeedSide(second))) return { kind: 'pairing', id, top: first, bottom: second };
+  const hostFirst = first.seed <= second.seed;
   return { kind: 'pairing', id, top: hostFirst ? second : first, bottom: hostFirst ? first : second };
 }
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import SectionHeader from '../ui/SectionHeader';
 import { shortDate } from '../../lib/format';
@@ -6,14 +7,17 @@ import { shortDate } from '../../lib/format';
 import type { ThisWeekRow, ThisWeekView } from './this-week';
 
 /**
- * "This week in the postseason" (view model buildThisWeek, this-week.ts): one strip per region on /playoffs,
- * `#this-week-norcal` after the CCS intro and `#this-week-socal` before the San Diego block, outside every
- * league card (the copy rules that cover a card do not reach it; it still carries no seed word, and the SoCal
- * strip no CCS word, because no SoCal label has one). A day is an `<h3>` ('Today · Thu Oct 29'); a row is one
- * link, its whole sentence one text node ('4:00 PM PT · Redwood at Tamalpais', or a final's score sentence),
- * then the label badge ('MCAL final'). No GameRow: its expanding panel would cost the page's weight budget
- * (/playoffs ≤ 43,224 B gzip, scripts/assert-budgets.ts), and the game page one tap away has everything. Past the
- * cap, a last row links the schedule. Renders nothing when the window is empty. Server component.
+ * "This week in the postseason" (view model buildThisWeek, this-week.ts): a region's postseason games and
+ * dated events from two days back to a week ahead, by day. A working export that no page renders since the
+ * refresh (/playoffs opens on the bracket, spec §5.6); its test stays.
+ *
+ * A day is a strip ('Today · Thu Oct 29', the view's words); a row is its start time, then one link whose
+ * text is the matchup, the score sentence or the event, then its label ('MCAL final') at the row's end,
+ * linked to the game's place in the bracket when it has one (bracket-link.ts; an sr-only tail tells the
+ * many "CCS quarterfinal" links apart). The view's rows are sentences, not games, so they are plain rows
+ * and not the site's game row. It carries no seed word, and the SoCal list no CCS word, because no label
+ * has one. Past the cap, a last link goes to the schedule. Renders nothing when the window is empty.
+ * Server component.
  */
 export interface ThisWeekProps {
   view: ThisWeekView;
@@ -22,10 +26,11 @@ export interface ThisWeekProps {
   className?: string;
 }
 
-function rowText(row: ThisWeekRow): string {
-  if (row.final) return row.text;
-  if (row.time === null) return row.kind === 'game' ? `Time TBA · ${row.text}` : row.text;
-  return `${row.time} · ${row.text}`;
+/** The start-time column: '4:00 PM PT', 'Time TBA' for a game with none, nothing for a final or an untimed event. */
+function rowTime(row: ThisWeekRow): string | null {
+  if (row.final) return null;
+  if (row.time === null) return row.kind === 'game' ? 'Time TBA' : null;
+  return row.time;
 }
 
 export function ThisWeek({ view, id, className }: ThisWeekProps) {
@@ -37,45 +42,46 @@ export function ThisWeek({ view, id, className }: ThisWeekProps) {
         kicker="This week in the postseason"
         meta={`${shortDate(view.from)} – ${shortDate(view.to)}`}
       />
-      <ol className="m-0 list-none space-y-4 p-0">
-        {view.days.map((day) => (
-          <li key={day.dateKey}>
-            <h3 className="m-0 mb-1 text-meta text-ink-2">
+      {view.days.map((day) => (
+        <Fragment key={day.dateKey}>
+          <div className="sx-strip">
+            <h3 className="m-0 text-lead text-ink">
               <time dateTime={day.dateKey}>{day.dateLabel}</time>
             </h3>
-            <ol className="m-0 list-none space-y-1 p-0">
-              {day.rows.map((row) => (
-                <li key={`${row.kind}:${row.key}`} className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  {row.href ? (
-                    <Link href={row.href} prefetch={false} className="sx-action text-body text-ink hover:underline">
-                      {rowText(row)}
-                    </Link>
-                  ) : (
-                    <span className="text-body text-ink">{rowText(row)}</span>
-                  )}
-                  {/* A game's badge (its round) links its place in the bracket (bracket-link.ts); the sr-only tail
-                      tells the many "CCS quarterfinal" links apart. */}
-                  {row.label && row.bracket ? (
-                    <Link href={`/playoffs#${row.bracket}`} prefetch={false} className="sx-badge no-underline hover:underline">
-                      {row.label}
-                      <span className="sr-only"> in the bracket: {row.text}</span>
-                    </Link>
-                  ) : row.label ? (
-                    <span className="sx-badge">{row.label}</span>
-                  ) : null}
-                </li>
-              ))}
-            </ol>
-          </li>
-        ))}
-        {view.more > 0 ? (
-          <li>
-            <Link href="/schedule" prefetch={false} className="sx-action text-meta text-accent hover:underline">
-              {`+${view.more} more on the schedule`}
-            </Link>
-          </li>
-        ) : null}
-      </ol>
+          </div>
+          <ul className="sx-list">
+            {day.rows.map((row, i) => (
+              // Several events of one day share a title ("San Diego Section playoffs", one per game), so
+              // the position completes the key.
+              <li key={`${row.kind}:${row.key}:${i}`} className="flex min-h-11 flex-wrap items-center gap-x-3 px-2 py-1">
+                <span className="sx-num w-24 shrink-0 text-body text-ink-2">{rowTime(row)}</span>
+                {row.href ? (
+                  <Link href={row.href} prefetch={false} className="sx-rowlink min-w-0 text-body font-medium text-ink">
+                    {row.text}
+                  </Link>
+                ) : (
+                  <span className="min-w-0 text-body font-medium text-ink">{row.text}</span>
+                )}
+                {row.label && row.bracket ? (
+                  <Link href={`/playoffs#${row.bracket}`} prefetch={false} className="sx-link ml-auto text-cell">
+                    {row.label}
+                    <span className="sr-only"> in the bracket: {row.text}</span>
+                  </Link>
+                ) : row.label ? (
+                  <span className="ml-auto text-cell text-ink-2">{row.label}</span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Fragment>
+      ))}
+      {view.more > 0 ? (
+        <p className="sx-linkrow">
+          <Link href="/schedule" prefetch={false} className="sx-action">
+            {`+${view.more} more on the schedule`}
+          </Link>
+        </p>
+      ) : null}
     </section>
   );
 }

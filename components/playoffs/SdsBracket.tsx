@@ -7,23 +7,21 @@ import SectionHeader from '../ui/SectionHeader';
 import { sdsBracketIntro, sdsBracketView } from './sds-bracket-view';
 
 /**
- * The San Diego Section's brackets on /playoffs (`#sds-bracket`, inside the `#sds-playoffs` block, between its
- * "Round dates" list and the three conference cards; plan final-08, 2026-10-30).
+ * The San Diego Section's brackets on /playoffs (`#sds-bracket`, the first thing in the SoCal block once
+ * they exist: spec §5.6, bracket-first).
  *
  * Drawn only from the Section's PUBLISHED bracket (data/sds-brackets-2026.json, transcribed from its
- * Championship Brackets sheet after the Sat Oct 31 seeding meeting; lib/postseason/sds-bracket.ts joins MaxPreps' results
- * to it). This reverses DESIGN §24.8's "no San Diego bracket" for that case only: the site still projects no
- * place, and while the file is the placeholder the page never renders this component, so nothing is drawn and
- * /playoffs weighs what it did.
+ * Championship Brackets sheet after the seeding meeting; lib/postseason/sds-bracket.ts joins MaxPreps' results
+ * to it). The site still projects no place, and while the file is the placeholder the page never renders
+ * this component.
  *
- * One sentence above (where the brackets come from, the day they were read, the sheet's link), then each
- * division under its own h3 ('Open Division', 'Division I', 'Division II') with the archive's drawer
- * (components/history/HistoryBracket.tsx BracketView): rounds stacked on a phone, round columns from md (lg for
- * four or five rounds), the winner's line 600 weight with the 2px rule, one sentence per card for a screen reader,
- * a joined card one link to its game page. The words are components/playoffs/sds-bracket-view.ts's: bare
- * numerals, never a seed word (scripts/copy-rules.ts SEED_CLAIM covers every San Diego surface), no "eliminat",
- * no champion named, no CCS word. A server component: it reads the registry and must stay out of any client
- * bundle (tests/ui/client-boundary.test.ts).
+ * Each division is a section under its own h2 ('Open Division', 'Division I', 'Division II', the field's
+ * size beside it) drawn by the shared drawer (components/history/HistoryBracket.tsx BracketView →
+ * components/playoffs/Bracket.tsx), then one line under the last: where the brackets come from, the day
+ * they were read, the sheet's link. The words are components/playoffs/sds-bracket-view.ts's: bare
+ * numerals, never a seed word (scripts/copy-rules.ts SEED_CLAIM covers every San Diego surface), no
+ * "eliminat", no champion named, no CCS word. A server component: it reads the registry and must stay
+ * out of any client bundle (tests/ui/client-boundary.test.ts).
  */
 export interface SdsBracketProps {
   divisions: readonly LiveBracketDivision[];
@@ -37,21 +35,19 @@ export function SdsBracket({ divisions, source, today, className }: SdsBracketPr
   if (divisions.length === 0) return null;
   return (
     <section id="sds-bracket" aria-label="The Section’s brackets" className={className}>
-      <p className="m-0 max-w-prose text-body text-ink-2">
-        {sdsBracketIntro(SEASON_CALENDAR_YEAR, source.retrievedOn)}{' '}
-        <ExternalLink href={source.url} className="sx-action gap-1">
-          {source.label}
-        </ExternalLink>
-      </p>
-      {divisions.map((division) => {
+      {divisions.map((division, index) => {
         const view = sdsBracketView(division, today);
         return (
-          <section key={view.id} aria-label={view.label} className="mt-section min-w-0">
-            <SectionHeader as="h3" kicker={view.label} meta={`${view.size} teams`} className="mb-4" />
+          <section key={view.id} aria-label={view.label} data-first={index === 0 ? '' : undefined} className="sx-section min-w-0">
+            <SectionHeader kicker={view.label} meta={`${view.size} teams`} />
             <BracketView division={view} label={`${view.label} bracket`} anchorPrefix="sds-" />
           </section>
         );
       })}
+      <p className="sx-note">
+        {sdsBracketIntro(SEASON_CALENDAR_YEAR, source.retrievedOn)}{' '}
+        <ExternalLink href={source.url}>{source.label}</ExternalLink>
+      </p>
     </section>
   );
 }

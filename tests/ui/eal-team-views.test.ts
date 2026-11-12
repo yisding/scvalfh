@@ -42,6 +42,8 @@ interface Loaded {
   gm: GameViewModule;
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
+  /** The game's cross-check sentence (GameElsewhere), rendered from its view model: no page prints it now. */
+  renderElsewhere: (contestId: string) => string;
   renderIndex: () => string;
   describeTeam: (slug: string) => Promise<string | undefined>;
 }
@@ -67,6 +69,7 @@ async function load(snapshotPath: string): Promise<Loaded> {
   const gm = await import('../../components/game/game-view');
   const teamPage = await import('../../app/teams/[slug]/page');
   const gamePage = await import('../../app/game/[id]/page');
+  const { GameElsewhere } = await import('../../components/game/GameSources');
   const indexPage = (await import('../../app/teams/page')).default;
   return {
     d,
@@ -82,6 +85,8 @@ async function load(snapshotPath: string): Promise<Loaded> {
       renderToStaticMarkup(
         (await gamePage.default({ params: Promise.resolve({ id: contestId }) } as never)) as ReactElement,
       ),
+    renderElsewhere: (contestId) =>
+      renderToStaticMarkup(createElement(GameElsewhere, { model: gm.buildGameView(contestId.replace(':', '-'))! })),
     renderIndex: () => renderToStaticMarkup(createElement(indexPage)),
     describeTeam: async (slug) => {
       const meta = await teamPage.generateMetadata({ params: Promise.resolve({ slug }) } as never);
@@ -170,7 +175,7 @@ describe('an EAL team page (/teams/davis)', () => {
     }
   });
 
-  it('puts the end-of-season sentence and the no-bracket sentence on the NEXT card', async () => {
+  it('keeps the end-of-season sentence and the no-bracket sentence in the league copy', async () => {
     const copy = eal.v.leagueCopy('eal');
     expect(copy.seasonEndSentence).toBe('The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.');
     expect(copy.bracketSentence).toBe(
@@ -288,8 +293,10 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
   });
 });
 
-describe('the cross-check paragraph under Elsewhere (components/game/GameSources.tsx, spec D23, D24)', () => {
-  /** The paragraph's last sentence, under the Elsewhere kicker (its section is labelled by it). */
+describe('the cross-check paragraph (components/game/GameSources.tsx GameElsewhere, spec D23, D24)', () => {
+  // DESIGN §33: the game page no longer carries a per-page method paragraph, so the sentence is rendered from
+  // the component, as tests/ui/game-view.test.ts does. The wording is still GameElsewhere's, whole.
+  /** The paragraph's last sentence, in the section its kicker labels. */
   function elsewhereText(html: string): string {
     const at = html.indexOf('aria-labelledby="game-sources-kicker"');
     expect(at, 'components/game/GameSources.tsx: the Elsewhere section renders').toBeGreaterThan(-1);
@@ -302,7 +309,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
     expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/league-config/eal.ts official.mode').toBe('none');
     const league = eal.l.leagueOfDivision(game.countsFor!);
     expect(league.rules.leagueOvertime, 'lib/league-config/eal.ts leagueOvertime').toBe('shootout');
-    const text = elsewhereText(await eal.renderGame(game.contestId));
+    const text = elsewhereText(eal.renderElsewhere(game.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain(
       'When MaxPreps has no result for a league game, or its row is clearly wrong, we publish si.com’s score and mark it;',
     );
@@ -324,7 +331,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
           ![g.home.slug, g.away.slug].every((s) => s !== null && ealSlugs.has(s)),
       );
     expect(game, 'the EAL corpus has a non-league final of an EAL team').toBeDefined();
-    const text = elsewhereText(await eal.renderGame(game!.contestId));
+    const text = elsewhereText(eal.renderElsewhere(game!.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for an official league game,');
     expect(text, 'components/game/GameSources.tsx: D24 needs two members').not.toContain('1 v 1s');
   });
@@ -335,7 +342,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
     const league = withTag.l.getLeague(taggedFinal.postseason!.leagueId!);
     expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/league-config/eal.ts official.mode').toBe(true);
     expect(league.rules.leagueOvertime, 'lib/league-config/eal.ts leagueOvertime').toBe('shootout');
-    const text = elsewhereText(await withTag.renderGame(taggedFinal.contestId));
+    const text = elsewhereText(withTag.renderElsewhere(taggedFinal.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for a league game,');
     expect(text, 'components/game/GameSources.tsx: no official schedule (D23)').not.toMatch(/\bofficial\b/i);
     expect(text, 'components/game/GameSources.tsx: the D24 exception').toContain(
@@ -367,15 +374,17 @@ describe('/teams on the EAL corpus', () => {
     const note = eal.l.getLeague('eal').membershipNote!;
     expect(note).toBeTruthy();
     const html = eal.renderIndex();
-    // The league's SectionHeader carries the id on its wrapper; the h3 is inside it.
+    // The league's SectionHeader carries the id on its wrapper; the h2 is inside it (DESIGN §33: a league is a
+    // section of the directory, so its heading is an h2 and the note sits right under it, before the name list).
     const header = html.search(/\sid="eal"/);
     expect(header, 'app/teams/page.tsx EAL heading').toBeGreaterThan(0);
-    expect(html.slice(header, header + 400), 'app/teams/page.tsx EAL h3').toContain('<h3');
-    const after = textOf(html.slice(header, header + 4000));
-    expect(after.indexOf(note), 'app/teams/page.tsx membership note under the h3').toBeGreaterThanOrEqual(0);
-    expect(after.indexOf(note), 'app/teams/page.tsx membership note comes before the table').toBeLessThan(
-      after.indexOf('Bella Vista'),
+    expect(html.slice(header, header + 400), 'app/teams/page.tsx EAL h2').toContain('<h2');
+    const after = html.slice(header, header + 6000);
+    expect(after.indexOf(note), 'app/teams/page.tsx membership note under the h2').toBeGreaterThanOrEqual(0);
+    expect(after.indexOf(note), 'app/teams/page.tsx membership note comes before the list').toBeLessThan(
+      after.indexOf('<li data-team-slug='),
     );
+    expect(after.slice(0, after.indexOf(note)), 'app/teams/page.tsx note directly under the heading').not.toContain('<ul');
     expect(textOf(html).split(note).length - 1, 'app/teams/page.tsx note appears once').toBe(1);
     const groups = eal.ti.buildTeamsByLeague().flatMap((s) => s.leagues);
     // The EAL and the Sunset (a field hockey grouping, not the all-sports league of that name) carry one.
@@ -384,11 +393,18 @@ describe('/teams on the EAL corpus', () => {
     expect(groups.length, 'components/teams/teams-index-view.ts nine league groups and the independents').toBe(10);
   });
 
-  it('states what the six EAL teams are, and carries no seed word', () => {
-    const text = textOf(eal.renderIndex());
-    expect(text, 'app/teams/page.tsx').toContain(
+  it('lists the six EAL teams, keeps the alignment sentence in the view, and carries no seed word', () => {
+    const html = eal.renderIndex();
+    const text = textOf(html);
+    // The provenance lede is /about's now (DESIGN §33); the sentence itself is still the view's.
+    expect(eal.ti.alignmentSentence(), 'components/teams/teams-index-view.ts').toContain(
       'the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.',
     );
+    expect(text, 'app/teams/page.tsx: no lede under the title').not.toContain('the EAL publishes none');
+    for (const team of eal.d.getTeams({ league: 'eal' })) {
+      expect(html, `app/teams/page.tsx ${team.slug}`).toContain(`<li data-team-slug="${team.slug}" data-team-tile="${team.slug}"`);
+    }
+    expect(eal.d.getTeams({ league: 'eal' }), 'the EAL has six').toHaveLength(6);
     expect(text, 'app/teams/page.tsx').not.toMatch(/\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i);
   });
 });
