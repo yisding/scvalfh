@@ -22,7 +22,7 @@
 export const THEME_STORAGE_KEY = 'scvalfh.theme';
 
 /** `--sx-bg` in each mode (app/globals.css): the layout's theme-color metas and both scripts read it. */
-export const THEME_COLOR = { light: '#f6f7f8', dark: '#0b0d10' } as const;
+export const THEME_COLOR = { light: '#ffffff', dark: '#0f0f0e' } as const;
 
 /** The id of the media-less theme-color meta an explicit choice adds. */
 export const THEME_META_ID = 'sx-theme-color';

@@ -1,16 +1,8 @@
 /**
- * The mono micro-tag: `NL`, `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), `this game`
- * (DESIGN §7.16). A game's postseason chip is a phrase ("San Diego Section playoffs") that no fixed
- * track holds, so GameRow's GameChips draws it as a wrapping capsule, not a Tag.
- * A tag is a 1–2 word code — never a hue on its own. It is the one place mono caps survive:
- * 12px, weight 600, 0.06em (all from `text-kicker`), and it never wraps: 20px tall, ink-2 on
- * surface-3.
- *
- * A postseason status such as "Automatic qualifier" is a phrase, not a code, so it is the
- * sentence-case StatusChip (components/ui/StatusChip.tsx), not a Tag.
- *
- * The † beside a si.com score is not a Tag either: StatusLabel's SourceMark prints it as a sans
- * footnote mark.
+ * The micro-tag: `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), `Non-league`, `this game`
+ * (DESIGN §7.16; §33 for the face). Text only: 11px, weight 700, caps, ink-2, no fill and no box.
+ * It is a 1–2 word code, never a hue, and it never wraps. The one FILLED label on the site is
+ * `Flag` (components/ui/Flag.tsx), for "your team" and a live game.
  */
 export interface TagProps {
   children: React.ReactNode;
@@ -22,11 +14,7 @@ export interface TagProps {
 export function Tag({ children, label, className }: TagProps) {
   return (
     <span
-      // `.sx-tag` (app/globals.css) is the look, one class instead of eleven utilities: a game
-      // row carries two to four tags, and /schedule/<league> renders every row twice. The corner
-      // stays the `rounded-tag` utility because it is also the HOOK GameRow's SummaryLead
-      // tightens tags by (`[&_.rounded-tag]:px-1`, `[&_.rounded-tag]:h-4`), as it does the
-      // postseason capsule's.
+      // `.sx-tag` (app/globals.css) is the look; `rounded-tag` stays as the hook older call sites select by.
       className={['sx-tag rounded-tag', className].filter(Boolean).join(' ')}
     >
       <span aria-hidden={label ? 'true' : undefined}>{children}</span>

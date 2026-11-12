@@ -44,7 +44,6 @@ export function GoalDiffBar({
   const safeDomain = Math.max(1, domain);
   const magnitude = value === null ? 0 : Math.min(1, Math.abs(value) / safeDomain);
   const width = Math.round(magnitude * arm);
-  const cap = thickness / 2;
   return (
     <span
       className={['inline-flex items-center', className].filter(Boolean).join(' ')}
@@ -54,7 +53,7 @@ export function GoalDiffBar({
       {/* Left arm: the track's rounded cap is on the OUTER (left) end; the bar grows from the rule. */}
       <span
         className="flex justify-end bg-surface-3"
-        style={{ width: arm, height: thickness, borderRadius: `${cap}px 0 0 ${cap}px` }}
+        style={{ width: arm, height: thickness }}
       >
         {value !== null && value < 0 ? (
           <span
@@ -62,7 +61,6 @@ export function GoalDiffBar({
             style={{
               width: Math.max(2, width),
               height: thickness,
-              borderRadius: `${cap}px 0 0 ${cap}px`,
             }}
           />
         ) : null}
@@ -71,7 +69,7 @@ export function GoalDiffBar({
       <span className="sx-zero shrink-0" style={{ width: 1, height: thickness + 8 }} />
       <span
         className="flex items-center bg-surface-3"
-        style={{ width: arm, height: thickness, borderRadius: `0 ${cap}px ${cap}px 0` }}
+        style={{ width: arm, height: thickness }}
       >
         {value !== null && value > 0 ? (
           <span
@@ -79,7 +77,6 @@ export function GoalDiffBar({
             style={{
               width: Math.max(2, width),
               height: thickness,
-              borderRadius: `0 ${cap}px ${cap}px 0`,
             }}
           />
         ) : null}

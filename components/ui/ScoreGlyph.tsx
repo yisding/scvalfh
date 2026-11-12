@@ -3,11 +3,11 @@ import type { SideView } from './describe-game';
 /**
  * The never-0-0 rule, rendered (DESIGN §5.2, §5.3).
  *
- * A real `0` is the mono glyph `0` in full-strength ink. A `null` is an en dash in muted ink,
+ * A real `0` is the glyph `0` in full-strength ink (tabular figures of the one face: `.sx-num`). A `null` is an en dash in muted ink,
  * aria-hidden, with the visually hidden words "score not reported" beside it. No cell is ever
  * blank and no cell ever coerces — the pipeline has no default anywhere.
  *
- * Winner-by-weight (DESIGN §6.5 channel 3, R-19): the winner's number is 600 weight in
+ * Winner-by-weight (DESIGN §6.5 channel 3, R-19; §33): the winner's number is 800 weight in
  * `--sx-text`, the loser's 400 in `--sx-text-2`, so who won survives total desaturation with no
  * chip at all.
  *
@@ -28,7 +28,7 @@ export const SCORE_SIZE_CLASS: Record<NonNullable<ScoreGlyphProps['size']>, stri
 };
 
 const WEIGHT_CLASS: Record<SideView['weight'], string> = {
-  winner: 'font-semibold text-ink',
+  winner: 'font-extrabold text-ink',
   loser: 'font-normal text-ink-2',
   level: 'font-normal text-ink',
 };
@@ -46,7 +46,7 @@ const WEIGHT_CLASS: Record<SideView['weight'], string> = {
  * component (the home My-team card) can weigh a name without reaching lib/teams.
  */
 export const NAME_CLASS: Record<SideView['weight'], string> = {
-  winner: 'font-semibold text-ink',
+  winner: 'font-bold text-ink',
   loser: 'font-normal text-ink-2',
   level: 'font-normal text-ink',
 };

@@ -1,4 +1,4 @@
-import { LETTER_SIZE, monogramRadius, type TeamMonogramProps } from './TeamMonogram';
+import { LETTER_SIZE, type TeamMonogramProps } from './TeamMonogram';
 
 /**
  * The tile for a school this site does not track (DESIGN §8): the same square as TeamMonogram —
@@ -54,7 +54,6 @@ export function GhostMonogram({ name, size = 24, className, title }: GhostMonogr
       style={{
         width: size,
         height: size,
-        borderRadius: monogramRadius(size),
         fontSize: LETTER_SIZE[size],
       }}
       title={title}

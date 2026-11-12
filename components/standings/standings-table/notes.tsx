@@ -4,18 +4,17 @@ import type { TeamSlug } from '../../../lib/types';
 import ExternalLink from '../../ui/ExternalLink';
 import { orderHead } from '../../../lib/standings/order';
 import { articleFor, membershipSource } from '../../words/membership-words';
-import { AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_WORDS, RECORD_NOUN_WORDS, SCORE_UNIT } from '../../words/score-words';
-import { biggestGoalDiff } from '../standings-view';
+import { AGAINST_WORDS, DIFF_ABBR, FOR_WORDS, RECORD_NOUN_WORDS, SCORE_UNIT } from '../../words/score-words';
 
 import { tableName } from './cells';
 import type { StandingsTableProps } from './types';
 
 /**
- * The table's notes, split by where they belong (brief §4.22):
- *  - `legend`: the GD paragraph and the PTS paragraph — generic, and verbatim the same under every
- *    table, so a page may print them once;
+ * The table's notes, split by where they belong:
+ *  - `legend`: what is the same under every table (the difference column and the ordering rule's
+ *    citation), so a page prints it once, at its foot or on /about;
  *  - `specific`: shared-place notes, the no-results team, `standing.mismatch` flags and the
- *    caller's `footnotes` — facts about THIS division, which always stay visible.
+ *    caller's `footnotes` — facts about THIS division. StandingsTable prints them as its one note.
  *
  * `statedElsewhere`: teams whose MaxPreps difference the caller's Notes block already states in
  * its comparison list (StandingsNotes). Their `standing.mismatch` note is left out, so one fact is
@@ -28,17 +27,10 @@ export function collectStandingsNotes(
 ): { legend: React.ReactNode[]; specific: React.ReactNode[] } {
   const legend: React.ReactNode[] = [];
   const specific: React.ReactNode[] = [];
-  const { rows, gdDomain, division, variant } = props;
+  const { rows, division, variant } = props;
   if (variant !== 'archive') {
-    // The scale names the division's biggest goal difference only when there is one: `gdDomain` is
-    // floored at 1 for the bar arithmetic, and "(1)" printed for a division where every |GD| is 0
-    // (Metro South Bay before its first game) stated a goal difference nobody has (review 2026-10-06).
-    const scale =
-      biggestGoalDiff(rows.map((r) => r.standing.computed.gd)) > 0
-        ? `, to ${tableName(division)}’s biggest ${DIFFERENCE_WORDS} (${gdDomain})`
-        : '';
     legend.push(
-      `${DIFF_ABBR} = league ${FOR_WORDS} minus ${AGAINST_WORDS}. Bars are scaled per division${scale}, so bars in different divisions are not comparable to each other. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the ${RECORD_NOUN_WORDS} record, not in the ${SCORE_UNIT} columns.`,
+      `${DIFF_ABBR} = league ${FOR_WORDS} minus ${AGAINST_WORDS}. A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the ${RECORD_NOUN_WORDS} record, not in the ${SCORE_UNIT} columns.`,
     );
     legend.push(`${orderHead(leagueOfDivision(division).rules)}: ${leagueOfDivision(division).rules.citations.points}.`);
   }
@@ -80,7 +72,7 @@ export function collectStandingsNotes(
       const detail = row.standing.mismatchDetail?.replace(/\.?$/, '.');
       specific.push(
         <>
-          <span aria-hidden="true">&#9873;</span>
+          <span aria-hidden="true">&dagger;</span>
           <span className="sr-only">Flagged:</span> {row.team.name}:{' '}
           {detail ?? 'our computation differs from MaxPreps.'} We show our own
           computation.{' '}

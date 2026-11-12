@@ -4,24 +4,25 @@ import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
 
 /**
- * The desktop nav: eight links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). JV is the junior varsity hub
- * (/jv: tables, latest results, next games, every school's JV team), which the phone bar's five tabs have no room
- * for: on a phone it is reached from the home page, each team page and each league's standings. It matches the
- * phone bar: Teams is the teams-and-standings page (the standings live there, and Teams stays lit
- * on every /standings page), so there is no separate Standings link. History keeps its short
- * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
+ * The desktop nav (DESIGN §33). Six sections, then, from 1024px, a hairline divider and the two
+ * quiet links. The wordmark is the home link, so there is no "Home"; "Scores" is the same word the
+ * phone tab bar uses for /schedule. `quiet` links are hidden below 1024 (`.sx-mast-quiet`), where the
+ * footer and the phone More sheet carry them. tests/ui/header-fit.test.ts has a measured width for
+ * every label here and fails when one is added without it.
  */
-const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
-  { href: '/', label: 'Home' },
-  { href: '/schedule', label: 'Schedule' },
+export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string; quiet?: boolean }> = [
+  { href: '/schedule', label: 'Scores' },
+  { href: '/standings', label: 'Standings' },
   { href: '/teams', label: 'Teams' },
-  // The suffix is short on purpose: the nav is in every page's first-load JS, and /teams sits at its budget.
-  { href: '/jv', label: 'JV', srSuffix: ' (junior varsity)' },
-  { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
-  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
-  { href: '/about', label: 'About' },
+  { href: '/leaders', label: 'Leaders' },
+  // The suffix is short on purpose: the nav is in every page's first-load JS.
+  { href: '/jv', label: 'JV', srSuffix: ' (junior varsity)' },
+  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)', quiet: true },
+  { href: '/about', label: 'About', quiet: true },
 ];
+
+const FIRST_QUIET = TOP_LINKS.findIndex((link) => link.quiet);
 
 export interface TopNavProps {
   className?: string;
@@ -33,9 +34,10 @@ export function TopNav({ className, slugLeague }: TopNavProps) {
   const hrefs = navLeagueHrefs();
   return (
     <nav aria-label="Main" className={className}>
-      <ul className="flex list-none items-center gap-0.5 p-0">
-        {TOP_LINKS.map((link) => (
-          <li key={link.href}>
+      <ul>
+        {TOP_LINKS.flatMap((link, i) => [
+          i === FIRST_QUIET ? <li key="sep" className="sx-mast-sep" aria-hidden="true" /> : null,
+          <li key={link.href} className={link.quiet ? 'sx-mast-quiet' : undefined}>
             <NavLink
               href={link.href}
               variant="top"
@@ -46,8 +48,8 @@ export function TopNav({ className, slugLeague }: TopNavProps) {
               // each, so the Flight serializer can write it once and refer back to it.
               slugLeague={hrefs[link.href] ? slugLeague : undefined}
             />
-          </li>
-        ))}
+          </li>,
+        ])}
       </ul>
     </nav>
   );

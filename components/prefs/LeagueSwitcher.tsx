@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from './use-league';
 import type { SectionConfig } from '../../lib/league-config/shape';
@@ -9,6 +9,7 @@ import type { LeagueId, RegionId } from '../../lib/types';
 
 import type { LeagueChip } from '../layout/league-chips';
 import { ALL_LEAGUES } from './prefs-script';
+import { SINGLE_REGION } from './single-region';
 
 /**
  * The league chips (SPEC §8.3). One component, three modes:
@@ -26,21 +27,20 @@ import { ALL_LEAGUES } from './prefs-script';
  *   sections, which may include route links (on /playoffs a tournament league's chip goes to
  *   `/playoffs/<league>`). Never writes.
  *
- * Chip token: `text-micro` weight 600, `min-h-11 min-w-11`, 6px side padding, 4px gap, `flex-wrap`
- * (200% text zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
- * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section` /
- * `Southern Section` / `San Diego Section`, split by hairlines; the `All` chip precedes them all.
- * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden check (`.sx-chip-check`, drawn
- * by `.sx-check`) — never colour alone. Every scope and link chip lays the check out
- * and only the selected one shows it (globals.css), so a chip has one width on every page. No league hue anywhere. `link` and `anchor` rows are screen-only (`sx-print-hide`);
- * the `scope` row is `sx-js-only`, which print hides too.
+ * Face (DESIGN §33): every chip is a `.sx-tab` — text on the row's hairline, the selected one ink at
+ * weight 700 with a 3px ink bar (never colour alone). `sx-league-chip` stays the FIRST class: it is the
+ * hook the scope stylesheet and the tests use. A label is set twice (`.sx-weight-hold`), so the bold
+ * selected state never moves a neighbour. The row never wraps: it scrolls sideways inside its own box
+ * with no scrollbar, and on mount the selected chip is brought into view. Alone, a switcher is its own
+ * `.sx-tabs` row; inside a `ScopeBar` (`.sx-scope`) the bar owns the hairline and the scrolling. The
+ * league chips sit in one list per section, labelled `Central Coast Section` / … for a screen reader;
+ * nothing is drawn between sections. No league hue anywhere. `link` and `anchor` rows are screen-only
+ * (`sx-print-hide`); the `scope` row is `sx-js-only`, which print hides too.
  *
  * Regions (DESIGN-socal §2.4). In `scope` and `anchor` mode each section list carries
  * `data-region-scope="<its region>"`, so the scope stylesheet shows only the effective region's
  * lists once JS has run (both, NorCal first, without it). The attribute sits on the lists themselves,
- * never on a wrapper: a wrapper would make a region one flex item and stop the per-list wrapping
- * DESIGN §22.3 relies on. The hairline is drawn from a list's index WITHIN ITS REGION, so the first
- * SoCal list never opens the row with a divider when NorCal's lists are hidden. `link` mode is handed
+ * never on a wrapper. `link` mode is handed
  * one region's chips (components/layout/league-chips.ts, the page league's region) and stamps no
  * scope: its lists must show whichever region the reader last chose.
  *
@@ -85,16 +85,7 @@ const REGION_WORDS: Readonly<Record<RegionId, { shortName: string; name: string 
   socal: { shortName: 'SoCal', name: 'Southern California' },
 };
 const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
-/**
- * The soccer and basketball builds cover one region (lib/league-config/sections.ts REGIONS: Northern California), so
- * they have no region to switch to; only field hockey's build (SCVAL_SPORT unset or 'field-hockey') has two. Read
- * from the inlined SCVAL_SPORT (next.config.ts `env`), not lib/sports/current, so this client module bundles no
- * sport definition.
- */
-// Unset (a test, a script) is field hockey, as in lib/sports/current.ts; the builds always inline a value.
-const SINGLE_REGION = !!process.env.SCVAL_SPORT && process.env.SCVAL_SPORT !== 'field-hockey';
-
-const CHIP = 'sx-league-chip';
+const CHIP = 'sx-league-chip sx-tab';
 
 interface SectionGroup {
   section: LeagueChip['sectionShort'];
@@ -113,37 +104,38 @@ function bySection(leagues: readonly LeagueChip[]): SectionGroup[] {
   return groups;
 }
 
-/**
- * The drawn check (`.sx-check`, globals.css): a fixed 0.6667em box, never the U+2713 glyph, which
- * the latin subset of Geist that next/font serves lacks, so its width came from a system font and
- * varied by OS (10.6px at 12px in DejaVu Sans). Plain markup, not an inline <svg> or a shared
- * component: this is a client module, and either put `/teams` past its first-load JS budget.
- */
-function Check() {
-  return <span aria-hidden="true" className="sx-check sx-chip-check" />;
+/** A chip's words, set twice so the 700 selected state is no wider than the 500 resting one. */
+function Label({ text }: { text: string }) {
+  return (
+    <span className="sx-weight-hold" data-label={text}>
+      {text}
+    </span>
+  );
 }
 
 /**
- * A section list's classes. The 4px gap (with the chip's 6px side padding and 8px drawn check,
- * globals.css) is what fits a per-league page's row on one line at 390: NorCal's All + five chips,
- * every one carrying its check, measure 347px of the 358px column, SoCal's 335px. At the old 6px
- * gap and 8px padding the row was 1 line or 2 by which chip was current (375px), moving everything
- * under it by 50px between league pages.
+ * Brings the selected chip into view inside its scrolling row (the `ScopeBar` when there is one, else
+ * the switcher itself) whenever `key` changes. It moves the row's own `scrollLeft` and nothing else:
+ * `scrollIntoView` would also scroll the PAGE to a row that sits below the fold.
  */
-const SECTION_LIST = 'm-0 flex list-none flex-wrap items-center gap-1 p-0';
+function useSelectedInView(key: string) {
+  const ref = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const root = ref.current;
+    const selected = root?.querySelector<HTMLElement>('[aria-pressed="true"],[aria-current="page"]');
+    if (!root || !selected) return;
+    const row = root.closest<HTMLElement>('.sx-scope') ?? root;
+    const box = row.getBoundingClientRect();
+    const item = selected.getBoundingClientRect();
+    if (item.left < box.left) row.scrollLeft -= box.left - item.left;
+    else if (item.right > box.right) row.scrollLeft += item.right - box.right;
+  }, [key]);
+  return ref;
+}
 
 /**
- * The hairline that splits one section from the next, drawn by the list it introduces (a `::before`,
- * so it is never in the accessibility tree). A separate flex item in the outer row could be left at
- * the end of a line when the next section wraps (All + five chips at 320-360px, or 200% text zoom);
- * as the list's own first box it always travels with that list and leads its line.
- */
-const SECTION_DIVIDER = 'before:h-6 before:w-px before:shrink-0 before:self-center before:bg-hairline';
-
-/**
- * The section lists, split by hairlines. `chip` renders one league's control. With `regionScoped`
- * each list carries `data-region-scope`; either way a list draws the divider only when it is not
- * the first list of its region, since the scope stylesheet may hide the other region's lists.
+ * The section lists. `chip` renders one league's control. With `regionScoped` each list carries
+ * `data-region-scope`, so the scope stylesheet may hide the other region's lists.
  */
 function SectionLists({
   leagues,
@@ -154,31 +146,20 @@ function SectionLists({
   chip: (league: LeagueChip) => React.ReactNode;
   regionScoped: boolean;
 }) {
-  const seen = new Map<RegionId, number>();
-  return bySection(leagues).map((group) => {
-    const indexInRegion = seen.get(group.region) ?? 0;
-    seen.set(group.region, indexInRegion + 1);
-    return (
-      <ul
-        key={group.section}
-        aria-label={SECTION_NAMES[group.section]}
-        data-region-scope={regionScoped ? group.region : undefined}
-        className={indexInRegion > 0 ? `${SECTION_LIST} ${SECTION_DIVIDER}` : SECTION_LIST}
-      >
-        {group.leagues.map((league) => (
-          <li key={league.id} className="flex">
-            {chip(league)}
-          </li>
-        ))}
-      </ul>
-    );
-  });
+  return bySection(leagues).map((group) => (
+    <ul key={group.section} aria-label={SECTION_NAMES[group.section]} data-region-scope={regionScoped ? group.region : undefined}>
+      {group.leagues.map((league) => (
+        <li key={league.id}>{chip(league)}</li>
+      ))}
+    </ul>
+  ));
 }
 
 function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcherProps) {
   const { league, ready } = useEffectiveLeague();
   const { region } = useEffectiveRegion();
   const [said, setSaid] = useState('');
+  const ref = useSelectedInView(ready ? `${region} ${league ?? ALL_LEAGUES}` : '');
 
   const choose = (id: LeagueId | typeof ALL_LEAGUES) => {
     setLeague(id);
@@ -199,17 +180,19 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
         onClick={() => choose(id)}
         className={CHIP}
       >
-        <Check />
-        {text}
+        <Label text={text} />
       </button>
     );
   };
 
   return (
     <div
+      ref={(node) => {
+        ref.current = node;
+      }}
       role="group"
       aria-label={label}
-      className={['sx-js-only flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}
+      className={['sx-js-only sx-tabs', className].filter(Boolean).join(' ')}
     >
       {includeAll ? button(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped chip={(l) => button(l.id, l.shortName)} />
@@ -221,21 +204,12 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
 }
 
 function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, className }: LeagueSwitcherProps) {
+  const ref = useSelectedInView(mode === 'link' ? (current ?? ALL_LEAGUES) : '');
   const chip = (id: string, text: string) => {
     const href = hrefs[id];
     if (!href) return null;
     const isCurrent = mode === 'link' && (id === ALL_LEAGUES ? current === undefined : current === id);
-    // Link mode lays the check out on EVERY chip and globals.css shows only the current one's
-    // (`aria-current`), as scope mode does: rendered on the current chip alone it widened that chip
-    // by 14.6px, so every chip after it sat 14.6px further right on its own league's page and the
-    // row wrapped on some league pages and not others. An anchor row marks nothing current and
-    // carries no check.
-    const body = (
-      <>
-        {mode === 'link' ? <Check /> : null}
-        {text}
-      </>
-    );
+    const body = <Label text={text} />;
     // A `#id` chip stays on the page: a plain fragment link. Any other href is a route, in either
     // mode (/playoffs' tournament leagues are route chips in an anchor row): a `<Link>` with no
     // prefetch, because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
@@ -251,7 +225,13 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   };
 
   return (
-    <nav aria-label={label} className={['sx-print-hide flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
+    <nav
+      ref={(node) => {
+        ref.current = node;
+      }}
+      aria-label={label}
+      className={['sx-print-hide sx-tabs', className].filter(Boolean).join(' ')}
+    >
       {includeAll && mode === 'link' ? chip(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped={mode === 'anchor'} chip={(l) => chip(l.id, l.shortName)} />
     </nav>
@@ -262,29 +242,22 @@ export interface RegionSwitcherProps {
   className?: string;
   /** The group's accessible name. Default 'Region'. */
   label?: string;
-  /**
-   * Draw a trailing hairline (the control's own `::after`, so it travels with it when the row wraps):
-   * the home scope row, where the region control leads and the league chips follow (DESIGN-socal §2.4:
-   * "separated from the league chips by a hairline"). Off where the control is a row of its own.
-   */
+  /** @deprecated No longer draws anything: `ScopeBar` places the divider between the two controls. */
   separated?: boolean;
 }
 
 /**
  * The NorCal/SoCal control (DESIGN-socal §2.4): `<div role="group" aria-label="Region">` of two
- * `<button aria-pressed data-region-option>`, styled as a SEGMENTED control — the two segments share
- * one rounded `surface-2` track — rather than as two more league chips, so a checked 'NorCal' never reads
- * as a peer of the 'All' chip. Each segment is the chip token (44px target, `min-h-11 min-w-11`) and the
- * selected one is the same inverse ink and aria-hidden check as a chip: never colour alone, no new
- * colour. Before hydration the scope stylesheet draws the selected segment from
- * `html[data-region]` (`[data-region-option]`, components/prefs/league-scope-css.ts); after, aria-pressed
- * does. Hidden without JS (`sx-js-only`: both regions are on the page then, NorCal first) and
- * `disabled` until hydrated. A polite live region says what a tap did ("Showing Southern California.").
- * `setRegion` writes `scvalfh.region` and, when the effective league is in the other region, removes the
- * remembered league (never writes 'All'), so a pinned team's league returns with its region
- * (components/prefs/use-league.ts). Not in the SiteHeader: a page renders it under its header.
+ * `<button aria-pressed data-region-option>`, drawn as two `.sx-tab`s like every other selector. Before
+ * hydration the scope stylesheet draws the selected one from `html[data-region]` (`[data-region-option]`,
+ * components/prefs/league-scope-css.ts); after, aria-pressed does. Hidden without JS (`sx-js-only`: both
+ * regions are on the page then, NorCal first) and `disabled` until hydrated. A polite live region says
+ * what a tap did ("Showing Southern California."). `setRegion` writes `scvalfh.region` and, when the
+ * effective league is in the other region, removes the remembered league (never writes 'All'), so a
+ * pinned team's league returns with its region (components/prefs/use-league.ts). Not in the SiteHeader:
+ * a page renders it under its header, normally through `ScopeBar`.
  */
-export function RegionSwitcher({ className, label = 'Region', separated = false }: RegionSwitcherProps) {
+export function RegionSwitcher({ className, label = 'Region' }: RegionSwitcherProps) {
   const { region, ready } = useEffectiveRegion();
   const [said, setSaid] = useState('');
 
@@ -295,33 +268,20 @@ export function RegionSwitcher({ className, label = 'Region', separated = false 
   if (SINGLE_REGION) return null;
 
   return (
-    <div
-      role="group"
-      aria-label={label}
-      className={[
-        'sx-js-only flex shrink-0 items-center gap-1.5',
-        separated ? 'after:h-6 after:w-px after:shrink-0 after:self-center after:bg-hairline' : null,
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      <span className="inline-flex items-center gap-0.5 rounded-[12px] bg-surface-2 p-0.5">
-        {REGION_ORDER.map((id) => (
-          <button
-            key={id}
-            type="button"
-            data-region-option={id}
-            aria-pressed={ready ? region === id : false}
-            disabled={!ready}
-            onClick={() => choose(id)}
-            className={`${CHIP} min-h-11 min-w-11`}
-          >
-            <Check />
-            {REGION_WORDS[id].shortName}
-          </button>
-        ))}
-      </span>
+    <div role="group" aria-label={label} className={['sx-js-only sx-tabs', className].filter(Boolean).join(' ')}>
+      {REGION_ORDER.map((id) => (
+        <button
+          key={id}
+          type="button"
+          data-region-option={id}
+          aria-pressed={ready ? region === id : false}
+          disabled={!ready}
+          onClick={() => choose(id)}
+          className={CHIP}
+        >
+          <Label text={REGION_WORDS[id].shortName} />
+        </button>
+      ))}
       <span role="status" aria-live="polite" className="sr-only">
         {said}
       </span>

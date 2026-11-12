@@ -1,89 +1,65 @@
-import { GameCard } from '../game-row/GameCard';
 import { GameRow } from '../game-row/GameRow';
 import type { Game, LeagueId } from '../../lib/types';
+import { WIDE_SCORES } from '../words/score-words';
 
 import { gameFilterAttrs } from './filter-data-server';
 
 /**
- * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).
+ * One day's contests as a list of game rows (DESIGN §33).
  *
- * Phone gets the 76px two-line `GameRow` — a `<details>`/`<summary>` pair, so expanding a game
- * needs no JavaScript — in one full-bleed band. From 768px the same games are `GameCard`s in an
- * auto-fill grid (17rem minimum, so 2-up at 768 and 3- or 4-up wider), with the recap always
- * visible and nothing to expand.
+ * `<ul className="sx-games">` of `GameRow`s, ONE `<li>` per contest carrying the `data-*` filter
+ * attributes, so the schedule filter has exactly one element per game to hide at any width, the
+ * visible count is unambiguous, and there is no phone/desktop twin. The row lays itself out from
+ * its own width (stacked, or one line from 40rem), so `layout` only chooses the list's shape:
+ *   - `list` (default): one column of rows;
+ *   - `grid`: auto-fill columns of stacked rows, 18.75rem minimum (1 / 2 / 3 at 390 / 768 / 1136).
  *
- * Both render inside ONE `<li>` per contest, with one set of `data-*` filter attributes, so:
- *   - the filter has exactly one element per game to hide, at any viewport width,
- *   - the visible count is unambiguous,
- *   - and DOM order matches visual order at both breakpoints (DESIGN §10.5).
- * That is the same "render both variants and hide one" pattern `StandingsTable` uses, because the
- * phone and desktop forms are genuinely different DOM rather than a restyle.
- *
- * GameList is only ever a slate nobody is following one team through: /schedule/<league> and
- * /scores/[date]. (The team page lists its games with GameLogRow, through TeamGameLog.) So every
- * upcoming league game prints both sides' league records beside their names (`showRecords`), which
- * is what a reader sizing up a game before kickoff wants, and every game shows its recap.
+ * GameList is only ever a slate nobody is following one team through: /schedule/<league>,
+ * /scores/[date] and the playoff lists. So every upcoming league game prints both sides' league
+ * records beside their names (`showRecords`), which is what a reader sizing up a game wants.
  */
 export interface GameListProps {
   games: readonly Game[];
   /** A league-scoped list: a side from another league carries its league's short name. */
   scopeLeague?: LeagueId | null;
-  /**
-   * `bleed` (default): the phone band pulls itself out to the screen edge (`.sx-bleed`) and draws
-   * its own line above and below. `grouped`: the HOST is already full-bleed (a /schedule date
-   * group, which must be, because `content-visibility: auto` clips paint to its own box) and its
-   * sticky date header draws the line above, so the list adds only the line below.
-   */
+  /** `list` (default): one column. `grid`: auto-fill columns of stacked rows. */
+  layout?: 'list' | 'grid';
+  /** @deprecated Nothing bleeds: the page is the only surface. Ignored. */
   variant?: 'bleed' | 'grouped';
-  /**
-   * The ≥768px grid's track rule. `fill` (default) keeps empty tracks, so a /schedule day with
-   * one game shows one card-sized card. `fit` collapses them, so a single-day page's two or
-   * three cards run to the same right edge as everything else under its h1.
-   */
+  /** @deprecated The grid is always auto-fill. Ignored. */
   tracks?: 'fill' | 'fit';
-  /** false where the list IS the games' place on /playoffs (the Tournament of Champions, the Super Regional). */
+  /** @deprecated A row holds one link, to the game page. Ignored. */
   bracket?: boolean;
   className?: string;
 }
 
-export function GameList({
-  games,
-  scopeLeague = null,
-  variant = 'bleed',
-  tracks = 'fill',
-  bracket = true,
-  className,
-}: GameListProps) {
+export function GameList({ games, scopeLeague = null, layout = 'list', className }: GameListProps) {
   return (
-    <ol
-      // Tailwind v4's scanner skips a candidate that runs straight into `${`, so the
-      // interpolation stays out of the literal.
+    <ul
       className={[
-        'sx-list max-md:bg-surface md:grid md:items-stretch md:gap-4',
-        tracks === 'fit'
-          ? 'md:grid-cols-[repeat(auto-fit,minmax(17rem,1fr))]'
-          : 'md:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))]',
-        variant === 'bleed'
-          ? 'sx-bleed max-md:shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]'
-          : 'max-md:shadow-[0_1px_0_var(--sx-border)]',
+        'sx-games',
+        layout === 'grid' ? 'sx-games-grid' : null,
+        // Three-digit scores (basketball) need a wider score track in the one-line form.
+        WIDE_SCORES ? 'sx-games-wide' : null,
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       {games.map((game) => (
-        // No display utility on the <li>: the filter toggles `hidden` on it, and a `display`
-        // class would beat the attribute and leave a hole in the grid.
-        <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
-          <div data-twin className="md:hidden">
-            <GameRow game={game} scopeLeague={scopeLeague} showRecords bracket={bracket} />
-          </div>
-          <div data-twin className="hidden h-full md:block">
-            <GameCard game={game} scopeLeague={scopeLeague} showRecords bracket={bracket} className="h-full" />
-          </div>
-        </li>
+        // The row is the <li>. No display utility on it: the filter toggles `hidden`, and a
+        // `display` class would beat the attribute and leave a hole in the grid. The filter's own
+        // `data-state` (final / pending / upcoming) replaces the row's.
+        <GameRow
+          key={game.contestId}
+          as="li"
+          attrs={{ ...gameFilterAttrs(game) }}
+          game={game}
+          scopeLeague={scopeLeague}
+          showRecords
+        />
       ))}
-    </ol>
+    </ul>
   );
 }
 

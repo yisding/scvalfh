@@ -50,3 +50,21 @@ export function StretchedRowLink({
     </Link>
   );
 }
+
+/**
+ * A table row's team link (DESIGN §33): the visible name IS the link (`.sx-rowlink`: ink, underlined
+ * on hover and focus), and its `::after` stretches over the positioned row, so the whole row is the
+ * target and the keyboard ring is drawn around the row. The accessible name is `label`, the row's
+ * sentence, led by the pin note; the visible name is aria-hidden so it is not read twice.
+ */
+export function TeamRowLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} prefetch={false} className="sx-rowlink min-w-0">
+      <span aria-hidden="true">{children}</span>
+      <span className="sr-only">
+        <PinNote />
+        {label}
+      </span>
+    </Link>
+  );
+}

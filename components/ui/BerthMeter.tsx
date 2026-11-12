@@ -34,7 +34,7 @@ export function BerthMeter({ claimed, total, label, className }: BerthMeterProps
         {Array.from({ length: total }, (_, i) => (
           <span
             key={i}
-            className={`rounded-[3px] ${i < claimed ? 'sx-meter-fill' : 'sx-meter-track'}`}
+            className={i < claimed ? 'sx-meter-fill' : 'sx-meter-track'}
           />
         ))}
       </div>

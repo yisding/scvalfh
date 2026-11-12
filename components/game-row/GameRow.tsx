@@ -1,112 +1,76 @@
 import Link from 'next/link';
 
-import { mapsSearchHref } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import type { Game } from '../../lib/types';
-import { gameAddress } from '../../lib/schools/venue';
 
-import ExternalLink from '../ui/ExternalLink';
-import { getBracketLink } from '../playoffs/bracket-link';
-import { maxPrepsLabel } from '../words/maxpreps-label';
-import { describeGame, resultSentence } from '../ui/describe-game';
+import { describeGame, type GameDisplay, type SideView } from '../ui/describe-game';
 
 import type { GameBaseProps, GameViewOptions } from './props';
-import { SummaryLead, SummaryTeams, chipsSentence, recordsApply, recordsSentence } from './summary';
+import {
+  GameStatus,
+  SideCrest,
+  SideNotes,
+  chipsSentence,
+  gameMetaText,
+  recordsApply,
+  recordsSentence,
+  wonAttr,
+} from './summary';
 
 /**
- * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15), one file
- * each in components/game-row/, built from the pieces in summary.tsx.
+ * The ONE game row (DESIGN §33), in components/game-row/ with its pieces in summary.tsx. `GameCard`
+ * and `GameLine` are aliases of it; `GameLogRow` is the team-perspective log line.
  *
- * A row is a three-column grid: a lead column (clock · the written status label · the chips, in
- * three fixed slots: SummaryLead), the two team lines — AWAY on top, HOME below, each `[chip]
- * [monogram] [name] [score]` — and a chevron.
- * The score column is mono/tabular so scores align down a list, and the winner's number is 600
- * weight in `--sx-text` against the loser's 400 in `--sx-text-2` (the fourth redundant channel,
- * R-19). Exactly two ScoreGlyphs per row, away then home.
+ * One DOM at every width, no `<details>`, no card twin. `.sx-game` is its own query container and
+ * `.sx-game-grid` inside it is the layout (app/globals.css): stacked on two lines (status on the
+ * left, away over home, scores on the right, the meta on a third line when there is one) until the
+ * ROW ITSELF is 40rem wide, then one line centred on the score. So it is one line in a full-width
+ * or 720px column and stacked on a phone, in the rail, in a narrow main column and in a grid.
  *
- * The row is a `<details>` / `<summary>` pair, so EXPAND WORKS WITH ZERO JAVASCRIPT. Venue,
- * stream, tickets, the box score and the /game/[id] link live in the panel, which is why 174
- * venue addresses never enter the initial payload of a list page.
+ * The whole row is ONE link to the game page (`gameHref(game.contestId)`, SPEC §10.0): the away
+ * name carries it and its `::after` covers the row. Its accessible name is the game's sentence
+ * (`describeGame().sentence`, the game's kind and the records after it); everything drawn is
+ * aria-hidden. Team names are not links inside a row. Venue, stream, tickets and the box score are
+ * the game page's.
  *
- * An opponent that is not one of the registry's teams gets a ghost monogram (GhostMonogram: two
- * mixed-case letters on the inset surface, no school colour), titled NON_MEMBER_NOTE, and no link
- * (DESIGN §8).
+ * Winner = weight: `data-won` makes the name 700 and the score 800. No W/L marks here (a
+ * team-perspective row is GameLogRow). A score cell's class starts `sx-num ` and holds
+ * `text-score`, and its glyph is `describeGame`'s: a real `0`, or an en dash for a score nobody
+ * reported, never a coerced zero (tests/ui/rendered-never-00.test.ts reads exactly these cells).
+ * A game with nothing on the scoreboard has two empty cells and `at` (or `vs`) between the names.
  *
- * Every game link is `gameHref(game.contestId)` (SPEC §10.0): a si.com-only game's id is
- * `sblive:<n>`, which the route spells `sblive-<n>`.
+ * A side this site follows carries `data-team-slug` on a `.sx-pinnable` span, so the pinned team's
+ * NAME takes the highlighter. A side it does not follow gets a ghost monogram titled
+ * NON_MEMBER_NOTE (DESIGN §8).
  *
- * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
- * scope, and NON_MEMBER_NOTE counts the registry through lib/teams (summary.tsx). Every consumer is
- * a server component; nothing on the client imports these modules.
+ * SERVER-ONLY: `showRecords` reads the standings through lib/data, and summary.tsx reads lib/teams.
  */
 export type GameRowProps = GameBaseProps &
-  Pick<
-    GameViewOptions,
-    'showDate' | 'showTime' | 'showRecap' | 'scopeLeague' | 'showRecords' | 'defaultExpanded' | 'seeds' | 'bracket'
-  >;
+  GameViewOptions & {
+    /** The row's one meta item; overrides the computed one (the seed line, the round, `Non-league`). */
+    meta?: React.ReactNode;
+    /** false drops the meta cell. Default true. */
+    showMeta?: boolean;
+    /**
+     * The row's element. `'li'` directly inside a `<ul className="sx-games">` (GameList does this);
+     * the default `'div'` anywhere else, e.g. inside a caller's own `<li>`.
+     */
+    as?: 'li' | 'div';
+    /** Extra attributes for the row element (GameList's `data-*` filter attributes). They win over the row's own. */
+    attrs?: Readonly<Record<`data-${string}`, string | undefined>>;
+  };
 
-/** The pills in an expanded panel: real links only, never a dead affordance. */
-function GameLinks({ game, bracket }: { game: Game; bracket: boolean }) {
-  const place = bracket ? getBracketLink(game) : null;
-  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
-  const address = gameAddress(game)?.address;
-  const directions = address ? mapsSearchHref(address) : null;
-  const links: Array<{ href: string; label: string }> = [];
-  if (directions) links.push({ href: directions, label: 'Directions' });
-  if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
-  return (
-    <p className="m-0 flex flex-wrap gap-2">
-      {/* The way on to the whole contest comes first, as the one accent pill. */}
-      <Link
-        href={gameHref(game.contestId)}
-        prefetch={false}
-        className="sx-pill sx-pill-accent min-h-11"
-      >
-        Full game page
-      </Link>
-      {/* Where the game sits in its bracket, an internal page, so a plain Link in the card pill's face. */}
-      {place ? (
-        <Link href={place.href} prefetch={false} className="sx-pill sx-pill-card">
-          {place.label}
-        </Link>
-      ) : null}
-      {/* The open panel is surface-2, the pill's own fill, so these pills take the card
-          surface instead or they would read as bare text links. A press steps them to surface-3,
-          the same as a hover, so a tap on a phone (no hover) still answers. */}
-      {links.map((l) => (
-        <ExternalLink
-          key={l.href}
-          href={l.href}
-          className="sx-pill sx-pill-card"
-        >
-          {l.label}
-        </ExternalLink>
-      ))}
-    </p>
-  );
+/** `final` (a result, reported or not), `upcoming`, or `off` (postponed, cancelled). */
+function rowState(display: GameDisplay): 'final' | 'upcoming' | 'off' {
+  if (display.kind === 'scheduled') return 'upcoming';
+  return display.kind === 'postponed' || display.kind === 'cancelled' ? 'off' : 'final';
 }
 
-function GameDetailBody({ game, showRecap, bracket }: { game: Game; showRecap: boolean; bracket: boolean }) {
-  const recap = showRecap ? resultSentence(game) : null;
+function Score({ side, which, show }: { side: SideView; which: 'away' | 'home'; show: boolean }) {
   return (
-    // From 768px (the team page's Last card) the panel is indented to the team column — gutter +
-    // the 80px lead column + its 8px gap — so it reads as belonging to the two names above it.
-    // On a phone that indent cost 94px of a 358px row and stacked every pill on its own line, so
-    // the panel starts at the gutter there.
-    // A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so each
-    // child's `m-0` cancelled it and the recap sat on the pill row.
-    // `.sx-gamedetail` (app/globals.css) is that panel: surface-2 under a divider, 12px between
-    // its lines, the md indent.
-    <div className="sx-gamedetail">
-      {recap ? <p className="m-0 text-ink-2">{recap}</p> : null}
-      {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
-      {/* `contest.location` is a NOTE field, not a venue field — live values include
-          "Senior Night" and a coach's scoring note — so it is never labelled "Venue". */}
-      {game.venue.text ? <p className="m-0 text-ink-3">Note: {game.venue.text}</p> : null}
-      <GameLinks game={game} bracket={bracket} />
-    </div>
+    // `className` LAST: tests/ui/rendered-never-00.test.ts finds a score cell by `class="sx-num … text-score…"><span`.
+    <span data-side={which} data-won={wonAttr(side)} aria-hidden="true" className="sx-num sx-game-score text-score">
+      {show ? <span>{side.glyph}</span> : null}
+    </span>
   );
 }
 
@@ -114,73 +78,70 @@ export function GameRow({
   game,
   perspective,
   showDate = false,
-  showTime = true,
-  showRecap = true,
   showChips = true,
   scopeLeague = null,
   showRecords = false,
-  defaultExpanded = false,
   seeds,
-  bracket = true,
+  meta,
+  showMeta = true,
+  as: Row = 'div',
+  attrs,
   className,
 }: GameRowProps) {
   const display = describeGame(game, perspective);
   const withRecords = recordsApply(game, display, showRecords);
+  const state = rowState(display);
+  const metaText = gameMetaText(display, showChips, seeds);
   return (
-    <details
-      open={defaultExpanded || undefined}
-      className={[
-        display.isNonLeague ? 'sx-nonleague' : null,
-        'bg-surface',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+    <Row
+      className={['sx-game', className].filter(Boolean).join(' ')}
+      data-state={state}
+      data-off={state === 'off' ? '' : undefined}
+      {...attrs}
     >
-      {/* Three columns — lead (clock · status · chips, SummaryLead), the two team lines, the
-          chevron — so the status word never pushes a team line onto a third row. The lead column
-          is 80px at every phone width and its three slots are fixed, so the row is 76px whatever
-          its labels say. At 320 a 70px column broke a label into three lines and grew the row to
-          90px; the 10px comes back from the score column, which is sized to its glyph. */}
-      {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
-          by the screen edge (or by a /schedule date group's paint containment). */}
-      {/* `.sx-gamerow` (app/globals.css) is the grid, the 76px floor, the padding, the inset ring
-          and the hidden marker: one class instead of twelve utilities on every row. */}
-      <summary className="sx-tap sx-gamerow">
-        {/* The chips are aria-hidden in the lead column, so the sentence says them in words — the
-            same gate as the chips, so a bracket (showChips false) does not repeat them. */}
-        <span className="sr-only">
-          {display.sentence}
-          {chipsSentence(display, showChips)}
-          {withRecords ? recordsSentence(display) : ''}
+      <div className="sx-game-grid">
+        <GameStatus game={game} display={display} showDate={showDate} />
+        <span
+          className="sx-game-team sx-pinnable"
+          data-side="away"
+          data-team-slug={display.away.slug ?? undefined}
+          data-won={wonAttr(display.away)}
+        >
+          <SideCrest side={display.away} />
+          <Link href={gameHref(game.contestId)} prefetch={false} className="sx-game-link sx-game-name">
+            <span aria-hidden="true">{display.away.shortName}</span>
+            <span className="sr-only">
+              {display.sentence}
+              {chipsSentence(display, showChips)}
+              {withRecords ? recordsSentence(display) : ''}
+            </span>
+          </Link>
+          <SideNotes side={display.away} showRecord={withRecords} scopeLeague={scopeLeague} />
         </span>
-        {/* The lead is 52px and centred on the 52px team block (the grid's `items-center`); a
-            name that genuinely wraps grows the block, and the lead stays centred on it. */}
-        <SummaryLead
-          game={game}
-          display={display}
-          showDate={showDate}
-          showTime={showTime}
-          showChips={showChips}
-        />
-        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} seeds={seeds} />
-        <svg
-          className="sx-chevron text-ink-3"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Score side={display.away} which="away" show={display.showScores} />
+        <span className="sx-game-sep" aria-hidden="true">
+          {display.showScores ? '–' : game.site === 'neutral' ? 'vs' : 'at'}
+        </span>
+        <Score side={display.home} which="home" show={display.showScores} />
+        <span
+          className="sx-game-team sx-pinnable"
+          data-side="home"
+          data-team-slug={display.home.slug ?? undefined}
+          data-won={wonAttr(display.home)}
           aria-hidden="true"
         >
-          <path d="m4 6 4 4 4-4" />
-        </svg>
-      </summary>
-      <GameDetailBody game={game} showRecap={showRecap} bracket={bracket} />
-    </details>
+          <SideCrest side={display.home} />
+          <span className="sx-game-name">{display.home.shortName}</span>
+          <SideNotes side={display.home} showRecord={withRecords} scopeLeague={scopeLeague} />
+        </span>
+        {showMeta ? (
+          // A caller's own meta is content the sentence does not carry, so it is not hidden.
+          <span className="sx-game-meta" aria-hidden={meta === undefined ? 'true' : undefined}>
+            {meta ?? metaText}
+          </span>
+        ) : null}
+      </div>
+    </Row>
   );
 }
 

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
-import Arrow from '../ui/Arrow';
 // From lib/format itself, not the words/plural re-export: that module's other helpers then stay out of this
 // client chunk, which sits within bytes of /teams' first-load budget (scripts/assert-budgets.ts).
 import { plural } from '../../lib/format';
@@ -31,7 +30,7 @@ import {
  *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
  *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
- *   `Search all 102 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
+ *   `Search all 102 on Teams` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
  *   reads exactly like the pin tiles' (`pinLabel`, components/words/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
@@ -66,10 +65,16 @@ export interface TeamFinderProps {
   limit?: number;
   /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass MyTeamCard's `focusUnpin`, which moves it to #my-team-unpin). */
   onPin?: (slug: string, leagueId: string) => void;
+  /** Cap the finder at 22rem: for a `ScopeBar` `end` slot. */
+  compact?: boolean;
   className?: string;
 }
 
 export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
+/** The field's visible prompt; its accessible name is the (visually hidden) label. */
+const PLACEHOLDER = 'Find a team: school, city or mascot';
+/** A result row: 44px, a hairline below, no card. */
+const RESULT_ROW = 'flex min-h-11 w-full flex-col items-start justify-center border-b border-hairline py-1.5 text-left';
 const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
@@ -113,7 +118,7 @@ export interface FinderView {
   matches: TeamSearchEntry[];
   /** The teams this finder lists itself (pin mode: the first `limit`; filter mode: none). */
   shown: TeamSearchEntry[];
-  /** pin mode: more teams match than are shown → the "Search all 102 on Teams →" link. */
+  /** pin mode: more teams match than are shown → the "Search all 102 on Teams" link. */
   more: boolean;
   groups: GroupSearchEntry[];
   notCovered: NotCoveredEntry[];
@@ -199,9 +204,9 @@ export function PinResult({ entry, onPick }: { entry: TeamSearchEntry; onPick: (
     <button
       type="button"
       onClick={() => onPick(entry)}
-      className="sx-tap flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left"
+      className={`sx-tap cursor-pointer ${RESULT_ROW}`}
     >
-      <span className="text-body font-semibold text-ink">
+      <span className="text-body font-bold text-ink">
         <span className="sr-only">{before}</span>
         {visible}
         <span className="sr-only">{after}</span>
@@ -221,9 +226,9 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
     <Link
       href={`/teams/${entry.slug}`}
       prefetch={false}
-      className="flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left no-underline"
+      className={`sx-tap no-underline ${RESULT_ROW}`}
     >
-      <span className="text-body font-semibold text-accent">{entry.shortName}</span>
+      <span className="text-body font-bold text-ink">{entry.shortName}</span>
       <span className="text-meta text-ink-2">{resultDetail(entry)}</span>
     </Link>
   );
@@ -236,18 +241,18 @@ function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[
   if (groups.length === 0) return null;
   return (
     <div className="mt-3">
-      <p id={kickerId} className="m-0 text-micro font-semibold text-ink-3">
+      <p id={kickerId} className="m-0 text-cell text-ink-2">
         Divisions and leagues
       </p>
-      <ul aria-labelledby={kickerId} className="m-0 mt-1 list-none p-0">
+      <ul aria-labelledby={kickerId} className="m-0 list-none border-t border-hairline p-0 mt-1">
         {groups.map((group) => (
           <li key={`${group.kind}:${group.id}`}>
             <Link
               href={group.href}
               prefetch={false}
-              className="flex min-h-11 flex-col justify-center rounded-card px-3 py-1 no-underline"
+              className={`sx-tap no-underline ${RESULT_ROW}`}
             >
-              <span className="text-body font-semibold text-accent">{group.label}</span>
+              <span className="text-body font-bold text-ink">{group.label}</span>
               <span className="text-meta text-ink-2">{group.detail}</span>
             </Link>
           </li>
@@ -265,6 +270,7 @@ export function TeamFinder({
   label = DEFAULT_FINDER_LABEL,
   limit = PIN_LIMIT,
   onPin,
+  compact = false,
   className,
 }: TeamFinderProps) {
   const inputId = useId();
@@ -355,10 +361,10 @@ export function TeamFinder({
 
   return (
     <search
-      className={['sx-js-only block', className].filter(Boolean).join(' ')}
+      className={['sx-js-only block', compact ? 'w-full max-w-[22rem]' : null, className].filter(Boolean).join(' ')}
       data-searching={typing ? '' : undefined}
     >
-      <label htmlFor={inputId} className="mb-1 block text-meta font-medium text-ink">
+      <label htmlFor={inputId} className="sr-only">
         {label}
       </label>
       <input
@@ -371,7 +377,8 @@ export function TeamFinder({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={onKeyDown}
-        className="block h-12 w-full rounded-card border border-rule bg-surface px-3 text-body text-ink"
+        placeholder={PLACEHOLDER}
+        className="sx-field"
       />
       <p id={liveId} role="status" aria-live="polite" className="sr-only">
         {announced}
@@ -391,7 +398,7 @@ export function TeamFinder({
           {mode === 'pin' && view.shown.length > 0 ? (
             <Fragment>
               {linkResults ? <p className="mt-3 mb-0 text-meta text-ink-2">{PIN_UNAVAILABLE_NOTE}</p> : null}
-              <ul id={resultsId} className="m-0 mt-2 list-none p-0">
+              <ul id={resultsId} className="m-0 list-none p-0">
                 {view.shown.map((entry) => (
                   <li key={entry.slug}>
                     {linkResults ? <TeamResultLink entry={entry} /> : <PinResult entry={entry} onPick={pick} />}
@@ -399,8 +406,8 @@ export function TeamFinder({
                 ))}
               </ul>
               {view.more ? (
-                <Link href="/teams" prefetch={false} className="sx-action mt-1 inline-flex min-h-11 items-center text-accent">
-                  Search all {index.teams.length} on Teams <Arrow />
+                <Link href="/teams" prefetch={false} className="sx-action min-h-11">
+                  Search all {index.teams.length} on Teams
                 </Link>
               ) : null}
             </Fragment>

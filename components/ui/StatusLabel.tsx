@@ -1,20 +1,19 @@
 import Tag from './Tag';
-import type { GameDisplay, StatusTone } from './describe-game';
+import type { GameDisplay } from './describe-game';
 import { sourceMarkWords } from './source-mark';
 
 /**
- * The written label beside every score: FINAL · SCORE NOT REPORTED · POSTPONED ·
- * CANCELLED · the time · TIME TBA (DESIGN §5.2, §6.5 channel 2), plus the game's chips
- * (SPEC §10.4): the league chip (`SCVAL`, `BVAL`, …) of a counted game or `NL` for a non-league
- * game (both from `countsFor`), the postseason chip (`SCVAL crossover`, `BVAL play-in`,
- * `MCAL tournament`, `EAL Super Regional`, `CCS`), and the `†` marker of a score published from
- * si.com. The decider tag ('OT', '2 OT', 'SO', 'F') carries its meaning in words for a screen
- * reader: 'by forfeit'; for 'SO', the words of the section whose rule decided the game, resolved by
- * describeGame (GameDisplay.shootoutLabel: 'decided on 1 v 1s' for an EAL 1 v 1 win, 'decided by a
- * shootout' for a San Diego Section game); else 'after overtime'.
+ * The written label beside a score (DESIGN §5.2, §6.5 channel 2; §33 for the face): the status word
+ * as plain 13px/600 text in sentence case (`Final`, `Score not reported`, `Postponed`, `Cancelled`,
+ * the time, `Time TBA`), then, as text-only caps tags (`.sx-tag`), the decider (`OT`, `2 OT`, `SO`,
+ * `F`) and the game's kind (SPEC §10.4): the league code of a counted game (`SCVAL`), `Non-league`,
+ * or the postseason round (`SCVAL crossover`, `MCAL tourney`, `CCS`), and the `†` of a score
+ * published from another source. The decider carries its meaning in words for a screen reader: 'by
+ * forfeit'; for 'SO', the words of the section whose rule decided the game, resolved by describeGame
+ * (GameDisplay.shootoutLabel); else 'after overtime'.
  *
- * Channel 2 is never abbreviated to a dot. Set in 12px sans semibold caps; the strings are
- * already uppercase, so `uppercase` changes nothing a reader hears.
+ * Channel 2 is never abbreviated to a dot, and nothing here is a filled chip: the one filled label
+ * on the site is `.sx-flag`.
  *
  * Client-safe: it imports only TYPES from describe-game (the home My-team card renders it).
  */
@@ -29,11 +28,18 @@ export interface StatusLabelProps {
   className?: string;
 }
 
-const TONE: Record<StatusTone, string> = {
-  ink: 'text-ink',
-  'ink-2': 'text-ink-2',
-  'ink-3': 'text-ink-3',
+const STATUS_CASE: Readonly<Record<string, string>> = {
+  FINAL: 'Final',
+  'SCORE NOT REPORTED': 'Score not reported',
+  POSTPONED: 'Postponed',
+  CANCELLED: 'Cancelled',
+  'TIME TBA': 'Time TBA',
 };
+
+/** describeGame's status label in sentence case: 'FINAL' is 'Final'; a time ('3:00 PM') is itself. */
+export function statusCase(label: string): string {
+  return STATUS_CASE[label] ?? label;
+}
 
 /**
  * The accessible words of a decider tag. 'OT' / '2 OT' are both 'after overtime'; 'SO' reads the
@@ -52,11 +58,11 @@ function deciderLabel(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel'>
  * school's own athletics site: a title
  * for a pointer, words for a screen reader.
  */
-function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
+export function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
   if (display.sourceMark === null) return null;
   const words = sourceMarkWords(display.sourceMark);
   return (
-    <span className="font-sans text-micro font-semibold text-ink-3" title={words}>
+    <span className="text-micro font-semibold text-ink-3" title={words}>
       <span aria-hidden="true">&dagger;</span>
       <span className="sr-only">{words}</span>
     </span>
@@ -64,11 +70,9 @@ function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
 }
 
 /**
- * The 12px mono caps of the chip run 7.92px a letter (Geist Mono's 0.6em advance plus 0.06em of
- * tracking), and the 80px lead column of GameRow and Home's ResultRow leaves 72px inside the
- * capsule's 4px padding: nine letters. `TOURNAMENT` (ten, 79.2px) broke inside the word there, as
- * MCAL / TOURNAMEN / T, so the chip PRINTS the shorter word the sports pages use; the full name is
- * still what a screen reader hears, and every sentence and title keeps it (`postseasonTag`).
+ * The round's PRINTED word: `tournament` is the shorter word the sports pages use, so the phrase
+ * stays short in a narrow column. The full name is still what a screen reader hears, and every
+ * sentence and title keeps it (`postseasonTag`).
  */
 const CHIP_WORD: Readonly<Record<string, string>> = { tournament: 'tourney' };
 
@@ -80,18 +84,10 @@ export function postseasonChipText(tag: string): string {
     .join(' ');
 }
 
-/**
- * The postseason chip. A league or NL chip is a code of at most six letters (SUNSET, 59.5px), but
- * a postseason chip is a phrase — `SCVAL crossover` is 131px, `San Diego Section playoffs` 218px —
- * wider than a row's 80px lead column or a fixed tag track. As a nowrap `Tag` it ran out of its
- * column over the team lines beside it, so it is Tag's face (mono caps on surface-3, 20px for one
- * line) on an `inline-block` capsule, as StatusChip is: a phrase too wide for its column grows into
- * ONE taller capsule, broken between its words (no printed word is wider than the lead column:
- * `postseasonChipText`). `break-words` stays only as the last resort for a host narrower still.
- */
+/** The postseason round: a text tag that may wrap between its words (a round is a phrase, not a code). */
 function PostseasonChip({ tag }: { tag: string }) {
   return (
-    <span className="inline-block min-w-0 max-w-full break-words rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-kicker uppercase text-ink-2">
+    <span className="sx-tag rounded-tag whitespace-normal">
       <span aria-hidden="true">{postseasonChipText(tag)}</span>
       <span className="sr-only">{tag}</span>
     </span>
@@ -123,7 +119,7 @@ export function GameChips({
     // `.sx-chips` (app/globals.css): a wrapping row of tags, 4px apart, never wider than its host.
     <span className={['sx-chips', className].filter(Boolean).join(' ')}>
       {leagueTag ? <Tag label={`${leagueTag} league game`}>{leagueTag}</Tag> : null}
-      {isNonLeague ? <Tag label="non-league">NL</Tag> : null}
+      {isNonLeague ? <Tag>Non-league</Tag> : null}
       {postseasonTag ? <PostseasonChip tag={postseasonTag} /> : null}
     </span>
   );
@@ -131,21 +127,16 @@ export function GameChips({
 
 export function StatusLabel({ display, showChips = true, className }: StatusLabelProps) {
   return (
-    // `.sx-status` (app/globals.css) is the 12px sans semibold caps face and its wrapping row;
-    // only the tone is a utility. A host's child rules still tighten it (GameRow's SummaryLead).
-    <span className={['sx-status', TONE[display.statusTone], className].filter(Boolean).join(' ')}>
-      <span className={display.strikeTime ? 'line-through' : undefined}>{display.statusLabel}</span>
+    // `.sx-status` (app/globals.css) is the plain 13px/600 status face and its wrapping row.
+    <span className={['sx-status', className].filter(Boolean).join(' ')}>
+      <span className={display.strikeTime ? 'line-through' : undefined}>{statusCase(display.statusLabel)}</span>
       {display.deciderTag ? (
         <Tag label={deciderLabel(display)}>{display.deciderTag}</Tag>
       ) : null}
-      {display.shootoutText ? (
-        <span className="sx-num normal-case tracking-normal text-ink-3">
-          {display.shootoutText}
-        </span>
-      ) : null}
+      {display.shootoutText ? <span className="sx-num font-normal text-ink-2">{display.shootoutText}</span> : null}
       {/* The source of the score is never optional: it travels with the score. */}
       <SourceMark display={display} />
-      {showChips ? <GameChips display={display} className="normal-case tracking-normal" /> : null}
+      {showChips ? <GameChips display={display} /> : null}
     </span>
   );
 }

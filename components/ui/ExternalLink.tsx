@@ -17,14 +17,26 @@ export function ExternalLink({ href, children, className, arrow = true }: Extern
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={['text-accent hover:underline', className].filter(Boolean).join(' ')}
+      className={['hover:underline', className].filter(Boolean).join(' ')}
     >
       {children}
       {arrow ? (
-        <>
-          {' '}
-          <span aria-hidden="true">&#8599;</span>
-        </>
+        // The one external-link glyph: a 10px drawn arrow, never the `↗` character (whose width and
+        // weight came from whatever font the reader's system had).
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="ml-[0.25em] inline-block shrink-0 align-baseline"
+        >
+          <path d="M3 1.5h5.5V7M8.5 1.5 1.5 8.5" />
+        </svg>
       ) : null}
       <span className="sr-only"> (opens in a new tab)</span>
     </a>

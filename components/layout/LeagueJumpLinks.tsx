@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Arrow, { type ArrowProps } from '../ui/Arrow';
+import type { ArrowProps } from '../ui/Arrow';
 import { standaloneName } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
@@ -14,10 +14,9 @@ import type { LeagueId } from '../../lib/types';
  * A `#<id>` pill is a plain `<a>` (a fragment stays on the page); a route pill (/playoffs sends a
  * tournament league to its own page) is a `<Link prefetch={false}>`, the same rule as the league
  * chips (LeagueSwitcher.tsx, DESIGN §15.4), and the row is a per-league list
- * (tests/ui/prefetch-policy.test.ts). They sit on the canvas, so they are canvas pills
- * (`sx-pill-ring`) at the 44px primary height. The arrow says where the target is (down the page
- * by default) and is aria-hidden like every link arrow (components/ui/Arrow.tsx). The pill names the
- * league by `standaloneName` ('Jump to North County ↓', never 'Jump to North ↓', which reads as a direction).
+ * (tests/ui/prefetch-policy.test.ts). Each is a standalone action link (`sx-action`, DESIGN §33) with no
+ * arrow in its label. It names the league by `standaloneName` ('Jump to North County', never 'Jump to
+ * North', which reads as a direction).
  * The row is screen-only: `sx-print-hide` drops it from a printout (app/globals.css, @media print).
  */
 export interface LeagueJumpLinksProps {
@@ -25,21 +24,17 @@ export interface LeagueJumpLinksProps {
   leagues: ReadonlyArray<{ id: LeagueId; shortName: string }>;
   /** Each league's target; default `#<id>`. /playoffs sends a tournament league to its own page. */
   hrefs?: Readonly<Record<string, string>>;
-  /** Each pill's arrow; default down. */
+  /** @deprecated Link labels carry no arrow (DESIGN §33); accepted and ignored. */
   arrow?: (id: LeagueId) => NonNullable<ArrowProps['dir']>;
 }
 
-export function LeagueJumpLinks({ leagues, hrefs, arrow }: LeagueJumpLinksProps) {
+export function LeagueJumpLinks({ leagues, hrefs }: LeagueJumpLinksProps) {
   return (
-    <p className="sx-print-hide m-0 mt-4 flex flex-wrap gap-2">
+    <p className="sx-print-hide m-0 mt-3 flex flex-wrap gap-x-4">
       {leagues.map((league) => {
         const href = hrefs?.[league.id] ?? `#${league.id}`;
-        const className = `sx-jump sx-jump-${league.id} sx-pill sx-pill-ring min-h-11`;
-        const body = (
-          <>
-            Jump to {standaloneName(league.id)} <Arrow dir={arrow?.(league.id) ?? 'down'} />
-          </>
-        );
+        const className = `sx-jump sx-jump-${league.id} sx-action`;
+        const body = <>Jump to {standaloneName(league.id)}</>;
         return href.startsWith('#') ? (
           <a key={league.id} href={href} className={className}>
             {body}

@@ -73,36 +73,18 @@ export function SectionHeader({
       <div className="flex min-w-0 flex-[1_1_auto] flex-wrap items-baseline gap-x-3 gap-y-0.5">
         <Heading className={headingClass}>{kicker}</Heading>
         {meta ? (
-          <span className="text-meta font-normal tracking-normal text-ink-3">{meta}</span>
+          <span className="text-meta font-normal text-ink-2">{meta}</span>
         ) : null}
       </div>
       <span className="sx-kicker-rule" aria-hidden="true" />
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
           (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
-          into view, and almost every section on every page has one of these. Navigation still
-          fetches on click. The negative margins let the 44px (phone) / 32px (desktop) pill grow
-          around the text without moving the heading's baseline. */}
+          into view, and almost every section on every page has one of these. A standalone action
+          link (`.sx-action`): ink, underlined, no chevron. */}
       {action ? (
-        <Link
-          href={action.href}
-          prefetch={false}
-          className="-my-2 -mr-3 inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-chip px-3 font-medium text-accent no-underline hover:bg-surface-2 md:min-h-8"
-        >
+        <Link href={action.href} prefetch={false} className="sx-action">
           {action.label}
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M4.5 2.5 8 6l-3.5 3.5" />
-          </svg>
         </Link>
       ) : null}
     </div>

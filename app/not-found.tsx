@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history/history';
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 /**
  * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
- * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
+ * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line
  * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
  * the leagues with a table: the LA independents have none (DESIGN §24.9), so "every table in
  * the nine leagues" stays exact.
@@ -39,34 +38,29 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
 ];
 
 /**
- * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
- * links are the real navigation rather than a single "go home": one card per top-level page
- * (the seven desktop nav destinations, the History archive among them, which covers the leagues
- * with a published 2025-26 table; the standings are on Teams, DESIGN §18), with its name over a
- * one-line description, so nothing is a sentence squeezed into a pill.
+ * Say what is true, say what to do next (DESIGN §8). No illustration, and the links are the real
+ * navigation rather than a single "go home": one row per top-level page, its name over a one-line
+ * description, in ruled columns.
  *
  * The copy does not claim these seven are every page on the site — there are hundreds of team,
  * game and day pages — only that each of those is reachable from one of them, which is true.
- * Seven cards run two-up from sm and four-up from lg (a row of four, then three). Each card is
- * h-full so a row stays even when one description wraps in the narrower four-up column.
+ * No freshness stamp: nothing on this page is data.
  */
 export default function NotFound() {
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        eyebrow="404"
-        title="That page is not here."
-        description="The link may be out of date, or that game or day isn’t in this season’s schedule. Every team, game and day is reachable from one of these:"
-      />
-      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
+      <header className="sx-pagehead">
+        <h1 className="m-0 text-h1 text-ink">That page is not here.</h1>
+        <p className="sx-dateline">
+          The link may be out of date, or that game or day isn’t in this season’s schedule. Every team, game and day
+          is reachable from one of these:
+        </p>
+      </header>
+      <ul className="sx-auto m-0 mt-6 list-none border-t-2 border-ink p-0">
         {LINKS.map((l) => (
-          <li key={l.href}>
-            <Link
-              href={l.href}
-              prefetch={false}
-              className="sx-card sx-lift block h-full min-h-11 p-4 no-underline"
-            >
-              <span className="block text-body font-semibold text-ink">{l.name}</span>
+          <li key={l.href} className="border-b border-hairline">
+            <Link href={l.href} prefetch={false} className="block py-3 no-underline">
+              <span className="block text-body font-bold text-ink">{l.name}</span>
               <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>
             </Link>
           </li>

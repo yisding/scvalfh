@@ -71,7 +71,7 @@ function chipLabel(entry: FormEntry): string {
 export function FormStrip({ entries, size = 20, label, className }: FormStripProps) {
   if (entries.length === 0) {
     return (
-      <span className={['text-meta text-ink-3', className].filter(Boolean).join(' ')}>no results</span>
+      <span className={['text-meta text-ink-2', className].filter(Boolean).join(' ')}>no results</span>
     );
   }
   const linked = entries.some((e) => e.contestId);

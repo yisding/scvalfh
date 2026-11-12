@@ -14,25 +14,14 @@
  */
 export interface StatusChipProps {
   children: React.ReactNode;
-  /** `accent` only for an automatic qualifier. */
-  tone: 'accent' | 'neutral';
+  /** @deprecated Ignored: the status is plain text. */
+  tone?: 'accent' | 'neutral';
   className?: string;
 }
 
-export function StatusChip({ children, tone, className }: StatusChipProps) {
-  return (
-    <span
-      className={[
-        'inline-block max-w-full rounded-tag px-2 py-0.5 text-micro font-semibold leading-5',
-        tone === 'accent' ? 'bg-accent-wash text-accent-ink' : 'bg-surface-3 text-ink-2',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      {children}
-    </span>
-  );
+export function StatusChip({ children, className }: StatusChipProps) {
+  // Plain text (DESIGN §33): a status is a few words, not a filled chip. `tone` is accepted and ignored.
+  return <span className={['text-cell font-semibold text-ink', className].filter(Boolean).join(' ')}>{children}</span>;
 }
 
 export default StatusChip;

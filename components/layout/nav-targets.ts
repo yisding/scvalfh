@@ -8,9 +8,9 @@ import { postseasonHref } from '../../lib/postseason/postseason-kind';
 import type { LeagueId } from '../../lib/types';
 
 /**
- * The league-aware targets of the three nav entries that have a per-league place (SPEC §8.3),
+ * The league-aware targets of the four nav entries that have a per-league place (SPEC §8.3),
  * built once from the league config and handed to the client `NavLink` as plain, serializable
- * objects. Scores → `/schedule/<id>`; Teams → the league's section of the teams-and-standings page
+ * objects. Scores → `/schedule/<id>`; Standings → `/standings/<id>`; Teams → the league's section of the teams-and-standings page
  * (`/teams#<id>`, which took over the old Table tab's job of opening your league's tables, DESIGN
  * §18); Playoffs → the league's section of the CCS page (`/playoffs#<id>`) for a CCS-ladder league,
  * its own tournament page (`/playoffs/<id>`) for a league-tournament league, and its pointer card on
@@ -30,6 +30,7 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
     );
   return {
     '/schedule': per((id) => `/schedule/${id}`),
+    '/standings': per((id) => `/standings/${id}`),
     '/teams': per((id) => `/teams#${id}`),
     '/playoffs': per((id) => postseasonHref(getLeague(id))),
   };

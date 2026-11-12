@@ -55,6 +55,14 @@ const PROGRAM_TITLE = IS_FIELD_HOCKEY ? SPORT.name : `${GENDER_NAME} ${SPORT.nam
 export const SITE_NAME = `NorCal High School ${PROGRAM_TITLE}`;
 /** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
 export const SITE_WORDMARK = `NorCal HS ${PROGRAM_TITLE}`;
+/**
+ * The wordmark as the masthead sets it (SiteHeader; tests/ui/header-fit.test.ts measures these words):
+ * 'NorCal HS' at weight 800, then the program ('Field Hockey'), which 768–1023 shortens to its initials ('FH').
+ */
+const WORDMARK_WORDS = SITE_WORDMARK.split(' ');
+export const WORDMARK_SHORT = WORDMARK_WORDS.slice(0, 2).join(' ');
+export const WORDMARK_TAIL = WORDMARK_WORDS.slice(2).join(' ');
+export const WORDMARK_TAIL_ABBR = WORDMARK_WORDS.slice(2).map((word) => word[0]).join('');
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = `NorCal ${SPORT.abbr}`;
 

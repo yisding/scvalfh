@@ -44,8 +44,10 @@ export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number>
  * The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 56px hero is 14px. The
  * mascot tile gets the same corner from `.sx-monogram`'s `border-radius: 25%` in app/globals.css.
  */
+/** @deprecated The plate radius is 3px at every size (`.sx-monogram`, app/globals.css). */
 export function monogramRadius(size: number): number {
-  return Math.round(size / 4);
+  void size;
+  return 3;
 }
 
 export function TeamMonogram({

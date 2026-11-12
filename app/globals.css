@@ -1,72 +1,30 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   NorCal High School Field Hockey — design tokens (DESIGN §4.1 / §4.2)
+   NorCal High School Field Hockey — design tokens and shared classes (DESIGN §33, "Agate").
 
-   Every hex below is measured output from the contrast validator, not an
-   assertion. tests/ui/contrast.test.ts parses THIS FILE and re-measures every
-   documented pair, so editing a token here fails `pnpm test` if it breaks a
-   floor (DESIGN §10.9d).
-
-   Four planes per mode. Three on-screen hues total — win, loss, accent — plus
-   one hueless bar ink. Divisions have no hue. School colors are never an
-   encoding; they live only inside TeamMonogram.
+   White paper, black ink, rules instead of cards, one typeface, one highlighter. Every hex below is
+   measured: tests/ui/contrast.test.ts parses THIS FILE and re-measures every pair, so editing a
+   token here fails `pnpm test` if it breaks a floor.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── The BOLD half of next/font's metric-matched "Geist Fallback" (app/layout.tsx). next/font
-      emits only a regular face (`src: local(Arial)`, no weight descriptor = 400), and `body` sets
-      `font-synthesis-weight: none`, so every semibold heading, nav item, chip and team name was
-      set in Arial REGULAR until Geist loaded: nav items up to 2.7px narrower, headings and
-      paragraphs re-wrapping on the swap. This face joins the same family (same name, declared
-      once here; vinext's shim emits the same 'Geist Fallback' name) for weights 600–900, so 500
-      still matches the regular face and 600 gets Arial Bold.
-      size-adjust is MEASURED, not derived: Geist at 600 against Arial Bold's advances (Liberation
-      Sans Bold, which shares them, standing in for the local() in a test page). Over the 493
-      distinct semibold strings on ten routes Geist is 99.93% of Arial Bold; over the h1s alone,
-      99.61%. 99.3% leans narrow on purpose: an h1 is the text where a fallback a hair too wide
-      costs a whole 32px line, and the tightest one, "SCVAL schedule and results" at 390, has 0.8px
-      to spare in Geist (at 99.9% the fallback wrapped it, CLS 0.029 on the swap; at 99.3% it fits).
-      Before this face, semibold fell back to Arial Regular at 104.76%, 2–3% narrow (the nav 2.0%,
-      section h2s 2.7%), and with the old mono fallback /teams/cupertino at 390 stood 212px taller
-      in the fallback than in Geist; 80px now (Arial simulated, faces blocked). The
-      overrides are next/font's regular-face values (95.94% / 28.16% at 104.76%) rescaled to this
-      size-adjust, since they apply after it: a line of bold fallback is as tall, with the same
-      baseline, as a line of regular or of Geist. ── */
+/* The BOLD half of next/font's metric-matched "Public Sans Fallback" (app/layout.tsx). next/font emits
+   only a regular face (`local(Arial)` at size-adjust 104.87%, no weight descriptor), and `body` sets
+   `font-synthesis-weight: none`, so without this every 600–900 heading, nav item and team name was
+   set in Arial REGULAR until Public Sans loaded. size-adjust is MEASURED (2026-11-12, Chromium):
+   Public Sans 800 against Liberation Sans Bold, which shares Arial Bold's advances, over the h1 and
+   h2 strings of /, /standings and /schedule/scval is 100.61% (h1) and 100.73% (h2); 100.1% leans
+   0.5% narrow on purpose, since a fallback h1 a hair too wide costs a whole line on the swap. The
+   overrides are next/font's regular-face values (90.59% / 21.46% at 104.87%) rescaled to this
+   size-adjust, so a bold fallback line is as tall, with the same baseline, as a regular one. */
 @font-face {
-  font-family: "Geist Fallback";
+  font-family: "Public Sans Fallback";
   src: local("Arial Bold"), local("Arial-BoldMT");
   font-style: normal;
   font-weight: 600 900;
-  size-adjust: 99.3%;
-  ascent-override: 101.22%;
-  descent-override: 29.71%;
-  line-gap-override: 0%;
-}
-
-/* ── Geist Mono's fallback (app/layout.tsx sets `adjustFontFallback: false` and lists these two
-      families first). A system monospace already has Geist Mono's 0.6em advance (measured:
-      Liberation Mono 0.6001, DejaVu Sans Mono 0.6021; Menlo and SF Mono are 0.6 too), so it needs
-      no size-adjust, only Geist Mono's line metrics (ascent 100.5%, descent 29.5%, no gap, from
-      next/font's own Geist Mono figures): with its native ones (Liberation Mono 83.3% / 30.0%) a
-      mono score or date inside a line of sans made that line 1px taller until the face loaded.
-      Consolas is the one common monospace that is narrower, 0.55em, so it gets its own family
-      with size-adjust 0.6 / 0.5498 = 109.13% (overrides rescaled the same way). A reader with
-      none of these falls through to the generic list after them. ── */
-@font-face {
-  font-family: "Geist Mono Fallback";
-  src: local("SF Mono Regular"), local("SFMono-Regular"), local("Menlo Regular"), local("Menlo-Regular"),
-    local("Liberation Mono"), local("LiberationMono"), local("DejaVu Sans Mono"), local("DejaVuSansMono"),
-    local("Droid Sans Mono"), local("DroidSansMono");
-  ascent-override: 100.5%;
-  descent-override: 29.5%;
-  line-gap-override: 0%;
-}
-@font-face {
-  font-family: "Geist Mono Fallback Narrow";
-  src: local("Consolas");
-  size-adjust: 109.13%;
-  ascent-override: 92.09%;
-  descent-override: 27.03%;
+  size-adjust: 100.1%;
+  ascent-override: 94.91%;
+  descent-override: 22.48%;
   line-gap-override: 0%;
 }
 
@@ -80,65 +38,60 @@
   }
 }
 
-/* ── Light (default) ─────────────────────────────────────────────────────── */
+/* ── Light (default). One plane: the page is white paper and content is separated by rules. ── */
 :root {
   color-scheme: light;
 
-  /* planes */
-  --sx-bg:            #f6f7f8;
+  --sx-bg:            #ffffff;
   --sx-surface:       #ffffff;
-  --sx-surface-2:     #f2f4f6;   /* table header, zebra, ROW HOVER */
-  --sx-surface-3:     #e6e9ec;   /* chrome only — never hosts a result mark (light) */
-  --sx-border:        #d9dde2;
-  --sx-border-strong: #b9c0c8;
+  --sx-surface-2:     #f4f4f1;   /* row hover, .sx-band, .sx-inset */
+  --sx-surface-3:     #e8e8e3;   /* crest plate, T mark, meter track */
+  --sx-border:        #d9d9d3;   /* hairlines, the rail's column rule */
+  --sx-border-strong: #878780;   /* control outlines, the scope divider */
 
   /* ink */
-  --sx-text:          #0e1116;
-  --sx-text-2:        #4a5461;
-  --sx-text-3:        #5d6874;
+  --sx-text:          #111111;
+  --sx-text-2:        #45453f;
+  --sx-text-3:        #5e5e57;
 
-  /* accent — links, focus, LIVE, the berth meter */
-  --sx-accent:        #1558b0;
-  --sx-accent-ink:    #0f4a96;
-  --sx-accent-wash:   #d4e1f3;   /* doubles as the meter track */
+  /* There is no accent hue: links, focus, meters and selected states are ink. The two names stay as
+     aliases of the ink; the wash is THE highlighter (fill only: pinned team, LIVE flag, stale strip). */
+  --sx-accent:        #111111;
+  --sx-accent-ink:    #111111;
+  --sx-accent-wash:   #ffd83d;
 
-  /* the two reserved data hues + the hueless third state */
-  --sx-win:           #036a34;
-  --sx-win-ink:       #03562a;
-  --sx-win-wash:      #d5e3d8;
-  --sx-loss:          #df6860;
-  --sx-loss-ink:      #a32f28;
-  --sx-loss-wash:     #fde4e1;
-  --sx-tie:           #55606d;
-  --sx-tie-ink:       #414b56;
-  --sx-tie-wash:      #dee0e3;
+  /* Result marks are hueless: W solid, L hollow (the ring is --sx-loss), T grey. */
+  --sx-win:           #111111;
+  --sx-win-ink:       #ffffff;
+  --sx-win-wash:      #111111;
+  --sx-loss:          #767670;
+  --sx-loss-ink:      #45453f;
+  --sx-loss-wash:     #ffffff;
+  --sx-tie:           #767670;
+  --sx-tie-ink:       #111111;
+  --sx-tie-wash:      #e8e8e3;
 
-  /* data-viz: ONE ink for every bar on the site, and a neutral zero */
-  --sx-bar:           #4a5461;
-  --sx-zero:          #b9c0c8;
+  --sx-bar:           #45453f;   /* chart ink */
+  --sx-zero:          #878780;   /* chart zero rule */
 
-  --sx-focus:         #1558b0;
-  --sx-select:        #cbdaf0;
+  --sx-focus:         #111111;
+  --sx-pin:           #111111;   /* the pinned row's bar */
+  --sx-select:        #ffe98a;
 
-  /* radii. Few and moderate: softly rounded controls, crisper cards. Full pills (999px) are kept
-     only where the shape is the meaning (the empty "pending" chip). `control` is the selectors
-     (league, region and filter chips): rounder than a button, well short of a capsule. */
-  --sx-r-tag: 4px;
-  --sx-r-chip: 8px;
-  --sx-r-control: 10px;
-  --sx-r-card: 8px;
-  --sx-r-card-lg: 10px;
+  /* Radii: 2px on controls and tags, 0 on everything else (3px crest plates are `.sx-monogram`). */
+  --sx-r-tag: 2px;
+  --sx-r-chip: 2px;
+  --sx-r-control: 2px;
+  --sx-r-card: 0px;
+  --sx-r-card-lg: 0px;
 
-  /* Elevation. Flat in both modes: a card is a 1px ring and nothing else, the way dark mode
-     always was. Hover darkens the ring instead of floating the card on a blurred shadow.
-     None of these is a colour token: they are alpha on the ink, so the contrast test is untouched.
-     `raised` stays a transparent zero layer, never `none`: it sits inside shadow LISTS. */
-  --sx-shadow-sticky: 0 1px 0 var(--sx-border);
+  /* No elevation. `sticky` is a 1px ink rule; the rest are transparent zero layers, never `none`:
+     they sit inside shadow LISTS, and `none` in a list invalidates the whole declaration. */
+  --sx-shadow-sticky: 0 1px 0 var(--sx-text);
   --sx-shadow-raised: 0 0 0 0 transparent;
-  --sx-shadow-lift:   0 0 0 1px rgb(14 17 22 / 0.28);
-  --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.11);
-  /* in-card row lines: lighter than a container edge, so space (not lines) groups sections */
-  --sx-divider:       color-mix(in srgb, var(--sx-border) 60%, transparent);
+  --sx-shadow-lift:   0 0 0 0 transparent;
+  --sx-ring:          0 0 0 0 transparent;
+  --sx-divider:       var(--sx-border);
 
   /* motion */
   --sx-dur-tap: 120ms;
@@ -150,82 +103,74 @@
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --sx-bg:            #0b0d10;
-    --sx-surface:       #14171b;
-    --sx-surface-2:     #1c2026;
-    --sx-surface-3:     #252a31;
-    --sx-border:        #2b3138;
-    --sx-border-strong: #3d444d;
-    --sx-text:          #f2f5f8;
-    --sx-text-2:        #aab4bf;
-    --sx-text-3:        #919ba5;
-    --sx-accent:        #4f95ee;
-    --sx-accent-ink:    #9cc6f8;
-    --sx-accent-wash:   #213043;
-    --sx-win:           #179765;
-    --sx-win-ink:       #5fd39c;
-    --sx-win-wash:      #1c302a;
-    --sx-loss:          #e9523f;
-    --sx-loss-ink:      #ff9c8c;
-    --sx-loss-wash:     #3e2625;
-    --sx-tie:           #8b959f;
-    --sx-tie-ink:       #c3ccd6;
-    --sx-tie-wash:      #2b2f35;
-    --sx-bar:           #aab4bf;
-    --sx-zero:          #3d444d;
-    --sx-focus:         #4f95ee;
-    --sx-select:        #213043;
-    /* shadows do not read on #0b0d10 — the ring does the work. A transparent zero layer, NOT
-       `none`: this token is composed into shadow LISTS (`var(--sx-ring), var(--sx-shadow-raised)`),
-       and `none` inside a list invalidates the whole declaration (no ring, no pinned rule). */
-    --sx-shadow-raised: 0 0 0 0 transparent;
-    --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
-    --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
+    --sx-bg:            #0f0f0e;
+    --sx-surface:       #0f0f0e;
+    --sx-surface-2:     #1b1b19;
+    --sx-surface-3:     #262623;
+    --sx-border:        #32322e;
+    --sx-border-strong: #6e6e66;
+    --sx-text:          #f4f4ef;
+    --sx-text-2:        #b9b9b0;
+    --sx-text-3:        #a3a39a;
+    --sx-accent:        #f4f4ef;
+    --sx-accent-ink:    #f4f4ef;
+    --sx-accent-wash:   #3f3400;
+    --sx-win:           #f4f4ef;
+    --sx-win-ink:       #0f0f0e;
+    --sx-win-wash:      #f4f4ef;
+    --sx-loss:          #8a8a82;
+    --sx-loss-ink:      #b9b9b0;
+    --sx-loss-wash:     #0f0f0e;
+    --sx-tie:           #8a8a82;
+    --sx-tie-ink:       #f4f4ef;
+    --sx-tie-wash:      #262623;
+    --sx-bar:           #b9b9b0;
+    --sx-zero:          #6e6e66;
+    --sx-focus:         #ffd83d;
+    --sx-pin:           #ffd83d;
+    --sx-select:        #4a3d00;
   }
 }
 
-/* ── Dark, under the explicit toggle (wins over the OS in both directions) ── */
+/* ── Dark, under the explicit toggle (wins over the OS in both directions). The SAME map. ── */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --sx-bg:            #0b0d10;
-  --sx-surface:       #14171b;
-  --sx-surface-2:     #1c2026;
-  --sx-surface-3:     #252a31;
-  --sx-border:        #2b3138;
-  --sx-border-strong: #3d444d;
-  --sx-text:          #f2f5f8;
-  --sx-text-2:        #aab4bf;
-  --sx-text-3:        #919ba5;
-  --sx-accent:        #4f95ee;
-  --sx-accent-ink:    #9cc6f8;
-  --sx-accent-wash:   #213043;
-  --sx-win:           #179765;
-  --sx-win-ink:       #5fd39c;
-  --sx-win-wash:      #1c302a;
-  --sx-loss:          #e9523f;
-  --sx-loss-ink:      #ff9c8c;
-  --sx-loss-wash:     #3e2625;
-  --sx-tie:           #8b959f;
-  --sx-tie-ink:       #c3ccd6;
-  --sx-tie-wash:      #2b2f35;
-  --sx-bar:           #aab4bf;
-  --sx-zero:          #3d444d;
-  --sx-focus:         #4f95ee;
-  --sx-select:        #213043;
-  --sx-shadow-raised: 0 0 0 0 transparent;   /* never `none`: it sits inside shadow lists */
-  --sx-shadow-lift:   0 0 0 1px rgb(255 255 255 / 0.10);
-  --sx-ring:          0 0 0 1px rgb(255 255 255 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --sx-bg:            #0f0f0e;
+  --sx-surface:       #0f0f0e;
+  --sx-surface-2:     #1b1b19;
+  --sx-surface-3:     #262623;
+  --sx-border:        #32322e;
+  --sx-border-strong: #6e6e66;
+  --sx-text:          #f4f4ef;
+  --sx-text-2:        #b9b9b0;
+  --sx-text-3:        #a3a39a;
+  --sx-accent:        #f4f4ef;
+  --sx-accent-ink:    #f4f4ef;
+  --sx-accent-wash:   #3f3400;
+  --sx-win:           #f4f4ef;
+  --sx-win-ink:       #0f0f0e;
+  --sx-win-wash:      #f4f4ef;
+  --sx-loss:          #8a8a82;
+  --sx-loss-ink:      #b9b9b0;
+  --sx-loss-wash:     #0f0f0e;
+  --sx-tie:           #8a8a82;
+  --sx-tie-ink:       #f4f4ef;
+  --sx-tie-wash:      #262623;
+  --sx-bar:           #b9b9b0;
+  --sx-zero:          #6e6e66;
+  --sx-focus:         #ffd83d;
+  --sx-pin:           #ffd83d;
+  --sx-select:        #4a3d00;
 }
 
 
 /* ── Tailwind theme. `inline` is required: the utilities must resolve the
       var() at use-site so the dark overrides above take effect. ─────────── */
 @theme inline {
-  /* fonts — the variables come from next/font in layout.tsx. Each ends in a generic family: the
-     `font-sans` / `font-mono` utilities compile to exactly this list, and a list that stopped at
-     the variable fell to the browser default (a serif) wherever none of its named faces existed. */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* One face. The variable comes from next/font in layout.tsx; the list ends in a generic family.
+     `--font-mono` is an alias for one release, so a stray `font-mono` does not fall to Courier. */
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-sans);
 
   /* colors → bg-surface, text-ink-2, border-hairline, bg-win, fill-bar, … */
   --color-bg:           var(--sx-bg);
@@ -253,85 +198,80 @@
   --color-bar:          var(--sx-bar);
   --color-zero:         var(--sx-zero);
 
-  /* type ladder — 12 · 13 · 14 · 16 · 18 · 18→20 · 22 · 24 · 28→36 · 32→44 · 40→56.
-     Nothing that carries information is set below 12px. `cell` is NOT a prose step: it is the
-     13px mono numeral used only in pixel-budgeted columns (phone standings, time columns). */
-  --text-kicker: 0.75rem;                      /* 12 — column heads and 1–2 word caps tags only */
+  /* Type scale: 11 (th) · 12 · 13 · 14 · 16 · 17 · 22 · h1 32→46, plus the 72px game score.
+     Headings are 800; the names are the old ones, the values are new. */
+  --text-kicker: 0.6875rem;                    /* 11 — <th> and phone tab labels only */
   --text-kicker--line-height: 1rem;
   --text-kicker--letter-spacing: 0.06em;
   --text-kicker--font-weight: 600;
 
-  --text-micro: 0.75rem;                       /* 12 — tab labels, status words, pills, dt labels */
+  --text-micro: 0.75rem;                       /* 12 — small labels (dt, fine status) */
   --text-micro--line-height: 1rem;
   --text-micro--font-weight: 500;
 
-  --text-cell: 0.8125rem;                      /* 13 — mono numerals in measured columns */
-  --text-cell--line-height: 1.25rem;
+  --text-cell: 0.8125rem;                      /* 13 — status column, row meta, footer */
+  --text-cell--line-height: 1.125rem;
 
-  --text-meta: 0.875rem;                       /* 14 — notes, captions, recaps, nav, desktop cells */
+  --text-meta: 0.875rem;                       /* 14 — table cells, datelines, notes */
   --text-meta--line-height: 1.25rem;
 
-  --text-body: 1rem;                           /* 16 — default reading size, team names */
+  --text-body: 1rem;                           /* 16 — prose, team names in game rows */
   --text-body--line-height: 1.5rem;
 
-  --text-lead: 1.125rem;                       /* 18 — card leads, h3 */
-  --text-lead--line-height: 1.625rem;
-  --text-lead--font-weight: 600;
+  --text-lead: 1.0625rem;                      /* 17 — every h3 / h4 */
+  --text-lead--line-height: 1.5rem;
+  --text-lead--font-weight: 700;
 
-  --text-section: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);   /* 18 → 20 — every h2 */
+  --text-score: 1.0625rem;                     /* 17 — list scores; the winner adds `font-extrabold` */
+  --text-score--line-height: 1.5rem;
+
+  --text-section: 1.375rem;                    /* 22 — every h2 */
   --text-section--line-height: 1.75rem;
-  --text-section--letter-spacing: -0.012em;
-  --text-section--font-weight: 600;
+  --text-section--letter-spacing: -0.02em;
+  --text-section--font-weight: 800;
 
-  --text-score: 1.375rem;                      /* 22 — mono tabular scores in lists */
-  --text-score--line-height: 1.75rem;
-  --text-score--font-weight: 600;
+  --text-title: 1.375rem;                      /* = text-section */
+  --text-title--line-height: 1.75rem;
+  --text-title--letter-spacing: -0.02em;
+  --text-title--font-weight: 800;
 
-  --text-title: 1.5rem;                        /* 24 — long-form h2 (About, History), board names */
-  --text-title--line-height: 2rem;
-  --text-title--letter-spacing: -0.015em;
-  --text-title--font-weight: 600;
+  --text-h1: clamp(2rem, 1.3rem + 2.2vw, 2.875rem);        /* 32 → 46 */
+  --text-h1--line-height: 1.06;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h1--font-weight: 800;
 
-  --text-h1: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);      /* 28 → 36 */
-  --text-h1--line-height: 1.15;
-  --text-h1--letter-spacing: -0.025em;
-  --text-h1--font-weight: 600;
-
-  --text-figure: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);     /* 32 → 44 — stat values */
+  --text-figure: clamp(1.75rem, 1.6rem + 0.6vw, 2rem);     /* 28 → 32 — the team page's four figures */
   --text-figure--line-height: 1;
   --text-figure--letter-spacing: -0.02em;
-  --text-figure--font-weight: 600;
+  --text-figure--font-weight: 800;
 
-  --text-display: clamp(2.5rem, 1.9rem + 2.6vw, 3.5rem);   /* 40 → 56 — the game-page score */
+  --text-display: clamp(2.75rem, 2rem + 3vw, 4.5rem);      /* 44 → 72 — the game-page score only */
   --text-display--line-height: 1;
   --text-display--letter-spacing: -0.03em;
-  --text-display--font-weight: 600;
+  --text-display--font-weight: 800;
 
   /* named layout constants */
-  --spacing-gutter:    1rem;      /* 16px phone side gutter — .sx-bleed and the measured phone
-                                     standings depend on it; never make it media-varying */
+  --spacing-gutter:    1rem;      /* 16px phone side gutter */
   --spacing-gutter-lg: 1.5rem;    /* 24px, 768–1279 */
   --spacing-gutter-xl: 2rem;      /* 32px, ≥1280 (`xl:px-gutter-xl`) */
-  --spacing-topbar:    3rem;      /* 48px phone */
+  --spacing-topbar:    3rem;      /* 48px phone, the bar's rule included */
   --spacing-topbar-lg: 4rem;      /* 64px desktop */
-  --spacing-tabbar:    3.5rem;    /* 56px — unchanged on purpose */
+  --spacing-tabbar:    3.5rem;    /* 56px */
   --spacing-divbar:    3rem;      /* 48px — /standings phone division bar */
-  --spacing-row:       4.25rem;   /* 68px two-line phone standings row */
-  --spacing-row-1:     3.25rem;   /* 52px one-line row: desktop/mini table, GameLine, game log */
-  --spacing-gamerow:   4.75rem;   /* 76px game row */
-  --spacing-section:   2.5rem;    /* 40px between sections, phone */
-  --spacing-section-lg: 3.5rem;   /* 56px between sections, ≥768 */
-  --spacing-stack:     1.5rem;    /* 24px between blocks inside a section */
-  --spacing-head:      0.75rem;   /* 12px from a heading to its content */
+  --spacing-row:       2.75rem;   /* 44px one-line row */
+  --spacing-row-1:     2.75rem;
+  --spacing-gamerow:   4.125rem;  /* 66px stacked two-line game row */
+  --spacing-section:   1.75rem;   /* 28px between sections, phone */
+  --spacing-section-lg: 2.5rem;   /* 40px between sections, ≥1024 */
+  --spacing-stack:     1.25rem;   /* 20px between blocks inside a section */
+  --spacing-head:      0.5rem;    /* 8px from a heading's rule to its content */
   --spacing-content:   75rem;     /* 1200px content max-width (padding included) */
   /* `max-w-*` reads the --container-* namespace, not --spacing-*, so the content
      cap has to be declared in both to be usable as `max-w-content`. */
   --container-content: 75rem;
-  /* The reading measure, for `max-w-prose` and `.sx-prose`. Tailwind's default is 65ch, but a
-     `ch` is the width of a "0", and Geist's figures are wide: 65ch of 16px Geist is 690px, and
-     the About prose ran 88–100 characters a line. 32em (512px at 16px) runs 63–76 — and it is
-     `em`, so a 14px `text-meta` note gets the same character count as 16px body text. */
-  --max-width-prose: 32em;
+  /* The reading measure, for `max-w-prose` and `.sx-prose`: `em`, so a 14px note gets the same
+     character count as 16px body text. For <p> only, never a cap on a section. */
+  --max-width-prose: 34em;
 
   --radius-tag:     var(--sx-r-tag);
   --radius-chip:    var(--sx-r-chip);
@@ -348,39 +288,25 @@
 }
 
 @layer base {
-  /* No sideways page scroll, ever. Nothing on the site is meant to be wider than the screen (the
-     wide things — the date rail, the division bar — scroll inside their own box), but a box that
-     is wider by a pixel or two still gave Chrome on Android a page that shifted sideways and a
-     scrollbar for a few pixels: a row that cannot shrink once Android's text scaling enlarges its
-     text, a fractional device-pixel ratio rounding a full-width box up, a visually hidden label
-     (`sr-only` is a 1px absolute box) parked at the right edge. `clip`, NOT `hidden`: `hidden`
-     on <body> makes it a scroll container, and every `position: sticky` on the site (the top
-     bar, the division bar, the table heads) would stick to <body> instead of the viewport and
-     stop sticking. `clip` only clips. On <html> the value goes to the viewport. */
+  /* No sideways page scroll, ever. `clip`, NOT `hidden`: `hidden` on <body> makes it a scroll
+     container and every `position: sticky` on the site would stop sticking. */
   html, body { overflow-x: clip; }
 
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-    /* WCAG 2.2 SC 2.4.11 Focus Not Obscured: the chrome is declared as the scroll container's own
-       padding, which fixes focus scroll, `#hash` navigation and `scrollIntoView()` in one place.
-       The top value is the TALLEST sticky stack on the site, plus 8px of air:
-         phone — 48px top bar + 48px multi-division /standings/<league> division bar (or the 48px
-           date header on /schedule/<league>, or /history's 48px jump bar);
-         ≥768  — 64px top bar + 48px /schedule date header.
-       A /schedule date group is the one target that carries its own header, so `.sx-dategroup`
-       hands those 48px back with a negative scroll-margin (below).
-       The bottom value adds 1px to the 56px tab bar so the last pixel of a focus ring clears it. */
+    /* WCAG 2.4.11 Focus Not Obscured: the chrome is the scroll container's own padding. Top = the
+       TALLEST sticky stack plus 8px of air (phone: 48px bar + a 48px division/date bar; ≥768: 64px
+       bar + 48px date header). Bottom = the 56px tab bar + 1px, so a focus ring clears it. */
     scroll-padding-top: 6.5rem;
     scroll-padding-bottom: calc(var(--spacing-tabbar) + 1px + env(safe-area-inset-bottom));
   }
   @media (min-width: 768px) {
-    /* BottomTabBar is `md:hidden`, so there is nothing at the bottom to clear from here up. */
+    /* The tab bar is hidden from 768px, so there is nothing at the bottom to clear. */
     html { scroll-padding-top: 7.5rem; scroll-padding-bottom: 0; }
   }
 
-  /* The sticky stack a sticky <thead> parks under. /standings raises it on its own wrapper
-     (phone: top bar + division bar); everything else gets the bar's own height. */
+  /* The sticky stack a sticky <thead> parks under. /standings raises it on its own wrapper. */
   :root {
     --sx-sticky-top: var(--spacing-topbar);
   }
@@ -391,9 +317,12 @@
   body {
     background: var(--sx-bg);
     color: var(--sx-text);
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.5rem;
+    /* Figures are tabular lining numerals of the same face. Never set font-feature-settings
+       "tnum" 0 on an ancestor: it silently defeats this. */
+    font-variant-numeric: tabular-nums lining-nums;
     font-synthesis-weight: none;
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
@@ -402,660 +331,564 @@
   }
   @media (min-width: 768px) { body { padding-bottom: 0; } }
 
-  /* Ragged-right that reads as set, not as overflow. */
   h1, h2, h3 { text-wrap: balance; }
   p, li, dd, dt, figcaption, blockquote { text-wrap: pretty; }
 
-  /* WCAG 1.4.1 / SC 1.4.11: a link inside a run of text is underlined. Whole-row, whole-card and
-     pill links carry `no-underline` (utilities layer) or `.sx-pill` (higher specificity). */
-  p a, li a, dd a, dt a, blockquote a, caption a, figcaption a {
+  /* ── Links are ink. Underlined in prose and for standalone actions; plain for a team name or a
+        whole-row link (underline on hover / focus). Whole-row links carry `no-underline`. ── */
+  p a, li a, dd a, dt a, blockquote a, caption a, figcaption a, .sx-link, .sx-action {
     text-decoration-line: underline;
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: from-font;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .sx-link, .sx-action, .sx-prose a { color: var(--sx-text); }
+  .sx-link:hover, .sx-action:hover { text-decoration-thickness: 2px; }
+  /* A STANDALONE action link is outside WCAG 2.5.8's inline exception, so it carries a 24px box. */
+  .sx-action { display: inline-flex; align-items: center; column-gap: 0.25em; min-height: 1.5rem; font-weight: 600; white-space: nowrap; }
+  .sx-rowlink, .sx-teamlink { color: inherit; text-decoration-line: none; }
+  .sx-rowlink:hover, .sx-teamlink:hover, .sx-rowlink:focus-visible, .sx-teamlink:focus-visible {
+    text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
+  }
+  /* `.sx-rowlink` also stretches over its row (its ::after covers the positioned row and draws the ring). */
+  .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
+  .sx-rowlink:focus-visible { outline-style: none; }
+  .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
+
+  ::selection { background: var(--sx-select); color: var(--sx-text); }
+  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible {
+    outline: 2px solid var(--sx-focus);
+    outline-offset: 2px;
   }
 
-  /* Mono is the voice of facts; Sans is the voice of names, headings and prose. */
-  .sx-num {                     /* digits that stack in a column */
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-variant-numeric: tabular-nums;
-  }
-  .sx-figure {                  /* large standalone numbers — never tabular */
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-variant-numeric: proportional-nums;
-  }
+  /* Digits that stack in a column: the SAME face, tabular (0.70em a digit at every weight, so a
+     bold winner never shifts a column). The name is kept; there is no mono face. */
+  .sx-num { font-family: inherit; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: normal; }
+  .sx-figure { font-variant-numeric: tabular-nums lining-nums; }
 
-  /* ── Section header. The class keeps its historical name (tests assert it), but it is no
-        longer a rule with an 11px mono kicker on it: it is an 18→20px sans heading sitting on
-        clear space. Space separates sections; lines only separate rows. ─────────────────── */
-  /* `nowrap`: the heading and its meta wrap together inside their own box (SectionHeader), so
-     the action link always stays on the heading's line instead of dropping onto a row alone.
-     No column gap: the action pill's own 12px padding is the space before its text, and two
-     gaps around the spacer would cost a 320px row 24px of heading. */
+  /* ── Section header (components/ui/SectionHeader.tsx renders `.sx-kicker`): the title row THEN
+        the rule. 2px ink under an h2, a hairline under an h3 / h4. ── */
   .sx-kicker {
-    display: flex; flex-wrap: nowrap; align-items: baseline;
-    column-gap: 0; row-gap: 0.125rem;
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: var(--text-section); line-height: 1.75rem; font-weight: 600;
-    letter-spacing: -0.012em; text-transform: none;
-    color: var(--sx-text);
-    border-top: 0; padding-top: 0;
-    margin-bottom: var(--spacing-head);
-    min-height: 2rem;
+    display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0.75rem;
+    margin: 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--sx-text);
+    font-size: var(--text-body); line-height: 1.5rem; color: var(--sx-text);
   }
-  /* The rule (DESIGN §7.2, R-9, restored): a section h2 sits under a 2px ink rule, an h3 under
-     a hairline. It is what tells a section from the card under it without one more box, and it
-     gives stacked headings ("Central Coast Section" / "SCVAL" / "De Anza") a visible rank. */
-  .sx-kicker:has(> div > h2) { border-top: 2px solid var(--sx-text); padding-top: 0.625rem; }
-  .sx-kicker:has(> div > h3) { border-top: 1px solid var(--sx-border-strong); padding-top: 0.5rem; }
-  /* In-card label variant (Last / Next / Splits …): 12px sans, ink-3, tight to its content. */
-  .sx-kicker.sx-kicker-label {
-    border-top: 0; padding-top: 0;
-    font-size: var(--text-micro); line-height: 1rem; letter-spacing: 0;
-    color: var(--sx-text-3); min-height: 1.25rem; margin-bottom: 0.5rem;
+  .sx-kicker:has(> div > :is(h3, h4)) { padding-bottom: 0.375rem; border-bottom: 1px solid var(--sx-border); }
+  .sx-kicker.sx-kicker-label { border-bottom: 0; padding-bottom: 0; }
+  .sx-kicker-rule { display: none; } /* the selector must exist: tests/ui/contrast.test.ts */
+  /* Rows and tables sit on the rule; running text keeps 8px of air under it. */
+  .sx-kicker + :is(p, dl, .sx-prose, .sx-inset, .sx-note) { margin-top: var(--spacing-head); }
+  .sx-section { margin-top: var(--spacing-section); }
+  @media (min-width: 64rem) { .sx-section { margin-top: var(--spacing-section-lg); } }
+
+  /* ── Masthead (components/layout/SiteHeader.tsx, TopNav.tsx, NavLink.tsx). Wordmark, nav, theme
+        button: the wordmark and the button never shrink and the nav scrolls inside its own box,
+        so nothing in the row can truncate or wrap (tests/ui/header-fit.test.ts has the widths). ── */
+  /* The bar is 48/64px INCLUDING its rule (border-box), so every sticky offset stays 48/64. */
+  .sx-mast { position: sticky; top: 0; z-index: 20; height: var(--spacing-topbar); background: var(--sx-bg); border-bottom: 1px solid var(--sx-text); }
+  .sx-mast-row {
+    display: flex; align-items: stretch; height: 100%;
+    max-width: var(--spacing-content); margin-inline: auto; padding-inline: var(--spacing-gutter);
   }
-  /* The rule is now only the flex spacer that pushes the action to the right. */
-  .sx-kicker > .sx-kicker-rule { flex: 1 1 0; min-width: 0; height: 0; background: transparent; }
-  /* A STANDALONE action link is not covered by WCAG 2.5.8's inline exception, so it carries its
-     own box: 24px is the floor; 44px where it is a primary way through the site on a phone. */
-  /* `column-gap`: a flex row drops the whitespace-only text node in `{label} <Arrow />`, so
-     without it the glyph sat flush against the word ("table→", "⚑4 missing"). 0.25em is about a
-     word space. A `gap-*` utility on the caller still wins (utilities layer). */
-  .sx-action {
-    display: inline-flex;
-    align-items: center;
-    column-gap: 0.25em;
-    min-height: 1.5rem;
+  .sx-wordmark {
+    display: inline-flex; align-items: center; flex: none; white-space: pre;
+    font-size: 1.0625rem; line-height: 1; letter-spacing: -0.02em; font-weight: 800;
+    color: var(--sx-text); text-decoration: none;
   }
-  /* Weight without width: a label whose weight follows its state (the top bar's current item,
-     components/layout/NavLink.tsx; the pressed schedule filter pill) sets its words twice, once
-     visibly and once as a hidden zero-height semibold copy from `data-label`, and is as wide as
-     the wider of the two. Without it the semibold current item was 0.5–1.6px wider than at rest,
-     so every item after it moved between pages, and a pressed filter pill 0.6–1.4px wider than
-     unpressed. `visibility: hidden` keeps the copy out of the accessibility tree; it is generated
-     content, so it is never selected, copied or found. */
-  .sx-weight-hold { display: inline-flex; flex-direction: column; align-items: center; }
+  .sx-wordmark:focus-visible { outline-offset: -4px; }
+  .sx-wordmark-tail, .sx-wordmark-abbr { font-weight: 400; }
+  .sx-wordmark-abbr { display: none; }
+  .sx-mast-nav { display: none; flex: 1 1 auto; min-width: 0; margin-left: 1.25rem; overflow-x: auto; scrollbar-width: none; }
+  .sx-mast-nav::-webkit-scrollbar { display: none; }
+  .sx-mast-nav > ul { display: flex; align-items: stretch; height: 100%; margin: 0; padding: 0; list-style: none; }
+  .sx-mast-nav li { display: flex; flex: none; }
+  .sx-navtop {
+    position: relative; display: inline-flex; align-items: center; height: 100%; padding-inline: 0.625rem;
+    font-size: 0.9375rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap;
+    color: var(--sx-text-2); text-decoration: none;
+  }
+  .sx-navtop:hover { color: var(--sx-text); }
+  .sx-navtop[aria-current], .sx-navtop:has([data-pending]) { color: var(--sx-text); font-weight: 700; }
+  .sx-navtop[aria-current]::after, .sx-navtop:has([data-pending])::after {
+    content: ""; position: absolute; left: 0.625rem; right: 0.625rem; bottom: 0; height: 4px; background: var(--sx-text);
+  }
+  .sx-navtop:focus-visible { outline-offset: -3px; }
+  .sx-mast-sep, .sx-mast-quiet { display: none !important; }
+  .sx-mast-end { display: flex; align-items: center; flex: none; margin-left: auto; margin-right: -0.75rem; }
+  @media (min-width: 48rem) {
+    .sx-mast { height: var(--spacing-topbar-lg); }
+    .sx-mast-row { padding-inline: var(--spacing-gutter-lg); }
+    .sx-wordmark { font-size: 1.1875rem; }
+    .sx-wordmark-abbr { display: inline; }
+    /* = sr-only: the full tail stays in the home link's accessible name behind the initials. */
+    .sx-wordmark-tail { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .sx-mast-nav { display: block; }
+    .sx-mast-end { margin-left: 0; }
+  }
+  @media (min-width: 64rem) {
+    .sx-wordmark-abbr { display: none; }
+    .sx-wordmark-tail { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+    .sx-mast-nav { margin-left: 1.5rem; }
+    .sx-navtop { padding-inline: 0.75rem; }
+    .sx-navtop[aria-current]::after, .sx-navtop:has([data-pending])::after { left: 0.75rem; right: 0.75rem; }
+    .sx-mast-sep { display: flex !important; width: 1px; margin: 1.375rem 0.5rem; background: var(--sx-border); }
+    .sx-mast-quiet { display: flex !important; }
+    .sx-mast-quiet .sx-navtop { font-weight: 400; color: var(--sx-text-3); }
+    .sx-mast-quiet .sx-navtop:hover { color: var(--sx-text); }
+    .sx-mast-quiet .sx-navtop[aria-current], .sx-mast-quiet .sx-navtop:has([data-pending]) { font-weight: 700; color: var(--sx-text); }
+  }
+  @media (min-width: 80rem) { .sx-mast-row { padding-inline: var(--spacing-gutter-xl); } }
+  /* Weight without width: a label whose weight follows its state sets its words twice, once visibly
+     and once as a hidden zero-height 700 copy from `data-label`, and is as wide as the wider. */
+  .sx-weight-hold { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; }
   .sx-weight-hold::after {
     content: attr(data-label);
     height: 0; overflow: hidden; visibility: hidden;
-    font-weight: 600;
+    font-weight: 700; pointer-events: none; user-select: none;
+  }
+  /* One lit item while a navigation is pending: `aria-current` only moves when the route commits,
+     so the item the reader is leaving returns to rest as soon as another is marked `data-pending`. */
+  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending])) {
+    color: var(--sx-text-2); font-weight: 500;
+  }
+  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending]))::before,
+  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending]))::after {
+    content: none;
   }
 
-  .sx-kicker > a {
-    display: inline-flex; align-items: center; min-height: 1.5rem;
-    margin-left: auto; color: var(--sx-accent);
-    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500; letter-spacing: 0;
+  /* The stale strip (LastUpdated variant="strip"): only when the data is over 36 hours old while a
+     league is still playing. Under the bar, not sticky. */
+  .sx-stale { background: var(--sx-accent-wash); color: var(--sx-text); font-size: 0.8125rem; line-height: 1.125rem; }
+  .sx-stale > p { max-width: var(--spacing-content); margin: 0 auto; padding: 0.5rem var(--spacing-gutter); }
+  .sx-stale a { margin-left: 0.5rem; color: var(--sx-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 48rem) { .sx-stale > p { padding-inline: var(--spacing-gutter-lg); } }
+  @media (min-width: 80rem) { .sx-stale > p { padding-inline: var(--spacing-gutter-xl); } }
+
+  /* ── Page header and its dateline (PageHeader.tsx, Dateline.tsx). The dateline is ordinary
+        wrapping text; only the date and time themselves stay on one line. ── */
+  .sx-pagehead { padding-top: 1.75rem; }
+  .sx-pagehead > h1 { margin: 0; }
+  .sx-dateline { margin: 0.5rem 0 0; max-width: 46rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
+  .sx-dateline b, .sx-dateline strong { font-weight: 600; color: var(--sx-text); }
+  .sx-dateline time { white-space: nowrap; }
+  @media (min-width: 64rem) { .sx-pagehead { padding-top: 2.5rem; } }
+
+  /* ── Footer (Attribution.tsx): a site index and one line. ── */
+  .sx-foot { margin-top: 4rem; border-top: 1px solid var(--sx-text); font-size: 0.8125rem; line-height: 1.25rem; color: var(--sx-text-2); }
+  .sx-foot-inner { max-width: var(--spacing-content); margin-inline: auto; padding: 0.5rem var(--spacing-gutter) 1.5rem; }
+  .sx-foot-index { display: flex; flex-wrap: wrap; gap: 0 1.25rem; margin: 0; padding: 0; list-style: none; }
+  .sx-foot-index a {
+    display: inline-flex; align-items: center; gap: 0.25em; min-height: 2.75rem;
+    font-size: 0.875rem; font-weight: 600; color: var(--sx-text); text-decoration: none;
+  }
+  .sx-foot-index a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .sx-foot-line { margin: 0.25rem 0 0; max-width: 62ch; }
+  @media (min-width: 48rem) { .sx-foot-inner { padding-inline: var(--spacing-gutter-lg); } }
+  @media (min-width: 80rem) { .sx-foot-inner { padding-inline: var(--spacing-gutter-xl); } }
+
+  /* ── Phone tab bar and its More sheet (BottomTabBar.tsx, MoreMenu.tsx). ── */
+  .sx-tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: var(--sx-bg); border-top: 1px solid var(--sx-text); padding-bottom: env(safe-area-inset-bottom);
+  }
+  .sx-tabbar > ul { display: flex; max-width: 28rem; margin: 0 auto; padding: 0; list-style: none; }
+  .sx-tabbar > ul > li { flex: 1 1 0; min-width: 0; }
+  .sx-tabbar-tab {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
+    width: 100%; height: var(--spacing-tabbar); line-height: 1; font-weight: 500;
+    color: var(--sx-text-2); text-decoration: none; cursor: pointer; list-style: none;
+    transition: background-color var(--sx-dur-tap) var(--sx-ease);
+  }
+  .sx-tabbar-tab::-webkit-details-marker { display: none; }
+  .sx-tabbar-tab:active { background: var(--sx-surface-2); }
+  .sx-tabbar-tab:is([aria-current], [data-current]), .sx-tabbar-tab:has([data-pending]), details[open] > .sx-tabbar-tab {
+    color: var(--sx-text); font-weight: 700;
+  }
+  .sx-tabbar-tab:is([aria-current], [data-current])::before, .sx-tabbar-tab:has([data-pending])::before,
+  details[open] > .sx-tabbar-tab::before {
+    content: ""; position: absolute; top: -1px; left: 22%; right: 22%; height: 4px; background: var(--sx-text);
+  }
+  .sx-tabbar-tab:focus-visible { outline-offset: -4px; }
+  .sx-more-sheet {
+    position: fixed; left: 0; right: 0; bottom: calc(var(--spacing-tabbar) + env(safe-area-inset-bottom) + 1px); z-index: 19;
+    max-height: calc(100dvh - 8rem); overflow-y: auto; background: var(--sx-bg); border-top: 1px solid var(--sx-text);
+  }
+  .sx-more-sheet > ul { margin: 0; padding: 0 var(--spacing-gutter); list-style: none; }
+  .sx-more-sheet li + li { border-top: 1px solid var(--sx-border); }
+  .sx-more-sheet a {
+    display: flex; align-items: center; justify-content: space-between; min-height: 3rem;
+    font-size: 1rem; font-weight: 600; color: var(--sx-text); text-decoration: none;
+  }
+  .sx-more-sheet a[aria-current] { box-shadow: inset 3px 0 0 var(--sx-text); padding-left: 0.75rem; }
+  .sx-more-sheet > p { margin: 0; padding: 0.75rem var(--spacing-gutter); border-top: 1px solid var(--sx-border); font-size: 0.8125rem; color: var(--sx-text-2); }
+  @media (min-width: 48rem) { .sx-tabbar { display: none; } }
+
+  /* ── Layout: main + rail, two-up, auto-fill columns. ── */
+  .sx-cols { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .sx-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 3rem; }
+  .sx-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 0 3rem; }
+  @media (min-width: 64rem) {
+    .sx-cols { grid-template-columns: minmax(0, 1fr) 22rem; }
+    .sx-cols > .sx-rail { margin-left: 2rem; padding-left: 2rem; border-left: 1px solid var(--sx-border); }
+    .sx-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 
-  /* A bracket card or pairing a game links to (components/playoffs/bracket-link.ts: `/playoffs#sds-division-2-0-1`,
-     `#mcal-qf-1`, `#scval-crossover-1`, a CCS division `#ccs-division-2`): when it is the URL's target, an accent
-     ring says "this one" after the jump. An outline, so nothing moves; rounded like the cards it rings. */
-  /* The pinned team's line in a bracket (the pin script sets `data-pinned` on its `[data-team-slug]`): a tint, not the
-     usual inset accent rule, which a winner's line already uses (2px --sx-text) and would collide with. */
-  .sx-pinnable[data-team-slug][data-pinned] {
-    background: var(--sx-accent-wash);
-    box-shadow: none;
+  /* ── Tabs: the ONE selector control (region, league, division, month, date). Text on a
+        hairline; selected = ink, 700 and a 3px ink bar. `.sx-league-chip` is the same face (the
+        name is a hook). Before hydration the scope stylesheet (components/prefs/league-scope-css.ts,
+        unlayered) draws the selected state from html[data-league]; the two must stay the same. ── */
+  .sx-tabs, .sx-scope {
+    display: flex; align-items: stretch; margin: 0; padding: 0; list-style: none;
+    border-bottom: 1px solid var(--sx-border); overflow-x: auto; scrollbar-width: none;
+  }
+  .sx-tabs::-webkit-scrollbar, .sx-scope::-webkit-scrollbar { display: none; }
+  .sx-scope { margin-top: 1.25rem; }
+  .sx-scope > [role="group"], .sx-scope > nav, .sx-tabs > ul, .sx-scope ul {
+    display: flex; align-items: stretch; flex: none; margin: 0; padding: 0; list-style: none;
+  }
+  .sx-scope li, .sx-tabs li { display: flex; flex: none; }
+  /* A switcher is its own `.sx-tabs` row when it stands alone; inside the bar, the bar owns the
+     hairline and the scrolling. */
+  .sx-scope > .sx-tabs { flex: none; border-bottom: 0; overflow: visible; }
+  .sx-scope-sep { flex: none; width: 1px; margin: 0.75rem 0.75rem 0.75rem 0.5rem; background: var(--sx-border-strong); }
+  .sx-scope-end { display: flex; align-items: center; flex: none; margin-left: auto; padding-left: 1rem; }
+  .sx-tab, .sx-league-chip {
+    appearance: none; display: inline-flex; align-items: center; flex: none; min-height: 2.75rem; padding: 0 0.5625rem;
+    border: 0; border-radius: 0; background: none; cursor: pointer;
+    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap;
+    color: var(--sx-text-2); text-decoration: none; opacity: 1;
+  }
+  .sx-tab:disabled, .sx-league-chip:disabled { color: var(--sx-text-2); cursor: default; }
+  .sx-tab:hover, .sx-league-chip:hover { color: var(--sx-text); }
+  .sx-tab:is([aria-pressed="true"], [aria-current], [aria-selected="true"]),
+  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
+    color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-text);
+  }
+  .sx-tab:focus-visible, .sx-league-chip:focus-visible { outline-offset: -3px; }
+  @media (min-width: 48rem) { .sx-tab, .sx-league-chip { padding: 0 0.75rem; } }
+  /* The drawn check of the schedule filter pills (a mask over the pill's own ink). The league and
+     region tabs no longer show one: `.sx-chip-check` goes with their check spans. */
+  .sx-check {
+    display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .sx-chip-check { display: none; }
+  /* "Jump to <SHORT>" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's call. */
+  .sx-jump { min-height: 2.75rem; font-size: var(--text-meta); line-height: 1.25rem; }
+
+  /* ── Surfaces. The page is the only surface: the old card names are flattened (no background,
+        ring, radius or padding) and kept only until the pages drop them. ── */
+  .sx-card { background: none; box-shadow: none; border-radius: 0; }
+  .sx-flush { padding: 0; }
+  .sx-bleed { margin-inline: 0; } /* no box edge to bleed past; the selector must exist (contrast.test) */
+  .sx-lift { box-shadow: none; }
+  /* The one tinted block, for a note that must stand apart. */
+  .sx-inset {
+    background: var(--sx-surface-2); border-radius: 0; padding: 0.75rem 1rem;
+    font-size: var(--text-meta); line-height: 1.25rem; color: var(--sx-text-2);
+  }
+  .sx-inset > * + * { margin-top: 0.75rem; }
+  /* A 32px strip for STICKY date and division bars only. */
+  .sx-band {
+    display: flex; align-items: baseline; gap: 0.75rem; min-height: 2rem; padding: 0.375rem 0.5rem;
+    background: var(--sx-surface-2); font-size: 0.8125rem; line-height: 1.25rem; font-weight: 700; color: var(--sx-text);
+  }
+  /* The one note under a table. */
+  .sx-note { margin: 0.5rem 0 0; max-width: 62ch; font-size: 0.8125rem; line-height: 1.1875rem; color: var(--sx-text-2); }
+
+  /* A labelled disclosure: no box, a 44px summary with a CSS chevron, a hairline below. */
+  .sx-disclosure { border-bottom: 1px solid var(--sx-border); border-radius: 0; }
+  .sx-disclosure > summary {
+    display: flex; align-items: center; gap: 0.5rem;
+    min-height: 2.75rem; cursor: pointer; list-style: none;
+    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 600;
+    color: var(--sx-text);
+  }
+  .sx-disclosure > summary::-webkit-details-marker { display: none; }
+  .sx-disclosure > summary::before {
+    content: ""; flex: none; width: 0.4375rem; height: 0.4375rem; margin-inline: 0.125rem 0.25rem;
+    border-right: 1.5px solid var(--sx-text); border-bottom: 1.5px solid var(--sx-text);
+    rotate: -45deg;
+    transition: rotate var(--sx-dur-ui) var(--sx-ease);
+  }
+  .sx-disclosure[open] > summary::before { rotate: 45deg; }
+  .sx-disclosure[open] { padding-bottom: 0.75rem; }
+  .sx-inset.sx-disclosure { border-bottom: 0; padding-block: 0; }
+  .sx-inset.sx-disclosure[open] { padding-bottom: 0.75rem; }
+
+  /* The school tile: TeamMonogram's mascot image and GhostMonogram's letters, on a 3px plate. */
+  .sx-monogram {
+    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
+    border: 1px solid var(--sx-border); border-radius: 3px;
+    font-weight: 600; line-height: 1;
+  }
+  /* A white logo square; the hairline is an inset outline, so the image is never resampled. */
+  img.sx-monogram {
+    border: 0; outline: 1px solid var(--sx-border); outline-offset: -1px;
+    border-radius: 3px; background: #fff; object-fit: contain;
   }
 
+  /* ── Buttons. One outline button, 36px (44 under a coarse pointer); the primary is ink-filled.
+        `.sx-pill*` are the old names, kept as aliases until the pages drop them. ── */
+  .sx-btn, .sx-pill {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
+    min-height: 2.25rem; padding: 0.3125rem 0.875rem;
+    border: 1px solid var(--sx-text); border-radius: var(--sx-r-control); background: transparent; cursor: pointer;
+    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600;
+    color: var(--sx-text); text-decoration: none;
+    transition: background-color var(--sx-dur-tap) var(--sx-ease);
+  }
+  .sx-btn { white-space: nowrap; }
+  a.sx-pill { color: var(--sx-text); }
+  .sx-btn:hover, .sx-pill:hover, .sx-btn:active, .sx-pill:active { background: var(--sx-surface-2); }
+  .sx-btn-primary, .sx-pill.sx-pill-accent, a.sx-pill.sx-pill-accent { background: var(--sx-text); color: var(--sx-bg); }
+  /* `!important` in this layer outranks an important UTILITY (important reverses the layer order):
+     un-migrated pages still force `text-accent-ink!` onto the old accent pill, which is now ink on ink. */
+  .sx-pill.sx-pill-accent { color: var(--sx-bg) !important; }
+  .sx-btn-primary:hover, .sx-pill.sx-pill-accent:hover, .sx-btn-primary:active, .sx-pill.sx-pill-accent:active { background: var(--sx-text-2); }
+  .sx-pill.sx-pill-ring, .sx-pill.sx-pill-card { background: transparent; box-shadow: none; }
+  @media (pointer: coarse) { .sx-btn, .sx-pill { min-height: 2.75rem; } }
+  .sx-field {
+    display: block; width: 100%; height: 2.75rem; padding: 0 0 0 1.75rem;
+    border: 0; border-bottom: 1px solid var(--sx-text); border-radius: 0;
+    background: transparent no-repeat left center / 1.125rem; font: inherit; font-size: 1rem; color: var(--sx-text);
+    /* The magnifier: a mid grey that clears 3:1 on the paper in both themes (an image cannot read a token). */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='%23808079' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7.5' cy='7.5' r='5'/%3E%3Cpath d='m11.5 11.5 4 4'/%3E%3C/svg%3E");
+  }
+  .sx-field:focus-visible { outline-offset: 0; }
+  .sx-field::placeholder { color: var(--sx-text-3); opacity: 1; }
+  .sx-select {
+    appearance: none; height: 2.75rem; padding: 0 1.25rem 0 0;
+    border: 0; border-bottom: 1px solid var(--sx-text); border-radius: 0; background: transparent;
+    font: inherit; font-size: 0.875rem; font-weight: 600; color: var(--sx-text);
+  }
+
+  /* ── Tags, flags, result marks. A tag is text only; `.sx-flag` is the one filled label (ink on
+        the highlighter); a count (`.sx-badge`, kept until the pages drop it) is plain text. ── */
+  .sx-tag {
+    display: inline; padding: 0; border: 0; background: none;
+    font-size: 0.6875rem; line-height: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--sx-text-2); white-space: nowrap;
+  }
+  /* StatusLabel: the status word as plain 13px/600 text, its tags after it. */
+  .sx-status {
+    display: inline-flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.375rem; row-gap: 0.125rem;
+    font-size: var(--text-cell); line-height: 1.125rem; font-weight: 600; color: var(--sx-text);
+  }
+  .sx-chips { display: inline-flex; max-width: 100%; flex-wrap: wrap; align-items: baseline; gap: 0.125rem 0.375rem; }
+  .sx-badge {
+    display: inline-flex; align-items: baseline; gap: 0.25rem;
+    font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-2); white-space: nowrap;
+  }
+  .sx-flag {
+    display: inline-block; padding: 1px 5px; border-radius: var(--sx-r-tag); background: var(--sx-accent-wash); color: var(--sx-text);
+    font-size: 0.6875rem; line-height: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+  }
+  /* ResultChip: hueless squares. W solid ink, L hollow, T grey; pending is the one ring. */
+  .sx-chip { display: inline-grid; place-items: center; flex: none; border: 0; border-radius: 0; font-weight: 700; line-height: 1; }
+  .sx-chip-slot { display: inline-block; flex-shrink: 0; }
+  .sx-chip-16 { width: 16px; height: 16px; font-size: 9px; }
+  .sx-chip-20 { width: 18px; height: 18px; font-size: 10px; }
+  .sx-chip-24 { width: 22px; height: 22px; font-size: 12px; }
+  .sx-chip-28 { width: 26px; height: 26px; font-size: 13px; }
+  .sx-chip-win  { background: var(--sx-win-wash);  color: var(--sx-win-ink); }
+  .sx-chip-loss { background: var(--sx-loss-wash); color: var(--sx-loss-ink); box-shadow: inset 0 0 0 1px var(--sx-loss); }
+  .sx-chip-tie  { background: var(--sx-tie-wash);  color: var(--sx-tie-ink); }
+  .sx-chip.sx-chip-pending { background: none; color: var(--sx-text-3); box-shadow: inset 0 0 0 1px var(--sx-border-strong); border-radius: 999px; }
+  .sx-bar  { background: var(--sx-bar); }
+  .sx-zero { background: var(--sx-zero); }
+  .sx-meter-track { background: var(--sx-surface-3); }
+  .sx-meter-fill  { background: var(--sx-text); }
+
+  /* ── Game row: ONE component (components/game-row/). The <li> is the query container; the grid
+        inside switches from the stacked two-line form to the one-line results row when the ROW
+        ITSELF is ≥ 40rem wide. The stretched name link makes the whole row the game link. ── */
+  .sx-games { margin: 0; padding: 0; list-style: none; }
+  .sx-games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18.75rem), 1fr)); column-gap: 3rem; }
+  .sx-game { position: relative; container-type: inline-size; border-bottom: 1px solid var(--sx-border); }
+  .sx-game:hover { background: var(--sx-surface-2); }
+  /* Inside an old `.sx-list` item the item draws the hairline. */
+  .sx-list > li > :is(.sx-game, .sx-logrow):last-child { border-bottom: 0; }
+  .sx-games-wide { --sx-score-ch: 3ch; }
+  .sx-game-grid {
+    display: grid; grid-template-columns: 4rem minmax(0, 1fr) auto; grid-template-areas: "st a as" "st h hs" "st m m";
+    column-gap: 0.75rem; align-items: center; padding: 0.5625rem 0; font-size: 1rem; line-height: 1.5rem;
+  }
+  .sx-game-status { grid-area: st; align-self: center; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 600; color: var(--sx-text); }
+  .sx-game-status > small { display: block; font-size: inherit; font-weight: 400; color: var(--sx-text-2); }
+  .sx-game-team { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-weight: 400; color: var(--sx-text-2); }
+  .sx-game-team > .sx-game-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* After a name: another league's code, or a league record before the game. */
+  .sx-game-sub { display: inline-flex; flex: none; gap: 0.375rem; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-3); }
+  .sx-game-team[data-side="away"] { grid-area: a; }
+  .sx-game-team[data-side="home"] { grid-area: h; }
+  .sx-game-team[data-won], .sx-game[data-state="upcoming"] .sx-game-team { color: var(--sx-text); }
+  .sx-game-team[data-won] { font-weight: 700; }
+  .sx-game[data-off] .sx-game-team { color: var(--sx-text-2); }
+  .sx-game-score { min-width: 1ch; text-align: right; font-size: 1.0625rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-game-score[data-side="away"] { grid-area: as; }
+  .sx-game-score[data-side="home"] { grid-area: hs; }
+  .sx-game-score[data-won] { font-weight: 800; color: var(--sx-text); }
+  .sx-game-sep { display: none; grid-area: dash; text-align: center; font-size: 0.8125rem; color: var(--sx-text-3); }
+  .sx-game-meta { grid-area: m; font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2); }
+  .sx-game-meta:empty { display: none; }
+  .sx-game-link { color: inherit; text-decoration-line: none; }
+  .sx-game-link::after { content: ""; position: absolute; inset: 0; }
+  .sx-game-link:focus-visible { outline: none; }
+  .sx-game:has(.sx-game-link:focus-visible) { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
+  @container (min-width: 40rem) {
+    .sx-game-grid {
+      grid-template-columns: 4.75rem minmax(0, 1fr) var(--sx-score-ch, 2ch) 0.75rem var(--sx-score-ch, 2ch) minmax(0, 1fr) minmax(7.5rem, auto);
+      grid-template-areas: "st a as dash hs h m"; column-gap: 0.625rem; min-height: 2.75rem; padding: 0;
+    }
+    .sx-game-status > small { display: inline; margin-left: 0.25em; }
+    .sx-game-team[data-side="away"] { flex-direction: row-reverse; text-align: right; }
+    .sx-game-score[data-side="home"] { text-align: left; }
+    .sx-game-sep { display: block; }
+    .sx-game-meta { text-align: right; white-space: nowrap; padding-left: 0.75rem; }
+    .sx-game-meta:empty { display: block; }
+  }
+  /* The team-perspective log row (GameLogRow): date, mark, score, "vs/at Opponent", note. One line. */
+  .sx-logrow {
+    position: relative; container-type: inline-size;
+    display: grid; grid-template-columns: 3.5rem 1.375rem var(--sx-log-score, 3.25rem) minmax(0, 1fr) auto;
+    column-gap: 0.625rem; align-items: center; min-height: 2.75rem; padding-block: 0.375rem;
+    border-bottom: 1px solid var(--sx-border); font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2);
+  }
+  .sx-logrow-wide { --sx-log-score: 4.5rem; }
+  a.sx-logrow:hover { background: var(--sx-surface-2); }
+  .sx-logrow-note {
+    display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 0 0.5rem;
+    font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2);
+  }
+  .sx-logrow-note:empty { display: none; }
+  /* A narrow row: the note drops under the opponent, which never gives way to it. */
+  @container (max-width: 26rem) {
+    .sx-logrow-note { grid-column: 4; justify-content: flex-start; }
+  }
+  .sx-nonleague { color: var(--sx-text-2); }
+
+  /* ── Tables. No box: 11px caps heads on a 1px ink rule (sticky), 40px rows (44 under a coarse
+        pointer), hairlines between rows. Cells are right-aligned ink-2 unless a column class says
+        otherwise: rank, team, the ONE bold sort key, an ink cell. ── */
+  .sx-table { width: 100%; border-collapse: collapse; border-spacing: 0; font-size: var(--text-meta); line-height: 1.25rem; }
+  .sx-table caption { text-align: left; }
+  .sx-table thead th {
+    position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 1;
+    padding: 0.5rem 0.5rem 0.375rem; border-bottom: 1px solid var(--sx-text); background: var(--sx-bg);
+    font-size: var(--text-kicker); line-height: 1rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    text-align: right; white-space: nowrap; color: var(--sx-text-2);
+  }
+  /* A row header (`<th scope="row">`) is a body cell, not a column head. */
+  .sx-table :is(td, tbody th) {
+    height: 2.5rem; padding: 0 0.5rem; border-bottom: 1px solid var(--sx-border);
+    text-align: right; vertical-align: middle; white-space: nowrap; color: var(--sx-text-2);
+  }
+  .sx-table tbody th { text-align: left; font-weight: inherit; }
+  .sx-table :is(th, td):first-child { padding-left: 0; }
+  .sx-table :is(th, td):last-child { padding-right: 0; }
+  .sx-table :is(th, td).sx-col-rank { width: 1.75rem; text-align: left; }
+  .sx-table :is(th, td).sx-col-team { width: 99%; text-align: left; }
+  .sx-table :is(td, tbody th).sx-col-team { font-size: 0.9375rem; font-weight: 600; color: var(--sx-text); white-space: normal; }
+  .sx-table td.sx-col-key { font-size: 0.9375rem; font-weight: 800; color: var(--sx-text); }
+  .sx-table td.sx-col-ink { color: var(--sx-text); }
+  .sx-table tbody tr:hover > :is(td, th) { background: var(--sx-surface-2); }
+  .sx-table tr.sx-cut > :is(td, th) { border-bottom: 2px solid var(--sx-text); }
+  /* "This team" on its own page: weight and an ink bar, no yellow. */
+  .sx-table tr.sx-self > :is(td, th) { font-weight: 700; color: var(--sx-text); }
+  .sx-table tr.sx-self > :is(td, th):first-child { box-shadow: inset 3px 0 0 var(--sx-text); padding-left: 0.5rem; }
+  @media (pointer: coarse) { .sx-table :is(td, tbody th) { height: 2.75rem; } }
+
+  /* ── The pinned team (`[data-pinned]` is set on a `[data-team-slug]` by the pinned-team script and
+        PinnedTeamMarks; `.sx-pinned` is the static class). A table row: the highlighter across the
+        row and a 3px bar (an inset shadow, so nothing moves). A game row or bracket line: the
+        highlighter behind the team NAME only. Never colour alone: the bar and `.sx-pin-note` say it too. ── */
+  .sx-table tr[data-team-slug][data-pinned] > :is(td, th),
+  .sx-pinned { background: var(--sx-accent-wash) !important; color: var(--sx-text); }
+  .sx-table tr[data-team-slug][data-pinned] > :is(td, th):first-child { box-shadow: inset 3px 0 0 var(--sx-pin); padding-left: 0.5rem; }
+  [data-team-slug][data-pinned]:not(tr):not(.sx-pinnable) { box-shadow: inset 3px 0 0 var(--sx-pin); background: var(--sx-accent-wash); }
+  .sx-pinnable[data-team-slug][data-pinned] .sx-game-name,
+  .sx-game-team[data-pinned] .sx-game-name {
+    background: var(--sx-accent-wash); color: var(--sx-text);
+    box-shadow: -4px 0 0 var(--sx-accent-wash), 4px 0 0 var(--sx-accent-wash);
+  }
+  /* A pinnable line with no `.sx-game-name` inside (a bracket line): the highlighter on the line. */
+  .sx-pinnable[data-team-slug][data-pinned]:not(:has(.sx-game-name)) { background: var(--sx-accent-wash); box-shadow: none; }
+  /* The non-colour channel: a visually hidden word only the pinned row announces. Every note ships
+     `hidden`, so a dropped stylesheet keeps it silent; `!important` beats preflight's `[hidden]`. */
+  .sx-pinned .sx-pin-note,
+  [data-team-slug][data-pinned] .sx-pin-note { display: inline !important; }
+  /* PinControl's "This replaces your pinned team." before hydration. TeamIdentity server-renders a
+     one-line style that sets `--sx-pin-other: none` on its own hero, so the note never paints there. */
+  html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }
+
+  /* A card or pairing a game links to (`/playoffs#mcal-qf-1`): an outline says "this one" after the jump. */
   .sx-target:target {
     outline: 2px solid var(--sx-accent);
     outline-offset: 4px;
     border-radius: 0.75rem;
   }
 
-  /* Long lists stay in the HTML without costing layout on first paint.
-     `scroll-margin-top: -3rem` cancels the 48px date header that html's scroll-padding-top
-     reserves (see `html` above): that header is the group's OWN first child, sticky inside it,
-     so a `/schedule#2026-09-16` jump (rail chip, Scores tab, pasted link) has nothing of its own
-     to clear. Without it the group landed 48px low, with half of the previous day's sticky
-     header still pinned above it.
-     With it the group's top lands at 56px on a phone (48px bar + 8px air) and 72px from 768px
-     (64 + 8), the header flush under the bar. */
+  /* Long lists stay in the HTML without costing layout on first paint. `scroll-margin-top: -3rem`
+     cancels the 48px date header that html's scroll-padding-top reserves: that header is the
+     group's OWN first child, sticky inside it. */
   .sx-dategroup {
     content-visibility: auto; contain-intrinsic-size: auto 480px;
     scroll-margin-top: -3rem;
   }
-  /* A /schedule/<league> date group (components/schedule/ScheduleList.tsx, whose comments say
-     why each line is there): its own upper height estimate from the `--sx-*` counts its `style`
-     sets, per phone row and per card row at 2-, 3- and 4-up; full-bleed on a phone with no gap
-     between days; 48px between days from 768px (32px above the first). These were nine
-     utilities, ~350 bytes on each of up to 60 groups, sent in the markup and the RSC payload.
-     (0,2,0), so the estimate replaces the flat 480px above; a `[content-visibility:visible]`
-     utility (the landing window) still wins. */
+  /* A /schedule/<league> date group's own height estimate from the counts its `style` sets
+     (components/schedule/ScheduleList.tsx): a 2rem band, then one 4.125rem stacked row per game on
+     a phone, per row of two from 768px and per row of three from 1280px (`.sx-games-grid`). */
   .sx-dategroup.sx-dategroup-est {
     margin-top: 0;
-    contain-intrinsic-size: auto calc(var(--sx-n) * var(--sx-rh) + 3.5rem);
-  }
-  @media (width < 48rem) {
-    .sx-dategroup.sx-dategroup-est { margin-inline: calc(var(--spacing-gutter) * -1); }
+    contain-intrinsic-size: auto calc(var(--sx-n) * var(--sx-rh, 4.125rem) + 2rem);
   }
   @media (width >= 48rem) {
-    .sx-dategroup.sx-dategroup-est {
-      margin-top: 3rem;
-      contain-intrinsic-size: auto calc(var(--sx-r) * var(--sx-ch) + 3.5rem);
-    }
-    .sx-dategroup.sx-dategroup-est:first-child { margin-top: 2rem; }
-  }
-  @media (width >= 64rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r3) * var(--sx-ch) + 3.5rem); }
+    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r) * var(--sx-ch, 4.125rem) + 2rem); }
   }
   @media (width >= 80rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r4) * var(--sx-ch) + 3.5rem); }
+    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r3) * var(--sx-ch, 4.125rem) + 2rem); }
   }
 
-  /* ── Surfaces. Three planes, one job each:
-        canvas (--sx-bg)        page titles and section headings;
-        card   (--sx-surface)   data — tables, game lists, tiles, details;
-        inset  (--sx-surface-2) commentary — notes, legends, disclosures, control tracks.
-        In dark, an inset that sits on the CANVAS steps down to --sx-surface: dark planes get
-        lighter as they rise, and surface-2 there was brighter than the data cards beside it, so
-        a legend outshone the scores it explains. Inside a card it stays surface-2, one step up
-        from the card. Light is unchanged (surface-2 on the canvas already reads as recessed).
-        Every ink on it is measured on --sx-surface as well (contrast.test). ──── */
-  .sx-card {
-    background: var(--sx-surface);
-    border-radius: var(--sx-r-card-lg);
-    box-shadow: var(--sx-ring), var(--sx-shadow-raised);
-  }
-  /* A card that holds rows or a table: no padding, clipped corners. `clip`, NEVER `hidden` —
-     `hidden` makes a scroll container and a sticky <thead> inside would stop sticking. Focus
-     rings inside are drawn inset so the clip cannot eat them. */
-  .sx-flush { padding: 0; overflow: clip; }
-  .sx-flush :where(a, button, input, summary, [tabindex]):focus-visible { outline-offset: -2px; }
-
-  .sx-inset {
-    background: var(--sx-surface-2);
-    border-radius: var(--sx-r-card);
-    padding: 1rem 1.125rem;
-    font-size: var(--text-meta); line-height: 1.375rem;
-    color: var(--sx-text-2);
-    @variant dark { background: var(--sx-surface); }
-  }
-  .sx-card .sx-inset { background: var(--sx-surface-2); }
-  .sx-inset > * + * { margin-top: 0.75rem; }
-
-  /* A labelled disclosure for generic legends and methodology (never for division- or
-     team-specific facts, with one deliberate exception: a team's Elo rating, an estimate the owner
-     chose to keep one tap away, DESIGN §20.2). The summary is a ≥44px target with a CSS chevron. */
-  .sx-disclosure > summary {
-    display: flex; align-items: center; gap: 0.625rem;
-    min-height: 2.75rem; cursor: pointer; list-style: none;
-    font-size: var(--text-body); line-height: 1.5rem; font-weight: 500;
-    color: var(--sx-text);
-  }
-  .sx-disclosure > summary::-webkit-details-marker { display: none; }
-  .sx-disclosure > summary::before {
-    content: ""; flex: none; width: 0.5rem; height: 0.5rem; margin-inline: 0.25rem 0.125rem;
-    border-right: 1.5px solid var(--sx-text-3); border-bottom: 1.5px solid var(--sx-text-3);
-    rotate: -45deg;
-    transition: rotate var(--sx-dur-ui) var(--sx-ease);
-  }
-  .sx-disclosure[open] > summary::before { rotate: 45deg; }
-  /* The body hangs under the summary TEXT, not under the chevron: 0.5rem chevron + 0.375rem of
-     margin + the 0.625rem gap = 1.5rem. A table (MarginStrip's "Show as table") keeps the full
-     width. Padding, not margin, so an `m-0` utility on the child cannot cancel it. */
-  .sx-disclosure > :not(summary, table) { padding-inline-start: 1.5rem; }
-  .sx-inset.sx-disclosure { padding-block: 0.25rem; }
-  .sx-inset.sx-disclosure[open] { padding-bottom: 1rem; }
-
-  /* The school tile: TeamMonogram's mascot image and GhostMonogram's letters
-     (components/ui/). One rule instead of eight utility classes on every tile: the home page alone
-     renders about a hundred of them, and the repeated class string cost it ~1.1 KB gzip. Callers'
-     className utilities still win (utilities layer). */
-  .sx-monogram {
-    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
-    border: 1px solid var(--sx-border);
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 600; line-height: 1;
-  }
-  /* The mascot tile is a white logo square, so the white shows while it loads too. The corner is a
-     quarter of the side, the same as the ghost's inline monogramRadius, without an inline style.
-     The hairline is an inset outline, not the border: a 1px border would shrink the image to 22px
-     inside a 24px tile, and the browser would resample the exact-size file (blurring it). */
-  img.sx-monogram {
-    border: 0; outline: 1px solid var(--sx-border); outline-offset: -1px;
-    border-radius: 25%; background: #fff; object-fit: contain;
-  }
-
-  /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary).
-     `padding-block` is 10px around the 20px line, so a one-line pill is still exactly 40px and a
-     label that wraps grows evenly instead of touching its edges: the EAL PDF pill on /about, and
-     Home's 2-up "Show <LEAGUE> here" buttons at 390, which are 60px rather than 44px. */
-  .sx-pill {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    min-height: 2.5rem; padding-block: 0.625rem; padding-inline: 1rem;
-    border-radius: var(--sx-r-chip);
-    background: var(--sx-surface-2); color: var(--sx-text);
-    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
-    text-decoration: none;
-    transition: background-color var(--sx-dur-tap) var(--sx-ease);
-  }
-  /* A pill that is a LINK reads as one, the same as the ExternalLink pills beside it: accent
-     text (on surface-2 6.24 / 5.35, on the surface-3 hover 5.64 / 4.72). A pill that is a
-     BUTTON (Unpin, Pin this team, More filters) keeps ink. */
-  a.sx-pill { color: var(--sx-accent); }
-  .sx-pill.sx-pill-accent { background: var(--sx-accent-wash); color: var(--sx-accent-ink); font-weight: 600; }
-  /* The canvas pill: on the page background the plain surface-2 fill barely separates, so a pill
-     there is raised to the card plane with the hairline ring and hovers and presses down to
-     surface-2 (F-56g). Height stays the caller's: `min-h-11` only where the pill is primary. */
-  .sx-pill.sx-pill-ring { background: var(--sx-surface); box-shadow: var(--sx-ring); }
-  /* The card-surface pill: on a surface-2 panel (GameRow's open panel) the plain fill would match
-     the panel and read as a bare text link, so it takes the card surface instead. It replaces the
-     `bg-surface hover:bg-surface-3 active:bg-surface-3` utilities each panel pill carried, and it
-     sits BEFORE the hover rules so they still step it to surface-3 (the press rule below already
-     outranks it). */
-  .sx-pill.sx-pill-card { background: var(--sx-surface); }
-  /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
-     surface-3 chrome plane (its hover plane, already measured above), the canvas pill to its own
-     surface-2 hover plane, and the accent pill, which keeps its wash, draws a 1px accent ring
-     inside its edge. A pill with a utility background (`bg-surface`, PinControl's
-     `data-[pinned=true]:bg-accent-wash`) carries its own `active:` utility instead — utilities
-     outrank this layer. */
-  .sx-pill:not(.sx-pill-accent):active { background: var(--sx-surface-3); }
-  .sx-pill.sx-pill-ring:active { background: var(--sx-surface-2); }
-  .sx-pill.sx-pill-accent:active { box-shadow: inset 0 0 0 1px var(--sx-accent); }
-  @media (hover: hover) {
-    .sx-pill:hover { background: var(--sx-surface-3); }
-    .sx-pill.sx-pill-ring:hover { background: var(--sx-surface-2); }
-    .sx-pill.sx-pill-accent:hover { background: var(--sx-accent-wash); text-decoration: underline; }
-  }
-  /* A small static fact pill: "as of Wed Sep 30", "3 final", a count beside a date. */
-  .sx-badge {
-    display: inline-flex; align-items: center; gap: 0.25rem;
-    height: 1.75rem; padding-inline: 0.75rem; border-radius: var(--sx-r-tag);
-    background: var(--sx-surface-2); color: var(--sx-text-2);
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 500;
-    white-space: nowrap;
-  }
-
-  /* Long-form prose (About, How it works). 32em, the same measure as `max-w-prose` (@theme). */
-  .sx-prose { font-size: var(--text-body); line-height: 1.625rem; color: var(--sx-text-2); max-width: 32em; }
+  /* Long-form prose (About). The same measure as `max-w-prose` (@theme). */
+  .sx-prose { font-size: var(--text-body); line-height: 1.625rem; color: var(--sx-text-2); max-width: 34em; }
   .sx-prose > * + * { margin-top: 1rem; }
-  /* A smaller note inside the prose (a `text-meta` aside) keeps the same ~70-character measure
-     in its OWN ems — 448px at 14px — instead of running ~83 a line across the 512px column. */
-  .sx-prose > :is(p, ul, ol) { max-width: 32em; }
-  .sx-prose h3 { margin-top: 2rem; font-size: var(--text-lead); line-height: 1.625rem; font-weight: 600; color: var(--sx-text); }
+  .sx-prose > :is(p, ul, ol) { max-width: 34em; }
+  .sx-prose h3 { margin-top: 2rem; font-size: var(--text-lead); line-height: 1.5rem; font-weight: 700; color: var(--sx-text); }
   .sx-prose h3 + * { margin-top: 0.5rem; }
   .sx-prose ul, .sx-prose ol { padding-left: 1.25rem; }
   .sx-prose li + li { margin-top: 0.5rem; }
   .sx-prose b, .sx-prose strong { font-weight: 600; color: var(--sx-text); }
 
-  /* ── Tables. A head without a fill band, divider lines between rows, and a sticky head that
-        never clips its own focus ring. ────────────────────────────────────────────────────── */
-  .sx-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    border-radius: 0;
-    background: var(--sx-surface);
-    text-align: left;
-  }
-  .sx-table caption { text-align: left; }
-  .sx-table th, .sx-table td {
-    padding-block: 0.5rem;
-    vertical-align: middle;
-  }
-  /* The 14-column desktop table: fixed layout from a <colgroup>, 52px rows, a gutter between
-     columns (6px at lg, 10px from 1280) and 20px at the card's inner edges. */
-  .sx-table-wide { table-layout: fixed; }
-  .sx-table-wide th, .sx-table-wide td { padding-block: 0.875rem; padding-inline: 0.375rem; }
-  @media (min-width: 1280px) {
-    .sx-table-wide th, .sx-table-wide td { padding-inline: 0.625rem; }
-  }
-  .sx-table-wide th:first-child, .sx-table-wide td:first-child { padding-inline-start: 1.25rem; }
-  .sx-table-wide th:last-child, .sx-table-wide td:last-child { padding-inline-end: 1.25rem; }
-  .sx-table thead th {
-    position: sticky;
-    top: var(--sx-sticky-top, 0px);
-    z-index: 1;
-    background: var(--sx-surface);
-    color: var(--sx-text-3);
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: var(--text-kicker);
-    line-height: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    height: 2.25rem;             /* 36px phone / mini */
-    padding-block: 0;
-    border-bottom: 1px solid var(--sx-border);
-  }
-  .sx-table-wide thead th { height: 2.5rem; padding-block: 0; }
-  .sx-table tbody tr { border-bottom: 1px solid var(--sx-divider); }
-  .sx-table tbody tr:last-child { border-bottom: 0; }
-  @media (hover: hover) {
-    .sx-table tbody tr:hover { background: var(--sx-surface-2); }
-  }
-  /* 2px accent left rule = the pinned team; 2px strong rule = non-league. `.sx-pinned` is the
-     home pinned card's static class (MyTeamCard); `[data-pinned]` is the localStorage pin, set on
-     a `[data-team-slug]` row or card by the pinned-team script and PinnedTeamMarks. */
-  .sx-pinned,
-  [data-team-slug][data-pinned] { box-shadow: inset 2px 0 0 var(--sx-accent); }
-  /* On a card the rule widens to 3px and is COMPOSED with the ring in the same rule, so the
-     card edge survives and no utility shadow can erase the pin. */
-  .sx-card.sx-pinned,
-  .sx-card[data-team-slug][data-pinned] {
-    box-shadow: inset 3px 0 0 var(--sx-accent), var(--sx-ring), var(--sx-shadow-raised);
-  }
-  /* The rule's non-colour channel: a visually hidden word only the pinned row announces. Every
-     note ships with the `hidden` attribute, so anything that drops this stylesheet (reader modes,
-     a failed CSS load) keeps it silent instead of saying "Your team." on every row. The reveal
-     needs `!important` to beat Tailwind preflight's `[hidden] { display: none !important }`. */
-  .sx-pinned .sx-pin-note,
-  [data-team-slug][data-pinned] .sx-pin-note { display: inline !important; }
-  /* PinControl's "This replaces your pinned team." before hydration: another team is pinned
-     (`html[data-pin]`, stamped pre-paint) and the head script did not mark THIS hero as the pinned
-     one. It ships `hidden`, so a failed stylesheet keeps it silent; after hydration React drops
-     `data-pending` and owns `hidden` itself. */
-  /* On the pinned team's OWN page the head script only marks the hero `[data-pinned]` at
-     DOMContentLoaded, so on a slow phone the note painted first and then vanished, pulling the
-     page up 28px. components/teams/TeamIdentity.tsx server-renders, before the note, a one-line
-     style for its own slug that sets `--sx-pin-other: none` on its hero when `html[data-pin]`
-     names that slug (a custom property, so it wins from outside this layer without an
-     !important of its own), and the note never paints there. */
-  html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }
-  .sx-nonleague { box-shadow: inset 2px 0 0 var(--sx-border-strong); }
-
-  /* Hover elevation for card-sized links only (TeamTile, GameCard). Shadow only — no translate. */
-  @media (hover: hover) {
-    .sx-lift { transition: box-shadow var(--sx-dur-ui) var(--sx-ease); }
-    .sx-lift:hover { box-shadow: var(--sx-ring), var(--sx-shadow-lift); }
-    .sx-lift:is(.sx-pinned, [data-team-slug][data-pinned]):hover {
-      box-shadow: inset 3px 0 0 var(--sx-accent), var(--sx-ring), var(--sx-shadow-lift);
-    }
-  }
-
-  /* ── The marks' colours live HERE, not in a `style` attribute (forced-colors must win). ── */
-  /* ResultChip (components/ui/ResultChip.tsx). The box, the kind's three colours and the size are
-     classes, not eight utilities plus a five-property `style` on every chip: /schedule/<league>
-     renders up to ~730 of them (twice per game, once per breakpoint twin) and the repeated
-     ~260 bytes went out once in the markup and again in the RSC payload. The values are what
-     those utilities and that style generated: `border` is a 1px solid edge, `font-sans
-     font-semibold leading-none rounded-tag`, the colours as the same custom properties. The faces
-     here and in `.sx-tag` / `.sx-status` are `var(--font-sans)` / `var(--font-mono)` alone: the
-     theme lists already end in a generic family (@theme above) and the `font-sans` / `font-mono`
-     utilities compile to exactly those lists, so appending one again, as the older rules in this
-     layer do, would give a different computed family list. */
-  .sx-chip {
-    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
-    border-width: 1px; border-style: solid; border-radius: var(--sx-r-tag);
-    font-family: var(--font-sans);
-    font-weight: 600; line-height: 1;
-    background: var(--sx-chip-bg);
-    border-color: var(--sx-chip-ring);
-    color: var(--sx-chip-ink);
-  }
-  .sx-chip-win  { --sx-chip-bg: var(--sx-win-wash);  --sx-chip-ring: var(--sx-win);  --sx-chip-ink: var(--sx-win-ink); }
-  .sx-chip-loss { --sx-chip-bg: var(--sx-loss-wash); --sx-chip-ring: var(--sx-loss); --sx-chip-ink: var(--sx-loss-ink); }
-  /* A tie, and the cancelled ⊘ / postponed ↻ marks, which share the tie's hueless colours. */
-  .sx-chip-tie  { --sx-chip-bg: var(--sx-tie-wash);  --sx-chip-ring: var(--sx-tie);  --sx-chip-ink: var(--sx-tie-ink); }
-  /* `pending` is the dashed circle (ResultChip's docblock). (0,2,0), so the forced-colors
-     `border: 1px solid CanvasText` below cannot turn it back into a solid square edge: when the
-     dash was a utility, the utilities layer kept it dashed there too. */
-  .sx-chip.sx-chip-pending {
-    --sx-chip-bg: transparent; --sx-chip-ring: var(--sx-border-strong); --sx-chip-ink: var(--sx-text-3);
-    border-style: dashed; border-radius: calc(infinity * 1px);
-  }
-  /* The chip's side, and its letter (20 → 12px is the smallest letter any visible surface uses).
-     `.sx-chip-slot` is the empty, invisible slot a row keeps where a side has no chip; it takes
-     the size class too, so the two line up. */
-  .sx-chip-slot { display: inline-block; flex-shrink: 0; }
-  .sx-chip-16 { width: 16px; height: 16px; }
-  .sx-chip-20 { width: 20px; height: 20px; }
-  .sx-chip-24 { width: 24px; height: 24px; }
-  .sx-chip-28 { width: 28px; height: 28px; }
-  .sx-chip.sx-chip-16 { font-size: 10px; }
-  .sx-chip.sx-chip-20 { font-size: 12px; }
-  .sx-chip.sx-chip-24 { font-size: 13px; }
-  .sx-chip.sx-chip-28 { font-size: 14px; }
-
-  /* Tag (components/ui/Tag.tsx): the 20px mono micro-tag, `NL`, `OT`, a league code. Was
-     `inline-flex shrink-0 items-center whitespace-nowrap rounded-tag font-mono text-kicker
-     uppercase h-5 px-1.5 bg-surface-3 text-ink-2` on every tag, two to four per game row.
-     `text-kicker` is 12px / 16px, 0.06em, weight 600. The corner is left to the `rounded-tag`
-     utility the element keeps, because GameRow's SummaryLead finds its tags by that class.
-     Callers' utilities (that lead's 16px height and 4px padding among them) still win. */
-  .sx-tag {
-    display: inline-flex; flex-shrink: 0; align-items: center; white-space: nowrap;
-    height: 1.25rem; padding-inline: 0.375rem;
-    background: var(--sx-surface-3); color: var(--sx-text-2);
-    font-family: var(--font-mono);
-    font-size: var(--text-kicker); line-height: 1rem; letter-spacing: 0.06em; font-weight: 600;
-    text-transform: uppercase;
-  }
-  /* StatusLabel (components/ui/StatusLabel.tsx): FINAL · SCORE NOT REPORTED · POSTPONED …, 12px
-     sans semibold caps at 0.04em; its tone stays a `text-*` utility. `.sx-chips` is GameChips,
-     the wrapping row of tags, never wider than its host. */
-  .sx-status {
-    display: inline-flex; flex-wrap: wrap; align-items: center; column-gap: 0.375rem; row-gap: 0.125rem;
-    font-family: var(--font-sans);
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .sx-chips { display: inline-flex; max-width: 100%; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
-
-  /* ── Game rows and cards (components/game-row/, DESIGN §7.4). /schedule/<league> renders
-        every game of the season twice, a phone GameRow and a ≥768px GameCard (GameList), and each
-        of these utility sets used to be repeated on every one of them: on North County's page
-        (~250 games) the class strings were ~1 MB of the markup, and the same strings went out a
-        second time in the RSC payload the page hydrates from. One class each instead, with the
-        values those utilities generated — breakpoints in rem, as Tailwind writes them (`md` is
-        48rem, the name's step-down 22.4375rem), not the 768px some older rules here use. They
-        sit in this layer, so a caller's className utility still wins. ─────────────────────── */
-  /* TeamLine: one 24px line per side, chip · monogram · name · score, 8px apart. */
-  .sx-teamline { display: flex; min-height: 1.5rem; align-items: center; gap: 0.5rem; }
-  /* The name: up to two lines, wrapping inside a long word rather than overflowing; 16px, and
-     15px on a 20px line below 359px. Its weight and ink stay `nameClass` utilities. */
-  .sx-teamname {
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
-    flex: 1; min-width: 0; overflow-wrap: break-word;
-    font-size: var(--text-body); line-height: 1.5rem;
-  }
-  /* The league record after the name: 12px mono ink-3 (`sx-num` is still on the element), dropped
-     below 359px rather than allowed to wrap the name. `text-micro` brought weight 500. */
-  .sx-teamrecord {
-    margin-left: 0.5rem; white-space: nowrap;
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 500; color: var(--sx-text-3);
-  }
-  @media (width < 22.4375rem) {
-    .sx-teamname { font-size: 0.9375rem; line-height: 1.25rem; }
-    .sx-teamrecord { display: none; }
-  }
-  /* The score column, sized to its glyph and right-aligned so scores line up down a list. */
-  .sx-teamscore { display: flex; height: 1.5rem; flex-shrink: 0; align-items: center; justify-content: flex-end; }
-
-  /* GameRow's <summary>: lead column (80px) · the two team lines · the 16px chevron, a 76px row.
-     The ring is drawn inset (the row is an edge-to-edge band), and the native marker is hidden. */
-  .sx-gamerow {
-    position: relative; display: grid; min-height: var(--spacing-gamerow);
-    grid-template-columns: 5rem minmax(0, 1fr) 1rem; align-items: center; column-gap: 0.5rem;
-    padding-inline: var(--spacing-gutter); padding-block: 0.75rem;
-    cursor: pointer; list-style-type: none;
-  }
-  .sx-gamerow:focus-visible { outline-offset: -2px; }
-  .sx-gamerow::-webkit-details-marker { display: none; }
-  /* SummaryLead's three fixed slots (GameRow's summary and Home's ResultRow): the 16px clock line,
-     the 16px status slot and the 20px chips slot. In the status slot StatusLabel (the one child
-     span) is tightened to 4px gaps, 12px lines and normal tracking, and its decider tag to 16px:
-     (0,1,1) and (0,2,0), so they outrank `.sx-status` and `.sx-tag` (0,1,0) in this layer. The tag
-     is found by its `rounded-tag` class, as the lead's own `[&_.rounded-tag]:px-1` finds it; that
-     one stays a utility, since it must also beat the postseason capsule's `px-1.5` utility. */
-  .sx-lead-clock { height: 1rem; white-space: nowrap; font-size: var(--text-cell); line-height: 1rem; color: var(--sx-text-2); }
-  .sx-lead-status { display: flex; min-height: 1rem; align-items: center; }
-  .sx-lead-status > span { column-gap: 0.25rem; line-height: 0.75rem; letter-spacing: var(--tracking-normal); }
-  .sx-lead-status .rounded-tag { height: 1rem; }
-  .sx-lead-chips { display: flex; min-height: 1.25rem; align-items: center; }
-  /* The expanded panel: surface-2 under a divider; from 768px indented to the team column
-     (gutter + the 80px lead column + its 8px gap). */
-  .sx-gamedetail {
-    display: flex; flex-direction: column; gap: 0.75rem;
-    border-top-width: 1px; border-top-style: solid; border-color: var(--sx-divider);
-    background: var(--sx-surface-2);
-    padding-inline: var(--spacing-gutter); padding-top: 0.75rem; padding-bottom: 1rem;
-    font-size: var(--text-meta); line-height: 1.25rem;
-  }
-  @media (width >= 48rem) {
-    .sx-gamedetail { padding-left: calc(var(--spacing-gutter) + 5.5rem); }
-  }
-
-  /* GameCard: a column on `.sx-card`, 16px in and 20px from 768px. The stretched "Game page" link
-     covers it, so that link's focus ring is drawn on the card, inset (a /schedule date group's
-     paint containment clips anything outside it). */
-  .sx-gamecard { position: relative; display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem; }
-  @media (width >= 48rem) {
-    .sx-gamecard { padding: 1.25rem; }
-  }
-  .sx-gamecard:has(> div > a[data-stretched]:focus-visible) {
-    outline: 2px solid var(--sx-focus); outline-offset: -2px;
-  }
-  /* The card's compact text links, 16px apart. */
-  .sx-gamecard-links { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; column-gap: 1rem; row-gap: 0.25rem; font-size: var(--text-meta); line-height: 1.25rem; }
-  /* The stretched link: its ::after covers the card (rounded to it), so the whole card is the
-     target; its own ring is off because the card draws it. */
-  .sx-stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--sx-r-card-lg); }
-  .sx-stretch:focus-visible { outline-style: none; }
-  /* A link that sits ABOVE the stretched one (Box score, NFHS stream) so it stays its own target.
-     After `.sx-action` in this layer, so its 4px gap replaces that rule's 0.25em. */
-  .sx-gamecard-extlink { position: relative; z-index: 10; gap: 0.25rem; font-weight: 500; }
-
-  /* A table row's stretched name link (components/leaders/LeaderBoardTable.tsx): its ::after
-     covers the row, and the focus ring is drawn on that ::after, inset, so a keyboard reader sees
-     the whole row a tap opens. Was nine utilities on each of ~120 rows on /leaders. */
-  .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
-  .sx-rowlink:focus-visible { outline-style: none; }
-  .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
-  .sx-bar  { background: var(--sx-bar); }
-  .sx-zero { background: var(--sx-zero); }
-  .sx-meter-track { background: var(--sx-accent-wash); }
-  .sx-meter-fill  { background: var(--sx-accent); }
-
-  /* ── Full-bleed phone lists: edge to edge below 768px, a rounded card from 768px. ── */
-  .sx-bleed {
-    margin-inline: calc(-1 * var(--spacing-gutter));
-    border-radius: 0;
-  }
-  @media (min-width: 768px) {
-    .sx-bleed { margin-inline: 0; border-radius: var(--sx-r-card-lg); }
-  }
-  /* A bled card on a phone is a band: no radius, a container line above and below. */
-  @media (max-width: 767.98px) {
-    .sx-card.sx-bleed { box-shadow: 0 -1px 0 var(--sx-border), 0 1px 0 var(--sx-border); }
-  }
-  /* `margin-block` only: `.sx-list` is declared after `.sx-bleed` in this layer, and a
-     `margin: 0` shorthand here would silently cancel the phone bleed on `sx-list sx-bleed`. */
+  /* Lists and grid cells: hairlines between rows, no box. `margin-block` only on `.sx-list`. */
   .sx-list { list-style: none; margin-block: 0; padding: 0; }
-  .sx-list > li { border-bottom: 1px solid var(--sx-divider); }
+  .sx-list > li { border-bottom: 1px solid var(--sx-border); }
   .sx-list > li:last-child { border-bottom: 0; }
-  /* A cell of a card's row-major grid list (the roster, /recruiting, /commits, /clubs: one column,
-     two from 640px, three from 1024px). Each cell draws a hairline on top, except the first row's
-     cells at each column count. GridRowFiller (components/ui/GridRowFiller.tsx) finishes a short
-     last row with the same hairline. Was eight utilities on every cell — /recruiting has ~600 — and
-     they went out in the markup and again in the RSC payload. `sm:px-4` was the 16px gutter again,
-     so the side padding is one value at every width. A list whose cells are subgrids (/commits, a
-     club page's players) keeps its `sm:row-span-* sm:grid …` utilities beside this class. */
-  .sx-gridcell {
-    min-width: 0;
-    border-top-width: 1px; border-top-style: solid; border-color: var(--sx-divider);
-    padding-inline: var(--spacing-gutter); padding-block: 0.625rem;
-  }
+  .sx-gridcell { min-width: 0; border-top: 1px solid var(--sx-border); padding-block: 0.625rem; }
   .sx-gridcell:first-child { border-top-width: 0; }
-  @media (width >= 40rem) {
-    .sx-gridcell:nth-child(2) { border-top-width: 0; }
-  }
-  @media (width >= 64rem) {
-    .sx-gridcell:nth-child(3) { border-top-width: 0; }
-  }
+  @media (width >= 40rem) { .sx-gridcell:nth-child(2) { border-top-width: 0; } }
+  @media (width >= 64rem) { .sx-gridcell:nth-child(3) { border-top-width: 0; } }
 
-  /* ── League chips (components/prefs/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
-        a 44px target, 6px of side padding and 3px between the check and the word (8px until a
-        per-league row had to fit one line at 390 with every chip carrying its check; the drawn
-        check's own 1px side bearing makes the visible gap 4px). The current chip is inverse ink +
-        the aria-hidden check (`.sx-check`) —
-        never colour alone, and no league hue anywhere (DESIGN §6.4, §26.1). Before hydration the
-        scope stylesheet (components/prefs/league-scope-css.ts, unlayered) draws the same state
-        from html[data-league]; after it, aria-pressed / aria-current do. ── */
-  .sx-league-chip {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.1875rem;
-    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.375rem;
-    border-radius: var(--sx-r-control);
-    background: var(--sx-surface-2); color: var(--sx-text-2);
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
-    text-decoration: none; white-space: nowrap;
-  }
-  .sx-league-chip:disabled { cursor: default; }
-  /* The selected chip keeps its inverse ink under the pointer: this rule is (0,3,0) and would
-     otherwise outrank the (0,2,0) selected rule below. */
-  @media (hover: hover) {
-    .sx-league-chip:not(:disabled, [aria-pressed="true"], [aria-current="page"]):hover {
-      background: var(--sx-surface-3); color: var(--sx-text);
-    }
-  }
-  /* Selected: inverse ink, the text/surface pair (18.91 / 16.43) swapped, so it needs no new
-     measurement. The check glyph stays as the non-luminance cue. */
-  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--sx-text); color: var(--sx-surface);
-  }
-  /* The check is always laid out and only shown when selected, so every chip keeps one width and
-     a selection (or a different current league) never reflows a wrapped row. Scope chips and link
-     chips both render it; anchor chips, which are never current, do not. */
-  /* The drawn check of a selector chip or pill (the league and region chips, the schedule filter
-     pills; DESIGN §15.4: inverse ink AND a check, never colour alone). U+2713 is not in the latin
-     subset of Geist that next/font serves, so a typed ✓ took its advance from a system font and
-     varied by OS. This is a fixed 0.6667em box (8px in a 12px chip, 9.3px in a 14px pill) that
-     scales with text zoom, the stroke a mask over the chip's own ink. Forced colours repaint
-     backgrounds, so there it is painted in the text colour the mode gives the chip. */
-  .sx-check {
-    display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
-    background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  }
-  @media (forced-colors: active) {
-    .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
-  }
-  .sx-chip-check { visibility: hidden; }
-  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { visibility: visible; }
-
-  /* "Jump to <SHORT> ↓" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's
-     call (`.sx-jump` hidden, `.sx-jump-<id>` shown for the effective league), unlayered. */
-  .sx-jump {
-    align-items: center; gap: 0.25rem; min-height: 2.75rem;
-    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
-    color: var(--sx-accent);
-  }
-
-  /* 120ms tap feedback. */
+  /* 120ms tap feedback; with a mouse a list row answers the pointer the way a table row does. */
   .sx-tap { transition: background-color var(--sx-dur-tap) var(--sx-ease); }
   .sx-tap:active { background: var(--sx-surface-2); }
-  /* With a mouse, a list row (GameRow's summary, GameLine, the game logs, SeasonSeries) answers
-     the pointer the way a table row does: surface-2, the plane `--sx-surface-2` documents as ROW
-     HOVER. Cards (TeamTile lifts its shadow) and pills (their own surface-3 hover) are excluded,
-     and anything with a utility hover — the pin picker's tiles, the filter chips, ThemeToggle —
-     keeps it, because utilities outrank this layer. */
   @media (hover: hover) {
-    .sx-tap:not(.sx-card, .sx-pill):hover { background: var(--sx-surface-2); }
+    .sx-tap:not(.sx-card, .sx-pill, .sx-btn):hover { background: var(--sx-surface-2); }
   }
 
-  /* A disclosure chevron (GameRow): rotates when its <details> opens. */
+  /* A disclosure chevron: rotates when its <details> opens; a LEADING one points right while closed. */
   .sx-chevron { transition: rotate var(--sx-dur-ui) var(--sx-ease); }
   details[open] > summary .sx-chevron { rotate: 180deg; }
-  /* A LEADING chevron (before the summary text, OfficialFixtures) follows `.sx-disclosure`
-     instead: it points right while closed and down when open. Add it beside `.sx-chevron` on the
-     same down-pointing glyph; it wins the open state by coming later at equal specificity. */
   .sx-chevron-lead { rotate: -90deg; }
   details[open] > summary .sx-chevron-lead { rotate: 0deg; }
 
-  /* Phone-only right-edge fade for a horizontally scrolling rail. */
+  /* Phone-only right-edge fade for a horizontally scrolling rail; dropped while the KEYBOARD is in
+     it, when the rail wraps so every chip is wholly on screen. */
   @media (max-width: 767.98px) {
     .sx-fade-x { mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); }
-    /* While the KEYBOARD is in the rail it drops the fade and wraps, so every chip is wholly on
-       screen: Chrome only scrolls a focused chip into view when it is entirely outside the
-       scrollport, so the last chips (↓ Oct 28, CCS) took focus half under the fade or past the
-       edge at 320–390. `:focus-visible` only — a tap focuses no link visibly, so at rest and
-       under a finger the rail stays one scrolling line. */
     .sx-fade-x:has(:focus-visible) { mask-image: none; flex-wrap: wrap; }
   }
 
-  /* The auto-generated recap never takes more than two lines (DESIGN §5.8). */
   .sx-clamp-2 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -1063,26 +896,16 @@
     overflow: hidden;
   }
 
-  /* CSS-only tooltip: hover AND :focus-visible, and it never gates a value.
-     `width: max-content` (capped at 14rem), NOT `min-width: max-content`: a min-width outranks
-     the max-width, so the cap never applied. And a hidden body still has a layout box: centred
-     on the right-most marks, the bodies hung past the card and widened the page by up to 43px
-     on 9 of the 15 team pages at 768–1024 (a horizontal page scroll).
-     The body is centred on its mark only in the middle of the strip: the first seven marks
-     anchor it to their LEFT edge and the last seven to their RIGHT edge, so it opens inward and
-     never reaches past the first or last column. On a strip of 14 or fewer columns every body
-     opens inward (where the two ranges overlap, the right anchor wins); a longer strip would keep
-     its middle marks centred. The counts include MarginStrip's unplayed `?` slots, which are
-     siblings of the marks. */
+  /* CSS-only tooltip: hover AND :focus-visible, and it never gates a value. `width: max-content`
+     capped at 14rem (a min-width would outrank the cap). The first seven marks anchor it to their
+     LEFT edge and the last seven to their RIGHT, so it opens inward and never widens the page. */
   .sx-tip { position: relative; }
   .sx-tip > .sx-tip-body {
     position: absolute; bottom: 100%; left: 50%; translate: -50% -6px;
     z-index: 2; width: max-content; min-width: 0; max-width: 14rem;
     padding: 0.375rem 0.625rem;
-    background: var(--sx-surface); color: var(--sx-text);
-    border-radius: var(--sx-r-chip);
-    box-shadow: var(--sx-ring), var(--sx-shadow-lift);
-    font-size: var(--text-meta); line-height: 1.25rem;
+    background: var(--sx-text); color: var(--sx-bg);
+    font-size: var(--text-cell); line-height: 1.125rem;
     opacity: 0; visibility: hidden;
     transition: opacity var(--sx-dur-tap) var(--sx-ease);
   }
@@ -1090,23 +913,6 @@
   .sx-tip:nth-last-child(-n+7) > .sx-tip-body { left: auto; right: 0; translate: 0 -6px; }
   .sx-tip:hover > .sx-tip-body,
   .sx-tip:focus-within > .sx-tip-body { opacity: 1; visibility: visible; }
-
-  ::selection { background: var(--sx-select); }
-
-  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible {
-    outline: 2px solid var(--sx-focus);
-    outline-offset: 2px;
-  }
-  /* The ring's 6px corner is a DEFAULT for elements that have no shape of their own (inline links,
-     bare buttons), so it carries zero specificity: a pill (999px), a badge or a card (16px) keeps
-     its own radius on focus and the ring follows it instead of squaring it off. */
-  :where(a, button, input, select, summary, [role="tab"], [tabindex]):where(:focus-visible) {
-    border-radius: var(--sx-r-tag);
-  }
-  /* TopNav: the 44px link is the target, the 36px capsule inside it is what you see, so the ring
-     is drawn on the capsule rather than as a rectangle around it. */
-  .sx-navtop:focus-visible { outline: none; }
-  .sx-navtop:focus-visible > .sx-indicator { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -1118,25 +924,21 @@
   }
 
   @media (forced-colors: active) {
-    /* Hue is gone. The letter, the written label and the bar's side of the zero
-       rule already carry every meaning, so nothing needs a fallback channel. */
-    .sx-chip { forced-color-adjust: none; border: 1px solid CanvasText;
-               background: Canvas; border-color: CanvasText; color: CanvasText; }
+    /* The letter, the written label and the bar's side of the zero rule already carry every
+       meaning, so nothing needs a fallback channel; fills and shadows need a real edge. */
+    .sx-chip { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; color: CanvasText; box-shadow: none; }
     .sx-bar  { forced-color-adjust: none; background: CanvasText; }
     .sx-zero { forced-color-adjust: none; background: CanvasText; }
     .sx-meter-fill { forced-color-adjust: none; background: CanvasText; }
     .sx-meter-track { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; }
-    /* box-shadow is dropped in forced colors, so every surface edge needs a real border. */
-    .sx-card, .sx-inset, .sx-pill, .sx-badge { border: 1px solid CanvasText; }
-    .sx-league-chip { border: 1px solid CanvasText; }
+    .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
+    .sx-inset, .sx-flag, .sx-band, .sx-stale { border: 1px solid CanvasText; }
+    .sx-tab:is([aria-pressed="true"], [aria-current], [aria-selected="true"]),
     .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
-    /* Any truthy `aria-current`, not only "page": a section that is lit for its descendants
-       (Teams on /teams/cupertino, Scores on /scores/[date] and /game/[id]) carries
-       `aria-current="true"`, and its capsule is a background that forced colours drop too. */
-    [aria-current]:not([aria-current="false"]) .sx-indicator { outline: 2px solid Highlight; outline-offset: -2px; }
-    /* The sticky/fixed chrome is edged by a box-shadow too: give it a real line, or content
-       scrolls under a bar with no visible boundary. */
+    /* Any truthy `aria-current`, not only "page": the lit bar is a background, which forced colours drop. */
+    [aria-current]:not([aria-current="false"]) .sx-indicator,
+    .sx-tabbar-tab[data-current], details[open] > .sx-tabbar-tab { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-chrome-top { border-bottom: 1px solid CanvasText; }
     .sx-chrome-bottom { border-top: 1px solid CanvasText; }
   }
@@ -1147,73 +949,45 @@
       An unlayered rule outranks every @layer, utilities included. ScoreBoard wraps each of its
       two glyphs in `<span class="sx-board-score">`; nothing else on the site uses that class. ── */
 .sx-board-score > .sx-num {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--text-display);
   line-height: 1;
   letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ── Unlayered on purpose: one lit tab while a navigation is pending. NavLink marks the TARGET's
-      capsule `data-pending` (useLinkStatus) the moment it is tapped, but `aria-current` only moves
-      when the route commits, so for the length of the fetch two capsules were lit. While anything
-      in the same <nav> is pending, the current item that is not itself the pending one drops to
-      the resting look. It has to beat the active item's utilities (the top bar's ink underline,
-      the tab bar's `bg-accent-wash` / `text-accent-ink`), and a rule in @layer base never can,
-      so it sits outside every layer like the score rule above. The ink is the resting nav ink (`text-ink-2`), set on the link for the tab
-      variant (whose label and glyph inherit it) and on the capsule for the top variant. Nothing
-      matches when nothing is pending, and forced colours keep the Highlight outline on
-      `aria-current` until the route actually changes. ── */
-nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])),
-nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
-  color: var(--sx-text-2);
-}
-nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
-  background: transparent;
-  box-shadow: none;
-  /* The resting weight too: the label holds its semibold width either way (`.sx-weight-hold`), so
-     dropping it moves nothing. */
-  font-weight: 500;
 }
 
 /* ── Print (unlayered, after the token blocks, so it outranks the dark blocks, every layer and the
-      unlayered scope stylesheet). Paper is always light: a dark-theme reader's page printed
-      near-white ink on white paper, since browsers drop background colours by default. The light
-      token values are copied from the `:root` block above; keep the two in step. The chrome, the
-      client-only controls, the league/region rows, the report line and the jump pills are for a
-      screen, not for paper (`.sx-print-hide` marks the server-rendered ones). Nothing sticks. ── */
+      unlayered scope stylesheet). Paper is always light: the colour tokens are the `:root` block's,
+      copied; keep the two in step. The chrome and the client-only controls are for a screen
+      (`.sx-print-hide` marks the server-rendered ones). Nothing sticks. ── */
 @media print {
   :root,
   :root[data-theme="dark"] {
     color-scheme: light;
-    --sx-bg:            #f6f7f8;
+    --sx-bg:            #ffffff;
     --sx-surface:       #ffffff;
-    --sx-surface-2:     #f2f4f6;
-    --sx-surface-3:     #e6e9ec;
-    --sx-border:        #d9dde2;
-    --sx-border-strong: #b9c0c8;
-    --sx-text:          #0e1116;
-    --sx-text-2:        #4a5461;
-    --sx-text-3:        #5d6874;
-    --sx-accent:        #1558b0;
-    --sx-accent-ink:    #0f4a96;
-    --sx-accent-wash:   #d4e1f3;
-    --sx-win:           #036a34;
-    --sx-win-ink:       #03562a;
-    --sx-win-wash:      #d5e3d8;
-    --sx-loss:          #df6860;
-    --sx-loss-ink:      #a32f28;
-    --sx-loss-wash:     #fde4e1;
-    --sx-tie:           #55606d;
-    --sx-tie-ink:       #414b56;
-    --sx-tie-wash:      #dee0e3;
-    --sx-bar:           #4a5461;
-    --sx-zero:          #b9c0c8;
-    --sx-focus:         #1558b0;
-    --sx-select:        #cbdaf0;
-    --sx-shadow-raised: 0 0 0 0 transparent;
-    --sx-shadow-lift:   0 0 0 1px rgb(14 17 22 / 0.28);
-    --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.11);
+    --sx-surface-2:     #f4f4f1;
+    --sx-surface-3:     #e8e8e3;
+    --sx-border:        #d9d9d3;
+    --sx-border-strong: #878780;
+    --sx-text:          #111111;
+    --sx-text-2:        #45453f;
+    --sx-text-3:        #5e5e57;
+    --sx-accent:        #111111;
+    --sx-accent-ink:    #111111;
+    --sx-accent-wash:   #ffd83d;
+    --sx-win:           #111111;
+    --sx-win-ink:       #ffffff;
+    --sx-win-wash:      #111111;
+    --sx-loss:          #767670;
+    --sx-loss-ink:      #45453f;
+    --sx-loss-wash:     #ffffff;
+    --sx-tie:           #767670;
+    --sx-tie-ink:       #111111;
+    --sx-tie-wash:      #e8e8e3;
+    --sx-bar:           #45453f;
+    --sx-zero:          #878780;
+    --sx-focus:         #111111;
+    --sx-pin:           #111111;
+    --sx-select:        #ffe98a;
   }
   body { background: #fff; color: #000; padding-bottom: 0; }
 
@@ -1221,6 +995,6 @@ nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([dat
 
   .sticky, [class*=":sticky"], .sx-table thead th { position: static !important; }
   .sx-dategroup { content-visibility: visible; }
-  tr, .sx-list > li, .sx-card:not(.sx-flush), .sx-inset { break-inside: avoid; }
+  tr, .sx-list > li, .sx-game, .sx-inset { break-inside: avoid; }
   h2, h3 { break-after: avoid; }
 }

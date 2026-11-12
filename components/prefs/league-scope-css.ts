@@ -16,9 +16,9 @@
  *                          it is never orphaned): hidden with no pin, no league and no stale pin.
  *                          Its HEIGHTS are not here — the component that owns the content sets them
  *                          with Tailwind arbitrary variants (SPEC §10.1).
- * - `[data-league-option="<id>"]`  the scope chips: the effective league's chip (or `all` when
- *                          there is none) is drawn selected, with its aria-hidden ✓ shown, before
- *                          hydration. Never colour alone: inverse ink + weight + the ✓.
+ * - `[data-league-option="<id>"]`  the scope tabs: the effective league's tab (or `all` when
+ *                          there is none) is drawn selected before hydration. Never colour alone:
+ *                          weight 700 and a 3px ink bar.
  *
  * The region half (DESIGN-socal §2.4), keyed off `data-region` (stamped `"socal"` only; absent =
  * NorCal):
@@ -28,8 +28,8 @@
  *                          DOM order is the reading order and every link works (CLS 0).
  * - `[data-region-scope="norcal"]` hidden when the region is SoCal (only JS can stamp that).
  * - `[data-region-option="<region>"]` the region switcher's two buttons: the effective region's is
- *                          drawn selected (the same inverse ink and ✓ as a chip) before
- *                          hydration.
+ *                          drawn selected (the same weight and bar as a league tab)
+ *                          before hydration.
  * - a deep link opens its region: a region block that IS the `:target` (`/standings#socal`) or holds
  *                          it (`/leaders#elo-rating-socal`) is shown whatever the stamp says.
  *                          `display:block`, so it is meant for block wrappers: a region-scoped flex or
@@ -45,7 +45,7 @@
  *                          which also sets `data-searching`, lifts nothing. Placed after the hide rules
  *                          and more specific than both (an id), so it needs no `!important`.
  *
- * No league hue anywhere (DESIGN §6.4): every selected state is the one inverse ink plus ✓.
+ * No league hue anywhere (DESIGN §6.4): every selected state is the one ink weight plus bar.
  * `display: none` also removes a hidden panel from the accessibility tree; DOM order stays the
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
@@ -62,11 +62,11 @@ const SOCAL = 'socal';
 const NORCAL = 'norcal';
 
 /**
- * The selected chip: inverse ink (the text/surface pair swapped), weight 600 — the same look
- * globals.css gives `.sx-league-chip[aria-pressed="true"]`, so the pre-paint state and the
- * hydrated one match.
+ * The selected tab: ink, weight 700 and a 3px ink bar — the same look globals.css gives
+ * `.sx-league-chip:is([aria-pressed="true"], [aria-current="page"])`, so the pre-paint state and
+ * the hydrated one match. Change the two together.
  */
-const SELECTED = 'background:var(--sx-text);color:var(--sx-surface);font-weight:600';
+const SELECTED = 'color:var(--sx-text);font-weight:700;box-shadow:inset 0 -3px 0 var(--sx-text)';
 
 export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   for (const id of leagueIds) {
@@ -89,17 +89,13 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   rules.push('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
   for (const id of leagueIds) {
     rules.push(`html[data-league="${id}"] [data-league-option="${id}"]{${SELECTED}}`);
-    rules.push(`html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{visibility:visible}`);
   }
   rules.push(`html:not([data-league]) [data-league-option="all"]{${SELECTED}}`);
-  rules.push('html:not([data-league]) [data-league-option="all"] .sx-chip-check{visibility:visible}');
   // The region half (DESIGN-socal §2.4), verbatim from the design.
   rules.push(`html[data-js]:not([data-region="${SOCAL}"]) [data-region-scope="${SOCAL}"]{display:none}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-scope="${NORCAL}"]{display:none}`);
   rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"]{${SELECTED}}`);
-  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{visibility:visible}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
-  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{visibility:visible}`);
   // Both deep-link rules stand down once the reader picks a region on this page view
   // (REGION_PICKED): tap `#elo-rating` on /leaders, then SoCal, and the NorCal block that holds the
   // `:target` would otherwise stay open above SoCal's, since dropping the fragment with

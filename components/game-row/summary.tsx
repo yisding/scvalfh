@@ -4,15 +4,16 @@ import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3 } from '../../lib/types';
 
 import GhostMonogram from '../ui/GhostMonogram';
-import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import StatusLabel, { GameChips } from '../ui/StatusLabel';
+import { ScoreGlyph } from '../ui/ScoreGlyph';
+import { SourceMark, statusCase } from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { clockText, otherLeagueSuffix, statusLabelIsTime, type GameDisplay, type SideView } from '../ui/describe-game';
+import { otherLeagueSuffix, type GameDisplay, type SideView } from '../ui/describe-game';
 
 /*
- * The pieces a game summary is built from: the lead column, the two team lines, and the sr-only
- * sentences for the chips and the records. GameRow and GameCard (and Home's ResultRow) render them.
+ * The pieces a game row is built from (DESIGN §33): the status cell, a side's crest, name and
+ * footnotes, the one meta item, and the sr-only sentences for the game's kind and the records.
+ * GameRow renders them in its own grid; `SummaryLead`, `SummaryTeams` and `TeamLine` are the same
+ * pieces in the two-column shape Home's ResultRow still lays out.
  *
  * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
  * scope, and NON_MEMBER_NOTE counts the registry through lib/teams. Every consumer is a server
@@ -49,9 +50,9 @@ export function recordsApply(game: Game, display: GameDisplay, showRecords: bool
 }
 
 /**
- * The game's chips in words, for a row whose visible chips sit in an aria-hidden column: " SCVAL
- * league game." / " Non-league." / " SCVAL crossover." The same gate as the chips themselves, so
- * a bracket (showChips false) does not repeat them per row.
+ * The game's kind in words, for a row whose visible meta is aria-hidden: " SCVAL league game." /
+ * " Non-league." / " SCVAL crossover." The same gate as the meta itself, so a bracket (showChips
+ * false) does not repeat it per row.
  */
 export function chipsSentence(display: GameDisplay, showChips: boolean): string {
   if (!showChips) return '';
@@ -79,20 +80,114 @@ export function recordsSentence(display: GameDisplay): string {
   return parts.length ? ` ${parts.join(', ')}.` : '';
 }
 
+/** The row's status word, in sentence case: `Final`, `3:00 PM`, `Postponed`. */
+export function statusWords(display: Pick<GameDisplay, 'statusLabel'>): string {
+  return statusCase(display.statusLabel);
+}
+
+/**
+ * The ONE meta item of a row: the seed line of a bracket game (`7 v 2`), else its round
+ * (`SCVAL crossover`), else the word `Non-league`; '' for a league game, whose heading already says
+ * it. `showChips` false (a bracket, where every game is the same kind) leaves only the seed line.
+ */
+export function gameMetaText(
+  display: Pick<GameDisplay, 'postseasonTag' | 'isNonLeague'>,
+  showChips: boolean,
+  seeds?: { away: number | null; home: number | null },
+): string {
+  if (seeds && seeds.away !== null && seeds.home !== null) return `${seeds.away} v ${seeds.home}`;
+  if (!showChips) return '';
+  return display.postseasonTag ?? (display.isNonLeague ? 'Non-league' : '');
+}
+
+/**
+ * The status cell (`.sx-game-status`): the status word, and in its `<small>` the decider (`OT`,
+ * `SO`, `F`), a shootout tally, the † of a score from another source, and the date when asked.
+ * Decorative: the row's sentence says all of it.
+ */
+export function GameStatus({
+  game,
+  display,
+  showDate = false,
+  className,
+}: {
+  game: Game;
+  display: GameDisplay;
+  showDate?: boolean;
+  className?: string;
+}) {
+  const small = [display.deciderTag, display.shootoutText, showDate ? monthDay(game.dateLocal) : null].filter(Boolean);
+  return (
+    <span className={['sx-game-status', className].filter(Boolean).join(' ')} aria-hidden="true">
+      {statusWords(display)}
+      {small.length > 0 || display.sourceMark !== null ? (
+        <small>
+          {small.join(' ')}
+          <SourceMark display={display} />
+        </small>
+      ) : null}
+    </span>
+  );
+}
+
+/** A side's crest: the school's mascot tile, or the ghost letters of a team this site does not follow. */
+export function SideCrest({ side }: { side: SideView }) {
+  const team = side.slug ? getTeamBySlug(side.slug) : undefined;
+  return team ? (
+    <TeamMonogram team={team} size={24} />
+  ) : (
+    <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
+  );
+}
+
+/**
+ * What follows a side's name in 13px ink-3: its bracket seed is NOT here (the meta carries the seed
+ * line); the league of a side from another league on a league-scoped list (`SCVAL`), and its league
+ * record before a league game (`1-4-0`, already gated by the row). A counted game never has a side
+ * from another league, so the two never stack.
+ */
+export function SideNotes({
+  side,
+  showRecord = false,
+  scopeLeague,
+}: {
+  side: SideView;
+  showRecord?: boolean;
+  scopeLeague?: LeagueId | null;
+}) {
+  const league = otherLeagueSuffix(side.slug, scopeLeague).replace(/^ · /, '');
+  const record = showRecord ? leagueRecord(side) : null;
+  if (!league && !record) return null;
+  return (
+    <span className="sx-game-sub">
+      {league}
+      {record ? <span className="sx-num">{record}</span> : null}
+    </span>
+  );
+}
+
+/** `data-won` for the winner: the name is 700 and the score 800 (winner = weight, never a mark). */
+export function wonAttr(side: Pick<SideView, 'weight'>): '' | undefined {
+  return side.weight === 'winner' ? '' : undefined;
+}
+
+/**
+ * One side as one line: crest, name, footnotes, and the score at the line's end. The two-column
+ * shape (Home's ResultRow); GameRow lays the same pieces out in its own grid. The pinned team's name
+ * takes the highlighter (`sx-pinnable` + `data-team-slug`).
+ */
 export function TeamLine({
   side,
   showScore,
-  chipSlot = true,
   monogram = true,
   showRecord = false,
   scopeLeague,
-  seed = null,
 }: {
   side: SideView;
-  /** The side's bracket seed (`GameViewOptions.seeds`), or null. */
+  /** @deprecated The meta carries the seed line (`7 v 2`). */
   seed?: number | null;
   showScore: boolean;
-  /** false drops the chip column entirely (a GameCard where neither side has a chip). */
+  /** @deprecated W/L marks are for team-perspective rows only (GameLogRow). */
   chipSlot?: boolean;
   /**
    * false drops the mascot tile: Home's ResultRow, whose page carries every league's panel in its
@@ -103,170 +198,66 @@ export function TeamLine({
   showRecord?: boolean;
   scopeLeague?: LeagueId | null;
 }) {
-  const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-  const record = showRecord ? leagueRecord(side) : null;
-  const suffix = otherLeagueSuffix(side.slug, scopeLeague);
   return (
-    // One 24px line per side: chip 20 · monogram 24 · name · score, 8px apart. The status label
-    // lives in the row's lead column, so nothing trails the score. The score column is sized to
-    // its glyph (one digit is ~13px), not reserved for two: right-aligned, the scores still line
-    // up down a list, and the name gets the slack (≈ 95px at 320, enough for "Monta Vista").
-    // A name that still does not fit wraps to a second line instead of losing its end; below
-    // 359px (22.4375rem, a rem gate so it follows the reader's text size) it also steps down to
-    // 15px so that stays rare.
-    // The name takes `nameClass`: a winner 600/ink, a loser 400/ink-2, and a LEVEL side —
-    // a tie and every game not yet decided — 400 in full ink, so an upcoming slate is not
-    // printed in the loser's grey.
-    // `.sx-teamline`, `.sx-teamname`, `.sx-teamrecord` and `.sx-teamscore` (app/globals.css,
-    // "Game rows and cards") are those measurements as classes: every list page repeats this line
-    // twice per game, and /schedule/<league> twice again (GameRow and GameCard).
-    <span className="sx-teamline">
-      {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
-      {!monogram ? null : team ? (
-        <TeamMonogram team={team} size={24} />
-      ) : (
-        <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
-      )}
-      {seed !== null ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{seed}</span> : null}
-      <span className={`sx-teamname ${nameClass(side)}`}>
-        {/* The dense row renders the SHORT name (DESIGN §3.3's wireframe writes "Mitty", not
-            "Archbishop Mitty High School"). `display.sentence` keeps the full name for a screen
-            reader. */}
-        {side.shortName}
-        {/* The other side's league, on a league-scoped list only: `Saint Francis · SCVAL`. A
-            counted game never has a side from another league, so this and the record below
-            never stack. */}
-        {suffix ? <span className="text-ink-3">{suffix}</span> : null}
-        {/* The league record rides INLINE after the name, never in the score column (which
-            stays empty until there is a score). 12px mono ink-3, so it reads as a footnote to
-            the name: "Presentation 2-4-1", the widest pair, measures 136px of the 156px a 360px
-            row leaves the name (two-digit records would add ≈ 15px and still fit).
-            Below 359px it is dropped rather than allowed to wrap the name. The row's sr-only
-            sentence carries it in words. */}
-        {record ? (
-          <span className="sx-num sx-teamrecord" aria-hidden="true">
-            {record}
-          </span>
-        ) : null}
-      </span>
-      {/* The 22px glyph's 28px line box is centred in the 24px line, so two team lines are
-          52px and the row keeps its 76px height. */}
-      {showScore ? (
-        <span className="sx-teamscore">
-          <ScoreGlyph side={side} size="score" />
-        </span>
-      ) : null}
+    <span className="sx-game-team sx-pinnable" data-team-slug={side.slug ?? undefined} data-won={wonAttr(side)}>
+      {monogram ? <SideCrest side={side} /> : null}
+      {/* The dense row renders the SHORT name; `display.sentence` keeps the full name for a screen reader. */}
+      <span className="sx-game-name">{side.shortName}</span>
+      <SideNotes side={side} showRecord={showRecord} scopeLeague={scopeLeague} />
+      {showScore ? <ScoreGlyph side={side} size="score" className="ml-auto pl-3" /> : null}
     </span>
   );
 }
 
 /**
- * The lead column of a game summary row — GameRow's `<summary>` and Home's ResultRow
- * (components/home/LatestScores.tsx), which renders this same component so the two faces of one
- * game cannot drift apart. Three FIXED slots, top to bottom:
- *
- *   clock   16px  `4:00 PM`, mono 13px; struck through for a postponed game.
- *   status  16px  the status word and its decider tag (`FINAL`, `FINAL 2 OT`, `POSTPONED`), and
- *                 the † of a si.com score. Empty for a scheduled game: its status IS the clock.
- *   chips   20px  the league / NL code (`SCVAL`, `NL`), or the postseason chip. Reserved when the
- *                 game has none, so a row with chips and a row without are one height.
- *
- * 52px in all — the two 24px team lines and their 4px gap — so the row is its 76px
- * `min-h-gamerow` whatever its labels say, and the team block never re-centres. Before, the
- * status word and the chips shared one wrapping line: FINAL + NL (64px) fitted the 80px column
- * but FINAL + SCVAL (90px) did not, so the code dropped to a third line and one /schedule list
- * mixed 76, 86, 92 and 100px rows, its names shifting a few px each time.
- *
- * Widths at 12px: FINAL is 34.5px at normal tracking and a decider tag, 4px later and with the
- * lead's 4px tag padding, at most 39.7px (`2 OT`), so `FINAL 2 OT` is 78px of the 80; the decider
- * tag is 16px tall here so it fits the 16px slot. The widest league code, SUNSET, is 55.5px. What
- * cannot fit one 80px line wraps INSIDE its slot and that row grows: SCORE NOT REPORTED (135px;
- * two 12px caps lines, an 84px row), a shootout tally, a `2 OT` tag with the † beside it, and a
- * postseason phrase, which grows into one taller capsule (GameChips).
+ * The lead column of a two-column summary row (Home's ResultRow): the status cell, with the row's
+ * one meta item under it.
  */
 export function SummaryLead({
   game,
   display,
   showDate = false,
-  showTime = true,
   showChips = true,
 }: {
   game: Game;
   display: GameDisplay;
-  /** No caller passes it today: it adds a fourth slot above the clock, and the row grows. */
   showDate?: boolean;
-  /** false drops the clock slot (the team page's expanded Last row, under its own date header). */
+  /** @deprecated The status cell is one line whatever the game's state. */
   showTime?: boolean;
   showChips?: boolean;
 }) {
-  // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so under the clock line
-  // it would only repeat it: the status slot stays empty (GameCard does the same).
-  const statusIsTime = statusLabelIsTime(game, display.statusLabel);
+  const meta = gameMetaText(display, showChips);
   return (
-    // `[&_.rounded-tag]:px-1`: every tag in the lead (decider, codes, postseason capsule) takes
-    // 4px of padding instead of 6, the 4px that lets `FINAL 2 OT` keep one line. A descendant
-    // rule, so it outranks Tag's own `px-1.5` without depending on stylesheet order.
-    <span className="flex min-w-0 flex-col [&_.rounded-tag]:px-1" aria-hidden="true">
-      {showDate ? (
-        <span className="sx-num text-cell leading-4 text-ink-2">{monthDay(game.dateLocal)}</span>
-      ) : null}
-      {showTime ? (
-        // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a
-        // final and the upcoming game under it no longer switch faces. "12:00 PM" is 62px.
-        // `display.sentence` carries PT.
-        <span
-          className={[
-            // `.sx-lead-clock` (app/globals.css): the 16px nowrap line of 13px mono ink-2.
-            'sx-num sx-lead-clock',
-            display.strikeTime ? 'line-through' : null,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        >
-          {clockText(game, 'TBA')}
-        </span>
-      ) : null}
-      {/* StatusLabel's own gap (6px), tracking (0.04em) and line (16px) are tightened from here,
-          by child rules that outrank its classes: 4px, normal tracking, 12px lines (all caps, so
-          two lines of SCORE NOT REPORTED are 24px), and a 16px decider tag. Those rules are
-          `.sx-lead-status` (app/globals.css): (0,1,1) and (0,2,0) against `.sx-status` and
-          `.sx-tag`, which are (0,1,0) in the same layer, so they still win. */}
-      <span className="sx-lead-status">
-        {statusIsTime && showTime ? null : <StatusLabel display={display} showChips={false} />}
-      </span>
-      <span className="sx-lead-chips">
-        {showChips ? <GameChips display={display} /> : null}
-      </span>
+    <span className="flex min-w-0 flex-col" aria-hidden="true">
+      {/* `self-start`: the cell centres itself in GameRow's grid; in this column that would centre it sideways. */}
+      <GameStatus game={game} display={display} showDate={showDate} className="self-start" />
+      {meta ? <span className="sx-game-meta">{meta}</span> : null}
     </span>
   );
 }
 
-/**
- * The two team lines of a summary row, away over home (GameRow, Home's ResultRow). 24px each,
- * 4px apart: the 52px block SummaryLead's slots are measured against.
- */
+/** The two team lines of a summary row, away over home (Home's ResultRow). */
 export function SummaryTeams({
   display,
   showRecords = false,
   scopeLeague = null,
   monogram = true,
-  seeds,
 }: {
   display: GameDisplay;
   showRecords?: boolean;
   scopeLeague?: LeagueId | null;
   monogram?: boolean;
+  /** @deprecated The meta carries the seed line. */
   seeds?: { away: number | null; home: number | null };
 }) {
   return (
-    <span className="min-w-0 space-y-1" aria-hidden="true">
+    <span className="flex min-w-0 flex-col" aria-hidden="true">
       <TeamLine
         side={display.away}
         showScore={display.showScores}
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
-        seed={seeds?.away ?? null}
       />
       <TeamLine
         side={display.home}
@@ -274,7 +265,6 @@ export function SummaryTeams({
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
-        seed={seeds?.home ?? null}
       />
     </span>
   );

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Public_Sans } from 'next/font/google';
 
 import Attribution from '../components/layout/Attribution';
 import BottomTabBar from '../components/layout/BottomTabBar';
@@ -20,67 +20,25 @@ import { LEAGUE_IDS, regionOf } from '../lib/leagues';
 import './globals.css';
 
 /**
- * Two self-hosted families, both preloaded and both `display: 'swap'`, so text is never invisible
- * and neither face arrives late.
+ * ONE self-hosted family, Public Sans (variable, 100–900), preloaded and `display: 'swap'`, so text
+ * is never invisible (DESIGN §33). Figures are tabular lining numerals of the same face (`body` and
+ * `.sx-num` in app/globals.css): there is no mono face any more.
  *
- * Together they are 53 KB of the critical path (sans 29.6 KB, mono 23.4 KB) — the largest line
- * item after the framework's own JS, and the reason DESIGN §13's "`/` under 120 KB gzipped
- * including fonts" cannot be met. `preload: false` on the mono face was measured as a way to buy
- * that back and does NOT: mono is the numeral and tag face, so `.sx-num` and `Tag` ask
- * for it above the fold on every route, and the browser fetches it the moment the stylesheet is
- * applied whether or not a preload hint pointed at it — `/` measured 236.3 KB with the hint
- * removed against 236.8 KB with it, i.e. the ~550 bytes of the `<link>` itself. All it actually
- * changes is WHEN the scores get their real glyphs. Dropping the family outright would save the
- * 23 KB and is the one thing not on the table: mono numerals are the type system (DESIGN §4.2).
- * The budget is restated against the framework floor instead — see the note at the top of
- * docs/DESIGN.md.
- */
-/*
- * The fallbacks are what the text is set in until the faces land (and for good if they never do),
- * so they are chosen for WIDTH, not just for being present. Each list is written inline, not as a
- * shared const: vinext's font plugin reads these options from the source and only self-hosts a
- * call whose object is all literals (node_modules/vinext/dist/plugins/fonts.js).
+ * The options are written inline as literals, not as a shared const: vinext's font plugin reads
+ * them from the source and only self-hosts a call whose object is all literals
+ * (node_modules/vinext/dist/plugins/fonts.js).
  *
- * Sans keeps next/font's metric-adjusted "Geist Fallback" (Arial at size-adjust 104.76%) and
- * takes NO `fallback` list: under Turbopack a `fallback` REPLACES the adjusted face rather than
- * following it (the built CSS lost "Geist Fallback" altogether; webpack and vinext keep both).
- * The generic tail (`ui-sans-serif, system-ui, sans-serif`) is appended where the variable is
- * used instead, by `--font-sans` in app/globals.css' @theme and by `body`, so a reader without
- * Arial (Android, most Linux) still gets a sans. The bold twin of "Geist Fallback" (600–900) is
+ * It keeps next/font's metric-adjusted "Public Sans Fallback" (Arial, size-adjusted) and takes NO
+ * `fallback` list: under Turbopack a `fallback` REPLACES the adjusted face rather than following
+ * it. The generic tail (`ui-sans-serif, system-ui, sans-serif`) is appended where the variable is
+ * used instead, by `--font-sans` in app/globals.css' @theme, so a reader without Arial (Android,
+ * most Linux) still gets a sans. The bold twin of "Public Sans Fallback" (600–900) is
  * app/globals.css' own @font-face.
- *
- * Mono drops the adjusted fallback (`adjustFontFallback: false`). next/font only knows Arial's and
- * Times' metrics, so its "Geist Mono Fallback" was Arial at size-adjust 134.59%: a proportional
- * face blown up until its AVERAGE advance matched, which set tags 27–29% and `.sx-num` figures
- * 6–21% wider than Geist Mono until it loaded (measured on /, /schedule/scval and
- * /teams/cupertino, Arial simulated), and not monospaced at all. A system monospace has Geist
- * Mono's 0.6em advance, so the fallback is one: app/globals.css declares "Geist Mono Fallback"
- * (SF Mono, Menlo, Liberation Mono, DejaVu Sans Mono … with Geist Mono's line metrics) and
- * "Geist Mono Fallback Narrow" (Consolas, size-adjusted from 0.55em), then the named families and
- * the generic follow for a reader with neither. Measured with the faces blocked: 0.0% width change
- * on the swap.
  */
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const publicSans = Public_Sans({
+  variable: '--font-public-sans',
   subsets: ['latin'],
   display: 'swap',
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'swap',
-  adjustFontFallback: false,
-  fallback: [
-    'Geist Mono Fallback',
-    'Geist Mono Fallback Narrow',
-    'ui-monospace',
-    'SFMono-Regular',
-    'Menlo',
-    'Consolas',
-    'Liberation Mono',
-    'monospace',
-  ],
 });
 
 export const metadata: Metadata = {
@@ -141,7 +99,7 @@ const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const snapshotAt = getFetchedAt();
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={publicSans.variable} suppressHydrationWarning>
       <head>
         {/* ~300 bytes, blocking, before first paint: stamps data-theme so an explicit
             Light/Dark choice never flashes the other theme, and gives the browser chrome the
@@ -168,7 +126,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-30 focus:rounded-chip focus:bg-surface focus:px-3 focus:py-2 focus:text-meta focus:text-accent-ink"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-30 focus:bg-ink focus:px-3 focus:py-2 focus:text-meta focus:font-semibold focus:text-bg"
         >
           Skip to content
         </a>

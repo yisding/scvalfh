@@ -127,14 +127,14 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   const osDark = useSyncExternalStore(subscribeOsScheme, osIsDark, serverOsIsDark);
   const next = nextTheme(theme, osDark);
 
-  // The focus ring is drawn 2px INSIDE the 44px circle: at the default 2px outside, it ran 2px
-  // past the top and bottom of the 48px phone bar.
+  // A plain 44px icon button, no fill. The focus ring is drawn 2px INSIDE the box: at the default 2px
+  // outside, it ran past the top and bottom of the 48px phone bar.
   return (
     <button
       type="button"
       onClick={() => applyTheme(next)}
       className={[
-        'sx-js-only sx-tap relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink focus-visible:-outline-offset-2',
+        'sx-js-only relative inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center text-ink-2 hover:text-ink focus-visible:-outline-offset-2',
         className,
       ]
         .filter(Boolean)

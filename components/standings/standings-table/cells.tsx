@@ -12,17 +12,15 @@ import { DIFF_WORDS } from '../../words/score-words';
 import type { StandingsColumn, StandingsRowData, StandingsTableProps } from './types';
 
 /**
- * The cells and per-row words the faces of the league table share (PhoneStandingsTable,
- * DesktopStandingsTable, MiniStandingsTable, ArchiveStandingsTable), and the notes under it
+ * The cells and per-row words of the league table (StandingsTable.tsx) and the notes under it
  * (notes.tsx).
  */
 
 /**
  * The league W-L-T, with a † after it when this team's record includes a score published from
  * si.com (SPEC §7.9). The † hangs: it is placed just past the record's last digit and takes no
- * width, so it sits in the cell's right padding (8px on a phone, 6/10px on desktop; the glyph is
- * about 8px of 13px mono) and a marked record's digits right-align with every other row's. As an
- * inline glyph it pushed them 7.8px left (8.4 from 1280) of the unmarked rows on /standings/pcal.
+ * width, so it sits in the cell's right padding and a marked record's digits right-align with
+ * every other row's.
  */
 export function LeagueRecord({ record, context }: { record: string; context: StandingContext | undefined }) {
   if (!context || context.backfilled === 0) return <>{record}</>;
@@ -63,36 +61,30 @@ export function tableName(division: DivisionId): string {
 }
 
 /**
- * The colour comes from the cell (rank is ink-3 in every variant). '1', 'T7' for a shared place,
- * an em dash for a team with no reported results. `whitespace-nowrap`: the phone and mini place
- * column is 20px of content at 320 and "T7" is ~16px of 13px mono, so it must never break into
- * a "T" over a "7".
+ * '1', 'T7' for a shared place, an em dash for a team with no reported results. The colour and the
+ * figures come from the cell. `whitespace-nowrap` (PlaceMark): "T7" must never break into a "T"
+ * over a "7".
  */
 export function PlaceCell({ standing }: { standing: Standing }) {
   return (
-    <PlaceMark
-      place={standing.computed.place}
-      shared={standing.tiebreak.shared}
-      ranked={standing.hasReportedResults}
-      className="sx-num"
-    />
+    <PlaceMark place={standing.computed.place} shared={standing.tiebreak.shared} ranked={standing.hasReportedResults} />
   );
 }
 
 /**
- * The ⚑ beside a team name. It is `aria-hidden` and paired with an sr-only sentence, because the
- * glyph alone means nothing read aloud and the detail lives in a footnote under the table.
+ * The † after a team name MaxPreps publishes differently. It is `aria-hidden` and paired with an
+ * sr-only sentence, because the mark alone means nothing read aloud and the detail is in the note
+ * under the table. `relative`: it sits above the row's stretched link only in paint order, the link
+ * still takes the click.
  */
 export function FlagMark({ name }: { name: string }) {
   return (
     <>
-      {/* -ml-1: the flag hugs the name (4px, not the row's 8px gap), which is the last few pixels
-          a flagged "Monta Vista" needs to stay whole in the 320px phone row. */}
-      <span className="-ml-1 shrink-0 text-ink-3" aria-hidden="true">
-        &#9873;
+      <span className="-ml-1.5 shrink-0 font-normal text-ink-2" aria-hidden="true">
+        &dagger;
       </span>
       <span className="sr-only">
-        Flagged: MaxPreps publishes a different row for {name}; see the notes under this table.
+        Flagged: MaxPreps publishes a different row for {name}; see the note under this table.
       </span>
     </>
   );
@@ -102,8 +94,8 @@ export function FlagMark({ name }: { name: string }) {
  * A column-head abbreviation: the short form is what a sighted reader scans ("GF"), the long form
  * is what a screen reader announces with every cell it reaches in that column ("Goals for") —
  * a bare "G F" or "P C T" spelled out on every cell is noise. The sr-only span is
- * `position: absolute`, so the `<th>` holding it must be positioned: every sticky head already
- * is; a static one (the mini table's) carries `relative`.
+ * `position: absolute`, so the `<th>` holding it must be positioned: every `.sx-table` head is
+ * sticky.
  */
 export function Abbr({ short, long }: { short: string; long: string }) {
   return (
@@ -119,7 +111,7 @@ export function dash(value: number | null, hasResults: boolean, render = (v: num
   return render(value);
 }
 
-/** The row link's name (StretchedRowLink, components/ui/PinNote.tsx), after the pin note. */
+/** The row link's name (TeamRowLink, components/ui/PinNote.tsx), after the pin note. */
 export function rowLabel(row: StandingsRowData): string {
   const { standing, team } = row;
   if (!standing.hasReportedResults) return `${team.name}: no results reported yet`;
@@ -130,7 +122,7 @@ export function rowLabel(row: StandingsRowData): string {
   )}, ${orderValueWords(leagueOfDivision(team.division).rules, standing.computed)}`;
 }
 
-/** The ⚑ mark, shown on any row MaxPreps publishes differently. */
+/** Whether MaxPreps publishes this row differently (the † after the name). */
 export function isFlagged(row: StandingsRowData, flagged: Set<TeamSlug>): boolean {
   return row.standing.mismatch || flagged.has(row.team.slug);
 }
@@ -149,7 +141,6 @@ export function NoGoalDiff() {
 
 /** What the table bodies derive from the props before rendering a row. */
 export function tableRows(props: StandingsTableProps) {
-  const { berthRuleAfter } = props;
   const flagged = new Set<TeamSlug>(props.flaggedSlugs ?? []);
   const context = props.context;
   const columns = new Set<StandingsColumn>(context ? (props.columns ?? []) : []);
@@ -157,18 +148,12 @@ export function tableRows(props: StandingsTableProps) {
   // Every row of a table shares its division's schedule, so one null `scheduled` means none is fixed.
   const fixedSchedule = props.rows.every((row) => ctx(row)?.scheduled !== null);
 
-  // The pinned team's 2px accent left rule has one channel. The pages are static and the pin lives
-  // in localStorage, so every row carries `data-team-slug`, and the pinned-team head script
-  // (components/prefs/pinned-team-script.ts, run from app/layout.tsx's <head>; then
-  // components/prefs/PinnedTeamMarks.tsx after a client navigation) sets `[data-pinned]` on the
-  // matching row.
-  // The 2px automatic-qualifier cut: the one deliberately strong line in the table.
-  const cut = (index: number) =>
-    berthRuleAfter && index + 1 === berthRuleAfter
-      ? { borderBottom: '2px solid var(--sx-border-strong)' }
-      : undefined;
+  // The pages are static and the pin lives in localStorage, so every row carries `data-team-slug`,
+  // and the pinned-team head script (components/prefs/pinned-team-script.ts, run from
+  // app/layout.tsx's <head>; then components/prefs/PinnedTeamMarks.tsx after a client navigation)
+  // sets `[data-pinned]` on the matching row.
   const hrefOf = (row: StandingsRowData) => row.href ?? `/teams/${row.team.slug}`;
   const formLabel = (row: StandingsRowData) =>
     formStripName(row.team.name, row.standing.computed.last5.length);
-  return { flagged, columns, ctx, fixedSchedule, cut, hrefOf, formLabel };
+  return { flagged, columns, ctx, fixedSchedule, hrefOf, formLabel };
 }

@@ -9,12 +9,13 @@ import { usePinnedTeam } from './use-pinned-team';
  * `label` is the team's pin label, built by the caller with `pinLabel()` from components/words/pin-label.ts
  * (`Pin Leigh, Mt. Hamilton · BVAL`, `Pin Tamalpais, MCAL`), so this module never reaches the
  * registry or the league config (the client boundary, SPEC §0.4). It names the team in the
- * button's accessible name: the visible words come first ("Pin this team" / "Unpin this team",
- * WCAG 2.5.3, the same verb as Home's "Unpin"), followed by the team in an sr-only suffix.
+ * button's accessible name: the visible words come first ("Pin this team" / "Pinned", WCAG 2.5.3;
+ * the pinned one continues ". Unpin this team", the same verb as Home's "Unpin"), followed by the
+ * team in an sr-only suffix.
  *
  * The button is an ACTION, not a toggle: there is no `aria-pressed`. The label already says what a
- * tap will do, and "Pinned … pressed" announced the state twice. The filled star and the wash are
- * the visual twin of the words, keyed on `data-pinned`.
+ * tap will do, and "Pinned … pressed" announced the state twice. The filled star and the ink fill
+ * (`sx-btn sx-btn-primary`, with the word "Pinned") are the visual twin of the words, keyed on `data-pinned`.
  *
  * The button reserves its footprint server-side and stays `invisible` until the stored pin has been
  * read, so it never shows the wrong state and the swap costs no layout shift. Without JS the whole
@@ -79,23 +80,18 @@ export function PinControl({
         type="button"
         onClick={() => toggle(slug, leagueId)}
         data-pinned={isPinned}
-        // Pinned reads as pinned: accent-ink on the accent wash (6.5 / 7.55), the
-        // `.sx-pill-accent` pairing, held on hover too (a utility outranks the base hover rule).
-        // Unpinned stays the neutral grey pill. The words change as well ("Unpin this team").
+        // One button (`.sx-btn`); pinned is the ink-filled primary and says "Pinned" (the action,
+        // "Unpin this team", follows for a screen reader), so the state is never colour alone.
         //
-        // The press itself darkens the unpinned pill to surface-3: `.sx-tap:active` paints
-        // surface-2, which IS the pill's resting colour, so a tap gave no feedback at all. It is
-        // scoped to `data-pinned="false"` so it can never paint over the pinned wash, whatever
-        // order Tailwind emits the two variants in.
-        //
-        // `md:min-w-40` (160px, wider than either label: "Unpin this team" measures 159.5px): from
-        // 768px the button is `w-auto` at the card's right edge, so a label swap that changed its
-        // width moved its LEFT edge under the pointer. On a phone it is full width already.
+        // `md:min-w-40` (160px, wider than either label): from 768px the button is `w-auto` at the
+        // block's right edge, so a label swap that changed its width moved its LEFT edge under the
+        // pointer. On a phone it is full width already.
         //
         // `invisible` until the stored pin has been read: the footprint stays and the state is
         // never guessed. (Without JS the wrapper's `sx-js-only` drops the whole control.)
         className={[
-          'sx-pill sx-tap min-h-11 justify-center font-semibold data-[pinned=false]:active:bg-surface-3 data-[pinned=true]:bg-accent-wash data-[pinned=true]:text-accent-ink w-full md:w-auto md:min-w-40',
+          isPinned ? 'sx-btn sx-btn-primary' : 'sx-btn',
+          'min-h-11 w-full md:w-auto md:min-w-40',
           ready ? null : 'invisible',
         ]
           .filter(Boolean)
@@ -108,7 +104,6 @@ export function PinControl({
           height="16"
           viewBox="0 0 16 16"
           aria-hidden="true"
-          className={isPinned ? 'text-accent-ink' : 'text-ink-2'}
           fill={isPinned ? 'currentColor' : 'none'}
           stroke="currentColor"
           strokeWidth="1.4"
@@ -116,7 +111,10 @@ export function PinControl({
         >
           <path d="M8 1.6l1.95 4.02 4.43.6-3.23 3.08.8 4.4L8 11.6l-3.95 2.1.8-4.4L1.62 6.22l4.43-.6z" />
         </svg>
-        <span>{isPinned ? 'Unpin this team' : 'Pin this team'}</span>
+        <span>
+          {isPinned ? 'Pinned' : 'Pin this team'}
+          {isPinned ? <span className="sr-only">. Unpin this team</span> : null}
+        </span>
         <span className="sr-only">
           {' '}
           &mdash; {team}, {isPinned ? 'pinned' : 'saved'} in this browser only
