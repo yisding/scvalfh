@@ -1,5 +1,5 @@
 import { getStandingFor } from '../../lib/data';
-import { monthDay, recordString, recordWords } from '../../lib/format';
+import { monthDay, recordWords } from '../../lib/format';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3 } from '../../lib/types';
 
@@ -7,13 +7,13 @@ import GhostMonogram from '../ui/GhostMonogram';
 import { ScoreGlyph } from '../ui/ScoreGlyph';
 import { SourceMark, statusCase } from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
-import { otherLeagueSuffix, type GameDisplay, type SideView } from '../ui/describe-game';
+import type { GameDisplay, SideView } from '../ui/describe-game';
 
 /*
- * The pieces a game row is built from (DESIGN §33): the status cell, a side's crest, name and
- * footnotes, the one meta item, and the sr-only sentences for the game's kind and the records.
- * GameRow renders them in its own grid; `SummaryLead`, `SummaryTeams` and `TeamLine` are the same
- * pieces in the two-column shape Home's ResultRow still lays out.
+ * The pieces a game row is built from (DESIGN §33): the status slot, a side's logo, the note line's
+ * parts (shootout, competition, venue), and the sr-only sentences for the game's kind and the
+ * records. GameRow renders them in its own grid; `SummaryLead`, `SummaryTeams` and `TeamLine` are
+ * the same pieces in the two-column shape Home's ResultRow still lays out.
  *
  * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
  * scope, and NON_MEMBER_NOTE counts the registry through lib/teams. Every consumer is a server
@@ -33,11 +33,6 @@ function leagueStanding(side: SideView): Record3 | null {
   if (!side.slug) return null;
   const standing = getStandingFor(side.slug);
   return standing && standing.hasReportedResults ? standing.computed : null;
-}
-
-function leagueRecord(side: SideView): string | null {
-  const computed = leagueStanding(side);
-  return computed ? recordString(computed) : null;
 }
 
 /**
@@ -86,43 +81,121 @@ export function statusWords(display: Pick<GameDisplay, 'statusLabel'>): string {
 }
 
 /**
- * The ONE meta item of a row: the seed line of a bracket game (`7 v 2`), else its round
- * (`SCVAL crossover`), else the word `Non-league`; '' for a league game, whose heading already says
- * it. `showChips` false (a bracket, where every game is the same kind) leaves only the seed line.
+ * The competition of a game, for a row in a list that is NOT grouped by competition: its round
+ * (`SCVAL crossover`), else the word `Non-league`; '' for a league game. `showChips` false (a list
+ * under a competition's own strip, a bracket) leaves it out. The `seeds` argument is historical:
+ * seeds are printed after each name (`#7`), never as a "7 v 2" line.
  */
 export function gameMetaText(
   display: Pick<GameDisplay, 'postseasonTag' | 'isNonLeague'>,
   showChips: boolean,
   seeds?: { away: number | null; home: number | null },
 ): string {
-  if (seeds && seeds.away !== null && seeds.home !== null) return `${seeds.away} v ${seeds.home}`;
+  void seeds;
   if (!showChips) return '';
   return display.postseasonTag ?? (display.isNonLeague ? 'Non-league' : '');
 }
 
+/** The four states a row can be in. A final nobody reported, a postponed and a cancelled game are `off`. */
+export type RowState = 'final' | 'live' | 'upcoming' | 'off';
+
+export function rowState(game: Pick<Game, 'status'>, display: Pick<GameDisplay, 'kind'>): RowState {
+  if (game.status === 'live') return 'live';
+  if (display.kind === 'scheduled') return 'upcoming';
+  return display.kind === 'final' ? 'final' : 'off';
+}
+
 /**
- * The status cell (`.sx-game-status`): the status word, and in its `<small>` the decider (`OT`,
- * `SO`, `F`), a shootout tally, the † of a score from another source, and the date when asked.
- * Decorative: the row's sentence says all of it.
+ * Where a game still to play is: `at Los Altos`. The host is the home side unless the site is
+ * neutral; a venue name from the game's own page, or a MaxPreps location note written as a place
+ * (`@ Saint Francis`), wins over it. (`venue.text` is otherwise a NOTE field, "Senior Night",
+ * "White Uniforms", and is never printed as a place.) null for a neutral site nobody named.
+ */
+export function venueWords(game: Pick<Game, 'venue' | 'site'>, display: Pick<GameDisplay, 'kind' | 'home'>): string | null {
+  if (display.kind !== 'scheduled') return null;
+  const noted = game.venue.text?.startsWith('@ ') ? game.venue.text.slice(2).trim() : '';
+  const named = game.venue.name ?? (noted || null);
+  if (named) return `at ${named}`;
+  return game.site === 'neutral' ? null : `at ${display.home.shortName}`;
+}
+
+/**
+ * How a shootout was decided, for the note line: `Palo Alto wins shootout 3-2` when a tally is
+ * stored, else the section's own words (`Corning wins on 1 v 1s`). null for every other game:
+ * overtime needs no note, the status slot says `OT`.
+ */
+export function shootoutNote(game: Pick<Game, 'shootout'>, display: GameDisplay): string | null {
+  const winner = display.home.weight === 'winner' ? display.home : display.away.weight === 'winner' ? display.away : null;
+  if (!winner) return null;
+  if (game.shootout) {
+    const { home, away } = game.shootout;
+    return `${winner.shortName} wins shootout ${Math.max(home, away)}-${Math.min(home, away)}`;
+  }
+  if (display.deciderTag !== 'SO') return null;
+  const how = (display.shootoutLabel ?? 'decided by a shootout').replace(/^decided /, '');
+  return `${winner.shortName} wins ${how}`;
+}
+
+/** The second status line of a final: `OT`, `2 OT`, `SO`, `F`. A stored shootout tally is `SO` too. */
+function deciderWord(game: Pick<Game, 'shootout'>, display: Pick<GameDisplay, 'deciderTag'>): string | null {
+  return display.deciderTag ?? (game.shootout ? 'SO' : null);
+}
+
+/**
+ * The status slot (`.sx-game-status`), the FIRST column of every row, in every state. Two lines
+ * that sit on the two team lines:
+ *
+ *   upcoming   the start time (`TBD` when unset)      the date, when the list spans days (`showDate`)
+ *   live       `Live` (red dot + red word)            —
+ *   final      `Final`                                `OT` / `2 OT` / `SO` / `F`, then the date when asked
+ *   off        `Postponed` (`PPD` at 320), `Canceled` (`CAN`), `No score` for an unreported final
+ *
+ * The † of a score from another source travels with the status. Decorative: the row's sentence
+ * says all of it.
  */
 export function GameStatus({
   game,
   display,
   showDate = false,
+  extra,
   className,
 }: {
   game: Game;
   display: GameDisplay;
   showDate?: boolean;
+  /** One more second-line item (Home's ResultRow puts the competition here). */
+  extra?: string;
   className?: string;
 }) {
-  const small = [display.deciderTag, display.shootoutText, showDate ? monthDay(game.dateLocal) : null].filter(Boolean);
+  const state = rowState(game, display);
+  const second = [
+    state === 'final' ? deciderWord(game, display) : null,
+    showDate ? monthDay(game.dateLocal) : null,
+    extra || null,
+  ].filter(Boolean);
+  const first =
+    state === 'live' ? (
+      <span className="sx-live">Live</span>
+    ) : state === 'upcoming' ? (
+      <span className="sx-num sx-game-time">{game.isTimeTba ? 'TBD' : statusWords(display)}</span>
+    ) : state === 'final' ? (
+      <span>Final</span>
+    ) : display.kind === 'unreported' ? (
+      <span>No score</span>
+    ) : (
+      <span>
+        <span className="sx-long">{display.kind === 'cancelled' ? 'Canceled' : 'Postponed'}</span>
+        <abbr className="sx-short" title={display.kind === 'cancelled' ? 'Canceled' : 'Postponed'}>
+          {display.kind === 'cancelled' ? 'CAN' : 'PPD'}
+        </abbr>
+      </span>
+    );
   return (
     <span className={['sx-game-status', className].filter(Boolean).join(' ')} aria-hidden="true">
-      {statusWords(display)}
-      {small.length > 0 || display.sourceMark !== null ? (
+      {first}
+      {second.length > 0 || display.sourceMark !== null ? (
         <small>
-          {small.join(' ')}
+          {second.join(' ')}
           <SourceMark display={display} />
         </small>
       ) : null}
@@ -130,7 +203,7 @@ export function GameStatus({
   );
 }
 
-/** A side's crest: the school's mascot tile, or the ghost letters of a team this site does not follow. */
+/** A side's logo, or the ghost letters of a team this site does not follow. */
 export function SideCrest({ side }: { side: SideView }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   return team ? (
@@ -141,78 +214,62 @@ export function SideCrest({ side }: { side: SideView }) {
 }
 
 /**
- * What follows a side's name in 13px ink-3: its bracket seed is NOT here (the meta carries the seed
- * line); the league of a side from another league on a league-scoped list (`SCVAL`), and its league
- * record before a league game (`1-4-0`, already gated by the row). A counted game never has a side
- * from another league, so the two never stack.
+ * @deprecated A row prints a name, its seed and the star, nothing else (DESIGN §33): the league of
+ * a side from another league and a pre-game record are not drawn. Renders nothing; kept for callers.
  */
-export function SideNotes({
-  side,
-  showRecord = false,
-  scopeLeague,
-}: {
-  side: SideView;
-  showRecord?: boolean;
-  scopeLeague?: LeagueId | null;
-}) {
-  const league = otherLeagueSuffix(side.slug, scopeLeague).replace(/^ · /, '');
-  const record = showRecord ? leagueRecord(side) : null;
-  if (!league && !record) return null;
-  return (
-    <span className="sx-game-sub">
-      {league}
-      {record ? <span className="sx-num">{record}</span> : null}
-    </span>
-  );
+export function SideNotes(props: { side: SideView; showRecord?: boolean; scopeLeague?: LeagueId | null }) {
+  void props;
+  return null;
 }
 
-/** `data-won` for the winner: the name is 700 and the score 800 (winner = weight, never a mark). */
+/** `data-won` for the winner: the name and the score are 700 (winner = weight, never a mark). */
 export function wonAttr(side: Pick<SideView, 'weight'>): '' | undefined {
   return side.weight === 'winner' ? '' : undefined;
 }
 
+/** `data-lost` for the loser: the name 400 and the score 500, both `--sx-text-3`. A tie has neither. */
+export function lostAttr(side: Pick<SideView, 'weight'>): '' | undefined {
+  return side.weight === 'loser' ? '' : undefined;
+}
+
 /**
- * One side as one line: crest, name, footnotes, and the score at the line's end. The two-column
- * shape (Home's ResultRow); GameRow lays the same pieces out in its own grid. The pinned team's name
- * takes the highlighter (`sx-pinnable` + `data-team-slug`).
+ * One side as one line: logo, name, and the score at the line's end. The two-column shape (Home's
+ * ResultRow); GameRow lays the same pieces out in its own grid.
  */
 export function TeamLine({
   side,
   showScore,
   monogram = true,
-  showRecord = false,
-  scopeLeague,
 }: {
   side: SideView;
-  /** @deprecated The meta carries the seed line (`7 v 2`). */
+  /** @deprecated Seeds are printed by GameRow after the name. */
   seed?: number | null;
   showScore: boolean;
   /** @deprecated W/L marks are for team-perspective rows only (GameLogRow). */
   chipSlot?: boolean;
-  /**
-   * false drops the mascot tile: Home's ResultRow, whose page carries every league's panel in its
-   * static HTML and is held to a markup budget (SPEC §12.4).
-   */
+  /** false drops the logo (Home's ResultRow, held to a markup budget: SPEC §12.4). */
   monogram?: boolean;
-  /** Print the side's league record after its name (`showRecords`, already gated by the row). */
+  /** @deprecated Not drawn. */
   showRecord?: boolean;
+  /** @deprecated Not drawn. */
   scopeLeague?: LeagueId | null;
 }) {
   return (
-    <span className="sx-game-team sx-pinnable" data-team-slug={side.slug ?? undefined} data-won={wonAttr(side)}>
+    <span
+      className="sx-game-team sx-pinnable"
+      data-team-slug={side.slug ?? undefined}
+      data-won={wonAttr(side)}
+      data-lost={lostAttr(side)}
+    >
       {monogram ? <SideCrest side={side} /> : null}
       {/* The dense row renders the SHORT name; `display.sentence` keeps the full name for a screen reader. */}
       <span className="sx-game-name">{side.shortName}</span>
-      <SideNotes side={side} showRecord={showRecord} scopeLeague={scopeLeague} />
-      {showScore ? <ScoreGlyph side={side} size="score" className="ml-auto pl-3" /> : null}
+      {showScore && side.hasScore ? <ScoreGlyph side={side} size="score" className="ml-auto pl-3" /> : null}
     </span>
   );
 }
 
-/**
- * The lead column of a two-column summary row (Home's ResultRow): the status cell, with the row's
- * one meta item under it.
- */
+/** The lead column of a two-column summary row (Home's ResultRow): the status slot, the competition on its second line. */
 export function SummaryLead({
   game,
   display,
@@ -222,16 +279,14 @@ export function SummaryLead({
   game: Game;
   display: GameDisplay;
   showDate?: boolean;
-  /** @deprecated The status cell is one line whatever the game's state. */
+  /** @deprecated The status slot is the same whatever the game's state. */
   showTime?: boolean;
   showChips?: boolean;
 }) {
-  const meta = gameMetaText(display, showChips);
   return (
-    <span className="flex min-w-0 flex-col" aria-hidden="true">
-      {/* `self-start`: the cell centres itself in GameRow's grid; in this column that would centre it sideways. */}
-      <GameStatus game={game} display={display} showDate={showDate} className="self-start" />
-      {meta ? <span className="sx-game-meta">{meta}</span> : null}
+    // A wrapper of its own: `.sx-game-status` names a grid area of GameRow's grid, which the host's grid does not have.
+    <span className="flex min-w-0 flex-col self-start">
+      <GameStatus game={game} display={display} showDate={showDate} extra={gameMetaText(display, showChips)} />
     </span>
   );
 }
@@ -239,33 +294,21 @@ export function SummaryLead({
 /** The two team lines of a summary row, away over home (Home's ResultRow). */
 export function SummaryTeams({
   display,
-  showRecords = false,
-  scopeLeague = null,
   monogram = true,
 }: {
   display: GameDisplay;
+  /** @deprecated Not drawn. */
   showRecords?: boolean;
+  /** @deprecated Not drawn. */
   scopeLeague?: LeagueId | null;
   monogram?: boolean;
-  /** @deprecated The meta carries the seed line. */
+  /** @deprecated Seeds are printed by GameRow after the name. */
   seeds?: { away: number | null; home: number | null };
 }) {
   return (
     <span className="flex min-w-0 flex-col" aria-hidden="true">
-      <TeamLine
-        side={display.away}
-        showScore={display.showScores}
-        monogram={monogram}
-        showRecord={showRecords}
-        scopeLeague={scopeLeague}
-      />
-      <TeamLine
-        side={display.home}
-        showScore={display.showScores}
-        monogram={monogram}
-        showRecord={showRecords}
-        scopeLeague={scopeLeague}
-      />
+      <TeamLine side={display.away} showScore={display.showScores} monogram={monogram} />
+      <TeamLine side={display.home} showScore={display.showScores} monogram={monogram} />
     </span>
   );
 }

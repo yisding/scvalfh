@@ -107,7 +107,9 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     const text = textOf(html);
     expect(text, 'components/home/PostseasonCard.tsx: EAL kicker').toContain('Postseason');
     expect(text, 'components/home/PostseasonCard.tsx: EAL line').toContain('Super Regional, Oct 30–31 — the top six qualify');
-    expect(text, 'components/home/PostseasonCard.tsx: EAL link').toContain('Postseason →');
+    // The link is its words alone: the trailing arrow is retired (components/ui/Arrow.tsx renders nothing, DESIGN §33).
+    expect(html, 'components/home/PostseasonCard.tsx: EAL link').toMatch(/>Postseason\s*<\/a>/);
+    expect(text, 'components/home/PostseasonCard.tsx: no arrow').not.toContain('→');
     expect(html, 'components/home/PostseasonCard.tsx: EAL link href').toContain('href="/playoffs#eal"');
     expect(html, 'components/home/PostseasonCard.tsx: EAL has no meter').not.toContain('sx-meter');
     expect(html, 'components/home/PostseasonCard.tsx: EAL has no bracket page').not.toContain('href="/playoffs/eal"');

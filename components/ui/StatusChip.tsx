@@ -1,16 +1,7 @@
 /**
- * The postseason status chip: one tinted capsule in 12px SANS, sentence case ("Automatic
- * qualifier", "At-large consideration or no automatic berth"). It is the sentence-case sibling of
- * `Tag`: a status is a phrase, and mono caps are kept for the 1–2 word codes a Tag is for
- * (brief §1, DESIGN §7.16), so this is a component of its own rather than a mode of Tag.
- *
- * The tones are Tag's pairs: `accent` is accent-ink on the accent wash (6.5 / 7.55), only for an
- * automatic qualifier, where the accent already means "berth"; `neutral` is ink-2 on surface-3.
- * The capsule is `inline-block`, so a long phrase grows into ONE taller capsule instead of
- * breaking into a cloned pill per line.
- *
- * Used by /playoffs (PlayoffProjection), the /standings band (PlayoffStatusBand) and the team
- * page's playoff line (TeamPlayoffLine), so the three are one height.
+ * A postseason status in words ("Automatic qualifier", "At-large consideration or no automatic
+ * berth"): plain text in the `.sx-status` face (DESIGN §33). Used by /playoffs, the /standings
+ * status list and the team page's playoff line.
  */
 export interface StatusChipProps {
   children: React.ReactNode;
@@ -21,7 +12,7 @@ export interface StatusChipProps {
 
 export function StatusChip({ children, className }: StatusChipProps) {
   // Plain text (DESIGN §33): a status is a few words, not a filled chip. `tone` is accepted and ignored.
-  return <span className={['text-cell font-semibold text-ink', className].filter(Boolean).join(' ')}>{children}</span>;
+  return <span className={['sx-status', className].filter(Boolean).join(' ')}>{children}</span>;
 }
 
 export default StatusChip;

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Public_Sans } from 'next/font/google';
+import { Barlow_Semi_Condensed, Public_Sans } from 'next/font/google';
 
 import Attribution from '../components/layout/Attribution';
 import BottomTabBar from '../components/layout/BottomTabBar';
@@ -20,25 +20,37 @@ import { LEAGUE_IDS, regionOf } from '../lib/leagues';
 import './globals.css';
 
 /**
- * ONE self-hosted family, Public Sans (variable, 100–900), preloaded and `display: 'swap'`, so text
- * is never invisible (DESIGN §33). Figures are tabular lining numerals of the same face (`body` and
- * `.sx-num` in app/globals.css): there is no mono face any more.
+ * Two self-hosted families (DESIGN §33), both `display: 'swap'`, so text is never invisible:
+ *  - Public Sans (variable) for text: names, labels, prose.
+ *  - Barlow Semi Condensed 500 / 600 / 700 for FIGURES (scores, records, points, start times, seeds:
+ *    `.sx-num` and the `font-mono` utility) and for TITLES (`h1`, `h2`, `.sx-title` and the wordmark,
+ *    through one base rule in app/globals.css). Its figures share one width. It is preloaded: the h1
+ *    and the wordmark are set in it. The site's heaviest weight is 700.
  *
  * The options are written inline as literals, not as a shared const: vinext's font plugin reads
  * them from the source and only self-hosts a call whose object is all literals
  * (node_modules/vinext/dist/plugins/fonts.js).
  *
- * It keeps next/font's metric-adjusted "Public Sans Fallback" (Arial, size-adjusted) and takes NO
- * `fallback` list: under Turbopack a `fallback` REPLACES the adjusted face rather than following
- * it. The generic tail (`ui-sans-serif, system-ui, sans-serif`) is appended where the variable is
- * used instead, by `--font-sans` in app/globals.css' @theme, so a reader without Arial (Android,
- * most Linux) still gets a sans. The bold twin of "Public Sans Fallback" (600–900) is
- * app/globals.css' own @font-face.
+ * Each keeps next/font's metric-adjusted fallback face ("Public Sans Fallback", "Barlow Semi
+ * Condensed Fallback": Arial, size-adjusted) and takes NO `fallback` list: under Turbopack a
+ * `fallback` REPLACES the adjusted face rather than following it. The generic tail
+ * (`ui-sans-serif, system-ui, sans-serif`) is appended where the variables are used instead, by
+ * `--font-sans` / `--font-mono` in app/globals.css' @theme, so a reader without Arial (Android,
+ * most Linux) still gets a sans. The bold twins of both fallback faces are app/globals.css' own
+ * @font-face blocks.
  */
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
   subsets: ['latin'],
   display: 'swap',
+});
+
+const barlowSemiCondensed = Barlow_Semi_Condensed({
+  weight: ['500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-num',
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -69,7 +81,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  // Matches --sx-bg in each mode, so the browser chrome never flashes the other theme. These follow
+  // Matches --sx-band (the header) in each mode, so a phone's browser bar continues it. These follow
   // the OS; an explicit Light/Dark choice prepends a media-less meta that outranks them
   // (components/prefs/theme-script.ts), from the same THEME_COLOR pair.
   themeColor: [
@@ -86,6 +98,11 @@ export const viewport: Viewport = {
 const SLUG_LEAGUE: Readonly<Record<string, string>> = Object.fromEntries(
   getTeams().map((t) => [t.slug, t.league]),
 );
+/**
+ * `{ slug: short name }` for every team: the phone More sheet names the reader's pinned team from it
+ * (the pin is a slug in localStorage, so the name cannot be server-rendered).
+ */
+const TEAM_NAMES: Readonly<Record<string, string>> = Object.fromEntries(getTeams().map((t) => [t.slug, t.shortName]));
 /** `{ league: region }`, from the config (lib/leagues.ts regionOf): the prefs script ships the non-default part. */
 const LEAGUE_REGION: Readonly<Record<string, string>> = Object.fromEntries(LEAGUE_IDS.map((id) => [id, regionOf(id)]));
 const PREFS_SCRIPT = buildPrefsScript({
@@ -99,7 +116,7 @@ const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const snapshotAt = getFetchedAt();
   return (
-    <html lang="en" className={publicSans.variable} suppressHydrationWarning>
+    <html lang="en" className={[publicSans.variable, barlowSemiCondensed.variable].join(' ')} suppressHydrationWarning>
       <head>
         {/* ~300 bytes, blocking, before first paint: stamps data-theme so an explicit
             Light/Dark choice never flashes the other theme, and gives the browser chrome the
@@ -146,7 +163,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           {children}
         </main>
         <Attribution snapshotAt={snapshotAt} now={BUILD_INSTANT} />
-        <BottomTabBar slugLeague={SLUG_LEAGUE} />
+        <BottomTabBar slugLeague={SLUG_LEAGUE} teamNames={TEAM_NAMES} />
       </body>
     </html>
   );

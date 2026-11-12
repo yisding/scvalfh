@@ -6,39 +6,34 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
 import MoreMenu, { type MoreMenuLink } from './MoreMenu';
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
-import { DATA_CORRECTIONS_URL } from './site';
+import { DATA_CORRECTIONS_URL, NAV_LABELS } from './site';
 
 /**
- * The phone bottom bar (DESIGN §33). Four tabs and a More sheet: Home, Scores, Standings, Playoffs,
- * then `<MoreMenu />` with Teams, Leaders, JV, last season's archive, About and the corrections
- * thread. The bar is 56px tall plus the safe-area inset; each cell is an equal fifth of a row capped
- * at 448px, so a 320px phone still gets 64×56 per tab. The labels are 11px and measured
- * (tests/ui/tab-labels.test.ts): none truncates at any supported width or text size.
+ * The phone bar (DESIGN §33). Four text tabs and a More sheet: Scores, Standings, Playoffs, Teams
+ * (the same four sections, in the same order, as the start of the header nav), then `<MoreMenu />`
+ * with the reader's team, Leaders, JV, History, About, the corrections thread and the two
+ * preferences. The wordmark is Home, and home is the Scores page, so on `/` the Scores cell is the
+ * selected one. No icons.
  *
- * After hydration Scores, Standings and Playoffs follow the page's league, else the remembered one
- * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
- * static HTML keeps the index hrefs.
+ * The bar is 52px tall plus the safe-area inset, on the page colour (it is not a band). Each cell is
+ * as wide as its word plus an equal share of the spare width, so the gaps between the five words are
+ * equal; the labels are measured (tests/ui/tab-labels.test.ts): none truncates at any supported
+ * width or text size.
  *
- * It is a `<nav aria-label="Sections">` and the current tab carries `aria-current`, a 4px ink bar
- * hanging from the bar's top rule AND a 700 label, never colour alone. `aria-current` is "page" on
- * the tab's own route and "true" inside its section (a day or game page under Scores), see
- * NavLink.tsx. The More tab is lit on the routes its sheet leads to.
+ * After hydration the four tabs follow the page's league, else the remembered one
+ * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`, `/teams#<id>`;
+ * SPEC §8.3); the static HTML keeps the index hrefs.
+ *
+ * It is a `<nav aria-label="Sections">` and the current tab carries `aria-current`, a 3px accent bar
+ * on the cell's top edge AND a 700 label, never colour alone. `aria-current` is "page" on the tab's
+ * own route and "true" inside its section (a day or game page under Scores), see NavLink.tsx. The
+ * More tab is lit on the routes its sheet leads to.
  *
  * Scores opens on the latest results, not on the top of a season-long list: its href carries the
  * date as a fragment (see scoresHrefs below), and so does each of its league targets
- * (`/schedule/<id>#<date>`, that league's own latest results). The masthead's Scores link stays
+ * (`/schedule/<id>#<date>`, that league's own latest results). The header's Scores link stays
  * plain `/schedule`.
  */
-const ICON_PROPS = {
-  width: 20,
-  height: 20,
-  viewBox: '0 0 20 20',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 1.6,
-  strokeLinecap: 'round' as const,
-  strokeLinejoin: 'round' as const,
-};
 
 /**
  * The Scores tab's landing date, across every league or within one (lib/data
@@ -64,73 +59,31 @@ function scoresHrefs(): { href: string; leagueHrefs: Readonly<Record<LeagueId, s
   };
 }
 
-export const TABS = [
-  {
-    href: '/',
-    label: 'Home',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        <path d="M3 8.5 10 3l7 5.5" />
-        <path d="M5 8v9h10V8" />
-      </svg>
-    ),
-  },
-  {
-    href: '/schedule',
-    label: 'Scores',
-    // Replaced per build by scoresHrefs() in BottomTabBar below.
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        <rect x="3" y="4" width="14" height="13" rx="1.5" />
-        <path d="M3 8h14M7 4V2.5M13 4V2.5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/standings',
-    label: 'Standings',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        {/* Three rows of a table. */}
-        <path d="M3 5h14M3 10h14M3 15h14" />
-      </svg>
-    ),
-  },
-  {
-    href: '/playoffs',
-    label: 'Playoffs',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        {/* A trophy: cup, two handles, and a stem that reaches its base. A cup over a detached
-            dash did not read as a trophy at 20px. */}
-        <path d="M6 3h8v5a4 4 0 0 1-8 0zM6 5H4a2 2 0 0 0 2 3M14 5h2a2 2 0 0 1-2 3M10 12v4.5M7 17h6" />
-      </svg>
-    ),
-  },
+export const TABS: ReadonlyArray<{ href: string; label: string }> = [
+  // The href is replaced per build by scoresHrefs() in BottomTabBar below.
+  { href: '/schedule', label: NAV_LABELS.scores },
+  { href: '/standings', label: NAV_LABELS.standings },
+  { href: '/playoffs', label: NAV_LABELS.playoffs },
+  { href: '/teams', label: NAV_LABELS.teams },
 ];
 
-/** The More sheet, in the footer index's order. Every route here is in MoreMenu's MORE_ROUTES. */
+/** The More sheet's links, in the footer index's order. Every route here is in MoreMenu's MORE_ROUTES. */
 const MORE_LINKS: readonly MoreMenuLink[] = [
-  { href: '/teams', label: 'Teams' },
-  { href: '/leaders', label: 'Leaders' },
-  { href: '/jv', label: 'JV' },
-  { href: '/history/2025-26', label: '2025-26 archive' },
-  { href: '/about', label: 'About and sources' },
-  { href: DATA_CORRECTIONS_URL, label: 'Report an error', external: true },
+  { href: '/leaders', label: NAV_LABELS.leaders },
+  { href: '/jv', label: NAV_LABELS.jv },
+  { href: '/history/2025-26', label: NAV_LABELS.history },
+  { href: '/about', label: NAV_LABELS.about },
+  { href: DATA_CORRECTIONS_URL, label: NAV_LABELS.report, external: true },
 ];
-
-const MORE_GLYPH = (
-  <svg {...ICON_PROPS} aria-hidden="true">
-    <path d="M4.5 10h.01M10 10h.01M15.5 10h.01" strokeWidth={2.4} />
-  </svg>
-);
 
 export interface BottomTabBarProps {
   /** `{ slug: league }` for every team (the same map the prefs script embeds). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
+  /** `{ slug: short name }` for every team: the More sheet's first row names the reader's pinned team. */
+  teamNames?: Readonly<Record<TeamSlug, string>>;
 }
 
-export function BottomTabBar({ slugLeague }: BottomTabBarProps) {
+export function BottomTabBar({ slugLeague, teamNames }: BottomTabBarProps) {
   const hrefs = navLeagueHrefs();
   const scores = scoresHrefs();
   return (
@@ -142,14 +95,18 @@ export function BottomTabBar({ slugLeague }: BottomTabBarProps) {
               href={tab.href === '/schedule' ? scores.href : tab.href}
               variant="tab"
               label={tab.label}
-              glyph={tab.glyph}
               leagueHrefs={tab.href === '/schedule' ? scores.leagueHrefs : hrefs[tab.href]}
               slugLeague={hrefs[tab.href] ? slugLeague : undefined}
             />
           </li>
         ))}
         <li>
-          <MoreMenu links={MORE_LINKS} glyph={MORE_GLYPH} stamp={`Updated ${formatStamp(getFetchedAt())}.`} />
+          <MoreMenu
+            links={MORE_LINKS}
+            stamp={`Updated ${formatStamp(getFetchedAt())}`}
+            teamNames={teamNames}
+            mascotBase="/mascots/"
+          />
         </li>
       </ul>
     </nav>

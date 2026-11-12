@@ -1,30 +1,48 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   NorCal High School Field Hockey — design tokens and shared classes (DESIGN §33, "Agate").
+   NorCal High School Field Hockey — design tokens and shared classes (DESIGN §33).
 
-   White paper, black ink, rules instead of cards, one typeface, one highlighter. Every hex below is
-   measured: tests/ui/contrast.test.ts parses THIS FILE and re-measures every pair, so editing a
-   token here fails `pnpm test` if it breaks a floor.
+   A white page printed in one navy ink. The same navy, solid, is the band: the header, the footer
+   and the live board. One accent blue marks where you are; green, red and the live red belong to
+   results. Every hex below is measured: tests/ui/contrast.test.ts parses THIS FILE and re-measures
+   every pair, so editing a token here fails `pnpm test` if it breaks a floor.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* The BOLD half of next/font's metric-matched "Public Sans Fallback" (app/layout.tsx). next/font emits
-   only a regular face (`local(Arial)` at size-adjust 104.87%, no weight descriptor), and `body` sets
-   `font-synthesis-weight: none`, so without this every 600–900 heading, nav item and team name was
-   set in Arial REGULAR until Public Sans loaded. size-adjust is MEASURED (2026-11-12, Chromium):
-   Public Sans 800 against Liberation Sans Bold, which shares Arial Bold's advances, over the h1 and
-   h2 strings of /, /standings and /schedule/scval is 100.61% (h1) and 100.73% (h2); 100.1% leans
-   0.5% narrow on purpose, since a fallback h1 a hair too wide costs a whole line on the swap. The
-   overrides are next/font's regular-face values (90.59% / 21.46% at 104.87%) rescaled to this
-   size-adjust, so a bold fallback line is as tall, with the same baseline, as a regular one. */
+/* The BOLD halves of next/font's metric-matched fallback faces (app/layout.tsx). next/font emits
+   only a regular face for each family (`local(Arial)`, size-adjusted, no weight descriptor), and
+   `body` sets `font-synthesis-weight: none`, so without these every 600–700 nav item, team name,
+   title and score was set in Arial REGULAR until the web font loaded. Both size-adjusts are
+   MEASURED (2026-11-12, Chromium, against Liberation Sans Bold, which shares Arial Bold's advances)
+   and lean 0.5% narrow on purpose: a fallback line a hair too wide costs a whole line on the swap.
+   The overrides are next/font's regular-face values rescaled to the bold size-adjust, so a bold
+   fallback line is as tall, with the same baseline, as a regular one.
+
+   Public Sans 700 over the h3 / h4, nav, <th> and <b> strings of /, /standings and /schedule/scval
+   (253 strings) is 99.26% of the bold fallback → 98.8%. (Titles are no longer Public Sans; the
+   site's heaviest weight is 700, so the range stops there.) Regular face: 90.59% / 21.46% at 104.87%. */
 @font-face {
   font-family: "Public Sans Fallback";
   src: local("Arial Bold"), local("Arial-BoldMT");
   font-style: normal;
-  font-weight: 600 900;
-  size-adjust: 100.1%;
-  ascent-override: 94.91%;
-  descent-override: 22.48%;
+  font-weight: 600 700;
+  size-adjust: 98.8%;
+  ascent-override: 96.16%;
+  descent-override: 22.78%;
+  line-gap-override: 0%;
+}
+/* Barlow Semi Condensed 700 over the h1, h2 and wordmark strings of /, /standings, /schedule/scval,
+   /teams/los-gatos and /leaders (41 strings) is 83.27% of the bold fallback → 82.8% (its `.sx-num`
+   figures, 483 strings, are 84.7%: a fallback score is 2% narrow, which moves nothing). Regular
+   face: 115.49% / 23.1% at 86.59%. */
+@font-face {
+  font-family: "Barlow Semi Condensed Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  font-style: normal;
+  font-weight: 600 700;
+  size-adjust: 82.8%;
+  ascent-override: 120.78%;
+  descent-override: 24.16%;
   line-gap-override: 0%;
 }
 
@@ -38,64 +56,66 @@
   }
 }
 
-/* ── Light (default). One plane: the page is white paper and content is separated by rules. ── */
+/* Light: one ink. Text is a deep navy and every grey is on the same hue. The same navy, solid, is the
+   band: the header, the live board that continues it on a day with games in progress, and the footer.
+   Dark: a near-black charcoal page with the faintest cool cast (still r <= g <= b), so the navy band
+   stays a second plane. One accent blue marks where you are (the selected bar), focus, today, and
+   your team's star. Green, red and the live red belong to results. */
 :root {
   color-scheme: light;
-
   --sx-bg:            #ffffff;
   --sx-surface:       #ffffff;
-  --sx-surface-2:     #f4f4f1;   /* row hover, .sx-band, .sx-inset */
-  --sx-surface-3:     #e8e8e3;   /* crest plate, T mark, meter track */
-  --sx-border:        #d9d9d3;   /* hairlines, the rail's column rule */
-  --sx-border-strong: #878780;   /* control outlines, the scope divider */
+  --sx-surface-2:     #f1f4f9;   /* the tint: group strips and row hover. Nothing else */
+  --sx-surface-3:     #e1e7f1;   /* selected switch segment, meter track, logo fallback */
+  --sx-border:        #d9dfea;   /* hairline between rows */
+  --sx-border-strong: #7c8799;   /* input / button outline, the T chip outline */
+  --sx-text:          #0c1b33;   /* the ink */
+  --sx-text-2:        #3d4a63;   /* unselected tabs, column heads, secondary values */
+  --sx-text-3:        #5a667d;   /* the losing side of a final (name and score, zeros included), seeds, counts */
+  --sx-accent:        #1747d1;   /* selected bar, focus ring, today, the star */
+  --sx-accent-ink:    #1747d1;   /* the accent as text: a hovered link, "Today" in the date bar, the selected phone-bar label */
+  --sx-accent-wash:   #f1f4f9;   /* = surface-2. Used by no rule here */
+  --sx-win:           #036a34;   /* the qualification line */
+  --sx-win-ink:       #03562a;   /* green as text: the qualification label */
+  --sx-win-fill:      #03562a;   /* the W chip (white letter) */
+  --sx-win-wash:      #d5e3d8;
+  --sx-loss:          #df6860;   /* the L chip's outline */
+  --sx-loss-ink:      #a32f28;   /* the L chip's letter */
+  --sx-loss-wash:     #fde4e1;
+  --sx-tie:           #5a667d;
+  --sx-tie-ink:       #3d4a63;
+  --sx-tie-wash:      #d9dfea;
+  --sx-on-fill:       #ffffff;   /* the letter on the W chip, both themes */
+  --sx-live:          #c8281e;   /* Live: the dot and the word */
+  --sx-bar:           #3d4a63;
+  --sx-zero:          #5a667d;   /* = text-3. A losing zero is not lighter than any other losing score */
+  --sx-focus:         #1747d1;
+  --sx-pin:           #1747d1;   /* the "your team" star */
+  /* the navy band: header, live board, footer */
+  --sx-band:          #0c1b33;
+  --sx-band-2:        #1d2c47;   /* the search field on the band; a hovered live game */
+  --sx-band-3:        #2c3c5c;   /* hairline between live games */
+  --sx-band-line:     #6b7891;   /* control outline on the band */
+  --sx-band-edge:     #0c1b33;   /* the band's edge against the page (visible in dark only) */
+  --sx-band-text:     #ffffff;
+  --sx-band-muted:    #aab6cc;
+  --sx-band-accent:   #8fb0ff;   /* selected bar, focus ring and the star on the band */
+  --sx-band-live:     #ff8a7a;   /* "Live" on the band */
 
-  /* ink */
-  --sx-text:          #111111;
-  --sx-text-2:        #45453f;
-  --sx-text-3:        #5e5e57;
-
-  /* There is no accent hue: links, focus, meters and selected states are ink. The two names stay as
-     aliases of the ink; the wash is THE highlighter (fill only: pinned team, LIVE flag, stale strip). */
-  --sx-accent:        #111111;
-  --sx-accent-ink:    #111111;
-  --sx-accent-wash:   #ffd83d;
-
-  /* Result marks are hueless: W solid, L hollow (the ring is --sx-loss), T grey. */
-  --sx-win:           #111111;
-  --sx-win-ink:       #ffffff;
-  --sx-win-wash:      #111111;
-  --sx-loss:          #767670;
-  --sx-loss-ink:      #45453f;
-  --sx-loss-wash:     #ffffff;
-  --sx-tie:           #767670;
-  --sx-tie-ink:       #111111;
-  --sx-tie-wash:      #e8e8e3;
-
-  --sx-bar:           #45453f;   /* chart ink */
-  --sx-zero:          #878780;   /* chart zero rule */
-
-  --sx-focus:         #111111;
-  --sx-pin:           #111111;   /* the pinned row's bar */
-  --sx-select:        #ffe98a;
-
-  /* Radii: 2px on controls and tags, 0 on everything else (3px crest plates are `.sx-monogram`). */
-  --sx-r-tag: 2px;
-  --sx-r-chip: 2px;
-  --sx-r-control: 2px;
+  --sx-r-tag: 0px;
+  --sx-r-chip: 3px;
+  --sx-r-control: 4px;
   --sx-r-card: 0px;
   --sx-r-card-lg: 0px;
 
-  /* No elevation. `sticky` is a 1px ink rule; the rest are transparent zero layers, never `none`:
-     they sit inside shadow LISTS, and `none` in a list invalidates the whole declaration. */
-  --sx-shadow-sticky: 0 1px 0 var(--sx-text);
+  --sx-shadow-sticky: 0 1px 0 var(--sx-border);
   --sx-shadow-raised: 0 0 0 0 transparent;
-  --sx-shadow-lift:   0 0 0 0 transparent;
+  --sx-shadow-lift:   0 -8px 24px rgb(12 27 51 / 0.16);   /* the More sheet */
   --sx-ring:          0 0 0 0 transparent;
   --sx-divider:       var(--sx-border);
 
-  /* motion */
   --sx-dur-tap: 120ms;
-  --sx-dur-ui: 200ms;
+  --sx-dur-ui: 160ms;
   --sx-ease: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
@@ -103,74 +123,99 @@
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --sx-bg:            #0f0f0e;
-    --sx-surface:       #0f0f0e;
-    --sx-surface-2:     #1b1b19;
-    --sx-surface-3:     #262623;
-    --sx-border:        #32322e;
-    --sx-border-strong: #6e6e66;
-    --sx-text:          #f4f4ef;
-    --sx-text-2:        #b9b9b0;
-    --sx-text-3:        #a3a39a;
-    --sx-accent:        #f4f4ef;
-    --sx-accent-ink:    #f4f4ef;
-    --sx-accent-wash:   #3f3400;
-    --sx-win:           #f4f4ef;
-    --sx-win-ink:       #0f0f0e;
-    --sx-win-wash:      #f4f4ef;
-    --sx-loss:          #8a8a82;
-    --sx-loss-ink:      #b9b9b0;
-    --sx-loss-wash:     #0f0f0e;
-    --sx-tie:           #8a8a82;
-    --sx-tie-ink:       #f4f4ef;
-    --sx-tie-wash:      #262623;
-    --sx-bar:           #b9b9b0;
-    --sx-zero:          #6e6e66;
-    --sx-focus:         #ffd83d;
-    --sx-pin:           #ffd83d;
-    --sx-select:        #4a3d00;
+    --sx-bg:            #121417;
+    --sx-surface:       #121417;
+    --sx-surface-2:     #1c1f24;
+    --sx-surface-3:     #2a2e35;
+    --sx-border:        #33373f;
+    --sx-border-strong: #727a87;
+    --sx-text:          #eef0f4;
+    --sx-text-2:        #b9bfca;
+    --sx-text-3:        #9299a6;
+    --sx-accent:        #8fb0ff;
+    --sx-accent-ink:    #8fb0ff;
+    --sx-accent-wash:   #1c1f24;
+    --sx-win:           #1f9a5a;
+    --sx-win-ink:       #5fd39c;
+    --sx-win-fill:      #17854a;   /* white letter 4.6; the same solid chip as light */
+    --sx-win-wash:      #1b2b23;
+    --sx-loss:          #e9523f;
+    --sx-loss-ink:      #ff9c8c;
+    --sx-loss-wash:     #3a2422;
+    --sx-tie:           #9299a6;
+    --sx-tie-ink:       #c5cad3;
+    --sx-tie-wash:      #33373f;
+    --sx-on-fill:       #ffffff;
+    --sx-live:          #ff6654;
+    --sx-bar:           #b9bfca;
+    --sx-zero:          #9299a6;
+    --sx-focus:         #8fb0ff;
+    --sx-pin:           #8fb0ff;
+    --sx-band:          #0c1c3a;   /* navy on a charcoal page: the hue is the difference, and a 1px edge */
+    --sx-band-2:        #1a2b4d;
+    --sx-band-3:        #2a3c62;
+    --sx-band-line:     #6878a0;
+    --sx-band-edge:     #2a3c62;
+    --sx-band-text:     #eef0f4;
+    --sx-band-muted:    #a3aec6;
+    --sx-band-accent:   #8fb0ff;
+    --sx-band-live:     #ff8a7a;
+    --sx-shadow-lift:   0 -8px 24px rgb(0 0 0 / 0.5);
   }
 }
 
 /* ── Dark, under the explicit toggle (wins over the OS in both directions). The SAME map. ── */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --sx-bg:            #0f0f0e;
-  --sx-surface:       #0f0f0e;
-  --sx-surface-2:     #1b1b19;
-  --sx-surface-3:     #262623;
-  --sx-border:        #32322e;
-  --sx-border-strong: #6e6e66;
-  --sx-text:          #f4f4ef;
-  --sx-text-2:        #b9b9b0;
-  --sx-text-3:        #a3a39a;
-  --sx-accent:        #f4f4ef;
-  --sx-accent-ink:    #f4f4ef;
-  --sx-accent-wash:   #3f3400;
-  --sx-win:           #f4f4ef;
-  --sx-win-ink:       #0f0f0e;
-  --sx-win-wash:      #f4f4ef;
-  --sx-loss:          #8a8a82;
-  --sx-loss-ink:      #b9b9b0;
-  --sx-loss-wash:     #0f0f0e;
-  --sx-tie:           #8a8a82;
-  --sx-tie-ink:       #f4f4ef;
-  --sx-tie-wash:      #262623;
-  --sx-bar:           #b9b9b0;
-  --sx-zero:          #6e6e66;
-  --sx-focus:         #ffd83d;
-  --sx-pin:           #ffd83d;
-  --sx-select:        #4a3d00;
+  --sx-bg:            #121417;
+  --sx-surface:       #121417;
+  --sx-surface-2:     #1c1f24;
+  --sx-surface-3:     #2a2e35;
+  --sx-border:        #33373f;
+  --sx-border-strong: #727a87;
+  --sx-text:          #eef0f4;
+  --sx-text-2:        #b9bfca;
+  --sx-text-3:        #9299a6;
+  --sx-accent:        #8fb0ff;
+  --sx-accent-ink:    #8fb0ff;
+  --sx-accent-wash:   #1c1f24;
+  --sx-win:           #1f9a5a;
+  --sx-win-ink:       #5fd39c;
+  --sx-win-fill:      #17854a;   /* white letter 4.6; the same solid chip as light */
+  --sx-win-wash:      #1b2b23;
+  --sx-loss:          #e9523f;
+  --sx-loss-ink:      #ff9c8c;
+  --sx-loss-wash:     #3a2422;
+  --sx-tie:           #9299a6;
+  --sx-tie-ink:       #c5cad3;
+  --sx-tie-wash:      #33373f;
+  --sx-on-fill:       #ffffff;
+  --sx-live:          #ff6654;
+  --sx-bar:           #b9bfca;
+  --sx-zero:          #9299a6;
+  --sx-focus:         #8fb0ff;
+  --sx-pin:           #8fb0ff;
+  --sx-band:          #0c1c3a;   /* navy on a charcoal page: the hue is the difference, and a 1px edge */
+  --sx-band-2:        #1a2b4d;
+  --sx-band-3:        #2a3c62;
+  --sx-band-line:     #6878a0;
+  --sx-band-edge:     #2a3c62;
+  --sx-band-text:     #eef0f4;
+  --sx-band-muted:    #a3aec6;
+  --sx-band-accent:   #8fb0ff;
+  --sx-band-live:     #ff8a7a;
+  --sx-shadow-lift:   0 -8px 24px rgb(0 0 0 / 0.5);
 }
 
 
 /* ── Tailwind theme. `inline` is required: the utilities must resolve the
       var() at use-site so the dark overrides above take effect. ─────────── */
 @theme inline {
-  /* One face. The variable comes from next/font in layout.tsx; the list ends in a generic family.
-     `--font-mono` is an alias for one release, so a stray `font-mono` does not fall to Courier. */
+  /* Two faces. Text is Public Sans; figures and titles are Barlow Semi Condensed (`--font-num`).
+     Both variables come from next/font in layout.tsx; each list ends in a generic family.
+     `font-mono` and `.sx-num` both give the condensed face. */
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-sans);
+  --font-mono: var(--font-num), var(--font-sans);
 
   /* colors → bg-surface, text-ink-2, border-hairline, bg-win, fill-bar, … */
   --color-bg:           var(--sx-bg);
@@ -198,73 +243,71 @@
   --color-bar:          var(--sx-bar);
   --color-zero:         var(--sx-zero);
 
-  /* Type scale: 11 (th) · 12 · 13 · 14 · 16 · 17 · 22 · h1 32→46, plus the 72px game score.
-     Headings are 800; the names are the old ones, the values are new. */
-  --text-kicker: 0.6875rem;                    /* 11 — <th> and phone tab labels only */
+  /* Type scale. It has a gap on purpose: small text, 15px group strips, 22px section heads, then
+     the page title at 36–60px. Nothing between 22 and 36; nothing under 12px. No tracking. */
+  --text-kicker: 0.8125rem;                    /* 13 — <th>, status words */
   --text-kicker--line-height: 1rem;
-  --text-kicker--letter-spacing: 0.06em;
-  --text-kicker--font-weight: 600;
+  --text-kicker--font-weight: 500;
 
-  --text-micro: 0.75rem;                       /* 12 — small labels (dt, fine status) */
+  --text-micro: 0.8125rem;                     /* 13 — weekday and count in the date bar, a figure's label */
   --text-micro--line-height: 1rem;
-  --text-micro--font-weight: 500;
 
-  --text-cell: 0.8125rem;                      /* 13 — status column, row meta, footer */
-  --text-cell--line-height: 1.125rem;
+  --text-cell: 0.875rem;                       /* 14 — seeds, notes, the Updated stamp, footer */
+  --text-cell--line-height: 1.25rem;
 
-  --text-meta: 0.875rem;                       /* 14 — table cells, datelines, notes */
+  --text-meta: 0.9375rem;                      /* 15 — nav, tabs, links */
   --text-meta--line-height: 1.25rem;
 
-  --text-body: 1rem;                           /* 16 — prose, team names in game rows */
+  --text-body: 1rem;                           /* 16 — prose, team names in rows and tables */
   --text-body--line-height: 1.5rem;
 
-  --text-lead: 1.0625rem;                      /* 17 — every h3 / h4 */
+  --text-lead: 0.9375rem;                      /* 15 — every h3 / h4 and every strip */
   --text-lead--line-height: 1.5rem;
   --text-lead--font-weight: 700;
 
-  --text-score: 1.0625rem;                     /* 17 — list scores; the winner adds `font-extrabold` */
-  --text-score--line-height: 1.5rem;
+  --text-score: 1.625rem;                      /* 26 — list scores (Barlow), one size in every list */
+  --text-score--line-height: 1.75rem;
 
-  --text-section: 1.375rem;                    /* 22 — every h2 */
+  --text-section: 1.375rem;                    /* 22 — every h2 (Barlow) */
   --text-section--line-height: 1.75rem;
-  --text-section--letter-spacing: -0.02em;
-  --text-section--font-weight: 800;
+  --text-section--letter-spacing: 0;
+  --text-section--font-weight: 700;
 
   --text-title: 1.375rem;                      /* = text-section */
   --text-title--line-height: 1.75rem;
-  --text-title--letter-spacing: -0.02em;
-  --text-title--font-weight: 800;
+  --text-title--letter-spacing: 0;
+  --text-title--font-weight: 700;
 
-  --text-h1: clamp(2rem, 1.3rem + 2.2vw, 2.875rem);        /* 32 → 46 */
-  --text-h1--line-height: 1.06;
-  --text-h1--letter-spacing: -0.03em;
-  --text-h1--font-weight: 800;
+  --text-figure: 1.375rem;                     /* = text-section */
+  --text-figure--line-height: 1.75rem;
+  --text-figure--letter-spacing: 0;
+  --text-figure--font-weight: 700;
 
-  --text-figure: clamp(1.75rem, 1.6rem + 0.6vw, 2rem);     /* 28 → 32 — the team page's four figures */
-  --text-figure--line-height: 1;
-  --text-figure--letter-spacing: -0.02em;
-  --text-figure--font-weight: 800;
+  --text-h1: clamp(2.25rem, 1.5rem + 3.2vw, 3.75rem);      /* 36 → 60 — the page title where it is the identity */
+  --text-h1--line-height: 1;
+  --text-h1--letter-spacing: 0;
+  --text-h1--font-weight: 700;
 
-  --text-display: clamp(2.75rem, 2rem + 3vw, 4.5rem);      /* 44 → 72 — the game-page score only */
+  --text-display: clamp(2.5rem, 2rem + 2vw, 3.5rem);       /* 40 → 56 — the game-page score */
   --text-display--line-height: 1;
-  --text-display--letter-spacing: -0.03em;
-  --text-display--font-weight: 800;
+  --text-display--letter-spacing: 0;
+  --text-display--font-weight: 700;
 
   /* named layout constants */
   --spacing-gutter:    1rem;      /* 16px phone side gutter */
   --spacing-gutter-lg: 1.5rem;    /* 24px, 768–1279 */
   --spacing-gutter-xl: 2rem;      /* 32px, ≥1280 (`xl:px-gutter-xl`) */
-  --spacing-topbar:    3rem;      /* 48px phone, the bar's rule included */
+  --spacing-topbar:    3rem;      /* 48px phone, the band's edge included */
   --spacing-topbar-lg: 4rem;      /* 64px desktop */
-  --spacing-tabbar:    3.5rem;    /* 56px */
+  --spacing-tabbar:    3.25rem;   /* 52px */
   --spacing-divbar:    3rem;      /* 48px — /standings phone division bar */
-  --spacing-row:       2.75rem;   /* 44px one-line row */
-  --spacing-row-1:     2.75rem;
-  --spacing-gamerow:   4.125rem;  /* 66px stacked two-line game row */
-  --spacing-section:   1.75rem;   /* 28px between sections, phone */
-  --spacing-section-lg: 2.5rem;   /* 40px between sections, ≥1024 */
+  --spacing-row:       2.5rem;    /* 40px one-line row */
+  --spacing-row-1:     2.5rem;
+  --spacing-gamerow:   4.5rem;    /* 72px: two 28px lines + 16px padding */
+  --spacing-section:   2rem;      /* 32px between small blocks (`.sx-section` itself is 2.5rem) */
+  --spacing-section-lg: 2rem;
   --spacing-stack:     1.25rem;   /* 20px between blocks inside a section */
-  --spacing-head:      0.5rem;    /* 8px from a heading's rule to its content */
+  --spacing-head:      0.5rem;    /* 8px from a heading to its content */
   --spacing-content:   75rem;     /* 1200px content max-width (padding included) */
   /* `max-w-*` reads the --container-* namespace, not --spacing-*, so the content
      cap has to be declared in both to be usable as `max-w-content`. */
@@ -297,7 +340,7 @@
     scroll-behavior: smooth;
     /* WCAG 2.4.11 Focus Not Obscured: the chrome is the scroll container's own padding. Top = the
        TALLEST sticky stack plus 8px of air (phone: 48px bar + a 48px division/date bar; ≥768: 64px
-       bar + 48px date header). Bottom = the 56px tab bar + 1px, so a focus ring clears it. */
+       bar + 48px date header). Bottom = the 52px tab bar + 1px, so a focus ring clears it. */
     scroll-padding-top: 6.5rem;
     scroll-padding-bottom: calc(var(--spacing-tabbar) + 1px + env(safe-area-inset-bottom));
   }
@@ -320,7 +363,7 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.5rem;
-    /* Figures are tabular lining numerals of the same face. Never set font-feature-settings
+    /* Figures in running text are tabular lining numerals. Never set font-feature-settings
        "tnum" 0 on an ancestor: it silently defeats this. */
     font-variant-numeric: tabular-nums lining-nums;
     font-synthesis-weight: none;
@@ -334,490 +377,714 @@
   h1, h2, h3 { text-wrap: balance; }
   p, li, dd, dt, figcaption, blockquote { text-wrap: pretty; }
 
-  /* ── Links are ink. Underlined in prose and for standalone actions; plain for a team name or a
-        whole-row link (underline on hover / focus). Whole-row links carry `no-underline`. ── */
-  p a, li a, dd a, dt a, blockquote a, caption a, figcaption a, .sx-link, .sx-action {
-    text-decoration-line: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+  /* Figures (scores, records, points, start times, seeds, table cells) are Barlow Semi Condensed,
+     whose figures share one width. Text is Public Sans. `--font-num` is wired in layout.tsx. */
+  .sx-num { font-family: var(--font-num), var(--font-sans), sans-serif; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: normal; letter-spacing: 0; }
+  /* Titles are in the same condensed face. The scale has a gap on purpose: 15px group strips, 22px
+     section heads (h2), then the page title (h1) at 36–60px, used only where the title is the page's
+     identity (a team's name, "SCVAL standings", "Leaders"). Score pages have no visible h1: the selected
+     day in the date bar is the title. The other big thing on the site is a live score (40–48px).
+     No text anywhere is under 12px. */
+  h1, h2, .sx-title { font-family: var(--font-num), var(--font-sans), sans-serif; font-weight: 700; letter-spacing: 0; }
+  h1, .sx-title { font-size: clamp(2.25rem, 1.5rem + 3.2vw, 3.75rem); line-height: 1; text-wrap: balance; }   /* = text-h1: 36px at 390, 60px from 1125 */
+  h2 { font-size: 1.375rem; line-height: 1.75rem; }                                                            /* = text-section */
+
+  /* Links: ink with a 1px underline; the accent on hover. Team names and row links underline on hover. */
+  .sx-link, .sx-action, .sx-prose a, main p a {
+    color: var(--sx-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--sx-border-strong);
   }
-  .sx-link, .sx-action, .sx-prose a { color: var(--sx-text); }
-  .sx-link:hover, .sx-action:hover { text-decoration-thickness: 2px; }
-  /* A STANDALONE action link is outside WCAG 2.5.8's inline exception, so it carries a 24px box. */
-  .sx-action { display: inline-flex; align-items: center; column-gap: 0.25em; min-height: 1.5rem; font-weight: 600; white-space: nowrap; }
-  .sx-rowlink, .sx-teamlink { color: inherit; text-decoration-line: none; }
+  .sx-link:hover, .sx-action:hover, .sx-prose a:hover, main p a:hover, .sx-link:focus-visible, .sx-action:focus-visible { color: var(--sx-accent-ink); text-decoration-color: currentColor; }
+  button.sx-link { appearance: none; padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
+  .sx-action { display: inline-flex; align-items: center; min-height: 1.75rem; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap; }
+  @media (pointer: coarse) { .sx-action { min-height: 2.75rem; } }
+  .sx-rowlink, .sx-teamlink { color: inherit; text-decoration: none; }
   .sx-rowlink:hover, .sx-teamlink:hover, .sx-rowlink:focus-visible, .sx-teamlink:focus-visible {
-    text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
+    text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px;
   }
-  /* `.sx-rowlink` also stretches over its row (its ::after covers the positioned row and draws the ring). */
-  .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
-  .sx-rowlink:focus-visible { outline-style: none; }
-  .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
+  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
+  .sx-linkrow { display: flex; flex-wrap: wrap; column-gap: 1.5rem; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+  /* "Updated 3:42 PM": plain text, once per page, beside the scores (the live board's head, else the end of the league row). */
+  .sx-stamp { font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; color: var(--sx-text-2); white-space: nowrap; }
 
-  ::selection { background: var(--sx-select); color: var(--sx-text); }
-  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible {
-    outline: 2px solid var(--sx-focus);
-    outline-offset: 2px;
-  }
-
-  /* Digits that stack in a column: the SAME face, tabular (0.70em a digit at every weight, so a
-     bold winner never shifts a column). The name is kept; there is no mono face. */
-  .sx-num { font-family: inherit; font-variant-numeric: tabular-nums lining-nums; font-feature-settings: normal; }
-  .sx-figure { font-variant-numeric: tabular-nums lining-nums; }
-
-  /* ── Section header (components/ui/SectionHeader.tsx renders `.sx-kicker`): the title row THEN
-        the rule. 2px ink under an h2, a hairline under an h3 / h4. ── */
-  .sx-kicker {
-    display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0.75rem;
-    margin: 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--sx-text);
-    font-size: var(--text-body); line-height: 1.5rem; color: var(--sx-text);
-  }
-  .sx-kicker:has(> div > :is(h3, h4)) { padding-bottom: 0.375rem; border-bottom: 1px solid var(--sx-border); }
-  .sx-kicker.sx-kicker-label { border-bottom: 0; padding-bottom: 0; }
-  .sx-kicker-rule { display: none; } /* the selector must exist: tests/ui/contrast.test.ts */
-  /* Rows and tables sit on the rule; running text keeps 8px of air under it. */
-  .sx-kicker + :is(p, dl, .sx-prose, .sx-inset, .sx-note) { margin-top: var(--spacing-head); }
-  .sx-section { margin-top: var(--spacing-section); }
-  @media (min-width: 64rem) { .sx-section { margin-top: var(--spacing-section-lg); } }
-
-  /* ── Masthead (components/layout/SiteHeader.tsx, TopNav.tsx, NavLink.tsx). Wordmark, nav, theme
-        button: the wordmark and the button never shrink and the nav scrolls inside its own box,
-        so nothing in the row can truncate or wrap (tests/ui/header-fit.test.ts has the widths). ── */
-  /* The bar is 48/64px INCLUDING its rule (border-box), so every sticky offset stays 48/64. */
-  .sx-mast { position: sticky; top: 0; z-index: 20; height: var(--spacing-topbar); background: var(--sx-bg); border-bottom: 1px solid var(--sx-text); }
-  .sx-mast-row {
-    display: flex; align-items: stretch; height: 100%;
-    max-width: var(--spacing-content); margin-inline: auto; padding-inline: var(--spacing-gutter);
-  }
+  /* ── Header: a solid navy band ────────────────────────────────────────────── */
+  .sx-mast { position: sticky; top: 0; z-index: 20; box-sizing: border-box; height: var(--spacing-topbar); /* edge included, so every sticky offset stays 48/64 */
+    background: var(--sx-band); border-bottom: 1px solid var(--sx-band-edge); color: var(--sx-band-text); }
+  .sx-mast-row { display: flex; align-items: stretch; height: 100%; max-width: 75rem; margin-inline: auto; padding-inline: 1rem; }
   .sx-wordmark {
-    display: inline-flex; align-items: center; flex: none; white-space: pre;
-    font-size: 1.0625rem; line-height: 1; letter-spacing: -0.02em; font-weight: 800;
-    color: var(--sx-text); text-decoration: none;
+    display: inline-flex; align-items: baseline; align-self: center; flex: none; white-space: pre;
+    padding-block: 0.625rem; font-family: var(--font-num), var(--font-sans), sans-serif; font-size: 1.375rem; line-height: 1.5rem; letter-spacing: 0; font-weight: 700;   /* 44px target */
+    color: var(--sx-band-text); text-decoration: none;
   }
-  .sx-wordmark:focus-visible { outline-offset: -4px; }
-  .sx-wordmark-tail, .sx-wordmark-abbr { font-weight: 400; }
-  .sx-wordmark-abbr { display: none; }
+  .sx-wordmark-tail { margin-left: 0.25rem; font-family: var(--font-sans), sans-serif; font-size: 0.875rem; font-weight: 500; color: var(--sx-band-muted); }   /* the sport name */
   .sx-mast-nav { display: none; flex: 1 1 auto; min-width: 0; margin-left: 1.25rem; overflow-x: auto; scrollbar-width: none; }
   .sx-mast-nav::-webkit-scrollbar { display: none; }
   .sx-mast-nav > ul { display: flex; align-items: stretch; height: 100%; margin: 0; padding: 0; list-style: none; }
   .sx-mast-nav li { display: flex; flex: none; }
+  /* Nav item: white on the band; the selected section is bold with a 3px accent bar on the band's bottom edge. */
   .sx-navtop {
-    position: relative; display: inline-flex; align-items: center; height: 100%; padding-inline: 0.625rem;
-    font-size: 0.9375rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap;
-    color: var(--sx-text-2); text-decoration: none;
+    display: inline-flex; align-items: center; height: 100%; padding-inline: 0.625rem;
+    font-size: 0.9375rem; font-weight: 500; white-space: nowrap; color: var(--sx-band-text); text-decoration: none;
   }
-  .sx-navtop:hover { color: var(--sx-text); }
-  .sx-navtop[aria-current], .sx-navtop:has([data-pending]) { color: var(--sx-text); font-weight: 700; }
-  .sx-navtop[aria-current]::after, .sx-navtop:has([data-pending])::after {
-    content: ""; position: absolute; left: 0.625rem; right: 0.625rem; bottom: 0; height: 4px; background: var(--sx-text);
-  }
+  .sx-navtop:hover { box-shadow: inset 0 -3px 0 var(--sx-band-line); }
+  .sx-navtop[aria-current], .sx-navtop:has([data-pending]) { font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-band-accent); }
+  .sx-mast :focus-visible { outline-color: var(--sx-band-accent); }
   .sx-navtop:focus-visible { outline-offset: -3px; }
-  .sx-mast-sep, .sx-mast-quiet { display: none !important; }
-  .sx-mast-end { display: flex; align-items: center; flex: none; margin-left: auto; margin-right: -0.75rem; }
+  /* Header end: team search. A field from 1024; below that a 44px magnifier link to /teams. */
+  .sx-mast-end { display: flex; align-items: center; flex: none; margin-left: auto; }
+  .sx-mast-search { display: none; position: relative; }
+  .sx-mast-search > input {
+    width: 13rem; height: 2.25rem; padding: 0 0.625rem 0 2rem; border: 1px solid var(--sx-band-line); border-radius: var(--sx-r-control);
+    background: var(--sx-band-2); font: inherit; font-size: 0.9375rem; color: var(--sx-band-text);
+  }
+  .sx-mast-search > input::placeholder { color: var(--sx-band-muted); opacity: 1; }
+  .sx-mast-search > input:hover { border-color: var(--sx-band-muted); }
+  .sx-mast-search > svg { position: absolute; left: 0.625rem; top: 50%; translate: 0 -50%; color: var(--sx-band-muted); pointer-events: none; }
+  .sx-mast-find { display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; margin-right: -0.75rem; color: var(--sx-band-text); }
   @media (min-width: 48rem) {
     .sx-mast { height: var(--spacing-topbar-lg); }
-    .sx-mast-row { padding-inline: var(--spacing-gutter-lg); }
-    .sx-wordmark { font-size: 1.1875rem; }
-    .sx-wordmark-abbr { display: inline; }
-    /* = sr-only: the full tail stays in the home link's accessible name behind the initials. */
-    .sx-wordmark-tail { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .sx-mast-row { padding-inline: 1.5rem; }
+    .sx-wordmark { font-size: 1.5rem; }
+    .sx-wordmark-tail { font-size: 0.9375rem; }
     .sx-mast-nav { display: block; }
-    .sx-mast-end { margin-left: 0; }
   }
   @media (min-width: 64rem) {
-    .sx-wordmark-abbr { display: none; }
-    .sx-wordmark-tail { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
-    .sx-mast-nav { margin-left: 1.5rem; }
+    .sx-mast-nav { margin-left: 1.75rem; }
     .sx-navtop { padding-inline: 0.75rem; }
-    .sx-navtop[aria-current]::after, .sx-navtop:has([data-pending])::after { left: 0.75rem; right: 0.75rem; }
-    .sx-mast-sep { display: flex !important; width: 1px; margin: 1.375rem 0.5rem; background: var(--sx-border); }
-    .sx-mast-quiet { display: flex !important; }
-    .sx-mast-quiet .sx-navtop { font-weight: 400; color: var(--sx-text-3); }
-    .sx-mast-quiet .sx-navtop:hover { color: var(--sx-text); }
-    .sx-mast-quiet .sx-navtop[aria-current], .sx-mast-quiet .sx-navtop:has([data-pending]) { font-weight: 700; color: var(--sx-text); }
+    .sx-mast-search { display: block; }
+    .sx-mast-find { display: none; }
   }
-  @media (min-width: 80rem) { .sx-mast-row { padding-inline: var(--spacing-gutter-xl); } }
-  /* Weight without width: a label whose weight follows its state sets its words twice, once visibly
-     and once as a hidden zero-height 700 copy from `data-label`, and is as wide as the wider. */
+  @media (min-width: 80rem) { .sx-mast-row { padding-inline: 2rem; } }
+  /* width-hold: the label reserves its 700-weight width so the selected state never moves a neighbour */
   .sx-weight-hold { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; }
-  .sx-weight-hold::after {
-    content: attr(data-label);
-    height: 0; overflow: hidden; visibility: hidden;
-    font-weight: 700; pointer-events: none; user-select: none;
-  }
-  /* One lit item while a navigation is pending: `aria-current` only moves when the route commits,
-     so the item the reader is leaving returns to rest as soon as another is marked `data-pending`. */
-  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending])) {
-    color: var(--sx-text-2); font-weight: 500;
-  }
-  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending]))::before,
-  nav:has([data-pending]) :is(.sx-navtop, .sx-tabbar-tab):is([aria-current], [data-current]):not(:has([data-pending]))::after {
-    content: none;
-  }
+  .sx-weight-hold::after { content: attr(data-label); height: 0; visibility: hidden; overflow: hidden; font-weight: 700; pointer-events: none; user-select: none; }
 
-  /* The stale strip (LastUpdated variant="strip"): only when the data is over 36 hours old while a
-     league is still playing. Under the bar, not sticky. */
-  .sx-stale { background: var(--sx-accent-wash); color: var(--sx-text); font-size: 0.8125rem; line-height: 1.125rem; }
-  .sx-stale > p { max-width: var(--spacing-content); margin: 0 auto; padding: 0.5rem var(--spacing-gutter); }
-  .sx-stale a { margin-left: 0.5rem; color: var(--sx-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-  @media (min-width: 48rem) { .sx-stale > p { padding-inline: var(--spacing-gutter-lg); } }
-  @media (min-width: 80rem) { .sx-stale > p { padding-inline: var(--spacing-gutter-xl); } }
+  /* Square 44px outlined button: the date bar's step arrows and the phone Calendar button. */
+  .sx-iconbtn { appearance: none; display: inline-grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); color: var(--sx-text); cursor: pointer; text-decoration: none; }
+  .sx-iconbtn:hover { border-color: var(--sx-text); }
+  .sx-iconbtn[aria-disabled="true"], .sx-iconbtn:disabled { color: var(--sx-border-strong); border-color: var(--sx-border); cursor: default; }
 
-  /* ── Page header and its dateline (PageHeader.tsx, Dateline.tsx). The dateline is ordinary
-        wrapping text; only the date and time themselves stay on one line. ── */
-  .sx-pagehead { padding-top: 1.75rem; }
-  .sx-pagehead > h1 { margin: 0; }
-  .sx-dateline { margin: 0.5rem 0 0; max-width: 46rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
-  .sx-dateline b, .sx-dateline strong { font-weight: 600; color: var(--sx-text); }
+  /* Stale notice: rendered only when the snapshot is > 36h old and the season is not complete. */
+  .sx-stale { max-width: 75rem; margin: 0.75rem auto 0; padding-inline: 1rem; font-size: 0.9375rem; line-height: 1.375rem; color: var(--sx-text); }
+  .sx-stale > p { margin: 0; padding: 0.625rem 0.75rem; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); }
+  .sx-stale a { margin-left: 0.5rem; color: var(--sx-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; white-space: nowrap; }
+  @media (min-width: 48rem) { .sx-stale { padding-inline: 1.5rem; } }
+  @media (min-width: 80rem) { .sx-stale { padding-inline: 2rem; } }
+
+  /* ── Page header (pages whose title is their identity: Standings, Teams, a team, Leaders, About …) ───────── */
+  .sx-pagehead { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; row-gap: 0.375rem; align-items: center; padding: 1rem 0 0.5rem; }
+  .sx-pagehead > h1 { grid-column: 1 / -1; margin: 0; }
+  .sx-pagehead-meta { grid-column: 1; grid-row: 2; display: flex; flex-wrap: wrap; column-gap: 0.75rem; margin: 0; font-size: 0.9375rem; line-height: 1.375rem; color: var(--sx-text-2); }
+  .sx-pagehead-end { grid-column: 2; grid-row: 2; display: flex; align-items: center; gap: 1.125rem; }
+  .sx-pagehead > :not(h1, .sx-pagehead-meta, .sx-pagehead-end) { grid-column: 1 / -1; }
+  .sx-dateline { margin: 0; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }   /* the long "Updated …" line (footer, /about, stale) */
   .sx-dateline time { white-space: nowrap; }
-  @media (min-width: 64rem) { .sx-pagehead { padding-top: 2.5rem; } }
+  @media (min-width: 48rem) {
+    .sx-pagehead { align-items: baseline; padding: 1.5rem 0 0.75rem; row-gap: 0.5rem; }
+    .sx-pagehead:has(> .sx-pagehead-end) > h1 { grid-column: 1; }
+    .sx-pagehead-end { grid-row: 1; }
+    .sx-pagehead-meta { grid-column: 1 / -1; }
+  }
+  .sx-pagehead:not(:has(> .sx-pagehead-end)) > .sx-pagehead-meta { grid-column: 1 / -1; }
+  /* Team page header: logo (the 64px file, drawn at 48 below 768), the name, where the team plays in
+     plain text, then the record as FIGURES with a small label under each (not a label-plus-meta line).
+     The pin state ends the header: "★ Your team" + a "Remove" link, or one button "Make this my team". */
+  .sx-teamhead { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 0.875rem; row-gap: 0; }
+  .sx-pagehead.sx-teamhead > img { grid-column: 1; grid-row: 1 / span 2; width: 3rem; height: 3rem; }
+  .sx-teamhead > h1 { grid-column: 2; grid-row: 1; align-self: end; }
+  .sx-teamhead > .sx-pagehead-meta { grid-column: 2; grid-row: 2; align-self: start; }
+  .sx-pagehead.sx-teamhead > .sx-figures { grid-column: 1 / -1; grid-row: 3; margin-top: 0.875rem; }
+  .sx-teamhead > .sx-pagehead-end { grid-column: 1 / -1; grid-row: 4; margin-top: 0.5rem; }
+  .sx-figures { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin: 0; }
+  .sx-figures > div { display: flex; flex-direction: column-reverse; }
+  .sx-figures dt { font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-figures dd { margin: 0; font-family: var(--font-num), var(--font-sans), sans-serif; font-variant-numeric: tabular-nums lining-nums; font-size: 1.625rem; line-height: 1.75rem; font-weight: 700; color: var(--sx-text); }
+  .sx-pinstate { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 2.75rem; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; color: var(--sx-text); }
+  .sx-pinstate > .sx-pin-note { margin: 0; }
+  .sx-pinstate > .sx-link { margin-left: 0.5rem; font-weight: 400; min-height: 2.75rem; }
+  @media (min-width: 48rem) {
+    .sx-teamhead { grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 1.25rem; }
+    .sx-pagehead.sx-teamhead > img { width: 4rem; height: 4rem; }
+    .sx-teamhead:has(> .sx-pagehead-end) > h1 { grid-column: 2; }
+    .sx-teamhead > .sx-pagehead-meta { grid-column: 2; }
+    .sx-pagehead.sx-teamhead > .sx-figures { grid-column: 2 / -1; }
+    .sx-teamhead > .sx-pagehead-end { grid-column: 3; grid-row: 1 / span 2; margin-top: 0; }
+  }
 
-  /* ── Footer (Attribution.tsx): a site index and one line. ── */
-  .sx-foot { margin-top: 4rem; border-top: 1px solid var(--sx-text); font-size: 0.8125rem; line-height: 1.25rem; color: var(--sx-text-2); }
-  .sx-foot-inner { max-width: var(--spacing-content); margin-inline: auto; padding: 0.5rem var(--spacing-gutter) 1.5rem; }
-  .sx-foot-index { display: flex; flex-wrap: wrap; gap: 0 1.25rem; margin: 0; padding: 0; list-style: none; }
-  .sx-foot-index a {
-    display: inline-flex; align-items: center; gap: 0.25em; min-height: 2.75rem;
-    font-size: 0.875rem; font-weight: 600; color: var(--sx-text); text-decoration: none;
+  /* ── Date bar (the Scores page, which is also the home page). It is the page's visible title: the
+     selected cell names the day, and there is no h1 above it (the h1 is visually hidden).
+     previous / day cells / next / Calendar in one row. Cells share the width. The bar is a size
+     container: it shows 3 cells when it is under 34rem wide (phones, a tablet's main column), 5 from
+     34rem (the main column at 1024), 7 from 44rem (the main column at 1280), centred on the selected
+     day (`data-far="1|2"` marks the outer cells). ── */
+  .sx-datebar { container: datebar / inline-size; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; background: var(--sx-bg); border-bottom: 1px solid var(--sx-border); }
+  .sx-datebar[data-sticky] { position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 10; }
+  .sx-days { display: flex; flex: 1 1 auto; min-width: 0; margin: 0; padding: 0; list-style: none; }
+  .sx-days > li { display: flex; flex: 1 1 0; min-width: 0; }
+  .sx-days > li[data-far] { display: none; }
+  .sx-day {
+    display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; height: 3.75rem; margin-bottom: -0.5625rem; padding: 0 0.125rem 0.5rem;
+    font-size: 0.8125rem; line-height: 1rem; font-weight: 500; color: var(--sx-text-2); text-decoration: none; white-space: nowrap;
   }
-  .sx-foot-index a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .sx-foot-line { margin: 0.25rem 0 0; max-width: 62ch; }
-  @media (min-width: 48rem) { .sx-foot-inner { padding-inline: var(--spacing-gutter-lg); } }
-  @media (min-width: 80rem) { .sx-foot-inner { padding-inline: var(--spacing-gutter-xl); } }
+  .sx-day > b { font-size: 1rem; line-height: 1.25rem; font-weight: 600; color: var(--sx-text); }
+  .sx-day > small { font-size: 0.8125rem; line-height: 1rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-day:hover { background: var(--sx-surface-2); }
+  .sx-day[aria-current] { color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-accent); }
+  .sx-day[aria-current] > b { font-weight: 700; }
+  .sx-day[data-today] { color: var(--sx-accent-ink); font-weight: 700; }   /* the word "Today" is the today marker */
+  .sx-day[data-live] > small { color: var(--sx-live); font-weight: 700; }
+  .sx-day:focus-visible { outline-offset: -3px; }
+  .sx-datebar .sx-btn { min-height: 2.75rem; }
+  .sx-datebar .sx-btn > svg { display: none; }
+  @container datebar (max-width: 29.99rem) {
+    .sx-datebar .sx-btn { width: 2.75rem; padding: 0; }
+    .sx-datebar .sx-btn > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .sx-datebar .sx-btn > svg { display: block; }
+  }
+  @container datebar (max-width: 19.99rem) {   /* a 320px phone */
+    .sx-day { padding-inline: 0; }
+    .sx-day > b { font-size: 0.9375rem; }
+    .sx-day > small { font-size: 0.75rem; }
+    .sx-datebar :is(.sx-iconbtn, .sx-btn) { width: 2.25rem; }   /* 36 x 44 */
+  }
+  @media (max-width: 22.49rem) { .sx-datebar { gap: 0.25rem; } }
+  @container datebar (min-width: 34rem) { .sx-days > li[data-far="1"] { display: flex; } }
+  @container datebar (min-width: 44rem) { .sx-days > li[data-far] { display: flex; } }
+  /* Month picker (the SeasonCalendar inside the Calendar disclosure) */
+  .sx-cal { display: grid; grid-template-columns: repeat(7, 2.5rem); gap: 2px; font-size: 0.875rem; text-align: center; }
+  .sx-cal > :is(a, span) { display: grid; place-items: center; height: 2.5rem; border-radius: var(--sx-r-control); color: var(--sx-text-3); text-decoration: none; }
+  .sx-cal > a { color: var(--sx-text); font-weight: 600; }
+  .sx-cal > a:hover { background: var(--sx-surface-2); }
+  .sx-cal > a[data-today] { text-decoration: underline; text-decoration-color: var(--sx-accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .sx-cal > a[aria-current] { background: var(--sx-text); color: var(--sx-bg); }
 
-  /* ── Phone tab bar and its More sheet (BottomTabBar.tsx, MoreMenu.tsx). ── */
-  .sx-tabbar {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
-    background: var(--sx-bg); border-top: 1px solid var(--sx-text); padding-bottom: env(safe-area-inset-bottom);
+  /* ── Tabs. One face for the league row (`.sx-league-chip`), page tabs (`.sx-tab`) and option rows
+     (`.sx-opt`): a row of words on a hairline; the selected one is bold with a 3px accent bar. ── */
+  .sx-tabs, .sx-scope, .sx-opts { display: flex; align-items: stretch; column-gap: 1.25rem; margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--sx-border); }
+  .sx-tabs { overflow-x: auto; scrollbar-width: none; }
+  .sx-tabs::-webkit-scrollbar { display: none; }
+  .sx-tabs > ul, .sx-scope > [role="group"], .sx-chips, .sx-opts > ul { display: flex; align-items: stretch; column-gap: 1.25rem; flex: none; margin: 0; padding: 0; list-style: none; }
+  .sx-scope ul, .sx-opts ul { display: contents; }
+  .sx-tabs li, .sx-scope li, .sx-opts li { display: flex; flex: none; list-style: none; }
+  .sx-tab, .sx-league-chip, .sx-opt {
+    appearance: none; display: inline-flex; align-items: center; flex: none; min-height: 2.75rem; margin-bottom: -1px; padding: 0;
+    border: 0; border-radius: 0; background: none; cursor: pointer;
+    font: inherit; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap;
+    color: var(--sx-text-2); text-decoration: none; opacity: 1;
   }
-  .sx-tabbar > ul { display: flex; max-width: 28rem; margin: 0 auto; padding: 0; list-style: none; }
-  .sx-tabbar > ul > li { flex: 1 1 0; min-width: 0; }
-  .sx-tabbar-tab {
-    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
-    width: 100%; height: var(--spacing-tabbar); line-height: 1; font-weight: 500;
-    color: var(--sx-text-2); text-decoration: none; cursor: pointer; list-style: none;
-    transition: background-color var(--sx-dur-tap) var(--sx-ease);
+  .sx-tab:hover, .sx-league-chip:hover, .sx-opt:hover { color: var(--sx-text); }
+  :is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], [aria-current], [aria-selected="true"]) { color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-accent); }
+  .sx-tab:focus-visible, .sx-league-chip:focus-visible { outline-offset: -3px; }
+  /* League row (ScopeBar). Two parts: the league tabs, and `.sx-scope-util` = the region switch
+     (multi-region builds) + the "Updated …" stamp. From 768 they share one row: tabs, then at the row's
+     end the stamp and the switch. Below 768 the util part is its own 44px line ABOVE the tabs (region
+     first, then leagues: the order of the scope), switch at the left and stamp at the right. It is the
+     only place the region SWITCH is drawn, at every width. */
+  .sx-scope { flex-wrap: wrap; align-items: center; }
+  .sx-scope > [role="group"], .sx-chips { order: 2; flex: 1 1 100%; flex-wrap: wrap; min-width: 0; }
+  .sx-scope-util { order: 1; display: flex; flex: 1 1 100%; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 2.75rem; }
+  .sx-scope-util > .sx-stamp:only-child { margin-left: auto; }
+  .sx-scope-end { order: 3; display: flex; flex-wrap: wrap; flex: 1 1 100%; gap: 0.5rem; padding: 0.5rem 0; }      /* selects: their own row */
+  @media (max-width: 22.49rem) { .sx-scope > [role="group"], .sx-chips { column-gap: 0.75rem; } .sx-league-chip { font-size: 0.875rem; } }
+  @media (min-width: 48rem) {
+    .sx-scope > [role="group"], .sx-chips { order: 1; flex: 1 1 auto; }
+    .sx-scope-util { order: 2; flex: none; flex-direction: row-reverse; gap: 1rem; min-height: 0; margin-left: auto; }
   }
-  .sx-tabbar-tab::-webkit-details-marker { display: none; }
-  .sx-tabbar-tab:active { background: var(--sx-surface-2); }
-  .sx-tabbar-tab:is([aria-current], [data-current]), .sx-tabbar-tab:has([data-pending]), details[open] > .sx-tabbar-tab {
-    color: var(--sx-text); font-weight: 700;
-  }
-  .sx-tabbar-tab:is([aria-current], [data-current])::before, .sx-tabbar-tab:has([data-pending])::before,
-  details[open] > .sx-tabbar-tab::before {
-    content: ""; position: absolute; top: -1px; left: 22%; right: 22%; height: 4px; background: var(--sx-text);
-  }
-  .sx-tabbar-tab:focus-visible { outline-offset: -4px; }
-  .sx-more-sheet {
-    position: fixed; left: 0; right: 0; bottom: calc(var(--spacing-tabbar) + env(safe-area-inset-bottom) + 1px); z-index: 19;
-    max-height: calc(100dvh - 8rem); overflow-y: auto; background: var(--sx-bg); border-top: 1px solid var(--sx-text);
-  }
-  .sx-more-sheet > ul { margin: 0; padding: 0 var(--spacing-gutter); list-style: none; }
-  .sx-more-sheet li + li { border-top: 1px solid var(--sx-border); }
-  .sx-more-sheet a {
-    display: flex; align-items: center; justify-content: space-between; min-height: 3rem;
-    font-size: 1rem; font-weight: 600; color: var(--sx-text); text-decoration: none;
-  }
-  .sx-more-sheet a[aria-current] { box-shadow: inset 3px 0 0 var(--sx-text); padding-left: 0.75rem; }
-  .sx-more-sheet > p { margin: 0; padding: 0.75rem var(--spacing-gutter); border-top: 1px solid var(--sx-border); font-size: 0.8125rem; color: var(--sx-text-2); }
-  @media (min-width: 48rem) { .sx-tabbar { display: none; } }
 
-  /* ── Layout: main + rail, two-up, auto-fill columns. ── */
+  /* Segmented switch. ONE use: the region (NorCal / SoCal), a real change of data. Equal cells, 32px
+     tall; on touch the cell's hit area is extended to 44px without growing the control. */
+  .sx-seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); }
+  .sx-seg > .sx-opt { position: relative; justify-content: center; min-height: 2rem; margin: 0; padding: 0 0.75rem; font-size: 0.875rem; font-weight: 600; color: var(--sx-text-2); box-shadow: none; }
+  .sx-seg > .sx-opt:first-child { border-radius: 3px 0 0 3px; }
+  .sx-seg > .sx-opt:last-child { border-radius: 0 3px 3px 0; }
+  .sx-seg > .sx-opt + .sx-opt { border-left: 1px solid var(--sx-border-strong); }
+  .sx-seg > .sx-opt[aria-pressed="true"] { background: var(--sx-surface-3); color: var(--sx-text); font-weight: 600; box-shadow: none; }
+  .sx-seg > .sx-opt:focus-visible { outline-offset: -3px; }
+  @media (pointer: coarse) { .sx-seg > .sx-opt::before { content: ""; position: absolute; inset: -6px 0; } }
+
+  /* ── Sections ─────────────────────────────────────────────────────────────── */
+  /* A top-level block (a league on Standings, a rail block, "Latest results" on a day without games) is
+     set apart by space and its 22px heading. There is no rule above a block. Section heads are the ONE
+     level where a heading may carry a grey fact beside it (`.sx-dayhead`: "Latest results  Saturday,
+     November 7"). Groups inside a block are headed by a tint strip (`.sx-strip`): a competition, a
+     division in the rail, a date, a leaders board. The tint means "group title" and nothing else:
+     table column heads are NOT tinted. */
+  .sx-section { margin-top: 2.5rem; }
+  .sx-section:first-child, .sx-section[data-first] { margin-top: 1.25rem; }
+  .sx-kicker { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.75rem; margin: 0 0 0.5rem; padding: 0; border: 0; font-size: 1rem; }
+  .sx-kicker > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.75rem; min-width: 0; }
+  .sx-kicker > .sx-action { margin-left: auto; }
+  .sx-kicker-rule { display: none; } /* name kept: tests/ui/contrast.test.ts checks the selector exists */
+  .sx-section > :is(h2, h3):first-child { margin: 0 0 0.5rem; }
+  .sx-dayhead { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.625rem; margin: 0 0 0.5rem; color: var(--sx-text); }
+  .sx-dayhead > :is(a, span) { font-family: var(--font-sans), sans-serif; font-size: 0.9375rem; line-height: 1.5rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-subsection { margin-top: 1.25rem; }
+  .sx-subsection:first-of-type, .sx-dayhead + .sx-subsection { margin-top: 0; }
+  /* Group strip: the quiet head of a group of rows. Tint, no rule, 36px. The name (15px/700) at the
+     left; at the right end, in regular weight, what round or how many, then (optional) one link. */
+  .sx-strip, .sx-band {
+    display: flex; align-items: center; gap: 0.625rem; min-height: 2.25rem; margin: 0; padding: 0 0.5rem; background: var(--sx-surface-2);
+    font-family: var(--font-sans), sans-serif; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 700; letter-spacing: 0; color: var(--sx-text);
+  }
+  :is(.sx-strip, .sx-band) :is(h2, h3, h4) { margin: 0; font: inherit; }
+  .sx-strip-end { display: flex; align-items: center; gap: 0.875rem; margin-left: auto; font-size: 0.875rem; font-weight: 400; color: var(--sx-text-2); white-space: nowrap; }
+  .sx-strip-end > .sx-action { min-height: 2.25rem; font-size: 0.875rem; }
+  :is(.sx-strip, .sx-band) a:not(.sx-action) { color: inherit; text-decoration: none; }
+  :is(.sx-strip, .sx-band) a:not(.sx-action):hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .sx-strip ~ .sx-strip, .sx-gamelist + .sx-strip, .sx-tablewrap + .sx-strip { margin-top: 1rem; }
+  @media (pointer: coarse) { .sx-strip:has(.sx-action), .sx-strip:has(.sx-action) .sx-action { min-height: 2.75rem; } }
+  .sx-band[data-sticky] { position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 5; }
+
+  /* ── Layout: main + rail from 768 (the rail holds standings, so they are on the first screen of a
+     tablet too). The rail is 21rem from 1024 with a 40px gap (760 + 336 inside the 75rem container at
+     1280). The main column is never stretched: a game list adds columns instead (see `.sx-gamelist`). ── */
   .sx-cols { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .sx-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 3rem; }
-  .sx-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 0 3rem; }
+  .sx-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 2.5rem; }
+  .sx-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 0 2.5rem; }
+  .sx-rail > .sx-section:first-child { margin-top: 2.5rem; }
+  @media (min-width: 48rem) {
+    .sx-cols { grid-template-columns: minmax(0, 1fr) 18rem; column-gap: 2rem; align-items: start; }
+    .sx-rail > .sx-section:first-child { margin-top: 1.25rem; }
+  }
   @media (min-width: 64rem) {
-    .sx-cols { grid-template-columns: minmax(0, 1fr) 22rem; }
-    .sx-cols > .sx-rail { margin-left: 2rem; padding-left: 2rem; border-left: 1px solid var(--sx-border); }
+    .sx-cols { grid-template-columns: minmax(0, 1fr) 21rem; column-gap: 2.5rem; }
     .sx-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 
-  /* ── Tabs: the ONE selector control (region, league, division, month, date). Text on a
-        hairline; selected = ink, 700 and a 3px ink bar. `.sx-league-chip` is the same face (the
-        name is a hook). Before hydration the scope stylesheet (components/prefs/league-scope-css.ts,
-        unlayered) draws the selected state from html[data-league]; the two must stay the same. ── */
-  .sx-tabs, .sx-scope {
-    display: flex; align-items: stretch; margin: 0; padding: 0; list-style: none;
-    border-bottom: 1px solid var(--sx-border); overflow-x: auto; scrollbar-width: none;
+  /* Old surfaces, flattened. Names kept so call sites and tests survive; page agents purge them. */
+  .sx-card { background: none; box-shadow: none; border-radius: 0; padding: 0; }
+  /* Inside an old card the text still wraps as it did: a prose table that is not in the new
+     `.sx-tablewrap` (the /about cross-checks) and a sentence-long `.sx-action` (the /playoffs league
+     lines) were set on one line by the new rules and ran 600 to 1080px past a 390px phone. Dead once
+     the pages drop `.sx-card`. */
+  .sx-card .sx-table:not(.sx-tablewrap > .sx-table) :is(td, tbody th) { white-space: normal; }
+  .sx-card .sx-action, p > .sx-action { white-space: normal; }   /* and a link set in a paragraph: /playoffs' NFHS link is 308px, 4px more than a 320px phone has */
+  .sx-flush { padding: 0; }
+  .sx-bleed { margin-inline: 0; }
+  .sx-inset { border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); padding: 0.625rem 0.75rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
+  .sx-note { margin: 0.5rem 0 0; max-width: 62ch; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2); }
+  .sx-empty { margin: 0; padding: 0.25rem 0 0.75rem; font-size: 1rem; line-height: 1.5rem; color: var(--sx-text-2); }
+
+  /* ── Status text, live, result chips ──────────────────────────────────────── */
+  .sx-tag, .sx-badge, .sx-status, .sx-flag {
+    display: inline; padding: 0; border: 0; border-radius: 0; background: none; min-height: 0;
+    font-family: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; letter-spacing: 0; text-transform: none;
+    color: var(--sx-text-2); white-space: nowrap;
   }
-  .sx-tabs::-webkit-scrollbar, .sx-scope::-webkit-scrollbar { display: none; }
-  .sx-scope { margin-top: 1.25rem; }
-  .sx-scope > [role="group"], .sx-scope > nav, .sx-tabs > ul, .sx-scope ul {
-    display: flex; align-items: stretch; flex: none; margin: 0; padding: 0; list-style: none;
+  .sx-live { display: inline-flex; align-items: center; gap: 0.3125rem; font-weight: 700; color: var(--sx-live); white-space: nowrap; }
+  .sx-live::before { content: ""; width: 0.4375rem; height: 0.4375rem; border-radius: 999px; background: currentColor; }
+  /* W / L / T chip. The letter always carries the meaning. W is a solid green square with a white
+     letter; L is a red outline with a red letter; T is a grey outline. A run of five therefore weighs
+     less than the Pts column beside it, and the chip is the same in both themes. Letters are 12px or more. */
+  .sx-chip { display: inline-grid; place-items: center; flex: none; box-sizing: border-box; border-radius: var(--sx-r-chip); border: 1px solid transparent; font-family: var(--font-num), var(--font-sans), sans-serif; font-style: normal; font-weight: 700; line-height: 1; }
+  .sx-chip-16 { width: 16px; height: 16px; font-size: 12px; }
+  .sx-chip-20 { width: 20px; height: 20px; font-size: 13px; }
+  .sx-chip-24 { width: 24px; height: 24px; font-size: 14px; }
+  .sx-chip-28 { width: 28px; height: 28px; font-size: 16px; }
+  .sx-chip-win  { background: var(--sx-win-fill); border-color: var(--sx-win-fill); color: var(--sx-on-fill); }
+  .sx-chip-loss { border-color: var(--sx-loss); color: var(--sx-loss-ink); }
+  .sx-chip-tie  { border-color: var(--sx-border-strong); color: var(--sx-text-2); }
+  .sx-chip-pending { border-color: var(--sx-border); color: var(--sx-text-3); }
+  .sx-form { display: inline-flex; gap: 2px; vertical-align: middle; }
+
+  /* ── Buttons, fields ──────────────────────────────────────────────────────── */
+  .sx-btn, .sx-pill {
+    appearance: none; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; min-height: 2.5rem; padding: 0 0.875rem;
+    border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control); background: var(--sx-bg); cursor: pointer;
+    font: inherit; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; white-space: nowrap; color: var(--sx-text); text-decoration: none; list-style: none;
   }
-  .sx-scope li, .sx-tabs li { display: flex; flex: none; }
-  /* A switcher is its own `.sx-tabs` row when it stands alone; inside the bar, the bar owns the
-     hairline and the scrolling. */
-  .sx-scope > .sx-tabs { flex: none; border-bottom: 0; overflow: visible; }
-  .sx-scope-sep { flex: none; width: 1px; margin: 0.75rem 0.75rem 0.75rem 0.5rem; background: var(--sx-border-strong); }
-  .sx-scope-end { display: flex; align-items: center; flex: none; margin-left: auto; padding-left: 1rem; }
-  .sx-tab, .sx-league-chip {
-    appearance: none; display: inline-flex; align-items: center; flex: none; min-height: 2.75rem; padding: 0 0.5625rem;
-    border: 0; border-radius: 0; background: none; cursor: pointer;
-    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; white-space: nowrap;
-    color: var(--sx-text-2); text-decoration: none; opacity: 1;
+  .sx-btn::-webkit-details-marker { display: none; }
+  a.sx-pill { color: var(--sx-text); }
+  .sx-btn:hover, .sx-pill:hover { border-color: var(--sx-text); }
+  .sx-btn-primary, .sx-pill-accent { border-color: var(--sx-text); background: var(--sx-text); color: var(--sx-bg); }
+  a.sx-pill-accent { color: var(--sx-bg); }
+  .sx-pill-ring, .sx-pill-card { box-shadow: none; }
+  @media (pointer: coarse) { .sx-btn, .sx-pill { min-height: 2.75rem; } }
+  .sx-field {
+    display: block; width: 100%; height: 2.75rem; padding: 0 0.75rem; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control);
+    background: var(--sx-bg); font: inherit; font-size: 1rem; color: var(--sx-text);
   }
-  .sx-tab:disabled, .sx-league-chip:disabled { color: var(--sx-text-2); cursor: default; }
-  .sx-tab:hover, .sx-league-chip:hover { color: var(--sx-text); }
-  .sx-tab:is([aria-pressed="true"], [aria-current], [aria-selected="true"]),
-  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-text);
+  .sx-field::placeholder { color: var(--sx-text-3); opacity: 1; }
+  .sx-field:focus-visible, .sx-select:focus-visible { outline: 2px solid var(--sx-focus); outline-offset: 0; border-color: var(--sx-focus); }
+  .sx-mast-search > input:focus-visible { outline: 2px solid var(--sx-band-accent); outline-offset: 0; border-color: var(--sx-band-accent); }
+  .sx-select {
+    height: 2.75rem; max-width: 100%; padding: 0 0.5rem; border: 1px solid var(--sx-border-strong); border-radius: var(--sx-r-control);
+    background: var(--sx-bg); font: inherit; font-size: 0.9375rem; font-weight: 500; color: var(--sx-text);
+  }   /* a native select with its own arrow */
+
+  /* ── Team logo ────────────────────────────────────────────────────────────── */
+  /* The files are opaque squares (96 of 108 on white, 12 full-bleed). No tile, no border, no padding,
+     no filter, in either theme: on a white page a white-ground logo has no edge at all, and on the
+     dark page and the navy band it is its own small white square with a 2px corner. */
+  img.sx-monogram { display: block; flex: none; border-radius: 2px; }
+  .sx-monogram:not(img) { display: inline-grid; place-items: center; flex: none; border-radius: 2px; background: var(--sx-surface-3); color: var(--sx-text-2); font-style: normal; font-weight: 600; line-height: 1; }
+
+  /* ── Game row ─────────────────────────────────────────────────────────────── */
+  /* One component, one DOM, one row shape, one size. Three columns:
+       status (fixed, 4.25rem) | two team lines (logo, name, seed) | the scores, flush right.
+     The STATUS SLOT is the same place for every state, so nothing shifts between rows:
+       upcoming  "4:00 PM"            final   "Final" (+ "OT" / "SO" on its second line)
+       live      "Live" + "2nd half"  off     "Postponed" / "Canceled"
+     "Final" is therefore printed on every final. An upcoming game has nothing in the score column.
+     Under the teams, one optional note line: the venue, the competition (in a list not grouped by
+     competition), or how it was decided ("Palo Alto wins shootout 3-2").
+     `GameList` renders <div class="sx-gamelist"><ul class="sx-games">; the wrapper is the size
+     container. A list under 44rem wide (phones, the rail, the main column up to 1024) is one column.
+     From 44rem the SAME rows sit in columns of at least 21rem, so a wide list gets shorter instead of
+     stretching name and score apart. */
+  .sx-gamelist { container: games / inline-size; }
+  .sx-games { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 2rem; margin: 0; padding: 0; list-style: none; overflow: clip; }
+  .sx-game { position: relative; margin-top: -1px; border-top: 1px solid var(--sx-border); }   /* the first row's line is clipped by the list */
+  .sx-game:hover { background: var(--sx-surface-2); }
+  .sx-game-grid {
+    display: grid; grid-template-columns: 4.25rem minmax(0, 1fr) auto; grid-template-areas: "st a as" "st h hs" ". note note";
+    column-gap: 0.5rem; align-items: center; padding: 0.5rem; font-size: 1rem; line-height: 1.75rem;
   }
-  .sx-tab:focus-visible, .sx-league-chip:focus-visible { outline-offset: -3px; }
-  @media (min-width: 48rem) { .sx-tab, .sx-league-chip { padding: 0 0.75rem; } }
-  /* The drawn check of the schedule filter pills (a mask over the pill's own ink). The league and
-     region tabs no longer show one: `.sx-chip-check` goes with their check spans. */
+  .sx-game-team { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-weight: 500; color: var(--sx-text); }
+  .sx-game-team[data-side="away"] { grid-area: a; }
+  .sx-game-team[data-side="home"] { grid-area: h; }
+  .sx-game-name { position: relative; z-index: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: inherit; text-decoration: none; }   /* a team link, above the row link */
+  a.sx-game-name:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .sx-seed { flex: none; font-size: 0.875rem; font-weight: 500; color: var(--sx-text-3); }   /* "#7" */
+  .sx-game-score { min-width: 1.5rem; text-align: right; font-size: 1.625rem; line-height: 1.75rem; font-weight: 600; color: var(--sx-text); }
+  .sx-game-score[data-side="away"] { grid-area: as; }
+  .sx-game-score[data-side="home"] { grid-area: hs; }
+  .sx-games-wide .sx-game-score { min-width: 2.25rem; }   /* basketball */
+  /* Result: the winner is bold; the loser's name and score (a zero too) are `--sx-text-3`. A tie leaves both alone. */
+  .sx-game-team[data-won], .sx-game-score[data-won] { font-weight: 700; }
+  .sx-game-team[data-lost] { font-weight: 400; color: var(--sx-text-3); }
+  .sx-game-score[data-lost] { font-weight: 500; color: var(--sx-text-3); }
+  .sx-game[data-off] .sx-game-team { color: var(--sx-text-2); }
+  .sx-game-team[data-undecided] { font-size: 0.9375rem; font-weight: 400; color: var(--sx-text-2); }   /* "Christopher or St. Ignatius": no logo */
+  /* The status slot: two lines that sit on the two team lines. */
+  .sx-game-status { grid-area: st; align-self: start; display: flex; flex-direction: column; min-width: 0; font-size: 0.8125rem; line-height: 1.75rem; font-weight: 600; color: var(--sx-text-2); white-space: nowrap; }
+  .sx-game-status > small { font-size: 0.8125rem; line-height: 1.75rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-game-status > .sx-live { font-size: 0.8125rem; }
+  .sx-game-time { font-size: 1.0625rem; font-weight: 600; color: var(--sx-text); }
+  /* The line under a game. */
+  .sx-game-note { grid-area: note; padding-left: 2rem; font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-game-note[data-decider] { font-weight: 600; color: var(--sx-text); }
+  .sx-game-note > a { position: relative; z-index: 1; margin-left: 0.75rem; }   /* "Bracket" at the end of a next game's note */
+  .sx-game-sep, .sx-game-meta, .sx-game-tag { display: none; }   /* retired elements; remove them from GameRow */
+  /* The row opens the game. On a mouse the team names are links too (above the row link). On touch the
+     row is ONE target: the names stop being links, and the teams are reached from the game page. */
+  .sx-game-link { position: absolute; inset: 0; }
+  .sx-game-link:focus-visible { outline: none; }
+  .sx-game:has(.sx-game-link:focus-visible) { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
+  @media (hover: none), (pointer: coarse) { a.sx-game-name, .sx-livegame a.sx-game-name { pointer-events: none; } }
+  .sx-game-status .sx-short { display: none; }
+  @container games (max-width: 19.99rem) {   /* a 320px phone: a narrower slot ("PPD" for "Postponed"), 15px names */
+    .sx-game-grid { grid-template-columns: 3.25rem minmax(0, 1fr) auto; padding-inline: 0.25rem; font-size: 0.9375rem; }
+    .sx-game-team { gap: 0.375rem; }
+    .sx-game-time { font-size: 1rem; }
+    .sx-game-note { padding-left: 1.875rem; }
+    .sx-game-status .sx-long { display: none; }
+    .sx-game-status .sx-short { display: inline; text-decoration: none; }
+  }
+  @container games (min-width: 44rem) { .sx-games { grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); } }
+  .sx-games-solo { grid-template-columns: minmax(0, 1fr) !important; }   /* a single game that takes the column's full width (a team's next game) */
+
+  /* ── Live board: the band continues below the header while games are in progress ──────────────
+     Rendered on the Scores page (which is the home page) for TODAY only, directly under the header,
+     full-bleed, when at least one game is live. Its games are not repeated in the list below.
+     Head: "Live" (dot + word) and the count at the left, "Updated 3:42 PM" at the right. Then one
+     block per game: a line with the period and the competition, two team lines, and the scores in
+     white at 40–48px: the largest figures on the site. Up to 6 games; with more, `data-many` drops
+     the figures to 28px so the board stays under one screen. */
+  /* The board is the first child of the page's content inside <main>. It breaks out to the viewport's
+     edges and pads itself back in, so its content box is exactly <main>'s content box. If <main> has
+     top padding, cancel it with an equal negative margin-top so the board touches the header. */
+  .sx-liveboard { margin-inline: calc(50% - 50vw); padding: 0.25rem calc(50vw - 50%) 0.5rem; background: var(--sx-band); border-bottom: 1px solid var(--sx-band-edge); color: var(--sx-band-text); }
+  .sx-liveboard-head { display: flex; align-items: center; gap: 0.625rem; min-height: 2.5rem; font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-band-muted); }
+  .sx-liveboard-head > h2 { margin: 0; font-family: var(--font-sans), sans-serif; font-size: 0.9375rem; line-height: 1.25rem; }
+  .sx-liveboard .sx-live { color: var(--sx-band-live); }
+  .sx-liveboard .sx-stamp { margin-left: auto; color: var(--sx-band-muted); }
+  .sx-livegames { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 2.5rem; margin: 0; padding: 0; list-style: none; }
+  .sx-livegame { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; align-items: center; margin-inline: -0.5rem; padding: 0.5rem 0.5rem 0.75rem; border-top: 1px solid var(--sx-band-3); }
+  .sx-livegame:hover { background: var(--sx-band-2); }
+  .sx-livegame-kicker { grid-column: 1 / -1; font-size: 0.8125rem; line-height: 1.25rem; color: var(--sx-band-muted); }
+  .sx-livegame-kicker > b { margin-right: 0.5rem; font-weight: 700; color: var(--sx-band-text); }
+  .sx-livegame-team { display: flex; align-items: center; gap: 0.625rem; min-width: 0; min-height: 3rem; font-size: 1.125rem; line-height: 1.5rem; font-weight: 600; color: var(--sx-band-text); }
+  .sx-livegame .sx-seed { color: var(--sx-band-muted); }
+  .sx-livegame .sx-pin-note { background: var(--sx-band-accent); }
+  .sx-livegame-score { min-width: 1.75rem; text-align: right; font-size: clamp(2.5rem, 2.25rem + 1vw, 3rem); line-height: 1; font-weight: 700; color: var(--sx-band-text); }
+  .sx-livegames[data-many] .sx-livegame-score { font-size: 1.75rem; }
+  .sx-livegames[data-many] .sx-livegame-team { min-height: 2.25rem; font-size: 1rem; }
+  .sx-livegame > .sx-game-link:focus-visible { outline: 2px solid var(--sx-band-accent); outline-offset: -2px; }
+  @media (min-width: 48rem) {
+    .sx-liveboard { padding-bottom: 0.75rem; }
+    .sx-livegames { grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }   /* 2 across at 768 and 1024, 3 at 1280: a block is never wider than 24rem */
+  }
+
+  /* Team-perspective log row (GameLogRow): date, W/L chip, score or start time, vs/at opponent, note.
+     Date, chip and score are fixed columns, so the result column is one vertical line down the list. */
+  .sx-logrow { display: grid; grid-template-columns: 3.25rem 1.25rem 4.75rem minmax(0, 1fr) auto; white-space: nowrap; column-gap: 0.625rem; align-items: center; min-height: 2.75rem; padding-inline: 0.5rem; border-top: 1px solid var(--sx-border); font-size: 1rem; position: relative; }
+  .sx-logrow:first-child { border-top: 0; }
+  .sx-logrow > :first-child { color: var(--sx-text-2); }
+  .sx-logrow > .sx-num:nth-child(3) { font-size: 1.25rem; font-weight: 600; }
+  .sx-logrow > .sx-num[data-time] { font-size: 1.0625rem; }
+  .sx-logrow:hover { background: var(--sx-surface-2); }
+  .sx-logrow-note { font-size: 0.875rem; color: var(--sx-text-2); }
+  .sx-logrow .sx-teamcell > :is(a, span) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sx-nonleague { color: var(--sx-text-2); }
+
+  /* ── Your team line. On the Scores page, when the reader's team has NO game on the selected day:
+     one 44px line above the first group (logo, name, star; at the right, its next game). One line at
+     every width. When the team does play that day there is no line: its group is listed first, its
+     game first in the group, and the star in the row marks it. The old strip (`.sx-myteam`) is retired. ── */
+  .sx-myline { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.5rem; min-height: 2.75rem; padding: 0 0.5rem; border-bottom: 1px solid var(--sx-border); font-size: 0.9375rem; line-height: 1.25rem; color: var(--sx-text); text-decoration: none; }
+  .sx-myline:hover { background: var(--sx-surface-2); }
+  .sx-myline > b { font-weight: 700; white-space: nowrap; }
+  .sx-myline > .sx-pin-note { margin-left: 0; }
+  .sx-myline > span:last-child { flex: 1 1 auto; padding-left: 0.5rem; text-align: right; color: var(--sx-text-2); white-space: nowrap; }
+
+  /* ── Tables ───────────────────────────────────────────────────────────────── */
+  /* A standings table: column heads are small grey labels with NO tint, over one 1px ink rule; then
+     rows on hairlines. The full table is capped (`.sx-tablewrap[data-full]`, 47rem) so the numbers
+     stay near the names. Columns answer to the table's own width: `.sx-col-mid` from 20rem (GD in the
+     full table); `.sx-col-wide` from 24rem (Last 5 in the compact table); `.sx-col-full` from 40rem
+     (W, L, T as three columns, GF, GA, Overall, Last 5), where `.sx-col-rec` (the combined W-L-T) is
+     dropped. Column groups: league record and the sort key (W L T Pts) | goals (GF GA GD) | Overall |
+     Last 5; `.sx-col-gap` starts a group with a wider gutter. There is no Pct column beside Pts. */
+  .sx-table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.25rem; }
+  .sx-table thead th {
+    height: 1.75rem; padding: 0 0.375rem; border-bottom: 1px solid var(--sx-text); background: none;
+    font-size: 0.8125rem; line-height: 1rem; font-weight: 500; letter-spacing: 0; text-transform: none; text-align: right; white-space: nowrap; color: var(--sx-text-2);
+  }
+  .sx-table td, .sx-table tbody th { height: 2.5rem; padding: 0 0.375rem; border-top: 1px solid var(--sx-border); font-weight: 400; text-align: right; white-space: nowrap; color: var(--sx-text); }
+  .sx-table :is(th, td):first-child { padding-left: 0.5rem; }
+  .sx-table :is(th, td):last-child { padding-right: 0.5rem; }
+  .sx-table tbody tr:first-child > * { border-top: 0; }
+  .sx-table td.sx-num { font-size: 1.0625rem; }
+  .sx-table :is(th, td).sx-col-rank { width: 1.25rem; text-align: left; color: var(--sx-text-2); }
+  .sx-table :is(th, td).sx-col-team { width: 99%; text-align: left; }
+  .sx-table :is(td, tbody th).sx-col-team { max-width: 0; font-weight: 500; }   /* max-width 0 + width 99%: the name takes what is left and ellipsizes */
+  .sx-teamcell { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+  .sx-teamcell > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sx-table td.sx-col-key { font-size: 1.1875rem; font-weight: 700; }     /* the sort key: Pts (Pct in a league ranked by percentage). The strongest column */
+  .sx-table thead th.sx-col-key { font-weight: 700; color: var(--sx-text); }
+  .sx-table td.sx-col-quiet { color: var(--sx-text-2); }
+  .sx-tablewrap { container: tablewrap / inline-size; }
+  .sx-tablewrap[data-full] { max-width: 47rem; }
+  .sx-table :is(th, td):is(.sx-col-mid, .sx-col-wide, .sx-col-full) { display: none; }
+  .sx-table :is(th, td).sx-col-split { min-width: 2rem; box-sizing: border-box; }   /* W, L, T: three equal narrow columns */
+  .sx-table :is(th, td).sx-col-key { min-width: 2.5rem; box-sizing: border-box; }
+  @container tablewrap (min-width: 20rem) { .sx-table :is(th, td).sx-col-mid { display: table-cell; } }      /* GD in the full table: dropped on a 320px phone */
+  @container tablewrap (min-width: 24rem) { .sx-table :is(th, td).sx-col-wide { display: table-cell; } }
+  @container tablewrap (min-width: 40rem) {
+    .sx-table :is(th, td).sx-col-full { display: table-cell; }
+    .sx-table :is(th, td).sx-col-rec { display: none; }
+    .sx-table :is(th, td) { padding-inline: 0.4375rem; }
+    .sx-table :is(th, td).sx-col-gap { padding-left: 1.75rem; }
+  }
+  .sx-table td:has(> .sx-form) { text-align: right; }
+  .sx-table tbody tr:hover > * { background: var(--sx-surface-2); }
+  /* Qualification line: a 2px green rule with its label sitting on the line at the right end. */
+  .sx-table tr.sx-cutline > td { height: 1rem; padding: 0; border-top: 0; text-align: right; font-size: 0.8125rem; line-height: 1rem; font-weight: 600; color: var(--sx-win-ink); background: linear-gradient(var(--sx-win), var(--sx-win)) left center / 100% 2px no-repeat; }
+  .sx-table tr.sx-cutline > td > span { padding: 0 0.5rem; background: var(--sx-bg); }
+  .sx-table tr.sx-cutline + tr > * { border-top: 0; }
+  .sx-table tr.sx-cutline:hover > td { background: linear-gradient(var(--sx-win), var(--sx-win)) left center / 100% 2px no-repeat; }
+  .sx-table tr.sx-self > .sx-col-team { font-weight: 700; }               /* this page's team */
+  @media (pointer: coarse) { .sx-table td, .sx-table tbody th { height: 2.75rem; } }
+  @media (min-width: 64rem) { .sx-table[data-sticky-head] thead th { position: sticky; top: var(--sx-sticky-top, 4rem); z-index: 1; background: var(--sx-bg); box-shadow: inset 0 -1px 0 var(--sx-text); } }   /* a collapsed border stays with the table, so the stuck head draws its ink rule itself */
+
+  /* ── Leaders: a grid of top-5 boards (1 column, 2 from 768, 3 from 1024). Each board is a strip
+     (the stat's name + "Show all") over five rows: rank, school logo, name over school, the figure. ── */
+  .sx-boards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem 2.5rem; }
+  @media (min-width: 48rem) { .sx-boards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 64rem) { .sx-boards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .sx-board > ol { margin: 0; padding: 0; list-style: none; }
+  .sx-board > .sx-disclosure { padding-left: 0.5rem; border-top: 1px solid var(--sx-border); }
+  .sx-leader { position: relative; display: grid; grid-template-columns: 1.25rem auto minmax(0, 1fr) auto; column-gap: 0.625rem; align-items: center; min-height: 3.25rem; padding: 0.375rem 0.5rem; border-top: 1px solid var(--sx-border); font-size: 0.9375rem; line-height: 1.25rem; }
+  .sx-leader:first-child { border-top: 0; }
+  .sx-leader:hover { background: var(--sx-surface-2); }
+  .sx-leader > :first-child { color: var(--sx-text-3); }                                   /* rank */
+  .sx-leader-name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; color: var(--sx-text); }
+  .sx-leader-name + small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2); }
+  .sx-leader > .sx-num:last-child { font-size: 1.25rem; font-weight: 700; color: var(--sx-text); }
+  .sx-leader:first-child > .sx-num:last-child { font-size: 1.625rem; }                   /* the leader's figure is one step up */
+
+  /* ── Your team (pinned): a small star after the name, and a bold name in tables. The star is drawn
+     where it helps a reader scan: standings rows, game rows in lists, the live board. Not in the bracket. The words
+     "Your team" stay in the DOM for screen readers; the star is drawn from the same element. ── */
+  .sx-table tr[data-team-slug][data-pinned] > .sx-col-team { font-weight: 700; }
+  .sx-pin-note { display: inline-block; flex: none; width: 0.75rem; height: 0.75rem; margin-left: 0.375rem; overflow: hidden; text-indent: 200%; white-space: nowrap; vertical-align: -0.0625rem; background: var(--sx-pin);
+    clip-path: polygon(50% 0, 62% 35%, 100% 37%, 70% 60%, 81% 97%, 50% 75%, 19% 97%, 30% 60%, 0 37%, 38% 35%); }
+  .sx-game-team > .sx-pin-note, .sx-livegame-team > .sx-pin-note { margin-left: 0; }
+  .sx-pin-words { margin-left: auto; font-size: 0.875rem; font-weight: 400; color: var(--sx-text-2); }   /* the words, where they are shown: the More sheet */
+
+  /* ── Game header (the /game page scoreboard) ──────────────────────────────── */
+  /* One alignment at every width: everything is left-aligned. The status ("Final", "Live 2nd half",
+     a start time), then two stacked team rows (logo, name, seed, record) with the score at the row's
+     end, capped at 34rem so the score is near the name. Date, time and venue follow underneath. */
+  .sx-scoreboard { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.5rem; column-gap: 1rem; align-items: center; max-width: 34rem; margin: 0.5rem 0 0; padding: 0 0 1rem; }
+  .sx-sb-team { display: flex; align-items: center; gap: 0.75rem; min-width: 0; font-size: 1.25rem; line-height: 1.5rem; font-weight: 500; color: var(--sx-text); }
+  .sx-sb-team[data-won] { font-weight: 700; }
+  .sx-sb-team[data-lost], .sx-sb-score[data-lost] { color: var(--sx-text-3); }
+  .sx-sb-team small { display: block; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-sb-score { font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); line-height: 1; font-weight: 500; letter-spacing: 0; text-align: right; color: var(--sx-text); }
+  .sx-sb-score[data-won] { font-weight: 700; }
+  .sx-sb-status { grid-column: 1 / -1; grid-row: 1; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 600; color: var(--sx-text-2); }
+  @media (min-width: 48rem) { .sx-sb-team { font-size: 1.5rem; line-height: 1.75rem; } }
+  .sx-metalist { margin: 0; padding: 0; list-style: none; font-size: 1rem; line-height: 1.5rem; color: var(--sx-text-2); }
+
+  /* ── Bracket: matchup cells joined by 1px connectors (≥1024); one round at a time below that. ── */
+  .sx-bracket { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .sx-round { display: none; flex-direction: column; justify-content: space-around; gap: 0.75rem; min-width: 0; }
+  .sx-round[data-current] { display: flex; }
+  .sx-round-ties, .sx-tie-pair { display: flex; flex-direction: column; gap: 0.75rem; }
+  .sx-round > h3 { margin: 0 0 0.25rem; font-size: 0.9375rem; line-height: 1.25rem; font-weight: 700; color: var(--sx-text); }
+  .sx-tie { position: relative; border: 1px solid var(--sx-border-strong); background: var(--sx-bg); }
+  .sx-tie:hover { border-color: var(--sx-text); }
+  .sx-tie-line { display: flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; padding: 0 0.625rem 0 0.5rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-text); }
+  .sx-tie-line + .sx-tie-line { border-top: 1px solid var(--sx-border); }
+  .sx-tie-line > .sx-game-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sx-tie-score { margin-left: auto; font-size: 1.25rem; font-weight: 600; }
+  .sx-tie-line[data-won], .sx-tie-line[data-won] > .sx-tie-score { font-weight: 700; }
+  .sx-tie-line[data-lost], .sx-tie-line[data-lost] > .sx-tie-score { font-weight: 400; color: var(--sx-text-3); }
+  /* A cell always says where its game stands. Played: the two scores. Live: the two scores and a
+     "Live 2nd half" line under them. Not started: the start time in the score position, across both lines. */
+  .sx-tie[data-state="upcoming"] { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+  .sx-tie[data-state="upcoming"] > .sx-tie-line { grid-column: 1; }
+  .sx-tie-time { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; padding: 0 0.625rem; border-left: 1px solid var(--sx-border); font-size: 1.0625rem; font-weight: 600; color: var(--sx-text); white-space: nowrap; }
+  .sx-tie-note { display: flex; align-items: center; gap: 0.5rem; min-height: 1.75rem; padding: 0 0.5rem; border-top: 1px solid var(--sx-border); font-size: 0.8125rem; line-height: 1rem; color: var(--sx-text-2); }
+  @media (min-width: 64rem) {
+    .sx-bracket { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-columns: none; column-gap: 2.5rem; }
+    .sx-round { display: flex; }
+    .sx-round > h3 { flex: none; }
+    .sx-round-ties { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-around; gap: 0.75rem; }
+    .sx-tie-pair { position: relative; display: flex; flex: 1 1 auto; flex-direction: column; justify-content: space-around; gap: 0.75rem; }
+    .sx-tie-pair::after { content: ""; position: absolute; left: 100%; top: 25%; bottom: 25%; width: 1.25rem; border: 1px solid var(--sx-border-strong); border-left: 0; pointer-events: none; }
+    .sx-round + .sx-round .sx-tie::before { content: ""; position: absolute; right: 100%; top: 50%; width: 1.25rem; border-top: 1px solid var(--sx-border-strong); pointer-events: none; }
+    .sx-round-tabs { display: none; }
+  }
+
+  /* ── Meters and bars ──────────────────────────────────────────────────────── */
+  .sx-meter-track { background: var(--sx-surface-3); border-radius: 0; }
+  .sx-meter-fill { background: var(--sx-text); border-radius: 0; }
+
+  /* ── Footer: the same navy band as the header ─────────────────────────────── */
+  .sx-foot { margin-top: 3.5rem; border-top: 1px solid var(--sx-band-edge); background: var(--sx-band); font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-band-muted); }
+  .sx-foot-inner { max-width: 75rem; margin-inline: auto; padding: 1.25rem 1rem 2rem; }
+  .sx-foot-index { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .sx-foot-index a { display: inline-flex; align-items: center; gap: 0.25rem; min-height: 2.25rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-band-text); text-decoration: none; }
+  .sx-foot-index a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  /* Preferences: two plain text buttons, not switches. "Dark mode" (or "Light mode": the label names what
+     a press does) and, on a multi-region build, "Switch to SoCal". */
+  .sx-foot-prefs { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin-top: 0.25rem; }
+  .sx-textbtn { appearance: none; display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 0.875rem; color: var(--sx-band-muted); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--sx-band-line); }
+  .sx-textbtn:hover { color: var(--sx-band-text); text-decoration-color: currentColor; }
+  .sx-foot-line { margin: 0.75rem 0 0; max-width: 62ch; }
+  .sx-foot-line + .sx-foot-line { margin-top: 0.25rem; }
+  .sx-foot .sx-stamp { font: inherit; color: inherit; white-space: normal; }
+  .sx-foot .sx-stamp time { white-space: nowrap; }
+  .sx-foot-line a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .sx-foot :focus-visible { outline-color: var(--sx-band-accent); }
+  @media (pointer: coarse) { .sx-foot-index a, .sx-textbtn { min-height: 2.75rem; } }
+  @media (min-width: 48rem) { .sx-foot-inner { padding: 1.5rem 1.5rem 2.5rem; } }
+  @media (min-width: 80rem) { .sx-foot-inner { padding-inline: 2rem; } }
+
+  /* ── Phone bar + More sheet. Five cells on the page colour (the band is the only dark plane on a
+     phone). A cell is as wide as its word plus an equal share of the spare width, so the gaps between
+     the words are equal (at 320, "Standings" and "Playoffs" no longer touch). The selected cell: bold,
+     the label in the accent, and a 3px accent bar on its top edge. ── */
+  .sx-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--sx-bg); border-top: 1px solid var(--sx-border-strong); padding-bottom: env(safe-area-inset-bottom); }
+  .sx-tabbar > ul { display: flex; max-width: 30rem; margin: 0 auto; padding: 0; list-style: none; }
+  .sx-tabbar > ul > li { flex: 1 1 auto; min-width: 0; }
+  .sx-tabbar-tab {
+    display: flex; align-items: center; justify-content: center; height: 3.25rem; margin-top: -1px; padding: 0 0.25rem;
+    /* Capped in px: the label follows the reader's text size up to 15px and stops there, because five
+       words at 200% cannot share a 320px bar (tests/ui/tab-labels.test.ts). */
+    font-size: min(0.875rem, 15px); line-height: 1; font-weight: 500; letter-spacing: 0; color: var(--sx-text-2); text-decoration: none; cursor: pointer; list-style: none; white-space: nowrap;
+  }
+  .sx-tabbar-tab::-webkit-details-marker { display: none; }
+  .sx-tabbar-tab:is([aria-current], [data-current]), details[open] > .sx-tabbar-tab { color: var(--sx-accent-ink); font-weight: 700; box-shadow: inset 0 3px 0 var(--sx-accent); }
+  .sx-tabbar-tab:focus-visible { outline-offset: -4px; }
+  @media (max-width: 22.49rem) { .sx-tabbar-tab { font-size: min(0.8125rem, 15px); } }
+  .sx-more-scrim { display: none; }
+  details[open] > .sx-more-scrim { display: block; position: fixed; inset: 0 0 calc(3.25rem + env(safe-area-inset-bottom) + 1px); z-index: 30; background: rgb(8 12 20 / 0.6); }   /* covers the header too */
+  .sx-more-sheet {
+    position: fixed; left: 0; right: 0; bottom: calc(3.25rem + env(safe-area-inset-bottom) + 1px); z-index: 31;
+    max-height: calc(100dvh - 8rem); overflow-y: auto; background: var(--sx-bg); box-shadow: var(--sx-shadow-lift);
+  }
+  :root[data-theme="dark"] .sx-more-sheet { background: var(--sx-surface-2); }
+  @media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .sx-more-sheet { background: var(--sx-surface-2); } }
+  .sx-more-head { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem 0.25rem; font-size: 1.125rem; font-weight: 700; color: var(--sx-text); }
+  .sx-more-head > .sx-btn { min-height: 2.75rem; }
+  .sx-more-sheet > ul { margin: 0; padding: 0 1rem; list-style: none; }
+  .sx-more-sheet > ul > li + li { border-top: 1px solid var(--sx-border); }
+  .sx-more-sheet > ul > li[hidden] + li { border-top: 0; }   /* no pinned team: the list starts at its first link */
+  .sx-more-sheet > ul > li > a > svg { flex: none; }
+  .sx-more-sheet > ul > li > :is(a, button) { appearance: none; display: flex; align-items: center; gap: 0.625rem; width: 100%; min-height: 3rem; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 1rem; font-weight: 500; text-align: left; color: var(--sx-text); text-decoration: none; }
+  .sx-more-sheet > ul > li > a[aria-current] { font-weight: 700; }
+  .sx-more-sheet > ul > li[data-prefs] { border-top-color: var(--sx-border-strong); }   /* the two preference rows: "Dark mode", "Switch to SoCal" */
+  .sx-more-sheet > p { margin: 0; padding: 0.5rem 1rem 1rem; font-size: 0.875rem; color: var(--sx-text-2); }
+  @media (min-width: 48rem) { .sx-tabbar { display: none; } }
+
+  /* ── Disclosure (optional data: "Show all", the Calendar) ─────────────────── */
+  .sx-disclosure { position: relative; border: 0; background: none; border-radius: 0; }
+  .sx-disclosure > summary:not(.sx-btn) { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--sx-border-strong); cursor: pointer; list-style: none; }
+  .sx-disclosure > summary::-webkit-details-marker { display: none; }
+
+  /* ── Phone adjustments ────────────────────────────────────────────────────── */
+  @media (max-width: 63.99rem) {   /* below 1024 the log sits in a column of 400px or less: the note goes under the opponent */
+    .sx-logrow { grid-template-columns: 3.25rem 1.25rem 4.75rem minmax(0, 1fr); padding-block: 0.375rem; }
+    .sx-logrow-note { grid-column: 4; }
+    .sx-logrow-note:empty { display: none; }
+  }
+  @media (max-width: 29.99rem) {
+    .sx-logrow { column-gap: 0.5rem; padding-inline: 0.25rem; }
+    @media (max-width: 22.49rem) { .sx-logrow { grid-template-columns: 2.75rem 1.25rem 3.5rem minmax(0, 1fr); } }
+    .sx-logrow .sx-teamcell > :is(a, span) { white-space: normal; line-height: 1.25rem; }   /* a long opponent wraps; it is never cut */
+  }
+
+  /* ── Kept beside the refresh: small rules the foundation sheet does not restate. ── */
+  .sx-figure { font-variant-numeric: tabular-nums lining-nums; }
+  /* `.sx-rowlink` also stretches over its row (its ::after covers the positioned row and draws the ring). */
+  .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
+  .sx-rowlink:focus-visible { outline-style: none; }
+  .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
+  /* One lit item while a navigation is pending: `aria-current` only moves when the route commits,
+     so the item the reader is leaving returns to rest as soon as another is marked `data-pending`. */
+  .sx-tabbar-tab:has([data-pending]) { color: var(--sx-accent-ink); font-weight: 700; box-shadow: inset 0 3px 0 var(--sx-accent); }
+  nav:has([data-pending]) .sx-navtop[aria-current]:not(:has([data-pending])) { font-weight: 500; box-shadow: none; }
+  nav:has([data-pending]) .sx-tabbar-tab:is([aria-current], [data-current]):not(:has([data-pending])) {
+    color: var(--sx-text-2); font-weight: 500; box-shadow: none;
+  }
+  .sx-tabbar-tab:active { background: var(--sx-surface-2); }
+  /* The ring is inset 4px; 6px of inline padding (taken back as margin, so nothing moves) keeps it clear of the N and the last letter. */
+  .sx-wordmark:focus-visible { outline-offset: -4px; padding-inline: 0.375rem; margin-inline: -0.375rem; }
+  .sx-tab:disabled, .sx-league-chip:disabled, .sx-opt:disabled { cursor: default; }
+  /* A league row that stands outside a ScopeBar lays its section lists out the same way. */
+  .sx-chips ul { display: contents; }
+  .sx-chips li { display: flex; flex: none; list-style: none; }
+  /* "Jump to <SHORT>" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's call. */
+  .sx-jump { min-height: 2.75rem; font-size: var(--text-meta); line-height: 1.25rem; }
+  .sx-chip-slot { display: inline-block; flex-shrink: 0; }
+  .sx-bar  { background: var(--sx-bar); }
+  .sx-zero { background: var(--sx-zero); }
+  .sx-inset > * + * { margin-top: 0.75rem; }
+  .sx-inset.sx-disclosure { padding-block: 0; }
+  .sx-inset.sx-disclosure[open] { padding-bottom: 0.75rem; }
+  .sx-disclosure[open] { padding-bottom: 0.75rem; }
+  .sx-lift { box-shadow: none; }
+
+  /* ── TRANSITIONAL: old names un-migrated pages still use. Delete each rule with the markup it serves. ── */
+  /* The drawn check of the schedule filter pills (ScheduleFilters, P2). */
   .sx-check {
     display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
     background-color: currentColor;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
   }
   .sx-chip-check { display: none; }
-  /* "Jump to <SHORT>" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's call. */
-  .sx-jump { min-height: 2.75rem; font-size: var(--text-meta); line-height: 1.25rem; }
-
-  /* ── Surfaces. The page is the only surface: the old card names are flattened (no background,
-        ring, radius or padding) and kept only until the pages drop them. ── */
-  .sx-card { background: none; box-shadow: none; border-radius: 0; }
-  .sx-flush { padding: 0; }
-  .sx-bleed { margin-inline: 0; } /* no box edge to bleed past; the selector must exist (contrast.test) */
-  .sx-lift { box-shadow: none; }
-  /* The one tinted block, for a note that must stand apart. */
-  .sx-inset {
-    background: var(--sx-surface-2); border-radius: 0; padding: 0.75rem 1rem;
-    font-size: var(--text-meta); line-height: 1.25rem; color: var(--sx-text-2);
-  }
-  .sx-inset > * + * { margin-top: 0.75rem; }
-  /* A 32px strip for STICKY date and division bars only. */
-  .sx-band {
-    display: flex; align-items: baseline; gap: 0.75rem; min-height: 2rem; padding: 0.375rem 0.5rem;
-    background: var(--sx-surface-2); font-size: 0.8125rem; line-height: 1.25rem; font-weight: 700; color: var(--sx-text);
-  }
-  /* The one note under a table. */
-  .sx-note { margin: 0.5rem 0 0; max-width: 62ch; font-size: 0.8125rem; line-height: 1.1875rem; color: var(--sx-text-2); }
-
-  /* A labelled disclosure: no box, a 44px summary with a CSS chevron, a hairline below. */
-  .sx-disclosure { border-bottom: 1px solid var(--sx-border); border-radius: 0; }
-  .sx-disclosure > summary {
-    display: flex; align-items: center; gap: 0.5rem;
-    min-height: 2.75rem; cursor: pointer; list-style: none;
-    font-size: var(--text-meta); line-height: 1.25rem; font-weight: 600;
-    color: var(--sx-text);
-  }
-  .sx-disclosure > summary::-webkit-details-marker { display: none; }
-  .sx-disclosure > summary::before {
-    content: ""; flex: none; width: 0.4375rem; height: 0.4375rem; margin-inline: 0.125rem 0.25rem;
-    border-right: 1.5px solid var(--sx-text); border-bottom: 1.5px solid var(--sx-text);
-    rotate: -45deg;
-    transition: rotate var(--sx-dur-ui) var(--sx-ease);
-  }
-  .sx-disclosure[open] > summary::before { rotate: 45deg; }
-  .sx-disclosure[open] { padding-bottom: 0.75rem; }
-  .sx-inset.sx-disclosure { border-bottom: 0; padding-block: 0; }
-  .sx-inset.sx-disclosure[open] { padding-bottom: 0.75rem; }
-
-  /* The school tile: TeamMonogram's mascot image and GhostMonogram's letters, on a 3px plate. */
-  .sx-monogram {
-    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
-    border: 1px solid var(--sx-border); border-radius: 3px;
-    font-weight: 600; line-height: 1;
-  }
-  /* A white logo square; the hairline is an inset outline, so the image is never resampled. */
-  img.sx-monogram {
-    border: 0; outline: 1px solid var(--sx-border); outline-offset: -1px;
-    border-radius: 3px; background: #fff; object-fit: contain;
-  }
-
-  /* ── Buttons. One outline button, 36px (44 under a coarse pointer); the primary is ink-filled.
-        `.sx-pill*` are the old names, kept as aliases until the pages drop them. ── */
-  .sx-btn, .sx-pill {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem;
-    min-height: 2.25rem; padding: 0.3125rem 0.875rem;
-    border: 1px solid var(--sx-text); border-radius: var(--sx-r-control); background: transparent; cursor: pointer;
-    font: inherit; font-size: 0.875rem; line-height: 1.25rem; font-weight: 600;
-    color: var(--sx-text); text-decoration: none;
-    transition: background-color var(--sx-dur-tap) var(--sx-ease);
-  }
-  .sx-btn { white-space: nowrap; }
-  a.sx-pill { color: var(--sx-text); }
-  .sx-btn:hover, .sx-pill:hover, .sx-btn:active, .sx-pill:active { background: var(--sx-surface-2); }
-  .sx-btn-primary, .sx-pill.sx-pill-accent, a.sx-pill.sx-pill-accent { background: var(--sx-text); color: var(--sx-bg); }
-  /* `!important` in this layer outranks an important UTILITY (important reverses the layer order):
-     un-migrated pages still force `text-accent-ink!` onto the old accent pill, which is now ink on ink. */
-  .sx-pill.sx-pill-accent { color: var(--sx-bg) !important; }
-  .sx-btn-primary:hover, .sx-pill.sx-pill-accent:hover, .sx-btn-primary:active, .sx-pill.sx-pill-accent:active { background: var(--sx-text-2); }
-  .sx-pill.sx-pill-ring, .sx-pill.sx-pill-card { background: transparent; box-shadow: none; }
-  @media (pointer: coarse) { .sx-btn, .sx-pill { min-height: 2.75rem; } }
-  .sx-field {
-    display: block; width: 100%; height: 2.75rem; padding: 0 0 0 1.75rem;
-    border: 0; border-bottom: 1px solid var(--sx-text); border-radius: 0;
-    background: transparent no-repeat left center / 1.125rem; font: inherit; font-size: 1rem; color: var(--sx-text);
-    /* The magnifier: a mid grey that clears 3:1 on the paper in both themes (an image cannot read a token). */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='%23808079' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7.5' cy='7.5' r='5'/%3E%3Cpath d='m11.5 11.5 4 4'/%3E%3C/svg%3E");
-  }
-  .sx-field:focus-visible { outline-offset: 0; }
-  .sx-field::placeholder { color: var(--sx-text-3); opacity: 1; }
-  .sx-select {
-    appearance: none; height: 2.75rem; padding: 0 1.25rem 0 0;
-    border: 0; border-bottom: 1px solid var(--sx-text); border-radius: 0; background: transparent;
-    font: inherit; font-size: 0.875rem; font-weight: 600; color: var(--sx-text);
-  }
-
-  /* ── Tags, flags, result marks. A tag is text only; `.sx-flag` is the one filled label (ink on
-        the highlighter); a count (`.sx-badge`, kept until the pages drop it) is plain text. ── */
-  .sx-tag {
-    display: inline; padding: 0; border: 0; background: none;
-    font-size: 0.6875rem; line-height: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-    color: var(--sx-text-2); white-space: nowrap;
-  }
-  /* StatusLabel: the status word as plain 13px/600 text, its tags after it. */
-  .sx-status {
-    display: inline-flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.375rem; row-gap: 0.125rem;
-    font-size: var(--text-cell); line-height: 1.125rem; font-weight: 600; color: var(--sx-text);
-  }
-  .sx-chips { display: inline-flex; max-width: 100%; flex-wrap: wrap; align-items: baseline; gap: 0.125rem 0.375rem; }
-  .sx-badge {
-    display: inline-flex; align-items: baseline; gap: 0.25rem;
-    font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-2); white-space: nowrap;
-  }
-  .sx-flag {
-    display: inline-block; padding: 1px 5px; border-radius: var(--sx-r-tag); background: var(--sx-accent-wash); color: var(--sx-text);
-    font-size: 0.6875rem; line-height: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
-  }
-  /* ResultChip: hueless squares. W solid ink, L hollow, T grey; pending is the one ring. */
-  .sx-chip { display: inline-grid; place-items: center; flex: none; border: 0; border-radius: 0; font-weight: 700; line-height: 1; }
-  .sx-chip-slot { display: inline-block; flex-shrink: 0; }
-  .sx-chip-16 { width: 16px; height: 16px; font-size: 9px; }
-  .sx-chip-20 { width: 18px; height: 18px; font-size: 10px; }
-  .sx-chip-24 { width: 22px; height: 22px; font-size: 12px; }
-  .sx-chip-28 { width: 26px; height: 26px; font-size: 13px; }
-  .sx-chip-win  { background: var(--sx-win-wash);  color: var(--sx-win-ink); }
-  .sx-chip-loss { background: var(--sx-loss-wash); color: var(--sx-loss-ink); box-shadow: inset 0 0 0 1px var(--sx-loss); }
-  .sx-chip-tie  { background: var(--sx-tie-wash);  color: var(--sx-tie-ink); }
-  .sx-chip.sx-chip-pending { background: none; color: var(--sx-text-3); box-shadow: inset 0 0 0 1px var(--sx-border-strong); border-radius: 999px; }
-  .sx-bar  { background: var(--sx-bar); }
-  .sx-zero { background: var(--sx-zero); }
-  .sx-meter-track { background: var(--sx-surface-3); }
-  .sx-meter-fill  { background: var(--sx-text); }
-
-  /* ── Game row: ONE component (components/game-row/). The <li> is the query container; the grid
-        inside switches from the stacked two-line form to the one-line results row when the ROW
-        ITSELF is ≥ 40rem wide. The stretched name link makes the whole row the game link. ── */
-  .sx-games { margin: 0; padding: 0; list-style: none; }
-  .sx-games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18.75rem), 1fr)); column-gap: 3rem; }
-  .sx-game { position: relative; container-type: inline-size; border-bottom: 1px solid var(--sx-border); }
-  .sx-game:hover { background: var(--sx-surface-2); }
   /* Inside an old `.sx-list` item the item draws the hairline. */
-  .sx-list > li > :is(.sx-game, .sx-logrow):last-child { border-bottom: 0; }
-  .sx-games-wide { --sx-score-ch: 3ch; }
-  .sx-game-grid {
-    display: grid; grid-template-columns: 4rem minmax(0, 1fr) auto; grid-template-areas: "st a as" "st h hs" "st m m";
-    column-gap: 0.75rem; align-items: center; padding: 0.5625rem 0; font-size: 1rem; line-height: 1.5rem;
-  }
-  .sx-game-status { grid-area: st; align-self: center; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 600; color: var(--sx-text); }
-  .sx-game-status > small { display: block; font-size: inherit; font-weight: 400; color: var(--sx-text-2); }
-  .sx-game-team { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-weight: 400; color: var(--sx-text-2); }
-  .sx-game-team > .sx-game-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  /* After a name: another league's code, or a league record before the game. */
-  .sx-game-sub { display: inline-flex; flex: none; gap: 0.375rem; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-3); }
-  .sx-game-team[data-side="away"] { grid-area: a; }
-  .sx-game-team[data-side="home"] { grid-area: h; }
-  .sx-game-team[data-won], .sx-game[data-state="upcoming"] .sx-game-team { color: var(--sx-text); }
-  .sx-game-team[data-won] { font-weight: 700; }
-  .sx-game[data-off] .sx-game-team { color: var(--sx-text-2); }
-  .sx-game-score { min-width: 1ch; text-align: right; font-size: 1.0625rem; font-weight: 400; color: var(--sx-text-2); }
-  .sx-game-score[data-side="away"] { grid-area: as; }
-  .sx-game-score[data-side="home"] { grid-area: hs; }
-  .sx-game-score[data-won] { font-weight: 800; color: var(--sx-text); }
-  .sx-game-sep { display: none; grid-area: dash; text-align: center; font-size: 0.8125rem; color: var(--sx-text-3); }
-  .sx-game-meta { grid-area: m; font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2); }
-  .sx-game-meta:empty { display: none; }
-  .sx-game-link { color: inherit; text-decoration-line: none; }
-  .sx-game-link::after { content: ""; position: absolute; inset: 0; }
-  .sx-game-link:focus-visible { outline: none; }
-  .sx-game:has(.sx-game-link:focus-visible) { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
-  @container (min-width: 40rem) {
-    .sx-game-grid {
-      grid-template-columns: 4.75rem minmax(0, 1fr) var(--sx-score-ch, 2ch) 0.75rem var(--sx-score-ch, 2ch) minmax(0, 1fr) minmax(7.5rem, auto);
-      grid-template-areas: "st a as dash hs h m"; column-gap: 0.625rem; min-height: 2.75rem; padding: 0;
-    }
-    .sx-game-status > small { display: inline; margin-left: 0.25em; }
-    .sx-game-team[data-side="away"] { flex-direction: row-reverse; text-align: right; }
-    .sx-game-score[data-side="home"] { text-align: left; }
-    .sx-game-sep { display: block; }
-    .sx-game-meta { text-align: right; white-space: nowrap; padding-left: 0.75rem; }
-    .sx-game-meta:empty { display: block; }
-  }
-  /* The team-perspective log row (GameLogRow): date, mark, score, "vs/at Opponent", note. One line. */
-  .sx-logrow {
-    position: relative; container-type: inline-size;
-    display: grid; grid-template-columns: 3.5rem 1.375rem var(--sx-log-score, 3.25rem) minmax(0, 1fr) auto;
-    column-gap: 0.625rem; align-items: center; min-height: 2.75rem; padding-block: 0.375rem;
-    border-bottom: 1px solid var(--sx-border); font-size: 0.875rem; line-height: 1.25rem; color: var(--sx-text-2);
-  }
-  .sx-logrow-wide { --sx-log-score: 4.5rem; }
-  a.sx-logrow:hover { background: var(--sx-surface-2); }
-  .sx-logrow-note {
-    display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 0 0.5rem;
-    font-size: 0.8125rem; line-height: 1.125rem; color: var(--sx-text-2);
-  }
-  .sx-logrow-note:empty { display: none; }
-  /* A narrow row: the note drops under the opponent, which never gives way to it. */
-  @container (max-width: 26rem) {
-    .sx-logrow-note { grid-column: 4; justify-content: flex-start; }
-  }
-  .sx-nonleague { color: var(--sx-text-2); }
+  .sx-list > li > :is(.sx-game, .sx-logrow):first-child { margin-top: 0; border-top: 0; }
+  /* The old pill alias keeps wrapping labels; un-migrated pages force `text-accent-ink!` onto the
+     accent pill, which is ink on ink (`!important` in this layer outranks an important utility). */
+  .sx-pill { white-space: normal; padding-block: 0.3125rem; }
+  .sx-pill.sx-pill-accent { color: var(--sx-bg) !important; }
 
-  /* ── Tables. No box: 11px caps heads on a 1px ink rule (sticky), 40px rows (44 under a coarse
-        pointer), hairlines between rows. Cells are right-aligned ink-2 unless a column class says
-        otherwise: rank, team, the ONE bold sort key, an ink cell. ── */
-  .sx-table { width: 100%; border-collapse: collapse; border-spacing: 0; font-size: var(--text-meta); line-height: 1.25rem; }
-  .sx-table caption { text-align: left; }
-  .sx-table thead th {
-    position: sticky; top: var(--sx-sticky-top, 3rem); z-index: 1;
-    padding: 0.5rem 0.5rem 0.375rem; border-bottom: 1px solid var(--sx-text); background: var(--sx-bg);
-    font-size: var(--text-kicker); line-height: 1rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-    text-align: right; white-space: nowrap; color: var(--sx-text-2);
-  }
-  /* A row header (`<th scope="row">`) is a body cell, not a column head. */
-  .sx-table :is(td, tbody th) {
-    height: 2.5rem; padding: 0 0.5rem; border-bottom: 1px solid var(--sx-border);
-    text-align: right; vertical-align: middle; white-space: nowrap; color: var(--sx-text-2);
-  }
-  .sx-table tbody th { text-align: left; font-weight: inherit; }
-  .sx-table :is(th, td):first-child { padding-left: 0; }
-  .sx-table :is(th, td):last-child { padding-right: 0; }
-  .sx-table :is(th, td).sx-col-rank { width: 1.75rem; text-align: left; }
-  .sx-table :is(th, td).sx-col-team { width: 99%; text-align: left; }
-  .sx-table :is(td, tbody th).sx-col-team { font-size: 0.9375rem; font-weight: 600; color: var(--sx-text); white-space: normal; }
-  .sx-table td.sx-col-key { font-size: 0.9375rem; font-weight: 800; color: var(--sx-text); }
-  .sx-table td.sx-col-ink { color: var(--sx-text); }
-  .sx-table tbody tr:hover > :is(td, th) { background: var(--sx-surface-2); }
-  .sx-table tr.sx-cut > :is(td, th) { border-bottom: 2px solid var(--sx-text); }
-  /* "This team" on its own page: weight and an ink bar, no yellow. */
-  .sx-table tr.sx-self > :is(td, th) { font-weight: 700; color: var(--sx-text); }
-  .sx-table tr.sx-self > :is(td, th):first-child { box-shadow: inset 3px 0 0 var(--sx-text); padding-left: 0.5rem; }
-  @media (pointer: coarse) { .sx-table :is(td, tbody th) { height: 2.75rem; } }
-
-  /* ── The pinned team (`[data-pinned]` is set on a `[data-team-slug]` by the pinned-team script and
-        PinnedTeamMarks; `.sx-pinned` is the static class). A table row: the highlighter across the
-        row and a 3px bar (an inset shadow, so nothing moves). A game row or bracket line: the
-        highlighter behind the team NAME only. Never colour alone: the bar and `.sx-pin-note` say it too. ── */
-  .sx-table tr[data-team-slug][data-pinned] > :is(td, th),
-  .sx-pinned { background: var(--sx-accent-wash) !important; color: var(--sx-text); }
-  .sx-table tr[data-team-slug][data-pinned] > :is(td, th):first-child { box-shadow: inset 3px 0 0 var(--sx-pin); padding-left: 0.5rem; }
-  [data-team-slug][data-pinned]:not(tr):not(.sx-pinnable) { box-shadow: inset 3px 0 0 var(--sx-pin); background: var(--sx-accent-wash); }
-  .sx-pinnable[data-team-slug][data-pinned] .sx-game-name,
-  .sx-game-team[data-pinned] .sx-game-name {
-    background: var(--sx-accent-wash); color: var(--sx-text);
-    box-shadow: -4px 0 0 var(--sx-accent-wash), 4px 0 0 var(--sx-accent-wash);
-  }
-  /* A pinnable line with no `.sx-game-name` inside (a bracket line): the highlighter on the line. */
-  .sx-pinnable[data-team-slug][data-pinned]:not(:has(.sx-game-name)) { background: var(--sx-accent-wash); box-shadow: none; }
-  /* The non-colour channel: a visually hidden word only the pinned row announces. Every note ships
-     `hidden`, so a dropped stylesheet keeps it silent; `!important` beats preflight's `[hidden]`. */
   .sx-pinned .sx-pin-note,
-  [data-team-slug][data-pinned] .sx-pin-note { display: inline !important; }
+  [data-team-slug][data-pinned] .sx-pin-note { display: inline-block !important; }   /* inline-block: the note is drawn as the star, a sized box */
   /* PinControl's "This replaces your pinned team." before hydration. TeamIdentity server-renders a
      one-line style that sets `--sx-pin-other: none` on its own hero, so the note never paints there. */
   html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }
@@ -826,7 +1093,6 @@
   .sx-target:target {
     outline: 2px solid var(--sx-accent);
     outline-offset: 4px;
-    border-radius: 0.75rem;
   }
 
   /* Long lists stay in the HTML without costing layout on first paint. `scroll-margin-top: -3rem`
@@ -837,17 +1103,18 @@
     scroll-margin-top: -3rem;
   }
   /* A /schedule/<league> date group's own height estimate from the counts its `style` sets
-     (components/schedule/ScheduleList.tsx): a 2rem band, then one 4.125rem stacked row per game on
-     a phone, per row of two from 768px and per row of three from 1280px (`.sx-games-grid`). */
+     (components/schedule/ScheduleList.tsx): a 2.25rem strip, then one 4.5rem row per game on a
+     phone, per row of two from 768px and per row of three from 1184px (a long schedule has no
+     rail, so its list reaches three 21rem columns there). */
   .sx-dategroup.sx-dategroup-est {
     margin-top: 0;
-    contain-intrinsic-size: auto calc(var(--sx-n) * var(--sx-rh, 4.125rem) + 2rem);
+    contain-intrinsic-size: auto calc(var(--sx-n) * var(--sx-rh, 4.5rem) + 2.25rem);
   }
   @media (width >= 48rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r) * var(--sx-ch, 4.125rem) + 2rem); }
+    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r) * var(--sx-ch, 4.5rem) + 2.25rem); }
   }
-  @media (width >= 80rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r3) * var(--sx-ch, 4.125rem) + 2rem); }
+  @media (width >= 74rem) {
+    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r3) * var(--sx-ch, 4.5rem) + 2.25rem); }
   }
 
   /* Long-form prose (About). The same measure as `max-w-prose` (@theme). */
@@ -869,25 +1136,16 @@
   @media (width >= 40rem) { .sx-gridcell:nth-child(2) { border-top-width: 0; } }
   @media (width >= 64rem) { .sx-gridcell:nth-child(3) { border-top-width: 0; } }
 
-  /* 120ms tap feedback; with a mouse a list row answers the pointer the way a table row does. */
-  .sx-tap { transition: background-color var(--sx-dur-tap) var(--sx-ease); }
+  /* Tap feedback; with a mouse a list row answers the pointer the way a table row does. */
   .sx-tap:active { background: var(--sx-surface-2); }
   @media (hover: hover) {
     .sx-tap:not(.sx-card, .sx-pill, .sx-btn):hover { background: var(--sx-surface-2); }
   }
 
-  /* A disclosure chevron: rotates when its <details> opens; a LEADING one points right while closed. */
-  .sx-chevron { transition: rotate var(--sx-dur-ui) var(--sx-ease); }
+  /* A disclosure chevron: turned when its <details> opens; a LEADING one points right while closed. */
   details[open] > summary .sx-chevron { rotate: 180deg; }
   .sx-chevron-lead { rotate: -90deg; }
   details[open] > summary .sx-chevron-lead { rotate: 0deg; }
-
-  /* Phone-only right-edge fade for a horizontally scrolling rail; dropped while the KEYBOARD is in
-     it, when the rail wraps so every chip is wholly on screen. */
-  @media (max-width: 767.98px) {
-    .sx-fade-x { mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); }
-    .sx-fade-x:has(:focus-visible) { mask-image: none; flex-wrap: wrap; }
-  }
 
   .sx-clamp-2 {
     display: -webkit-box;
@@ -907,7 +1165,6 @@
     background: var(--sx-text); color: var(--sx-bg);
     font-size: var(--text-cell); line-height: 1.125rem;
     opacity: 0; visibility: hidden;
-    transition: opacity var(--sx-dur-tap) var(--sx-ease);
   }
   .sx-tip:nth-child(-n+7) > .sx-tip-body { left: 0; translate: 0 -6px; }
   .sx-tip:nth-last-child(-n+7) > .sx-tip-body { left: auto; right: 0; translate: 0 -6px; }
@@ -932,16 +1189,27 @@
     .sx-meter-fill { forced-color-adjust: none; background: CanvasText; }
     .sx-meter-track { forced-color-adjust: none; border: 1px solid CanvasText; background: Canvas; }
     .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
-    .sx-inset, .sx-flag, .sx-band, .sx-stale { border: 1px solid CanvasText; }
-    .sx-tab:is([aria-pressed="true"], [aria-current], [aria-selected="true"]),
-    .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) { outline: 2px solid Highlight; outline-offset: -2px; }
-    .sx-pinned, [data-team-slug][data-pinned] { border-left: 3px solid Highlight; }
-    /* Any truthy `aria-current`, not only "page": the lit bar is a background, which forced colours drop. */
+    .sx-inset, .sx-stale > p { border: 1px solid CanvasText; }
+    :is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], [aria-current], [aria-selected="true"]) { outline: 2px solid Highlight; outline-offset: -2px; }
+    .sx-pin-note { forced-color-adjust: none; background: Highlight; }
+    .sx-mast, .sx-foot, .sx-liveboard { border-color: CanvasText; }
+    /* Any truthy `aria-current`, not only "page": the lit bar is a shadow, which forced colours drop. */
     [aria-current]:not([aria-current="false"]) .sx-indicator,
     .sx-tabbar-tab[data-current], details[open] > .sx-tabbar-tab { outline: 2px solid Highlight; outline-offset: -2px; }
     .sx-chrome-top { border-bottom: 1px solid CanvasText; }
     .sx-chrome-bottom { border-top: 1px solid CanvasText; }
   }
+
+  /* ── Motion: three things, CSS only, and only when the reader has not asked for less. ── */
+  @media (prefers-reduced-motion: no-preference) {
+    .sx-game, .sx-logrow, .sx-leader, .sx-livegame, .sx-myline, .sx-table tbody tr > *, .sx-day { transition: background-color 120ms linear; }
+    details[open] > .sx-more-sheet { animation: sx-sheet 160ms var(--sx-ease); }
+    details[open] > .sx-more-scrim { animation: sx-fade 160ms linear; }
+    .sx-live::before { animation: sx-pulse 1.6s ease-in-out infinite; }
+  }
+  @keyframes sx-sheet { from { opacity: 0; translate: 0 8px; } }
+  @keyframes sx-fade { from { opacity: 0; } }
+  @keyframes sx-pulse { 50% { opacity: 0.35; } }
 }
 
 /* ── Unlayered on purpose: the game-page hero score must beat ScoreGlyph's `text-[2rem]` utility
@@ -951,7 +1219,7 @@
 .sx-board-score > .sx-num {
   font-size: var(--text-display);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 
 /* ── Print (unlayered, after the token blocks, so it outranks the dark blocks, every layer and the
@@ -964,30 +1232,32 @@
     color-scheme: light;
     --sx-bg:            #ffffff;
     --sx-surface:       #ffffff;
-    --sx-surface-2:     #f4f4f1;
-    --sx-surface-3:     #e8e8e3;
-    --sx-border:        #d9d9d3;
-    --sx-border-strong: #878780;
-    --sx-text:          #111111;
-    --sx-text-2:        #45453f;
-    --sx-text-3:        #5e5e57;
-    --sx-accent:        #111111;
-    --sx-accent-ink:    #111111;
-    --sx-accent-wash:   #ffd83d;
-    --sx-win:           #111111;
-    --sx-win-ink:       #ffffff;
-    --sx-win-wash:      #111111;
-    --sx-loss:          #767670;
-    --sx-loss-ink:      #45453f;
-    --sx-loss-wash:     #ffffff;
-    --sx-tie:           #767670;
-    --sx-tie-ink:       #111111;
-    --sx-tie-wash:      #e8e8e3;
-    --sx-bar:           #45453f;
-    --sx-zero:          #878780;
-    --sx-focus:         #111111;
-    --sx-pin:           #111111;
-    --sx-select:        #ffe98a;
+    --sx-surface-2:     #f1f4f9;
+    --sx-surface-3:     #e1e7f1;
+    --sx-border:        #d9dfea;
+    --sx-border-strong: #7c8799;
+    --sx-text:          #0c1b33;
+    --sx-text-2:        #3d4a63;
+    --sx-text-3:        #5a667d;
+    --sx-accent:        #1747d1;
+    --sx-accent-ink:    #1747d1;
+    --sx-accent-wash:   #f1f4f9;
+    --sx-win:           #036a34;
+    --sx-win-ink:       #03562a;
+    --sx-win-fill:      #03562a;
+    --sx-win-wash:      #d5e3d8;
+    --sx-loss:          #df6860;
+    --sx-loss-ink:      #a32f28;
+    --sx-loss-wash:     #fde4e1;
+    --sx-tie:           #5a667d;
+    --sx-tie-ink:       #3d4a63;
+    --sx-tie-wash:      #d9dfea;
+    --sx-on-fill:       #ffffff;
+    --sx-live:          #c8281e;
+    --sx-bar:           #3d4a63;
+    --sx-zero:          #5a667d;
+    --sx-focus:         #1747d1;
+    --sx-pin:           #1747d1;
   }
   body { background: #fff; color: #000; padding-bottom: 0; }
 

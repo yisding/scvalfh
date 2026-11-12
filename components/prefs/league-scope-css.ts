@@ -62,11 +62,17 @@ const SOCAL = 'socal';
 const NORCAL = 'norcal';
 
 /**
- * The selected tab: ink, weight 700 and a 3px ink bar — the same look globals.css gives
- * `.sx-league-chip:is([aria-pressed="true"], [aria-current="page"])`, so the pre-paint state and
- * the hydrated one match. Change the two together.
+ * The selected league tab: ink, weight 700 and a 3px accent bar — the same look globals.css gives
+ * `:is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], …)`, so the pre-paint state and
+ * the hydrated one match. Change the two together (and tests/ui/scope-css.test.ts).
  */
-const SELECTED = 'color:var(--sx-text);font-weight:700;box-shadow:inset 0 -3px 0 var(--sx-text)';
+const SELECTED = 'color:var(--sx-text);font-weight:700;box-shadow:inset 0 -3px 0 var(--sx-accent)';
+/**
+ * The selected segment of the region switch: globals.css' `.sx-seg > .sx-opt[aria-pressed="true"]`.
+ * Scoped to `.sx-seg`, so the text face ("Switch to SoCal", whose `data-region-option` is the OTHER
+ * region) is never drawn as selected.
+ */
+const SEG_SELECTED = 'background:var(--sx-surface-3);color:var(--sx-text)';
 
 export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   for (const id of leagueIds) {
@@ -94,8 +100,8 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   // The region half (DESIGN-socal §2.4), verbatim from the design.
   rules.push(`html[data-js]:not([data-region="${SOCAL}"]) [data-region-scope="${SOCAL}"]{display:none}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-scope="${NORCAL}"]{display:none}`);
-  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"]{${SELECTED}}`);
-  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
+  rules.push(`html:not([data-region="${SOCAL}"]) .sx-seg>[data-region-option="${NORCAL}"]{${SEG_SELECTED}}`);
+  rules.push(`html[data-region="${SOCAL}"] .sx-seg>[data-region-option="${SOCAL}"]{${SEG_SELECTED}}`);
   // Both deep-link rules stand down once the reader picks a region on this page view
   // (REGION_PICKED): tap `#elo-rating` on /leaders, then SoCal, and the NorCal block that holds the
   // `:target` would otherwise stay open above SoCal's, since dropping the fragment with

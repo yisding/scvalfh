@@ -1,11 +1,18 @@
 /**
- * `components/prefs/LeagueSwitcher.tsx`: the hairline between two sections' chip lists.
+ * `components/prefs/LeagueSwitcher.tsx`: the league row and the region control (DESIGN §33).
  *
- * With five leagues, `All` plus the five chips no longer fit one row at 320-360px (DESIGN §22.3), so
- * the Northern Section's list wraps alone onto a second row. A hairline drawn as its own flex item
- * in the outer row was left behind at the end of row 1. It is now the following list's own
- * `::before`, so it travels with that list: these tests pin that it is never a sibling of the lists.
+ * The league row is a row of words on a hairline, one list per section. Nothing is drawn between
+ * sections any more: the hairline that used to introduce a later section's list (and, before that,
+ * a separate flex item that a wrap stranded at the end of a line) is gone, and these tests pin that
+ * no element and no pseudo-element class can come back between two lists. The lists themselves are
+ * `display: contents`, so the row wraps tab by tab like text.
+ *
+ * The region is the one control drawn as a switch (`.sx-seg` of two `.sx-opt` buttons); in the
+ * footer and the More sheet it is ONE text button that names the action. The theme is one text
+ * button too.
  */
+
+import { readFileSync } from 'node:fs';
 
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -13,6 +20,9 @@ import { describe, expect, it } from 'vitest';
 
 import type { LeagueChip } from '../../components/layout/league-chips';
 import LeagueSwitcher, { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
+import ThemeToggle from '../../components/prefs/ThemeToggle';
+
+const GLOBALS = readFileSync(new URL('../../app/globals.css', import.meta.url), 'utf8');
 
 const CHIPS: LeagueChip[] = [
   { id: 'scval', shortName: 'SCVAL', sectionShort: 'CCS', region: 'norcal' },
@@ -47,15 +57,19 @@ describe.each([
 ] as const)('%s mode', (_mode, element) => {
   const html = renderToStaticMarkup(element());
 
-  it('draws each section divider on the list it introduces, never as a separate flex item', () => {
+  it('draws nothing between sections: bare lists, and no separate flex item a wrap could strand', () => {
     const uls = lists(html);
     expect(uls.map((u) => /aria-label="([^"]+)"/.exec(u)?.[1]), 'components/prefs/LeagueSwitcher.tsx').toEqual([
       'Central Coast Section',
       'North Coast Section',
       'Northern Section',
     ]);
-    expect(uls[0], 'the first section has no divider').not.toContain('before:bg-hairline');
-    for (const ul of uls.slice(1)) expect(ul, 'a later section leads with its divider').toContain('before:bg-hairline');
+    // A list is its label (and, in scope and anchor mode, its region) and nothing else: no class,
+    // so no `before:` / `after:` divider and no layout of its own.
+    for (const ul of uls) {
+      expect(ul, 'a section list carries no class').toMatch(/^<ul aria-label="[^"]+"(?: data-region-scope="(?:norcal|socal)")?>$/);
+    }
+    expect(html).not.toMatch(/(before|after):/);
     // No stray element between two lists that a wrap could strand at the end of a line.
     expect(html, 'components/prefs/LeagueSwitcher.tsx').not.toMatch(/<\/ul><(?!ul\b)[^>]*>(?:<\/[^>]+>)?<ul\b/);
     expect(html).not.toContain('w-px shrink-0 self-center bg-hairline');
@@ -92,8 +106,9 @@ describe.each([
     ]);
   });
 
-  it('draws the divider from the index within the region: CCS and SS open their regions bare', () => {
-    expect(uls.map((u) => u.includes('before:bg-hairline'))).toEqual([false, true, true, false, true]);
+  it('draws no divider in either region: every list is bare, so hiding a region leaves no orphan', () => {
+    for (const ul of uls) expect(ul).toMatch(/^<ul aria-label="[^"]+" data-region-scope="(?:norcal|socal)">$/);
+    expect(html).not.toMatch(/hairline|(before|after):/);
   });
 
   it('has no wrapper element around a region and no stray element between lists', () => {
@@ -109,9 +124,7 @@ describe('a SoCal fixture alone', () => {
     );
     const uls = lists(html);
     expect(uls.map((u) => /aria-label="([^"]+)"/.exec(u)?.[1])).toEqual(['Southern Section', 'San Diego Section']);
-    expect(uls[0]).not.toContain('before:bg-hairline');
-    expect(uls[1]).toContain('before:bg-hairline');
-    for (const ul of uls) expect(ul).toContain('data-region-scope="socal"');
+    for (const ul of uls) expect(ul).toMatch(/^<ul aria-label="[^"]+" data-region-scope="socal">$/);
     expect(html).toContain('data-league-option="north-county"');
   });
 
@@ -127,9 +140,23 @@ describe('a SoCal fixture alone', () => {
       }),
     );
     expect(html).not.toContain('data-region-scope');
-    expect(lists(html)[0]).not.toContain('before:bg-hairline');
+    for (const ul of lists(html)) expect(ul).toMatch(/^<ul aria-label="[^"]+">$/);
     expect(html).toContain('href="/schedule/city"');
     expect(html).toContain('aria-current="page"');
+  });
+});
+
+describe('the row lays out as text (app/globals.css)', () => {
+  it('section lists are `display: contents`, inside a ScopeBar and alone', () => {
+    expect(GLOBALS).toContain('.sx-scope ul, .sx-opts ul { display: contents; }');
+    expect(GLOBALS).toContain('.sx-chips ul { display: contents; }');
+  });
+
+  it('a league tab is a 44px target that never wraps inside itself', () => {
+    const m = /\.sx-tab, \.sx-league-chip, \.sx-opt \{([^}]*)\}/.exec(GLOBALS);
+    expect(m, 'globals.css: the tab face').not.toBeNull();
+    expect(m![1]).toMatch(/min-height:\s*2\.75rem/);
+    expect(m![1]).toMatch(/white-space:\s*nowrap/);
   });
 });
 
@@ -137,7 +164,7 @@ describe('RegionSwitcher', () => {
   const html = renderToStaticMarkup(createElement(RegionSwitcher, {}));
 
   it('is a labelled group of two pressed-state buttons, NorCal then SoCal', () => {
-    expect(html).toMatch(/^<div role="group" aria-label="Region"/);
+    expect(html).toMatch(/^<div role="group" aria-label="Region" class="sx-js-only sx-seg">/);
     const buttons = [...html.matchAll(/<button\b[^>]*>/g)].map((m) => m[0]);
     expect(buttons).toHaveLength(2);
     expect(buttons.map((b) => /data-region-option="([^"]+)"/.exec(b)?.[1])).toEqual(['norcal', 'socal']);
@@ -146,18 +173,25 @@ describe('RegionSwitcher', () => {
       // Server render: not pressed and disabled until hydrated; the stylesheet draws the selection.
       expect(b).toContain('aria-pressed="false"');
       expect(b).toContain('disabled=""');
-      expect(b).toContain('min-h-11');
-      expect(b).toContain('min-w-11');
+      expect(b).toContain('class="sx-opt"');
     }
-    expect(html).toContain('>NorCal</button>');
-    expect(html).toContain('>SoCal</button>');
+    // The buttons are DIRECT children of the switch (the scope stylesheet's `.sx-seg>` rules).
+    expect(html).toMatch(/class="sx-js-only sx-seg"><button\b[^>]*>NorCal<\/button><button\b[^>]*>SoCal<\/button>/);
   });
 
-  it('is JS-only, has a polite live region, and a hairline only when separated', () => {
+  it('is a 44px target on touch: a 32px segment whose hit area reaches 6px above and below', () => {
+    expect(GLOBALS).toMatch(/\.sx-seg > \.sx-opt \{ position: relative;[^}]*min-height: 2rem;/);
+    expect(GLOBALS).toContain(
+      '@media (pointer: coarse) { .sx-seg > .sx-opt::before { content: ""; position: absolute; inset: -6px 0; } }',
+    );
+  });
+
+  it('is JS-only, has a polite live region, and draws no hairline of its own', () => {
     expect(html).toContain('sx-js-only');
     expect(html).toContain('role="status" aria-live="polite"');
-    expect(html).not.toContain('after:bg-hairline');
-    expect(renderToStaticMarkup(createElement(RegionSwitcher, { separated: true }))).toContain('after:bg-hairline');
+    expect(html).not.toMatch(/hairline|(before|after):/);
+    // `separated` is accepted and draws nothing.
+    expect(renderToStaticMarkup(createElement(RegionSwitcher, { separated: true }))).toBe(html);
     expect(renderToStaticMarkup(createElement(RegionSwitcher, { label: 'Show region' }))).toContain(
       'aria-label="Show region"',
     );
@@ -166,45 +200,90 @@ describe('RegionSwitcher', () => {
   it('carries no region scope of its own: it shows in both views', () => {
     expect(html).not.toContain('data-region-scope');
   });
+
+  it('the text face is ONE button that names the action, and no group', () => {
+    const text = renderToStaticMarkup(createElement(RegionSwitcher, { face: 'text', className: 'sx-textbtn' }));
+    const buttons = [...text.matchAll(/<button\b[^>]*>/g)].map((m) => m[0]);
+    expect(buttons).toHaveLength(1);
+    expect(text.match(/data-region-option=/g)).toHaveLength(1);
+    expect(text).not.toContain('role="group"');
+    expect(text).not.toContain('aria-pressed');
+    expect(text).not.toContain('sx-seg');
+    expect(text).not.toContain('sx-opt');
+    // Its option is the OTHER region (the default view is NorCal), and the words say so.
+    expect(buttons[0]).toContain('data-region-option="socal"');
+    expect(buttons[0]).toContain('class="sx-js-only sx-textbtn"');
+    expect(text).toContain('>Switch to SoCal</button>');
+    // The announcement is a sibling, never part of the button's name.
+    expect(text).toMatch(/<\/button><span role="status" aria-live="polite" class="sr-only"><\/span>$/);
+  });
+});
+
+describe('ThemeToggle', () => {
+  it.each(['text', 'row'] as const)('is ONE text button that names the action (face: %s)', (face) => {
+    const html = renderToStaticMarkup(createElement(ThemeToggle, { face }));
+    expect(html.match(/<button\b/g)).toHaveLength(1);
+    expect(html.match(/data-theme-toggle/g)).toHaveLength(1);
+    expect(html).toMatch(/^<button type="button" data-theme-toggle=""/);
+    expect(html).not.toContain('aria-pressed');
+    expect(html).not.toContain('role="group"');
+    expect(html).not.toContain('role="radio');
+    expect(html).not.toContain('sx-seg');
+    // The server (and a light device) offers the other theme by name.
+    expect(html).toContain('>Dark mode</button>');
+    expect(html).toContain('sx-js-only');
+    expect(html.includes('sx-textbtn')).toBe(face === 'text');
+  });
 });
 
 /**
- * One chip width on every page. A chip's check is laid out whether or not the chip is current
- * (globals.css shows only the current one's), so a per-league page's row is the same row on every
- * league page; before, link mode rendered it on the current chip alone, which widened that chip by
- * 14.6px and wrapped the row on some league pages and not others. The check is drawn
- * (`.sx-check`, globals.css), never the U+2713 glyph, which Geist's served subset lacks.
+ * One tab width on every page. A tab's selected state is bold, and its label is set twice
+ * (`.sx-weight-hold`: the visible word plus a hidden zero-height bold copy), so a per-league page's
+ * row is the same row whichever league is current. The check spans that used to mark the current
+ * chip are gone: selection is weight plus a bar, never a glyph.
  */
-describe('the chip check', () => {
+describe('the league tab', () => {
   const chipsOf = (html: string) =>
-    [...html.matchAll(/<(a|button)\b[^>]*class="sx-league-chip[^"]*"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => m[2]);
+    [...html.matchAll(/<(a|button)\b[^>]*class="(sx-league-chip[^"]*)"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => ({
+      className: m[2],
+      body: m[3],
+    }));
   const link = (current?: string) =>
     renderToStaticMarkup(
       createElement(LeagueSwitcher, { mode: 'link', includeAll: true, label: 'Leagues', leagues: CHIPS, hrefs: HREFS, current }),
     );
   const scope = () =>
     renderToStaticMarkup(createElement(LeagueSwitcher, { mode: 'scope', includeAll: true, label: 'Your league', leagues: CHIPS }));
+  const anchor = () =>
+    renderToStaticMarkup(createElement(LeagueSwitcher, { mode: 'anchor', label: 'Leagues', leagues: CHIPS, hrefs: ANCHOR_HREFS }));
 
-  it.each(['scval', 'eal', undefined])('link mode lays the check out on every chip (current: %s)', (current) => {
+  it.each(['scval', 'eal', undefined])('link mode: every tab is the width-held label alone (current: %s)', (current) => {
     const html = link(current);
     const chips = chipsOf(html);
     expect(chips).toHaveLength(CHIPS.length + 1);
     for (const chip of chips) {
-      expect(chip, 'components/prefs/LeagueSwitcher.tsx').toMatch(/^<span aria-hidden="true" class="sx-check sx-chip-check"><\/span>/);
+      expect(chip.body, 'components/prefs/LeagueSwitcher.tsx').toMatch(
+        /^<span class="sx-weight-hold" data-label="([^"]+)">\1<\/span>$/,
+      );
     }
     expect(html.match(/aria-current="page"/g)).toHaveLength(1);
   });
 
-  it('scope chips and region segments carry the same drawn check; anchor chips carry none', () => {
-    const scopeChips = chipsOf(scope());
-    const regionChips = chipsOf(renderToStaticMarkup(createElement(RegionSwitcher, {})));
-    expect(scopeChips).toHaveLength(CHIPS.length + 1);
-    expect(regionChips).toHaveLength(2);
-    for (const chip of [...scopeChips, ...regionChips]) expect(chip).toContain('sx-chip-check');
-    const anchor = renderToStaticMarkup(
-      createElement(LeagueSwitcher, { mode: 'anchor', label: 'Leagues', leagues: CHIPS, hrefs: ANCHOR_HREFS }),
-    );
-    expect(anchor).not.toContain('sx-chip-check');
+  it('every mode: the class is exactly `sx-league-chip`, never the page-tab face', () => {
+    const all = [...chipsOf(scope()), ...chipsOf(anchor()), ...chipsOf(link('bval'))];
+    expect(all).toHaveLength(CHIPS.length + 1 + CHIPS.length + CHIPS.length + 1);
+    for (const chip of all) {
+      expect(chip.className).toBe('sx-league-chip');
+      expect(chip.className).not.toContain('sx-tab');
+      expect(chip.body).toMatch(/^<span class="sx-weight-hold" data-label="([^"]+)">\1<\/span>$/);
+    }
+  });
+
+  it('no mode and no region control renders a check span', () => {
+    for (const html of [link('bval'), scope(), anchor(), renderToStaticMarkup(createElement(RegionSwitcher, {}))]) {
+      expect(html).not.toContain('sx-chip-check');
+      expect(html).not.toContain('sx-check');
+    }
   });
 
   it('never types the glyph', () => {

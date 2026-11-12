@@ -5,61 +5,80 @@ import { WIDE_SCORES } from '../words/score-words';
 import { gameFilterAttrs } from './filter-data-server';
 
 /**
- * One day's contests as a list of game rows (DESIGN §33).
+ * A list of game rows (DESIGN §33).
  *
- * `<ul className="sx-games">` of `GameRow`s, ONE `<li>` per contest carrying the `data-*` filter
- * attributes, so the schedule filter has exactly one element per game to hide at any width, the
- * visible count is unambiguous, and there is no phone/desktop twin. The row lays itself out from
- * its own width (stacked, or one line from 40rem), so `layout` only chooses the list's shape:
- *   - `list` (default): one column of rows;
- *   - `grid`: auto-fill columns of stacked rows, 18.75rem minimum (1 / 2 / 3 at 390 / 768 / 1136).
+ * `<div className="sx-gamelist"><ul className="sx-games">` of `GameRow`s. The outer div is the size
+ * container: under 44rem of its width the list is one column; from 44rem it is auto-fill columns
+ * of the same rows (two in a 760px main column, three across a full page), filled left to right in
+ * the order given. ONE `<li>` per contest carries the `data-*` filter attributes, so the schedule
+ * filter has exactly one element per game to hide at any width and there is no phone/desktop twin.
  *
- * GameList is only ever a slate nobody is following one team through: /schedule/<league>,
- * /scores/[date] and the playoff lists. So every upcoming league game prints both sides' league
- * records beside their names (`showRecords`), which is what a reader sizing up a game wants.
+ * One row size, and every final prints "Final", so `layout`, `lead`, `dense`, `variant` and
+ * `tracks` are accepted and ignored. `solo` keeps a single game on one full-width row (a team's
+ * next game). Order is the caller's.
  */
 export interface GameListProps {
   games: readonly Game[];
-  /** A league-scoped list: a side from another league carries its league's short name. */
+  /** @deprecated A row prints no league suffix. Ignored. */
   scopeLeague?: LeagueId | null;
-  /** `list` (default): one column. `grid`: auto-fill columns of stacked rows. */
+  /** One full-width column whatever the list's width (`sx-games-solo`). */
+  solo?: boolean;
+  /**
+   * true where the list is NOT grouped by competition (a league's schedule by date, a rail list):
+   * each row then notes its round or `Non-league`. Default false: a list sits under its
+   * competition's own strip, which already says it.
+   */
+  showChips?: boolean;
+  /** The list spans days: an upcoming row prints its date under its start time. */
+  showDate?: boolean;
+  /** One link at the end of each row's note ("Bracket"): a team page's next game. */
+  noteLink?: { href: string; label: string };
+  /** @deprecated One row size. Ignored. */
   layout?: 'list' | 'grid';
+  /** @deprecated One row size. Ignored. */
+  lead?: boolean;
+  /** @deprecated Every final prints "Final". Ignored. */
+  dense?: boolean;
   /** @deprecated Nothing bleeds: the page is the only surface. Ignored. */
   variant?: 'bleed' | 'grouped';
-  /** @deprecated The grid is always auto-fill. Ignored. */
+  /** @deprecated The list chooses its own columns. Ignored. */
   tracks?: 'fill' | 'fit';
   /** @deprecated A row holds one link, to the game page. Ignored. */
   bracket?: boolean;
+  /** Goes on the `<ul>`. */
   className?: string;
 }
 
-export function GameList({ games, scopeLeague = null, layout = 'list', className }: GameListProps) {
+export function GameList({ games, solo = false, showChips = false, showDate = false, noteLink, className }: GameListProps) {
   return (
-    <ul
-      className={[
-        'sx-games',
-        layout === 'grid' ? 'sx-games-grid' : null,
-        // Three-digit scores (basketball) need a wider score track in the one-line form.
-        WIDE_SCORES ? 'sx-games-wide' : null,
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      {games.map((game) => (
-        // The row is the <li>. No display utility on it: the filter toggles `hidden`, and a
-        // `display` class would beat the attribute and leave a hole in the grid. The filter's own
-        // `data-state` (final / pending / upcoming) replaces the row's.
-        <GameRow
-          key={game.contestId}
-          as="li"
-          attrs={{ ...gameFilterAttrs(game) }}
-          game={game}
-          scopeLeague={scopeLeague}
-          showRecords
-        />
-      ))}
-    </ul>
+    <div className="sx-gamelist">
+      <ul
+        className={[
+          'sx-games',
+          solo ? 'sx-games-solo' : null,
+          // Three-digit scores (basketball) need a wider score cell.
+          WIDE_SCORES ? 'sx-games-wide' : null,
+          className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        {games.map((game) => (
+          // The row is the <li>. No display utility on it: the filter toggles `hidden`, and a
+          // `display` class would beat the attribute and leave a hole in the grid. The filter's own
+          // `data-state` (final / pending / upcoming) replaces the row's.
+          <GameRow
+            key={game.contestId}
+            as="li"
+            attrs={{ ...gameFilterAttrs(game) }}
+            game={game}
+            showChips={showChips}
+            showDate={showDate}
+            noteLink={noteLink}
+          />
+        ))}
+      </ul>
+    </div>
   );
 }
 

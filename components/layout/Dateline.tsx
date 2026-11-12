@@ -4,34 +4,29 @@ import { BUILD_INSTANT } from './build-instant';
 import LastUpdated from './LastUpdated';
 
 /**
- * The line under every page's h1 (DESIGN §33): one or two sentences about the page, then the
- * freshness stamp, "Updated Wed Nov 11, 1:03 PM PT." It is ordinary wrapping text: nothing on the
- * paragraph truncates or forbids wrapping, so the stamp can never be cut off (only the date and
- * time themselves stay on one line).
+ * The long freshness stamp, "Updated Wed Nov 11, 1:03 PM PT", as plain text (DESIGN §33). Used where
+ * the long form is wanted in a page's own text: /about, through PageHeader's `stamp`. Every other
+ * page shows the short form once, beside its scores (LastUpdated `variant="time"`), and the footer
+ * carries the long one.
  */
 export interface DatelineProps {
-  children?: React.ReactNode;
-  /** Appends the freshness stamp. Default true. */
-  stamp?: boolean;
   className?: string;
+  /** @deprecated accepted until pages migrate; ignored (the stamp stands alone). */
+  children?: React.ReactNode;
+  /** @deprecated accepted until pages migrate; `false` renders nothing. */
+  stamp?: boolean;
 }
 
-export function Dateline({ children, stamp = true, className }: DatelineProps) {
-  const hasWords = children !== undefined && children !== null && children !== false && children !== '';
-  if (!hasWords && !stamp) return null;
+export function Dateline({ className, stamp = true }: DatelineProps) {
+  if (!stamp) return null;
   return (
-    <p className={['sx-dateline', className].filter(Boolean).join(' ')}>
-      {hasWords ? children : null}
-      {hasWords && stamp ? ' ' : null}
-      {stamp ? (
-        <LastUpdated
-          variant="dateline"
-          at={getFetchedAt()}
-          now={BUILD_INSTANT}
-          seasonComplete={getSitePhase() === 'complete'}
-        />
-      ) : null}
-    </p>
+    <LastUpdated
+      variant="dateline"
+      at={getFetchedAt()}
+      now={BUILD_INSTANT}
+      seasonComplete={getSitePhase() === 'complete'}
+      className={className}
+    />
   );
 }
 

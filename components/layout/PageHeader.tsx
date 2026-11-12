@@ -1,10 +1,16 @@
 import Dateline from './Dateline';
 
 /**
- * The page title block (DESIGN §33): the h1, the dateline (a sentence or two about the page, ending
- * in the freshness stamp), then the page's controls row. It opens every route except /game/[id],
- * whose h1 stays sr-only beside the scoreboard, and the team page, whose TeamIdentity holds its own.
- * One column at every width: nothing sits beside the title.
+ * The page title block (DESIGN §33), for pages whose title is their identity: a team's name, "SCVAL
+ * standings", "Leaders", "About". The h1 is the condensed title face at 36–60px (the base `h1` rule
+ * and the `text-h1` theme value are the same numbers); a long title wraps, it is never clipped.
+ * Under it, at most ONE plain line (`meta`), and a right-hand slot (`end`). No sentence under a
+ * title, and no grey line by default.
+ *
+ * Score pages (home included) pass `titleHidden`: the h1 is visually hidden and nothing else is
+ * drawn, because the selected cell of the date bar is the visible title.
+ *
+ * The team page passes `lead` (its logo) and `figures` (its record as figures, not a label line).
  *
  * Server-only (Dateline reads the snapshot): a client module such as app/error.tsx writes the same
  * `<header className="sx-pagehead">` by hand.
@@ -17,61 +23,89 @@ export interface PageHeaderProps {
   title: React.ReactNode;
   /** Appended inside the h1 as sr-only text (e.g. " — scores, standings and the CCS playoff picture"). */
   srTitle?: string;
-  /** One or two sentences, at most about 120 characters; `<b>` the lead clause. */
-  dateline?: React.ReactNode;
-  /** Appends "Updated … PT." to the dateline. Default true. */
+  /** Score pages (home included): the h1 is sr-only and the header renders nothing visible. */
+  titleHidden?: boolean;
+  /** ONE plain line under the title (team: "SCVAL De Anza"). Not prose, not a list of facts. */
+  meta?: React.ReactNode;
+  /** Team page only: the record as figures (value over a small label). */
+  figures?: ReadonlyArray<{ label: string; value: string }>;
+  /** Right-hand slot: the team page's pin state; elsewhere the short Updated stamp when the page has no league row. */
+  end?: React.ReactNode;
+  /** Team page only: the logo (the 64px file; CSS draws it at 48px below 768). Adds the class `sx-teamhead`. */
+  lead?: React.ReactNode;
+  /** Appends the long "Updated …" stamp to the meta line. Default FALSE; only /about passes true. */
   stamp?: boolean;
-  /** The controls row (ScopeBar, tabs), rendered right under the dateline. */
+  /** The page's controls (ScopeBar, tabs), rendered under the header. */
   children?: React.ReactNode;
   className?: string;
-  /** @deprecated accepted until pages migrate: rendered as the first sentence of the dateline. */
+  /**
+   * @deprecated accepted until pages migrate; rendered as a plain 14px line UNDER the title (never a
+   * kicker above it). It is still drawn because /clubs/[slug] passes its only link back to /clubs here.
+   */
   eyebrow?: React.ReactNode;
-  /** @deprecated accepted until pages migrate: use `dateline`. */
+  /** @deprecated accepted until pages migrate; rendered as a plain 14px line. */
   description?: React.ReactNode;
   /** @deprecated accepted until pages migrate. */
-  meta?: React.ReactNode;
-  /** @deprecated accepted until pages migrate: use `children`. */
   aside?: React.ReactNode;
   /** @deprecated accepted until pages migrate. */
   asideClassName?: string;
 }
 
-/** 'Fri Sep 19' → 'Fri Sep 19.': a deprecated eyebrow or description ends as a sentence before what follows it. */
-function sentence(words: React.ReactNode): React.ReactNode {
-  return typeof words === 'string' && !/[.!?:]$/.test(words) ? `${words}.` : words;
-}
-
 export function PageHeader({
   title,
   srTitle,
-  dateline,
-  stamp = true,
+  titleHidden = false,
+  meta,
+  figures,
+  end,
+  lead,
+  stamp = false,
   children,
   className,
   eyebrow,
   description,
-  meta,
   aside,
   asideClassName,
 }: PageHeaderProps) {
-  const words = dateline ?? description;
+  if (titleHidden) {
+    return (
+      <>
+        <h1 className="sr-only">
+          {title}
+          {srTitle ? <span className="sr-only">{srTitle}</span> : null}
+        </h1>
+        {children}
+      </>
+    );
+  }
   return (
-    <header className={['sx-pagehead', className].filter(Boolean).join(' ')}>
+    <header className={['sx-pagehead', lead ? 'sx-teamhead' : null, className].filter(Boolean).join(' ')}>
+      {lead}
       <h1 className="m-0 text-h1 text-ink">
         {title}
         {srTitle ? <span className="sr-only">{srTitle}</span> : null}
       </h1>
-      <Dateline stamp={stamp}>
-        {eyebrow || words ? (
-          <>
-            {eyebrow ? sentence(eyebrow) : null}
-            {eyebrow && words ? ' ' : null}
-            {dateline === undefined ? sentence(words) : words}
-          </>
-        ) : null}
-      </Dateline>
-      {meta ? <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-meta text-ink-2">{meta}</div> : null}
-      {aside ? <div className={['mt-4', asideClassName].filter(Boolean).join(' ')}>{aside}</div> : null}
+      {end ? <div className="sx-pagehead-end">{end}</div> : null}
+      {meta || stamp ? (
+        // A <div>, not a <p>: un-migrated pages still pass a paragraph of their own as `meta`.
+        <div className="sx-pagehead-meta">
+          {meta}
+          {stamp ? <Dateline /> : null}
+        </div>
+      ) : null}
+      {figures ? (
+        <dl className="sx-figures">
+          {figures.map((f) => (
+            <div key={f.label}>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+      {eyebrow ? <p className="sx-dateline">{eyebrow}</p> : null}
+      {description ? <p className="sx-dateline">{description}</p> : null}
+      {aside ? <div className={asideClassName}>{aside}</div> : null}
       {children}
     </header>
   );

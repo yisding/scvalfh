@@ -173,20 +173,35 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
     expect(describeGame(eal('L')).sentence).toBe('Chico 1, Davis 1, final; Davis won on 1 v 1s.');
   });
 
-  it('says what SO means to a screen reader (StatusLabel)', async () => {
+  it('says what SO means in plain words everyone reads (StatusLabel)', async () => {
+    // The decider is no longer an abbreviation with a hidden expansion: the words are the visible
+    // text, so a screen reader and a sighted reader get the same thing.
     const { StatusLabel } = await import('../../components/ui/StatusLabel');
-    const html = renderToStaticMarkup(createElement(StatusLabel, { display: describeGame(eal('W')) }));
-    expect(html, 'components/ui/StatusLabel.tsx SO label').toContain('<span class="sr-only">decided on 1 v 1s</span>');
+    const html = renderToStaticMarkup(createElement(StatusLabel, { display: describeGame(eal('W')), showChips: false }));
+    expect(html, 'components/ui/StatusLabel.tsx SO label').toBe('<span class="sx-status"><span>Final, decided on 1 v 1s</span></span>');
     const ot = renderToStaticMarkup(
-      createElement(StatusLabel, { display: describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })) }),
+      createElement(StatusLabel, { display: describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })), showChips: false }),
     );
-    expect(ot, 'components/ui/StatusLabel.tsx OT label').toContain('<span class="sr-only">after overtime</span>');
+    expect(ot, 'components/ui/StatusLabel.tsx OT label').toBe('<span class="sx-status"><span>Final, overtime</span></span>');
     const forfeit = renderToStaticMarkup(
       createElement(StatusLabel, {
         display: describeGame(final(1, 0, { decider: 'FORFEIT', isForfeit: true, forfeitBy: 'away' })),
+        showChips: false,
       }),
     );
-    expect(forfeit, 'components/ui/StatusLabel.tsx forfeit label').toContain('<span class="sr-only">by forfeit</span>');
+    expect(forfeit, 'components/ui/StatusLabel.tsx forfeit label').toBe('<span class="sx-status"><span>Final, forfeit</span></span>');
+    const tally = renderToStaticMarkup(
+      createElement(StatusLabel, {
+        display: describeGame(final(1, 1, { decider: 'SO', shootout: { home: 4, away: 3 } })),
+        showChips: false,
+      }),
+    );
+    expect(tally, 'components/ui/StatusLabel.tsx shootout tally').toBe('<span class="sx-status"><span>Final, shootout 4-3</span></span>');
+    // No abbreviation is left for a reader to decode, and nothing is hidden.
+    for (const out of [html, ot, forfeit, tally]) {
+      expect(out).not.toContain('sr-only');
+      expect(out).not.toMatch(/>(SO|OT|F)</);
+    }
   });
 
   it('credits a San Diego level W/L final as a win with no SO tag and no shootout claim (StatusLabel)', async () => {
@@ -659,5 +674,183 @@ describe('other-league suffix (GameRow and LatestScores)', () => {
     expect(otherLeagueSuffix('tamalpais', 'mcal')).toBe('');
     expect(otherLeagueSuffix('tamalpais', null)).toBe('');
     expect(otherLeagueSuffix(null, 'scval')).toBe('');
+  });
+});
+
+/**
+ * The ONE game row (DESIGN §33, components/game-row/GameRow.tsx): status slot, two team lines, the
+ * scores flush right. These pin the shape that makes a list of mixed states line up: the status is
+ * always first, the score column holds scores and nothing else, and a result is weight, not a mark.
+ */
+describe('the one game row (GameRow, GameList)', () => {
+  const STATES: Array<{ name: string; game: Game; state: string; scores: number }> = [
+    { name: 'final', game: final(1, 3), state: 'final', scores: 2 },
+    { name: 'upcoming', game: game(), state: 'upcoming', scores: 0 },
+    { name: 'live', game: game({ status: 'live' }), state: 'live', scores: 0 },
+    { name: 'off (unreported)', game: game({ status: 'score-pending' }), state: 'off', scores: 0 },
+    { name: 'off (postponed)', game: game({ status: 'postponed' }), state: 'off', scores: 0 },
+  ];
+  const row = async (g: Game, props: Record<string, unknown> = {}) => {
+    const { GameRow } = await import('../../components/game-row/GameRow');
+    return renderToStaticMarkup(createElement(GameRow, { game: g, ...props }));
+  };
+  /** The direct children of `.sx-game-grid`, as their class attributes, in DOM order. */
+  const cells = (html: string): string[] => {
+    const grid = /<div class="sx-game-grid">([\s\S]*)<\/div><\/(?:div|li)>$/.exec(html);
+    expect(grid, 'the row grid').not.toBeNull();
+    const out: string[] = [];
+    let depth = 0;
+    for (const m of grid![1].matchAll(/<(\/)?(a|span|small|abbr|img|time)\b([^>]*?)(\/)?>/g)) {
+      if (m[1]) depth -= 1;
+      else {
+        if (depth === 0) out.push(/class="([^"]*)"/.exec(m[3])?.[1] ?? '');
+        if (!m[4] && m[2] !== 'img') depth += 1;
+      }
+    }
+    return out;
+  };
+
+  for (const s of STATES) {
+    it(`${s.name}: the row link, then the status slot, then teams and only scores in the score column`, async () => {
+      const html = await row(s.game);
+      expect(html).toMatch(new RegExp(`^<div class="sx-game" data-state="${s.state}"`));
+      const classes = cells(html);
+      // The empty row link first, the status slot second: in every state.
+      expect(classes[0]).toBe('sx-game-link');
+      expect(classes[1]).toBe('sx-game-status');
+      expect(html).toMatch(/<a class="sx-game-link" aria-label="[^"]+" href="\/game\/c-1"><\/a><span class="sx-game-status" aria-hidden="true">/);
+      // Then away, home (each followed by its score when there is one), then at most one note.
+      const expected = s.scores
+        ? ['sx-game-team sx-pinnable', 'sx-num sx-game-score text-score', 'sx-game-team sx-pinnable', 'sx-num sx-game-score text-score']
+        : ['sx-game-team sx-pinnable', 'sx-game-team sx-pinnable'];
+      const rest = classes.slice(2);
+      expect(rest.slice(0, expected.length)).toEqual(expected);
+      expect(rest.slice(expected.length).every((c) => c === 'sx-game-note')).toBe(true);
+      expect(rest.slice(expected.length).length).toBeLessThanOrEqual(1);
+      // Exactly one status slot, and nothing retired.
+      expect(html.match(/class="sx-game-status"/g)).toHaveLength(1);
+      expect(html.match(/sx-game-score/g)?.length ?? 0).toBe(s.scores);
+      for (const retired of ['sx-game-at', 'sx-game-tag', 'sx-game-sep', 'sx-game-meta']) {
+        expect(html, retired).not.toContain(retired);
+      }
+    });
+  }
+
+  it('every final’s status reads `Final`, whatever decided it', async () => {
+    const finals = [
+      final(2, 1),
+      final(0, 0),
+      final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 }),
+      final(1, 1, { decider: 'SO', shootout: { home: 4, away: 3 } }),
+      final(1, 0, { decider: 'FORFEIT', isForfeit: true, forfeitBy: 'away' }),
+    ];
+    for (const g of finals) {
+      expect(await row(g)).toMatch(/<span class="sx-game-status" aria-hidden="true"><span>Final<\/span>/);
+    }
+    // And over the real snapshot.
+    for (const g of getGames().filter((x) => describeGame(x).kind === 'final')) {
+      expect(await row(g), g.contestId).toMatch(/<span class="sx-game-status" aria-hidden="true"><span>Final<\/span>/);
+    }
+  });
+
+  it('an upcoming row’s status is its start time; a live row’s is `Live`; a postponed one says so', async () => {
+    expect(await row(game())).toMatch(/<span class="sx-game-status" aria-hidden="true"><span class="sx-num sx-game-time">5:30 PM<\/span>/);
+    expect(await row(game({ isTimeTba: true }))).toContain('<span class="sx-num sx-game-time">TBD</span>');
+    expect(await row(game({ status: 'live' }))).toContain('<span class="sx-game-status" aria-hidden="true"><span class="sx-live">Live</span>');
+    const ppd = await row(game({ status: 'postponed' }));
+    expect(ppd).toContain('<span class="sx-long">Postponed</span><abbr class="sx-short" title="Postponed">PPD</abbr>');
+  });
+
+  it('an unreported game renders no score cell: never a dash, never a zero', async () => {
+    const html = await row(game({ status: 'score-pending' }));
+    expect(html).not.toContain('sx-game-score');
+    expect(html).not.toContain('text-score');
+    expect(html).toContain('<span class="sx-game-status" aria-hidden="true"><span>No score</span>');
+    expect(html).not.toContain(EN_DASH);
+    // The link still says it in words.
+    expect(html).toMatch(/aria-label="[^"]*score not reported/i);
+    // Unreported is not a result: neither side is marked.
+    expect(html).not.toContain('data-won');
+    expect(html).not.toContain('data-lost');
+  });
+
+  it('a final marks exactly one side `data-won` and the other `data-lost`, on the name and on the score; a tie neither', async () => {
+    const html = await row(final(1, 3)); // home Homestead 1, away Saint Francis 3
+    const team = (side: string) => new RegExp(`<span class="sx-game-team sx-pinnable" data-side="${side}" data-team-slug="[^"]+"( data-won="")?( data-lost="")?>`).exec(html)!;
+    const score = (side: string) => new RegExp(`<span data-side="${side}"( data-won="")?( data-lost="")? aria-hidden="true" class="sx-num sx-game-score text-score">`).exec(html)!;
+    for (const part of [team, score]) {
+      expect([Boolean(part('away')[1]), Boolean(part('away')[2])], 'away won').toEqual([true, false]);
+      expect([Boolean(part('home')[1]), Boolean(part('home')[2])], 'home lost').toEqual([false, true]);
+    }
+    expect(html.match(/data-won=""/g)).toHaveLength(2);
+    expect(html.match(/data-lost=""/g)).toHaveLength(2);
+    const tie = await row(final(2, 2));
+    expect(tie).not.toContain('data-won');
+    expect(tie).not.toContain('data-lost');
+    // A live lead is not a result, and a game still to play has none.
+    for (const g of [game({ status: 'live' }), game()]) {
+      const out = await row(g);
+      expect(out).not.toContain('data-won');
+      expect(out).not.toContain('data-lost');
+    }
+  });
+
+  it('a shootout final renders a `data-decider` note naming the winner', async () => {
+    // Level on goals; the home side (Homestead) won the shootout 4-3.
+    const so = await row(final(1, 1, { decider: 'SO', shootout: { home: 4, away: 3 } }), { showChips: false });
+    expect(so).toContain('<span class="sx-game-note" data-decider="">Homestead wins shootout 4-3</span>');
+    // The goals stay level, and the weight follows the shootout.
+    expect(so).toMatch(/data-side="home" data-team-slug="homestead" data-won=""/);
+    // No tally stored: the section's own words.
+    const eal = await row(
+      final(1, 1, {
+        countsFor: 'eal',
+        leagueDivision: 'eal',
+        decider: 'SO',
+        home: { teamId: 'chico-id', slug: 'chico', name: 'Chico', score: 1, result: 'W' },
+        away: { teamId: 'davis-id', slug: 'davis', name: 'Davis', score: 1, result: 'L' },
+      }),
+      { showChips: false },
+    );
+    expect(eal).toContain('<span class="sx-game-note" data-decider="">Chico wins on 1 v 1s</span>');
+    // A regulation or overtime final has no decider note.
+    expect(await row(final(2, 1), { showChips: false })).not.toContain('data-decider');
+    expect(await row(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 }), { showChips: false })).not.toContain('data-decider');
+  });
+
+  it('a registry side is a link to its team and carries the hidden pin note; the row link is first and empty', async () => {
+    const html = await row(final(1, 3));
+    expect(html).toContain('<a class="sx-game-name" href="/teams/saint-francis">Saint Francis</a>');
+    expect(html).toContain('<a class="sx-game-name" href="/teams/homestead">Homestead</a>');
+    expect(html.match(/<span class="sx-pin-note" hidden="">Your team<\/span>/g)).toHaveLength(2);
+    // Away first, home second, always.
+    expect(html.indexOf('data-side="away"')).toBeLessThan(html.indexOf('data-side="home"'));
+    const seeded = await row(final(1, 3), { seeds: { away: 2, home: 7 } });
+    expect(seeded).toContain('<span class="sx-seed sx-num">#2</span>');
+    expect(seeded).toContain('<span class="sx-seed sx-num">#7</span>');
+  });
+
+  it('`GameList` wraps its list in `sx-gamelist`, renders rows as <li>, and keeps the order it is given', async () => {
+    const { GameList } = await import('../../components/schedule/GameList');
+    const a = final(2, 1, { contestId: 'c-a' });
+    const b = game({ contestId: 'c-b', dateKey: '2026-09-20', dateLocal: '2026-09-20T15:00:00' });
+    const c = game({ contestId: 'c-c', status: 'live' });
+    const d = final(0, 0, { contestId: 'c-d', dateKey: '2026-09-01', dateLocal: '2026-09-01T15:00:00' });
+    for (const order of [[a, b, c, d], [d, c, b, a], [c, a, d, b]]) {
+      const html = renderToStaticMarkup(createElement(GameList, { games: order }));
+      expect(html).toMatch(/^<div class="sx-gamelist"><ul class="sx-games[^"]*"><li class="sx-game"/);
+      expect(html).toMatch(/<\/li><\/ul><\/div>$/);
+      expect([...html.matchAll(/href="\/game\/(c-[a-d])"/g)].map((m) => m[1])).toEqual(order.map((g) => g.contestId));
+      expect(html.match(/<li class="sx-game"/g)).toHaveLength(4);
+      // The status slot is first in every row of a mixed list.
+      expect(html.match(/<\/a><span class="sx-game-status" aria-hidden="true">/g)).toHaveLength(4);
+    }
+    // No pinned-first reordering, no `order` trick: the list is the caller's.
+    expect(renderToStaticMarkup(createElement(GameList, { games: [a, b], solo: true }))).toMatch(/<ul class="sx-games sx-games-solo/);
+  });
+
+  it('a real 0-0 final renders two zeros in the score column', async () => {
+    const html = await row(final(0, 0));
+    expect([...html.matchAll(/class="sx-num sx-game-score text-score"><span>([^<]*)<\/span>/g)].map((m) => m[1])).toEqual(['0', '0']);
   });
 });

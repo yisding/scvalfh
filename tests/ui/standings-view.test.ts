@@ -241,8 +241,9 @@ describe('GP, LEFT and MAX', () => {
   it('render from the standing context on the desktop table, GP on the phone row', async () => {
     const html = await renderLeague('mcal');
     expect(html, 'components/standings/standings-table/DesktopStandingsTable.tsx head').toMatch(/>GP<\/th>/);
-    expect(html).toMatch(/>Left<\/th>/);
-    expect(html).toMatch(/>Max<\/th>/);
+    // DESIGN §33: the one StandingsTable has no LEFT or MAX column; GP still prints played/scheduled.
+    expect(html).not.toMatch(/>Left<\/th>/);
+    expect(html).not.toMatch(/>Max<\/th>/);
     const ctx = data.getStandingContext('marin-county');
     for (const c of ctx.values()) {
       expect(c.scheduled, 'lib/data.ts getStandingContext: MCAL has a fixed schedule').not.toBeNull();
@@ -377,8 +378,10 @@ describe('the /standings overview', () => {
     }
     expect(html).toContain('href="/standings/scval#de-anza"');
     expect(html).toContain('href="/standings/mcal#marin-county"');
-    expect(text).toContain('Full De Anza table →');
-    expect(text).toContain('Full PCAL table →');
+    // The link is its words alone: the trailing arrow is retired (components/ui/Arrow.tsx, DESIGN §33).
+    expect(html).toMatch(/>Full De Anza table\s*<\/a>/);
+    expect(html).toMatch(/>Full PCAL table\s*<\/a>/);
+    expect(text).not.toMatch(/table\s*→/);
     expect(html, 'components/standings/CompactStandingsTable.tsx static head').toContain('[&amp;_th]:static');
     expect(text).not.toContain('Gabilan');
   });

@@ -8,9 +8,11 @@
  *
  * - `overflow-x: clip` on html and body, never `hidden`: `hidden` on <body> makes it a scroll
  *   container, and every `position: sticky` on the site would stick to <body> and stop sticking.
- * - The header stamp may shrink (`min-w-0 truncate`) and is `relative`, the containing block of
- *   its `sr-only` span: an absolutely positioned box is not clipped by an ancestor that is not its
- *   containing block, so without it the span alone widened the page.
+ * - The header holds the wordmark, the nav and the team search and nothing else (DESIGN §33). The
+ *   freshness stamp was cut off in it at 1280, so it left the header for good: nothing in the row
+ *   may truncate, and no stamp, external link, theme control or region control may come back.
+ * - The stamp now sits beside the content (the league row's util part). Its rule never wraps and
+ *   has no clipping property at all, so "Updated 3:42 PM" cannot be cut again.
  */
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -21,6 +23,7 @@ import { REPO } from '../helpers';
 
 const CSS = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
 const HEADER = readFileSync(path.join(REPO, 'components', 'layout', 'SiteHeader.tsx'), 'utf8');
+const SCOPE_BAR = readFileSync(path.join(REPO, 'components', 'prefs', 'ScopeBar.tsx'), 'utf8');
 
 describe('no sideways page scroll', () => {
   it('clips html and body horizontally, and never hides them', () => {
@@ -30,12 +33,42 @@ describe('no sideways page scroll', () => {
     );
   });
 
-  it('lets the header stamp give way, and contains its hidden label', () => {
-    const stamp = HEADER.match(/<LastUpdated[\s\S]*?className="([^"]+)"/);
-    expect(stamp, 'components/layout/SiteHeader.tsx: the stamp').not.toBeNull();
-    const classes = stamp![1].split(/\s+/);
-    for (const c of ['relative', 'min-w-0', 'truncate']) expect(classes).toContain(c);
-    // The cluster holding the stamp must be allowed to shrink too.
-    expect(HEADER).toContain('<span className="ml-auto flex min-w-0 items-center gap-2">');
+  it('keeps the header to the wordmark, the nav and the search: nothing in it can be cut', () => {
+    const element = HEADER.match(/<header\b[\s\S]*?<\/header>/);
+    expect(element, 'components/layout/SiteHeader.tsx: the <header> element').not.toBeNull();
+    const header = element![0];
+    for (const banned of ['LastUpdated', 'truncate', 'ExternalLink', 'ThemeToggle', 'RegionSwitcher']) {
+      expect(header, `the header must not contain ${banned}`).not.toContain(banned);
+    }
+    expect(header).toMatch(/<TopNav className="sx-mast-nav"/);
+    // Exactly three children in the row: wordmark, nav, search.
+    expect(header.match(/className="sx-wordmark"/g)).toHaveLength(1);
+    expect(header.match(/className="sx-mast-end"/g)).toHaveLength(1);
+  });
+
+  it('draws the stamp beside the content, in a rule that can never cut it', () => {
+    // ScopeBar renders its `stamp` prop inside the util part.
+    expect(SCOPE_BAR).toMatch(/<span className="sx-scope-util">[\s\S]*?\{stamp\}[\s\S]*?<\/span>/);
+    const rules = [...CSS.matchAll(/^\s*\.sx-stamp\s*\{([^}]*)\}/gm)];
+    expect(rules, 'globals.css: exactly one base .sx-stamp rule').toHaveLength(1);
+    const body = rules[0][1];
+    expect(body).toMatch(/white-space:\s*nowrap/);
+    for (const banned of ['overflow', 'text-overflow', 'max-width']) {
+      expect(body, `.sx-stamp must not set ${banned}`).not.toContain(banned);
+    }
+    // No other rule may clip a stamp either.
+    for (const m of CSS.matchAll(/([^{}]*\.sx-stamp[^{}]*)\{([^}]*)\}/g)) {
+      expect(m[2], `${m[1].trim()}`).not.toMatch(/text-overflow|overflow\s*:|max-width/);
+    }
+  });
+
+  it('lets text inside an old card wrap for as long as the old card exists', () => {
+    // The new `.sx-table` cells and `.sx-action` never wrap. On a page that has not been rebuilt
+    // (measured at 390px, 2026-11-12) that set /about's cross-check tables 618 to 1080px wide, which
+    // widened the whole page on a phone, and cut /playoffs' sentence-long links at the right edge.
+    // While the flattened `.sx-card` is defined, both wrap inside it; the rules go when it goes.
+    if (!/^\s*\.sx-card \{/m.test(CSS)) return;
+    expect(CSS).toContain('.sx-card .sx-table:not(.sx-tablewrap > .sx-table) :is(td, tbody th) { white-space: normal; }');
+    expect(CSS).toContain('.sx-card .sx-action, p > .sx-action { white-space: normal; }');
   });
 });

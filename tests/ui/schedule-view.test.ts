@@ -466,7 +466,9 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
     expect(past).not.toContain('Upcoming');
   });
 
-  it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
+  it('an upcoming league game prints no pre-game record at all, so never 0-0-0 (showRecords is ignored)', async () => {
+    // DESIGN §33: a row is a status, two names (seed, star) and the scores. The league records that
+    // used to sit beside the names of an upcoming league game are on the standings table instead.
     const { GameRow } = await import('../../components/game-row/GameRow');
     const { recordWords } = await import('../../lib/format');
     const today = data.getToday();
@@ -475,18 +477,22 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
       .filter((g) => g.status === 'scheduled' && g.dateKey >= today);
     const league = upcoming.find((g) => g.countsFor !== null);
     expect(league, 'corpus has an upcoming league game').toBeDefined();
-    const text = textOf(renderToStaticMarkup(createElement(GameRow, { game: league!, showRecords: true })));
+    const html = renderToStaticMarkup(createElement(GameRow, { game: league!, showRecords: true }));
+    const text = textOf(html);
+    expect(html, 'components/game-row/GameRow.tsx: showRecords changes nothing').toBe(
+      renderToStaticMarkup(createElement(GameRow, { game: league! })),
+    );
     let checked = 0;
     for (const side of [league!.away, league!.home]) {
       const standing = side.slug ? data.getStandingFor(side.slug) : undefined;
       if (standing?.hasReportedResults) {
         checked += 1;
-        expect(text, `components/game-row/GameRow.tsx records: ${side.slug}`).toContain(
-          `${recordWords(standing.computed)} in league`,
-        );
+        expect(html, `components/game-row/GameRow.tsx records: ${side.slug}`).not.toContain(recordWords(standing.computed));
       }
     }
     expect(checked, 'a side with a record was checked').toBeGreaterThan(0);
+    expect(html).not.toContain(' in league');
+    expect(html).not.toMatch(/\b\d+-\d+-\d+\b/);
     expect(text).not.toContain('0-0-0');
     const nonLeague = upcoming.find((g) => g.countsFor === null);
     if (nonLeague) {

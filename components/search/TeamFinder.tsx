@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment, useEffect, useId, useMemo, useState } from 'react';
+import { Fragment, useEffect, useId, useMemo, useState, useSyncExternalStore } from 'react';
 
 // From lib/format itself, not the words/plural re-export: that module's other helpers then stay out of this
 // client chunk, which sits within bytes of /teams' first-load budget (scripts/assert-budgets.ts).
@@ -70,11 +70,29 @@ export interface TeamFinderProps {
   className?: string;
 }
 
-export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
+export const DEFAULT_FINDER_LABEL = 'Search teams by school, city or mascot';
 /** The field's visible prompt; its accessible name is the (visually hidden) label. */
-const PLACEHOLDER = 'Find a team: school, city or mascot';
-/** A result row: 44px, a hairline below, no card. */
-const RESULT_ROW = 'flex min-h-11 w-full flex-col items-start justify-center border-b border-hairline py-1.5 text-left';
+const PLACEHOLDER = 'Search teams';
+/** A result row: 44px, a hairline below, no card: a 24px logo (teams), the name, then the detail in grey. */
+const RESULT_ROW = 'flex min-h-11 w-full items-center gap-2 border-b border-hairline px-2 py-1.5 text-left hover:bg-surface-2';
+const RESULT_NAME = 'text-body font-medium text-ink';
+const RESULT_DETAIL = 'min-w-0 text-meta text-ink-2';
+
+/** The school's logo, drawn as it is (public/mascots/<slug>-24.webp, the file TeamMonogram picks). */
+function ResultLogo({ slug }: { slug: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className="sx-monogram"
+      src={`/mascots/${slug}-24.webp`}
+      srcSet={`/mascots/${slug}-48.webp 2x`}
+      width={24}
+      height={24}
+      alt=""
+      loading="lazy"
+    />
+  );
+}
 const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
@@ -206,12 +224,13 @@ export function PinResult({ entry, onPick }: { entry: TeamSearchEntry; onPick: (
       onClick={() => onPick(entry)}
       className={`sx-tap cursor-pointer ${RESULT_ROW}`}
     >
-      <span className="text-body font-bold text-ink">
+      <ResultLogo slug={entry.slug} />
+      <span className={RESULT_NAME}>
         <span className="sr-only">{before}</span>
         {visible}
         <span className="sr-only">{after}</span>
       </span>
-      <span className="text-meta text-ink-2">{detail}</span>
+      <span className={RESULT_DETAIL}>{detail}</span>
     </button>
   );
 }
@@ -228,14 +247,15 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
       prefetch={false}
       className={`sx-tap no-underline ${RESULT_ROW}`}
     >
-      <span className="text-body font-bold text-ink">{entry.shortName}</span>
-      <span className="text-meta text-ink-2">{resultDetail(entry)}</span>
+      <ResultLogo slug={entry.slug} />
+      <span className={RESULT_NAME}>{entry.shortName}</span>
+      <span className={RESULT_DETAIL}>{resultDetail(entry)}</span>
     </Link>
   );
 }
 
 /** The line above the results when pinning cannot work in this browser. */
-const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
+const PIN_UNAVAILABLE_NOTE = 'This browser is not storing your team, so a result opens its team page.';
 
 function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[]; kickerId: string }) {
   if (groups.length === 0) return null;
@@ -252,8 +272,8 @@ function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[
               prefetch={false}
               className={`sx-tap no-underline ${RESULT_ROW}`}
             >
-              <span className="text-body font-bold text-ink">{group.label}</span>
-              <span className="text-meta text-ink-2">{group.detail}</span>
+              <span className={RESULT_NAME}>{group.label}</span>
+              <span className={RESULT_DETAIL}>{group.detail}</span>
             </Link>
           </li>
         ))}
@@ -261,6 +281,10 @@ function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[
     </div>
   );
 }
+
+const subscribeNever = () => () => {};
+const readUrlQuery = () => new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+const readNoQuery = () => '';
 
 export function TeamFinder({
   index,
@@ -277,7 +301,12 @@ export function TeamFinder({
   const liveId = useId();
   const resultsId = useId();
   const groupsKickerId = useId();
-  const [query, setQuery] = useState('');
+  // The header's team search is a plain GET form to /teams?q=…: the filter on /teams starts from that
+  // query until the reader types here. Read as an external store with '' on the server (the page is
+  // static, so the server never sees the query string), so the hydrating render matches the HTML.
+  const urlQuery = useSyncExternalStore(subscribeNever, readUrlQuery, readNoQuery);
+  const [typed, setQuery] = useState<string | null>(null);
+  const query = typed ?? (mode === 'filter' ? urlQuery : '');
   const [announced, setAnnounced] = useState('');
   const { ready, available, pin } = usePinnedTeam();
   // pin mode with storage blocked: results are team-page links, not pin buttons.

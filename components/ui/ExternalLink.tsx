@@ -1,5 +1,5 @@
 /**
- * Every off-site link: an `↗`, `rel="noopener noreferrer"`, and a visually-hidden
+ * Every off-site link: one drawn 10px arrow (it inherits `currentColor`), `rel="noopener noreferrer"`, and a visually-hidden
  * "opens in a new tab" (DESIGN §7.16). Deep links back to the source sit on every row, which
  * is part of the attribution posture in SPEC §6.
  */

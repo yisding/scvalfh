@@ -534,7 +534,7 @@ describe('/playoffs (rendered)', () => {
     // drawn in it (since 2026-11-03) and its rules one link away.
     expect(html, PAGE).toMatch(/<section[^>]*\sid="mcal"/);
     expect(text, PAGE).toContain(
-      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. How the MCAL tournament works →',
+      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. How the MCAL tournament works',
     );
     expect(html, PAGE).toContain('href="/playoffs/mcal#how-it-works"');
     const mcal = html.slice(html.search(/<section[^>]*\sid="mcal"/), html.search(/<section[^>]*\sid="eal"/));
@@ -753,7 +753,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     const html = unseeded;
     const text = textOf(html);
     expect(text, PAGE).toContain('Not seeded yet:');
-    expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket ↗ (opens in a new tab) — not yet posted.');
+    expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket (opens in a new tab) — not yet posted.');
     expect(text, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points; nothing here is official until Mon Nov 2.');
     expect(text, PAGE).not.toContain('every status below is a written word');
     expect(text, PAGE).not.toContain('CCS has posted');

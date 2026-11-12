@@ -1,24 +1,14 @@
 import { signedGd } from '../../lib/format';
 
 /**
- * Goal differential as a HUELESS ink bar (DESIGN §5.6, §7.8, R-1).
+ * Goal differential as a bar (DESIGN §5.6, §7.8; §33 for the face). No table draws it any more
+ * (GD is the signed number); kept until the pages stop importing it.
  *
- * Polarity is POSITION against a shared 1px zero rule — positive extends right, negative left —
- * plus the signed numeral printed beside it. No hue at all: a bar has no adjacent letter to lean
- * on, so a hued bar would make the CVD failure load-bearing, and a blue/red diverging pair would
- * mean "blue = good" on a page where "green = win". One ink, `--sx-bar`, 7.69 light / 8.55 dark.
+ * Polarity is POSITION against a shared 1px zero rule (positive extends right, negative left) and
+ * the sign's colour, green or red, with the signed numeral printed beside it. Square ends and no
+ * track: `--sx-loss` on `--sx-surface-3` is under 3:1, so a red bar never sits on a filled track.
  *
- * Each arm sits on a faint `surface-3` track with a rounded outer cap, so a short bar still reads
- * as a share of a fixed length rather than as a stray tick. Not `surface-2`: that is the table's
- * row hover and focus fill, so the track vanished exactly on the row the reader was pointing at. The track is decoration only: it is
- * not `.sx-bar`/`.sx-zero`, so forced colours (which rewrite backgrounds to Canvas) simply drop it
- * while the bar and the zero rule keep their own CanvasText fallback from app/globals.css.
- *
- * The domain is PER DIVISION (De Anza 32, El Camino 43 on the live snapshot); a shared domain
- * would squash every De Anza bar. Each table's legend prints its own domain and the page says the
- * two tables are not comparable (R-2).
- *
- * The bar is aria-hidden: the numeral in the adjacent cell is the accessible value.
+ * The domain is PER DIVISION. The bar is aria-hidden: the numeral beside it is the value.
  */
 export interface GoalDiffBarProps {
   /** null → a `·` on the zero rule (a team with no reported results). */
@@ -50,14 +40,14 @@ export function GoalDiffBar({
       style={{ width: arm * 2 + 1, height: thickness + 8 }}
       aria-hidden="true"
     >
-      {/* Left arm: the track's rounded cap is on the OUTER (left) end; the bar grows from the rule. */}
+      {/* Left arm: the bar grows leftward from the rule. */}
       <span
-        className="flex justify-end bg-surface-3"
+        className="flex justify-end"
         style={{ width: arm, height: thickness }}
       >
         {value !== null && value < 0 ? (
           <span
-            className="sx-bar"
+            className="bg-loss"
             style={{
               width: Math.max(2, width),
               height: thickness,
@@ -68,12 +58,12 @@ export function GoalDiffBar({
       {/* The zero line is the hairline: solid, neutral, never dashed and never a hue. */}
       <span className="sx-zero shrink-0" style={{ width: 1, height: thickness + 8 }} />
       <span
-        className="flex items-center bg-surface-3"
+        className="flex items-center"
         style={{ width: arm, height: thickness }}
       >
         {value !== null && value > 0 ? (
           <span
-            className="sx-bar"
+            className="bg-win"
             style={{
               width: Math.max(2, width),
               height: thickness,

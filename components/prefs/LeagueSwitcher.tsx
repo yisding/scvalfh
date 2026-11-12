@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from './use-league';
 import type { SectionConfig } from '../../lib/league-config/shape';
@@ -85,7 +85,7 @@ const REGION_WORDS: Readonly<Record<RegionId, { shortName: string; name: string 
   socal: { shortName: 'SoCal', name: 'Southern California' },
 };
 const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
-const CHIP = 'sx-league-chip sx-tab';
+const CHIP = 'sx-league-chip';
 
 interface SectionGroup {
   section: LeagueChip['sectionShort'];
@@ -114,26 +114,6 @@ function Label({ text }: { text: string }) {
 }
 
 /**
- * Brings the selected chip into view inside its scrolling row (the `ScopeBar` when there is one, else
- * the switcher itself) whenever `key` changes. It moves the row's own `scrollLeft` and nothing else:
- * `scrollIntoView` would also scroll the PAGE to a row that sits below the fold.
- */
-function useSelectedInView(key: string) {
-  const ref = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    const root = ref.current;
-    const selected = root?.querySelector<HTMLElement>('[aria-pressed="true"],[aria-current="page"]');
-    if (!root || !selected) return;
-    const row = root.closest<HTMLElement>('.sx-scope') ?? root;
-    const box = row.getBoundingClientRect();
-    const item = selected.getBoundingClientRect();
-    if (item.left < box.left) row.scrollLeft -= box.left - item.left;
-    else if (item.right > box.right) row.scrollLeft += item.right - box.right;
-  }, [key]);
-  return ref;
-}
-
-/**
  * The section lists. `chip` renders one league's control. With `regionScoped` each list carries
  * `data-region-scope`, so the scope stylesheet may hide the other region's lists.
  */
@@ -159,7 +139,6 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
   const { league, ready } = useEffectiveLeague();
   const { region } = useEffectiveRegion();
   const [said, setSaid] = useState('');
-  const ref = useSelectedInView(ready ? `${region} ${league ?? ALL_LEAGUES}` : '');
 
   const choose = (id: LeagueId | typeof ALL_LEAGUES) => {
     setLeague(id);
@@ -186,14 +165,7 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
   };
 
   return (
-    <div
-      ref={(node) => {
-        ref.current = node;
-      }}
-      role="group"
-      aria-label={label}
-      className={['sx-js-only sx-tabs', className].filter(Boolean).join(' ')}
-    >
+    <div role="group" aria-label={label} className={['sx-js-only sx-chips', className].filter(Boolean).join(' ')}>
       {includeAll ? button(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped chip={(l) => button(l.id, l.shortName)} />
       <span role="status" aria-live="polite" className="sr-only">
@@ -204,7 +176,6 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
 }
 
 function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, className }: LeagueSwitcherProps) {
-  const ref = useSelectedInView(mode === 'link' ? (current ?? ALL_LEAGUES) : '');
   const chip = (id: string, text: string) => {
     const href = hrefs[id];
     if (!href) return null;
@@ -225,13 +196,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   };
 
   return (
-    <nav
-      ref={(node) => {
-        ref.current = node;
-      }}
-      aria-label={label}
-      className={['sx-print-hide sx-tabs', className].filter(Boolean).join(' ')}
-    >
+    <nav aria-label={label} className={['sx-print-hide sx-chips', className].filter(Boolean).join(' ')}>
       {includeAll && mode === 'link' ? chip(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped={mode === 'anchor'} chip={(l) => chip(l.id, l.shortName)} />
     </nav>
@@ -239,25 +204,34 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
 }
 
 export interface RegionSwitcherProps {
+  /**
+   * 'switch' (default) is the segmented NorCal | SoCal control, drawn once per page (ScopeBar's
+   * league row). 'text' is ONE text button that names the action, "Switch to SoCal" (the footer,
+   * where it takes `sx-textbtn`, and the phone More sheet, where it is a list row).
+   */
+  face?: 'switch' | 'text';
   className?: string;
   /** The group's accessible name. Default 'Region'. */
   label?: string;
-  /** @deprecated No longer draws anything: `ScopeBar` places the divider between the two controls. */
+  /** @deprecated Draws nothing. */
   separated?: boolean;
 }
 
 /**
- * The NorCal/SoCal control (DESIGN-socal §2.4): `<div role="group" aria-label="Region">` of two
- * `<button aria-pressed data-region-option>`, drawn as two `.sx-tab`s like every other selector. Before
- * hydration the scope stylesheet draws the selected one from `html[data-region]` (`[data-region-option]`,
- * components/prefs/league-scope-css.ts); after, aria-pressed does. Hidden without JS (`sx-js-only`: both
- * regions are on the page then, NorCal first) and `disabled` until hydrated. A polite live region says
- * what a tap did ("Showing Southern California."). `setRegion` writes `scvalfh.region` and, when the
- * effective league is in the other region, removes the remembered league (never writes 'All'), so a
- * pinned team's league returns with its region (components/prefs/use-league.ts). Not in the SiteHeader:
- * a page renders it under its header, normally through `ScopeBar`.
+ * The NorCal/SoCal control (DESIGN-socal §2.4, DESIGN §33). The region is a real change of data, so
+ * it has a switch: `<div role="group" aria-label="Region" class="sx-seg">` of two
+ * `<button class="sx-opt" aria-pressed data-region-option>` as direct children. Before hydration the
+ * scope stylesheet fills the selected one from `html[data-region]` (`.sx-seg > [data-region-option]`,
+ * components/prefs/league-scope-css.ts); after, aria-pressed does. Hidden without JS (`sx-js-only`:
+ * both regions are on the page then, NorCal first) and `disabled` until hydrated. A polite live
+ * region says what a tap did ("Showing Southern California."). `setRegion` writes `scvalfh.region`
+ * and, when the effective league is in the other region, removes the remembered league (never writes
+ * 'All'), so a pinned team's league returns with its region (components/prefs/use-league.ts).
+ *
+ * The text face is the same handler on one button whose `data-region-option` is the OTHER region.
+ * More than one region control can be in the DOM; only the switch is a `[role="group"]`.
  */
-export function RegionSwitcher({ className, label = 'Region' }: RegionSwitcherProps) {
+export function RegionSwitcher({ face = 'switch', className, label = 'Region' }: RegionSwitcherProps) {
   const { region, ready } = useEffectiveRegion();
   const [said, setSaid] = useState('');
 
@@ -267,8 +241,28 @@ export function RegionSwitcher({ className, label = 'Region' }: RegionSwitcherPr
   };
   if (SINGLE_REGION) return null;
 
+  if (face === 'text') {
+    const other = REGION_ORDER.find((id) => id !== region) ?? REGION_ORDER[0];
+    return (
+      <>
+        <button
+          type="button"
+          data-region-option={other}
+          disabled={!ready}
+          onClick={() => choose(other)}
+          className={['sx-js-only', className].filter(Boolean).join(' ')}
+        >
+          Switch to {REGION_WORDS[other].shortName}
+        </button>
+        <span role="status" aria-live="polite" className="sr-only">
+          {said}
+        </span>
+      </>
+    );
+  }
+
   return (
-    <div role="group" aria-label={label} className={['sx-js-only sx-tabs', className].filter(Boolean).join(' ')}>
+    <div role="group" aria-label={label} className={['sx-js-only sx-seg', className].filter(Boolean).join(' ')}>
       {REGION_ORDER.map((id) => (
         <button
           key={id}
@@ -277,9 +271,9 @@ export function RegionSwitcher({ className, label = 'Region' }: RegionSwitcherPr
           aria-pressed={ready ? region === id : false}
           disabled={!ready}
           onClick={() => choose(id)}
-          className={CHIP}
+          className="sx-opt"
         >
-          <Label text={REGION_WORDS[id].shortName} />
+          {REGION_WORDS[id].shortName}
         </button>
       ))}
       <span role="status" aria-live="polite" className="sr-only">

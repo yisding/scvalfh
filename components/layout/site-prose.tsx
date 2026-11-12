@@ -127,7 +127,7 @@ export function DisclaimerProse({ className }: SiteProseProps) {
   ];
   return (
     <p className={className}>
-      Unofficial; not affiliated with{' '}
+      This is an unofficial site, not affiliated with{' '}
       {names.map((name, i) => (
         <Fragment key={i}>
           {i === 0 ? null : ', '}

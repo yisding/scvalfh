@@ -4,12 +4,13 @@ import { EM_DASH, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { Game } from '../../lib/types';
 
+import { getTeamBySlug } from '../../lib/teams';
+import GhostMonogram from '../ui/GhostMonogram';
 import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph } from '../ui/ScoreGlyph';
 import { SourceMark, postseasonChipText, statusCase } from '../ui/StatusLabel';
-import Tag from '../ui/Tag';
+import TeamMonogram from '../ui/TeamMonogram';
 import { WIDE_SCORES } from '../words/score-words';
-import { clockText, describeGame, gameKind, perspectiveIsHome, statusLabelIsTime } from '../ui/describe-game';
+import { clockText, describeGame, gameKind, perspectiveIsHome } from '../ui/describe-game';
 
 import type { GameBaseProps } from './props';
 
@@ -24,24 +25,23 @@ export type GameLogRowProps = GameBaseProps & {
 };
 
 /**
- * A team-perspective log line (DESIGN §33): `Sep 24 [L] 0–7 vs Saint Francis`, and a note only
- * when there is something to add. ONE row for a team page's log AND the /game/[id] season series
- * ("These two this season"), so the two lists cannot drift apart. The series renders its own
- * `<Link>` (or, for the game being viewed, an `aria-current` band) around `GameLogRowBody` with
- * `gameLogRowClass`; a team log uses `GameLogRow`, which is exactly that link.
+ * A team-perspective log line (DESIGN §33): `Nov 7 [W] 2-0 vs Gilroy`, and a note only when there
+ * is something to add. ONE row for a team page's schedule AND the /game/[id] season series, so the
+ * two lists cannot drift apart. The series renders its own `<Link>` (or, for the game being
+ * viewed, an `aria-current` band) around `GameLogRowBody` with `gameLogRowClass`; a team log uses
+ * `GameLogRow`, which is exactly that link.
  *
- * ONE `sr-only` sentence, led by the date, and everything visual behind `aria-hidden`: the link's
- * accessible name is the sentence, never "…final. Loss FINAL".
+ * `.sx-logrow` (app/globals.css) is the grid, with FIXED columns so the result column is one
+ * vertical line down the schedule: the date, the W/L/T chip (an empty cell for a game still to
+ * play), the score (mine first) or the start time (`data-time`), the opponent with its logo
+ * (`vs` / `at`), and a note. Below 1024 the note drops under the opponent.
  *
- * `.sx-logrow` (app/globals.css) is the grid: date, result mark, score, opponent, note, on one
- * 44px line with a hairline below. This is the one place a W/L/T mark appears (hueless: solid,
- * hollow, grey). The score is mine, a dash, theirs, with MY score right-aligned against the dash so
- * the dashes stack down the log. The opponent is the short name and never gives way to the note:
- * when the row is narrow (a phone, or large text) the note drops to a second line under it.
+ * ONE `sr-only` sentence, led by the date, inside the date cell (the cells are counted by the
+ * stylesheet, so there is no extra first child), and everything visual behind `aria-hidden`: the
+ * link's accessible name is the sentence.
  *
- * The note says only what the row has not said: the clock of a game still to play, `Postponed`,
- * `Score not reported`, the decider (`OT`), the †, `Non-league` or the postseason round, `this
- * game`, a caller's extra tag. A final league game has none: "FINAL SCVAL" on every line was noise.
+ * The note says only what the row has not said: `Postponed`, `Score not reported`, the decider
+ * (`OT`), the †, `Non-league` or the postseason round, `this game`, a caller's extra tag.
  */
 /** The log row's class, shared with the team page's JV list (components/jv/TeamJvGames.tsx). The name is historical. */
 export const GAME_LOG_ROW_GRID = WIDE_SCORES ? 'sx-logrow sx-logrow-wide' : 'sx-logrow';
@@ -77,53 +77,57 @@ export function GameLogRowBody({
   const mine = mineIsHome ? display.home : display.away;
   const day = shortDate(game.dateLocal).slice(4);
   const final = display.kind === 'final';
+  const upcoming = display.kind === 'scheduled';
+  const team = opponent.slug ? getTeamBySlug(opponent.slug) : undefined;
   // The kind, only when it is not a league game: `Non-league`, or the postseason round.
   const kind = showChips ? (display.postseasonTag ?? (display.isNonLeague ? 'Non-league' : null)) : null;
+  const notes = [
+    isThisGame ? 'this game' : null,
+    final || upcoming ? null : statusCase(display.statusLabel),
+    display.deciderTag,
+    kind ? (kind === display.postseasonTag ? postseasonChipText(kind) : kind) : null,
+    extraTag?.text ?? null,
+  ].filter(Boolean);
   return (
     <>
-      <span className="sr-only">
-        {isThisGame ? 'This game. ' : ''}
-        {day}: {display.sentence}
-        {extraTag ? ` ${extraTag.label}` : ''}
+      <span className="sx-num">
+        <span className="sr-only">
+          {isThisGame ? 'This game. ' : ''}
+          {day}: {display.sentence}
+          {extraTag ? ` ${extraTag.label}` : ''}
+        </span>
+        <span aria-hidden="true">{day}</span>
       </span>
-      <span className="sx-num text-cell text-ink-2" aria-hidden="true">
-        {day}
+      {/* The chip column is always there, so the scores line up; a game still to play leaves it empty. */}
+      <span aria-hidden="true">
+        {display.perspectiveOutcome || display.kind === 'unreported' ? (
+          <ResultChip kind={display.perspectiveOutcome ?? 'pending'} size={20} />
+        ) : null}
       </span>
-      <span className="inline-flex" aria-hidden="true">
-        <ResultChip
-          kind={display.perspectiveOutcome ?? (display.showScores ? 'pending' : 'none')}
-          size={20}
-        />
-      </span>
-      {/* mine · dash · theirs. Mine takes the slack and sits right against the dash. An unreported
-          game keeps ScoreGlyph's two muted en dashes (never 0–0); a game with no score yet is one
-          em dash in the middle. */}
-      <span className="sx-num grid grid-cols-[minmax(0,1fr)_auto_minmax(1.4em,auto)] whitespace-nowrap" aria-hidden="true">
-        {display.showScores ? (
-          <>
-            <ScoreGlyph side={mine} size="meta" className="justify-self-end" />
-            <span className="px-0.5 text-center text-ink-3">{'–'}</span>
-            <ScoreGlyph side={opponent} size="meta" className="justify-self-start" />
-          </>
-        ) : (
-          <span className="col-start-2 text-center text-ink-3">{EM_DASH}</span>
-        )}
-      </span>
+      {/* Mine first. A start time takes the same column; a score nobody reported is a dash, never 0-0. */}
+      {final ? (
+        <span className="sx-num" aria-hidden="true">
+          {mine.glyph}-{opponent.glyph}
+        </span>
+      ) : upcoming ? (
+        <span className="sx-num" data-time="" aria-hidden="true">
+          {clockText(game, 'TBA')}
+        </span>
+      ) : (
+        <span className="sx-num text-ink-3" aria-hidden="true">
+          {display.kind === 'unreported' ? EM_DASH : ''}
+        </span>
+      )}
       {/* The short name, as every game row prints it; the sr-only sentence keeps the full name. */}
-      <span className="min-w-0 break-words text-ink" aria-hidden="true">
-        {display.versus ?? 'vs'} {opponent.shortName}
+      <span className="sx-teamcell" aria-hidden="true">
+        {team ? <TeamMonogram team={team} size={24} /> : <GhostMonogram name={opponent.name} size={24} />}
+        <span>
+          {display.versus ?? 'vs'} {opponent.shortName}
+        </span>
       </span>
       <span className="sx-logrow-note" aria-hidden="true">
-        {isThisGame ? <Tag>this game</Tag> : null}
-        {final ? null : (
-          <span className={display.strikeTime ? 'line-through' : undefined}>
-            {statusLabelIsTime(game, display.statusLabel) ? clockText(game, 'TBA') : statusCase(display.statusLabel)}
-          </span>
-        )}
-        {display.deciderTag ? <Tag>{display.deciderTag}</Tag> : null}
+        {notes.join(', ')}
         <SourceMark display={display} />
-        {kind ? <span>{kind === display.postseasonTag ? postseasonChipText(kind) : kind}</span> : null}
-        {extraTag ? <Tag>{extraTag.text}</Tag> : null}
       </span>
     </>
   );

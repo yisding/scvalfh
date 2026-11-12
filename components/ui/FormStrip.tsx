@@ -23,13 +23,8 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  * the caller supplies contestIds the chips are also links, each with its own label, so both
  * §5.5's sentence and §7.6's per-chip label are present.
  *
- * A LINKED chip is a tap target and is sized like one: a 40px box with an 8px gap, which is
- * DESIGN §4.4's own rule for chip links. The UNLINKED strip (the standings row, whose five chips
- * are measured into the phone row's line 2 and are not targets at all) keeps a 4px surface gap:
- * five 20px chips and four gaps are 116px, which still fits beside "10-1-0 overall" at 320px. The two readings of §7.6 cannot both hold for a link: 20×20 marks two pixels apart fail
- * WCAG 2.5.8 outright (axe: "safe clickable space has a diameter of 20px instead of at least
- * 24px"), and §10.9 makes a clean axe run a gate. So the gap widens exactly where the chip
- * becomes something you aim a thumb at, and nowhere else.
+ * A LINKED chip is a tap target and is sized like one: a 40px box with an 8px gap (DESIGN §4.4).
+ * The UNLINKED strip (a standings row) is `.sx-form`: the chips 2px apart, no marker on the newest.
  */
 export interface FormEntry {
   outcome: Outcome;
@@ -43,17 +38,16 @@ export interface FormEntry {
 export interface FormStripProps {
   /** Oldest → newest, league only, at most 5. */
   entries: FormEntry[];
-  /** 20 in tables, cards and the game page; 24 on the team page. */
-  size?: 20 | 24;
+  /** 16 in every standings table (DESIGN §33); 20 on the game page; 24 on the team page. */
+  size?: 16 | 20 | 24;
   /** "Homestead last 5 league games" — the subject of the strip's one sentence. */
   label: string;
   className?: string;
 }
 
-/** DESIGN §4.4: a chip LINK is a 40px target with an 8px gap. An unlinked mark is 4px apart. */
+/** DESIGN §4.4: a chip LINK is a 40px target with an 8px gap. Unlinked marks are 2px apart (`.sx-form`). */
 const TAP = 40;
 const TAP_GAP = 8;
-const MARK_GAP = 4;
 
 /** Standings carry outcomes only; this is the adapter for `standing.computed.last5`. */
 export function toFormEntries(outcomes: readonly Outcome[]): FormEntry[] {
@@ -85,55 +79,28 @@ export function FormStrip({ entries, size = 20, label, className }: FormStripPro
   return (
     <span className={['inline-flex flex-wrap items-center gap-2', className].filter(Boolean).join(' ')}>
       <span className="sr-only">{sentence} Most recent last.</span>
-      <span className="inline-flex items-center" aria-hidden={linked ? undefined : 'true'}>
-        {entries.map((entry, i) => {
-          // The newest chip carries a 2px ink underline as well as its position. It hugs the
-          // MARK, not the tap box, so widening the box does not widen the underline.
-          // Only the newest mark has a border at all; the others take the same 4px as padding.
-          // A `transparent` border is NOT invisible under forced colours: the UA repaints every
-          // border colour as CanvasText, so the old "2px solid transparent" spacer drew an
-          // underline under all five chips there and the newest one was no longer singled out.
-          // Normal rendering is pixel-identical (2 + 2 vs 4 below each chip).
-          const newest = i === entries.length - 1;
-          const mark = (
-            <span
-              className="inline-flex"
-              style={
-                newest
-                  ? { paddingBottom: 2, borderBottom: '2px solid var(--sx-text)' }
-                  : { paddingBottom: 4 }
-              }
+      {/* `.sx-form`: the chips 2px apart. Position alone says which is newest; there is no marker. */}
+      <span className="sx-form" style={linked ? { gap: TAP_GAP } : undefined} aria-hidden={linked ? undefined : 'true'}>
+        {entries.map((entry, i) =>
+          entry.contestId ? (
+            <Link
+              key={`${entry.contestId}-${i}`}
+              href={gameHref(entry.contestId)}
+              prefetch={false}
+              aria-label={chipLabel(entry)}
+              className="inline-flex items-center justify-center"
+              style={{ width: TAP, height: TAP }}
             >
-              <ResultChip kind={entry.outcome} size={size} />
-            </span>
-          );
-          return (
-            <span
-              key={`${entry.contestId ?? 'form'}-${i}`}
-              className="inline-flex"
-              // 4px of surface between marks; 8px between targets (DESIGN §4.4).
-              style={{ marginLeft: i === 0 ? 0 : linked ? TAP_GAP : MARK_GAP }}
-            >
-              {entry.contestId ? (
-                <Link
-                  href={gameHref(entry.contestId)}
-                  prefetch={false}
-                  aria-label={chipLabel(entry)}
-                  className="inline-flex items-center justify-center"
-                  style={{ width: TAP, height: TAP }}
-                >
-                  {/* The link's own label is the accessible name; the chip's role="img" would
-                      otherwise be announced a second time inside it. */}
-                  <span aria-hidden="true" className="inline-flex">
-                    {mark}
-                  </span>
-                </Link>
-              ) : (
-                mark
-              )}
-            </span>
-          );
-        })}
+              {/* The link's own label is the accessible name; the chip's role="img" would
+                  otherwise be announced a second time inside it. */}
+              <span aria-hidden="true" className="inline-flex">
+                <ResultChip kind={entry.outcome} size={size} />
+              </span>
+            </Link>
+          ) : (
+            <ResultChip key={`form-${i}`} kind={entry.outcome} size={size} />
+          ),
+        )}
       </span>
     </span>
   );

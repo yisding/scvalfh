@@ -1,8 +1,6 @@
 /**
- * The micro-tag: `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), `Non-league`, `this game`
- * (DESIGN §7.16; §33 for the face). Text only: 11px, weight 700, caps, ink-2, no fill and no box.
- * It is a 1–2 word code, never a hue, and it never wraps. The one FILLED label on the site is
- * `Flag` (components/ui/Flag.tsx), for "your team" and a live game.
+ * A short code or word beside something: `OT`, `SO`, `F`, a league code (`SCVAL`), `Non-league`,
+ * `this game` (DESIGN §33). Plain 14px text in natural case (`.sx-tag`): no fill, no box, no hue.
  */
 export interface TagProps {
   children: React.ReactNode;

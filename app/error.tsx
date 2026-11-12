@@ -7,10 +7,9 @@ import Link from 'next/link';
  * The route-level error boundary. Next 16 passes `retry`, not `reset`
  * (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/error.md).
  *
- * The page is static and cron-fed, so the realistic cause is a bad snapshot — but the reader
- * does not need that mechanism. The copy says three plain things: it is our fault, not theirs;
- * the rest of the site should still work; and what to do now (the two buttons). The digest is
- * kept as a small reference line so a correction request can quote it.
+ * The page is static and cron-fed, so the realistic cause is a bad snapshot, but the reader does
+ * not need that mechanism: a title that says what happened and the way on ("Try again", "Scores").
+ * The digest is kept as a small reference line so a correction request can quote it.
  *
  * A client module, so it cannot use PageHeader (which reads the snapshot for its stamp): it writes
  * the same `sx-pagehead` block by hand, without a freshness stamp.
@@ -30,13 +29,9 @@ export default function Error({
   return (
     <div className="pb-section-lg">
       <header className="sx-pagehead">
-        <h1 className="m-0 text-h1 text-ink">This page didn’t load.</h1>
-        <p className="sx-dateline">
-          It’s a problem on our end, not yours. The rest of the site should still work. Try again, or go back to the
-          home page.
-        </p>
+        <h1 className="m-0 text-h1 text-ink">Something went wrong</h1>
       </header>
-      <div className="mt-6">
+      <div className="mt-4">
         {error.digest ? (
           <p className="m-0 mb-4 text-meta text-ink-3">
             Reference <span className="sx-num">{error.digest}</span>
@@ -46,8 +41,8 @@ export default function Error({
           <button type="button" onClick={() => retry()} className="sx-btn sx-btn-primary">
             Try again
           </button>
-          <Link href="/" className="sx-btn">
-            Go to the home page
+          <Link href="/" prefetch={false} className="sx-btn">
+            Scores
           </Link>
         </div>
       </div>

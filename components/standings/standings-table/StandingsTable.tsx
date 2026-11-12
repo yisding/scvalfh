@@ -1,13 +1,14 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import ExternalLink from '../../ui/ExternalLink';
 import FormStrip, { toFormEntries } from '../../ui/FormStrip';
 import MissingValue from '../../ui/MissingValue';
 import { TeamRowLink } from '../../ui/PinNote';
 import TeamMonogram from '../../ui/TeamMonogram';
-import { EM_DASH, recordString, signedGd, streakString, winPct } from '../../../lib/format';
-import { leagueOfDivision } from '../../../lib/leagues';
-import { orderHead, orderHeadWords, orderValue, ordersByRecord } from '../../../lib/standings/order';
+import { EM_DASH, recordString, signedGd } from '../../../lib/format';
+import { findDivision, leagueOfDivision } from '../../../lib/leagues';
+import { orderHead, orderHeadWords, orderValue } from '../../../lib/standings/order';
 import { capitalized } from '../../words/capitalized';
 import {
   AGAINST_ABBR, AGAINST_WORDS, DIFFERENCE_WORDS, DIFF_ABBR, FOR_ABBR, FOR_WORDS, RECORD_HEAD, RECORD_HEAD_WORDS,
@@ -20,19 +21,28 @@ import type { StandingsRowData, StandingsTableProps, StandingsVariant } from './
 /**
  * The league table (DESIGN §3.2, §7.3, amended by BYLAWS-ADDENDUM; §33 for the face).
  *
- * ONE `<table className="sx-table">`: no card, no phone/desktop twin. A `face` chooses the columns:
+ * ONE `<div className="sx-tablewrap"><table className="sx-table">`: no card, no phone/desktop twin.
+ * Which columns show is decided by the TABLE's own width (container queries on `.sx-tablewrap`,
+ * app/globals.css), never by the viewport. A `face` chooses the set:
  *
- *   full     # · Team · (GP) · W-L-T · Pts · GD, and from 768px also Pct · Overall · GF · GA · Strk · Last 5
- *            (the wide columns are `hidden md:table-cell`, so a phone gets the five that matter);
- *   mini     # · Team · W-L-T · Pts — the top `limit` rows (default 4), for a rail;
+ *   mini     # · Team · W-L-T · Pts · Last 5 (`sx-col-wide`: from 24rem of table width; a 21rem rail
+ *            does not show it) — the top `limit` rows when one is given;
+ *   full     the wrapper carries `data-full` (capped at 47rem). Under 20rem: # · Team · W-L-T · Pts.
+ *            From 20rem: + GD (`sx-col-mid`). From 40rem, four groups:
+ *            # · Team · W · L · T · Pts ‖ GF · GA · GD ‖ Overall ‖ Last 5
+ *            (W, L, T are `sx-col-full sx-col-split` and replace the combined `sx-col-rec` cell; a
+ *            group starts with `sx-col-gap`, a wider gutter, not a rule). BOTH the combined record
+ *            cell and the three split cells are in every row; CSS shows one or the other;
  *   archive  # · Team · League · Overall — final records only.
  *
  * The old `variant` values still work: `phone` and `desktop` are both the full table.
  *
- * A PTS column SHIPS and it is the ordering key: By-Laws Article VI §2 awards 3 points for a win
- * and 1 for a tie, and "the division placement/standings will be the order of team points". It is
- * the ONE bold column (`sx-col-key`); a league ordered on its record (basketball) prints Pct there
- * instead and not again further along. W-L-T is ink (`sx-col-ink`); everything else is ink-2.
+ * THE SORT KEY is the one strong column (`sx-col-key`, 19px/700): Pts (By-Laws Article VI §2: 3 for
+ * a win, 1 for a tie, "the division placement/standings will be the order of team points"). There
+ * is no Pct column beside Pts: it restates W-L-T. A league ordered on its record (basketball)
+ * prints Pct in the key column instead, and no Pts. After it: the name (500), W / L / T and GD
+ * (ink), GF / GA / Overall (`sx-col-quiet`), and Last 5 as five 16px chips (W solid, L and T
+ * outlined), oldest left.
  *
  * SHARED PLACES ARE REAL. Two or more teams can carry the same `computed.place` with
  * `tiebreak.shared === true`. Those rows render LEVEL — the same number with the US sports-page `T`
@@ -42,14 +52,21 @@ import type { StandingsRowData, StandingsTableProps, StandingsVariant } from './
  * results reported yet" cell across the data columns — never `0-0-0`, never `.000`, never a rank by
  * merit — and it is still a link.
  *
- * The team's name is the team-page link, stretched over the row (`TeamRowLink`); its accessible name
- * is the row's sentence. Every row carries `data-team-slug` FIRST, so the pinned-team script can mark
- * it: the highlighter across the row and a 3px bar (app/globals.css), and the sr-only "Your team."
+ * The team cell is the logo (24px, every face, every width) and the name, which is the team-page
+ * link stretched over the row (`TeamRowLink`; its accessible name is the row's sentence). Every row
+ * carries `data-team-slug` FIRST, so the pinned-team script can mark it: the reader's team gets a
+ * bold name and the star (`.sx-pin-note`; aria-hidden here, because the row link already says
+ * "Your team."). `self` (the team whose page this is) is `tr.sx-self`: a bold name. No row
+ * background, bar or tint.
  *
- * The cut line (`berthRuleAfter`) is `tr.sx-cut`: a 2px ink rule under that row, no separate row.
+ * THE QUALIFICATION LINE (`berthRuleAfter`): directly after the last qualifying row, ONE extra row,
+ * `tr.sx-cutline`, a 2px green line with its label set on it at the right end (`berthLabel`, else
+ * the division's own line label from the league config). It has no `data-team-slug`. Omitted when
+ * every listed team is above it.
+ *
  * GP is one plain column, only when `columns` asks for it AND some team still has games to play.
- * There is no LEFT or MAX column and no GD bar: GD is the signed number. A row MaxPreps publishes
- * differently carries a † after its name.
+ * No LEFT or MAX column, no GD bar, no streak column. A row MaxPreps publishes differently carries a
+ * † after its name.
  *
  * No client-side sorting: the table has one correct order.
  *
@@ -62,44 +79,58 @@ import type { StandingsRowData, StandingsTableProps, StandingsVariant } from './
 type Face = 'full' | 'mini' | 'archive';
 const FACE: Record<StandingsVariant, Face> = { phone: 'full', desktop: 'full', mini: 'mini', archive: 'archive' };
 
-/** Shown from 768px only. */
-const WIDE = 'hidden md:table-cell';
 const NUM = 'sx-num';
+/** The full table's columns that appear from 40rem of table width. */
+const FULL = 'sx-col-full';
+const SPLIT = `${FULL} sx-col-split`;
+/** `W`, `L`, `T` (no `T` in a sport without ties) and their words, for the split record columns. */
+const SPLIT_HEADS = RECORD_HEAD.split('-');
+const SPLIT_WORDS = RECORD_HEAD_WORDS.split('-');
 
 export function StandingsTable(props: StandingsTableProps) {
   const { variant, caption, className, id, berthRuleAfter } = props;
   const face = FACE[variant];
-  const rows = face === 'mini' ? props.rows.slice(0, props.limit ?? 4) : props.rows;
+  const rows = face === 'mini' && props.limit !== undefined ? props.rows.slice(0, props.limit) : props.rows;
   const showNotes = face !== 'mini' && (props.notes ?? 'inline') === 'inline';
   const notes = showNotes ? collectStandingsNotes({ ...props, rows }).specific : [];
 
   const { flagged, columns, ctx, fixedSchedule, hrefOf, formLabel } = tableRows(props);
   const rules = leagueOfDivision(props.division).rules;
-  const byRecord = ordersByRecord(rules);
   // GP earns its column only while it differs between teams' futures: once nobody has a game left,
   // W-L-T says it all.
   const showGp = face === 'full' && columns.has('gp') && rows.some((row) => (ctx(row)?.remaining ?? 0) > 0);
   const full = face === 'full';
-  // The data columns after the team: a no-results row spans them with one sentence.
-  const dataCols = face === 'archive' ? 2 : face === 'mini' ? 2 : (byRecord ? 9 : 10) + (showGp ? 1 : 0);
+  // Every rendered cell of a row (the qualification line spans them all): 12 in the full table, 5 in `mini`.
+  const cols = face === 'archive' ? 4 : full ? 9 + SPLIT_HEADS.length + (showGp ? 1 : 0) : 5;
+  // The data columns after the team (and GP): a no-results row spans them with one sentence.
+  const dataCols = full ? 7 + SPLIT_HEADS.length : 2;
+  const cutAfter = berthRuleAfter && face !== 'archive' && berthRuleAfter < rows.length ? berthRuleAfter : null;
+  const cutLabel = props.berthLabel ?? findDivision(props.division)?.ladderLine?.label ?? null;
+  const keyHead = capitalized(orderHead(rules).toLowerCase());
 
   const teamCell = (row: StandingsRowData) => (
     // `aria-label`: the row header is re-announced on every cell, and without it would carry the
     // row link's whole sentence.
     <th scope="row" aria-label={row.team.name} className="sx-col-team">
-      <span className="flex items-center gap-2">
-        {face === 'full' ? <TeamMonogram team={row.team} size={24} className="hidden md:block" /> : null}
-        <TeamRowLink href={hrefOf(row)} label={rowLabel(row)}>
-          {face === 'archive' ? row.team.name : row.team.shortName}
-        </TeamRowLink>
-        {face !== 'archive' && isFlagged(row, flagged) ? <FlagMark name={row.team.name} /> : null}
+      <span className="sx-teamcell">
+        <TeamMonogram team={row.team} size={24} />
+        <span>
+          <TeamRowLink href={hrefOf(row)} label={rowLabel(row)}>
+            {face === 'archive' ? row.team.name : row.team.shortName}
+          </TeamRowLink>
+          {/* The star. aria-hidden: the row link's own sentence already starts "Your team." */}
+          <span className="sx-pin-note" aria-hidden="true" hidden>
+            Your team
+          </span>
+          {face !== 'archive' && isFlagged(row, flagged) ? <FlagMark name={row.team.name} /> : null}
+        </span>
       </span>
     </th>
   );
 
   return (
-    <div className={className} id={id}>
-      <table className="sx-table">
+    <div className={['sx-tablewrap', className].filter(Boolean).join(' ')} id={id} data-full={full ? '' : undefined}>
+      <table className="sx-table" data-sticky-head={full ? '' : undefined}>
         {/* sr-only: "unofficial" and the through-date are in the section's own meta. */}
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -118,43 +149,46 @@ export function StandingsTable(props: StandingsTableProps) {
             ) : (
               <>
                 {showGp ? (
-                  <th scope="col" className="hidden sm:table-cell" title={gpTitle(fixedSchedule)}>
+                  <th scope="col" className="sx-col-mid" title={gpTitle(fixedSchedule)}>
                     GP
                   </th>
                 ) : null}
-                <th scope="col">
+                <th scope="col" className={full ? 'sx-col-rec' : undefined}>
                   <Abbr short={RECORD_HEAD} long={`League record, ${RECORD_HEAD_WORDS}`} />
                 </th>
-                <th scope="col">
-                  <Abbr short={capitalized(orderHead(rules).toLowerCase())} long={orderHeadWords(rules)} />
+                {full
+                  ? SPLIT_HEADS.map((letter, i) => (
+                      <th key={letter} scope="col" className={SPLIT}>
+                        <Abbr short={letter} long={capitalized(SPLIT_WORDS[i] ?? letter)} />
+                      </th>
+                    ))
+                  : null}
+                <th scope="col" className="sx-col-key">
+                  <Abbr short={keyHead} long={orderHeadWords(rules)} />
                 </th>
                 {full ? (
                   <>
-                    {byRecord ? null : (
-                      <th scope="col" className={WIDE}>
-                        <Abbr short="Pct" long="Win percentage" />
-                      </th>
-                    )}
-                    <th scope="col" className={WIDE}>
-                      Overall
-                    </th>
-                    <th scope="col" className={WIDE}>
+                    <th scope="col" className={`${FULL} sx-col-gap`}>
                       <Abbr short={FOR_ABBR} long={capitalized(FOR_WORDS)} />
                     </th>
-                    <th scope="col" className={WIDE}>
+                    <th scope="col" className={FULL}>
                       <Abbr short={AGAINST_ABBR} long={capitalized(AGAINST_WORDS)} />
                     </th>
-                    <th scope="col">
+                    <th scope="col" className="sx-col-mid">
                       <Abbr short={DIFF_ABBR} long={capitalized(DIFFERENCE_WORDS)} />
                     </th>
-                    <th scope="col" className={WIDE}>
-                      <Abbr short="Strk" long="Streak" />
+                    <th scope="col" className={`${FULL} sx-col-gap`}>
+                      Overall
                     </th>
-                    <th scope="col" className={WIDE}>
+                    <th scope="col" className={`${FULL} sx-col-gap`}>
                       Last 5
                     </th>
                   </>
-                ) : null}
+                ) : (
+                  <th scope="col" className="sx-col-wide">
+                    Last 5
+                  </th>
+                )}
               </>
             )}
           </tr>
@@ -164,63 +198,81 @@ export function StandingsTable(props: StandingsTableProps) {
             const s = row.standing;
             const has = s.hasReportedResults;
             const c = ctx(row);
-            const gp = showGp ? <td className={`${NUM} hidden sm:table-cell`}>{gpText(c)}</td> : null;
+            const gp = showGp ? <td className={`${NUM} sx-col-mid sx-col-quiet`}>{gpText(c)}</td> : null;
+            const record = s.computed;
+            const last5 = <FormStrip entries={toFormEntries(record.last5)} size={16} label={formLabel(row)} />;
             return (
-              <tr
-                key={row.team.id}
-                data-team-slug={row.team.slug}
-                className={berthRuleAfter && index + 1 === berthRuleAfter ? 'relative sx-cut' : 'relative'}
-              >
-                <td className={`${NUM} sx-col-rank`}>
-                  <PlaceCell standing={s} />
-                </td>
-                {teamCell(row)}
-                {face === 'archive' ? (
-                  <>
-                    <td className={`${NUM} sx-col-ink`}>{recordString(s.computed)}</td>
-                    <td className={NUM}>{s.overall.gp > 0 ? recordString(s.overall) : EM_DASH}</td>
-                  </>
-                ) : !has && face === 'full' ? (
-                  /* ONE sentence across the data columns: no fabricated 0-0-0, no row of em dashes.
-                     GP still reads 0/12 where the column is on: a fact, not a rank. */
-                  <>
-                    {gp}
-                    <td colSpan={dataCols - (showGp ? 1 : 0)} className="text-left">
-                      No results reported yet
+              <Fragment key={row.team.id}>
+                <tr data-team-slug={row.team.slug} className={props.self === row.team.slug ? 'relative sx-self' : 'relative'}>
+                  <td className={`${NUM} sx-col-rank`}>
+                    <PlaceCell standing={s} />
+                  </td>
+                  {teamCell(row)}
+                  {face === 'archive' ? (
+                    <>
+                      <td className={NUM}>{recordString(record)}</td>
+                      <td className={`${NUM} sx-col-quiet`}>{s.overall.gp > 0 ? recordString(s.overall) : EM_DASH}</td>
+                    </>
+                  ) : !has && full ? (
+                    /* ONE sentence across the data columns: no fabricated 0-0-0, no row of em dashes.
+                       GP still reads 0/12 where the column is on: a fact, not a rank. */
+                    <>
+                      {gp}
+                      <td colSpan={dataCols} className="sx-col-quiet">
+                        No results reported yet
+                      </td>
+                    </>
+                  ) : !has ? (
+                    <>
+                      <td className={NUM}>
+                        <MissingValue words="no results reported yet" />
+                      </td>
+                      <td className={`${NUM} sx-col-key`} aria-hidden="true">
+                        {EM_DASH}
+                      </td>
+                      <td className="sx-col-wide" />
+                    </>
+                  ) : (
+                    <>
+                      {gp}
+                      <td className={full ? `${NUM} sx-col-rec` : NUM}>
+                        <LeagueRecord record={recordString(record)} context={c} />
+                      </td>
+                      {full ? (
+                        <>
+                          {[record.w, record.l, record.t].slice(0, SPLIT_HEADS.length).map((value, i) => (
+                            <td key={SPLIT_HEADS[i]} className={`${NUM} ${SPLIT}`}>
+                              {/* The † of a record that includes a si.com score hangs off the last figure. */}
+                              {i === SPLIT_HEADS.length - 1 ? <LeagueRecord record={String(value)} context={c} /> : value}
+                            </td>
+                          ))}
+                        </>
+                      ) : null}
+                      <td className={`${NUM} sx-col-key`}>{orderValue(rules, record)}</td>
+                      {full ? (
+                        <>
+                          <td className={`${NUM} ${FULL} sx-col-gap sx-col-quiet`}>{dash(record.gf, has)}</td>
+                          <td className={`${NUM} ${FULL} sx-col-quiet`}>{dash(record.ga, has)}</td>
+                          <td className={`${NUM} sx-col-mid`}>{signedGd(record.gd)}</td>
+                          <td className={`${NUM} ${FULL} sx-col-gap sx-col-quiet`}>{recordString(s.overall)}</td>
+                          <td className={`${FULL} sx-col-gap`}>{last5}</td>
+                        </>
+                      ) : (
+                        <td className="sx-col-wide">{last5}</td>
+                      )}
+                    </>
+                  )}
+                </tr>
+                {cutAfter === index + 1 && cutLabel ? (
+                  // The qualification line: its label sits ON the line. `data-hide-while-searching`:
+                  // it means nothing between filtered rows (components/search/TeamFinder.tsx).
+                  <tr className="sx-cutline" data-hide-while-searching="">
+                    <td colSpan={cols}>
+                      <span>{cutLabel}</span>
                     </td>
-                  </>
-                ) : !has ? (
-                  <>
-                    <td className={NUM}>
-                      <MissingValue words="no results reported yet" />
-                    </td>
-                    <td className={NUM} aria-hidden="true">
-                      {EM_DASH}
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    {gp}
-                    <td className={`${NUM} sx-col-ink`}>
-                      <LeagueRecord record={recordString(s.computed)} context={c} />
-                    </td>
-                    <td className={`${NUM} sx-col-key`}>{orderValue(rules, s.computed)}</td>
-                    {full ? (
-                      <>
-                        {byRecord ? null : <td className={`${NUM} ${WIDE}`}>{winPct(s.computed.winPct)}</td>}
-                        <td className={`${NUM} ${WIDE}`}>{recordString(s.overall)}</td>
-                        <td className={`${NUM} ${WIDE}`}>{dash(s.computed.gf, has)}</td>
-                        <td className={`${NUM} ${WIDE}`}>{dash(s.computed.ga, has)}</td>
-                        <td className={NUM}>{signedGd(s.computed.gd)}</td>
-                        <td className={`${NUM} ${WIDE}`}>{streakString(s.computed.streak)}</td>
-                        <td className={WIDE}>
-                          <FormStrip entries={toFormEntries(s.computed.last5)} size={20} label={formLabel(row)} />
-                        </td>
-                      </>
-                    ) : null}
-                  </>
-                )}
-              </tr>
+                  </tr>
+                ) : null}
+              </Fragment>
             );
           })}
         </tbody>

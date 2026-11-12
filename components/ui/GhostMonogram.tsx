@@ -1,10 +1,10 @@
 import { LETTER_SIZE, type TeamMonogramProps } from './TeamMonogram';
 
 /**
- * The tile for a school this site does not track (DESIGN §8): the same square as TeamMonogram —
- * same sizes, same quarter-radius corner, same letter sizes, all imported from it — but on the
- * inset surface with a hairline and muted letters, because nothing may pretend to be a school's
- * colours that the registry never recorded.
+ * The square for a school this site does not track (DESIGN §8; §33): the same sizes as TeamMonogram
+ * and the same 2px corner, a `--sx-surface-3` square with one or two upright 600 letters
+ * (`.sx-monogram:not(img)`, app/globals.css), because nothing may pretend to be a school's logo
+ * that the registry never recorded.
  *
  * Server-only by intent: no consumer of it is a client component, and TeamMonogram (which IS in
  * the pinned-team card's client bundle) does not import it back, so it costs the client nothing.
@@ -50,7 +50,7 @@ function ghostInitials(name: string): string {
 export function GhostMonogram({ name, size = 24, className, title }: GhostMonogramProps) {
   return (
     <span
-      className={['sx-monogram bg-surface-2 text-ink-3', className].filter(Boolean).join(' ')}
+      className={['sx-monogram', className].filter(Boolean).join(' ')}
       style={{
         width: size,
         height: size,

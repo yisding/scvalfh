@@ -304,7 +304,9 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     const t = text();
     expect(t, PAGE).toContain('MCAL tournament');
     expect(t, PAGE).toContain('Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30');
-    expect(t, PAGE).toContain('CCS playoffs (SCVAL, BVAL, PCAL) →');
+    // The link is its words alone: the trailing arrow is retired (components/ui/Arrow.tsx, DESIGN §33).
+    expect(t, PAGE).toContain('CCS playoffs (SCVAL, BVAL, PCAL)');
+    expect(t, PAGE).not.toContain('CCS playoffs (SCVAL, BVAL, PCAL) →');
     expect(t, PAGE).toContain('Not a section playoff');
     expect(t, PAGE).toContain('North Coast Section');
     expect(t, PAGE).toContain('If the season ended today');

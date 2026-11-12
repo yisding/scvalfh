@@ -7,6 +7,9 @@
  * a scratchpad script and asked for it to be committed (see scratchpad/notes/page-{home,teams,
  * schedule,game}.md); this is that test.
  *
+ * Since the 2026-11-12 refresh (DESIGN §33) a game with no score renders NO score cell at all (the
+ * two en dashes are gone with the old row), which makes the first direction stricter, not looser.
+ *
  * It asserts the rule in BOTH directions, which is the only way it means anything: a non-final
  * game renders no numeric score anywhere, AND a genuine 0-0 final still renders two zeros. A
  * component that suppressed every zero would pass the first assertion and be wrong.
@@ -136,13 +139,18 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
       expect(offenders).toEqual([]);
     });
 
-    it('gives every score-pending game two en dashes and the words, not zeros', () => {
+    it('gives every score-pending game NO score cell and the words: not zeros, and not dashes either', () => {
+      // DESIGN §33: the score column holds scores and nothing else, so a game with no score has no
+      // cell at all (the two en dashes are gone). What it says instead: "No score" in the status
+      // slot, and "score not reported" in the row link's name.
       const { r, pending } = sets();
       for (const game of pending) {
         const html = renderToStaticMarkup(createElement(r.GameRow, { game }));
-        expect(scoreGlyphs(html)).toEqual(['–', '–']);
-        expect(html).toContain('score not reported');
-        expect(html).toContain('SCORE NOT REPORTED');
+        expect(scoreGlyphs(html)).toEqual([]);
+        expect(html).not.toContain('sx-game-score');
+        expect(html).toContain('<span class="sx-game-status" aria-hidden="true"><span>No score</span>');
+        expect(html).toMatch(/aria-label="[^"]*score not reported/);
+        expect(textOf(html)).not.toMatch(/[–—]/);
       }
     });
 
@@ -256,30 +264,45 @@ describe('every league, rendered', () => {
     }
   });
 
-  it('prints the league chip of a counted game and NL for a non-league one', () => {
+  it('says a non-league game is non-league, in the note and in the row’s name; a counted game names its league', () => {
+    // DESIGN §33: a league game is the default and carries no visible label; a game that does NOT
+    // count is the one that is marked ("Non-league" in the note line). The row link's name says
+    // the kind in words either way.
     for (const game of games) {
-      const text = textOf(renderToStaticMarkup(createElement(GameRow, { game })));
+      const html = renderToStaticMarkup(createElement(GameRow, { game }));
+      const note = /<span class="sx-game-note"[^>]*>([\s\S]*?)<\/span>/.exec(html)?.[1] ?? '';
+      const label = /aria-label="([^"]*)"/.exec(html)?.[1] ?? '';
       if (game.countsFor === null && game.postseason === null) {
-        expect(text, `components/game-row/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
+        expect(note, `components/game-row/GameRow.tsx NL note ${game.contestId}`).toContain('Non-league');
+        expect(label, `components/game-row/GameRow.tsx NL name ${game.contestId}`).toContain(' Non-league.');
       } else if (game.countsFor !== null) {
-        expect(text, `components/game-row/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
+        expect(label, `components/game-row/GameRow.tsx league name ${game.contestId}`).toMatch(/ \S[^.]* league game\./);
+        expect(note, `components/game-row/GameRow.tsx league note ${game.contestId}`).not.toContain('Non-league');
       }
     }
   });
 
-  it('tags the other league on a league-scoped list, and only there', () => {
+  it('under a competition’s own strip (showChips false) the row repeats neither', () => {
+    for (const game of games.slice(0, 200)) {
+      const html = renderToStaticMarkup(createElement(GameRow, { game, showChips: false }));
+      expect(html).not.toContain('Non-league');
+      expect(html).not.toContain('league game.');
+    }
+  });
+
+  it('draws no other-league suffix: a row is a name, its seed and the star (scopeLeague is ignored)', () => {
     const cross = games.find((g) => {
       const a = g.away.slug ? getTeamBySlug(g.away.slug)?.league : undefined;
       const h = g.home.slug ? getTeamBySlug(g.home.slug)?.league : undefined;
       return a !== undefined && h !== undefined && a !== h;
     });
-    if (!cross) return; // no cross-league game in this snapshot: nothing to tag
+    if (!cross) return; // no cross-league game in this snapshot: nothing to compare
     const homeLeague = getTeamBySlug(cross.home.slug!)!.league;
     const awayShort = getLeagueSummaries().find((l) => l.id === getTeamBySlug(cross.away.slug!)!.league)!.shortName;
-    const scoped = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
-    expect(scoped, 'components/game-row/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
-    const plain = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross })));
-    expect(plain, 'components/game-row/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
+    const scoped = renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague }));
+    const plain = renderToStaticMarkup(createElement(GameRow, { game: cross }));
+    expect(scoped, 'components/game-row/GameRow.tsx scopeLeague').toBe(plain);
+    expect(textOf(scoped)).not.toContain(`· ${awayShort}`);
   });
 
   it('links every game through gameHref (sblive ids become sblive-<n>, cifsds ids cifsds-<away>-at-<home>)', () => {

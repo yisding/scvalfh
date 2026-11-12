@@ -16,7 +16,7 @@
  * six team pages), and inside the EAL's card on `/playoffs` (`id="eal"`, the page's only non-CCS
  * part outside a pointer link): no "automatic qualifier", "at-large", "CCS Division",
  * "CCS picture", no BerthMeter label ("holds <n> of 16"), and "CCS" only in the
- * `CCS playoffs (SCVAL, BVAL, PCAL) →` link.
+ * `CCS playoffs (SCVAL, BVAL, PCAL)` link.
  * The visible text of every page (`visibleText`: no scripts, so not the RSC payload; the footer
  * included), and its `<title>`, description metas and `title`, `aria-label` and `alt` attributes
  * (`attributeText`: what a link preview prints and assistive technology reads), make none of the
@@ -263,7 +263,8 @@ const leaguePages = (id: LeagueId): string[] => [
 ];
 const nonCcsPages = nonCcsLeagues.flatMap((l) => leaguePages(l.id));
 /** The text of the one link a non-CCS page may name CCS in: app/playoffs/[league]/page.tsx's pointer to /playoffs. */
-const ALLOWED_CCS = 'CCS playoffs (SCVAL, BVAL, PCAL) →';
+/* The link is its words alone since the 2026-11-12 refresh (DESIGN §33: components/ui/Arrow renders nothing). */
+const ALLOWED_CCS = 'CCS playoffs (SCVAL, BVAL, PCAL)';
 /** The CCS concepts no part of a non-CCS league's pages may carry. */
 function forbidCcs(file: string, part: string, where: string): void {
   forbid(file, part, /automatic qualifier/i, `${where} says "automatic qualifier"`);

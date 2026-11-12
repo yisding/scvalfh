@@ -3,26 +3,27 @@ import Link from 'next/link';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
-import ThemeToggle from '../prefs/ThemeToggle';
+import { SearchGlyph } from '../ui/glyphs';
 import LastUpdated from './LastUpdated';
-import { WORDMARK_SHORT, WORDMARK_TAIL, WORDMARK_TAIL_ABBR } from './site';
+import { WORDMARK_SHORT, WORDMARK_TAIL } from './site';
 import TopNav from './TopNav';
 
 /**
- * The masthead (DESIGN §33). One sticky row, 48px below 768 and 64px from 768, that holds exactly
- * three things: the wordmark (the home link), the nav and the theme button. Every one of them is a
- * fixed-width word or a 44px button; the wordmark and the button never shrink and the nav scrolls
- * inside its own box if it must, so nothing in the row can truncate or wrap at any width or text
- * scale. tests/ui/header-fit.test.ts holds the measured widths for all three sports.
+ * The header (DESIGN §33): a solid navy band, 48px below 768 and 64px from 768, that holds exactly
+ * three things: the wordmark (the home link), the nav and the team search. The wordmark and the
+ * search never shrink and the nav scrolls inside its own box if it must, so nothing in the row can
+ * truncate or wrap at any width or text scale. tests/ui/header-fit.test.ts holds the measured widths
+ * for all three sports. Every colour in it is a `--sx-band-*` token (app/globals.css `.sx-mast`).
  *
- * The freshness stamp is not here: it is a sentence in every page header (PageHeader → Dateline) and
- * in the footer. Only when the data is stale (and some league is still playing) does a yellow strip
- * appear under the bar. It is not sticky, so the sticky stack every offset is measured against
- * (--sx-sticky-top, html's scroll-padding-top) stays the 48/64px bar.
+ * The team search is a plain GET form to /teams (`?q=`), so it works with no script: the finder on
+ * /teams reads `q` and filters. From 1024 it is a field; below that a 44px magnifier link to /teams,
+ * where the finder is the first thing on the page.
  *
- * The home link's accessible name always starts with its visible label (WCAG 2.5.3): at 768–1023 the
- * initials are visible and the full tail is visually hidden, so the name is "NorCal HS FH Field
- * Hockey"; elsewhere the initials are `display: none` and it is "NorCal HS Field Hockey".
+ * There is no freshness stamp, theme control or region control here. "Updated 3:42 PM" is beside the
+ * scores (the live board's head, else the league row) and in the footer. Only when the data is stale
+ * (and some league is still playing) does a bordered notice appear under the band. It is not sticky,
+ * so the sticky stack every offset is measured against (--sx-sticky-top, html's scroll-padding-top)
+ * stays the 48/64px band.
  */
 export interface SiteHeaderProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */
@@ -40,10 +41,6 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
         <div className="sx-mast-row">
           <Link href="/" prefetch={false} className="sx-wordmark">
             <span>{WORDMARK_SHORT}</span>
-            <span className="sx-wordmark-abbr">
-              {' '}
-              {WORDMARK_TAIL_ABBR}
-            </span>
             <span className="sx-wordmark-tail">
               {' '}
               {WORDMARK_TAIL}
@@ -51,7 +48,16 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
           </Link>
           <TopNav className="sx-mast-nav" slugLeague={slugLeague} />
           <span className="sx-mast-end">
-            <ThemeToggle />
+            <form className="sx-mast-search" role="search" action="/teams" method="get">
+              <label className="sr-only" htmlFor="mast-q">
+                Find a team
+              </label>
+              <SearchGlyph size={15} />
+              <input id="mast-q" type="search" name="q" placeholder="Find a team" autoComplete="off" />
+            </form>
+            <Link href="/teams" prefetch={false} className="sx-mast-find" aria-label="Find a team">
+              <SearchGlyph size={18} />
+            </Link>
           </span>
         </div>
       </header>

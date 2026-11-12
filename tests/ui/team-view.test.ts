@@ -313,10 +313,13 @@ describe('postseason lines per kind (components/playoffs/team-postseason-line.ts
     const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
     const mcal = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('tamalpais')! }));
     // The arrow is drawn, not spoken (components/ui/Arrow.tsx): the link's name is the words alone.
-    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('MCAL tournament <span aria-hidden="true">→</span>');
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toMatch(/>MCAL tournament\s*<\/a>/);
+    // The trailing arrow is retired (components/ui/Arrow.tsx renders nothing, DESIGN §33).
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').not.toContain('→');
     expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').not.toContain('CCS');
     const scval = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('st-ignatius')! }));
-    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('CCS playoffs <span aria-hidden="true">→</span>');
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toMatch(/>CCS playoffs\s*<\/a>/);
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').not.toContain('→');
     expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('Official CCS bracket');
   });
 });
@@ -431,7 +434,8 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       // An LA independent (DESIGN §24.10, §24.11): the standings link reads 'LA standings', and its GP tile prints
       // the bare count, as the Sunset's does (no fixed schedule).
       if (leagues.isIndependentLeague(team.league)) {
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('LA standings →');
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toMatch(/LA standings(?! →)/);
+        expect(html, `app/teams/[slug]/page.tsx ${team.slug} group link text`).toMatch(/>LA standings\s*<\/a>/);
         expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
         expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
         expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');

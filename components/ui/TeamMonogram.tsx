@@ -2,18 +2,19 @@ import { mascotFile, type MascotTileSize } from '../../lib/schools/mascots';
 import type { Team } from '../../lib/types';
 
 /**
- * A school's mascot tile (DESIGN §7.1, §12.4).
+ * A school's logo (DESIGN §7.1, §12.4; §33): the real file, drawn straight on the page. No tile, no
+ * border, no padding, no filter, in either theme; a 2px corner (`img.sx-monogram`).
  *
  * The mascot is MaxPreps' own school logo, downloaded once by `pnpm fetch-mascots` into
  * public/mascots/ and served from this site, so no page makes a third-party image request and
  * none depends on MaxPreps being up. Every registry team has a file for every tile size at 1× and
  * 2× (lib/schools/mascots.ts, tests/mascots.test.ts), so the browser never resamples one: `src` is the 1×
- * file and `srcSet` the 2× one. Each is an opaque logo on white with the art inset clear of the
- * rounded corners, so it reads the same on the light and the dark theme; the hairline is
- * `img.sx-monogram`'s inset outline, which unlike a border leaves the image its full size.
+ * file and `srcSet` the 2× one. Each file is an opaque square (most on white), so on the dark page
+ * and on the band it is its own small square.
  *
- * School colors are no longer drawn here: they stay in the data (DESIGN §7.1) but a tile is now the
- * logo itself. A school this site does not track keeps GhostMonogram's letters.
+ * Sizes in use: 24 (game rows, tables, log rows, brackets, finder results, leaders), 32 (the live
+ * board), 56 (the game header), 64 (the team header; CSS draws it at 48px below 768). A school this
+ * site does not track keeps GhostMonogram's letters.
  */
 export interface TeamMonogramProps {
   /** `slug` names the files; `name` is the accessible name when the tile is not decorative. */
@@ -40,14 +41,10 @@ export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number>
   64: 22,
 };
 
-/**
- * The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 56px hero is 14px. The
- * mascot tile gets the same corner from `.sx-monogram`'s `border-radius: 25%` in app/globals.css.
- */
-/** @deprecated The plate radius is 3px at every size (`.sx-monogram`, app/globals.css). */
+/** @deprecated The logo's corner is 2px at every size (`.sx-monogram`, app/globals.css). */
 export function monogramRadius(size: number): number {
   void size;
-  return 3;
+  return 2;
 }
 
 export function TeamMonogram({

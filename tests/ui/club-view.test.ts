@@ -530,7 +530,7 @@ describe('the clubs routes, rendered', () => {
     const html = await renderClub('sf-hawks');
     const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)![1];
     expect(textOf(h1).trim()).toBe('SF Hawks San Francisco Youth Field Hockey Club');
-    expect(html).toMatch(/<a href="https:\/\/sfyouthfieldhockey\.com\/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline sx-pill">SF Hawks website/);
+    expect(html).toMatch(/<a href="https:\/\/sfyouthfieldhockey\.com\/" target="_blank" rel="noopener noreferrer" class="hover:underline sx-pill">SF Hawks website/);
     expect(textOf(html)).toContain('San Francisco · Founded 2017');
     const htc = textOf(await renderClub('htc'));
     expect(htc).toContain('La Jolla, CA (HTC California) · Founded 2009');
@@ -559,7 +559,7 @@ describe('the clubs routes, rendered', () => {
           ...row.facts.map((f) => `· ${f}`),
           row.status,
           'Sources:',
-          ...row.sources.map((s, j) => `${j ? '· ' : ''}${row.name}: ${s.label} ↗ (opens in a new tab)`),
+          ...row.sources.map((s, j) => `${j ? '· ' : ''}${row.name}: ${s.label} (opens in a new tab)`),
         ].join(' ');
         expect(squashWs(textOf(items[i])), `${slug} / ${row.name}`).toBe(squashWs(expected));
         expect(items[i], `${slug} / ${row.name}`).toContain(`href="${row.school.href}"`);
@@ -591,7 +591,7 @@ describe('the clubs routes, rendered', () => {
       expect(new Set(links.map((l) => l.name)).size, slug).toBe(links.length);
       if (shared) {
         const after = programs.slice(programs.lastIndexOf('</ul>'));
-        expect(textOf(after).replace(/\s+/g, ' '), slug).toContain(`${shared.lead}: Teams and programs: ${shared.label} ↗ (opens in a new tab)`);
+        expect(textOf(after).replace(/\s+/g, ' '), slug).toContain(`${shared.lead}: Teams and programs: ${shared.label} (opens in a new tab)`);
         expect(after, slug).toContain(`<a href="${esc(shared.url)}" target="_blank" rel="noopener noreferrer"`);
         // The same page under "Pages about the club" goes by its plain name, so the two read apart.
         const about = [...sectionOf(html, 'sources').matchAll(/<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]

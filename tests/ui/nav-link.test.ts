@@ -15,6 +15,7 @@ vi.mock('next/navigation', () => ({ usePathname: () => mockPath }));
 
 import { NavLink, isActive, navTarget, pageLeagueOf } from '../../components/layout/NavLink';
 import { navLeagueHrefs } from '../../components/layout/nav-targets';
+import { TOP_LINKS } from '../../components/layout/TopNav';
 import { TEAMS } from '../../lib/teams';
 
 const HREFS = navLeagueHrefs();
@@ -35,7 +36,7 @@ function render(href: string, pathname: string): string {
 }
 
 describe('the league hrefs the bars hand to NavLink', () => {
-  it('Scores, Teams and Playoffs per league; MCAL’s Playoffs is its tournament page, EAL’s its card on /playoffs', () => {
+  it('Scores, Standings, Teams and Playoffs per league; MCAL’s Playoffs is its tournament page, EAL’s its card on /playoffs', () => {
     expect(HREFS['/schedule']).toEqual({
       scval: '/schedule/scval',
       bval: '/schedule/bval',
@@ -77,7 +78,9 @@ describe('the league hrefs the bars hand to NavLink', () => {
       // The LA independents' 'no-postseason' card (DESIGN §24.9).
       independents: '/playoffs#independents',
     });
-    expect(HREFS['/standings']).toBeUndefined();
+    // Standings is a section of its own again (DESIGN §33: /teams is a team directory, standings
+    // live on /standings): its link follows the league like the other three.
+    expect(HREFS['/standings']).toEqual(Object.fromEntries(Object.keys(HREFS['/schedule']).map((id) => [id, `/standings/${id}`])));
     expect(HREFS['/leaders']).toBeUndefined();
   });
 });
@@ -93,11 +96,41 @@ describe('active state comes from the base href only', () => {
     expect(render('/schedule', '/schedule/scval')).toContain('aria-current="page"');
   });
 
-  it('/playoffs/mcal lights Playoffs; /standings and /standings/bval light Teams and not Scores', () => {
+  it('/playoffs/mcal lights Playoffs; /standings and /standings/bval light Standings, not Teams and not Scores', () => {
     expect(render('/playoffs', '/playoffs/mcal')).toContain('aria-current="page"');
-    expect(render('/teams', '/standings/bval')).toContain('aria-current="true"');
-    expect(render('/teams', '/standings')).toContain('aria-current="true"');
+    expect(render('/standings', '/standings')).toContain('aria-current="page"');
+    // A league page the link itself can point at is the page, not just "inside the section".
+    expect(render('/standings', '/standings/bval')).toContain('aria-current="page"');
+    expect(render('/teams', '/standings/bval')).not.toContain('aria-current');
+    expect(render('/teams', '/standings')).not.toContain('aria-current');
     expect(render('/schedule', '/standings/bval')).not.toContain('aria-current');
+  });
+
+  it('exactly one of the six header links is lit on every kind of route', () => {
+    const routes = ['/', '/schedule', '/schedule/scval', '/scores/2026-09-24', '/game/abc', '/standings', '/standings/mcal', '/playoffs', '/playoffs/mcal', '/teams', '/teams/leigh', '/leaders', '/jv', '/jv/scval'];
+    for (const route of routes) {
+      const lit = TOP_LINKS.filter((l) => isActive(route, l.href, HREFS[l.href]));
+      expect(lit.map((l) => l.label), route).toHaveLength(1);
+    }
+    // Footer-only pages light nothing in the header.
+    for (const route of ['/about', '/history/2025-26']) {
+      expect(TOP_LINKS.filter((l) => isActive(route, l.href, HREFS[l.href])), route).toHaveLength(0);
+    }
+  });
+
+  it('Scores is the current item on `/` (home is the Scores page), on /schedule, a day page and a game page', () => {
+    // The page itself: home and the index.
+    expect(render('/schedule', '/')).toContain('aria-current="page"');
+    expect(render('/schedule', '/schedule')).toContain('aria-current="page"');
+    // Inside the section: reached from Scores, not its own page.
+    expect(render('/schedule', '/scores/2026-09-24')).toContain('aria-current="true"');
+    expect(render('/schedule', '/game/2026-09-24-leigh-at-pioneer')).toContain('aria-current="true"');
+    // A fragment target (the phone tab lands on a date) never breaks it.
+    expect(render('/schedule#2026-09-24', '/')).toContain('aria-current="page"');
+    // And nothing else is lit on `/`.
+    for (const href of ['/standings', '/playoffs', '/teams', '/leaders', '/jv']) {
+      expect(isActive('/', href, HREFS[href]), href).toBe(false);
+    }
   });
 
   it('/teams#bval, a league target, still lights Teams as the page itself', () => {
@@ -105,9 +138,19 @@ describe('active state comes from the base href only', () => {
     expect(render('/teams', '/teams/leigh')).toContain('aria-current="true"');
   });
 
-  it('Home is active on / only', () => {
+  it('a `/` href is active on / only (every path starts with "/")', () => {
     expect(isActive('/', '/')).toBe(true);
     expect(isActive('/teams', '/')).toBe(false);
+  });
+
+  it('the tab face is the word alone, and the top face reserves its bold width', () => {
+    mockPath = '/';
+    const tab = renderToStaticMarkup(createElement(NavLink, { href: '/teams', variant: 'tab', label: 'Teams' }));
+    expect(tab).toBe('<a class="sx-tabbar-tab" href="/teams"><span class="sx-indicator leading-none">Teams</span></a>');
+    const top = renderToStaticMarkup(createElement(NavLink, { href: '/jv', variant: 'top', label: 'JV', srSuffix: ' (junior varsity)' }));
+    expect(top).toBe(
+      '<a class="sx-navtop" href="/jv"><span data-label="JV" class="sx-indicator sx-weight-hold leading-5">JV<span class="sr-only"> (junior varsity)</span></span></a>',
+    );
   });
 
   it('the static HTML carries the index href (no hydration mismatch)', () => {

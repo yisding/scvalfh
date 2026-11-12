@@ -80,7 +80,7 @@ export function PlaceCell({ standing }: { standing: Standing }) {
 export function FlagMark({ name }: { name: string }) {
   return (
     <>
-      <span className="-ml-1.5 shrink-0 font-normal text-ink-2" aria-hidden="true">
+      <span className="ml-0.5 font-normal text-ink-2" aria-hidden="true">
         &dagger;
       </span>
       <span className="sr-only">

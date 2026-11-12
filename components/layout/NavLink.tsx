@@ -26,7 +26,7 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
  * click), and on a slow phone network that gap read as "the tap did not register". So the tapped
  * item answers at once, in two steps: `:active` greys it under the finger (120ms, --sx-dur-tap),
  * and `useLinkStatus()` marks its label `data-pending`, which globals.css draws exactly like the
- * current item (ink, 700, the ink bar), until the route commits. `aria-current` does NOT move early —
+ * current item (700, the accent bar), until the route commits. `aria-current` does NOT move early —
  * it describes where the reader IS, and that only changes when the history entry does. A
  * globals.css rule keyed on `nav:has([data-pending])` returns the old item to rest meanwhile, so one
  * item is lit at a time.
@@ -53,12 +53,12 @@ export interface NavLinkProps {
    * only the path part is compared with the current route.
    */
   href: string;
-  /** 'tab' is the bottom-bar item (56px tall, an equal fifth of the bar); 'top' is the masthead link. */
+  /** 'tab' is the phone-bar item (52px tall, as wide as its word plus a share of the spare width); 'top' is the header link. */
   variant: 'tab' | 'top';
   label: string;
   /** Visually hidden words after the label (History: ' (2025-26 final standings)'). */
   srSuffix?: string;
-  /** A 20px inline SVG glyph for the tab variant. */
+  /** @deprecated The phone bar has no icons; accepted and ignored. */
   glyph?: React.ReactNode;
   /** The link target per league, e.g. { bval: '/standings/bval', … }. Serializable. */
   leagueHrefs?: Readonly<Partial<Record<LeagueId, string>>>;
@@ -76,8 +76,16 @@ const SECTION_PREFIXES: Readonly<Record<string, readonly string[]>> = {
 };
 
 /**
+ * Paths that ARE a section's own page without being its href. Home is the Scores page (the score
+ * day view opened on today), so the Scores item is the current page on `/`, in both bars.
+ */
+const SECTION_EXACT: Readonly<Record<string, readonly string[]>> = {
+  '/schedule': ['/'],
+};
+
+/**
  * `'page'` on the section's own page, `'true'` anywhere inside the section (a team page under
- * /teams, a day or game page under /schedule), otherwise null. Both draw the ink bar; the ARIA
+ * /teams, a day or game page under /schedule), otherwise null. Both draw the bar; the ARIA
  * value tells a screen reader which of the two it is ("current page" against "current item"), and
  * forced colours outline either (globals.css matches any `aria-current` but "false").
  *
@@ -94,7 +102,7 @@ function activeState(
   leagueHrefs?: Readonly<Partial<Record<string, string>>>,
 ): ActiveState {
   const path = pathOf(href);
-  if (pathname === path) return 'page';
+  if (pathname === path || SECTION_EXACT[path]?.includes(pathname)) return 'page';
   if (Object.values(leagueHrefs ?? {}).some((h) => h !== undefined && pathOf(h) === pathname)) {
     return 'page';
   }
@@ -161,7 +169,7 @@ function TopFace({ label, suffix, active }: { label: string; suffix?: React.Reac
     <span
       data-pending={pending && !active ? '' : undefined}
       data-label={label}
-      className={`sx-indicator sx-weight-hold transition-colors duration-[var(--sx-dur-tap)]`}
+      className={`sx-indicator sx-weight-hold leading-5`}
     >
       {label}
       {suffix}
@@ -170,36 +178,21 @@ function TopFace({ label, suffix, active }: { label: string; suffix?: React.Reac
 }
 
 /**
- * The tab's glyph and label. The label is the 11px kicker size and scales with the reader's text
- * size up to 12.5px, a px cap because a rem cap would scale with it: at 12.5px the widest label,
- * "Standings", is 60px in a 320px phone's 64px tab (tests/ui/tab-labels.test.ts). Nothing truncates.
+ * The tab's label: the word alone, no icon. Its size is `.sx-tabbar-tab`'s (14px, 13px under 360px
+ * of viewport), and the five cells are word-width plus an equal share of the spare width
+ * (tests/ui/tab-labels.test.ts). Nothing truncates.
  */
-function TabFace({
-  label,
-  suffix,
-  glyph,
-  active,
-}: {
-  label: string;
-  suffix?: React.ReactNode;
-  glyph: React.ReactNode;
-  active: boolean;
-}) {
+function TabFace({ label, suffix, active }: { label: string; suffix?: React.ReactNode; active: boolean }) {
   const { pending } = useLinkStatus();
   return (
-    <>
-      <span aria-hidden="true" data-pending={pending && !active ? '' : undefined} className="sx-indicator flex">
-        {glyph}
-      </span>
-      <span className="text-[length:min(var(--text-kicker),12.5px)] leading-none">
-        {label}
-        {suffix}
-      </span>
-    </>
+    <span data-pending={pending && !active ? '' : undefined} className="sx-indicator leading-none">
+      {label}
+      {suffix}
+    </span>
   );
 }
 
-export function NavLink({ href, variant, label, srSuffix, glyph, leagueHrefs, slugLeague }: NavLinkProps) {
+export function NavLink({ href, variant, label, srSuffix, leagueHrefs, slugLeague }: NavLinkProps) {
   const pathname = usePathname();
   const { league, ready } = useEffectiveLeague();
   const state = activeState(pathname ?? '/', href, leagueHrefs);
@@ -207,7 +200,7 @@ export function NavLink({ href, variant, label, srSuffix, glyph, leagueHrefs, sl
   const target = ready ? navTarget({ href, leagueHrefs, slugLeague, pathname, effectiveLeague: league }) : href;
   const suffix = srSuffix ? <span className="sr-only">{srSuffix}</span> : null;
 
-  // The current item's non-colour cues are `aria-current`, the 4px ink bar and the 700 weight;
+  // The current item's non-colour cues are `aria-current`, the 3px bar and the 700 weight;
   // forced colours outline `.sx-indicator` (globals.css).
   return (
     <Link
@@ -219,7 +212,7 @@ export function NavLink({ href, variant, label, srSuffix, glyph, leagueHrefs, sl
       {variant === 'top' ? (
         <TopFace label={label} suffix={suffix} active={state !== null} />
       ) : (
-        <TabFace label={label} suffix={suffix} glyph={glyph} active={state !== null} />
+        <TabFace label={label} suffix={suffix} active={state !== null} />
       )}
     </Link>
   );
