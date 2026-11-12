@@ -38,9 +38,13 @@
  * need a capturing listener. A click on the summary (Enter and Space on a focused summary dispatch
  * one too) is exactly "the reader opened this".
  *
+ * The month picker (the date bar's Calendar disclosure) lists the whole season from its first month;
+ * the same frame scrolls its panel to the month that holds the selected day (else today), so a reader
+ * in November does not open it on August.
+ *
  * A document-level listener, so it costs no React and survives every client-side navigation, and it
  * sits in <head> beside the theme stamp because React drops an inline <script> rendered in <body>
  * (see pinned-team-script.ts). The whole body is in try/catch: if anything throws, disclosures
  * still open; they just are not scrolled.
  */
-export const DISCLOSURE_SCRIPT = `try{document.addEventListener('click',function(e){var t=e.target,s=t&&t.closest?t.closest('summary'):null,d=s&&s.parentElement;if(!d||d.tagName!=='DETAILS'||d.firstElementChild!==s)return;var y=s.getBoundingClientRect().top;requestAnimationFrame(function(){if(!d.open)return;var dy=s.getBoundingClientRect().top-y;if(dy)scrollBy({top:dy,behavior:'instant'});if(d.getBoundingClientRect().bottom>innerHeight-(parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom)||0))d.scrollIntoView({block:'nearest'})})})}catch(e){}`;
+export const DISCLOSURE_SCRIPT = `try{document.addEventListener('click',function(e){var t=e.target,s=t&&t.closest?t.closest('summary'):null,d=s&&s.parentElement;if(!d||d.tagName!=='DETAILS'||d.firstElementChild!==s)return;var y=s.getBoundingClientRect().top;requestAnimationFrame(function(){if(!d.open)return;var dy=s.getBoundingClientRect().top-y;if(dy)scrollBy({top:dy,behavior:'instant'});if(d.getBoundingClientRect().bottom>innerHeight-(parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom)||0))d.scrollIntoView({block:'nearest'});var c=d.querySelector('.sx-cal [aria-current],.sx-cal [data-today]'),m=c&&c.closest('[role=group]'),p=m&&m.offsetParent;if(p&&p.scrollHeight>p.clientHeight)p.scrollTop=m.offsetTop-12})})}catch(e){}`;

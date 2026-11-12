@@ -1,17 +1,15 @@
 import { listWords } from '../../lib/format';
 import { Profiles } from '../teams/TeamRoster';
 import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
 import { MissingValue } from '../ui/MissingValue';
-import Tag from '../ui/Tag';
 import type { TeamJvRosterView } from './jv-roster-view';
 
 /**
- * A team page's JV roster: the varsity roster's list (components/teams/TeamRoster.tsx: one card of
- * grid cells, number, name and one line of the facts that exist, a blank never printed as a guess).
+ * A team page's JV roster: the varsity roster's list (components/teams/TeamRoster.tsx: the same
+ * `sx-auto` columns of hairline rows, number, name and one line of the facts that exist, a blank never printed as a guess).
  * Of its recruiting lines only the profile links appear (the same Profiles line, data/jv-profiles.json):
  * commitments and clubs are for the varsity rosters. The footnote names the source
- * and when it was read, and the pill links it. A player on the varsity roster above is not repeated
+ * and when it was read, and a link under it goes there. A player on the varsity roster above is not repeated
  * (lib/jv/jv-rosters.ts): the footnote counts them, and a list that is all varsity players says so in
  * place of the grid. Only a school some source lists JV players for gets this section
  * (components/jv/jv-roster-view.ts returns null otherwise).
@@ -21,9 +19,9 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
   const hasCaptain = rows.some((r) => r.captain);
   const sourceName = view.source === 'maxpreps' ? 'MaxPreps’ JV roster' : `${view.teamName}’s JV list on ${view.sourceLabel}`;
   const pill = (
-    <ul className="m-0 mt-3 flex list-none flex-wrap gap-2 p-0">
+    <ul className="sx-linkrow">
       <li>
-        <ExternalLink href={view.sourceUrl} className="sx-pill sx-pill-ring">
+        <ExternalLink href={view.sourceUrl} className="sx-action">
           {view.source === 'maxpreps' ? 'MaxPreps JV roster' : `${view.sourceLabel} JV roster`}
         </ExternalLink>
       </li>
@@ -32,7 +30,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
   if (rows.length === 0) {
     return (
       <div>
-        <p className="m-0 max-w-prose text-body text-ink-2">
+        <p className="sx-empty">
           Every player on {sourceName} is on the varsity roster above, so none is repeated here.
         </p>
         {pill}
@@ -41,13 +39,11 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
   }
   return (
     <div>
-      <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="sx-auto m-0 list-none p-0">
         {rows.map((row) => (
-          <li key={row.key} className="sx-gridcell flex items-baseline gap-3">
+          <li key={row.key} className="flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5">
             {showNumbers ? (
-              <span
-                className={`sx-num ${view.numberChars > 3 ? 'w-11' : 'w-8'} shrink-0 text-right text-meta font-semibold text-ink-2`}
-              >
+              <span className={['sx-num shrink-0 text-right text-body text-ink-2', view.numberChars > 3 ? 'w-11' : 'w-8'].join(' ')}>
                 {row.jersey ? (
                   <>
                     <span className="sr-only">Number </span>
@@ -59,14 +55,15 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
               </span>
             ) : null}
             <span className="min-w-0 flex-1">
-              <span className="block text-body text-ink">
+              <span className="block text-body font-medium text-ink">
                 {row.name}
                 {row.captain ? (
                   <>
                     {' '}
-                    <Tag label="captain" className="relative -top-px ml-1">
-                      C
-                    </Tag>
+                    <span className="text-cell font-semibold text-ink-2">
+                      <span aria-hidden="true">C</span>
+                      <span className="sr-only">captain</span>
+                    </span>
                   </>
                 ) : null}
               </span>
@@ -74,7 +71,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
                 <span className="block text-meta text-ink-2">
                   {row.facts.map((fact, i) => (
                     <span key={i}>
-                      {i > 0 ? <>&nbsp;&middot; </> : null}
+                      {i > 0 ? ', ' : null}
                       <span className="whitespace-nowrap">{fact}</span>
                     </span>
                   ))}
@@ -84,10 +81,9 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
             </span>
           </li>
         ))}
-        <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} />
       </ul>
 
-      <div className="mt-3 max-w-prose text-meta text-ink-3">
+      <div className="sx-note">
         <p className="m-0">
           {view.source === 'maxpreps' ? (
             <>What the coach entered on MaxPreps&rsquo; JV roster as of {view.asOf}.</>
@@ -100,7 +96,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
           {hasCaptain ? (
             <>
               {' '}
-              <Tag className="relative -top-px">C</Tag> marks a captain.
+              C: captain.
             </>
           ) : null}
         </p>

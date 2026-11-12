@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment, useEffect, useId, useMemo, useState } from 'react';
+import { Fragment, useEffect, useId, useMemo, useState, useSyncExternalStore } from 'react';
 
-import Arrow from '../ui/Arrow';
 // From lib/format itself, not the words/plural re-export: that module's other helpers then stay out of this
 // client chunk, which sits within bytes of /teams' first-load budget (scripts/assert-budgets.ts).
 import { plural } from '../../lib/format';
@@ -31,7 +30,7 @@ import {
  *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
  *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
- *   `Search all 102 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
+ *   `Search all 102 on Teams` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
  *   reads exactly like the pin tiles' (`pinLabel`, components/words/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
@@ -64,12 +63,38 @@ export interface TeamFinderProps {
   label?: string;
   /** pin mode default 8. */
   limit?: number;
-  /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass MyTeamCard's `focusUnpin`, which moves it to #my-team-unpin). */
+  /** pin mode: called after a result is pinned (the caller manages focus: FindYourTeam moves it to the pinned team's league tab). */
   onPin?: (slug: string, leagueId: string) => void;
+  /** Cap the finder at 22rem: for a `ScopeBar` `end` slot. */
+  compact?: boolean;
+  /** The field's visible prompt. Default 'Search teams'. */
+  placeholder?: string;
   className?: string;
 }
 
-export const DEFAULT_FINDER_LABEL = 'School, city or mascot';
+export const DEFAULT_FINDER_LABEL = 'Search teams by school, city or mascot';
+/** The field's visible prompt; its accessible name is the (visually hidden) label. */
+const PLACEHOLDER = 'Search teams';
+/** A result row: 44px, a hairline below, no card: a 24px logo (teams), the name, then the detail in grey. */
+const RESULT_ROW = 'flex min-h-11 w-full items-center gap-2 border-b border-hairline px-2 py-1.5 text-left hover:bg-surface-2';
+const RESULT_NAME = 'text-body font-medium text-ink';
+const RESULT_DETAIL = 'min-w-0 text-meta text-ink-2';
+
+/** The school's logo, drawn as it is (public/mascots/<slug>-24.webp, the file TeamMonogram picks). */
+function ResultLogo({ slug }: { slug: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className="sx-monogram"
+      src={`/mascots/${slug}-24.webp`}
+      srcSet={`/mascots/${slug}-48.webp 2x`}
+      width={24}
+      height={24}
+      alt=""
+      loading="lazy"
+    />
+  );
+}
 const PIN_LIMIT = 8;
 const DEBOUNCE_MS = 250;
 
@@ -113,7 +138,7 @@ export interface FinderView {
   matches: TeamSearchEntry[];
   /** The teams this finder lists itself (pin mode: the first `limit`; filter mode: none). */
   shown: TeamSearchEntry[];
-  /** pin mode: more teams match than are shown → the "Search all 102 on Teams →" link. */
+  /** pin mode: more teams match than are shown → the "Search all 102 on Teams" link. */
   more: boolean;
   groups: GroupSearchEntry[];
   notCovered: NotCoveredEntry[];
@@ -199,14 +224,15 @@ export function PinResult({ entry, onPick }: { entry: TeamSearchEntry; onPick: (
     <button
       type="button"
       onClick={() => onPick(entry)}
-      className="sx-tap flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left"
+      className={`sx-tap cursor-pointer ${RESULT_ROW}`}
     >
-      <span className="text-body font-semibold text-ink">
+      <ResultLogo slug={entry.slug} />
+      <span className={RESULT_NAME}>
         <span className="sr-only">{before}</span>
         {visible}
         <span className="sr-only">{after}</span>
       </span>
-      <span className="text-meta text-ink-2">{detail}</span>
+      <span className={RESULT_DETAIL}>{detail}</span>
     </button>
   );
 }
@@ -221,34 +247,35 @@ export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
     <Link
       href={`/teams/${entry.slug}`}
       prefetch={false}
-      className="flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left no-underline"
+      className={`sx-tap no-underline ${RESULT_ROW}`}
     >
-      <span className="text-body font-semibold text-accent">{entry.shortName}</span>
-      <span className="text-meta text-ink-2">{resultDetail(entry)}</span>
+      <ResultLogo slug={entry.slug} />
+      <span className={RESULT_NAME}>{entry.shortName}</span>
+      <span className={RESULT_DETAIL}>{resultDetail(entry)}</span>
     </Link>
   );
 }
 
 /** The line above the results when pinning cannot work in this browser. */
-const PIN_UNAVAILABLE_NOTE = 'This browser is not storing a pinned team, so a result opens its team page.';
+const PIN_UNAVAILABLE_NOTE = 'This browser is not storing your team, so a result opens its team page.';
 
 function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[]; kickerId: string }) {
   if (groups.length === 0) return null;
   return (
     <div className="mt-3">
-      <p id={kickerId} className="m-0 text-micro font-semibold text-ink-3">
+      <p id={kickerId} className="m-0 text-cell text-ink-2">
         Divisions and leagues
       </p>
-      <ul aria-labelledby={kickerId} className="m-0 mt-1 list-none p-0">
+      <ul aria-labelledby={kickerId} className="m-0 list-none border-t border-hairline p-0 mt-1">
         {groups.map((group) => (
           <li key={`${group.kind}:${group.id}`}>
             <Link
               href={group.href}
               prefetch={false}
-              className="flex min-h-11 flex-col justify-center rounded-card px-3 py-1 no-underline"
+              className={`sx-tap no-underline ${RESULT_ROW}`}
             >
-              <span className="text-body font-semibold text-accent">{group.label}</span>
-              <span className="text-meta text-ink-2">{group.detail}</span>
+              <span className={RESULT_NAME}>{group.label}</span>
+              <span className={RESULT_DETAIL}>{group.detail}</span>
             </Link>
           </li>
         ))}
@@ -256,6 +283,10 @@ function GroupResults({ groups, kickerId }: { groups: readonly GroupSearchEntry[
     </div>
   );
 }
+
+const subscribeNever = () => () => {};
+const readUrlQuery = () => new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+const readNoQuery = () => '';
 
 export function TeamFinder({
   index,
@@ -265,13 +296,20 @@ export function TeamFinder({
   label = DEFAULT_FINDER_LABEL,
   limit = PIN_LIMIT,
   onPin,
+  compact = false,
+  placeholder = PLACEHOLDER,
   className,
 }: TeamFinderProps) {
   const inputId = useId();
   const liveId = useId();
   const resultsId = useId();
   const groupsKickerId = useId();
-  const [query, setQuery] = useState('');
+  // The header's team search is a plain GET form to /teams?q=…: the filter on /teams starts from that
+  // query until the reader types here. Read as an external store with '' on the server (the page is
+  // static, so the server never sees the query string), so the hydrating render matches the HTML.
+  const urlQuery = useSyncExternalStore(subscribeNever, readUrlQuery, readNoQuery);
+  const [typed, setQuery] = useState<string | null>(null);
+  const query = typed ?? (mode === 'filter' ? urlQuery : '');
   const [announced, setAnnounced] = useState('');
   const { ready, available, pin } = usePinnedTeam();
   // pin mode with storage blocked: results are team-page links, not pin buttons.
@@ -355,10 +393,10 @@ export function TeamFinder({
 
   return (
     <search
-      className={['sx-js-only block', className].filter(Boolean).join(' ')}
+      className={['sx-js-only block', compact ? 'w-full max-w-[22rem]' : null, className].filter(Boolean).join(' ')}
       data-searching={typing ? '' : undefined}
     >
-      <label htmlFor={inputId} className="mb-1 block text-meta font-medium text-ink">
+      <label htmlFor={inputId} className="sr-only">
         {label}
       </label>
       <input
@@ -371,7 +409,8 @@ export function TeamFinder({
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={onKeyDown}
-        className="block h-12 w-full rounded-card border border-rule bg-surface px-3 text-body text-ink"
+        placeholder={placeholder}
+        className="sx-field"
       />
       <p id={liveId} role="status" aria-live="polite" className="sr-only">
         {announced}
@@ -391,7 +430,7 @@ export function TeamFinder({
           {mode === 'pin' && view.shown.length > 0 ? (
             <Fragment>
               {linkResults ? <p className="mt-3 mb-0 text-meta text-ink-2">{PIN_UNAVAILABLE_NOTE}</p> : null}
-              <ul id={resultsId} className="m-0 mt-2 list-none p-0">
+              <ul id={resultsId} className="m-0 list-none p-0">
                 {view.shown.map((entry) => (
                   <li key={entry.slug}>
                     {linkResults ? <TeamResultLink entry={entry} /> : <PinResult entry={entry} onPick={pick} />}
@@ -399,8 +438,8 @@ export function TeamFinder({
                 ))}
               </ul>
               {view.more ? (
-                <Link href="/teams" prefetch={false} className="sx-action mt-1 inline-flex min-h-11 items-center text-accent">
-                  Search all {index.teams.length} on Teams <Arrow />
+                <Link href="/teams" prefetch={false} className="sx-action min-h-11">
+                  Search all {index.teams.length} on Teams
                 </Link>
               ) : null}
             </Fragment>

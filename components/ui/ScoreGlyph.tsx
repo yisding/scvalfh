@@ -3,13 +3,13 @@ import type { SideView } from './describe-game';
 /**
  * The never-0-0 rule, rendered (DESIGN §5.2, §5.3).
  *
- * A real `0` is the mono glyph `0` in full-strength ink. A `null` is an en dash in muted ink,
+ * A real `0` is the glyph `0` in full-strength ink (tabular figures of the one face: `.sx-num`). A `null` is an en dash in muted ink,
  * aria-hidden, with the visually hidden words "score not reported" beside it. No cell is ever
  * blank and no cell ever coerces — the pipeline has no default anywhere.
  *
- * Winner-by-weight (DESIGN §6.5 channel 3, R-19): the winner's number is 600 weight in
- * `--sx-text`, the loser's 400 in `--sx-text-2`, so who won survives total desaturation with no
- * chip at all.
+ * Winner-by-weight (DESIGN §6.5 channel 3, R-19; §33): the winner's number is 700 in `--sx-text`,
+ * the loser's 500 in `--sx-text-3` (a zero like any other figure), a level side's 600, so who won
+ * survives total desaturation with no chip at all.
  *
  * Client-safe (SPEC §10.4): this module imports only TYPES from describe-game, so a client component
  * (the home My-team card) can render it without reaching lib/teams. Server components import it
@@ -28,9 +28,9 @@ export const SCORE_SIZE_CLASS: Record<NonNullable<ScoreGlyphProps['size']>, stri
 };
 
 const WEIGHT_CLASS: Record<SideView['weight'], string> = {
-  winner: 'font-semibold text-ink',
-  loser: 'font-normal text-ink-2',
-  level: 'font-normal text-ink',
+  winner: 'font-bold text-ink',
+  loser: 'font-medium text-ink-3',
+  level: 'font-semibold text-ink',
 };
 
 /**
@@ -38,7 +38,7 @@ const WEIGHT_CLASS: Record<SideView['weight'], string> = {
  *
  * A level side is FULL ink, not ink-2: "level" covers a tie and every game without a winner yet
  * (scheduled, live, unreported), and printing those names in the loser's muted ink made a whole
- * upcoming slate look as if everyone had lost. Only a loser steps down to ink-2 at 400.
+ * upcoming slate look as if everyone had lost. Only a loser steps down to ink-3 at 400.
  *
  * Kept as its own table rather than reusing WEIGHT_CLASS: ScoreGlyph's class string is frozen by
  * tests/ui/rendered-never-00.test.ts, and a name may need to diverge from a numeral one day
@@ -46,9 +46,9 @@ const WEIGHT_CLASS: Record<SideView['weight'], string> = {
  * component (the home My-team card) can weigh a name without reaching lib/teams.
  */
 export const NAME_CLASS: Record<SideView['weight'], string> = {
-  winner: 'font-semibold text-ink',
-  loser: 'font-normal text-ink-2',
-  level: 'font-normal text-ink',
+  winner: 'font-bold text-ink',
+  loser: 'font-normal text-ink-3',
+  level: 'font-medium text-ink',
 };
 
 /**

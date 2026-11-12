@@ -165,14 +165,19 @@ describe('buildThisWeek — NorCal on Thu Oct 29', () => {
     expect(capped.more, VIEW).toBe(2);
   });
 
-  it('renders the strip: one link per row with its whole sentence, the badge, and the overflow link', () => {
+  it('renders the list: a strip per day, one link per row, its time and its label as plain text, and the overflow link', () => {
     const html = renderToStaticMarkup(createElement(ThisWeek, { id: 'this-week-norcal', view: norcal({ cap: 5 }) }));
     const text = textOf(html);
     expect(html, 'components/playoffs/ThisWeek.tsx').toContain('id="this-week-norcal"');
     expect(text).toContain('This week in the postseason');
     expect(text).toContain('Tue Oct 27 – Thu Nov 5');
-    expect(html).toContain('>4:00 PM PT · St. Ignatius at Mitty</a>');
-    expect(html).toContain('<span class="sx-badge">SCVAL crossover · #1 v #1</span>');
+    // The start time, the matchup (the row's one game link) and the label are three elements, not one dotted string.
+    expect(html).toMatch(/<span class="sx-num[^"]*">4:00 PM PT<\/span><a [^>]*>St\. Ignatius at Mitty<\/a>/);
+    expect(html).not.toContain('4:00 PM PT · St. Ignatius at Mitty');
+    expect(html).toMatch(/<span class="[^"]*">SCVAL crossover · #1 v #1<\/span>/);
+    // No badge, pill or card: a day is a strip, a row sits on a hairline.
+    expect(html).not.toMatch(/sx-badge|sx-pill|sx-card/);
+    expect(html.match(/<div class="sx-strip"><h3 /g)?.length).toBeGreaterThan(0);
     expect(html).toContain('href="/schedule"');
     expect(text).toContain('+3 more on the schedule');
     expect(text).not.toMatch(/\b(\d+(st|nd|rd|th)|top|first|second) seed(ed)?\b/i);

@@ -263,7 +263,7 @@ export interface CommitRow {
   /** The roster row's own spelling. */
   name: string;
   /** The registry name, and `/teams/<slug>#roster`. */
-  school: { name: string; href: string };
+  school: { name: string; href: string; slug: string };
   /** The grade in words, when the roster has one. */
   facts: string[];
   college: {
@@ -360,7 +360,7 @@ function commitRow(c: Commitment): CommitRow {
     key: commitAnchor(c),
     anchor: commitAnchor(c),
     name: row.fullName,
-    school: { name: schoolName(c.teamSlug), href: `/teams/${c.teamSlug}#roster` },
+    school: { name: schoolName(c.teamSlug), href: `/teams/${c.teamSlug}#roster`, slug: c.teamSlug },
     facts: row.grade !== null ? [gradeWord(row.grade)] : [],
     college: {
       name: collegeDisplayName(college),

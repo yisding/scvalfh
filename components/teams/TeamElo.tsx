@@ -1,27 +1,20 @@
 import Link from 'next/link';
 
 import { placeWords } from '../../lib/format';
-import { ELO_SCALE, MARGIN_WORDS } from '../leaders/elo-board';
-import { AND_INDEPENDENTS, THE_LEAGUES_POSSESSIVE } from '../leaders/scope';
 import { plural } from '../words/plural';
+import { FACT_ROW } from './TeamSplits';
 import type { TeamEloView } from './team-view';
 
 /**
- * The team's Elo rating (DESIGN §20.2), kept low on purpose: a closed disclosure under the stat
- * tiles, beside "How these numbers are counted", whose summary says only "Elo rating". A family
- * checking its team's page meets the record first and never a low number it did not ask for; the
- * rating is an estimate, not a result, so it waits one tap away. It is the one team-specific
- * figure the site keeps in a disclosure (app/globals.css explains the rule it is the exception
- * to). `#elo` is the `<details>` itself, so a link from the /leaders board lands on the summary in
- * every browser.
+ * The team's Elo rating (DESIGN §33): a rail section, `#elo` (the /leaders board links it), of two
+ * plain rows and one link.
  *
- * Opened, it reads "<rating> points · <where it stands>": the team's place on its region's /leaders
- * Elo board when the board lists it (its top 10; `#elo-rating` for NorCal, `#elo-rating-socal` for
- * SoCal, DESIGN-socal §2.3: the numbers are one fit over every covered team, the boards per region), "preseason" for a team rated from last season
- * alone, "provisional" for one with fewer games than the board needs, otherwise how many games the
- * rating counts. Then what the number means, and `How it is computed` → the board, whose note says
- * the rest. No team page names a place below the board's top 10, and a team with neither a final
- * this season nor a start from last reads "Not rated", never a 1500 it has not earned.
+ * Row one is the number, or "Not rated" for a team with neither a final this season nor a start
+ * from last: never a 1500 it has not earned. Row two says where the number stands: the team's
+ * place on its region's /leaders Elo board when the board lists it (its top 10; no team page names
+ * a place below that), "Preseason, from 2025-26" for a team rated from last season alone,
+ * "Provisional, 3 games" for one with fewer games than the board needs, otherwise how many games
+ * the rating counts. How the number is worked out is said once, on the board the link goes to.
  */
 export interface TeamEloProps {
   elo: TeamEloView;
@@ -30,55 +23,39 @@ export interface TeamEloProps {
 
 export function TeamElo({ elo, className }: TeamEloProps) {
   const { boardPlace } = elo;
-  const sub =
+  const second: { label: string; value: string } | null =
     elo.elo === null
-      ? 'no counted results yet'
+      ? null
       : boardPlace
-        ? `${placeWords(boardPlace.rank, boardPlace.tied)} on the ${elo.boardRegion} Elo board`
+        ? { label: `${elo.boardRegion} Elo board`, value: placeWords(boardPlace.rank, boardPlace.tied) }
         : elo.preseason
-          ? `preseason, from ${elo.seededFrom}`
+          ? { label: 'Preseason', value: `from ${elo.seededFrom}` }
           : elo.provisional
-            ? `provisional, from ${plural(elo.games, 'game')}`
-            : `from ${plural(elo.games, 'game')}`;
-  const scale = `${ELO_SCALE}. `;
-  const about =
-    elo.elo === null
-      ? `A rating needs at least one completed game against another of ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}. `
-      : elo.preseason
-        ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, worked out from last season’s games. ${scale}`
-        : `Worked out from every completed game between two of ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS} this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each ${MARGIN_WORDS}.${
-            elo.seeded
-              ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
-              : elo.seededFrom
-                ? ` It had no counted ${elo.seededFrom} game against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, so it started from an average rating.`
-                : ''
-          } ${scale}`;
-
+            ? { label: 'Provisional', value: plural(elo.games, 'game') }
+            : { label: 'Counted', value: plural(elo.games, 'game') };
   return (
-    <details id="elo" className={['sx-disclosure', className].filter(Boolean).join(' ')}>
-      <summary>Elo rating</summary>
-      <div className="mt-1 mb-2 max-w-prose text-meta text-ink-2">
-        <p className="m-0">
-          {elo.elo === null ? (
-            <span className="text-ink">Not rated</span>
-          ) : (
-            <span className="text-ink">
-              <span className="sx-num font-semibold">{elo.elo}</span> points
-            </span>
-          )}{' '}
-          <span aria-hidden="true">&middot;</span> {sub}
-        </p>
-        <p className="mt-1 mb-0">
-          {about}
-          {elo.provisional
-            ? `The Elo board waits for ${plural(elo.minGames, 'game')}, so this one is provisional. `
-            : null}
-          <Link href={elo.boardHref} prefetch={false} className="text-accent hover:underline">
+    <section id="elo" aria-labelledby="elo-heading" className={['sx-section sx-target', className].filter(Boolean).join(' ')}>
+      <h2 id="elo-heading">Rating</h2>
+      <dl className="m-0 text-body text-ink">
+        <div className={FACT_ROW}>
+          <dt className="text-ink-2">Elo rating</dt>
+          <dd className="sx-num m-0">{elo.elo === null ? 'Not rated' : elo.elo}</dd>
+        </div>
+        {second ? (
+          <div className={FACT_ROW}>
+            <dt className="text-ink-2">{second.label}</dt>
+            <dd className="m-0">{second.value}</dd>
+          </div>
+        ) : null}
+      </dl>
+      <ul className="sx-linkrow">
+        <li>
+          <Link href={elo.boardHref} prefetch={false} className="sx-action">
             How it is computed
           </Link>
-        </p>
-      </div>
-    </details>
+        </li>
+      </ul>
+    </section>
   );
 }
 

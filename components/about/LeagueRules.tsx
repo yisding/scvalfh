@@ -1,7 +1,6 @@
 import { ordersByRecord } from '../../lib/standings/order';
 import Link from 'next/link';
 
-import Arrow from '../ui/Arrow';
 import ExternalLink from '../ui/ExternalLink';
 import { ordinal, shortDate } from '../../lib/format';
 import type { LeagueConfig } from '../../lib/league-config/shape';
@@ -17,15 +16,13 @@ import { isQuotedLeague } from './about-view';
  */
 
 /**
- * A quoted by-law: a card with a straight 3px rule down its left edge. The rule is a pseudo-element
- * inset 16px from the top and bottom (the card's corner radius), so it stays straight; an inset
- * box-shadow would curve around the corners like a bracket.
+ * A quoted by-law: indented text in the secondary ink. No box and no side rule (DESIGN §33); the
+ * indent and the quotation marks say it is a quotation, and its source follows it.
  */
-const QUOTE =
-  "sx-card relative not-italic p-5 pl-6 text-body text-ink-2 before:absolute before:inset-y-4 before:left-0 before:w-[3px] before:rounded-r-full before:bg-rule before:content-['']";
+const QUOTE = 'mx-0 mb-0 pl-6';
 
 /** A sub-heading inside a league's rules block (the league itself is the h3). */
-const H4 = 'm-0 mt-8 text-body font-semibold text-ink';
+const H4 = 'm-0 mt-6 text-lead text-ink';
 
 // ---------------------------------------------------------------- per-league rules (generated)
 
@@ -113,7 +110,7 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
         </ol>
       )}
       {anyStepSeparates ? <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p> : null}
-      <p className="text-meta text-ink-3">
+      <p className="text-cell text-ink-2">
         {`A step this site cannot compute (${
           ordersByRecord(rules) ? 'a coaches’ vote, a coin flip' : 'a coin flip, a draw, a play-in'
         }) leaves the teams level at the same place, with a footnote citing the rule. Our display order is not a league ruling.`}
@@ -122,14 +119,15 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
 
       <h4 className={H4}>Postseason</h4>
       <GeneratedPostseason league={league} />
-      <p className="text-meta text-ink-2">
-        {league.links.map((l, i) => (
-          <span key={l.href}>
-            {i > 0 ? ' · ' : ''}
-            <ExternalLink href={l.href}>{l.label}</ExternalLink>
-          </span>
+      <ul className="sx-linkrow pl-0 [&>li]:mt-0">
+        {league.links.map((l) => (
+          <li key={l.href}>
+            <ExternalLink href={l.href} className="sx-action whitespace-normal">
+              {l.label}
+            </ExternalLink>
+          </li>
         ))}
-      </p>
+      </ul>
     </div>
   );
 }
@@ -169,8 +167,8 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
           <p>{postseason.citations.qualifiersConflict}</p>
           <p>{postseason.titleNote}</p>
           <p>
-            <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
-              {postseason.name} <Arrow />
+            <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action">
+              {postseason.name}
             </Link>
           </p>
         </>
@@ -220,8 +218,8 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
             {postseason.note} {postseason.citations.roundDates}
           </p>
           <p>
-            <Link href={`/playoffs#${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
-              {postseason.name} <Arrow />
+            <Link href={`/playoffs#${league.id}`} prefetch={false} className="sx-action">
+              {postseason.name}
             </Link>
           </p>
         </>
@@ -249,7 +247,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
         placement/standings will be the order of team points. The team with the greatest number of
         points will be declared the champion and higher in the standings. If there is a tie at the
         top both teams shall be declared division champions.&rdquo;{' '}
-        <cite className="not-italic text-ink-3">&mdash; Article VI, Section 2</cite>
+        <span className="text-ink-2">&mdash; Article VI, Section 2</span>
       </blockquote>
       <p>
         We implement that literally: <code>points = 3 &times; wins + 1 &times; ties</code> from
@@ -274,7 +272,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
           instead of a 6th and a 7th), with a footnote citing this rule. ({stages['coin-flip']})
         </li>
       </ol>
-      <p className="text-meta text-ink-3">
+      <p className="text-cell text-ink-2">
         Our display order is not a league ruling &mdash; if {league.shortName} settles a coin flip we
         have no way to know, the official standings remain the source of truth.
       </p>
@@ -284,7 +282,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
         &ldquo;Varsity: four 15-minute quarters. After a regulation tie (league AND non-league varsity
         games): ONE 7-minute sudden-victory period, 7-a-side. If still tied after that one period, the
         game ends in a tie (no shootout in league play).&rdquo;{' '}
-        <cite className="not-italic text-ink-3">&mdash; Article IV</cite>
+        <span className="text-ink-2">&mdash; Article IV</span>
       </blockquote>
       <p>
         An overtime win counts as a full win, shown with an OT tag. Because league play never has a
@@ -295,7 +293,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
       <h4 className={H4}>CCS qualification</h4>
       <blockquote className={QUOTE}>
         &ldquo;16-team CCS tournament: SCVAL 7, BVAL 4, PCAL 2, at-large 3.&rdquo;{' '}
-        <cite className="not-italic text-ink-3">&mdash; Article VII, Section 1</cite>
+        <span className="text-ink-2">&mdash; Article VII, Section 1</span>
       </blockquote>
       <blockquote className={QUOTE}>
         &ldquo;The first three teams in each division are awarded automatic qualifiers (AQ) to CCS
@@ -304,23 +302,24 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
         submitted to CCS for at-large consideration. #1 v #1, #2 v #2, #3 v #3 crossover games are
         played after the season to help CCS ordering (home site by coin flip). Per the official
         schedule PDFs these crossover/play-in games are Friday, October 30, 2026.&rdquo;{' '}
-        <cite className="not-italic text-ink-3">&mdash; Article VII, Section 2</cite>
+        <span className="text-ink-2">&mdash; Article VII, Section 2</span>
       </blockquote>
       <p>
         {qualification}. Live, team-by-team status is on the{' '}
-        <Link href={`/playoffs#${league.id}`} prefetch={false} className="text-accent hover:underline">
+        <Link href={`/playoffs#${league.id}`} prefetch={false}>
           CCS playoffs
         </Link>{' '}
         page.
       </p>
-      <p className="text-meta text-ink-2">
-        {league.links.map((l, i) => (
-          <span key={l.href}>
-            {i > 0 ? ' · ' : ''}
-            <ExternalLink href={l.href}>{l.label}</ExternalLink>
-          </span>
+      <ul className="sx-linkrow pl-0 [&>li]:mt-0">
+        {league.links.map((l) => (
+          <li key={l.href}>
+            <ExternalLink href={l.href} className="sx-action whitespace-normal">
+              {l.label}
+            </ExternalLink>
+          </li>
         ))}
-      </p>
+      </ul>
     </div>
   );
 }

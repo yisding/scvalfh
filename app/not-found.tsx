@@ -1,12 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import PageHeader from '../components/layout/PageHeader';
-import { OG_BASE } from '../components/layout/site';
-import { listWords, numberWord } from '../lib/format';
-import { getAvailableHistoryLeagues } from '../lib/history/history';
-import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
-import { IS_BASKETBALL } from '../lib/sports/current';
+import { NAV_LABELS, OG_BASE } from '../components/layout/site';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -16,61 +11,35 @@ export const metadata: Metadata = {
 };
 
 /**
- * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
- * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
- * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
- * the leagues with a table: the LA independents have none (DESIGN §24.9), so "every table in
- * the nine leagues" stays exact.
- */
-const LEAGUE_COUNT = LEAGUES_PROPER.length === 1 ? LEAGUES_PROPER[0].shortName : `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
-
-const LINKS: Array<{ href: string; name: string; description: string }> = [
-  { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
-  { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
-  { href: '/teams', name: 'Teams and standings', description: `Find your school; every table in ${LEAGUE_COUNT}` },
-  { href: '/leaders', name: 'Season leaders', description: IS_BASKETBALL ? 'Top scorers, records and ratings' : 'Top scorers, keepers and records, every league' },
-  { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
-  {
-    href: '/history/2025-26',
-    name: 'History',
-    description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
-  },
-  { href: '/about', name: 'About', description: 'Where this data comes from' },
-];
-
-/**
- * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
- * links are the real navigation rather than a single "go home": one card per top-level page
- * (the seven desktop nav destinations, the History archive among them, which covers the leagues
- * with a published 2025-26 table; the standings are on Teams, DESIGN §18), with its name over a
- * one-line description, so nothing is a sentence squeezed into a pill.
- *
- * The copy does not claim these seven are every page on the site — there are hundreds of team,
- * game and day pages — only that each of those is reachable from one of them, which is true.
- * Seven cards run two-up from sm and four-up from lg (a row of four, then three). Each card is
- * h-full so a row stays even when one description wraps in the narrower four-up column.
+ * Say what is true, then the way on (DESIGN §33): a title, one sentence and three links. Every team, game and day
+ * is reachable from Scores or Standings, and the header and footer above and below carry the rest of
+ * the navigation. No freshness stamp: nothing on this page is data.
  */
 export default function NotFound() {
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        eyebrow="404"
-        title="That page is not here."
-        description="The link may be out of date, or that game or day isn’t in this season’s schedule. Every team, game and day is reachable from one of these:"
-      />
-      <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
-        {LINKS.map((l) => (
-          <li key={l.href}>
-            <Link
-              href={l.href}
-              prefetch={false}
-              className="sx-card sx-lift block h-full min-h-11 p-4 no-underline"
-            >
-              <span className="block text-body font-semibold text-ink">{l.name}</span>
-              <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>
-            </Link>
-          </li>
-        ))}
+      <header className="sx-pagehead">
+        <h1 className="m-0 text-h1 text-ink">Page not found</h1>
+      </header>
+      <p className="m-0 text-body text-ink-2">Nothing on this site is at that address.</p>
+      {/* The header above and the footer below carry the full navigation as buttons and links already:
+          the way on is three plain links, not a second set of buttons. */}
+      <ul className="sx-linkrow">
+        <li>
+          <Link href="/" prefetch={false} className="sx-action">
+            {NAV_LABELS.scores}
+          </Link>
+        </li>
+        <li>
+          <Link href="/standings" prefetch={false} className="sx-action">
+            {NAV_LABELS.standings}
+          </Link>
+        </li>
+        <li>
+          <Link href="/teams" prefetch={false} className="sx-action">
+            Find a team
+          </Link>
+        </li>
       </ul>
     </div>
   );

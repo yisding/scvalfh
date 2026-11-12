@@ -1,48 +1,31 @@
 import type { JumpListItem } from './about-view';
 
 /**
- * The /about jump list, rendered twice as two of the page's grid children (DESIGN §10.5): the "On this
- * page" disclosure below `lg` (`variant="disclosure"`), and the sticky rail beside the sections from
- * `lg` (`variant="rail"`). Each entry carries its league's region (`data-region-scope`), so the reader's
- * region's rules entries show.
+ * The /about section index (DESIGN §33): ONE list in the DOM. From 1024 it is the page's rail, a
+ * sticky column of links beside the sections; below that it is a wrapping row of links between the
+ * summary and the first section (`.sx-linkrow`). Each league's rules entry carries its league's
+ * region (`data-region-scope`), so the reader's region's entries show; those entries are sub-items
+ * of "Standings" and appear in the rail only, so the phone's row stays a dozen links.
  */
-export function AboutJumpList({ items, variant }: { items: readonly JumpListItem[]; variant: 'disclosure' | 'rail' }) {
-  if (variant === 'disclosure') {
-    return (
-      <details data-twin className="sx-inset sx-disclosure mt-8 lg:hidden">
-        <summary>On this page</summary>
-        <nav aria-label="On this page">
-          <ul className="m-0 list-none p-0">
-            {items.map((item) => (
-              <li key={item.id} data-region-scope={item.region}>
-                <a href={`#${item.id}`} className="sx-action min-h-11 text-meta text-ink-2 hover:text-accent hover:underline">
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </details>
-    );
-  }
+export function AboutJumpList({ items, className }: { items: readonly JumpListItem[]; className?: string }) {
   return (
     <nav
-      data-twin
-      aria-label="Sections on this page"
-      className="hidden lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-10 lg:block lg:sticky lg:top-[5rem]"
+      aria-label="On this page"
+      className={['sx-print-hide lg:sticky lg:top-[calc(var(--sx-sticky-top,4rem)+1rem)] lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto', className].filter(Boolean).join(' ')}
     >
-      <div className="sx-card p-4">
-        <p className="m-0 text-micro font-medium text-ink-3">On this page</p>
-        <ul className="m-0 mt-2 list-none p-0">
-          {items.map((item) => (
-            <li key={item.id} data-region-scope={item.region}>
-              <a href={`#${item.id}`} className="sx-action min-h-8 text-meta text-ink-2 hover:text-accent hover:underline">
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="sx-linkrow lg:mt-0 lg:block">
+        {items.map((item) => (
+          <li
+            key={item.id}
+            data-region-scope={item.region}
+            className={item.id.startsWith('rules-') ? 'max-lg:hidden lg:pl-4' : undefined}
+          >
+            <a href={`#${item.id}`} className="sx-action">
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }

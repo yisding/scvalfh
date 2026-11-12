@@ -23,6 +23,7 @@ import { listWords } from '../../lib/format';
 import type { PlayoffStatus, Snapshot } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025 } from '../fixtures/ccs/bracket-2025';
 import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
+import { elementById } from '../../scripts/copy-rules';
 import { textOf } from './html-text';
 
 type Data = typeof import('../../lib/data');
@@ -372,19 +373,23 @@ describe('buildOutsideTournamentView — the Tournament of Champions (SectionCon
     expect(view.buildOutsideTournamentView(toc, data.getGames()).rounds, VIEW).toEqual([]);
   });
 
-  it('/playoffs gives the tournament its own section, holding both the Sunset’s and the LA independents’ cards, its games under both', () => {
+  it('/playoffs gives the tournament its own section, its games first, then the Sunset’s and the LA independents’ own sections', () => {
     const text = textOf(html);
     expect(html.match(/id="toc"/g)?.length, PAGE).toBe(1);
     expect(html.match(/id="toc-games"/g)?.length, PAGE).toBe(1);
-    expect(text, PAGE).toContain('Tournament of Champions Oct 22–29 · the postseason for the Sunset and the LA independents');
+    // The heading carries the dates as its fact; whose postseason it is opens the note under the games.
+    expect(html, PAGE).toMatch(/id="toc-heading"><div><h2 [^>]*>Tournament of Champions<\/h2><span [^>]*>Oct 22–29<\/span>/);
+    expect(text, PAGE).toContain('The postseason for the Sunset and the LA independents.');
     expect(text, PAGE).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
-    // The section opens on its heading, then both leagues' cards, then the games: neither league owns it.
+    // The section opens on its heading and its games, and each league's own section follows it: neither league owns it.
     const toc = html.indexOf('id="toc"');
     const sunset = html.indexOf('id="sunset"');
     const la = html.indexOf('id="independents"');
     const games = html.indexOf('id="toc-games"');
     expect(toc, PAGE).toBeGreaterThan(0);
-    expect([toc < sunset, sunset < la, la < games], PAGE).toEqual([true, true, true]);
+    expect([toc < games, games < sunset, sunset < la], PAGE).toEqual([true, true, true]);
+    // The tournament's section closes before the leagues' sections open: they are siblings, not its children.
+    expect(elementById(html, 'toc', 'section'), PAGE).not.toMatch(/id="(sunset|independents)"/);
     const sunsetNote = leagues.getLeague('sunset').postseason;
     const laNote = leagues.getLeague('independents').postseason;
     if (sunsetNote.kind !== 'no-postseason' || laNote.kind !== 'no-postseason') throw new Error('no-postseason');
@@ -487,35 +492,46 @@ describe('/playoffs (rendered)', () => {
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
   });
 
-  it('orders the NorCal block as DESIGN §32.3 says: board, CCS intro, bracket, leagues, at-large, key dates, MCAL, EAL', () => {
+  it('orders the NorCal block bracket-first (spec §5.6): bracket, leagues, at-large, key dates, MCAL, EAL', () => {
     const at = (id: string) => {
       const i = html.indexOf(` id="${id}"`);
       expect(i, `${PAGE}: #${id}`).toBeGreaterThan(-1);
       return i;
     };
-    const order = ['board-norcal', 'ccs-playoffs', 'bracket', 'scval', 'bval', 'pcal', 'at-large', 'key-dates', 'mcal', 'eal', 'socal', 'board-socal'];
+    const order = ['norcal', 'bracket', 'scval', 'bval', 'pcal', 'at-large', 'key-dates', 'mcal', 'eal', 'socal'];
     const positions = order.map(at);
     expect(positions, PAGE).toEqual([...positions].sort((a, b) => a - b));
+    // The bracket is the first thing in the block: nothing readable sits between the block's start and it but
+    // the jump to each division.
+    const lead = html.slice(html.indexOf('>', at('norcal')) + 1, html.lastIndexOf('<', at('ccs-division-1')));
+    expect(textOf(lead).replace(/\s+/g, ' ').trim(), PAGE).toMatch(/^(Division 1 Division 2)?$/);
+    // The status board and the "This week" list no longer open the page.
+    for (const id of ['board-norcal', 'board-socal', 'this-week-norcal', 'this-week-socal']) expect(html, `${PAGE}: #${id}`).not.toContain(` id="${id}"`);
     // Inside a CCS league, the deciding games come before the tables.
     expect(at('scval-pairings'), PAGE).toBeLessThan(at('de-anza'));
     expect(at('bval-pairings'), PAGE).toBeLessThan(at('mt-hamilton'));
-    // Every league section is headed the same way.
-    for (const heading of ['SCVAL — Santa Clara Valley Athletic League', 'MCAL — Marin County Athletic League', 'EAL — Eastern Athletic League']) {
-      expect(textOf(html), PAGE).toContain(heading);
+    // Every league section is headed the same way: an h2 that is the league's short name (the one the league row uses).
+    for (const [id, heading] of [['scval', 'SCVAL'], ['bval', 'BVAL'], ['pcal', 'PCAL'], ['mcal', 'MCAL'], ['eal', 'EAL']]) {
+      expect(html, `${PAGE}: #${id}`).toMatch(new RegExp(`<section[^>]*\\sid="${id}"[^>]*><div class="sx-kicker" id="${id}-heading"><div><h2 [^>]*>${heading}</h2>`));
     }
   });
 
-  it('opens each region with "Where every league stands", one row per league linking to its section', () => {
+  it('reaches every league from the league row (the status board is gone), and states each postseason once', () => {
     const text = textOf(html);
-    expect(text.match(/Where every league stands/g) ?? [], PAGE).toHaveLength(2);
-    expect(text, PAGE).toContain('CCS championship · 7 of 16 berths');
-    expect(text, PAGE).toContain('MCAL tournament · 6 teams');
-    expect(text, PAGE).toContain('Super Regional, Oct 30–31 · the top six qualify');
-    expect(text, PAGE).toContain('San Diego Section playoffs, Nov 2–14 · placed by the Section');
-    expect(text, PAGE).toContain('Tournament of Champions, Oct 22–29 · eight teams');
+    expect(text, PAGE).not.toContain('Where every league stands');
+    const row = /<div class="sx-scope [^"]*">([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? '';
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal', 'city', 'north-county', 'metro', 'sunset', 'independents']) {
+      expect(row, `${PAGE}: tab #${id}`).toContain(`href="#${id}"`);
+    }
+    // The row carries the region switch and the short Updated stamp, and the title has no line under it.
+    expect(html, PAGE).toMatch(/<span class="sx-scope-util">/);
+    expect(html, PAGE).toContain('sx-stamp');
+    expect(html.match(/<h1[\s>]/g)?.length, PAGE).toBe(1);
+    // Each league's share of the field is a fact beside its heading.
+    expect(text, PAGE).toContain('7 of 16 CCS berths');
+    expect(text, PAGE).toContain('4 of 16 CCS berths');
+    expect(text, PAGE).toContain('2 of 16 CCS berths');
     expect(text, PAGE).not.toContain('No section playoffs');
-    const board = /<section[^>]*\sid="board-norcal"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
-    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) expect(board, PAGE).toContain(`href="#${id}"`);
   });
 
   it('renders no "This week" strip and no Super Regional results block on Oct 2, far from any postseason game', () => {
@@ -533,9 +549,8 @@ describe('/playoffs (rendered)', () => {
     // The league tournament has its own section like every other league (DESIGN §32.2), with the whole tournament
     // drawn in it (since 2026-11-03) and its rules one link away.
     expect(html, PAGE).toMatch(/<section[^>]*\sid="mcal"/);
-    expect(text, PAGE).toContain(
-      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. How the MCAL tournament works →',
-    );
+    expect(text, PAGE).toContain('The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason.');
+    expect(text, PAGE).toContain('How the MCAL tournament works');
     expect(html, PAGE).toContain('href="/playoffs/mcal#how-it-works"');
     const mcal = html.slice(html.search(/<section[^>]*\sid="mcal"/), html.search(/<section[^>]*\sid="eal"/));
     for (const id of ['mcal-seeds', 'mcal-bracket']) expect(mcal, PAGE).toContain(`id="${id}"`);
@@ -544,12 +559,20 @@ describe('/playoffs (rendered)', () => {
     expect(mcal, PAGE).not.toMatch(/<h2[^>]*>(Seeds|Bracket)<\/h2>/);
     expect(mcal, PAGE).toMatch(/<h3[^>]*>Seeds<\/h3>/);
     expect(html, PAGE).toContain('href="#mcal"');
-    expect(text, PAGE).toContain('Central Coast Section · 16 teams · SCVAL 7, BVAL 4, PCAL 2, 3 at-large');
-    // The field is said once, in the CCS header's meta and each league's intro; no berth meters (DESIGN §32.3).
+    // Each league's share of the field is said once, beside its heading (a fact, not a sentence); the at-large
+    // berths are the paragraph's below. No berth meters (DESIGN §32.3).
     expect(html, PAGE).not.toContain('id="field"');
-    for (const line of ['SCVAL holds 7 of the 16 CCS berths', 'BVAL holds 4 of the 16 CCS berths', 'PCAL holds 2 of the 16 CCS berths']) {
-      expect(text, PAGE).toContain(line);
+    expect(html, PAGE).not.toContain('sx-meter');
+    for (const [id, line] of [['scval', '7 of 16 CCS berths'], ['bval', '4 of 16 CCS berths'], ['pcal', '2 of 16 CCS berths']]) {
+      expect(html, `${PAGE}: #${id}`).toMatch(new RegExp(`id="${id}-heading"><div><h2 [^>]*>[A-Z]+</h2><span [^>]*>${line}</span>`));
     }
+    // Before CCS seeds its field each division's qualification is a plain table under its strip, the ladder
+    // line its labelled qualification line, every status a plain word (no chip, no card).
+    const scval = html.slice(html.search(/<section[^>]*\sid="scval"/), html.search(/<section[^>]*\sid="bval"/));
+    expect(scval.match(/<div class="sx-tablewrap"><table class="sx-table">/g)?.length, PAGE).toBe(2);
+    expect(scval, PAGE).toMatch(/<tr class="sx-cutline"><td colSpan="5"><span>Automatic-berth line<\/span><\/td><\/tr>/);
+    expect(scval, PAGE).toMatch(/<section[^>]*id="de-anza"><div class="sx-strip"><h3 [^>]*>De Anza<\/h3>/);
+    expect(html, PAGE).not.toMatch(/sx-card|sx-badge|sx-pill|sx-status|sx-bleed/);
     expect(text, PAGE).toContain(
       'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.',
     );
@@ -566,7 +589,7 @@ describe('/playoffs (rendered)', () => {
 
   it('carries the EAL section: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
     const text = textOf(html);
-    expect(text, PAGE).toContain('EAL — Eastern Athletic League');
+    expect(html, PAGE).toMatch(/id="eal-heading"><div><h2 [^>]*>EAL<\/h2><span [^>]*>Super Regional<\/span>/);
     expect(text, PAGE).toContain(
       'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
     );
@@ -594,7 +617,7 @@ describe('/playoffs (rendered)', () => {
 });
 
 describe('/playoffs by region (DESIGN-socal §2.4)', () => {
-  it('a neutral header, then the NorCal block (CCS, MCAL pointer, EAL card) and the SoCal block', () => {
+  it('a neutral header, then the NorCal block (CCS, MCAL pointer, EAL card) and the SoCal block', async () => {
     expect(html, PAGE).toMatch(/<h1[^>]*>Playoffs<\/h1>/);
     expect(html, PAGE).toContain('data-region-option="socal"');
     const norcal = html.indexOf('<div id="norcal" data-region-scope="norcal"');
@@ -608,9 +631,13 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     for (const id of ['sds-playoffs', 'city', 'north-county', 'metro', 'sunset', 'independents']) {
       expect(html.indexOf(`id="${id}"`), `${PAGE}: #${id} in the SoCal block`).toBeGreaterThan(socal);
     }
-    // The CCS description moved into its block; the header names every league's postseason.
-    expect(textOf(html), PAGE).toContain(
-      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the LA independents) and the San Diego Section playoffs (City, North and Metro).',
+    // The title stands alone (spec §5: no sentence under a title); every league's postseason is named in the
+    // metadata description, which is read by itself in a search result or a link preview.
+    expect(textOf(html), PAGE).not.toContain('Where each league’s season leads');
+    const page = await import('../../app/playoffs/page');
+    const meta = await page.generateMetadata();
+    expect(meta.description, `${PAGE}: generateMetadata`).toContain(
+      'Every league’s postseason: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the LA independents) and the San Diego Section playoffs (City, North and Metro).',
     );
   });
 
@@ -622,7 +649,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
     // The Section's brackets are transcribed (data/sds-brackets-2026.json), so the block says they are drawn below.
-    expect(text, PAGE).toContain('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
+    expect(text, PAGE).toContain('The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.');
     expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
     expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
@@ -647,7 +674,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     // The third state (plan final-08): the owner has transcribed the Section's published brackets, so the page
     // draws them under #sds-bracket (tests/ui/sds-bracket.test.ts renders it).
     const drawn = view.sectionBracketSentence(city, '2026-10-31', '2026-11-03', true);
-    expect(drawn, VIEW).toBe('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
+    expect(drawn, VIEW).toBe('The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.');
     expect(drawn, VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)|eliminat/i);
     expect(`${view.sectionRoundRows(city).map((r) => r.label).join(' ')} ${view.sectionBracketSentence(city, '2026-10-31', '2026-11-03')}`, VIEW).not.toMatch(/\bseed\b|top \w+ qualify/i);
     expect(text, PAGE).toContain(city.sourceLabel);
@@ -666,7 +693,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       if (/\bSunset League\b/.test(sentence)) expect(sentence).toContain('all-sports');
       expect(sentence).not.toMatch(/\bSunset (school|member)s?\b/);
     }
-    expect(socal, PAGE).not.toMatch(/PlayoffBracket|sx-bracket/);
+    // No CCS path is drawn in the SoCal block (the Section's own brackets, `#sds-bracket`, are).
+    expect(socal, PAGE).not.toMatch(/PlayoffBracket|ccs-division/);
   });
 });
 
@@ -707,26 +735,36 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     vi.resetModules();
   });
 
-  it('draws two CCS division paths under their own h3s, with seeds, and drops the not-seeded sentences', () => {
-    const bracket = seededHtml.slice(seededHtml.indexOf('id="bracket"'), seededHtml.indexOf('id="at-large"'));
+  it('draws two CCS division paths under their own h2s, with seeds, first in the NorCal block, and drops the not-seeded sentences', () => {
+    const bracket = seededHtml.slice(seededHtml.indexOf('id="bracket"'), seededHtml.search(/<section[^>]*\sid="scval"/));
     const text = textOf(bracket);
-    expect(bracket.match(/<h3[^>]*>CCS Division 1<\/h3>/g)?.length, PAGE).toBe(1);
-    expect(bracket.match(/<h3[^>]*>CCS Division 2<\/h3>/g)?.length, PAGE).toBe(1);
-    expect(text, PAGE).toContain('seeded Mon Nov 2');
+    expect(bracket.match(/<h2[^>]*>CCS Division 1<\/h2>/g)?.length, PAGE).toBe(1);
+    expect(bracket.match(/<h2[^>]*>CCS Division 2<\/h2>/g)?.length, PAGE).toBe(1);
+    // Each round is an h3 with its day; the day of the seeding meeting is in the key dates, not beside a heading.
+    expect(bracket.match(/<h3>Quarterfinals, Sat Nov 7<\/h3>/g)?.length, PAGE).toBe(2);
+    expect(text, PAGE).not.toContain('seeded Mon Nov 2');
+    expect(seededHtml.indexOf('id="bracket"'), PAGE).toBeLessThan(seededHtml.indexOf('id="key-dates"'));
     expect(text, PAGE).toContain('CCS numbers each division’s eight teams 1-8; CCS Division 2 holds the committee’s overall seeds 9-16.');
     expect(text, PAGE).not.toContain('Our data does not say which division');
     expect(text, PAGE).not.toContain('no games posted yet');
     expect(text, PAGE).not.toContain('CCS has posted');
     // Every game card links its game page; the seed digits are on the cards.
     for (const g of games) expect(bracket, `${PAGE}: ${g.contestId}`).toContain(`href="/game/${g.contestId}"`);
-    expect(bracket, PAGE).toMatch(/<span class="sx-num[^"]*">8<\/span>/);
+    expect(bracket, PAGE).toMatch(/<span class="sx-seed sx-num">#(?:<!-- -->)?8<\/span>/);
     const whole = textOf(seededHtml);
     expect(whole, PAGE).not.toContain('Not seeded yet');
     expect(whole, PAGE).not.toContain('not yet posted');
     expect(whole, PAGE).not.toContain('every status below is a written word');
-    // The day after the meeting, the league intros say so.
-    expect(whole, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points. CCS seeded the field on Mon Nov 2; results update twice a day.');
+    // After the meeting the bracket is the answer: no projection table, no at-large paragraph, no "nothing here
+    // is official" (spec §5.6). Each league keeps its section, its share of the field and its deciding games.
+    expect(whole, PAGE).toContain('7 of 16 CCS berths');
     expect(whole, PAGE).not.toContain('nothing here is official');
+    expect(whole, PAGE).not.toContain('Ordered by league points');
+    for (const id of ['de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'at-large']) {
+      expect(seededHtml, `${PAGE}: #${id}`).not.toContain(` id="${id}"`);
+    }
+    for (const id of ['scval', 'bval', 'pcal', 'key-dates', 'mcal', 'eal']) expect(seededHtml, `${PAGE}: #${id}`).toContain(` id="${id}"`);
+    expect(seededHtml, PAGE).not.toContain('Automatic-berth line');
     expect(seededDescription, `${PAGE}: generateMetadata`).toContain('The CCS field hockey bracket: quarterfinals Sat Nov 7');
   });
 
@@ -735,7 +773,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     expect(socalAt, PAGE).toBeGreaterThan(0);
     expect(textOf(seededHtml.slice(socalAt)), PAGE).not.toMatch(/CCS Division/i);
     expect(textOf(seededHtml.slice(0, seededHtml.indexOf('<div id="norcal"'))), PAGE).not.toMatch(/CCS Division/i);
-    expect(seededHtml.slice(socalAt), PAGE).not.toMatch(/PlayoffBracket|sx-bracket|href="\/game\//);
+    expect(seededHtml.slice(socalAt), PAGE).not.toMatch(/PlayoffBracket|ccs-division|href="\/game\//);
     expect(seededHtml, PAGE).not.toMatch(/eliminat/i);
   });
 
@@ -752,11 +790,17 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     vi.doUnmock('../../lib/postseason/ccs-bracket');
     const html = unseeded;
     const text = textOf(html);
-    expect(text, PAGE).toContain('Not seeded yet:');
-    expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket ↗ (opens in a new tab) — not yet posted.');
-    expect(text, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points; nothing here is official until Mon Nov 2.');
+    expect(text, PAGE).toContain(
+      'Not seeded yet: CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. The official bracket is not yet posted.',
+    );
+    expect(text, PAGE).toContain('Official CCS bracket (opens in a new tab)');
+    // One plain line under the heading, never a card; no bracket is drawn.
+    expect(html, PAGE).toMatch(/<section id="bracket"[^>]*>.*?<h2 [^>]*>CCS playoffs<\/h2>.*?<p class="sx-empty">Not seeded yet:/);
+    expect(html.slice(0, html.search(/<section[^>]*\sid="scval"/)), PAGE).not.toContain('sx-bracket');
+    expect(text, PAGE).toContain('7 of 16 CCS berths');
+    expect(text, PAGE).toContain('Ordered by league points; nothing here is official until Mon Nov 2.');
     expect(text, PAGE).not.toContain('every status below is a written word');
     expect(text, PAGE).not.toContain('CCS has posted');
-    expect(html, PAGE).not.toContain('<h3 class="m-0 mb-3 text-lead text-ink">CCS Division');
+    expect(html, PAGE).not.toMatch(/<h[23][^>]*>CCS Division/);
   });
 });

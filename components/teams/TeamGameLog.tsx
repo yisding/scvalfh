@@ -1,40 +1,33 @@
 import type { Game, TeamSlug } from '../../lib/types';
-import EmptyState from '../ui/EmptyState';
 import { GameLogRow } from '../game-row/GameLogRow';
 
 /**
- * A dense game log (DESIGN §3.7): `Sep 24 (L) 0–7 vs Saint Francis FINAL`, 52px a row, the whole
- * row a link to the game page.
- *
- * League and non-league games are rendered by TWO of these under separate section headers and are
- * NEVER interleaved (DESIGN §5.4), so `0-4-0 in league` is never contradicted by a `(W)` in the
- * list beneath it. The non-league rows still carry the `NL` tag and the 2px left rule, because a
- * reader who lands mid-page should not have to remember which list they are in.
+ * The team's schedule (DESIGN §33): ONE log, league, non-league and postseason games together in
+ * date order, each a `GameLogRow` (`Nov 7 [W] 2-0 vs Gilroy`) that is one link to the game. The
+ * date, the W / L / T chip and the score or start time are fixed columns, so the results line up
+ * down the list. A row that is not a league game says so in its note (`Non-league`, or the round),
+ * so the league record above the list is never contradicted by an unlabelled result.
  */
 export interface TeamGameLogProps {
-  games: Game[];
+  /** In the order to print (the page passes date order). */
+  games: readonly Game[];
   perspective: TeamSlug;
-  /** Rendered when the list is empty — Saratoga has played no non-league games at all. */
-  emptyHeading: string;
+  /** The one line printed when there is no game at all. */
+  emptyHeading?: string;
+  /** @deprecated One line only; ignored. */
   emptyBody?: string;
 }
 
-export function TeamGameLog({ games, perspective, emptyHeading, emptyBody }: TeamGameLogProps) {
-  if (games.length === 0) {
-    return <EmptyState heading={emptyHeading}>{emptyBody}</EmptyState>;
-  }
-  // The card is the band on a phone (edge to edge, a line above and below) and a rounded card
-  // from 768px; `sx-flush` clips the rows to its corners and draws their focus rings inset.
+export function TeamGameLog({ games, perspective, emptyHeading = 'No games listed' }: TeamGameLogProps) {
+  if (games.length === 0) return <p className="sx-empty">{emptyHeading}</p>;
   return (
-    <div className="sx-card sx-flush sx-bleed">
-      <ol className="sx-list">
-        {games.map((game) => (
-          <li key={game.contestId}>
-            <GameLogRow game={game} perspective={perspective} />
-          </li>
-        ))}
-      </ol>
-    </div>
+    <ol className="sx-list">
+      {games.map((game) => (
+        <li key={game.contestId}>
+          <GameLogRow game={game} perspective={perspective} />
+        </li>
+      ))}
+    </ol>
   );
 }
 

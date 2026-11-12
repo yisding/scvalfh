@@ -185,11 +185,22 @@ export interface DayGroup {
    * `SCVAL · 2 league games · 1 postseason game` / `CCS · 4` / `Non-league · 3`
    */
   kicker: string;
+  /** The group's name alone, its strip's heading: `SCVAL`, `CCS Division 1`, `Non-league`. */
+  name: string;
   /** The league's id; null for an event's group and for Non-league. */
   leagueId: LeagueId | null;
   games: Game[];
   /** The games' shared place on /playoffs ('CCS bracket' at `#ccs-division-2`), linked from the group's header. */
   bracket: { href: string; label: string } | null;
+  /** The round every game of the group is, as its bracket heads it ('Semifinals'); null when they share none. */
+  round?: string | null;
+}
+
+/** The one round a group's games share in their bracket, else null. */
+function groupRound(games: readonly Game[]): string | null {
+  const rounds = new Set(games.map((g) => getBracketLink(g)?.round ?? null));
+  const [only] = [...rounds];
+  return rounds.size === 1 && only ? only : null;
 }
 
 /** Where an event's group sits when a day has several: the CCS, the San Diego Section, the outside tournament. */
@@ -223,9 +234,11 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
       id: league.id,
       leagueId: league.id,
       kicker: [league.shortName, ...clauses].join(' · '),
+      name: league.shortName,
       games: mine,
       // A league's group links a bracket only when it holds nothing but postseason games (the MCAL tournament's day).
       bracket: played === 0 ? groupBracket(mine) : null,
+      round: played === 0 ? groupRound(mine) : null,
     });
   }
 
@@ -242,14 +255,16 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
       id: `postseason-${slugOf(name)}`,
       leagueId: null,
       kicker: `${name} · ${event.games.length}`,
+      name,
       games: event.games,
       bracket: groupBracket(event.games),
+      round: groupRound(event.games),
     });
   }
 
   const rest = games.filter((g) => gameLeague(g) === null && eventOf(g) === null);
   if (rest.length > 0) {
-    groups.push({ id: 'non-league', leagueId: null, kicker: `Non-league · ${rest.length}`, games: rest, bracket: null });
+    groups.push({ id: 'non-league', leagueId: null, kicker: `Non-league · ${rest.length}`, name: 'Non-league', games: rest, bracket: null });
   }
   return groups;
 }
@@ -383,4 +398,29 @@ export function headlineGame(games: readonly Game[]): Game | null {
     }
   }
   return best;
+}
+
+/**
+ * A day's groups in the order the Scores page lists them (DESIGN §33): by each group's first start
+ * time, the order `dayGroups` gave (leagues, events, Non-league) breaking ties; each group's games in
+ * start-time order. The reader's own team's group and game are moved first by the page's CSS (the pin
+ * lives in the browser), never here.
+ */
+export function groupsByStart(groups: readonly DayGroup[]): DayGroup[] {
+  const sorted = groups.map((group) => ({
+    ...group,
+    games: [...group.games].sort((a, b) => a.dateLocal.localeCompare(b.dateLocal)),
+  }));
+  const first = (group: DayGroup) => group.games[0]?.dateLocal ?? '';
+  return sorted
+    .map((group, i) => ({ group, i }))
+    .sort((a, b) => first(a.group).localeCompare(first(b.group)) || a.i - b.i)
+    .map((x) => x.group);
+}
+
+/** The games with a side in `league`, in the order given: a league tab's slice of a day. */
+export function gamesOfLeague(games: readonly Game[], league: LeagueId): Game[] {
+  return games.filter((game) =>
+    [game.away, game.home].some((side) => (side.slug ? getTeamBySlug(side.slug)?.league === league : false)),
+  );
 }

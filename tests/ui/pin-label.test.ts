@@ -2,7 +2,7 @@
  * `components/words/pin-label.ts` over the real 102-team registry (SPEC §10.1).
  *
  * WCAG 2.5.3 Label in Name: a tile's VISIBLE label is `shortName`, so the accessible name has to contain it.
- * The picker's break points are asserted against tests/ui/text-metrics.ts (static Geist 12 px / 500 widths),
+ * The picker's break points are asserted against tests/ui/text-metrics.ts (static Public Sans 12 px / 500 widths),
  * so a new school or a renamed short name that needs one fails here instead of being assumed.
  */
 
@@ -93,10 +93,12 @@ describe('pinLabel', () => {
 const segments = (s: string) => s.split(/ |(?<=-)/).filter(Boolean);
 
 describe('text metrics (calibration)', () => {
-  it('reproduces the widths the browser rendered at 12 px / 500 Geist', () => {
-    expect(width('Homestead')).toBeCloseTo(70, 0);
-    expect(width('Presentation')).toBeCloseTo(77, 0);
-    expect(width('Hollister')).toBeCloseTo(50.9, 1);
+  it('reproduces the widths the browser rendered at 12 px / 500 Public Sans', () => {
+    // Re-measured in Chromium against the face the site ships (120px / 10): 64.45, 71.62, 48.35.
+    expect(width('Homestead')).toBeCloseTo(64.5, 1);
+    expect(width('Presentation')).toBeCloseTo(71.6, 1);
+    expect(width('Hollister')).toBeCloseTo(48.4, 1);
+    expect(width('Standings')).toBeCloseTo(57.0, 1);
   });
 });
 
@@ -114,9 +116,13 @@ describe('pickerName', () => {
       .sort();
     expect(Object.keys(PICKER_BREAKS).sort()).toEqual(tooWide);
     expect(tooWide).toEqual([
-      'Chaminade', 'Christopher', 'Clairemont', 'Escondido', 'Greenfield', 'Homestead', 'Huntington Beach',
-      'Lick-Wilmerding', 'Presentation', 'Southwest', 'Stevenson', 'Tamalpais', 'Westmont',
+      'Chaminade', 'Christopher', 'Clairemont', 'Homestead', 'Huntington Beach', 'Lick-Wilmerding', 'Presentation',
     ]);
+    // Public Sans sets narrower than Geist did: these needed a break before and now fit whole.
+    for (const name of ['Escondido', 'Greenfield', 'Southwest', 'Stevenson', 'Tamalpais', 'Westmont']) {
+      expect(width(name), name).toBeLessThanOrEqual(TILE_PX);
+      expect(pickerName({ shortName: name })).toBe(name);
+    }
     // Hollister fits and gets no break.
     expect(width('Hollister')).toBeLessThan(TILE_PX);
     expect(pickerName({ shortName: 'Hollister' })).toBe('Hollister');

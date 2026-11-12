@@ -9,8 +9,8 @@ import type { StandingsRowData } from './standings-table/types';
 import type { ComparisonView, MismatchNote, MissingRowView } from './standings-view';
 
 /**
- * The division's Notes block (DESIGN §9, §8; SPEC §10.3): an inset under the table that holds
- * every fact specific to THIS division, always visible.
+ * A division's notes (DESIGN §9, §8, §33; SPEC §10.3): a plain list under the table that holds every
+ * fact specific to THIS division, always visible, and nothing when there is nothing to say.
  *
  *  1. The table's own notes: shared places, the team with no results, any `standing.mismatch`.
  *  2. Missing official results (`id="missing-<division>"`): official fixtures dated before today
@@ -21,7 +21,7 @@ import type { ComparisonView, MismatchNote, MissingRowView } from './standings-v
  *  3. The comparison with MaxPreps' own published table: agreement is printed only when the
  *     division's trust is not informational, MaxPreps leaves no one out and no row differs —
  *     otherwise the known cause and each team MaxPreps leaves out, then the differing figures.
- *     ⚑ marks a difference only in a `full` division; elsewhere it is an annotation.
+ *     A difference in a `full` division starts with the dagger its row carries in the table.
  *     The differences are PLAIN SENTENCES, with our figure and theirs. The cross-check log's raw
  *     field names ("place (we order on points, Art. VI §2; MaxPreps orders on win pct)") are for
  *     /about#cross-check; here they are rewritten at render time, without touching lib or the
@@ -36,16 +36,14 @@ import type { ComparisonView, MismatchNote, MissingRowView } from './standings-v
  *        tied group's own note (`tiebreak.note`, item 1, earlier in this same list) already cites
  *        the league's last step — SCVAL's coin flip, MCAL's play-in — so it is said once.
  *  4. Division-specific footnotes (league games played with no score; no league results yet).
- *  5. `Scheduled per <SHORT>` and one row of links: the cross-check log, MaxPreps' table, the
- *     official schedule (labelled by its source: PDF or Google Doc). They are standalone actions
- *     (`sx-action`, a 24px floor), with no `·` text nodes between them. A league that publishes no
- *     schedule (EAL) gets its own source line and no official-schedule link.
+ *  5. Where the league games come from, ONLY for a league that publishes no schedule (EAL, the San
+ *     Diego leagues): with a schedule document, its link below says it.
  *
- * It shares an `lg` row with the postseason card, so it takes the card's padding, radius and
- * `text-lead` h3 and the two read as one row; the inset surface stays, because this is commentary.
- * The row stretches both panels to the taller one and this block is a flex column whose link row
- * is pushed down (`mt-auto`), so both link rows end on the same line. It sits OUTSIDE the two table
- * variants so it renders once, not once per breakpoint.
+ * Then one row of source links (`.sx-linkrow`): MaxPreps' table and the official schedule (labelled
+ * by its source: PDF or Google Doc), each with the division in its accessible name.
+ *
+ * No heading, no box: the list sits under its table, inside the division's own section. It renders
+ * once, outside the table.
  */
 export interface StandingsNotesProps {
   /** The division heading, or the league's short name for a single-division league. */
@@ -202,21 +200,17 @@ function FieldPhrases({ items }: { items: FieldItem[] }) {
       {items.map((item, i) => (
         <span key={i}>
           {i > 0 ? '; ' : null}
-          {FIELD_WORDS[item.field] ?? item.field} <span className="sx-num text-ink">{item.ours}</span>{' '}
-          here, <span className="sx-num text-ink">{item.theirs}</span> on MaxPreps
+          {FIELD_WORDS[item.field] ?? item.field} <span className="text-ink">{item.ours}</span> here,{' '}
+          <span className="text-ink">{item.theirs}</span> on MaxPreps
         </span>
       ))}
     </>
   );
 }
 
+/** The dagger a differing row carries in the table (standings-table/cells.tsx FlagMark). */
 function Flag() {
-  return (
-    <>
-      <span aria-hidden="true">&#9873;</span>
-      <span className="sr-only">Flagged:</span>{' '}
-    </>
-  );
+  return <>&dagger; </>;
 }
 
 const Name = ({ children }: { children: React.ReactNode }) => (
@@ -302,7 +296,9 @@ function TeamLinks({ lines, sourceUrl }: { lines: FlagLine[]; sourceUrl?: string
       {urls.map((url) => (
         <span key={url}>
           {' '}
-          <ExternalLink href={url}>MaxPreps table</ExternalLink>
+          <ExternalLink href={url} className="sx-link">
+            MaxPreps table
+          </ExternalLink>
         </span>
       ))}
     </>
@@ -328,104 +324,107 @@ export function StandingsNotes({
   className,
 }: StandingsNotesProps) {
   const items = toItems(byTeam(mismatches));
+  const hasList =
+    tableNotes.length > 0 ||
+    missing.length + postponed.length > 0 ||
+    comparison.agreement !== null ||
+    comparison.knownCause !== null ||
+    comparison.leftOut.length > 0 ||
+    items.length > 0 ||
+    footnotes.length > 0 ||
+    sourceSkipped !== null ||
+    officialSchedule === null;
+  if (!hasList && !sourceUrl && !officialSchedule) return null;
   return (
-    <div
-      className={['sx-inset flex flex-col rounded-card-lg p-5 md:p-6', className].filter(Boolean).join(' ')}
-    >
-      <h3 className="m-0 text-lead text-ink">
-        Notes<span className="sr-only">: {divisionLabel}</span>
-      </h3>
-      <ul className="mt-3 mb-0 max-w-prose list-none space-y-2 p-0">
-        {tableNotes.map((note, i) => (
-          <li key={`table-${i}`}>{note}</li>
-        ))}
-        {missing.length + postponed.length > 0 ? (
-          <li id={missingId}>
-            {missing.length > 0 ? missingIntro : null}
-            <ul className="mt-1 mb-0 list-none space-y-1 p-0">
-              {[...missing, ...postponed].map((row) => (
-                <li key={row.key}>
-                  <time dateTime={row.dateKey} className="sx-num text-ink">
-                    {row.dateLabel}
-                  </time>{' '}
-                  {row.href ? (
-                    <Link href={row.href} prefetch={false} className="text-accent hover:underline">
-                      {row.matchup}
-                    </Link>
+    <div className={className}>
+      {hasList ? (
+        <ul aria-label={`Notes: ${divisionLabel}`} className="sx-note list-none space-y-1 p-0">
+          {tableNotes.map((note, i) => (
+            <li key={`table-${i}`}>{note}</li>
+          ))}
+          {missing.length + postponed.length > 0 ? (
+            <li id={missingId} className="sx-target">
+              {missing.length > 0 ? missingIntro : null}
+              <ul className="m-0 list-none p-0">
+                {[...missing, ...postponed].map((row) => (
+                  <li key={row.key}>
+                    <time dateTime={row.dateKey} className="text-ink">
+                      {row.dateLabel}
+                    </time>{' '}
+                    {row.href ? (
+                      <Link href={row.href} prefetch={false} className="sx-link">
+                        {row.matchup}
+                      </Link>
+                    ) : (
+                      row.matchup
+                    )}
+                    {row.sbliveNote ? <span className="block">{row.sbliveNote}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : null}
+          {/* Agreement comes ONLY from the view's comparison (SPEC §10.3): an empty mismatch list
+              is not agreement where MaxPreps leaves a team out or is informational only. */}
+          {comparison.agreement ? <li>{comparison.agreement}</li> : null}
+          {comparison.knownCause ? <li>{comparison.knownCause}</li> : null}
+          {comparison.leftOut.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+          {comparison.agreement
+            ? null
+            : items.map((item) => (
+                <li key={item.key}>
+                  {/* The dagger only in a `full` division; elsewhere a difference is an annotation. */}
+                  {comparison.flag ? <Flag /> : null}
+                  {item.kind === 'swap' ? (
+                    <>
+                      <SwapSentence a={item.a} b={item.b} rows={rows} rankRule={rankRule} />
+                      <TeamLinks lines={[item.a, item.b]} sourceUrl={sourceUrl} />
+                    </>
                   ) : (
-                    row.matchup
+                    <>
+                      <TeamSentence line={item.line} rows={rows} rankRule={rankRule} />
+                      <TeamLinks lines={[item.line]} sourceUrl={sourceUrl} />
+                    </>
                   )}
-                  {row.sbliveNote ? <span className="block text-meta text-ink-3">{row.sbliveNote}</span> : null}
                 </li>
               ))}
-            </ul>
-          </li>
-        ) : null}
-        {/* Agreement comes ONLY from the view's comparison (SPEC §10.3): an empty mismatch list
-            is not agreement where MaxPreps leaves a team out or is informational only. */}
-        {comparison.agreement ? <li>{comparison.agreement}</li> : null}
-        {comparison.knownCause ? <li>{comparison.knownCause}</li> : null}
-        {comparison.leftOut.map((line) => (
-          <li key={line}>{line}</li>
-        ))}
-        {comparison.agreement
-          ? null
-          : items.map((item) => (
-              <li key={item.key}>
-                {/* ⚑ only in a `full` division; elsewhere a difference is an annotation. */}
-                {comparison.flag ? <Flag /> : null}
-                {item.kind === 'swap' ? (
-                  <>
-                    <SwapSentence a={item.a} b={item.b} rows={rows} rankRule={rankRule} />
-                    <TeamLinks lines={[item.a, item.b]} sourceUrl={sourceUrl} />
-                  </>
-                ) : (
-                  <>
-                    <TeamSentence line={item.line} rows={rows} rankRule={rankRule} />
-                    <TeamLinks lines={[item.line]} sourceUrl={sourceUrl} />
-                  </>
-                )}
-              </li>
-            ))}
-        {footnotes.map((note) => (
-          <li key={note}>{note}</li>
-        ))}
-        {sourceSkipped ? <li>{sourceSkipped}, so there is nothing to compare these records with.</li> : null}
-      </ul>
-      {/* `mt-auto pt-3`: the 12px gap the inset's own `* + *` rule gave, and from lg (where the
-          row stretches this block to the postseason card's height) the push to the bottom edge,
-          the source line and the link row together. */}
-      <div className="mt-auto pt-3">
-        <p className="mt-0 mb-1 text-meta text-ink-3">{scheduledPer}.</p>
-        <div className="flex flex-wrap gap-x-4 gap-y-1">
-          <Link
-            href="/about#cross-check"
-            prefetch={false}
-            className="sx-action font-medium text-accent hover:underline"
-          >
-            Cross-check log
-          </Link>
+          {footnotes.map((note) => (
+            <li key={note}>{note}</li>
+          ))}
+          {sourceSkipped ? <li>{sourceSkipped}, so there is nothing to compare these records with.</li> : null}
+          {/* With a schedule document its link says where the league games come from. */}
+          {officialSchedule === null ? <li>{scheduledPer}.</li> : null}
+        </ul>
+      ) : null}
+      {sourceUrl || officialSchedule ? (
+        <ul className="sx-linkrow">
           {sourceUrl ? (
-            <ExternalLink href={sourceUrl} className="sx-action gap-1 font-medium">
-              {/* Wrapped: `.sx-action` is inline-flex, which trims the spaces around the sr-only
-                  span if the words are bare flex items ("MaxPrepstable"). */}
-              <span>
-                MaxPreps <span className="sr-only">{divisionLabel} </span>table
-              </span>
-            </ExternalLink>
+            <li>
+              <ExternalLink href={sourceUrl} className="sx-action">
+                {/* Wrapped: `.sx-action` is inline-flex, which trims the spaces around the sr-only
+                    span if the words are bare flex items ("MaxPrepstable"). */}
+                <span>
+                  MaxPreps <span className="sr-only">{divisionLabel} </span>table
+                </span>
+              </ExternalLink>
+            </li>
           ) : null}
           {/* The division name is in the accessible name only: the block already sits under its
               heading, but a links list read out of context would show two identical names. */}
           {officialSchedule ? (
-            <ExternalLink href={officialSchedule.href} className="sx-action gap-1 font-medium">
-              <span>
-                {officialSchedule.label}
-                <span className="sr-only"> for {divisionLabel}</span>
-              </span>
-            </ExternalLink>
+            <li>
+              <ExternalLink href={officialSchedule.href} className="sx-action">
+                <span>
+                  {officialSchedule.label}
+                  <span className="sr-only"> for {divisionLabel}</span>
+                </span>
+              </ExternalLink>
+            </li>
           ) : null}
-        </div>
-      </div>
+        </ul>
+      ) : null}
     </div>
   );
 }

@@ -1,47 +1,39 @@
-import { getScoresLandingDate } from '../../lib/data';
+import { getFetchedAt, getScoresLandingDate } from '../../lib/data';
+import { formatStamp } from '../../lib/format';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
+import MoreMenu, { type MoreMenuLink } from './MoreMenu';
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
+import { DATA_CORRECTIONS_URL, NAV_LABELS } from './site';
 
 /**
- * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §18). FIVE tabs: Home, Scores, Teams, Leaders,
- * Playoffs. "Find my school" was a top-three task with no phone nav entry, so Teams has a tab; since
- * DESIGN §18 that page also holds every division's standings table, so the separate Table tab gave
- * its place to Leaders (/leaders). The bar is 56px tall plus the safe-area inset; each tab
- * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
- * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
- * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
- * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
- * fails any label over 56px, so none truncates at any supported width. With a large text setting
- * the label stops growing at 18px (1.5×, NavLink.tsx), where the widest still fits a 390px phone's
- * 78px tab instead of running into its neighbour.
+ * The phone bar (DESIGN §33). Four text tabs and a More sheet: Scores, Standings, Playoffs, Teams
+ * (the same four sections, in the same order, as the start of the header nav), then `<MoreMenu />`
+ * with the reader's team, Leaders, JV, History, About, the corrections thread and the two
+ * preferences. The wordmark is Home, and home is the Scores page, so on `/` the Scores cell is the
+ * selected one. No icons.
  *
- * After hydration Scores, Teams and Playoffs follow the page's league, else the remembered one
- * (`/schedule/<id>#<date>`, `/teams#<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the
- * static HTML keeps the index hrefs.
+ * The bar is 52px tall plus the safe-area inset, on the page colour (it is not a band). Each cell is
+ * as wide as its word plus an equal share of the spare width, so the gaps between the five words are
+ * equal; the labels are measured (tests/ui/tab-labels.test.ts): none truncates at any supported
+ * width or text size.
  *
- * It is a `<nav aria-label="Sections">` and the active tab carries `aria-current`, accent ink, a
- * wash capsule behind its glyph AND a heavier label — never color alone. `aria-current` is "page"
- * on the tab's own route and "true" inside its section (a team page or a standings page under Teams;
- * a day or game page under Scores, which used to leave the bar with nothing lit), see NavLink.tsx.
+ * After hydration the four tabs follow the page's league, else the remembered one
+ * (`/schedule/<id>#<date>`, `/standings/<id>`, `/playoffs#<id>` or `/playoffs/mcal`, `/teams#<id>`;
+ * SPEC §8.3); the static HTML keeps the index hrefs.
+ *
+ * It is a `<nav aria-label="Sections">` and the current tab carries `aria-current`, a 3px accent bar
+ * on the cell's top edge AND a 700 label, never colour alone. `aria-current` is "page" on the tab's
+ * own route and "true" inside its section (a day or game page under Scores), see NavLink.tsx. The
+ * More tab is lit on the routes its sheet leads to.
  *
  * Scores opens on the latest results, not on the top of a season-long list: its href carries the
  * date as a fragment (see scoresHrefs below), and so does each of its league targets
- * (`/schedule/<id>#<date>`, that league's own latest results). The desktop TopNav's Schedule link
- * stays plain `/schedule`, a page that also has the timeline rail to jump with.
+ * (`/schedule/<id>#<date>`, that league's own latest results). The header's Scores link stays
+ * plain `/schedule`.
  */
-const ICON_PROPS = {
-  width: 20,
-  height: 20,
-  viewBox: '0 0 20 20',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 1.6,
-  strokeLinecap: 'round' as const,
-  strokeLinejoin: 'round' as const,
-};
 
 /**
  * The Scores tab's landing date, across every league or within one (lib/data
@@ -67,91 +59,55 @@ function scoresHrefs(): { href: string; leagueHrefs: Readonly<Record<LeagueId, s
   };
 }
 
-export const TABS = [
-  {
-    href: '/',
-    label: 'Home',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        <path d="M3 8.5 10 3l7 5.5" />
-        <path d="M5 8v9h10V8" />
-      </svg>
-    ),
-  },
-  {
-    href: '/schedule',
-    label: 'Scores',
-    // Replaced per build by scoresHrefs() in BottomTabBar below.
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        <rect x="3" y="4" width="14" height="13" rx="1.5" />
-        <path d="M3 8h14M7 4V2.5M13 4V2.5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/teams',
-    label: 'Teams',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        <rect x="3" y="3" width="6" height="6" rx="1" />
-        <rect x="11" y="3" width="6" height="6" rx="1" />
-        <rect x="3" y="11" width="6" height="6" rx="1" />
-        <rect x="11" y="11" width="6" height="6" rx="1" />
-      </svg>
-    ),
-  },
-  {
-    href: '/leaders',
-    label: 'Leaders',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        {/* A podium: 1st in the middle, the highest block, with 2nd and 3rd beside it on one
-            floor line. A plain bar chart would read as statistics, not places. */}
-        <path d="M2.5 17.5h15M7.5 17.5V3.5h5v14M3 17.5V9h4.5M12.5 17.5V12H17v5.5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/playoffs',
-    label: 'Playoffs',
-    glyph: (
-      <svg {...ICON_PROPS} aria-hidden="true">
-        {/* A trophy: cup, two handles, and a stem that reaches its base. A cup over a detached
-            dash did not read as a trophy at 20px. */}
-        <path d="M6 3h8v5a4 4 0 0 1-8 0zM6 5H4a2 2 0 0 0 2 3M14 5h2a2 2 0 0 1-2 3M10 12v4.5M7 17h6" />
-      </svg>
-    ),
-  },
+export const TABS: ReadonlyArray<{ href: string; label: string }> = [
+  // The href is replaced per build by scoresHrefs() in BottomTabBar below.
+  { href: '/schedule', label: NAV_LABELS.scores },
+  { href: '/standings', label: NAV_LABELS.standings },
+  { href: '/playoffs', label: NAV_LABELS.playoffs },
+  { href: '/teams', label: NAV_LABELS.teams },
+];
+
+/** The More sheet's links, in the footer index's order. Every route here is in MoreMenu's MORE_ROUTES. */
+const MORE_LINKS: readonly MoreMenuLink[] = [
+  { href: '/leaders', label: NAV_LABELS.leaders },
+  { href: '/jv', label: NAV_LABELS.jv },
+  { href: '/history/2025-26', label: NAV_LABELS.history },
+  { href: '/about', label: NAV_LABELS.about },
+  { href: DATA_CORRECTIONS_URL, label: NAV_LABELS.report, external: true },
 ];
 
 export interface BottomTabBarProps {
   /** `{ slug: league }` for every team (the same map the prefs script embeds). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
+  /** `{ slug: short name }` for every team: the More sheet's first row names the reader's pinned team. */
+  teamNames?: Readonly<Record<TeamSlug, string>>;
 }
 
-export function BottomTabBar({ slugLeague }: BottomTabBarProps) {
+export function BottomTabBar({ slugLeague, teamNames }: BottomTabBarProps) {
   const hrefs = navLeagueHrefs();
   const scores = scoresHrefs();
   return (
-    <nav
-      aria-label="Sections"
-      className="sx-chrome-bottom fixed bottom-0 left-0 z-20 w-full bg-surface shadow-[0_-1px_0_var(--sx-border)] md:hidden"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-    >
-      <ul className="mx-auto flex w-full max-w-md list-none p-0">
+    <nav aria-label="Sections" className="sx-chrome-bottom sx-tabbar">
+      <ul>
         {TABS.map((tab) => (
-          <li key={tab.href} className="min-w-0 flex-1">
+          <li key={tab.href}>
             <NavLink
               href={tab.href === '/schedule' ? scores.href : tab.href}
               variant="tab"
               label={tab.label}
-              glyph={tab.glyph}
               leagueHrefs={tab.href === '/schedule' ? scores.leagueHrefs : hrefs[tab.href]}
               slugLeague={hrefs[tab.href] ? slugLeague : undefined}
             />
           </li>
         ))}
+        <li>
+          <MoreMenu
+            links={MORE_LINKS}
+            stamp={`Updated ${formatStamp(getFetchedAt())}`}
+            teamNames={teamNames}
+            mascotBase="/mascots/"
+          />
+        </li>
       </ul>
     </nav>
   );

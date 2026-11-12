@@ -1,16 +1,21 @@
 import Link from 'next/link';
 
 /**
- * The section heading (DESIGN §7.2, R-9). An 18→20px sans h2 sitting on clear canvas, with
- * optional meta beside it and a right-aligned action link. There is no rule above it and no mono
- * kicker on it any more: space separates sections, lines only separate rows. The wrapper keeps
- * its historical `.sx-kicker` class (tests assert it), and the `kicker` prop keeps its name.
+ * A heading row (DESIGN §33). Two faces:
  *
- * Sizes:
- * - `section` (default for h2): 18→20px, every page section;
- * - `as="h3"` without a size: 18px `text-lead`;
- * - `lg`: 24px `text-title`, long-form h2s (About, History);
- * - `label`: 12px semibold ink-3, an in-card label ("Last", "Next", "Details").
+ * - default, a SECTION head (`.sx-kicker`): the heading (an h2 is 22px in the condensed face, from
+ *   the base rule), an optional fact beside it, and an optional action link pushed to the right.
+ *   There is no rule above or below it: space separates sections, lines only separate rows. The
+ *   `kicker` prop and the `.sx-kicker` / `.sx-kicker-rule` names are historical (tests assert them).
+ * - `strip`, a GROUP head inside a section (`.sx-strip`): a 36px tint strip with the name at the
+ *   left (15px/700) and, together at the right end, the fact (`meta`: "Semifinals", "3 games") and
+ *   one link (`action`: "Bracket"). For a competition on a day, a division's table in a rail or an
+ *   overview, a date in a long list, a leaders board.
+ *
+ * Pass `meta` only when it is a fact the heading lacks; never one that restates the content.
+ *
+ * Sizes (default face): `section` (h2), the h3 style for `as="h3"` / `as="h4"`, `lg` (= section),
+ * `label` (a 13px in-block label).
  */
 export interface SectionHeaderProps {
   /** "Latest scores": sentence case, rendered as written. */
@@ -33,6 +38,11 @@ export interface SectionHeaderProps {
   size?: 'section' | 'lg' | 'label';
   /** An id for a `#de-anza` style anchor target. */
   id?: string;
+  /**
+   * The group-strip face: the heading at the left of a tint strip, `meta` and `action` at its right
+   * end. The heading is an h3 unless `as` says otherwise.
+   */
+  strip?: boolean;
   className?: string;
 }
 
@@ -40,71 +50,53 @@ const HEADING = {
   section: 'm-0 text-section text-ink',
   h3: 'm-0 text-lead text-ink',
   lg: 'm-0 text-title text-ink',
-  label: 'm-0 text-micro font-semibold text-ink-3',
+  label: 'm-0 text-micro font-semibold text-ink-2',
 } as const;
 
 export function SectionHeader({
   kicker,
   meta,
   action,
-  as: Heading = 'h2',
+  as,
   size,
   id,
+  strip = false,
   className,
 }: SectionHeaderProps) {
-  const headingClass = HEADING[size ?? (Heading === 'h2' ? 'section' : 'h3')];
-  return (
-    <div
-      className={[
-        'sx-kicker',
-        size === 'label' ? 'sx-kicker-label' : null,
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      id={id}
-    >
-      {/* The heading and its meta wrap TOGETHER, inside their own box, and the action sits beside
-          that box on a row that never wraps. When heading + meta + action overflow a phone row,
-          the meta drops under the heading and the action stays on the heading's line (it used to
-          fall alone onto a second line, right-aligned and orphaned). The box's first baseline is
-          the heading's, so the action still lines up with the heading text. DOM order is
-          unchanged: heading, meta, action. */}
-      <div className="flex min-w-0 flex-[1_1_auto] flex-wrap items-baseline gap-x-3 gap-y-0.5">
-        <Heading className={headingClass}>{kicker}</Heading>
-        {meta ? (
-          <span className="text-meta font-normal tracking-normal text-ink-3">{meta}</span>
+  const Heading = as ?? (strip ? 'h3' : 'h2');
+  // `prefetch={false}` for the reason the nav and the standings rows carry it: every route here is
+  // STATIC, so Next's `auto` downloads the whole linked route the moment the link scrolls into
+  // view, and almost every section on every page has one of these.
+  const link = action ? (
+    <Link href={action.href} prefetch={false} className="sx-action">
+      {action.label}
+    </Link>
+  ) : null;
+  if (strip) {
+    return (
+      <div className={['sx-strip', className].filter(Boolean).join(' ')} id={id}>
+        <Heading className={HEADING.h3}>{kicker}</Heading>
+        {meta || link ? (
+          <div className="sx-strip-end">
+            {meta ? <span>{meta}</span> : null}
+            {link}
+          </div>
         ) : null}
       </div>
+    );
+  }
+  const headingClass = HEADING[size ?? (Heading === 'h2' ? 'section' : 'h3')];
+  return (
+    <div className={['sx-kicker', className].filter(Boolean).join(' ')} id={id}>
+      {/* The heading and its meta wrap TOGETHER, inside their own box, and the action sits beside
+          that box: when all three overflow a phone row, the meta drops under the heading and the
+          action stays on the heading's line. DOM order: heading, meta, rule, action. */}
+      <div>
+        <Heading className={headingClass}>{kicker}</Heading>
+        {meta ? <span className="text-cell font-normal text-ink-2">{meta}</span> : null}
+      </div>
       <span className="sx-kicker-rule" aria-hidden="true" />
-      {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route here is
-          STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
-          into view, and almost every section on every page has one of these. Navigation still
-          fetches on click. The negative margins let the 44px (phone) / 32px (desktop) pill grow
-          around the text without moving the heading's baseline. */}
-      {action ? (
-        <Link
-          href={action.href}
-          prefetch={false}
-          className="-my-2 -mr-3 inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-chip px-3 font-medium text-accent no-underline hover:bg-surface-2 md:min-h-8"
-        >
-          {action.label}
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M4.5 2.5 8 6l-3.5 3.5" />
-          </svg>
-        </Link>
-      ) : null}
+      {link}
     </div>
   );
 }

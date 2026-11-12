@@ -7,7 +7,7 @@ import { TOC } from '../../lib/league-config/sections';
 import { getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
-import ChampionCard from './ChampionCard';
+import ChampionRow from './ChampionRow';
 import HistoryBracket from './HistoryBracket';
 import { divisionChampion, finalLine, sideName, thirdPlaceLine } from './bracket-view';
 
@@ -40,45 +40,28 @@ export default function TournamentBracketBlock({
   ));
   const whose = listWords(leagues.map((l) => `the ${getLeague(l).name}`));
   return (
-    <section id={TOC.id} data-region-scope="socal" aria-label={`${TOC.name} ${season}`} className="min-w-0">
-      <SectionHeader
-        size="lg"
-        kicker={`${TOC.shortName} · ${TOC.name}`}
-        meta={<span className="whitespace-nowrap">{season}</span>}
-      />
-      <p className="m-0 mt-2 max-w-prose text-body text-ink-2">
+    <section id={TOC.id} data-region-scope="socal" aria-label={`${TOC.name} ${season}`} className="sx-section sx-target min-w-0">
+      <SectionHeader kicker={TOC.name} />
+      <ul className="sx-list max-w-188">
+        <ChampionRow team={team} name={sideName(champion)} label={`${TOC.name} champion`} detail={finalLine(final)} />
+      </ul>
+
+      <div id={`${TOC.id}-${d.id}`} className="sx-target mt-4 min-w-0">
+        <HistoryBracket division={d} label={`${TOC.name} bracket, ${season}`} />
+        {third ? <p className="sx-note">{third}</p> : null}
+      </div>
+
+      <p className="sx-note">
         The 2025 postseason for {whose}: eight teams, run by the {bracket.organizer}, not by CIF.
       </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4">
-        <ChampionCard team={team}>
-          <p className="m-0 text-micro font-medium text-ink-3">{TOC.name} champion</p>
-          <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
-          <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
-        </ChampionCard>
-      </div>
-
-      <section id={`${TOC.id}-${d.id}`} aria-label={`${TOC.shortName} bracket`} className="mt-section min-w-0 md:mt-section-lg">
-        <SectionHeader
-          as="h3"
-          size="section"
-          kicker={`${TOC.shortName} · bracket`}
-          meta={<span className="whitespace-nowrap">{season}</span>}
-          className="mb-4"
-        />
-        <HistoryBracket division={d} label={`${TOC.name} bracket, ${season}`} />
-        {third ? <p className="m-0 mt-4 text-meta text-ink-2">{third}</p> : null}
-      </section>
-
-      <div className="mt-section max-w-prose space-y-3 text-meta text-ink-3 md:mt-section-lg">
-        <p className="m-0">
-          Source: {links}. Read on {dateWithYear(bracket.retrievedOn)}. No bracket, pairings or seeds were
-          published, so this bracket is drawn from the games: Harvard-Westlake&rsquo;s three are the
-          Chronicle&rsquo;s, the other five MaxPreps&rsquo; 2025-26 schedules, and each card lists the home team
-          first. MaxPreps gives Newport Harbor the 1-1 game with Bonita, and Newport Harbor played on, but no
-          source says how the tie was broken. The third-place game is the two beaten semifinalists&rsquo; game
-          two days later.
-        </p>
-      </div>
+      <p className="sx-note">
+        Source: {links}. Read on {dateWithYear(bracket.retrievedOn)}. No bracket, pairings or seeds were
+        published, so this bracket is drawn from the games: Harvard-Westlake&rsquo;s three are the
+        Chronicle&rsquo;s, the other five MaxPreps&rsquo; 2025-26 schedules, and each card lists the home team
+        first. MaxPreps gives Newport Harbor the 1-1 game with Bonita, and Newport Harbor played on, but no
+        source says how the tie was broken. The third-place game is the two beaten semifinalists&rsquo; game
+        two days later.
+      </p>
     </section>
   );
 }

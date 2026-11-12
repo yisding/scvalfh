@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
+import { statusCase } from '../../../components/ui/StatusLabel';
 import { gameWord, plural } from '../../../components/words/plural';
 import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
@@ -75,8 +76,6 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
             style={{
               display: 'flex',
               fontSize: 26,
-              letterSpacing: 4,
-              textTransform: 'uppercase',
               color: OG.TEXT_3,
             }}
           >
@@ -114,11 +113,10 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
                         display: 'flex',
                         marginLeft: 12,
                         fontSize: 20,
-                        letterSpacing: 2,
                         color: OG.TEXT_3,
                       }}
                     >
-                      NL
+                      Non-league
                     </div>
                   ) : null}
                 </div>
@@ -129,13 +127,11 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
                     color: line.showScores ? OG.TEXT : OG.TEXT_3,
                     fontWeight: line.showScores ? 600 : 400,
                     fontSize: line.showScores ? 34 : 24,
-                    textTransform: line.showScores ? 'none' : 'uppercase',
-                    letterSpacing: line.showScores ? 0 : 2,
                   }}
                 >
                   {line.showScores
                     ? `${line.awayGlyph} ${EN_DASH} ${line.homeGlyph}`
-                    : line.statusLabel}
+                    : statusCase(line.statusLabel)}
                 </div>
               </div>
             ))

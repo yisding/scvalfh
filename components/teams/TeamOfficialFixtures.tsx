@@ -4,6 +4,7 @@ import { monthDay } from '../../lib/format';
 import { getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, OfficialFixture, TeamSlug } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import { GAME_LOG_ROW_GRID } from '../game-row/GameLogRow';
 import { NON_MEMBER_NOTE } from '../game-row/summary';
 import GhostMonogram from '../ui/GhostMonogram';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -21,6 +22,9 @@ import { fixtureOpponent } from './team-schedule';
  * excluded from every record, and they are deliberately outside the game log so nothing here can
  * be mistaken for a result (DESIGN §5.2 — a missing score is never a zero).
  *
+ * Drawn on the schedule's own row grid (`.sx-logrow`: date, an empty chip cell, the status where a
+ * score would be, the opponent), so the two lists read as one schedule, under a group strip.
+ *
  * The status is date-aware. Every row used to say "Not reported", including fixtures still weeks
  * away, which read as if a game had been played and lost track of. A fixture before `today`
  * (getToday(), never the clock) says "No result"; one on or after it says "Upcoming".
@@ -33,8 +37,6 @@ export interface TeamOfficialFixturesProps {
   today: string;
 }
 
-const ROW = 'flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta';
-
 /**
  * One fixture row. A registry opponent's row is a link to its team page, as each row of the
  * unbeaten list on the same page is (TeamUnbeaten); the row's sr-only sentence is the link's name.
@@ -43,13 +45,13 @@ const ROW = 'flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta';
  */
 function FixtureRow({ opponentSlug, children }: { opponentSlug: TeamSlug | null; children: React.ReactNode }) {
   return (
-    <li className={opponentSlug ? undefined : ROW}>
+    <li>
       {opponentSlug ? (
-        <Link href={`/teams/${opponentSlug}`} prefetch={false} className={`${ROW} sx-tap no-underline`}>
+        <Link href={`/teams/${opponentSlug}`} prefetch={false} className={[GAME_LOG_ROW_GRID, 'sx-tap no-underline'].join(' ')}>
           {children}
         </Link>
       ) : (
-        children
+        <div className={GAME_LOG_ROW_GRID}>{children}</div>
       )}
     </li>
   );
@@ -69,57 +71,44 @@ export function TeamOfficialFixtures({
 
   return (
     <>
-      <div className="sx-card sx-flush sx-bleed">
-        <ul className="sx-list">
-          {fixtures.map((fixture) => {
-            const { mineIsHome, versus, opponent, opponentName } = fixtureOpponent(fixture, { slug });
-            const past = fixture.dateKey < today;
-            return (
-              <FixtureRow
-                key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
-                opponentSlug={opponent?.slug ?? null}
-              >
+      <ul className="sx-list">
+        {fixtures.map((fixture) => {
+          const { mineIsHome, versus, opponent, opponentName } = fixtureOpponent(fixture, { slug });
+          const past = fixture.dateKey < today;
+          return (
+            <FixtureRow
+              key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
+              opponentSlug={opponent?.slug ?? null}
+            >
+              <span className="sx-num">
                 <span className="sr-only">
-                  {mineIsHome ? 'Home' : 'Away'} against{' '}
-                  {opponent ? opponent.name : opponentName} on {monthDay(fixture.dateKey)}:{' '}
-                  {`on ${short}’s schedule only, ${past ? 'no result' : 'not played yet'}.`}
+                  {mineIsHome ? 'Home' : 'Away'} against {opponent ? opponent.name : opponentName} on{' '}
+                  {monthDay(fixture.dateKey)}: {`on ${short}’s schedule only, ${past ? 'no result' : 'not played yet'}.`}
                 </span>
-                <span className="sx-num w-14 shrink-0 text-cell text-ink-2" aria-hidden="true">
-                  {monthDay(fixture.dateKey)}
-                </span>
-                {/* A school outside the registry gets GameRow's ghost tile, so every name starts
-                    at one x; with no tile its name started 36px left of the others. */}
+                <span aria-hidden="true">{monthDay(fixture.dateKey)}</span>
+              </span>
+              <span aria-hidden="true" />
+              <span className="text-cell text-ink-2" aria-hidden="true">
+                {past ? 'No result' : 'No time'}
+              </span>
+              <span className="sx-teamcell" aria-hidden="true">
                 {opponent ? (
                   <TeamMonogram team={opponent} size={24} />
                 ) : (
                   <GhostMonogram name={opponentName} size={24} title={NON_MEMBER_NOTE} />
                 )}
-                {/* Two lines rather than an ellipsis: at 320px the name has ~96px and "vs
-                    Homestead" was cut. No `break-words`: a school name breaks between words. */}
-                <span className="line-clamp-2 min-w-0 flex-1 text-body text-ink" aria-hidden="true">
-                  <span className="text-ink-2">{versus} </span>
-                  {opponentName}
+                <span>
+                  {versus} {opponentName}
                 </span>
-                {/* A fixed 4.75rem, one line ("No result" and "Upcoming" are both 69.6px), so the
-                    name's width no longer depends on which word it is. Below 360px "No result"
-                    used to stack into two lines and "Upcoming" could not, so the name beside them
-                    had two different widths. */}
-                <span
-                  className="w-[4.75rem] shrink-0 whitespace-nowrap text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
-                  aria-hidden="true"
-                >
-                  {past ? 'No result' : 'Upcoming'}
-                </span>
-              </FixtureRow>
-            );
-          })}
-        </ul>
-      </div>
-      <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-        {short}&rsquo;s official schedule lists these games, but no source has published a result
-        we count for them, so there is no start time or score for them and they count in no record
-        here.{' '}
-        <ExternalLink href={scheduleUrl}>Official {short} schedule</ExternalLink>
+              </span>
+              <span className="sx-logrow-note" aria-hidden="true" />
+            </FixtureRow>
+          );
+        })}
+      </ul>
+      <p className="sx-note">
+        On {short}&rsquo;s official schedule, but no source has published a result we count for them, so they
+        count in no record here. <ExternalLink href={scheduleUrl}>Official {short} schedule</ExternalLink>
       </p>
     </>
   );

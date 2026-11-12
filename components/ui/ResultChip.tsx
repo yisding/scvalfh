@@ -1,33 +1,24 @@
 import type { ChipKind } from './describe-game';
 
 /**
- * A square with the LETTER inside (DESIGN §7.5, §6.5).
+ * A square with the LETTER inside (DESIGN §7.5, §6.5; §33 for the face).
  *
- * The letter is channel 1 — it survives grayscale, CVD, forced-colors and a screenshot pasted
- * into a group text. Hue is channel 4 and the only optional one. There is exactly ONE visual
- * treatment: wash ground, 1px ring at the mark hue, glyph in the ink token (5.80–8.28:1
- * everywhere). No `solid` variant, so the raw loss mark never becomes a fill under a letter.
- * No `title` attribute — a touch device never sees one.
- *
- * `pending` (a game played with no score published) is the empty outline DESIGN §7.5 asks for,
- * but drawn as a DASHED CIRCLE: an empty solid-ringed rounded square beside a monogram read as an
- * unticked checkbox — an input — rather than "no result". The shape differs from every lettered
- * square, so it never needs hue to be told apart.
+ * The letter is channel 1: it survives grayscale, CVD, forced-colors and a screenshot pasted into
+ * a group text. W is a solid green square with a white letter; L is a red outline with a red
+ * letter; T (and cancelled / postponed) a grey outline; `pending` (a game played with no score
+ * published) an empty light outline. The same in both themes. Letters are the figure face, 12px in
+ * the 16px chip and never smaller. No `title` attribute: a touch device never sees one.
  */
 export interface ResultChipProps {
   kind: ChipKind;
-  /**
-   * 20 = standings form strip, 24 = game row, 28 = a hero mark. 16 stays in the union for
-   * compatibility only: its 10px letter is under the site's 12px floor, so no visible surface
-   * should use it.
-   */
+  /** 16 = a standings Last 5 strip (12px letter), 20 = a log row, 24 = the team page's form, 28 = a hero mark. */
   size?: 16 | 20 | 24 | 28;
   className?: string;
 }
 
 /**
- * The kind's colours, as a class (`.sx-chip-win` …, app/globals.css): wash ground, ring at the
- * mark hue, glyph in the ink token. Cancelled and postponed share the tie's hueless set.
+ * The kind's colours, as a class (`.sx-chip-win` …, app/globals.css). Cancelled and postponed
+ * share the tie's hueless outline.
  */
 const KIND_CLASS: Record<Exclude<ChipKind, 'none'>, string> = {
   W: 'sx-chip-win',
@@ -39,8 +30,8 @@ const KIND_CLASS: Record<Exclude<ChipKind, 'none'>, string> = {
 };
 
 /**
- * The side and letter size per chip size (`.sx-chip-20` …, app/globals.css): 16 → 10px,
- * 20 → 12px (the smallest letter any visible surface uses), 24 → 13px, 28 → 14px.
+ * The side and letter size per chip size (`.sx-chip-20` …, app/globals.css): 16 → 12px,
+ * 20 → 13px, 24 → 14px, 28 → 16px.
  */
 const SIZE_CLASS: Record<16 | 20 | 24 | 28, string> = {
   16: 'sx-chip-16',

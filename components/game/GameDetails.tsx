@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, longDate, mapsSearchHref, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
-import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
+import { mapsSearchHref, monthDay } from '../../lib/format';
+import { findDivision, findLeague } from '../../lib/leagues';
 import { addressLine, gameAddress } from '../../lib/schools/venue';
+import { DATA_CORRECTIONS_URL } from '../layout/site';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { maxPrepsLabel } from '../words/maxpreps-label';
@@ -10,20 +11,14 @@ import { maxPrepsLabel } from '../words/maxpreps-label';
 import type { GameModel } from './game-view';
 
 /**
- * The DETAILS card of DESIGN §3.5 — when, where, and the off-site links that are not the result's.
- * Three widths, one DOM:
- * - phone: a card in the column, each fact a 12px label over a 16px value, divider lines between;
- * - 768–1023: still in the column (the page is one column there — F-17, a recorded deviation from
- *   §3.5's 768 rail), so the facts sit 3-up across the full width with no dividers, and a Note
- *   takes its own full-width row under a rule;
- * - ≥1024: the right rail (sticky under the top bar), back to the stacked phone list.
- * The 3-up band is written as `md:max-lg:` ranges rather than `md:` undone by `lg:` because the
- * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
+ * DETAILS (DESIGN §33): the rail of a game page (under the main column below 768). A plain `<dl>` of
+ * the facts the header does not carry, then the off-site links, then Report an error. The date, the
+ * start time and the venue's name are in the header's fact list (ScoreBoard.tsx GameFacts) and are
+ * not repeated here; what the game counts for is said here, once.
  *
- * A FINAL's result links (the box score or si.com game page, and the stream) are not here: the
- * page prints them under the recap (`GameModel.resultLinks`, F-73), and each link has one home on
- * the page (the exception is the disagreement notes under the scoreboard — GameSources'
- * SourceDisagreement and ResultFlagConflict — which link the source pages they cite).
+ * List rows no longer expand, so every off-site link a row used to offer lives here: Directions,
+ * the stream and tickets as buttons; the game's own pages (MaxPreps, si.com, a final's box score)
+ * and each school's page on those sites as plain external links.
  *
  * Four honesty rules live here:
  *
@@ -33,162 +28,147 @@ import type { GameModel } from './game-view';
  *    MaxPreps gives a game no address in the sweep, so it is almost always a school's campus from
  *    data/schools.json: the named venue's school, the league final's fixed site, or the host. A neutral
  *    site, a venue that is not a registry school, and a disputed host have none, and print no address
- *    line and no Directions chip: a chip that cannot resolve a location is a dead affordance.
+ *    line and no Directions button: a button that cannot resolve a location is a dead affordance.
  * 3. **The venue we do know is the host school, not the field.** When the `.ics` feeds gave a real
- *    venue name it is shown; otherwise the line says who hosted, then that school's address. A school
- *    can play off campus, so the address sits under the school's name and is never labelled the field.
- * 4. **Where the two sources disagree about the host, the page says so.** Home and away are always
+ *    venue name the header shows it; otherwise the header says whose school hosts, and the address
+ *    here is that school's. A school can play off campus, so the address is never labelled the field.
+ * 4. **Where the two sources disagree about the host, it says so.** Home and away are always
  *    MaxPreps' (SPEC §5.5.4 — it is the only source that states them), but where a league's official
- *    schedule names the other school the host line was the one claim on this page stated as settled
- *    fact while `provenance.hostConflict` recorded the opposite. It is printed here, the way `Moved`
- *    is printed under WHEN, rather than left in the snapshot unread.
- *
- * "Counts as" is the model's league-aware `countsAs` (SPEC §10.6): `League game · De Anza Division`
- * (a division label only through `divisionHeading`), `League game · MCAL` for a single-division
- * league, the postseason round, or `Non-league game`; the points sentence cites the game's league.
+ *    schedule names the other school, `provenance.hostConflict` is printed rather than left unread.
  */
 export interface GameDetailsProps {
   model: GameModel;
   className?: string;
 }
 
+/** The links drawn as buttons: somewhere to go for THIS game (the rest are reference pages). */
+const BUTTONS: ReadonlySet<string> = new Set(['Directions', 'NFHS stream', 'Tickets']);
+
 export function GameDetails({ model, className }: GameDetailsProps) {
-  const { game, home, countsAs } = model;
+  const { game, home, away, countsAs } = model;
   const officialLeague = game.official
     ? findLeague(findDivision(game.official.division)?.leagueId ?? '')?.shortName
     : undefined;
   const where = gameAddress(game);
   const address = where?.address ?? null;
-  const host = game.site === 'neutral' ? null : home;
-  // A league final at its fixed site that is not the listed home team's school names the site instead.
-  const site = where?.source === 'final-site' && where.school?.slug !== home.team?.slug ? where.school : null;
   const movedFrom =
     game.official && game.official.scheduledDate !== game.dateKey
       ? game.official.scheduledDate
       : null;
 
-  // Whatever the page already printed under the recap (a final's result links) is skipped, so no
-  // link appears twice on the page.
-  const elsewhere = new Set(model.resultLinks.map((link) => link.href));
   const links: Array<{ href: string; label: string }> = [];
   if (address) links.push({ href: mapsSearchHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
-  const ownLinks = links.filter((link) => !elsewhere.has(link.href));
+
+  // A final's result links (the box score or si.com game page, the stream) and the game's other pages, each once.
+  const seen = new Set<string>();
+  const pages = [...model.resultLinks, ...links.filter((link) => !BUTTONS.has(link.label))].filter((link) =>
+    seen.has(link.href) ? false : Boolean(seen.add(link.href)),
+  );
+  const buttons = links.filter((link) => BUTTONS.has(link.label) && !seen.has(link.href));
+  // Each registry side's own page on the two sources, away first.
+  const teamPages = [away, home].flatMap((side) =>
+    side.team
+      ? [
+          ...(side.team.external.maxprepsTeamUrl
+            ? [{ href: side.team.external.maxprepsTeamUrl, name: side.name, label: `${side.team.shortName} on MaxPreps` }]
+            : []),
+          ...(side.sbliveUrl ? [{ href: side.sbliveUrl, name: side.name, label: `${side.team.shortName} on si.com` }] : []),
+        ]
+      : [],
+  );
+  /* One line per source, not one line per link: "MaxPreps  Box score  Stevenson  Salinas". The source's
+     name is said once, in the line's first word; each link keeps it for a screen reader, in the order
+     its full label has it ("MaxPreps box score", "Stevenson on MaxPreps"). A link to anything else
+     (a stream's replay) is a line of its own. */
+  type SourceLink = { href: string; text: string; before?: string; after?: string };
+  const SOURCE_NAMES = ['MaxPreps', 'si.com'] as const;
+  const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+  const sources: Array<{ name: string | null; links: SourceLink[] }> = [];
+  for (const name of SOURCE_NAMES) {
+    const mine: SourceLink[] = [
+      ...pages
+        .filter((link) => link.label.startsWith(`${name} `))
+        .map((link) => ({ href: link.href, before: `${name} `, text: sentence(link.label.slice(name.length + 1)) })),
+      ...teamPages
+        .filter((link) => link.label.endsWith(` on ${name}`))
+        .map((link) => ({ href: link.href, text: link.label.slice(0, -` on ${name}`.length), after: ` on ${name}` })),
+    ];
+    if (mine.length > 0) sources.push({ name, links: mine });
+  }
+  for (const link of pages) {
+    if (!SOURCE_NAMES.some((name) => link.label.startsWith(`${name} `))) sources.push({ name: null, links: [{ href: link.href, text: link.label }] });
+  }
+  // MaxPreps' location note, unless it only names the host (`@ Saint Francis`): the header already says where.
+  const placeNote = game.venue.text?.startsWith('@ ') ? game.venue.text.slice(2).trim().toLowerCase() : null;
+  const note =
+    game.venue.text && !(placeNote && [home.name, home.team?.shortName].some((n) => n?.toLowerCase() === placeNote))
+      ? game.venue.text
+      : null;
+  const whenNotes = Boolean(game.timeConfirmed || movedFrom || game.provenance.dateCorrection);
 
   return (
-    <section
-      className={['sx-card p-5', className].filter(Boolean).join(' ')}
-      aria-labelledby="game-details-kicker"
-    >
-      <SectionHeader kicker="Details" as="h2" size="label" id="game-details-kicker" />
-      <dl className="m-0 divide-y divide-divider text-meta md:max-lg:grid md:max-lg:grid-cols-3 md:max-lg:gap-x-6 md:max-lg:gap-y-4 md:max-lg:divide-y-0">
-        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
-          <dt className="text-micro font-medium text-ink-3">When</dt>
-          <dd className="mt-1 mb-0 ml-0 text-body text-ink">
-            <time dateTime={dateTimeAttr(game)} className="block">
-              <span className="block">
-                {longDate(game.dateLocal)}, {parseLocal(game.dateLocal).year}
-              </span>
-              {/* Sans with tabular figures, not `.sx-num` mono: a single time of day does not
-                  stack in a column, and "4:00 PM PT" in mono read as a code (F-54d). */}
-              <span className="block text-meta text-ink-2 tabular-nums">
-                {game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal)}
-              </span>
-            </time>
-            {game.timeConfirmed ? (
-              <span className="mt-1 block text-meta text-ink-3">
-                Start time confirmed against the school&rsquo;s athletics calendar.
-              </span>
-            ) : null}
-            {movedFrom ? (
-              <span className="mt-1 block text-meta text-ink-3">
-                Moved — the official {officialLeague ?? 'league'} schedule has this game on{' '}
-                {monthDay(movedFrom)}.
-              </span>
-            ) : null}
-            {/* DATA_QUALITY.contestDateOverrides (lib/pipeline/normalize.ts): the date shown is a better source's,
-                not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
-            {game.provenance.dateCorrection ? (
-              <span className="mt-1 block text-meta text-ink-3">
-                Date corrected from MaxPreps&rsquo; {monthDay(game.provenance.dateCorrection.maxprepsDateLocal)}{' '}
-                &mdash; {game.provenance.dateCorrection.source}.
-              </span>
-            ) : null}
-          </dd>
-        </div>
+    <section className={className} aria-labelledby="game-details-kicker">
+      <SectionHeader kicker="Details" as="h2" id="game-details-kicker" />
+      <dl className="m-0 flex flex-col gap-3 text-body text-ink">
+        {address || game.provenance.hostConflict ? (
+          <div>
+            <dt className="sr-only">Address</dt>
+            <dd className="m-0">
+              {address ? <span className="block">{addressLine(address)}</span> : null}
+              {game.provenance.hostConflict ? (
+                <span className="block text-cell text-ink-2">Hosts disagree — {game.provenance.hostConflict}</span>
+              ) : null}
+            </dd>
+          </div>
+        ) : null}
 
-        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
-          <dt className="text-micro font-medium text-ink-3">Where</dt>
-          <dd className="mt-1 mb-0 ml-0 text-body text-ink">
-            {game.venue.name ? (
-              <span className="block">{game.venue.name}</span>
-            ) : site ? (
-              <span className="block">At {site.name}, the league final&rsquo;s site</span>
-            ) : host ? (
-              <span className="block">
-                Hosted by {host.name}
-                {/* The address line below already says the city. */}
-                {host.team && !address ? `, ${host.team.city}, CA` : ''}
-              </span>
-            ) : (
-              <span className="block">Neutral site — the venue is not published.</span>
-            )}
-            {address ? (
-              <span className="mt-1 block text-meta text-ink-2">
-                {addressLine(address)}
-              </span>
-            ) : null}
-            {game.provenance.hostConflict ? (
-              <span className="mt-1 block text-meta text-ink-3">
-                Hosts disagree — {game.provenance.hostConflict}
-              </span>
-            ) : null}
-          </dd>
-        </div>
-
-        <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
-          <dt className="text-micro font-medium text-ink-3">Counts as</dt>
-          <dd className="mt-1 mb-0 ml-0 text-body text-ink">
-            {/* A counted league game links the table it counts in, at its division's section: the
-                one step up from a game page that was missing (the routes row goes to the day and the
-                two teams). Its name says where it goes, "League game · Santa Teresa, BVAL
-                standings", rather than a generic "standings". */}
-            {model.division && model.league ? (
-              <Link
-                href={`/standings/${model.league.id}#${model.division}`}
-                prefetch={false}
-                className="sx-action gap-1 text-accent no-underline hover:underline"
-              >
-                {countsAs.label}
-                <span className="sr-only">, {standingsLabel(model.league.id)}</span>
-                <span aria-hidden="true" className="text-micro">
-                  &rsaquo;
+        {whenNotes ? (
+          <div>
+            <dt className="sr-only">Date and time</dt>
+            <dd className="m-0 text-cell text-ink-2">
+              {game.timeConfirmed ? (
+                <span className="block">Start time confirmed against the school&rsquo;s athletics calendar.</span>
+              ) : null}
+              {movedFrom ? (
+                <span className="block">
+                  Moved — the official {officialLeague ?? 'league'} schedule has this game on {monthDay(movedFrom)}.
                 </span>
-              </Link>
-            ) : (
-              <span className="block">{countsAs.label}</span>
-            )}
-            <span className="mt-1 block text-meta text-ink-3">{countsAs.detail}</span>
+              ) : null}
+              {/* DATA_QUALITY.contestDateOverrides (lib/pipeline/normalize.ts): the date shown is a better source's,
+                  not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
+              {game.provenance.dateCorrection ? (
+                <span className="block">
+                  Date corrected from MaxPreps&rsquo; {monthDay(game.provenance.dateCorrection.maxprepsDateLocal)}{' '}
+                  &mdash; {game.provenance.dateCorrection.source}.
+                </span>
+              ) : null}
+            </dd>
+          </div>
+        ) : null}
+
+        <div>
+          <dt className="sr-only">Counts as</dt>
+          <dd className="m-0">
+            <span className="block">{countsAs.detail}</span>
             {countsAs.classificationNote ? (
-              <span className="mt-1 block text-meta text-ink-3">{countsAs.classificationNote}</span>
+              <span className="block text-cell text-ink-2">{countsAs.classificationNote}</span>
             ) : null}
           </dd>
         </div>
 
-        {game.venue.text ? (
-          // In the 3-up band the Note is a fourth fact, so it takes a full-width row of its own
-          // under a rule (it keeps the list's own 12px above the rule's content).
-          <div className="py-3 first:pt-0 last:pb-0 md:max-lg:col-span-3 md:max-lg:border-t md:max-lg:border-divider">
-            <dt className="text-micro font-medium text-ink-3">Note</dt>
+        {note ? (
+          <div>
+            <dt className="sr-only">Note</dt>
             {/* MaxPreps' `location` field, verbatim. It is a note, not a venue. */}
-            <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">
-              {game.venue.text}
+            <dd className="m-0">
+              {note}
               {/* lib/pipeline/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
               {game.provenance.overtimeNote ? (
-                <span className="mt-1 block text-meta text-ink-3">
+                <span className="block text-cell text-ink-2">
                   MaxPreps records no overtime for this game; the overtime shown here is from this note.
                 </span>
               ) : null}
@@ -197,15 +177,43 @@ export function GameDetails({ model, className }: GameDetailsProps) {
         ) : null}
       </dl>
 
-      {ownLinks.length > 0 ? (
+      {buttons.length > 0 ? (
         <p className="mt-4 mb-0 flex flex-wrap gap-2">
-          {ownLinks.map((link) => (
-            <ExternalLink key={link.href} href={link.href} className="sx-pill">
+          {buttons.map((link) => (
+            <ExternalLink key={link.href} href={link.href} className="sx-btn" arrow={false}>
               {link.label}
             </ExternalLink>
           ))}
         </p>
       ) : null}
+      {sources.length > 0 ? (
+        <ul className="m-0 mt-3 list-none p-0">
+          {sources.map((source) => (
+            <li key={source.name ?? source.links[0].href} className="flex flex-wrap items-baseline gap-x-4">
+              {source.name ? <span className="text-meta text-ink-2">{source.name}</span> : null}
+              {source.links.map((link) => (
+                <ExternalLink key={link.href} href={link.href} className="sx-action" arrow={source.name === null}>
+                  {link.before ? <span className="sr-only">{link.before}</span> : null}
+                  {link.text}
+                  {link.after ? <span className="sr-only">{link.after}</span> : null}
+                </ExternalLink>
+              ))}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <ul className="sx-linkrow">
+        <li>
+          <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-action">
+            Report an error
+          </ExternalLink>
+        </li>
+        <li>
+          <Link href="/about" prefetch={false} className="sx-action">
+            About this data
+          </Link>
+        </li>
+      </ul>
     </section>
   );
 }

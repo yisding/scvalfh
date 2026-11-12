@@ -16,9 +16,9 @@ export function BackfillsSection({
   shootoutSections: readonly ShootoutSection[];
 }) {
   return (
-    <section id="backfills" className="mt-16">
+    <section id="backfills" className="sx-section">
       <SectionHeader
-        size="lg"
+       
         kicker="Scores taken from si.com"
         meta={plural(backfilled.length, 'score', 'scores')}
       />
@@ -57,7 +57,7 @@ export function BackfillsSection({
           league membership, league records or the standings order.
         </p>
       </div>
-      <div className="mt-stack">
+      <div className="mt-4">
         <BackfillTable rows={backfilled} />
       </div>
     </section>

@@ -313,10 +313,13 @@ describe('postseason lines per kind (components/playoffs/team-postseason-line.ts
     const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
     const mcal = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('tamalpais')! }));
     // The arrow is drawn, not spoken (components/ui/Arrow.tsx): the link's name is the words alone.
-    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('MCAL tournament <span aria-hidden="true">→</span>');
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toMatch(/>MCAL tournament\s*<\/a>/);
+    // The trailing arrow is retired (components/ui/Arrow.tsx renders nothing, DESIGN §33).
+    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').not.toContain('→');
     expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').not.toContain('CCS');
     const scval = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('st-ignatius')! }));
-    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('CCS playoffs <span aria-hidden="true">→</span>');
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toMatch(/>CCS playoffs\s*<\/a>/);
+    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').not.toContain('→');
     expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('Official CCS bracket');
   });
 });
@@ -373,23 +376,22 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
 });
 
 describe('TeamPlayoffLine without a result (the EAL in the all-2026-10-02 corpus)', () => {
-  it('names the Super Regional picture, not a playoff or a CCS one', async () => {
+  it('says one plain line, under the Super Regional picture heading, with no CCS word', async () => {
     const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
     const lassen = view.buildTeamPageView('lassen')!;
     expect(lassen.hasResults, 'the all corpus holds no EAL league result').toBe(false);
-    const text = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, { view: lassen })));
-    expect(text, 'components/teams/TeamPlayoffLine.tsx').toContain(
-      'Lassen has no counted EAL result, so it has no computed place in the Super Regional picture.',
-    );
-    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('CCS');
-    const mcal = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, {
-      view: { ...view.buildTeamPageView('tamalpais')!, postseasonLine: null },
-    })));
-    expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('in the MCAL tournament picture.');
-    const scval = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, {
-      view: { ...view.buildTeamPageView('st-ignatius')!, postseasonLine: null },
-    })));
-    expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('in the playoff picture.');
+    // ONE line (DESIGN §33); the section's heading on the page names the picture it has no place in.
+    const html = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: lassen }));
+    expect(html, 'components/teams/TeamPlayoffLine.tsx').toBe('<p class="sx-empty">No results reported yet.</p>');
+    const page = await renderTeam('lassen');
+    expect(page, 'app/teams/[slug]/page.tsx heading').toMatch(/<h2 id="postseason-heading">Super Regional picture<\/h2>/);
+    expect(textOf(page.slice(page.indexOf('id="postseason"'))), 'app/teams/[slug]/page.tsx').not.toContain('CCS');
+    for (const slug of ['tamalpais', 'st-ignatius']) {
+      const text = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, {
+        view: { ...view.buildTeamPageView(slug)!, postseasonLine: null },
+      })));
+      expect(text.trim(), `components/teams/TeamPlayoffLine.tsx ${slug}`).toBe('No results reported yet.');
+    }
   });
 });
 
@@ -421,67 +423,71 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
     }
   });
 
-  it('every page: identity line, pin control with its league, league links, never 0-0 for a missing score', async () => {
+  it('every page: league line, record figures, standings link, never 0-0 for a missing score', async () => {
+    const { leagueLine } = await import('../../components/teams/TeamIdentity');
+    const { recordString } = await import('../../lib/format');
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
       const html = await renderTeam(team.slug);
       const text = textOf(html);
-      expect(text, `components/teams/TeamIdentity.tsx ${team.slug}`).toContain(v.identityLine);
-      expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings`).toContain(`href="${v.standingsHref}"`);
-      // An LA independent (DESIGN §24.10, §24.11): the standings link reads 'LA standings', and its GP tile prints
-      // the bare count, as the Sunset's does (no fixed schedule).
-      if (leagues.isIndependentLeague(team.league)) {
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('LA standings →');
-        expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
-        expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
-        continue;
-      }
-      expect(text, `app/teams/[slug]/page.tsx ${team.slug} standings label`).toContain(`${v.league.shortName} standings`);
-      // A league with no fixed schedule (the Sunset) prints the bare count: no "of N" (DESIGN-socal §2.1.7).
-      if (v.context!.scheduled === null) {
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).not.toMatch(/\/null|of null/);
-      } else expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toContain(
-        `${v.context!.counted}/${v.context!.scheduled}`,
+      // ONE plain line under the name: the league and division (DESIGN §33).
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug}`).toContain(
+        `<div class="sx-pagehead-meta">${leagueLine(v).replace(/&/g, '&amp;')}</div>`,
       );
-      // MAX is a total: a team with no league games left shows its final points, never points "still" to win.
-      expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).not.toMatch(/still reachable/);
-      if (v.context!.remaining === 0) {
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).toMatch(
-          new RegExp(`Max\\s*${v.context!.maxPts}\\s*final league points`),
+      expect((html.match(/<h1/g) ?? []).length, `app/teams/[slug]/page.tsx ${team.slug}: one h1`).toBe(1);
+      expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings`).toContain(`href="${v.standingsHref}"`);
+      expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings link`).toMatch(/>Full standings<\/a>/);
+      // The rail's table is headed by the division, or the league's own label where it has one table
+      // ('MCAL standings'; 'LA standings' for the independents, DESIGN §24.10).
+      const heading = v.divisionHeading ? `${v.divisionHeading} standings` : v.standingsLabel;
+      expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings heading`).toContain(
+        `<h2 id="standings-heading">${heading}</h2>`,
+      );
+      if (leagues.isIndependentLeague(team.league)) expect(heading).toBe('LA standings');
+      // This team's row is the bold one.
+      expect(html, `app/teams/[slug]/page.tsx ${team.slug} self row`).toMatch(
+        new RegExp(`<tr data-team-slug="${team.slug}"[^>]*class="[^"]*sx-self`),
+      );
+      // The record as figures: the league record, exactly as the table has it; no figures without results.
+      if (v.hasResults && v.standing) {
+        expect(html, `components/teams/TeamIdentity.tsx ${team.slug} figures`).toContain(
+          `<dt>League</dt><dd>${recordString(v.standing.computed)}</dd>`,
         );
-      } else if (v.context!.remaining !== null) {
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).toContain('most points possible');
+      } else {
+        expect(html, `components/teams/TeamIdentity.tsx ${team.slug} no figures`).not.toContain('sx-figures');
       }
+      expect(text, `app/teams/[slug]/page.tsx ${team.slug}`).not.toMatch(/\b0-0-0\b|\/null|of null/);
       expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
       expect(html, `app/teams/[slug]/page.tsx ${team.slug} game links`).not.toMatch(/href="\/game\/sblive:/);
       if (team.league === 'pcal' || team.league === 'mcal') {
         expect(text, `app/teams/[slug]/page.tsx ${team.slug}: division label`).not.toMatch(/PCAL Division|MCAL Division/);
       }
+      // The four section anchors the sticky tabs point at are on every page.
+      for (const id of ['schedule', 'standings', 'roster', 'player-stats']) {
+        expect(html, `app/teams/[slug]/page.tsx ${team.slug} #${id}`).toMatch(new RegExp(`<section id="${id}"`));
+        expect(html, `app/teams/[slug]/page.tsx ${team.slug} tab ${id}`).toContain(`<a href="#${id}" class="sx-tab">`);
+      }
+      expect(html, `app/teams/[slug]/page.tsx ${team.slug}: no card, pill or badge`).not.toMatch(/\bsx-(card|pill|badge|flag|lift|bleed|flush)\b/);
     }
   });
 
-  it('the margin strip spans the division\'s scheduled league games, never a phantom 14-game season', async () => {
-    const PHONE_CELL = 'flex flex-col items-center min-w-3 max-w-14 flex-1';
-    // A slate longer than 14 (MCAL's 16) takes the 20px desktop floor at a 24px pitch, so it fits
-    // the 380px plot of a half-width card at 1024px (components/teams/MarginStrip.tsx).
-    const desktopCell = (slots: number) =>
-      `flex flex-col items-center ${slots > 14 ? 'min-w-5' : 'min-w-6'} max-w-14 flex-1`;
+  it('the schedule is ONE log: every game of the team, oldest first, non-league rows marked', async () => {
     let checked = 0;
-    for (const division of leagues.ALL_DIVISIONS) {
-      for (const team of data.getTeams(division.id)) {
-        const v = view.buildTeamPageView(team.slug)!;
-        if (!v.marginEntries.some((e) => e.margin !== null && !e.excludedFromMargin)) continue;
-        const html = await renderTeam(team.slug);
-        // A league with no fixed schedule (the Sunset, gamesPerTeam null) draws only the games it has.
-        const slots = division.gamesPerTeam ?? v.marginEntries.length;
-        const expected = Math.max(slots, v.marginEntries.length);
-        const count = (cls: string) => html.split(`${cls}"`).length - 1;
-        expect(count(PHONE_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
-        expect(count(desktopCell(slots)), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
-        checked += 1;
-      }
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug)!;
+      const html = await renderTeam(team.slug);
+      const at = html.indexOf('<section id="schedule"');
+      const section = html.slice(at, html.indexOf('</section>', at));
+      const all = [...v.leagueLog, ...v.nonLeagueLog];
+      const hrefs = [...section.matchAll(/<a [^>]*href="\/game\/([^"]+)"/g)].map((m) => m[1]);
+      expect(hrefs.length, `app/teams/[slug]/page.tsx ${team.slug} schedule rows`).toBe(all.length);
+      const byId = new Map(all.map((g) => [g.contestId.replace(':', '-'), g]));
+      const dates = hrefs.map((id) => byId.get(id)!.dateLocal);
+      expect(dates, `app/teams/[slug]/page.tsx ${team.slug} date order`).toEqual([...dates].sort());
+      const nonLeague = v.nonLeagueLog.filter((g) => g.postseason === null).length;
+      expect(section.split('sx-nonleague').length - 1, `components/teams/TeamGameLog.tsx ${team.slug} non-league rows`).toBe(nonLeague);
+      if (all.length > 0) checked += 1;
+      else expect(section, `components/teams/TeamGameLog.tsx ${team.slug} empty`).toContain('<p class="sx-empty">No games listed</p>');
     }
     expect(checked).toBeGreaterThan(30);
   });
@@ -506,20 +512,21 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const html = await renderTeam(team.slug);
       const text = textOf(html);
       const row = listed.get(team.slug);
-      // Collapsed: the summary says "Elo rating" and nothing else shows until the reader opens it.
-      expect(html, `components/teams/TeamElo.tsx ${team.slug}: closed disclosure`).toMatch(
-        /<details id="elo" class="sx-disclosure"><summary>Elo rating<\/summary>/,
+      // A rail section, not a disclosure (DESIGN §33); `#elo` is still the anchor the board links.
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: section`).toMatch(
+        /<section id="elo" aria-labelledby="elo-heading" class="sx-section sx-target"><h2 id="elo-heading">Rating<\/h2>/,
       );
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: no disclosure`).not.toContain('<details id="elo"');
       expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain(`href="/leaders#${board.id}"`);
       if (row) {
         expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
         expect(String(elo.elo), `components/teams/team-view.ts ${team.slug}`).toBe(row.cells[board.rankedBy].text);
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(
-          `${row.tied ? 'tied for ' : ''}${ordinal(row.rank)} on the ${elo.boardRegion} Elo board`,
+          `${elo.boardRegion} Elo board ${row.tied ? 'tied for ' : ''}${ordinal(row.rank)}`,
         );
       } else {
         expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toBeNull();
-        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toMatch(/on the \w+ Elo board/);
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toMatch(/\w+ Elo board/);
       }
       expect(elo.provisional, `components/teams/team-view.ts ${team.slug} provisional`).toBe(
         elo.elo !== null && elo.games > 0 && elo.games < elo.minGames,
@@ -527,10 +534,10 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       expect(elo.preseason, `components/teams/team-view.ts ${team.slug} preseason`).toBe(elo.elo !== null && elo.games === 0);
       if (elo.elo !== null) {
         rated += 1;
-        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`Elo rating ${elo.elo} points ·`);
+        expect(html, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`>Elo rating</dt><dd class="sx-num m-0">${elo.elo}</dd>`);
       }
       if (elo.provisional) {
-        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`provisional, from ${elo.games}`);
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toMatch(new RegExp(`Provisional ${elo.games} games?\\b`));
       }
     }
     expect(rated, 'components/teams/team-view.ts: the corpus rates most teams').toBeGreaterThan(30);
@@ -546,116 +553,116 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
 });
 
 describe('/teams (app/teams/page.tsx)', () => {
-  it('heading outline: h2 section → h3 league → h4 division; anchors resolve; ids unique', () => {
+  it('heading outline: h1 Teams → h2 league → h3 division; anchors resolve; ids unique', () => {
     const html = renderIndex();
     const all = ids(html);
     expect(new Set(all).size, 'app/teams/page.tsx: unique ids').toBe(all.length);
+    // League and division anchors (the nav's `/teams#<league>` lands on them). The section level is gone:
+    // a league is a section of the directory (DESIGN §33).
     for (const id of [
-      'ccs', 'ncs', 'ns', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal',
-      'ss', 'sds', 'sunset', 'city', 'city-western', 'city-eastern', 'north-county', 'avocado', 'palomar', 'valley', 'metro', 'metro-mesa',
+      'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal',
+      'sunset', 'city', 'city-western', 'city-eastern', 'north-county', 'avocado', 'palomar', 'valley', 'metro', 'metro-mesa',
       'metro-south-bay', 'independents', 'norcal', 'socal', 'team-list', 'team-league-switcher',
     ]) {
       expect(all, `app/teams/page.tsx #${id}`).toContain(id);
     }
-    expect(html, 'app/teams/page.tsx CCS h2').toMatch(/<h2[^>]*>Central Coast Section<\/h2>/);
-    expect(html, 'app/teams/page.tsx NCS h2').toMatch(/<h2[^>]*>North Coast Section<\/h2>/);
-    expect(html, 'app/teams/page.tsx NS h2').toMatch(/<h2[^>]*>Northern Section<\/h2>/);
-    expect(html, 'app/teams/page.tsx section labelling').toContain('<section aria-labelledby="ccs"');
-    // Nine leagues and the LA independents (one table, so no h4: DESIGN §24.10).
-    expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(10);
-    const h4s = [...html.matchAll(/<h4 class="m-0 mb-3 text-lead text-ink">([^<]+)<\/h4>/g)].map((m) => m[1]);
-    expect(h4s, 'app/teams/page.tsx division h4s').toEqual([
+    expect(html, 'app/teams/page.tsx h1').toMatch(/<h1[^>]*>Teams<\/h1>/);
+    expect((html.match(/<h1/g) ?? []).length, 'app/teams/page.tsx: one h1').toBe(1);
+    expect(html, 'app/teams/page.tsx league labelling').toContain('<section aria-labelledby="scval"');
+    // Nine leagues and the LA independents, each an h2; the last h2 heads the three plain links.
+    const h2s = [...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/g)].map((m) => m[1]);
+    expect(h2s.length, 'app/teams/page.tsx league h2s + More').toBe(11);
+    expect(h2s[0], 'app/teams/page.tsx SCVAL h2').toBe('SCVAL');
+    expect(html, 'app/teams/page.tsx SCVAL long name').toContain('Santa Clara Valley Athletic League, ');
+    expect(h2s[h2s.length - 1], 'app/teams/page.tsx last h2').toBe('More');
+    // A league with one table has no division heading (the independents too: DESIGN §24.10).
+    const h3s = [...html.matchAll(/<h3 class="sx-strip">([^<]+)<\/h3>/g)].map((m) => m[1]);
+    expect(h3s, 'app/teams/page.tsx division h3s').toEqual([
       'De Anza', 'El Camino', 'Mt. Hamilton', 'Santa Teresa',
       'City Western', 'City Eastern', 'Avocado', 'Palomar', 'Valley', 'Metro Mesa', 'Metro South Bay',
     ]);
-    // Region → section → league order; the regions are `<div id="norcal|socal" data-region-scope>`
-    // inside #team-list (DESIGN-socal §2.4), so the finder's lift can show both while searching.
+    expect(html, 'app/teams/page.tsx: no h4').not.toContain('<h4');
+    // Region → league order; the regions are `<div id="norcal|socal" data-region-scope>` inside #team-list
+    // (DESIGN-socal §2.4), so the finder's lift can show both while searching.
     expect(html, 'app/teams/page.tsx region wrappers').toMatch(/<div id="team-list"><div id="norcal" data-region-scope="norcal">/);
     expect(html, 'app/teams/page.tsx region wrappers').toContain('<div id="socal" data-region-scope="socal">');
     expect(html, 'app/teams/page.tsx lift hook').toContain('data-teams-page=""');
     const order = [
-      'id="norcal"', 'id="ccs"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="ncs"', 'id="mcal"',
-      'id="marin-county"', 'id="ns"', 'id="eal"', 'id="socal"', 'id="ss"', 'id="sunset"', 'id="independents"', 'id="sds"', 'id="city"',
+      'id="norcal"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="mcal"',
+      'id="marin-county"', 'id="eal"', 'id="socal"', 'id="sunset"', 'id="independents"', 'id="city"',
       'id="north-county"', 'id="metro"',
     ].map((s) => html.indexOf(s));
     expect([...order].sort((a, b) => a - b), 'app/teams/page.tsx order').toEqual(order);
   });
 
-  it('the finder hooks: 102 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
+  it('the finder hooks: 102 list items with data-team-tile, group wrappers, the search field first, the league row', () => {
     const html = renderIndex();
-    // Every team is a row of its division's standings table (DESIGN §18), and the row is the
-    // finder's hook: no <li> tiles any more.
-    const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
-    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(102);
-    for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
-    expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
-    expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
-    // The pinned row says so in words, not with the accent rule alone: every row's link carries the
-    // hidden note the pinned-team CSS reveals (the old tiles did too).
-    const links = [...html.matchAll(/<tr data-team-slug="[^"]+"[\s\S]*?<a [^>]*href="\/teams\/[^"]+"[^>]*>([\s\S]*?)<\/a>/g)];
-    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(102);
-    for (const [, inner] of links) {
-      expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
-        '<span class="sr-only"><span class="sx-pin-note" hidden="">Your team. </span></span>',
-      );
+    // Every team is ONE list item of its division's name list, and the item is the finder's hook: the
+    // directory holds no table (standings live on /standings, DESIGN §33).
+    const items = [...html.matchAll(/<li data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
+    expect(items.length, 'app/teams/page.tsx data-team-tile').toBe(102);
+    for (const [, slug, tile] of items) expect(tile, slug).toBe(slug);
+    expect(new Set(items.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
+    expect(html, 'app/teams/page.tsx: zero tables').not.toContain('<table');
+    // Each item: the logo, the name as a link to the team's page, and the hidden note the pinned-team CSS
+    // reveals as the star (the reader's team says so, not with a rule or a tint).
+    const rows = [...html.matchAll(/<li data-team-slug="([^"]+)" data-team-tile[\s\S]*?<\/li>/g)];
+    expect(rows.length, 'app/teams/page.tsx items').toBe(102);
+    for (const [row, slug] of rows) {
+      expect(row, `app/teams/page.tsx ${slug} logo`).toContain('<img class="sx-monogram"');
+      expect(row, `app/teams/page.tsx ${slug} link`).toContain(`<a class="sx-rowlink text-body font-medium" href="/teams/${slug}">`);
+      expect(row, `app/teams/page.tsx ${slug} pin note`).toContain('<span class="sx-pin-note" hidden="">Your team</span>');
     }
-    // Sixteen tables, one per division, each in a group wrapper the finder can hide (5 sections, 9
-    // leagues and the independents, 16 divisions; the independents' table is one of them, DESIGN §24.10).
-    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(16);
-    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(5 + 10 + 16);
-    // A division with a ladder line drawn marks it, so a search never leaves it between rows.
-    const lines = [...html.matchAll(/<tr data-hide-while-searching="">\s*<td colSpan="5"[^>]*>([^<]+)</g)].map((m) => m[1]);
-    expect(lines.length, 'components/standings/CompactStandingsTable.tsx ladder rows').toBeGreaterThan(0);
-    for (const label of lines) expect(label, 'ladder row label').toMatch(/line|host/i);
-    // Each division links its full league table.
-    for (const href of ['/standings/scval#de-anza', '/standings/bval#santa-teresa', '/standings/pcal#pcal', '/standings/mcal#marin-county', '/standings/eal#eal']) {
+    // Ten league groups and sixteen division groups, each a wrapper the finder can hide.
+    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(10 + 16);
+    // Each league's heading links its standings.
+    for (const href of ['/standings/scval', '/standings/bval', '/standings/pcal', '/standings/mcal', '/standings/eal']) {
       expect(html, `app/teams/page.tsx ${href}`).toContain(`href="${href}"`);
     }
+    // The finder is the first thing under the title, and its field is the page's first search input.
     expect(html, 'app/teams/page.tsx finder').toContain('<search');
-    expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
+    expect(html.indexOf('<search'), 'app/teams/page.tsx finder before the league row').toBeLessThan(html.indexOf('id="team-league-switcher"'));
+    expect(html.indexOf('type="search"'), 'app/teams/page.tsx search input first').toBeLessThan(html.indexOf('id="team-list"'));
+    // The league row: anchors to each league, with the region switch and the short stamp in its util part.
+    expect(html, 'app/teams/page.tsx league row').toMatch(/<div id="team-league-switcher"[^>]*>\s*<div class="sx-scope sx-print-hide">/);
+    expect(html, 'app/teams/page.tsx league anchors').toContain('href="#scval"');
+    expect(html, 'app/teams/page.tsx stamp').toMatch(/<span class="sx-scope-util">[\s\S]*?Updated <time/);
+    // No sentence under the title: the provenance lede is /about's.
     const text = textOf(html);
-    expect(text, 'app/teams/page.tsx description').toContain(
-      'each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other) for the LA independents.',
-    );
-    expect(text, 'app/teams/page.tsx description').toContain('All 102 girls varsity teams in ');
+    expect(text, 'app/teams/page.tsx: no lede').not.toContain('League and division alignment comes from');
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
+    expect(html, 'app/teams/page.tsx: no card, pill or badge').not.toMatch(/\bsx-(card|pill|badge|flag|lift|bleed|flush)\b/);
   });
 
-  it('a row holds what the Table tab showed, and agrees with /standings', () => {
+  it('an item prints the league record the standings have, and nothing for a team with no result', () => {
     const html = renderIndex();
-    const heads = [...html.matchAll(/<thead[\s\S]*?<\/thead>/g)].map((m) => textOf(m[0]).replace(/\s+/g, ' ').trim());
-    for (const head of heads) expect(head, 'app/teams/page.tsx table head').toBe('# Team GP W-L-T Pts');
-    for (const slug of ['st-ignatius', 'leigh', 'stevenson', 'tamalpais']) {
+    for (const slug of ['st-ignatius', 'leigh', 'stevenson', 'tamalpais', 'lassen']) {
       const s = data.getStandingFor(slug)!;
-      const row = new RegExp(`<tr data-team-slug="${slug}"[\\s\\S]*?</tr>`).exec(html)![0];
+      const row = new RegExp(`<li data-team-slug="${slug}"[\\s\\S]*?</li>`).exec(html)![0];
       const cells = textOf(row).replace(/\s+/g, ' ');
       if (s.hasReportedResults) {
-        expect(cells, slug).toContain(`${s.computed.w}-${s.computed.l}-${s.computed.t}`);
-        expect(cells, slug).toContain(String(s.computed.pts));
+        expect(cells, slug).toContain(`League record ${s.computed.w}-${s.computed.l}-${s.computed.t}`);
+      } else {
+        // Never 0-0-0, and no dash either: the record is simply absent.
+        expect(cells, slug).not.toMatch(/\d+-\d+-\d+|—/);
       }
     }
+    expect(data.getStandingFor('lassen')!.hasReportedResults, 'the all corpus holds no EAL league result').toBe(false);
   });
 
-  it('links the club pages once, quietly, outside the list the finder filters', () => {
+  it('links the clubs, commitments and recruiting pages once each, as plain links outside the list the finder filters', () => {
     const html = renderIndex();
-    expect((html.match(/href="\/clubs"/g) ?? []).length, 'app/teams/page.tsx /clubs link').toBe(1);
-    const link = html.indexOf('href="/clubs"');
-    // After the whole list (its last group), not inside it: TeamFinder never hides it.
-    expect(link, 'app/teams/page.tsx /clubs link').toBeGreaterThan(html.lastIndexOf('data-team-group=""'));
-    expect(textOf(html), 'app/teams/page.tsx').toContain(
-      'Club field hockey: the club teams page lists youth field hockey clubs and, for each, the players here a public page ties to it.',
-    );
-  });
-
-  it('links the commitments page once, quietly, outside the list the finder filters', () => {
-    const html = renderIndex();
-    expect((html.match(/href="\/commits"/g) ?? []).length, 'app/teams/page.tsx /commits link').toBe(1);
-    expect(html.indexOf('href="/commits"'), 'app/teams/page.tsx /commits link').toBeGreaterThan(
-      html.lastIndexOf('data-team-group=""'),
-    );
-    expect(textOf(html), 'app/teams/page.tsx').toContain(
-      'College commitments: the college commitments page lists the players here a public page says have committed to play in college, in field hockey or another sport.',
-    );
+    const lastGroup = html.lastIndexOf('data-team-group=""');
+    for (const [href, label] of [
+      ['/commits', 'College commitments'],
+      ['/clubs', 'Club teams'],
+      ['/recruiting', 'Recruiting by school'],
+    ]) {
+      expect((html.match(new RegExp(`href="${href}"`, 'g')) ?? []).length, `app/teams/page.tsx ${href} link`).toBe(1);
+      // After the whole list (its last group), not inside it: TeamFinder never hides it.
+      expect(html.indexOf(`href="${href}"`), `app/teams/page.tsx ${href} link`).toBeGreaterThan(lastGroup);
+      expect(html, `app/teams/page.tsx ${href} label`).toContain(`<a class="sx-action" href="${href}">${label}</a>`);
+    }
   });
 });
 
@@ -704,89 +711,66 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
     }
   });
 
-  it('the identity card states the place on its own line, T-prefixed when level', async () => {
-    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
-    const { ordinal } = await import('../../lib/format');
+  it('the header states the place as a figure over its scope, T-prefixed when level', async () => {
+    const { TeamIdentity, leagueLine } = await import('../../components/teams/TeamIdentity');
+    const { ordinal, recordString } = await import('../../lib/format');
     let checked = 0;
+    let level = 0;
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
       if (!v.hasResults || !v.standing) continue;
       checked += 1;
       const html = renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] }));
-      const text = textOf(html);
       const place = ordinal(v.standing.computed.place);
-      const scope = view.placeScope(v.divisionSize, v.scopeLabel);
-      expect(text, `components/teams/TeamIdentity.tsx ${team.slug} identity line`).toContain(v.identityLine);
-      if (v.standing.tiebreak.shared) {
-        expect(text, `components/teams/TeamIdentity.tsx ${team.slug} level place`).toContain(`T-${place}`);
-        expect(text).toContain(`tied for ${place}`);
-      } else {
-        expect(text, `components/teams/TeamIdentity.tsx ${team.slug} place`).toContain(`${place} ${scope}`);
-      }
+      expect(textOf(html), `components/teams/TeamIdentity.tsx ${team.slug} league line`).toContain(leagueLine(v));
+      // The record is figures, not a label line: league, overall, then the place over the table it is a place in.
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug} league figure`).toContain(
+        `<dt>League</dt><dd>${recordString(v.standing.computed)}</dd>`,
+      );
+      const shown = v.standing.tiebreak.shared ? `T-${place}` : place;
+      if (v.standing.tiebreak.shared) level += 1;
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug} place`).toContain(
+        `<dt>${v.scopeLabel.replace(/&/g, '&amp;')}</dt><dd>${shown}</dd>`,
+      );
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug}: one way to write a level place`).not.toContain('(tied)');
+      // The name is the h1; the logo is the 64px file.
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug} h1`).toContain(
+        `<h1 class="m-0 text-h1 text-ink">${v.team.name.replace(/&/g, '&amp;').replace(/'/g, '&#x27;')}</h1>`,
+      );
+      expect(html, `components/teams/TeamIdentity.tsx ${team.slug} hook`).toContain(`<div data-team-slug="${team.slug}">`);
     }
     expect(checked).toBeGreaterThan(0);
+    expect(level, 'the corpus has a level place to check').toBeGreaterThan(0);
   });
 
-  it('the Place tile writes a level place the same way: T-prefixed value, "tied for" spoken', async () => {
-    const { TeamStatTiles } = await import('../../components/teams/TeamStatTiles');
-    const { ordinal } = await import('../../lib/format');
-    let checked = 0;
-    for (const team of data.getTeams()) {
-      const v = view.buildTeamPageView(team.slug)!;
-      if (!v.hasResults || !v.standing) continue;
-      checked += 1;
-      const text = textOf(renderToStaticMarkup(createElement(TeamStatTiles, { view: v })));
-      const place = ordinal(v.standing.computed.place);
-      expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} sub`).not.toContain('(tied)');
-      if (v.standing.tiebreak.shared) {
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} level place`).toContain(`T-${place}`);
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} spoken`).toContain(`tied for ${place}`);
-      } else {
-        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} place`).not.toContain(`T-${place}`);
-      }
-    }
-    expect(checked).toBeGreaterThan(0);
-  });
-
-  it('the Max tile reads as a total: final points with no games left, never points "still" to win', async () => {
-    const { TeamStatTiles } = await import('../../components/teams/TeamStatTiles');
-    // The corpus is mid-season, so every branch is forced on one team's view: a finished team
-    // (Cupertino, 12/12 on 2026-10-29), one with games left, and a league with no fixed schedule.
-    const base = data.getTeams()
-      .map((team) => view.buildTeamPageView(team.slug)!)
-      .find((v) => v.hasResults && v.context?.scheduled != null)!;
-    const ctx = base.context!;
-    const render = (context: typeof ctx) =>
-      textOf(renderToStaticMarkup(createElement(TeamStatTiles, { view: { ...base, context } })));
-    const finished = render({ ...ctx, counted: ctx.scheduled!, remaining: 0, maxPts: 2 });
-    expect(finished, 'components/teams/TeamStatTiles.tsx finished').toMatch(/Max\s*2\s*final league points/);
-    expect(finished, 'components/teams/TeamStatTiles.tsx finished').toContain('no league games left');
-    const open = render({ ...ctx, counted: ctx.scheduled! - 2, remaining: 2, maxPts: 8 });
-    expect(open, 'components/teams/TeamStatTiles.tsx games left').toMatch(/Max\s*8\s*most points possible/);
-    const unscheduled = render({ ...ctx, scheduled: null, remaining: null, maxPts: null });
-    expect(unscheduled, 'components/teams/TeamStatTiles.tsx no schedule').toContain('no fixed league schedule');
-    for (const text of [finished, open, unscheduled]) expect(text).not.toMatch(/still reachable/);
-  });
-
-  it('the Splits card never prints 0-0-0 for a venue with no league games', async () => {
+  it('Last 5 games never prints 0-0-0 for a venue with no league games, and lists a neutral row only when there is one', async () => {
     const { TeamSplits } = await import('../../components/teams/TeamSplits');
+    const { recordString } = await import('../../lib/format');
     let empty = 0;
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
-      const text = textOf(renderToStaticMarkup(createElement(TeamSplits, { view: v })));
+      const html = renderToStaticMarkup(createElement(TeamSplits, { view: v }));
+      const text = textOf(html);
       expect(text, `components/teams/TeamSplits.tsx ${team.slug}`).not.toContain('0-0-0');
+      expect(html, `components/teams/TeamSplits.tsx ${team.slug}: no card`).not.toMatch(/sx-card|sx-figure\b/);
       const league = v.hasResults && v.standing ? v.standing.computed : null;
       if (!league) continue;
       const splits = [
-        [league.homeRecord, 'no home league games'],
-        [league.awayRecord, 'no away league games'],
-        [league.neutralRecord, 'no neutral-site league games'],
+        [league.homeRecord, 'Home', 'no home league games'],
+        [league.awayRecord, 'Away', 'no away league games'],
       ] as const;
-      for (const [record, words] of splits) {
-        if (record.w + record.l + record.t > 0) continue;
+      for (const [record, label, words] of splits) {
+        if (record.w + record.l + record.t > 0) {
+          expect(html, `components/teams/TeamSplits.tsx ${team.slug} ${label}`).toContain(
+            `>${label}</dt><dd class="sx-num m-0">${recordString(record)}</dd>`,
+          );
+          continue;
+        }
         empty += 1;
         expect(text, `components/teams/TeamSplits.tsx ${team.slug} empty split`).toContain(words);
       }
+      const n = league.neutralRecord;
+      expect(html.includes('>Neutral</dt>'), `components/teams/TeamSplits.tsx ${team.slug} neutral row`).toBe(n.w + n.l + n.t > 0);
     }
     expect(empty, 'the corpus has an empty split to check').toBeGreaterThan(0);
   });
@@ -837,42 +821,44 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     expect(v.elo.elo, 'components/teams/team-view.ts elo gp 0').not.toBeNull();
     expect(v.elo.seeded, 'components/teams/team-view.ts elo gp 0: its own start').toBe(true);
     const text = textOf(await zeroed.renderTeam(slug));
-    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} points · preseason, from 2025-26`);
-    expect(text, 'components/teams/TeamElo.tsx gp 0').toContain('No counted result this season yet, so this is where it starts');
+    expect(text.replace(/\s+/g, ' '), 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} Preseason from 2025-26`);
+    expect(text, 'components/teams/TeamElo.tsx gp 0: no board place').not.toMatch(/\w+ Elo board/);
   });
 
-  it('the Elo card says where THIS team started: its own rating from last season, or average', async () => {
+  it('the Elo rows say what the number rests on: games counted, or provisional, never how it is computed', async () => {
     const { TeamElo } = await import('../../components/teams/TeamElo');
     const view = zeroed.v.buildTeamPageView(slug)!.elo;
     const played = { ...view, elo: 1600, games: 8, preseason: false, provisional: false, boardPlace: null };
-    const seeded = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: true } })));
-    expect(seeded, 'components/teams/TeamElo.tsx seeded').toContain('It started the season from its 2025-26 rating');
-    // A program new to the registry: no 2025-26 rating, though every other team has one.
-    const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
-    // "Counted": last season's forfeits, unscored finals and games against outside schools are not
-    // in the file, so a team can have played and still have no start.
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 game against the nine leagues’ teams and the Southern Section’s five independents, so it started from an average rating.');
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
+    const counted = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: played }))).replace(/\s+/g, ' ');
+    expect(counted, 'components/teams/TeamElo.tsx counted').toContain('Elo rating 1600 Counted 8 games');
+    const provisional = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, games: 2, provisional: true } }))).replace(/\s+/g, ' ');
+    expect(provisional, 'components/teams/TeamElo.tsx provisional').toContain('Elo rating 1600 Provisional 2 games');
+    // The method (the scale, where a team started, what counts) is said once, on the board the link goes to.
+    for (const text of [counted, provisional]) {
+      expect(text, 'components/teams/TeamElo.tsx: no method text').not.toMatch(/Worked out from|It started the season|1500 is an average team/);
+      expect(text, 'components/teams/TeamElo.tsx: the link').toContain('How it is computed');
+    }
   });
 
-  it('the Elo card says a team with no rating at all is not rated, never a 1500 it has not earned', async () => {
+  it('the Elo rows say a team with no rating at all is not rated, never a 1500 it has not earned', async () => {
     const { TeamElo } = await import('../../components/teams/TeamElo');
     const view = zeroed.v.buildTeamPageView(slug)!.elo;
     const unrated = { ...view, elo: null, preseason: false, provisional: false, boardPlace: null };
-    const text = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: unrated })));
-    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('Elo rating Not rated · no counted results yet');
-    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('A rating needs at least one completed game');
-    expect(text, 'components/teams/TeamElo.tsx unrated').not.toContain('1500 is an average team');
+    const html = renderToStaticMarkup(createElement(TeamElo, { elo: unrated }));
+    expect(html, 'components/teams/TeamElo.tsx unrated').toContain('>Elo rating</dt><dd class="sx-num m-0">Not rated</dd>');
+    expect((html.match(/<dt/g) ?? []).length, 'components/teams/TeamElo.tsx unrated: one row').toBe(1);
+    expect(html, 'components/teams/TeamElo.tsx unrated').not.toContain('1500');
   });
 
-  it('the identity card prints no place line at all (never an em dash in a sentence)', async () => {
-    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
+  it('the header prints no figures at all (never 0-0-0)', async () => {
+    const { TeamIdentity, leagueLine } = await import('../../components/teams/TeamIdentity');
     const v = zeroed.v.buildTeamPageView(slug)!;
-    const text = textOf(renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] })));
-    expect(text, 'components/teams/TeamIdentity.tsx gp 0').toContain(v.identityLine);
-    expect(text, 'components/teams/TeamIdentity.tsx gp 0: place line').not.toContain(
-      zeroed.v.placeScope(v.divisionSize, v.scopeLabel),
-    );
+    const html = renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] }));
+    const text = textOf(html);
+    expect(text, 'components/teams/TeamIdentity.tsx gp 0').toContain(leagueLine(v));
+    expect(html, 'components/teams/TeamIdentity.tsx gp 0: no figures').not.toContain('sx-figures');
+    expect(text, 'components/teams/TeamIdentity.tsx gp 0').not.toContain('0-0-0');
+    expect(html, 'components/teams/TeamIdentity.tsx gp 0: no definition list').not.toContain('<dl');
   });
 });
 

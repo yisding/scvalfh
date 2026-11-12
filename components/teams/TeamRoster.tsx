@@ -1,11 +1,6 @@
 import Link from 'next/link';
 
-import { listWords } from '../../lib/format';
-import EmptyState from '../ui/EmptyState';
-import GridRowFiller from '../ui/GridRowFiller';
 import ExternalLink from '../ui/ExternalLink';
-import SectionHeader from '../ui/SectionHeader';
-import Tag from '../ui/Tag';
 import { MissingValue } from '../ui/MissingValue';
 import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
@@ -13,55 +8,24 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * The team page's roster (SPEC §1.1j): every varsity player MaxPreps lists, with whatever number,
  * grade, position and height somebody published.
  *
- * A list, not a table: a five-column table cannot reflow at 320px / 400% zoom without a scroller
- * (DESIGN §10.8), and for many of the programs most columns would be empty. Each row is
- * the number (when the team publishes numbers at all), the name, and one meta line holding only
- * the facts that exist — a blank is never printed as a guess or a placeholder.
+ * A list, not a table (DESIGN §33): a five-column table cannot reflow at 320px without a scroller,
+ * and for many programs most columns would be empty. Each item is the number (when the team
+ * publishes numbers at all), the name, and one line holding only the facts that exist, each its
+ * own element; a blank is never printed as a guess or a placeholder. The items sit in `sx-auto`
+ * columns with a hairline under each: one column on a phone, two in the team page's main column.
+ * Reading order is DOM order: left to right, then down.
  *
- * The rows sit in one card with divider rules, in a row-major grid like the all-league lists on
- * /history (components/history/AwardsBlock.tsx): one column on a phone, two from 640px, three from
- * 1024px, where the section spans both page columns. A grid row's cells share one height, so the
- * rules run straight across. Reading order is DOM order: left to right, then down.
+ * Provenance is visible: a value that did not come from MaxPreps carries a † that the ONE legend
+ * line under the list explains and the Sources row links; where a source disagrees with what is
+ * shown, the disagreement is listed with a link to it. How clubs, commitments and profile links are
+ * collected is said once, on /about.
  *
- * Provenance is visible, not buried: a value that did not come from MaxPreps carries a † that the
- * footnote explains and the Sources row links; where a source disagrees with what is shown, the
- * disagreement is listed with a link to it.
- *
- * A player with a recruiting page of their own (NCSA and the like, or a MaxPreps page they have
- * claimed) gets a line of links under the facts — its own line, so a link never dangles off the end
- * of a wrapped fact line. Alone on its line, a link is not inline text, so it carries the 24px
- * `sx-action` box (WCAG 2.5.8). Each link's
- * accessible name leads with the player's name, so a screen reader's links list tells them apart.
- *
- * A player a public page ties to a youth club gets a club line (DESIGN §17.4) between the facts and
- * the profile links: "Club: SF Hawks", "Club: NorCal Impact · Earlier clubs: Fly FHC, Lightning",
- * "Listed club: Fly FHC" for a club a source names with no date that makes it current. It answers
- * "where does she play" next to the facts and keeps the off-site links as the row's last line. It
- * is its own line for the same reason the profiles are, so it never dangles. Its links are
- * internal, to the club's page on this site, which cites a source for every tie: no arrow, the
- * `sx-action` box, and an accessible name that leads with the player ("Storey Lewis’s club: SF
- * Hawks"), the visible label hidden from assistive technology so it is not read twice. The words
- * are components/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
- * says recall is partial, wherever one appears.
- *
- * A player a public page says has committed to play a college sport gets a commitment line
- * (DESIGN §21.5) right under the facts, above any club line: "Committed: Stanford", or "Signed:
- * Stanford" only where a source says so, and "Committed: St. Lawrence (soccer)" for a sport other
- * than field hockey. It is the same kind of line as the club line — its own line, an internal link
- * with the `sx-action` box and no arrow, the visible label (and the sport in parentheses) hidden
- * from assistive technology and the link's accessible name leading with the player ("Pat Example’s
- * college commitment: Stanford", "Pat Example’s college soccer commitment: St. Lawrence") — and it
- * links the player's row on /commits, which cites the sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
- * /commits and says recall is partial, wherever one appears.
- *
- * Wherever a row has a profile, a club or a commitment line, one more footnote links this school's
- * block on /recruiting, which gathers the same lines for every school.
- *
- * A team with no list still shows the coaches and sources the enrichment file found for it, under
- * the empty state, and the empty state says only what the file records about other sources.
+ * A player with a recruiting page of their own gets a line of links under the facts; a player a
+ * public page says has committed to a college gets a commitment line linking their row on /commits;
+ * a player a public page ties to a club gets a club line linking /clubs/<slug>. Each link's
+ * accessible name starts with the player's name (sr-only), so a links list does not read "NCSA
+ * profile" eleven times. The three lines are shared with /recruiting.
  */
-
-/** "†" for sighted readers; a short spoken note instead of the glyph for a screen reader. */
 function ElsewhereMark() {
   return (
     <>
@@ -75,16 +39,11 @@ function ElsewhereMark() {
 
 function Facts({ facts }: { facts: RosterFact[] }) {
   return (
-    <span className="block text-meta text-ink-2">
+    <span className="flex flex-wrap gap-x-3 text-cell text-ink-2">
       {facts.map((fact, i) => (
-        <span key={i}>
-          {/* A no-break space BEFORE each dot, so a narrow column breaks after a dot and never
-              starts a line with one (the AwardsBlock rule). */}
-          {i > 0 ? <>&nbsp;&middot; </> : null}
-          <span className="whitespace-nowrap">
-            {fact.text}
-            {fact.elsewhere ? <ElsewhereMark /> : null}
-          </span>
+        <span key={i} className="whitespace-nowrap">
+          {fact.text}
+          {fact.elsewhere ? <ElsewhereMark /> : null}
         </span>
       ))}
     </span>
@@ -99,24 +58,16 @@ export type RecruitingLineRow = Pick<RosterRow, 'name' | 'commitment' | 'clubs' 
 
 export function Profiles({ row }: { row: Pick<RecruitingLineRow, 'name' | 'profiles'> }) {
   return (
-    <span className="block text-meta text-ink-2">
-      {row.profiles.map((profile, i) => (
-        <span key={profile.url}>
-          {i > 0 ? ' ' : null}
-          {/* The dot inside the link's nowrap span: the link is inline-flex, an atomic inline, so a
-              no-break space after it would still let a line start with the dot. */}
-          <span className="whitespace-nowrap">
-            <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
-              {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
-                  name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
-              <span>
-                <span className="sr-only">{row.name}&rsquo;s </span>
-                {profile.label}
-              </span>
-            </ExternalLink>
-            {i < row.profiles.length - 1 ? <>&nbsp;&middot;</> : null}
+    <span className="flex flex-wrap gap-x-4 text-cell text-ink-2">
+      {row.profiles.map((profile) => (
+        <ExternalLink key={profile.url} href={profile.url} className="sx-action whitespace-nowrap">
+          {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
+              name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
+          <span>
+            <span className="sr-only">{row.name}&rsquo;s </span>
+            {profile.label}
           </span>
-        </span>
+        </ExternalLink>
       ))}
     </span>
   );
@@ -124,7 +75,7 @@ export function Profiles({ row }: { row: Pick<RecruitingLineRow, 'name' | 'profi
 
 export function Clubs({ row }: { row: RecruitingLineRow }) {
   return (
-    <span className="block text-meta text-ink-2">
+    <span className="block text-cell text-ink-2">
       {row.clubs.map((group, i) => (
         <span key={group.status}>
           {i > 0 ? ' ' : null}
@@ -144,7 +95,7 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
                 <Link
                   href={club.href}
                   prefetch={false}
-                  className="sx-action whitespace-nowrap text-accent hover:underline"
+                  className="sx-action whitespace-nowrap"
                 >
                   {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
                   <span>
@@ -167,7 +118,7 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
 export function Commitment({ row }: { row: RecruitingLineRow }) {
   const line = row.commitment!;
   return (
-    <span className="block text-meta text-ink-2">
+    <span className="block text-cell text-ink-2">
       {/* Hidden from assistive technology: the link says it in its own name. The no-break space
           keeps the label with the college. */}
       <span aria-hidden="true" className="text-ink-3">
@@ -177,7 +128,7 @@ export function Commitment({ row }: { row: RecruitingLineRow }) {
       {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
       {/* Not nowrap, unlike a club name: a college without a short name shows its official one
           ("University of North Carolina at Chapel Hill"), which must wrap at 320px. */}
-      <Link href={line.college.href} prefetch={false} className="sx-action text-accent hover:underline">
+      <Link href={line.college.href} prefetch={false} className="sx-action">
         {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
         <span>
           <span className="sr-only">
@@ -196,12 +147,12 @@ function Coaches({ view }: { view: RosterView }) {
   if (view.coaches.length === 0) return null;
   return (
     <div className="mt-6">
-      <SectionHeader as="h3" size="label" kicker="Coaches" />
+      <h3 className="m-0 mb-1 text-lead text-ink">Coaches</h3>
       <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
         {view.coaches.map((coach) => (
           <li key={coach.key} className="min-w-0">
             <span className="block text-body text-ink">{coach.name}</span>
-            {coach.role ? <span className="block text-meta text-ink-3">{coach.role}</span> : null}
+            {coach.role ? <span className="block text-cell text-ink-2">{coach.role}</span> : null}
           </li>
         ))}
       </ul>
@@ -213,11 +164,11 @@ function Sources({ view }: { view: RosterView }) {
   if (view.sources.length === 0) return null;
   return (
     <div className="mt-6">
-      <SectionHeader as="h3" size="label" kicker="Sources" />
-      <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+      <h3 className="m-0 text-lead text-ink">Sources</h3>
+      <ul className="sx-linkrow mt-0">
         {view.sources.map((s) => (
           <li key={s.url}>
-            <ExternalLink href={s.url} className="sx-pill">
+            <ExternalLink href={s.url} className="sx-action">
               {s.label}
             </ExternalLink>
           </li>
@@ -227,14 +178,17 @@ function Sources({ view }: { view: RosterView }) {
   );
 }
 
-/** The empty state's second sentence for a team MaxPreps lists nobody for: what the file records. */
+/** What the file records about other rosters, for a team MaxPreps lists nobody for. */
 function OtherRostersText({ view }: { view: RosterView }) {
   const other = view.otherRosters;
   if (other.status === 'none') return <>No other public source we checked has a current roster either.</>;
   if (other.status === 'partial') {
     return (
       <>
-        {other.summary} <ExternalLink href={other.source}>See that list</ExternalLink>.
+        {other.summary}{' '}
+        <ExternalLink href={other.source} className="sx-link">
+          See that list
+        </ExternalLink>
       </>
     );
   }
@@ -249,31 +203,30 @@ export function TeamRoster({ view }: TeamRosterProps) {
   const { rows, showNumbers, teamName } = view;
 
   if (view.status === 'error' || view.status === 'pending' || rows.length === 0) {
-    const action = view.rosterUrl
-      ? { href: view.rosterUrl, label: 'Check MaxPreps', external: true }
-      : undefined;
     // Coaches and the sources come from the enrichment file, not the MaxPreps list, so a team
     // with no list still shows them (each renders nothing when it has nothing).
     return (
       <div>
-        <EmptyState
-          heading={
-            view.status === 'error'
-              ? `${teamName}'s roster could not be read.`
-              : view.status === 'pending'
-                ? `${teamName}'s roster has not been collected yet.`
-                : `MaxPreps lists no players for ${teamName}.`
-          }
-          action={action}
-        >
-          {view.status === 'error' ? (
-            'The last roster update failed and there was no earlier list to fall back on.'
-          ) : view.status === 'pending' ? (
-            'No roster update has covered this team yet. It will appear once a run collects it.'
-          ) : (
+        <p className="sx-empty">
+          {view.status === 'error'
+            ? `${teamName}'s roster could not be read.`
+            : view.status === 'pending'
+              ? `${teamName}'s roster has not been collected yet. It will appear once a run collects it.`
+              : `MaxPreps lists no players for ${teamName}.`}
+          {view.rosterUrl ? (
+            <>
+              {' '}
+              <ExternalLink href={view.rosterUrl} className="sx-link">
+                Check MaxPreps
+              </ExternalLink>
+            </>
+          ) : null}
+        </p>
+        {view.status !== 'error' && view.status !== 'pending' ? (
+          <p className="sx-note mt-0">
             <OtherRostersText view={view} />
-          )}
-        </EmptyState>
+          </p>
+        ) : null}
         <Coaches view={view} />
         <Sources view={view} />
       </div>
@@ -281,23 +234,16 @@ export function TeamRoster({ view }: TeamRosterProps) {
   }
 
   const hasCaptain = rows.some((r) => r.captain);
+  // Two digits (and a †) fit 2rem; Valley Christian's "21/88" needs the wider column.
+  const numberWidth = view.numberChars > 3 ? 'w-11' : 'w-8';
 
   return (
     <div>
-      <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="sx-auto m-0 list-none p-0">
         {rows.map((row) => (
-          <li
-            key={row.key}
-            // A rule on top of every row except the first in each column: one row in a single
-            // column, the first two from 640px, the first three from 1024px. `.sx-gridcell`
-            // (app/globals.css) is that rule and the cell's padding, shared by every grid list.
-            className="sx-gridcell flex items-baseline gap-3"
-          >
+          <li key={row.key} className="flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5">
             {showNumbers ? (
-              // Two digits (and a †) fit 2rem; Valley Christian's "21/88" needs the wider column.
-              <span
-                className={`sx-num ${view.numberChars > 3 ? 'w-11' : 'w-8'} shrink-0 text-right text-meta font-semibold text-ink-2`}
-              >
+              <span className={['sx-num shrink-0 text-right text-body text-ink-2', numberWidth].join(' ')}>
                 {row.jersey ? (
                   <>
                     <span className="sr-only">Number </span>
@@ -310,14 +256,15 @@ export function TeamRoster({ view }: TeamRosterProps) {
               </span>
             ) : null}
             <span className="min-w-0 flex-1">
-              <span className="block text-body text-ink">
+              <span className="block text-body font-medium text-ink">
                 {row.name}
                 {row.captain ? (
                   <>
                     {' '}
-                    <Tag label="captain" className="relative -top-px ml-1">
-                      C
-                    </Tag>
+                    <span className="text-cell font-semibold text-ink-2">
+                      <span aria-hidden="true">C</span>
+                      <span className="sr-only">captain</span>
+                    </span>
                   </>
                 ) : null}
               </span>
@@ -328,101 +275,44 @@ export function TeamRoster({ view }: TeamRosterProps) {
             </span>
           </li>
         ))}
-        <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} />
       </ul>
 
-      <div className="mt-3 max-w-prose text-meta text-ink-3">
-        <p className="m-0">
-          What the coach entered on MaxPreps
-          {view.asOf ? ` as of ${view.asOf}` : ''}. Anything nobody published is left blank, never
-          guessed.
-          {hasCaptain ? (
-            <>
-              {' '}
-              <Tag className="relative -top-px">C</Tag> marks a captain.
-            </>
-          ) : null}
-        </p>
+      {/* ONE legend line: where the list comes from and what its two marks mean. */}
+      <p className="sx-note">
+        From MaxPreps{view.asOf ? `, as of ${view.asOf}` : ''}.{hasCaptain ? ' C: captain.' : ''}
         {view.hasElsewhere ? (
-          <p className="mt-1 mb-0">
-            <span aria-hidden="true">&dagger;</span> From another public source
-            {view.elsewhereSources.length > 0 ? <> ({listWords(view.elsewhereSources)})</> : null} where
-            MaxPreps has it blank; each source is linked under Sources.
-            {view.hasDerivedGrade
-              ? ' A few grades are worked out from a class year listed for an earlier season.'
-              : ''}
-          </p>
+          <>
+            {' '}
+            <span aria-hidden="true">&dagger;</span>: from another public source, linked under Sources.
+          </>
         ) : null}
-        {view.profilePlatforms.length > 0 ? (
-          <p className="mt-1 mb-0">
-            Profile links go to players&rsquo; own recruiting pages on{' '}
-            {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
-            school or class year.
-          </p>
-        ) : null}
-        {view.hasClaimedMaxPreps ? (
-          <p className="mt-1 mb-0">
-            A MaxPreps profile link is the player&rsquo;s own page on MaxPreps, the one this roster
-            comes from, shown only where the player or a parent has claimed it there.
-          </p>
-        ) : null}
-        {view.hasCommitments ? (
-          <p className="mt-1 mb-0">
-            Commitment lines link to the player&rsquo;s entry on the{' '}
-            <Link href="/commits" prefetch={false} className="text-accent hover:underline">
-              college commitments
-            </Link>{' '}
-            page, which cites a source for each one; &ldquo;Signed&rdquo; appears only where a source
-            says so. They were checked by hand on {view.commitsCheckedOn} and are not part of the
-            twice-daily update. Recall is partial: a player with no commitment line may still have
-            committed.
-          </p>
-        ) : null}
-        {view.hasClubs ? (
-          <p className="mt-1 mb-0">
-            Club lines link to the club&rsquo;s page on this site, which cites a source for each
-            player it lists.
-            {view.hasListedClub
-              ? ' A “listed club” is one a source names without saying whether the player is still with it.'
-              : ''}{' '}
-            Recall is partial: a player with no club line may still play for a club.
-          </p>
-        ) : null}
-        {view.recruitingHref ? (
-          <p className="mt-1 mb-0">
-            Every school&rsquo;s recruiting profiles, clubs and commitments are gathered on the{' '}
-            <Link href={view.recruitingHref} prefetch={false} className="text-accent hover:underline">
-              recruiting
-            </Link>{' '}
-            page.
-          </p>
-        ) : null}
-        {view.jvLeftOut > 0 ? (
-          <p className="mt-1 mb-0">
-            MaxPreps lists {teamName}&rsquo;s whole program on one page; the{' '}
-            {view.jvLeftOut} players the school lists as JV are not shown.
-          </p>
-        ) : null}
-        {view.status === 'carried-forward' ? (
-          <p className="mt-1 mb-0 text-ink-2">
-            The latest roster update could not read MaxPreps, so this is the list as it stood
-            {view.asOf ? ` on ${view.asOf}` : ' before that'}.
-          </p>
-        ) : null}
-      </div>
+        {view.jvLeftOut > 0 ? ` The ${view.jvLeftOut} players the school lists as JV are not shown.` : ''}
+        {view.status === 'carried-forward' ? ' The latest roster update could not read MaxPreps.' : ''}
+      </p>
+      {view.recruitingHref ? (
+        <ul className="sx-linkrow">
+          <li>
+            <Link href={view.recruitingHref} prefetch={false} className="sx-action">
+              Recruiting
+            </Link>
+          </li>
+        </ul>
+      ) : null}
 
       <Coaches view={view} />
 
       {view.conflicts.length > 0 ? (
         <div className="mt-6">
-          <SectionHeader as="h3" size="label" kicker="Where sources disagree" />
-          <ul className="m-0 flex max-w-prose list-none flex-col gap-1 p-0 text-meta text-ink-2">
+          <h3 className="m-0 mb-1 text-lead text-ink">Where sources disagree</h3>
+          <ul className="m-0 flex max-w-prose list-none flex-col gap-1 p-0 text-cell text-ink-2">
             {view.conflicts.map((c) => (
               <li key={c.key}>
                 <span className="text-ink">{c.name}</span>: {c.field}{' '}
                 {c.shown === null ? 'not listed here' : `${c.shown} here`}, {c.other}
                 {c.derived ? ', worked out from ' : ' on '}
-                <ExternalLink href={c.sourceUrl}>{c.sourceLabel}</ExternalLink>
+                <ExternalLink href={c.sourceUrl} className="sx-link">
+                  {c.sourceLabel}
+                </ExternalLink>
                 {c.now ? `, so ${c.now} now` : ''}.
               </li>
             ))}

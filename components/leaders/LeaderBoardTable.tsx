@@ -1,73 +1,33 @@
 import Link from 'next/link';
-import { Fragment } from 'react';
 
 import MissingValue from '../ui/MissingValue';
 import { PinNote } from '../ui/PinNote';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './types';
+import type { LeaderBoard, LeaderCell, LeaderRow } from './types';
 
 /**
- * One /leaders board (DESIGN §16): an h3, a ranked table, and the line that says what it counts,
- * with a closed "How it’s worked out" under it where a derived number needs more (DESIGN §28).
- * A player board's places from 11th to 25th wait in a closed `<details>` under the table ("Show 15
- * more players", DESIGN §23), so the board reads as a top 10 and opens with zero JavaScript. Every
- * player or school tied for a board's last place is listed, however many. They
- * are a second table with its own head and caption, in a card of the same width, so the columns
- * line up with the first and its sticky head is there while the reader scrolls through them.
+ * One /leaders board (DESIGN §16, §33): a group strip with the board's title over a ranked list of
+ * its top five, then a closed "Show all" with every row after the fifth, so the board reads as a
+ * top five and opens with zero JavaScript. Every player or school tied for a board's last place is
+ * listed, however many: they are all in the DOM, five above the disclosure and the rest inside it,
+ * in one continuous numbering (`<ol start={6}>`).
  *
- * A real `<table>`: a leaderboard is tabular data a reader scans down a column. The layout is
- * fixed from a `<colgroup>`, as on /history, so the numbers line up from board to board, and every
- * board keeps to at most three numeric columns so a 320px phone needs no scroller (DESIGN §10.8).
- * The column the board is ranked on is the bold one.
+ * A row (`.sx-leader`): the place, the school's logo, the name over one small line (a player's
+ * school; a school's league), and ONE figure: the number the board is ranked on. No column heads
+ * and no second number: the strip says what the figure is. The leader's figure is one step larger
+ * (CSS). A list, not a table: one figure per row needs no columns.
  *
- * The place cell follows the standings tables: `1`, `T7` for a shared place (with "tied for 7th"
- * for a screen reader), never colour alone. Every row carries `data-team-slug`, so the pinned-team
- * script and `PinnedTeamMarks` draw the 2px accent rule on the pinned team's rows (on a player
- * board, all of that team's players) with the visually hidden "Your team" note beside it.
+ * The place follows the standings tables: `1`, `T7` for a shared place (with "tied for 7th" for a
+ * screen reader), never colour alone. Every row carries `data-team-slug`, so the pinned-team script
+ * and `PinnedTeamMarks` mark the reader's team's rows (on a player board, all of that team's
+ * players); the hidden "Your team" note leads the row link's name.
  *
- * Below 640px a name cell shows the team's short name (the phone cell is about 100-125px wide, so
- * "Convent of the Sacred Heart" would take three lines), and the full name from there. A player's
- * grade and position follow the school and league, as the roster prints them ("Junior ·
- * Midfield"): on the same line from 640px, on a line of their own below it. The row header has no
- * `aria-label`: its content is what is read, so the pinned row's note is too. On a school board the
- * row is one link: the school link's `::after` stretches over the `relative` row, as on the compact
- * standings table, and carries the focus ring. A player board's row is about the player, so there
- * the school stays a plain inline link in the meta line.
+ * The row is one link: the name's `::after` stretches over the `relative` row (`.sx-rowlink`) and
+ * carries the focus ring. A player's row goes to the team's player stats, a school's to its page.
+ * The names are the short ones at every width, so a row never needs two lines.
  */
-
-/**
- * Column widths, by the widest value each column holds in 13px mono plus its gutter; a key left out
- * takes the default (DEFAULT_WIDTH, DEFAULT_LAST_WIDTH). Keyed by LeaderColumnKey, so a column the
- * view model renames cannot silently fall back to the default.
- */
-type Widths = Readonly<Partial<Record<LeaderColumnKey, string>>>;
-const DEFAULT_WIDTH = 'w-11';
-const DEFAULT_LAST_WIDTH = 'w-[3.75rem]';
-const WIDTH: Widths = {
-  record: 'w-16', // "12-1-3"
-  pct: 'w-[3.25rem] sm:w-[3.75rem]', // "1.000", after the wider gutter below
-  savePct: 'w-14', // "85.9%"
-  perGame: 'w-12', // "7.17"
-};
-/** The last column also carries the card's 16px inner edge. */
-const LAST_WIDTH: Widths = {
-  record: 'w-20',
-  pct: 'w-16',
-  savePct: 'w-[4.5rem]',
-  perGame: 'w-16',
-  adjusted: 'w-16', // "17.76"
-  adjustedPoints: 'w-16', // "228.5"
-};
-
-/**
- * The gutter before a column: 8px, except before Pct, which follows the record. Both are
- * dash-separated mono numbers, and at 8px "10-0-0 1.000" read as one string.
- */
-const GUTTER: Widths = {
-  pct: 'pl-3 sm:pl-5',
-};
 
 function Cell({ cell }: { cell: LeaderCell }) {
   if (cell.text === null) return <MissingValue words="not recorded" />;
@@ -80,162 +40,41 @@ function Cell({ cell }: { cell: LeaderCell }) {
   );
 }
 
-/** Short name below 640px, the full name from there. */
-function TeamName({ name, shortName }: { name: string; shortName: string }) {
-  if (name === shortName) return <>{name}</>;
-  return (
-    <>
-      <span data-twin className="sm:hidden">
-        {shortName}
-      </span>
-      <span data-twin className="hidden sm:inline">
-        {name}
-      </span>
-    </>
-  );
-}
+/** How many rows a board shows before "Show all". */
+export const BOARD_TOP = 5;
 
-function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
+function Row({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
   const { team } = row;
-  // `prefetch={false}` for the reason every team link on the site carries it (NavLink.tsx,
-  // PinNote.tsx): the routes are static, and `auto` would download every linked team page
-  // the moment a board scrolled into view.
-  if (board.kind === 'player') {
-    return (
-      <>
-        <span className="block text-body text-ink">{row.name}</span>
-        <span className="block text-meta text-ink-3">
-          {/* The school is a link inside a run of text (school · league · grade · position), so it
-              is accent and underlined like the archive's and /commits' school links: the
-              globals.css rule that underlines a link in running text does not reach a `<th>`. */}
-          <Link
-            href={team.href}
-            prefetch={false}
-            className="text-accent underline decoration-from-font underline-offset-[0.2em]"
-          >
-            <TeamName name={team.name} shortName={team.shortName} />
-          </Link>
-          {/* A no-break space BEFORE each dot and each part kept whole (the AwardsBlock rule), so
-              a narrow cell wraps between parts and never starts a line with a dot. */}
-          &nbsp;<span aria-hidden="true">&middot;</span> <span className="whitespace-nowrap">{team.leagueShort}</span>
-          {row.facts.length > 0 ? (
-            // Grade and position: on the school's line from 640px; below it on a line of their
-            // own, so a 130-200px cell does not wrap "St. Ignatius · SCVAL · Junior ·" mid-run.
-            <span className="block sm:inline">
-              {row.facts.map((fact, i) => (
-                <Fragment key={fact}>
-                  {i === 0 ? (
-                    <span className="hidden sm:inline">
-                      &nbsp;<span aria-hidden="true">&middot;</span>{' '}
-                    </span>
-                  ) : (
-                    <>
-                      &nbsp;<span aria-hidden="true">&middot;</span>{' '}
-                    </>
-                  )}
-                  <span className="whitespace-nowrap">{fact}</span>
-                </Fragment>
-              ))}
-            </span>
-          ) : null}
-        </span>
-      </>
-    );
-  }
+  const player = board.kind === 'player';
+  const recordAt = player ? -1 : board.columns.findIndex((column) => column.key === 'record');
+  const record = recordAt >= 0 && recordAt !== board.rankedBy ? row.cells[recordAt] : null;
   return (
-    <span className="flex items-center gap-2">
-      {/* The monogram waits for 640px: below it the cell is too narrow to spare 32px. */}
-      <span className="hidden shrink-0 sm:inline-flex">
-        <TeamMonogram team={team} size={24} />
+    <li className="sx-leader" data-team-slug={team.slug}>
+      <span className="sx-num">
+        <PlaceMark place={row.rank} shared={row.tied} />
       </span>
+      <TeamMonogram team={team} size={24} />
       <span className="min-w-0">
-        {/* The ring goes on the stretched `::after`, so a keyboard reader sees the whole row that a
-            tap opens, not just the name (`.sx-rowlink`, app/globals.css). */}
-        <Link
-          href={team.href}
-          prefetch={false}
-          className="sx-rowlink block text-body text-ink no-underline hover:underline"
-        >
-          <TeamName name={team.name} shortName={team.shortName} />
+        {/* `prefetch={false}` for the reason every team link on the site carries it (NavLink.tsx,
+            PinNote.tsx): the routes are static, and `auto` would download every linked team page
+            the moment a board scrolled into view. */}
+        <Link href={team.href} prefetch={false} className="sx-leader-name sx-rowlink">
+          {/* Only the pinned team's rows display this (app/globals.css). */}
+          <span className="sr-only">
+            <PinNote text={player ? 'Your team’s player. ' : 'Your team. '} />
+          </span>
+          {player ? row.name : team.shortName}
         </Link>
-        <span className="block text-meta text-ink-3">{team.leagueShort}</span>
+        <small>
+          {player ? team.shortName : team.leagueShort}
+          {/* A board ranked on a rate says the record behind it: ".810" alone hides 17-4-0. */}
+          {record ? <span className="sx-num ml-2">{record.sr ? <><span aria-hidden="true">{record.text}</span><span className="sr-only">{record.sr}</span></> : record.text}</span> : null}
+        </small>
       </span>
-    </span>
-  );
-}
-
-/** The table in its card: the board's own rows, or the ones behind "Show N more". */
-function BoardTable({
-  board,
-  rows,
-  caption,
-  className = '',
-}: {
-  board: LeaderBoard;
-  rows: readonly LeaderRow[];
-  caption: string;
-  className?: string;
-}) {
-  const last = board.columns.length - 1;
-  return (
-    <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>
-      <table className="sx-table table-fixed text-meta">
-        <caption className="sr-only">{caption}</caption>
-        <colgroup>
-          {/* 48px: 16 of left padding, "T10" in 13px mono, 8 of gutter. */}
-          <col className="w-12" />
-          <col />
-          {board.columns.map((c, i) => (
-            <col
-              key={c.key}
-              className={i === last ? (LAST_WIDTH[c.key] ?? DEFAULT_LAST_WIDTH) : (WIDTH[c.key] ?? DEFAULT_WIDTH)}
-            />
-          ))}
-        </colgroup>
-        <thead>
-          <tr>
-            <th scope="col" className="pl-4 pr-2">
-              <span aria-hidden="true">#</span>
-              <span className="sr-only">Place</span>
-            </th>
-            <th scope="col">{board.kind === 'player' ? 'Player' : 'School'}</th>
-            {board.columns.map((c, i) => (
-              <th key={c.key} scope="col" className={`${GUTTER[c.key] ?? 'pl-2'} text-right ${i === last ? 'pr-4' : ''}`}>
-                <span aria-hidden="true">{c.label}</span>
-                <span className="sr-only">{c.title}</span>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.key} data-team-slug={row.team.slug} className="relative h-14">
-              <td className="pl-4 pr-2 text-cell text-ink-3">
-                <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />
-              </td>
-              <th scope="row" className="py-2 text-left font-normal">
-                {/* Only the pinned team's rows display this (app/globals.css), so the accent
-                    rule is never the only thing saying "your team". */}
-                <span className="sr-only">
-                  <PinNote text={board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '} />
-                </span>
-                <NameCell board={board} row={row} />
-              </th>
-              {row.cells.map((cell, i) => (
-                <td
-                  key={board.columns[i].key}
-                  className={`sx-num ${GUTTER[board.columns[i].key] ?? 'pl-2'} text-right text-cell ${
-                    i === board.rankedBy ? 'font-semibold text-ink' : 'text-ink-2'
-                  } ${i === last ? 'pr-4' : ''}`}
-                >
-                  <Cell cell={cell} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <span className="sx-num">
+        <Cell cell={row.cells[board.rankedBy]} />
+      </span>
+    </li>
   );
 }
 
@@ -244,29 +83,33 @@ export interface LeaderBoardTableProps {
 }
 
 export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
-  const { extra } = board;
+  const rows = [...board.rows, ...(board.extra?.rows ?? [])];
+  const rest = rows.slice(BOARD_TOP);
   return (
-    <section id={board.id} className="min-w-0">
-      <SectionHeader as="h3" kicker={board.title} meta={board.meta} />
-      {board.rows.length === 0 ? (
+    <section id={board.id} className="sx-board min-w-0">
+      {/* The qualifier is the board's rule ("At least 9 games"), said in the strip's end slot. */}
+      <SectionHeader strip kicker={board.title} meta={/^At least /.test(board.meta) ? board.meta : undefined} />
+      {rows.length === 0 ? (
         // No row listed: nobody qualifies yet.
-        <p className="sx-card m-0 p-4 text-meta text-ink-2">{board.empty}</p>
+        <p className="sx-empty">{board.empty}</p>
       ) : (
-        <BoardTable board={board} rows={board.rows} caption={board.caption} />
+        <ol aria-label={board.caption}>
+          {rows.slice(0, BOARD_TOP).map((row) => (
+            <Row key={row.key} board={board} row={row} />
+          ))}
+        </ol>
       )}
-      {extra ? (
-        <details className="sx-disclosure mt-1">
-          <summary>{extra.summary}</summary>
-          {/* `ps-0`: the card keeps the board's full width, not the disclosure body's hang under
-              the summary text. */}
-          <BoardTable board={board} rows={extra.rows} caption={extra.caption} className="mt-1 ps-0" />
-        </details>
-      ) : null}
-      <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{board.note}</p>
-      {board.method ? (
-        <details className="sx-disclosure mt-1 max-w-prose text-meta">
-          <summary>How it’s worked out</summary>
-          <p className="m-0 mt-1 text-ink-3">{board.method}</p>
+      {rest.length > 0 ? (
+        <details className="sx-disclosure">
+          <summary>
+            <span data-when="closed">Show all</span>
+            <span data-when="open">Show fewer</span>
+          </summary>
+          <ol start={BOARD_TOP + 1} aria-label={`${board.caption}, continued`}>
+            {rest.map((row) => (
+              <Row key={row.key} board={board} row={row} />
+            ))}
+          </ol>
         </details>
       ) : null}
     </section>

@@ -15,12 +15,14 @@ import { describe, expect, it } from 'vitest';
 import { PlayoffBracket } from '../../components/playoffs/PlayoffBracket';
 import { buildBrackets, type BracketPath } from '../../components/playoffs/bracket-model';
 import { gameHref } from '../../lib/game-id';
+import { shortDate } from '../../lib/format';
 import { CCS } from '../../lib/league-config/sections';
 import type { CcsPlayoffs, Game } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025, unplayed } from '../fixtures/ccs/bracket-2025';
 import { textOf } from './html-text';
 
 const COMPONENT = 'components/playoffs/PlayoffBracket.tsx';
+/** The retired winner bar (spec §5.6: the winner is the bold line, `data-won`, and nothing else). */
 const WINNER_RULE = 'inset 2px 0 0 var(--sx-text)';
 
 const playoffs: CcsPlayoffs = {
@@ -47,10 +49,20 @@ function paths(games: Game[], seeds = SEEDS): BracketPath[] {
   return buildBrackets({ ...playoffs, games }, seeds);
 }
 
-/** The desktop twin (the second `data-twin` list), where the bracket-specific card markup lives. */
-function desktop(html: string): string {
-  const at = html.lastIndexOf('<ol data-twin');
-  return html.slice(at);
+/** The bracket's cells: one `.sx-tie` each, sliced out of the markup in order. */
+function ties(html: string): string[] {
+  return html.split(/<div (?:id="[^"]*" )?class="sx-tie(?: sx-target)?(?=")/).slice(1);
+}
+
+/** A cell's two lines, each with its `data-won` / `data-lost` mark and its text. */
+function linesOf(tie: string): Array<{ won: boolean; lost: boolean; text: string }> {
+  return tie
+    .split('<div class="sx-tie-line"')
+    .slice(1)
+    .map((line) => {
+      const open = line.slice(0, line.indexOf('>'));
+      return { won: open.includes('data-won'), lost: open.includes('data-lost'), text: textOf(`<div${line}`) };
+    });
 }
 
 describe('PlayoffBracket on the 2025 championship', () => {
@@ -58,46 +70,72 @@ describe('PlayoffBracket on the 2025 championship', () => {
   const html = render(d1);
   const text = textOf(html);
 
-  it('prints every seed digit beside its team, in both twins', () => {
-    const d = desktop(html);
-    // 1 St. Ignatius v 8 Palo Alto on the first card: the digits as their own spans.
-    expect(d, COMPONENT).toMatch(/<span class="sx-num[^"]*">1<\/span>/);
-    expect(d, COMPONENT).toMatch(/<span class="sx-num[^"]*">8<\/span>/);
+  it('is ONE bracket (no phone / desktop twin), each round an h3 with its day', () => {
+    expect(html, COMPONENT).not.toContain('data-twin');
+    expect(html.match(/class="sx-bracket/g)?.length, COMPONENT).toBe(1);
+    expect([...html.matchAll(/<h3>([^<]*)<\/h3>/g)].map((m) => m[1]), COMPONENT).toEqual([
+      `Quarterfinals, ${shortDate(CCS.keyDates.quarterfinals)}`,
+      `Semifinals, ${shortDate(CCS.keyDates.semifinals)}`,
+      `Final, ${shortDate(CCS.keyDates.finals)}`,
+    ]);
+    expect(html, COMPONENT).not.toContain('<h4');
+    // Without JavaScript every round shows, stacked: the server marks them all, and the tab row is hidden.
+    expect(html.match(/class="sx-round" data-current=""/g)?.length, COMPONENT).toBe(3);
+    expect(html, COMPONENT).toMatch(/<nav class="sx-round-tabs sx-js-only[^"]*"/);
+    expect([...html.matchAll(/<button type="button" class="sx-tab"[^>]*>([^<]*)<\/button>/g)].map((m) => m[1]), COMPONENT).toEqual([
+      'Quarterfinals',
+      'Semifinals',
+      'Final',
+    ]);
+    // Seven cells; the quarterfinals and the semifinals are paired for the connectors, the final is not.
+    expect(ties(html), COMPONENT).toHaveLength(7);
+    expect(html.match(/class="sx-tie-pair"/g)?.length, COMPONENT).toBe(3);
+  });
+
+  it('prints every seed beside its team as #n', () => {
     for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
-      expect(d.match(new RegExp(`<span class="sx-num[^"]*">${seed}</span>`, 'g'))?.length ?? 0, `${COMPONENT}: seed ${seed}`).toBeGreaterThan(0);
+      expect(html.match(new RegExp(`<span class="sx-seed sx-num">#(?:<!-- -->)?${seed}</span>`, 'g'))?.length ?? 0, `${COMPONENT}: seed ${seed}`).toBeGreaterThan(0);
     }
     expect(text, COMPONENT).toContain('Quarterfinals');
     expect(text, COMPONENT).toContain('Semifinals');
     expect(text, COMPONENT).toContain('Final');
   });
 
-  it('marks the winner’s line with the 2px inset rule and nothing on the loser’s', () => {
-    const d = desktop(html);
-    // Seven games, one winner each in the desktop twin.
-    expect(d.split(WINNER_RULE).length - 1, COMPONENT).toBe(7);
-    // The final: Los Gatos 3-0 Saint Francis — Los Gatos' line carries the rule, Saint Francis' does not.
-    const final = d.slice(d.lastIndexOf('<li class="flex min-w-0 items-center">'));
-    // Each line carries its team's slug, so the pinned team's line can be tinted (app/globals.css .sx-pinnable).
-    const lines = [...final.matchAll(/<span class="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2"( style="[^"]*")?( data-team-slug="[^"]*")?>/g)];
+  it('marks the winner’s line data-won and the other data-lost, with no bar and no star', () => {
+    // Seven games, one winner and one loser each.
+    expect(html.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-won=""/g)?.length, COMPONENT).toBe(7);
+    expect(html.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-lost=""/g)?.length, COMPONENT).toBe(7);
+    expect(html, COMPONENT).not.toContain(WINNER_RULE);
+    expect(html, COMPONENT).not.toContain('style=');
+    expect(html, COMPONENT).not.toContain('sx-pin-note');
+    // The final: Los Gatos 3-0 Saint Francis. Away first: Saint Francis' line is the loser's, Los Gatos' the winner's.
+    const final = ties(html).at(-1)!;
+    expect(final.startsWith('" data-state="final"'), COMPONENT).toBe(true);
+    const lines = linesOf(final);
     expect(lines).toHaveLength(2);
-    expect(lines.map((m) => (m[1] ?? '').includes(WINNER_RULE)), COMPONENT).toEqual([false, true]);
-    expect(textOf(final), COMPONENT).toMatch(/Saint Francis.*Los Gatos/);
+    expect(lines.map((l) => [l.won, l.lost]), COMPONENT).toEqual([[false, true], [true, false]]);
+    expect(lines[0].text.trim(), COMPONENT).toMatch(/^Saint Francis.* 0$/);
+    expect(lines[1].text.trim(), COMPONENT).toMatch(/^Los Gatos.* 3$/);
+    // Each line carries its team's slug (the pin hook), and each score is a figure of its own.
+    expect(final, COMPONENT).toContain('data-team-slug="los-gatos"');
+    expect(final.match(/<span class="sx-num sx-tie-score">\d+<\/span>/g)?.length, COMPONENT).toBe(2);
   });
 
-  it('links every named game card to its game page, with prefetch off', () => {
-    const d = desktop(html);
+  it('links every named game cell to its game page, once, with prefetch off', () => {
     for (const g of GAMES.filter((x) => x.bracket?.name === 'Division 1')) {
-      expect(d, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g.contestId)}"`);
+      expect(html, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g.contestId)}"`);
     }
-    expect(d.match(/href="\/game\//g)?.length, COMPONENT).toBe(7);
+    expect(html.match(/href="\/game\//g)?.length, COMPONENT).toBe(7);
     expect(html, COMPONENT).not.toContain('prefetch="true"');
+    // A cell that links its game holds no other link: its team names are plain text.
+    expect(html, COMPONENT).not.toContain('href="/teams/');
   });
 
   it('speaks each card as one sentence and hides the drawn lines', () => {
     expect(html, COMPONENT).toContain('<span class="sr-only">');
     expect(html, COMPONENT).toContain('aria-hidden="true"');
-    // describeGame's sentence for a final, once per card (both twins): 'Los Gatos 3, Saint Francis 0, final.'
-    expect(text, COMPONENT).toContain('Los Gatos 3, Saint Francis 0, final.');
+    // describeGame's sentence for a final, once per cell: 'Los Gatos 3, Saint Francis 0, final.'
+    expect(text.split('Los Gatos 3, Saint Francis 0, final.').length - 1, COMPONENT).toBe(1);
   });
 
   it('never writes "eliminated" and renders no 0-0', () => {
@@ -123,32 +161,49 @@ describe('PlayoffBracket before the games exist', () => {
     expect(text, COMPONENT).toContain('TBD');
     // The sentence a screen reader hears for a pairing.
     expect(text, COMPONENT).toContain('Quarterfinal: 8 Palo Alto v 1 St. Ignatius. Not listed on MaxPreps yet.');
-    expect(text, COMPONENT).toContain('Semifinal: the winner of 4 Saint Francis v 5 Gilroy v the winner of 1 St. Ignatius v 8 Palo Alto. Not listed on MaxPreps yet.');
+    expect(text, COMPONENT).toContain('Semifinal: the winner of 1 St. Ignatius v 8 Palo Alto v the winner of 4 Saint Francis v 5 Gilroy. Not listed on MaxPreps yet.');
     expect(html, COMPONENT).not.toContain(WINNER_RULE);
   });
 
-  it('an unplayed game card prints its date and time, the location without "@ ", and Tickets / NFHS stream pills', () => {
+  it('a seeds-only cell has no state; a place two results away is drawn in the secondary grey', () => {
+    const [d1] = paths([]);
+    const html = render(d1);
+    expect(html, COMPONENT).not.toContain('data-state=');
+    expect(html, COMPONENT).toMatch(/<span class="sx-game-name [^"]*font-normal [^"]*text-ink-2">St\. Ignatius or Palo Alto<\/span>/);
+    expect(html, COMPONENT).toMatch(/<span class="sx-game-name [^"]*font-normal [^"]*text-ink-2">TBD<\/span>/);
+    // A seeded team with no game page yet: its name is a pointer-only link to its team page.
+    expect(html, COMPONENT).toMatch(/<a tabindex="-1" class="sx-game-name sx-teamlink" href="\/teams\/st-ignatius">St\. Ignatius<\/a>/);
+  });
+
+  it('an unplayed game cell prints its start time in the score position, the location without "@ ", and Tickets / NFHS stream links', () => {
     const quarters = GAMES.filter((g) => g.dateKey === CCS.keyDates.quarterfinals && g.bracket?.name === 'Division 1');
     const [first, second, ...rest] = quarters;
     const ticketed = unplayed(first, { venue: '@ St. Ignatius College Preparatory', goFan: 'https://gofan.co/app/events/1' });
     const tba = unplayed(second, { timeTba: true, venue: null, nfhsStream: 'https://www.nfhsnetwork.com/events/cifccs/gam1' });
     const [d1] = paths([ticketed, tba, ...rest]);
     const html = render(d1);
-    const d = desktop(html);
-    const text = textOf(d);
-    expect(text, COMPONENT).toContain('Sat Nov 7 · 4:00 PM PT');
-    expect(text, COMPONENT).toContain('St. Ignatius College Preparatory');
+    const text = textOf(html);
+    const upcoming = ties(html).filter((t) => t.startsWith('" data-state="upcoming"'));
+    expect(upcoming, COMPONENT).toHaveLength(2);
+    // The round's heading carries the day; the cell carries the time where a score will be (never a score, never a dash).
+    expect(text, COMPONENT).toContain(`Quarterfinals, ${shortDate(CCS.keyDates.quarterfinals)}`);
+    const cellOf = (g: Game) => upcoming.find((t) => t.includes(gameHref(g.contestId)))!;
+    expect(cellOf(ticketed), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4:00 PM</span>');
+    expect(cellOf(tba), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">TBD</span>');
+    for (const cell of upcoming) expect(cell, COMPONENT).not.toContain('sx-tie-score');
+    expect(text, COMPONENT).toContain('at St. Ignatius College Preparatory');
     expect(text, COMPONENT).not.toContain('@ St. Ignatius');
-    expect(text, COMPONENT).toContain('Sat Nov 7 · time TBA');
-    expect(d, COMPONENT).toContain('href="https://gofan.co/app/events/1"');
-    expect(d, COMPONENT).toContain('href="https://www.nfhsnetwork.com/events/cifccs/gam1"');
+    expect(html, COMPONENT).toContain('href="https://gofan.co/app/events/1"');
+    expect(html, COMPONENT).toContain('href="https://www.nfhsnetwork.com/events/cifccs/gam1"');
     expect(text, COMPONENT).toContain('Tickets');
     expect(text, COMPONENT).toContain('NFHS stream');
-    // The pills sit beside the game link, never inside it: an anchor holds no anchor.
-    expect(d, COMPONENT).not.toMatch(/<a [^>]*href="\/game\/[^"]*"[^>]*>(?:(?!<\/a>)[\s\S])*<a /);
-    // Both unplayed cards still link their game page and show no winner rule or score.
-    expect(d, COMPONENT).toContain(`href="${gameHref(ticketed.contestId)}"`);
-    expect(d, COMPONENT).toContain(`href="${gameHref(tba.contestId)}"`);
-    expect(d.split(WINNER_RULE).length - 1, COMPONENT).toBe(2);
+    // The links sit beside the game link, never inside it: an anchor holds no anchor.
+    expect(html, COMPONENT).not.toMatch(/<a [^>]*href="\/game\/[^"]*"[^>]*>(?:(?!<\/a>)[\s\S])*<a /);
+    // Both unplayed cells still link their game page and mark no winner; the two played quarterfinals do.
+    expect(html, COMPONENT).toContain(`href="${gameHref(ticketed.contestId)}"`);
+    expect(html, COMPONENT).toContain(`href="${gameHref(tba.contestId)}"`);
+    expect(html.match(/ data-won=""/g)?.length, COMPONENT).toBe(2);
+    for (const cell of upcoming) expect(cell, COMPONENT).not.toMatch(/data-won|data-lost/);
+    expect(html, COMPONENT).not.toContain(WINNER_RULE);
   });
 });

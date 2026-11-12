@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
-import SectionHeader from '../ui/SectionHeader';
 import type { ClubHostLink, ClubPageView } from './club-view';
 
 /**
- * A club page's "Where this comes from" (DESIGN §17.1): the club's own roster pages, then the pages
- * the club record was read from, then when, and how players are matched.
+ * A club page's "Where this comes from" (DESIGN §33): the club's own roster pages, then the pages
+ * the club record was read from, then when. How players are matched is said once, on /about, which
+ * the last line links.
  *
  * The roster pages are why the players section can stay narrow: a club's own roster names many more
  * players than the tracked varsity rows, and those are linked, never copied (SPEC §1.1j2, the
@@ -22,13 +22,13 @@ import type { ClubHostLink, ClubPageView } from './club-view';
 
 function HostList({ links }: { links: ClubHostLink[] }) {
   return (
-    <ul className="m-0 flex list-none flex-col gap-1 p-0 text-meta">
+    <ul className="m-0 list-none p-0">
       {links.map((link) => (
-        <li key={link.url} className="min-w-0">
-          <ExternalLink href={link.url} className="sx-action gap-1">
+        <li key={link.url} className="flex min-w-0 flex-wrap items-baseline gap-x-3">
+          <ExternalLink href={link.url} className="sx-action whitespace-normal">
             {link.label}
           </ExternalLink>
-          <span className="text-ink-3"> &middot; {link.host}</span>
+          <span className="text-cell text-ink-2">{link.host}</span>
         </li>
       ))}
     </ul>
@@ -42,27 +42,28 @@ export interface ClubSourcesProps {
 export function ClubSources({ view }: ClubSourcesProps) {
   return (
     <div>
-      <p className="m-0 max-w-prose text-meta text-ink-2">
+      <p className="sx-note mt-0 max-w-prose">
         {view.rosterPages.length > 0
           ? `The club’s own rosters list many more players than this page does. Only players on the ${view.trackedTeams} varsity rosters this site tracks are named here; the club’s rosters are linked below instead.`
           : `We found no public roster page naming this club’s players. Only players on the ${view.trackedTeams} varsity rosters this site tracks are named here.`}
       </p>
-      {view.rosterPages.length > 0 ? (
-        <div className="mt-6">
-          <SectionHeader as="h3" size="label" kicker="The club’s own rosters" />
-          <HostList links={view.rosterPages} />
+      <div className="sx-auto mt-4">
+        {view.rosterPages.length > 0 ? (
+          <div className="mb-4">
+            <h3 className="m-0 text-lead text-ink">The club&rsquo;s own rosters</h3>
+            <HostList links={view.rosterPages} />
+          </div>
+        ) : null}
+        <div className="mb-4">
+          <h3 className="m-0 text-lead text-ink">Pages about the club</h3>
+          <HostList links={view.sources} />
         </div>
-      ) : null}
-      <div className="mt-6">
-        <SectionHeader as="h3" size="label" kicker="Pages about the club" />
-        <HostList links={view.sources} />
       </div>
-      <p className="mt-4 mb-0 text-meta text-ink-3">
+      <p className="sx-note mt-0">
         Read from these pages on {view.checkedOn}.{' '}
-        <Link href="/clubs#how-matched" prefetch={false} className="text-accent hover:underline">
+        <Link href="/about#clubs-matched" prefetch={false} className="sx-link">
           How players are matched
         </Link>
-        .
       </p>
     </div>
   );

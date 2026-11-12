@@ -16,8 +16,8 @@ import type { AboutPostseason } from '../about-view';
 export function PostseasonSection({ postseason }: { postseason: AboutPostseason }) {
   const { field, leagues, tournamentIds, sections, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed } = postseason;
   return (
-    <section id="playoffs" className="mt-16">
-      <SectionHeader size="lg" kicker="Postseason" />
+    <section id="playoffs" className="sx-section">
+      <SectionHeader kicker="Postseason" />
       <div className="sx-prose">
         <p>
           {field.total === null
@@ -26,7 +26,7 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
           Each
           league&rsquo;s own route to its automatic berths is under its rules above; the live,
           team-by-team picture is on the{' '}
-          <Link href="/playoffs" className="text-accent hover:underline">
+          <Link href="/playoffs">
             CCS playoffs
           </Link>{' '}
           page.
@@ -38,7 +38,7 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             return (
               <p key={l.id}>
                 {l.section.name}: {sections.find((s) => s.id === l.section.id)?.noChampionshipNote ?? ''}{' '}
-                <Link href={`/playoffs/${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
+                <Link href={`/playoffs/${l.id}`} prefetch={false} className="sx-action">
                   {ps.kind === 'league-tournament' ? ps.name : `${l.shortName} postseason`}
                 </Link>
               </p>
@@ -70,8 +70,8 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             <p key={isIndependentLeague(l.id) ? l.id : `${l.section.id}-${ps.kind}`}>
               {isIndependentLeague(l.id) ? l.name : l.section.name}: {ps.note}{' '}
               <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>{' '}
-              <Link href={`/playoffs#${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
-                Playoffs page
+              <Link href={`/playoffs#${l.id}`} prefetch={false} className="sx-action">
+                Playoffs
               </Link>
             </p>
           ) : null,
@@ -115,7 +115,7 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
           </li>
         </ul>
         {CCS.roundDaysNote ? <p>{CCS.roundDaysNote}</p> : null}
-        <p className="text-meta text-ink-3">
+        <p className="text-cell text-ink-2">
           {ccsCalendar === undefined
             ? `The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it ${IS_FIELD_HOCKEY ? 'in late October' : `on ${monthDay(CCS.pollFrom)}`} and will note here whether it confirms the dates above.`
             : keyDatesConfirmed

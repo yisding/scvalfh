@@ -1,10 +1,14 @@
 /**
  * `/scores/[date]` keeps the regions apart (DESIGN §24.3; owner decision, 2026-10-06): a NorCal block
- * (`#norcal`, h2 "Northern California"), then, only on a day that has one, the unscoped NorCal vs SoCal
- * block (`#between-regions`), then the SoCal block (`#socal`), each region's league groups and
- * Non-league group inside it as h3s; a region with no game keeps its block with one sentence; the JV
- * games split into `#jv` and `#jv-socal`; the header badges and the description go per region only
- * when both regions have a game.
+ * (`#norcal`, h2 "Northern California"), then, only on a day that has one, the NorCal vs SoCal block
+ * (`#between-regions`, in both regions' views), then the SoCal block (`#socal`), each region's league
+ * groups and Non-league group inside it as strips (h3s); a region with no game keeps its block with one
+ * sentence; the JV games split into `#jv` and `#jv-socal`; the date bar's counts are per region and the
+ * description goes per region only when both regions have a game.
+ *
+ * DESIGN §33: a region block holds the day's groups once for every league (`data-scope="none"`, the
+ * All tab) and once per league (`data-scope="<league>"`); the scope stylesheet shows one, so "each game
+ * once" is asserted over the every-league copy (`everyLeague`).
  *
  * On the committed snapshot (data/snapshot.json), as tests/ui/render-score.test.ts walks it: no corpus
  * holds both regions (socal-2026-10-06 has only the Southern California schedules, all-2026-10-02 only
@@ -56,13 +60,26 @@ function dateWhere(what: string, test: (regions: ReturnType<Day['dayRegions']>) 
   return date!;
 }
 
-/** The page's slice from `id="<from>"` up to the next marker (or the JV blocks / the closing line). */
+/** The page's slice from `id="<from>"` up to the next marker (or the JV blocks / the rail). */
 function block(html: string, from: string, to: readonly string[]): string {
   const start = html.indexOf(`id="${from}"`);
   expect(start, `app/scores/[date]/page.tsx: id="${from}"`).toBeGreaterThan(-1);
   const ends = to.map((id) => html.indexOf(`id="${id}"`, start + 1)).filter((i) => i > -1);
-  const close = html.indexOf('All times Pacific.', start);
+  const close = html.indexOf('<aside class="sx-rail">', start);
+  expect(close, 'components/schedule/ScoreRail.tsx: the rail closes the main column').toBeGreaterThan(-1);
   return html.slice(start, Math.min(...ends, close));
+}
+
+/**
+ * A region block's every-league copy of the day (`<div data-scope="none" id="latest-every-league…">`), up
+ * to the first league-scoped copy: what a reader with no league chosen sees of that region.
+ */
+function everyLeague(html: string, suffix: '' | '-socal'): string {
+  const start = html.indexOf(`<div data-scope="none" id="latest-every-league${suffix}">`);
+  expect(start, `components/schedule/ScoresRegionBlock.tsx: #latest-every-league${suffix}`).toBeGreaterThan(-1);
+  const end = html.indexOf('<div data-scope="', start + 1);
+  expect(end).toBeGreaterThan(start);
+  return html.slice(start, end);
 }
 
 const gameIn = (html: string, game: Game) => html.includes(`data-game="${game.contestId}"`);
@@ -96,30 +113,56 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     expect(html.split('id="between-regions"').length - 1, 'one NorCal vs SoCal block').toBe(1);
     expect(html).toMatch(/<section data-region-scope="norcal" id="norcal"|<section id="norcal" data-region-scope="norcal"/);
     expect(html).toMatch(/<section id="socal" data-region-scope="socal"/);
-    expect(html, 'the NorCal vs SoCal block is shown in both views').toMatch(/<section id="between-regions" aria-labelledby/);
+    // Never region-scoped: the NorCal vs SoCal block is shown in both regions' views (it belongs to the All tab).
+    expect(html, 'the NorCal vs SoCal block is shown in both views').toMatch(
+      /<section id="between-regions" data-scope="none" aria-labelledby="between-regions-heading"/,
+    );
 
     const norcal = block(html, 'norcal', ['between-regions']);
     const middle = block(html, 'between-regions', ['socal']);
     const socal = block(html, 'socal', ['jv', 'jv-socal']);
+    const norcalAll = everyLeague(html, '');
+    const socalAll = everyLeague(html, '-socal');
     expect(textOf(norcal)).toContain('Northern California');
     expect(textOf(middle)).toContain('NorCal vs SoCal');
     expect(textOf(socal)).toContain('Southern California');
+    const shown = norcalAll + middle + socalAll;
     for (const game of between) {
       expect(gameIn(middle, game), `${date} ${game.contestId} in NorCal vs SoCal`).toBe(true);
-      expect(gameIn(norcal, game), `${date} ${game.contestId} not in NorCal`).toBe(false);
-      expect(gameIn(socal, game), `${date} ${game.contestId} not in SoCal`).toBe(false);
-      expect(html.split(`data-game="${game.contestId}"`).length - 1).toBe(1);
+      expect(gameIn(norcalAll, game), `${date} ${game.contestId} not in NorCal`).toBe(false);
+      expect(gameIn(socalAll, game), `${date} ${game.contestId} not in SoCal`).toBe(false);
+      expect(shown.split(`data-game="${game.contestId}"`).length - 1).toBe(1);
     }
-    for (const [region, slice] of [
-      [regions[0], norcal],
-      [regions[1], socal],
+    // With no league chosen, every game of the day is listed exactly once.
+    for (const game of data.getGames({ date })) {
+      expect(shown.split(`data-game="${game.contestId}"`).length - 1, `${date} ${game.contestId} once`).toBe(1);
+    }
+    // A league's own copy lists the games with a side in that league, each once, and nothing else.
+    for (const league of data.getLeagueSummaries()) {
+      const start = html.indexOf(`<div data-scope="${league.id}">`);
+      expect(start, `data-scope=${league.id}`).toBeGreaterThan(-1);
+      // Up to whatever follows the copy: the next league's, the region's notes, the next block, the rail.
+      const ends = ['<div data-scope="', '<p class="sx-note">', '<section id="', '<aside class="sx-rail">']
+        .map((marker) => html.indexOf(marker, start + 1))
+        .filter((i) => i > -1);
+      const copy = html.slice(start, Math.min(...ends));
+      const ids = [...copy.matchAll(/data-game="([^"]+)"/g)].map((m) => m[1]);
+      const mine = data
+        .getGames({ date })
+        .filter((g) => [g.home.slug, g.away.slug].some((slug) => slug && data.getTeamBySlug(slug)?.league === league.id))
+        .map((g) => g.contestId);
+      expect([...ids].sort(), `${date} ${league.id} copy`).toEqual([...mine].sort());
+    }
+    for (const [region, slice, all] of [
+      [regions[0], norcal, norcalAll],
+      [regions[1], socal, socalAll],
     ] as const) {
-      for (const game of region.games) expect(gameIn(slice, game), `${date} ${game.contestId} in ${region.id}`).toBe(true);
-      // The region heading is an h2; its league and Non-league groups are h3s under it.
+      for (const game of region.games) expect(gameIn(all, game), `${date} ${game.contestId} in ${region.id}`).toBe(true);
+      // The region heading is an h2; its league and Non-league groups are h3s (strips) under it.
       expect(slice).toMatch(new RegExp(`<h2[^>]*>${region.name}</h2>`));
       for (const group of region.groups) {
-        expect(slice, `${region.id} group ${group.id}`).toMatch(new RegExp(`<section id="${group.id}"`));
-        expect(slice).toContain(`<h3 class="m-0 text-lead text-ink">${group.kicker}</h3>`);
+        expect(all, `${region.id} group ${group.id}`).toMatch(new RegExp(`<section id="${group.id}"`));
+        expect(all).toContain(`<h3 class="m-0 text-lead text-ink">${group.name}</h3>`);
       }
     }
   });
@@ -184,17 +227,24 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     }
   });
 
-  it('counts per region in the header and the description only when both regions have a game', async () => {
+  it('counts per region in the date bar, and in the description only when both regions have a game', async () => {
+    /** The selected cell of a region's set of the date bar: its count line. */
+    const selectedCount = (html: string, region: string): string | undefined =>
+      html.match(
+        new RegExp(`<li data-region-scope="${region}"><a class="sx-day" [^>]*aria-current="date"[^>]*>[^<]*<b>[^<]*</b><small>([^<]*)</small>`),
+      )?.[1];
     const both = dateWhere('games in both regions', ({ regions }) => regions.every((r) => r.withSide.length > 0));
     const games = data.getGames({ date: both });
     const { regions } = day.dayRegions(games);
     const html = await renderDay(both);
     for (const region of regions) {
       const n = region.withSide.length;
-      expect(html).toContain(
-        `<span data-region-scope="${region.id}" class="sx-badge tabular-nums">${region.shortName}: ${n} ${n === 1 ? 'game' : 'games'}</span>`,
+      // Plain text in the region's own cell (no badge): a NorCal vs SoCal game counts in both.
+      expect(selectedCount(html, region.id), `components/schedule/DayNav.tsx ${both} ${region.id}`).toBe(
+        `${n} ${n === 1 ? 'game' : 'games'}`,
       );
     }
+    expect(html).not.toContain('sx-badge');
     const description = await describeDay(both);
     expect(description).toMatch(/^Girls varsity field hockey on \w+day, \w+ \d+, 2026\. NorCal: \d+ games?[;.]/);
     expect(description.indexOf('NorCal: ')).toBeLessThan(description.indexOf(' SoCal: '));
@@ -202,9 +252,14 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     const one = dateWhere('games in one region only', ({ regions }) => regions.some((r) => r.withSide.length === 0));
     const oneGames = data.getGames({ date: one });
     const oneHtml = await renderDay(one);
-    expect(oneHtml, 'a one-region day keeps the whole-day badge').toContain(
-      `<span class="sx-badge tabular-nums">${oneGames.length} ${oneGames.length === 1 ? 'game' : 'games'}</span>`,
-    );
+    const { regions: oneRegions } = day.dayRegions(oneGames);
+    for (const region of oneRegions) {
+      const n = region.withSide.length;
+      // The region that plays counts the whole day; the other region's selected cell says it has none.
+      expect(selectedCount(oneHtml, region.id), `components/schedule/DayNav.tsx ${one} ${region.id}`).toBe(
+        n === 0 ? 'No games' : `${n} ${n === 1 ? 'game' : 'games'}`,
+      );
+    }
     expect(oneHtml).not.toMatch(/(NorCal|SoCal): \d+ games?<\/span>/);
     expect(await describeDay(one), 'a one-region day keeps daySummary’s sentence').toBe(
       day.daySummary(oneGames, `${longDate(one)}, ${parseLocal(one).year}`).sentence,
@@ -289,9 +344,12 @@ describe('dayGroups: a postseason game is never a "league game" (components/sche
     expect(toc.leagueId).toBeNull();
     expect(toc.id).toBe('postseason-tournament-of-champions');
     expect(toc.games.map((g) => g.contestId)).toContain(hb!.contestId);
-    // The page renders the group as its own h3 and keeps every id unique.
+    // The page renders the group under its own strip (an h3, the count at the strip's end) and keeps every id unique.
     const html = await renderDay('2026-10-27');
-    expect(html).toContain(`<h3 class="m-0 text-lead text-ink">${toc.kicker}</h3>`);
+    expect(toc.name).toBe('Tournament of Champions');
+    expect(html).toContain(
+      `<h3 class="m-0 text-lead text-ink">${toc.name}</h3><div class="sx-strip-end"><span>2 games</span>`,
+    );
     expect(html).not.toMatch(/Sunset · \d+ league games?/);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(new Set(ids).size, 'unique ids').toBe(ids.length);
@@ -371,5 +429,97 @@ describe('dayGroups: a postseason game is never a "league game" (components/sche
       'San Diego Section playoffs · 1',
       'Non-league · 1',
     ]);
+  });
+});
+
+// ---------------------------------------------------------------- the date bar and the live board (DESIGN §33)
+
+describe('the date bar’s cells (components/schedule/scores-page-view.ts dateBarView)', () => {
+  const DATES = ['2026-09-01', '2026-09-03', '2026-09-05', '2026-09-08', '2026-09-10', '2026-09-12', '2026-09-15', '2026-09-17', '2026-09-19'];
+
+  it('shows the selected day and the six game days nearest to it, three each side, in date order', async () => {
+    const { dateBarView } = await import('../../components/schedule/scores-page-view');
+    const view = dateBarView(DATES, '2026-09-10', '2026-09-10');
+    expect(view.cells.map((c) => c.date)).toEqual(DATES.slice(1, 8));
+    expect(view.cells.map((c) => c.far)).toEqual([2, 1, null, null, null, 1, 2]);
+    expect(view.cells.filter((c) => c.current).map((c) => c.date)).toEqual(['2026-09-10']);
+    expect(view.cells.filter((c) => c.today).map((c) => c.date)).toEqual(['2026-09-10']);
+    expect([view.previous, view.next]).toEqual(['2026-09-08', '2026-09-12']);
+  });
+
+  it('slides toward the side that has days left at either end of the season', async () => {
+    const { dateBarView } = await import('../../components/schedule/scores-page-view');
+    const first = dateBarView(DATES, '2026-09-01', '2026-09-10');
+    expect(first.cells.map((c) => c.date)).toEqual(DATES.slice(0, 7));
+    expect(first.previous).toBeNull();
+    // The nearest two are the ones a phone shows beside the selected cell.
+    expect(first.cells.map((c) => c.far)).toEqual([null, null, null, 1, 1, 2, 2]);
+    const last = dateBarView(DATES, '2026-09-19', '2026-09-10');
+    expect(last.cells.map((c) => c.date)).toEqual(DATES.slice(2));
+    expect(last.next).toBeNull();
+    expect(last.cells.map((c) => c.far)).toEqual([2, 2, 1, 1, null, null, null]);
+  });
+
+  it('keeps the selected day as a cell when it is not a game day (today on an off day)', async () => {
+    const { dateBarView, dayCountWords } = await import('../../components/schedule/scores-page-view');
+    const view = dateBarView(DATES, '2026-09-11', '2026-09-11');
+    expect(view.cells.map((c) => c.date)).toEqual(['2026-09-05', '2026-09-08', '2026-09-10', '2026-09-11', '2026-09-12', '2026-09-15', '2026-09-17']);
+    expect(view.cells.find((c) => c.current)).toMatchObject({ date: '2026-09-11', today: true, far: null });
+    expect(dayCountWords([])).toEqual({ text: 'No games', live: false });
+    expect(dayCountWords([{ status: 'final' }])).toEqual({ text: '1 game', live: false });
+    expect(dayCountWords([{ status: 'final' }, { status: 'scheduled' }])).toEqual({ text: '2 games', live: false });
+    // While a game is being played the count line is the live count.
+    expect(dayCountWords([{ status: 'live' }, { status: 'live' }, { status: 'final' }])).toEqual({ text: '2 live', live: true });
+  });
+});
+
+describe('group order and the live board (components/schedule/day-summary.ts groupsByStart, LiveBoard.tsx)', () => {
+  it('lists a day’s groups by first start time, and each group’s games in time order', () => {
+    const at = (id: string, time: string, post: NonNullable<Game['postseason']>) => ({
+      ...postseasonGame(id, '2026-11-07', 'los-gatos', 'gilroy', post),
+      dateLocal: `2026-11-07T${time}:00`,
+    });
+    const ccs = { kind: 'ccs', leagueId: null, via: 'ccs-window' } as const;
+    const mcal = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' } as const;
+    const games = [
+      { ...at('m-late', '18:00', mcal), home: at('x', '18:00', mcal).home },
+      at('c-late', '16:00', ccs),
+      at('c-early', '10:00', ccs),
+    ];
+    // dayGroups keeps its own order (leagues, then events); the page's order is by first start time.
+    expect(day.dayGroups(games).map((g) => g.name)).toEqual(['MCAL', 'CCS']);
+    const ordered = day.groupsByStart(day.dayGroups(games));
+    expect(ordered.map((g) => g.name)).toEqual(['CCS', 'MCAL']);
+    expect(ordered[0].games.map((g) => g.contestId)).toEqual(['c-early', 'c-late']);
+  });
+
+  it('draws a live game on the board: one link to the game, the competition, both teams with the pin hooks', async () => {
+    const { LiveBoard } = await import('../../components/schedule/LiveBoard');
+    const { createElement } = await import('react');
+    const live = { ...data.getGames().find((g) => g.home.slug && g.away.slug && g.countsFor !== null)!, status: 'live' as const };
+    const html = renderToStaticMarkup(
+      createElement(LiveBoard, { region: 'norcal', games: [live], idSuffix: '', stamp: createElement('span', { className: 'sx-stamp' }, 'Updated 3:42 PM') }),
+    );
+    expect(html).toMatch(/^<section class="sx-liveboard sx-print-hide" data-region-scope="norcal" aria-labelledby="live-heading">/);
+    expect(html).toContain('<h2 id="live-heading"><span class="sx-live">Live</span></h2><span>1 game</span><span class="sx-stamp">Updated 3:42 PM</span>');
+    expect(html.split('class="sx-livegame"').length - 1).toBe(1);
+    expect(html.split('class="sx-game-link"').length - 1, 'one link to the game').toBe(1);
+    for (const side of [live.away, live.home]) {
+      expect(html).toContain(`<span class="sx-livegame-team sx-pinnable" data-team-slug="${side.slug}">`);
+    }
+    // The star ships hidden; only the pinned-team rule reveals it.
+    expect(html.split('<span class="sx-pin-note" hidden="">Your team</span>').length - 1).toBe(2);
+    // No board without a live game.
+    expect(renderToStaticMarkup(createElement(LiveBoard, { region: 'norcal', games: [], idSuffix: '', stamp: null }))).toBe('');
+  });
+
+  it('never marks a game live from the snapshot as fetched (the board appears only while one is)', async () => {
+    const today = data.getToday();
+    const html = await renderDay(today).catch(() => null);
+    if (html === null) return; // today is not a game day: /scores/<today> does not exist
+    const live = data.getGames({ date: today }).filter((g) => g.status === 'live');
+    expect(html.includes('sx-liveboard')).toBe(live.length > 0);
+    // A game on the board is not in the list under it.
+    for (const game of live) expect(gameIn(html, game), `${game.contestId} is on the board only`).toBe(false);
   });
 });

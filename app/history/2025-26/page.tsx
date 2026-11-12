@@ -16,53 +16,45 @@ import {
   UNAVAILABLE_SUBJECT,
   leagueShortName,
 } from '../../../components/history/history-page-view';
-import { RegionSwitcher } from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
-import DivisionTabs from '../../../components/standings/DivisionTabs';
+import { leagueChips } from '../../../components/layout/league-chips';
+import ScopeBar from '../../../components/prefs/ScopeBar';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { listWords } from '../../../lib/format';
-import { TOC } from '../../../lib/league-config/sections';
-import { getSection, regionOf } from '../../../lib/leagues';
 import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
 
 /**
- * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
- * per league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro`), each carrying its
- * region's `data-region-scope`, as do the jump pills (DESIGN-socal §2.4). The four Southern California
- * leagues are unavailable: no league published 2025-26 standings (data/history-2025-26.json says what
- * was checked). A league whose own end-of-season documents we could
- * read (SCVAL's two PDFs, BVAL's Google Sheet and all-league documents) shows both divisions'
- * record-only tables and the all-league awards; a league we found no official 2025-26 final
- * standings for (PCAL, MCAL, EAL) says so, with the reason, links any official document it did publish
- * (MCAL's all-league team), and shows no table in its place. Everything is
- * built once by `scripts/build-history.ts`. After each section's last league comes that section's
- * 2025 playoff bracket (`#ccs` after PCAL, `#sds` after Metro: data/history-brackets-2025-26.json,
- * transcribed from the sections' own pages), so SoCal, where no league published standings, still
- * has last season's results; the unavailable cards of those leagues point to it. After the LA
- * independents comes the 2025 Tournament of Champions (`#toc`), the postseason the Sunset and the LA
- * independents share, which no CIF section runs (DESIGN §24.13): one unseeded bracket assembled from a
- * school newspaper and MaxPreps' schedules, since its organizer publishes none; their cards point to it. MaxPreps cannot serve a prior season at all — the year
- * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
- * page is the only place last season's numbers live, and it is not part of the snapshot the
- * scheduled update rebuilds.
+ * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8; refresh spec §5.6) — last season's final standings: the
+ * title, the league row (`ScopeBar`, anchor tabs scoped by region, no Updated stamp: an archive does not
+ * change), then one section per league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro
+ * #independents`), each carrying its region's `data-region-scope` (DESIGN-socal §2.4).
+ *
+ * A league whose own end-of-season documents we could read (SCVAL's two PDFs, BVAL's Google Sheet and
+ * all-league documents) shows its divisions in pairs: varsity standings (row 1 bold, with the plain label
+ * "Champion"), JV standings, all-league awards. A league we found no official 2025-26 final standings for
+ * says "No standings available", with the reason, any official document it did publish (MCAL's all-league
+ * team) and what was checked (data/history-2025-26.json), and shows no table in its place. Everything is
+ * built once by `scripts/build-history.ts`. After each section's last league comes that section's 2025
+ * playoff bracket (`#ccs` after PCAL, `#sds` after Metro: data/history-brackets-2025-26.json, transcribed
+ * from the sections' own pages), so SoCal, where no league published standings, still has last season's
+ * results; the unavailable leagues' sections point to it. After the LA independents comes the 2025
+ * Tournament of Champions (`#toc`), the postseason the Sunset and the LA independents share, which no CIF
+ * section runs (DESIGN §24.13): one unseeded bracket assembled from a school newspaper and MaxPreps'
+ * schedules, since its organizer publishes none; their sections point to it. MaxPreps cannot serve a prior
+ * season at all — the year segment of its league URL is cosmetic and always returns the CURRENT table (SPEC
+ * §1.1h) — so this page is the only place last season's numbers live, and it is not part of the snapshot
+ * the scheduled update rebuilds.
  *
  * The soccer and basketball builds cover SCVAL alone: their archive (data/<sport>/history-2025-26.json) is
- * SCVAL's two divisions from its standings and all-league PDFs, with no bracket (a CCS bracket's other schools
- * are not in those builds' registries), and the jump pills go to the two divisions.
+ * SCVAL's two divisions from its standings and all-league PDFs, with no bracket, and the league row is not
+ * drawn (a row of one tab goes nowhere).
  *
- * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
- * never from a literal list, so a league cannot be dropped or invented here. The header says only
- * what a reader needs before the tables in a short lede; provenance detail sits in each league's
- * source note. A long lede here pushed the first standings row under the phone tab bar.
+ * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts, never from
+ * a literal list, so a league cannot be dropped or invented here. The title has no sentence under it: what
+ * the page covers is the metadata description's, and provenance sits in each league's source note.
  */
 
-/**
- * The one league of a one-league archive (SCVAL, in the soccer and basketball builds, where it has final
- * standings), or null.
- */
-const SINGLE_LEAGUE = HISTORY_LEAGUES.length === 1 && AVAILABLE.length === 1 ? AVAILABLE[0] : null;
 const OWN_DOCUMENTS = HISTORY_LEAGUES.length === 1 ? 'the league’s own documents' : 'each league’s own documents';
-const JUMP_LABEL = SINGLE_LEAGUE ? 'Jump to a division' : 'Jump to a league';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = `${SEASON} final standings`;
@@ -82,80 +74,39 @@ export const metadata: Metadata = {
 };
 
 export default function HistoryPage() {
-  // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
-  // A section's bracket pill follows its last league's, as the block does. A one-league archive (the soccer
-  // and basketball builds: SCVAL) jumps to its divisions instead, since a single league pill goes nowhere.
-  const tabs = SINGLE_LEAGUE
-    ? SINGLE_LEAGUE.entry.divisions.map((d) => ({ href: `#${d.division}`, label: d.label, region: regionOf(SINGLE_LEAGUE.id) }))
-    : HISTORY_LEAGUES.flatMap(({ id }) => [
-    { href: `#${id}`, label: leagueShortName(id), region: regionOf(id) },
-    ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => ({
-      href: `#${b.id}`,
-      label: `${getSection(b.id).shortName} playoffs`,
-      region: getSection(b.id).region,
-    })),
-    ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => ({
-      href: `#${t.id}`,
-      label: TOC.shortName,
-      region: regionOf(id),
-    })),
-  ]);
-  const available = listWords(AVAILABLE.map((l) => leagueShortName(l.id)));
+  // The league row: every league of the archive, each tab an anchor to its section; the lists are
+  // region-scoped (DESIGN-socal §2.4), so a reader sees their region's leagues. No stamp: an archive
+  // does not update. A one-league archive (the soccer and basketball builds: SCVAL) draws no row.
+  const ids = new Set<string>(HISTORY_LEAGUES.map((l) => l.id));
+  const chips = leagueChips().filter((chip) => ids.has(chip.id));
+  const hrefs: Record<string, string> = Object.fromEntries(chips.map((chip) => [chip.id, `#${chip.id}`]));
 
   return (
-    // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
-    // (6rem); from md the pills sit in the title row (or wrap under the title) and do not stick.
-    <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
-      <PageHeader
-        eyebrow="Archive"
-        title={`${SEASON} final standings`}
-        description={
-          <>
-            Final standings and all-league awards for {available}, from {OWN_DOCUMENTS}
-            {BRACKET_WORDS ? <>, and {BRACKET_WORDS}</> : null}.{' '}
-            {UNAVAILABLE_SUBJECT ? (
-              <>
-                {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
-              </>
-            ) : null}
-            {GROUPS_SENTENCE ? <>{GROUPS_SENTENCE} </> : null}
-            This page doesn&rsquo;t change.
-          </>
-        }
-        aside={<DivisionTabs variant="inline" tabs={tabs} label={JUMP_LABEL} />}
-        asideClassName="hidden md:block"
-      />
+    <div className="pb-section-lg">
+      <PageHeader title={PAGE_TITLE} />
+      <ScopeBar league={{ mode: 'anchor', label: 'Leagues', leagues: chips, hrefs }} />
 
-      {/* The region control, its own row above the sticky jump bar (DESIGN-socal §2.4). */}
-      <RegionSwitcher className="mt-4" />
-
-      {/* Jump bar: a long page with a section per league to reach. Sticky under the top bar below
-          md; from md the pills sit in the title row, or under the title when they do not fit
-          beside it. */}
-      <DivisionTabs variant="bar" tabs={tabs} label={JUMP_LABEL} className="mt-4" />
-
-      <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
-        {HISTORY_LEAGUES.flatMap(({ id, entry }) => [
-          entry.status === 'available' ? (
-            <AvailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
-          ) : (
-            <UnavailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
-          ),
-          ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => (
-            <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} season={SEASON} />
-          )),
-          ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => (
-            <TournamentBracketBlock key={t.id} bracket={t.bracket} leagues={t.leagues} season={SEASON} />
-          )),
-        ])}
+      {/* A plain block wrapper, so the first section is a first child and sits close under the league row. */}
+      <div>
+      {HISTORY_LEAGUES.flatMap(({ id, entry }) => [
+        entry.status === 'available' ? (
+          <AvailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
+        ) : (
+          <UnavailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
+        ),
+        ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => (
+          <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} season={SEASON} />
+        )),
+        ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => (
+          <TournamentBracketBlock key={t.id} bracket={t.bracket} leagues={t.leagues} season={SEASON} />
+        )),
+      ])}
       </div>
 
-      <p className="mt-section max-w-prose text-meta text-ink-3 md:mt-section-lg">
-        Full attribution and update details are on the{' '}
-        <Link href="/about" className="text-accent hover:underline">
-          About &amp; sources
-        </Link>{' '}
-        page.
+      <p className="sx-linkrow mt-8">
+        <Link href="/about" prefetch={false} className="sx-action">
+          About this data
+        </Link>
       </p>
     </div>
   );

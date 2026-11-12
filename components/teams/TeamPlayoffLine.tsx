@@ -2,29 +2,8 @@ import Link from 'next/link';
 
 import { CCS } from '../../lib/league-config/sections';
 import { splitStatusLabel } from '../playoffs/playoff-view';
-import Arrow from '../ui/Arrow';
-import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
-import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
-
-/**
- * 'MCAL tournament' | 'Super Regional' | 'San Diego Section playoffs' | 'playoff': the event a
- * result-less team has no place in. The Sunset ('no-postseason') never reaches it: its line is the
- * league's note whatever the team has played (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
- */
-function postseasonPhrase(league: TeamPageView['league']): string {
-  switch (league.postseasonKind) {
-    case 'league-tournament':
-      return `${league.shortName} tournament`;
-    case 'unbracketed-tournament':
-    case 'section-playoffs':
-      return league.postseasonName ?? 'playoff';
-    case 'ccs-ladder':
-    case 'no-postseason':
-      return 'playoff';
-  }
-}
 
 /**
  * Where this team stands in its league's postseason picture (SPEC §10.5): the CCS ladder for SCVAL,
@@ -47,6 +26,11 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  *   below it: no league route), the Section's qualification line and the team's own playoff division
  *   (I or II, the Section's 2026 Divisions sheet), and `San Diego Section playoffs →`. No seed.
  *
+ * Drawn as plain text in the rail (DESIGN §33): the status as one bold line, the sentence, the
+ * tiebreak note and the honesty line under it, then a row of links. The team's bracket GAME, once
+ * there is one, is the page's Next game row (with its own "Bracket" link) and a line of the
+ * schedule; it is not repeated here.
+ *
  * A team with no results is never placed by merit: the accessor returns null and the block reads
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
  * official, and the line that says so (`caveat`) prints only where something is projected: under a
@@ -59,39 +43,37 @@ export interface TeamPlayoffLineProps {
 
 export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
   const { postseasonLine: line, standing, league } = view;
-  if (!line) {
-    return (
-      <EmptyState heading="No results reported yet.">
-        {`${view.team.name} has no counted ${league.shortName} result, so it has no computed place in the ${postseasonPhrase(league)} picture.`}
-      </EmptyState>
-    );
-  }
-  // The chip is the label's head; a level place's " — <rule> decides it" tail is the tiebreak
-  // note's job below, not the chip's.
+  if (!line) return <p className="sx-empty">No results reported yet.</p>;
+  // The status is the label's head; a level place's " — <rule> decides it" tail is the tiebreak
+  // note's job below.
   const { head } = splitStatusLabel(line.label);
+  // The sentence often opens with the very words of the line above it ("CCS Division 1 semifinal · 3 v 2:
+  // vs Mitty …"): they are said once, and the sentence starts at what is new.
+  const tail = line.sentence.startsWith(head) ? line.sentence.slice(head.length).replace(/^\s*[·:,.—-]\s*/, '') : '';
+  const rest = tail ? tail.charAt(0).toUpperCase() + tail.slice(1) : line.sentence;
   return (
-    <div className="sx-card p-5 text-meta">
-      <p className="m-0 mb-3">
-        <StatusChip tone={view.postseasonAccent ? 'accent' : 'neutral'}>{head}</StatusChip>
-      </p>
-      <p className="m-0 text-body text-ink">{line.sentence}</p>
-      {standing?.tiebreak.shared && standing.tiebreak.note ? (
-        <p className="mt-2 mb-0 text-ink-2">{standing.tiebreak.note}</p>
-      ) : null}
+    <>
+      <p className="m-0 text-body font-semibold text-ink">{head}</p>
+      <p className="sx-note mt-1">{rest}</p>
+      {standing?.tiebreak.shared && standing.tiebreak.note ? <p className="sx-note">{standing.tiebreak.note}</p> : null}
       {/* The honesty line is the accessor's (`caveat`): a projection says so; a tournament with results says it
           reads them; the EAL, a San Diego league and the Sunset, which project nothing, print none. */}
-      {line.caveat ? <p className="mt-2 mb-0 text-ink-2">{line.caveat}</p> : null}
-      <p className="mt-3 mb-0 flex flex-wrap gap-2">
-        <Link href={line.href} prefetch={false} className="sx-pill">
-          {line.linkText} <Arrow />
-        </Link>
+      {line.caveat ? <p className="sx-note">{line.caveat}</p> : null}
+      <ul className="sx-linkrow">
+        <li>
+          <Link href={line.href} prefetch={false} className="sx-action">
+            {line.linkText}
+          </Link>
+        </li>
         {league.postseasonKind === 'ccs-ladder' ? (
-          <ExternalLink href={CCS.bracketUrl ?? CCS.sources.index} className="sx-pill">
-            {CCS.bracketUrl ? 'Official CCS bracket' : 'CCS playoffs'}
-          </ExternalLink>
+          <li>
+            <ExternalLink href={CCS.bracketUrl ?? CCS.sources.index} className="sx-action">
+              {CCS.bracketUrl ? 'Official CCS bracket' : 'CCS playoffs'}
+            </ExternalLink>
+          </li>
         ) : null}
-      </p>
-    </div>
+      </ul>
+    </>
   );
 }
 

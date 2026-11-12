@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
-import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
+import { SCHOOL_LINK, SchoolFace, SourcesLine } from '../clubs/ClubPlayers';
 import type { CommitRow } from './commit-view';
 
 /**
- * One class's commitments on /commits (DESIGN §21.1): each a player on the tracked varsity rosters,
+ * One class's commitments on /commits (DESIGN §33): each a player on the tracked varsity rosters,
  * the college, the status in words, and the public pages it rests on.
  *
  * Privacy (DESIGN §21.2, the clubs pages' posture): a row is a roster row of this site, by its own
@@ -13,80 +12,41 @@ import type { CommitRow } from './commit-view';
  * status and the links. The quotes, the basis and the confidence the data file keeps are not in the
  * view at all (components/commits/commit-view.ts), so nothing here can print them.
  *
- * Each row is the club page's player row (components/clubs/ClubPlayers.tsx), the same card and
- * row-major grid as the team roster:
+ * An entry is the club page's player entry (components/clubs/ClubPlayers.tsx), in `sx-auto` columns
+ * with a hairline under each:
  *   - the name;
- *   - the school, linking that team's roster, then the grade, kept whole with a no-break space
- *     before its dot (the AwardsBlock rule);
- *   - the college: its display name, the official name when that is a short one, the sport, and
- *     the division of the college's team in that sport, each part wrapping on its own;
+ *   - the school with its logo, linking that team's roster, then the grade;
+ *   - the college in the name's weight, then its official name when that is a short one, the sport
+ *     and the division of the college's team in that sport, each its own element;
  *   - the status on its own line;
- *   - the sources, each an off-site link whose accessible name leads with the player ("Pat
+ *   - ONE sources line, each an off-site link whose accessible name leads with the player ("Pat
  *     Example: SportsRecruits profile").
  * The row's id is commitAnchor() (team slug + MaxPreps athleteId, never a name): a team page's
  * commitment line links it (html's scroll-padding keeps the target clear of the sticky header).
- * Every link stands alone in its row, so each carries the 24px `sx-action` box (WCAG
- * 2.5.8), with the sr-only name and the label in ONE span, as ClubPlayers explains.
- *
- * From two columns each row is a subgrid of the list's rows, five per row of cells, one per line
- * above, so the lines of the cells side by side start level: when one cell's college wrapped, its
- * status and sources sat 20px below its neighbours'. The fillers span the same five.
  */
 function Row({ row }: { row: CommitRow }) {
   return (
-    <li
-      id={row.anchor}
-      className="sx-gridcell sm:row-span-5 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid"
-    >
-      <span className="block text-body text-ink">{row.name}</span>
-      <span className="block text-meta text-ink-2">
+    <li id={row.anchor} className="sx-target min-w-0 border-b border-hairline py-1.5">
+      <span className="block text-body font-semibold text-ink">{row.name}</span>
+      <span className="flex flex-wrap items-center gap-x-3 text-cell text-ink-2">
         {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}
-        {/* Each dot sits inside the nowrap span of the item before it: the link is inline-flex, an
-            atomic inline, so a no-break space after it would still let a line start with the dot. */}
-        <span className="whitespace-nowrap">
-          <Link href={row.school.href} prefetch={false} className="sx-action text-accent hover:underline">
-            <span>
-              {row.school.name}
-              <span className="sr-only"> roster</span>
-            </span>
-          </Link>
-          {row.facts.length > 0 ? <>&nbsp;&middot;</> : null}
-        </span>
+        <Link href={row.school.href} prefetch={false} className={SCHOOL_LINK}>
+          <SchoolFace school={row.school} />
+        </Link>
         {row.facts.map((fact, i) => (
-          <span key={i}>
-            {' '}
-            <span className="whitespace-nowrap">
-              {fact}
-              {i < row.facts.length - 1 ? <>&nbsp;&middot;</> : null}
-            </span>
-          </span>
+          <span key={i}>{fact}</span>
         ))}
       </span>
-      <span className="block text-meta text-ink-2">
-        {/* Each dot glued to the item before it, so a wrapped line never starts with one. */}
-        <span className="font-semibold text-ink">{row.college.name}</span>&nbsp;&middot;{' '}
-        {row.college.fullName ? <>{row.college.fullName}&nbsp;&middot;{' '}</> : null}
-        <span className="whitespace-nowrap">{row.college.sport}&nbsp;&middot;</span>{' '}
+      <span className="flex flex-wrap items-baseline gap-x-3 text-cell text-ink-2">
+        <span className="font-semibold text-ink">{row.college.name}</span>
+        {/* 'Vassar' beside 'Vassar College' says one thing twice; 'Cal' beside its full name does not. */}
+        {row.college.fullName && !row.college.fullName.startsWith(row.college.name) ? <span>{row.college.fullName}</span> : null}
+        <span className="whitespace-nowrap">{row.college.sport}</span>
         <span className="whitespace-nowrap">{row.college.division}</span>
       </span>
-      <span className="block text-meta text-ink-2">{row.status}</span>
-      <span className="block text-meta text-ink-2">
-        <span className="text-ink-3">Sources:</span>&nbsp;
-        {row.sources.map((source, i) => (
-          <span key={source.url}>
-            {i > 0 ? ' ' : null}
-            <span className="whitespace-nowrap">
-              <ExternalLink href={source.url} className="sx-action gap-1 whitespace-nowrap">
-                <span>
-                  <span className="sr-only">{row.name}: </span>
-                  {source.label}
-                </span>
-              </ExternalLink>
-              {i < row.sources.length - 1 ? <>&nbsp;&middot;</> : null}
-            </span>
-          </span>
-        ))}
-      </span>
+      {/* Every row on this page is a commitment: the status is printed only when it adds a date or differs. */}
+      {row.status === 'Committed' ? null : <span className="block text-cell text-ink-2">{row.status}</span>}
+      <SourcesLine name={row.name} sources={row.sources} />
     </li>
   );
 }
@@ -97,11 +57,10 @@ export interface CommitListProps {
 
 export function CommitList({ rows }: CommitListProps) {
   return (
-    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="sx-auto m-0 list-none p-0">
       {rows.map((row) => (
         <Row key={row.key} row={row} />
       ))}
-      <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} className="sm:row-span-5" />
     </ul>
   );
 }

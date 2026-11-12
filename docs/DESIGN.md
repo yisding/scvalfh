@@ -1,3 +1,57 @@
+> **§33 UI refresh (2026-11-12) — wins over everything below where they disagree.**
+> The owner asked for a modern, simpler, more usable UI after the header stamp was found cut off at 1280,
+> and rejected the earlier card look and a black-and-yellow draft as AI design tropes; the direction was
+> then checked against Awwwards-level sites and against FotMob, SofaScore and StatMuse, and corrected once
+> after a blind review. What changed, and which earlier decisions it reverses:
+> - **Planes**: the page is white (`--sx-bg` = `--sx-surface` = `#ffffff`; dark a neutral charcoal
+>   `#121417`). A solid navy band (`--sx-band` `#0c1b33`; dark `#0c1c3a` with a 1px edge) is the header,
+>   the footer and the LIVE BOARD. A tint (`--sx-surface-2` `#f1f4f9` / `#1c1f24`) is used for group
+>   title strips and row hover only. The grey canvas, ring cards and their radii and shadows (§26) are
+>   gone. Rows are separated by a 1px light line; sections by space, never by a rule.
+> - **Live board**: on the Scores page for today, while any game is live, the band continues under the
+>   header and holds the live games (white 40–48px scores, "Live", the period, "Updated 3:42 PM"). Those
+>   games are not repeated in the list below. No live game, no board.
+> - **Colour**: light = one ink (`--sx-text` `#0c1b33`) with every grey on its hue; dark = near-neutral
+>   greys (all r ≤ g ≤ b). One accent blue (`--sx-accent` `#1747d1` / `#8fb0ff`) for the selected bar,
+>   focus, "Today", the your-team star and a hovered link. Hue otherwise marks results and state: a solid
+>   green W chip, an outlined red L chip, a green 2px qualification line, `--sx-live` red for Live. §4.1's
+>   matrix is superseded by tests/ui/contrast.test.ts. "No per-league hue" stands.
+> - **Type**: text is Public Sans (variable). Figures AND titles are Barlow Semi Condensed 500/600/700
+>   (`--font-num`; `.sx-num` / `font-mono` for figures, a base rule for `h1`, `h2` and the wordmark); this
+>   replaces Geist Mono (§4.2 is reversed). The scale has a gap: 15px group strips, 22px section heads,
+>   then the page title at 36–60px, used only where the title is the page's identity. Score pages have a
+>   visually hidden h1. No text under 12px. No uppercase styling, no letter-spacing.
+> - **Chrome**: the navy top bar holds the wordmark (the home link), Scores, Standings, Playoffs, Teams,
+>   Leaders, JV and a team search (a field from 1024, a magnifier link to /teams below). The freshness
+>   stamp, the "Report an error" pill, the theme button and the phone "See something missing?" bar left the
+>   header (§1.3, §7.15 superseded). "Updated 3:42 PM" is plain text beside the scores (the live board's
+>   head, else the league row); the long form is in the footer; a bordered notice under the bar appears
+>   only when the data is stale. Region is one segmented switch in the league row at every width, plus a
+>   text button in the footer and the More sheet. The theme follows the device, with one text button
+>   ("Dark mode" / "Light mode") in the footer and the More sheet. tests/ui/header-fit.test.ts proves the
+>   header row fits for all three sports. Bar heights (48/64) and sticky offsets are unchanged.
+> - **Phone bar**: five text cells on the page colour, Scores, Standings, Playoffs, Teams, More; each
+>   cell is its word plus an equal share of the spare width.
+> - **Selection**: bold + a 3px accent bar; unselected items are `--sx-text-2` (white on the band).
+> - **Home is Scores**: `/` is the score day view for today (date bar: 3 / 5 / 7 game days by its own
+>   width, step arrows, Calendar; then the day's games grouped under competition strips; the reader's
+>   league standings in a rail from 768). "Latest results" and "Next up" appear only when today has no
+>   games. The separate home feed and its your-team strip are gone.
+> - **Rows and tables**: one `GameRow`, one shape, three columns: a status slot (start time / Final / Live
+>   / Postponed), two team lines, the scores flush right. A list 44rem wide or more lays its rows in two
+>   or three columns. In a final the loser is grey. On a mouse team names link to teams and the row to
+>   the game; on touch the row is one link. Groups sit under a tint strip. One `StandingsTable` with
+>   logos, untinted column heads over an ink rule, grouped columns (W L T Pts | GF GA GD | Overall |
+>   Last 5; no Pct beside Pts), 16px Last 5 chips and the labelled qualification line; the full table is
+>   capped at 47rem. Leaders are a grid of top-5 boards. GD bars, LEFT/MAX columns, recap sentences and
+>   per-row link trios are gone.
+> - **Logos**: the real files, drawn straight on the page (2px corner; no tile or border).
+> - **Your team**: an accent star after the name; a bold name in tables. No bar, tint or fill.
+> - **Motion**: row hover 120ms, the More sheet 160ms, a live-dot pulse; all under
+>   `prefers-reduced-motion: no-preference`. Nothing else moves.
+> - **Pages**: /teams is a team directory; standings live on /standings. Method prose lives on /about only.
+> Typeface-dependent proofs: tests/ui/text-metrics.ts is Public Sans 12px/500.
+
 > **Note on this copy.** This is the implementation-ready design record produced during the
 > design stage, kept verbatim below for history. **Sections 1-14 describe the single-league
 > (SCVAL, 15-team) site as designed; §15 took it to four leagues and 43 teams (today's counts are in

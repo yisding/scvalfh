@@ -1,19 +1,34 @@
-import EmptyState from '../ui/EmptyState';
+import Link from 'next/link';
+
 import SectionHeader from '../ui/SectionHeader';
 import { gameWord } from '../words/plural';
 import { shortNameOf } from '../words/team-short-name';
 import type { LeagueSummary } from '../../lib/data';
-import { shortDate } from '../../lib/format';
+import { monthDay, shortDate } from '../../lib/format';
 import type { Game, OfficialFixture } from '../../lib/types';
 
 import GameList from './GameList';
 import OfficialFixtures from './OfficialFixtures';
-import type { DayRegion } from './day-summary';
+import { dayGroups, gamesOfLeague, groupsByStart, type DayGroup, type DayRegion } from './day-summary';
 
 /** One league's unreported official fixtures of the day (the day page's `fixtureLeagues`). */
 interface FixtureBlock {
   league: LeagueSummary;
   rows: OfficialFixture[];
+}
+
+/**
+ * The reader's own team first (DESIGN §33): the pin lives in the browser, which stamps `data-pinned`
+ * on the team's side of its row before paint (components/prefs/pinned-team-script.ts), so the group
+ * that holds that row, and the row within it, are moved first with `order`. Everything else stays in
+ * start-time order. These are utilities because the rule belongs to this page alone.
+ */
+const PINNED_GROUP_FIRST = 'flex flex-col gap-4 [&>*:has([data-pinned])]:order-first';
+const PINNED_GAME_FIRST = '[&>li:has([data-pinned])]:order-first';
+
+/** 'Sat, Nov 14' */
+export function dayWords(date: string): string {
+  return `${shortDate(date).split(' ')[0]}, ${monthDay(date)}`;
 }
 
 /**
@@ -26,7 +41,7 @@ export function MovedNote({ games, date }: { games: readonly Game[]; date: strin
   const moved = games.filter((game) => game.official && game.official.scheduledDate !== date);
   if (moved.length === 0) return null;
   return (
-    <p className="sx-inset mt-stack mb-0 max-w-prose">
+    <p className="sx-note">
       {moved.length === 1 ? 'One game here was moved' : `${moved.length} games here were moved`}{' '}
       from the date on the league&rsquo;s official schedule:{' '}
       {moved
@@ -44,22 +59,73 @@ export function MovedNote({ games, date }: { games: readonly Game[]; date: strin
 }
 
 /**
- * One region's block on `/scores/[date]` (DESIGN §24.3): `<section id="norcal|socal" data-region-scope>` under an h2 naming
- * the region, holding its "Leagues on this day" pills (two groups or more), its league groups and its
- * Non-league group (h3s, so the outline stays region → group with both regions visible), its moved-game
- * note and its leagues' unreported official fixtures. NorCal's ids are the page's ids from before the
- * regions (`#scval`, `#non-league`, `#scval-heading`); SoCal's repeated ones take `-socal`
- * (`#non-league-socal`). A SoCal group is labelled by its heading AND the region's, so with JS off two
- * "Non-league · 3" sections never share an accessible name (axe landmark-unique; the /schedule index's
- * fix, review 2026-10-06); the SoCal pills' nav is named for its region for the same reason.
+ * A day's groups as strips and lists (DESIGN §33): per competition or league a strip (its name at the
+ * left; the count and, for a playoff group, "Bracket" at the right end) directly over its game rows.
+ * `anchors` puts the group ids on the page (`#scval`, `#non-league`): only ONE copy of a day's groups
+ * carries them, the every-league one.
+ */
+export function DayGroups({
+  groups,
+  anchors = false,
+  labelledBy,
+  limit,
+}: {
+  groups: readonly DayGroup[];
+  anchors?: boolean;
+  /** The `aria-labelledby` of a group's section, from its id. */
+  labelledBy?: (groupId: string) => string;
+  /** At most this many rows per group (the today-only fallback sections). */
+  limit?: number;
+}) {
+  return (
+    <div className={PINNED_GROUP_FIRST}>
+      {groupsByStart(groups).map((group) => {
+        const games = limit === undefined ? group.games : group.games.slice(0, limit);
+        const head = (
+          <SectionHeader
+            strip
+            id={anchors ? `${group.id}-heading` : undefined}
+            kicker={group.name}
+            meta={group.round ?? `${group.games.length} ${gameWord(group.games.length)}`}
+            action={group.bracket ? { href: group.bracket.href, label: 'Bracket' } : undefined}
+          />
+        );
+        const list = <GameList games={games} className={PINNED_GAME_FIRST} />;
+        return anchors ? (
+          <section key={group.id} id={group.id} aria-labelledby={labelledBy ? labelledBy(group.id) : `${group.id}-heading`}>
+            {head}
+            {list}
+          </section>
+        ) : (
+          <div key={group.id}>
+            {head}
+            {list}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * One region's block on a score day (DESIGN §24.3, §33): `<section id="norcal|socal" data-region-scope>`,
+ * holding the day's groups once for every league (`data-scope="none"`, the All tab; it carries the
+ * anchors `#latest-every-league`, `#scval`, `#non-league`, SoCal's repeats suffixed `-socal`) and once
+ * per league of the region (`data-scope="<league>"`: the games with a side in that league, the day's
+ * NorCal vs SoCal games included). The scope stylesheet shows one of them, so no game is seen twice.
+ *
+ * The region's name is its h2. The region switch already says it, so with JavaScript the heading is
+ * for screen readers only; without it both regions render and the heading is what tells them apart.
+ * A SoCal group is labelled by its heading AND the region's, so two "Non-league" sections never share
+ * an accessible name (axe landmark-unique).
  *
  * A region with no game that day keeps its block with one sentence, so a reader in that region sees what
  * is true rather than an empty page: "No Southern California games on this day." When the day's only
  * games with a side in the region are NorCal vs SoCal it adds "besides the NorCal vs SoCal game above",
- * and when the region has JV games that day (a day page exists for any varsity game, so Aug 18 has a
- * page for its six SoCal games and NorCal JV games too) it says "varsity" and points at them, because
- * "no games" above a list of that region's JV games would not be true. For the same reason a region whose
- * leagues' official schedules list a game no source has says "No source lists …" and points at it.
+ * and when the region has JV games that day it says "varsity" and points at them, because "no games"
+ * above a list of that region's JV games would not be true. For the same reason a region whose leagues'
+ * official schedules list a game no source has says "No source lists …" and points at it. The sentence
+ * ends with the region's next game day, linked.
  */
 export default function ScoresRegionBlock({
   region,
@@ -69,12 +135,13 @@ export default function ScoresRegionBlock({
   date,
   today,
   fixtureLeagues,
+  leagues,
+  dayGames,
+  nextDate,
+  leagueDays,
 }: {
   region: DayRegion;
-  /**
-   * The page's first region block (NorCal's): it takes the top margin, and the NorCal vs SoCal block sits
-   * below it (above the second).
-   */
+  /** The page's first region block (NorCal's): the NorCal vs SoCal block sits below it (above the second). */
   firstRegion: boolean;
   /** The day's NorCal vs SoCal games, for the empty sentence. */
   betweenCount: number;
@@ -83,6 +150,14 @@ export default function ScoresRegionBlock({
   date: string;
   today: string;
   fixtureLeagues: readonly FixtureBlock[];
+  /** The region's leagues: one league-scoped copy of the day's groups each. */
+  leagues: readonly LeagueSummary[];
+  /** Every game of the day the list shows (both regions'), for the league slices. */
+  dayGames: readonly Game[];
+  /** The region's next game day after this one, or null. */
+  nextDate: string | null;
+  /** A league's game day before and after this one, so its empty line is not a dead end. */
+  leagueDays?: (league: LeagueSummary['id']) => { last: string | null; next: string | null };
 }) {
   const headingId = `${region.id}-heading`;
   const labelledBy = (groupId: string) =>
@@ -100,82 +175,81 @@ export default function ScoresRegionBlock({
       : `No source lists a ${region.name} ${varsity}game on this day${besides}; ${
           fixtureCount === 1 ? 'one on a league’s official schedule is' : `${fixtureCount} on league official schedules are`
         } below${jvNote}.`;
+  const next = nextDate ? (
+    <>
+      {' '}
+      Next games:{' '}
+      <Link href={nextDate === today ? '/' : `/scores/${nextDate}`} prefetch={false} className="sx-link">
+        {dayWords(nextDate)}
+      </Link>
+    </>
+  ) : null;
+  const dayLink = (label: string, d: string) => (
+    <>
+      {' '}
+      {label}{' '}
+      <Link href={d === today ? '/' : `/scores/${d}`} prefetch={false} className="sx-link">
+        {dayWords(d)}
+      </Link>
+      .
+    </>
+  );
   return (
-    <section
-      id={region.id}
-      data-region-scope={region.id}
-      aria-labelledby={headingId}
-      className={firstRegion ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
-    >
-      <SectionHeader id={headingId} kicker={region.name} />
+    <section id={region.id} data-region-scope={region.id} aria-labelledby={headingId} className="sx-section" data-first="">
+      <h2 id={headingId} className="[html[data-js]_&]:sr-only">
+        {region.name}
+      </h2>
 
-      {region.groups.length >= 2 ? (
-        <nav
-          aria-label={region.idSuffix === '' ? 'Leagues on this day' : `${region.name} leagues on this day`}
-          className="sx-print-hide mt-4 flex flex-wrap gap-2"
-        >
-          {region.groups.map((group) => (
-            <a key={group.id} href={`#${group.id}`} className="sx-pill sx-pill-ring min-h-11">
-              {group.kicker}
-            </a>
-          ))}
-        </nav>
-      ) : null}
+      <div data-scope="none" id={`latest-every-league${region.idSuffix}`}>
+        {region.games.length === 0 ? (
+          <p className="sx-empty">
+            {empty}
+            {next}
+          </p>
+        ) : (
+          <DayGroups groups={region.groups} anchors labelledBy={labelledBy} />
+        )}
+      </div>
 
-      {region.games.length === 0 ? (
-        <EmptyState heading={empty} className="mt-4" />
-      ) : (
-        region.groups.map((group, index) => (
-          <section
-            key={group.id}
-            id={group.id}
-            aria-labelledby={labelledBy(group.id)}
-            className={index === 0 ? 'mt-6' : 'mt-8 md:mt-10'}
-          >
-            {/* A postseason group links its place on /playoffs ('CCS Division 2 · 4' → its division's bracket). */}
-            <SectionHeader
-              as="h3"
-              id={`${group.id}-heading`}
-              kicker={group.kicker}
-              action={group.bracket ? { href: group.bracket.href, label: group.bracket.label } : undefined}
-            />
-            {/* Two or more cards fill the row, so they end where the pager, the fixtures card
-                and the disclosure below end; a lone card stays card-sized rather than 1200px wide. */}
-            <GameList games={group.games} tracks={group.games.length > 1 ? 'fit' : 'fill'} />
-          </section>
-        ))
-      )}
+      {leagues.map((league) => {
+        const mine = gamesOfLeague(dayGames, league.id);
+        return (
+          <div key={league.id} data-scope={league.id}>
+            {mine.length === 0 ? (
+              <p className="sx-empty">
+                {`No ${league.shortName} games on this day.`}
+                {(() => {
+                  /* The league's own days: its next game day, else its last one (a league whose
+                     season is over), never the region's. */
+                  const days = leagueDays?.(league.id);
+                  if (!days) return next;
+                  if (days.next) return dayLink('Next games:', days.next);
+                  if (days.last) return dayLink(`Last ${league.shortName} games:`, days.last);
+                  return null;
+                })()}
+              </p>
+            ) : (
+              <DayGroups groups={dayGroups(mine)} />
+            )}
+          </div>
+        );
+      })}
 
       <MovedNote games={region.games} date={date} />
 
-      {/* Fixtures on a league's official schedule that no source lists, one block per league. A
-          day that has not come yet (or is today) introduces them as more of the day ("Also on
-          <SHORT>’s schedule…"), never as a missing result: its visible lead replaces the kicker,
-          and an sr-only h3 in the lead's own words keeps a heading for screen readers moving by
-          headings, as a past day's SPEC §10.4 kicker does. The date column would repeat the h1,
-          so it goes. */}
-      {fixtureLeagues.map(({ league, rows }) =>
-        date >= today ? (
-          <section key={league.id} aria-labelledby={`${league.id}-schedule-only`} className="mt-8 md:mt-10">
-            <h3 id={`${league.id}-schedule-only`} className="sr-only">
-              {`Also on ${league.shortName}’s schedule`}
-            </h3>
-            <OfficialFixtures
-              fixtures={rows}
-              leagueId={league.id}
-              today={today}
-              variant="plain"
-              showDate={false}
-              lead={`Also on ${league.shortName}’s schedule for this day, but not listed by any source:`}
-            />
-          </section>
-        ) : (
-          <section key={league.id} className="mt-8 md:mt-10">
-            <SectionHeader as="h3" kicker={`Scheduled by ${league.shortName}, not reported`} />
-            <OfficialFixtures fixtures={rows} leagueId={league.id} today={today} variant="plain" showDate={false} />
-          </section>
-        ),
-      )}
+      {/* Fixtures on a league's official schedule that no source lists, one group per league. A day
+          that has not come yet (or is today) heads them as more of the day ("Also on <SHORT>’s
+          schedule"), never as a missing result. The date column would repeat the selected day, so
+          it goes. */}
+      {fixtureLeagues.map(({ league, rows }) => (
+        <div key={league.id} className="mt-4">
+          <SectionHeader
+            strip
+            kicker={date >= today ? `Also on ${league.shortName}’s schedule` : `Scheduled by ${league.shortName}, not reported`}
+          />
+          <OfficialFixtures fixtures={rows} leagueId={league.id} today={today} variant="plain" showDate={false} />
+        </div>
+      ))}
     </section>
   );
 }

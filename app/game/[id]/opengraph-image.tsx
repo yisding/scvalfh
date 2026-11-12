@@ -88,9 +88,7 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
           <div
             style={{
               display: 'flex',
-              fontSize: 24,
-              letterSpacing: 4,
-              textTransform: 'uppercase',
+              fontSize: 26,
               color: OG.TEXT_3,
             }}
           >

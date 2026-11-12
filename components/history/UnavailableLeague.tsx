@@ -16,7 +16,6 @@ import type { LeagueId } from '../../lib/types';
 export default function UnavailableLeague({
   leagueId,
   entry,
-  season,
 }: {
   leagueId: LeagueId;
   entry: UnavailableLeagueHistory;
@@ -38,18 +37,14 @@ export default function UnavailableLeague({
       id={leagueId}
       data-region-scope={regionOf(leagueId)}
       aria-label={league.name}
-      className="min-w-0"
+      className="sx-section sx-target min-w-0"
     >
-      <SectionHeader
-        size="lg"
-        kicker={`${league.shortName} · ${league.name}`}
-        meta={<span className="whitespace-nowrap">{season}</span>}
-      />
-      <div className="sx-card mt-4 p-4 sm:p-5">
-        <p className="m-0 text-lead text-ink">Unavailable</p>
-        <p className="m-0 mt-2 max-w-prose text-body text-ink-2">{entry.reason}</p>
+      <SectionHeader kicker={isIndependentLeague(leagueId) ? league.name : league.shortName} />
+      <p className="sx-empty">No standings available</p>
+      <div className="max-w-prose">
+        <p className="sx-note">{entry.reason}</p>
         {entry.alsoPublished?.length ? (
-          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+          <p className="sx-note">
             Official, from {publisher}:{' '}
             {entry.alsoPublished.map((doc, i) => (
               <span key={doc.url}>
@@ -61,19 +56,19 @@ export default function UnavailableLeague({
           </p>
         ) : null}
         {bracket ? (
-          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+          <p className="sx-note">
             The {bracketSectionName(bracket.id)}&rsquo;s 2025 playoff results are on this page:{' '}
-            <a href={`#${bracket.id}`} className="text-accent hover:underline">
+            <a href={`#${bracket.id}`} className="sx-link">
               {getSection(bracket.id).briefLabel} playoffs
             </a>
             .
           </p>
         ) : null}
         {tournament ? (
-          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+          <p className="sx-note">
             The 2025 {TOC.name}, the postseason of{' '}
             {listWords(tournament.leagues.map((l) => `the ${getLeague(l).name}`))}, is on this page:{' '}
-            <a href={`#${tournament.id}`} className="text-accent hover:underline">
+            <a href={`#${tournament.id}`} className="sx-link">
               {TOC.shortName} bracket
             </a>
             .
@@ -81,12 +76,12 @@ export default function UnavailableLeague({
         ) : null}
         {/* `break-words`: the checked list quotes whole URLs, which would otherwise widen a
             320px page past the screen. */}
-        <p className="m-0 mt-3 max-w-prose break-words text-meta text-ink-3">
+        <p className="sx-note break-words">
           {/* A group of independents (DESIGN §24.10): its current table is this site's, under the group's name. */}
           {isIndependentLeague(leagueId) ? (
             <>
               Checked {entry.checkedOn}: {entry.checked.join('; ')}. This season&rsquo;s table of the {league.name} is on{' '}
-              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+              <Link href={`/standings/${leagueId}`} prefetch={false} className="sx-link">
                 the {league.name} page
               </Link>{' '}
               and their section&rsquo;s field hockey page is{' '}
@@ -94,7 +89,7 @@ export default function UnavailableLeague({
           ) : (
             <>
               Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
-              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+              <Link href={`/standings/${leagueId}`} prefetch={false} className="sx-link">
                 the {league.shortName} standings page
               </Link>{' '}
               and {ownSite ? 'its official site is' : `its section’s field hockey page is`}{' '}

@@ -83,7 +83,11 @@ describe('buildUnbracketedResults (the EAL card on /playoffs)', () => {
     expect(view.empty, VIEW).toBeNull();
     const html = renderToStaticMarkup(createElement(UnbracketedResults, { view, idPrefix: 'eal' }));
     const text = textOf(html);
-    expect(text, 'components/playoffs/UnbracketedResults.tsx').toContain('Semifinals and final · Sat Oct 31');
+    // A day is a strip: the round at the left, the day at its right end (two elements, not a dotted string).
+    expect(html, 'components/playoffs/UnbracketedResults.tsx').toMatch(
+      /<div class="sx-strip" id="eal-results-2026-10-31"><h3 [^>]*>Semifinals and final<\/h3><div class="sx-strip-end"><span>Sat Oct 31<\/span><\/div><\/div>/,
+    );
+    expect(html.match(/class="sx-gamelist"/g)?.length, 'components/playoffs/UnbracketedResults.tsx').toBe(2);
     expect(text).toContain('Sun Nov 1');
     expect(html).toContain('id="eal-results-2026-10-31"');
     expect(text).not.toMatch(/\bCCS\b|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i);

@@ -1,17 +1,20 @@
 /**
- * The pin write and the focus after an unpin (components/prefs/use-pinned-team.ts,
- * components/home/MyTeamCard.tsx), against a minimal fake DOM — the suite runs in node.
+ * The pin write and the focus after a pin or an unpin (components/prefs/use-pinned-team.ts,
+ * components/home/FindYourTeam.tsx), against a minimal fake DOM — the suite runs in node.
  *
  * - With storage blocked, `pinTeam` changes nothing (no `html[data-pin]`, no remembered league)
- *   and returns false, so the finder never leaves an empty My-team box with no Unpin.
- * - After an unpin with "All" remembered, the My-team slot hides; focus goes to the first-visit
- *   finder (or its heading), never `<body>`.
- * - A tile far off screen is skipped for the finder, so an unpin never jumps the page to it.
+ *   and returns false, so the finder never claims a pin it could not store.
+ * - After an unpin with "All" remembered, focus goes to the first-visit finder (or its heading),
+ *   never `<body>`. The home My-team slot (`.sx-myteam-slot`, `#my-team-heading`) is retired
+ *   (DESIGN §33), so nothing here names it.
+ * - An element far off screen is not "near": an unpin never jumps the page to it.
+ * - After a pin from "Find your team" (which hides the block), focus goes to the team's league tab,
+ *   else to the main landmark.
  */
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { unpinFocusTarget } from '../../components/home/MyTeamCard';
-import { pinTeam, unpinFallbackTarget } from '../../components/prefs/use-pinned-team';
+import { afterPinTarget } from '../../components/home/FindYourTeam';
+import { isNearViewport, pinTeam, unpinFallbackTarget } from '../../components/prefs/use-pinned-team';
 
 type Attrs = Map<string, string>;
 
@@ -86,54 +89,27 @@ describe('pinTeam', () => {
 });
 
 describe('focus after an unpin', () => {
-  it('pin + "All" + unpin: the slot is hidden, so focus goes to the first-visit finder', () => {
-    const hiddenSlotField = fakeElement(false);
+  it('pin + "All" + unpin: focus goes to the first-visit finder', () => {
     const firstVisitField = fakeElement(true);
     install({
       storage: 'ok',
       bySelector: {
-        '[data-pin-tile="leigh"]': [fakeElement(false)],
-        '.sx-myteam-slot input[type="search"]': [hiddenSlotField],
-        '[data-scope="none"] input[type="search"]': [firstVisitField],
+        '[data-scope="none"] input[type="search"]': [fakeElement(false), firstVisitField],
       },
     });
-    expect(unpinFocusTarget('leigh')).toBe(firstVisitField);
     expect(unpinFallbackTarget()).toBe(firstVisitField);
   });
 
-  it('prefers the rendered tile, then the slot finder', () => {
-    const tile = fakeElement(true);
-    const slotField = fakeElement(true);
-    install({
-      storage: 'ok',
-      bySelector: {
-        '[data-pin-tile="leigh"]': [tile],
-        '.sx-myteam-slot input[type="search"]': [slotField],
-        '[data-scope="none"] input[type="search"]': [fakeElement(true)],
-      },
-    });
-    expect(unpinFocusTarget('leigh')).toBe(tile);
-    expect(unpinFocusTarget(null)).toBe(slotField);
-  });
-
-  it('a tile far below the viewport is skipped for the slot finder (no long scroll jump)', () => {
-    const farTile = Object.assign(fakeElement(true), {
+  it('an element far below the viewport is not near (no long scroll jump); one on screen is', () => {
+    const far = Object.assign(fakeElement(true), {
       getBoundingClientRect: () => ({ top: 1800, bottom: 1860 }),
     });
-    const nearTile = Object.assign(fakeElement(true), {
+    const near = Object.assign(fakeElement(true), {
       getBoundingClientRect: () => ({ top: 400, bottom: 460 }),
     });
-    const slotField = fakeElement(true);
-    install({
-      storage: 'ok',
-      bySelector: {
-        '[data-pin-tile="leigh"]': [farTile],
-        '[data-pin-tile="cupertino"]': [nearTile],
-        '.sx-myteam-slot input[type="search"]': [slotField],
-      },
-    });
-    expect(unpinFocusTarget('leigh')).toBe(slotField);
-    expect(unpinFocusTarget('cupertino')).toBe(nearTile);
+    install({ storage: 'ok' });
+    expect(isNearViewport(far as unknown as Element)).toBe(false);
+    expect(isNearViewport(near as unknown as Element)).toBe(true);
   });
 
   it('no finder rendered (no JS styles yet): the first-visit heading, made focusable', () => {
@@ -141,5 +117,31 @@ describe('focus after an unpin', () => {
     install({ storage: 'ok', byId: { 'find-your-team': heading } });
     expect(unpinFallbackTarget()).toBe(heading);
     expect(heading.getAttribute('tabindex')).toBe('-1');
+  });
+});
+
+describe('focus after a pin from "Find your team" (the block hides once a league is remembered)', () => {
+  it('goes to the rendered tab of the team’s league', () => {
+    const hiddenCopy = fakeElement(false);
+    const tab = fakeElement(true);
+    const main = fakeElement(true);
+    install({
+      storage: 'ok',
+      bySelector: { 'button[data-league-option="bval"]': [hiddenCopy, tab] },
+      byId: { main },
+    });
+    expect(afterPinTarget('bval')).toBe(tab);
+    expect(main.hasAttribute('tabindex')).toBe(false);
+  });
+
+  it('the tab is not on screen (the other region’s league): the main landmark, made focusable, never <body>', () => {
+    const main = fakeElement(true);
+    install({
+      storage: 'ok',
+      bySelector: { 'button[data-league-option="city"]': [fakeElement(false)] },
+      byId: { main },
+    });
+    expect(afterPinTarget('city')).toBe(main);
+    expect(main.getAttribute('tabindex')).toBe('-1');
   });
 });

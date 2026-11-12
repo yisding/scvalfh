@@ -235,17 +235,31 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     expect(final.line, VIEW).toBe(`1 ${short(AW)} vs 2 ${short(RW)}`);
   });
 
-  it('BracketGame draws the winner rule on the winner’s side only and speaks the outcome (LeagueTournament.tsx)', async () => {
+  it('the bracket marks the winner’s line only (data-won, no bar), prints results as scores and speaks the outcome (LeagueTournament.tsx)', async () => {
     const { LeagueTournament } = await import('../../components/playoffs/LeagueTournament');
     const { v } = view([...season, playIn, ...qfs, ...sfs, fin], 'complete');
     const html = renderToStaticMarkup(createElement(LeagueTournament, { view: v, leagueShort: 'MCAL', standingsHref: '/standings/mcal' }));
     const COMPONENT = 'components/playoffs/LeagueTournament.tsx';
-    // Five decided bracket games, one rule each (the play-in card is PlayInCard’s, which draws none).
-    expect(html.match(/box-shadow:inset 2px 0 0 var\(--sx-text\)/g)?.length, COMPONENT).toBe(5);
+    // One bracket: the play-in is its first round, then the three rounds, each an h3 with its day.
+    expect(html.match(/class="sx-bracket/g)?.length, COMPONENT).toBe(1);
+    expect([...html.matchAll(/<h3>([^<,]*),[^<]*<\/h3>/g)].map((m) => m[1]), COMPONENT).toEqual(['Play-in', 'Quarterfinals', 'Semifinals', 'Final']);
+    // Six decided games (the play-in and five bracket games): one winner's line and one loser's each, and no bar.
+    expect(html.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-won=""/g)?.length, COMPONENT).toBe(6);
+    expect(html.match(/class="sx-tie-line" aria-hidden="true"[^>]* data-lost=""/g)?.length, COMPONENT).toBe(6);
+    expect(html, COMPONENT).not.toContain('inset 2px 0 0');
+    expect(html, COMPONENT).not.toContain('style=');
+    // A result is two scores in the cell, and the cell links the game page: never a sentence link.
+    expect(html.match(/<div (?:id="[^"]*" )?class="sx-tie sx-target" data-state="final"/g)?.length, COMPONENT).toBe(6);
+    expect(html.match(/<span class="sx-num sx-tie-score">\d+<\/span>/g)?.length, COMPONENT).toBe(12);
+    expect(html.match(/href="\/game\//g)?.length, COMPONENT).toBe(6);
     expect(textOf(html), COMPONENT).toContain(`1 ${short(AW)} at 3 ${short(TM)}. ${short(TM)} wins the MCAL tournament.`);
     expect(textOf(html), COMPONENT).toContain(`3 ${short(TM)} at 2 ${short(RW)}. ${short(TM)} won and advances to the final.`);
-    // The winner's name carries the 600 weight.
-    expect(html, COMPONENT).toMatch(/style="box-shadow:inset 2px 0 0 var\(--sx-text\)"><span class="sx-num[^"]*">3<\/span><span class="font-semibold text-ink">/);
+    // The winner's line: its team's slug, the mark, the name and its seed.
+    expect(html, COMPONENT).toMatch(
+      new RegExp(`<div class="sx-tie-line" aria-hidden="true" data-team-slug="${TM}" data-won="">.*?<span class="sx-game-name">${short(TM)}</span><span class="sx-seed sx-num">#(?:<!-- -->)?3</span>`),
+    );
+    // The cells keep the anchors their games link to (bracket-link.ts).
+    for (const id of ['play-in', 'qf-1', 'qf-2', 'sf-1', 'sf-2', 'final']) expect(html, `${COMPONENT}: #${id}`).toContain(`id="${id}"`);
     expect(html, COMPONENT).not.toMatch(/eliminat/i);
   });
 
@@ -300,11 +314,18 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     }
   });
 
-  it('shows the header, the NCS note, seeds 1-6 with the tournament line and the bracket', () => {
+  it('shows the header, the NCS note, seeds 1-6 with the tournament line and the bracket', async () => {
     const t = text();
     expect(t, PAGE).toContain('MCAL tournament');
-    expect(t, PAGE).toContain('Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30');
-    expect(t, PAGE).toContain('CCS playoffs (SCVAL, BVAL, PCAL) →');
+    // The title has no line under it (spec §5: no sentence under a title). The league, the field and the round
+    // dates are the metadata description's, which is read alone in a search result.
+    expect(html.match(/<h1[\s>]/g)?.length, PAGE).toBe(1);
+    expect(t, PAGE).not.toContain('Marin County Athletic League · 6 teams');
+    const meta = await page.generateMetadata({ params: Promise.resolve({ league: 'mcal' }) } as never);
+    expect(meta.description, PAGE).toContain('Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30');
+    // The link is its words alone: the trailing arrow is retired (components/ui/Arrow.tsx, DESIGN §33).
+    expect(t, PAGE).toContain('CCS playoffs (SCVAL, BVAL, PCAL)');
+    expect(t, PAGE).not.toContain('CCS playoffs (SCVAL, BVAL, PCAL) →');
     expect(t, PAGE).toContain('Not a section playoff');
     expect(t, PAGE).toContain('North Coast Section');
     expect(t, PAGE).toContain('If the season ended today');
@@ -313,7 +334,11 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(t, PAGE).toContain(`6 ${short(LW)} at 3 ${short(RW)}`);
     expect(t, PAGE).toContain('Lowest-ranked remaining seed');
     expect(t, PAGE).toContain('Highest-ranked remaining seed of 3-6');
-    expect(t, PAGE).toContain('Fri Oct 30 · 4 PM PT · at Tamalpais');
+    // The final's day is its round's heading, its time sits where the score will be, its site under the lines.
+    expect(html, PAGE).toContain('<h3>Final, Fri Oct 30</h3>');
+    const finalCell = html.slice(html.indexOf('id="final"'));
+    expect(finalCell.slice(0, finalCell.indexOf('</div></div>')), PAGE).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4 PM</span>');
+    expect(textOf(finalCell), PAGE).toContain('at Tamalpais');
     // The final's where and how much, from config finalSite (DESIGN §3.8): venue, address, Directions, admission.
     expect(t, PAGE).toContain('Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941.');
     expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=700%20Miller%20Ave%2C%20Mill%20Valley%2C%20CA%2094941"');
@@ -338,8 +363,11 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
       // The row sentence counts points in words: "1 point", never "1 points".
       expect(inner, 'components/playoffs/LeagueTournament.tsx row sentence').not.toMatch(/\b1 points\b/);
     }
-    // From sm the PTS and GP headers name the unit, so the seed cells print bare numbers.
-    expect(html, 'components/playoffs/LeagueTournament.tsx seed units').toContain('<span class="sm:hidden"> pts</span>');
+    // The Pts and GP headers name the unit at every width, so the seed cells print bare numbers.
+    expect(html, 'components/playoffs/LeagueTournament.tsx seed units').not.toMatch(/<td[^>]*>\d+ pts</);
+    // The seeds are the site's plain table, with the tournament line as its labelled qualification line.
+    expect(html, 'components/playoffs/LeagueTournament.tsx').toContain('<tr class="sx-cutline"><td colSpan="5"><span>Tournament line</span></td></tr>');
+    expect(html, 'components/playoffs/LeagueTournament.tsx').not.toMatch(/sx-card|sx-bleed|sx-flush/);
   });
 
   it('carries no CCS concept inside the page except the link to the CCS page', () => {

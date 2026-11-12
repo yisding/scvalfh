@@ -109,14 +109,17 @@ from_build() {
 }
 # page PATH — a prerendered page, with real content of its own: a <main>, exactly one <h1>, and the
 # canonical URL of PATH (so a 200 carrying an empty shell or another route's HTML fails).
+# One page is canonically another: /schedule renders the same score day as / since the 2026-11-12
+# refresh (components/schedule/ScoreDay.tsx), so its canonical URL is the bare origin.
 page() {
+  local want="${1%/}"; [ "$1" != /schedule ] || want=""
   expect "$1" 200 text/html "$public"
   from_build "$1"
   grep -qF '<main' "$tmp/b" || fail "$1" "no <main> in the body"
   local h1; h1=$(grep -oE '<h1[ >]' "$tmp/b" | wc -l | tr -d ' ' || true)
   [ "$h1" = 1 ] || fail "$1" "$h1 <h1> elements, expected 1"
   local canonical; canonical=$(grep -oE '<link rel="canonical" href="[^"]*"' "$tmp/b" | sed -n '1s/.*href="//; 1s/"$//p' || true)
-  [ "$canonical" = "$origin${1%/}" ] || fail "$1" "canonical '$canonical', expected '$origin${1%/}'"
+  [ "$canonical" = "$origin$want" ] || fail "$1" "canonical '$canonical', expected '$origin$want'"
 }
 # png PATH WIDTH HEIGHT — a prerendered image route answering with a real PNG of the declared size.
 png() {
@@ -290,7 +293,7 @@ for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /hi
   /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/eal /playoffs/sunset /playoffs/city \
   /playoffs/independents /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope; do
   expect "$path" 404 text/html "$nostore"
-  grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
+  grep -qF '>Page not found</h1>' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)
   [ "$got_og" = "$og" ] || fail "$path" "og:image '${got_og#*content=\"}', expected '${og#*content=\"}' as on /"
   got_stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)

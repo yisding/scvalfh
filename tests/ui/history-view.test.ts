@@ -184,9 +184,25 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     }
     for (const id of ['sunset', 'city', 'north-county', 'metro']) {
       expect(html, `#${id}`).toMatch(new RegExp(`<section id="${id}" data-region-scope="socal"`));
-      expect(html, `pill #${id}`).toMatch(new RegExp(`href="#${id}" data-region-scope="socal"`));
+      // The league row (ScopeBar, anchor mode): the tab sits in a list scoped to its region.
+      expect(html, `tab #${id}`).toMatch(new RegExp(`<ul [^>]*data-region-scope="socal">(?:(?!</ul>).)*<a href="#${id}" class="sx-league-chip"`));
     }
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) {
+      expect(html, `tab #${id}`).toMatch(new RegExp(`<ul [^>]*data-region-scope="norcal">(?:(?!</ul>).)*<a href="#${id}" class="sx-league-chip"`));
+    }
+    // A division's champion is row 1 of its varsity table, bold, with the plain label after the name: no card.
+    const scval = sectionById(html, 'scval')!;
+    expect(scval.match(/<th scope="row" class="sx-col-team font-bold">/g)?.length, 'champion rows').toBe(2);
+    expect(scval, 'champion label').toMatch(/<a class="sx-rowlink" href="\/teams\/st-ignatius">St\. Ignatius<\/a><span class="[^"]*">Champion<\/span>/);
+    expect(scval.match(/<div class="sx-tablewrap"><table class="sx-table">/g)?.length, 'plain tables').toBe(4);
+    // An unavailable league says so in one plain line under its heading.
+    expect(sectionById(html, 'pcal'), 'unavailable').toContain('<p class="sx-empty">No standings available</p>');
     expect(html, 'region control').toContain('data-region-option="socal"');
+    // One league row in place of the jump pills and the phone's sticky jump bar; an archive carries no Updated stamp.
+    expect(html.match(/class="sx-scope /g)?.length, 'league row').toBe(1);
+    expect(html, 'no stamp').not.toContain('sx-stamp');
+    expect(html, 'no pills').not.toMatch(/sx-pill|sx-card|sx-jump/);
+    expect(html.match(/<h1[\s>]/g)?.length, 'one h1').toBe(1);
     const text = textOf(html);
     expect(text).toContain('Official, from the San Diego Section: 2025 CIFSDS playoff brackets (Google Sheet)');
     expect(text).toContain('year_id=175');
@@ -207,7 +223,8 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     const { default: HistoryPage } = await import('../../app/history/2025-26/page');
     const html = renderToStaticMarkup(createElement(HistoryPage));
     expect(html).toMatch(/<section id="toc" data-region-scope="socal"/);
-    expect(html).toMatch(/href="#toc" data-region-scope="socal"/);
+    // No tab of its own in the league row (its tabs are leagues): the Sunset's and the LA independents' sections link it.
+    for (const id of ['sunset', 'independents']) expect(sectionById(html, id), `#${id} points to #toc`).toContain('href="#toc"');
     expect(html.indexOf('<section id="toc"')).toBeGreaterThan(html.indexOf('<section id="independents"'));
     const toc = sectionById(html, 'toc')!;
     const text = textOf(toc);
@@ -218,7 +235,8 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     expect(text).toContain('Third place, Oct 25: Huntington Beach beat Edison 1-0.');
     expect(text).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
     expect(text).not.toMatch(SEED_CLAIM);
-    // The seed column of every drawn line is empty.
-    expect(toc).not.toMatch(/<span class="sx-num w-5 shrink-0 text-right text-meta text-ink-3">\d+<\/span>/);
+    // No drawn line carries a seed.
+    expect(toc).toContain('class="sx-tie-line"');
+    expect(toc).not.toContain('sx-seed');
   });
 });

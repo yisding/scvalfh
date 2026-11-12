@@ -167,8 +167,9 @@ describe('the 2025 CCS championship on 2026’s dates (tests/fixtures/ccs/bracke
       ['los-gatos', 'christopher'],
     ]);
     expect(cards(d1, 'Semifinals').map(sides), MODEL).toEqual([
-      ['winner of 1 v 8', 'winner of 4 v 5'],
-      ['winner of 3 v 6', 'winner of 2 v 7'],
+      // `sides` reads [bottom, top]: an undecided card keeps its feeders' order, the upper game's side on top.
+      ['winner of 4 v 5', 'winner of 1 v 8'],
+      ['winner of 2 v 7', 'winner of 3 v 6'],
     ]);
     expect(cards(d1, 'Final').map(sides), MODEL).toEqual([['TBD', 'TBD']]);
     // A pairing is a card: no round is pending.
@@ -184,7 +185,7 @@ describe('the 2025 CCS championship on 2026’s dates (tests/fixtures/ccs/bracke
       ['st-ignatius', 'saint-francis'],
       ['los-gatos', 'mitty'],
     ]);
-    expect(cards(d1, 'Final').map(sides), MODEL).toEqual([['winner of 1 v 4', 'winner of 2 v 6']]);
+    expect(cards(d1, 'Final').map(sides), MODEL).toEqual([['winner of 2 v 6', 'winner of 1 v 4']]);
     expect(pendingRounds(withGames(quarters), paths), MODEL).toEqual([]);
   });
 

@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { shootoutPhrases } from '../../lib/format';
 import { LEAGUES, findDivision, findLeague } from '../../lib/leagues';
 import { shootoutGroupName, shootoutSectionOf } from '../ui/describe-game';
@@ -19,21 +17,19 @@ const READS_SBLIVE = LEAGUES.some((l) => l.sblive.backfill);
  * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note:
  * `Score via High School on SI (si.com): <rule note>.` A San Diego Section playoff score from the Section's
  * bracket sheet (MaxPreps had no contest, or no score) says so the same way, and links the sheet. Both sources are linked, but a link that is
- * already one of the final's result pills directly above (`GameModel.resultLinks`, where si.com's
- * game page is the accent pill) is not repeated here.
+ * already one of the final's result links in DETAILS (`GameModel.resultLinks`) is not repeated here.
  *
  * `SourceDisagreement` is the site's credibility mechanism applied to one contest (DESIGN §9,
  * SPEC §5.7): when MaxPreps and si.com publish different numbers we show which one we publish and
  * why, say so on the page, and link both sources so a reader can check. It sits directly under the
  * scoreboard, because a disagreement buried in a footer is a disagreement hidden.
  *
- * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
- * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
- * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
- * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
- * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
- * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
- * when that page is also a result pill under the recap.
+ * `GameElsewhere` is the cross-check method sentence for one game. Since DESIGN §33 method text lives
+ * on /about and the game page does NOT render this block; each school's pages on the two sources
+ * moved to DETAILS (GameDetails). It is kept because the sentence is the one place the league-aware
+ * wording is written and tested (D23, D24). Each link has one home (DETAILS), except in this file's
+ * two disagreement notes: SourceDisagreement cites both sources' pages and ResultFlagConflict
+ * MaxPreps' page beside their sentences.
  *
  * The cross-check sentence follows the game's league config: a game counted in a division with no
  * official schedule (`official.mode` 'none', spec D23), or a league-postseason game or a game between
@@ -70,17 +66,17 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
       {sbliveUrl || maxprepsUrl || sheetUrl ? (
         <p className="m-0 flex flex-wrap gap-x-4">
           {sheetUrl ? (
-            <ExternalLink href={sheetUrl} className="sx-action no-underline">
+            <ExternalLink href={sheetUrl} className="sx-link">
               The Section&rsquo;s bracket sheet
             </ExternalLink>
           ) : null}
           {sbliveUrl ? (
-            <ExternalLink href={sbliveUrl} className="sx-action no-underline">
+            <ExternalLink href={sbliveUrl} className="sx-link">
               si.com&rsquo;s page
             </ExternalLink>
           ) : null}
           {maxprepsUrl ? (
-            <ExternalLink href={maxprepsUrl} className="sx-action no-underline">
+            <ExternalLink href={maxprepsUrl} className="sx-link">
               MaxPreps&rsquo; page
             </ExternalLink>
           ) : null}
@@ -104,19 +100,18 @@ export function SourceDisagreement({ model, className }: SourceDisagreementProps
       aria-label="Sources disagree on this score"
     >
       <p className="m-0">
-        <span aria-hidden="true">&#9873; </span>
         {/* The sentence is written by the pipeline and carries both numbers already. */}
         {conflict.note}
       </p>
       {conflict.sbliveUrl || conflict.maxprepsUrl ? (
         <p className="m-0 flex flex-wrap gap-x-4">
           {conflict.sbliveUrl ? (
-            <ExternalLink href={conflict.sbliveUrl} className="sx-action no-underline">
+            <ExternalLink href={conflict.sbliveUrl} className="sx-link">
               si.com&rsquo;s page
             </ExternalLink>
           ) : null}
           {conflict.maxprepsUrl ? (
-            <ExternalLink href={conflict.maxprepsUrl} className="sx-action no-underline">
+            <ExternalLink href={conflict.maxprepsUrl} className="sx-link">
               MaxPreps&rsquo; page
             </ExternalLink>
           ) : null}
@@ -140,12 +135,11 @@ export function ResultFlagConflict({ model, className }: SourceDisagreementProps
       aria-label="MaxPreps’ result flags disagree with the score"
     >
       <p className="m-0">
-        <span aria-hidden="true">&#9873; </span>
         {model.resultConflictNote}
       </p>
       {url ? (
         <p className="m-0">
-          <ExternalLink href={url} className="sx-action no-underline">
+          <ExternalLink href={url} className="sx-link">
             MaxPreps&rsquo; page
           </ExternalLink>
         </p>
@@ -161,22 +155,9 @@ export interface GameElsewhereProps {
 
 export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const { display, away, home } = model;
-  const teamRows = [away, home].flatMap((side) =>
-    side.team && (side.team.external.maxprepsTeamUrl || side.sbliveUrl)
-      ? [
-          {
-            slug: side.team.slug,
-            name: side.name,
-            shortName: side.team.shortName,
-            maxprepsUrl: side.team.external.maxprepsTeamUrl,
-            sbliveUrl: side.sbliveUrl,
-          },
-        ]
-      : [],
-  );
   // The cross-check sentence is about a SCORE, so it only belongs on a game that has one.
   const isFinal = display.kind === 'final';
-  if (teamRows.length === 0 && !isFinal) return null;
+  if (!isFinal) return null;
   // D24 (lib/crosscheck/backfill.ts): the section BOTH sides are teams of, when it ends a level game with a shootout
   // (keyed on the section, as lib/pipeline/normalize.ts keys decider 'SO'). Lookups here never throw: the snapshot
   // schema checks a tag's league id only for shape, so an id no longer configured reads as no league (and
@@ -214,66 +195,8 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
 
   return (
     <section className={className} aria-labelledby="game-sources-kicker">
-      <SectionHeader kicker="Elsewhere" as="h2" id="game-sources-kicker" />
-      {teamRows.length > 0 ? (
-        <div className="sx-card sx-flush sx-bleed">
-          {/* One row per school, so the links scan by team instead of repeating each school's
-              name in four equal-weight pills. The visible name is the SHORT one (F-26c): a long full
-              name ("Convent of the Sacred Heart") wrapped its row at 390, and the full name is still
-              what each pill announces. The pills are raised to the surface with the hairline
-              ring, the site's capsule for a secondary link (F-56g). */}
-          <ul className="sx-list">
-            {teamRows.map((side) => (
-              <li
-                key={side.slug}
-                className="flex min-h-row-1 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2"
-              >
-                {/* The school's name links to its team page, as the same short name does in FORM
-                    GOING IN above (FormGoingIn) and on every other team row. */}
-                <Link
-                  href={`/teams/${side.slug}`}
-                  prefetch={false}
-                  className="sx-action mr-auto min-w-0 gap-1 text-body text-accent no-underline hover:underline"
-                >
-                  <span className="truncate">{side.shortName}</span>
-                  <span aria-hidden="true" className="shrink-0 text-micro">
-                    &rsaquo;
-                  </span>
-                </Link>
-                <span className="flex flex-wrap gap-2">
-                  {side.maxprepsUrl ? (
-                    <ExternalLink
-                      href={side.maxprepsUrl}
-                      className="sx-pill sx-pill-ring"
-                    >
-                      <span className="sr-only">{side.name} on </span>MaxPreps
-                    </ExternalLink>
-                  ) : null}
-                  {side.sbliveUrl ? (
-                    <ExternalLink
-                      href={side.sbliveUrl}
-                      className="sx-pill sx-pill-ring"
-                    >
-                      <span className="sr-only">{side.name} on </span>si.com
-                    </ExternalLink>
-                  ) : null}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {isFinal ? (
-        <p
-          className={
-            teamRows.length > 0
-              ? 'mt-3 mb-0 max-w-prose text-meta text-ink-3'
-              : 'm-0 max-w-prose text-meta text-ink-3'
-          }
-        >
-          {crossCheck}
-        </p>
-      ) : null}
+      <SectionHeader kicker="About this score" as="h2" id="game-sources-kicker" />
+      <p className="sx-note">{crossCheck}</p>
     </section>
   );
 }

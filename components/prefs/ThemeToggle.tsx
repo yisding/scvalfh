@@ -7,37 +7,27 @@ import { useIsHydrated, useStoredValue, writeStored } from './local-store';
 import { THEME_META_ID, THEME_STORAGE_KEY, themeMetaColor } from './theme-script';
 
 /**
- * System / Light / Dark, cycled by one 44×44 button (DESIGN §7.14).
+ * The theme preference (DESIGN §33): ONE text button, not a switch. The site follows the device
+ * (`prefers-color-scheme`); the button's label names what a press does: "Dark mode" while the page
+ * is light, "Light mode" while it is dark. Rendered in the footer (`sx-textbtn`) and, as a list row
+ * (`face="row"`), in the phone More sheet. Never in the header.
  *
- * The accessible name comes from the button's CONTENTS and names both states: "Light theme is on.
- * Switch to dark theme." An `aria-label` was doing the second half on its own, which is exactly
- * how accname works — label (step 2C) beats name-from-content (step 2F) — so the visually hidden
- * sentence naming the CURRENT theme was computed away and never announced, the opposite of what
- * this comment used to promise.
+ * A press sets `data-theme` on `<html>` and stores the choice. When the chosen theme is the
+ * device's own, the stored override is REMOVED instead, so the site goes back to following the
+ * device: there is no third "System" state to show or to get stuck outside of.
  *
- * There is no `aria-pressed`: the control cycles THREE states, and a two-valued "pressed" cannot
- * tell Light from Dark (both are "on"). The name carries the whole story instead.
+ * `color-scheme` on `:root` (set by the CSS tokens) keeps form controls and scrollbars in step. The
+ * pre-paint script in layout.tsx has already stamped the attribute, so there is no flash. The
+ * browser chrome's `theme-color` follows the choice through one media-less meta that an explicit
+ * theme prepends and following the device removes (components/prefs/theme-script.ts says why it is
+ * not the layout's).
  *
- * "System" is stored as the ABSENCE of the attribute, so `prefers-color-scheme` stays in charge,
- * and `color-scheme` on `:root` (set by the CSS tokens) keeps form controls and scrollbars in step.
- * The pre-paint script in layout.tsx has already stamped the attribute, so there is no flash: this
- * component renders the neutral glyph on the server and the real one after hydration. The browser
- * chrome's `theme-color` follows the choice through one media-less meta that an explicit theme
- * prepends and System removes (components/prefs/theme-script.ts says why it is not the layout's).
- *
- * Without JS the button would look live and do nothing, so it is `sx-js-only`: the OS scheme still
- * applies, and the bar keeps its 48px height from its own `h-topbar`, not from this button.
- *
- * The cycle depends on the OS scheme, so that the FIRST tap always changes the page. A fixed
- * System → Light → Dark cycle spent its first tap on a no-op for every reader whose phone was
- * already light: System and Light paint the same page, and the reader concluded the button was
- * broken. Now System goes to the theme OPPOSITE the OS, then to the OS-matching explicit theme,
- * then back to System. On a dark OS that is the old System → Light → Dark; on a light OS it is
- * System → Dark → Light. The OS scheme is a `useSyncExternalStore` read of the media query, with
- * `false` (light) as the server snapshot, so the hydrating render matches the HTML and the
- * sentence settles a render later, the same way the stored theme already does.
+ * Without JS the button would look live and do nothing, so it is `sx-js-only` (the device's scheme
+ * still applies), and it is `disabled` until hydrated. The device's scheme is a
+ * `useSyncExternalStore` read of the media query, with `false` (light) as the server snapshot, so the
+ * hydrating render matches the HTML and the label settles a render later.
  */
-type Theme = 'system' | 'light' | 'dark';
+type Theme = 'light' | 'dark';
 
 const DARK_QUERY = '(prefers-color-scheme: dark)';
 
@@ -50,56 +40,11 @@ function subscribeOsScheme(onChange: () => void): () => void {
 const osIsDark = () => window.matchMedia(DARK_QUERY).matches;
 const serverOsIsDark = () => false;
 
-/** The theme after `theme`, given the OS scheme. */
-function nextTheme(theme: Theme, osDark: boolean): Theme {
-  const osMatching: Theme = osDark ? 'dark' : 'light';
-  const osOpposite: Theme = osDark ? 'light' : 'dark';
-  if (theme === 'system') return osOpposite;
-  if (theme === osOpposite) return osMatching;
-  return 'system';
-}
-const SVG_PROPS = {
-  width: 20,
-  height: 20,
-  viewBox: '0 0 20 20',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 1.6,
-  strokeLinecap: 'round' as const,
-  strokeLinejoin: 'round' as const,
-  'aria-hidden': true,
-};
-
-/** 20px inline glyphs: a half-filled circle (system), a sun (light), a crescent (dark). */
-const GLYPH: Record<Theme, React.ReactNode> = {
-  system: (
-    <svg {...SVG_PROPS}>
-      <circle cx="10" cy="10" r="7" />
-      <path d="M10 3a7 7 0 0 0 0 14z" fill="currentColor" stroke="none" />
-    </svg>
-  ),
-  light: (
-    <svg {...SVG_PROPS}>
-      <circle cx="10" cy="10" r="4" />
-      <path d="M10 1.75v1.5M10 16.75v1.5M1.75 10h1.5M16.75 10h1.5M4.17 4.17l1.06 1.06M14.77 14.77l1.06 1.06M4.17 15.83l1.06-1.06M14.77 5.23l1.06-1.06" />
-    </svg>
-  ),
-  dark: (
-    <svg {...SVG_PROPS}>
-      <path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7z" />
-    </svg>
-  ),
-};
-const WORD: Record<Theme, string> = {
-  system: 'System theme',
-  light: 'Light theme',
-  dark: 'Dark theme',
-};
-
-function applyTheme(theme: Theme) {
+/** Show `theme`; `followDevice` drops the override (the device already shows it). */
+function applyTheme(theme: Theme, followDevice: boolean) {
   const root = document.documentElement;
   let meta = document.getElementById(THEME_META_ID) as HTMLMetaElement | null;
-  if (theme === 'system') {
+  if (followDevice) {
     root.removeAttribute('data-theme');
     meta?.remove();
   } else {
@@ -112,38 +57,32 @@ function applyTheme(theme: Theme) {
     }
     meta.content = themeMetaColor(theme);
   }
-  writeStored(THEME_STORAGE_KEY, theme === 'system' ? null : theme);
+  writeStored(THEME_STORAGE_KEY, followDevice ? null : theme);
 }
 
 export interface ThemeToggleProps {
+  /** 'text' (default) is the footer's text button; 'row' is a More-sheet list row (the sheet styles it). */
+  face?: 'text' | 'row';
   className?: string;
 }
 
-export function ThemeToggle({ className }: ThemeToggleProps) {
+export function ThemeToggle({ face = 'text', className }: ThemeToggleProps) {
   const hydrated = useIsHydrated();
   const stored = useStoredValue(THEME_STORAGE_KEY);
-  const theme: Theme =
-    hydrated && (stored === 'dark' || stored === 'light') ? stored : 'system';
   const osDark = useSyncExternalStore(subscribeOsScheme, osIsDark, serverOsIsDark);
-  const next = nextTheme(theme, osDark);
+  const device: Theme = osDark ? 'dark' : 'light';
+  const current: Theme = hydrated && (stored === 'dark' || stored === 'light') ? stored : device;
+  const next: Theme = current === 'dark' ? 'light' : 'dark';
 
-  // The focus ring is drawn 2px INSIDE the 44px circle: at the default 2px outside, it ran 2px
-  // past the top and bottom of the 48px phone bar.
   return (
     <button
       type="button"
-      onClick={() => applyTheme(next)}
-      className={[
-        'sx-js-only sx-tap relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink focus-visible:-outline-offset-2',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      data-theme-toggle=""
+      disabled={!hydrated}
+      onClick={() => applyTheme(next, next === device)}
+      className={['sx-js-only', face === 'text' ? 'sx-textbtn' : null, className].filter(Boolean).join(' ')}
     >
-      {GLYPH[theme]}
-      <span className="sr-only">
-        {WORD[theme]} is on. Switch to {WORD[next].toLowerCase()}.
-      </span>
+      {next === 'dark' ? 'Dark mode' : 'Light mode'}
     </button>
   );
 }

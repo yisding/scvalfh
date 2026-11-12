@@ -41,6 +41,10 @@ export interface BracketLink {
   label: string;
   /** A CCS game's division path, 'CCS Division 2' (or 'Bracket 1' while unproven); absent for any other game. */
   division?: string;
+  /** The game's round as its bracket heads it, 'Semifinals', 'Final'; absent when the bracket names none. */
+  round?: string;
+  /** A CCS game's seeds from the bracket (the owner file); absent for any other game. */
+  seeds?: { away: number | null; home: number | null };
 }
 
 let index: Map<ContestId, BracketLink> | null = null;
@@ -50,14 +54,22 @@ function buildIndex(): Map<ContestId, BracketLink> {
   for (const path of buildBrackets(getPlayoffs(), getCcsSeeds())) {
     for (const round of path.rounds) {
       for (const card of round.cards) {
-        if (card.kind === 'game') out.set(card.game.contestId, { href: `/playoffs#${path.id}`, label: 'CCS bracket', division: path.name });
+        if (card.kind === 'game') {
+          out.set(card.game.contestId, {
+            href: `/playoffs#${path.id}`,
+            label: 'CCS bracket',
+            division: path.name,
+            round: round.key === 'other' ? undefined : round.name,
+            seeds: card.seeds,
+          });
+        }
       }
     }
   }
   for (const division of getSdsBrackets() ?? []) {
     for (const round of division.rounds) {
       for (const card of round.cards) {
-        if (card.game) out.set(card.game.contestId, { href: `/playoffs#sds-${card.id}`, label: 'Section bracket' });
+        if (card.game) out.set(card.game.contestId, { href: `/playoffs#sds-${card.id}`, label: 'Section bracket', round: round.name });
       }
     }
   }

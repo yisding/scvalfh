@@ -7,7 +7,7 @@ import { RegionCard, standingsCardProps } from '../../components/metadata/og-reg
 import { SITE_NAME } from '../../components/layout/site';
 
 /**
- * The /standings OG card (SPEC §8.4; DESIGN-socal §2.4): SITE_WORDMARK as a small uppercase eyebrow,
+ * The /standings OG card (SPEC §8.4; DESIGN-socal §2.4): SITE_WORDMARK as a small eyebrow in capitals,
  * "Standings — every league" at 44px, then the root card's two region columns — one row per league,
  * `SCVAL  De Anza: St. Ignatius 18 pts · El Camino: Los Gatos 21 pts` (short name and points;
  * co-leaders at most two names joined with " & ", then ` +<n>`; `No league results yet` before a

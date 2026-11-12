@@ -1,23 +1,24 @@
 import Link from 'next/link';
 
-import Arrow from '../ui/Arrow';
-
 import CompactStandingsTable from './CompactStandingsTable';
 import type { OverviewDivision } from './standings-view';
 
 /**
- * One division of a section → league → division overview (SPEC §10.3, DESIGN §18.1): its h4
- * (omitted for a single-division league), its COMPACT standings table and the
- * `Full <division> table →` link to `/standings/<league>#<division>`.
+ * One division of a league in an overview (SPEC §10.3; DESIGN §33): a group strip with the
+ * division's name, which links the full standings at `/standings/<league>#<division>`, then its
+ * COMPACT standings table. A single-division league has no strip: its table sits directly under the
+ * league's own heading, whose "Full standings" link is the way to the full one.
  *
- * The /standings overview and /teams both draw their divisions through here, from the same
- * `OverviewDivision` (`buildOverviewDivision`), so the two pages cannot disagree about a place or
- * about the block's markup. The section and league wrappers above it, and each page's closing
- * legend, stay with the page: /teams carries the finder's hooks and a league action there.
+ * `buildOverviewDivision` builds the `OverviewDivision`, so two pages that draw a division through
+ * here cannot disagree about a place or about the block's markup. The league wrapper above it stays
+ * with the page.
+ *
+ * The strip is written out here rather than through `SectionHeader strip`, whose heading is plain
+ * text: this one is a link.
  *
  * The wrapper carries the division id unless it equals the league id (PCAL, EAL), where the league's
  * heading has it, so every id on a page is unique. `teamGroup` adds the `data-team-group` hook the
- * /teams finder hides an emptied group by; `filterable` passes the finder's row hooks down to the
+ * team finder hides an emptied group by; `filterable` passes the finder's row hooks down to the
  * table.
  */
 export interface OverviewDivisionBlockProps {
@@ -28,27 +29,29 @@ export interface OverviewDivisionBlockProps {
   teamGroup?: boolean;
 }
 
+/** The strip's link is a 36px target with a mouse and a 44px one on touch (the strip grows with it). */
+const STRIP_LINK = 'inline-flex min-h-9 items-center pointer-coarse:min-h-11';
+
 export function OverviewDivisionBlock({ division, filterable = false, teamGroup = false }: OverviewDivisionBlockProps) {
   return (
-    <div id={division.anchorId ?? undefined} data-team-group={teamGroup ? '' : undefined} className="mt-6">
-      {division.heading ? <h4 className="m-0 mb-3 text-lead text-ink">{division.heading}</h4> : null}
+    <div id={division.anchorId ?? undefined} data-team-group={teamGroup ? '' : undefined} className="min-w-0">
+      {division.heading ? (
+        <div className="sx-strip">
+          <h3 className="m-0 text-lead text-ink">
+            {/* prefetch off: the full league pages are static, and `auto` would download each one
+                the moment its link scrolls into view. */}
+            <Link href={division.fullHref} prefetch={false} className={STRIP_LINK}>
+              {division.heading}
+            </Link>
+          </h3>
+        </div>
+      ) : null}
       <CompactStandingsTable
         rows={division.rows}
         ladderLine={division.ladderLine}
         caption={division.caption}
         filterable={filterable}
       />
-      <p className="m-0 mt-2">
-        {/* prefetch off: the full league pages are static, and `auto` would download each one
-            the moment its link scrolls into view. */}
-        <Link
-          href={division.fullHref}
-          prefetch={false}
-          className="sx-action text-meta font-medium text-accent hover:underline"
-        >
-          {division.fullLabel} <Arrow />
-        </Link>
-      </p>
     </div>
   );
 }

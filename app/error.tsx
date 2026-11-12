@@ -3,20 +3,16 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-import PageHeader from '../components/layout/PageHeader';
-
 /**
  * The route-level error boundary. Next 16 passes `retry`, not `reset`
  * (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/error.md).
  *
- * The page is static and cron-fed, so the realistic cause is a bad snapshot — but the reader
- * does not need that mechanism. The copy says three plain things: it is our fault, not theirs;
- * the rest of the site should still work; and what to do now (the two buttons). The digest is
- * kept as a small reference line so a correction request can quote it.
+ * The page is static and cron-fed, so the realistic cause is a bad snapshot, but the reader does
+ * not need that mechanism: a title that says what happened and the way on ("Try again", "Scores").
+ * The digest is kept as a small reference line so a correction request can quote it.
  *
- * "Go to the home page" sits on the canvas, where the default `sx-pill` fill (surface-2) read as
- * a grey label rather than a control; `sx-pill-ring` (the surface fill plus the hairline ring)
- * makes it a button, the same canvas-pill treatment the other "See all"/stepper pills use.
+ * A client module, so it cannot use PageHeader (which reads the snapshot for its stamp): it writes
+ * the same `sx-pagehead` block by hand, without a freshness stamp.
  */
 export default function Error({
   error,
@@ -32,26 +28,21 @@ export default function Error({
 
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        eyebrow="Something went wrong"
-        title="This page didn’t load."
-        description="It’s a problem on our end, not yours. The rest of the site should still work. Try again, or go back to the home page."
-      />
-      <div className="mt-8 md:mt-10">
+      <header className="sx-pagehead">
+        <h1 className="m-0 text-h1 text-ink">Something went wrong</h1>
+      </header>
+      <div className="mt-4">
         {error.digest ? (
           <p className="m-0 mb-4 text-meta text-ink-3">
             Reference <span className="sx-num">{error.digest}</span>
           </p>
         ) : null}
         <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={() => retry()} className="sx-pill sx-pill-accent min-h-11">
+          <button type="button" onClick={() => retry()} className="sx-btn sx-btn-primary">
             Try again
           </button>
-          <Link
-            href="/"
-            className="sx-pill sx-pill-ring min-h-11"
-          >
-            Go to the home page
+          <Link href="/" prefetch={false} className="sx-btn">
+            Scores
           </Link>
         </div>
       </div>

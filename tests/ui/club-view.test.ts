@@ -510,30 +510,43 @@ describe('the clubs routes, rendered', () => {
       for (const id of ['players', 'sources']) expect(html, `${slug} #${id}`).toContain(`<section aria-labelledby="${id}"`);
       expect(html.includes('aria-labelledby="programs"'), slug).toBe(club(slug).programs.length > 0);
       expect(html, slug).toContain('href="/clubs"');
-      expect(html, slug).toContain('href="/clubs#how-matched"');
+      // How players are matched is said once, on /about: the club's last line links it.
+      expect(html, slug).toContain('href="/about#clubs-matched"');
+      // The recruiting family's one tab row, "Clubs" lit.
+      expect(html, slug).toContain('<nav aria-label="Recruiting"');
+      expect(html, slug).toContain('<a class="sx-tab" aria-current="true" href="/clubs">Clubs</a>');
     }
     const index = renderIndex();
     const levels = headings(index);
-    expect(levels).toEqual([1, ...Array(11).fill(2)]);
-    // Each region's section carries its half of the site's scope, under the region switcher.
-    expect(index).toContain('data-region-option="socal"');
+    // One h2 per region with a club; the method is on /about, not a section here.
+    expect(levels).toEqual([1, ...Array(10).fill(2)]);
+    expect(index).toContain('<a class="sx-tab" aria-current="page" href="/clubs">Clubs</a>');
+    // Each region's section carries its half of the site's scope. The page has no region control of
+    // its own (DESIGN §33): the footer and the More sheet carry it.
+    expect(index).not.toContain('data-region-option');
     expect(index).toMatch(/<section aria-labelledby="san-francisco" data-region-scope="norcal"/);
     expect(index).toMatch(/<section aria-labelledby="san-diego" data-region-scope="socal"/);
-    expect(index).toContain('<section aria-labelledby="how-matched"');
-    const how = textOf(sectionOf(index, 'how-matched'));
+    expect(index).not.toContain('how-matched');
+    expect(index).toContain('href="/about#clubs-matched"');
+    const about = renderToStaticMarkup(createElement(AboutPage));
+    expect(about).toContain('<section aria-labelledby="clubs-matched"');
+    const how = textOf(sectionOf(about, 'clubs-matched'));
     expect(how).toContain('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
     expect(how).not.toMatch(/no club based (in|on) the (Sacramento area|North State)/);
     for (const slug of getClubSlugs()) expect(index).toContain(`href="/clubs/${slug}"`);
   });
 
-  it('puts both names in the one h1, apart, and the website in a pill', async () => {
+  it('titles the page with the display name, the full name and facts in the one line under it, and links the website', async () => {
     const html = await renderClub('sf-hawks');
     const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)![1];
-    expect(textOf(h1).trim()).toBe('SF Hawks San Francisco Youth Field Hockey Club');
-    expect(html).toMatch(/<a href="https:\/\/sfyouthfieldhockey\.com\/" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline sx-pill">SF Hawks website/);
-    expect(textOf(html)).toContain('San Francisco · Founded 2017');
-    const htc = textOf(await renderClub('htc'));
-    expect(htc).toContain('La Jolla, CA (HTC California) · Founded 2009');
+    // A page title has no sub-label (DESIGN §33): the full name is the first fact of the line under it.
+    expect(textOf(h1).trim()).toBe('SF Hawks');
+    expect(html).toContain(
+      '<div class="sx-pagehead-meta"><span>San Francisco Youth Field Hockey Club</span><span>San Francisco</span><span>Founded 2017</span></div>',
+    );
+    expect(html).toMatch(/<a href="https:\/\/sfyouthfieldhockey\.com\/" target="_blank" rel="noopener noreferrer" class="hover:underline sx-action whitespace-normal">SF Hawks website/);
+    const htc = await renderClub('htc');
+    expect(htc).toContain('<span>La Jolla, CA (HTC California)</span><span>Founded 2009</span>');
     expect(textOf(/<h1[^>]*>([\s\S]*?)<\/h1>/.exec(await renderClub('performance-fh'))![1]).trim()).toBe('Performance Field Hockey');
   });
 
@@ -556,10 +569,11 @@ describe('the clubs routes, rendered', () => {
         const expected = [
           row.name,
           `${row.school.name} roster`,
-          ...row.facts.map((f) => `· ${f}`),
+          // Each fact is its own element, and the sources are one line, "Sources: A, B".
+          ...row.facts,
           row.status,
           'Sources:',
-          ...row.sources.map((s, j) => `${j ? '· ' : ''}${row.name}: ${s.label} ↗ (opens in a new tab)`),
+          ...row.sources.map((s, j) => `${j ? ', ' : ''}${row.name}: ${s.label} (opens in a new tab)`),
         ].join(' ');
         expect(squashWs(textOf(items[i])), `${slug} / ${row.name}`).toBe(squashWs(expected));
         expect(items[i], `${slug} / ${row.name}`).toContain(`href="${row.school.href}"`);
@@ -591,7 +605,7 @@ describe('the clubs routes, rendered', () => {
       expect(new Set(links.map((l) => l.name)).size, slug).toBe(links.length);
       if (shared) {
         const after = programs.slice(programs.lastIndexOf('</ul>'));
-        expect(textOf(after).replace(/\s+/g, ' '), slug).toContain(`${shared.lead}: Teams and programs: ${shared.label} ↗ (opens in a new tab)`);
+        expect(textOf(after).replace(/\s+/g, ' '), slug).toContain(`${shared.lead}: Teams and programs: ${shared.label} (opens in a new tab)`);
         expect(after, slug).toContain(`<a href="${esc(shared.url)}" target="_blank" rel="noopener noreferrer"`);
         // The same page under "Pages about the club" goes by its plain name, so the two read apart.
         const about = [...sectionOf(html, 'sources').matchAll(/<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
@@ -628,8 +642,8 @@ describe('the clubs routes, rendered', () => {
     }
   });
 
-  it('defines each status word on /clubs#how-matched as the rows use it', () => {
-    const how = squashWs(textOf(sectionOf(renderIndex(), 'how-matched')));
+  it('defines each status word on /about#clubs-matched as the rows use it', () => {
+    const how = squashWs(textOf(sectionOf(renderToStaticMarkup(createElement(AboutPage)), 'clubs-matched')));
     expect(how).toContain(
       squashWs(
         '“Current” means a source from the 2025-26 or 2026-27 club season: a page dated in one of them, a club’s current-players page, or a live recruiting profile that lists the club.',

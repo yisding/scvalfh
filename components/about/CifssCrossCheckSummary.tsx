@@ -17,21 +17,24 @@ export interface CifssCrossCheckSummaryProps {
 /** `sharedNote`: the note every row carries, said once in the intro instead of under each row. */
 function OnlyList({ rows, intro, sharedNote }: { rows: readonly CifssOnlyRow[]; intro: string; sharedNote?: string }) {
   return (
-    <div className="mt-stack">
-      <p className="max-w-prose text-body text-ink-2">{intro}</p>
+    <div className="mt-4">
+      <p className="m-0 max-w-prose text-body text-ink-2">{intro}</p>
       <ul className="sx-list mt-2 max-w-prose">
         {rows.map((row) => (
-          <li key={row.contestId} className="flex flex-wrap items-center justify-between gap-2 py-2 text-meta">
-            <span>
-              {row.label} <span className="text-ink-3">&middot; <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time></span>{' '}
-              <span className="sx-num text-ink-2">
+          <li key={row.contestId} className="py-2 text-cell text-ink-2">
+            <span className="flex flex-wrap items-baseline gap-x-3 text-body text-ink">
+              <span>{row.label}</span>
+              <span className="sx-num">
                 {row.cifss.away}&ndash;{row.cifss.home}
               </span>
-              {row.note !== sharedNote ? <span className="block text-ink-3">{row.note}</span> : null}
+              <time dateTime={row.dateKey} className="sx-num text-ink-2">
+                {shortDate(row.dateKey)}
+              </time>
+              <ExternalLink href={row.cifssUrl} arrow={false} className="sx-link ml-auto text-cell">
+                cifsshome.org
+              </ExternalLink>
             </span>
-            <ExternalLink href={row.cifssUrl} arrow={false}>
-              cifsshome.org
-            </ExternalLink>
+            {row.note !== sharedNote ? <span className="block">{row.note}</span> : null}
           </li>
         ))}
       </ul>
@@ -43,7 +46,7 @@ export function CifssCrossCheckSummary({ cross }: CifssCrossCheckSummaryProps) {
   const { compared, agreements, conflicts, cifssOnlyScored, notOnMaxPreps, cifssFetchedAt } = cross;
   return (
     <div>
-      <p className="max-w-prose text-body text-ink-2">
+      <p className="m-0 max-w-prose text-body text-ink-2">
         cifsshome.org is the CIF Southern Section&rsquo;s schedule-and-score site, and it carries the
         other Sections&rsquo; games too. Schools enter their own schedules and scores there, so many
         games are missing or unscored, and a missing game says nothing about MaxPreps. We read every
@@ -56,45 +59,39 @@ export function CifssCrossCheckSummary({ cross }: CifssCrossCheckSummaryProps) {
           : ' and none disagreed.'}
       </p>
       {conflicts.length > 0 ? (
-        <div className="sx-card sx-flush mt-4 max-w-prose">
-          <table className="sx-table text-meta">
-            <caption className="sr-only">Games where MaxPreps and cifsshome.org publish different scores</caption>
-            <thead>
-              <tr>
-                <th scope="col" className="pl-4">
-                  Game
-                </th>
-                <th scope="col" className="w-px px-3 text-right tracking-normal">
-                  MaxPreps
-                </th>
-                <th scope="col" className="w-px pl-3 pr-4 text-right tracking-normal">
-                  cifsshome
-                </th>
+        <table className="sx-table mt-2 max-w-prose">
+          <caption className="sr-only">Games where MaxPreps and cifsshome.org publish different scores</caption>
+          <thead>
+            <tr>
+              <th scope="col" className="text-left">
+                Game
+              </th>
+              <th scope="col">MaxPreps</th>
+              <th scope="col">cifsshome</th>
+            </tr>
+          </thead>
+          <tbody>
+            {conflicts.map((row) => (
+              <tr key={row.contestId}>
+                <td className="py-2 text-left whitespace-normal">
+                  {row.label}
+                  <span className="block text-cell text-ink-2">
+                    <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time>. {row.note}{' '}
+                    <ExternalLink href={row.cifssUrl} arrow={false} className="sx-link">
+                      cifsshome.org
+                    </ExternalLink>
+                  </span>
+                </td>
+                <td className="sx-num w-px pl-4 align-top font-semibold">
+                  {row.maxpreps.away}&ndash;{row.maxpreps.home}
+                </td>
+                <td className="sx-num w-px pl-4 align-top text-ink-2">
+                  {row.cifss.away}&ndash;{row.cifss.home}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {conflicts.map((row) => (
-                <tr key={row.contestId}>
-                  <td className="py-3 pl-4">
-                    {row.label}
-                    <span className="block text-ink-3">
-                      <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time> &middot; {row.note}{' '}
-                      <ExternalLink href={row.cifssUrl} arrow={false} className="underline">
-                        cifsshome.org
-                      </ExternalLink>
-                    </span>
-                  </td>
-                  <td className="sx-num whitespace-nowrap px-3 py-3 text-right text-cell font-semibold text-ink">
-                    {row.maxpreps.away}&ndash;{row.maxpreps.home}
-                  </td>
-                  <td className="sx-num whitespace-nowrap py-3 pl-3 pr-4 text-right text-cell text-ink-2">
-                    {row.cifss.away}&ndash;{row.cifss.home}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       ) : null}
       {cifssOnlyScored.length > 0 ? (
         <OnlyList

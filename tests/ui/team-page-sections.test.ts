@@ -51,11 +51,11 @@ describe('the team page, every league', () => {
     }
   });
 
-  it('shows club lines and their footnote only where a rostered player has a club', async () => {
+  it('shows club lines only where a rostered player has a club, and no footnote about them (it is on /about)', async () => {
     const footnote = 'Club lines link to the club’s page on this site';
     const si = await render('st-ignatius');
     expect(si).toContain('href="/clubs/sf-hawks"');
-    expect(si).toContain(footnote);
+    expect(si).not.toContain(footnote);
     const vc = await render('valley-christian');
     expect(vc).not.toContain(footnote);
     expect(vc).not.toContain('href="/clubs/');
@@ -68,7 +68,10 @@ describe('the team page, every league', () => {
     }
     const noStats = getPlayerStats().teams.find((t) => t.status === 'none');
     if (noStats) {
-      expect(await render(noStats.slug)).toMatch(/No player stats for|Nobody has entered any/);
+      // ONE plain line under the section's heading; the section itself never vanishes.
+      const html = await render(noStats.slug);
+      const at = html.search(/<section[^>]*\bid="player-stats"/);
+      expect(html.slice(at, html.indexOf('</section>', at))).toContain('<p class="sx-empty">No stats reported');
     }
   });
 });

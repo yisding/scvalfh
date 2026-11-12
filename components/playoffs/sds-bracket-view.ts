@@ -1,4 +1,4 @@
-import { EN_DASH, leagueClockPT, monthDay, renderScore, shortDate } from '../../lib/format';
+import { EN_DASH, leagueClock, leagueClockPT, monthDay, renderScore, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { LiveBracketCard, LiveBracketDivision, LiveBracketRound, LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
@@ -79,6 +79,12 @@ function whenLine(card: LiveBracketCard): string {
   return `${shortDate(card.dateKey)} · ${card.time ? leagueClockPT(card.time) : 'time TBA'}`;
 }
 
+/** "4 PM", "TBD"; with the weekday ("Tue 3:30 PM") when the card is not on its round's day, which the heading names. */
+function clockLine(card: LiveBracketCard, round: LiveBracketRound): string {
+  const clock = card.time ? leagueClock(card.time) : 'TBD';
+  return card.dateKey === round.date ? clock : `${shortDate(card.dateKey).split(' ')[0]} ${clock}`;
+}
+
 /** The decided card's sentence, winner first. */
 function resultSentence(card: LiveBracketCard, top: BracketSideView, bottom: BracketSideView, score: readonly [number, number] | null): string {
   const sides = { top, bottom };
@@ -139,6 +145,7 @@ function cardView(card: LiveBracketCard, round: LiveBracketRound, today: string)
     score,
     status,
     time: status === 'scheduled' ? whenLine(card) : null,
+    clock: status === 'scheduled' ? clockLine(card, round) : null,
     site: card.site,
     href: card.game ? gameHref(card.game.contestId) : null,
     sentence: [sentence],

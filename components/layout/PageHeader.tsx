@@ -1,79 +1,112 @@
+import Dateline from './Dateline';
+
 /**
- * The page title block. It sits on the canvas (never in a card) and opens every route except
- * /game/[id], whose h1 stays sr-only beside the scoreboard, and the team page, whose TeamIdentity
- * hero card holds its own h1.
+ * The page title block (DESIGN §33), for pages whose title is their identity: a team's name, "SCVAL
+ * standings", "Leaders", "About". The h1 is the condensed title face at 36–60px (the base `h1` rule
+ * and the `text-h1` theme value are the same numbers); a long title wraps, it is never clipped.
+ * Under it, at most ONE plain line (`meta`), and a right-hand slot (`end`). No sentence under a
+ * title, and no grey line by default.
  *
- * Below 1024px: eyebrow, h1 (28px, growing toward 36px), description, meta row, then the aside
- * stacked underneath, 16px down, left-aligned.
- * From 1024px: the aside (steppers, inline DivisionTabs) moves to the right of the title block and
- * aligns to its bottom edge. The title block keeps at least 28rem: an aside too wide to sit beside
- * that wraps under the title, still right-aligned, rather than squeezing the h1 into a column a
- * word wide (at 20rem, /history's description ran to eight lines at 1024px beside its jump pills).
- * Every aside on the site fits beside the title from 1024px, so in practice that wrap never fires.
+ * Score pages (home included) pass `titleHidden`: the h1 is visually hidden and nothing else is
+ * drawn, because the selected cell of the date bar is the visible title.
  *
- * Side by side only from 1024px, not 768px: at 768–1023 whether the aside fit beside a 28rem title
- * block depended on its label widths, so the same header was one row on one league's page and
- * two on the next. At 768 /standings/scval's division tabs sat beside the title (a 134px header)
- * while BVAL's, City's, North's and Metro's wrapped under it (170–194px); at 900 all five sat
- * beside; /scores/<date> flipped by the length of the date. Stacked, it is one rule, and the
- * aside sits in the same place on every page.
+ * The team page passes `lead` (its logo) and `figures` (its record as figures, not a label line).
  *
- * The first block after a PageHeader takes `mt-8 md:mt-10`; later sections take
- * `mt-section md:mt-section-lg`.
+ * Server-only (Dateline reads the snapshot): a client module such as app/error.tsx writes the same
+ * `<header className="sx-pagehead">` by hand.
  *
- * Class strings are built with `[…].filter(Boolean).join(' ')`, never `md:pt-10${…}`: Tailwind's
- * scanner does not extract a candidate that runs straight into a template interpolation, so the
- * glued class is silently never generated. tests/ui/class-join.test.ts holds the rule site-wide.
+ * Class strings are built with `[…].filter(Boolean).join(' ')`, never glued to a template
+ * interpolation: Tailwind's scanner does not extract such a candidate
+ * (tests/ui/class-join.test.ts holds the rule site-wide).
  */
 export interface PageHeaderProps {
   title: React.ReactNode;
   /** Appended inside the h1 as sr-only text (e.g. " — scores, standings and the CCS playoff picture"). */
   srTitle?: string;
-  /** A 14px ink-3 line above the title (e.g. the weekday on /scores/[date]). */
-  eyebrow?: React.ReactNode;
-  /** 16px ink-2 lede under the title, capped at `max-w-prose`. */
-  description?: React.ReactNode;
-  /** A row under the title: `sx-badge` pills or a one-line status. */
+  /** Score pages (home included): the h1 is sr-only and the header renders nothing visible. */
+  titleHidden?: boolean;
+  /** ONE plain line under the title (team: "SCVAL De Anza"). Not prose, not a list of facts. */
   meta?: React.ReactNode;
-  /** Right side from lg (steppers, inline DivisionTabs); below the title under 1024px. */
-  aside?: React.ReactNode;
-  /** Extra classes for the aside wrapper, e.g. `hidden md:block` when it is desktop-only. */
-  asideClassName?: string;
+  /** Team page only: the record as figures (value over a small label). */
+  figures?: ReadonlyArray<{ label: string; value: string }>;
+  /** Right-hand slot: the team page's pin state; elsewhere the short Updated stamp when the page has no league row. */
+  end?: React.ReactNode;
+  /** Team page only: the logo (the 64px file; CSS draws it at 48px below 768). Adds the class `sx-teamhead`. */
+  lead?: React.ReactNode;
+  /** Appends the long "Updated …" stamp to the meta line. Default FALSE; only /about passes true. */
+  stamp?: boolean;
+  /** The page's controls (ScopeBar, tabs), rendered under the header. */
+  children?: React.ReactNode;
   className?: string;
+  /**
+   * @deprecated accepted until pages migrate; rendered as a plain 14px line UNDER the title (never a
+   * kicker above it). It is still drawn because /clubs/[slug] passes its only link back to /clubs here.
+   */
+  eyebrow?: React.ReactNode;
+  /** @deprecated accepted until pages migrate; rendered as a plain 14px line. */
+  description?: React.ReactNode;
+  /** @deprecated accepted until pages migrate. */
+  aside?: React.ReactNode;
+  /** @deprecated accepted until pages migrate. */
+  asideClassName?: string;
 }
 
 export function PageHeader({
   title,
   srTitle,
+  titleHidden = false,
+  meta,
+  figures,
+  end,
+  lead,
+  stamp = false,
+  children,
+  className,
   eyebrow,
   description,
-  meta,
   aside,
   asideClassName,
-  className,
 }: PageHeaderProps) {
-  return (
-    <header
-      className={['pt-6 md:pt-10 lg:flex lg:flex-wrap lg:items-end lg:justify-between lg:gap-x-8 lg:gap-y-4', className]
-        .filter(Boolean)
-        .join(' ')}
-    >
-      <div className="min-w-0 lg:min-w-[28rem] lg:flex-1">
-        {eyebrow ? <p className="m-0 mb-1 text-meta font-medium text-ink-3">{eyebrow}</p> : null}
-        <h1 className="m-0 text-h1 text-ink">
+  if (titleHidden) {
+    return (
+      <>
+        <h1 className="sr-only">
           {title}
           {srTitle ? <span className="sr-only">{srTitle}</span> : null}
         </h1>
-        {description ? (
-          <p className="mt-2 mb-0 max-w-prose text-body text-ink-2">{description}</p>
-        ) : null}
-        {meta ? <div className="mt-3 flex flex-wrap items-center gap-2">{meta}</div> : null}
-      </div>
-      {aside ? (
-        <div className={['mt-4 shrink-0 lg:mt-0 lg:ml-auto', asideClassName].filter(Boolean).join(' ')}>
-          {aside}
+        {children}
+      </>
+    );
+  }
+  return (
+    <header className={['sx-pagehead', lead ? 'sx-teamhead' : null, className].filter(Boolean).join(' ')}>
+      {lead}
+      <h1 className="m-0 text-h1 text-ink">
+        {title}
+        {srTitle ? <span className="sr-only">{srTitle}</span> : null}
+      </h1>
+      {end ? <div className="sx-pagehead-end">{end}</div> : null}
+      {meta || stamp ? (
+        // A <div>, not a <p>: un-migrated pages still pass a paragraph of their own as `meta`.
+        <div className="sx-pagehead-meta">
+          {meta}
+          {stamp ? <Dateline /> : null}
         </div>
       ) : null}
+      {figures ? (
+        <dl className="sx-figures">
+          {figures.map((f) => (
+            <div key={f.label}>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+      {eyebrow ? <p className="sx-dateline">{eyebrow}</p> : null}
+      {description ? <p className="sx-dateline">{description}</p> : null}
+      {aside ? <div className={asideClassName}>{aside}</div> : null}
+      {children}
     </header>
   );
 }

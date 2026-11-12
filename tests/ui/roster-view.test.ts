@@ -13,7 +13,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
-import GridRowFiller, { fillerClasses } from '../../components/ui/GridRowFiller';
 import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
 import { getPlayerClubs } from '../../lib/players/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
@@ -339,7 +338,7 @@ describe('TeamRoster', () => {
     }
   });
 
-  it('renders a profile as an off-site link named for the player, and explains the links once', () => {
+  it('renders a profile as an off-site link named for the player; how they are matched is said on /about', () => {
     const base = views.find((v) => v.slug === 'saint-francis')!.view;
     const [first, second, ...rest] = base.rows;
     const view = {
@@ -361,8 +360,9 @@ describe('TeamRoster', () => {
     expect(html).toContain(`<span><span class="sr-only">${esc(first.name)}’s </span>NCSA profile</span>`);
     // A row with no facts still gets its line of links.
     expect(html).toContain(`<span><span class="sr-only">${esc(second.name)}’s </span>Recruiting site</span>`);
-    expect(html).toContain('own recruiting pages on NCSA and personal sites,');
-    expect(html.match(/own recruiting pages/g)?.length).toBe(1);
+    // ONE legend line under the list (DESIGN §33): the method paragraphs are /about's.
+    expect(html).not.toContain('own recruiting pages');
+    expect(html.match(/<p class="sx-note">/g)?.length).toBe(1);
 
     const none = renderToStaticMarkup(
       createElement(TeamRoster, { view: { ...view, rows: view.rows.map((r) => ({ ...r, profiles: [] })), profilePlatforms: [] } }),
@@ -372,7 +372,7 @@ describe('TeamRoster', () => {
     expect(html).not.toContain('claimed it there');
   });
 
-  it('links a claimed MaxPreps page beside the others, and says how it was matched', () => {
+  it('links a claimed MaxPreps page beside the others', () => {
     const base = views.find((v) => v.slug === 'saint-francis')!.view;
     const [first, ...rest] = base.rows;
     const url = 'https://www.maxpreps.com/ca/x/y/athletes/z/?careerid=abc';
@@ -385,9 +385,9 @@ describe('TeamRoster', () => {
     const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
     expect(html).toContain(`href="${url.replace(/&/g, '&amp;')}"`);
     expect(html).toContain('MaxPreps profile</span>');
-    // Only MaxPreps pages: no name-matching sentence, one claim sentence.
+    // No method sentence on the team page.
     expect(html).not.toContain('own recruiting pages');
-    expect(html.match(/has claimed it there/g)?.length).toBe(1);
+    expect(html).not.toContain('has claimed it there');
   });
 
   it('shows a stated empty state, not an empty card, when a team has no rows', () => {
@@ -406,7 +406,8 @@ describe('TeamRoster', () => {
     );
     expect(html).toContain(`MaxPreps lists no players for ${base.teamName}.`);
     expect(html).toContain('No other public source we checked has a current roster either.');
-    expect(html).not.toContain('<ul class="sx-card');
+    expect(html).not.toContain('<ul class="sx-auto');
+    expect(html).toMatch(/^<div><p class="sx-empty">/);
   });
 
   it('says only what the file records about other sources: none, a partial list, or not checked', () => {
@@ -544,17 +545,14 @@ describe('TeamRoster: commitment lines', () => {
     expect(html).toContain('<span class="sr-only">Pat Example’s college signing: </span>');
   });
 
-  it('explains commitment lines once where there are any, linking /commits, and never elsewhere', () => {
+  it('prints no footnote about commitment lines: the method is on /about, the line itself links /commits', () => {
     const footnote = 'Commitment lines link to the player’s entry on the';
-    const count = (html: string, s: string) => html.split(s).length - 1;
     const html = withLine(committedRow('committed'));
-    expect(count(html, footnote)).toBe(1);
-    expect(textOf(html)).toContain(
-      `Commitment lines link to the player’s entry on the college commitments page, which cites a source for each one; “Signed” appears only where a source says so. They were checked by hand on ${si.commitsCheckedOn} and are not part of the twice-daily update. Recall is partial: a player with no commitment line may still have committed.`,
-    );
-    expect(html).toContain('href="/commits"');
+    expect(html).not.toContain(footnote);
+    expect(html).not.toContain('Recall is partial');
+    expect(html).toContain('href="/commits#st-ignatius-pat-example"');
     for (const { slug, view } of views) {
-      expect(count(renderToStaticMarkup(createElement(TeamRoster, { view })), footnote), slug).toBe(view.hasCommitments ? 1 : 0);
+      expect(renderToStaticMarkup(createElement(TeamRoster, { view })), slug).not.toContain(footnote);
     }
   });
 });
@@ -575,27 +573,27 @@ describe('TeamRoster: club lines', () => {
     expect(/<a[^>]*href="\/clubs\/sf-hawks"[^>]*>/.exec(html)![0]).not.toContain('target=');
   });
 
-  it('explains club lines once where there are any, and "listed club" only where one is shown', () => {
+  it('prints no footnote about club lines, and says "listed club" only on the line of a player who has one', () => {
     const footnote = 'Club lines link to the club’s page on this site';
     const listed = 'A “listed club” is one a source names';
-    const count = (html: string, s: string) => html.split(s).length - 1;
     const withClubs = renderToStaticMarkup(createElement(TeamRoster, { view: si }));
-    expect(count(withClubs, footnote)).toBe(1);
-    expect(withClubs).toContain('Recall is partial: a player with no club line may still play for a club.');
+    expect(withClubs).not.toContain(footnote);
+    expect(withClubs).not.toContain('Recall is partial');
     expect(si.hasListedClub).toBe(false);
-    expect(withClubs).not.toContain(listed);
+    expect(withClubs).not.toContain('listed club');
     const losAltos = renderToStaticMarkup(createElement(TeamRoster, { view: views.find((v) => v.slug === 'los-altos')!.view }));
-    expect(count(losAltos, listed)).toBe(1);
+    expect(losAltos).not.toContain(listed);
     expect(losAltos).toContain('<span><span class="sr-only">Riya Mehrotra’s listed club: </span>Fly FHC</span>');
     for (const { slug, view } of views) {
       const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
-      expect(count(html, footnote), slug).toBe(view.hasClubs ? 1 : 0);
-      expect(count(html, listed), slug).toBe(view.hasListedClub ? 1 : 0);
+      expect(html, slug).not.toContain(footnote);
+      // ONE legend line under a roster that lists players, none under an empty one.
+      expect(html.split('<p class="sx-note">').length - 1, slug).toBeLessThanOrEqual(view.rows.length > 0 ? 1 : 0);
+      expect(html, slug).not.toMatch(/\bsx-(card|pill|badge|flag|lift|bleed|flush)\b/);
     }
     const none = renderToStaticMarkup(
       createElement(TeamRoster, { view: { ...si, rows: si.rows.map((r) => ({ ...r, clubs: [] })), hasClubs: false } }),
     );
-    expect(none).not.toContain(footnote);
     expect(none).not.toContain('/clubs/');
   });
 
@@ -621,34 +619,5 @@ describe('profile link text', () => {
     expect(profileLabel({ platform: 'hudl', sport: 'softball' })).toBe('Hudl softball profile');
     expect(profileLabel({ platform: 'personal' })).toBe('Recruiting site');
     expect(profileLabel({ platform: 'personal', sport: 'water-polo' })).toBe('Water polo recruiting site');
-  });
-});
-
-describe('GridRowFiller (the cells that finish a short last row of a grid list)', () => {
-  const grid = { sm: 2, lg: 3 } as const;
-  const shown = (count: number) => [1, 2].map((k) => fillerClasses(count, grid, k));
-
-  it('shows a filler only at the breakpoints where the last row is short', () => {
-    // 7 rows: one short of 2 columns, two short of 3.
-    expect(shown(7)).toEqual(['hidden sm:block', 'hidden lg:block']);
-    // 6 fill both; 5 is one short at 2 columns and at 3.
-    expect(shown(6)).toEqual([null, null]);
-    expect(shown(5)).toEqual(['hidden sm:block', null]);
-    // 4 fill 2 columns and are two short of 3.
-    expect(shown(4)).toEqual(['hidden lg:block', 'hidden lg:block']);
-    // 3 fit one row at 3 columns, which has no rule to finish.
-    expect(shown(3)).toEqual(['hidden sm:block lg:hidden', null]);
-    expect(shown(1)).toEqual([null, null]);
-    // AwardsBlock's First/Second team lists go to two columns only from lg.
-    expect(fillerClasses(5, { lg: 2 }, 1)).toBe('hidden lg:block');
-  });
-
-  it('renders aria-hidden, empty cells with the rows’ hairline and nothing else', () => {
-    const html = renderToStaticMarkup(createElement(GridRowFiller, { count: 7, columns: grid }));
-    expect(html).toBe(
-      '<li aria-hidden="true" class="hidden sm:block border-t border-divider bg-surface"></li>' +
-        '<li aria-hidden="true" class="hidden lg:block border-t border-divider bg-surface"></li>',
-    );
-    expect(renderToStaticMarkup(createElement(GridRowFiller, { count: 6, columns: grid }))).toBe('');
   });
 });

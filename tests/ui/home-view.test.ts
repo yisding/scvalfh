@@ -1,9 +1,15 @@
 /**
- * The home page's view models and rendered markup (SPEC §10.1, §8.2, §8.4), on the offline corpus
- * snapshot so league-specific values never move with a live fetch (SPEC §13.6).
+ * The home page (SPEC §10.1, §8.2, §8.4; DESIGN §33 "Home is Scores"), on the offline corpus snapshot so
+ * league-specific values never move with a live fetch (SPEC §13.6).
+ *
+ * `/` renders the score day view for today (components/schedule/ScoreDay.tsx) with one block of its own,
+ * "Find your team". The league panels, the league cards, the pinned card and the "This week" strip are no
+ * longer drawn on `/`; their view models (components/home/*.ts) are still built and still read by other
+ * suites, so what they SAY is held here on the view models themselves.
  *
  * Every assertion names the module that produced the value (the repair policy routes on it).
  */
+
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -19,6 +25,7 @@ import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
 import { SEED_CLAIM } from '../../scripts/copy-rules';
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
 
+
 import { textOf } from './html-text';
 import { width } from './text-metrics';
 
@@ -32,11 +39,42 @@ let phaseLeadModule: PhaseLead;
 let postseasonCard: PostseasonCard;
 let data: ReturnType<HomeView['buildHomeView']>;
 let leagues: typeof import('../../lib/leagues');
-let pageHtml = '';
-const panelHtml = new Map<string, string>();
-let renderPanel: (id: string) => string;
 
 const HV = 'components/home/home-view.ts';
+const LEAGUE_IDS = ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
+
+/** Every string a value holds, in order: the copy of a view model, without its keys. */
+function stringsOf(value: unknown, into: string[] = []): string[] {
+  if (typeof value === 'string') into.push(value);
+  else if (Array.isArray(value)) for (const v of value) stringsOf(v, into);
+  else if (value && typeof value === 'object') for (const v of Object.values(value)) stringsOf(v, into);
+  return into;
+}
+
+type Panel = ReturnType<HomeView['buildHomeView']>['panels'][number];
+
+/**
+ * A league panel's own copy: its names, phase lead, postseason view, table lines, the points legend and the
+ * other-leagues lines. Not its game lists, which are other teams' names and nothing the panel wrote.
+ */
+function panelCopy(panel: Panel): string {
+  return stringsOf([
+    panel.shortName,
+    panel.name,
+    panel.lead,
+    panel.postseason,
+    panel.divisions.map((d) => [d.heading, d.home.lineLabel]),
+    panel.pointsLegend,
+    panel.others.map((o) => o.text),
+    panel.afterSchedule,
+  ]).join(' | ');
+}
+
+const panelOf = (id: string): Panel => {
+  const panel = data.panels.find((p) => p.id === id);
+  if (!panel) throw new Error(`${HV}: no panel for ${id}`);
+  return panel;
+};
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
@@ -44,40 +82,25 @@ beforeAll(async () => {
   phaseLeadModule = await import('../../components/home/phase-lead');
   postseasonCard = await import('../../components/home/postseason-card');
   leagues = await import('../../lib/leagues');
-  const { default: HomePage } = await import('../../app/page');
-  const { LeaguePanel } = await import('../../components/home/LeaguePanel');
   data = home.buildHomeView();
-  pageHtml = renderToStaticMarkup(createElement(HomePage));
-  renderPanel = (id: string) => {
-    const cached = panelHtml.get(id);
-    if (cached) return cached;
-    const panel = data.panels.find((p) => p.id === id);
-    if (!panel) throw new Error(`${HV}: no panel for ${id}`);
-    const html = renderToStaticMarkup(createElement(LeaguePanel, { panel }));
-    panelHtml.set(id, html);
-    return html;
-  };
 }, 600_000);
 
-describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
+describe('home panels (components/home/home-view.ts)', () => {
   it('builds one panel per league, config order', () => {
-    expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual([
-      'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
-    ]);
-    // Each panel knows its region, from its section (DESIGN-socal §2.4): the page puts it in that block.
+    expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual(LEAGUE_IDS);
+    // Each panel knows its region, from its section (DESIGN-socal §2.4).
     expect(data.panels.map((p) => p.region), `${HV}: panel regions`).toEqual([
       'norcal', 'norcal', 'norcal', 'norcal', 'norcal', 'socal', 'socal', 'socal', 'socal', 'socal',
     ]);
     for (const p of data.panels) {
-      const html = renderPanel(p.id);
-      expect(html, `components/home/LeaguePanel.tsx: ${p.id} scope`).toContain(`data-scope="${p.id}"`);
-      expect(html, `components/home/LeaguePanel.tsx: ${p.id} heading id`).toContain(`id="league-${p.id}"`);
-      expect(textOf(html), `components/home/LeaguePanel.tsx: ${p.id} heading`).toContain(`${p.shortName} · ${p.name}`);
+      expect(p.shortName, `${HV}: ${p.id} short name`).toBe(leagues.getLeague(p.id).shortName);
+      expect(p.name, `${HV}: ${p.id} name`).toBe(leagues.getLeague(p.id).name);
     }
   });
 
   it('the MCAL panel carries no CCS concept', () => {
-    const text = textOf(renderPanel('mcal'));
+    const text = panelCopy(panelOf('mcal'));
+
     expect(text, `${HV}: MCAL panel`).not.toMatch(/automatic qualifier/i);
     expect(text, `${HV}: MCAL panel`).not.toMatch(/at-large/i);
     expect(text, `${HV}: MCAL panel`).not.toMatch(/CCS Division/i);
@@ -90,10 +113,11 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       );
       expect(mcal.postseason.link.href).toBe('/playoffs/mcal');
     }
-    expect(renderPanel('mcal'), 'components/home/PostseasonCard.tsx: MCAL has no meter').not.toContain('sx-meter');
+    expect(mcal.postseason.kind, `${HV}: MCAL has no berth meter`).not.toBe('ccs-ladder');
   });
 
   it('the EAL panel: the Super Regional line and note, no meter, no bracket and no CCS concept', () => {
+
     const eal = data.panels.find((p) => p.id === 'eal')!;
     const config = leagues.getLeague('eal');
     expect(eal.postseason.kind, `${HV}: EAL postseason`).toBe('unbracketed-tournament');
@@ -103,14 +127,13 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       expect(eal.postseason.link, `${HV}: EAL postseason link`).toEqual({ href: '/playoffs#eal', label: 'Postseason' });
     }
     expect(eal.afterSchedule, `${HV}: EAL afterSchedule`).toEqual({ href: '/playoffs#eal', label: 'Super Regional' });
-    const html = renderPanel('eal');
-    const text = textOf(html);
-    expect(text, 'components/home/PostseasonCard.tsx: EAL kicker').toContain('Postseason');
-    expect(text, 'components/home/PostseasonCard.tsx: EAL line').toContain('Super Regional, Oct 30–31 — the top six qualify');
-    expect(text, 'components/home/PostseasonCard.tsx: EAL link').toContain('Postseason →');
-    expect(html, 'components/home/PostseasonCard.tsx: EAL link href').toContain('href="/playoffs#eal"');
-    expect(html, 'components/home/PostseasonCard.tsx: EAL has no meter').not.toContain('sx-meter');
-    expect(html, 'components/home/PostseasonCard.tsx: EAL has no bracket page').not.toContain('href="/playoffs/eal"');
+    const text = panelCopy(eal);
+    expect(text, `${HV}: EAL line`).toContain('Super Regional, Oct 30–31 — the top six qualify');
+    // The link is its words alone: no trailing arrow (DESIGN §33).
+    expect(text, `${HV}: no arrow`).not.toContain('→');
+    expect(eal.postseason.kind, `${HV}: EAL has no berth meter`).not.toBe('ccs-ladder');
+    expect(JSON.stringify(eal.postseason), `${HV}: EAL has no bracket page`).not.toContain('/playoffs/eal');
+
     expect(text, `${HV}: EAL panel`).not.toMatch(/\bCCS\b/);
     expect(text, `${HV}: EAL panel`).not.toMatch(/automatic qualifier/i);
     expect(text, `${HV}: EAL panel`).not.toMatch(/at-large/i);
@@ -130,18 +153,17 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       'PCAL holds 2 of the 16 CCS berths automatically: the top two of the final standings.',
     );
     for (const id of ['scval', 'bval', 'pcal']) {
-      const html = renderPanel(id);
-      expect(html, `components/home/PostseasonCard.tsx: ${id} CCS link`).toContain(`href="/playoffs#${id}"`);
-      expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} dates`).toContain('Quarterfinals');
-      // The footer is the view's dated sentence (ccsLadderView `official`); the corpus day is before the meeting.
-      const panel = data.panels.find((p) => p.id === id)!;
+      const panel = panelOf(id);
       if (panel.postseason.kind !== 'ccs-ladder') throw new Error(`${HV}: ${id} is a CCS ladder`);
+      expect(panel.postseason.link.href, `${HV}: ${id} CCS link`).toBe(`/playoffs#${id}`);
+      expect(panel.postseason.dates.map((d) => d.term), `${HV}: ${id} dates`).toContain('Quarterfinals');
+      // The footer is the view's dated sentence (ccsLadderView `official`); the corpus day is before the meeting.
       expect(panel.postseason.official, `${HV}: ${id} footer`).toBe(
         'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.',
       );
-      expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} footer`).toContain(panel.postseason.official);
     }
   });
+
 
   it('the CCS card footer changes tense the day after the seeding meeting (ccsOfficialSentence)', () => {
     const before = 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
@@ -153,21 +175,22 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     );
   });
 
-  it('PCAL and MCAL mini tables carry no division label', () => {
+  it('PCAL and MCAL tables carry no division label', () => {
     for (const id of ['pcal', 'mcal']) {
-      const panel = data.panels.find((p) => p.id === id)!;
+      const panel = panelOf(id);
       expect(panel.divisions.map((d) => d.heading), `${HV}: ${id} division heading`).toEqual([null]);
-      const text = textOf(renderPanel(id));
-      expect(text, `components/home/MiniStandings.tsx: ${id} kicker`).toContain('League table');
-      expect(text, `components/home/MiniStandings.tsx: ${id}`).not.toMatch(/\b(PCAL|MCAL) Division\b/);
-      expect(text, `components/home/MiniStandings.tsx: ${id}`).not.toMatch(/Gabilan/i);
+      const text = panelCopy(panel);
+      expect(text, `${HV}: ${id}`).not.toMatch(/\b(PCAL|MCAL) Division\b/);
+      expect(text, `${HV}: ${id}`).not.toMatch(/Gabilan/i);
     }
+
     const bval = data.panels.find((p) => p.id === 'bval')!;
     expect(bval.divisions.map((d) => d.heading), `${HV}: BVAL division headings`).toEqual(['Mt. Hamilton', 'Santa Teresa']);
   });
 
-  it('the division `home` config drives each mini table', async () => {
-    const { MiniStandings, miniShownCount } = await import('../../components/home/MiniStandings');
+  it('the division `home` config drives each short table', () => {
+    const { miniShownCount } = home;
+
     const expected: Record<string, { rows: number; line: string | null }> = {
       'de-anza': { rows: 4, line: null },
       'el-camino': { rows: 4, line: null },
@@ -190,56 +213,35 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     for (const panel of data.panels) {
       for (const division of panel.divisions) {
         expect(division.home, `${HV}: ${division.id} home`).toEqual(leagues.getDivision(division.id).home);
-        const html = renderToStaticMarkup(
-          createElement(MiniStandings, { division }),
-        );
         const want = expected[division.id];
-        const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
         // `want.rows`, plus any team sharing the place at the cutoff.
-        expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBe(miniShownCount(division.rows, want.rows));
-        expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
-        if (want.line) expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} line`).toContain(want.line);
-        // No line configured (the EAL: `lineAfter` null): no labelled separator row at all.
-        if (!want.line) expect(division.home.lineLabel, `${HV}: ${division.id} no line label`).toBeNull();
-        if (division.home.lineAfter === null) {
-          expect(html, `components/home/MiniStandings.tsx: ${division.id} no line`).not.toContain('border-t-2');
-        }
-        expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
+        const rows = miniShownCount(division.rows, division.home.miniRows);
+        expect(rows, `${HV}: ${division.id} rows`).toBe(miniShownCount(division.rows, want.rows));
+        expect(rows, `${HV}: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
+        expect(division.total, `${HV}: ${division.id} total`).toBe(division.rows.length);
+        expect(division.home.lineLabel, `${HV}: ${division.id} line`).toBe(want.line);
+        // No line configured (the EAL: `lineAfter` null): no label either.
+        if (division.home.lineAfter === null) expect(division.home.lineLabel, `${HV}: ${division.id} no line`).toBeNull();
         // The row link reads the record in words and counts points ("1 point", never "1 points").
         for (const row of division.rows.filter((r) => r.hasResults)) {
           expect(row.recordWords, `${HV}: ${row.slug} record words`).toMatch(/^\d+ wins?, \d+ loss(es)?, \d+ ties?$/);
+          expect(row.orderWords, `${HV}: ${row.slug} order words`).not.toMatch(/\b1 points\b/);
         }
-        expect(html, `components/home/MiniStandings.tsx: ${division.id} row label`).not.toMatch(/\b1 points\b|, \d+-\d+-\d+, /);
         expect(division.href, `${HV}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
-        // "Division" only for NorCal: San Diego's "Division I/II" are playoff tiers (review 2026-10-06).
-        if (division.heading !== null) {
-          expect(html, `components/home/MiniStandings.tsx: ${division.id} caption`).toContain(
-            panel.region === 'socal' ? `${division.heading} league standings` : `${division.heading} Division league standings`,
-          );
-        }
-        if (panel.region === 'socal') expect(html).not.toMatch(/ Division league standings/);
-        // The scale is named only when some team has a goal difference: the floor of 1 is not a fact.
-        const realMax = Math.max(0, ...division.rows.map((r) => Math.abs(r.gd)));
-        expect(textOf(html).includes('biggest goal difference'), `components/home/MiniStandings.tsx: ${division.id} GD`).toBe(
-          realMax > 0,
-        );
       }
     }
-    // The points legend: once per league, under its last table, citing the league's own rule (the
-    // independents' table included, DESIGN §24.10).
+    // The points legend: once per league, citing the league's own rule (the independents' table included,
+    // DESIGN §24.10).
     for (const panel of data.panels) {
       expect(panel.pointsLegend, `${HV}: ${panel.id} legend`).toBe(
         `PTS: ${leagues.getLeague(panel.id).rules.citations.points}.`,
       );
-      const html = renderPanel(panel.id);
-      expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(
-        1,
-      );
     }
   });
 
-  it('a place shared at the row cutoff is shown whole (Mt. Hamilton 4= pair), and nothing else stretches it', async () => {
-    const { miniShownCount } = await import('../../components/home/MiniStandings');
+  it('a place shared at the row cutoff is shown whole (Mt. Hamilton 4= pair), and nothing else stretches it', () => {
+    const { miniShownCount } = home;
+
     const row = (place: number, shared: boolean, hasResults = true) => ({ place, shared, hasResults });
     // 1, 2, 3, 4=, 4=, 6: four rows asked, both 4= teams shown.
     const tied = [row(1, false), row(2, false), row(3, false), row(4, true), row(4, true), row(6, false)];
@@ -352,7 +354,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     });
     expect(sunset.afterSchedule).toEqual({ href: '/playoffs#sunset', label: 'Postseason' });
     for (const id of ['city', 'north-county', 'metro']) {
-      const panel = data.panels.find((p) => p.id === id)!;
+      const panel = panelOf(id);
+
       const ps = leagues.getLeague(id).postseason;
       if (ps.kind !== 'section-playoffs') throw new Error(`${id}: section-playoffs`);
       expect(panel.postseason, `${HV}: ${id} postseason`).toEqual({
@@ -362,21 +365,18 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         note: null,
         link: { href: `/playoffs#${id}`, label: 'San Diego Section playoffs' },
       });
-      const text = textOf(renderPanel(id));
-      expect(text, `components/home/PostseasonCard.tsx: ${id}`).toContain(ps.qualificationLine);
-      expect(text, `components/home/PostseasonCard.tsx: ${id}`).not.toMatch(/top \w+ qualify|CCS|at-large|automatic qualifier/i);
+      const text = panelCopy(panel);
+      expect(text, `${HV}: ${id}`).toContain(ps.qualificationLine);
+      expect(text, `${HV}: ${id}`).not.toMatch(/top \w+ qualify|CCS|at-large|automatic qualifier/i);
     }
-    const sunsetText = textOf(renderPanel('sunset'));
-    expect(sunsetText).not.toMatch(/top \w+ qualify|CCS|at-large|bracket/i);
+    expect(panelCopy(sunset), `${HV}: Sunset`).not.toMatch(/top \w+ qualify|CCS|at-large|bracket/i);
   });
 });
 
-describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
-  it('has a card per league with its facts and both ways on', async () => {
-    const { LeagueCard } = await import('../../components/home/LeagueCard');
-    expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual([
-      'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
-    ]);
+describe('the league cards (components/home/home-view.ts leagueCards)', () => {
+  it('has a card per league with its facts', () => {
+    expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual(LEAGUE_IDS);
+
     const bval = data.leagueCards.find((c) => c.id === 'bval')!;
     expect(bval, `${HV}: BVAL card`).toMatchObject({
       shortName: 'BVAL',
@@ -407,93 +407,112 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
     expect(data.leagueCards.map((c) => c.showName), `${HV}: card button names`).toEqual([
       'SCVAL', 'BVAL', 'PCAL', 'MCAL', 'EAL', 'Sunset', 'City', 'North County', 'Metro', 'the LA independents',
     ]);
-    for (const card of data.leagueCards) {
-      const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
-      // The button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${leagues.standaloneName(card.id)} here`);
-      expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(`href="/standings/${card.id}"`);
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(leagues.standingsLabel(card.id));
-      expect(html, 'components/home/SetLeagueButton.tsx: js-only, disabled before hydration').toMatch(
-        /<button[^>]*disabled=""[^>]*class="sx-js-only/,
-      );
-    }
-  });
-
-  it('the last card of a region’s odd count spans both columns (NorCal five: 2 + 2 + 1; SoCal five: 2 + 2 + 1)', () => {
-    const cards = [...pageHtml.matchAll(/<li class="sx-card flex[^"]*"/g)].map((m) => m[0]);
-    expect(cards, 'app/page.tsx: one card per league').toHaveLength(data.leagueCards.length);
-    // Per region grid (DESIGN-socal §2.4): the col-span rule is each grid's own.
-    const grids = [...pageHtml.matchAll(/<ul data-region-scope="(norcal|socal)"[^>]*>([\s\S]*?)<\/ul>/g)];
-    expect(grids.map((g) => g[1]), 'app/page.tsx: one card grid per region').toEqual(['norcal', 'socal']);
-    for (const [, region, body] of grids) {
-      const mine = [...body.matchAll(/<li class="sx-card flex[^"]*"/g)].map((m) => m[0]);
-      const count = data.regions.find((r) => r.id === region)!.leagueCards.length;
-      expect(mine, `app/page.tsx: ${region} cards`).toHaveLength(count);
-      mine.forEach((card, i) => {
-        expect(card.includes('min-[390px]:col-span-2'), `app/page.tsx: ${region} card ${i + 1} spans`).toBe(
-          count % 2 === 1 && i === count - 1,
-        );
-      });
-    }
     expect(data.regions.map((r) => r.leagueCards.length), `${HV}: cards per region`).toEqual([5, 5]);
-    // Each grid is preceded by an h3 naming its region, under the one "Find your team" h2.
-    expect(pageHtml).toMatch(/<h3 data-region-scope="norcal"[^>]*>Northern California<\/h3><ul data-region-scope="norcal"/);
-    expect(pageHtml).toMatch(/<h3 data-region-scope="socal"[^>]*>Southern California<\/h3><ul data-region-scope="socal"/);
+    expect(data.regions.map((r) => r.name), `${HV}: region names`).toEqual(['Northern California', 'Southern California']);
   });
 });
 
-describe('the rendered home page (app/page.tsx)', () => {
-  it('has one data-scope section per league, a first-visit block and the always-on chrome', () => {
-    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']) {
-      expect(pageHtml.split(`<section data-scope="${id}"`).length - 1, `app/page.tsx: ${id} panel`).toBe(1);
+/**
+ * `/` is the score day view for today (DESIGN §33, "Home is Scores"): app/page.tsx renders
+ * components/schedule/ScoreDay.tsx with `home` and hands it the first-visit block. What the day view
+ * prints for a day is tests/ui/scores-day.test.ts's; this pins what makes it the home page.
+ */
+describe('the rendered home page (app/page.tsx): the score day view for today', () => {
+  let pageHtml = '';
+
+  beforeAll(async () => {
+    const { default: HomePage } = await import('../../app/page');
+    pageHtml = renderToStaticMarkup(createElement(HomePage));
+  }, 600_000);
+
+  it('has ONE h1, visually hidden, that starts with the site name and says it is the scores', () => {
+    // Always NorCal (owner decision, 2026-10-06): the brand stays NorCal whichever region is shown.
+    expect(pageHtml.split('<h1').length - 1, 'app/page.tsx: one h1').toBe(1);
+    const h1 = /<h1([^>]*)>([\s\S]*?)<\/h1>/.exec(pageHtml);
+    expect(h1?.[1], 'app/page.tsx: the h1 is visually hidden (the date bar is the visible title)').toContain('class="sr-only"');
+    expect(textOf(h1?.[2] ?? ''), 'app/page.tsx: h1').toMatch(/^NorCal High School Field Hockey\b.*\bscores\b/i);
+    expect(pageHtml, 'app/page.tsx: h1').not.toContain('California High School Field Hockey Teams');
+  });
+
+  it('opens the date bar on today, the selected cell', () => {
+    expect(pageHtml, 'components/schedule/ScoreDay.tsx: the date bar').toMatch(/<nav class="sx-datebar[^"]*"/);
+    const current = [...pageHtml.matchAll(/<a\b[^>]*aria-current="date"[^>]*>/g)].map((m) => m[0]);
+    // Each region's bar marks its own selected day; every one of them is today's cell.
+    expect(current.length, 'components/schedule/ScoreDay.tsx: a selected day').toBeGreaterThan(0);
+    for (const cell of current.filter((c) => c.includes('sx-day'))) {
+      expect(cell, 'app/page.tsx: the selected cell is today').toContain('data-today');
     }
+    expect(current.some((c) => c.includes('sx-day')), 'components/schedule/ScoreDay.tsx: the selected cell is a date-bar cell').toBe(true);
+    expect(data.today, `${HV}: the corpus day`).toBe('2026-10-02');
+  });
+
+  it('is not a second layout: no my-team strip, no "Today" headline, no league panels, cards or "This week" strip', () => {
+    expect(pageHtml, 'app/page.tsx: no my-team strip').not.toMatch(/sx-myteam|my-team-heading|my-team-unpin/);
+    expect(pageHtml, 'app/page.tsx: no date headline').not.toContain('data-title');
+    expect(pageHtml, 'app/page.tsx: no "Today" section head').not.toMatch(/<h2[^>]*>\s*Today\s*<\/h2>/);
+    expect(pageHtml, 'app/page.tsx: no league panels').not.toMatch(/id="league-(scval|bval|pcal|mcal|eal|sunset|city|north-county|metro|independents)"/);
+    expect(textOf(pageHtml), 'app/page.tsx: no league cards').not.toMatch(/Show \w[\w ]* here/);
+    expect(pageHtml, 'app/page.tsx: no "This week" strip').not.toMatch(/id="this-week|This week in the postseason/);
+    // The whole rendered page, so a component of another family that `/` prints is held to the purge too:
+    // the fix belongs to whichever file prints the class (components/home/ prints none).
+    expect(pageHtml, 'the component that prints it (not components/home/): no card, pill or badge on `/`').not.toMatch(/\bsx-(card|pill|badge|flag|lift)\b/);
+    expect(textOf(pageHtml), 'app/page.tsx: nothing is labelled "My team"').not.toMatch(/\bMy team\b/);
+  });
+
+  it('has the first-visit block once, the league row with the region switch, and the scope wrappers', () => {
     expect(pageHtml, 'components/home/FindYourTeam.tsx: first-visit block').toMatch(
       /<section data-scope="none" aria-labelledby="find-your-team"/,
     );
-    expect(textOf(pageHtml)).toContain('Find your team');
-    expect(pageHtml, 'app/page.tsx: My-team slot').toMatch(/<section data-scope="all" class="sx-myteam-slot[^"]*" aria-labelledby="my-team-heading"/);
-    // One h1, always NorCal (owner decision, 2026-10-06): the brand stays NorCal, and with SoCal
-    // selected the "Southern California" region heading below it says what is shown.
-    expect(pageHtml.split('<h1').length - 1, 'app/page.tsx: one h1').toBe(1);
-    expect(pageHtml, 'app/page.tsx: h1').toMatch(/<h1[^>]*>NorCal High School Field Hockey Teams/);
-    expect(pageHtml, 'app/page.tsx: h1').not.toContain('California High School Field Hockey Teams');
-    // The status line, one per region: its own latest day, its teams and its leagues.
-    expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
-      /Results through \w{3} \w{3} \d{1,2} · 49 NorCal teams · SCVAL · BVAL · PCAL · MCAL · EAL/,
-    );
-    expect(textOf(pageHtml), 'app/page.tsx: SoCal status line').toMatch(/· 53 SoCal teams · Sunset · City · North · Metro · LA/);
-    // ONE finder, outside every region block; the region control leads the scope row.
+    expect(pageHtml, 'components/home/FindYourTeam.tsx: its heading').toMatch(/<h2 id="find-your-team" class="sr-only">Find your team<\/h2>/);
+    // ONE finder, outside every region block.
     expect(pageHtml.split('aria-labelledby="find-your-team"').length - 1).toBe(1);
-    expect(pageHtml, 'app/page.tsx: region control').toMatch(/data-region-option="norcal"[\s\S]*data-league-option="all"/);
-    // The panels sit in their region's block, in config order.
-    const norcal = pageHtml.indexOf('<section data-scope="eal"');
-    const socal = pageHtml.indexOf('<section data-scope="sunset"');
-    expect(norcal).toBeGreaterThan(0);
-    expect(socal).toBeGreaterThan(norcal);
-    // One latest-results block per region (ids per the -socal rule).
-    expect(pageHtml).toMatch(/<section data-scope="none" data-region-scope="norcal" aria-labelledby="latest-every-league"/);
-    expect(pageHtml).toMatch(/<section data-scope="none" data-region-scope="socal" aria-labelledby="latest-every-league-socal"/);
+    expect(pageHtml.split('<search').length - 1, 'components/home/FindYourTeam.tsx: one finder').toBe(1);
+    // The league row: "All" and one tab per league, then the region switch at the row's end
+    // (components/prefs/ScopeBar.tsx: the tabs, then the util part).
+    expect(pageHtml, 'app/page.tsx: league row, region control').toMatch(/data-league-option="all"[\s\S]*data-region-option="norcal"[\s\S]*data-region-option="socal"/);
+    for (const id of LEAGUE_IDS) {
+      expect(pageHtml, `app/page.tsx: the ${id} tab`).toContain(`data-league-option="${id}"`);
+    }
+    // Both regions are in the static HTML; the scope stylesheet shows the reader's.
+    expect(pageHtml, 'app/page.tsx: NorCal block').toContain('data-region-scope="norcal"');
+    expect(pageHtml, 'app/page.tsx: SoCal block').toContain('data-region-scope="socal"');
+    // The first-visit block sits above the games: it is the top of the main column.
+    const finder = pageHtml.indexOf('aria-labelledby="find-your-team"');
+    const firstGame = pageHtml.search(/class="sx-game"|class="sx-empty"/);
+    expect(firstGame, 'components/schedule/ScoreDay.tsx: games or the empty line').toBeGreaterThan(-1);
+    expect(finder, 'components/schedule/ScoreDay.tsx: `before` comes first in the main column').toBeLessThan(firstGame);
+    expect(pageHtml.indexOf('sx-datebar'), 'components/schedule/ScoreDay.tsx: the date bar is above it').toBeLessThan(finder);
   });
 
   it('keeps every id unique', () => {
     const ids = [...pageHtml.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
     expect(dupes, 'app/page.tsx: duplicate ids').toEqual([]);
-    for (const id of [
-      'my-team-heading', 'find-your-team', 'league-scval', 'league-bval', 'league-pcal', 'league-mcal', 'league-eal',
-      'league-sunset', 'league-city', 'league-north-county', 'league-metro', 'league-independents', 'latest-every-league', 'latest-every-league-socal',
-    ]) {
-      expect(ids, `app/page.tsx: #${id}`).toContain(id);
+    expect(ids, 'app/page.tsx: #find-your-team').toContain('find-your-team');
+    expect(ids, 'app/page.tsx: the retired my-team heading').not.toContain('my-team-heading');
+  });
+
+  it('prints no game twice', () => {
+    // One row per game per scope: a league tab shows one scope at a time, so within a scope a game is listed once.
+    const rows = [...pageHtml.matchAll(/<section[^>]*data-scope="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+    for (const [, scope, body] of rows) {
+      const hrefs = [...body.matchAll(/class="sx-game-link"[^>]*href="([^"]+)"|href="([^"]+)"[^>]*class="sx-game-link"/g)].map((m) => m[1] ?? m[2]);
+      expect(hrefs.filter((h, i) => hrefs.indexOf(h) !== i), `components/schedule/ScoreDay.tsx: ${scope} lists a game twice`).toEqual([]);
     }
+  });
+
+  it('carries the site’s structured data', () => {
+    expect(pageHtml, 'app/page.tsx: JSON-LD').toMatch(/<script type="application\/ld\+json">[^<]*"WebSite"/);
   });
 
   it('prints no "This week in the postseason" strip in the regular season (the Oct 2 corpus)', () => {
     // No postseason game and no dated postseason event is within two days back and a week ahead of the corpus's
-    // day, so HomeThisWeek renders nothing (DESIGN §8: no empty-state box) and the view model is empty.
+    // day, so the view model is empty; and `/` has no such strip in any week (DESIGN §33).
     expect(data.thisWeek.norcal.days, `${HV}: thisWeek.norcal`).toEqual([]);
     expect(data.thisWeek.socal.days, `${HV}: thisWeek.socal`).toEqual([]);
-    expect(pageHtml, 'components/home/HomeThisWeek.tsx').not.toMatch(/id="this-week|This week in the postseason/);
+    expect(pageHtml, 'app/page.tsx').not.toMatch(/id="this-week|This week in the postseason/);
   });
+
 
   it('never renders Gabilan, "eliminated", a league hue or a game link that skips gameHref', () => {
     const text = textOf(pageHtml);
@@ -504,8 +523,9 @@ describe('the rendered home page (app/page.tsx)', () => {
   });
 });
 
-describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team views)', () => {
-  /** The card's identity: the search index entry its view joins to on `slug` (MyTeamCard.tsx). */
+describe('the team views (components/home/team-card.ts ← home-view.ts teamViews)', () => {
+  /** A view's identity: the search index entry it joins to on `slug`. */
+
   const cardTeam = (slug: string) => data.searchIndex.teams.find((t) => t.slug === slug)!;
   /** The league a view's team plays in, from its search-index entry (a team with no table has no table link). */
   const cardTeamLeague = (slug: string) => cardTeam(slug).leagueId;
@@ -519,8 +539,8 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     }
   });
 
-  it('has a view for all 102 teams with the meta, played and postseason lines', async () => {
-    const { PinnedCard } = await import('../../components/home/MyTeamCard');
+  it('has a view for all 102 teams with the meta, played and postseason lines', () => {
+
     expect(data.teamViews, `${HV}: team views`).toHaveLength(102);
     const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
     expect(leigh.meta, `${HV}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
@@ -536,11 +556,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
       // playoffs" note whatever it has played (components/playoffs/team-postseason-line.ts getTeamPostseasonLine).
       const noPostseason = leagues.NO_POSTSEASON_LEAGUE_IDS.includes(leagues.getLeague(cardTeamLeague(v.slug)).id);
       if (!v.hasResults && !noPostseason) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
-      const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
-      expect(html, `components/home/MyTeamCard.tsx: ${v.slug} unpin id`).toContain('id="my-team-unpin"');
-      if (v.postseason) expect(textOf(html)).toContain(v.postseason);
       const card = postseasonCardLine(v);
-      if (card) expect(textOf(html)).toContain(card);
       expect(card === null, `${HV}: ${v.slug} card line iff line`).toBe(v.postseason === null);
     }
   });
@@ -549,7 +565,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     const d = await import('../../lib/data');
     const { describeGame } = await import('../../components/ui/describe-game');
     const { gameHref } = await import('../../lib/game-id');
-    const { PinnedCard } = await import('../../components/home/MyTeamCard');
+
     let pending = 0;
     for (const v of data.teamViews) {
       const team = d.getTeamBySlug(v.slug)!;
@@ -565,17 +581,17 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
       expect(v.last.display.kind, `${HV}: ${v.slug} last kind`).toBe(unreported ? 'unreported' : 'final');
       if (!unreported) continue;
       pending += 1;
-      const text = textOf(renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} })));
-      expect(text, `components/home/MyTeamCard.tsx: ${v.slug} unreported last`).toMatch(/score not reported/i);
-      if (v.last.display.note) expect(text, `components/home/MyTeamCard.tsx: ${v.slug} note`).toContain(v.last.display.note);
+      expect(v.last.display.statusLabel, `${HV}: ${v.slug} unreported last`).toMatch(/score not reported/i);
     }
+
     // The corpus has at least one such team, so the unreported branch is never vacuous.
     expect(pending, `${HV}: a newest played game that is score-pending`).toBeGreaterThan(0);
   });
 
-  // The card text is 288px wide at 320 (px-4 in a 320px card); the line is one truncated h-6 row,
-  // so the STATUS must fit whole or the reader sees only the prefix. Widths: tests/ui/text-metrics.ts
-  // (Geist 12px/500) scaled to the 14px meta size — an over-estimate for the 400 weight.
+  // The short postseason line is one line at 320px (288px of text): the STATUS must fit whole or the reader
+  // sees only the prefix. Widths: tests/ui/text-metrics.ts (12px/500) scaled to the 14px meta size, an
+  // over-estimate for the 400 weight.
+
   const CARD_TEXT_PX = 288;
   const at14 = (s: string) => (width(s) * 14) / 12;
 
@@ -608,14 +624,16 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 });
 
+
 /**
- * The pinned card after the SCVAL play-in (plan final-10, 2026-10-30): the committed 2026-10-29 snapshot
+ * The team view after the SCVAL play-in (plan final-10, 2026-10-30): the committed 2026-10-29 snapshot
  * (data/snapshot.json, SCVAL league play over: Los Altos is De Anza #4, Santa Clara El Camino #4) with Los Altos 2-1
  * Santa Clara played Fri Oct 30, stamped Sat Oct 31. The outcome label replaces the 'Final place:' lead, as an MCAL
- * tournament outcome does, and fits the card's one 288px line. A fresh module instance; the corpus views above are
+ * tournament outcome does, and fits one 288px line. A fresh module instance; the corpus views above are
  * already built.
  */
-describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason/postseason-outcomes.ts)', () => {
+describe('the team view after the SCVAL play-in (home-view.ts ← lib/postseason/postseason-outcomes.ts)', () => {
+
   let views: ReturnType<TeamCard['buildTeamViews']>;
   const prior = process.env.SCVAL_SNAPSHOT;
 
@@ -646,7 +664,8 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
     else process.env.SCVAL_SNAPSHOT = prior;
   });
 
-  it('a pinned Los Altos reads "Won the play-in", Santa Clara "Lost the play-in", with no "Final place:" lead', () => {
+  it('Los Altos reads "Won the play-in", Santa Clara "Lost the play-in", with no "Final place:" lead', () => {
+
     const view = (slug: string) => views.find((v) => v.slug === slug)!;
     expect(view('los-altos').postseason, `${HV}: los-altos`).toBe('Won the play-in');
     expect(postseasonCardLine(view('los-altos')), `${HV}: los-altos card line`).toBe('Won the play-in');
@@ -663,14 +682,16 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
 });
 
 /**
- * "This week in the postseason" on the home page (home-view.ts `thisWeek` -> HomeThisWeek, plan final-11,
- * 2026-10-30): built from the committed snapshot with every postseason-tagged game replaced by synthetic ones
- * from the shared builder (so a data refresh cannot move the assertions), stamped Thu Oct 29 at noon Pacific,
- * the day the 2026 week looked like this. Config supplies the events (the BVAL play-in Sat Oct 31, the EAL's
- * Super Regional, the CCS and San Diego seeding meetings and the San Diego round calendar). A fresh module
- * instance; the corpus views above are already built.
+ * The "This week in the postseason" view model (home-view.ts `thisWeek`, plan final-11, 2026-10-30): built from
+ * the committed snapshot with every postseason-tagged game replaced by synthetic ones from the shared builder (so
+ * a data refresh cannot move the assertions), stamped Thu Oct 29 at noon Pacific, the day the 2026 week looked like
+ * this. Config supplies the events (the BVAL play-in Sat Oct 31, the EAL's Super Regional, the CCS and San Diego
+ * seeding meetings and the San Diego round calendar). `/` no longer prints the strip (DESIGN §33: that week's games
+ * are the day view's own groups); /playoffs prints the same view at 12 rows. A fresh module instance; the corpus
+ * views above are already built.
  */
-describe('the home page "This week in the postseason" (home-view.ts <- playoffs/this-week-inputs.ts)', () => {
+describe('the home "This week in the postseason" view (home-view.ts <- playoffs/this-week-inputs.ts)', () => {
+
   let week: ReturnType<HomeView['buildHomeView']>['thisWeek'];
   let html = '';
   const prior = process.env.SCVAL_SNAPSHOT;
@@ -733,43 +754,27 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
     expect(south, `${HV}: SoCal has no NorCal game`).not.toMatch(/Mitty|Tamalpais/);
   });
 
-  it('renders each strip once, in its region block, above that region\'s latest results and every league panel', () => {
-    for (const [id, region, latest] of [
-      ['this-week', 'norcal', 'latest-every-league'],
-      ['this-week-socal', 'socal', 'latest-every-league-socal'],
-    ] as const) {
-      expect(html.split(`<section id="${id}"`).length - 1, `components/home/HomeThisWeek.tsx: #${id}`).toBe(1);
-      expect(html, `components/home/HomeThisWeek.tsx: #${id}`).toContain(
-        `<div data-scope="all" data-region-scope="${region}"><section id="${id}" aria-labelledby="${id}-heading"`,
-      );
-      expect(html.indexOf(`id="${id}"`), `app/page.tsx: #${id} before the latest results`).toBeLessThan(
-        html.indexOf(`aria-labelledby="${latest}"`),
-      );
-    }
-    expect(html.indexOf('id="this-week-socal"'), 'app/page.tsx: the strips before any league panel').toBeLessThan(
-      html.indexOf('<section data-scope="scval"'),
-    );
+  it('`/` prints no strip in a postseason week either: one page, one way of grouping', () => {
+    expect(html, 'app/page.tsx').not.toMatch(/id="this-week|This week in the postseason/);
+    expect(html.split('<h1').length - 1, 'app/page.tsx: one h1').toBe(1);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/page.tsx: duplicate ids').toEqual([]);
   });
 
-  it('prints whole sentences as single link text, no GameRow, no seed word and no "eliminat"', () => {
-    const strip = (id: string) => {
-      const at = html.indexOf(`<section id="${id}"`);
-      return html.slice(at, html.indexOf('</section>', at));
-    };
-    const north = strip('this-week');
-    const south = strip('this-week-socal');
-    expect(textOf(north), 'components/home/HomeThisWeek.tsx').toContain('St. Ignatius at Mitty');
-    expect(textOf(north), 'components/home/HomeThisWeek.tsx: one row over the cap is shown').not.toContain('more on the schedule');
-    expect(north, 'components/home/HomeThisWeek.tsx: no GameRow').not.toMatch(/<details|aria-expanded/);
-    for (const text of [textOf(north), textOf(south)]) {
+  it('writes whole sentences, no seed word and no "eliminat"', () => {
+    // Everything the view says (row texts, their labels, the day labels), as the strip printed it.
+    const north = stringsOf(week.norcal).join(' | ');
+    const south = stringsOf(week.socal).join(' | ');
+    expect(north, HV).toContain('St. Ignatius at Mitty');
+    expect(week.norcal.more, `${HV}: one row over the cap is shown`).toBe(0);
+    for (const text of [north, south]) {
       expect(text).not.toMatch(SEED_CLAIM);
       expect(text).not.toMatch(/eliminat/i);
     }
-    expect(textOf(south), 'components/home/HomeThisWeek.tsx: SoCal strip has no CCS word').not.toMatch(/\bCCS\b/);
-    expect(textOf(south)).toContain('Tournament of Champions');
+    expect(south, `${HV}: SoCal rows have no CCS word`).not.toMatch(/\bCCS\b/);
+    expect(south).toContain('Tournament of Champions');
   });
+
 
   it('is the same view /playoffs prints, at 8 rows instead of 12', async () => {
     const { thisWeekByRegion } = await import('../../components/playoffs/this-week-inputs');

@@ -709,7 +709,8 @@ function withoutTags(html: string): string {
  * What the history page's `<main>` gets wrong about `leagues` (lib/history/history.ts getHistoryLeagues),
  * one message per problem: every league has its `<section id="<league>">`; an available league has
  * an anchor for each division and every varsity row's league record, and never says
- * "Unavailable"; an unavailable league has the "Unavailable" card with its reason, and no table and
+ * "No standings available"; an unavailable league has that one plain line (the page's `sx-empty` line since the
+ * 2026-11-12 refresh; it was an "Unavailable" card) with its reason, and no table and
  * no champion, winner or award, since nothing official was read for it.
  */
 export function historyPageProblems(
@@ -732,9 +733,9 @@ export function historyPageProblems(
           }
         }
       }
-      if (/Unavailable/.test(section)) problems.push(`${id}: an available league says "Unavailable"`);
+      if (/No standings available/.test(section)) problems.push(`${id}: an available league says "No standings available"`);
     } else {
-      if (!section.includes('Unavailable')) problems.push(`${id}: unavailable league has no "Unavailable" card`);
+      if (!section.includes('No standings available')) problems.push(`${id}: unavailable league has no "No standings available" line`);
       if (!decodeEntities(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
       if (/<table/.test(section)) problems.push(`${id}: an unavailable league shows a table`);
       // The Sunset's and the LA independents' cards name their postseason, the Tournament of Champions, to point

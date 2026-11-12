@@ -24,8 +24,8 @@ export function JvSection({ jv }: { jv: AboutJv }) {
   const official = getJvOfficialMerge();
   const byRecord = LEAGUES.every((l) => ordersByRecord(l.rules));
   return (
-    <section id="jv" className="mt-16">
-      <SectionHeader size="lg" kicker="JV games" meta={plural(school.games.length, 'game', 'games')} />
+    <section id="jv" className="sx-section">
+      <SectionHeader kicker="JV games" meta={plural(school.games.length, 'game', 'games')} />
       <div className="sx-prose">
         <p>
           Each team page and each day&rsquo;s scores also list the school&rsquo;s junior varsity
@@ -39,7 +39,7 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           JV games are kept apart from varsity: no varsity standings table, record, leader board,
           rating or postseason picture on this site reads them. They have tables of their own, on
           the{' '}
-          <Link href="/jv" prefetch={false} className="text-accent hover:underline">
+          <Link href="/jv" prefetch={false}>
             JV page
           </Link>
           , which also lists each league&rsquo;s latest JV results, its next JV games and every school&rsquo;s
@@ -60,8 +60,8 @@ export function JvSection({ jv }: { jv: AboutJv }) {
             round on the Monday before the last varsity night, and its by-laws make the JV round a double round
             robin like the varsity one. So each of the {official.slots} league fixtures has a JV game here: MaxPreps&rsquo;
             own row where a coach has entered it ({official.matched + official.moved} today), and otherwise a game
-            listed from the schedule, tagged SCHED, with the schedule&rsquo;s date, time and host and no score
-            ({plural(official.added.length, 'game', 'games')} today). A SCHED game is replaced by MaxPreps&rsquo; row,
+            listed from the schedule, noted &ldquo;League schedule&rdquo;, with the schedule&rsquo;s date, time and host and no score
+            ({plural(official.added.length, 'game', 'games')} today). Such a game is replaced by MaxPreps&rsquo; row,
             and its score, as soon as MaxPreps lists it.
           </p>
         ) : null}
@@ -117,7 +117,7 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           in Santa Catalina&rsquo;s place, a JV game MaxPreps files under Santa Catalina is shown as
           York&rsquo;s, and a York game counts when Santa Catalina&rsquo;s varsity game of the day does. York
           has no page of its own here: its JV games and its JV table line are in{' '}
-          <Link href="/teams/santa-catalina#jv" prefetch={false} className="text-accent hover:underline">
+          <Link href="/teams/santa-catalina#jv" prefetch={false}>
             Santa Catalina&rsquo;s JV section
           </Link>
           , each result from York&rsquo;s side, and its row in the PCAL JV table links there. York is

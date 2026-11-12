@@ -1,19 +1,16 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/data';
+import { shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import ExternalLink from '../ui/ExternalLink';
-import { GameRow } from '../game-row/GameRow';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import StatusLabel from '../ui/StatusLabel';
-import TeamMonogram from '../ui/TeamMonogram';
+import { rowState, statusWords } from '../game-row/summary';
 import { describeGame, type SideView } from '../ui/describe-game';
 
+import Bracket, { type BracketRoundModel, type TieLineModel, type TieModel } from './Bracket';
 import {
   isNamedSide,
   isSeedSide,
   isWinnerOf,
-  type BracketCard,
   type BracketGame,
   type BracketPairing,
   type BracketPath,
@@ -22,33 +19,21 @@ import {
 } from './bracket-model';
 
 /**
- * One published bracket (DESIGN §3.8, §7.11).
+ * One published CCS bracket path (spec §5.6), drawn by the shared drawer (Bracket.tsx): round columns
+ * joined by connectors from 1024px, one round at a time below that.
  *
- * **Phone is a vertical list of rounds, never a tree.** A horizontally scrolling tree on a 390px
- * screen is a usability failure and is not offered; each round is a kicker over the same `GameRow`
- * every other list on this site uses, so scores, status words and the expandable panel behave
- * identically here. A slot no game fills yet is a pairing card in the same list.
- *
- * **Desktop is a CSS grid of round columns** — one column per round, cards distributed with
- * `justify-around` so each pair points at the game it feeds. Connectors are 1px borders: a rail on
- * the left edge of every round after the first and a short stub into each card. No SVG, no
- * library, no absolute positioning.
- *
- * Both breakpoints render the SAME rounds array. Every card carries its seeds once the owner file
- * names them (bracket-model.ts). An unfilled slot reads `TBD` or `Winner of 1 v 8` — never a blank
- * box — and the winner's line carries 600 weight AND a 2px `--sx-text` left rule, never color alone.
- * An unplayed game's card answers the parent's questions before the day (2026-10-30): its date and
- * time (or "time TBA"), where (MaxPreps' location, without its leading "@ "), and how to get in or
- * watch (`Tickets` and `NFHS stream` pills from the game's own urls, outside the card's game link
- * because an anchor cannot hold another anchor). A pairing card has no link: there is no game yet.
+ * Every cell carries its seeds once the owner file names them (bracket-model.ts). A cell always shows
+ * where its game stands: a final its two scores, a game in progress its two scores and "Live", a game
+ * to come its start time (with the weekday when it is not on the round's day); under an unplayed
+ * game, where it is played (MaxPreps' location without its leading "@ ") and the `Tickets` and
+ * `NFHS stream` links from the game's own urls, outside the cell's game link because an anchor cannot
+ * hold another. A place no game fills yet names its seeds, or the two teams that can reach it
+ * ("Willow Glen or Homestead"), or `TBD`; it has no link, since there is no game yet. The winner's
+ * line is bold and the other grey; there is no winner bar and no star.
  */
 export interface PlayoffBracketProps {
   path: BracketPath;
-  /**
-   * The level of each round's heading. The page owns the h1 and the section heading is an h2; the
-   * caller renders a path-name h3 only when there is more than one path, so with a single path the
-   * round headings are the h3s themselves and the outline never skips from h2 to h4.
-   */
+  /** @deprecated A round's heading is an h3 (the drawer's). Ignored. */
   headingLevel?: 'h3' | 'h4';
   className?: string;
 }
@@ -83,188 +68,100 @@ function pairingSideWords(side: PairingSide): string {
   return 'a team to be decided';
 }
 
-function BracketLine({ side, seed, showScore }: { side: SideView; seed: number | null; showScore: boolean }) {
-  const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-  return (
-    // `data-team-slug`: the pinned team's line is tinted (app/globals.css .sx-pinnable, the pin script's mark).
-    <span
-      className="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2"
-      style={side.weight === 'winner' ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined}
-      data-team-slug={team?.slug}
-    >
-      {/* A seed is information before a score (DESIGN §7.11): it prints as soon as the owner file names
-          it (lib/postseason/ccs-bracket.ts getCcsSeeds), and nothing is printed in its place before that. */}
-      {seed !== null ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{seed}</span> : null}
-      {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block shrink-0" style={{ width: 20 }} />}
-      <span className={`min-w-0 flex-1 truncate text-meta ${nameClass(side)}`}>{sideLabel(side)}</span>
-      {showScore ? <ScoreGlyph side={side} size="meta" /> : null}
-    </span>
-  );
-}
-
-function PairingLine({ side }: { side: PairingSide }) {
-  const team = isSeedSide(side) && side.slug ? getTeamBySlug(side.slug) : undefined;
-  return (
-    <span className="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2" data-team-slug={team?.slug}>
-      {isSeedSide(side) ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{side.seed}</span> : null}
-      {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block shrink-0" style={{ width: 20 }} />}
-      <span className={`min-w-0 flex-1 truncate text-meta ${isSeedSide(side) ? 'font-normal text-ink' : 'font-normal text-ink-2'}`}>
-        {pairingSideLabel(side)}
-      </span>
-    </span>
-  );
-}
-
-/**
- * A slot no game fills yet: both seeds and names when the CCS pairing is known from the seeds, else the
- * winners-of that feed it. No link — there is no game page — and one sentence for a screen reader.
- */
-function PairingCard({ card, round, flush }: { card: BracketPairing; round: BracketRound; flush?: boolean }) {
-  const sentence = `${roundWord(round)}: ${pairingSideWords(card.top)} v ${pairingSideWords(card.bottom)}. Not listed on MaxPreps yet.`;
-  return (
-    <div className={flush ? 'min-w-0 px-2 py-1' : 'sx-card min-w-0 flex-1'}>
-      <span className="block py-1">
-        <span className="sr-only">{sentence}</span>
-        <span className="block" aria-hidden="true">
-          <PairingLine side={card.top} />
-          <PairingLine side={card.bottom} />
-          <span className="block px-2 pb-1 text-meta text-ink-3">{round.dateLabel}</span>
-        </span>
-      </span>
-    </div>
-  );
-}
-
-/** MaxPreps writes a location as '@ Los Gatos HS'; the card has already said who is home. */
+/** MaxPreps writes a location as '@ Los Gatos HS'; the cell has already said who is home. */
 function venueWords(text: string | null): string | null {
   const words = (text ?? '').replace(/^@\s*/, '').trim();
   return words.length > 0 ? words : null;
 }
 
-/** The desktop card for a game. Phone uses `GameRow`, so this is the only bracket-specific game markup. */
-function BracketGameCard({ entry }: { entry: BracketGame }) {
+function gameLine(side: SideView, seed: number | null, scored: boolean, decided: boolean): TieLineModel {
+  return {
+    slug: side.slug,
+    name: sideLabel(side),
+    seed,
+    score: scored ? side.glyph : undefined,
+    result: !decided ? null : side.weight === 'winner' ? 'won' : side.weight === 'loser' ? 'lost' : null,
+  };
+}
+
+function gameTie(entry: BracketGame, round: BracketRound): TieModel {
   const { game, seeds } = entry;
   const display = describeGame(game);
   const named = isNamedSide(game.home) || isNamedSide(game.away);
-  const unplayed = game.status === 'scheduled';
+  const state = rowState(game, display);
+  const scored = named && display.showScores && display.away.hasScore && display.home.hasScore;
+  const unplayed = state === 'upcoming';
   const venue = unplayed ? venueWords(game.venue.text) : null;
   const links: Array<{ href: string; label: string }> = [];
   if (unplayed && game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (unplayed && game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  const body = (
-    <span className="block" aria-hidden="true">
-      <BracketLine side={display.away} seed={seeds.away} showScore={named && display.showScores} />
-      <BracketLine side={display.home} seed={seeds.home} showScore={named && display.showScores} />
-      {unplayed ? (
-        <span className="block px-2 pb-1 text-meta text-ink-2">
-          <span className="block">{entry.when}</span>
-          {venue ? <span className="block truncate text-ink-3">{venue}</span> : null}
-        </span>
-      ) : (
-        <span className="block px-2 pb-1">
-          <StatusLabel display={display} showChips={false} />
-        </span>
-      )}
-    </span>
-  );
-  return (
-    <div className="sx-card min-w-0 flex-1">
-      {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/PinNote.tsx): every route here is
-          STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
-          into view, and a full bracket is fourteen game pages. Navigation still fetches on click. */}
-      {named ? (
-        <Link href={gameHref(game.contestId)} prefetch={false} className="block py-1 no-underline">
-          <span className="sr-only">{display.sentence}</span>
-          {body}
-        </Link>
-      ) : (
-        <span className="block py-1">{body}</span>
-      )}
-      {links.length > 0 ? (
-        <span className="flex flex-wrap gap-2 px-2 pb-2">
-          {links.map((l) => (
-            <ExternalLink key={l.href} href={l.href} className="sx-pill no-underline">
+  const clock = game.isTimeTba ? 'TBD' : statusWords(display);
+  // A final nobody reported, a postponed game: its status in words, in the note row.
+  const off = state === 'off' ? statusWords(display) : null;
+  return {
+    key: game.contestId,
+    state: state === 'off' ? null : state,
+    lines: [
+      gameLine(display.away, seeds.away, scored, state === 'final'),
+      gameLine(display.home, seeds.home, scored, state === 'final'),
+    ],
+    // The round's heading carries its day; a game moved off it says which day.
+    time: game.dateLocal.slice(0, 10) === round.dateKey ? clock : `${shortDate(game.dateLocal).split(' ')[0]} ${clock}`,
+    note: off ?? (display.deciderTag && state === 'final' ? display.deciderTag : venue ? `at ${venue}` : null),
+    links:
+      links.length > 0
+        ? links.map((l) => (
+            <ExternalLink key={l.href} href={l.href} className="sx-link inline-flex min-h-6 items-center">
               {l.label}
             </ExternalLink>
-          ))}
-        </span>
-      ) : null}
-    </div>
-  );
+          ))
+        : undefined,
+    // `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads the whole linked route the
+    // moment the link scrolls into view, and a full bracket is fourteen game pages. Navigation still fetches on click.
+    link: named ? (
+      <Link href={gameHref(game.contestId)} prefetch={false} className="absolute inset-0">
+        <span className="sr-only">{display.sentence}</span>
+      </Link>
+    ) : undefined,
+    sentence: [display.sentence],
+  };
 }
 
-function cardKey(card: BracketCard): string {
-  return card.kind === 'game' ? card.game.contestId : card.id;
+function pairingLine(side: PairingSide): TieLineModel {
+  return {
+    slug: isSeedSide(side) ? side.slug : null,
+    name: pairingSideLabel(side),
+    seed: isSeedSide(side) ? side.seed : null,
+    open: !isSeedSide(side),
+  };
 }
 
-export function PlayoffBracket({ path, headingLevel: RoundHeading = 'h4', className }: PlayoffBracketProps) {
-  const { rounds } = path;
-  if (rounds.length === 0) return null;
+/**
+ * A place no game fills yet: both seeds and names when the CCS pairing is known from the seeds, else the two
+ * teams that can reach each side. No link (there is no game page) and one sentence for a screen reader.
+ */
+function pairingTie(card: BracketPairing, round: BracketRound): TieModel {
+  return {
+    key: card.id,
+    state: null,
+    lines: [pairingLine(card.top), pairingLine(card.bottom)],
+    sentence: [`${roundWord(round)}: ${pairingSideWords(card.top)} v ${pairingSideWords(card.bottom)}. Not listed on MaxPreps yet.`],
+  };
+}
 
-  return (
-    <div className={className}>
-      {/* Phone: rounds stacked, the same GameRow as every other list; a pairing is a plain row. */}
-      <ol data-twin className="m-0 list-none space-y-6 p-0 md:hidden">
-        {rounds.map((round) => (
-          <li key={round.dateKey}>
-            <RoundHeading className="m-0 mb-3 flex flex-wrap items-baseline gap-x-3 text-lead text-ink">
-              {round.name}
-              <span className="text-meta font-normal text-ink-2">{round.dateLabel}</span>
-            </RoundHeading>
-            {/* A full-bleed band below md, like every other game list (GameRow pads itself
-                with the 16px gutter); the desktop tree below never bleeds. */}
-            <ol className="sx-list sx-card sx-flush sx-bleed">
-              {round.cards.map((card) => (
-                <li key={cardKey(card)}>
-                  {/* Every CCS game is a postseason game, so the NL tag would mark the whole
-                      bracket — marking the majority is noise (DESIGN §5.4). */}
-                  {card.kind === 'game' ? (
-                    <GameRow game={card.game} showRecap={false} showChips={false} seeds={card.seeds} bracket={false} />
-                  ) : (
-                    <PairingCard card={card} round={round} flush />
-                  )}
-                </li>
-              ))}
-            </ol>
-          </li>
-        ))}
-      </ol>
+/** A CCS path as the shared drawer's rounds. */
+export function playoffBracketRounds(path: BracketPath): BracketRoundModel[] {
+  return path.rounds.map((round) => ({
+    key: round.dateKey,
+    name: round.name,
+    dateLabel: round.key === 'other' ? null : round.dateLabel,
+    ties: round.cards.map((card) => (card.kind === 'game' ? gameTie(card, round) : pairingTie(card, round))),
+  }));
+}
 
-      {/* Desktop: one column per round. Nested <ol>s, so it reads as rounds in order (§10.4).
-          Two rows, headings and games, and each round a subgrid of them, so a heading that wraps
-          in its column lowers every round's games together instead of its own alone, which put
-          the next round's cards 20px off the midpoints of the pairs feeding them (measured with
-          a two-line heading at 768px; HistoryBracket.tsx had it live, "Quarterfinals · Nov 8"). */}
-      <ol
-        data-twin
-        className="m-0 hidden list-none grid-rows-[auto_1fr] gap-0 p-0 md:grid"
-        style={{ gridTemplateColumns: `repeat(${rounds.length}, minmax(0, 1fr))` }}
-      >
-        {rounds.map((round, roundIndex) => (
-          <li key={round.dateKey} className="row-span-2 grid min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-subgrid">
-            <RoundHeading className="m-0 mb-3 text-lead text-ink">
-              {round.name}{' '}
-              <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
-            </RoundHeading>
-            <ol
-              className={['m-0 flex list-none flex-col justify-around gap-4 p-0', roundIndex > 0 ? 'border-l border-divider' : null]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {round.cards.map((card) => (
-                <li key={cardKey(card)} className="flex min-w-0 items-center">
-                  {roundIndex > 0 ? <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" /> : null}
-                  {card.kind === 'game' ? <BracketGameCard entry={card} /> : <PairingCard card={card} round={round} />}
-                  {roundIndex < rounds.length - 1 ? <span className="w-4 shrink-0 border-t border-divider" aria-hidden="true" /> : null}
-                </li>
-              ))}
-            </ol>
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
+export function PlayoffBracket({ path, className }: PlayoffBracketProps) {
+  if (path.rounds.length === 0) return null;
+  return <Bracket rounds={playoffBracketRounds(path)} label={`${path.name} bracket`} className={className} />;
 }
 
 export default PlayoffBracket;

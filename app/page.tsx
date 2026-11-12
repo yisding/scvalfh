@@ -1,180 +1,42 @@
-import JvHomeStrip from '../components/jv/JvHomeStrip';
 import type { Metadata } from 'next';
-import { Fragment } from 'react';
 
-import CrossLeagueLatest from '../components/home/CrossLeagueLatest';
 import FindYourTeam from '../components/home/FindYourTeam';
-import HomeThisWeek from '../components/home/HomeThisWeek';
-import LeagueCard from '../components/home/LeagueCard';
-import LeaguePanel from '../components/home/LeaguePanel';
-import MyTeamCard from '../components/home/MyTeamCard';
-import { buildHomeView } from '../components/home/home-view';
-import LeagueSwitcher, { RegionSwitcher } from '../components/prefs/LeagueSwitcher';
-import PageHeader from '../components/layout/PageHeader';
-import JsonLd from '../components/metadata/JsonLd';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
+import JsonLd from '../components/metadata/JsonLd';
 import { websiteJsonLd } from '../components/metadata/structured-data';
-import { listWords, shortDate } from '../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
+import { ScoreDay } from '../components/schedule/ScoreDay';
+import { getTeamSearchIndex, getToday } from '../lib/data';
+import { SPORT_AUDIENCE } from '../lib/sports/current';
 import { TEAMS } from '../lib/teams';
-import { PROGRAM_WORDS, SPORT_AUDIENCE } from '../lib/sports/current';
 
 /**
- * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
+ * `/` is the Scores page (DESIGN §33, "Home is Scores"): the score day view opened on today's
+ * Pacific date, the same view `/schedule` and `/scores/[date]` print
+ * (components/schedule/ScoreDay.tsx). There is no separate home layout. `home` tells the view this is
+ * `/`: the visually hidden h1 starts with the site name.
  *
- * Every league's panel is in the static HTML. The remembered league (`localStorage`, stamped on
- * `<html data-league>` by the prefs script before first paint) and the scope stylesheet decide
- * which `data-scope` blocks show: `all` always, `none` only when no league is effective (the
- * first-visit view: the latest from every league, then Find your team), `<id>` only for that league.
- * The remembered region (`<html data-region>`, DESIGN-socal §2.4) decides, independently, which
- * `data-region-scope` blocks show: each region's panels, its card grid, its latest-results block and
- * its status line. The finder stays outside them and searches all 99 teams.
- * No CSS reordering anywhere: DOM order is the reading order (WCAG 1.3.2 / 2.4.3), and a hidden
- * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
- * the first-visit view with every link working.
+ * The one thing this page adds is the first-visit block, "Find your team", which the view prints at
+ * the top of its main column; the scope stylesheet shows it only while no league is remembered.
  *
  * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
  * this page with `react-dom/server` under Vitest, which has no path alias.
  *
- * In the postseason weeks each region's "This week in the postseason" (`#this-week`, `#this-week-socal`,
- * components/home/HomeThisWeek.tsx, the strip /playoffs prints, capped at 8 rows) sits above the latest
- * results, in the same `data-scope="none"` first-visit scope and the region's `data-region-scope`; it
- * renders nothing when the window holds no postseason game or event (plan final-11, 2026-10-30).
- *
- * The page body is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
- * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and
- * the sr-only league list read config (`lib/teams`, `lib/leagues`) directly. No page calls `Date.now()`, and
- * there is no `searchParams` in this signature, which is what keeps the route static.
+ * Static: "today" is the snapshot's own Pacific day (`getToday()`), never `Date.now()`, and there is
+ * no `searchParams` in this signature.
  */
 export const metadata: Metadata = {
-  // Absolute, so the layout's suffix does not repeat the brand; the brand alone ("NorCal High School
-  // Field Hockey", the layout's default) said nothing about what the page has.
+  // Absolute, so the layout's suffix does not repeat the brand.
   title: { absolute: `${SITE_NAME} Scores & Standings` },
   description: `Scores, standings and playoff pictures for the ${TEAMS.length} ${SPORT_AUDIENCE} teams in ${leaguesBySectionWords('name')}. Unofficial, updated twice daily.`,
   alternates: { canonical: '/' },
   openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
 };
 
-/**
- * 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the LA independents', from the
- * config (never a literal list): the leagues, then each group with no table by its name (DESIGN §24.9).
- */
-const LEAGUE_LIST = listWords([
-  ...LEAGUES_PROPER.map((l) => l.shortName),
-  ...INDEPENDENT_LEAGUES.map((l) => `the ${l.name}`),
-]);
-
-/** The card grid of one region in "Find your team": two-up from 390px. */
-const CARD_GRID = 'm-0 mt-3 grid list-none grid-cols-1 gap-3 p-0 min-[390px]:grid-cols-2 md:gap-4';
-
-export default function HomePage() {
-  const data = buildHomeView();
-
+export default function Home() {
   return (
-    <div className="pb-section-lg">
+    <>
       <JsonLd data={websiteJsonLd()} />
-      <div data-scope="all">
-        <PageHeader
-          title={`${SITE_NAME} Teams`}
-          srTitle={` — ${PROGRAM_WORDS} scores, standings and playoff pictures for ${LEAGUE_LIST}`}
-          meta={
-            /* One line at 390: the league list wrapped onto a second line there, and the leagues
-               are named by the switcher chips right below. From 640px it fits and comes back; the
-               text stays in the DOM either way. One line per region (DESIGN-socal §2.4): the scope
-               stylesheet shows the reader's, and without JS both read in turn, NorCal first — each
-               a block, so the two lines never run together. */
-            <p className="m-0 text-meta text-ink-2">
-              {data.regions.map((region) => (
-                <span key={region.id} data-region-scope={region.id} className="block">
-                  {region.status.resultsThrough
-                    ? `Results through ${shortDate(region.status.resultsThrough)}`
-                    : 'No results yet'}{' '}
-                  &middot; {region.status.teamCount} {region.shortName} teams
-                  <span className="hidden sm:inline"> &middot; {region.status.leagueShorts.join(' · ')}</span>
-                </span>
-              ))}
-            </p>
-          }
-        />
-      </div>
-
-      {/* My team: hidden (with its heading) when there is no pin, no league and no stale pin. */}
-      <section data-scope="all" className="sx-myteam-slot mt-8 md:mt-10" aria-labelledby="my-team-heading">
-        <MyTeamCard views={data.teamViews} index={data.searchIndex} />
-      </section>
-
-      {/* The scope row: the region control first, then the league chips (each section's list is
-          region-scoped by the switcher, so only the shown region's chips appear). */}
-      <div data-scope="all" className="mt-6 flex flex-wrap items-center gap-x-1.5 gap-y-2">
-        <RegionSwitcher separated />
-        <LeagueSwitcher mode="scope" includeAll label="Your league" leagues={data.leagueChips} />
-      </div>
-
-      {/* First visit: the latest results come BEFORE the finder and the league directory. "What
-          just happened?" is the question this page answers first (SPEC §10.1), and the league cards
-          below are a directory, not news; with the finder first, a phone's first screen held no
-          score at all. */}
-      {/* Above the latest results: in the postseason weeks, what is played and decided this week comes
-          first (components/home/HomeThisWeek.tsx; nothing renders outside them). */}
-      {data.regions.map((region) => (
-        <HomeThisWeek
-          key={region.id}
-          view={data.thisWeek[region.id]}
-          region={{ id: region.id, idSuffix: region.idSuffix }}
-          className="mt-8 md:mt-10"
-        />
-      ))}
-      {data.regions.map((region) => (
-        <CrossLeagueLatest
-          key={region.id}
-          view={region.latest}
-          region={{ id: region.id, shortName: region.shortName, idSuffix: region.idSuffix }}
-          className="mt-8 md:mt-10"
-        />
-      ))}
-
-      {/* The way into the JV pages, under the latest varsity results: a phone's bottom bar has no JV tab. */}
-      <div data-scope="all">
-        <JvHomeStrip className="mt-8 md:mt-10" />
-      </div>
-
-      {/* ONE finder over all 99 teams, outside the region blocks; only the card grids are scoped. */}
-      <FindYourTeam index={data.searchIndex} className="mt-section md:mt-section-lg">
-        {data.regions.map((region) => (
-          <Fragment key={region.id}>
-            <h3 data-region-scope={region.id} className="m-0 mt-6 text-lead text-ink">
-              {region.name}
-            </h3>
-            <ul data-region-scope={region.id} className={CARD_GRID}>
-              {region.leagueCards.map((card, i, cards) => {
-                // The last card of a region's odd count spans both columns of the two-up grid, so
-                // five cards read 2 + 2 + 1 full-width rather than ending on an orphan half-card.
-                const wide = cards.length % 2 === 1 && i === cards.length - 1;
-                return (
-                  <LeagueCard
-                    key={card.id}
-                    card={card}
-                    wide={wide}
-                    className={wide ? 'min-[390px]:col-span-2' : undefined}
-                  />
-                );
-              })}
-            </ul>
-          </Fragment>
-        ))}
-      </FindYourTeam>
-
-      {/* Each region's league panels in its own block; a panel's `data-scope` is unchanged. */}
-      {data.regions.map((region) => (
-        <div key={region.id} data-region-scope={region.id}>
-          {data.panels
-            .filter((panel) => panel.region === region.id)
-            .map((panel) => (
-              <LeaguePanel key={panel.id} panel={panel} />
-            ))}
-        </div>
-      ))}
-
-    </div>
+      <ScoreDay date={getToday()} home before={<FindYourTeam index={getTeamSearchIndex()} />} />
+    </>
   );
 }

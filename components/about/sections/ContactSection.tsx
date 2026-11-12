@@ -9,9 +9,9 @@ import type { AboutNoDocument } from '../about-view';
 export function ContactSection({ noDocument }: { noDocument: AboutNoDocument }) {
   const { norcal, socal } = noDocument;
   return (
-    <section id="contact" className="mt-16">
+    <section id="contact" className="sx-section">
       <span id="corrections" className="block" />
-      <SectionHeader size="lg" kicker="Corrections &amp; contact" />
+      <SectionHeader kicker="Corrections &amp; contact" />
       <div className="sx-prose">
         <p>
           Spot a wrong score, a missing game, a misspelled name or a record that does not add up?
@@ -32,7 +32,7 @@ export function ContactSection({ noDocument }: { noDocument: AboutNoDocument }) 
           scores here come from MaxPreps, so if MaxPreps has it wrong too, the school can correct it
           there and the next update picks it up. If a number here disagrees with one of those
           sources, check{' '}
-          <a href="#cross-check" className="text-accent hover:underline">
+          <a href="#cross-check">
             the cross-check log
           </a>{' '}
           first: a real disagreement between sources is published, not hidden.

@@ -759,9 +759,9 @@ function unevenOrderSentence(league: LeagueConfig): string {
  * it is the sentence the standings page has always printed: 'Teams have played between 9 and 12 of 16
  * league games, so points favour teams that have played more.' A league with no fixed schedule
  * (gamesPerTeam null: the Sunset, whose ten teams meet 0, 1 or 2 times and play only the games MaxPreps
- * marks as league games) has no "of N" to say, and no LEFT or MAX column to explain; its sentence says
- * what the gap is instead (DESIGN-socal §2.1.7). The rest of the footnote — LEFT, MAX and how the table
- * is ordered — is unevenGpFootnote's below, which reads this.
+ * marks as league games) has no "of N" to say; its sentence says what the gap is instead
+ * (DESIGN-socal §2.1.7). The rest of the footnote — how the table is ordered — is unevenGpFootnote's
+ * below, which reads this.
  */
 export function unevenGamesSentence(
   leagueId: LeagueId,
@@ -785,8 +785,8 @@ export function unevenGamesSentence(
  * The uneven-GP footnote (SPEC §10.3), or null when every team has played within one game of the
  * others. MCAL adds its incomplete-schedule rule; a league whose points decide only its title (EAL)
  * does not say its rules require the order, and a 'site' league says the order is the site's. A league
- * with no fixed schedule (`scheduled` null: the Sunset) has no LEFT or MAX column, so its footnote
- * explains neither; its first sentence is unevenGamesSentence's no-"of N" variant.
+ * with no fixed schedule (`scheduled` null: the Sunset) gets unevenGamesSentence's no-"of N" variant.
+ * (The table has no LEFT or MAX column since DESIGN §33, so the footnote explains neither.)
  */
 export function unevenGpFootnote(
   leagueId: LeagueId,
@@ -795,13 +795,7 @@ export function unevenGpFootnote(
   const games = unevenGamesSentence(leagueId, spread);
   if (games === null) return null;
   const league = getLeague(leagueId);
-  const columns =
-    spread.scheduled === null
-      ? ''
-      : ordersByRecord(league.rules)
-        ? ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most league wins a team can finish with if it wins all of them (its final total once none are left).'
-        : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left).';
-  const base = `${games}${columns} ${unevenOrderSentence(league)}`;
+  const base = `${games} ${unevenOrderSentence(league)}`;
   const incomplete = league.rules.citations.incomplete;
   return incomplete
     ? `${base} If the season ends with games unplayed, ${incomplete}; we will show that order then.`
@@ -829,7 +823,7 @@ export interface OverviewDivision {
   rows: StandingsRowData[];
   /** The labelled rule in the compact table; null when the division draws none (EAL). */
   ladderLine: { after: number; label: string } | null;
-  /** `Full <division heading ?? SHORT> table`; the page adds the aria-hidden arrow (components/ui/Arrow). */
+  /** `Full <division heading ?? SHORT> table`; no page prints it since the 2026-11-12 refresh. */
   fullLabel: string;
   /** `/standings/<league>#<division>` */
   fullHref: string;

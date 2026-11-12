@@ -363,7 +363,7 @@ describe('historyPageProblems: the history page holds what the history data says
                     '</table></section>',
                 )
                 .join('')
-            : `<div><h3>Unavailable</h3><p>${escaped(entry.reason)}</p></div>`;
+            : `<p>No standings available</p><div><p>${escaped(entry.reason)}</p></div>`;
         return `<section id="${id}" aria-label="${id}"><h2>${id}</h2>${body}${edit?.id === id ? (edit.tail ?? '') : ''}</section>`;
       })
       .join('') +
@@ -412,7 +412,7 @@ describe('historyPageProblems: the history page holds what the history data says
     const { id } = unavailable;
     const reason = `The league's "standings" page & its <archive> are gone, so nothing official was read.`;
     const one = [{ id, entry: { ...unavailable.entry, reason } }];
-    const section = (text: string) => `<main><section id="${id}"><div><h3>Unavailable</h3><p>${text}</p></div></section></main>`;
+    const section = (text: string) => `<main><section id="${id}"><p>No standings available</p><div><p>${text}</p></div></section></main>`;
     // React escapes `& < > " '` in text.
     const react = reason
       .replace(/&/g, '&amp;')

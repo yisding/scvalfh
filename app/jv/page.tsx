@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
-import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
+import { BUILD_INSTANT } from '../../components/layout/build-instant';
+import LastUpdated from '../../components/layout/LastUpdated';
+import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import { JvLeagueGames, JvTeamIndex } from '../../components/jv/JvHub';
 import JvStandings from '../../components/jv/JvStandings';
 import { buildJvTablesView } from '../../components/jv/jv-standings-view';
 import { buildLeagueJvHubView, buildLeagueJvTeams } from '../../components/jv/jv-view';
-import Arrow from '../../components/ui/Arrow';
+import ScopeBar from '../../components/prefs/ScopeBar';
 import SectionHeader from '../../components/ui/SectionHeader';
+import { getFetchedAt } from '../../lib/data';
 import { listWords } from '../../lib/format';
-import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '../../lib/leagues';
-import { ordersByRecord } from '../../lib/standings/order';
+import { LEAGUES, LEAGUES_PROPER, regionOf } from '../../lib/leagues';
 import { GENDER_NAME, SPORT } from '../../lib/sports/current';
 
 /**
@@ -26,7 +27,7 @@ import { GENDER_NAME, SPORT } from '../../lib/sports/current';
  * Its own page rather than a section of `/standings/<league>`: those pages carry the varsity tables
  * at their weight budget, and the JV tables are a different kind of claim (no league publishes one
  * in season; a JV league game is identified by its varsity counterpart; a table appears only once
- * enough of its games have a score), which this page states once at the top. Each league standings
+ * enough of its games have a score), which /about#jv states once. Each league standings
  * page links here (`/jv#<league>`), and a team page's JV header links its division (`/jv#<division>`).
  *
  * The LA independents (DESIGN §24.10) get a JV section like a league's: a JV game between two
@@ -37,8 +38,6 @@ import { GENDER_NAME, SPORT } from '../../lib/sports/current';
 
 const SHORT_NAMES = listWords(LEAGUES_PROPER.map((l) => l.shortName));
 const PAGE_TITLE = 'JV standings and scores';
-/** Every league's table is ordered the same way in a build: on points, or on the league record (basketball). */
-const BY_RECORD = LEAGUES.every((l) => ordersByRecord(l.rules));
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -50,48 +49,31 @@ export const metadata: Metadata = {
 export default function JvStandingsPage() {
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        title={PAGE_TITLE}
-        description="Junior varsity tables, latest results and next games · computed from published results&nbsp;· unofficial"
+      <PageHeader title="JV" />
+      {/* The league row: anchors to each league's section, the region switch and the short stamp. Each league's
+          section is region-scoped (DESIGN-socal §2.4). */}
+      <ScopeBar
+        league={{ mode: 'anchor', label: 'Leagues', leagues: leagueChips(), hrefs: leagueHrefs(null) }}
+        stamp={<LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" />}
       />
-      {/* The region control, its own row (DESIGN-socal §2.4); each league's section is region-scoped. */}
-      <RegionSwitcher className="mt-4" />
-      <p className="m-0 mt-4 max-w-prose text-body text-ink-2">
-        No league publishes JV standings during the season, so these tables are computed from the JV
-        results coaches enter: a JV game counts when its varsity counterpart counts, or when it is on the
-        league&rsquo;s own schedule.{' '}
-        {BY_RECORD
-          ? 'Teams are ordered on their league record, as the varsity tables are.'
-          : 'Teams are ordered on points (3 a win, 1 a tie).'}{' '}
-        Under each league&rsquo;s tables are its latest JV results, its next JV games and every
-        school&rsquo;s JV team.{' '}
-        <Link href="/about#jv" prefetch={false} className="font-medium text-accent hover:underline">
-          How JV tables are built <Arrow />
-        </Link>
-      </p>
-      {LEAGUES.map((league) => (
+      {LEAGUES.map((league, index) => (
         <section
           key={league.id}
           id={league.id}
           data-region-scope={regionOf(league.id)}
           aria-labelledby={`${league.id}-heading`}
-          // The first league of each region takes the smaller gap: the other region's may be hidden.
-          className={
-            leaguesInRegion(regionOf(league.id))[0]?.id === league.id
-              ? 'mt-8 md:mt-10'
-              : 'mt-section md:mt-section-lg'
-          }
+          className="sx-section"
+          // The first league of each region is the first block the reader sees: the other region's is hidden.
+          data-first={index === 0 || regionOf(LEAGUES[index - 1].id) !== regionOf(league.id) ? '' : undefined}
         >
-            <SectionHeader
-              id={`${league.id}-heading`}
-              kicker={`${league.shortName} JV`}
-              action={{ href: `/standings/${league.id}`, label: 'Varsity table' }}
-              // Capped like the tables below (48rem from lg), so the action sits over them.
-              className="lg:max-w-3xl"
-            />
-            <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
-            <JvLeagueGames view={buildLeagueJvHubView(league.id)} leagueShort={league.shortName} idPrefix={`${league.id}-jv`} />
-            <JvTeamIndex teams={buildLeagueJvTeams(league.id)} id={`${league.id}-jv-teams`} leagueShort={league.shortName} />
+          <SectionHeader
+            id={`${league.id}-heading`}
+            kicker={league.shortName}
+            action={{ href: `/standings/${league.id}`, label: 'Varsity standings' }}
+          />
+          <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
+          <JvLeagueGames view={buildLeagueJvHubView(league.id)} leagueShort={league.shortName} idPrefix={`${league.id}-jv`} />
+          <JvTeamIndex teams={buildLeagueJvTeams(league.id)} id={`${league.id}-jv-teams`} leagueShort={league.shortName} />
         </section>
       ))}
     </div>

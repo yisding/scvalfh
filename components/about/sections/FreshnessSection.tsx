@@ -10,9 +10,9 @@ import type { AboutFreshness } from '../about-view';
 export function FreshnessSection({ freshness }: { freshness: AboutFreshness }) {
   const { counted, erroring } = freshness;
   return (
-    <section id="freshness" className="mt-16">
+    <section id="freshness" className="sx-section">
       <span id="updates" className="block" />
-      <SectionHeader size="lg" kicker="How often this updates" />
+      <SectionHeader kicker="How often this updates" />
       <div className="sx-prose">
         <p>
           Pages do not load live data. Instead, an automatic update re-reads MaxPreps (and, most
@@ -33,28 +33,27 @@ export function FreshnessSection({ freshness }: { freshness: AboutFreshness }) {
           anywhere on the site shows a &ldquo;last updated&rdquo; stamp more than 36 hours old, that
           is this site telling you its own update may be failing &mdash; not a claim that nothing
           happened in the leagues since then. Per-league detail is under{' '}
-          <a href="#health" className="text-accent hover:underline">
+          <a href="#health">
             data health
           </a>
           .
         </p>
         <h3>Most recent run, by source</h3>
-        <p className="text-meta text-ink-2">
-          {plural(counted.ok, 'source', 'sources')} ok &middot; {counted.stale} stale &middot;{' '}
-          {counted.error} failed &middot; {counted.skipped} skipped (season-gated or optional steps,
-          by design).
+        <p>
+          {plural(counted.ok, 'source', 'sources')} ok, {counted.stale} stale, {counted.error} failed, {counted.skipped}{' '}
+          skipped (season-gated or optional steps, by design).
         </p>
         {erroring.length > 0 ? (
           <ul className="sx-list">
             {erroring.map((s) => (
-              <li key={`${s.id}-${s.label}`} className="py-2 text-meta text-ink-2">
+              <li key={`${s.id}-${s.label}`} className="py-2 text-cell text-ink-2">
                 <b className="font-semibold text-loss-ink">{s.label}</b>
                 {s.error ? `: ${s.error}` : ''}
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-meta text-ink-3">No source failed outright in the most recent run.</p>
+          <p>No source failed outright in the most recent run.</p>
         )}
       </div>
     </section>

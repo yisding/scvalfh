@@ -1,6 +1,10 @@
 import type { StandingContext } from '../../../lib/data';
 import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../../lib/types';
 
+/**
+ * `phone` and `desktop` are the same responsive table (the old twin's two names, both still accepted);
+ * `mini` is the compact table (rail, team page, overview); `archive` is final records only.
+ */
 export type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
 
 export interface StandingsRowData {
@@ -16,7 +20,7 @@ export interface StandingsTableProps {
   division: DivisionId;
   /** Already sorted and ranked by lib/standings/engine.ts. */
   rows: StandingsRowData[];
-  /** max |gd| for THIS division — never global (R-2). */
+  /** @deprecated There is no GD bar to scale; accepted and ignored. */
   gdDomain: number;
   variant: StandingsVariant;
   /** "De Anza Division league standings through Sep 29" */
@@ -29,15 +33,22 @@ export interface StandingsTableProps {
    * would never appear. The explanation stays in the notes under the table.
    */
   flaggedSlugs?: readonly TeamSlug[];
-  /** Draw a 2px rule after this row index (1-based) — the 7th automatic berth. */
+  /** The qualification line: an extra `tr.sx-cutline` row after this row (1-based index). */
   berthRuleAfter?: number;
+  /**
+   * The words set on the qualification line ("Top 3 qualify for CCS"). Default: the division's own
+   * line label from the league config (`ladderLine.label`: "Automatic-berth line", "Tournament line").
+   */
+  berthLabel?: string;
+  /** The team whose page this is: its row is `tr.sx-self` (a bold name). */
+  self?: TeamSlug;
   footnotes?: string[];
   /**
-   * `inline` (default) prints the legend, the specific notes and the source links under the card;
-   * `none` renders the card alone — the caller takes the notes from `collectStandingsNotes()`.
+   * `inline` (default) prints ONE note under the table (this table's own facts and the source links);
+   * `none` renders the table alone — the caller takes the notes from `collectStandingsNotes()`.
    */
   notes?: 'inline' | 'none';
-  /** `mini` shows this many rows (default 4). */
+  /** `mini` shows only this many rows (default: all of them). */
   limit?: number;
   /** The MaxPreps league page, deep-linked under the table (SPEC §6). */
   sourceUrl?: string;
@@ -45,6 +56,6 @@ export interface StandingsTableProps {
   id?: string;
   /** Derived per-row facts (`getStandingContext(division)`), keyed by team id. */
   context?: ReadonlyMap<TeamId, StandingContext>;
-  /** Extra columns read from `context`: GP (all variants but archive), LEFT and MAX (desktop). */
+  /** `'gp'` adds a GP column while some team has games left. `'left'` and `'max'` are accepted and never drawn. */
   columns?: ReadonlyArray<StandingsColumn>;
 }

@@ -131,7 +131,7 @@ describe('/standings/eal', () => {
     );
   });
 
-  it('heads the band "Super Regional, as things stand", links the /playoffs card, and draws no 2px rule', () => {
+  it('names the Super Regional in the view, links the /playoffs card, and draws no qualification line', () => {
     const [v] = sd.buildStandingsPageView(LEAGUE).views;
     expect(v.statusHeading, 'components/standings/standings-view.ts statusHeading').toBe('Super Regional, as things stand');
     expect(v.playoffsHref).toBe(`/playoffs#${LEAGUE}`);
@@ -142,8 +142,10 @@ describe('/standings/eal', () => {
     if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
     expect(v.legendNotes[0], 'components/standings/standings-view.ts legend').toBe(`${ps.citations.qualification}.`);
     const text = textOf(standingsHtml);
-    expect(text, 'components/standings/PlayoffStatusBand.tsx').toContain('Super Regional, as things stand');
-    expect(standingsHtml).toContain(`href="/playoffs#${LEAGUE}"`);
+    // DESIGN §33: the status band is not drawn; the page links the league's /playoffs card once, as "Playoffs".
+    expect(text, 'components/standings/PlayoffStatusBand.tsx is not rendered').not.toContain('as things stand');
+    expect(standingsHtml).toContain(`<a class="sx-action" href="/playoffs#${LEAGUE}">Playoffs</a>`);
+    expect(standingsHtml, 'no ladder line: no cut-line row').not.toContain('sx-cutline');
     expect(text, 'app/standings/[league]/page.tsx legend').not.toMatch(/2px rule|heavier line/);
   });
 
@@ -193,20 +195,26 @@ describe('/standings/eal', () => {
 });
 
 describe('/standings, the EAL block', () => {
-  it('sits under the Northern Section with its membership note', () => {
+  it('is the last NorCal league, under the Northern Section anchor, with its membership note', () => {
     const outline = [...overviewHtml.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h\1>/g)].map(
       (m) => `h${m[1]} ${textOf(m[2]).trim()}`,
     );
-    // The last NorCal section (the SoCal sections follow it, in their own region block).
-    const ns = outline.indexOf('h2 Northern Section');
-    expect(outline.slice(ns, ns + 2), 'app/standings/page.tsx outline').toEqual(['h2 Northern Section', 'h3 EAL — Eastern Athletic League']);
-    expect(outline[ns + 2], 'app/standings/page.tsx outline').toBe('h2 Southern Section');
-    const block = textOf(sectionLabelledBy(overviewHtml, 'ns'));
+    // DESIGN §33: each league is an h2 (its short name); the EAL is the last NorCal one, and the SoCal
+    // leagues follow it in their own region block.
+    const eal = outline.indexOf('h2 EAL');
+    expect(eal, 'app/standings/page.tsx outline').toBeGreaterThan(0);
+    expect(outline[eal - 1], 'app/standings/page.tsx outline').toBe('h2 MCAL');
+    expect(outline[eal + 1], 'app/standings/page.tsx outline').toBe('h2 Sunset');
+    // The section anchor (`#ns`) is the marker at the top of the EAL's block.
+    const section = sectionLabelledBy(overviewHtml, LEAGUE);
+    expect(section, 'app/standings/page.tsx #ns').toContain('<span id="ns"></span>');
+    const block = textOf(section);
     expect(block, 'app/standings/page.tsx EAL block').toContain(leagues.getLeague(LEAGUE).membershipNote!);
     // No ladder line in the compact table (ladderLine null).
     expect(block).not.toMatch(/\bline\b/i);
+    expect(section).not.toContain('sx-cutline');
     // Only the EAL carries a NorCal membership note.
-    for (const id of ['ccs', 'ncs']) {
+    for (const id of ['scval', 'bval', 'pcal', 'mcal']) {
       const other = textOf(sectionLabelledBy(overviewHtml, id));
       expect(other).not.toBe('');
       expect(other).not.toContain('Sac-Joaquin');
@@ -363,7 +371,9 @@ describe('/history/2025-26#eal', () => {
     expect(getHistorySeason()).toBe('2025-26');
     const section = byId(historyHtml, LEAGUE);
     const text = textOf(section);
-    expect(text, 'app/history/2025-26/page.tsx #eal').toContain('Unavailable');
+    // The unavailable card is one plain line under the league's heading now (UI refresh, spec 5.6).
+    expect(text, 'app/history/2025-26/page.tsx #eal').toContain('No standings available');
+    expect(section).toContain('<p class="sx-empty">No standings available</p>');
     expect(text).toContain('The EAL published no 2025-26 final standings of its own.');
     expect(text).toContain('its section’s field hockey page is cifns.org/sports/fh/index');
     expect(text).not.toContain('its official site is');

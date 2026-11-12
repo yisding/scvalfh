@@ -21,13 +21,13 @@
  *
  * Layout chrome is the other shape that opts out. The header, nav and footer (app/layout.tsx) are
  * on every page, so a default link there is a speculative download on every page load: the
- * wordmark, every NavLink, the stamp's stale pill and the footer's actions (Attribution and the
- * LastUpdated it renders) all carry the prop (components/layout/NavLink.tsx has the measurement).
+ * wordmark, the header's search link, every NavLink, the More sheet's rows, the stale notice and
+ * the footer's index (Attribution and the LastUpdated it renders) all carry the prop (components/layout/NavLink.tsx has the measurement).
  * The singleton exemption above covers in-page content only, where the call is the author's, and
  * most here opt out.
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -170,7 +170,6 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // StretchedRowLink: the stretched team-row link of the standings tables, the home mini
       // table, the playoff projection and the league-tournament seeds.
       ['components/ui/PinNote.tsx', 'href={href}'],
-      ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
       // The /standings and /teams overviews render one block per division, each with its
@@ -183,14 +182,12 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/game/SeasonSeries.tsx', GAME_LINK],
       ['components/schedule/DateHeader.tsx', 'href={dayHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
-      // EmptyState's internal action: the home page's LeaguePanel renders one per league inside
-      // panels.map(), each to a different /schedule/<league> page.
+      // EmptyState's internal action: a list renders one per league or per group inside a `.map()`.
       ['components/ui/EmptyState.tsx', 'href={action.href}'],
       // The team finder's "Divisions and leagues" results and the link-mode league chips are
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],
       ['components/prefs/LeagueSwitcher.tsx', 'href={href}'],
-      ['components/layout/LeagueJumpLinks.tsx', 'href={href}'],
       // The clubs pages (DESIGN §17): a club line per roster row, a link per club on /clubs, and a
       // school link per player row on a club page.
       ['components/teams/TeamRoster.tsx', 'href={club.href}'],
@@ -202,11 +199,27 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // Layout chrome (app/layout.tsx): on every page, so it opts out like the nav.
       ['components/layout/SiteHeader.tsx', 'href="/"'],
       ['components/layout/NavLink.tsx', 'href={target}'],
-      ['components/layout/Attribution.tsx', 'href="/about"'],
-      ['components/layout/Attribution.tsx', 'href="/history/2025-26"'],
+      // The header's magnifier link to the finder (below 1024).
+      ['components/layout/SiteHeader.tsx', 'href="/teams"'],
+      ['components/layout/NavLink.tsx', 'href={target}'],
+      // The footer's index is one mapped list now (Scores … About), in the header's own words.
+      ['components/layout/Attribution.tsx', 'href={item.href}'],
       ['components/layout/LastUpdated.tsx', '/about#updates'],
+      // The phone More sheet (in the bar on every page): the reader's team, then its links.
+      ['components/layout/MoreMenu.tsx', 'href={`/teams/${pinned}`}'],
+      ['components/layout/MoreMenu.tsx', 'href={link.href}'],
     ];
+    /** These hold the chrome and the shared primitives: their entries may never be skipped. */
+    const MUST_EXIST = /^components\/(layout|ui|search|prefs)\//;
+    let held = 0;
     for (const [rel, href] of WANT) {
+      // A page package may delete a component with its page (the refresh retires several); an entry
+      // whose file is gone has no link left to hold. A file that still exists must still match.
+      if (!existsSync(path.join(ROOT, rel))) {
+        expect(MUST_EXIST.test(rel), `${rel} was deleted`).toBe(false);
+        continue;
+      }
+      held += 1;
       const src = readFileSync(path.join(ROOT, rel), 'utf8');
       const matches = (text: string) => (typeof href === 'string' ? text.includes(href) : href.test(text));
       const tags = linkTags(src, blanked(src)).filter((t) => matches(t.text));
@@ -215,5 +228,21 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
         expect(/prefetch=\{false\}/.test(tag.text), `${rel}:${tag.line} ${String(href)}`).toBe(true);
       }
     }
+    // The skip above must never empty the table.
+    expect(held).toBeGreaterThanOrEqual(12);
+  });
+
+  it('every <Link> in the layout chrome opts out, whatever its href', () => {
+    const offenders: string[] = [];
+    let checked = 0;
+    for (const file of sources(path.join(ROOT, 'components', 'layout'))) {
+      const src = readFileSync(file, 'utf8');
+      for (const tag of linkTags(src, blanked(src))) {
+        checked += 1;
+        if (!/prefetch=\{false\}/.test(tag.text)) offenders.push(`${path.relative(ROOT, file)}:${tag.line}`);
+      }
+    }
+    expect(checked).toBeGreaterThanOrEqual(8);
+    expect(offenders).toEqual([]);
   });
 });

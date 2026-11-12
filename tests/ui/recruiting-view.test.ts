@@ -18,6 +18,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import AboutPage from '../../app/about/page';
 import ClubsPage from '../../app/clubs/page';
 import CommitsPage from '../../app/commits/page';
 import RecruitingPage, { metadata } from '../../app/recruiting/page';
@@ -113,11 +114,15 @@ describe('buildRecruitingView', () => {
 });
 
 describe('/recruiting, rendered', () => {
-  it('has one h1, skips no heading level, and ends with how the page is built', () => {
+  it('has one h1, skips no heading level, and ends with a link to how the lists are gathered, on /about', () => {
     const levels = headings(html);
     expect(levels.filter((l) => l === 1)).toHaveLength(1);
     for (let i = 1; i < levels.length; i++) expect(levels[i] - levels[i - 1]).toBeLessThanOrEqual(1);
-    expect(html.lastIndexOf('<section')).toBe(html.indexOf('<section aria-labelledby="how-matched"'));
+    // The method is said once, on /about (DESIGN §33): no section of it here, one link to it last.
+    expect(html).not.toContain('how-matched');
+    expect(html.lastIndexOf('<a ')).toBe(html.indexOf('<a class="sx-action" href="/about#recruiting">'));
+    expect(html).toContain('<nav aria-label="Recruiting"');
+    expect(html).toContain('<a class="sx-tab" aria-current="page" href="/recruiting">By school</a>');
   });
 
   it('gives every id once, and puts each region’s leagues in its own scope block, NorCal first', () => {
@@ -133,8 +138,10 @@ describe('/recruiting, rendered', () => {
         for (const s of l.schools) expect(html.indexOf(`id="${s.id}"`), s.slug).toBeGreaterThan(at);
       }
     }
-    // The switcher, before the first region block.
-    expect(html.indexOf('NorCal')).toBeLessThan(html.indexOf('data-region-scope="norcal"'));
+    // No region control and no league row of its own (DESIGN §33: one tab row a page; the footer and
+    // the More sheet carry the region).
+    expect(html).not.toContain('data-region-option');
+    expect(html).not.toContain('data-league-option');
   });
 
   it('shows every listed player’s lines, linking /commits and /clubs, and no quote or basis', () => {
@@ -194,8 +201,10 @@ describe('the pages that link /recruiting', () => {
     for (const page of [TeamsPage, ClubsPage, CommitsPage]) {
       expect(renderToStaticMarkup(createElement(page))).toContain('href="/recruiting"');
     }
-    expect(textOf(renderToStaticMarkup(createElement(TeamsPage)))).toContain(
-      'Recruiting: the recruiting page gathers every school’s recruiting profiles, clubs and commitments in one place.',
+    // /teams links it by name, in its last section; what it gathers is said on /about.
+    expect(renderToStaticMarkup(createElement(TeamsPage))).toMatch(/<a class="sx-action" href="\/recruiting">Recruiting[^<]*<\/a>/);
+    expect(textOf(renderToStaticMarkup(createElement(AboutPage))).replace(/\s+/g, ' ')).toContain(
+      'lists gather every school’s recruiting profiles, clubs and commitments in one place.',
     );
   });
 });

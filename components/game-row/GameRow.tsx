@@ -1,112 +1,123 @@
 import Link from 'next/link';
 
-import { mapsSearchHref } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import type { Game } from '../../lib/types';
-import { gameAddress } from '../../lib/schools/venue';
 
-import ExternalLink from '../ui/ExternalLink';
-import { getBracketLink } from '../playoffs/bracket-link';
-import { maxPrepsLabel } from '../words/maxpreps-label';
-import { describeGame, resultSentence } from '../ui/describe-game';
+import { describeGame, type SideView } from '../ui/describe-game';
 
 import type { GameBaseProps, GameViewOptions } from './props';
-import { SummaryLead, SummaryTeams, chipsSentence, recordsApply, recordsSentence } from './summary';
+import {
+  GameStatus,
+  SideCrest,
+  chipsSentence,
+  gameMetaText,
+  lostAttr,
+  rowState,
+  shootoutNote,
+  venueWords,
+  wonAttr,
+} from './summary';
 
 /**
- * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15), one file
- * each in components/game-row/, built from the pieces in summary.tsx.
+ * The ONE game row (DESIGN §33), in components/game-row/ with its pieces in summary.tsx.
+ * `GameLogRow` is the team-perspective log line.
  *
- * A row is a three-column grid: a lead column (clock · the written status label · the chips, in
- * three fixed slots: SummaryLead), the two team lines — AWAY on top, HOME below, each `[chip]
- * [monogram] [name] [score]` — and a chevron.
- * The score column is mono/tabular so scores align down a list, and the winner's number is 600
- * weight in `--sx-text` against the loser's 400 in `--sx-text-2` (the fourth redundant channel,
- * R-19). Exactly two ScoreGlyphs per row, away then home.
+ * One DOM, one shape, one size, in every list and every state. Three columns (`.sx-game-grid`,
+ * app/globals.css):
  *
- * The row is a `<details>` / `<summary>` pair, so EXPAND WORKS WITH ZERO JAVASCRIPT. Venue,
- * stream, tickets, the box score and the /game/[id] link live in the panel, which is why 174
- * venue addresses never enter the initial payload of a list page.
+ *   status slot | away logo, name, seed, star | away score
+ *               | home logo, name, seed, star | home score
+ *               | note (a shootout, the competition, the venue, one link)
  *
- * An opponent that is not one of the registry's teams gets a ghost monogram (GhostMonogram: two
- * mixed-case letters on the inset surface, no school colour), titled NON_MEMBER_NOTE, and no link
- * (DESIGN §8).
+ * - The STATUS SLOT is always rendered and always first: a start time, `Live`, `Final`,
+ *   `Postponed` (summary.tsx `GameStatus`). "Final" is printed on every final.
+ * - Away first, home second, always.
+ * - Nothing but a score is ever in the score column, so the scores are one vertical line down a
+ *   list whatever mix of states it holds. A game with no score (upcoming, postponed, cancelled,
+ *   unreported) renders NO score cells: never a dash, never a coerced zero. A real 0-0 final
+ *   renders two zeros (tests/ui/rendered-never-00.test.ts reads exactly these cells: the class
+ *   starts `sx-num ` and holds `text-score`).
+ * - Result = weight: the winner's name and score carry `data-won` (700), the loser's `data-lost`
+ *   (grey). A tie, a live game and a game still to play carry neither. No W/L marks here.
+ * - The NOTE is one line under the names: how a shootout was decided (`data-decider`), the
+ *   competition when the list is not grouped by competition (`showChips`), where a game still to
+ *   play is (`at Los Altos`), and one optional link (`noteLink`).
  *
- * Every game link is `gameHref(game.contestId)` (SPEC §10.0): a si.com-only game's id is
- * `sblive:<n>`, which the route spells `sblive-<n>`.
+ * Links: `.sx-game-link` is an empty link covering the row, named by the game's sentence
+ * (`describeGame().sentence`). With a mouse the team names are links to the teams too, above it;
+ * on touch the CSS turns them off, so the row is ONE target.
  *
- * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
- * scope, and NON_MEMBER_NOTE counts the registry through lib/teams (summary.tsx). Every consumer is
- * a server component; nothing on the client imports these modules.
+ * A side this site follows carries `data-team-slug` on a `.sx-pinnable` span and a hidden
+ * `.sx-pin-note`, so the reader's team gets the star. A side it does not follow gets a ghost
+ * monogram titled NON_MEMBER_NOTE (DESIGN §8) and a name that is not a link.
+ *
+ * SERVER-ONLY: summary.tsx reads lib/teams and lib/data.
  */
 export type GameRowProps = GameBaseProps &
-  Pick<
-    GameViewOptions,
-    'showDate' | 'showTime' | 'showRecap' | 'scopeLeague' | 'showRecords' | 'defaultExpanded' | 'seeds' | 'bracket'
-  >;
+  GameViewOptions & {
+    /** The note's text; overrides the computed one (shootout, competition, venue). */
+    meta?: React.ReactNode;
+    /** false drops the note line. Default true. */
+    showMeta?: boolean;
+    /** One link at the end of the note ("Bracket"): a team page's next game. */
+    noteLink?: { href: string; label: string };
+    /**
+     * The row's element. `'li'` directly inside a `<ul className="sx-games">` (GameList does this);
+     * the default `'div'` anywhere else, e.g. inside a caller's own `<li>`.
+     */
+    as?: 'li' | 'div';
+    /** Extra attributes for the row element (GameList's `data-*` filter attributes). They win over the row's own. */
+    attrs?: Readonly<Record<`data-${string}`, string | undefined>>;
+  };
 
-/** The pills in an expanded panel: real links only, never a dead affordance. */
-function GameLinks({ game, bracket }: { game: Game; bracket: boolean }) {
-  const place = bracket ? getBracketLink(game) : null;
-  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
-  const address = gameAddress(game)?.address;
-  const directions = address ? mapsSearchHref(address) : null;
-  const links: Array<{ href: string; label: string }> = [];
-  if (directions) links.push({ href: directions, label: 'Directions' });
-  if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
+function Team({
+  side,
+  which,
+  seed,
+  decided,
+}: {
+  side: SideView;
+  which: 'away' | 'home';
+  seed: number | null | undefined;
+  decided: boolean;
+}) {
   return (
-    <p className="m-0 flex flex-wrap gap-2">
-      {/* The way on to the whole contest comes first, as the one accent pill. */}
-      <Link
-        href={gameHref(game.contestId)}
-        prefetch={false}
-        className="sx-pill sx-pill-accent min-h-11"
-      >
-        Full game page
-      </Link>
-      {/* Where the game sits in its bracket, an internal page, so a plain Link in the card pill's face. */}
-      {place ? (
-        <Link href={place.href} prefetch={false} className="sx-pill sx-pill-card">
-          {place.label}
+    <span
+      className="sx-game-team sx-pinnable"
+      data-side={which}
+      data-team-slug={side.slug ?? undefined}
+      data-won={decided ? wonAttr(side) : undefined}
+      data-lost={decided ? lostAttr(side) : undefined}
+    >
+      <SideCrest side={side} />
+      {side.slug ? (
+        <Link href={`/teams/${side.slug}`} prefetch={false} className="sx-game-name">
+          {side.shortName}
         </Link>
+      ) : (
+        <span className="sx-game-name">{side.shortName}</span>
+      )}
+      {seed !== null && seed !== undefined ? <span className="sx-seed sx-num">#{seed}</span> : null}
+      {side.slug ? (
+        <span className="sx-pin-note" hidden>
+          Your team
+        </span>
       ) : null}
-      {/* The open panel is surface-2, the pill's own fill, so these pills take the card
-          surface instead or they would read as bare text links. A press steps them to surface-3,
-          the same as a hover, so a tap on a phone (no hover) still answers. */}
-      {links.map((l) => (
-        <ExternalLink
-          key={l.href}
-          href={l.href}
-          className="sx-pill sx-pill-card"
-        >
-          {l.label}
-        </ExternalLink>
-      ))}
-    </p>
+    </span>
   );
 }
 
-function GameDetailBody({ game, showRecap, bracket }: { game: Game; showRecap: boolean; bracket: boolean }) {
-  const recap = showRecap ? resultSentence(game) : null;
+function Score({ side, which, decided }: { side: SideView; which: 'away' | 'home'; decided: boolean }) {
   return (
-    // From 768px (the team page's Last card) the panel is indented to the team column — gutter +
-    // the 80px lead column + its 8px gap — so it reads as belonging to the two names above it.
-    // On a phone that indent cost 94px of a 358px row and stacked every pill on its own line, so
-    // the panel starts at the gutter there.
-    // A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so each
-    // child's `m-0` cancelled it and the recap sat on the pill row.
-    // `.sx-gamedetail` (app/globals.css) is that panel: surface-2 under a divider, 12px between
-    // its lines, the md indent.
-    <div className="sx-gamedetail">
-      {recap ? <p className="m-0 text-ink-2">{recap}</p> : null}
-      {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
-      {/* `contest.location` is a NOTE field, not a venue field — live values include
-          "Senior Night" and a coach's scoring note — so it is never labelled "Venue". */}
-      {game.venue.text ? <p className="m-0 text-ink-3">Note: {game.venue.text}</p> : null}
-      <GameLinks game={game} bracket={bracket} />
-    </div>
+    // `className` LAST: tests/ui/rendered-never-00.test.ts finds a score cell by `class="sx-num … text-score…"><span`.
+    <span
+      data-side={which}
+      data-won={decided ? wonAttr(side) : undefined}
+      data-lost={decided ? lostAttr(side) : undefined}
+      aria-hidden="true"
+      className="sx-num sx-game-score text-score"
+    >
+      <span>{side.glyph}</span>
+    </span>
   );
 }
 
@@ -114,73 +125,58 @@ export function GameRow({
   game,
   perspective,
   showDate = false,
-  showTime = true,
-  showRecap = true,
   showChips = true,
-  scopeLeague = null,
-  showRecords = false,
-  defaultExpanded = false,
   seeds,
-  bracket = true,
+  meta,
+  showMeta = true,
+  noteLink,
+  as: Row = 'div',
+  attrs,
   className,
 }: GameRowProps) {
   const display = describeGame(game, perspective);
-  const withRecords = recordsApply(game, display, showRecords);
+  const state = rowState(game, display);
+  // A score cell only for a score that exists: a final, or a live game with both numbers in.
+  const scores = display.showScores && display.away.hasScore && display.home.hasScore;
+  // Winner and loser are marked on a final only: a live lead is not a result.
+  const decided = state === 'final';
+  const decider = showMeta && meta === undefined && decided ? shootoutNote(game, display) : null;
+  const noteParts =
+    meta === undefined
+      ? [decider, gameMetaText(display, showChips), venueWords(game, display)].filter(Boolean)
+      : [];
+  const hasNote = showMeta && (meta !== undefined || noteParts.length > 0 || noteLink !== undefined);
   return (
-    <details
-      open={defaultExpanded || undefined}
-      className={[
-        display.isNonLeague ? 'sx-nonleague' : null,
-        'bg-surface',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+    <Row
+      className={['sx-game', className].filter(Boolean).join(' ')}
+      data-state={state}
+      data-off={state === 'off' && display.kind !== 'unreported' ? '' : undefined}
+      {...attrs}
     >
-      {/* Three columns — lead (clock · status · chips, SummaryLead), the two team lines, the
-          chevron — so the status word never pushes a team line onto a third row. The lead column
-          is 80px at every phone width and its three slots are fixed, so the row is 76px whatever
-          its labels say. At 320 a 70px column broke a label into three lines and grew the row to
-          90px; the 10px comes back from the score column, which is sized to its glyph. */}
-      {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
-          by the screen edge (or by a /schedule date group's paint containment). */}
-      {/* `.sx-gamerow` (app/globals.css) is the grid, the 76px floor, the padding, the inset ring
-          and the hidden marker: one class instead of twelve utilities on every row. */}
-      <summary className="sx-tap sx-gamerow">
-        {/* The chips are aria-hidden in the lead column, so the sentence says them in words — the
-            same gate as the chips, so a bracket (showChips false) does not repeat them. */}
-        <span className="sr-only">
-          {display.sentence}
-          {chipsSentence(display, showChips)}
-          {withRecords ? recordsSentence(display) : ''}
-        </span>
-        {/* The lead is 52px and centred on the 52px team block (the grid's `items-center`); a
-            name that genuinely wraps grows the block, and the lead stays centred on it. */}
-        <SummaryLead
-          game={game}
-          display={display}
-          showDate={showDate}
-          showTime={showTime}
-          showChips={showChips}
+      <div className="sx-game-grid">
+        <Link
+          href={gameHref(game.contestId)}
+          prefetch={false}
+          className="sx-game-link"
+          aria-label={`${display.sentence}${chipsSentence(display, showChips)}`}
         />
-        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} seeds={seeds} />
-        <svg
-          className="sx-chevron text-ink-3"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="m4 6 4 4 4-4" />
-        </svg>
-      </summary>
-      <GameDetailBody game={game} showRecap={showRecap} bracket={bracket} />
-    </details>
+        <GameStatus game={game} display={display} showDate={showDate} />
+        <Team side={display.away} which="away" seed={seeds?.away} decided={decided} />
+        {scores ? <Score side={display.away} which="away" decided={decided} /> : null}
+        <Team side={display.home} which="home" seed={seeds?.home} decided={decided} />
+        {scores ? <Score side={display.home} which="home" decided={decided} /> : null}
+        {hasNote ? (
+          <span className="sx-game-note" data-decider={decider ? '' : undefined}>
+            {meta ?? noteParts.join(', ')}
+            {noteLink ? (
+              <Link href={noteLink.href} prefetch={false} className="sx-link">
+                {noteLink.label}
+              </Link>
+            ) : null}
+          </span>
+        ) : null}
+      </div>
+    </Row>
   );
 }
 

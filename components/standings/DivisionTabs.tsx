@@ -1,35 +1,17 @@
 /**
- * The division switcher (DESIGN §1.2, §7.16; brief §4.21): plain in-page anchors drawn as pills.
+ * The division switcher (DESIGN §33): plain in-page anchors drawn as `.sx-tabs`, the one selector face.
  *
- * They are `<a href="#de-anza">`, NOT ARIA tabs and NOT a client component:
- *  - both divisions stay in the page, so neither is hidden from Cmd-F, from a screen reader, or
- *    from a reader who wants to compare them;
- *  - the links work with JavaScript off and they are shareable;
- *  - there is no scroll-spy, so there is no keyboard trap to get wrong and no `aria-current` that
- *    a static page could only ever guess at — hence NO active state on either pill.
+ * They are `<a href="#de-anza">`, NOT ARIA tabs and NOT a client component: both divisions stay in the
+ * page (Cmd-F, a screen reader, a reader comparing them), the links work with JavaScript off, and
+ * there is no scroll-spy, so no tab is ever "current" and none carries `aria-current` (a caller that
+ * knows the current one, a month or a date strip, passes `current`).
  *
  * Two variants, and only one is ever displayed:
- *  - `bar` (phone): a 48px band that sticks directly under the 48px top bar, so the table head
- *    parks under both (the page sets `--sx-sticky-top: 6rem`). Hidden from 768px. `sx-chrome-top`
- *    gives it the same 1px CanvasText edge as the top bar under forced colours, where the
- *    box-shadow edge is dropped. Under a 20-24px browser text size the pills ("Mt. Hamilton",
- *    "Santa Teresa") outgrow a 320-390 screen, so the bar scrolls sideways on its own (no
- *    scrollbar drawn; the cut-off pill is the cue, and tabbing to it scrolls it into view) instead
- *    of widening the page. The 44px anchors sit inside the 48px bar, so the focus ring is not
- *    clipped by the scroll box.
- *  - `inline` (≥768px): static, in PageHeader's `aside`: under the title below 1024px, beside it
- *    from 1024px.
- *
- * Each pill is a 36px capsule inside a 44px anchor, so the target is the full 44px (DESIGN §10.9).
- * The capsule is drawn like the page's other link pills — the surface with a 1px ring — because
- * surface-2 on the bg was nearly invisible in light, so the two read as words, not buttons. It
- * borrows TopNav's focus treatment: the anchor is `sx-navtop`, so the keyboard ring is drawn on
- * the `sx-indicator` capsule (2px out, following its 999px radius) instead of as a rectangle
- * around the 44px box. The 4px between capsule and anchor edge on each side is what keeps that
- * ring inside the 48px sticky bar rather than clipped by it. `group-active` is the press state,
- * for the anchor's whole 44px box. Neither pill is ever "current" (see above), so the
- * indicator's `aria-current` styling never applies.
- * The as-of stamp no longer rides here: the top bar and the footer already carry it.
+ *  - `bar` (phone): sticks directly under the 48px top bar on the page's own paper (`bg-bg`), so the
+ *    table head parks under both (the page sets `--sx-sticky-top: 6rem`). Hidden from 768px.
+ *    `sx-chrome-top` gives it a CanvasText edge under forced colours. It scrolls sideways on its own
+ *    (no scrollbar drawn) instead of widening the page.
+ *  - `inline` (≥768px): static, in the page header.
  */
 export interface DivisionTabsProps {
   /**
@@ -41,7 +23,7 @@ export interface DivisionTabsProps {
    * two pills with the same visible text and different targets have different accessible names when
    * JS is off and both regions' pills show (WCAG 2.4.9; the visible text comes first, 2.5.3).
    */
-  tabs: Array<{ href: string; label: string; region?: 'norcal' | 'socal'; srSuffix?: string }>;
+  tabs: Array<{ href: string; label: string; region?: 'norcal' | 'socal'; srSuffix?: string; current?: boolean }>;
   variant?: 'bar' | 'inline';
   /** Names the nav landmark for a screen reader. */
   label?: string;
@@ -49,8 +31,9 @@ export interface DivisionTabsProps {
 }
 
 const VARIANT = {
-  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 overflow-x-auto overflow-y-hidden bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] [scrollbar-width:none] md:hidden',
-  inline: 'hidden md:flex items-center gap-2',
+  // 48px (`h-divbar`): the sticky stack maths (`--sx-sticky-top: 6rem`, scroll-padding) count on it.
+  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter h-divbar bg-bg px-gutter md:hidden',
+  inline: 'hidden md:block',
 } as const;
 
 export function DivisionTabs({
@@ -61,20 +44,19 @@ export function DivisionTabs({
 }: DivisionTabsProps) {
   return (
     // Screen-only (`sx-print-hide`): a jump nav is no use on paper.
-    <nav aria-label={label} className={`sx-print-hide ${VARIANT[variant]}${className ? ` ${className}` : ''}`}>
-      {tabs.map((tab) => (
-        <a
-          key={tab.href}
-          href={tab.href}
-          data-region-scope={tab.region}
-          className="group sx-navtop inline-flex h-11 shrink-0 items-center no-underline"
-        >
-          <span className="sx-indicator inline-flex h-9 items-center rounded-control bg-surface px-4 text-body font-medium text-ink shadow-[var(--sx-ring)] hover:bg-surface-2 group-active:bg-surface-3 forced-colors:border">
-            {tab.label}
-            {tab.srSuffix ? <span className="sr-only">{tab.srSuffix}</span> : null}
-          </span>
-        </a>
-      ))}
+    <nav aria-label={label} className={['sx-print-hide', VARIANT[variant], className].filter(Boolean).join(' ')}>
+      <ul className="sx-tabs h-full">
+        {tabs.map((tab) => (
+          // The region scope stays on the anchor (tests/ui/history-view.test.ts); a hidden anchor leaves
+          // an empty, zero-width item.
+          <li key={tab.href}>
+            <a href={tab.href} data-region-scope={tab.region} aria-current={tab.current ? 'true' : undefined} className="sx-tab">
+              {tab.label}
+              {tab.srSuffix ? <span className="sr-only">{tab.srSuffix}</span> : null}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }

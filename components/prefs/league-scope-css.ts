@@ -10,15 +10,10 @@
  * - `[data-scope="<id>"]`  shown only when that league is the effective league;
  *   `[data-scope="none"]`  shown only when there is none (the first-visit view);
  *   `[data-scope="all"]`   always shown.
- * - `.sx-jump-<id>`        the "Jump to <SHORT> ↓" link of the effective league only.
  * - `.sx-js-only`          hidden without JS (nothing stamped `data-js`).
- * - `.sx-myteam-slot`      the WRAPPING `<section>` of the home My-team slot (heading included, so
- *                          it is never orphaned): hidden with no pin, no league and no stale pin.
- *                          Its HEIGHTS are not here — the component that owns the content sets them
- *                          with Tailwind arbitrary variants (SPEC §10.1).
- * - `[data-league-option="<id>"]`  the scope chips: the effective league's chip (or `all` when
- *                          there is none) is drawn selected, with its aria-hidden ✓ shown, before
- *                          hydration. Never colour alone: inverse ink + weight + the ✓.
+ * - `[data-league-option="<id>"]`  the scope tabs: the effective league's tab (or `all` when
+ *                          there is none) is drawn selected before hydration. Never colour alone:
+ *                          weight 700 and a 3px ink bar.
  *
  * The region half (DESIGN-socal §2.4), keyed off `data-region` (stamped `"socal"` only; absent =
  * NorCal):
@@ -28,8 +23,8 @@
  *                          DOM order is the reading order and every link works (CLS 0).
  * - `[data-region-scope="norcal"]` hidden when the region is SoCal (only JS can stamp that).
  * - `[data-region-option="<region>"]` the region switcher's two buttons: the effective region's is
- *                          drawn selected (the same inverse ink and ✓ as a chip) before
- *                          hydration.
+ *                          drawn selected (the same weight and bar as a league tab)
+ *                          before hydration.
  * - a deep link opens its region: a region block that IS the `:target` (`/standings#socal`) or holds
  *                          it (`/leaders#elo-rating-socal`) is shown whatever the stamp says.
  *                          `display:block`, so it is meant for block wrappers: a region-scoped flex or
@@ -45,7 +40,7 @@
  *                          which also sets `data-searching`, lifts nothing. Placed after the hide rules
  *                          and more specific than both (an id), so it needs no `!important`.
  *
- * No league hue anywhere (DESIGN §6.4): every selected state is the one inverse ink plus ✓.
+ * No league hue anywhere (DESIGN §6.4): every selected state is the one ink weight plus bar.
  * `display: none` also removes a hidden panel from the accessibility tree; DOM order stays the
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
@@ -62,11 +57,17 @@ const SOCAL = 'socal';
 const NORCAL = 'norcal';
 
 /**
- * The selected chip: inverse ink (the text/surface pair swapped), weight 600 — the same look
- * globals.css gives `.sx-league-chip[aria-pressed="true"]`, so the pre-paint state and the
- * hydrated one match.
+ * The selected league tab: ink, weight 700 and a 3px accent bar — the same look globals.css gives
+ * `:is(.sx-tab, .sx-league-chip, .sx-opt):is([aria-pressed="true"], …)`, so the pre-paint state and
+ * the hydrated one match. Change the two together (and tests/ui/scope-css.test.ts).
  */
-const SELECTED = 'background:var(--sx-text);color:var(--sx-surface);font-weight:600';
+const SELECTED = 'color:var(--sx-text);font-weight:700;box-shadow:inset 0 -3px 0 var(--sx-accent)';
+/**
+ * The selected segment of the region switch: globals.css' `.sx-seg > .sx-opt[aria-pressed="true"]`.
+ * Scoped to `.sx-seg`, so the text face ("Switch to SoCal", whose `data-region-option` is the OTHER
+ * region) is never drawn as selected.
+ */
+const SEG_SELECTED = 'background:var(--sx-surface-3);color:var(--sx-text)';
 
 export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   for (const id of leagueIds) {
@@ -83,23 +84,16 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
       `html[data-league="${id}"] [data-scope]:not([data-scope="${id}"]):not([data-scope="all"]):not([data-scope="none"]){display:none}`,
     );
   }
-  rules.push('.sx-jump{display:none}');
-  for (const id of leagueIds) rules.push(`html[data-league="${id}"] .sx-jump-${id}{display:inline-flex}`);
   rules.push('html:not([data-js]) .sx-js-only{display:none !important}');
-  rules.push('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
   for (const id of leagueIds) {
     rules.push(`html[data-league="${id}"] [data-league-option="${id}"]{${SELECTED}}`);
-    rules.push(`html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{visibility:visible}`);
   }
   rules.push(`html:not([data-league]) [data-league-option="all"]{${SELECTED}}`);
-  rules.push('html:not([data-league]) [data-league-option="all"] .sx-chip-check{visibility:visible}');
   // The region half (DESIGN-socal §2.4), verbatim from the design.
   rules.push(`html[data-js]:not([data-region="${SOCAL}"]) [data-region-scope="${SOCAL}"]{display:none}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-scope="${NORCAL}"]{display:none}`);
-  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"]{${SELECTED}}`);
-  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{visibility:visible}`);
-  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
-  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{visibility:visible}`);
+  rules.push(`html:not([data-region="${SOCAL}"]) .sx-seg>[data-region-option="${NORCAL}"]{${SEG_SELECTED}}`);
+  rules.push(`html[data-region="${SOCAL}"] .sx-seg>[data-region-option="${SOCAL}"]{${SEG_SELECTED}}`);
   // Both deep-link rules stand down once the reader picks a region on this page view
   // (REGION_PICKED): tap `#elo-rating` on /leaders, then SoCal, and the NorCal block that holds the
   // `:target` would otherwise stay open above SoCal's, since dropping the fragment with

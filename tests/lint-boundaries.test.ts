@@ -29,13 +29,13 @@ describe('lint layer zones (eslint.config.mjs)', () => {
   });
 
   it('lib/ must not import components/', async () => {
-    const errors = await restrictedImports(`import x from '../components/ui/Tag';`, 'lib/x.ts');
+    const errors = await restrictedImports(`import x from '../components/ui/ResultChip';`, 'lib/x.ts');
     expect(errors).toHaveLength(1);
     expect(errors[0]).toMatch(/lib\/ is the shared core/);
   });
 
   it('lib/sources keeps the general lib/ bans', async () => {
-    expect(await restrictedImports(`import x from '../../components/ui/Tag';`, 'lib/sources/x.ts')).toHaveLength(1);
+    expect(await restrictedImports(`import x from '../../components/ui/ResultChip';`, 'lib/sources/x.ts')).toHaveLength(1);
   });
 
   it('components/ must not import the build-only pipeline', async () => {

@@ -7,13 +7,13 @@ import LeagueHealthCard from '../LeagueHealthCard';
  */
 export function HealthSection({ leagues }: { leagues: readonly LeagueHealthEntry[] }) {
   return (
-    <section id="health" className="mt-16">
-      <SectionHeader size="lg" kicker="Data health, by league" />
+    <section id="health" className="sx-section">
+      <SectionHeader kicker="Data health, by league" />
       <p className="sx-prose">
         Each league is read and checked on its own, so a problem in one never holds the others
         back. This is how the most recent update went for each.
       </p>
-      <div className="mt-stack grid gap-4 md:grid-cols-2">
+      <div className="sx-auto mt-2">
         {leagues.map((l) => (
           <LeagueHealthCard
             key={l.summary.id}

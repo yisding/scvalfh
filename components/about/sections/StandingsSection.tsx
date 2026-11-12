@@ -15,8 +15,8 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
   // Every league of this build orders its table on its league record (basketball): no points to describe.
   const byRecord = perLeague.length > 0 && perLeague.every(({ config }) => ordersByRecord(config.rules));
   return (
-    <section id="standings" className="mt-16">
-      <SectionHeader size="lg" kicker={byRecord ? 'Standings & tiebreaks' : 'Standings, points & tiebreaks'} />
+    <section id="standings" className="sx-section">
+      <SectionHeader kicker={byRecord ? 'Standings & tiebreaks' : 'Standings, points & tiebreaks'} />
       <div className="sx-prose">
         <p>
           {/* The qualifiers appear only when they are needed, so a NorCal-only site reads as before:
@@ -27,7 +27,7 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
           {siteOrdered.length > 0 ? ' where it publishes them (otherwise by this site’s stated rules below)' : ''},
           then compared field by field against MaxPreps&rsquo; own published table
           {anyTableless ? ' wherever MaxPreps publishes one' : ''} (see{' '}
-          <a href="#cross-check" className="text-accent hover:underline">
+          <a href="#cross-check">
             the cross-check log
           </a>
           {`). A team with no reported results is never shown as a fabricated ${EMPTY_RECORD} record.`}{' '}
@@ -72,13 +72,15 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
           key={summary.id}
           id={`rules-${summary.id}`}
           data-region-scope={summary.region}
-          className="mt-section"
+          className="mt-8"
           aria-labelledby={`rules-${summary.id}-heading`}
         >
+          {/* A league inside the section is a group: headed by a strip, its parts by h4s. */}
           <SectionHeader
-            as="h3"
+            strip
             id={`rules-${summary.id}-heading`}
             kicker={leagueHeading(summary.id)}
+            className="mb-3 max-w-[47rem]"
           />
           <LeagueRules league={config} />
         </section>

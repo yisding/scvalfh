@@ -4,11 +4,14 @@ import { notFound } from 'next/navigation';
 
 import JvSchedule from '../../../components/jv/JvSchedule';
 import { buildLeagueJvScheduleView } from '../../../components/jv/jv-view';
+import { BUILD_INSTANT } from '../../../components/layout/build-instant';
+import LastUpdated from '../../../components/layout/LastUpdated';
+import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
-import Arrow from '../../../components/ui/Arrow';
+import ScopeBar from '../../../components/prefs/ScopeBar';
 import EmptyState from '../../../components/ui/EmptyState';
-import { getGameDates } from '../../../lib/data';
+import { getFetchedAt, getGameDates } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
 import { regionIdSuffix } from '../../../components/leaders/scope';
 import { LEAGUE_IDS, getLeague, regionOf, standaloneName } from '../../../lib/leagues';
@@ -23,7 +26,7 @@ import { GENDER_NAME, SPORT } from '../../../lib/sports/current';
  * with a varsity game; a team page lists one school's JV games. This page is the league's JV calendar,
  * including the dates only JV teams play (SCVAL basketball's Monday JV round before the last varsity night).
  * Where the league's own schedule sets the JV round, a game MaxPreps does not list yet is listed from the
- * schedule and tagged SCHED (lib/jv/jv-official.ts).
+ * schedule and noted "League schedule" (lib/jv/jv-official.ts).
  *
  * One static page per league, nothing derived from `Date.now()`: "today" is the JV file's own date.
  */
@@ -52,49 +55,76 @@ export async function generateMetadata({ params }: PageProps<'/jv/[league]'>): P
   };
 }
 
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 export default async function JvLeagueSchedulePage({ params }: PageProps<'/jv/[league]'>) {
   const { league } = await params;
   if (!LEAGUE_IDS.includes(league)) notFound();
   const config = getLeague(league);
+  const region = regionOf(league);
   const view = buildLeagueJvScheduleView(league);
   const varsityDates = new Set(getGameDates());
-  const counts = [
-    plural(view.games, 'game'),
-    `${view.finals} final`,
-    view.toCome > 0 ? `${view.toCome} to come` : null,
-    view.noScore > 0 ? `${view.noScore} with no score reported` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ');
+  // The month links: each to its first JV game day (`#d-<date>`), as on the league's varsity schedule.
+  const months = view.days.reduce<Array<{ key: string; name: string; first: string }>>((out, day) => {
+    const key = day.dateKey.slice(0, 7);
+    if (out.at(-1)?.key !== key) out.push({ key, name: MONTH_NAMES[Number(key.slice(5)) - 1], first: day.dateKey });
+    return out;
+  }, []);
   return (
     <div className="pb-section-lg">
-      <PageHeader
-        title={titleOf(league)}
-        description={`Junior varsity games, ${SEASON_DISPLAY} · ${counts}`}
+      <PageHeader title={`${config.shortName} JV schedule`} />
+      {/* The league's region only (links to the sibling leagues' JV schedules), plus All → the JV hub. */}
+      <ScopeBar
+        region={false}
+        league={{
+          mode: 'link',
+          includeAll: true,
+          label: 'Leagues',
+          leagues: leagueChips(region),
+          current: league,
+          hrefs: leagueHrefs('/jv', region),
+        }}
+        stamp={<LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" />}
       />
-      <p className="m-0 mt-4 flex flex-wrap gap-x-5 gap-y-2 text-meta">
-        <Link href={`/jv#${league}`} prefetch={false} className="font-medium text-accent hover:underline">
-          {config.shortName} JV standings <Arrow />
-        </Link>
-        {view.nextDateKey ? (
-          <a href={`#d-${view.nextDateKey}`} className="font-medium text-accent hover:underline">
-            Jump to {monthDay(view.nextDateKey)}, the next JV game day <Arrow />
-          </a>
-        ) : null}
-        <Link href={`/schedule/${league}`} prefetch={false} className="font-medium text-accent hover:underline">
-          Varsity schedule <Arrow />
-        </Link>
-      </p>
-      <div className="mt-6">
+      {months.length > 1 || view.nextDateKey ? (
+        <ul className="sx-linkrow">
+          {view.nextDateKey ? (
+            <li>
+              <a href={`#d-${view.nextDateKey}`} className="sx-action">
+                Next: {monthDay(view.nextDateKey)}
+              </a>
+            </li>
+          ) : null}
+          {months.length > 1
+            ? months.map((month) => (
+                <li key={month.key}>
+                  <a href={`#d-${month.first}`} className="sx-action">
+                    {month.name}
+                  </a>
+                </li>
+              ))
+            : null}
+        </ul>
+      ) : null}
+      <div className="mt-4">
         {view.days.length === 0 ? (
-          <EmptyState heading={`No ${config.shortName} JV game is listed yet.`}>
-            MaxPreps lists no JV game for any {config.shortName} school this season. Coaches enter JV schedules
-            later, and less often, than varsity ones.
-          </EmptyState>
+          <EmptyState heading={`No ${config.shortName} JV games listed`} />
         ) : (
-          <JvSchedule view={view} varsityDates={varsityDates} dayAnchor={`jv${regionIdSuffix(regionOf(league))}`} />
+          <JvSchedule view={view} varsityDates={varsityDates} dayAnchor={`jv${regionIdSuffix(region)}`} />
         )}
       </div>
+      <ul className="sx-linkrow mt-4">
+        <li>
+          <Link href={`/jv#${league}`} prefetch={false} className="sx-action">
+            {config.shortName} JV standings
+          </Link>
+        </li>
+        <li>
+          <Link href={`/schedule/${league}`} prefetch={false} className="sx-action">
+            {config.shortName} schedule
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }
