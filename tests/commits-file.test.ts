@@ -181,14 +181,14 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22, 2026-11-03 and 2026-11-06 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round two, one of them on the owner confirming it; the 2026-11-06 round two), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22, 2026-11-03, 2026-11-06 and 2026-11-13 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round two, one of them on the owner confirming it; the 2026-11-06 round two; the 2026-11-13 round one signing and five sources), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 37 commitments from 22 schools to 28 colleges (31 programs), all "committed", 33 high and 4 medium', () => {
-    expect(raw.capturedAt).toBe('2026-11-06');
+  it('holds 37 commitments from 22 schools to 28 colleges (31 programs), 36 "committed" and 1 "signed", 33 high and 4 medium', () => {
+    expect(raw.capturedAt).toBe('2026-11-13');
     expect(raw.commitments).toHaveLength(37);
     expect(raw.colleges).toHaveLength(28);
     expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(31);
@@ -215,17 +215,19 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'scripps-ranch', 'temecula-valley', 'torrey-pines']),
     );
     expect(socal).toHaveLength(14);
-    expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
+    // Phoebe Miller (Redwood, San Diego State lacrosse) signed on 2026-11-11: SDSU's own release of that day.
+    expect(raw.commitments.filter((c) => c.status === 'signed').map((c) => [c.fullName, c.college, c.sport])).toEqual([['Phoebe Miller', 'san-diego-state', 'lacrosse']]);
     expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann']);
     // Frankie Lemieux's and Clara Froemming's (both 2026-11-03, medium) went to high on 2026-11-06: Stick Together's
     // Nov 5 issue names each one's school. That issue also added Hailey Moncada (Gilroy, Mercyhurst) and Evie Ferrini
     // (Saint Francis, Wellesley), both high.
     // Rylie Storm's went from medium to high on 2026-11-03: her own SportsRecruits profile now shows Harvard.
     // Ryan Hemeon's went from medium to high on 2026-10-22: Stick Together's Oct 6 issue names her school.
-    // Kendall Gann's rests on MAX Field Hockey alone, whose commitments its users report.
+    // Kendall Gann's rests on MAX Field Hockey alone, whose commitments its users report. Since 2026-11-13 MAX's player
+    // pages name Reese Roldan's and Sami Lee's school too; MAX being self-reported, both stay medium.
     // Sami Lee's rests on the revised nickname rule (2026-10-06): the pages say Samantha; her own MaxPreps page backs the club.
     const lee = socal.find((c) => c.fullName === 'Sami Lee')!;
-    expect([lee.college, lee.sport, lee.sources.map((s) => s.kind)]).toEqual(['columbia', 'field-hockey', ['event', 'club-site', 'maxpreps']]);
+    expect([lee.college, lee.sport, lee.sources.map((s) => s.kind)]).toEqual(['columbia', 'field-hockey', ['event', 'club-site', 'maxpreps', 'other']]);
   });
 
   it('joins nothing to the six EAL teams: both 2026-10-04 sweeps of their 95 rows found no commitment', () => {
@@ -264,13 +266,13 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([24, 3, 10, 0]);
   });
 
-  it('rests on 101 source entries on 75 distinct URLs (SoCal: 42 on 35), and 17 commitments carry a date', () => {
+  it('rests on 107 source entries on 79 distinct URLs (SoCal: 45 on 38), and 17 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(101);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(75);
+    expect(entries).toHaveLength(107);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(79);
     const socalEntries = socal.flatMap((c) => c.sources);
-    expect(socalEntries).toHaveLength(42);
-    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(35);
+    expect(socalEntries).toHaveLength(45);
+    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(38);
     expect(raw.commitments.filter((c) => c.asOf !== null).map((c) => c.asOf).sort()).toEqual([
       '2025-09-22',
       '2026-02',
@@ -396,8 +398,8 @@ describe('lib/players/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The 2026-11-06 round added Hailey Moncada (and Mercyhurst) and Evie Ferrini.
-    expect(getCommitsLastChecked()).toBe('2026-11-06');
+    // The 2026-11-13 round: Phoebe Miller's signing and five more sources.
+    expect(getCommitsLastChecked()).toBe('2026-11-13');
   });
 
   it('displays a college by its short name when it has one', () => {
