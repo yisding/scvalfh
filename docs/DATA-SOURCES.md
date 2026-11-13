@@ -2626,6 +2626,23 @@ and their sentence says whose dates they are; a team name on another club's sche
 Black" on Roseville's Gold Cup page) does not put that club on the event; a month-only date ("April
 2027") is never turned into a day: the event stays `expected`.
 
+### 1.10 INSTAGRAM ACCOUNTS — teams' and clubs' official accounts (`data/instagram.json`)
+
+Links, not a source: no fact on the site is read from an account, and `BANNED_HOSTS` (§1.1j2,
+§1.1j3) still refuses social media as a source everywhere. Researched by hand on 2026-11-13 for the
+102 field hockey teams and the 28 clubs of `data/clubs.json`. Handles were found where a page that is
+not social media names or links them: a club's website (read by script, in Chromium where the links
+are rendered by script), a school's athletics or team page, a student paper, a search result, the
+site's owner. A handle the owner's own page links (a club's site, a school's or a program's) was taken
+from that link. Any other rests on a search result whose profile name and bio are the field hockey
+team's, a page naming it, a profile opened in a browser (a few, before Instagram's rate limit on
+anonymous views stopped the checks), or the site owner's confirmation, each said in its `note`; never
+the school's account for every sport, a booster club's, a club team's, a player's or a same-named
+school's elsewhere (`stevenson.fieldhockey` is Adlai Stevenson's, in Illinois). JV teams' own accounts were searched the same way and are kept as
+`level: "jv"` records beside the varsity program's. A page of the owner's own linking the account is not required
+(owner decision, 2026-11-13). Handles are stored lower case, as Instagram stores usernames. A school or
+club with no record had no account we could find and check on the day; it may still have one.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
