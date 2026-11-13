@@ -213,13 +213,15 @@ describe('data/clubs.json', () => {
       expect(schools.size).toBe(25);
       const rows = swept.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
       // 840 rows when swept; the 2026-10-07 BVAL and MCAL roster refresh added 20 no sweep has covered
-      // (Marin Academy's 18 and Westmont's 3, less one Tamalpais row MaxPreps dropped).
-      expect(rows).toHaveLength(860);
+      // (Marin Academy's 18 and Westmont's 3, less one Tamalpais row MaxPreps dropped), and the 2026-11-13
+      // re-read of every roster 76 more (not swept for clubs either).
+      expect(rows).toHaveLength(936);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
       expect(swept).toHaveLength(49);
       expect(teams).toHaveLength(102);
-      expect(teams.filter((t) => !SWEPT.has(getTeamBySlug(t.slug)!.league)).flatMap((t) => t.players)).toHaveLength(842);
+      // 842 Southern California rows until the 2026-11-13 re-read, 867 since.
+      expect(teams.filter((t) => !SWEPT.has(getTeamBySlug(t.slug)!.league)).flatMap((t) => t.players)).toHaveLength(867);
     });
 
     it('counts 71 current, 13 past and 10 unknown; 79 high and 15 medium', () => {

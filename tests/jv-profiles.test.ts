@@ -82,17 +82,20 @@ describe('data/jv-profiles.json', () => {
   it('holds what the 2026-11-06 research found: 33 SportsRecruits pages from the address probe and one NCSA page', () => {
     const all = fileEntries.flatMap((e) => e.profiles.map((x) => ({ e, x })));
     const probe = all.filter(({ x }) => x.note?.includes('Found by the 2026-11-06 address probe'));
-    expect(probe).toHaveLength(33);
-    expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(33);
+    // 33 pages for 33 players at 13 schools when found; on 2026-11-13 six of those players joined their varsity
+    // rosters (Berkeley, Leland, Marin Catholic twice, Saint Francis, Westview), so their pages moved to
+    // data/rosters-enrichment.json: 27 here, at 11 schools.
+    expect(probe).toHaveLength(27);
+    expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(27);
     expect(probe.every(({ x }) => x.platform === 'sportsrecruits' && x.classOf !== null)).toBe(true);
-    expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(32);
+    expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(26);
     expect(probe.filter(({ x }) => x.sport === undefined).map(({ e }) => e.name)).toEqual(['Jayla Gerrard']);
     expect(all.filter(({ x }) => x.platform === 'ncsa').map(({ e }) => e.name)).toEqual(['Katie Todd']);
-    // The probe's 33 pages are at 13 schools; Scripps Ranch, the fourteenth, is here for Katie Todd's NCSA page.
-    expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(13);
+    // The probe's 27 pages are at 11 schools; Scripps Ranch, the twelfth, is here for Katie Todd's NCSA page.
+    expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(11);
     const by1106 = fileEntries.filter((e) => e.profiles.some((x) => !x.note?.includes('Found by the 2026-11-13')));
-    expect(by1106).toHaveLength(34);
-    expect(new Set(by1106.map((e) => e.slug)).size).toBe(14);
+    expect(by1106).toHaveLength(28);
+    expect(new Set(by1106.map((e) => e.slug)).size).toBe(12);
     // Where a player had more than one live page, the one the rule kept is linked, not the other.
     const url = (slug: string, name: string) => getJvPlayerProfiles(slug as TeamSlug, name).map((x) => x.url);
     expect(url('saint-francis', "Aoife O'Connor")).toEqual(['https://iwlca.sportsrecruits.com/athlete/aoife_oconnor2']);
@@ -102,10 +105,10 @@ describe('data/jv-profiles.json', () => {
     expect(url('st-ignatius', 'Luciana Bennett')).toEqual(['https://iwlca.sportsrecruits.com/athlete/luciana_bennett']);
   });
 
-  it('holds what the 2026-11-13 Hudl sweep found: eight JV players\u2019 Hudl pages at four schools', () => {
+  it('holds what the 2026-11-13 Hudl sweep found: seven JV players\u2019 Hudl pages at three schools', () => {
     const found = fileEntries.flatMap((e) => e.profiles.filter((x) => x.note?.includes('Found by the 2026-11-13 Hudl team-roster sweep')).map((x) => ({ e, x })));
+    // An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day: her page is in the varsity overlay.
     expect(found.map(({ e }) => `${e.slug} ${e.name}`).sort()).toEqual([
-      'berkeley Sage Murphy',
       'bonita Agatha Sosa',
       'bonita Peyton Moronez',
       'great-oak London Harvey',
@@ -115,9 +118,9 @@ describe('data/jv-profiles.json', () => {
       'harvard-westlake Katiya Chen',
     ]);
     expect(found.every(({ x }) => x.platform === 'hudl' && x.sport === undefined)).toBe(true);
-    // 41 JV players with a profile at 17 schools; Sage Murphy's Hudl page joins her SportsRecruits one.
-    expect(fileEntries).toHaveLength(41);
-    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(17);
+    // 35 JV players with a profile at 15 schools.
+    expect(fileEntries).toHaveLength(35);
+    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(15);
     expect(file.capturedAt).toBe('2026-11-13');
   });
 

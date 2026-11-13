@@ -131,7 +131,8 @@ lazily, one request per game, never in the scheduled run).
 and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb/react/team-roster/v1`,
 `roster/v1` and `team-roster/v2` all 404 **[V]**. The page's `__NEXT_DATA__` → `props.pageProps` carries
 `countData {teamId, sportSeasonId, athleteCount, staffCount}`, `schoolId`, `canonicalUrl` and
-`athleteData`: an array of **37-element positional arrays**, one per athlete — the same tuple encoding
+`athleteData`: an array of **38-element positional arrays** (37 until MaxPreps added `isClaimed`, between
+2026-11-10 and 2026-11-12), one per athlete — the same tuple encoding
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
 (`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
 
@@ -189,21 +190,31 @@ code is 1 when a team the run covered failed, or when a team outside the run los
 `--capture <dir>` saves every page read as `<dir>/roster-<slug>.html`, the fixture layout
 `--fixtures` and `tests/fixtures/maxpreps` use.
 
-The column names are MaxPreps' own **[V]**: the roster page component (build `77480dfe-046b5bf4`,
-`asset.maxpreps.io/_next/static/chunks/1x2mehrsrg-g8.js`, found via `_buildManifest.js` →
-`/team/roster`) does `deserializeArray(GSSP_ROSTER_SERIALIZE_KEYS, athleteData)` with
-`obj[KEYS[i]] = row[i]`. KEYS, verbatim:
+The column names are MaxPreps' own **[V]**: the roster page component does
+`deserializeArray(GSSP_ROSTER_SERIALIZE_KEYS, athleteData)` with `obj[KEYS[i]] = row[i]`. KEYS, verbatim, as
+recovered 2026-11-13 from build `9db88398-95010d6e` (`asset.maxpreps.io/_next/static/chunks/0fl_-9l0zjx0n.js`, one
+of the scripts the roster page loads; `_buildManifest.js` → `/team/roster` names only a loader stub now):
 
 ```
- 0 linkedAthlete       8 jersey            16 isCaptain          24 hasPhoto           32 formattedPositions
- 1 linkedParents       9 heightInches      17 isDeleted          25 rosterId           33 formattedName
- 2 canStartChat       10 heightFeet        18 photoUrl           26 schoolId           34 formattedHeight
- 3 accountInformation 11 weight            19 secondaryPhotoUrl  27 sportSeasonId      35 calculatedHeight
- 4 athleteId          12 position1         20 weightClass        28 sportSeasonName    36 formattedClassYear
- 5 firstName          13 position2         21 isPlayerOfTheGame  29 careerProfileId
- 6 lastName           14 position3         22 isFemale           30 createdOn
- 7 classYear          15 hasStats          23 bio                31 canonicalUrl
+ 0 linkedAthlete       8 jersey            16 isCaptain          24 hasPhoto           32 canonicalUrl
+ 1 linkedParents       9 heightInches      17 isDeleted          25 rosterId           33 formattedPositions
+ 2 canStartChat       10 heightFeet        18 photoUrl           26 schoolId           34 formattedName
+ 3 accountInformation 11 weight            19 secondaryPhotoUrl  27 sportSeasonId      35 formattedHeight
+ 4 athleteId          12 position1         20 weightClass        28 sportSeasonName    36 calculatedHeight
+ 5 firstName          13 position2         21 isPlayerOfTheGame  29 careerProfileId    37 formattedClassYear
+ 6 lastName           14 position3         22 isFemale           30 isClaimed
+ 7 classYear          15 hasStats          23 bio                31 createdOn
 ```
+
+**`isClaimed` (index 30) is new.** Build `77480dfe-046b5bf4` (chunk `1x2mehrsrg-g8.js`, recovered 2026-10-02)
+had the other 37 keys in the same order; every capture in `tests/fixtures/maxpreps` is in that layout. By
+2026-11-12 every roster read failed the row-length check, as designed, until the new list was recovered. A
+claimed row renders a "Claimed profile" badge after the player's name (an icon and a visually hidden
+`<span> Claimed profile</span>` inside the name link), which the table reader cuts from the name and
+holds to `isClaimed`. The adapter reads a row with the list of its own length (`ROSTER_LAYOUTS`: 38, or the
+2026-10 37) and throws on any other, or on a page mixing them; in the 38 layout `isClaimed` must be a
+boolean, which pins the shift. `tests/fixtures/maxpreps/roster-layout-2026-11-st-ignatius.html` is a capture in
+the current layout (St. Ignatius field hockey, 23 players, read 2026-11-13).
 
 Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
 - `isDeleted` rows are soft-deleted: the public table hides them (`useRosterAthletes` →
@@ -620,8 +631,9 @@ Charlotte Painter, Kasia Umholtz); and 16 FieldLevel pages from an address probe
 without one (`/fieldhockeywomen`, 1,773 addresses), which give a hometown but no class year or school.
 The same day every linked SportsRecruits profile (294, varsity and JV) was re-read: all answer, and one
 now shows a new commitment (McKenzie Rackleff's, §1.1j3). The SportsRecruits address probe was not
-repeated. The overlay then holds 897 profiles for 630 players, and `data/jv-profiles.json` 41 JV players
-at 17 schools.
+repeated. The same day's roster refresh put six JV-list players on their varsity rosters, Berkeley's Sage Murphy
+among them, so her Hudl page is on her varsity row: the overlay then holds 903 profiles for 634 players (78
+Hudl and 4 NCSA from this sweep), and `data/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
 
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
@@ -1564,7 +1576,7 @@ address probe (both ran whole on 2026-11-03) and name-by-name web searches (the 
 nothing published after Nov 5). Not reached: the Mercury News' and Marin IJ's feeds, several student papers,
 Harvard-Westlake's site and San Diego Prep Insider (HTTP 403 or no answer), college sites behind bot
 checks, Instagram. More signing news is likely: the Marin schools' commitment ceremonies and San Diego's
-county signing event (Nov 12) had not been posted.
+county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows): the 60 players that refresh added, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, were not searched for commitments or profiles.
 
 *Recall is partial.* On 2026-11-13, 38 of the 1,673 varsity rows have a commitment, at 23 of the 102
 schools (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19

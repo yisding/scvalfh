@@ -381,7 +381,8 @@ docs.google.com has never been read from Actions, so each file is only as curren
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
 from the 102 MaxPreps roster pages (every registry team, all nine leagues and the five independents; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
-season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
+season; run it by hand or weekly). The page encodes each athlete as a 38-element positional array (37 until
+MaxPreps added `isClaimed` in November 2026; the parser reads both layouts and nothing else), so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
 a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
@@ -409,7 +410,14 @@ alone (MaxPreps' career and earlier-season pages, then school athletics sites, p
 heights, numbers, positions and coaches are still not swept there. On 2026-10-07 `data/rosters.json`
 holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
 players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
-2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
+2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). On 2026-11-13
+every roster was read again (the roster reader had been failing since MaxPreps added a column; see DATA-SOURCES
+§1.1j): 1,803 players, on 90 of the 102 teams. The overlay was reconciled with it by hand that day: coaches had entered 48 of
+the grades it supplied, each the same value, so those notes went; four players' records changed (a name spelled
+differently, a jersey, a position, a grade), two rows left MaxPreps (one a duplicate whose record moved to the
+player's other row), one profile accepted only while a row had no grade was unlinked, and six JV-list players
+who joined their varsity rosters took their recruiting pages with them (the file's last note lists each). The
+76 rows MaxPreps added at the swept leagues have not been swept for clubs or commitments. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -455,11 +463,12 @@ Vista's Ruhee Bhatnagar, Santa Clara's Bintu Deen, Greenfield's Evelyn Jaimes, G
 whose page says "Evie Maclennan" and fits both of Glendora's Maclennan seniors, so it is linked on the
 owner's word, and Los Gatos' Colette von Klemperer, a row the school marks JV): 816 profiles for 588
 players. On 2026-11-13 every school's field hockey team rosters on Hudl (read through Hudl's public
-GraphQL endpoint) and NCSA's field hockey school pages for all 102 schools linked 77 Hudl and 4 NCSA pages
+GraphQL endpoint) and NCSA's field hockey school pages for all 102 schools linked 78 Hudl and 4 NCSA pages
 for varsity-file rows, each listing a field hockey team at, or naming, the player's school with a class
 year that agrees, and each re-read by an independent refuter (Christopher 15, University 15, Saint Francis
-13, Gilroy 9, Valley Christian 7, Convent 5, Mitty 5, St. Ignatius 4, Berkeley 4 and one each at Lynbrook,
-Bishop's, Marin Catholic and Pleasant Valley): 897 profiles for 630 players. The same day every linked
+13, Gilroy 9, Valley Christian 7, Convent 5, Mitty 5, St. Ignatius 4, Berkeley 5, one of them Sage Murphy,
+on the JV list when the sweep ran and on the varsity roster after the same day's roster refresh, and one each at
+Lynbrook, Bishop's, Marin Catholic and Pleasant Valley): 903 profiles for 634 players. The same day every linked
 SportsRecruits page was re-read (all answer). The claimed-MaxPreps read was not
 repeated (MaxPreps answered 403). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
@@ -499,10 +508,10 @@ school's own on a tie: 25 school lists and 23 MaxPreps lists are shown) and name
 count. A JV player's own recruiting pages are linked under their row, by the varsity rule
 (`data/jv-profiles.json`, `lib/jv/jv-profiles.ts`, joined on the name the shown list gives; a Los Gatos row
 the varsity overlay marks JV keeps its profiles there), and `/recruiting` lists those players after each
-school's varsity rows, marked "JV": on 2026-11-13, 41 JV players at 17 schools (33 SportsRecruits pages from an
-address probe of the 746 JV players on 2026-11-06, 32 of them lacrosse, one NCSA page, and eight Hudl pages from
-the 2026-11-13 sweep of the schools' Hudl team rosters, at Berkeley, Bonita, Great Oak and Harvard-Westlake), plus
-the three Los Gatos rows.
+school's varsity rows, marked "JV": on 2026-11-13, 35 JV players at 15 schools (27 SportsRecruits pages from the
+2026-11-06 address probe of the 746 JV players, 26 of them lacrosse, one NCSA page, and seven Hudl pages from the
+2026-11-13 sweep of the schools' Hudl team rosters, at Bonita, Great Oak and Harvard-Westlake; the pages of six JV
+players who joined their varsity rosters on 2026-11-13 moved to the varsity overlay), plus the three Los Gatos rows.
 JV players feed nothing else: not the clubs or the commitments. York, which plays
 Santa Catalina's PCAL JV slot, has no roster on MaxPreps (its JV roster page lists nobody) or york.org
 (a schedule only), so Santa Catalina's page has no JV roster.
@@ -1068,7 +1077,7 @@ commitment pages and the news since Nov 5, re-read every linked SportsRecruits p
 SportsRecruits' commits feed for program ids 1 to 1,044, matching all of it against every varsity row and
 JV player. It found McKenzie Rackleff's commitment, Phoebe Miller's signing and the five sources above; no
 field hockey program had posted a fall signing class, and no decommitment was found. The rest of the feed and
-the SportsRecruits address probe were not run (both ran whole on 2026-11-03).
+the SportsRecruits address probe were not run (both ran whole on 2026-11-03). The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows): the 60 players that refresh added, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, were not searched for commitments or profiles.
 
 **When a roster refetch breaks it.** `lib/players/commits.ts` throws at import, as `lib/players/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a

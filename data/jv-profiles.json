@@ -5,32 +5,10 @@
   "notes": [
     "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial.",
     "2026-11-06, SportsRecruits: an address probe for the JV players (the first_last slug, and a hyphen-free one for a hyphenated name, bare and with the suffixes 2 to 5, which hold 252 of the 261 SportsRecruits pages the varsity overlay links; 3,800 addresses, one at a time, waiting out SportsRecruits' HTTP 429s). 111 live pages were read and kept by the 2026-10-12 rule (title names the player, class year agrees with the JV grade or is 2027-2030 for a player with none, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all: 33 pages for 33 players (32 lacrosse, 1 field hockey). Not linked: men's lacrosse pages; pages with a class year and no school or place (Anna Shapiro, Cora Gallagher and Zoe Shetti at St. Ignatius, Emersyn Manion and Kaleigh Houghton at Saint Francis, Kieara Reno, Nina Wimmer) or a place and no class year (Ella Gunthermaher, Fair Oaks; Sophie McRae; Frankie Rivinus; a second Eva Walker); a class that disagrees (Lauren Chow, Isabella Park, Tessa Lambert's Utah page); and namesakes in other states or classes, several of them committed. No page linked shows a college commitment. Three of the Los Gatos pages it found (Beatrix Monk's, Casey Moorehouse's and Colette von Klemperer's) were already linked in data/rosters-enrichment.json.",
-    "2026-11-13, Hudl: every school's field hockey team rosters on Hudl were read through its public GraphQL endpoint (the one its public fan pages use) and matched against the JV lists. Eight JV players' public profiles list a field hockey team at their school and were linked, each re-read by an independent refuter: Berkeley's Sage Murphy (on Berkeley's JV team on Hudl; the page gives class of 2029 and names Berkeley High School), Great Oak's London Harvey (the page says London Rose Harvey, class of 2028), Bonita's Agatha Sosa and Peyton Moronez (the page gives no class year and names Bonita High School, La Verne), and Harvard-Westlake's Grace Eisner, Katiya Chen, Isabella Park and Karina Ferrie (on the school's JV and freshman teams). The varsity rows' Hudl and NCSA pages from the same sweep are in data/rosters-enrichment.json."
+    "2026-11-13: six JV-listed players joined their varsity rosters (Berkeley's Sage Murphy, Leland's Riley Salgado, Marin Catholic's Laurel and Scarlett Wu, Saint Francis's Quinn Gossett, Westview's Mia Essey), so their recruiting pages moved to data/rosters-enrichment.json; this file now links 28 pages.",
+    "2026-11-13, Hudl: every school's field hockey team rosters on Hudl were read through its public GraphQL endpoint (the one its public fan pages use) and matched against the JV lists. Seven JV players' public profiles list a field hockey team at their school and were linked, each re-read by an independent refuter: Great Oak's London Harvey (the page says London Rose Harvey, class of 2028), Bonita's Agatha Sosa and Peyton Moronez (the page gives no class year and names Bonita High School, La Verne), and Harvard-Westlake's Grace Eisner, Katiya Chen, Isabella Park and Karina Ferrie (on the school's JV and freshman teams). An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day, so her page is in data/rosters-enrichment.json with the varsity rows' Hudl and NCSA pages from the same sweep."
   ],
   "teams": [
-    {
-      "slug": "berkeley",
-      "players": [
-        {
-          "name": "Sage Murphy",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/sage_murphy",
-              "classOf": 2029,
-              "note": "SportsRecruits lacrosse profile: class of 2029, Berkeley, CA; it gives a hometown in the school's own area. The JV list gives no grade. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            },
-            {
-              "platform": "hudl",
-              "url": "https://www.hudl.com/profile/28118823",
-              "classOf": 2029,
-              "note": "On Berkeley High School's JV field hockey team on Hudl (BHS Girls JV Field Hockey); class of 2029; the roster row has no grade. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
-            }
-          ]
-        }
-      ]
-    },
     {
       "slug": "bonita",
       "players": [
@@ -165,23 +143,6 @@
       ]
     },
     {
-      "slug": "leland",
-      "players": [
-        {
-          "name": "Riley Salgado",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/riley_salgado",
-              "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, San Jose, CA (club: Alliance Lacrosse); it gives a hometown in the school's own area. Its bio says she is a varsity field hockey player; the team page's JV list has her (no grade). Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "slug": "lick-wilmerding",
       "players": [
         {
@@ -265,30 +226,6 @@
               "sport": "lacrosse"
             }
           ]
-        },
-        {
-          "name": "Laurel Wu",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/laurel_wu",
-              "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, Corte Madera, CA (club: STEPS California); it names Marin Catholic (her bio: a student at Marin Catholic). Its bio lists Marin Catholic varsity field hockey, 2026; the team page's JV list has her. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            }
-          ]
-        },
-        {
-          "name": "Scarlett Wu",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/scarlett_wu",
-              "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, Corte Madera, CA (club: STEPS California); it names Marin Catholic (her bio: a student at Marin Catholic). Its bio lists Marin Catholic varsity field hockey, 2026; the team page's JV list has her. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            }
-          ]
         }
       ]
     },
@@ -360,18 +297,6 @@
               "url": "https://iwlca.sportsrecruits.com/athlete/perry_george",
               "classOf": 2029,
               "note": "SportsRecruits lacrosse profile: class of 2029, Sunnyvale, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            }
-          ]
-        },
-        {
-          "name": "Quinn Gossett",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/quinn_gossett2",
-              "classOf": 2029,
-              "note": "SportsRecruits lacrosse profile: class of 2029, San Jose, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
               "sport": "lacrosse"
             }
           ]
@@ -556,18 +481,6 @@
     {
       "slug": "westview",
       "players": [
-        {
-          "name": "Mia Essey",
-          "profiles": [
-            {
-              "platform": "sportsrecruits",
-              "url": "https://iwlca.sportsrecruits.com/athlete/mia_essey",
-              "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
-              "sport": "lacrosse"
-            }
-          ]
-        },
         {
           "name": "Olivia Pineda",
           "profiles": [
