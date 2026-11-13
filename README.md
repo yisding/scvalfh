@@ -792,7 +792,8 @@ The rules:
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/players/clubs-schema.ts`),
-  and every URL is https.
+  and every URL is https. A club's official Instagram account is linked from its page, but it lives in
+  `data/instagram.json`, not here, and is never a source (see "Instagram accounts").
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
   page and "Listed club" on the roster; a `past` one reads "Earlier".
@@ -1097,6 +1098,27 @@ linking the player's row there. The gates know the
 page: `assert:prerender`, `assert-vinext-prerender.ts` and `smoke-server.sh` expect it among the
 fixed pages, and `a11y-axe.mjs` checks it.
 
+### Instagram accounts
+
+`data/instagram.json` holds the official Instagram account of each team's field hockey program and of each
+club in `data/clubs.json`, where one was found; the team page's Elsewhere row and the club page's link
+row link it ("Instagram"). These are links, not sources: the rule that social media is never a source
+(`BANNED_HOSTS`, under Clubs and College commitments) still holds, and nothing on the site is read
+from an account. An account is official only when a page that is not social media and is the owner's
+own links it: a club's account is linked from the club's own website (the loader checks the proof is on
+that site, `clubSiteKey`), a team's from its school's, district's or athletics department's site or the
+program's own site. A search result, a handle that looks right, or an account that says it is the team's is
+never enough, and Instagram itself is never read. A team's account is the field hockey program's own,
+never the school's or the athletics department's account for every sport, a booster club's, a club
+team's or a player's. Each record keeps its `proof` page and `proofWhat`, never rendered. No record
+means no page of the owner's linked an account when it was checked (`checkedOn`), not that there is none.
+
+The file is research, written by hand on 2026-11-13 (its `builtBy` and `notes` say how); nothing
+rewrites it. `lib/social/instagram.ts` validates it at import (lower-case handles, registry team and
+club slugs, each once, https proofs off social media, a club's on its own site), so a bad file fails
+`pnpm test` and the build (`tests/instagram-file.test.ts`). The soccer and basketball builds read
+empty files in `data/soccer/` and `data/basketball/` until their programs are researched.
+
 ## Code layout
 
 ```
@@ -1151,6 +1173,7 @@ sport definition). The rest is grouped by domain:
 | `players/` | rosters, player stats, clubs and college commitments |
 | `ratings/` | Elo and Elo-adjusted scoring |
 | `schools/` | school addresses, venues and mascots |
+| `social/` | teams' and clubs' official Instagram accounts |
 | `crosscheck/` | the si.com backfill and the cross-checks against si.com and cifsshome.org (build-time only, but for the `cifss-notes` leaf /about prints) |
 | `official/` | the official-fixtures bundles and their matching (build-time only) |
 | `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
@@ -1202,7 +1225,7 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles sixteen data files
+develop and build without ever calling a live upstream API. Every build bundles seventeen data files
 into its server code, each imported by its read module, so no server reads `data/` at run time:
 
 | File | Read by |
@@ -1221,6 +1244,7 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/ccs-bracket-2026.json` | `lib/postseason/ccs-bracket.ts` |
 | `data/sds-brackets-2026.json` | `lib/postseason/sds-bracket.ts` |
 | `data/schools.json` (each registry school's campus address, by slug) | `lib/schools/schools.ts` |
+| `data/instagram.json` (teams' and clubs' official Instagram accounts) | `lib/social/instagram.ts` |
 
 The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the

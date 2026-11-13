@@ -4,13 +4,15 @@ import { DATA_CORRECTIONS_URL } from '../layout/site';
 import ExternalLink from '../ui/ExternalLink';
 import { ordinal } from '../../lib/format';
 import { getHistorySeason } from '../../lib/history/history';
+import { getTeamInstagram, instagramUrl } from '../../lib/social/instagram';
 import type { Team } from '../../lib/types';
 import type { TeamPageParts } from './team-page-view';
 
 /**
  * The team page's Elsewhere block, last in the rail (DESIGN §33): one row of links to the team's
- * pages on MaxPreps and si.com, its league's official schedule where the league publishes one, and
- * the way to report an error; then last season in one line.
+ * pages on MaxPreps and si.com, its program's official Instagram account where data/instagram.json has
+ * one (an account its school's or its own site links: lib/social/instagram.ts), its league's official
+ * schedule where the league publishes one, and the way to report an error; then last season in one line.
  */
 export function TeamElsewhere({
   team,
@@ -26,6 +28,7 @@ export function TeamElsewhere({
   /** @deprecated The page has one column and a rail; ignored. */
   logOutweighs?: boolean;
 } & Pick<TeamPageParts, 'sblive' | 'history' | 'historySize' | 'historyScope'>) {
+  const instagram = getTeamInstagram(team.slug);
   return (
     <section className="sx-section" aria-labelledby="elsewhere-heading">
       <h2 id="elsewhere-heading">Elsewhere</h2>
@@ -48,6 +51,13 @@ export function TeamElsewhere({
           <li>
             <ExternalLink href={sblive} className="sx-action">
               SI.com
+            </ExternalLink>
+          </li>
+        ) : null}
+        {instagram ? (
+          <li>
+            <ExternalLink href={instagramUrl(instagram.handle)} className="sx-action">
+              Instagram
             </ExternalLink>
           </li>
         ) : null}
