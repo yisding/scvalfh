@@ -42,6 +42,9 @@ import {
   type SbliveGame,
   type SbliveSide,
 } from '../sources/sblive';
+import { isLevelWithWinner, mustHaveWinner } from '../postseason/level-final';
+import { excessOver } from '../results/result';
+import { postseasonTag } from '../classify';
 import { getTeamBySlug, unorderedPairKey } from '../teams';
 import type {
   BackfillProvenance,
@@ -337,6 +340,19 @@ function shootoutGroupName(section: SectionConfig): string {
 /** A level si.com score in a shootout section says nothing about who won, so no rule writes it. */
 function isUnusableLevelScore(g: Pick<Game, 'home' | 'away' | 'contestTypes'>, s: { home: number; away: number }): boolean {
   return s.home === s.away && shootoutSectionOf(g) !== null;
+}
+
+/**
+ * MaxPreps' level score with the winner marked, in a game that must have a winner, where si.com's score is that
+ * level score with goals added for the marked side (Mission Vista 4, Westview 3 where MaxPreps has 1-1: a 3-2
+ * shootout). The flags are then the result, not a contradiction, so rule 4a does not publish si.com's score:
+ * MaxPreps' goals in play stand, the cross-check keeps si.com's score on the game (rule 5), and
+ * lib/results/result.ts reads the tally from it. The postseason tag is not set yet at this step, so it is derived.
+ */
+function readsAsSettledLevelScore(g: Game, s: { home: number; away: number }): boolean {
+  if (g.home.score === null || !isLevelWithWinner(g.home, g.away)) return false;
+  if (!mustHaveWinner({ ...g, postseason: g.postseason ?? postseasonTag(g) })) return false;
+  return excessOver(g.home.score, s, g.home.result === 'W' ? 'home' : 'away') !== null;
 }
 
 /** 4b: matched its fixture only in pass 3, more than 7 days from the official date. */
@@ -720,7 +736,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         if (pick.kind === 'conflict') warnings.push(`si.com has ${pick.rows.length} different scores for ${label} near ${g.dateKey}; rule 4a not applied`);
         if (pick.kind === 'one') {
           const s = scoreFor(pick.row, g.home.slug, g.away.slug);
-          if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s)) {
+          if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s) && !readsAsSettledLevelScore(g, s)) {
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
             return overrideGame(g, pick.row, s, 'contradictory-result', 'MaxPreps’ score contradicts its own result flags, so si.com’s score is published.');

@@ -50,7 +50,7 @@ export function ConventionsSection({ shootoutSections }: { shootoutSections: rea
               source this site reads says how the tie was broken, so the row carries no decider tag. */}
           <li>
             {ALLOWS_TIES
-              ? 'A postseason game has to have a winner. One that MaxPreps lists as level and marks as won is counted as the marked team’s win in records and form; it shows MaxPreps’ level score with no decider tag, because MaxPreps does not say how the level score was broken.'
+              ? 'A postseason or tournament game that MaxPreps lists as level and marks as won was played to a winner: it is counted as the marked team’s win in records and form. The score shown is always the score in play. Where a second source records that level score with a shootout added (si.com’s 4–3 where MaxPreps has 1–1 is a 3–2 shootout), or a cited report gives it, the shootout is shown beside the score; where nothing says how the level score was broken, the game shows no decider tag and its page says so.'
               : 'A game cannot end level. One that MaxPreps lists as level and marks as won is counted as the marked team’s win; it shows the score as MaxPreps has it.'}
           </li>
           <li>

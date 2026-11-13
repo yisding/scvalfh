@@ -72,8 +72,8 @@ describe('settleLevelFinal', () => {
 
   it('leaves alone a regular-season game, an unmarked level final, a decided game, a forfeit and a game not final', () => {
     const untouched: Array<[string, Game]> = [
-      // Huntington Beach 0, Hockaday 0 (Aug 21): marked W and L at a tournament, in no postseason.
-      ['regular season', semifinal({ postseason: null, contestTypes: { home: 2, away: 2 } })],
+      // A level non-league game marked W and L outside a tournament: no rule says it needed a winner.
+      ['regular season', semifinal({ postseason: null, contestTypes: { home: 1, away: 1 } })],
       ['T and T', semifinal({ home: { ...semifinal().home, result: 'T' }, away: { ...semifinal().away, result: 'T' } })],
       ['no flags', semifinal({ home: { ...semifinal().home, result: null }, away: { ...semifinal().away, result: null } })],
       ['W and W', semifinal({ away: { ...semifinal().away, result: 'W' } })],
@@ -87,6 +87,20 @@ describe('settleLevelFinal', () => {
     }
     const list = untouched.map(([, g]) => g);
     expect(settleLevelFinals(list), 'the same array when nothing changes').toBe(list);
+  });
+
+  it('counts a tournament game marked W and L, and leaves one marked T and T a tie', () => {
+    // Huntington Beach 0, Hockaday 0 (Aug 21) and University 0, Gilroy 0 (Sep 12): contestType 2, marked W and L.
+    const marked = settleLevelFinal(semifinal({ postseason: null, contestTypes: { home: 2, away: 2 } }));
+    expect(marked.decider).toBe('SO');
+    expect(sideOutcome(marked, 'home')).toBe('W');
+    // Pool games end level: 22 of the 24 level tournament finals of 2026 are marked T and T.
+    const pool = semifinal({
+      postseason: null, contestTypes: { home: 2, away: 2 },
+      home: { ...semifinal().home, result: 'T' }, away: { ...semifinal().away, result: 'T' },
+    });
+    expect(settleLevelFinal(pool)).toBe(pool);
+    expect(sideOutcome(pool, 'home')).toBe('T');
   });
 
   it('runs in the classify step, so the standings count the win', () => {

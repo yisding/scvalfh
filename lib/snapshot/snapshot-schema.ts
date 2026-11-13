@@ -201,6 +201,14 @@ export const GameSchema = z
     forfeitBy: z.enum(['home', 'away']).nullable(),
     decider: decider.nullable(),
     shootout: z.object({ home: z.number().int(), away: z.number().int() }).nullable(),
+    result: z
+      .object({
+        winner: z.enum(['home', 'away']).nullable(),
+        ending: z.enum(['regulation', 'overtime', 'shootout', 'forfeit', 'unstated']),
+        certainty: z.enum(['confirmed', 'reported', 'inferred', 'disputed']),
+        basis: z.string().min(1).optional(),
+      })
+      .optional(),
     bracket: GameBracketSchema.optional(),
     venue: z.object({
       text: z.string().nullable(),
@@ -233,6 +241,17 @@ export const GameSchema = z
         })
         .optional(),
       backfill: backfillProvenance.optional(),
+      cifssScore: z.object({ home: z.number().int(), away: z.number().int(), url: httpUrl }).optional(),
+      shootoutSource: z
+        .object({ source: z.enum(['sblive', 'cifss']), score: z.object({ home: z.number().int(), away: z.number().int() }) })
+        .optional(),
+      resultCorrection: z
+        .object({
+          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), otPeriods: z.number().int().min(0) }),
+          source: z.string().min(1),
+          url: httpUrl.nullable(),
+        })
+        .optional(),
       sectionSheet: z.object({ rule: z.enum(['absent-game', 'score-pending']), note: z.string().min(1) }).optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
@@ -262,6 +281,8 @@ export const GameSchema = z
   // 4. Shootout data only with decider === 'SO' (an EAL 1 v 1 win is 'SO' with no stored tally).
   .refine((g) => g.shootout === null || g.decider === 'SO', 'shootout data without decider SO')
   .refine((g) => g.isOt === g.otPeriods > 0, 'isOt/otPeriods mismatch')
+  // A recorded result only on a final.
+  .refine((g) => g.result === undefined || g.status === 'final', 'a result on a game that is not final')
   .refine((g) => g.dateKey === g.dateLocal.slice(0, 10), 'dateKey does not match dateLocal');
 
 // ---------------------------------------------------------------- standings

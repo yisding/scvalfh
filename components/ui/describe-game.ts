@@ -30,9 +30,13 @@ import {
   leagueOfDivision,
 } from '../../lib/leagues';
 import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
+import { resolveResult } from '../../lib/results/result';
+import { shootoutRuleSectionOf, shootoutSectionOf } from '../../lib/results/section-rule';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 import type { SourceMark } from './source-mark';
+
+export { shootoutRuleSectionOf, shootoutSectionOf };
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
@@ -281,20 +285,6 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
 }
 
 /**
- * The section both sides are teams of when it ends a level varsity game with a shootout
- * (SectionConfig.shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout), else null.
- * The same rule lib/pipeline/normalize.ts writes decider 'SO' by. An 'SO' game without one is a level final in a
- * game that had to have a winner (lib/postseason/level-final.ts); `tiebreakRuleOf` words both.
- */
-export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionConfig | null {
-  const home = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
-  const away = game.away.slug ? getTeamBySlug(game.away.slug) : undefined;
-  if (!home || !away || home.section !== away.section) return null;
-  const section = getSection(home.section);
-  return section.shootout ? section : null;
-}
-
-/**
  * What shootout copy calls the teams a section's rule covers: the section's one covered league when it
  * has just one ('EAL': every EAL string has always said "the EAL’s rules", "two EAL teams"), else the
  * section ('San Diego Section': its rule covers the City, North County and Metro conferences alike, and
@@ -317,19 +307,6 @@ export function shootoutCitationParts(citation: string): { source: string; proce
   const m = /^(.*?) \((.*)\)$/.exec(citation);
   if (!m) return { source: citation, procedure: null };
   return { source: m[1], procedure: m[2].replace(/^one /, 'a ') };
-}
-
-/**
- * The section whose shootout rule covers this game: `shootoutSectionOf`, unless the game is a tournament
- * row (contestType 2 on either side) and the rule does not reach tournaments (SectionConfig.shootout.
- * coversTournaments false: the SDFHOA procedures cover the regular season and the playoffs only). The
- * same rule lib/pipeline/normalize.ts reads 'SO' by.
- */
-export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contestTypes'>): SectionConfig | null {
-  const section = shootoutSectionOf(game);
-  if (!section?.shootout) return null;
-  const tournament = game.contestTypes?.home === 2 || game.contestTypes?.away === 2;
-  return tournament && !section.shootout.coversTournaments ? null : section;
 }
 
 /**
@@ -382,17 +359,17 @@ export function overtimeInDoubt(game: Game): boolean {
  *    sections: lib/postseason/level-final.ts): the sport's own tiebreak (`SPORT_TIEBREAK_WORDS`: 'a shootout',
  *    soccer's 'penalty kicks'), 'unverified', because the feed marks the winner and says nothing of how.
  *
- * Either way a stored tally, or a score from the San Diego Section's own bracket sheet ("1-1 (2-1 SO)"),
- * confirms the tiebreak: 'verified'.
+ * Whether the tiebreak is established is the recorded result's call (lib/results/result.ts `resolveResult`, ending
+ * 'shootout'): a stored tally, the San Diego Section's own bracket sheet ("1-1 (2-1 SO)"), a second source that
+ * records the level score with the one goal a shootout winner is credited (Escondido 0, El Capitan 0: si.com and
+ * cifsshome.org both have 1-0), or a section whose box scores show it (the EAL). Anything else is 'unverified'.
  */
-export function tiebreakRuleOf(
-  game: Pick<Game, 'home' | 'away' | 'provenance' | 'shootout'>,
-): { words: string; inference: ShootoutInference; section: SectionConfig | null } {
+export function tiebreakRuleOf(game: Game): { words: string; inference: ShootoutInference; section: SectionConfig | null } {
   const section = shootoutSectionOf(game);
-  const confirmed = game.shootout !== null || game.provenance.scores === 'cifsds-sheet';
   return {
     words: section?.shootout?.words ?? SPORT_TIEBREAK_WORDS,
-    inference: confirmed ? 'verified' : (section?.shootout?.inference ?? 'unverified'),
+    // The recorded result is the one judge of whether the tiebreak is established (lib/results/result.ts).
+    inference: resolveResult(game)?.ending === 'shootout' ? 'verified' : 'unverified',
     section,
   };
 }
@@ -491,7 +468,8 @@ export function describeGame(game: Game, perspective?: Perspective | null): Game
         deciderTag,
         shootoutLabel: shootoutLabelFor(game, deciderTag),
         shootoutText: view.shootout
-          ? `(${view.shootout.home}${EN_DASH}${view.shootout.away} ${SPORT_TIEBREAK_TAG})`
+          ? // Winner's count first, as a shootout is always quoted ('(3–2 SO)'), whichever side is home.
+            `(${Math.max(view.shootout.home, view.shootout.away)}${EN_DASH}${Math.min(view.shootout.home, view.shootout.away)} ${SPORT_TIEBREAK_TAG})`
           : null,
         showScores: true,
         home: sideView(

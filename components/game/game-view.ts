@@ -80,11 +80,13 @@ import {
   resultSentence,
   shootoutCitationParts,
   shootoutGroupName,
-  shootoutSectionOf,
+  shootoutRuleSectionOf,
   type GameDisplay,
   type SideView,
 } from '../ui/describe-game';
 import { capitalized } from '../words/capitalized';
+import { SCORE_UNITS } from '../words/score-words';
+import { otherScores, resolveResult } from '../../lib/results/result';
 import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 // ---------------------------------------------------------------- types
@@ -708,7 +710,8 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     const label = slot ? `${league.shortName} ${ROUND_WORD[slot.round]}` : league.postseason.name;
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
     const notes = [sentence];
-    const shootout = slot?.note ?? (mayHideShootout(game) ? SHOOTOUT_NOTE : null);
+    // A game recorded from a cited correction says so in its score note (scoreNoteFor), once.
+    const shootout = game.provenance.resultCorrection ? null : (slot?.note ?? (mayHideShootout(game) ? SHOOTOUT_NOTE : null));
     if (shootout) notes.push(shootout);
     return {
       contextLabel: label,
@@ -802,21 +805,45 @@ function scoreNoteFor(
   away: GameSideModel,
   home: GameSideModel,
 ): string | null {
-  const section = shootoutSectionOf(game);
+  // The section whose rule reaches THIS game: a tournament game between two San Diego teams has none.
+  const section = shootoutRuleSectionOf(game);
   const notes: string[] = [];
   const level = `${display.home.glyph}\u2013${display.away.glyph}`;
+  const result = resolveResult(game);
+  // What the record rests on, where a second source or a correction is part of it (lib/results/result.ts).
+  const evidence =
+    result?.basis && (otherScores(game).length > 0 || game.provenance.shootoutSource || game.provenance.resultCorrection)
+      ? `${capitalized(result.basis)}.`
+      : null;
+  const established = result?.ending === 'shootout';
+  if (display.kind === 'final' && game.decider === 'SO' && game.shootout !== null && evidence) {
+    // A tally this site read from a second source or took from a correction: say where each number is from.
+    notes.push(`${evidence} This site shows the ${SCORE_UNITS} in play, ${level}, and the tally apart.`);
+  }
   if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null && !section?.shootout) {
     // No section rule reaches this game: it is level with the winner marked in a game that had to have one
-    // (lib/postseason/level-final.ts). The feed says who won and nothing of how, so neither does this note.
+    // (lib/postseason/level-final.ts).
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
+      const how = established
+        ? ''
+        : evidence
+          ? ''
+          : '; MaxPreps does not say how the tie was broken';
       notes.push(
         !SPORT.scoring.allowsTies
           ? `MaxPreps lists a level ${level} score and marks ${winner} the winner. A ${SPORT.noun} game cannot end level, so one of the two numbers is wrong; this site shows the score as MaxPreps has it and counts the game as ${winner}\u2019s win.`
-          : `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A postseason game has to have a winner, so this site counts it as ${winner}\u2019s win; MaxPreps does not say how the tie was broken.`,
+          : game.postseason
+            ? `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A postseason game has to have a winner, so this site counts it as ${winner}\u2019s win${how}.`
+            : `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A tournament game marked that way was played to a winner, so this site counts it as ${winner}\u2019s win${how}.`,
       );
+      if (evidence) notes.push(evidence);
     }
+  }
+  if (display.kind === 'final' && game.decider !== 'SO' && result?.certainty === 'disputed' && otherScores(game).length > 0 && result.basis) {
+    // Another source records a different winner, or a winner where this is a tie.
+    notes.push(`${capitalized(result.basis)}.`);
   }
   const doubt = overtimeDoubtOf(game);
   if (!section?.shootout) return notes.length > 0 ? notes.join(' ') : null;
@@ -828,7 +855,7 @@ function scoreNoteFor(
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
       // A score from the Section's own bracket sheet confirms the shootout ("2-2 (SO)"): the verified wording.
-      if (section.shootout.inference === 'unverified' && game.provenance.scores !== 'cifsds-sheet') {
+      if (!established) {
         // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
@@ -838,13 +865,13 @@ function scoreNoteFor(
         const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
         notes.push(
           `MaxPreps lists ${display.home.glyph}\u2013${display.away.glyph} with no tally and marks ${winner} the winner; a level ${group} varsity game${scope} goes to a sudden-victory period and then ${section.shootout.words} (${source}), so this site counts it as ${winner}\u2019s win.${
-            section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
+            evidence ? ` ${evidence}` : section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
           }`,
         );
       } else {
         const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
         notes.push(
-          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
+          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.${evidence ? ` ${evidence}` : ''}`,
         );
       }
     }

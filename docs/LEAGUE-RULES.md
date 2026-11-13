@@ -46,39 +46,75 @@ Places use standard competition ranking: two teams sharing 3rd are both 3rd and 
 
 ## How a game's result is read: overtime, shootouts and level scores
 
-Every W, L and T on the site comes from one function (`sideOutcome`, `lib/format.ts`), and the stored
-`decider` says how a final ended: `REG`, `OT`, `2OT` (two or more overtime periods; `otPeriods` keeps the
-count), `SO` (level on the scoreboard, won by the side the source marks) or `FORFEIT`. The cases, in the
-order they are decided:
+Every final carries a recorded result, `Game.result` (`lib/types.ts` GameResult), decided in one place
+(`lib/results/result.ts`) and stored in the snapshot:
 
-| A final that is… | Counts as | Shown as | Where |
-|---|---|---|---|
-| a forfeit | the win and the loss; no goals for or against | `F` | `lib/pipeline/normalize.ts` |
-| decided on goals in regulation | the score | the score | |
-| decided on goals in overtime | the score: an overtime win is a full win | `OT`, `2 OT`; in basketball `3 OT` and up; in soccer always `OT` (its overtime is two halves, never counted) | `deciderTagFor` |
-| level, between two teams of a section whose rule ends every level varsity game with a shootout (the EAL; the San Diego Section outside a tournament), marked W and L | the marked side's win | EAL: `SO`, "won on 1 v 1s". San Diego: no tag, "credited with the win" (the shootout is not confirmed by any source) | `normalize.ts`, `SectionConfig.shootout` |
-| level, in a **postseason game** of any section, marked W and L | the marked side's win: a postseason game has to have a winner | no tag, "credited with the win"; with a tally from a source (the San Diego Section's bracket sheet), `(2–1 SO)` | `lib/postseason/level-final.ts`, from the classify step |
-| level, in **basketball**, marked W and L | the marked side's win: a basketball game cannot end level, so the score is entered wrong | the score as MaxPreps has it, "credited with the win" | `lib/postseason/level-final.ts` |
-| level, regular season, anywhere else, marked W and L (a tournament game settled by a shootout, most likely) | a tie: no rule this site has read says the game needed a winner | the level score; the game page prints MaxPreps' flags as a contradiction | `resultConflict` |
-| level, marked T and T or not marked | a tie | the level score (`OT` if a period was played) | |
-| a tournament game whose shootout MaxPreps stored as goals (MCAL: Tamalpais 3-1 Marin Catholic was 0-0) | the stored score | the score, with a caveat or a sourced sentence | `mayHideShootout`, `resultNotes` |
+- **winner**: home, away, or nobody (a tie). Every W, L and T on the site is this (`sideOutcome`).
+- **ending**: `regulation`, `overtime`, `shootout`, `forfeit`, or `unstated` (level in play, one side credited
+  the win, and no source says how the level score was broken).
+- **certainty**: `confirmed` (an official sheet, a cited correction, or a second source that corroborates it),
+  `reported` (one source, nothing contradicts it: nearly every game), `inferred` (read from a rule or from
+  two sources' scores, and the basis says which), `disputed` (another source records a different outcome, or
+  MaxPreps' flags contradict its own score).
+- **basis**: one sentence on what the record rests on, printed on the game page.
 
-The postseason row is new on 2026-11-13. Saint Francis 1, Archbishop Mitty 1 (CCS Division 1 semifinal, Nov
-11, 2026) is marked W for Saint Francis, who play the final; the 2025 semifinal Willow Glen 1, Stevenson 1 had
-the same shape. Read as its score, the game was a tie in both teams' records and form while the bracket
-advanced Saint Francis, and Mitty's record disagreed with MaxPreps' (17-4-1 here, 17-5-0 there). The CCS's own
-tie procedure for a playoff game was not read (cifccs.org refused the request for its bylaws) [U], so the copy says only
-that MaxPreps credits the win and does not say how the tie was broken. Goals stay as recorded (1 and 1), so
-goal difference and the ratings, which fit goals, see a level game.
+The score a game shows is always the score in play (regulation plus overtime): `home.score` / `away.score`.
+A tiebreak tally is kept apart in `shootout`, the overtime periods in `otPeriods`, so goals for and against,
+goal difference and the ratings never count a shootout as goals.
 
-An overtime record the rule cannot give is shown without its overtime tag and explained on the game page
-(`overtimeDoubtOf`, `components/ui/describe-game.ts`). That applies to a regular-season game between two teams of
-a section that plays one sudden-victory period and then a shootout: more than one period recorded (Pleasant
-Valley 1, Chico 0, Sep 2: three), or one period and more than a goal between the sides (Corning 2, Bella Vista
-0, Oct 5). Either may be a shootout win stored as goals. Everywhere else MaxPreps' count stands. A coach's note
-that says overtime where MaxPreps records none is believed (`overtimeFromNote`), with the count it names
-("3OT", "triple overtime"); in field hockey only on a level or one-goal score, since its overtime is sudden
-victory, and in soccer and basketball on any score.
+**How sources write a game settled after a level score** (read on the 2026 data):
+
+| Source | Writes | Example |
+|---|---|---|
+| MaxPreps | the level score, one side marked W and the other L, no tally | Escondido 0, El Capitan 0, Escondido W |
+| MaxPreps | or the shootout tally as the score of a regulation game | Tamalpais 3, Marin Catholic 1 (it was 0-0) |
+| si.com, cifsshome.org | the level score plus one goal for the winner, as the San Diego officials' procedure credits it | Escondido 1-0 |
+| si.com, cifsshome.org | or the level score plus the whole tally | Vista 3-2 where MaxPreps has 0-0; Mission Vista 4-3 where MaxPreps has 1-1 |
+| San Diego Section bracket sheet | the score and the shootout apart | "1-1 (2-1 SO)" |
+| a press report | everything | "scoreless after regulation and two overtimes … won 3-1 in the shootout" |
+
+**What the site records**, in the order it is decided (`finalizeResults`, the pipeline's step 11c, and again
+when a stored snapshot is loaded):
+
+| A final that is… | Recorded as | Shown as |
+|---|---|---|
+| named in `DATA_QUALITY.resultCorrections` (a cited report) | the goals in play, overtime and tally the source gives; MaxPreps' version kept in `provenance.resultCorrection`; `confirmed` | 0–0 `(3–1 SO)`, with the citation |
+| a forfeit | the win and the loss; no goals for or against | `F` |
+| decided on goals | `regulation` or `overtime`; an overtime win is a full win | `OT`, `2 OT`; basketball `3 OT` and up; soccer always `OT` |
+| level, between two teams of a section whose rule ends every level varsity game with a shootout (the EAL; the San Diego Section outside a tournament), marked W and L | the marked side's win | EAL: `SO` (`inferred` from the rule and its box scores). San Diego: see the next three rows |
+| level, marked W and L, in a **postseason** game, a **tournament** game (MaxPreps' contestType 2), or any **basketball** game | the marked side's win (`lib/postseason/level-final.ts`): the game was played to a winner | see the next three rows |
+| …and a second source records the level score **plus one goal** for the winner | `shootout`, `confirmed`, no tally | `SO`, "won in a shootout" |
+| …and a second source records the level score **plus a tally** (both sides raised) | `shootout`, `inferred`, the tally stored with its source (`provenance.shootoutSource`) | 1–1 `(3–2 SO)` |
+| …and nothing else, or a second score that may be a tally or another score (2-0 where MaxPreps has 0-0) | `unstated`, `reported` | the level score, no tag, "credited with the win"; the page says what each source has |
+| level, marked W and L, in any other regular-season game | a tie, `disputed`; where si.com has a decisive score, that score is published instead (D2 rule 4a) | the level score; the page prints MaxPreps' flags |
+| level, marked T and T or unmarked | a tie; `disputed` if another source gives a winner (Westview 0, Poway 0, Aug 22: cifsshome.org has 1-0) | the level score (`OT` if a period was played) |
+| any score another source records with a different winner | the published score, `disputed` | the score; the page names the other source's |
+
+A tournament game marked T and T stays a tie: pool games end level, and 22 of the 24 level tournament finals of
+2026 are marked that way. A tournament game marked W and L was played to a winner (owner decision, 2026-11-13).
+
+On 2026-11-13 the field hockey snapshot's 963 finals record as 943 reported in play, 2 forfeits, 7 shootouts
+(3 confirmed, 4 inferred), 9 unstated and 2 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
+1 (CCS semifinal, Nov 11) was a tie in both teams' records while the bracket advanced Saint Francis; Huntington
+Beach 0, Hockaday 0 and University 0, Gilroy 0 were ties; Mission Vista–Westview was published as si.com's 4-3
+and is now 1–1 with a 3–2 shootout; Tamalpais–Marin Catholic was 3-1 and is now 0–0 after two overtimes with a
+3–1 shootout; Vista–Escondido gained its 3–2 tally from cifsshome.org; Escondido–El Capitan and Canyon Crest
+Academy–Rancho Bernardo are confirmed shootouts. Each team's record now equals MaxPreps' where it had differed
+on these games. The CCS's own tie procedure for a playoff game was not read (cifccs.org refused the request for
+its bylaws) [U], which is why the Saint Francis game says only that MaxPreps credits the win.
+
+To record a result from a better source, add the contest to `resultCorrections` in
+`lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)
+and the citation; the next load applies it and recomputes the two teams' records.
+
+**Overtime.** An overtime record the rule cannot give is shown without its overtime tag and explained on the
+game page (`overtimeDoubtOf`, `components/ui/describe-game.ts`). That applies to a regular-season game between
+two teams of a section that plays one sudden-victory period and then a shootout: more than one period recorded
+(Pleasant Valley 1, Chico 0, Sep 2: three), or one period and more than a goal between the sides (Corning 2,
+Bella Vista 0, Oct 5). Either may be a shootout win stored as goals. Everywhere else MaxPreps' count stands. A
+coach's note that says overtime where MaxPreps records none is believed (`overtimeFromNote`), with the count it
+names ("3OT", "triple overtime"); in field hockey only on a level or one-goal score, since its overtime is
+sudden victory, and in soccer and basketball on any score.
 
 ---
 

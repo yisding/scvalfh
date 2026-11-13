@@ -1,0 +1,232 @@
+/**
+ * The recorded result of a final (lib/results/result.ts): every way a game ends, and what each second source's
+ * score does to the record. The scenes are 2026 games, with the scores the sources carried on 2026-11-13.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import { describeGame, resultSentence, tiebreakRuleOf } from '../components/ui/describe-game';
+import { sideOutcome } from '../lib/format';
+import {
+  applyResultCorrection, correctionProblems, excessOver, finalizeResult, finalizeResults, readExcess, resolveResult, unfoldShootout,
+} from '../lib/results/result';
+import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import type { DataQualityConfig } from '../lib/league-config/shape';
+import { loadSnapshot } from '../lib/snapshot/snapshot-load';
+import type { Game } from '../lib/types';
+import { game } from './game-builder';
+import { readFileSync } from 'node:fs';
+
+const CIFSS_URL = 'https://www.cifsshome.org/widget/schedule-score?section_id=3';
+const cifss = (home: number, away: number) => ({ cifss: { home, away }, cifssUrl: CIFSS_URL });
+const withSblive = (g: Game, home: number, away: number): Game => ({
+  ...g,
+  provenance: { ...g.provenance, scoreConflict: { sblive: { home, away }, note: 'Sources disagree.' } },
+});
+const MARKED_HOME = { home: 'W', away: 'L' } as const;
+
+describe('a plain final', () => {
+  it('is its score, reported, with no basis to print', () => {
+    expect(finalizeResult(game({ home: 'homestead', away: 'cupertino', hs: 3, as: 1 })).result).toEqual({ winner: 'home', ending: 'regulation', certainty: 'reported' });
+    expect(finalizeResult(game({ home: 'homestead', away: 'cupertino', hs: 1, as: 2, ot: 1 })).result).toEqual({ winner: 'away', ending: 'overtime', certainty: 'reported' });
+    // One sudden-victory period and still level: a tie after overtime.
+    expect(finalizeResult(game({ home: 'homestead', away: 'cupertino', hs: 1, as: 1, ot: 1 })).result).toEqual({ winner: null, ending: 'overtime', certainty: 'reported' });
+    expect(finalizeResult(game({ home: 'homestead', away: 'cupertino', hs: 0, as: 0 })).result).toEqual({ winner: null, ending: 'regulation', certainty: 'reported' });
+  });
+
+  it('is a forfeit when MaxPreps marks one', () => {
+    expect(finalizeResult(game({ home: 'homestead', away: 'cupertino', hs: 1, as: 0, forfeit: true })).result).toMatchObject({ winner: 'home', ending: 'forfeit' });
+  });
+
+  it('has no result until it is final, and loses a stale one', () => {
+    const scheduled = game({ home: 'homestead', away: 'cupertino' });
+    expect(resolveResult(scheduled)).toBeNull();
+    expect(finalizeResult(scheduled)).toBe(scheduled);
+    const stale: Game = { ...scheduled, result: { winner: 'home', ending: 'regulation', certainty: 'reported' } };
+    expect(finalizeResult(stale).result).toBeUndefined();
+  });
+
+  it('always agrees with sideOutcome, and finalizing twice changes nothing', () => {
+    const games = [
+      game({ home: 'homestead', away: 'cupertino', hs: 3, as: 1 }),
+      game({ home: 'chico', away: 'davis', hs: 1, as: 1, results: MARKED_HOME }),
+      game({ home: 'escondido', away: 'el-capitan', hs: 0, as: 0, league: false, results: MARKED_HOME }),
+    ];
+    const once = finalizeResults(games);
+    for (const g of once) {
+      const o = sideOutcome(g, 'home');
+      expect(g.result?.winner).toBe(o === 'W' ? 'home' : o === 'L' ? 'away' : null);
+    }
+    expect(finalizeResults(once)).toBe(once);
+  });
+});
+
+describe('a second source’s score against a level score with the winner marked', () => {
+  it('reads what was added to the level score', () => {
+    expect(excessOver(0, { home: 1, away: 0 }, 'home')).toEqual({ home: 1, away: 0 });
+    expect(readExcess({ home: 1, away: 0 })).toBe('credited-goal');
+    expect(readExcess({ home: 3, away: 2 })).toBe('tally');
+    expect(readExcess({ home: 0, away: 2 })).toBe('unclear');
+    // Lower on a side, level, or the other team ahead: not this game's level score with goals added.
+    expect(excessOver(1, { home: 0, away: 2 }, 'away')).toBeNull();
+    expect(excessOver(1, { home: 2, away: 2 }, 'home')).toBeNull();
+    expect(excessOver(0, { home: 0, away: 1 }, 'home')).toBeNull();
+    expect(readExcess(null)).toBeNull();
+  });
+
+  // Escondido 0, El Capitan 0 (Sep 1), Escondido marked W: si.com and cifsshome.org both record 1-0.
+  it('confirms the shootout when it is the level score plus the one credited goal', () => {
+    const base = game({ home: 'escondido', away: 'el-capitan', hs: 0, as: 0, league: false, date: '2026-09-01', results: MARKED_HOME });
+    expect(resolveResult(base), 'San Diego, MaxPreps alone: the win is credited, the shootout not asserted').toMatchObject({ ending: 'unstated', certainty: 'reported' });
+    const g = finalizeResult(withSblive(base, 1, 0), { cifss: cifss(1, 0) });
+    expect(g.shootout, 'a credited goal is not a tally').toBeNull();
+    expect(g.result).toEqual({
+      winner: 'home',
+      ending: 'shootout',
+      certainty: 'confirmed',
+      basis: 'MaxPreps lists 0-0 and marks Escondido the winner; si.com and cifsshome.org record 1-0, the level score with the one goal a shootout winner is credited',
+    });
+    // The views now say what the record says: the tag, and "in a shootout".
+    expect(tiebreakRuleOf(g).inference).toBe('verified');
+    expect(describeGame(g).deciderTag).toBe('SO');
+    expect(describeGame(g).sentence).toBe('Escondido 0, El Capitan 0, final; Escondido won in a shootout.');
+  });
+
+  // Vista 0, Escondido 0 (Oct 5), Vista marked W: cifsshome.org records Vista 3, Escondido 2.
+  it('records the tally when both sides are raised, and keeps the goals in play', () => {
+    const base = game({ home: 'vista', away: 'escondido', hs: 0, as: 0, date: '2026-10-05', results: MARKED_HOME });
+    const g = finalizeResult(base, { cifss: cifss(3, 2) });
+    expect([g.home.score, g.away.score]).toEqual([0, 0]);
+    expect(g.shootout).toEqual({ home: 3, away: 2 });
+    expect(g.provenance.shootoutSource).toEqual({ source: 'cifss', score: { home: 3, away: 2 } });
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'shootout', certainty: 'inferred' });
+    expect(describeGame(g).shootoutText).toBe('(3–2 SO)');
+    expect(resultSentence(g)).toContain('in a shootout (3–2) after a 0–0 tie');
+  });
+
+  // Mt. Carmel 0, Poway 0 (Sep 11), Mt. Carmel marked W: cifsshome.org records 2-0.
+  it('records only the difference when the score may be a tally or another score', () => {
+    const base = game({ home: 'poway', away: 'mt-carmel', hs: 0, as: 0, league: false, date: '2026-09-11', results: { home: 'L', away: 'W' } });
+    const g = finalizeResult(base, { cifss: cifss(0, 2) });
+    expect(g.shootout).toBeNull();
+    expect(g.result).toMatchObject({ winner: 'away', ending: 'unstated', certainty: 'reported' });
+    expect(g.result?.basis).toContain('cifsshome.org records 2-0, which may be a tally or another score');
+    expect(describeGame(g).deciderTag).toBeNull();
+  });
+
+  it('records no tally when two sources give different ones', () => {
+    const base = game({ home: 'vista', away: 'escondido', hs: 0, as: 0, results: MARKED_HOME });
+    const g = unfoldShootout({ ...withSblive(base, 4, 3), provenance: { ...withSblive(base, 4, 3).provenance, cifssScore: { home: 3, away: 2, url: CIFSS_URL } } });
+    expect(g.shootout).toBeNull();
+  });
+
+  // Westview 0, Poway 0 (Aug 22, a tournament), marked T and T: cifsshome.org records Westview 1-0.
+  it('marks a result disputed when another source names a different outcome', () => {
+    const tie = game({ home: 'westview', away: 'poway', hs: 0, as: 0, league: false, contestTypes: { home: 2, away: 2 } });
+    const g = finalizeResult(tie, { cifss: cifss(1, 0) });
+    expect(g.result).toEqual({
+      winner: null,
+      ending: 'regulation',
+      certainty: 'disputed',
+      basis: 'cifsshome.org records Westview 1, Poway 0, a different outcome; the published score stands',
+    });
+    // The same winner on another score is a difference, not a dispute.
+    const won = finalizeResult(game({ home: 'westview', away: 'poway', hs: 4, as: 0 }), { cifss: cifss(3, 0) });
+    expect(won.result).toEqual({ winner: 'home', ending: 'regulation', certainty: 'reported' });
+  });
+
+  it('drops a cifsshome.org score once the cross-check no longer lists it', () => {
+    const base = game({ home: 'westview', away: 'poway', hs: 4, as: 0 });
+    const had = finalizeResult(base, { cifss: cifss(3, 0) });
+    expect(had.provenance.cifssScore).toEqual({ home: 3, away: 0, url: CIFSS_URL });
+    expect(finalizeResult(had).provenance.cifssScore).toBeUndefined();
+  });
+});
+
+describe('a tournament game settled after a level score', () => {
+  // Mission Vista 1, Westview 1 (Oct 17, contestType 2), Mission Vista marked W: si.com records 4-3.
+  const base = game({
+    home: 'westview', away: 'mission-vista', hs: 1, as: 1, league: false, date: '2026-10-17',
+    contestTypes: { home: 2, away: 2 }, results: { home: 'L', away: 'W' },
+  });
+
+  it('counts the marked win and reads the 3-2 shootout out of si.com’s 4-3', () => {
+    const g = finalizeResult(withSblive(base, 3, 4));
+    expect(g.decider).toBe('SO');
+    expect([g.home.score, g.away.score]).toEqual([1, 1]);
+    expect(g.shootout).toEqual({ home: 2, away: 3 });
+    expect(g.result).toEqual({
+      winner: 'away',
+      ending: 'shootout',
+      certainty: 'inferred',
+      basis: 'MaxPreps lists 1-1 and marks Mission Vista the winner; si.com records 4-3, the level score with the tally added',
+    });
+    expect(describeGame(g, 'mission-vista').perspectiveOutcome).toBe('W');
+    // The tally is quoted winner's count first, whichever side is home, and the sentence names who won it.
+    expect(describeGame(g).shootoutText).toBe('(3–2 SO)');
+    expect(describeGame(g).sentence).toBe('Westview 1, Mission Vista 1, final; Mission Vista won in a shootout, 3–2.');
+  });
+
+  it('with no second source, counts the win and says no source states how', () => {
+    const g = finalizeResult(base);
+    expect(g.result).toMatchObject({ winner: 'away', ending: 'unstated', certainty: 'reported' });
+  });
+});
+
+describe('a result recorded from a better source (DATA_QUALITY.resultCorrections)', () => {
+  // Tamalpais 3, Marin Catholic 1 on MaxPreps (Oct 28, MCAL semifinal): 0-0 after two overtimes, 3-1 in the shootout.
+  const id = '7bb048ba-9e33-4ad1-a743-2348c6637602';
+  const maxpreps = game({ home: 'tamalpais', away: 'marin-catholic', hs: 3, as: 1, league: false, date: '2026-10-28', contestId: id });
+
+  it('replaces the feed’s score with the goals in play, the overtime and the tally, and keeps what MaxPreps had', () => {
+    expect(DATA_QUALITY.resultCorrections[id]).toBeDefined();
+    const g = finalizeResult(maxpreps);
+    expect([g.home.score, g.away.score, g.otPeriods, g.isOt, g.decider]).toEqual([0, 0, 2, true, 'SO']);
+    expect(g.shootout).toEqual({ home: 3, away: 1 });
+    expect([g.home.result, g.away.result]).toEqual(['W', 'L']);
+    expect(g.provenance.resultCorrection?.maxpreps).toEqual({ home: 3, away: 1, otPeriods: 0 });
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'shootout', certainty: 'confirmed' });
+    expect(g.result?.basis).toContain('Marin Independent Journal');
+    expect(describeGame(g).shootoutText).toBe('(3–1 SO)');
+    expect(finalizeResult(g), 'applied once').toBe(g);
+  });
+
+  it('can record a plain corrected score, and never touches a game that is not the one named', () => {
+    const corrections: DataQualityConfig['resultCorrections'] = {
+      [id]: { goals: { tamalpais: 2, 'marin-catholic': 1 }, otPeriods: 1, shootout: null, source: 'a report', url: null },
+    };
+    const g = applyResultCorrection(maxpreps, corrections);
+    expect([g.home.score, g.away.score, g.decider, g.shootout]).toEqual([2, 1, 'OT', null]);
+    expect(resolveResult(g)).toMatchObject({ winner: 'home', ending: 'overtime', certainty: 'confirmed', basis: 'a report' });
+    const other = game({ home: 'redwood', away: 'tamalpais', hs: 2, as: 1, contestId: id });
+    expect(applyResultCorrection(other, corrections)).toBe(other);
+    expect(correctionProblems([other], corrections)).toHaveLength(1);
+    expect(correctionProblems([maxpreps], corrections)).toEqual([]);
+  });
+});
+
+describe('the committed snapshot, as the loader records it', () => {
+  const snapshot = loadSnapshot(JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as unknown);
+
+  it('gives every final a result that agrees with its outcome, and no other game one', () => {
+    for (const g of snapshot.games) {
+      if (g.status !== 'final') {
+        expect(g.result, g.contestId).toBeUndefined();
+        continue;
+      }
+      const o = sideOutcome(g, 'home');
+      expect(g.result?.winner, g.contestId).toBe(o === 'W' ? 'home' : o === 'L' ? 'away' : null);
+      // A tally is only ever shown for a shootout the record stands behind.
+      if (g.shootout) expect(g.result?.ending, g.contestId).toBe('shootout');
+      if (g.result?.certainty !== 'reported' || g.result.ending === 'unstated') expect(g.result?.basis, g.contestId).toBeTruthy();
+    }
+  });
+
+  it('applies every configured correction to its game', () => {
+    expect(correctionProblems(snapshot.games)).toEqual([]);
+    for (const id of Object.keys(DATA_QUALITY.resultCorrections)) {
+      const g = snapshot.games.find((x) => x.contestId === id);
+      if (g?.status === 'final') expect(g.provenance.resultCorrection, id).toBeDefined();
+    }
+  });
+});

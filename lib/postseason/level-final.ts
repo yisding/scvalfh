@@ -24,10 +24,14 @@
  * HOW the tie was broken, so the copy says only that MaxPreps credits the win (components/ui/describe-game.ts
  * `tiebreakRuleOf`: inference 'unverified').
  *
+ *  - a tournament game (MaxPreps' contestType 2 on either row): Huntington Beach 0, Hockaday 0 (Aug 21) and
+ *    University 0, Gilroy 0 (Sep 12) are marked W and L. A tournament game marked that way was played to a
+ *    winner (owner decision, 2026-11-13).
+ *
  * Left alone, on purpose:
- *  - a regular-season game outside a shootout section, tournament rows included (Huntington Beach 0, Hockaday 0,
- *    Aug 21, marked W and L at a tournament): no rule this site has read says the game needed a winner, so the
- *    score is the record, it counts as a tie, and the game page prints MaxPreps' flags as a contradiction;
+ *  - any other regular-season game outside a shootout section: no rule this site has read says the game needed
+ *    a winner, so the score is the record, it counts as a tie, and the game page prints MaxPreps' flags as a
+ *    contradiction (where si.com has a decisive score, D2 rule 4a publishes that instead);
  *  - a level final with no winner marked (T and T, or no flags): nothing says who won;
  *  - a forfeit, and a final already 'SO';
  *  - JV games: the JV pipeline (scripts/fetch-jv.ts) tags no postseason and never calls this.
@@ -56,9 +60,19 @@ export function flagConflictSentence(home: Pick<GameSide, 'name' | 'score' | 're
   );
 }
 
-/** Whether a game of this build's sport cannot end level: any postseason game, and every game of a sport with no ties. */
-export function mustHaveWinner(game: Pick<Game, 'postseason'>): boolean {
-  return !SPORT.scoring.allowsTies || (game.postseason !== null && game.postseason !== undefined);
+/** Whether either side's MaxPreps row marks the game a tournament game (contestType 2). */
+export function isTournamentRow(game: Pick<Game, 'contestTypes'>): boolean {
+  return game.contestTypes?.home === 2 || game.contestTypes?.away === 2;
+}
+
+/**
+ * Whether a level score with one side marked the winner is a result and not a contradiction: any game of a sport
+ * with no ties; any postseason game; and a tournament game (owner decision, 2026-11-13: a tournament game marked
+ * W and L was played to a winner). A tournament game MaxPreps marks T and T stays a tie: pool games end level,
+ * and 22 of the 24 level tournament finals of 2026 are marked that way.
+ */
+export function mustHaveWinner(game: Pick<Game, 'postseason' | 'contestTypes'>): boolean {
+  return !SPORT.scoring.allowsTies || (game.postseason !== null && game.postseason !== undefined) || isTournamentRow(game);
 }
 
 /**

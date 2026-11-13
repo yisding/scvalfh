@@ -53,6 +53,18 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
     },
   },
+  resultCorrections: {
+    // MCAL tournament semifinal, Wed Oct 28: MaxPreps has Tamalpais 3, Marin Catholic 1 as a regulation result. The
+    // Marin Independent Journal (Oct 28, 2026): "The game was scoreless after regulation and two overtimes"; Tamalpais
+    // "won 3-1 in the shootout". So the goals in play are 0-0, two overtime periods were played and 3-1 is the tally.
+    '7bb048ba-9e33-4ad1-a743-2348c6637602': {
+      goals: { tamalpais: 0, 'marin-catholic': 0 },
+      otPeriods: 2,
+      shootout: { tamalpais: 3, 'marin-catholic': 1 },
+      source: 'Marin Independent Journal, Oct 28, 2026: scoreless after regulation and two overtimes, and Tamalpais won the shootout 3-1; MaxPreps records the shootout tally as the score',
+      url: null,
+    },
+  },
   fixtureMoves: {
     // SCVAL De Anza: the PDF has Homestead at Cupertino on Wed Sep 9; it was not played then (no MaxPreps contest of
     // the pair until their Oct 5 meeting). si.com (6575658) and the NFHS Network (game82e9fefce, on Homestead's
@@ -124,6 +136,7 @@ const SOCCER_DATA_QUALITY: DataQualityConfig = {
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
+  resultCorrections: {},
   fixtureMoves: {},
   notCovered: [],
 };
@@ -136,6 +149,7 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
+  resultCorrections: {},
   fixtureMoves: {},
   notCovered: [],
 };

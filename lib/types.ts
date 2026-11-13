@@ -244,6 +244,57 @@ export type Decider = 'REG' | 'OT' | '2OT' | 'SO' | 'FORFEIT';
 
 export interface Record3 { w: number; l: number; t: number }
 
+/**
+ * How a final ended, as this site records it (lib/results/result.ts `resolveResult`, the one place it is decided):
+ *  - 'regulation' / 'overtime': decided, or left level, on goals in play;
+ *  - 'shootout': level in play and settled by the sport's tiebreak (field hockey's shootout or 1 v 1s, soccer's
+ *    penalty kicks): a tally is stored, an official sheet says so, a second source records the level score with
+ *    the one goal a shootout winner is credited, or the section's rule and box scores establish it (the EAL);
+ *  - 'forfeit';
+ *  - 'unstated': level in play with one side credited the win, and no source says how the tie was broken.
+ */
+export type ResultEnding = 'regulation' | 'overtime' | 'shootout' | 'forfeit' | 'unstated';
+
+/**
+ * How firmly the recorded result stands:
+ *  - 'confirmed': an official sheet, a cited correction, or a second source that corroborates it;
+ *  - 'reported': one source says so and nothing this site reads contradicts it (nearly every game);
+ *  - 'inferred': this site read it from a rule or from arithmetic on two sources' scores, and says which;
+ *  - 'disputed': another source records a different outcome (another winner, or a winner where this is a tie),
+ *    or MaxPreps' own flags contradict its score.
+ */
+export type ResultCertainty = 'confirmed' | 'reported' | 'inferred' | 'disputed';
+
+/**
+ * The recorded result of a final: stored on the game by the pipeline and re-derived on load, always equal to
+ * `resolveResult(game)` (lib/snapshot/snapshot-invariants.ts). The score in play is `home.score` / `away.score`,
+ * the overtime count `otPeriods` and the tiebreak tally `shootout`; this names the winner, the ending and how
+ * sure the record is, in one place, so no view has to work them out from flags and section rules.
+ */
+export interface GameResult {
+  /** The side that won; null for a tie. Always what `sideOutcome` gives. */
+  winner: 'home' | 'away' | null;
+  ending: ResultEnding;
+  certainty: ResultCertainty;
+  /** One sentence on what the record rests on; absent for a plain single-source result. */
+  basis?: string;
+}
+
+/**
+ * A result recorded from a better source than the feed (DataQualityConfig.resultCorrections), by contest: the
+ * goals in play and the tiebreak tally per team slug, the overtime periods played, and the citation the game
+ * page prints. MaxPreps stores a shootout after overtime as the score (Tamalpais 3-1 Marin Catholic was 0-0);
+ * a press report or an official sheet is the only source that says so.
+ */
+export interface ResultCorrection {
+  goals: Readonly<Record<TeamSlug, number>>;
+  otPeriods: number;
+  shootout: Readonly<Record<TeamSlug, number>> | null;
+  /** The source and what it says, one sentence without a final period. */
+  source: string;
+  url: string | null;
+}
+
 /** One side of a contest. `teamId` null ⇒ a non-SCVAL opponent, name only (SPEC §4 notes). */
 export interface GameSide {
   teamId: TeamId | null;
@@ -400,6 +451,8 @@ export interface Game {
    * shootouts are stored by MaxPreps as goals (see caveat copy).
    */
   shootout: { home: number; away: number } | null;
+  /** The recorded result of a final (GameResult); absent on a game that is not final, and in a file written before it existed. */
+  result?: GameResult;
   /**
    * MaxPreps' bracket fields for a tournament game (GameBracket); absent when the row's tournamentId is null or
    * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/postseason/ccs-bracket.ts ccsBracketGames puts a published
@@ -428,6 +481,23 @@ export interface Game {
     scoreConflict?: { sblive: { home: number; away: number }; note: string };
     /** NEW. Set on every game whose published score came from si.com. */
     backfill?: BackfillProvenance;
+    /**
+     * cifsshome.org's score for the game where it differs from the published one (the cifss cross-check's
+     * conflict row, copied onto the game by lib/results/result.ts so the result is resolved from the game
+     * alone): evidence, never the published score.
+     */
+    cifssScore?: { home: number; away: number; url: string };
+    /**
+     * Where a stored `shootout` tally came from when no source states it as one: another source's score is the
+     * level score with the tally added (si.com's 4-3 where MaxPreps has 1-1 marked W and L is a 3-2 shootout).
+     */
+    shootoutSource?: { source: 'sblive' | 'cifss'; score: { home: number; away: number } };
+    /** Set when DataQualityConfig.resultCorrections replaced the feed's result: what MaxPreps had, and the citation. */
+    resultCorrection?: {
+      maxpreps: { home: number; away: number; otPeriods: number };
+      source: string;
+      url: string | null;
+    };
     /**
      * Set on every game whose published score is the San Diego Section's, from its bracket sheet
      * (lib/postseason/sds-sheet-results.ts): 'absent-game' when MaxPreps has no contest for the game (a

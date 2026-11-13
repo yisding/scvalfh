@@ -670,6 +670,13 @@ export function scoreSentence(
           ? `${head}; ${winner} ${wonOn} (MaxPreps lists ${view.home}${EN_DASH}${view.away}${SPORT_HAS_NO_TIES ? '' : ' with no tally'}).`
           : `${head}; ${winner} ${wonOn}.`;
       }
+      if (view.shootout && view.outcome !== 'T') {
+        // A stored tally: say who won it and by what, winner's count first.
+        const { wonOn } = shootoutPhrases(opts.shootoutWords ?? GENERIC_SHOOTOUT_WORDS);
+        const winner = view.outcome === 'W' ? g.home.name : g.away.name;
+        const [most, least] = [Math.max(view.shootout.home, view.shootout.away), Math.min(view.shootout.home, view.shootout.away)];
+        return `${head}; ${winner} ${wonOn}, ${most}${EN_DASH}${least}.`;
+      }
       return `${head}${
         !opts.quietOvertime && (view.decider === 'OT' || view.decider === '2OT') ? ' after overtime' : ''
       }${view.decider === 'FORFEIT' ? ' by forfeit' : ''}.`;

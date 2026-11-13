@@ -341,7 +341,11 @@ describeIfCaptured('the section shootout and level games', () => {
     );
     for (const g of games) {
       expect(g.decider, `lib/pipeline/normalize.ts: ${g.contestId}`).toBe('SO');
-      expect(g.shootout, `lib/pipeline/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
+      // MaxPreps stores no tally. One is recorded only where a second source's score is the level score with the
+      // tally added (lib/results/result.ts unfoldShootout), and then the game says which source.
+      expect(g.shootout === null, `lib/results/result.ts: a tally needs its source: ${g.contestId}`).toBe(g.provenance.shootoutSource === undefined);
+      expect(g.result, `lib/results/result.ts: ${g.contestId}`).toMatchObject({ winner: g.home.result === 'W' ? 'home' : 'away' });
+      expect(['shootout', 'unstated'], `lib/results/result.ts: ${g.contestId}`).toContain(g.result?.ending);
       expect(g.provenance.resultConflict, `lib/pipeline/normalize.ts: ${g.contestId}`).toBeUndefined();
       const winner = g.home.result === 'W' ? 'home' : 'away';
       expect(sideOutcome(g, winner), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('W');

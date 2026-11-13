@@ -11,12 +11,12 @@ import {
   isSnapshotV1,
   lacksConfiguredLeagues,
   migrateV1ToV2,
-  needsLevelFinals,
+  needsRecordedResults,
   needsPlayoffGames,
   needsReclassification,
   rebuildPlayoffGames,
+  recordStoredResults,
   reclassify,
-  settleStoredLevelFinals,
 } from './snapshot-migrate';
 import type { Snapshot } from '../types';
 
@@ -35,15 +35,15 @@ export function parseSnapshot(raw: unknown): Snapshot {
 /**
  * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
  * addConfiguredLeagues; a v2 whose games no longer classify under the current rules or registry →
- * reclassify; one holding a level final in a game that must have a winner as a tie → settleStoredLevelFinals;
+ * reclassify; one whose games the current rules record differently → recordStoredResults;
  * then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
  */
 export function loadSnapshot(raw: unknown): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
   const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
   const classified = needsReclassification(complete) ? reclassify(complete) : complete;
-  // Then, with the tags current, a level postseason final marked W and L becomes the marked side's win.
-  const settled = needsLevelFinals(classified) ? settleStoredLevelFinals(classified) : classified;
+  // Then, with the tags current, every final as the current rules record it (lib/results/result.ts).
+  const settled = needsRecordedResults(classified) ? recordStoredResults(classified) : classified;
   // Then `playoffs.games` from the (now current) tags: lib/postseason/ccs-bracket.ts is its one derivation.
   return parseSnapshot(needsPlayoffGames(settled) ? rebuildPlayoffGames(settled) : settled);
 }

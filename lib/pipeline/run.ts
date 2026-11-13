@@ -16,6 +16,7 @@
  *   10 classify    classifyGames with the official step's degraded divisions
  *   11 guards      finals regression (c), frozen-league substitution, systemic RUN ABORT
  *   11b cifss      the cifsshome.org score cross-check (report only; never changes a game)
+ *   11c results    corrections, level finals that must have a winner, tallies, and every final's GameResult
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
  */
@@ -50,6 +51,7 @@ import { stepLeagueMeta } from './steps/league-meta';
 import { stepNormalize } from './steps/normalize';
 import { notAppliedReason } from './steps/official';
 import { stepReported } from './steps/reported';
+import { stepResults } from './steps/results';
 import { stepSchedules } from './steps/schedules';
 import { stepSecondary } from './steps/secondary';
 import { stepStandings } from './steps/standings';
@@ -172,6 +174,10 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
 
   // 11b cifsshome.org cross-check (over the games the snapshot will publish)
   state.cifssCrossCheck = await stepCifss(ctx, state);
+
+  // 11c results: every final's recorded result, from everything the run now knows about it (corrections, a
+  // level final that must have a winner, a tally read from a second source), before the standings count it.
+  state.games = stepResults(ctx, state.games, state.cifssCrossCheck);
 
   // 12 standings + health
   const table = stepStandings(ctx, state);

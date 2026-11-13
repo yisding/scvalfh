@@ -6,7 +6,7 @@
 
 import type {
   CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
-  PlayoffStatus, RegionId, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  PlayoffStatus, RegionId, ResultCorrection, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from '../types';
 
 /**
@@ -572,6 +572,13 @@ export interface DataQualityConfig {
    * (Game.provenance.dateCorrection). Keys are contest GUIDs, `dateKey` a YYYY-MM-DD (assertLeagues).
    */
   contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
+  /**
+   * A final's result recorded from a better source than the feed, by contest GUID (lib/types.ts ResultCorrection;
+   * lib/results/result.ts applies it before anything counts the game). For a result the feed cannot state: a
+   * shootout MaxPreps stores as the score. `goals` and `shootout` name both sides by slug (assertLeagues), and
+   * `source` is the citation the game page prints.
+   */
+  resultCorrections: Readonly<Record<ContestId, ResultCorrection>>;
   /**
    * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
    * other school, than its league's document says. D2 rule 2 (lib/crosscheck/backfill.ts) looks for si.com's Final of the pair
