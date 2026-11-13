@@ -636,6 +636,7 @@ export function assertLeagues(): void {
       if (!rules.unresolvedSuffix) fail(`${l.id}: a league tournament needs an unresolvedSuffix`);
     }
     if (rules.excludeContestTypes.includes(0)) fail(`${l.id}: excludeContestTypes may not contain 0 (the league flag)`);
+    if (!rules.excludeContestTypes.includes(2)) fail(`${l.id}: excludeContestTypes must contain 2 (a tournament game never counts toward a league record)`);
     // 'shootout' is built only where no official fixtures decide what counts (none to match level games against):
     // MaxPreps' league flag (EAL) or division membership (the San Diego leagues).
     if (rules.leagueOvertime === 'shootout' && rules.classification === 'official-fixtures') {

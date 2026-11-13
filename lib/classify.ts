@@ -240,8 +240,9 @@ export function postseasonTag(game: Game): PostseasonTag | null {
  *        null unless division.leaguePlay.first <= game.dateKey <= division.leaguePlay.last
  *        else leagueDivision — whatever MaxPreps' league flag (`isLeague`) says
  *  - 'contest-type' (SCVAL, EAL): null unless game.isLeague; null for a 'ccs' or 'league-postseason' tag; null if
- *        contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes (SCVAL's [] makes that a no-op, and
- *        SCVAL never gets a 'league-postseason' tag, so SCVAL is unchanged); else leagueDivision.
+ *        contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes (SCVAL's is [2]: a game one row
+ *        flags league and the other tournament does not count; SCVAL never gets a 'league-postseason' tag);
+ *        else leagueDivision.
  *  - 'official-fixtures' (BVAL, PCAL, MCAL):
  *        null if game.postseason !== null
  *        null if contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes
@@ -269,7 +270,7 @@ export function classifyGame(game: Game, opts: ClassifyOptions = {}): DivisionId
     if (!game.isLeague) return null;
     if (game.postseason?.kind === 'ccs') return null; // SCVAL's rule (golden)
     if (game.postseason?.kind === 'league-postseason') return null; // never produced for SCVAL
-    // SCVAL [] → no-op
+    // A tournament row never counts, in any league (every excludeContestTypes holds 2: assertLeagues).
     for (const t of [types.home, types.away]) if (t !== null && rules.excludeContestTypes.includes(t)) return null;
     return division;
   }

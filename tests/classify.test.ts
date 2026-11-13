@@ -16,6 +16,7 @@ import {
   postseasonTag,
 } from '../lib/classify';
 import type { Game } from '../lib/types';
+import { LEAGUES } from '../lib/leagues';
 import { game } from './game-builder';
 
 /** A contest MCAL has declared a league game despite its Oct 23 postseason window. */
@@ -255,9 +256,10 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
     const ct4 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 0 } });
     expect(ct4.postseason).toEqual({ kind: 'ccs', leagueId: 'scval', via: 'contest-type-4' });
     expect(ct4.countsFor).toBeNull();
-    // SCVAL excludes no contest type: a contestType 2 row MaxPreps also flags 0 still counts.
+    // A tournament row never counts toward a league record, in SCVAL as everywhere (owner decision, 2026-11-13):
+    // a game one row flags league (0) and the other tournament (2) is not a league game.
     const ct2 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, contestTypes: { home: 0, away: 2 } });
-    expect(ct2.countsFor).toBe('de-anza');
+    expect(ct2.countsFor).toBeNull();
   });
 });
 
@@ -524,5 +526,28 @@ describe('classify: the CCS bracket (rule 1c, the rule-2 gate and the widened 2b
     const before = { ...neutral, dateKey: '2026-10-29', dateLocal: '2026-10-29T12:00:00' };
     expect(postseasonTag(before)).toBeNull();
     expect(classifyGames([{ ...before, postseason: null }])[0].countsFor).toBeNull();
+  });
+});
+
+describe('a tournament game never counts toward a league record (owner decision, 2026-11-13)', () => {
+  it('holds in every league’s config', () => {
+    for (const league of LEAGUES) expect(league.rules.excludeContestTypes, league.id).toContain(2);
+  });
+
+  it('leaves a game between division-mates out of the table when either row is a tournament row', () => {
+    const pairs: Array<[string, string]> = [
+      ['homestead', 'cupertino'], // SCVAL: MaxPreps' league flag
+      ['chico', 'davis'], // EAL: MaxPreps' league flag
+      ['torrey-pines', 'la-costa-canyon'], // San Diego: membership
+      ['great-oak', 'edison'], // Sunset: membership
+    ];
+    for (const [home, away] of pairs) {
+      const league = game({ home, away, hs: 1, as: 0, date: '2026-09-22', official: null });
+      for (const contestTypes of [{ home: 2, away: 2 }, { home: 0, away: 2 }, { home: 2, away: 0 }]) {
+        const tourney = game({ home, away, hs: 1, as: 0, date: '2026-09-22', official: null, contestTypes });
+        expect(tourney.leagueDivision, `${home} v ${away}`).toBe(league.leagueDivision);
+        expect(classifyGame(tourney), `${home} v ${away} ${JSON.stringify(contestTypes)}`).toBeNull();
+      }
+    }
   });
 });

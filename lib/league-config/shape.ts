@@ -251,8 +251,11 @@ export interface LeagueRules {
    */
   classification: 'contest-type' | 'official-fixtures' | 'membership';
   /**
-   * contestTypes that never count (either row); applies to every classification. SCVAL: [] (byte-identity).
-   * BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
+   * contestTypes that never count (either row); applies to every classification. Always includes 2 (asserted): a
+   * tournament game never counts toward a league record, in any league or sport (owner decision, 2026-11-13; no
+   * 2026 game was counted that way). SCVAL: [2] (no 2026 SCVAL game has a league row and a tournament row, so its
+   * tables are unchanged). BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the
+   * 2025 EAL tournament).
    */
   excludeContestTypes: readonly number[];
   /** Games between two members on/after this local date are postseason (MCAL '2026-10-23', EAL '2026-10-30'). */

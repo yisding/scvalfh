@@ -49,7 +49,7 @@ export const SCVAL: LeagueConfig = {
   ],
   rules: {
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'division',
-    classification: 'contest-type', excludeContestTypes: [], postseasonFrom: null, leagueGameOverrides: [],
+    classification: 'contest-type', excludeContestTypes: [2], postseasonFrom: null, leagueGameOverrides: [],
     matcher: 'legacy',
     tiebreaks: { default: ['head-to-head', 'division-wins', 'h2h-goals-against', 'h2h-goal-diff', 'coin-flip'] },
     multiTeam: 'partition-restart', h2hUnmet: 'zero', drawNumbers: null, leagueOvertime: 'sudden-victory',
