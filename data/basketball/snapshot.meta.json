@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "aef9c5f472a484bb88dc2f5560cfd9a0ff4b5443ec3eccb2b3816f7dafebe3d5",
+  "contentHash": "712c6aa93d73a312cd11c1e1f3d5ac8e6f035ccaab135a21a4419315ec760111",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 263,
+        "games": 266,
         "leagueGames": 120,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 196,
+        "games": 199,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 423,
+    "games": 429,
     "leagueGames": 216,
     "mismatches": 0,
     "pending": 0,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-13T14:26:59.366Z",
+  "fetchedAt": "2026-11-13T21:22:46.508Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -99,7 +99,7 @@
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -124,7 +124,7 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -149,7 +149,7 @@
     },
     {
       "label": "santa-clara schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -239,7 +239,7 @@
     },
     {
       "label": "pioneer schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -264,7 +264,7 @@
     },
     {
       "label": "independence schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -334,7 +334,7 @@
     },
     {
       "label": "james-lick schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
