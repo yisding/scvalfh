@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "54a1933074c4b2dcedbd32a6b43b0ec77f8ae9831aa8413fd333fed2062c73f9",
+  "contentHash": "ea2f10deb4499228c9cae719896cdf82ffb5dd20ef3ef7d547c4ebd12a4138c6",
   "counts": {
     "byLeague": {
       "bval": {
@@ -33,7 +33,7 @@
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-13T03:37:25.182Z",
+  "fetchedAt": "2026-11-13T13:22:57.407Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -389,12 +389,12 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 3,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -413,7 +413,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-12",
+  "today": "2026-11-13",
   "warnings": 16,
   "window": {
     "firstGame": "2026-11-19T19:00:00",
