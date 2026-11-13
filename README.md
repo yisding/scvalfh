@@ -928,7 +928,9 @@ post counts when an official account posted it (since 2026-10-12): a college's a
 account, the player's high school's, or a club's, cited as an `official-social` source naming that
 account and a non-social page proving it is the owner's. A player's own post never counts, which
 costs recall: many commitments are announced only on a player's own Instagram, and those are not
-listed. College
+listed. A page drawn by a script (a SportsRecruits profile's TEAMS block or "Committed to … on" date, a
+club's `/committed/` page) may be cited since 2026-11-13, quoting what it shows once rendered, when two
+separate rendered reads agree, as the club ties have been read since 2026-10-05. College
 interests, offers, visits, camps and watchlists are not commitments, and neither is a place on a
 college's club team. A commitment in another sport counts (since 2026-10-04): the site is about
 field hockey, but its players commit to lacrosse, soccer and other college teams too, and every

@@ -1174,7 +1174,11 @@ otherwise (for a row with no grade, the stated class years must agree with each 
 a high school roster of the season can hold). Not a commitment: MaxPreps' "College Interests"
 (`careerCollegeInterestsData` on a career `/bio/` page, which was empty for every in-scope player
 anyway), offers, visits, camps, watchlists, all-league lists, and a place on a college's club team
-(club lacrosse, for one). Social media only from an official account (since 2026-10-12):
+(club lacrosse, for one). A page drawn by a script (SportsRecruits' `/committed/<club>` pages and its
+profiles' TEAMS blocks and "Committed to … on M/D/YYYY" tooltips, MAX Field Hockey's search) may be cited
+since 2026-11-13 (owner decision), quoting what it shows once rendered, when two separate rendered reads
+agree, and the basis says so; until then such pages were leads only and every quote had to be in the page's
+own HTML. The club ties (§1.1j2) have been read that way since 2026-10-05. Social media only from an official account (since 2026-10-12):
 `BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook, TikTok, X, Threads, YouTube,
 Snapchat, LinkedIn and their short links everywhere in the file except as an `official-social`
 source, a post by the `account` it names: a college's athletics or team account, the player's high
@@ -1372,15 +1376,17 @@ Gotchas, found in the research:
   needs a browser User-Agent and an Accept header; its rows load only after its search form runs (a
   script), and its date column is hidden by the page's own CSS. On 2026-10-04 a rendered read listed
   Lewis and Magnano (with St. Ignatius) and Cordoni with no college, and Van De Braak with none
-  either, which is stale; since no quote can be checked against the page as served, it is not cited,
-  and its hidden dates are not used.
+  either, which is stale; since no quote could be checked against the page as served, it was not cited,
+  and its hidden dates are not used (until 2026-11-13; since then a rendered read that a second read
+  confirms may be cited, see *The rule*).
 - **SportsRecruits splits by sport, and draws some of its pages with a script.** A profile lives on
   one sport's subdomain (`nfhca.` field hockey, `iwlca.` lacrosse, `my.` soccer and others), and
   `sportsrecruits.com/athlete/<slug>` redirects there, so a probe must follow redirects. A college
   page shows only its first ten committed athletes, and its "See More Commits" call returns another
   sport's (lacrosse) entries. A club's `/committed/<club>` page and a profile's "Committed to … on
   M/D/YYYY" tooltip are drawn by a script: one rendered read saw the dates, no second read confirmed
-  them, so neither the pages nor the dates are used.
+  them, so neither the pages nor the dates were used. Since 2026-11-13 they may be, from two rendered
+  reads that agree (*The rule*).
 - **One player, two sports.** Many players have a lacrosse or soccer profile beside a field hockey
   one, and the commitment is on the other sport's (Gigi Colant's soccer profile is under her given
   name, Gabriella; Claire Johnson plays field hockey and lacrosse, and her Cal commitment is for

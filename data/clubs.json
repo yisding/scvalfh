@@ -3327,7 +3327,7 @@
       "athleteId": "2760b7f0-efef-4775-b8cb-f27fbea09b2f",
       "fullName": "Junali Dutta",
       "club": "norcal-impact",
-      "clubTeam": "NorCal Impact (Competitive)",
+      "clubTeam": "Impact Wolves",
       "status": "current",
       "asOf": null,
       "confidence": "high",
@@ -3339,9 +3339,25 @@
           "statedSchool": "Lynbrook High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/junali_dutta",
+          "kind": "sportsrecruits",
+          "quote": "Junali Dutta Forward, Defense … 2028 GRAD YR Cupertino, CA HOMETOWN Impact Wolves, Norcal Impact club … Athletic Teams Impact Wolves, Norcal Impact 43 Lynbrook high school San Jose , CA location … NFHCA Winter Escape Showcase Boombah Sports Complex , Sanford 01/16/26 - 01/18/26",
+          "statedSchool": "Lynbrook high school",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/junali_dutta2",
+          "kind": "sportsrecruits",
+          "quote": "2028 GRAD YR Cupertino, CA HOMETOWN Norcal Impact, Norcal Impact - San Jose,CA (229382) club … Athletic Teams Norcal Impact, Norcal Impact - San Jose,CA (229382) 43 Lynbrook high school San Jose , CA … Nexus - Selection Camp Region 11 Stanford University , Stanford 05/09/26 - 05/10/26",
+          "statedSchool": "Lynbrook high school",
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA field hockey profile names her, Lynbrook High School and '28 (matches grade 11), and lists Club NorCal Impact. The NorCal Impact site confirms it is a field hockey club and that its owner and director is 'Leaf (Lifon) Huynh', matching the profile's club coach Lifon Huynh. The profile is live with 2026 events, so I mark it current under the live-profile rule. The only club season listed is 2024, and the profile and the Impact site carry no date, so asOf is null."
+      "basis": "Her own NCSA field hockey profile names her, Lynbrook High School and '28 (matches grade 11), and lists Club NorCal Impact. The NorCal Impact site confirms it is a field hockey club and that its owner and director is 'Leaf (Lifon) Huynh', matching the profile's club coach Lifon Huynh. The profile is live with 2026 events, so I mark it current under the live-profile rule. The only club season listed is 2024, and the profile and the Impact site carry no date, so asOf is null. Since 2026-11-13 her own two SportsRecruits field hockey profiles (junali_dutta, junali_dutta2) back it too: each names NorCal Impact as her CLUB and under TEAMS beside Lynbrook High School (San Jose) with the class of 2028, and lists 2026 events (the NFHCA Winter Escape of Jan 2026, the Nexus Region 11 camp of May 2026). Their CLUB and TEAMS blocks are drawn by script, so they were read rendered, twice the same day, as the 2026-10-05 pass read such blocks; the first gives the club team 'Impact Wolves' (the club's U19 Wolves), which clubTeam now follows. The events date the profiles, not the tie, so asOf stays null."
     },
     {
       "teamSlug": "monta-vista",
