@@ -92,7 +92,7 @@ const pre: RosterEnrichment = {
     players: t.players
       .map((p) => ({
         ...p,
-        grade: p.grade && from1012(p.grade.note) ? null : p.grade,
+        grade: p.grade && (from1012(p.grade.note) || (p.grade.note ?? '').endsWith('Added 2026-11-13.')) ? null : p.grade,
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
         profiles: p.profiles.filter(
@@ -1002,8 +1002,9 @@ describe('lib/players/rosters.ts merged view', () => {
       ps.filter((p) => p[k] !== null).length;
     // 133 from the 2026-10-02 research; on 2026-10-12, 8 more from MaxPreps' career and earlier-season pages
     // and 7 from school papers and Saratoga's athletics site: 148. 126 since 2026-11-13, when Saratoga's
-    // roster on MaxPreps gave 21 of them and Kaylee Stone's row left it.
-    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 126);
+    // roster on MaxPreps gave 21 of them and Kaylee Stone's row left it; 132 once the 2026-11-13 search of four
+    // schools filled six Homestead grades from Stick Together's 2025 all-league list and The Epitaph.
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 132);
     expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
     expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);

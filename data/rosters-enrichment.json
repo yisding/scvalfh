@@ -2844,6 +2844,132 @@
           "positions": null,
           "profiles": [],
           "sourceName": null
+        },
+        {
+          "athleteId": "ea303ec3-3e3d-4837-be37-966002678ecb",
+          "conflicts": [],
+          "fullName": "Sarah Anton",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 All-SCVAL list (fall 2025): 'Sarah Anton Homestead Midfield 11', so 12 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "572c5679-a6a6-4434-805a-1bf3325c02e8",
+          "conflicts": [],
+          "fullName": "Sahana Gopinath",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Sahana Gopinath Homestead Midfield 10', so 11 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d7563ecb-c0f8-4fa3-bd8e-eea735411ed3",
+          "conflicts": [],
+          "fullName": "Renee Lam",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Renee Lam Homestead Midfield 9', so 10 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e91ee125-f490-4030-8c34-9672301ed1bd",
+          "conflicts": [],
+          "fullName": "Elle Correia",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Elle Correia Homestead Defense 9', so 10 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "24abcb87-a244-4189-9b36-b49c813aaf8b",
+          "conflicts": [],
+          "fullName": "Olivia Leyton Bravo",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "The Epitaph (Homestead's student paper), Nov 2, 2026 game review: 'left defender, sophomore Olivia Leyton Bravo'. Added 2026-11-13.",
+            "source": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4e244520-e870-412f-bc47-eb17614930a3",
+          "conflicts": [],
+          "fullName": "Rhea Ananthateerta",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "The Epitaph (Homestead's student paper), Nov 2, 2026 game review: 'forward, sophomore Rhea Ananthateerta scored off a penalty corner'. Added 2026-11-13.",
+            "source": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "homestead",
@@ -2882,6 +3008,20 @@
           "kind": "news",
           "title": "hhsepitaph.com — The Epitaph (Homestead HS paper), 'JV field hockey scores big with large roster', Oct 29 2025: '...forward, freshman Emry Borges said.'",
           "url": "https://hhsepitaph.com/15706/sports/jv-field-hockey-scores-big-with-large-roster/"
+        },
+        {
+          "capturedAt": "2026-11-13",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "Stick Together, 2025 All-League (SCVAL and others): each honoree's school, position and grade in fall 2025; four Homestead grades derived from it (+1 year)",
+          "url": "https://www.sticktogetherfh.com/all-league-2025/"
+        },
+        {
+          "capturedAt": "2026-11-13",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "The Epitaph (Homestead's student paper), Nov 2, 2026: 'Varsity girls field hockey pulls ahead of FHS Firebirds 3-2', naming two sophomores",
+          "url": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/"
         }
       ]
     },
