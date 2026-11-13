@@ -198,21 +198,33 @@ describe('buildRosterView', () => {
     const labels = (slug: string) => views.find((v) => v.slug === slug)!.view.sources.map((s) => s.label);
     expect(labels('los-altos').filter((l) => l.startsWith('MaxPreps career:')).length).toBeGreaterThan(0);
     expect(labels('homestead')).toContain('MaxPreps JV roster: grade');
-    // Saratoga's 20 player profiles fold into its school roster page rather than 20 links.
-    expect(labels('saratoga')).toContain('shs-athletics.com: grades (player pages)');
+    // A school site's player pages fold into its roster page rather than one link each. Saratoga's 20 did until
+    // 2026-11-13, when MaxPreps' roster gave every one of those grades; Glendora's still do.
+    expect(labels('saratoga').some((l) => l.startsWith('shs-athletics.com'))).toBe(false);
+    expect(labels('glendora').some((l) => l.endsWith('(player pages)'))).toBe(true);
   });
 
   it("links each listed player's own recruiting pages, and names the platforms once", () => {
     // A claimed MaxPreps page is matched by MaxPreps' own id, not by name: its footnote is its own.
     const isMaxPreps = (x: { label: string }) => x.label === 'MaxPreps profile';
     for (const { slug, view } of views) {
-      const merged = new Map(getEnrichedTeamRoster(slug)!.players.map((p) => [p.fullName, p]));
+      // By name, each name's rows against its players as a set: MaxPreps can list one player twice under one
+      // career (Hollister's Paige Pierson, read 2026-11-13), and the two rows' links are those two records'.
+      const merged = new Map<string, string[][]>();
+      for (const p of getEnrichedTeamRoster(slug)!.players) {
+        merged.set(p.fullName, [...(merged.get(p.fullName) ?? []), p.profiles.map((x) => x.url).sort()]);
+      }
+      const shown = new Map<string, string[][]>();
       for (const row of view.rows) {
-        const p = merged.get(row.name)!;
-        expect(row.profiles.map((x) => x.url).sort(), `${slug} / ${row.name}`).toEqual(
-          p.profiles.map((x) => x.url).sort(),
-        );
+        shown.set(row.name, [...(shown.get(row.name) ?? []), row.profiles.map((x) => x.url).sort()]);
         for (const x of row.profiles) expect(x.label, `${slug} / ${row.name}`).toMatch(/profile$|^Recruiting site$/);
+      }
+      const asSet = (lists: string[][]) => lists.map((l) => l.join(' ')).sort();
+      for (const [name, lists] of shown) {
+        const rows = view.rows.filter((r) => r.name === name).length;
+        // Every shown row's links are some record's of that name (a JV-marked record is not a row here).
+        for (const l of asSet(lists)) expect(asSet(merged.get(name)!), `${slug} / ${name}`).toContain(l);
+        expect(rows, `${slug} / ${name}`).toBeLessThanOrEqual(merged.get(name)!.length);
       }
       expect(view.profilePlatforms.length > 0, slug).toBe(view.rows.some((r) => r.profiles.some((x) => !isMaxPreps(x))));
       expect(view.profilePlatforms, slug).not.toContain('MaxPreps');
@@ -222,10 +234,12 @@ describe('buildRosterView', () => {
       // same page backs one of that player's values (a claimed MaxPreps career page a grade was
       // worked out from, as at Homestead).
       const sources = new Set(view.sources.map((s) => s.url));
+      const players = getEnrichedTeamRoster(slug)!.players;
       for (const row of view.rows) {
-        const p = merged.get(row.name)!;
         const backs = new Set(
-          Object.values(p.provenance).flatMap((v) => (v && v !== 'maxpreps' ? [v.source] : [])),
+          players
+            .filter((p) => p.fullName === row.name)
+            .flatMap((p) => Object.values(p.provenance).flatMap((v) => (v && v !== 'maxpreps' ? [v.source] : []))),
         );
         for (const x of row.profiles) expect(sources.has(x.url) && !backs.has(x.url), slug).toBe(false);
       }
@@ -421,14 +435,14 @@ describe('TeamRoster', () => {
     // Southern California: no school-site sweep has been done (DESIGN-socal §3), so an empty SoCal roster
     // always says other sources were not checked.
     for (const [slug, status] of empty.filter(([slug]) => socal.has(slug))) expect(status, slug).toBe('not-checked');
+    // Sobrato was here until 2026-11-13, when MaxPreps first listed its players, and so was Corning (below).
     expect(empty.filter(([slug]) => !socal.has(slug))).toEqual([
       ['del-mar', 'none'],
       ['silver-creek', 'none'],
-      ['sobrato', 'none'],
       ['monterey', 'none'],
       ['santa-catalina', 'none'],
-      // An EAL team with no MaxPreps players: no school-athletics sweep has been done, and the card says so.
-      ['corning', 'not-checked'],
+      // Corning, an EAL team with no school-athletics sweep, was here as 'not-checked' until MaxPreps listed its
+      // players (2026-11-13).
     ]);
     for (const { slug, view } of views.filter((v) => v.view.status === 'empty')) {
       const html = renderToStaticMarkup(createElement(TeamRoster, { view }));
@@ -456,7 +470,8 @@ describe('TeamRoster', () => {
   });
 
   it('shows the coaches and their sources for a team with no list', () => {
-    for (const slug of ['del-mar', 'silver-creek', 'sobrato']) {
+    // Sobrato was one until MaxPreps listed its players on 2026-11-13.
+    for (const slug of ['del-mar', 'silver-creek']) {
       const view = views.find((v) => v.slug === slug)!.view;
       expect(view.rows, slug).toEqual([]);
       expect(view.coaches.length, slug).toBeGreaterThan(0);

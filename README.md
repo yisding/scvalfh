@@ -410,7 +410,14 @@ alone (MaxPreps' career and earlier-season pages, then school athletics sites, p
 heights, numbers, positions and coaches are still not swept there. On 2026-10-07 `data/rosters.json`
 holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
 players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
-2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
+2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). On 2026-11-13
+every roster was read again (the roster reader had been failing since MaxPreps added a column; see DATA-SOURCES
+§1.1j): 1,803 players, on 90 of the 102 teams. The overlay was reconciled with it by hand that day: coaches had entered 48 of
+the grades it supplied, each the same value, so those notes went; four players' records changed (a name spelled
+differently, a jersey, a position, a grade), two rows left MaxPreps (one a duplicate whose record moved to the
+player's other row), one profile accepted only while a row had no grade was unlinked, and six JV-list players
+who joined their varsity rosters took their recruiting pages with them (the file's last note lists each). The
+76 rows MaxPreps added at the swept leagues have not been swept for clubs or commitments. Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public

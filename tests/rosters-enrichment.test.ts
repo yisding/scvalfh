@@ -66,6 +66,12 @@ const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by
 const fromProbe1103 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-03 address probe') ?? false;
 /** A profile the 2026-11-06 NCSA school-page sweep linked: its note says so. */
 const fromSweep1106 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-06 NCSA school-page sweep') ?? false;
+/**
+ * A JV-list player's profile moved to her varsity row on 2026-11-13, when the re-read rosters put her on varsity
+ * (data/jv-profiles.json had linked it): its note says so.
+ */
+const movedFromJv1113 = (x: { note: string | null }) =>
+  x.note?.includes('Moved from the JV list when she joined the varsity roster (read 2026-11-13).') ?? false;
 /** A grade, a conflict or a record note added on 2026-10-12 from MaxPreps' career and 2025-26 pages: its note says so. */
 const from1012 = (note: string | null | undefined) => (note ?? '').includes('Added 2026-10-12') || (note ?? '').endsWith('(2026-10-12).');
 
@@ -87,7 +93,9 @@ const pre: RosterEnrichment = {
         grade: p.grade && from1012(p.grade.note) ? null : p.grade,
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
-        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x)),
+        profiles: p.profiles.filter(
+          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x),
+        ),
       }))
       .filter(
         (p) =>
@@ -162,7 +170,8 @@ describe('data/rosters-enrichment.json', () => {
     // SportsRecruits probe in every sport 2026-10-12, and the claimed MaxPreps pages 2026-10-13,
     // against the roster file read 2026-10-07). The athleteId join below is what keeps the two
     // files in step.
-    expect(raw.capturedAt).toBe('2026-11-06');
+    // 2026-11-13: reconciled with a fresh read of every MaxPreps roster (the file's last note says what changed).
+    expect(raw.capturedAt).toBe('2026-11-13');
     expect(base.fetchedAt.slice(0, 10) <= raw.capturedAt).toBe(true);
   });
 
@@ -223,8 +232,9 @@ describe('data/rosters-enrichment.json', () => {
         expect(new Set(open.map((c) => c.other)).size, `${t.slug} ${p.fullName}`).toBeGreaterThan(1);
       }
     }
+    // Berkeley's Anisa Alejandrino left this list on 2026-11-13: MaxPreps now gives her grade (So.), so her
+    // remaining conflict keeps it.
     expect(blanked.sort()).toEqual([
-      'berkeley/Anisa Alejandrino',
       // 2026-10-12: a profile page that contradicts itself (Glendora), a school site against MaxPreps'
       // 2025-26 roster (Granite Hills), and two school-site profiles of one player (Salinas).
       'glendora/Paula Mata',
@@ -299,7 +309,9 @@ describe('data/rosters-enrichment.json', () => {
     const scval = pre.teams.filter((t) => SCVAL_SLUGS.has(t.slug));
     const all = scval.flatMap((t) => t.players);
     const n = (k: 'grade' | 'positions' | 'jersey' | 'height') => all.filter((p) => p[k] !== null).length;
-    expect(n('grade')).toBe(133);
+    // 133 grades on 2026-10-02; 112 since 2026-11-13, when Saratoga's roster on MaxPreps gave the 21 its school
+    // site had supplied (each the same value), so those notes went.
+    expect(n('grade')).toBe(112);
     expect(n('positions')).toBe(9);
     expect(n('height')).toBe(23);
     expect(n('jersey')).toBe(0);
@@ -464,8 +476,11 @@ describe('recruiting profiles', () => {
     const fills = (kind: 'grade' | 'positions' | 'jersey' | 'height') =>
       others.flatMap((t) => t.players).filter((p) => p[kind] !== null).length;
     // 82 grades: 85 were filled on 2026-10-03; three were then blanked because their sources
-    // disagree (Leland's Michaela Reichmuth, Redwood's Audrey Dickerman and Eloise Tonderys).
-    expect([fills('grade'), fills('positions')]).toEqual([82, 5]);
+    // disagree (Leland's Michaela Reichmuth, Redwood's Audrey Dickerman and Eloise Tonderys). 69 since
+    // 2026-11-13, when MaxPreps' rosters gave 13 of them (Berkeley's 12 and Marin Catholic's Alexandra
+    // Schmidt's, now on Lexie Schmidt's row), each the same value; and 4 positions, MaxPreps now listing
+    // Berkeley's Natalie Jones (F, kept as a conflict with the school paper's F, M).
+    expect([fills('grade'), fills('positions')]).toEqual([69, 4]);
     // Jersey numbers and heights are never filled for these leagues (the README says so).
     expect([fills('jersey'), fills('height')]).toEqual([0, 0]);
     // A position MaxPreps lists only for the previous season is never filled.
@@ -658,13 +673,16 @@ describe('recruiting profiles', () => {
   it('what MaxPreps\' career and earlier-season pages added on 2026-10-12: grades MaxPreps\' own roster leaves blank', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug, p })));
     const added = records.filter(({ p }) => p.grade !== null && p.grade.kind === 'maxpreps-career' && from1012(p.grade.note));
-    expect(added).toHaveLength(136);
+    // 136 on 2026-10-12; 122 since 2026-11-13, when MaxPreps' rosters gave 14 of them the same grade (Mission
+    // Bay 8, University City 6) and those notes went.
+    expect(added).toHaveLength(122);
     for (const { slug, p } of added) {
       expect([p.grade!.kind, p.grade!.derived, p.grade!.confidence], `${slug} / ${p.fullName}`).toEqual(['maxpreps-career', true, 'medium']);
       expect(p.grade!.source, `${slug} / ${p.fullName}`).toMatch(/^https:\/\/www\.maxpreps\.com\//);
     }
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
-    expect(added.filter(({ slug }) => SOCAL.has(getTeamBySlug(slug)!.league))).toHaveLength(127);
+    // 127 Southern California grades on 2026-10-12; the 14 MaxPreps has since given are all Southern California's.
+    expect(added.filter(({ slug }) => SOCAL.has(getTeamBySlug(slug)!.league))).toHaveLength(113);
     // Where those pages disagree the grade stays blank and both are conflicts.
     const blanked = records
       .filter(({ p }) => p.conflicts.some((c) => from1012(c.note) && c.kind === 'maxpreps-career'))
@@ -682,9 +700,11 @@ describe('recruiting profiles', () => {
     const added = raw.teams.flatMap((t) =>
       t.players.filter((p) => p.grade !== null && p.grade.kind !== 'maxpreps-career' && from1012(p.grade.note)).map((p) => ({ t, p })),
     );
-    expect(added).toHaveLength(113);
+    // 113 (95 school sites, 18 papers) on 2026-10-12; since 2026-11-13 Saratoga's Kaylee Stone is off the roster
+    // and MaxPreps gives Mission Bay's Madeline Stiles the grade the Union-Tribune did.
+    expect(added).toHaveLength(111);
     const n = (k: string) => added.filter(({ p }) => p.grade!.kind === k).length;
-    expect([n('school-site'), n('news')]).toEqual([95, 18]);
+    expect([n('school-site'), n('news')]).toEqual([94, 17]);
     // Every page a grade rests on is among its team's sources: the page itself, or, for a school site's
     // player pages (Glendora, Granite Hills, Southwest), that site's roster page, which the team page
     // links in their place. Only school sites fold that way; a story must be listed itself, since a
@@ -702,10 +722,12 @@ describe('recruiting profiles', () => {
   it('what the 2026-10-12 SportsRecruits probe found, in every sport', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ t, p })));
     const probe = records.flatMap(({ t, p }) => p.profiles.filter(fromProbe1012).map((x) => ({ slug: t.slug, name: p.fullName, x })));
-    expect(probe).toHaveLength(118);
-    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(116);
+    // 118 pages for 116 players on 2026-10-12; on 2026-11-13 Mission Bay's Olivia Lynch, now listed Sr., lost
+    // the class-of-2030 softball page accepted only while her row had no grade.
+    expect(probe).toHaveLength(117);
+    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(115);
     const bySport = (s: string | undefined) => probe.filter((r) => r.x.sport === s).length;
-    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([91, 15, 6, 5, 1]);
+    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([91, 14, 6, 5, 1]);
     for (const r of probe) {
       expect(r.x.platform, r.name).toBe('sportsrecruits');
       expect(r.x.classOf, r.name).not.toBeNull();
@@ -735,9 +757,12 @@ describe('recruiting profiles', () => {
       'https://iwlca.sportsrecruits.com/athlete/reagan_roach2',
     ]);
     // 809 profiles for 583 players once it was linked (779 for 569 before it); the 2026-11-06 NCSA sweep, below, added 7.
+    // On 2026-11-13: one page unlinked (Olivia Lynch), one record folded into another (Alexandra Schmidt into Lexie
+    // Schmidt), and six JV-list players' pages moved to their varsity rows: 814 for 587.
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1106(x)))).toHaveLength(809);
-    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1106(x)))).toHaveLength(583);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1106(x)))).toHaveLength(814);
+    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1106(x)))).toHaveLength(587);
+    expect(all.flatMap((p) => p.profiles.filter(movedFromJv1113))).toHaveLength(6);
   });
 
   it('what the 2026-11-06 NCSA school-page sweep found: seven field hockey pages, each naming the school', () => {
@@ -761,10 +786,10 @@ describe('recruiting profiles', () => {
     expect(found.find((r) => r.slug === 'los-gatos')!.p.level).toBe('jv');
     // Evalina MacLennan's page says "Evie Maclennan" and fits both Maclennan seniors: it is linked on the owner's word.
     expect(found.find((r) => r.slug === 'glendora')!.x.note).toMatch(/the owner identified her as Evalina/);
-    // 816 profiles for 588 players in all.
+    // 816 profiles for 588 players in all; 821 for 592 after 2026-11-13 (see the 2026-11-03 test).
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(816);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(588);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(821);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(592);
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
@@ -776,8 +801,9 @@ describe('recruiting profiles', () => {
     expect(claimed).toHaveLength(260);
     expect(new Set(claimed.map((r) => `${r.slug} ${r.p.athleteId}`)).size).toBe(260);
     expect(new Set(claimed.map((r) => r.slug)).size).toBe(73);
-    // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more).
-    expect(claimed.filter((r) => r.p.profiles.filter((x) => !fromProbe1103(x)).length === 1)).toHaveLength(159);
+    // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more); 158 since
+    // Marin Catholic's Lexie Schmidt took her deleted duplicate row's lacrosse page (2026-11-13).
+    expect(claimed.filter((r) => r.p.profiles.filter((x) => !fromProbe1103(x)).length === 1)).toHaveLength(158);
     for (const { slug, p, x } of claimed) {
       // The row's own career page, never a namesake's: it needs no name match.
       expect(x.url, `${slug} / ${p.fullName}`).toBe(rows.get(`${slug} ${p.athleteId}`)!.careerUrl);
@@ -929,8 +955,9 @@ describe('lib/players/rosters.ts merged view', () => {
     const n = (ps: ReadonlyArray<{ grade: number | null; position: string | null; height: string | null }>, k: 'grade' | 'position' | 'height') =>
       ps.filter((p) => p[k] !== null).length;
     // 133 from the 2026-10-02 research; on 2026-10-12, 8 more from MaxPreps' career and earlier-season pages
-    // and 7 from school papers and Saratoga's athletics site.
-    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 148);
+    // and 7 from school papers and Saratoga's athletics site: 148. 126 since 2026-11-13, when Saratoga's
+    // roster on MaxPreps gave 21 of them and Kaylee Stone's row left it.
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 126);
     expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
     expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);
