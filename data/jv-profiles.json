@@ -1,13 +1,41 @@
 {
   "season": "26-27",
-  "builtBy": "research by hand, 2026-11-06: a SportsRecruits profile-address probe in every sport for the 746 JV players the team pages list (3,800 addresses: each name's slug bare and with the suffixes 2 to 5; 111 live pages read), NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe, each kept page re-read by an independent refuter",
-  "capturedAt": "2026-11-06",
+  "builtBy": "research by hand, 2026-11-06: a SportsRecruits profile-address probe in every sport for the 746 JV players the team pages list (3,800 addresses: each name's slug bare and with the suffixes 2 to 5; 111 live pages read), NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe, each kept page re-read by an independent refuter; 2026-11-13: Hudl's public team rosters for every school's field hockey teams, each kept page re-read by an independent refuter",
+  "capturedAt": "2026-11-13",
   "notes": [
     "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial.",
     "2026-11-06, SportsRecruits: an address probe for the JV players (the first_last slug, and a hyphen-free one for a hyphenated name, bare and with the suffixes 2 to 5, which hold 252 of the 261 SportsRecruits pages the varsity overlay links; 3,800 addresses, one at a time, waiting out SportsRecruits' HTTP 429s). 111 live pages were read and kept by the 2026-10-12 rule (title names the player, class year agrees with the JV grade or is 2027-2030 for a player with none, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all: 33 pages for 33 players (32 lacrosse, 1 field hockey). Not linked: men's lacrosse pages; pages with a class year and no school or place (Anna Shapiro, Cora Gallagher and Zoe Shetti at St. Ignatius, Emersyn Manion and Kaleigh Houghton at Saint Francis, Kieara Reno, Nina Wimmer) or a place and no class year (Ella Gunthermaher, Fair Oaks; Sophie McRae; Frankie Rivinus; a second Eva Walker); a class that disagrees (Lauren Chow, Isabella Park, Tessa Lambert's Utah page); and namesakes in other states or classes, several of them committed. No page linked shows a college commitment. Three of the Los Gatos pages it found (Beatrix Monk's, Casey Moorehouse's and Colette von Klemperer's) were already linked in data/rosters-enrichment.json.",
-    "2026-11-13: six JV-listed players joined their varsity rosters (Berkeley's Sage Murphy, Leland's Riley Salgado, Marin Catholic's Laurel and Scarlett Wu, Saint Francis's Quinn Gossett, Westview's Mia Essey), so their recruiting pages moved to data/rosters-enrichment.json; this file now links 28 pages."
+    "2026-11-13: six JV-listed players joined their varsity rosters (Berkeley's Sage Murphy, Leland's Riley Salgado, Marin Catholic's Laurel and Scarlett Wu, Saint Francis's Quinn Gossett, Westview's Mia Essey), so their recruiting pages moved to data/rosters-enrichment.json; this file now links 28 pages.",
+    "2026-11-13, Hudl: every school's field hockey team rosters on Hudl were read through its public GraphQL endpoint (the one its public fan pages use) and matched against the JV lists. Seven JV players' public profiles list a field hockey team at their school and were linked, each re-read by an independent refuter: Great Oak's London Harvey (the page says London Rose Harvey, class of 2028), Bonita's Agatha Sosa and Peyton Moronez (the page gives no class year and names Bonita High School, La Verne), and Harvard-Westlake's Grace Eisner, Katiya Chen, Isabella Park and Karina Ferrie (on the school's JV and freshman teams). An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day, so her page is in data/rosters-enrichment.json with the varsity rows' Hudl and NCSA pages from the same sweep."
   ],
   "teams": [
+    {
+      "slug": "bonita",
+      "players": [
+        {
+          "name": "Agatha Sosa",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27310761",
+              "classOf": 2028,
+              "note": "On Bonita High School's varsity field hockey team on Hudl (BHS Womens Varsity FieldHockey, La Verne); class of 2028 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Peyton Moronez",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27311557",
+              "classOf": null,
+              "note": "On Bonita High School's varsity field hockey team on Hudl (BHS Womens Varsity FieldHockey, La Verne); states no class year. The page names Bonita High School, La Verne; the profile was created 23 August 2025 for the 2025 team, a season the roster's sophomore would have played as a freshman. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
     {
       "slug": "cathedral-catholic",
       "players": [
@@ -44,6 +72,71 @@
               "classOf": 2029,
               "note": "SportsRecruits lacrosse profile: class of 2029, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
               "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "great-oak",
+      "players": [
+        {
+          "name": "London Harvey",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31947009",
+              "classOf": 2028,
+              "note": "On Great Oak High School's varsity field hockey team on Hudl (GOHS Girls Varsity Field Hockey, Temecula); class of 2028 agrees with the roster. The Hudl name is London Rose Harvey. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "harvard-westlake",
+      "players": [
+        {
+          "name": "Grace Eisner",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/23774064",
+              "classOf": 2028,
+              "note": "On Harvard-Westlake's JV field hockey team on Hudl (HW Field Hockey - JV; the profile also lists the Freshman team); class of 2028 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Katiya Chen",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28227584",
+              "classOf": 2029,
+              "note": "On Harvard-Westlake's JV field hockey team on Hudl (HW Field Hockey - JV; the profile also lists the Freshman team); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Isabella Park",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28227585",
+              "classOf": 2029,
+              "note": "On Harvard-Westlake's JV field hockey team on Hudl (HW Field Hockey - JV; the profile also lists the Freshman team); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Karina Ferrie",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/28227592",
+              "classOf": 2029,
+              "note": "On Harvard-Westlake's JV field hockey team on Hudl (HW Field Hockey - JV; the profile also lists the Freshman team); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
             }
           ]
         }

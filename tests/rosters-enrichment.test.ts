@@ -66,6 +66,8 @@ const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by
 const fromProbe1103 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-03 address probe') ?? false;
 /** A profile the 2026-11-06 NCSA school-page sweep linked: its note says so. */
 const fromSweep1106 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-06 NCSA school-page sweep') ?? false;
+/** A profile the 2026-11-13 Hudl team-roster or NCSA school-page sweep linked: its note says so. */
+const fromSweep1113 = (x: { note: string | null }) => /Found by the 2026-11-13 (Hudl team-roster|NCSA school-page) sweep/.test(x.note ?? '');
 /**
  * A JV-list player's profile moved to her varsity row on 2026-11-13, when the re-read rosters put her on varsity
  * (data/jv-profiles.json had linked it): its note says so.
@@ -94,7 +96,7 @@ const pre: RosterEnrichment = {
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
         profiles: p.profiles.filter(
-          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x),
+          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x) && !fromSweep1113(x),
         ),
       }))
       .filter(
@@ -760,8 +762,9 @@ describe('recruiting profiles', () => {
     // On 2026-11-13: one page unlinked (Olivia Lynch), one record folded into another (Alexandra Schmidt into Lexie
     // Schmidt), and six JV-list players' pages moved to their varsity rows: 814 for 587.
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1106(x)))).toHaveLength(814);
-    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1106(x)))).toHaveLength(587);
+    const before = (x: { note: string | null }) => !fromSweep1106(x) && !fromSweep1113(x);
+    expect(all.flatMap((p) => p.profiles.filter(before))).toHaveLength(814);
+    expect(all.filter((p) => p.profiles.some(before))).toHaveLength(587);
     expect(all.flatMap((p) => p.profiles.filter(movedFromJv1113))).toHaveLength(6);
   });
 
@@ -786,10 +789,52 @@ describe('recruiting profiles', () => {
     expect(found.find((r) => r.slug === 'los-gatos')!.p.level).toBe('jv');
     // Evalina MacLennan's page says "Evie Maclennan" and fits both Maclennan seniors: it is linked on the owner's word.
     expect(found.find((r) => r.slug === 'glendora')!.x.note).toMatch(/the owner identified her as Evalina/);
-    // 816 profiles for 588 players in all; 821 for 592 after 2026-11-13 (see the 2026-11-03 test).
+    // 816 profiles for 588 players in all; 821 for 592 after the 2026-11-13 roster refresh (see the 2026-11-03 test),
+    // before the 2026-11-13 Hudl and NCSA sweep (below).
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(821);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(592);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1113(x)))).toHaveLength(821);
+    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1113(x)))).toHaveLength(592);
+  });
+
+  it('what the 2026-11-13 Hudl team-roster and NCSA school-page sweeps found: 78 Hudl and 4 NCSA pages, each naming the school', () => {
+    const found = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromSweep1113).map((x) => ({ slug: t.slug, p, x }))));
+    expect(found).toHaveLength(82);
+    expect(new Set(found.map((r) => `${r.slug} ${r.p.fullName}`)).size).toBe(82);
+    const count = (k: string) => found.filter((r) => r.x.platform === k).length;
+    expect([count('hudl'), count('ncsa')]).toEqual([78, 4]);
+    const bySchool = Object.fromEntries([...new Set(found.map((r) => r.slug))].sort().map((s) => [s, found.filter((r) => r.slug === s).length]));
+    expect(bySchool).toEqual({
+      berkeley: 5,
+      bishops: 1,
+      christopher: 15,
+      'convent-sacred-heart': 5,
+      gilroy: 9,
+      lynbrook: 1,
+      'marin-catholic': 1,
+      mitty: 5,
+      'pleasant-valley': 1,
+      'saint-francis': 13,
+      'st-ignatius': 4,
+      'university-sf': 15,
+      'valley-christian': 7,
+    });
+    expect(found.filter((r) => r.x.platform === 'ncsa').map((r) => r.p.fullName).sort()).toEqual([
+      'Eleanor Navarrette',
+      'Junali Dutta',
+      'Myla McCandless',
+      'Samantha Brunsell',
+    ]);
+    for (const { p, x } of found) {
+      expect(x.sport, p.fullName).toBeUndefined();
+      expect(x.note, p.fullName).toMatch(/re-read by an independent refuter\.$/);
+    }
+    // One page gives no class year (Christopher's Johanna Canseco): it names the school, which carries the link.
+    expect(found.filter((r) => r.x.classOf === null).map((r) => r.p.fullName)).toEqual(['Johanna Canseco']);
+    // Berkeley's Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day.
+    expect(found.some((r) => r.slug === 'berkeley' && r.p.fullName === 'Sage Murphy')).toBe(true);
+    const all = raw.teams.flatMap((t) => t.players);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(903);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(634);
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
@@ -803,7 +848,8 @@ describe('recruiting profiles', () => {
     expect(new Set(claimed.map((r) => r.slug)).size).toBe(73);
     // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more); 158 since
     // Marin Catholic's Lexie Schmidt took her deleted duplicate row's lacrosse page (2026-11-13).
-    expect(claimed.filter((r) => r.p.profiles.filter((x) => !fromProbe1103(x)).length === 1)).toHaveLength(158);
+    const by1013 = (x: { note: string | null }) => !fromProbe1103(x) && !fromSweep1106(x) && !fromSweep1113(x);
+    expect(claimed.filter((r) => r.p.profiles.filter(by1013).length === 1)).toHaveLength(158);
     for (const { slug, p, x } of claimed) {
       // The row's own career page, never a namesake's: it needs no name match.
       expect(x.url, `${slug} / ${p.fullName}`).toBe(rows.get(`${slug} ${p.athleteId}`)!.careerUrl);

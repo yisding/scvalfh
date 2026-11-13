@@ -601,6 +601,40 @@ a Utah Tessa Lambert), and namesakes elsewhere, several committed. No linked pag
 `data/jv-profiles.json` holds 34 JV players with a profile at 14 schools. The varsity rows were not probed
 again this day.
 
+*2026-11-13: Hudl's team rosters and NCSA's school pages, for all 102 schools.* Hudl's public GraphQL
+endpoint (the EAL route below) answered without a login for every school: all 88 schools with rows were
+matched to a Hudl school and every field hockey team's roster read, the current season's or, where a team
+has none, its latest. Hudl's season label can be stale: Christopher's team reads 2023 and Convent & Stuart
+Hall's 2022 even on profiles created in August and September 2026, so the class year, not the team's
+season, ties a page to a current player. 85 public profiles not linked before were kept (77 varsity-file
+rows, 8 JV players), each listing a field hockey team at the player's school, its overview naming the
+school, and its class year agreeing with the roster (two give none and name the school: Christopher's
+Johanna Canseco and Bonita's JV Peyton Moronez): Christopher 15, University 15, Saint Francis 13, Gilroy 9,
+Valley Christian 7, Convent 5, Berkeley 5 (all on Berkeley's JV team on Hudl, four of them varsity rows),
+Mitty 4, Harvard-Westlake 4 (JV), St. Ignatius 3, Bonita 2 (JV), Great Oak 1 (JV), Marin Catholic 1 and
+Pleasant Valley 1. Given-name pages are linked on the school and class year (Madison McDougall, Addison
+Paradiso, Alexandra Pires, Lexie Osaki for the Lexi row, London Rose Harvey). Marin Catholic's roster has
+both a Lexie Schmidt and an Alexandra Schmidt row, class of 2027; the Hudl page says Lexie Schmidt and is
+linked on that row only (the school's own roster lists only Alexandra Schmidt, so the two MaxPreps rows may
+be one player). NCSA's field hockey school pages were read through WebFetch for all 88 schools (99 pages,
+both slugs where a school has two; Valley Christian's right slugs are `valley-christian-high-school-10` and
+`-7`, as `valley-christian-high-school` is Chandler, AZ, and Southwest's is
+`southwest-senior-high-school`, as `southwest-high-school` is Jacksonville, NC): four more pages, each
+naming the school with a class year that agrees (Samantha Brunsell, St. Ignatius; Eleanor Navarrette, Mitty;
+Junali Dutta, Lynbrook; Myla McCandless, Bishop's). An independent refuter re-opened all 89 and kept every
+one. Not linked: 96 Hudl roster entries whose profiles are private (Valley Christian 22, La Costa Canyon 16,
+Pleasant Valley 9, and others); Hudl pages whose class year disagrees with the roster (among them four La
+Jolla Country Day pages a year earlier than the rows, which may mean those grades are off, and Genevieve
+Ferrini's, a year off Saint Francis' Evie Ferrini); second Hudl profiles for rows that already link one;
+NCSA listings with no profile address that answers (Dylan Powell, Maggie Magnano, Brooklyn Barnard,
+Charlotte Painter, Kasia Umholtz); and 16 FieldLevel pages from an address probe of the 1,688 varsity rows
+without one (`/fieldhockeywomen`, 1,773 addresses), which give a hometown but no class year or school.
+The same day every linked SportsRecruits profile (294, varsity and JV) was re-read: all answer, and one
+now shows a new commitment (McKenzie Rackleff's, §1.1j3). The SportsRecruits address probe was not
+repeated. The same day's roster refresh put six JV-list players on their varsity rosters, Berkeley's Sage Murphy
+among them, so her Hudl page is on her varsity row: the overlay then holds 903 profiles for 634 players (78
+Hudl and 4 NCSA from this sweep), and `data/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
@@ -1061,9 +1095,9 @@ roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (ever
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
 round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools; and, on
 2026-10-12, a round over every row with each player's other sports, partial: see below; and, on
-2026-10-22, 2026-11-03 and 2026-11-06, another round over every row each: see below), not
-a script: nothing fetches or refreshes it. It holds 37 commitments (22 in field hockey, 12 in lacrosse,
-1 in soccer, 1 in basketball, 1 in softball) and the 28 colleges they are to, with 31 programs (UC Davis, Cal and
+2026-10-22, 2026-11-03, 2026-11-06 and 2026-11-13, another round over every row each: see below), not
+a script: nothing fetches or refreshes it. It holds 38 commitments (23 in field hockey, 12 in lacrosse,
+1 in soccer, 1 in basketball, 1 in softball; one, Phoebe Miller's, `signed`) and the 29 colleges they are to, with 32 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
 rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
@@ -1089,10 +1123,10 @@ or a news story names teammates and other recruits who are not on the rosters.
 | Christopher | Alyssa Montejano (2027) | Field hockey | Maryville | NCAA Division II | Her own SportsRecruits profile (class of 2027, Gilroy, CA; no school named, so the class year plus a Gilroy hometown); SportsRecruits' Maryville college page, built from the same profile. Undated |
 | Christopher | Ryan Hemeon (2028) | Field hockey | UC Davis | NCAA Division I | One line on FH College Path's class of 2028 list: name, CA, position, Infinity Sports Club. Medium: no school is named, so the class year plus a Gilroy club this row is already tied to (§1.1j2). Her own SportsRecruits profile shows no commitment, which is absence, not contradiction. Undated |
 | Redwood | Claire Johnson (2027) | Lacrosse | Cal | NCAA Division I | The Marin IJ's Apr 23, 2026 girls lacrosse story ("Redwood’s Claire Johnson, a junior committed to play at Cal"; `asOf`); her own SportsRecruits lacrosse profile (names Redwood High School); STEPS California's commitments page |
-| Redwood | Phoebe Miller (2027) | Lacrosse | San Diego State | NCAA Division I | The same Marin IJ story ("a junior committed to play at San Diego State"; `asOf`); her own SportsRecruits lacrosse profile (class of 2027, Larkspur, CA); STEPS California's commitments page (Redwood High School) |
+| Redwood | Phoebe Miller (2027) | Lacrosse | San Diego State | NCAA Division I | The same Marin IJ story ("a junior committed to play at San Diego State"; the commitment's date); her own SportsRecruits lacrosse profile (class of 2027, Larkspur, CA); STEPS California's commitments page (Redwood High School); San Diego State athletics' Nov 11, 2026 signing release ("announced the signing of six student-athletes from the class of 2027", with her bio: Redwood High School), so `signed` since 2026-11-13, `asOf` the release's date ("Signed, as of Nov 11, 2026") |
 | St. Ignatius | Sofie Stiefel (2027) | Lacrosse | Marist | NCAA Division I | Her own SportsRecruits lacrosse profile (listed under St. Ignatius's girls' lacrosse); STEPS California's commitments page. Undated |
 | St. Ignatius | Catherine Cecchini (2027) | Lacrosse | Bucknell | NCAA Division I | Her own SportsRecruits lacrosse profile, as Cate (its bio names St. Ignatius College Prep and the class of 2027); STEPS California's page (Cate Cecchini, St. Ignatius College Prep). Undated |
-| Marin Catholic | Gianna Rinaldi (2028) | Lacrosse | UC Davis | NCAA Division I | Her own SportsRecruits lacrosse profile (class of 2028, Novato, CA; no school in its text, so the class year plus a Marin hometown); SportsRecruits' UC Davis lacrosse page, built from it. Undated |
+| Marin Catholic | Gianna Rinaldi (2028) | Lacrosse | UC Davis | NCAA Division I | Her own SportsRecruits lacrosse profile (class of 2028, Novato, CA; no school in its text, so the class year plus a Marin hometown); SportsRecruits' UC Davis lacrosse page, built from it; since 2026-11-13 STEPS California's commitments page, which names Marin Catholic. Undated |
 | Stevenson | Zola Ducker (2027) | Lacrosse | Trinity (Conn.) | NCAA Division III | Her own SportsRecruits lacrosse profile (class of 2027, Pacific Grove, CA, Verve Lacrosse); Lacrosse Masters' girls' commitment list ("Verve Lacrosse / Stevenson School - CA - 2027"); SportsRecruits' Trinity page. Undated |
 | Berkeley | Violet Potts (2027) | Lacrosse | Vassar | NCAA Division III | Her own SportsRecruits lacrosse profile (class of 2027, Berkeley, CA, ADVNC Lacrosse); ADVNC Lacrosse's own commitments page (its 2027 class: "Violet Potts - Berkeley - Vassar"). Undated |
 | St. Ignatius | Gigi Colant (2027) | Soccer | St. Lawrence | NCAA Division III | Her own SportsRecruits soccer profile, under her given name Gabriella (its bio names Saint Ignatius College Prep, the class of 2027 and "Gigi Colant"); SportsRecruits' St. Lawrence soccer page. Undated |
@@ -1106,7 +1140,8 @@ or a news story names teammates and other recruits who are not on the rosters.
 | Scripps Ranch | Samantha Ippolito (2027) | Field hockey | Michigan State | NCAA Division I | Her own SportsRecruits profile; the San Diego Union-Tribune's Sep 22, 2025 athletes-of-the-week item (`asOf`); Scripps Ranch News (Oct 3, 2025 and Sep 21, 2026, dated from the site's WordPress API); FH College Path; RUSH's player page; SportsRecruits' Michigan State page. The row has no grade: every page says 2027 |
 | Canyon Hills | Eva Allen (2028) | Field hockey | Cal | NCAA Division I | Her own SportsRecruits profile, as Eva Jo Allen (its bio names Canyon Hills High School); FH College Path's class of 2028 list; RUSH's player page; SportsRecruits' Cal page. Undated |
 | Canyon Hills | Rylie Storm (2028) | Field hockey | Harvard | NCAA Division I | Her own SportsRecruits profile (class of 2028, San Diego, CA), which shows "Committed to Harvard University" since the 2026-11-03 probe (high since then); one line on FH College Path's class of 2028 list (name, CA, position, Rush FH), on which she was medium until then. Undated |
-| Canyon Hills | Reese Roldan (2027) | Field hockey | UC Davis | NCAA Division I | One line on FH College Path's class of 2027 list (Rush FH); RUSH's player page, whose College Commitment field is a UC Davis logo linking to its field hockey page. Medium, on the same ground as Storm. Undated |
+| Canyon Hills | Reese Roldan (2027) | Field hockey | UC Davis | NCAA Division I | One line on FH College Path's class of 2027 list (Rush FH); RUSH's player page, whose College Commitment field is a UC Davis logo linking to its field hockey page; since 2026-11-13 MAX Field Hockey's player page, which names Canyon Hills (still medium: MAX takes the commitments its users report). Undated |
+| San Marcos | McKenzie Rackleff (2027) | Field hockey | Lock Haven | NCAA Division I (an Atlantic 10 affiliate; the college's other teams are Division II) | Her own SportsRecruits profile, already linked on her row (class of 2027, San Marcos, CA, HTC-CA), which showed "Committed to Lock Haven University" when the 2026-11-13 round re-read it. High: her own profile. Undated |
 | San Dieguito Academy | Ella Rennie (2027) | Field hockey | Muhlenberg | NCAA Division III | Her own SportsRecruits profile (names San Dieguito Academy); Play College Field Hockey's sheet ("June 19, 2026" under Date Committed; `asOf`); SportsRecruits' Muhlenberg page. The row has no grade: every page says 2027 |
 | Bishop's | Emerson Davis (2028) | Lacrosse | Harvard | NCAA Division I | Her own SportsRecruits lacrosse profile (TEAMS names The Bishops School); SportsRecruits' Harvard lacrosse page. Undated |
 | Cathedral Catholic | Lia Palecek (2028) | Lacrosse | Oregon | NCAA Division I | Her own SportsRecruits lacrosse profile (names Cathedral Catholic High School); SportsRecruits' Oregon lacrosse page. The row has no grade: every page says 2028. Undated |
@@ -1509,8 +1544,42 @@ Lacrosse Masters (Bayport, NY), a Mia Jones on FH College Path (Virginia, class 
 several student and local papers (HTTP 403: the Falconer, the Chronicle, the Campanile, the Pitch, the
 Epitaph, the Union-Tribune, the Mercury News), X and Instagram.
 
-*Recall is partial.* On 2026-11-06, 37 of the 1,673 varsity rows have a commitment, at 22 of the 102
-schools (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19
+*The 2026-11-13 round.* Two days after the class of 2027's fall signing day (Nov 11, 2026), over all 1,702
+varsity rows and the JV players. Signing classes: every college in the file was checked for a November
+signing or incoming-class release in the commitment's sport, as were every Division I field hockey program
+(82; 73 read, the rest behind bot checks or failing) and Division II program (34; 31 read), about 130
+Division I women's lacrosse programs (17 releases read) and 56 West Coast Division I schools' soccer,
+softball, volleyball, water polo and basketball programs (64 releases read), every release matched against
+every row. No Division I or II field hockey program had posted one: field hockey programs announced their
+classes in the spring and summer. San Diego State's women's lacrosse release of Nov 11 names Phoebe Miller
+with Redwood High School, so hers is the file's first `signed`; no other college in the file had a release
+out. The Californian signees the releases name (Parker Saari, La Costa Canyon; Brooke Spagnuolo, Marin
+Catholic; Lily Raiszadeh, Cathedral Catholic; and others) are not on the field hockey rosters. Lists and
+clubs, read whole and matched against every row (FH College Path, MAX Field Hockey's 1,690-row table and
+its player pages, Play College Field Hockey's sheet, the SF Hawks', RUSH's, HTC's, NorCal Impact's, STEPS',
+ADVNC's and Lacrosse Masters' pages, TopDrawerSoccer, SoccerWire, Prep Girls Lacrosse, Cal Nuggets, Extra
+Inning Softball, the Prep Network, MileSplit): every list quote in the file is still on its page, and five
+pages are new sources for commitments already here (MAX's player pages naming Reese Roldan's, Sami Lee's
+and Frankie Lemieux's schools; STEPS' rows for Gianna Rinaldi and Campbell Trocha). Roldan and Lee stay
+medium, as Kendall Gann is, because MAX takes the commitments its users report. News: Stick Together has
+posted nothing since Nov 5 (its feed is now `/blog/rss/`); Saint Francis' and Cathedral Catholic's
+signing-day roundups of Nov 12 name no rostered player; the Bay Area and Southern California News Group
+papers' daily sitemaps for Nov 5 to 13 and about 70 school sites gave nothing new. SportsRecruits: all 294
+linked profiles (varsity and JV) were re-read; 26 show a commitment, 25 the one in the file and none
+signed, and one is new: McKenzie Rackleff (San Marcos, class of 2027) to Lock Haven in field hockey, on her
+own profile (high). Lock Haven is a Division II school whose field hockey team plays Division I as an
+Atlantic 10 affiliate (its athletics site lists the A-10 as "FH Affiliate"). The commits feed was read for
+program ids 1 to 1,044 (74,764 records) before the round stopped it for time; its twelve full-name matches
+not already in the file were opened by hand and are namesakes in other states, or, for University City's
+Samantha Weathers, a Saugus lacrosse player of another class. Not run: the rest of the feed, a SportsRecruits
+address probe (both ran whole on 2026-11-03) and name-by-name web searches (the search index held almost
+nothing published after Nov 5). Not reached: the Mercury News' and Marin IJ's feeds, several student papers,
+Harvard-Westlake's site and San Diego Prep Insider (HTTP 403 or no answer), college sites behind bot
+checks, Instagram. More signing news is likely: the Marin schools' commitment ceremonies and San Diego's
+county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles.
+
+*Recall is partial.* On 2026-11-13, 38 of the 1,673 varsity rows have a commitment, at 23 of the 102
+schools (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19
 (Valley Christian and Archbishop Mitty added on 2026-10-12, Temecula Valley on 2026-10-22): Southern California's 14 at 8 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
 Scripps Ranch, San Dieguito Academy and Temecula Valley 1 each); Northern California's 19 include St. Ignatius' seventh, Kaye Zilinskas, of 2026-10-22. Every one of the 842 rows had a
 SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
@@ -3553,9 +3622,9 @@ rules clause.)
   without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
   Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
   web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
-  recall is partial (35 of the 1,673 varsity rows, at 21 of the 102 schools, on 2026-11-03; social
+  recall is partial (38 of the 1,673 varsity rows, at 23 of the 102 schools, on 2026-11-13; social
   media, where most are announced, counts only from an official account), a signing or decommitment after that date is not
-  shown, and a roster refetch that drops or respells a committed row fails the build until it is
+  shown (one signing, Phoebe Miller's, was found by 2026-11-13), and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
 - Club ties (§1.1j2) were researched on 2026-10-03 (the six EAL teams' schools on 2026-10-04, adding
   eight ties for five players at Davis and Pleasant Valley, and three club records), re-read from the

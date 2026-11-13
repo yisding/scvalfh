@@ -93,8 +93,9 @@ describe('data/jv-profiles.json', () => {
     expect(all.filter(({ x }) => x.platform === 'ncsa').map(({ e }) => e.name)).toEqual(['Katie Todd']);
     // The probe's 27 pages are at 11 schools; Scripps Ranch, the twelfth, is here for Katie Todd's NCSA page.
     expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(11);
-    expect(fileEntries).toHaveLength(28);
-    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(12);
+    const by1106 = fileEntries.filter((e) => e.profiles.some((x) => !x.note?.includes('Found by the 2026-11-13')));
+    expect(by1106).toHaveLength(28);
+    expect(new Set(by1106.map((e) => e.slug)).size).toBe(12);
     // Where a player had more than one live page, the one the rule kept is linked, not the other.
     const url = (slug: string, name: string) => getJvPlayerProfiles(slug as TeamSlug, name).map((x) => x.url);
     expect(url('saint-francis', "Aoife O'Connor")).toEqual(['https://iwlca.sportsrecruits.com/athlete/aoife_oconnor2']);
@@ -102,6 +103,25 @@ describe('data/jv-profiles.json', () => {
     expect(url('st-ignatius', 'Simone Stiefel')).toEqual(['https://iwlca.sportsrecruits.com/athlete/simone_stiefel2']);
     expect(url('lick-wilmerding', 'Mira Mathus')).toEqual(['https://iwlca.sportsrecruits.com/athlete/mira_mathus']);
     expect(url('st-ignatius', 'Luciana Bennett')).toEqual(['https://iwlca.sportsrecruits.com/athlete/luciana_bennett']);
+  });
+
+  it('holds what the 2026-11-13 Hudl sweep found: seven JV players\u2019 Hudl pages at three schools', () => {
+    const found = fileEntries.flatMap((e) => e.profiles.filter((x) => x.note?.includes('Found by the 2026-11-13 Hudl team-roster sweep')).map((x) => ({ e, x })));
+    // An eighth, Berkeley's Sage Murphy, joined the varsity roster the same day: her page is in the varsity overlay.
+    expect(found.map(({ e }) => `${e.slug} ${e.name}`).sort()).toEqual([
+      'bonita Agatha Sosa',
+      'bonita Peyton Moronez',
+      'great-oak London Harvey',
+      'harvard-westlake Grace Eisner',
+      'harvard-westlake Isabella Park',
+      'harvard-westlake Karina Ferrie',
+      'harvard-westlake Katiya Chen',
+    ]);
+    expect(found.every(({ x }) => x.platform === 'hudl' && x.sport === undefined)).toBe(true);
+    // 35 JV players with a profile at 15 schools.
+    expect(fileEntries).toHaveLength(35);
+    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(15);
+    expect(file.capturedAt).toBe('2026-11-13');
   });
 
   it('refuses a claimed-MaxPreps profile, two profiles on one platform in one sport, and a player listed twice', () => {
