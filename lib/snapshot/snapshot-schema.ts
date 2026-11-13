@@ -261,7 +261,8 @@ export const GameSchema = z
         .optional(),
       resultCorrection: z
         .object({
-          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), otPeriods: z.number().int().min(0) }),
+          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), otPeriods: z.number().int().min(0) }).nullable(),
+          certainty: z.literal('reported').optional(),
           source: z.string().min(1),
           url: httpUrl.nullable(),
         })

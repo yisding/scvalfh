@@ -174,7 +174,8 @@ describeIfCaptured('the SoCal corpus run', () => {
       sunset: { teams: 8, games: 99, leagueGames: 35, finals: 83, backfilled: 0 },
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
-      metro: { teams: 9, games: 93, leagueGames: 31, finals: 59, backfilled: 0 },
+      // One fewer than MaxPreps listed: e767ad95 (Southwest at El Capitan, Oct 30) is an excluded stray row.
+      metro: { teams: 9, games: 92, leagueGames: 30, finals: 59, backfilled: 0 },
       // Not in the run: the Sunset and San Diego feeds' 34 games against the five independents (32 final), none
       // counted for the group's table (which counts games between two of the five: Bonita–Chaminade is in neither
       // team's feed here, both being out of the run, and the frozen league keeps no counted games).
@@ -278,7 +279,8 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
       'palomar:42/42',
       'valley:30/30',
       'metro-mesa:19/20',
-      'metro-south-bay:12/12',
+      // e767ad95 (Southwest at El Capitan, Oct 30) is excluded: the pair's second game was played Oct 27.
+      'metro-south-bay:11/12',
     ]);
   });
 

@@ -314,7 +314,70 @@ describe('a result recorded from a better source (DATA_QUALITY.resultCorrections
   });
 });
 
+describe('what the data audit of 2026-11-13 found', () => {
+  it('scores a game MaxPreps lists with no score from its citation, and says how sure the source is', () => {
+    // Bonita Vista at Helix, Oct 7: no score on MaxPreps; cifsshome.org has Helix 2-1.
+    const id = '3a37744f-8264-47f8-baa3-6c660b8e3892';
+    const pending = game({ home: 'helix', away: 'bonita-vista', date: '2026-10-07', status: 'score-pending', contestId: id });
+    expect([pending.home.score, pending.decider]).toEqual([null, null]);
+    const g = finalizeResult(pending);
+    expect([g.status, g.home.score, g.away.score, g.decider, g.home.result]).toEqual(['final', 2, 1, 'REG', 'W']);
+    expect(g.provenance.resultCorrection?.maxpreps).toBeNull();
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'regulation', certainty: 'reported' });
+    // A scheduled game is not a result to correct.
+    const scheduled = game({ home: 'helix', away: 'bonita-vista', date: '2026-10-07', contestId: id });
+    expect(finalizeResult(scheduled)).toBe(scheduled);
+  });
+
+  it('records the shootout tallies MaxPreps’ game pages print: Saint Francis 5-2, Pleasant Valley 3-2', () => {
+    const semi = game({
+      home: 'saint-francis', away: 'mitty', hs: 1, as: 1, league: false, date: '2026-11-11', results: MARKED_HOME,
+      postseason: { kind: 'ccs', leagueId: 'scval', via: 'maxpreps-bracket' }, contestId: '7d6e0426-a989-44cc-9f3e-e69e6ee0cec6',
+    });
+    const g = finalizeResult(semi);
+    expect(g.shootout).toEqual({ home: 5, away: 2 });
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'shootout', certainty: 'confirmed' });
+    expect(describeGame(g).sentence).toBe('Saint Francis 1, Archbishop Mitty 1, final; Saint Francis won in a shootout, 5–2.');
+    expect(DATA_QUALITY.resultCorrections['ca27178a-9f11-46c0-9397-8289585bdb76'].shootout).toEqual({ 'pleasant-valley': 3, chico: 2 });
+  });
+
+  // Pleasant Valley 6, Lassen 1 on MaxPreps (Sep 16): Pleasant Valley's scorers total 7, Lassen's goalkeeper conceded 7.
+  it('takes the figure the two teams’ own box scores agree on over MaxPreps’', () => {
+    const mp = game({ home: 'pleasant-valley', away: 'lassen', hs: 6, as: 1 });
+    const g = finalizeResult(mp, { box: boxFor(mp, { 'pleasant-valley': { goals: 7 }, lassen: { goals: 1, goalsAgainst: 7 } }) });
+    expect([g.home.score, g.away.score]).toEqual([7, 1]);
+    expect(g.result).toMatchObject({ winner: 'home', certainty: 'inferred' });
+    expect(g.result?.basis).toContain('Pleasant Valley’s scorers’ total of 7 and Lassen’s goalkeepers’ 7 goals against');
+    // One box score alone, or two that do not agree with each other, change nothing.
+    const cases: Array<Record<string, BoxSide>> = [{ 'pleasant-valley': { goals: 7 } }, { 'pleasant-valley': { goals: 7 }, lassen: { goalsAgainst: 8 } }];
+    for (const sides of cases) {
+      const same = finalizeResult(mp, { box: boxFor(mp, sides) });
+      expect([same.home.score, same.away.score, same.provenance.adjudicated]).toEqual([6, 1, undefined]);
+    }
+  });
+
+  it('ignores a box score that repeats another of the same team’s, player for player', () => {
+    const players = [{ field: { goals: 1 }, goalkeeping: null }, { field: { assists: 1 }, goalkeeping: null }];
+    const tracked = { field: ['goals', 'assists'], goalkeeping: [] };
+    const evidence = boxEvidenceFrom({
+      teams: [{ slug: 'westview', games: [{ contestId: 'aug-22', tracked, players }, { contestId: 'sep-12', tracked, players }, { contestId: 'other', tracked, players: [{ field: { goals: 2 }, goalkeeping: null }] }] }],
+    });
+    expect([evidence.has('aug-22'), evidence.has('sep-12'), evidence.has('other')]).toEqual([false, false, true]);
+  });
+});
+
 describe('the committed snapshot, as the loader records it', () => {
+  it('drops a row the config has since excluded, lists it as dropped, and recounts the table', () => {
+    const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as { games: Array<{ contestId: string }> };
+    const loaded = loadSnapshot(raw);
+    for (const id of Object.keys(DATA_QUALITY.excludedContestIds)) {
+      expect(loaded.games.some((g) => g.contestId === id), id).toBe(false);
+      if (raw.games.some((g) => g.contestId === id)) expect(loaded.dropped.some((d) => d.contestId === id), id).toBe(true);
+    }
+    // Torrey Pines at La Costa Canyon, Oct 13 (8c6b3f6a), was an 11th Avocado game in a 10-game schedule.
+    for (const row of loaded.standings.filter((r) => r.division === 'avocado')) expect(row.computed.gp, row.slug).toBeLessThanOrEqual(10);
+  });
+
   const snapshot = loadSnapshot(JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as unknown);
 
   it('gives every final a result that agrees with its outcome, and no other game one', () => {

@@ -26,6 +26,14 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     // Harvard-Westlake 6-0 Temecula Valley twice, on Thu Oct 22 (b5fbcc70) and Fri Oct 23; the other round-1
     // games were Thu Oct 22, so the Oct 23 row is the duplicate. Newport Harbor at Glendora was moved from Thu
     // Oct 22 to Sat Oct 24 (45732090, 3-0); the Oct 22 row stayed behind without a score.
+    // Two stray San Diego rows found in the data audit of 2026-11-13, each a third counted meeting of a pair in a
+    // double round robin. 8c6b3f6a (Oct 13, no time) repeats the Oct 6 game (72a06852): same host, same 4-0, and
+    // on Oct 13 both teams played other Avocado games at other schools (Torrey Pines home to Canyon Crest at 4:00,
+    // ec577909; La Costa Canyon at Mt. Carmel at 6:00, b45e6b34); it gave both 11 league games of a possible 10.
+    // e767ad95 (Oct 30, never scored, last edited Sep 10) is the slot the pair's second game was moved out of: they
+    // played Oct 21 at Southwest (35e91119) and Oct 27 at El Capitan (2a4f1334).
+    '8c6b3f6a-4a53-4e4e-87c2-690b6b45d182': 'Torrey Pines at La Costa Canyon, Oct 13 with no time: a second MaxPreps row for their Avocado game of Oct 6 (72a06852), both 4-0; each team played another league game elsewhere that day, and the pair’s return game is Oct 29 (f1388bcc)',
+    'e767ad95-30ad-4777-b1bb-0dac58d9db3f': 'Southwest at El Capitan, Oct 30 with no score: a third MaxPreps row for a Metro South Bay pair whose two games were played Oct 21 (35e91119) and Oct 27 (2a4f1334)',
     '0017b5bb-5319-4742-84df-e6585dcb7056': 'Temecula Valley at Harvard-Westlake, Oct 23: a second MaxPreps row for their Tournament of Champions round-1 game of Oct 22 (b5fbcc70), both 6-0',
     '3702e126-9414-4c0b-a13c-61e78ead2ed9': 'Newport Harbor at Glendora, Oct 22 with no score: the Tournament of Champions round-1 game was played Sat Oct 24 (45732090, Newport Harbor 3-0)',
   },
@@ -54,6 +62,54 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
   },
   resultCorrections: {
+    // The data audit of 2026-11-13. MaxPreps' game PAGE prints a box with an SO column that its schedule feed, which
+    // the pipeline reads, does not carry; both pages were read that day.
+    //  - CCS Division 1 semifinal, Nov 11: "Archbishop Mitty -- -- 1 2 / Saint Francis -- -- 1 5" (columns 1, 2,
+    //    Final, SO). No overtime column is shown, so none is recorded.
+    //  - EAL Super Regional final, Oct 31: "Chico 0 0 0 2 / Pleasant Valley 0 0 0 3".
+    '7d6e0426-a989-44cc-9f3e-e69e6ee0cec6': {
+      goals: { 'saint-francis': 1, mitty: 1 },
+      otPeriods: 0,
+      shootout: { 'saint-francis': 5, mitty: 2 },
+      source: 'MaxPreps’ page for the game, read Nov 13, 2026: level 1-1 at the final, and its shootout column has Saint Francis 5, Archbishop Mitty 2; MaxPreps’ schedule feed carries only the level score and the winner',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/archbishop-mitty-san-jose-vs-saint-francis-mountain-view/11-11-2026/?c=7d6e0426-a989-44cc-9f3e-e69e6ee0cec6',
+    },
+    'ca27178a-9f11-46c0-9397-8289585bdb76': {
+      goals: { 'pleasant-valley': 0, chico: 0 },
+      otPeriods: 0,
+      shootout: { 'pleasant-valley': 3, chico: 2 },
+      source: 'MaxPreps’ page for the game, read Nov 13, 2026: level 0-0 at the final, and its shootout column has Pleasant Valley 3, Chico 2; MaxPreps’ schedule feed carries only the level score and the winner',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/chico-vs-pleasant-valley-chico/10-31-2026/?c=ca27178a-9f11-46c0-9397-8289585bdb76',
+    },
+    // The San Diego Section's own bracket sheet (read Nov 13, 2026) has two results MaxPreps lacks or shortens:
+    // the Division II quarterfinal "Game Moved to Friday, November 6th", "Olympian HS", "6-0", which MaxPreps still
+    // lists with no score a week on (Olympian then played the Nov 11 semifinal); and the Division I first-round
+    // game Mission Bay won "3-2(OT)", which MaxPreps has as 3-2 with no overtime.
+    'dba373ca-9805-4eb4-a479-553059994aee': {
+      goals: { olympian: 6, 'sage-creek': 0 },
+      otPeriods: 0,
+      shootout: null,
+      source: 'the San Diego Section’s Division II bracket sheet, read Nov 13, 2026: the quarterfinal, moved to Fri Nov 6 at Olympian, ended 6-0; MaxPreps lists the game with no score',
+      url: 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit#gid=742825713',
+    },
+    '10c379a5-577c-4dc7-b70f-2a49ed09ca51': {
+      goals: { 'mission-bay': 3, 'la-jolla-country-day': 2 },
+      otPeriods: 1,
+      shootout: null,
+      source: 'the San Diego Section’s Division I bracket sheet, read Nov 13, 2026: “3-2(OT)”; MaxPreps has the score and records no overtime',
+      url: 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit#gid=1795050195',
+    },
+    // Metro Mesa, Oct 7: MaxPreps has listed the game with no score since; the Section's score widget (cifsshome.org,
+    // the snapshot's cifss cross-check row for the contest) has Helix 2, Bonita Vista 1. One source, entered by a
+    // school, but the only one: both teams sat at 7 league results of 8 without it.
+    '3a37744f-8264-47f8-baa3-6c660b8e3892': {
+      goals: { helix: 2, 'bonita-vista': 1 },
+      otPeriods: 0,
+      shootout: null,
+      certainty: 'reported',
+      source: 'cifsshome.org, the San Diego Section’s score listing for Oct 7, 2026: Helix 2, Bonita Vista 1; MaxPreps lists the game with no score',
+      url: 'https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F07%2F2026&date_to=10%2F07%2F2026',
+    },
     // MCAL tournament semifinal, Wed Oct 28: MaxPreps has Tamalpais 3, Marin Catholic 1 as a regulation result. The
     // Marin Independent Journal (Oct 28, 2026): "The game was scoreless after regulation and two overtimes"; Tamalpais
     // "won 3-1 in the shootout". So the goals in play are 0-0, two overtime periods were played and 3-1 is the tally.
@@ -142,10 +198,21 @@ const SOCCER_DATA_QUALITY: DataQualityConfig = {
 };
 
 /** This build's sport's corrections (lib/sports/current.ts). */
-/** Basketball's: nothing yet either. */
+/** Basketball's: the preseason schedule audit of 2026-11-13 (MaxPreps rows that cannot be games). */
 const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
-  ghostTeamIds: {},
-  excludedContestIds: {},
+  ghostTeamIds: {
+    // Four Lynbrook varsity rows (Dec 3, 4, 11, 12) and four Palo Alto JV rows are against this placeholder, which has
+    // an id of its own, so the all-zero TBA rule that drops the other 106 placeholder rows does not catch it.
+    'b6e1f3f8-f345-4829-80a4-0653a9a36a1d': '“Tournament Opponent”: a MaxPreps placeholder for a tournament game whose opponent is not set, not a school',
+  },
+  excludedContestIds: {
+    // Christopher's Jan 13 league game is at Pioneer of San Jose (18b406ab, on the BVAL schedule); this second row, the
+    // same night at the same time, names Pioneer of Woodland.
+    '30211366-90ce-40c4-aef9-983a7275b0c6': 'Christopher at Pioneer (Woodland), Jan 13: a second MaxPreps row for Christopher’s Mt. Hamilton game at Pioneer (San Jose) the same night (18b406ab), with the wrong Pioneer',
+    // The BVAL schedule has Pioneer at Christopher on Wed Feb 3 (37af39e8, matched); on Mon Feb 1 Pioneer is at Leigh
+    // (380c16d6, on the schedule). This row is the game's earlier date left behind.
+    '946b7447-4c09-499c-84a2-7b57b8c8585b': 'Pioneer at Christopher, Feb 1: a stale MaxPreps row for their Mt. Hamilton game of Feb 3 (37af39e8); Pioneer plays at Leigh on Feb 1',
+  },
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},

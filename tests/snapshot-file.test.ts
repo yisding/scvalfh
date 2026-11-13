@@ -127,13 +127,19 @@ describeIfPresent('the committed snapshot: cifsshome.org score cross-check', () 
     for (const row of x.conflicts) {
       const game = snapshot.games.find((g) => g.contestId === row.contestId);
       expect(game, row.contestId).toBeDefined();
-      expect({ home: game?.home.score, away: game?.away.score }).toEqual(row.maxpreps);
+      // The row holds MaxPreps' score as the cross-check saw it. The game shows it too, unless the recorded result
+      // is another one (lib/results/result.ts), and then the game keeps MaxPreps' version beside it.
+      const p = game?.provenance;
+      const mp = p?.adjudicated?.maxpreps ?? p?.resultCorrection?.maxpreps ?? { home: game?.home.score, away: game?.away.score };
+      expect({ home: mp.home, away: mp.away }).toEqual(row.maxpreps);
       expect(row.maxpreps).not.toEqual(row.cifss);
     }
     for (const row of x.cifssOnlyScored) {
       const game = snapshot.games.find((g) => g.contestId === row.contestId);
       expect(game, row.contestId).toBeDefined();
-      expect(game?.home.score ?? game?.away.score ?? null, row.contestId).toBeNull();
+      // Unscored on MaxPreps: it stays unscored here unless a cited correction scores it (DATA_QUALITY.resultCorrections).
+      if (!game?.provenance.resultCorrection) expect(game?.home.score ?? game?.away.score ?? null, row.contestId).toBeNull();
+      else expect(game.provenance.resultCorrection.maxpreps, row.contestId).toBeNull();
     }
     for (const row of x.notOnMaxPreps) expect(row.contestId).toMatch(/^cifss:\d+$/);
   });

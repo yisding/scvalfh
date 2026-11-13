@@ -101,8 +101,8 @@ function overtimeDecider(otPeriods: number): Decider {
 }
 
 /**
- * Step 2: the correction for this contest, applied to a final between the two teams it names; the same object
- * otherwise (no correction, not final, already applied, or the slugs are not this game's sides, which
+ * The correction for this contest, applied to a final, or to a game listed with no score, between the two teams it
+ * names; the same object otherwise (no correction, another status, already applied, or the slugs are not this game's sides, which
  * `correctionProblems` reports). The published score becomes the goals in play, the flags follow the winner
  * (the tally's, else the goals'), and `provenance.resultCorrection` keeps what MaxPreps had.
  */
@@ -111,8 +111,10 @@ export function applyResultCorrection(
   corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
 ): Game {
   const c = corrections[game.contestId];
-  if (!c || game.status !== 'final' || game.home.score === null || game.away.score === null) return game;
-  if (game.provenance.resultCorrection) return game;
+  if (!c || game.provenance.resultCorrection) return game;
+  const scored = game.status === 'final' && game.home.score !== null && game.away.score !== null;
+  // A game MaxPreps lists with no score is scored by its correction; any other state is not a result to correct.
+  if (!scored && game.status !== 'score-pending') return game;
   const { slug: h } = game.home;
   const { slug: a } = game.away;
   if (!h || !a || !(h in c.goals) || !(a in c.goals)) return game;
@@ -125,6 +127,7 @@ export function applyResultCorrection(
     ...game,
     home: { ...game.home, score: goals.home, result: lead > 0 ? 'W' : lead < 0 ? 'L' : 'T' },
     away: { ...game.away, score: goals.away, result: lead < 0 ? 'W' : lead > 0 ? 'L' : 'T' },
+    status: 'final',
     otPeriods: c.otPeriods,
     isOt: c.otPeriods > 0,
     isForfeit: false,
@@ -134,9 +137,10 @@ export function applyResultCorrection(
     provenance: {
       ...provenance,
       resultCorrection: {
-        maxpreps: { home: game.home.score, away: game.away.score, otPeriods: game.otPeriods },
+        maxpreps: scored ? { home: game.home.score as number, away: game.away.score as number, otPeriods: game.otPeriods } : null,
         source: c.source,
         url: c.url,
+        ...(c.certainty ? { certainty: c.certainty } : {}),
       },
     },
   };
@@ -182,7 +186,9 @@ function unadjudicated(game: Game): Game {
  *  - it is supported by each such source that records it, and by each box-score number (`boxGoals`) that equals
  *    its figure on a side where it differs from MaxPreps';
  *  - MaxPreps' score is defended by each box-score number that equals ITS figure on such a side;
- *  - the challenger is published when at least two sources support it and none defends MaxPreps'.
+ *  - the challenger is published when at least two sources support it and none defends MaxPreps';
+ *  - with no other source's score at all, the two teams' own box scores are a challenger when they agree with each
+ *    other on a side's goals (one team's scorers, the other's goalkeepers) and not with MaxPreps.
  *
  * Mission Hills 1, San Pasqual 0 on MaxPreps (Oct 30): si.com has 2-1 and Mission Hills' own box score totals 2
  * goals, so 2-1 is published. Carmel 4, Santa Catalina 0: si.com has 3-0, Carmel's box score totals 4, so
@@ -220,6 +226,23 @@ export function adjudicateScore(game: Game): Game {
       tied = false;
     }
     best = { score: x, by };
+  }
+  // The two teams' own box scores against MaxPreps': one side's scorers and the other side's goalkeepers, entered by
+  // different coaches, total the same figure and it is not MaxPreps' (Pleasant Valley 6, Lassen 1 on Sep 16: Pleasant
+  // Valley's scorers total 7 and Lassen's goalkeeper conceded 7). Only when no other source offers a score.
+  if (!best && others.length === 0) {
+    const b = base.provenance.boxScore;
+    const agreed = {
+      home: b?.home?.goals !== undefined && b.home.goals === b.away?.goalsAgainst ? b.home.goals : mp.home,
+      away: b?.away?.goals !== undefined && b.away.goals === b.home?.goalsAgainst ? b.away.goals : mp.away,
+    };
+    const by: string[] = [];
+    for (const side of ['home', 'away'] as const) {
+      if (agreed[side] === mp[side]) continue;
+      const other = side === 'home' ? 'away' : 'home';
+      by.push(`${base[side].name}’s scorers’ total of ${agreed[side]}`, `${base[other].name}’s goalkeepers’ ${agreed[side]} goals against`);
+    }
+    if (by.length > 0) best = { score: agreed, by };
   }
   if (!best || tied) return base === game ? game : base;
   const adopted: Game = {
@@ -333,7 +356,7 @@ export function resolveResult(game: Game): GameResult | null {
 
   if (p.resultCorrection) {
     const ending = game.shootout ? 'shootout' : game.otPeriods > 0 ? 'overtime' : 'regulation';
-    return { winner, ending, certainty: 'confirmed', basis: p.resultCorrection.source };
+    return { winner, ending, certainty: p.resultCorrection.certainty ?? 'confirmed', basis: p.resultCorrection.source };
   }
 
   if (p.adjudicated) {

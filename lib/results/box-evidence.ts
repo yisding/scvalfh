@@ -4,7 +4,10 @@
  * goals against and overtime minutes. It is one more slightly unreliable source (about 7% of the sides with
  * goals tracked do not total the game's score), but it is entered separately, so where it agrees with another
  * source it settles a disagreement, and a goalkeeper's overtime minutes say a game went to overtime when
- * MaxPreps' count is 0.
+ * MaxPreps' count is 0. Two box scores are two sources: one team's scorers and the OTHER team's goalkeepers are
+ * entered by different coaches. A coach may also enter shootout goals as ordinary goals (Tamalpais' box for its
+ * 0-0, 3-1 shootout with Marin Catholic totals 3), which is why a box score is never read against a level score
+ * with the winner marked.
  *
  * Pure: `boxEvidenceFrom` reads the player-stats file as plain JSON, defensively, so lib/data.ts and the
  * pipeline can call it without importing lib/players/player-stats.ts (which imports lib/data).
@@ -27,8 +30,15 @@ export function boxEvidenceFrom(playerStats: unknown): BoxEvidence {
   if (!isObject(playerStats) || !Array.isArray(playerStats.teams)) return out;
   for (const team of playerStats.teams) {
     if (!isObject(team) || typeof team.slug !== 'string' || !Array.isArray(team.games)) continue;
+    // A box score that repeats another of the same team's, player for player, is a copy filed under the wrong game
+    // (Westview's box for its 0-0 with Poway on Aug 22 is its box for the 1-0 of Sep 12): neither is evidence.
+    const seen = new Map<string, number>();
+    for (const box of team.games) {
+      if (isObject(box) && Array.isArray(box.players)) seen.set(JSON.stringify(box.players), (seen.get(JSON.stringify(box.players)) ?? 0) + 1);
+    }
     for (const box of team.games) {
       if (!isObject(box) || typeof box.contestId !== 'string' || !Array.isArray(box.players)) continue;
+      if ((seen.get(JSON.stringify(box.players)) ?? 0) > 1) continue;
       const players = box.players.filter(isObject);
       const side: BoxSide = {};
       // A stat counts only when the coach tracked it for this game: an untracked stat is unknown, not zero.
@@ -66,7 +76,12 @@ function bearsOn(game: Game, home: BoxSide | undefined, away: BoxSide | undefine
   // A cited correction settles its game: no box score is weighed against it.
   if (p.resultCorrection) return false;
   if (p.scoreConflict || p.cifssScore || p.resultConflict || p.adjudicated || p.overtimeEvidence || isLevelWithWinner(game.home, game.away)) return true;
-  return game.otPeriods === 0 && ((home?.overtimeMinutes ?? 0) > 0 || (away?.overtimeMinutes ?? 0) > 0);
+  if (game.otPeriods === 0 && ((home?.overtimeMinutes ?? 0) > 0 || (away?.overtimeMinutes ?? 0) > 0)) return true;
+  // The two teams' own entries agree with each other on a side's goals and not with the score.
+  return (
+    (home?.goals !== undefined && home.goals === away?.goalsAgainst && home.goals !== game.home.score) ||
+    (away?.goals !== undefined && away.goals === home?.goalsAgainst && away.goals !== game.away.score)
+  );
 }
 
 /**

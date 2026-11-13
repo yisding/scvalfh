@@ -46,6 +46,7 @@ import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final'
 import type { BoxEvidence } from '../results/box-evidence';
 import { excessOver, finalizeResult } from '../results/result';
 import { stableStringify } from '../stable-json';
+import { DATA_QUALITY } from '../league-config/data-quality';
 import { CCS } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
@@ -580,6 +581,15 @@ function unfillSettledLevelScore(g: Game): Game {
   };
 }
 
+/** Why the config now drops a stored game (the pipeline's applyExclusions rule: a ghost side first), or null. */
+function exclusionOf(g: Game): { reason: 'ghost-team' | 'excluded-by-config'; note: string } | null {
+  for (const id of [g.home.teamId, g.away.teamId]) {
+    if (id !== null && id in DATA_QUALITY.ghostTeamIds) return { reason: 'ghost-team', note: DATA_QUALITY.ghostTeamIds[id] };
+  }
+  const why = DATA_QUALITY.excludedContestIds[g.contestId];
+  return why === undefined ? null : { reason: 'excluded-by-config', note: why };
+}
+
 /** One stored game as the current rules record it (lib/results/result.ts), given the file's cifss conflict rows. */
 function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>, box: BoxEvidence | undefined): Game {
   return finalizeResult(unfillSettledLevelScore(g), { cifss: cifss.get(g.contestId), box });
@@ -601,14 +611,15 @@ export function needsRecordedResults(raw: unknown, box?: BoxEvidence): boolean {
   if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.standings)) return false;
   try {
     const cifss = cifssRowsOf(raw);
-    return (raw.games as Game[]).some((g) => recorded(g, cifss, box) !== g);
+    return (raw.games as Game[]).some((g) => exclusionOf(g) !== null || recorded(g, cifss, box) !== g);
   } catch {
     return false;
   }
 }
 
 /**
- * The same file with every game recorded by the current rules. In order: (1) the games; (2) the standings rows of
+ * The same file with every game recorded by the current rules. In order: (0) rows the config now excludes are
+ * dropped and listed in `dropped`; (1) the games; (2) the standings rows of
  * every division with a team in a game whose score, winner or tally moved, recomputed by the engine with MaxPreps'
  * reported rows carried over (the other divisions' rows stay byte-identical; a game that only gained its `result`
  * moves none); (3) the cross-check from the merged rows; (4) the si.com cross-check, where a fill was undone: its
@@ -619,11 +630,21 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
   if (!needsRecordedResults(raw, box)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot with a result to record');
   const v2 = raw as unknown as Snapshot;
   const cifss = cifssRowsOf(raw as Json);
-  const games = v2.games.map((g) => recorded(g, cifss, box));
   const changed = new Set<DivisionId>();
+  // (0) rows the config has since excluded (DATA_QUALITY.excludedContestIds, ghostTeamIds: a duplicate found after
+  //     the file was written) leave the games, as the pipeline's normalize step would drop them, and are recorded.
+  const excluded = v2.games.filter((g) => exclusionOf(g) !== null);
+  for (const g of excluded) {
+    for (const side of [g.home, g.away]) {
+      const team = side.teamId ? getTeamById(side.teamId) : undefined;
+      if (team) changed.add(team.division);
+    }
+  }
+  const kept = v2.games.filter((g) => exclusionOf(g) === null);
+  const games = kept.map((g) => recorded(g, cifss, box));
   const unfilled: Game[] = [];
   games.forEach((g, i) => {
-    const was = v2.games[i];
+    const was = kept[i];
     if (was.provenance.backfill && !g.provenance.backfill) unfilled.push(g);
     const moved =
       was.home.score !== g.home.score || was.away.score !== g.away.score || was.decider !== g.decider || was.otPeriods !== g.otPeriods ||
@@ -671,10 +692,17 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
           ].sort((x, y) => x.dateKey.localeCompare(y.dateKey)),
         }
       : v2.sbliveCrossCheck;
+  const droppedIds = new Set(v2.dropped.map((d) => d.contestId));
   const out: Snapshot = {
     ...v2,
     games,
     standings,
+    dropped: [
+      ...v2.dropped,
+      ...excluded
+        .filter((g) => !droppedIds.has(g.contestId))
+        .map((g) => ({ contestId: g.contestId, ...(exclusionOf(g) as { reason: 'ghost-team' | 'excluded-by-config'; note: string }), dateKey: g.dateKey, teams: [g.home.name, g.away.name] as [string, string] })),
+    ],
     ...(changed.size > 0 ? { crossCheck: buildCrossCheck(standings) } : {}),
     ...(sbliveCrossCheck ? { sbliveCrossCheck } : {}),
     counts: countsOf(games, standings),

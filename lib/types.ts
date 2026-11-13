@@ -295,7 +295,8 @@ export interface BoxSide {
  * A result recorded from a better source than the feed (DataQualityConfig.resultCorrections), by contest: the
  * goals in play and the tiebreak tally per team slug, the overtime periods played, and the citation the game
  * page prints. MaxPreps stores a shootout after overtime as the score (Tamalpais 3-1 Marin Catholic was 0-0);
- * a press report or an official sheet is the only source that says so.
+ * a press report or an official sheet is the only source that says so. It also scores a game MaxPreps lists with
+ * no score (status 'score-pending'), which becomes a final.
  */
 export interface ResultCorrection {
   goals: Readonly<Record<TeamSlug, number>>;
@@ -304,6 +305,12 @@ export interface ResultCorrection {
   /** The source and what it says, one sentence without a final period. */
   source: string;
   url: string | null;
+  /**
+   * 'reported' for a single source no better than the feed's own kind (a school's entry on cifsshome.org for a game
+   * MaxPreps has not scored); absent for a source that settles the result (an official sheet, a press report, the
+   * box on MaxPreps' own game page), which records as 'confirmed'.
+   */
+  certainty?: 'reported';
 }
 
 /** One side of a contest. `teamId` null ⇒ a non-SCVAL opponent, name only (SPEC §4 notes). */
@@ -522,7 +529,9 @@ export interface Game {
     };
     /** Set when DataQualityConfig.resultCorrections replaced the feed's result: what MaxPreps had, and the citation. */
     resultCorrection?: {
-      maxpreps: { home: number; away: number; otPeriods: number };
+      /** What MaxPreps had; null when it listed the game with no score. */
+      maxpreps: { home: number; away: number; otPeriods: number } | null;
+      certainty?: 'reported';
       source: string;
       url: string | null;
     };

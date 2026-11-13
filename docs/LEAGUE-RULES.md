@@ -81,11 +81,18 @@ sides with goals tracked do not total the game's score, so a box score never dec
 
 | The sources say… | Recorded | Example |
 |---|---|---|
-| two sources agree on another score, and no box score has MaxPreps' figure where they differ | that score, `inferred`; MaxPreps' kept in `provenance.adjudicated` | San Pasqual 0, Mission Hills 1 on MaxPreps; si.com 1-2 and Mission Hills' box score 2 goals: **1–2**. Westview 0, Poway 0 marked a tie; cifsshome.org 1-0 and Westview's box score a goal: **Westview 1–0** |
+| two sources agree on another score, and no box score has MaxPreps' figure where they differ | that score, `inferred`; MaxPreps' kept in `provenance.adjudicated` | San Pasqual 0, Mission Hills 1 on MaxPreps; si.com 1-2 and Mission Hills' box score 2 goals: **1–2** |
 | one source differs and a box score has MaxPreps' figure | MaxPreps' score, `confirmed` | Carmel 4, Santa Catalina 0; si.com 3-0; Carmel's box score 4 |
 | one source gives a different outcome and nothing settles it | MaxPreps' score, `disputed` | Salinas 1, Santa Catalina 0; si.com 1-1 |
 | level with the winner marked, and both teams' box scores total the level score | the game was level in play, so it was settled after it: `shootout`, `inferred`, no tally | Saint Francis 1, Archbishop Mitty 1 (CCS semifinal): one goal in each box score |
 | a goalkeeper's box score has overtime minutes and MaxPreps counts no overtime | one overtime period (`provenance.overtimeEvidence`) | Los Altos 2, Stevenson 2: 7 overtime minutes, the SCVAL period |
+
+Two more rules came out of the data audit of 2026-11-13. With no other source's score at all, the two teams'
+own box scores are enough when they agree with each other and not with MaxPreps (Pleasant Valley 6, Lassen 1:
+Pleasant Valley's scorers total 7 and Lassen's goalkeeper conceded 7, so 7–1). And a box score that repeats
+another of the same team's, player for player, is a copy filed under the wrong game and is no evidence: Westview's
+box for its 0-0 with Poway on Aug 22 is its box for their 1-0 of Sep 12, so that game stays 0–0 and `disputed`
+(cifsshome.org has 1-0) and is not rescored.
 
 A level score with the winner marked and a forfeit are never rescored: the other sources' higher scores there
 are the shootout (below) or a convention for a forfeit's nominal score. The site applies these when it loads the
@@ -112,17 +119,28 @@ when a stored snapshot is loaded):
 A tournament game marked T and T stays a tie: pool games end level, and 22 of the 24 level tournament finals of
 2026 are marked that way. A tournament game marked W and L was played to a winner (owner decision, 2026-11-13).
 
-On 2026-11-13 the field hockey site's 963 finals record as 942 reported in play (49 of them in overtime, 6 on
-a goalkeeper's overtime minutes alone), 2 rescored from two agreeing sources, 2 forfeits, 9 shootouts (3
-confirmed, 6 inferred), 7 unstated and 1 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
+On 2026-11-13 the field hockey site's 964 finals record as 942 in play (50 of them in overtime; 3 of the 942
+confirmed by a citation), 2 rescored from two agreeing sources, 2 forfeits, 9 shootouts (5 confirmed, 4
+inferred), 7 unstated and 2 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
 1 (CCS semifinal, Nov 11) was a tie in both teams' records while the bracket advanced Saint Francis; Huntington
 Beach 0, Hockaday 0 and University 0, Gilroy 0 were ties; Mission Vista–Westview was published as si.com's 4-3
 and is now 1–1 with a 3–2 shootout; Tamalpais–Marin Catholic was 3-1 and is now 0–0 after two overtimes with a
 3–1 shootout; Vista–Escondido gained its 3–2 tally from cifsshome.org; Escondido–El Capitan and Canyon Crest
 Academy–Rancho Bernardo are confirmed shootouts. Each team's record now equals MaxPreps' where it had differed
 on these games. The CCS's own tie procedure for a playoff game was not read (cifccs.org refused the request for
-its bylaws) [U]; the Saint Francis game reads as a shootout because both teams' box scores have one goal each,
-so the game was level in play, and no source gives its tally.
+its bylaws) [U]; the Saint Francis game's shootout and its 5–2 tally are from MaxPreps' own page for the game.
+
+**Recorded from a better source on 2026-11-13** (`DATA_QUALITY.resultCorrections`): the shootout tallies MaxPreps'
+game pages print and its schedule feed does not carry (Saint Francis 5–2 over Archbishop Mitty in the CCS
+semifinal; Pleasant Valley 3–2 over Chico in the EAL Super Regional final); from the San Diego Section's bracket
+sheet, Olympian 6–0 over Sage Creek (a quarterfinal MaxPreps still lists with no score) and the overtime in
+Mission Bay 3–2 La Jolla Country Day; and from cifsshome.org, Helix 2–1 over Bonita Vista (Oct 7, unscored on
+MaxPreps; one school-entered source, so `reported`). A correction can score a game MaxPreps lists with no score.
+
+**Not found.** The EAL Super Regional holds two games in every source (Pleasant Valley 2–0 Bella Vista and the
+final). Chico reached the final with no earlier game listed, and Davis, Lassen and Corning have none, so at least
+one game (Chico's, probably against Davis) is missing from MaxPreps, si.com and the press; the NFHS Network lists
+"Lassen vs. Chico" and "Bella Vista vs. Corning" for Oct 31 with no scores. Nothing is recorded for it [U].
 
 To record a result from a better source, add the contest to `resultCorrections` in
 `lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)
