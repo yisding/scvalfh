@@ -381,7 +381,8 @@ docs.google.com has never been read from Actions, so each file is only as curren
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
 from the 102 MaxPreps roster pages (every registry team, all nine leagues and the five independents; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
-season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
+season; run it by hand or weekly). The page encodes each athlete as a 38-element positional array (37 until
+MaxPreps added `isClaimed` in November 2026; the parser reads both layouts and nothing else), so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
 a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
