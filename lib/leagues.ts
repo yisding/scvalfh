@@ -21,7 +21,9 @@ import { METRO } from './league-config/metro';
 import { NORTH_COUNTY } from './league-config/north-county';
 import { PCAL } from './league-config/pcal';
 import { SCVAL } from './league-config/scval';
+import { BVAL_BASKETBALL_LEAGUE } from './league-config/basketball/bval';
 import { SCVAL_BASKETBALL } from './league-config/basketball/scval';
+import { BVAL_SOCCER_LEAGUE } from './league-config/soccer/bval';
 import { SCVAL_SOCCER } from './league-config/soccer/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
@@ -45,10 +47,11 @@ import { IS_BASKETBALL, IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } 
  */
 export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
-  : // The soccer build (SCVAL_SPORT=soccer) and the basketball build (SCVAL_SPORT=basketball) cover SCVAL alone for now.
+  : // The soccer build (SCVAL_SPORT=soccer) and the basketball build (SCVAL_SPORT=basketball) cover SCVAL and BVAL
+    // (BVAL added 2026-11-13, so the ratings count SCVAL's games against BVAL schools).
     IS_BASKETBALL
-    ? [SCVAL_BASKETBALL]
-    : [SCVAL_SOCCER];
+    ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
+    : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE];
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],

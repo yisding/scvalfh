@@ -1,21 +1,63 @@
 {
-  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06).",
-  "capturedAt": "2026-11-06",
+  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\".",
+  "capturedAt": "2026-11-13",
   "notes": [
     "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
   ],
   "schools": {
+    "andrew-hill": {
+      "street": "3200 Senter Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95111"
+    },
+    "branham": {
+      "street": "1570 Branham Ln",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95118"
+    },
+    "christopher": {
+      "street": "850 Day Rd",
+      "city": "Gilroy",
+      "region": "CA",
+      "postalCode": "95020"
+    },
     "cupertino": {
       "street": "10100 Finch Ave",
       "city": "Cupertino",
       "region": "CA",
       "postalCode": "95014"
     },
+    "del-mar": {
+      "street": "1224 Del Mar Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95128"
+    },
+    "evergreen-valley": {
+      "street": "3300 Quimby Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95148"
+    },
     "fremont": {
       "street": "575 W. Fremont Avenue",
       "city": "Sunnyvale",
       "region": "CA",
       "postalCode": "94087"
+    },
+    "gilroy": {
+      "street": "750 W 10th St",
+      "city": "Gilroy",
+      "region": "CA",
+      "postalCode": "95020"
+    },
+    "gunderson": {
+      "street": "622 Gaundabert Ln",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95136"
     },
     "gunn": {
       "street": "780 Arastradero Rd",
@@ -28,6 +70,42 @@
       "city": "Cupertino",
       "region": "CA",
       "postalCode": "95014"
+    },
+    "independence": {
+      "street": "617 N. Jackson Ave.",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95133"
+    },
+    "james-lick": {
+      "street": "57 N White Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95127"
+    },
+    "leigh": {
+      "street": "5210 Leigh Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95124"
+    },
+    "leland": {
+      "street": "6677 Camden Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95120"
+    },
+    "lincoln": {
+      "street": "555 Dana Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95126"
+    },
+    "live-oak": {
+      "street": "1505 E Main St",
+      "city": "Morgan Hill",
+      "region": "CA",
+      "postalCode": "95037"
     },
     "los-altos": {
       "street": "201 Almond Ave",
@@ -71,11 +149,53 @@
       "region": "CA",
       "postalCode": "94040"
     },
+    "mt-pleasant": {
+      "street": "1750 S White Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95127"
+    },
+    "oak-grove": {
+      "street": "285 Blossom Hill Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95123"
+    },
+    "overfelt": {
+      "street": "1835 Cunningham Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95122"
+    },
     "palo-alto": {
       "street": "50 Embarcadero Rd",
       "city": "Palo Alto",
       "region": "CA",
       "postalCode": "94301"
+    },
+    "piedmont-hills": {
+      "street": "1377 Piedmont Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95132"
+    },
+    "pioneer": {
+      "street": "1290 Blossom Hill Road",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95118"
+    },
+    "prospect": {
+      "street": "18900 Prospect Rd",
+      "city": "Saratoga",
+      "region": "CA",
+      "postalCode": "95070"
+    },
+    "san-jose": {
+      "street": "275 N 24th St",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95116"
     },
     "santa-clara": {
       "street": "3000 Benton St",
@@ -83,17 +203,53 @@
       "region": "CA",
       "postalCode": "95051"
     },
+    "santa-teresa": {
+      "street": "6150 Snell Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95123"
+    },
     "saratoga": {
       "street": "20300 Herriman Ave",
       "city": "Saratoga",
       "region": "CA",
       "postalCode": "95070"
     },
+    "silver-creek": {
+      "street": "3434 Silver Creek Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95121"
+    },
+    "sobrato": {
+      "street": "401 Burnett Ave",
+      "city": "Morgan Hill",
+      "region": "CA",
+      "postalCode": "95037"
+    },
+    "westmont": {
+      "street": "4805 Westmont Ave",
+      "city": "Campbell",
+      "region": "CA",
+      "postalCode": "95008"
+    },
     "wilcox": {
       "street": "3250 Monroe St",
       "city": "Santa Clara",
       "region": "CA",
       "postalCode": "95051"
+    },
+    "willow-glen": {
+      "street": "2001 Cottle Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95125"
+    },
+    "yerba-buena": {
+      "street": "1855 Lucretia Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95122"
     }
   }
 }

@@ -1,6 +1,6 @@
 /**
  * The soccer build's sections and CCS block (lib/league-config/sections.ts picks these when
- * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL only.
+ * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL and BVAL.
  *
  * Sources (the three CCS documents read 2026-11-06 from the links on cifccs.org's soccer page):
  *  - The CCS 2026-27 Playoff Calendar ("Updated 5/28/26"; sha256 28557c36…;
@@ -43,7 +43,7 @@ export const SOCCER_SECTIONS = [
 ] as const satisfies readonly SectionConfig[];
 
 export const SOCCER_CCS: CcsConfig = {
-  autoQualifiers: { scval: 4, atLarge: null, total: null },
+  autoQualifiers: { scval: 4, bval: 6, atLarge: null, total: null },
   // Five divisions (CCS_SOCCER_REPORT), each seeded on its own: CcsDivisionName names field hockey's two, so none
   // is named here, and the bracket is drawn by round until MaxPreps' feed names a division.
   ccsDivisions: [],
@@ -59,14 +59,14 @@ export const SOCCER_CCS: CcsConfig = {
   tournament: null,
   pollFrom: '2027-02-10',
   citations: {
-    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team); the CCS’s own allocation of the field is in its Soccer Bylaws, not transcribed here',
+    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team) and BVAL Girls Soccer By-Laws §10 (Mt. Hamilton’s top three, Santa Teresa’s top two and the West Valley champion); the CCS’s own allocation of the field is in its Soccer Bylaws, not transcribed here',
     change: 'SCVAL Soccer By-Laws Article V §4 (a team at .500 or better may apply for an at-large berth)',
   },
   laterDivisions: 'Divisions 2-5',
   roundDaysNote:
     'Division 1 plays its semifinals on Tue Feb 23 and its final on Fri Feb 26; Divisions 2-5 play theirs on Wed Feb 24 and Sat Feb 27 (the CCS 2026-27 Playoff Calendar).',
   atLargeParagraph:
-    'At-large berths are the CCS committee’s call. Any SCVAL team at .500 or better in league or overall may apply, and CCS orders the applicants by its power points (SCVAL Soccer By-Laws Article V §4).',
+    'At-large berths are the CCS committee’s call. Any SCVAL team at .500 or better in league or overall may apply, and CCS orders the applicants by its power points (SCVAL Soccer By-Laws Article V §4); a BVAL team applies under the CCS’s own rules.',
   sources: {
     bylaws: CCS_SOCCER_REPORT,
     index: CCS_SOCCER_INDEX,

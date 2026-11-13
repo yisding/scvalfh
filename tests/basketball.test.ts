@@ -90,8 +90,8 @@ describe('the basketball sport switch', () => {
 });
 
 describe('SCVAL boys basketball', () => {
-  it('is the only league, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval']);
+  it('covers SCVAL and BVAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -102,8 +102,26 @@ describe('SCVAL boys basketball', () => {
     expect(slugs('el-camino')).toEqual([
       'cupertino', 'fremont', 'los-altos', 'macdonald', 'monta-vista', 'santa-clara', 'saratoga', 'wilcox',
     ]);
-    expect(m.teams.TEAMS).toHaveLength(15);
+    expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
+    expect(m.teams.TEAMS).toHaveLength(41);
     for (const team of m.teams.TEAMS) expect(team.external.maxprepsTeamUrl).toMatch(/\/basketball\/$/);
+  });
+
+  it('aligns BVAL’s 26 schools as its four boys division schedules do', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('mt-hamilton')).toEqual(['christopher', 'evergreen-valley', 'leigh', 'pioneer', 'santa-teresa', 'westmont', 'willow-glen']);
+    expect(slugs('santa-teresa')).toEqual(['branham', 'independence', 'leland', 'live-oak', 'silver-creek', 'sobrato']);
+    expect(slugs('almaden-valley')).toEqual(['gilroy', 'lincoln', 'oak-grove', 'overfelt', 'piedmont-hills', 'prospect']);
+    expect(slugs('west-valley')).toEqual(['andrew-hill', 'del-mar', 'gunderson', 'james-lick', 'mt-pleasant', 'san-jose', 'yerba-buena']);
+    expect(m.teams.teamsInLeague('bval')).toHaveLength(26);
+  });
+
+  it('orders BVAL’s tables on wins, with its automatic-berth tiebreak, and gives it six berths (By-Laws §9, §10)', () => {
+    const { rules, postseason } = m.leagues.getLeague('bval');
+    expect(rules.orderBy).toBe('win-pct');
+    expect(rules.tiebreaks.default).toEqual(['head-to-head', 'record-vs-placed', 'h2h-goal-diff', 'coin-flip']);
+    expect(rules.classification).toBe('official-fixtures');
+    expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(6);
   });
 
   it('orders its tables on the league record, with the by-laws tiebreak chain (Article VI §1, §1.1)', () => {
@@ -129,7 +147,7 @@ describe('SCVAL boys basketball', () => {
 
   it('dates the CCS rounds from the CCS calendar: a first round before the quarterfinals, the Open final a day early', () => {
     const { CCS, ccsFirstDay, ccsLastDay, ccsRoundDays } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, atLarge: null, total: null });
+    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, atLarge: null, total: null });
     expect(CCS.keyDates).toMatchObject({
       entriesDue: '2027-02-17T10:00:00',
       seedingMeeting: '2027-02-17T12:00:00',
@@ -212,9 +230,10 @@ describe('the basketball data files', () => {
 describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled files)', () => {
   it('gives every league fixture a JV slot, and every slot exactly one JV game', () => {
     const merge = m.jv.getJvOfficialMerge();
-    expect(merge.slots).toBe(98);
+    // SCVAL's 98 fixtures and BVAL's 144: both leagues' schedules give every varsity game its JV game.
+    expect(merge.slots).toBe(98 + 144);
     expect(merge.matched + merge.moved + merge.added.length).toBe(merge.slots);
-    for (const division of m.leagues.getLeague('scval').divisions) {
+    for (const division of m.leagues.ALL_DIVISIONS) {
       expect(m.jv.isJvScheduledDivision(division.id)).toBe(true);
       expect(m.jv.getJvTable(division.id)?.gamesPerTeam).toBe(division.gamesPerTeam);
     }
@@ -237,7 +256,7 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
       expect(g.status).toBe('scheduled');
       expect([g.home.score, g.away.score]).toEqual([null, null]);
       expect(g.countsFor).toBe(g.leagueDivision);
-      expect(g.provenance.schedule).toBe('scval-pdf');
+      expect(['scval-pdf', 'bval-docx']).toContain(g.provenance.schedule);
       expect(m.jv.getJvClassification(g.contestId)).toMatchObject({ kind: 'league', via: 'official-fixture' });
     }
   });

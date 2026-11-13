@@ -25,7 +25,9 @@ import { METRO_SEEDS } from './registry/metro';
 import { NORTH_COUNTY_SEEDS } from './registry/north-county';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
+import { BVAL_BASKETBALL_SEEDS } from './registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from './registry/basketball/scval';
+import { BVAL_SOCCER_SEEDS } from './registry/soccer/bval';
 import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
@@ -113,6 +115,7 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HO
   independents: INDEPENDENTS_SEEDS,
 } : {
   scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : SCVAL_SOCCER_SEEDS,
+  bval: IS_BASKETBALL ? BVAL_BASKETBALL_SEEDS : BVAL_SOCCER_SEEDS,
 };
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
@@ -297,11 +300,13 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
  */
 const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
   ? ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS']
-  : // The soccer and basketball registries' 15 SCVAL schools: Mountain View and Monta Vista are both MVHS.
-    ['MVHS'];
+  : // The soccer and basketball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both MVHS;
+    // CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
+    // Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont).
+    ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS'];
 
-/** The registry's size: field hockey's 102 teams, or soccer's or basketball's 15 (SCVAL only). */
-const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : 15;
+/** The registry's size: field hockey's 102 teams, or soccer's or basketball's 41 (SCVAL's 15 and BVAL's 26). */
+const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : 41;
 
 function assertRegistry(): void {
   const fail = (m: string): never => {

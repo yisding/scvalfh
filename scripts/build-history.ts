@@ -60,7 +60,7 @@ import { HttpClient } from '../lib/sources/http';
 import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
-import { DATA_DIR, IS_FIELD_HOCKEY } from '../lib/sports/current';
+import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
 import { buildScvalDocumentsHistory, transcriptionPath, type Transcription } from './lib/history-scval-documents';
@@ -115,14 +115,32 @@ function pick<T extends { division: string; level: string }>(
 }
 
 /**
- * Another sport's build (SCVAL_SPORT=soccer or basketball) covers SCVAL alone: its file has the one SCVAL
- * entry, built from scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
- * (scripts/lib/history-scval-documents.ts). `--from` is a folder holding the standings PDF's text
- * (tests/fixtures/<sport>/scval-history); `--bval-from` and `--retrieved-on` are field hockey's.
+ * Another sport's build (SCVAL_SPORT=soccer or basketball): its file has the SCVAL entry, built from
+ * scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
+ * (scripts/lib/history-scval-documents.ts), and a BVAL entry marked unavailable (bvalNotTranscribed). `--from` is
+ * a folder holding the standings PDF's text (tests/fixtures/<sport>/scval-history); `--bval-from` and
+ * `--retrieved-on` are field hockey's.
  */
+/**
+ * BVAL in a winter build, added 2026-11-13: bval.org/standings links the league's official standings sheets, but
+ * the 2025-26 winter ones are not transcribed here yet, so the card says so and links the page. It never says no
+ * standings were published.
+ */
+function bvalNotTranscribed() {
+  const sport = IS_BASKETBALL ? 'boys basketball' : 'girls soccer';
+  return {
+    status: 'unavailable' as const,
+    league: getLeague('bval').name,
+    reason: `BVAL publishes its official standings on bval.org. This site added BVAL ${sport} on November 13, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.`,
+    checkedOn: '2026-11-13',
+    checked: ['https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)'],
+    alsoPublished: [{ label: 'BVAL standings', url: 'https://bval.org/standings/' }],
+  };
+}
+
 async function mainOtherSport(args: Args): Promise<number> {
   if (args.bvalFrom) {
-    console.error('FAILED: --bval-from is field hockey\'s: this build covers SCVAL alone');
+    console.error('FAILED: --bval-from is field hockey\'s: this build transcribes SCVAL alone');
     return 1;
   }
   const transcription = JSON.parse(readFileSync(transcriptionPath(DATA_DIR), 'utf8')) as Transcription;
@@ -134,7 +152,7 @@ async function mainOtherSport(args: Args): Promise<number> {
     return 1;
   }
   const { entry, problems } = built;
-  const history = { season: transcription.season, sport: transcription.sport, leagues: { scval: entry } };
+  const history = { season: transcription.season, sport: transcription.sport, leagues: { scval: entry, bval: bvalNotTranscribed() } };
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));
   if (!parsed.success) {

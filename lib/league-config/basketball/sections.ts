@@ -1,6 +1,6 @@
 /**
  * The basketball build's sections and CCS block (lib/league-config/sections.ts picks these when
- * `SCVAL_SPORT=basketball`). One section, the CCS, in one region: the build covers SCVAL only.
+ * `SCVAL_SPORT=basketball`). One section, the CCS, in one region: the build covers SCVAL and BVAL.
  *
  * Sources (read 2026-11-10):
  *  - CCS_PLAYOFF_CALENDAR, the CCS 2026-27 Playoff Calendar ("Updated 5/28/26"): boys and girls basketball entry
@@ -12,6 +12,7 @@
  *    with each round's site ("D1-D5 1st Round & Open Game #1 at Home Sites", "D1-D5 Semifinals at Home Sites",
  *    "Open Finals at Neutral Sites", "D1-D5 Finals at Neutral Sites").
  *  - SCVAL Basketball By-Laws Article VI §2: SCVAL's automatic berths (De Anza 1-3, El Camino 1).
+ *  - BVAL Basketball By-Laws §10.2: BVAL's (Mt. Hamilton 1-3, the Santa Teresa, Almaden Valley and West Valley champions).
  *
  * Still null, because none of these says it: the field's size and at-large count (the CCS Basketball Bylaws'
  * allocation), and MaxPreps' tournament page and bracket ids. cifccs.org's own sport pages answer scripts with
@@ -41,7 +42,7 @@ export const BASKETBALL_SECTIONS = [
 ] as const satisfies readonly SectionConfig[];
 
 export const BASKETBALL_CCS: CcsConfig = {
-  autoQualifiers: { scval: 4, atLarge: null, total: null },
+  autoQualifiers: { scval: 4, bval: 6, atLarge: null, total: null },
   // An Open Division and Divisions 1-5, each seeded on its own: CcsDivisionName names field hockey's two, so
   // none is named here, and the bracket is drawn by round until MaxPreps' feed names a division.
   ccsDivisions: [],
@@ -60,14 +61,14 @@ export const BASKETBALL_CCS: CcsConfig = {
   tournament: null,
   pollFrom: '2027-02-10',
   citations: {
-    allocation: 'SCVAL Basketball By-Laws Article VI §2.1 (De Anza’s top three and the El Camino champion); the CCS’s own allocation of the field is in its Basketball Bylaws, not transcribed here',
+    allocation: 'SCVAL Basketball By-Laws Article VI §2.1 (De Anza’s top three and the El Camino champion) and BVAL Basketball By-Laws §10.2 (Mt. Hamilton’s top three and the Santa Teresa, Almaden Valley and West Valley champions); the CCS’s own allocation of the field is in its Basketball Bylaws, not transcribed here',
     change: 'SCVAL Basketball By-Laws Article VI §2 (a team at .500 or better in league or out of league may apply for entry)',
   },
   laterDivisions: 'Divisions 1-5',
   roundDaysNote:
     'Divisions 1-5 play a first round on Fri Feb 19 and a second on Sat Feb 20, quarterfinals on Tue Feb 23, semifinals on Thu Feb 25 and finals on Sat Feb 27. The Open Division plays three games each (Fri Feb 19, Mon Feb 22, Wed Feb 24) and its final on Fri Feb 26 (the CCS 2026-27 Playoff Calendar).',
   atLargeParagraph:
-    'At-large berths are the CCS committee’s call. Any SCVAL team with a league record or an out-of-league record of .500 or better may apply (SCVAL Basketball By-Laws Article VI §2).',
+    'At-large berths are the CCS committee’s call. Any SCVAL team with a league record or an out-of-league record of .500 or better may apply (SCVAL Basketball By-Laws Article VI §2); the BVAL leaves post-season entry to the CCS’s own rules (BVAL Basketball By-Laws §10.1).',
   sources: {
     bylaws: CCS_PLAYOFF_CALENDAR,
     index: CCS_BASKETBALL_CALENDAR,

@@ -236,6 +236,12 @@ where soccer could reuse field hockey's rules, basketball could not, so parts of
   `scripts/vercel-ignore-build.sh` know the third sport. The hosting project and its domain are the owner's
   to create (README, "Deploy notes").
 
+**BVAL (2026-11-13).** The owner asked for BVAL in both winter builds, so the ratings count SCVAL's games
+against BVAL schools. Each sport has `lib/league-config/<sport>/bval.ts` and `lib/registry/<sport>/bval.ts`,
+`LEAGUES` lists both leagues, the CCS block allocates BVAL's six automatic berths, and the BVAL schedules are
+bundled by `scripts/build-bval-winter-fixtures.ts` (README, "BVAL in the winter builds"). The registries hold 41
+teams each. /history/2025-26 marks BVAL unavailable until its standings sheets are transcribed.
+
 Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
 basketball build.

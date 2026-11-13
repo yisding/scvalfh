@@ -11,7 +11,8 @@
  *   pnpm fetch-mascots --dry-run       fetch and process, write nothing
  *
  * The teams are this build's registry: a school only the soccer and basketball registries hold (Gunn, Mountain
- * View, MacDonald, Milpitas, Wilcox) is fetched with `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>`.
+ * View, MacDonald, Milpitas, Wilcox, and the fourteen BVAL schools field hockey does not have) is fetched with
+ * `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>` (one `--only` per slug).
  * One public/mascots/ serves every sport's build.
  *
  * Self-hosted, never hotlinked: the site makes no third-party image request. The files are
@@ -46,7 +47,9 @@ import path from 'node:path';
 import sharp, { type Sharp } from 'sharp';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { MASCOT_FILE_SIZES } from '../lib/schools/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
@@ -155,7 +158,9 @@ const SOURCE_OVERRIDES: Readonly<Record<string, MascotSource & { why: string }>>
 };
 
 /** Every slug the two winter registries hold: an override may name one in a build whose registry does not. */
-const WINTER_SLUGS: ReadonlySet<string> = new Set([...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS].map((s) => s.slug));
+const WINTER_SLUGS: ReadonlySet<string> = new Set(
+  [...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS, ...BVAL_SOCCER_SEEDS, ...BVAL_BASKETBALL_SEEDS].map((s) => s.slug),
+);
 
 function mascotSource(team: Pick<Team, 'id' | 'slug'>): MascotSource {
   const override = SOURCE_OVERRIDES[team.slug];
@@ -267,7 +272,7 @@ export async function main(argv: readonly string[]): Promise<number> {
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, source: { url: t.mascotSource } })),
   ];
   // The overrides name every sport's schools. A field hockey build checks each is one of its own or a winter
-  // registry's; a soccer or basketball build (SCVAL alone) checks only the slugs it was given.
+  // registry's; a soccer or basketball build (SCVAL and BVAL) checks only the slugs it was given.
   const overrides = IS_FIELD_HOCKEY ? Object.keys(SOURCE_OVERRIDES).filter((s) => !WINTER_SLUGS.has(s)) : [];
   const unknown = [...args.only, ...overrides].filter((s) => !targets.some((t) => t.slug === s));
   if (unknown.length > 0) throw new Error(`not a registry slug or JV slot team: ${unknown.join(', ')}`);

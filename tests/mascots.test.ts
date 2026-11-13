@@ -9,7 +9,9 @@ import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/schools/mascots';
 import { TEAMS } from '../lib/teams';
@@ -24,6 +26,8 @@ const STEMS = [
     ...TEAMS.map((t) => t.slug),
     ...SCVAL_SOCCER_SEEDS.map((s) => s.slug),
     ...SCVAL_BASKETBALL_SEEDS.map((s) => s.slug),
+    ...BVAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...BVAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot),
   ]),
 ];

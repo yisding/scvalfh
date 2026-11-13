@@ -67,8 +67,8 @@ describe('the soccer sport switch', () => {
 });
 
 describe('SCVAL girls soccer', () => {
-  it('is the only league, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval']);
+  it('covers SCVAL and BVAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -79,7 +79,21 @@ describe('SCVAL girls soccer', () => {
     expect(slugs('el-camino')).toEqual([
       'cupertino', 'fremont', 'lynbrook', 'macdonald', 'milpitas', 'monta-vista', 'saratoga', 'wilcox',
     ]);
-    expect(m.teams.TEAMS).toHaveLength(15);
+    expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
+    expect(m.teams.TEAMS).toHaveLength(41);
+  });
+
+  it('aligns BVAL’s 26 schools as its three girls division schedules do', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('mt-hamilton')).toEqual(['branham', 'gilroy', 'leigh', 'leland', 'piedmont-hills', 'pioneer', 'westmont', 'willow-glen']);
+    expect(slugs('santa-teresa')).toEqual(['christopher', 'evergreen-valley', 'lincoln', 'live-oak', 'oak-grove', 'santa-teresa', 'silver-creek', 'sobrato']);
+    expect(slugs('west-valley')).toEqual([
+      'andrew-hill', 'del-mar', 'gunderson', 'independence', 'james-lick', 'mt-pleasant', 'overfelt', 'prospect', 'san-jose', 'yerba-buena',
+    ]);
+    const { rules, postseason } = m.leagues.getLeague('bval');
+    expect(rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
+    expect(rules.leagueOvertime).toBe('none');
+    expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(6);
   });
 
   it('gives De Anza three automatic CCS berths and El Camino one (By-Laws Article V §2)', () => {
@@ -94,7 +108,7 @@ describe('SCVAL girls soccer', () => {
 
   it('dates the CCS rounds from the CCS calendar, and leaves the field size and hosting null', () => {
     const { CCS, ccsRoundDays, ccsLastDay } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, atLarge: null, total: null });
+    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, atLarge: null, total: null });
     expect(CCS.keyDates).toMatchObject({
       seedingMeeting: '2027-02-18T15:00:00',
       quarterfinals: '2027-02-20',
