@@ -233,8 +233,9 @@ describe('buildRosterView', () => {
     const platforms = (slug: string) => views.find((v) => v.slug === slug)!.view.profilePlatforms;
     expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits']);
     expect(platforms('saratoga')).toEqual(['Hudl']);
-    // Valley Christian had none until the 2026-10-12 probe found its softball players' SportsRecruits pages.
-    expect(platforms('valley-christian')).toEqual(['SportsRecruits']);
+    // Valley Christian had none until the 2026-10-12 probe found its softball players' SportsRecruits pages,
+    // and the 2026-11-13 Hudl sweep added seven of its players' Hudl pages.
+    expect(platforms('valley-christian')).toEqual(['SportsRecruits', 'Hudl']);
     // The EAL (recruiting pages swept 2026-10-04): footnote platforms in NCSA, SportsRecruits, Hudl order.
     expect(platforms('chico')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
     expect(platforms('davis')).toEqual(['NCSA', 'SportsRecruits']);
@@ -248,7 +249,8 @@ describe('buildRosterView', () => {
     const swept = (r: RosterRow) => r.profiles.some((x) => !isMaxPreps(x));
     expect(eal('chico').filter(swept).length).toBe(13);
     expect(eal('davis').filter(swept).length).toBe(4);
-    expect(eal('pleasant-valley').filter(swept).length).toBe(11);
+    // Pleasant Valley's twelfth, Lexi Quin's Hudl page, is from the 2026-11-13 sweep of the schools' Hudl rosters.
+    expect(eal('pleasant-valley').filter(swept).length).toBe(12);
     expect(eal('lassen').filter(swept).length).toBe(1);
     expect(eal('chico').find((r) => r.name === 'Olivia Council')!.profiles.map((x) => x.label)).toEqual([
       'NCSA profile',
