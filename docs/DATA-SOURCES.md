@@ -635,6 +635,26 @@ repeated. The same day's roster refresh put six JV-list players on their varsity
 among them, so her Hudl page is on her varsity row: the overlay then holds 903 profiles for 634 players (78
 Hudl and 4 NCSA from this sweep), and `data/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
 
+*2026-11-13: a search of four schools.* Sobrato, Cupertino, Lynbrook and Homestead (116 players: 72 varsity
+rows, among them the 20 Sobrato rows new to the roster that day, and 44 JV) were searched for recruiting pages
+on every platform and in every sport: a SportsRecruits address probe (4,550 addresses, name variants and
+suffixes 1 to 12; the bare live pages also read rendered, twice, under the 2026-11-13 rule, §1.1j3), every
+Hudl team of the four schools in every sport for 2022 to 2026 and a Hudl name search for every player, NCSA's
+field hockey, lacrosse, soccer, softball, volleyball and basketball school pages and a guessed address for every
+player, and FieldLevel in eight sports. Six pages for five players were kept and re-read by an independent
+refuter, each naming the school with a class year that agrees: Sobrato's Cameron Isle (Hudl and NCSA
+basketball), Lynbrook's Grace Cho (Hudl soccer), Cupertino's Allenah Watkins (NCSA field hockey; NCSA's school
+list leaves her out, her address answers) and Homestead's Olivia Leyton Bravo (NCSA field hockey) and Aalya Jain
+(NCSA softball): 909 profiles for 639 players. Not linked: an NCSA address under Sobrato goalkeeper Kinzie
+Rasley's name that serves a page headed "Regan Stuart '28" (a Sobrato field hockey goalkeeper of the class of
+2028) with her name nowhere on it, which looks like a renamed account but is linked only on the owner's word;
+bare SportsRecruits pages that show no school or place even rendered; a private Hudl profile. Sobrato's and
+Lynbrook's Hudl field hockey rosters are empty, and Cupertino and Homestead have only football teams on Hudl.
+The same search filled six Homestead grades MaxPreps leaves blank (four from Stick Together's 2025 all-league
+lists, derived; two from The Epitaph's Nov 2, 2026 game review), and Lynbrook's Trishna Sinha and Sahana
+Rajamani keep the school site's grade 11 on the owner's decision, Stick Together's 2025 list (which would make
+them 12 and 10) recorded as conflicts.
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
@@ -1583,6 +1603,14 @@ nothing published after Nov 5). Not reached: the Mercury News' and Marin IJ's fe
 Harvard-Westlake's site and San Diego Prep Insider (HTTP 403 or no answer), college sites behind bot
 checks, Instagram. More signing news is likely: the Marin schools' commitment ceremonies and San Diego's
 county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles.
+
+*The 2026-11-13 search of four schools.* Sobrato, Cupertino, Lynbrook and Homestead's 116 players (72 varsity,
+44 JV) were searched for a commitment in any sport: each varsity row's MaxPreps career page for her other
+sports, about 200 web searches (two for each junior, senior and ungraded player, one for each sophomore and
+freshman), the schools' athletics sites and student papers, the Morgan Hill Times, Gilroy Dispatch and Mercury
+News by name, the field hockey and other-sport lists and clubs' pages, SportsRecruits' commits feed for ids 1
+to 1,044, and the recruiting-profile search (§1.1j). None was found. Lynbrook's Trishna Sinha (a goalkeeper on
+the TFHA watchlist) and Homestead's Gabrielle Moll are the likeliest to commit. Club ties (§1.1j2): none new.
 
 *Recall is partial.* On 2026-11-13, 38 of the 1,673 varsity rows have a commitment, at 23 of the 102
 schools (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19
