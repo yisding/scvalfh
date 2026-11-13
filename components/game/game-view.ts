@@ -624,8 +624,16 @@ function conflictFor(game: Game): GameConflict | null {
   // Rule 5 (plain disagreement): the cross-check row holds both values and MaxPreps' stands. Rule 4
   // (si.com published over a clearly wrong MaxPreps row): MaxPreps' value is in the backfill record.
   const maxpreps = row?.maxpreps ?? game.provenance.backfill?.maxpreps ?? null;
+  // The stored note is rule 5's ("MaxPreps' score stands"). Where the recorded result reads the two scores
+  // together instead (the other score published, or its extra goals read as the shootout: lib/results/result.ts),
+  // that sentence would contradict the page, so this one states the two scores and points at the reading.
+  const mp = game.provenance.adjudicated?.maxpreps ?? (game.home.score !== null && game.away.score !== null ? { home: game.home.score, away: game.away.score } : null);
+  const readTogether = !game.provenance.backfill && mp !== null && (game.provenance.adjudicated !== undefined || (game.decider === 'SO' && resolveResult(game)?.ending === 'shootout'));
+  const note = readTogether
+    ? `si.com reports ${onGame.sblive.away}-${onGame.sblive.home} (${game.away.name}\u2013${game.home.name}) where MaxPreps lists ${mp.away}-${mp.home}; the note above says how this site reads the two.`
+    : onGame.note;
   return {
-    note: onGame.note,
+    note,
     maxpreps,
     sblive: row?.sblive ?? onGame.sblive,
     sbliveUrl: row?.sbliveUrl ?? game.urls.sblive ?? null,
@@ -811,8 +819,9 @@ function scoreNoteFor(
   const level = `${display.home.glyph}\u2013${display.away.glyph}`;
   const result = resolveResult(game);
   // What the record rests on, where a second source or a correction is part of it (lib/results/result.ts).
+  const p = game.provenance;
   const evidence =
-    result?.basis && (otherScores(game).length > 0 || game.provenance.shootoutSource || game.provenance.resultCorrection)
+    result?.basis && (otherScores(game).length > 0 || p.shootoutSource || p.resultCorrection || p.adjudicated || (p.boxScore && result.basis.includes('box score')))
       ? `${capitalized(result.basis)}.`
       : null;
   const established = result?.ending === 'shootout';
@@ -841,9 +850,12 @@ function scoreNoteFor(
       if (evidence) notes.push(evidence);
     }
   }
-  if (display.kind === 'final' && game.decider !== 'SO' && result?.certainty === 'disputed' && otherScores(game).length > 0 && result.basis) {
-    // Another source records a different winner, or a winner where this is a tie.
-    notes.push(`${capitalized(result.basis)}.`);
+  if (display.kind === 'final' && game.decider !== 'SO' && evidence && (p.adjudicated || result?.certainty === 'disputed' || result?.certainty === 'confirmed') && !p.resultCorrection) {
+    // The sources differ on this score: which one is published, and why (lib/results/result.ts adjudicateScore).
+    notes.push(p.adjudicated ? `${evidence} This site shows ${level}.` : evidence);
+  }
+  if (display.kind === 'final' && p.overtimeEvidence === 'box-score') {
+    notes.push('MaxPreps records no overtime for this game; a goalkeeper’s box score has overtime minutes, so it is shown as an overtime game.');
   }
   const doubt = overtimeDoubtOf(game);
   if (!section?.shootout) return notes.length > 0 ? notes.join(' ') : null;

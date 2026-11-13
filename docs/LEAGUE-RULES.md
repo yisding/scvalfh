@@ -73,6 +73,25 @@ goal difference and the ratings never count a shootout as goals.
 | San Diego Section bracket sheet | the score and the shootout apart | "1-1 (2-1 SO)" |
 | a press report | everything | "scoreless after regulation and two overtimes … won 3-1 in the shootout" |
 
+**Every source is wrong now and then, so they are weighed against each other.** The sources for a score are
+MaxPreps' score and flags, si.com's and cifsshome.org's scores (kept on the game where they differ), the San
+Diego Section's bracket sheet, a cited correction, and each team's own box score on MaxPreps: its scorers'
+goals, its goalkeepers' goals against and overtime minutes, entered apart from the score (about 7% of the
+sides with goals tracked do not total the game's score, so a box score never decides alone).
+
+| The sources say… | Recorded | Example |
+|---|---|---|
+| two sources agree on another score, and no box score has MaxPreps' figure where they differ | that score, `inferred`; MaxPreps' kept in `provenance.adjudicated` | San Pasqual 0, Mission Hills 1 on MaxPreps; si.com 1-2 and Mission Hills' box score 2 goals: **1–2**. Westview 0, Poway 0 marked a tie; cifsshome.org 1-0 and Westview's box score a goal: **Westview 1–0** |
+| one source differs and a box score has MaxPreps' figure | MaxPreps' score, `confirmed` | Carmel 4, Santa Catalina 0; si.com 3-0; Carmel's box score 4 |
+| one source gives a different outcome and nothing settles it | MaxPreps' score, `disputed` | Salinas 1, Santa Catalina 0; si.com 1-1 |
+| level with the winner marked, and both teams' box scores total the level score | the game was level in play, so it was settled after it: `shootout`, `inferred`, no tally | Saint Francis 1, Archbishop Mitty 1 (CCS semifinal): one goal in each box score |
+| a goalkeeper's box score has overtime minutes and MaxPreps counts no overtime | one overtime period (`provenance.overtimeEvidence`) | Los Altos 2, Stevenson 2: 7 overtime minutes, the SCVAL period |
+
+A level score with the winner marked and a forfeit are never rescored: the other sources' higher scores there
+are the shootout (below) or a convention for a forfeit's nominal score. The site applies these when it loads the
+snapshot, with the player-stats file of the same commit (`lib/data.ts`); a live pipeline run applies them with
+the player-stats file on disk, so the stored record can trail a new box score by one run.
+
 **What the site records**, in the order it is decided (`finalizeResults`, the pipeline's step 11c, and again
 when a stored snapshot is loaded):
 
@@ -93,15 +112,17 @@ when a stored snapshot is loaded):
 A tournament game marked T and T stays a tie: pool games end level, and 22 of the 24 level tournament finals of
 2026 are marked that way. A tournament game marked W and L was played to a winner (owner decision, 2026-11-13).
 
-On 2026-11-13 the field hockey snapshot's 963 finals record as 943 reported in play, 2 forfeits, 7 shootouts
-(3 confirmed, 4 inferred), 9 unstated and 2 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
+On 2026-11-13 the field hockey site's 963 finals record as 942 reported in play (49 of them in overtime, 6 on
+a goalkeeper's overtime minutes alone), 2 rescored from two agreeing sources, 2 forfeits, 9 shootouts (3
+confirmed, 6 inferred), 7 unstated and 1 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
 1 (CCS semifinal, Nov 11) was a tie in both teams' records while the bracket advanced Saint Francis; Huntington
 Beach 0, Hockaday 0 and University 0, Gilroy 0 were ties; Mission Vista–Westview was published as si.com's 4-3
 and is now 1–1 with a 3–2 shootout; Tamalpais–Marin Catholic was 3-1 and is now 0–0 after two overtimes with a
 3–1 shootout; Vista–Escondido gained its 3–2 tally from cifsshome.org; Escondido–El Capitan and Canyon Crest
 Academy–Rancho Bernardo are confirmed shootouts. Each team's record now equals MaxPreps' where it had differed
 on these games. The CCS's own tie procedure for a playoff game was not read (cifccs.org refused the request for
-its bylaws) [U], which is why the Saint Francis game says only that MaxPreps credits the win.
+its bylaws) [U]; the Saint Francis game reads as a shootout because both teams' box scores have one goal each,
+so the game was level in play, and no source gives its tally.
 
 To record a result from a better source, add the contest to `resultCorrections` in
 `lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)

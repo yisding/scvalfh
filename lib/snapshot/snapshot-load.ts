@@ -18,6 +18,7 @@ import {
   recordStoredResults,
   reclassify,
 } from './snapshot-migrate';
+import type { BoxEvidence } from '../results/box-evidence';
 import type { Snapshot } from '../types';
 
 /** Parse-or-throw (v2 only), with a readable message naming the first few failures. */
@@ -38,12 +39,12 @@ export function parseSnapshot(raw: unknown): Snapshot {
  * reclassify; one whose games the current rules record differently → recordStoredResults;
  * then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
  */
-export function loadSnapshot(raw: unknown): Snapshot {
+export function loadSnapshot(raw: unknown, evidence: { box?: BoxEvidence } = {}): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
   const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
   const classified = needsReclassification(complete) ? reclassify(complete) : complete;
   // Then, with the tags current, every final as the current rules record it (lib/results/result.ts).
-  const settled = needsRecordedResults(classified) ? recordStoredResults(classified) : classified;
+  const settled = needsRecordedResults(classified, evidence.box) ? recordStoredResults(classified, evidence.box) : classified;
   // Then `playoffs.games` from the (now current) tags: lib/postseason/ccs-bracket.ts is its one derivation.
   return parseSnapshot(needsPlayoffGames(settled) ? rebuildPlayoffGames(settled) : settled);
 }

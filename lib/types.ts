@@ -259,7 +259,8 @@ export type ResultEnding = 'regulation' | 'overtime' | 'shootout' | 'forfeit' | 
  * How firmly the recorded result stands:
  *  - 'confirmed': an official sheet, a cited correction, or a second source that corroborates it;
  *  - 'reported': one source says so and nothing this site reads contradicts it (nearly every game);
- *  - 'inferred': this site read it from a rule or from arithmetic on two sources' scores, and says which;
+ *  - 'inferred': this site read it from a rule, from arithmetic on two sources' scores, or by taking the score
+ *    most sources agree on over MaxPreps', and says which;
  *  - 'disputed': another source records a different outcome (another winner, or a winner where this is a tie),
  *    or MaxPreps' own flags contradict its score.
  */
@@ -278,6 +279,16 @@ export interface GameResult {
   certainty: ResultCertainty;
   /** One sentence on what the record rests on; absent for a plain single-source result. */
   basis?: string;
+}
+
+/** One team's box score of a game, as far as it bears on the result; a field is absent when the coach did not track it. */
+export interface BoxSide {
+  /** The goals (points) the team's players total. */
+  goals?: number;
+  /** The goals the team's goalkeepers conceded. */
+  goalsAgainst?: number;
+  /** The most overtime minutes any of its goalkeepers played. */
+  overtimeMinutes?: number;
 }
 
 /**
@@ -492,6 +503,23 @@ export interface Game {
      * level score with the tally added (si.com's 4-3 where MaxPreps has 1-1 marked W and L is a 3-2 shootout).
      */
     shootoutSource?: { source: 'sblive' | 'cifss'; score: { home: number; away: number } };
+    /**
+     * What each team's own box score on MaxPreps says of the game, where it bears on the result (lib/results/
+     * box-evidence.ts): the goals its scorers total, the goals its goalkeepers conceded and their overtime minutes,
+     * as its coach entered them. A separate entry from the score, so it can confirm it or contradict it.
+     */
+    boxScore?: { home?: BoxSide; away?: BoxSide };
+    /** Set when the overtime shown is from a goalkeeper's overtime minutes in a box score and MaxPreps records none. */
+    overtimeEvidence?: 'box-score';
+    /**
+     * Set when the published score is not MaxPreps' but the one the other sources agree on (lib/results/result.ts
+     * adjudicateScore): MaxPreps' score and flags, kept so the choice can be made again as evidence changes, and
+     * the sources that carried the published one.
+     */
+    adjudicated?: {
+      maxpreps: { home: number; away: number; homeResult: Outcome | null; awayResult: Outcome | null };
+      by: string[];
+    };
     /** Set when DataQualityConfig.resultCorrections replaced the feed's result: what MaxPreps had, and the citation. */
     resultCorrection?: {
       maxpreps: { home: number; away: number; otPeriods: number };

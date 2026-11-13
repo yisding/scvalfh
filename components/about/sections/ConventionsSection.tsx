@@ -54,6 +54,13 @@ export function ConventionsSection({ shootoutSections }: { shootoutSections: rea
               : 'A game cannot end level. One that MaxPreps lists as level and marks as won is counted as the marked team’s win; it shows the score as MaxPreps has it.'}
           </li>
           <li>
+            No source is always right, so a score is checked against the others this site reads: si.com,
+            cifsshome.org and each team&rsquo;s own box score. Where two of them agree on a score that is not
+            MaxPreps&rsquo; and nothing supports MaxPreps&rsquo;, their score is shown, and the game&rsquo;s page
+            says what each source has. Where one source differs and nothing settles it, MaxPreps&rsquo; score
+            stands and the page says so.
+          </li>
+          <li>
             {`A forfeit counts in ${RECORD_NOUN_WORDS} but not in ${SCORE_UNITS} for/against/differential — marked with a dagger everywhere a total would otherwise be misleading.`}
           </li>
           <li>A game with no score posted yet says <b>No score</b>, never a blank or a zero.</li>

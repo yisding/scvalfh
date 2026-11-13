@@ -52,6 +52,7 @@ import { stepNormalize } from './steps/normalize';
 import { notAppliedReason } from './steps/official';
 import { stepReported } from './steps/reported';
 import { stepResults } from './steps/results';
+import { boxEvidenceFrom, type BoxEvidence } from '../results/box-evidence';
 import { stepSchedules } from './steps/schedules';
 import { stepSecondary } from './steps/secondary';
 import { stepStandings } from './steps/standings';
@@ -177,7 +178,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
 
   // 11c results: every final's recorded result, from everything the run now knows about it (corrections, a
   // level final that must have a winner, a tally read from a second source), before the standings count it.
-  state.games = stepResults(ctx, state.games, state.cifssCrossCheck);
+  state.games = stepResults(ctx, state.games, state.cifssCrossCheck, ctx.args.fixtures ? undefined : boxEvidenceOnDisk());
 
   // 12 standings + health
   const table = stepStandings(ctx, state);
@@ -211,6 +212,15 @@ export interface ParseOptions {
   cwd: string;
   /** The default `fetchedAt` for a live run (the CLI passes the wall clock; tests pin it). */
   now: string;
+}
+
+/** The box-score evidence of this sport's player-stats file, or undefined when it is missing or unreadable. */
+function boxEvidenceOnDisk(): BoxEvidence | undefined {
+  try {
+    return boxEvidenceFrom(JSON.parse(readFileSync(path.join(process.cwd(), DATA_DIR, 'player-stats.json'), 'utf8')) as unknown);
+  } catch {
+    return undefined;
+  }
 }
 
 /**

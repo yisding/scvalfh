@@ -6,13 +6,16 @@
  * loader runs the same function over a stored file (lib/snapshot/snapshot-migrate.ts), so a rule added here
  * reaches the committed data without a refetch. In order, per game:
  *
- *  1. `withCifssScore`: cifsshome.org's differing score, from the cross-check's conflict row, onto the game.
- *  2. `applyResultCorrection`: a result recorded from a better source (DataQualityConfig.resultCorrections)
+ *  1. `applyResultCorrection`: a result recorded from a better source (DataQualityConfig.resultCorrections)
  *     replaces the feed's: goals in play, overtime periods, the shootout tally, with MaxPreps' version kept.
- *  3. `settleLevelFinal` (lib/postseason/level-final.ts): level with the winner marked, in a game that must have
+ *  2. `withCifssScore`, `withBoxScore`: the evidence onto the game: cifsshome.org's differing score (the
+ *     cross-check's conflict row) and the two teams' box scores where they bear on the record.
+ *  3. `adjudicateScore`: where two sources agree on another score and nothing defends MaxPreps', that score is
+ *     published. `withBoxOvertime`: overtime a goalkeeper's minutes show and MaxPreps does not count.
+ *  4. `settleLevelFinal` (lib/postseason/level-final.ts): level with the winner marked, in a game that must have
  *     one, is the marked side's win.
- *  4. `unfoldShootout`: a second source's score that is the level score with a tally added becomes the tally.
- *  5. `resolveResult`: the GameResult, stored as `game.result`.
+ *  5. `unfoldShootout`: a second source's score that is the level score with a tally added becomes the tally.
+ *  6. `resolveResult`: the GameResult, stored as `game.result`.
  *
  * How sources record a game settled after a level score, as read in 2026 (docs/LEAGUE-RULES.md, "How a game's
  * result is read"):
@@ -27,11 +30,13 @@
  * is a tally a-b; (a >= 2, 0) may be a tally or another score altogether and is recorded as a difference only.
  */
 
-import { sideOutcome } from '../format';
+import { SPORT_OVERTIME_IS_SUDDEN_VICTORY, numberWord, sideOutcome } from '../format';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import type { DataQualityConfig } from '../league-config/shape';
 import { isLevelWithWinner, settleLevelFinal } from '../postseason/level-final';
-import type { CifssConflictRow, Decider, Game, GameResult } from '../types';
+import { SPORT } from '../sports/current';
+import type { CifssConflictRow, Decider, Game, GameResult, Outcome } from '../types';
+import { boxGoals, boxOvertimeMinutes, withBoxScore, type BoxEvidence } from './box-evidence';
 import { shootoutRuleSectionOf } from './section-rule';
 
 type Pair = { home: number; away: number };
@@ -153,6 +158,119 @@ export function correctionProblems(
   return out;
 }
 
+const outcomeOf = (own: number, other: number): Outcome => (own > other ? 'W' : own < other ? 'L' : 'T');
+
+/** The game as MaxPreps had it, where `adjudicateScore` published another score; the same object otherwise. */
+function unadjudicated(game: Game): Game {
+  const was = game.provenance.adjudicated;
+  if (!was) return game;
+  const { adjudicated: _gone, ...provenance } = game.provenance;
+  void _gone;
+  return {
+    ...game,
+    home: { ...game.home, score: was.maxpreps.home, result: was.maxpreps.homeResult },
+    away: { ...game.away, score: was.maxpreps.away, result: was.maxpreps.awayResult },
+    provenance,
+  };
+}
+
+/**
+ * The score the sources agree on, when it is not MaxPreps'. Every source this site reads is wrong now and then,
+ * so MaxPreps' score is challenged by the others' and the best-supported one is published:
+ *
+ *  - a challenger is a whole score another source records (si.com's, cifsshome.org's) that differs from MaxPreps';
+ *  - it is supported by each such source that records it, and by each box-score number (`boxGoals`) that equals
+ *    its figure on a side where it differs from MaxPreps';
+ *  - MaxPreps' score is defended by each box-score number that equals ITS figure on such a side;
+ *  - the challenger is published when at least two sources support it and none defends MaxPreps'.
+ *
+ * Mission Hills 1, San Pasqual 0 on MaxPreps (Oct 30): si.com has 2-1 and Mission Hills' own box score totals 2
+ * goals, so 2-1 is published. Carmel 4, Santa Catalina 0: si.com has 3-0, Carmel's box score totals 4, so
+ * MaxPreps' score stands. One source against one (Salinas 1, Santa Catalina 0; si.com 1-1) changes nothing and
+ * is recorded as disputed.
+ *
+ * Never applied to a level score with the winner marked (the other sources' higher scores are then the shootout,
+ * `unfoldShootout`), a forfeit (sources differ on its nominal score), a corrected game, or a game already filled
+ * from si.com. `provenance.adjudicated` keeps MaxPreps' score and flags, so the choice is made afresh each time.
+ */
+export function adjudicateScore(game: Game): Game {
+  const base = unadjudicated(game);
+  if (base.status !== 'final' || base.home.score === null || base.away.score === null) return base === game ? game : base;
+  const p = base.provenance;
+  if (base.isForfeit || p.resultCorrection || p.backfill || isLevelWithWinner(base.home, base.away)) return base === game ? game : base;
+  const mp = { home: base.home.score, away: base.away.score };
+  const others = otherScores(base).filter((o) => o.score.home !== mp.home || o.score.away !== mp.away);
+  const box = boxGoals(base);
+  let best: { score: Pair; by: string[] } | null = null;
+  let tied = false;
+  for (const o of others) {
+    const x = o.score;
+    const by = others.filter((q) => q.score.home === x.home && q.score.away === x.away).map((q) => q.name as string);
+    let defended = 0;
+    for (const side of ['home', 'away'] as const) {
+      if (x[side] === mp[side]) continue;
+      const name = base[side].name;
+      if (box[side].some((n) => n === x[side])) by.push(`a box score with ${x[side]} for ${name}`);
+      defended += box[side].filter((n) => n === mp[side]).length;
+    }
+    if (by.length < 2 || defended > 0) continue;
+    if (best && (best.score.home !== x.home || best.score.away !== x.away)) {
+      if (by.length === best.by.length) tied = true;
+      if (by.length <= best.by.length) continue;
+      tied = false;
+    }
+    best = { score: x, by };
+  }
+  if (!best || tied) return base === game ? game : base;
+  const adopted: Game = {
+    ...base,
+    home: { ...base.home, score: best.score.home, result: outcomeOf(best.score.home, best.score.away) },
+    away: { ...base.away, score: best.score.away, result: outcomeOf(best.score.away, best.score.home) },
+    // A score decided on goals: the decider is the overtime count (a level MaxPreps score may have read otherwise).
+    decider: base.decider === 'SO' || base.decider === null ? overtimeDecider(base.otPeriods) : base.decider,
+    provenance: {
+      ...p,
+      adjudicated: { maxpreps: { home: mp.home, away: mp.away, homeResult: base.home.result, awayResult: base.away.result }, by: best.by },
+    },
+  };
+  const was = game.provenance.adjudicated;
+  const same =
+    was !== undefined && game.home.score === adopted.home.score && game.away.score === adopted.away.score &&
+    was.by.join('|') === best.by.join('|') && was.maxpreps.home === mp.home && was.maxpreps.away === mp.away;
+  return same ? game : adopted;
+}
+
+/**
+ * Overtime a box score shows and MaxPreps does not count: a goalkeeper's overtime minutes in a final with 0
+ * overtime periods recorded (Los Altos 2, Stevenson 2, Sep 18: 7 minutes, the SCVAL period). One period is
+ * recorded, since minutes do not say how many, and `provenance.overtimeEvidence` says where it came from, as
+ * `overtimeNote` does for a coach's note. As for a note, a sudden-victory sport believes it only on a level or
+ * one-goal score.
+ */
+export function withBoxOvertime(game: Game): Game {
+  if (game.status !== 'final' || game.isForfeit || game.home.score === null || game.away.score === null) return game;
+  if (game.provenance.resultCorrection) return game;
+  const fromBox = game.provenance.overtimeEvidence === 'box-score';
+  const fits = !SPORT_OVERTIME_IS_SUDDEN_VICTORY || Math.abs(game.home.score - game.away.score) <= 1;
+  const shows = boxOvertimeMinutes(game) > 0 && fits;
+  if (shows && game.otPeriods === 0) {
+    return {
+      ...game,
+      otPeriods: 1,
+      isOt: true,
+      decider: game.decider === 'REG' ? 'OT' : game.decider,
+      provenance: { ...game.provenance, overtimeEvidence: 'box-score' },
+    };
+  }
+  if (!shows && fromBox) {
+    // The evidence is gone (the box score changed): back to MaxPreps' count of none.
+    const { overtimeEvidence: _gone, ...provenance } = game.provenance;
+    void _gone;
+    return { ...game, otPeriods: 0, isOt: false, decider: game.decider === 'OT' ? 'REG' : game.decider, provenance };
+  }
+  return game;
+}
+
 /**
  * Step 4: on an 'SO' final with no tally, a second source's score that is the level score plus a tally (the
  * loser's side also raised: `readExcess` 'tally') becomes `shootout`, and `provenance.shootoutSource` says whose
@@ -175,6 +293,9 @@ export function unfoldShootout(game: Game): Game {
     provenance: { ...game.provenance, shootoutSource: { source: first.o.source, score: first.o.score } },
   };
 }
+
+const listOf = (items: readonly string[]): string =>
+  items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
 
 const pairText = (p: Pair, winner: 'home' | 'away' | null): string =>
   winner === 'away' ? `${p.away}-${p.home}` : `${p.home}-${p.away}`;
@@ -202,7 +323,7 @@ export function resolveResult(game: Game): GameResult | null {
           winner,
           ending,
           certainty: 'disputed',
-          basis: `${dissent.name} records ${game.home.name} ${dissent.score.home}, ${game.away.name} ${dissent.score.away}, a different outcome; the published score stands`,
+          basis: `another source, ${dissent.name}, records ${game.home.name} ${dissent.score.home}, ${game.away.name} ${dissent.score.away}: a different outcome, with nothing else to settle it, so MaxPreps’ score stands`,
         }
       : null;
 
@@ -213,6 +334,16 @@ export function resolveResult(game: Game): GameResult | null {
   if (p.resultCorrection) {
     const ending = game.shootout ? 'shootout' : game.otPeriods > 0 ? 'overtime' : 'regulation';
     return { winner, ending, certainty: 'confirmed', basis: p.resultCorrection.source };
+  }
+
+  if (p.adjudicated) {
+    const was = p.adjudicated.maxpreps;
+    return {
+      winner,
+      ending: game.otPeriods > 0 ? 'overtime' : 'regulation',
+      certainty: 'inferred',
+      basis: `${numberWord(p.adjudicated.by.length)} sources agree on ${game.home.name} ${game.home.score}, ${game.away.name} ${game.away.score} (${listOf(p.adjudicated.by)}); MaxPreps lists ${game.home.name} ${was.home}, ${game.away.name} ${was.away}, and nothing else supports that`,
+    };
   }
 
   if (game.decider === 'SO') {
@@ -255,6 +386,17 @@ export function resolveResult(game: Game): GameResult | null {
     if (section?.shootout?.inference === 'verified') {
       return { winner, ending: 'shootout', certainty: 'inferred', basis: `MaxPreps marks the winner of a level score, and ${section.shootout.citation}` };
     }
+    // Both teams' box scores total the level score: the game WAS level in play, so the marked win came after it,
+    // and the sport has one way to break a level score.
+    const box = boxGoals(game);
+    if (SPORT.scoring.tiebreak && box.home.length > 0 && box.away.length > 0 && [...box.home, ...box.away].every((n) => n === level)) {
+      return {
+        winner,
+        ending: 'shootout',
+        certainty: 'inferred',
+        basis: `MaxPreps lists ${level}-${level} and marks ${winnerName} the winner, and both teams’ box scores have ${level} ${level === 1 ? SPORT.scoring.unit : SPORT.scoring.units} each, so the game was level in play and was settled after it; no source gives the tally`,
+      };
+    }
     const unclear = winner ? others.find((o) => readExcess(excessOver(level, o.score, winner)) === 'unclear') : undefined;
     return {
       winner,
@@ -267,6 +409,21 @@ export function resolveResult(game: Game): GameResult | null {
   }
 
   const ending = game.otPeriods > 0 ? 'overtime' : 'regulation';
+  if (dissent && !p.backfill && !p.resultConflict) {
+    // One source against MaxPreps: a box score that has MaxPreps' figure where they differ settles it for MaxPreps.
+    const box = boxGoals(game);
+    const backed = (['home', 'away'] as const).some(
+      (side) => dissent.score[side] !== game[side].score && box[side].some((n) => n === game[side].score),
+    );
+    if (backed) {
+      return {
+        winner,
+        ending,
+        certainty: 'confirmed',
+        basis: `a box score agrees with MaxPreps’ ${game.home.name} ${game.home.score}, ${game.away.name} ${game.away.score}; another source, ${dissent.name}, records ${dissent.score.home}-${dissent.score.away}`,
+      };
+    }
+  }
   if (p.backfill) return { winner, ending, certainty: 'reported', basis: 'the score is si.com’s' };
   if (p.resultConflict) return { winner, ending, certainty: 'disputed', basis: 'MaxPreps’ own result flags contradict its score, or its two team feeds disagree; the published score stands' };
   return disputed(ending) ?? { winner, ending, certainty: 'reported' };
@@ -281,11 +438,19 @@ export interface FinalizeOptions {
   /** The cifss cross-check's conflict rows of the run (or of the stored file). */
   cifssConflicts?: readonly Pick<CifssConflictRow, 'contestId' | 'cifss' | 'cifssUrl'>[];
   corrections?: DataQualityConfig['resultCorrections'];
+  /** The box scores of the season (lib/results/box-evidence.ts); undefined leaves each game's box evidence as stored. */
+  box?: BoxEvidence;
 }
 
 /** Steps 1 to 5 on one game: the same object when nothing changes. */
-export function finalizeResult(game: Game, opts: { cifss?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>; corrections?: DataQualityConfig['resultCorrections'] } = {}): Game {
-  const read = unfoldShootout(settleLevelFinal(applyResultCorrection(withCifssScore(game, opts.cifss), opts.corrections)));
+export function finalizeResult(
+  game: Game,
+  opts: { cifss?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>; corrections?: DataQualityConfig['resultCorrections']; box?: BoxEvidence } = {},
+): Game {
+  // The correction first: a corrected game is settled by its citation and carries no box evidence.
+  const evidenced = withBoxScore(withCifssScore(applyResultCorrection(game, opts.corrections), opts.cifss), opts.box);
+  const scored = withBoxOvertime(adjudicateScore(evidenced));
+  const read = unfoldShootout(settleLevelFinal(scored));
   const result = resolveResult(read);
   if (sameResult(read.result, result)) return read;
   if (result === null) {
@@ -299,6 +464,6 @@ export function finalizeResult(game: Game, opts: { cifss?: Pick<CifssConflictRow
 /** `finalizeResult` over a list: the same array when no game changes. */
 export function finalizeResults(games: readonly Game[], opts: FinalizeOptions = {}): Game[] {
   const cifss = new Map((opts.cifssConflicts ?? []).map((r) => [r.contestId, r]));
-  const out = games.map((g) => finalizeResult(g, { cifss: cifss.get(g.contestId), corrections: opts.corrections }));
+  const out = games.map((g) => finalizeResult(g, { cifss: cifss.get(g.contestId), corrections: opts.corrections, box: opts.box }));
   return out.some((g, i) => g !== games[i]) ? out : (games as Game[]);
 }

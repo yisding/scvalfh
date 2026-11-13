@@ -37,6 +37,12 @@ const contestId = z
     'expected a contest GUID, sblive:<digits> or cifsds:<away>-at-<home>',
   );
 const outcome = z.enum(['W', 'L', 'T']);
+/** One team's box score of a game, as far as it bears on the result (lib/types.ts BoxSide). */
+const boxSide = z.object({
+  goals: z.number().int().min(0).optional(),
+  goalsAgainst: z.number().int().min(0).optional(),
+  overtimeMinutes: z.number().min(0).optional(),
+});
 // SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
 const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
 const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
@@ -244,6 +250,14 @@ export const GameSchema = z
       cifssScore: z.object({ home: z.number().int(), away: z.number().int(), url: httpUrl }).optional(),
       shootoutSource: z
         .object({ source: z.enum(['sblive', 'cifss']), score: z.object({ home: z.number().int(), away: z.number().int() }) })
+        .optional(),
+      boxScore: z.object({ home: boxSide.optional(), away: boxSide.optional() }).optional(),
+      overtimeEvidence: z.literal('box-score').optional(),
+      adjudicated: z
+        .object({
+          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), homeResult: outcome.nullable(), awayResult: outcome.nullable() }),
+          by: z.array(z.string().min(1)).min(1),
+        })
         .optional(),
       resultCorrection: z
         .object({

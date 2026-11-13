@@ -1560,7 +1560,9 @@ can end a league game in a tie; the EAL and the San Diego Section decide a level
 1 v 1s or a shootout. Every final carries a recorded result (`Game.result`: the winner, how the game
 ended, how certain the record is and what it rests on), decided in `lib/results/result.ts` from MaxPreps'
 score and flags, the differing scores si.com and cifsshome.org carry, the San Diego Section's bracket sheet
-and the cited corrections in `DATA_QUALITY.resultCorrections`. The score shown is always the score in play,
+each team's own box score, and the cited corrections in `DATA_QUALITY.resultCorrections`. Every source is
+wrong now and then, so they are weighed: where two agree on a score that is not MaxPreps' and nothing
+defends MaxPreps', theirs is published. The score shown is always the score in play,
 with a shootout tally kept apart: a postseason or tournament game MaxPreps lists as level with one side
 marked the winner counts as that side's win, and a second source's score that is the level score with a
 shootout added gives the tally (docs/LEAGUE-RULES.md, "How a game's result is read", has every case in all

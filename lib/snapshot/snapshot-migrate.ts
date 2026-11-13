@@ -43,6 +43,7 @@
 import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
 import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final';
+import type { BoxEvidence } from '../results/box-evidence';
 import { excessOver, finalizeResult } from '../results/result';
 import { stableStringify } from '../stable-json';
 import { CCS } from '../league-config/sections';
@@ -580,8 +581,8 @@ function unfillSettledLevelScore(g: Game): Game {
 }
 
 /** One stored game as the current rules record it (lib/results/result.ts), given the file's cifss conflict rows. */
-function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>): Game {
-  return finalizeResult(unfillSettledLevelScore(g), { cifss: cifss.get(g.contestId) });
+function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>, box: BoxEvidence | undefined): Game {
+  return finalizeResult(unfillSettledLevelScore(g), { cifss: cifss.get(g.contestId), box });
 }
 
 function cifssRowsOf(raw: Json): Map<string, CifssConflictRow> {
@@ -592,13 +593,15 @@ function cifssRowsOf(raw: Json): Map<string, CifssConflictRow> {
 /**
  * A v2 object with at least one game the current rules record differently (lib/results/result.ts
  * `finalizeResult`): a file written before `Game.result` existed, or before a rule or a correction was added.
- * False for anything else, including a file `parseSnapshot` would reject for another reason.
+ * False for anything else, including a file `parseSnapshot` would reject for another reason. `box` is the season's
+ * box-score evidence (lib/results/box-evidence.ts) when the caller has the player-stats file to hand: lib/data.ts
+ * does, so the site weighs it; without it each game's stored box evidence is left as it is.
  */
-export function needsRecordedResults(raw: unknown): boolean {
+export function needsRecordedResults(raw: unknown, box?: BoxEvidence): boolean {
   if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.standings)) return false;
   try {
     const cifss = cifssRowsOf(raw);
-    return (raw.games as Game[]).some((g) => recorded(g, cifss) !== g);
+    return (raw.games as Game[]).some((g) => recorded(g, cifss, box) !== g);
   } catch {
     return false;
   }
@@ -612,18 +615,18 @@ export function needsRecordedResults(raw: unknown): boolean {
  * `backfilled` row becomes a `conflicts` row; (5) `counts`; (6) `playoffs.games`, rebuilt so it holds the new
  * objects. Throws on input `needsRecordedResults` rejects.
  */
-export function recordStoredResults(raw: unknown): unknown {
-  if (!needsRecordedResults(raw)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot with a result to record');
+export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
+  if (!needsRecordedResults(raw, box)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot with a result to record');
   const v2 = raw as unknown as Snapshot;
   const cifss = cifssRowsOf(raw as Json);
-  const games = v2.games.map((g) => recorded(g, cifss));
+  const games = v2.games.map((g) => recorded(g, cifss, box));
   const changed = new Set<DivisionId>();
   const unfilled: Game[] = [];
   games.forEach((g, i) => {
     const was = v2.games[i];
     if (was.provenance.backfill && !g.provenance.backfill) unfilled.push(g);
     const moved =
-      was.home.score !== g.home.score || was.away.score !== g.away.score || was.decider !== g.decider ||
+      was.home.score !== g.home.score || was.away.score !== g.away.score || was.decider !== g.decider || was.otPeriods !== g.otPeriods ||
       was.home.result !== g.home.result || was.away.result !== g.away.result || stableStringify(was.shootout) !== stableStringify(g.shootout);
     if (!moved) return;
     for (const side of [g.home, g.away]) {

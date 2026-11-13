@@ -1,16 +1,20 @@
 /**
  * Step 11c: every final's recorded result (lib/results/result.ts `finalizeResults`), after the last step that
  * can bring evidence about a game (the cifsshome.org cross-check) and before the standings count it. Logs each
- * game whose score, winner or tally this step changed, and every result that is not a plain single-source one.
+ * game whose score, winner or tally this step changed. `box` is the box-score evidence of the player-stats file on
+ * disk (a live run; a corpus run has none, so its output depends on the corpus alone). The file is the previous
+ * player-stats fetch, so a box score entered since reaches the stored record a run later; the site reads the
+ * current one when it loads the snapshot (lib/data.ts).
  */
 
+import type { BoxEvidence } from '../../results/box-evidence';
 import { correctionProblems, finalizeResults } from '../../results/result';
 import type { CifssCrossCheck, Game } from '../../types';
 import type { RunContext } from '../contract';
 
-export function stepResults(ctx: RunContext, games: readonly Game[], cifss: CifssCrossCheck | null | undefined): Game[] {
+export function stepResults(ctx: RunContext, games: readonly Game[], cifss: CifssCrossCheck | null | undefined, box?: BoxEvidence): Game[] {
   for (const problem of correctionProblems(games)) ctx.warn(problem);
-  const out = finalizeResults(games, { cifssConflicts: cifss?.conflicts ?? [] });
+  const out = finalizeResults(games, { cifssConflicts: cifss?.conflicts ?? [], box });
   const tally = { confirmed: 0, reported: 0, inferred: 0, disputed: 0 };
   for (const [i, g] of out.entries()) {
     if (!g.result) continue;

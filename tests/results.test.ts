@@ -13,7 +13,8 @@ import {
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
 import type { DataQualityConfig } from '../lib/league-config/shape';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
-import type { Game } from '../lib/types';
+import { boxEvidenceFrom, type BoxEvidence } from '../lib/results/box-evidence';
+import type { BoxSide, Game } from '../lib/types';
 import { game } from './game-builder';
 import { readFileSync } from 'node:fs';
 
@@ -128,7 +129,7 @@ describe('a second source’s score against a level score with the winner marked
       winner: null,
       ending: 'regulation',
       certainty: 'disputed',
-      basis: 'cifsshome.org records Westview 1, Poway 0, a different outcome; the published score stands',
+      basis: 'another source, cifsshome.org, records Westview 1, Poway 0: a different outcome, with nothing else to settle it, so MaxPreps’ score stands',
     });
     // The same winner on another score is a difference, not a dispute.
     const won = finalizeResult(game({ home: 'westview', away: 'poway', hs: 4, as: 0 }), { cifss: cifss(3, 0) });
@@ -140,6 +141,114 @@ describe('a second source’s score against a level score with the winner marked
     const had = finalizeResult(base, { cifss: cifss(3, 0) });
     expect(had.provenance.cifssScore).toEqual({ home: 3, away: 0, url: CIFSS_URL });
     expect(finalizeResult(had).provenance.cifssScore).toBeUndefined();
+  });
+});
+
+/** Box evidence for one game: each named team's box score. */
+const boxFor = (g: Game, sides: Record<string, BoxSide>): BoxEvidence => new Map([[g.contestId, new Map(Object.entries(sides))]]);
+
+describe('weighing the sources: every one of them is wrong now and then', () => {
+  it('reads a player-stats file into box evidence, counting only what a coach tracked', () => {
+    const evidence = boxEvidenceFrom({
+      teams: [
+        {
+          slug: 'mission-hills',
+          games: [
+            {
+              contestId: 'c1',
+              tracked: { field: ['goals', 'assists'], goalkeeping: ['saves', 'overtimeMinutes'] },
+              players: [
+                { field: { goals: 1, assists: 1 }, goalkeeping: null },
+                { field: { goals: 1 }, goalkeeping: null },
+                { field: null, goalkeeping: { saves: 5, overtimeMinutes: 10 } },
+              ],
+            },
+            // Nothing tracked that bears on a result: no entry.
+            { contestId: 'c2', tracked: { field: ['assists'], goalkeeping: ['saves'] }, players: [{ field: { assists: 2 }, goalkeeping: null }] },
+          ],
+        },
+        { slug: 'broken', games: 'nope' },
+      ],
+    });
+    expect(evidence.get('c1')?.get('mission-hills')).toEqual({ goals: 2, overtimeMinutes: 10 });
+    expect(evidence.has('c2')).toBe(false);
+    expect(boxEvidenceFrom(null).size).toBe(0);
+  });
+
+  // San Pasqual 0, Mission Hills 1 on MaxPreps (Oct 30); si.com has 1-2 and Mission Hills' box score totals 2.
+  it('publishes the score two sources agree on when nothing defends MaxPreps’', () => {
+    const mp = game({ home: 'san-pasqual', away: 'mission-hills', hs: 0, as: 1, league: false, date: '2026-10-30' });
+    const g = finalizeResult(withSblive(mp, 1, 2), { box: boxFor(mp, { 'mission-hills': { goals: 2 } }) });
+    expect([g.home.score, g.away.score]).toEqual([1, 2]);
+    expect(g.provenance.adjudicated?.maxpreps).toMatchObject({ home: 0, away: 1 });
+    expect(g.result).toMatchObject({ winner: 'away', ending: 'regulation', certainty: 'inferred' });
+    expect(g.result?.basis).toContain('two sources agree on San Pasqual 1, Mission Hills 2 (si.com and a box score with 2 for Mission Hills)');
+    // Made afresh each time: the same evidence changes nothing, and without it MaxPreps' score is back.
+    expect(finalizeResult(g, { box: boxFor(mp, { 'mission-hills': { goals: 2 } }) })).toBe(g);
+    const back = finalizeResult(g, { box: new Map() });
+    expect([back.home.score, back.away.score, back.provenance.adjudicated]).toEqual([0, 1, undefined]);
+  });
+
+  // Westview 0, Poway 0 on MaxPreps, marked a tie (Aug 22); cifsshome.org has Westview 1-0 and Westview's box score a goal.
+  it('gives a tie its winner when two sources have one', () => {
+    const tie = game({ home: 'westview', away: 'poway', hs: 0, as: 0, league: false, contestTypes: { home: 2, away: 2 } });
+    const g = finalizeResult(tie, { cifss: cifss(1, 0), box: boxFor(tie, { westview: { goals: 1 } }) });
+    expect([g.home.score, g.away.score, g.home.result, g.away.result]).toEqual([1, 0, 'W', 'L']);
+    expect(sideOutcome(g, 'home')).toBe('W');
+    expect(g.result).toMatchObject({ winner: 'home', certainty: 'inferred' });
+  });
+
+  // Santa Catalina 0, Carmel 4 on MaxPreps (Oct 9); si.com has 0-3; Carmel's box score totals 4.
+  it('keeps MaxPreps’ score when a box score defends it, or when it is one source against one', () => {
+    const mp = game({ home: 'santa-catalina', away: 'carmel', hs: 0, as: 4 });
+    const defended = finalizeResult(withSblive(mp, 0, 3), { box: boxFor(mp, { carmel: { goals: 4 } }) });
+    expect([defended.home.score, defended.away.score, defended.provenance.adjudicated]).toEqual([0, 4, undefined]);
+    const alone = finalizeResult(withSblive(mp, 0, 3), { box: new Map() });
+    expect([alone.home.score, alone.away.score]).toEqual([0, 4]);
+    // A different OUTCOME from one source, with a box score for MaxPreps: confirmed, not disputed.
+    const salinas = game({ home: 'salinas', away: 'santa-catalina', hs: 1, as: 0 });
+    const backed = finalizeResult(withSblive(salinas, 1, 1), { box: boxFor(salinas, { salinas: { goalsAgainst: 0 } }) });
+    expect(backed.result).toMatchObject({ winner: 'home', certainty: 'confirmed' });
+    expect(finalizeResult(withSblive(salinas, 1, 1), { box: new Map() }).result).toMatchObject({ certainty: 'disputed' });
+  });
+
+  it('never rescores a level game with the winner marked, or a forfeit: the higher scores there are the shootout or a convention', () => {
+    const level = game({ home: 'westview', away: 'mission-vista', hs: 1, as: 1, league: false, contestTypes: { home: 2, away: 2 }, results: { home: 'L', away: 'W' } });
+    const g = finalizeResult(withSblive(level, 3, 4), { box: boxFor(level, { 'mission-vista': { goals: 4, goalsAgainst: 3 }, westview: { goals: 1 } }) });
+    expect([g.home.score, g.away.score, g.shootout]).toEqual([1, 1, { home: 2, away: 3 }]);
+    const forfeit = game({ home: 'del-norte', away: 'valley-center', hs: 1, as: 0, forfeit: true });
+    const f = finalizeResult(forfeit, { cifss: cifss(3, 0), box: new Map() });
+    expect([f.home.score, f.away.score, f.result?.ending]).toEqual([1, 0, 'forfeit']);
+  });
+
+  // Saint Francis 1, Archbishop Mitty 1 (CCS semifinal, Nov 11): both teams' box scores total one goal.
+  it('reads a shootout when both box scores confirm the game was level in play', () => {
+    const semi = game({
+      home: 'saint-francis', away: 'mitty', hs: 1, as: 1, league: false, date: '2026-11-11',
+      postseason: { kind: 'ccs', leagueId: 'scval', via: 'maxpreps-bracket' }, results: MARKED_HOME,
+    });
+    expect(finalizeResult(semi, { box: new Map() }).result).toMatchObject({ ending: 'unstated', certainty: 'reported' });
+    const g = finalizeResult(semi, { box: boxFor(semi, { 'saint-francis': { goals: 1 }, mitty: { goals: 1 } }) });
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'shootout', certainty: 'inferred' });
+    expect(describeGame(g).deciderTag).toBe('SO');
+    expect(describeGame(g).sentence).toBe('Saint Francis 1, Archbishop Mitty 1, final; Saint Francis won in a shootout.');
+    // One box score that disagrees leaves it unstated.
+    const off = finalizeResult(semi, { box: boxFor(semi, { 'saint-francis': { goals: 2 }, mitty: { goals: 1 } }) });
+    expect(off.result).toMatchObject({ ending: 'unstated' });
+  });
+
+  // Los Altos 2, Stevenson 2 (Sep 18): MaxPreps counts no overtime; Stevenson's goalkeeper has 7 overtime minutes.
+  it('records overtime a goalkeeper’s minutes show, and takes it back when the evidence goes', () => {
+    const mp = game({ home: 'los-altos', away: 'stevenson', hs: 2, as: 2, league: false });
+    const g = finalizeResult(mp, { box: boxFor(mp, { stevenson: { goals: 2, goalsAgainst: 2, overtimeMinutes: 7 } }) });
+    expect([g.otPeriods, g.isOt, g.decider, g.provenance.overtimeEvidence]).toEqual([1, true, 'OT', 'box-score']);
+    expect(g.result).toMatchObject({ winner: null, ending: 'overtime' });
+    expect(finalizeResult(g, { box: boxFor(mp, { stevenson: { goals: 2, goalsAgainst: 2, overtimeMinutes: 7 } }) }), 'a fixed point').toBe(g);
+    const gone = finalizeResult(g, { box: new Map() });
+    expect([gone.otPeriods, gone.decider, gone.provenance.overtimeEvidence]).toEqual([0, 'REG', undefined]);
+    // Sudden victory cannot leave two goals between the sides: not believed there.
+    const wide = game({ home: 'los-altos', away: 'stevenson', hs: 3, as: 1, league: false });
+    expect(finalizeResult(wide, { box: boxFor(wide, { stevenson: { overtimeMinutes: 7 } }) }).otPeriods).toBe(0);
   });
 });
 
@@ -219,6 +328,18 @@ describe('the committed snapshot, as the loader records it', () => {
       // A tally is only ever shown for a shootout the record stands behind.
       if (g.shootout) expect(g.result?.ending, g.contestId).toBe('shootout');
       if (g.result?.certainty !== 'reported' || g.result.ending === 'unstated') expect(g.result?.basis, g.contestId).toBeTruthy();
+    }
+  });
+
+  it('is a fixed point with the season’s box scores weighed in, as lib/data.ts loads it', () => {
+    const box = boxEvidenceFrom(JSON.parse(readFileSync('data/player-stats.json', 'utf8')) as unknown);
+    const once = loadSnapshot(JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as unknown, { box });
+    const twice = loadSnapshot(JSON.parse(JSON.stringify(once)) as unknown, { box });
+    expect(JSON.stringify(twice.games)).toBe(JSON.stringify(once.games));
+    expect(JSON.stringify(twice.standings)).toBe(JSON.stringify(once.standings));
+    for (const g of once.games) {
+      const o = sideOutcome(g, 'home');
+      if (g.status === 'final') expect(g.result?.winner, g.contestId).toBe(o === 'W' ? 'home' : o === 'L' ? 'away' : null);
     }
   });
 
