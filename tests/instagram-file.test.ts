@@ -10,7 +10,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getClub } from '../lib/players/clubs';
-import { clubSiteKey, isBannedHost } from '../lib/players/clubs-schema';
+import { isBannedHost } from '../lib/players/clubs-schema';
 import { isHttpsUrl } from '../lib/schema-primitives';
 import {
   InstagramFileSchema,
@@ -42,12 +42,12 @@ describe('data/instagram.json', () => {
     expect(new Set(file.clubs.map((a) => a.slug)).size).toBe(file.clubs.length);
   });
 
-  it('proves every account with an https page that is not social media, a club’s on its own site', () => {
+  it('cites, where it cites one, an https page that is not social media', () => {
     for (const a of [...file.teams, ...file.clubs]) {
-      expect(isHttpsUrl(a.proof), a.slug).toBe(true);
-      expect(isBannedHost(a.proof), a.slug).toBe(false);
+      if (a.foundAt === null) continue;
+      expect(isHttpsUrl(a.foundAt), a.slug).toBe(true);
+      expect(isBannedHost(a.foundAt), a.slug).toBe(false);
     }
-    for (const a of file.clubs) expect(clubSiteKey(a.proof), a.slug).toBe(clubSiteKey(getClub(a.slug)!.website!));
   });
 
   it('serves each account by slug, and a profile address per handle', () => {
@@ -76,12 +76,12 @@ describe('loadInstagram refuses a bad file', () => {
     }
   });
 
-  it('a proof on social media, or not https', () => {
+  it('a foundAt page on social media, or not https', () => {
     const f = copy();
-    f.teams[0]!.proof = 'https://www.instagram.com/someteam/';
+    f.teams[0]!.foundAt = 'https://www.instagram.com/someteam/';
     expect(() => loadInstagram(f)).toThrow(/social media is not a source/);
     const g = copy();
-    g.teams[0]!.proof = 'http://example.com/';
+    g.teams[0]!.foundAt = 'http://example.com/';
     expect(() => loadInstagram(g)).toThrow(/https/);
   });
 
@@ -97,9 +97,4 @@ describe('loadInstagram refuses a bad file', () => {
     expect(() => loadInstagram(h)).toThrow(/listed twice/);
   });
 
-  it('a club proof that is not on the club’s own site', () => {
-    const f = copy();
-    f.clubs[0]!.proof = 'https://example.com/';
-    expect(() => loadInstagram(f)).toThrow(/is not on the club's own site/);
-  });
 });

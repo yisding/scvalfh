@@ -2626,21 +2626,19 @@ and their sentence says whose dates they are; a team name on another club's sche
 Black" on Roseville's Gold Cup page) does not put that club on the event; a month-only date ("April
 2027") is never turned into a day: the event stays `expected`.
 
-### 1.10 INSTAGRAM ACCOUNTS — linked from the owners' own pages (`data/instagram.json`)
+### 1.10 INSTAGRAM ACCOUNTS — teams' and clubs' official accounts (`data/instagram.json`)
 
-Links, not a source: nothing on the site is read from an account, and `BANNED_HOSTS` (§1.1j2,
+Links, not a source: no fact on the site is read from an account, and `BANNED_HOSTS` (§1.1j2,
 §1.1j3) still refuses social media as a source everywhere. Researched by hand on 2026-11-13 for the
-102 field hockey teams and the 28 clubs of `data/clubs.json`. An account is recorded only when a page
-that is not social media and is the owner's own links it (`proof`): the club's website for a club
-(read by script, in Chromium where the links are rendered by script; the loader checks the proof is on
-the club's own site), and for a team the school's, district's or athletics department's site, or the
-program's own site, re-checked by fetching the page and finding the link. A team's account must be the
-field hockey program's own (not the school's or the athletics department's account for every sport, a
-booster club's, a club team's or a player's). Instagram itself was not read: automated access to it is
-refused, and the rule needs no more than the owner's own link. A handle found only in a search result,
-or one that looks right but no page of the owner's links, is left out. Handles are stored lower case,
-as Instagram stores usernames. A school or club with no record had no account linked from its own
-pages on the day it was checked; it may still have one.
+102 field hockey teams and the 28 clubs of `data/clubs.json`. Handles were found where a page that is
+not social media names or links them: a club's website (read by script, in Chromium where the links
+are rendered by script), a school's athletics or team page, a student paper, a search result. Every
+handle was then opened in a browser (Chromium, one profile at a time, slowly: Instagram rate-limits
+anonymous views) to see that the profile exists and that its name and bio are the field hockey team's
+or the club's, not the school's account for every sport, a booster club's, a club team's, a player's
+or a same-named school's elsewhere. A page of the owner's own linking the account is not required
+(owner decision, 2026-11-13). Handles are stored lower case, as Instagram stores usernames. A school or
+club with no record had no account we could find and check on the day; it may still have one.
 
 ### 1.6 Rejected sources (one line each)
 

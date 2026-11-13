@@ -4,23 +4,22 @@
  * page's link row read it from here.
  *
  * Social media is never a SOURCE on this site (BANNED_HOSTS, lib/players/clubs-schema.ts): these are
- * links, not facts. A handle is in the file only when `proof`, a page that is not social media and is
- * the owner's own (a club's website; the school's, its district's or its athletics department's site, or
- * the team's own site), links the account. That is what makes it the official one: a search result,
- * a handle that merely looks right, or an account that says it is the team's is never enough, and
- * Instagram itself is never read (it cannot be from the research environment). A team's handle is the
- * field hockey program's own account, never the school's or the athletics department's account for every
- * sport, a booster club's, a club team's or a player's.
+ * links, not facts. A team's handle is the field hockey program's own account, never the school's or
+ * the athletics department's account for every sport, a booster club's, a club team's or a player's.
+ * Each record says where the handle was found (`foundAt`, a page that is not social media, when there is
+ * one: a club's website, a school's athletics page, a student paper) and that the profile was checked: it
+ * exists and its name is the team's or the club's (`checkedOn`). A proof page of the owner's own is not
+ * required (owner decision, 2026-11-13).
  *
  * The file is research, written by hand (its `builtBy` says how); no script rewrites it. A school or
- * club with no record had no account linked from a page of its own when it was checked; that is
- * not a claim that it has none.
+ * club with no record had no account we could find and check when it was researched; that is not a
+ * claim that it has none.
  *
  * Invariants, checked once at module scope so a bad file fails at import:
  *   1. a team slug is a registry team; a club slug is a club in data/clubs.json
  *   2. no slug appears twice in its list
  *   3. a handle is an Instagram username: lower case, letters, digits, `.` and `_`, at most 30
- *   4. `proof` is https and not social media; a club's proof is on the club's own site (clubSiteKey)
+ *   4. `foundAt`, when set, is https and not social media
  *
  * One file per sport, as data/clubs.json: data/soccer/ and data/basketball/ hold empty ones until their
  * programs' accounts are researched.
@@ -33,7 +32,7 @@ import bundledBasketball from '../../data/basketball/instagram.json';
 import bundledSoccer from '../../data/soccer/instagram.json';
 import { validateData } from '../data-file';
 import { getClub } from '../players/clubs';
-import { clubSiteKey, sourceUrl } from '../players/clubs-schema';
+import { sourceUrl } from '../players/clubs-schema';
 import { calendarDateKey, slugId } from '../schema-primitives';
 import { TEAMS } from '../teams';
 
@@ -51,10 +50,11 @@ export const InstagramAccountSchema = z.strictObject({
   /** A team slug (lib/teams.ts) or a club slug (data/clubs.json), by the list it is in. */
   slug: slugId,
   handle: instagramHandle,
-  /** The owner's own page, not social media, that links the account. */
-  proof: sourceUrl,
-  /** What the proof page is, for maintainers ("Club website, footer"). Never rendered. */
-  proofWhat: text,
+  /** Where the handle was found: a page that is not social media, or null when only a search turned it up. */
+  foundAt: sourceUrl.nullable(),
+  /** How it was found and checked, for maintainers ("Club website, footer links"). Never rendered. */
+  note: text,
+  /** The day the profile was checked: it exists, and its name is the team's or the club's. */
   checkedOn: calendarDateKey,
 });
 
@@ -73,7 +73,7 @@ export const InstagramFileSchema = z.strictObject({
 export type InstagramFile = z.infer<typeof InstagramFileSchema>;
 
 /**
- * Parse `raw` and check what the schema cannot see: invariants 1, 2 and the club half of 4. Throws
+ * Parse `raw` and check what the schema cannot see: invariants 1 and 2. Throws
  * `data/instagram.json: <list> <slug>: <what>` on the first failure. The tests call it on files built in memory.
  */
 export function loadInstagram(raw: unknown): InstagramFile {
@@ -90,13 +90,9 @@ export function loadInstagram(raw: unknown): InstagramFile {
   }
   const seenClubs = new Set<string>();
   for (const a of file.clubs) {
-    const club = getClub(a.slug);
-    if (!club) fail('clubs', a.slug, 'not a club in data/clubs.json');
+    if (!getClub(a.slug)) fail('clubs', a.slug, 'not a club in data/clubs.json');
     if (seenClubs.has(a.slug)) fail('clubs', a.slug, 'listed twice');
     seenClubs.add(a.slug);
-    if (!club!.website || clubSiteKey(a.proof) !== clubSiteKey(club!.website)) {
-      fail('clubs', a.slug, `proof ${a.proof} is not on the club's own site`);
-    }
   }
   return file;
 }

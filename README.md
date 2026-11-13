@@ -1103,21 +1103,20 @@ fixed pages, and `a11y-axe.mjs` checks it.
 `data/instagram.json` holds the official Instagram account of each team's field hockey program and of each
 club in `data/clubs.json`, where one was found; the team page's Elsewhere row and the club page's link
 row link it ("Instagram"). These are links, not sources: the rule that social media is never a source
-(`BANNED_HOSTS`, under Clubs and College commitments) still holds, and nothing on the site is read
-from an account. An account is official only when a page that is not social media and is the owner's
-own links it: a club's account is linked from the club's own website (the loader checks the proof is on
-that site, `clubSiteKey`), a team's from its school's, district's or athletics department's site or the
-program's own site. A search result, a handle that looks right, or an account that says it is the team's is
-never enough, and Instagram itself is never read. A team's account is the field hockey program's own,
-never the school's or the athletics department's account for every sport, a booster club's, a club
-team's or a player's. Each record keeps its `proof` page and `proofWhat`, never rendered. No record
-means no page of the owner's linked an account when it was checked (`checkedOn`), not that there is none.
+(`BANNED_HOSTS`, under Clubs and College commitments) still holds, and no fact on the site is read from
+an account. A team's account is the field hockey program's own, never the school's or the athletics
+department's account for every sport, a booster club's, a club team's or a player's. Each record says
+where the handle was found (`foundAt`: a club's website, a school's athletics page, a student paper; null
+when only a search turned it up) and how (`note`, never rendered), and every profile was opened on its
+`checkedOn` day to see that it exists and that its name and bio are the team's or the club's. A page of
+the owner's own linking the account is not required (owner decision, 2026-11-13). No record means we
+found no account we could check, not that there is none.
 
 The file is research, written by hand on 2026-11-13 (its `builtBy` and `notes` say how); nothing
 rewrites it. `lib/social/instagram.ts` validates it at import (lower-case handles, registry team and
-club slugs, each once, https proofs off social media, a club's on its own site), so a bad file fails
-`pnpm test` and the build (`tests/instagram-file.test.ts`). The soccer and basketball builds read
-empty files in `data/soccer/` and `data/basketball/` until their programs are researched.
+club slugs, each once, an https `foundAt` off social media), so a bad file fails `pnpm test` and the
+build (`tests/instagram-file.test.ts`). The soccer and basketball builds read empty files in
+`data/soccer/` and `data/basketball/` until their programs are researched.
 
 ## Code layout
 
