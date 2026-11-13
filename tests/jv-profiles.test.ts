@@ -82,16 +82,19 @@ describe('data/jv-profiles.json', () => {
   it('holds what the 2026-11-06 research found: 33 SportsRecruits pages from the address probe and one NCSA page', () => {
     const all = fileEntries.flatMap((e) => e.profiles.map((x) => ({ e, x })));
     const probe = all.filter(({ x }) => x.note?.includes('Found by the 2026-11-06 address probe'));
-    expect(probe).toHaveLength(33);
-    expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(33);
+    // 33 pages for 33 players at 13 schools when found; on 2026-11-13 six of those players joined their varsity
+    // rosters (Berkeley, Leland, Marin Catholic twice, Saint Francis, Westview), so their pages moved to
+    // data/rosters-enrichment.json: 27 here, at 11 schools.
+    expect(probe).toHaveLength(27);
+    expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(27);
     expect(probe.every(({ x }) => x.platform === 'sportsrecruits' && x.classOf !== null)).toBe(true);
-    expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(32);
+    expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(26);
     expect(probe.filter(({ x }) => x.sport === undefined).map(({ e }) => e.name)).toEqual(['Jayla Gerrard']);
     expect(all.filter(({ x }) => x.platform === 'ncsa').map(({ e }) => e.name)).toEqual(['Katie Todd']);
-    // The probe's 33 pages are at 13 schools; Scripps Ranch, the fourteenth, is here for Katie Todd's NCSA page.
-    expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(13);
-    expect(fileEntries).toHaveLength(34);
-    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(14);
+    // The probe's 27 pages are at 11 schools; Scripps Ranch, the twelfth, is here for Katie Todd's NCSA page.
+    expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(11);
+    expect(fileEntries).toHaveLength(28);
+    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(12);
     // Where a player had more than one live page, the one the rule kept is linked, not the other.
     const url = (slug: string, name: string) => getJvPlayerProfiles(slug as TeamSlug, name).map((x) => x.url);
     expect(url('saint-francis', "Aoife O'Connor")).toEqual(['https://iwlca.sportsrecruits.com/athlete/aoife_oconnor2']);

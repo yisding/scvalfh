@@ -231,7 +231,8 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
   it('joins nothing to the six EAL teams: both 2026-10-04 sweeps of their 95 rows found no commitment', () => {
     const eal = getRosters().teams.filter((t) => t.division === 'eal');
     expect(eal.map((t) => t.slug).sort()).toEqual(['bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley']);
-    expect(eal.reduce((n, t) => n + t.players.length, 0)).toBe(95);
+    // 95 rows when swept; MaxPreps lists 111 since the 2026-11-13 re-read (the 16 added are not swept yet).
+    expect(eal.reduce((n, t) => n + t.players.length, 0)).toBe(111);
     const ealSlugs = new Set<string>(eal.map((t) => t.slug));
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });

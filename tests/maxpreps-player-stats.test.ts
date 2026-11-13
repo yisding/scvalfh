@@ -31,6 +31,7 @@ import {
   type FieldStatKey,
   type GoalieStatKey,
 } from '../lib/players/player-stats-schema';
+import { recaseName } from '../lib/sources/person-name';
 import { SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS as REGISTRY, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';
@@ -280,6 +281,32 @@ describe('parsePlayerStats: loud on drift', () => {
     const row = sub2.stats.rows.find((r) => Number(r.columns[g2].value) > 0)!;
     row.columns[g2].value = String(Number(row.columns[g2].value) + 1);
     expect(run(split)).toThrow(/in another table/);
+  });
+
+  it("leaves out a player's line that holds a negative count, whole, and still publishes the team", () => {
+    // Saratoga, 2026-11-13: a field player's goaltending line read -2 saves. The line goes, with a warning,
+    // from every table of its kind; the player's other line and every other player stay.
+    const cols = mutable('palo-alto').data.groups[0].subgroups[0].stats.columns.map((c) => c.name);
+    const goalsAt = cols.indexOf('Goals');
+    const neg = mutable('palo-alto');
+    const row = neg.data.groups[0].subgroups[0].stats.rows[0];
+    const name = row.columns[cols.indexOf('Name')].value!;
+    row.columns[goalsAt].value = '-2';
+    const page = parsePlayerStats(neg, { expectedTeamId: teamId })!;
+    const clean = parse('palo-alto')!;
+    expect(page.warnings.some((w) => w.includes(`goals is "-2", not a count; this player's field line is left out`))).toBe(true);
+    // The overflow table's row for the same player is dropped too: no partial field line survives.
+    const who = clean.players.find((p) => p.shortName === recaseName(name) && p.field !== null)!;
+    const after = page.players.find((p) => p.careerId === who.careerId);
+    expect(after?.field ?? null).toBeNull();
+    expect(page.players.filter((p) => p.field !== null)).toHaveLength(clean.players.filter((p) => p.field !== null).length - 1);
+  });
+
+  it('still throws on a negative team total: that is drift, not one entry', () => {
+    const cols = mutable('palo-alto').data.groups[0].subgroups[0].stats.columns;
+    const neg = mutable('palo-alto');
+    neg.data.groups[0].subgroups[0].stats.columns[cols.findIndex((c) => c.name === 'Goals')].overallValue = '-1';
+    expect(run(neg)).toThrow(/not a count/);
   });
 
   it('still throws when a row with no career link disagrees with a row of the same name and jersey', () => {

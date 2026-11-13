@@ -27,6 +27,12 @@ import { FIXTURE_DIR, REPO, runScript } from './helpers';
 const FILE = path.join(REPO, 'data', 'rosters.json');
 const text = readFileSync(FILE, 'utf8');
 const raw = JSON.parse(text) as Rosters;
+/**
+ * data/rosters.json as it stood when every SCVAL row was the 2026-10-02 captures' (read 2026-10-07): the file
+ * the two rebuild checks below hold the script to. The live file has since been re-read (2026-11-13) and will
+ * be again, so its SCVAL rows no longer equal the captures; the captures, and this copy, stay as they were.
+ */
+const golden = JSON.parse(readFileSync(path.join(FIXTURE_DIR, 'rosters-from-captures.json'), 'utf8')) as Rosters;
 
 /**
  * The leagues whose every team has a roster capture in tests/fixtures/maxpreps (SCVAL's 15 today).
@@ -38,7 +44,7 @@ const FIXTURED = LEAGUES.map((l) => l.id).filter((id) =>
 
 /** Run scripts/fetch-rosters.ts offline over the captures, writing to `out`. */
 function fetchRosters(out: string, ...extra: string[]) {
-  return runScript('scripts/fetch-rosters.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', raw.fetchedAt, ...extra]);
+  return runScript('scripts/fetch-rosters.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', golden.fetchedAt, ...extra]);
 }
 /** Whether a team belongs to a league whose every team has a capture. */
 const fixtured = (t: { slug: string }) => FIXTURED.includes(TEAMS.find((x) => x.slug === t.slug)!.league);
@@ -103,24 +109,24 @@ describe('data/rosters.json', () => {
     for (const l of FIXTURED) {
       for (const team of teamsInLeague(l)) {
         const a = built.teams.find((t) => t.slug === team.slug)!;
-        const b = raw.teams.find((t) => t.slug === team.slug)!;
+        const b = golden.teams.find((t) => t.slug === team.slug)!;
         expect(unstamped(a), team.slug).toEqual(unstamped(b));
       }
     }
     // The file around the rows: the same season and source (notes included), and the same
     // counts over the fixtured leagues' teams. The other leagues are pending in a build with no
     // previous file, so the file-wide counts are compared by the build below.
-    expect(built.season).toBe(raw.season);
-    expect(built.source).toEqual(raw.source);
-    expect(countRosters(built.teams.filter(fixtured))).toEqual(countRosters(raw.teams.filter(fixtured)));
+    expect(built.season).toBe(golden.season);
+    expect(built.source).toEqual(golden.source);
+    expect(countRosters(built.teams.filter(fixtured))).toEqual(countRosters(golden.teams.filter(fixtured)));
   });
 
   it('is, top level and counts included, what the script rebuilds over the committed file', () => {
-    // The committed file as the previous one, with a fixtured team's row edited so the run cannot
-    // leave the file as it was: the rebuild re-reads that team from its capture, keeps every other
-    // league's rows, and must come out as the committed file apart from when it was read.
+    // The file built from the captures as the previous one, with a fixtured team's row edited so the run
+    // cannot leave the file as it was: the rebuild re-reads that team from its capture, keeps every other
+    // league's rows, and must come out as that file apart from when it was read.
     const out = tmpOut();
-    const previous = structuredClone(raw);
+    const previous = structuredClone(golden);
     const edited = previous.teams.find((t) => fixtured(t) && t.players.length)!;
     edited.players[0].jersey = edited.players[0].jersey === '99' ? '98' : '99';
     writeFileSync(out, JSON.stringify(previous), 'utf8');
@@ -129,8 +135,8 @@ describe('data/rosters.json', () => {
     expect(stdout).toContain('wrote ');
     const built = read(out);
     const withoutStamps = (f: Rosters) => ({ ...f, fetchedAt: null, teams: f.teams.map(unstamped) });
-    expect(withoutStamps(built)).toEqual(withoutStamps(raw));
-    expect(built.counts).toEqual(raw.counts);
+    expect(withoutStamps(built)).toEqual(withoutStamps(golden));
+    expect(built.counts).toEqual(golden.counts);
     expect(built.fetchedAt).toBe('2030-01-01T00:00:00.000Z');
   });
 
@@ -415,15 +421,16 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   });
 
   it('keeps every row when only the counts lie, says so, and rewrites the file with true counts', () => {
-    const previous = structuredClone(raw);
+    // Over the file built from the captures, so the SCVAL rows the run re-reads are the ones it holds.
+    const previous = structuredClone(golden);
     previous.counts.players += 1;
     const { status, stderr, out } = runOver(JSON.stringify(previous), 'scval');
     expect(status, stderr).toBe(0);
     expect(stderr).toMatch(/does not validate as a whole \(.*counts do not match the rows/);
     const built = read(out);
-    expect(built.counts).toEqual(raw.counts);
+    expect(built.counts).toEqual(golden.counts);
     for (const team of TEAMS.filter((t) => t.league !== 'scval')) {
-      expect(built.teams[at(built, team.slug)], team.slug).toEqual(raw.teams[at(raw, team.slug)]);
+      expect(built.teams[at(built, team.slug)], team.slug).toEqual(golden.teams[at(golden, team.slug)]);
     }
   });
 

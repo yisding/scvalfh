@@ -348,6 +348,13 @@ export function parsePlayerStats(
   // matched to its records by value (recordFor), since the subgroups need not list them in the same
   // order; a row no record agrees with is drift and still throws.
   const byKey = new Map<string, StatsSheetPlayer>();
+  /**
+   * The players (by name and jersey) whose line of one kind holds a negative count: that line is left out of
+   * every table of its kind, with a warning, and the team publishes. MaxPreps' own rows can carry a coach's
+   * impossible entry (Saratoga's A. Garniek, a field player, had a goaltending line of -2 saves and nothing
+   * else, read 2026-11-13); a negative TEAM total is still drift and throws.
+   */
+  const leftOut = new Set<string>();
   const order: string[] = [];
   const playerKeyOf = new Map<string, string>();
   const recordsOf = new Map<string, string[]>();
@@ -397,6 +404,16 @@ export function parsePlayerStats(
         const careerId = careerIdFromUrl(careerUrl);
         const jersey = jerseyAt >= 0 ? row.columns[jerseyAt].value?.trim() || null : null;
         const playerKey = careerId ?? `${shortName}|${jersey ?? ''}`;
+        const lineKey = `${spec.kind} ${playerKey}`;
+        const negative = kept.find(({ at }) => /^\s*-\d+(\.\d+)?\s*$/.test(row.columns[at].value ?? ''));
+        if (negative && !leftOut.has(lineKey)) {
+          leftOut.add(lineKey);
+          warnings.push(
+            `${where} / ${shortName}: ${negative.key} is "${row.columns[negative.at].value}", not a count; ` +
+              `this player's ${spec.kind} line is left out`,
+          );
+        }
+        if (leftOut.has(lineKey)) continue;
         // Only a career id names one person for certain: a name-and-jersey key could be two players,
         // so those rows stay one record and a disagreement between them still throws.
         let key = playerKey;
@@ -438,7 +455,15 @@ export function parsePlayerStats(
     }
   }
 
-  const players = mergeDuplicateRecords(order.map((k) => [playerKeyOf.get(k)!, byKey.get(k)!] as const), warnings);
+  // A line left out is left out whole, whichever of its tables came first.
+  for (const k of order) {
+    const p = byKey.get(k)!;
+    const playerKey = playerKeyOf.get(k)!;
+    if (leftOut.has(`field ${playerKey}`)) p.field = null;
+    if (leftOut.has(`goalkeeping ${playerKey}`)) p.goalkeeping = null;
+  }
+  const kept = order.filter((k) => byKey.get(k)!.field !== null || byKey.get(k)!.goalkeeping !== null);
+  const players = mergeDuplicateRecords(kept.map((k) => [playerKeyOf.get(k)!, byKey.get(k)!] as const), warnings);
   // MaxPreps' points in a 'goals' sport are 2 per goal and 1 per assist; basketball's points are scored.
   for (const p of BASKETBALL ? [] : players) {
     const f = p.field;
