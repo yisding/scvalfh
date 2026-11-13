@@ -87,6 +87,8 @@ export const BASKETBALL = {
   },
   scoring: {
     allowsTies: false,
+    overtime: 'until-decided',
+    tiebreak: null,
     unit: 'point',
     units: 'points',
     forAbbr: 'PF',

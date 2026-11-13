@@ -5,6 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import * as format from '../lib/format';
 import { leagueSportWords } from '../lib/leagues';
 import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS } from '../lib/players/player-stats-schema';
 import { RIDGE_SIGMA, SHRINK_GAMES, SLOPE_SIGMA } from '../lib/ratings/adjusted-scoring';
@@ -34,6 +35,17 @@ describe('the current sport', () => {
       `${GENDER_NAME} ${SPORT_SEASON.level} ${SPORT.maxpreps.sportName} ${SPORT_SEASON.term} ${SPORT_SEASON.year}`,
     );
     expect(SPORT_SEASON.genderSport).toBe(`${SPORT_SEASON.gender},${SPORT.id.replace(/-/g, '')}`);
+  });
+});
+
+describe('how the sport ends a game (Sport.scoring), mirrored in lib/format for client modules', () => {
+  it('is sudden-victory overtime, a shootout where a game must have a winner, and ties otherwise', () => {
+    expect(SPORT.scoring).toMatchObject({ allowsTies: true, overtime: 'sudden-victory', tiebreak: { words: 'a shootout', tag: 'SO' } });
+    expect(format.SPORT_HAS_NO_TIES).toBe(!SPORT.scoring.allowsTies);
+    expect(format.SPORT_TIEBREAK_WORDS).toBe(SPORT.scoring.tiebreak?.words);
+    expect(format.SPORT_TIEBREAK_TAG).toBe(SPORT.scoring.tiebreak?.tag);
+    expect(format.SPORT_OVERTIME_IS_SUDDEN_VICTORY).toBe(true);
+    expect(format.SPORT_COUNTS_OVERTIMES).toBe(true);
   });
 });
 

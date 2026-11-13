@@ -43,12 +43,15 @@ export function statusCase(label: string): string {
  */
 function deciderWords(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel' | 'shootoutText'>): string | null {
   if (display.shootoutText) {
-    return `shootout ${display.shootoutText.replace(/[()]/g, '').replace(/\s*SO$/, '').replace('\u2013', '-')}`;
+    // '(4–3 SO)' is 'shootout 4-3'; the soccer build's '(4–3 PK)' is 'penalty kicks 4-3'.
+    const tally = display.shootoutText.replace(/[()]/g, '').replace(/\s*(?:SO|PK)$/, '').replace('\u2013', '-');
+    return `${/PK\)$/.test(display.shootoutText) ? 'penalty kicks' : 'shootout'} ${tally}`;
   }
   const tag = display.deciderTag;
   if (!tag) return null;
   if (tag === 'F') return 'forfeit';
   if (tag === 'SO') return display.shootoutLabel ?? 'shootout';
+  if (tag === 'PK') return display.shootoutLabel ?? 'penalty kicks';
   if (tag === 'OT') return 'overtime';
   const periods = /^(\d+) OT$/.exec(tag)?.[1];
   return periods ? `${periods} overtimes` : 'overtime';

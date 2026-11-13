@@ -44,6 +44,42 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
 
 Places use standard competition ranking: two teams sharing 3rd are both 3rd and the next is 5th.
 
+## How a game's result is read: overtime, shootouts and level scores
+
+Every W, L and T on the site comes from one function (`sideOutcome`, `lib/format.ts`), and the stored
+`decider` says how a final ended: `REG`, `OT`, `2OT` (two or more overtime periods; `otPeriods` keeps the
+count), `SO` (level on the scoreboard, won by the side the source marks) or `FORFEIT`. The cases, in the
+order they are decided:
+
+| A final that is… | Counts as | Shown as | Where |
+|---|---|---|---|
+| a forfeit | the win and the loss; no goals for or against | `F` | `lib/pipeline/normalize.ts` |
+| decided on goals in regulation | the score | the score | |
+| decided on goals in overtime | the score: an overtime win is a full win | `OT`, `2 OT`; in basketball `3 OT` and up; in soccer always `OT` (its overtime is two halves, never counted) | `deciderTagFor` |
+| level, between two teams of a section whose rule ends every level varsity game with a shootout (the EAL; the San Diego Section outside a tournament), marked W and L | the marked side's win | EAL: `SO`, "won on 1 v 1s". San Diego: no tag, "credited with the win" (the shootout is not confirmed by any source) | `normalize.ts`, `SectionConfig.shootout` |
+| level, in a **postseason game** of any section, marked W and L | the marked side's win: a postseason game has to have a winner | no tag, "credited with the win"; with a tally from a source (the San Diego Section's bracket sheet), `(2–1 SO)` | `lib/postseason/level-final.ts`, from the classify step |
+| level, in **basketball**, marked W and L | the marked side's win: a basketball game cannot end level, so the score is entered wrong | the score as MaxPreps has it, "credited with the win" | `lib/postseason/level-final.ts` |
+| level, regular season, anywhere else, marked W and L (a tournament game settled by a shootout, most likely) | a tie: no rule this site has read says the game needed a winner | the level score; the game page prints MaxPreps' flags as a contradiction | `resultConflict` |
+| level, marked T and T or not marked | a tie | the level score (`OT` if a period was played) | |
+| a tournament game whose shootout MaxPreps stored as goals (MCAL: Tamalpais 3-1 Marin Catholic was 0-0) | the stored score | the score, with a caveat or a sourced sentence | `mayHideShootout`, `resultNotes` |
+
+The postseason row is new on 2026-11-13. Saint Francis 1, Archbishop Mitty 1 (CCS Division 1 semifinal, Nov
+11, 2026) is marked W for Saint Francis, who play the final; the 2025 semifinal Willow Glen 1, Stevenson 1 had
+the same shape. Read as its score, the game was a tie in both teams' records and form while the bracket
+advanced Saint Francis, and Mitty's record disagreed with MaxPreps' (17-4-1 here, 17-5-0 there). The CCS's own
+tie procedure for a playoff game was not read (cifccs.org refused the request for its bylaws) [U], so the copy says only
+that MaxPreps credits the win and does not say how the tie was broken. Goals stay as recorded (1 and 1), so
+goal difference and the ratings, which fit goals, see a level game.
+
+An overtime record the rule cannot give is shown without its overtime tag and explained on the game page
+(`overtimeDoubtOf`, `components/ui/describe-game.ts`). That applies to a regular-season game between two teams of
+a section that plays one sudden-victory period and then a shootout: more than one period recorded (Pleasant
+Valley 1, Chico 0, Sep 2: three), or one period and more than a goal between the sides (Corning 2, Bella Vista
+0, Oct 5). Either may be a shootout win stored as goals. Everywhere else MaxPreps' count stands. A coach's note
+that says overtime where MaxPreps records none is believed (`overtimeFromNote`), with the count it names
+("3OT", "triple overtime"); in field hockey only on a level or one-goal score, since its overtime is sudden
+victory, and in soccer and basketball on any score.
+
 ---
 
 ## SCVAL — Santa Clara Valley Athletic League (CCS)

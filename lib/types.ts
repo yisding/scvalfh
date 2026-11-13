@@ -232,7 +232,13 @@ export type Outcome = 'W' | 'L' | 'T';
  * Mercy & Overtime Procedures credit the winner one goal, but MaxPreps often keeps the level score and
  * marks it W and L). Keyed on the section, not the league, because the San Diego rule covers every varsity
  * game in the Section, across its three conferences. `Game.shootout` may then be null (the tally is not
- * stored). The CCS, NCS and Southern Section leagues never produce it.
+ * stored). Also a level final MaxPreps flags W/L in a game that must have a winner whatever its section: a
+ * postseason game (a CCS semifinal settled by a shootout: Saint Francis 1, Archbishop Mitty 1, Nov 11, 2026),
+ * and any game of a sport that cannot end level (lib/postseason/level-final.ts, applied once the postseason tag
+ * is known). So 'SO' means "level on the scoreboard, won by the marked side"; what broke the tie is the
+ * section's rule or the sport's tiebreak (soccer's penalty kicks), and the view words it
+ * (components/ui/describe-game.ts tiebreakRuleOf). A regular-season CCS, NCS or Southern Section game never
+ * produces it. `otPeriods` stays as recorded on an 'SO' game.
  */
 export type Decider = 'REG' | 'OT' | '2OT' | 'SO' | 'FORFEIT';
 

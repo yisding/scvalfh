@@ -1557,7 +1557,11 @@ this site extends them to the table and says so). The four Southern California l
 points rule, no standings and no table order that we could find, so the order is this site's own
 3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
-1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
+1 v 1s or a shootout. A postseason game in any section has to have a winner: one MaxPreps lists as level
+with one side marked W and the other L (Saint Francis 1, Archbishop Mitty 1, the CCS semifinal of Nov 11,
+2026) counts as the marked side's win in records, form and game logs, with the score left as recorded and no
+claim about how the tie was broken (`lib/postseason/level-final.ts`; docs/LEAGUE-RULES.md, "How a game's result
+is read", lists every overtime, shootout and level-score case in all three sports). They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
 by-law citation next to it) and one engine in `lib/standings/engine.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,

@@ -28,11 +28,20 @@
  * (reclassified above) — gets it rebuilt on load (`needsPlayoffGames` / `rebuildPlayoffGames`), so the
  * committed file heals itself the way stale tags do. Today's file has no bracket game: a no-op.
  *
- * All four return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "Level finals" (v2 → v2, 2026-11-13). A level final marked W and L in a game that must have a winner (a
+ * postseason game; any game of a sport with no ties) is the marked side's win, decider 'SO'
+ * (lib/postseason/level-final.ts; the pipeline's classify step applies it). A file written before that rule holds
+ * such a game as a regulation tie with a result conflict (Saint Francis 1, Archbishop Mitty 1, the CCS semifinal
+ * of Nov 11, 2026), so both teams' overall records carry a tie. `needsLevelFinals` / `settleStoredLevelFinals`
+ * rewrite those games and recompute the two sides' divisions' standings rows, the cross-check and the counts, and
+ * rebuild `playoffs.games` from the new objects. Runs after `reclassify`, so it reads the current tags.
+ *
+ * All five return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
 import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
+import { isUnsettledLevelFinal, settleLevelFinals } from '../postseason/level-final';
 import { CCS } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
@@ -524,6 +533,62 @@ export function reclassify(raw: unknown): unknown {
     leagueHealth,
     // 6. counts
     counts: countsOf(games, standings),
+  };
+  return out;
+}
+
+// ---------------------------------------------------------------- "level finals" (v2 → v2)
+
+/**
+ * A v2 object with at least one final `settleLevelFinal` would change (lib/postseason/level-final.ts): written
+ * before the rule existed. False for anything else, including a file `parseSnapshot` would reject for another reason.
+ */
+export function needsLevelFinals(raw: unknown): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.standings)) return false;
+  try {
+    return (raw.games as Game[]).some(isUnsettledLevelFinal);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The same file with those finals settled. In order: (1) the games; (2) the standings rows of every division a
+ * settled game's side belongs to, recomputed by the engine with MaxPreps' reported rows carried over (a settled
+ * game moves a team's overall record, last five and streak; the other divisions' rows stay byte-identical);
+ * (3) the cross-check from the merged rows; (4) `counts`; (5) `playoffs.games`, rebuilt so it holds the new
+ * objects. A postseason game counts in no table, so no health count or season window moves. Throws on input
+ * `needsLevelFinals` rejects.
+ */
+export function settleStoredLevelFinals(raw: unknown): unknown {
+  if (!needsLevelFinals(raw)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot with a level final to settle');
+  const v2 = raw as unknown as Snapshot;
+  const games = settleLevelFinals(v2.games);
+  const changed = new Set<DivisionId>();
+  games.forEach((g, i) => {
+    if (g === v2.games[i]) return;
+    for (const side of [g.home, g.away]) {
+      const team = side.teamId ? getTeamById(side.teamId) : undefined;
+      if (team) changed.add(team.division);
+    }
+  });
+  const reported = new Map<TeamId, ReportedRecord>();
+  for (const row of v2.standings) if (row.reported) reported.set(row.teamId, row.reported);
+  const recomputed = computeStandings(games, { reported });
+  const standings: Standing[] = [];
+  for (const league of LEAGUES) {
+    for (const d of league.divisions) {
+      standings.push(...(changed.has(d.id) ? recomputed : v2.standings).filter((r) => r.division === d.id));
+    }
+  }
+  assertFullTable(standings);
+  const out: Snapshot = {
+    ...v2,
+    games,
+    standings,
+    crossCheck: buildCrossCheck(standings),
+    counts: countsOf(games, standings),
+    playoffs: { ...v2.playoffs, games: ccsBracketGames(games, CCS.keyDates) },
   };
   return out;
 }

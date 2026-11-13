@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { classifyGame } from '../classify';
 import { CCS, SECTIONS } from '../league-config/sections';
+import { mustHaveWinner } from '../postseason/level-final';
 import {
   CCS_LEAGUE_IDS,
   LEAGUES,
@@ -150,13 +151,17 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
     // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
     // shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout, which covers games between its
-    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/pipeline/normalize.ts is.
+    // conferences too), or in a game that must have a winner (a postseason game; a sport with no ties:
+    // lib/postseason/level-final.ts); without a tally, a level score flagged W/L. Keyed on the section, as lib/pipeline/normalize.ts is.
     if (g.decider === 'SO') {
       const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
       const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
       const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
-      if (!section?.shootout) {
-        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
+      if (mustHaveWinner(g)) {
+        // A postseason game, or any game of a sport with no ties, cannot end level in any section: the marked
+        // side won (lib/postseason/level-final.ts), or the Section's bracket sheet says so with a tally.
+      } else if (!section?.shootout) {
+        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout, and the game is not one that must have a winner (${g.contestId})`);
       } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
         // The San Diego procedures do not cover invitational tournaments; lib/pipeline/normalize.ts reads no 'SO' there.
         issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);

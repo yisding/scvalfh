@@ -75,7 +75,7 @@ import type { FormEntry } from '../ui/FormStrip';
 import {
   describeGame,
   gameContextNoun,
-  overtimeInDoubt,
+  overtimeDoubtOf,
   postseasonTagOf,
   resultSentence,
   shootoutCitationParts,
@@ -792,7 +792,9 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
  * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
  * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
  * its conferences too. The EAL's sentences are unchanged, word for word. Goals come from the view's
- * glyphs, never from the score fields.
+ * glyphs, never from the score fields. One note needs no section rule: a level final in a game that had to
+ * have a winner (a playoff game anywhere; any basketball game), which says MaxPreps marks the winner and not
+ * how.
  */
 function scoreNoteFor(
   game: Game,
@@ -801,11 +803,26 @@ function scoreNoteFor(
   home: GameSideModel,
 ): string | null {
   const section = shootoutSectionOf(game);
-  if (!section?.shootout) return null;
+  const notes: string[] = [];
+  const level = `${display.home.glyph}\u2013${display.away.glyph}`;
+  if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null && !section?.shootout) {
+    // No section rule reaches this game: it is level with the winner marked in a game that had to have one
+    // (lib/postseason/level-final.ts). The feed says who won and nothing of how, so neither does this note.
+    const outcome = sideOutcome(game, 'home');
+    if (outcome === 'W' || outcome === 'L') {
+      const winner = outcome === 'W' ? home.name : away.name;
+      notes.push(
+        !SPORT.scoring.allowsTies
+          ? `MaxPreps lists a level ${level} score and marks ${winner} the winner. A ${SPORT.noun} game cannot end level, so one of the two numbers is wrong; this site shows the score as MaxPreps has it and counts the game as ${winner}\u2019s win.`
+          : `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A postseason game has to have a winner, so this site counts it as ${winner}\u2019s win; MaxPreps does not say how the tie was broken.`,
+      );
+    }
+  }
+  const doubt = overtimeDoubtOf(game);
+  if (!section?.shootout) return notes.length > 0 ? notes.join(' ') : null;
   const group = shootoutGroupName(section);
   const phrases = shootoutPhrases(section.shootout.words);
   const { source, procedure } = shootoutCitationParts(section.shootout.citation);
-  const notes: string[] = [];
   if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null) {
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
@@ -832,7 +849,15 @@ function scoreNoteFor(
       }
     }
   }
-  if (overtimeInDoubt(game)) {
+  if (doubt?.why === 'margin') {
+    // One period recorded and more than a goal between the sides (Corning 2, Bella Vista 0, Oct 5): a period
+    // that ends on the first goal cannot give that, in either section.
+    const scope = section.shootout.coversTournaments ? '' : ' in a regular-season game outside a tournament';
+    notes.push(
+      `MaxPreps records overtime for this game and a ${level} score, but the ${group}\u2019s one overtime period ends on the first goal and is followed by ${section.shootout.words}${scope} (${source}), so MaxPreps may have recorded ${phrases.win} as goals. The score is shown as MaxPreps has it.`,
+    );
+  }
+  if (doubt?.why === 'periods') {
     // Both sections with a shootout rule play one 10-minute overtime period before it (NS Guidelines
     // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both. overtimeInDoubt leaves out
     // postseason games and, where the rule does not reach them, tournament rows; the San Diego sentence

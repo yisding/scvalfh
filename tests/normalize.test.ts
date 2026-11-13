@@ -914,6 +914,15 @@ describe('normalize: overtime a game note states (Homestead, Oct 5)', () => {
     expect(overtimeFromNote('OT2 winner')).toBe(2);
     expect(overtimeFromNote('went to 2 overtimes')).toBe(2);
     expect(overtimeFromNote('two overtimes')).toBe(2);
+    // Basketball plays as many periods as it takes: the note's own count, by digit or by word.
+    expect(overtimeFromNote('Won 62-60 3OT')).toBe(3);
+    expect(overtimeFromNote('triple overtime win')).toBe(3);
+    expect(overtimeFromNote('4 OT')).toBe(4);
+    expect(overtimeFromNote('OT3')).toBe(3);
+    expect(overtimeFromNote('went to OT, then double OT')).toBe(2);
+    // A digit that belongs to a score is never a count.
+    expect(overtimeFromNote('won 4-3 OT')).toBe(1);
+    expect(overtimeFromNote('OT 3-2')).toBe(1);
     // The count is the accepted mention's, never another, negated one's or a score's.
     expect(overtimeFromNote('won in overtime, no double OT')).toBe(1);
     expect(overtimeFromNote('won in OT 2-1')).toBe(1);

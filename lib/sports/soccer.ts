@@ -74,6 +74,8 @@ export const SOCCER = {
   },
   scoring: {
     allowsTies: true,
+    overtime: 'two-halves',
+    tiebreak: { words: 'penalty kicks', tag: 'PK' },
     unit: 'goal',
     units: 'goals',
     forAbbr: 'GF',

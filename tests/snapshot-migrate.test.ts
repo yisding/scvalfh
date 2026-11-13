@@ -9,7 +9,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { sideOutcome } from '../lib/format';
 import { ccsBracketGames } from '../lib/postseason/ccs-bracket';
+import { isUnsettledLevelFinal, settleLevelFinal } from '../lib/postseason/level-final';
 import { CCS } from '../lib/league-config/sections';
 import { LEAGUES, leaguesInRegion } from '../lib/leagues';
 import { buildSeason } from '../lib/snapshot/season-build';
@@ -23,6 +25,7 @@ import {
   needsReclassification,
   rebuildPlayoffGames,
   reclassify,
+  needsLevelFinals,
 } from '../lib/snapshot/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-load';
 import { stableStringify } from '../lib/stable-json';
@@ -584,7 +587,78 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
     expect(UNBRACKETED.playoffs.games).toEqual([]);
     expect(needsPlayoffGames(UNBRACKETED)).toBe(false);
     expect(stableStringify(loadSnapshot(UNBRACKETED))).toBe(stableStringify(UNBRACKETED));
-    // The committed file's playoffs.games is already the derivation, whatever bracket games it lists.
-    expect(stableStringify(loadSnapshot(COMMITTED))).toBe(stableStringify(COMMITTED));
+    // The committed file's playoffs.games is already the derivation, whatever bracket games it lists. A file
+    // written before the "level finals" upgrade differs from its loaded form in those finals only (below);
+    // every other game is untouched, and loading is a fixed point.
+    const loaded = loadSnapshot(COMMITTED);
+    expect(stableStringify(loadSnapshot(loaded))).toBe(stableStringify(loaded));
+    const stale = new Set(COMMITTED.games.filter(isUnsettledLevelFinal).map((g) => g.contestId));
+    expect(stableStringify(loaded.games.filter((g) => !stale.has(g.contestId)))).toBe(
+      stableStringify(COMMITTED.games.filter((g) => !stale.has(g.contestId))),
+    );
+    if (stale.size === 0) expect(stableStringify(loaded)).toBe(stableStringify(COMMITTED));
+  });
+});
+
+describe('the "level finals" upgrade (a level postseason final marked W and L is the marked side’s win, 2026-11-13)', () => {
+  // Saint Francis 1, Archbishop Mitty 1, the CCS Division 1 semifinal of Nov 11, 2026 (contest 7d6e0426), as the
+  // snapshot of 2026-11-13 held it: a regulation tie with a result conflict, MaxPreps marking Saint Francis W.
+  const template = COMMITTED.games.find((g) => g.postseason?.kind === 'ccs' && g.status === 'final' && g.home.slug !== null && g.away.slug !== null)!;
+  const staleGame: Game = {
+    ...template,
+    home: { ...template.home, score: 1, result: 'W' },
+    away: { ...template.away, score: 1, result: 'L' },
+    decider: 'REG',
+    otPeriods: 0,
+    isOt: false,
+    provenance: {
+      ...template.provenance,
+      resultConflict: `MaxPreps marks ${template.home.name} W and ${template.away.name} L on a 1-1 score.`,
+    },
+  };
+  const base = loadSnapshot(COMMITTED);
+  const STALE = {
+    ...base,
+    games: base.games.map((g) => (g.contestId === staleGame.contestId ? staleGame : g)),
+    playoffs: { ...base.playoffs, games: base.playoffs.games.map((g) => (g.contestId === staleGame.contestId ? staleGame : g)) },
+  };
+
+  it('settles the game, in games and in playoffs.games, and drops the flag contradiction', () => {
+    expect(needsLevelFinals(STALE)).toBe(true);
+    const loaded = loadSnapshot(STALE);
+    const game = loaded.games.find((g) => g.contestId === staleGame.contestId)!;
+    expect(game.decider).toBe('SO');
+    expect(game.provenance.resultConflict).toBeUndefined();
+    expect([game.home.score, game.away.score]).toEqual([1, 1]);
+    expect(sideOutcome(game, 'home')).toBe('W');
+    expect(sideOutcome(game, 'away')).toBe('L');
+    expect(loaded.playoffs.games.find((g) => g.contestId === staleGame.contestId)?.decider).toBe('SO');
+    expect(needsLevelFinals(loaded)).toBe(false);
+  });
+
+  it('recomputes the two teams’ overall records and leaves every other division’s rows byte-identical', () => {
+    const loaded = loadSnapshot(STALE);
+    const row = (s: typeof loaded, slug: string | null) => s.standings.find((r) => r.slug === slug)!;
+    const homeRow = row(loaded, staleGame.home.slug);
+    const awayRow = row(loaded, staleGame.away.slug);
+    // The settled game is a win and a loss, never a tie, in the rows the engine rebuilt.
+    const counted = (slug: string | null) =>
+      loaded.games.filter((g) => g.status === 'final' && (g.home.slug === slug || g.away.slug === slug)).length;
+    expect(homeRow.overall.w + homeRow.overall.l + homeRow.overall.t).toBe(counted(staleGame.home.slug));
+    expect(homeRow.overall.last5.at(-1)).toBe('W');
+    expect(awayRow.overall.last5.at(-1)).toBe('L');
+    const touched = new Set([homeRow.division, awayRow.division]);
+    expect(stableStringify(loaded.standings.filter((r) => !touched.has(r.division)))).toBe(
+      stableStringify(STALE.standings.filter((r) => !touched.has(r.division))),
+    );
+  });
+
+  it('leaves a level regular-season final marked W and L, and a level postseason final with no winner marked, as ties', () => {
+    const regular: Game = { ...staleGame, postseason: null };
+    const unmarked: Game = { ...staleGame, home: { ...staleGame.home, result: 'T' }, away: { ...staleGame.away, result: 'T' } };
+    const forfeit: Game = { ...staleGame, isForfeit: true, forfeitBy: 'away', decider: 'FORFEIT' };
+    for (const g of [regular, unmarked, forfeit]) expect(isUnsettledLevelFinal(g), g.contestId).toBe(false);
+    expect(settleLevelFinal(regular)).toBe(regular);
+    expect(sideOutcome(regular, 'home')).toBe('T');
   });
 });

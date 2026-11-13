@@ -1,4 +1,4 @@
-import { RECORD_NOUN_WORDS, SCORE_UNITS } from '../../words/score-words';
+import { ALLOWS_TIES, RECORD_NOUN_WORDS, SCORE_UNITS } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import type { ShootoutSection } from '../about-view';
 
@@ -46,6 +46,13 @@ export function ConventionsSection({ shootoutSections }: { shootoutSections: rea
               )}
             </li>
           ))}
+          {/* lib/postseason/level-final.ts: a level final with the winner marked, in a game that must have one. No
+              source this site reads says how the tie was broken, so the row carries no decider tag. */}
+          <li>
+            {ALLOWS_TIES
+              ? 'A postseason game has to have a winner. One that MaxPreps lists as level and marks as won is counted as the marked team’s win in records and form; it shows MaxPreps’ level score with no decider tag, because MaxPreps does not say how the level score was broken.'
+              : 'A game cannot end level. One that MaxPreps lists as level and marks as won is counted as the marked team’s win; it shows the score as MaxPreps has it.'}
+          </li>
           <li>
             {`A forfeit counts in ${RECORD_NOUN_WORDS} but not in ${SCORE_UNITS} for/against/differential — marked with a dagger everywhere a total would otherwise be misleading.`}
           </li>
