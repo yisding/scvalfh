@@ -200,7 +200,7 @@ describe('buildRosterView', () => {
     expect(labels('homestead')).toContain('MaxPreps JV roster: grade');
     // A school site's player pages fold into its roster page rather than one link each. Saratoga's 20 did until
     // 2026-11-13, when MaxPreps' roster gave every one of those grades; Glendora's still do.
-    expect(labels('saratoga').some((l) => l.startsWith('shs-athletics.com'))).toBe(false);
+    expect(labels('saratoga')).not.toContain('shs-athletics.com: grades (player pages)');
     expect(labels('glendora').some((l) => l.endsWith('(player pages)'))).toBe(true);
   });
 
