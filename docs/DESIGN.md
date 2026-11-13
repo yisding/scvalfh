@@ -5135,8 +5135,10 @@ refreshes it. Everything in §1-§32 still stands.
   (`scripts/lib/prerender-expectations.ts`), and a static sibling of `[slug]` would also take a name a
   future club could need. The More tab is lit on it, as on /clubs (`MORE_ROUTES`).
 - **Links in, not nav** (§17.6 holds): `/clubs` links it under its tabs; every club page with an event
-  has a "Tournaments and leagues" section (the events it hosts, then those its own pages say it enters,
-  in calendar order, each linking `/club-calendar#<event id>`), with a "Club calendar" header action.
+  has a "Tournaments and leagues" section (the events it hosts or its own pages list: those coming up
+  in calendar order, then those with no dates posted, then those already over, latest first; each
+  "Hosts", "On its schedule", "Hosted" or "Played", linking `/club-calendar#<event id>`), with a "Club
+  calendar" header action.
 - **Field hockey's alone**, like the club pages: another sport's build renders it as a 404, and the
   sitemap lists it only where `HAS_RECRUITING`.
 
@@ -5146,10 +5148,10 @@ Header: "Club calendar", with "Northern California" and "As listed <day>" on its
 lede says what is listed and that fixtures are posted by each event, usually in the week before it,
 so the event's own links are the way to its schedule. Then, in order:
 
-1. **One section per month** with an event coming up or under way on the day the list was read
-   (`#month-2026-12`), each event an h3 entry with its anchor id: kind and dates (a `<time>`), a
+1. **One section per month** with an event coming up on the day the list was read
+   (`#month-2026-12`), after an "Under way" section (`#under-way`) for a league part-way through its season, each event an h3 entry with its anchor id: kind and dates (a `<time>`), a
    "Dates tentative" note where the organizer says so, the league days, where, who plays and who
-   runs it, the host club and the clubs whose pages say they enter (internal links), one sentence,
+   runs it, the host club and "On the schedules of" the clubs whose own pages list it (internal links), one sentence,
    then the links out: "Event page", "Fixtures and results", "Register" (each only when it is its own
    page), and "Also read from" the other pages the entry rests on.
 2. **Dates not announced yet** (`#not-announced`): events that recur whose next dates were not
@@ -5160,7 +5162,7 @@ so the event's own links are the way to its schedule. Then, in order:
 4. **Earlier in 2026** (`#earlier`): events over by the day the list was read, latest first, for
    their results pages.
 5. **How this list is made** (`#how-made`): organizers' pages only, never social media; a club is
-   "entered" only on its own page's word; incomplete and not updated with each change; a link to
+   named on an event only when its own page lists it; incomplete and not updated with each change; a link to
    report a missing event.
 
 **The split is the day the list was read, not the build's clock.** Field hockey builds run with the

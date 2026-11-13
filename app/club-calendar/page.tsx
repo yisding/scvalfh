@@ -23,8 +23,8 @@ const PAGE_TITLE = 'Club calendar';
  * season's page: the high school season ends in November, and the club tournaments run from
  * December to July.
  *
- * Heading outline: the h1, then one h2 per month with an event coming up or under way on the day
- * the list was read (each event an h3), then "Dates not announced yet" (recurring events whose next
+ * Heading outline: the h1, then "Under way" (a league part-way through its season on the day the
+ * list was read), one h2 per month with an event coming up after that day (each event an h3), then "Dates not announced yet" (recurring events whose next
  * dates were not posted), "Where club fixtures are posted" (the standing pages: calendars and
  * tournament sites), "Earlier in 2026" (events over by that day, latest first: their results
  * pages), and "How this list is made".
@@ -84,13 +84,15 @@ export default function ClubCalendarPage() {
         </li>
       </ul>
 
-      {view.months.map((month, i) => (
-        <section
-          key={month.id}
-          aria-labelledby={`month-${month.id}`}
-          className="sx-section"
-          data-first={i === 0 ? '' : undefined}
-        >
+      {view.underway.length > 0 ? (
+        <section aria-labelledby="under-way" className="sx-section">
+          <SectionHeader id="under-way" kicker="Under way" meta={`On ${view.checkedOn}`} />
+          <ClubEventList events={view.underway} />
+        </section>
+      ) : null}
+
+      {view.months.map((month) => (
+        <section key={month.id} aria-labelledby={`month-${month.id}`} className="sx-section">
           <SectionHeader id={`month-${month.id}`} kicker={month.heading} meta={plural(month.events.length, 'event')} />
           <ClubEventList events={month.events} />
         </section>
@@ -157,8 +159,8 @@ export default function ClubCalendarPage() {
         <div className="max-w-prose text-body text-ink-2">
           <p className="mt-0">
             Every event here was read from its organizer’s own page, or from a club’s or a field hockey association’s
-            page, on {view.checkedOn}; none is from social media. A club is listed as entering an event only when its
-            own page says so. Club events move, fill up and are added through the season, so this list is incomplete
+            page, on {view.checkedOn}; none is from social media. A club is named on an event only when its own page
+            lists the event. Club events move, fill up and are added through the season, so this list is incomplete
             and is not updated with each change: the event’s own page is the one to trust.
           </p>
           <p className="mb-0">

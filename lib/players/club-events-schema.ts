@@ -31,17 +31,23 @@ import { sourceUrl } from './clubs-schema';
  * What kind of event it is; also the label each row prints (components/club-calendar/calendar-view.ts).
  *   tournament         a weekend or one-day tournament on grass or turf
  *   indoor-tournament  an indoor tournament
+ *   play-day           a day of games between a few clubs' youth teams, not an open tournament
  *   league             a league that meets on set days (a fall or spring league)
  *   indoor-league      the same, indoors
+ *   pickup             informal sessions anyone registered may join, self-umpired, no standings
  *   showcase           a recruiting showcase or camp-style event with games
+ *   pathway            USA Field Hockey's player pathway (Nexus): players register one by one, not as club teams
  *   national-event     a USA Field Hockey national event (club championship, festival, national indoor)
  */
 export const CLUB_EVENT_KINDS = [
   'tournament',
   'indoor-tournament',
+  'play-day',
   'league',
   'indoor-league',
+  'pickup',
   'showcase',
+  'pathway',
   'national-event',
 ] as const;
 export type ClubEventKind = (typeof CLUB_EVENT_KINDS)[number];

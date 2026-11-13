@@ -4,7 +4,7 @@
  * real file; every word the calendar prints about an event is chosen here.
  *
  * What the page promises, and this module enforces:
- *   - the split between "coming up" and "earlier" is the day the file was checked (`capturedAt`),
+ *   - the split between "under way", "coming up" and "earlier" is the day the file was checked (`capturedAt`),
  *     never the build's clock: the site is rebuilt only in the high school season, so a build-time
  *     split would go stale through the club season. The page says which day it is;
  *   - an event whose next dates are not posted is never given dates: it reads "Not announced yet",
@@ -39,9 +39,12 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 export const KIND_LABELS: Record<ClubEventKind, string> = {
   tournament: 'Tournament',
   'indoor-tournament': 'Indoor tournament',
+  'play-day': 'Play day',
   league: 'League',
   'indoor-league': 'Indoor league',
+  pickup: 'Pickup sessions',
   showcase: 'Showcase',
+  pathway: 'Player pathway',
   'national-event': 'National event',
 };
 
@@ -103,7 +106,9 @@ export interface CalendarResourceRow {
 export interface ClubCalendarView {
   /** "Nov 13, 2026": the day the list was read. */
   checkedOn: string;
-  /** Coming up or under way on that day, by the month each starts in. */
+  /** Begun before that day and not over: a league part-way through its season. */
+  underway: CalendarEventRow[];
+  /** Coming up after that day, by the month each starts in. */
   months: CalendarMonth[];
   /** Recurring events whose next dates were not posted that day. */
   undated: CalendarEventRow[];
@@ -194,6 +199,7 @@ export function buildClubCalendarView(): ClubCalendarView {
   const today = file.capturedAt;
   const months = new Map<string, CalendarMonth>();
   const undated: CalendarEventRow[] = [];
+  const underway: CalendarEventRow[] = [];
   const earlier: ClubEvent[] = [];
   let upcomingCount = 0;
   for (const e of getClubEvents()) {
@@ -204,6 +210,11 @@ export function buildClubCalendarView(): ClubCalendarView {
     }
     if (last < today) {
       earlier.push(e);
+      continue;
+    }
+    if (e.start < today) {
+      underway.push(eventRow(e));
+      upcomingCount += 1;
       continue;
     }
     const key = e.start.slice(0, 7);
@@ -218,6 +229,7 @@ export function buildClubCalendarView(): ClubCalendarView {
   earlier.sort((a, b) => (lastDay(b) ?? '').localeCompare(lastDay(a) ?? '') || a.name.localeCompare(b.name));
   return {
     checkedOn: dateWithYear(today),
+    underway,
     months: [...months.values()],
     undated,
     earlier: earlier.map(eventRow),
@@ -233,22 +245,42 @@ export function buildClubCalendarView(): ClubCalendarView {
   };
 }
 
-/** A club page's events: the ones it hosts and the ones its pages say it enters, in calendar order. */
+/** A club page's events: the ones it hosts and the ones its pages list, coming up first. */
 export interface ClubEventLine {
   id: string;
   name: string;
   href: string;
-  /** "Hosts" or "Enters". */
+  /** "Hosts" or "On its schedule"; "Hosted" or "Played" for an event over before the list was read. */
   role: string;
   when: string;
 }
 
+/**
+ * A club's events in reading order: those under way or coming up on the day the list was read (calendar
+ * order), then those whose dates are not posted, then those already over (latest first), each worded
+ * in its own tense.
+ */
 export function clubEventLines(slug: string): ClubEventLine[] {
-  return getClubEventsFor(slug).map((e) => ({
-    id: e.id,
-    name: e.name,
-    href: `/club-calendar#${e.id}`,
-    role: e.hostClub === slug ? 'Hosts' : 'Enters',
-    when: e.start === null ? 'Dates not announced yet' : shortSpan(e.start, e.end),
-  }));
+  const today = getClubEventsFile().capturedAt;
+  const events = getClubEventsFor(slug);
+  const over = (e: ClubEvent) => {
+    const last = lastDay(e);
+    return last !== null && last < today;
+  };
+  const ahead = events.filter((e) => e.start !== null && !over(e));
+  const undated = events.filter((e) => e.start === null);
+  const earlier = events
+    .filter(over)
+    .sort((a, b) => (lastDay(b) ?? '').localeCompare(lastDay(a) ?? ''));
+  return [...ahead, ...undated, ...earlier].map((e) => {
+    const hosts = e.hostClub === slug;
+    const past = over(e);
+    return {
+      id: e.id,
+      name: e.name,
+      href: `/club-calendar#${e.id}`,
+      role: past ? (hosts ? 'Hosted' : 'Played') : hosts ? 'Hosts' : 'On its schedule',
+      when: e.start === null ? 'Dates not announced yet' : shortSpan(e.start, e.end),
+    };
+  });
 }

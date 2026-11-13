@@ -41,7 +41,7 @@ describe('the calendar view', () => {
   const view = buildClubCalendarView();
 
   it('puts every event in exactly one place', () => {
-    const placed = [...view.months.flatMap((m) => m.events), ...view.undated, ...view.earlier].map((e) => e.id);
+    const placed = [...view.underway, ...view.months.flatMap((m) => m.events), ...view.undated, ...view.earlier].map((e) => e.id);
     expect(placed.sort()).toEqual(file.events.map((e) => e.id).sort());
   });
 
@@ -50,6 +50,8 @@ describe('the calendar view', () => {
       const last = lastDay(e);
       const inEarlier = view.earlier.some((r) => r.id === e.id);
       expect(inEarlier, e.id).toBe(last !== null && last < file.capturedAt);
+      const inUnderway = view.underway.some((r) => r.id === e.id);
+      expect(inUnderway, e.id).toBe(e.start !== null && e.start < file.capturedAt && last! >= file.capturedAt);
     }
   });
 

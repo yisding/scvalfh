@@ -11,8 +11,8 @@ import type { CalendarEventRow } from './calendar-view';
  *
  * An entry, in reading order: the name (its `id` is the anchor a club page links), the kind and the
  * dates (a `<time>` when there is a first day), the date note, the league days, where, who plays
- * and who runs it, the host club and the clubs whose pages say they enter (internal links to their
- * club pages), the one-sentence summary, then the links out (the event page, its fixtures and
+ * and who runs it, the host club and the clubs whose own pages list the event ("On the schedules
+ * of", internal links to their club pages), the one-sentence summary, then the links out (the event page, its fixtures and
  * results, registration) and the other pages it was read from.
  *
  * Every link written in the `.map()` carries `prefetch={false}` (tests/ui/prefetch-policy.test.ts).
@@ -54,7 +54,7 @@ export function ClubEventList({ events, as: Heading = 'h3' }: ClubEventListProps
               ) : null}
               {e.clubs.length > 0 ? (
                 <>
-                  {e.clubs.length === 1 ? 'Club entered' : 'Clubs entered'}, by their own pages:{' '}
+                  On the schedules of:{' '}
                   {e.clubs.map((c, i) => (
                     <Fragment key={c.href}>
                       {i > 0 ? ', ' : null}

@@ -1,41 +1,1390 @@
 {
-  "builtBy": "By hand, 2026-11-13: work in progress; the sweep of the organizers' and clubs' pages is being added.",
+  "builtBy": "By hand on 2026-11-13: the Northern California field hockey associations’ calendars, USA Field Hockey’s events pages, the tournaments’ own pages and the event and schedule pages of the 15 Northern California clubs in data/clubs.json, each read that day; spot-checked against the pages afterwards.",
   "capturedAt": "2026-11-13",
   "notes": [
-    "Work in progress: one event so far, read from the NCFHA community calendar on 2026-11-13."
+    "Scope: tournaments, play days, leagues, pickup sessions and national events that Northern California club teams or players take part in, from the 2026-27 club season (with the fall 2026 events as earlier entries), plus Cal Cup, held in Ventura County, which Northern California clubs travel to. National events out of state are listed only when a Northern California club’s own page lists them, or when they are the qualifying path from the West (the National Club Championship).",
+    "A club is in an event’s `clubs` only when that club’s own page says it enters or entered it; team names on another club’s schedule do not count.",
+    "Dates are the organizer’s when it posts them. When only a club’s page gives them the event is `tentative`, and the summary says whose dates they are. An event that recurs but has no posted dates is `expected`, with no dates, and `lastHeld` gives the last edition.",
+    "Social media is never a source. Events posted only there (Fog City pickup, NorCal Sharks) are left out; the USA Gold Cup and the Bay Area Hawks Cup are cited from the Stick Together community calendar, which lists them.",
+    "Left out: Hockey Gobble (no host or date on any page), the Lions Hockey Championship (its site shows only the 2024 edition), Stryker’s events (its site stops in 2022), out-of-state club trips no national body runs (the Pumpkin Classic, the Winter Escape showcase), the National Indoor Festivals and the U-8 to U-12 National Indoor Tournament (no Northern California club lists them), and the spring 2026 tournaments whose 2027 editions are listed."
   ],
-  "resources": [],
+  "resources": [
+    {
+      "id": "stick-together-calendar",
+      "name": "NorCal field hockey community calendar",
+      "organizer": "Stick Together",
+      "what": "A shared calendar of Northern California tournaments, leagues, play days and camps, kept with the site’s news of the clubs. On Nov 13, 2026 it ran to mid-December 2026.",
+      "url": "https://www.sticktogetherfh.com/calendar/",
+      "calendarFeedUrl": "https://calendar.google.com/calendar/ical/c_c46463938ab9ffe44a59f4b5c122a7e605712c79c74238f507140eae61a053e1%40group.calendar.google.com/public/basic.ics",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "sf-hawks-tournaments",
+      "name": "SF Hawks tournament list",
+      "organizer": "San Francisco Youth Field Hockey Club",
+      "what": "The fullest dated list of the 2026-27 club season we found: the local play days, the Berkeley, Stanford and Davis tournaments, Cal Cup and the national events, by age group.",
+      "url": "https://sfyouthfieldhockey.com/tournaments/",
+      "calendarFeedUrl": null,
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "ncfha-calendar",
+      "name": "NCFHA community calendar",
+      "organizer": "Northern California Field Hockey Association",
+      "what": "The association’s calendar of tournaments, leagues and clinics, each with a link to add it to your own calendar. Nothing upcoming was posted on Nov 13, 2026.",
+      "url": "https://www.ncfha.org/events",
+      "calendarFeedUrl": null,
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "usafh-events",
+      "name": "USA Field Hockey events calendar",
+      "organizer": "USA Field Hockey",
+      "what": "The national events (festival, indoor qualifiers and tournaments, showcases), each with its schedule once published.",
+      "url": "https://www.usafieldhockey.com/events-calendar",
+      "calendarFeedUrl": null,
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "usafh-future-dates",
+      "name": "USA Field Hockey future event dates",
+      "organizer": "USA Field Hockey",
+      "what": "Dates of national events and selection camps for the next seasons, including the National Club Championship and the Region 11 Nexus camp.",
+      "url": "https://www.usafieldhockey.com/events-beyond-calendar",
+      "calendarFeedUrl": null,
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "cal-cup-standings",
+      "name": "Cal Cup standings",
+      "organizer": "California Cup",
+      "what": "Results by division of the Memorial Day weekend tournament, each linking its pool’s games (the 2026 tournament on Nov 13, 2026).",
+      "url": "https://www.calcup.com/standings",
+      "calendarFeedUrl": null,
+      "checkedOn": "2026-11-13"
+    }
+  ],
   "events": [
     {
-      "id": "cal-cup-2027",
-      "name": "Cal Cup",
-      "organizer": "California Cup",
+      "id": "roseville-league-fall-2026",
+      "name": "Roseville FHC League, fall 2026",
+      "organizer": "Roseville Field Hockey Club",
+      "hostClub": "roseville-fhc",
+      "clubs": [],
+      "kind": "league",
+      "level": "open",
+      "divisions": "U6; U8/U10; U12/U14/U16; youth goalkeepers; women (5v5); men (7v7)",
+      "dateStatus": "confirmed",
+      "start": "2026-09-27",
+      "end": "2026-11-15",
+      "sessions": [
+        "2026-09-27",
+        "2026-10-04",
+        "2026-10-11",
+        "2026-10-18",
+        "2026-11-01",
+        "2026-11-08",
+        "2026-11-15"
+      ],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Placer Valley Soccer Complex (Nov 1 and 15 at Maidu Soccer Arena)",
+      "place": "Roseville, CA",
+      "inNorCal": true,
+      "summary": "The club’s own Sunday league, its teams playing each other; the league page carries every game, score and the standings.",
+      "url": "https://rosevillefhc.org/rfhc_league",
+      "fixturesUrl": null,
+      "registrationUrl": "https://rosevillefhc.org/programs",
+      "sources": [
+        {
+          "url": "https://rosevillefhc.org/rfhc_league",
+          "what": "Roseville FHC league page",
+          "quote": "View Fall 2026 rules, team rosters, the full game schedule, and standings."
+        },
+        {
+          "url": "https://rosevillefhc.org/schedule",
+          "what": "Roseville FHC season schedule",
+          "quote": "Season dates: August 2, 2026 – November 20, 2026"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "rippers-fall-play-day-2026",
+      "name": "Rippers Fall Play Day",
+      "organizer": "Golden Gate Rippers",
+      "hostClub": "golden-gate-rippers",
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "play-day",
+      "level": "youth",
+      "divisions": "U06, U08, U10, U12, U14",
+      "dateStatus": "tentative",
+      "start": "2026-11-14",
+      "end": null,
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Ghilotti Turf Field, Redwood High School",
+      "place": "Larkspur, CA",
+      "inNorCal": true,
+      "summary": "The date is from SF Hawks’ tournament list; the Rippers’ fall page names the play day without one.",
+      "url": "https://www.goldengaterippers.com/content/field-hockey/fall-season",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/fall-season",
+          "what": "Golden Gate Rippers fall season",
+          "quote": "Rippers Fall Play Day - Larkspur, CA"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Rippers Tournament"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "national-hockey-festival-2026",
+      "name": "National Hockey Festival",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "open",
+      "divisions": "U-10, U-12 and U-14 co-ed and U-14 girls (7v7); U-14, U-16 and U-19 girls (11v11); adults",
+      "dateStatus": "confirmed",
+      "start": "2026-11-26",
+      "end": "2026-11-28",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Paradise Coast Sports Complex",
+      "place": "Naples, FL",
+      "inNorCal": false,
+      "summary": "The Thanksgiving weekend national tournament; SF Hawks list their U16 and U19 girls.",
+      "url": "https://www.usafieldhockey.com/events/2026/november/26/festival",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2026/november/26/festival",
+          "what": "USA Field Hockey Festival page",
+          "quote": "The highly anticipated National Hockey Festival, presented by Approach Clothing Co., will once again take place November 26 to 28, 2026 at the Paradise Coast Sports Complex in Naples, Fla."
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "DATES: Thursday, November 26 – Saturday, November 28 from 7:30am-5:30pm"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "roseville-winter-pickup-2026-27",
+      "name": "Roseville FHC winter pickup hockey",
+      "organizer": "Roseville Field Hockey Club",
+      "hostClub": "roseville-fhc",
+      "clubs": [],
+      "kind": "pickup",
+      "level": "open",
+      "divisions": "Youth U8 and up (5:30–6:30 PM); adults 18 and over (6:30–7:30 PM)",
+      "dateStatus": "confirmed",
+      "start": "2026-12-04",
+      "end": "2027-01-31",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Maidu Soccer Arena",
+      "place": "Roseville, CA",
+      "inNorCal": true,
+      "summary": "Twelve Friday and Sunday sessions, self-umpired; none on Dec 13, Dec 24 to Jan 1, or Jan 15 and 17.",
+      "url": "https://rosevillefhc.playbookapi.com/programs/more_info/class_package/79727/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://rosevillefhc.playbookapi.com/programs/more_info/class_package/79727/",
+          "what": "Roseville FHC registration page",
+          "quote": "Season: December 4, 2026 to January 31, 2027 (12 sessions; no sessions December 13, December 24 to January 1, or January 15 and 17)"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nitq-2026-27",
+      "name": "National Indoor Tournament Qualifiers",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "indoor-tournament",
+      "level": "youth",
+      "divisions": "U-16 girls, U-19 girls",
+      "dateStatus": "confirmed",
+      "start": "2026-12-12",
+      "end": "2027-01-18",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": null,
+      "place": "Sites in the East and Midwest",
+      "inNorCal": false,
+      "summary": "Regional indoor qualifiers for the National Indoor Tournament, none in the West this winter; SF Hawks list Brighton, Mich., on Dec 19 (U16) and Dec 20 (U19).",
+      "url": "https://www.usafieldhockey.com/events/2026/december/12/2026-27-nitq",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2026/december/12/2026-27-nitq",
+          "what": "USA Field Hockey qualifiers page",
+          "quote": "The NITQs are regionally held tournaments, for teams in the U-16 Girls and U-19 Girls divisions to qualify for the NIT."
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/winter-teams/",
+          "what": "SF Hawks winter teams",
+          "quote": "December 19 – U16 Girls National Indoor Tournament Qualifier, Brighton MI December 20 – U19 Girls National Indoor Tournament Qualifier, Brighton MI"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "sunshine-showcase-2027",
+      "name": "Sunshine Showcase",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "youth",
+      "divisions": "U-10, U-12 and U-14 co-ed and U-14 girls (7v7); U-14, U-16 and U-19 girls (11v11)",
+      "dateStatus": "confirmed",
+      "start": "2027-01-22",
+      "end": "2027-01-24",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "ESPN Wide World of Sports Complex",
+      "place": "Kissimmee, FL",
+      "inNorCal": false,
+      "summary": null,
+      "url": "https://www.usafieldhockey.com/events/2027/january/22/sunshine-showcase",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2027/january/22/sunshine-showcase",
+          "what": "USA Field Hockey Sunshine Showcase page",
+          "quote": "Games will take place Friday, January 22 through Sunday, January 24, 2027."
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/winter-teams/",
+          "what": "SF Hawks winter teams",
+          "quote": "January 22 – 24 – Disney Sunshine Showcase for U14 Girls, U16 Girls, U19 Girls,"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "4goals-san-diego-2027",
+      "name": "4Goals Challenge, San Diego",
+      "organizer": "4Goals",
       "hostClub": null,
       "clubs": [],
       "kind": "tournament",
       "level": "open",
+      "divisions": "U-14 and adults (Saturday); U-16 and U-19 (Sunday); 7v7",
+      "dateStatus": "tentative",
+      "start": "2027-01-30",
+      "end": "2027-01-31",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Chula Vista Elite Athlete Training Center",
+      "place": "Chula Vista, CA",
+      "inNorCal": false,
+      "summary": "The page gives Sat Jan 30 and Sun Jan 31 without a year; those days fall on a weekend in 2027.",
+      "url": "https://www.4goals.net/tournament-ca",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.4goals.net/tournament-ca",
+          "what": "4Goals tournament page",
+          "quote": "Sat. Jan 30 10:30 - 5pm        U-14's and Adults Sun.  Jan 31 9:00am - 5:00.    U-16 and U-19 FEE $695 per team"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "uc-davis-11v11-2027",
+      "name": "UC Davis 11v11 Tournament",
+      "organizer": "UC Davis Field Hockey Camps",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "Girls 19 and under",
+      "dateStatus": "confirmed",
+      "start": "2027-02-06",
+      "end": "2027-02-07",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Aggie Field Hockey Facility, UC Davis",
+      "place": "Davis, CA",
+      "inNorCal": true,
+      "summary": "Team registration was sold out on Nov 13, 2026; places for individual players on house teams were still listed.",
+      "url": "https://ucdavisfieldhockeycamps.totalcamps.com/shop/EVENT",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://ucdavisfieldhockeycamps.totalcamps.com/shop/EVENT",
+          "what": "UC Davis camps events page",
+          "quote": "FEBRUARY 2027 11V11 TOURNAMENT 2/6/27 - 2/7/27 Davis, CA"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/winter-teams/",
+          "what": "SF Hawks winter teams",
+          "quote": "February 6-7 – UC Davis Tournament for U16 & U19 teams"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nit-u14-2027",
+      "name": "National Indoor Tournament: U-14 girls and co-ed",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "youth",
+      "divisions": "U-14 girls, U-14 co-ed",
+      "dateStatus": "confirmed",
+      "start": "2027-02-12",
+      "end": "2027-02-15",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Spooky Nook Sports",
+      "place": "Manheim, PA",
+      "inNorCal": false,
+      "summary": "SF Hawks’ pages give Feb 13–15, 14–15 and 14–16 for their U14 girls; these are USA Field Hockey’s dates.",
+      "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+          "what": "USA Field Hockey National Indoor Tournament page",
+          "quote": "U-14 Girls & Co-Ed NIT February 12-15, 2027 Spooky Nook Sports Lancaster, PA"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "February 13 – 15, 2027"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nit-u16-2027",
+      "name": "National Indoor Tournament: U-16 girls",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "youth",
+      "divisions": "U-16 girls, by qualifier",
+      "dateStatus": "confirmed",
+      "start": "2027-02-19",
+      "end": "2027-02-21",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Spooky Nook Sports",
+      "place": "Manheim, PA",
+      "inNorCal": false,
+      "summary": null,
+      "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+          "what": "USA Field Hockey National Indoor Tournament page",
+          "quote": "U-16 Girls NIT February 19-21, 2027 Spooky Nook Sports Lancaster, PA"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/summer-camps/",
+          "what": "SF Hawks indoor season",
+          "quote": "Nationals: February 19 – 21 at Spooky Nook I Lancaster PA"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nit-richmond-2027",
+      "name": "National Indoor Tournament: boys, U-19 girls and adults",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "open",
+      "divisions": "U-19 boys; U-19 girls, by qualifier; men and women",
+      "dateStatus": "confirmed",
+      "start": "2027-02-26",
+      "end": "2027-02-28",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Greater Richmond Convention Center",
+      "place": "Richmond, VA",
+      "inNorCal": false,
+      "summary": null,
+      "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2027/february/12/nit",
+          "what": "USA Field Hockey National Indoor Tournament page",
+          "quote": "Boys, U-19 Girls & Adult NIT February 26-28, 2027 Greater Richmond Convention Center Richmond, VA"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/summer-camps/",
+          "what": "SF Hawks indoor season",
+          "quote": "Nationals: February 26–28, 2027 at the Greater Richmond Convention Center I Richmond, VA"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nexus-norcal-2027",
+      "name": "Nexus Region 11, Northern California site",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "pathway",
+      "level": "youth",
+      "divisions": "U-14, U-16, U-18",
+      "dateStatus": "confirmed",
+      "start": "2027-02-27",
+      "end": "2027-02-28",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Stanford University",
+      "place": "Stanford, CA",
+      "inNorCal": true,
+      "summary": "Training weekends for players who register one by one, not as club teams; weekend 1 is at Stanford, and weekends 2 (UC Davis) and 3 (Cal Berkeley) are not dated yet.",
+      "url": "https://www.usafieldhockey.com/nexus/region-11-schedule",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/nexus/region-11-schedule",
+          "what": "USA Field Hockey Region 11 Nexus schedule",
+          "quote": "Site: Northern California Players please arrive 30 minutes prior to your session for check in. Weekend 1: February 27 & 28 Location: Stanford University"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "cal-6s-2027",
+      "name": "Cal 6s Tournament",
+      "organizer": "Cal Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks",
+        "d-city"
+      ],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "U10 to U19 (SF Hawks); in 2026 also adults, boys and open",
+      "dateStatus": "tentative",
+      "start": "2027-03-05",
+      "end": "2027-03-07",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Underhill Field, UC Berkeley",
+      "place": "Berkeley, CA",
+      "inNorCal": true,
+      "summary": "Cal’s own page says March 2027; Stick Together’s save-the-date gives Mar 5–7, and SF Hawks list Mar 6–7 for their teams.",
+      "url": "https://www.californiafieldhockeycamp.com/cal-6v6-clinic.html",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.californiafieldhockeycamp.com/cal-6v6-clinic.html",
+          "what": "Cal field hockey camps page",
+          "quote": "CAL 6v6 CLINIC March 2027 Location: Underhill Field, Berkeley, CA"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/league-champions-crowned-playoffs-begin/",
+          "what": "Stick Together, Nov 2026 news",
+          "quote": "Cal 6s Tournament, March 5-7: Underhill Field, Berkeley. Save the date! More details coming soon."
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/winter-teams/",
+          "what": "SF Hawks winter teams",
+          "quote": "March 6-7 – Cal 6v6 Tournament for U10 – U19 Teams"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames",
+          "what": "D-City tournaments page",
+          "quote": "U14/16/19 - March 2027"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "stanford-6s-2027",
+      "name": "Stanford 6s Tournament",
+      "organizer": "Stanford Field Hockey Camps",
+      "hostClub": null,
+      "clubs": [
+        "d-city",
+        "sf-hawks"
+      ],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "U14 and U16 (Saturday), U19 (Sunday), from D-City; in 2026 also boys and adults",
+      "dateStatus": "tentative",
+      "start": "2027-04-03",
+      "end": "2027-04-04",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Varsity Field Hockey Stadium, Stanford University",
+      "place": "Stanford, CA",
+      "inNorCal": true,
+      "summary": "The dates are from D-City’s page; Stanford’s camps page had nothing posted for 2027 on Nov 13, 2026.",
+      "url": "https://stanfordfieldhockeycamps.totalcamps.com/shop/EVENT",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames",
+          "what": "D-City tournaments page",
+          "quote": "U14 & U16 - April 3th 2027"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Stanford 6s"
+        },
+        {
+          "url": "https://www.ncfha.org/events/2n2bi1vvtm9exy712q4m5oos06txly",
+          "what": "NCFHA calendar, 2026 edition",
+          "quote": "Compete in the Stanford 6s field hockey tournament, welcoming youth and adult teams for a fast-paced weekend on campus. April 4-5."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "nexus-selection-camp-2027",
+      "name": "Nexus Region 11 selection camp",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "pathway",
+      "level": "youth",
+      "divisions": null,
+      "dateStatus": "confirmed",
+      "start": "2027-05-08",
+      "end": "2027-05-09",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Stanford University",
+      "place": "Stanford, CA",
+      "inNorCal": true,
+      "summary": "Selection for the Nexus regional teams; players are invited one by one, not as club teams.",
+      "url": "https://www.usafieldhockey.com/events-beyond-calendar",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events-beyond-calendar",
+          "what": "USA Field Hockey future event dates",
+          "quote": "May 8 & 9 Region 11 Nexus Selection Camp Palo Alto, Calif. Selection Opportunity"
+        },
+        {
+          "url": "https://www.usafieldhockey.com/nexus/region-11-schedule",
+          "what": "USA Field Hockey Region 11 Nexus schedule",
+          "quote": "11 May 8 - 9, 2027 Stanford University, CA"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "cal-cup-2027",
+      "name": "Cal Cup (California Cup)",
+      "organizer": "California Cup",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks",
+        "d-city",
+        "infinity"
+      ],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "U8 to U19, boys, and adult social, competitive and super divisions (2026)",
+      "dateStatus": "tentative",
+      "start": "2027-05-29",
+      "end": "2027-05-31",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Moorpark College and nearby fields (2026)",
+      "place": "Moorpark, CA",
+      "inNorCal": false,
+      "summary": "California’s Memorial Day weekend tournament, in Ventura County. The dates are SF Hawks’: calcup.com still showed 2026 on Nov 13, 2026. In 2026 the super divisions began on the Friday and the rest on the Saturday.",
+      "url": "https://www.calcup.com/",
+      "fixturesUrl": "https://www.calcup.com/standings",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "May 29 – 31, 2027"
+        },
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames",
+          "what": "D-City tournaments page",
+          "quote": "California Cup (Coach Invitation): May 2027 - Moorpark CA"
+        },
+        {
+          "url": "https://www.infinitysportsclub.org/programs-1",
+          "what": "Infinity programs page",
+          "quote": "CalCup (Moorpark) 11v11"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "ncc-2027",
+      "name": "National Club Championship",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "youth",
+      "divisions": "U-14 (Jun 21–23), U-16 (Jun 24–26), U-19 (Jun 27–29), girls",
+      "dateStatus": "confirmed",
+      "start": "2027-06-21",
+      "end": "2027-06-29",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": null,
+      "place": "Virginia Beach, VA",
+      "inNorCal": false,
+      "summary": "Teams qualify at a Regional Club Championship in the spring; SF Hawks list it pending qualification.",
+      "url": "https://www.usafieldhockey.com/events-beyond-calendar",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events-beyond-calendar",
+          "what": "USA Field Hockey future event dates",
+          "quote": "June 21-29 National Club Championship June 21-23: U-14 June 24-26: U-16 June 27-29: U-19 Virginia Beach, Va. Qualification"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "National Club Championship"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "uc-davis-7s-2027",
+      "name": "UC Davis 7s",
+      "organizer": "UC Davis Field Hockey Camps",
+      "hostClub": null,
+      "clubs": [
+        "d-city",
+        "sf-hawks"
+      ],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "U10, U12, U14, U16 and U19 (2026)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "late April (D-City and SF Hawks list April 2027)",
+      "lastHeld": {
+        "start": "2026-04-25",
+        "end": "2026-04-26"
+      },
+      "venue": "Aggie Field Hockey Facility, UC Davis",
+      "place": "Davis, CA",
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://ucdavisfieldhockeycamps.totalcamps.com/shop/EVENT",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sites.google.com/view/dcityhockeyclub/tournamentsgames",
+          "what": "D-City tournaments page",
+          "quote": "U14 & U19 - April 2027"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Davis 6s"
+        },
+        {
+          "url": "https://www.ncfha.org/events/uc-davis-7s",
+          "what": "NCFHA calendar, 2026 edition",
+          "quote": "Register for the UC Davis 7s tournament, a tournament focused on youth field hockey players from across California. April 25-26."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "bay-area-hawks-cup",
+      "name": "Bay Area Hawks Cup",
+      "organizer": "Hayward Hawks",
+      "hostClub": "hayward-hawks",
+      "clubs": [],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "U8, U10, U12, U14 co-ed (2026)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "spring",
+      "lastHeld": {
+        "start": "2026-04-18",
+        "end": null
+      },
+      "venue": "41825 Blacow Road",
+      "place": "Fremont, CA",
+      "inNorCal": true,
+      "summary": "Listed on the Stick Together community calendar; the club has no event page of its own.",
+      "url": "https://www.sticktogetherfh.com/calendar/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://calendar.google.com/calendar/ical/c_c46463938ab9ffe44a59f4b5c122a7e605712c79c74238f507140eae61a053e1%40group.calendar.google.com/public/basic.ics",
+          "what": "Stick Together calendar feed",
+          "quote": "The Hayward Hawks host the Bay Area Hawks Cup on Saturday, April 18 (12:30-7 PM) in Fremont. This is a youth tournament for U8, U10, U12, and U14 co-ed teams."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "rcc-region-11-2027",
+      "name": "Regional Club Championship, Region 11",
+      "organizer": "USA Field Hockey",
+      "hostClub": null,
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "national-event",
+      "level": "youth",
+      "divisions": "U-14, U-16, U-19 girls",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "early May (SF Hawks list May 2027, place to be announced)",
+      "lastHeld": {
+        "start": "2026-05-01",
+        "end": "2026-05-03"
+      },
+      "venue": null,
+      "place": null,
+      "inNorCal": true,
+      "summary": "The West’s qualifier for the National Club Championship: at Stanford in 2026, in Chula Vista in 2025. The link is the 2026 page.",
+      "url": "https://www.usafieldhockey.com/events/2026/april/04/rcc",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.usafieldhockey.com/events/2026/april/04/rcc",
+          "what": "USA Field Hockey 2026 regional championship page",
+          "quote": "Region 11 Division Date Venue Price Register U-14 May 1-3 Stanford University Stanford, Calif. $1,850"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Regional Club Championship"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "infinity-spring-fling-2027",
+      "name": "Infinity Spring Fling 7v7",
+      "organizer": "Infinity Sports Club",
+      "hostClub": "infinity",
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "U10 and U12 co-ed; U14, U16 and U19 girls (2026)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "May (SF Hawks list May 2027)",
+      "lastHeld": {
+        "start": "2026-05-03",
+        "end": null
+      },
+      "venue": "Gilroy High School (2026)",
+      "place": "Gilroy, CA",
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://playpass.com/infinitysportsclub",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Spring Fling"
+        },
+        {
+          "url": "https://playpass.com/infinitysportsclub/spring-fling-field-hockey-tournament-AJjhcip",
+          "what": "Infinity 2026 registration page",
+          "quote": "4-5 games guaranteed. Skill leveled brackets if enough registered teams. 3-boys maximum on the field (including goalie)."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "chico-queens-of-the-turf",
+      "name": "Queens of the Turf",
+      "organizer": "Chico Hotshots Field Hockey Club",
+      "hostClub": "chico-hotshots",
+      "clubs": [],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "7v7",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "May",
+      "lastHeld": {
+        "start": "2026-05-09",
+        "end": null
+      },
+      "venue": "901 Esplanade, next to Chico State",
+      "place": "Chico, CA",
+      "inNorCal": true,
+      "summary": "The club’s 7v7 tournament, in its second year in 2026; listed on the Stick Together community calendar.",
+      "url": "https://www.sticktogetherfh.com/calendar/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://calendar.google.com/calendar/ical/c_c46463938ab9ffe44a59f4b5c122a7e605712c79c74238f507140eae61a053e1%40group.calendar.google.com/public/basic.ics",
+          "what": "Stick Together calendar feed",
+          "quote": "Second Annual Tournament This year’s event will feature a fast-paced 7v7 format , with 18-minute games and just 2 minutes between matches"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "ncfha-womens-league",
+      "name": "NCFHA women’s league",
+      "organizer": "Northern California Field Hockey Association",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "league",
+      "level": "adult",
+      "divisions": "Women; players register one by one and are placed on teams",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "seasonally; no season was posted on Nov 13, 2026",
+      "lastHeld": {
+        "start": "2026-04-12",
+        "end": "2026-05-10"
+      },
+      "venue": "Stanford Varsity Field Hockey Turf (spring 2026)",
+      "place": "Stanford, CA",
+      "inNorCal": true,
+      "summary": "The fixtures link is the spring 2026 league’s schedule and scores.",
+      "url": "https://www.ncfha.org/womens-league",
+      "fixturesUrl": "https://docs.google.com/spreadsheets/d/1H8hUaKzj_QGm8DOF9A80Jk8--A73DzGooWug6N-WvBU",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.ncfha.org/womens-league",
+          "what": "NCFHA women’s league page",
+          "quote": "We offer year-round playing opportunities, including seasonal leagues where players register individually and are placed on teams to compete for a championship."
+        },
+        {
+          "url": "https://www.ncfha.org/events/ncfha-spring-league",
+          "what": "NCFHA spring 2026 league",
+          "quote": "Confirmed dates and times: April 12th, 4:30 - 8:00 pm April 19th, 5:00 - 8:30 pm April 26th, 4:00 - 7:30 pm May 10th, 4:00 - 7:30 pm"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "bafha-mens-league",
+      "name": "BAFHA men’s league",
+      "organizer": "Bay Area Field Hockey Association",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "league",
+      "level": "adult",
+      "divisions": "Men",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "spring",
+      "lastHeld": {
+        "start": "2026-03-22",
+        "end": "2026-05-09"
+      },
+      "venue": "Stanford University",
+      "place": "Stanford, CA",
+      "inNorCal": true,
+      "summary": "The 2026 schedule is posted as an image on the league’s page; it posts updates on its Facebook page.",
+      "url": "https://bafha.org/schedule/matches/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://bafha.org/schedule/matches/",
+          "what": "BAFHA schedule page",
+          "quote": "The 2026 BAFHA season is underway! Initial schedule is below. For now, check the BAFHA Facebook page for updates."
+        },
+        {
+          "url": "https://bafha.org/",
+          "what": "BAFHA home page",
+          "quote": "Games are played on the international standard artificial turf at UC Berkeley and Stanford ."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "ssa-games",
+      "name": "Sikh Sports Association Annual Games: field hockey",
+      "organizer": "Sikh Sports Association of U.S.A.",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "Open 6-a-side; adult social; U10, U12 and U14 co-ed; U12 and U19 boys (2026)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "late July",
+      "lastHeld": {
+        "start": "2026-07-25",
+        "end": "2026-07-26"
+      },
+      "venue": "James Logan High School",
+      "place": "Union City, CA",
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://sikhsports.leagueapps.com/events?sportId=817",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://calendar.google.com/calendar/ical/c_c46463938ab9ffe44a59f4b5c122a7e605712c79c74238f507140eae61a053e1%40group.calendar.google.com/public/basic.ics",
+          "what": "Stick Together calendar feed",
+          "quote": "Open Division – 6-a-side | Maximum 9-player roster | Entry Fee: $500 Adult Social Division – 7-a-side"
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-summer-of-wins-as-fall-season-begins/",
+          "what": "Stick Together, summer 2026 news",
+          "quote": "SSA Sikh Sports Tournament: Hayward Hawks claimed U14 gold, U10 and U8 gold and silver, and U12 silver"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "khalsa-cup-2027",
+      "name": "Khalsa Cup",
+      "organizer": "San Jose Khalsa Field Hockey Club",
+      "hostClub": "sj-khalsa",
+      "clubs": [],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "Youth U08 to U16; women; competitive; men super; masters (2026, all 7-a-side)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "Labor Day weekend",
+      "lastHeld": {
+        "start": "2026-09-05",
+        "end": "2026-09-06"
+      },
+      "venue": "University of the Pacific (2026)",
+      "place": "Stockton, CA",
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://sjkfieldhockey.com/events",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sjkfieldhockey.com/events",
+          "what": "San Jose Khalsa events page",
+          "quote": "Our flagship event is the Khalsa Cup every Labor Day weekend."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "usa-gold-cup-2027",
+      "name": "USA Gold Cup",
+      "organizer": "Tracy Field Hockey Club",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "Open, U-12, U-14 and women (2026, 7v7)",
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "Labor Day weekend",
+      "lastHeld": {
+        "start": "2026-09-05",
+        "end": "2026-09-06"
+      },
+      "venue": "Tracy Field Hockey Ground",
+      "place": "Tracy, CA",
+      "inNorCal": true,
+      "summary": "The host posts its details on Facebook; the link is Stick Together’s community calendar.",
+      "url": "https://www.sticktogetherfh.com/calendar/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://calendar.google.com/calendar/ical/c_c46463938ab9ffe44a59f4b5c122a7e605712c79c74238f507140eae61a053e1%40group.calendar.google.com/public/basic.ics",
+          "what": "Stick Together calendar feed",
+          "quote": "Tracy Field Hockey Club is hosting their 3rd 7-a-side tournament September 5 & 6 at the newly installed water-based astroturf at Tracy Field Hockey Ground."
+        },
+        {
+          "url": "https://www.sticktogetherfh.com/celebrating-a-summer-of-wins-as-fall-season-begins/",
+          "what": "Stick Together, summer 2026 news",
+          "quote": "USA Gold Cup 2026 | September 5-6 | Tracy, CA Tracy Field Hockey Club hosts their third annual 7v7 tournament"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "thunderstruck",
+      "name": "Thunderstruck Tournament",
+      "organizer": "Lightning Youth Field Hockey",
+      "hostClub": "lightning",
+      "clubs": [
+        "fly-fhc",
+        "golden-gate-rippers"
+      ],
+      "kind": "tournament",
+      "level": "youth",
       "divisions": null,
       "dateStatus": "expected",
       "start": null,
       "end": null,
       "sessions": [],
-      "expectedWhen": "Memorial Day weekend",
-      "lastHeld": {
-        "start": "2026-05-23",
-        "end": "2026-05-25"
-      },
-      "venue": null,
-      "place": null,
+      "expectedWhen": "fall",
+      "lastHeld": null,
+      "venue": "Foothill College",
+      "place": "Los Altos Hills, CA",
       "inNorCal": true,
-      "summary": null,
-      "url": "https://www.calcup.com/",
+      "summary": "Fly FHC’s page names it as hosted by Stanford Lightning; no date was posted on Nov 13, 2026, and Lightning’s calendar does not list it.",
+      "url": "https://flyfhc.com/programs/",
       "fixturesUrl": null,
       "registrationUrl": null,
       "sources": [
         {
-          "url": "https://www.ncfha.org/events",
-          "what": "NCFHA community calendar",
-          "quote": "Compete in Cal Cup 2026, California’s notorious Memorial Day weekend field hockey tournament"
+          "url": "https://flyfhc.com/programs/",
+          "what": "Fly FHC programs page",
+          "quote": "Thunderstruck Tournament -  hosted by Stanford Lightning"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/fall-season",
+          "what": "Golden Gate Rippers fall season",
+          "quote": "Thunderstruck Tournament - Palo Alto, CA"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "lightning-play-day-2026-11",
+      "name": "Lightning play day with SF Hawks",
+      "organizer": "Lightning Youth Field Hockey",
+      "hostClub": "lightning",
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "play-day",
+      "level": "youth",
+      "divisions": "U06, U08, U10, U12, U14",
+      "dateStatus": "confirmed",
+      "start": "2026-11-08",
+      "end": null,
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Foothill College Stadium",
+      "place": "Los Altos Hills, CA",
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://www.lightningfieldhockey.org/event/show_month_list/4354431",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.lightningfieldhockey.org/event/show_month_list/4354431",
+          "what": "Lightning club calendar",
+          "quote": "FALL 2026 Game Vs SF Hawks"
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "Lightning Playday"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "fly-fall-play-days-2026",
+      "name": "Fly FHC fall game play days",
+      "organizer": "Fly Field Hockey Club",
+      "hostClub": "fly-fhc",
+      "clubs": [
+        "sf-hawks"
+      ],
+      "kind": "play-day",
+      "level": "youth",
+      "divisions": "Girls in grades 3 to 8",
+      "dateStatus": "confirmed",
+      "start": "2026-10-03",
+      "end": "2026-10-24",
+      "sessions": [
+        "2026-10-03",
+        "2026-10-10",
+        "2026-10-17",
+        "2026-10-24"
+      ],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Los Altos High School",
+      "place": "Los Altos, CA",
+      "inNorCal": true,
+      "summary": "Saturday mornings of games between clubs, such as Lightning, Infinity and SF Hawks.",
+      "url": "https://flyfhc.com/programs/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://flyfhc.com/programs/",
+          "what": "Fly FHC programs page",
+          "quote": "We are going to hold 4 Saturday game play days with other clubs, such as Stanford Lightning, Infinity and San Francisco Hawks."
+        },
+        {
+          "url": "https://sfyouthfieldhockey.com/tournaments/",
+          "what": "SF Hawks tournament list",
+          "quote": "October 3 and 10, 2026"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "khalsa-cup-2026",
+      "name": "Khalsa Cup 2026",
+      "organizer": "San Jose Khalsa Field Hockey Club",
+      "hostClub": "sj-khalsa",
+      "clubs": [],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "U08, U10, U12, U14, U16; women; competitive; men super; masters over 50 and over 60 (all 7-a-side)",
+      "dateStatus": "confirmed",
+      "start": "2026-09-05",
+      "end": "2026-09-06",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "University of the Pacific",
+      "place": "Stockton, CA",
+      "inNorCal": true,
+      "summary": "The tournament site had posted no schedule or results by Nov 13, 2026.",
+      "url": "https://sjkfieldhockey.com/events/khalsa-cup-2026",
+      "fixturesUrl": "https://tournament.sjkfieldhockey.com/t/khalsa-cup-2026/results",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://sjkfieldhockey.com/events/khalsa-cup-2026",
+          "what": "San Jose Khalsa Khalsa Cup page",
+          "quote": "Khalsa Hockey Cup, Bay Area · September 5–6, 2026 · University of the Pacific, Stockton, CA · water-based AstroTurf. Hosted by SJK Hockey Club."
+        },
+        {
+          "url": "https://tournament.sjkfieldhockey.com/t/khalsa-cup-2026",
+          "what": "Khalsa Cup tournament site",
+          "quote": "We would like to cordially invite you, your team and families for our 24th Annual Guru Gobind Singh Field Hockey Tournament (Khalsa Hockey Cup - Bay Area)."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "usa-gold-cup-2026",
+      "name": "USA Gold Cup 2026",
+      "organizer": "Tracy Field Hockey Club",
+      "hostClub": null,
+      "clubs": [
+        "roseville-fhc"
+      ],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "Open, U-12, U-14 and women (7v7)",
+      "dateStatus": "confirmed",
+      "start": "2026-09-05",
+      "end": "2026-09-06",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Tracy Field Hockey Ground",
+      "place": "Tracy, CA",
+      "inNorCal": true,
+      "summary": "The fixtures link is Roseville FHC’s page of its own teams’ games there.",
+      "url": "https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/",
+      "fixturesUrl": "https://rosevillefhc.org/usa_gold_cup_2026",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/",
+          "what": "Stick Together, fall 2026 news",
+          "quote": "The USA Gold Cup returned to Tracy Field Hockey Ground at Gurdwara Gur Nanak Parkash over Labor Day weekend (September 5-6)."
+        },
+        {
+          "url": "https://rosevillefhc.org/tournaments",
+          "what": "Roseville FHC tournaments page",
+          "quote": "Roseville FHC competes in the 3rd USA Gold Cup Field Hockey Tournament across Open (Pool B), U-12, U-14, and Women's divisions — 7v7 action all weekend."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "cal-cup-2026",
+      "name": "Cal Cup 2026",
+      "organizer": "California Cup",
+      "hostClub": null,
+      "clubs": [
+        "lightning",
+        "norcal-impact",
+        "sf-hawks",
+        "fly-fhc"
+      ],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": "U8 to U19, boys, and adult social, competitive and super divisions",
+      "dateStatus": "confirmed",
+      "start": "2026-05-22",
+      "end": "2026-05-25",
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Moorpark College and Arroyo Vista",
+      "place": "Moorpark, CA",
+      "inNorCal": false,
+      "summary": "Super divisions played Fri May 22 to Mon May 25, the rest Sat May 23 to Mon May 25. The standings page links each division’s games and results.",
+      "url": "https://www.calcup.com/",
+      "fixturesUrl": "https://www.calcup.com/standings",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.calcup.com/blank",
+          "what": "Cal Cup tournament info",
+          "quote": "Memorial Day Weekend - May 22-25, 2026 Super Men's & Women's Starts: Friday, May 22nd Ends: Monday, May 25th All Other Divisions Starts: Saturday, May 23rd"
+        },
+        {
+          "url": "https://norcalimpactfh.weebly.com/",
+          "what": "NorCal Impact home page",
+          "quote": "U16 Team Wins Silver Medal at Cal Cup 2026"
+        },
+        {
+          "url": "https://flyfhc.com/programs/",
+          "what": "Fly FHC programs page",
+          "quote": "Cal Cup Int'l FH Tournament - May 23-25"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "id": "infinity-spring-fling-2026",
+      "name": "Infinity Spring Fling 7v7 2026",
+      "organizer": "Infinity Sports Club",
+      "hostClub": "infinity",
+      "clubs": [
+        "fly-fhc",
+        "golden-gate-rippers"
+      ],
+      "kind": "tournament",
+      "level": "youth",
+      "divisions": "U10 and U12 co-ed; U14, U16 and U19 girls",
+      "dateStatus": "confirmed",
+      "start": "2026-05-03",
+      "end": null,
+      "sessions": [],
+      "expectedWhen": null,
+      "lastHeld": null,
+      "venue": "Gilroy High School",
+      "place": "Gilroy, CA",
+      "inNorCal": true,
+      "summary": "The fixtures link is the U19 division’s standings, the only one posted.",
+      "url": "https://playpass.com/infinitysportsclub/spring-fling-field-hockey-tournament-AJjhcip",
+      "fixturesUrl": "https://playpass.com/infinitysportsclub/u19-RiseXTN",
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://playpass.com/infinitysportsclub/u19-RiseXTN",
+          "what": "Infinity U19 division page",
+          "quote": "4 Games Each-Round Robin Play- Seed 1 v Seed 2- Championship Game, Seed 3 v Seed 4- 3rd Place Game, 1 Champion"
+        },
+        {
+          "url": "https://flyfhc.com/programs/",
+          "what": "Fly FHC programs page",
+          "quote": "Infinity 7v7 - May 3"
+        },
+        {
+          "url": "https://www.goldengaterippers.com/content/field-hockey/spring-season",
+          "what": "Golden Gate Rippers spring season",
+          "quote": "Infinity Sports Club Spring Fling - Gilroy, CA"
         }
       ],
       "checkedOn": "2026-11-13"
