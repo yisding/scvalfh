@@ -18,7 +18,8 @@
  *
  * Not part of field hockey's twice-daily cron: a roster changes a few times a season and each page is
  * ~250 KB, so there it runs by hand. The two winter refreshes (update-data-soccer.yml,
- * update-data-basketball.yml: 15 teams each) run it, varsity and JV, on every run. The budget is the MaxPreps client's own
+ * update-data-basketball.yml: 41 teams each, SCVAL and BVAL) run it, varsity and JV, once a week (the Monday
+ * morning run; a manual run always). The budget is the MaxPreps client's own
  * (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
  *
  * A partial run still publishes, and failures are scoped to the team (scripts/lib/team-scope.ts): a team

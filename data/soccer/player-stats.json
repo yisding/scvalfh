@@ -3,16 +3,16 @@
     "errors": 0,
     "goalkeepers": 0,
     "players": 0,
-    "teams": 15,
+    "teams": 41,
     "teamsWithStats": 0
   },
-  "fetchedAt": "2026-11-06T10:10:43.637Z",
+  "fetchedAt": "2026-11-13T03:39:26.871Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
     "id": "maxpreps-api",
     "notes": [
-      "One entry per registry team, all 1 leagues (SCVAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 2 leagues (SCVAL, BVAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
       "Every number is what the coach entered on MaxPreps, for all of this season's varsity games, league and non-league alike. Coverage is the coach's choice: a team MaxPreps has no stats for is status none.",
       "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
@@ -45,7 +45,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -66,7 +66,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -87,7 +87,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -108,7 +108,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
@@ -129,7 +129,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -150,7 +150,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -171,7 +171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -192,7 +192,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -213,7 +213,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -234,7 +234,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef",
       "name": "MacDonald",
@@ -255,7 +255,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
@@ -276,7 +276,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
@@ -297,7 +297,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -318,7 +318,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-06T10:10:43.637Z",
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
@@ -327,6 +327,552 @@
       "statsUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/soccer/girls/winter/stats/",
       "status": "none",
       "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
+      "name": "Branham",
+      "players": [],
+      "slug": "branham",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
+      "name": "Gilroy",
+      "players": [],
+      "slug": "gilroy",
+      "statsUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
+      "name": "Leigh",
+      "players": [],
+      "slug": "leigh",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+      "name": "Leland",
+      "players": [],
+      "slug": "leland",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
+      "name": "Piedmont Hills",
+      "players": [],
+      "slug": "piedmont-hills",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
+      "name": "Pioneer",
+      "players": [],
+      "slug": "pioneer",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
+      "name": "Westmont",
+      "players": [],
+      "slug": "westmont",
+      "statsUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1959d651-408f-4764-94a5-144cea89c499",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
+      "name": "Willow Glen",
+      "players": [],
+      "slug": "willow-glen",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/willow-glen-rams/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
+      "name": "Christopher",
+      "players": [],
+      "slug": "christopher",
+      "statsUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "773e862d-e186-44aa-b268-461b4064ce52",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
+      "name": "Evergreen Valley",
+      "players": [],
+      "slug": "evergreen-valley",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/evergreen-valley-cougars/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "554a6e7c-06b6-473a-9461-9f155294d249",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
+      "name": "Lincoln",
+      "players": [],
+      "slug": "lincoln",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/lincoln-lions/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "23723b27-4092-4f9b-8f32-892896c67a84",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
+      "name": "Live Oak",
+      "players": [],
+      "slug": "live-oak",
+      "statsUrl": "https://www.maxpreps.com/ca/morgan-hill/live-oak-acorns/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
+      "name": "Oak Grove",
+      "players": [],
+      "slug": "oak-grove",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/oak-grove-eagles/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
+      "name": "Santa Teresa",
+      "players": [],
+      "slug": "santa-teresa",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/santa-teresa-saints/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
+      "name": "Silver Creek",
+      "players": [],
+      "slug": "silver-creek",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/silver-creek-raiders/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "30d65e43-1478-45b5-90de-fd69689344f8",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
+      "name": "Ann Sobrato",
+      "players": [],
+      "slug": "sobrato",
+      "statsUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
+      "name": "Andrew Hill",
+      "players": [],
+      "slug": "andrew-hill",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/hill-falcons/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "847b67d2-64a0-459a-b726-484e88392ba6",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
+      "name": "Del Mar",
+      "players": [],
+      "slug": "del-mar",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "8c56113f-9229-43a2-a56e-4f8443494857",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
+      "name": "Gunderson",
+      "players": [],
+      "slug": "gunderson",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/gunderson-grizzlies/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
+      "name": "Independence",
+      "players": [],
+      "slug": "independence",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/independence-76ers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
+      "name": "James Lick",
+      "players": [],
+      "slug": "james-lick",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/james-lick-comets/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
+      "name": "Mt. Pleasant",
+      "players": [],
+      "slug": "mt-pleasant",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/mt-pleasant-cardinals/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
+      "name": "Overfelt",
+      "players": [],
+      "slug": "overfelt",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/overfelt-overfelt-royals/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
+      "name": "Prospect",
+      "players": [],
+      "slug": "prospect",
+      "statsUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
+      "name": "San Jose",
+      "players": [],
+      "slug": "san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/san-jose-bulldogs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
+      "name": "Yerba Buena",
+      "players": [],
+      "slug": "yerba-buena",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/yerba-buena-warriors/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "totals": {
         "field": {},
         "goalkeeping": {}

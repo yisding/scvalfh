@@ -1,5 +1,20 @@
 {
   "leagues": {
+    "bval": {
+      "alsoPublished": [
+        {
+          "label": "BVAL standings",
+          "url": "https://bval.org/standings/"
+        }
+      ],
+      "checked": [
+        "https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)"
+      ],
+      "checkedOn": "2026-11-13",
+      "league": "Blossom Valley Athletic League",
+      "reason": "BVAL publishes its official standings on bval.org. This site added BVAL boys basketball on November 13, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
     "scval": {
       "divisions": [
         {
