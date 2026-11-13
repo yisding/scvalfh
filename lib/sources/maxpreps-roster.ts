@@ -3,14 +3,20 @@
  *
  * There is no ghost-API roster endpoint (`team-roster/v1`, `roster/v1`, `team-roster/v2` all 404),
  * so the roster comes from the page's `__NEXT_DATA__`: `props.pageProps.athleteData` is an array of
- * 37-element POSITIONAL arrays — the same tuple encoding the schedule page uses (SPEC §1.1i), with
+ * 38-element POSITIONAL arrays — the same tuple encoding the schedule page uses (SPEC §1.1i), with
  * the same hazard: a column added upstream silently shifts every index after it, and a shifted
- * grade column would print the wrong year next to a player's name.
+ * grade column would print the wrong year next to a player's name. It happened once: by 2026-11-12
+ * MaxPreps had added `isClaimed` after `careerProfileId`, and every roster read failed on the length
+ * check below, as it should, until the new list was recovered.
  *
- * The column names are MaxPreps' own. The page component (build 77480dfe, chunk 1x2mehrsrg-g8.js,
- * served from asset.maxpreps.io) does `deserializeArray(GSSP_ROSTER_SERIALIZE_KEYS, athleteData)`,
- * where the helper is `for (i…) obj[KEYS[i]] = row[i]` and KEYS is the literal list reproduced in
- * `ROSTER_KEYS` below (recovered 2026-10-02; see docs/DATA-SOURCES.md §1.1j). So this adapter is
+ * The column names are MaxPreps' own. The page component does
+ * `deserializeArray(GSSP_ROSTER_SERIALIZE_KEYS, athleteData)`, where the helper is
+ * `for (i…) obj[KEYS[i]] = row[i]` and KEYS is the literal list reproduced in `ROSTER_KEYS` below: recovered
+ * 2026-10-02 from build 77480dfe (chunk 1x2mehrsrg-g8.js, 37 keys) and again 2026-11-13 from build
+ * 9db88398-95010d6e (chunk 0fl_-9l0zjx0n.js, both served from asset.maxpreps.io; 38 keys, the 37 in the same
+ * order with `isClaimed` at index 30); see docs/DATA-SOURCES.md §1.1j. A row is decoded with the list
+ * of its own length, the current one or the 2026-10 one (`ROSTER_LAYOUTS`), which every capture in
+ * tests/fixtures/maxpreps is in; any other length throws. So this adapter is
  * pinned behind loud assertions, exactly as SPEC §1.1i prescribes for positional payloads: the row
  * length, the per-row school / season ids, and a row-by-row cross-check against the page's own
  * server-rendered `<table>` (`#`, `Player`, `Grade`, `Position`, `Height`) — the human-facing
@@ -34,9 +40,9 @@ import type { Team } from '../types';
 // ---------------------------------------------------------------- the positional map
 
 /**
- * MaxPreps' `GSSP_ROSTER_SERIALIZE_KEYS`, verbatim and in order. Index i of an athleteData row is
- * the value of key i. The first 32 are the roster record's own fields; 32–36 are server-computed
- * display strings the table renders directly.
+ * MaxPreps' `GSSP_ROSTER_SERIALIZE_KEYS`, verbatim and in order (build 9db88398-95010d6e, read 2026-11-13).
+ * Index i of an athleteData row is the value of key i. The first 33 are the roster record's own fields;
+ * 33–37 are server-computed display strings the table renders directly.
  */
 export const ROSTER_KEYS = [
   'linkedAthlete', // 0
@@ -69,21 +75,41 @@ export const ROSTER_KEYS = [
   'sportSeasonId', // 27  == lib/season SPORT_SEASON_ID
   'sportSeasonName', // 28
   'careerProfileId', // 29  the STABLE person id; `?careerid=` in the URL is its short form
-  'createdOn', // 30  when the roster row was created (naive local time) — not a modified stamp
-  'canonicalUrl', // 31  absolute career URL
-  'formattedPositions', // 32  position1..3 joined with ", " — exactly what the table prints
-  'formattedName', // 33  `${firstName} ${lastName}`
-  'formattedHeight', // 34  `5' 7"` (with a space) or ""
-  'calculatedHeight', // 35  total inches, or null
-  'formattedClassYear', // 36  "Fr." / "So." / "Jr." / "Sr." / ""
+  'isClaimed', // 30  boolean; new in build 9db88398 (read 2026-11-13). Not read: asserted a boolean, to pin the shift
+  'createdOn', // 31  when the roster row was created (naive local time) — not a modified stamp
+  'canonicalUrl', // 32  absolute career URL
+  'formattedPositions', // 33  position1..3 joined with ", " — exactly what the table prints
+  'formattedName', // 34  `${firstName} ${lastName}`
+  'formattedHeight', // 35  `5' 7"` (with a space) or ""
+  'calculatedHeight', // 36  total inches, or null
+  'formattedClassYear', // 37  "Fr." / "So." / "Jr." / "Sr." / ""
 ] as const;
 
-export const ROSTER_ROW_LENGTH = ROSTER_KEYS.length; // 37
+export const ROSTER_ROW_LENGTH = ROSTER_KEYS.length; // 38
 
 type RosterKey = (typeof ROSTER_KEYS)[number];
 
-/** Named indices, derived from the key list so the two can never disagree. */
-export const COL = Object.fromEntries(ROSTER_KEYS.map((k, i) => [k, i])) as Record<RosterKey, number>;
+/**
+ * The list before `isClaimed` (build 77480dfe, recovered 2026-10-02): the other 37 keys in the same order. Every
+ * capture in tests/fixtures/maxpreps was taken in it, so it stays readable; MaxPreps no longer serves it.
+ */
+export const ROSTER_KEYS_2026_10: readonly RosterKey[] = ROSTER_KEYS.filter((k) => k !== 'isClaimed');
+
+type Columns = Readonly<Record<RosterKey, number>>;
+const columnsOf = (keys: readonly RosterKey[]): Columns =>
+  Object.fromEntries(keys.map((k, i) => [k, i])) as Record<RosterKey, number>;
+
+/** Named indices of the current list, derived from it so the two can never disagree. */
+export const COL: Columns = columnsOf(ROSTER_KEYS);
+
+/**
+ * The two layouts a row may be in, by its length: the current one and the 2026-10 one. `isClaimed` has no
+ * index in the 2026-10 layout (its entry there is never read). Any other length is drift.
+ */
+export const ROSTER_LAYOUTS: ReadonlyMap<number, Columns> = new Map([
+  [ROSTER_KEYS.length, COL],
+  [ROSTER_KEYS_2026_10.length, columnsOf(ROSTER_KEYS_2026_10)],
+]);
 
 /** The table header the cross-check expects, in order. Anything else is a redesign: stop. */
 export const ROSTER_TABLE_HEADERS = ['#', 'Player', 'Grade', 'Position', 'Height'] as const;
@@ -120,6 +146,11 @@ export interface RosterTableRow {
   jersey: string | null;
   name: string;
   href: string | null;
+  /**
+   * Whether the name carries the "Claimed profile" badge (an icon and a visually hidden " Claimed profile"
+   * after the name, inside its link; build 9db88398, read 2026-11-13). The name above never includes it.
+   */
+  claimed: boolean;
   gradeClass: string | null;
   position: string | null;
   height: string | null;
@@ -236,10 +267,15 @@ export function parseRosterTable(html: string): RosterTableRow[] | null {
       );
     }
     const anchor = /<a[^>]*class="[^"]*\bname\b[^"]*"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/.exec(tds[1]);
+    const inner = anchor ? anchor[2] : tds[1];
+    // The badge is its own span whose whole text is "Claimed profile": cut exactly that span, never text.
+    const badge = /<span[^>]*>\s*Claimed profile\s*<\/span>/;
+    const claimed = badge.test(inner);
     rows.push({
       jersey: cell(tds[0]),
-      name: anchor ? collapse(anchor[2]) : collapse(tds[1]),
+      name: collapse(claimed ? inner.replace(badge, ' ') : inner),
       href: anchor ? htmlUnescape(anchor[1]) : null,
+      claimed,
       gradeClass: cell(tds[2]),
       position: cell(tds[3]),
       height: cell(tds[4]),
@@ -299,25 +335,40 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
 
   const warnings: string[] = [];
   const players: RosterPlayer[] = [];
+  /** Each player's `isClaimed`, for the badge cross-check: null in the 2026-10 layout, which has no such column. */
+  const claimedOf = new Map<RosterPlayer, boolean | null>();
   let deletedRows = 0;
+  // Every row of a page is in one layout: the first row's.
+  const layoutLength = athleteData[0]?.length ?? ROSTER_ROW_LENGTH;
   athleteData.forEach((row, i) => {
-    if (row.length !== ROSTER_ROW_LENGTH) {
-      fail(`athleteData[${i}] has ${row.length} columns, expected ${ROSTER_ROW_LENGTH} — the positional schema drifted`);
+    const layout = ROSTER_LAYOUTS.get(row.length);
+    if (!layout) {
+      fail(
+        `athleteData[${i}] has ${row.length} columns, expected ${ROSTER_ROW_LENGTH} ` +
+          `(or ${ROSTER_KEYS_2026_10.length}, the 2026-10 layout) — the positional schema drifted`,
+      );
     }
-    if (row[COL.schoolId] !== teamId) fail(`athleteData[${i}].schoolId is not the page's teamId`);
-    if (row[COL.sportSeasonId] !== sportSeasonId) fail(`athleteData[${i}].sportSeasonId is not the page's sportSeasonId`);
-    if (typeof row[COL.isDeleted] !== 'boolean') fail(`athleteData[${i}].isDeleted is not a boolean`);
-    if (row[COL.isDeleted] === true) {
+    if (row.length !== layoutLength) {
+      fail(`athleteData[${i}] has ${row.length} columns but athleteData[0] has ${layoutLength} — one page, two layouts`);
+    }
+    const C = layout!;
+    if (C === COL && typeof row[C.isClaimed] !== 'boolean') {
+      fail(`athleteData[${i}].isClaimed is not a boolean — the positional schema drifted`);
+    }
+    if (row[C.schoolId] !== teamId) fail(`athleteData[${i}].schoolId is not the page's teamId`);
+    if (row[C.sportSeasonId] !== sportSeasonId) fail(`athleteData[${i}].sportSeasonId is not the page's sportSeasonId`);
+    if (typeof row[C.isDeleted] !== 'boolean') fail(`athleteData[${i}].isDeleted is not a boolean`);
+    if (row[C.isDeleted] === true) {
       deletedRows += 1;
       return;
     }
 
-    const firstName = str(row[COL.firstName]);
-    const lastName = str(row[COL.lastName]);
-    const fullName = str(row[COL.formattedName]) ?? [firstName, lastName].filter(Boolean).join(' ');
+    const firstName = str(row[C.firstName]);
+    const lastName = str(row[C.lastName]);
+    const fullName = str(row[C.formattedName]) ?? [firstName, lastName].filter(Boolean).join(' ');
     if (!fullName) fail(`athleteData[${i}] has no name`);
 
-    const gradeRaw = row[COL.classYear];
+    const gradeRaw = row[C.classYear];
     let grade: number | null = null;
     if (typeof gradeRaw === 'number') {
       if (Number.isInteger(gradeRaw) && gradeRaw >= 9 && gradeRaw <= 12) grade = gradeRaw;
@@ -325,49 +376,53 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     } else if (gradeRaw !== null && gradeRaw !== undefined && gradeRaw !== '') {
       fail(`athleteData[${i}].classYear is not a number: ${JSON.stringify(gradeRaw)}`);
     }
-    const label = str(row[COL.formattedClassYear]);
+    const label = str(row[C.formattedClassYear]);
     if ((grade === null) !== (label === null) || (grade !== null && GRADE_LABELS[grade] !== label)) {
       fail(`${fullName}: classYear ${grade} and formattedClassYear "${label}" disagree`);
     }
     const gradeClass: GradeClass | null = grade === null ? null : GRADE_LABELS[grade];
 
-    const positions = [row[COL.position1], row[COL.position2], row[COL.position3]]
+    const positions = [row[C.position1], row[C.position2], row[C.position3]]
       .map(str)
       .filter((p): p is string => p !== null);
     const position = positions.length ? positions.join(', ') : null;
-    const formatted = str(row[COL.formattedPositions]);
+    const formatted = str(row[C.formattedPositions]);
     if (formatted !== position) fail(`${fullName}: positions ${JSON.stringify(positions)} but formattedPositions "${formatted}"`);
 
-    const feet = int(row[COL.heightFeet]);
-    const inches = int(row[COL.heightInches]);
+    const feet = int(row[C.heightFeet]);
+    const inches = int(row[C.heightInches]);
     const height = feet === null ? null : `${feet}'${inches ?? 0}"`;
     const heightInches = feet === null ? null : feet * 12 + (inches ?? 0);
-    const calculated = int(row[COL.calculatedHeight]);
+    const calculated = int(row[C.calculatedHeight]);
     if (calculated !== null && calculated !== heightInches) {
       fail(`${fullName}: calculatedHeight ${calculated} but heightFeet/heightInches give ${heightInches}`);
     }
 
-    if (typeof row[COL.isCaptain] !== 'boolean') fail(`${fullName}: isCaptain is not a boolean`);
-    const careerUrl = str(row[COL.canonicalUrl]);
-    players.push({
-      athleteId: str(row[COL.athleteId]),
-      rosterId: str(row[COL.rosterId]),
-      careerProfileId: str(row[COL.careerProfileId]),
+    if (typeof row[C.isCaptain] !== 'boolean') fail(`${fullName}: isCaptain is not a boolean`);
+    const careerUrl = str(row[C.canonicalUrl]);
+    const player: RosterPlayer = {
+      athleteId: str(row[C.athleteId]),
+      rosterId: str(row[C.rosterId]),
+      careerProfileId: str(row[C.careerProfileId]),
       careerId: careerIdFromUrl(careerUrl),
       firstName,
       lastName,
       fullName,
-      jersey: str(row[COL.jersey]),
+      // A coach who types "-" for a number means none: the table prints its own "-" for a blank one, so
+      // either way the player has no jersey (Willow Glen boys basketball, 2026-11-13).
+      jersey: str(row[C.jersey]) === '-' ? null : str(row[C.jersey]),
       grade,
       gradeClass,
       positions,
       position,
       height,
       heightInches,
-      isCaptain: row[COL.isCaptain] as boolean,
+      isCaptain: row[C.isCaptain] as boolean,
       careerUrl,
-      createdOn: str(row[COL.createdOn]),
-    });
+      createdOn: str(row[C.createdOn]),
+    };
+    players.push(player);
+    claimedOf.set(player, C === COL ? (row[C.isClaimed] as boolean) : null);
   });
 
   // ---- the cross-check: the table is what a reader sees; the array must say the same thing.
@@ -408,6 +463,11 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
       if (t!.gradeClass !== p.gradeClass) mismatch('grade', p.gradeClass, t!.gradeClass);
       if (t!.position !== p.position) mismatch('position', p.position, t!.position);
       if (t!.height !== p.height) mismatch('height', p.height, t!.height);
+      // The badge is the rendered form of isClaimed, so it pins that column too (absent in the 2026-10 layout).
+      const isClaimed = claimedOf.get(p) ?? false;
+      if (t!.claimed !== isClaimed) {
+        fail(`${p.fullName}: isClaimed is ${isClaimed} in athleteData but the rendered table ${t!.claimed ? 'shows' : 'has no'} a "Claimed profile" badge`);
+      }
     }
   }
 

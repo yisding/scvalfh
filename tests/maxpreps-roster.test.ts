@@ -1,6 +1,8 @@
 /**
  * The MaxPreps roster page: the positional key list, the rendered-table cross-check, and drift.
- * The 15 captures are SCVAL's, the first league captured; every league's page is the same page.
+ * The 15 captures are SCVAL's, the first league captured; every league's page is the same page. They are in
+ * MaxPreps' 2026-10 layout (37 columns); roster-layout-2026-11-st-ignatius.html is a capture in the current one
+ * (38 columns, `isClaimed` at 30, read 2026-11-13).
  */
 
 import { readFileSync } from 'node:fs';
@@ -13,6 +15,8 @@ import {
   COL,
   GRADE_LABELS,
   ROSTER_KEYS,
+  ROSTER_KEYS_2026_10,
+  ROSTER_LAYOUTS,
   ROSTER_ROW_LENGTH,
   careerIdFromUrl,
   parseRosterPage,
@@ -70,9 +74,9 @@ const EXPECTED: Record<string, number> = {
 };
 
 describe('maxpreps roster: the key list', () => {
-  it("is MaxPreps' own 37-key GSSP_ROSTER_SERIALIZE_KEYS, in order", () => {
-    expect(ROSTER_ROW_LENGTH).toBe(37);
-    expect(new Set(ROSTER_KEYS).size).toBe(37);
+  it("is MaxPreps' own 38-key GSSP_ROSTER_SERIALIZE_KEYS, in order", () => {
+    expect(ROSTER_ROW_LENGTH).toBe(38);
+    expect(new Set(ROSTER_KEYS).size).toBe(38);
     expect(COL.athleteId).toBe(4);
     expect(COL.firstName).toBe(5);
     expect(COL.classYear).toBe(7);
@@ -85,11 +89,22 @@ describe('maxpreps roster: the key list', () => {
     expect(COL.schoolId).toBe(26);
     expect(COL.sportSeasonId).toBe(27);
     expect(COL.careerProfileId).toBe(29);
-    expect(COL.createdOn).toBe(30);
-    expect(COL.canonicalUrl).toBe(31);
-    expect(COL.formattedPositions).toBe(32);
-    expect(COL.formattedName).toBe(33);
-    expect(COL.formattedClassYear).toBe(36);
+    expect(COL.isClaimed).toBe(30);
+    expect(COL.createdOn).toBe(31);
+    expect(COL.canonicalUrl).toBe(32);
+    expect(COL.formattedPositions).toBe(33);
+    expect(COL.formattedName).toBe(34);
+    expect(COL.formattedClassYear).toBe(37);
+  });
+
+  it('still reads the 2026-10 layout: the same keys in the same order, without isClaimed', () => {
+    expect(ROSTER_KEYS_2026_10).toHaveLength(37);
+    expect(ROSTER_KEYS_2026_10).toEqual(ROSTER_KEYS.filter((k) => k !== 'isClaimed'));
+    const old = ROSTER_LAYOUTS.get(37)!;
+    expect(old.careerProfileId).toBe(29);
+    expect(old.createdOn).toBe(30);
+    expect(old.formattedClassYear).toBe(36);
+    expect([...ROSTER_LAYOUTS.keys()].sort()).toEqual([37, 38]);
   });
 
   it("builds the roster URL from the registry's canonical team URL, never a slug", () => {
@@ -212,13 +227,27 @@ describe('maxpreps roster: the 15 captures of 2026-10-02', () => {
 });
 
 describe('maxpreps roster: drift is loud', () => {
+  // A 2026-10 capture, so its rows are edited at the 2026-10 layout's indices.
+  const OLD = ROSTER_LAYOUTS.get(ROSTER_KEYS_2026_10.length)!;
   const html = fixture('st-ignatius');
   const SI = getTeamBySlug('st-ignatius')!.id;
   const parseIt = (h: string) => parseRosterPage(h, { expectedTeamId: SI, url: 'test' });
 
-  it('a column added upstream (38-element rows) throws', () => {
+  it('a column added upstream at the end of a 2026-10 row (38 elements, not the current layout) throws', () => {
+    // 38 is the current length, so the row is read as the current layout: createdOn's string sits where
+    // isClaimed's boolean must be.
     const drifted = withPageProps(html, (pp) => rows(pp).forEach((r) => r.push(null)));
-    expect(() => parseIt(drifted)).toThrow(/38 columns, expected 37/);
+    expect(() => parseIt(drifted)).toThrow(/isClaimed is not a boolean/);
+  });
+
+  it('a row of any other length throws (39 columns)', () => {
+    const drifted = withPageProps(html, (pp) => rows(pp).forEach((r) => r.splice(30, 0, true, null)));
+    expect(() => parseIt(drifted)).toThrow(/39 columns, expected 38 \(or 37, the 2026-10 layout\)/);
+  });
+
+  it('a page mixing the two layouts throws', () => {
+    const drifted = withPageProps(html, (pp) => rows(pp)[1].splice(30, 0, false));
+    expect(() => parseIt(drifted)).toThrow(/athleteData\[1\] has 38 columns but athleteData\[0\] has 37 — one page, two layouts/);
   });
 
   it('a column removed upstream (every value shifted) throws before anything is read', () => {
@@ -229,15 +258,15 @@ describe('maxpreps roster: drift is loud', () => {
   it('a grade that disagrees with the rendered table throws', () => {
     const drifted = withPageProps(html, (pp) => {
       const r = rows(pp)[0];
-      r[COL.classYear] = 9;
-      r[COL.formattedClassYear] = 'Fr.';
+      r[OLD.classYear] = 9;
+      r[OLD.formattedClassYear] = 'Fr.';
     });
     expect(() => parseIt(drifted)).toThrow(/grade is "Fr\." in athleteData but "Sr\." in the rendered table/);
   });
 
   it('a grade whose number and label disagree throws', () => {
     const drifted = withPageProps(html, (pp) => {
-      rows(pp)[0][COL.classYear] = 11;
+      rows(pp)[0][OLD.classYear] = 11;
     });
     expect(() => parseIt(drifted)).toThrow(/classYear 11 and formattedClassYear "Sr\." disagree/);
   });
@@ -245,8 +274,8 @@ describe('maxpreps roster: drift is loud', () => {
   it('a position that disagrees with the rendered table throws', () => {
     const drifted = withPageProps(html, (pp) => {
       const r = rows(pp)[0];
-      r[COL.position1] = 'G';
-      r[COL.formattedPositions] = 'G';
+      r[OLD.position1] = 'G';
+      r[OLD.formattedPositions] = 'G';
     });
     expect(() => parseIt(drifted)).toThrow(/position is "G" in athleteData but "F" in the rendered table/);
   });
@@ -254,8 +283,8 @@ describe('maxpreps roster: drift is loud', () => {
   it('a name that disagrees with the rendered table throws (matched by its career link)', () => {
     const drifted = withPageProps(html, (pp) => {
       const r = rows(pp)[0];
-      r[COL.firstName] = 'Someone';
-      r[COL.formattedName] = 'Someone Lewis';
+      r[OLD.firstName] = 'Someone';
+      r[OLD.formattedName] = 'Someone Lewis';
     });
     expect(() => parseIt(drifted)).toThrow(/name is "Someone Lewis" in athleteData but "Storey Lewis" in the rendered table/);
   });
@@ -263,8 +292,8 @@ describe('maxpreps roster: drift is loud', () => {
   it('a row whose link and name are both unknown to the table throws', () => {
     const drifted = withPageProps(html, (pp) => {
       const r = rows(pp)[0];
-      r[COL.formattedName] = 'Someone Else';
-      r[COL.canonicalUrl] = 'https://www.maxpreps.com/x/athletes/someone-else/?careerid=zzz';
+      r[OLD.formattedName] = 'Someone Else';
+      r[OLD.canonicalUrl] = 'https://www.maxpreps.com/x/athletes/someone-else/?careerid=zzz';
     });
     expect(() => parseIt(drifted)).toThrow(/Someone Else .* is in athleteData but not in the rendered table/);
   });
@@ -272,8 +301,8 @@ describe('maxpreps roster: drift is loud', () => {
   it('a row the table does not show (without the deleted flag) throws', () => {
     const drifted = withPageProps(html, (pp) => {
       const extra = [...rows(pp)[0]];
-      extra[COL.formattedName] = 'Extra Player';
-      extra[COL.canonicalUrl] = 'https://www.maxpreps.com/x/athletes/extra-player/?careerid=zzz';
+      extra[OLD.formattedName] = 'Extra Player';
+      extra[OLD.canonicalUrl] = 'https://www.maxpreps.com/x/athletes/extra-player/?careerid=zzz';
       rows(pp).push(extra);
     });
     expect(() => parseIt(drifted)).toThrow(/rendered table has 23 rows, athleteData has 24 undeleted rows/);
@@ -289,7 +318,7 @@ describe('maxpreps roster: drift is loud', () => {
     });
     expect(() => parseIt(drifted)).toThrow(/sportSeasonId another-season, expected/);
     const driftedRow = withPageProps(html, (pp) => {
-      rows(pp)[0][COL.sportSeasonId] = 'another-season';
+      rows(pp)[0][OLD.sportSeasonId] = 'another-season';
     });
     expect(() => parseIt(driftedRow)).toThrow(/not the page's sportSeasonId/);
     expect(SPORT_SEASON_ID).toBe('e302eb3e-1a32-4f2d-934b-6f9d454f721e');
@@ -365,5 +394,50 @@ describe('every league has a roster page URL and a claim-free placeholder', () =
       counts: countRosters(teams),
     };
     expect(RostersSchema.safeParse(file).success).toBe(true);
+  });
+});
+
+describe('maxpreps roster: the current layout (38 columns, isClaimed)', () => {
+  const html = fixture('layout-2026-11-st-ignatius');
+  const SI = getTeamBySlug('st-ignatius')!.id;
+  const parseIt = (h: string) => parseRosterPage(h, { expectedTeamId: SI, url: 'test' });
+
+  it('reads the 2026-11-13 capture: every row, no warning, each one checked against the rendered table', () => {
+    const page = parseIt(html);
+    expect(page.players).toHaveLength(23);
+    expect(page.warnings).toEqual([]);
+    // createdOn is read from its new index (31), so it is a timestamp, not the career URL or a boolean.
+    expect(page.players.every((p) => p.createdOn === null || /^\d{4}-\d\d-\d\dT/.test(p.createdOn))).toBe(true);
+    expect(page.players.every((p) => p.careerUrl === null || p.careerUrl.includes('careerid='))).toBe(true);
+  });
+
+  it('reads the "Claimed profile" badge apart from the name, and holds it to isClaimed', () => {
+    const table = parseRosterTable(html)!;
+    const claimed = table.filter((t) => t.claimed);
+    expect(claimed.length).toBeGreaterThan(0);
+    expect(table.every((t) => !/Claimed profile/.test(t.name))).toBe(true);
+    // The same capture with one claimed row's isClaimed flipped: the badge no longer agrees.
+    const flipped = withPageProps(html, (pp) => {
+      const row = rows(pp).find((r) => r[COL.isClaimed] === true)!;
+      row[COL.isClaimed] = false;
+    });
+    expect(() => parseIt(flipped)).toThrow(/isClaimed is false in athleteData but the rendered table shows a "Claimed profile" badge/);
+  });
+
+  it('reads a jersey typed as "-" as no number, as the table prints a blank one', () => {
+    // The table still shows the real number here, so the cross-check fails, and its message shows the "-"
+    // was read as no jersey (null), the value a "-" cell in the table also reads as.
+    const first = parseIt(html).players[0];
+    expect(first.jersey).not.toBeNull();
+    const dashed = withPageProps(html, (pp) => {
+      rows(pp)[0][COL.jersey] = '-';
+    });
+    expect(() => parseIt(dashed)).toThrow(new RegExp(`${first.fullName}: jersey is "null" in athleteData but "${first.jersey}"`));
+  });
+
+  it('decodes a 2026-10 capture the same once the column is inserted (no badge, so false)', () => {
+    const old = fixture('st-ignatius');
+    const inserted = withPageProps(old, (pp) => rows(pp).forEach((r) => r.splice(30, 0, false)));
+    expect(parseIt(inserted).players).toEqual(parseIt(old).players);
   });
 });
