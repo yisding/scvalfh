@@ -1,0 +1,44 @@
+{
+  "builtBy": "By hand, 2026-11-13: work in progress; the sweep of the organizers' and clubs' pages is being added.",
+  "capturedAt": "2026-11-13",
+  "notes": [
+    "Work in progress: one event so far, read from the NCFHA community calendar on 2026-11-13."
+  ],
+  "resources": [],
+  "events": [
+    {
+      "id": "cal-cup-2027",
+      "name": "Cal Cup",
+      "organizer": "California Cup",
+      "hostClub": null,
+      "clubs": [],
+      "kind": "tournament",
+      "level": "open",
+      "divisions": null,
+      "dateStatus": "expected",
+      "start": null,
+      "end": null,
+      "sessions": [],
+      "expectedWhen": "Memorial Day weekend",
+      "lastHeld": {
+        "start": "2026-05-23",
+        "end": "2026-05-25"
+      },
+      "venue": null,
+      "place": null,
+      "inNorCal": true,
+      "summary": null,
+      "url": "https://www.calcup.com/",
+      "fixturesUrl": null,
+      "registrationUrl": null,
+      "sources": [
+        {
+          "url": "https://www.ncfha.org/events",
+          "what": "NCFHA community calendar",
+          "quote": "Compete in Cal Cup 2026, California’s notorious Memorial Day weekend field hockey tournament"
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    }
+  ]
+}

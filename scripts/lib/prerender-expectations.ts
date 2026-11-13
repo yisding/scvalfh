@@ -33,6 +33,7 @@ const ALL_FIXED_PAGES = [
   'leaders',
   'history/2025-26',
   'clubs',
+  'club-calendar',
   'commits',
   'recruiting',
   'jv',
@@ -44,12 +45,12 @@ const ALL_FIXED_PAGES = [
  * not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
-  (p) => HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p),
+  (p) => HAS_RECRUITING || !['clubs', 'club-calendar', 'commits', 'recruiting'].includes(p),
 );
 
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
-  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
+  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/club-calendar', '/commits', '/recruiting']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
 ];
 

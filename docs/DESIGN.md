@@ -5115,3 +5115,71 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
   the team page.
 - One time format site-wide ("11 AM PT" from `leagueClockPT` beside "4:00 PM PT" from `timeOfDayPT`) and one
   matchup component for the MCAL, CCS and San Diego brackets are left for a later pass.
+
+## 34. Club calendar amendment (2026-11)
+
+The high school season ends in November; the club season runs from December to July. The site
+gained one page for it: `/club-calendar`, the tournaments, league days and national events Northern
+California club teams play in, from `data/club-events.json` (research by hand on 2026-11-13, read
+from the organizers' own pages; `docs/DATA-SOURCES.md` §1.9, README "Club calendar"). Nothing
+refreshes it. Everything in §1-§32 still stands.
+
+### 34.1 Where it fits, and why
+
+- **Under Clubs, not a new family.** The page answers "when and where do the clubs play?", the
+  question after /clubs' "which clubs?". It takes the recruiting family's tab row with Clubs lit as a
+  club page lights it (`exact={false}`): a fourth tab would crowd the row at 320 px for a page about
+  clubs, not recruiting.
+- **A top-level route.** `/club-calendar`, not `/clubs/calendar`: `/clubs/<slug>` is the club pages'
+  family, whose prerendered files are checked against the club slugs exactly
+  (`scripts/lib/prerender-expectations.ts`), and a static sibling of `[slug]` would also take a name a
+  future club could need. The More tab is lit on it, as on /clubs (`MORE_ROUTES`).
+- **Links in, not nav** (§17.6 holds): `/clubs` links it under its tabs; every club page with an event
+  has a "Tournaments and leagues" section (the events it hosts, then those its own pages say it enters,
+  in calendar order, each linking `/club-calendar#<event id>`), with a "Club calendar" header action.
+- **Field hockey's alone**, like the club pages: another sport's build renders it as a 404, and the
+  sitemap lists it only where `HAS_RECRUITING`.
+
+### 34.2 The page
+
+Header: "Club calendar", with "Northern California" and "As listed <day>" on its one meta line. A
+lede says what is listed and that fixtures are posted by each event, usually in the week before it,
+so the event's own links are the way to its schedule. Then, in order:
+
+1. **One section per month** with an event coming up or under way on the day the list was read
+   (`#month-2026-12`), each event an h3 entry with its anchor id: kind and dates (a `<time>`), a
+   "Dates tentative" note where the organizer says so, the league days, where, who plays and who
+   runs it, the host club and the clubs whose pages say they enter (internal links), one sentence,
+   then the links out: "Event page", "Fixtures and results", "Register" (each only when it is its own
+   page), and "Also read from" the other pages the entry rests on.
+2. **Dates not announced yet** (`#not-announced`): events that recur whose next dates were not
+   posted, each "Usually <when> · last held <span>". An event with no posted date is never given one.
+3. **Where club fixtures are posted** (`#where-posted`): the standing pages (association calendars,
+   tournament sites, the national events calendar), each with a sentence and, where offered, its
+   calendar feed.
+4. **Earlier in 2026** (`#earlier`): events over by the day the list was read, latest first, for
+   their results pages.
+5. **How this list is made** (`#how-made`): organizers' pages only, never social media; a club is
+   "entered" only on its own page's word; incomplete and not updated with each change; a link to
+   report a missing event.
+
+**The split is the day the list was read, not the build's clock.** Field hockey builds run with the
+high school data refresh (August to December), so a split on the build instant would leave a
+January event "coming up" until August. The page prints the day instead, and every row carries its
+own dates.
+
+### 34.3 Layout and accessibility
+
+Lists, not tables (§10.8), one column (an entry is too long for `sx-auto` columns); nothing long is
+`nowrap`. Each section is a `<section aria-labelledby>` with a `SectionHeader`; month headings are h2,
+event names h3, no level skipped. Every external link's accessible name leads with the event or
+resource ("Cal Cup: Fixtures and results"), so a link list never holds a column of bare "Event page"
+links. Per-row internal links carry `prefetch={false}`. Nothing on the page is a client component.
+`scripts/a11y-axe.mjs` checks it in both themes at both widths. It takes the root OG card.
+
+### 34.4 Not built
+
+- No per-event pages, no `.ics` of our own (the organizers' feeds are linked), no Southern California
+  list yet (the region toggle does not scope the page: it says "Northern California" in its header).
+- No automatic refresh: club events are posted on many small sites in many shapes, and a wrong date
+  costs a family a drive. The file is re-read by hand.
