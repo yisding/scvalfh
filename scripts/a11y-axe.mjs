@@ -144,6 +144,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/about',
   '/history/2025-26',
   '/clubs',
+  '/club-calendar',
   '/commits',
   '/recruiting',
 ];

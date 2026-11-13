@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import ClubPlayers from '../../../components/clubs/ClubPlayers';
 import ClubPrograms from '../../../components/clubs/ClubPrograms';
 import ClubSources from '../../../components/clubs/ClubSources';
 import { buildClubPageView } from '../../../components/clubs/club-view';
+import { clubEventLines } from '../../../components/club-calendar/calendar-view';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -33,7 +35,9 @@ import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../
  * itself names no individual.
  *
  * Heading outline: h1 → h2 Players (→ an h3 per group, only when there are two) → h2 Teams and
- * programs (when the club lists any) → h2 Where this comes from (→ h3 labels). The page takes the
+ * programs (when the club lists any) → h2 Tournaments and leagues (when data/club-events.json has an
+ * event the club hosts or whose page says the club enters it; each links /club-calendar#<event>,
+ * DESIGN §34) → h2 Where this comes from (→ h3 labels). The page takes the
  * root OG card: there is no per-club card (DESIGN §17.6), so ROOT_OG_IMAGE is safe to spread here.
  */
 
@@ -75,6 +79,7 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
   const { slug } = await params;
   const view = buildClubPageView(slug);
   if (!view) notFound();
+  const events = clubEventLines(slug);
 
   return (
     <div className="pb-section-lg">
@@ -120,6 +125,25 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
         <section aria-labelledby="programs" className="sx-section">
           <SectionHeader id="programs" kicker="Teams and programs" meta={`As listed ${view.checkedOn}`} />
           <ClubPrograms programs={view.programs} shared={view.programsSource} />
+        </section>
+      ) : null}
+
+      {events.length > 0 ? (
+        <section aria-labelledby="events" className="sx-section">
+          <SectionHeader id="events" kicker="Tournaments and leagues" action={{ href: '/club-calendar', label: 'Club calendar' }} />
+          <ul className="sx-auto m-0 list-none p-0">
+            {events.map((e) => (
+              <li key={e.id} className="min-w-0 border-b border-hairline py-1.5">
+                <Link href={e.href} prefetch={false} className="text-body font-semibold">
+                  {e.name}
+                </Link>
+                <span className="flex flex-wrap gap-x-3 text-cell text-ink-2">
+                  <span>{e.role}</span>
+                  <span>{e.when}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
 

@@ -2502,6 +2502,50 @@ Harvard-Westlake 6-0 Temecula Valley on Oct 23; a scoreless Newport Harbor at Gl
 moved to Oct 24). The third-place game (Newport Harbor v Edison, Oct 29) is not on MaxPreps. A Nov 7 all-star
 game at Chaparral (hbfieldhockey.com) may surface as team rows inside the Southern Section's season window.
 
+### 1.9 CLUB CALENDAR — organizers' and clubs' own pages (`data/club-events.json`)
+
+Read by hand on 2026-11-13 for `/club-calendar` (DESIGN §34); nothing fetches it. Two sweeps ran in
+parallel, one over the associations, tournaments and national bodies, one over the 15 Northern
+California clubs of `data/clubs.json`; every quote kept in the file was then re-matched against its
+live page (60 by script in Chromium, the other 9 by hand where the text sits in a page's meta
+description, a calendar feed's markup or a tab the script does not open). What each source gave:
+
+- **Stick Together community calendar** (`sticktogetherfh.com/calendar/`): an embedded Google
+  Calendar whose public feed (`calendar.google.com/calendar/ical/c_c464…%40group.calendar.google.com/public/basic.ics`)
+  held 74 events for 2026, none after mid-December 2026. The richest source for 2026, and the only
+  non-social source for the USA Gold Cup (Tracy), the Bay Area Hawks Cup, Queens of the Turf (Chico)
+  and the SSA Games. Its Nov 2026 post has the Cal 6s save-the-date (Mar 5–7, 2027).
+- **SF Hawks' tournament list** (`sfyouthfieldhockey.com/tournaments/`) and **winter teams page**:
+  the fullest dated list of the 2026-27 season, from local play days to the national indoor finals.
+  Its pages disagree with each other on the U14 girls' indoor final (Feb 13–15, 14–15, 14–16); the
+  file takes USA Field Hockey's (Feb 12–15).
+- **NCFHA** (`ncfha.org/events`): its Squarespace calendar's JSON (`?format=json`) listed no upcoming
+  event on 2026-11-13; `?format=ical` returns HTML, not a feed. The 2026 spring league's fixtures and
+  scores are a Google Sheet linked from the home page.
+- **BAFHA** (`bafha.org/schedule/matches/`): the 2026 men's season (Mar 22–May 9, Stanford) as an
+  image; no results or standings since 2021; updates on Facebook only.
+- **Cal Cup** (`calcup.com`, Wix, rendered in Chromium): 2026 only (May 22–25, Moorpark: Ventura
+  County, though NCFHA calls it Northern California's). Results per division are on Playbook
+  (`calcup.playbookapi.com/division/<id>/`), linked from `/standings`. The 2027 dates (May 29–31) are
+  SF Hawks', so the event is `tentative`.
+- **USA Field Hockey** (`/events-calendar`, `/events-beyond-calendar`, `/nexus/region-11-schedule`,
+  the event pages): national dates, the Region 11 Nexus weekends and selection camp. Its sanctioning
+  is paused, so there is no list of sanctioned California events. No West indoor qualifier in 2026-27.
+- **Clubs**: Roseville FHC's league page (a script-rendered app: fixtures, scores and standings of its
+  own league) and its tournament pages; D-City's tournaments page (the Stanford 6s 2027 dates); Fly
+  FHC's programs page (tabs; its fall play days, Thunderstruck); Lightning's SportsEngine calendar
+  (paged month by month in a browser); Infinity's Playpass pages (Spring Fling 2026 and its U19
+  standings); San Jose Khalsa's events page and tournament app (no schedule or results posted for
+  the 2026 Khalsa Cup by 2026-11-13); the Rippers' season pages. Pac Heights, Performance FH, Stryker
+  (stops in 2022), Hayward Hawks, Lions (stops in 2024) and Chico Hotshots had little or nothing dated.
+- **Not found**: a site of their own for the NorCal Sharks (Facebook only) or East Bay Field Hockey;
+  dates or a host for Hockey Gobble; any NorCal indoor league.
+
+Gotchas: a club's page is the only source for several 2027 dates, so those events are `tentative`
+and their sentence says whose dates they are; a team name on another club's schedule ("Hayward
+Black" on Roseville's Gold Cup page) does not put that club on the event; a month-only date ("April
+2027") is never turned into a day: the event stays `expected`.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

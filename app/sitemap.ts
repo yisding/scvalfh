@@ -3,6 +3,7 @@ import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '../components/layout/site';
 import { getClubSlugs, getClubsLastChecked } from '../lib/players/clubs';
+import { getClubEventsLastChecked } from '../lib/players/club-events';
 import { getCommitsLastChecked } from '../lib/players/commits';
 import {
   gamePageInputs,
@@ -98,6 +99,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(HAS_RECRUITING
       ? [
           { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
+          // The club calendar (DESIGN §34) takes the day data/club-events.json was last checked.
+          {
+            url: url('/club-calendar'),
+            lastModified: new Date(getClubEventsLastChecked()),
+            changeFrequency: 'monthly' as const,
+            priority: 0.4,
+          },
           { url: url('/commits'), lastModified: commitsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
           { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
         ]

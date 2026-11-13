@@ -39,6 +39,9 @@ const PAGE_TITLE = 'Club teams';
  * half; `elsewhere` shows under both, and without JavaScript every section renders, NorCal's first.
  * The page has no region control of its own (DESIGN §33): the footer and the More sheet carry it.
  *
+ * Under the tabs, a link to /club-calendar (DESIGN §34): the clubs'
+ * tournaments and leagues.
+ *
  * The page is not in the nav; /teams, every team page's roster and /about link it. It takes the
  * root OG card: there is no clubs card (DESIGN §17.6).
  */
@@ -59,6 +62,13 @@ export default function ClubsPage() {
       <PageHeader title="Club teams">
         <RecruitingTabs current="clubs" />
       </PageHeader>
+      <ul className="sx-linkrow">
+        <li>
+          <Link href="/club-calendar" prefetch={false} className="sx-action">
+            Club calendar: when and where NorCal club teams play
+          </Link>
+        </li>
+      </ul>
 
       {view.regions.map((region, i) => (
         <section

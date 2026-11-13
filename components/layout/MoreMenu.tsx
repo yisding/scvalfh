@@ -42,7 +42,7 @@ export interface MoreMenuProps {
 }
 
 /** Routes the sheet's links lead to: on any of them the More tab is the lit one. */
-const MORE_ROUTES = ['/leaders', '/jv', '/history', '/about', '/clubs', '/commits', '/recruiting'];
+const MORE_ROUTES = ['/leaders', '/jv', '/history', '/about', '/clubs', '/club-calendar', '/commits', '/recruiting'];
 
 const under = (pathname: string, root: string) => pathname === root || pathname.startsWith(`${root}/`);
 
