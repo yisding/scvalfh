@@ -244,6 +244,9 @@ describe('data/rosters-enrichment.json', () => {
       'granite-hills/Emma Steingraber',
       'leland/Anna Lychagina',
       'leland/Michaela Reichmuth',
+      // 2026-11-13: the school site's undated profile grade against Stick Together's 2025 all-league list.
+      'lynbrook/Sahana Rajamani',
+      'lynbrook/Trishna Sinha',
       // MaxPreps' 2025-26 roster and career page disagree (2026-10-12).
       'mission-vista/Izabel Gaytan',
       'point-loma/Ellie Kay',
@@ -312,8 +315,9 @@ describe('data/rosters-enrichment.json', () => {
     const all = scval.flatMap((t) => t.players);
     const n = (k: 'grade' | 'positions' | 'jersey' | 'height') => all.filter((p) => p[k] !== null).length;
     // 133 grades on 2026-10-02; 112 since 2026-11-13, when Saratoga's roster on MaxPreps gave the 21 its school
-    // site had supplied (each the same value), so those notes went.
-    expect(n('grade')).toBe(112);
+    // site had supplied (each the same value), so those notes went; 110 since two Lynbrook grades were blanked
+    // the same day (the school site against Stick Together's 2025 all-league list).
+    expect(n('grade')).toBe(110);
     expect(n('positions')).toBe(9);
     expect(n('height')).toBe(23);
     expect(n('jersey')).toBe(0);
@@ -1002,8 +1006,9 @@ describe('lib/players/rosters.ts merged view', () => {
       ps.filter((p) => p[k] !== null).length;
     // 133 from the 2026-10-02 research; on 2026-10-12, 8 more from MaxPreps' career and earlier-season pages
     // and 7 from school papers and Saratoga's athletics site: 148. 126 since 2026-11-13, when Saratoga's
-    // roster on MaxPreps gave 21 of them and Kaylee Stone's row left it.
-    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 126);
+    // roster on MaxPreps gave 21 of them and Kaylee Stone's row left it; 124 once two Lynbrook grades the
+    // school site gave were blanked against Stick Together's 2025 all-league list.
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 124);
     expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
     expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);

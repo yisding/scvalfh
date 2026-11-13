@@ -5759,16 +5759,26 @@
         },
         {
           "athleteId": "951518b2-a8ee-4288-96ad-a4c96bed10a4",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "School player profile (Grade 11, with her 2025 Field Hockey Junior Varsity and 2026 Field Hockey seasons); not season-dated. Conflict recorded 2026-11-13.",
+              "other": "11",
+              "source": "https://www.lynbrookvikings.com/player/sahana-rajamani/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "news",
+              "note": "Stick Together's 2025 All-SCVAL El Camino list: 'Sahana Rajamani Lynbrook D, GK 9' for fall 2025, so 10 now. Conflict recorded 2026-11-13.",
+              "other": "10",
+              "source": "https://www.sticktogetherfh.com/all-league-2025/"
+            }
+          ],
           "fullName": "Sahana Rajamani",
-          "grade": {
-            "confidence": "medium",
-            "derived": false,
-            "kind": "school-site",
-            "note": null,
-            "source": "https://www.lynbrookvikings.com/player/sahana-rajamani/",
-            "value": 11
-          },
+          "grade": null,
           "height": null,
           "jersey": null,
           "level": null,
@@ -5810,16 +5820,26 @@
         },
         {
           "athleteId": "3a4d9596-1a6d-46e5-972f-b44e9451c622",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "school-site",
+              "note": "School player profile (Grade 11, with her 2025 and 2026 Field Hockey seasons); not season-dated, and the league and Stick Together pages make her a senior. Conflict recorded 2026-11-13.",
+              "other": "11",
+              "source": "https://www.lynbrookvikings.com/player/trishna-sinha/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "news",
+              "note": "Stick Together's 2025 All-SCVAL El Camino list: 'Junior of the Year Trishna Sinha Lynbrook 11' and 'Trishna Sinha Lynbrook Goalkeeper 11' for fall 2025, so 12 now; its Sep 10, 2026 issue calls her 'Trishna Sinha (Lynbrook '27)' (https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/), class of 2027. Conflict recorded 2026-11-13.",
+              "other": "12",
+              "source": "https://www.sticktogetherfh.com/all-league-2025/"
+            }
+          ],
           "fullName": "Trishna Sinha",
-          "grade": {
-            "confidence": "medium",
-            "derived": false,
-            "kind": "school-site",
-            "note": null,
-            "source": "https://www.lynbrookvikings.com/player/trishna-sinha/",
-            "value": 11
-          },
+          "grade": null,
           "height": null,
           "jersey": null,
           "level": null,
