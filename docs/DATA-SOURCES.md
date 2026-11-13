@@ -2633,11 +2633,12 @@ Links, not a source: no fact on the site is read from an account, and `BANNED_HO
 102 field hockey teams and the 28 clubs of `data/clubs.json`. Handles were found where a page that is
 not social media names or links them: a club's website (read by script, in Chromium where the links
 are rendered by script), a school's athletics or team page, a student paper, a search result, the
-owner. A handle the owner's own page links (a club's site, a school's or a program's) was taken from
-that link. Any other was opened in a browser (Chromium, one profile at a time, slowly: Instagram
-rate-limits anonymous views) to see that the profile exists and that its name and bio are the field
-hockey team's, not the school's account for every sport, a booster club's, a club team's, a player's or
-a same-named school's elsewhere. JV teams' own accounts were searched the same way and are kept as
+site's owner. A handle the owner's own page links (a club's site, a school's or a program's) was taken
+from that link. Any other rests on a search result whose profile name and bio are the field hockey
+team's, a page naming it, a profile opened in a browser (a few, before Instagram's rate limit on
+anonymous views stopped the checks), or the site owner's confirmation, each said in its `note`; never
+the school's account for every sport, a booster club's, a club team's, a player's or a same-named
+school's elsewhere (`stevenson.fieldhockey` is Adlai Stevenson's, in Illinois). JV teams' own accounts were searched the same way and are kept as
 `level: "jv"` records beside the varsity program's. A page of the owner's own linking the account is not required
 (owner decision, 2026-11-13). Handles are stored lower case, as Instagram stores usernames. A school or
 club with no record had no account we could find and check on the day; it may still have one.

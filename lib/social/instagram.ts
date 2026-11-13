@@ -7,9 +7,9 @@
  * links, not facts. A team's handle is the field hockey program's own account, never the school's or
  * the athletics department's account for every sport, a booster club's, a club team's or a player's.
  * Each record says where the handle was found (`foundAt`, a page that is not social media, when there is
- * one: a club's website, a school's athletics page, a student paper) and that the profile was checked: it
- * exists and its name is the team's or the club's (`checkedOn`). A proof page of the owner's own is not
- * required (owner decision, 2026-11-13).
+ * one: a club's website, a school's athletics page, a student paper) and what it rests on (`note`). A
+ * proof page of the owner's own is not required (owner decision, 2026-11-13). A team whose JV squad keeps
+ * its own account has a second record at `level: 'jv'`.
  *
  * The file is research, written by hand (its `builtBy` says how); no script rewrites it. A school or
  * club with no record had no account we could find and check when it was researched; that is not a
@@ -51,11 +51,11 @@ export const InstagramAccountSchema = z.strictObject({
   /** A team slug (lib/teams.ts) or a club slug (data/clubs.json), by the list it is in. */
   slug: slugId,
   handle: instagramHandle,
-  /** Where the handle was found: a page that is not social media, or null when only a search turned it up. */
+  /** Where the handle was found: a page that is not social media, or null when only a search or the site's owner turned it up. */
   foundAt: sourceUrl.nullable(),
-  /** How it was found and checked, for maintainers ("Club website, footer links"). Never rendered. */
+  /** How it was found and what it rests on, for maintainers ("Club website, footer links"). Never rendered. */
   note: text,
-  /** The day the profile was checked: it exists, and its name is the team's or the club's. */
+  /** The day the record was researched. */
   checkedOn: calendarDateKey,
 });
 

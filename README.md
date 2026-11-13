@@ -1108,10 +1108,10 @@ an account. A team's account is the field hockey program's own, never the school
 department's account for every sport, a booster club's, a club team's or a player's. A team whose JV
 squad keeps its own account has a second record (`level: "jv"`), linked as "JV Instagram". Each record
 says where the handle was found (`foundAt`: a club's website, a school's athletics page, a student paper;
-null when only a search turned it up) and how (`note`, never rendered). A handle the owner's own page
-links was taken from that link; any other was opened in a browser on its `checkedOn` day to see that the
-profile exists and that its name and bio are the team's. A page of the owner's own linking the account
-is not required (owner decision, 2026-11-13). No record means we found no account we could check, not
+null when only a search or the site's owner turned it up) and how (`note`, never rendered): a link
+from the school's, the program's or the club's own page, a page naming it, a search result whose
+profile name and bio are the team's, or the site owner's confirmation. A page of the owner's own linking
+the account is not required (owner decision, 2026-11-13). No record means we found no account we could check, not
 that there is none.
 
 The file is research, written by hand on 2026-11-13 (its `builtBy` and `notes` say how); nothing

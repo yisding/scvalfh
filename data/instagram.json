@@ -1,5 +1,5 @@
 {
-  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, the owner’s own reports and search results. Handles not linked from a page of the owner’s were opened in Chromium to check the profile is the team’s.",
+  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, search results and the owner’s own reports and confirmations. Each record’s note says where its handle was found.",
   "capturedAt": "2026-11-13",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
@@ -24,11 +24,59 @@
       "checkedOn": "2026-11-13"
     },
     {
+      "slug": "fremont",
+      "level": "varsity",
+      "handle": "fremontfhockey",
+      "foundAt": null,
+      "note": "Found by search: \"Fremont Field Hockey (@fremontfhockey)\", bio \"founded in 2021\". The owner confirmed it is Fremont (Sunnyvale)’s (2026-11-13).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "fremont",
+      "level": "jv",
+      "handle": "fhsjvfieldhockey",
+      "foundAt": null,
+      "note": "Reported by the owner, who confirmed it is Fremont (Sunnyvale)’s JV team (2026-11-13).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "cupertino",
+      "level": "varsity",
+      "handle": "cupertinohsfieldhockey",
+      "foundAt": null,
+      "note": "Found by search: \"Cupertino Field Hockey (@cupertinohsfieldhockey)\", described as Cupertino High School’s official field hockey page.",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "mitty",
+      "level": "varsity",
+      "handle": "mittyfieldhockey",
+      "foundAt": null,
+      "note": "Found by search: \"AMHS Field Hockey (@mittyfieldhockey)\", whose bio calls it the official account of Archbishop Mitty Monarchs field hockey, \"9-time CCS Champions\".",
+      "checkedOn": "2026-11-13"
+    },
+    {
       "slug": "los-gatos",
       "level": "varsity",
       "handle": "losgatosgirlsfieldhockey",
       "foundAt": "https://www.losgatosathletics.org/socialmedia",
       "note": "Listed as \"Field Hockey on Instagram\" on the school athletics site’s social media page. Profile opened: \"Los Gatos Field Hockey\"; the bio says \"Not affiliated with LGHS\", a student-run team account, which the owner confirmed is the team’s (2026-11-13)",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "varsity",
+      "handle": "palyfieldhockey",
+      "foundAt": null,
+      "note": "Confirmed by the site’s owner as Palo Alto High School’s (2026-11-13).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "jv",
+      "handle": "palyjvfieldhockey",
+      "foundAt": null,
+      "note": "Reported by the owner (2026-11-13): Palo Alto (Paly) JV field hockey.",
       "checkedOn": "2026-11-13"
     },
     {
@@ -40,11 +88,43 @@
       "checkedOn": "2026-11-13"
     },
     {
+      "slug": "monta-vista",
+      "level": "varsity",
+      "handle": "mvfieldhockey_",
+      "foundAt": "https://elestoque.org/2021/03/11/sports/jv-girls-field-hockey-team-faces-a-player-shortage/",
+      "note": "Named by the school’s student paper, El Estoque (2021): \"the MVHS Field Hockey Instagram page, @mvfieldhockey_\".",
+      "checkedOn": "2026-11-13"
+    },
+    {
       "slug": "westmont",
       "level": "varsity",
       "handle": "westmontfockey",
       "foundAt": "https://whstheshield.com/2025/09/15/field-hockey/",
       "note": "Named by the school’s student paper, The Shield (2024 and 2025 season previews: follow @westmontfockey). Profile opened: \"Westmont Field Hockey\"",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "university-sf",
+      "level": "varsity",
+      "handle": "uhsfhockey",
+      "foundAt": null,
+      "note": "Reported by the site’s owner as San Francisco University High School’s varsity account (2026-11-13).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "university-sf",
+      "level": "jv",
+      "handle": "uhsjvfhockey",
+      "foundAt": null,
+      "note": "Reported by the owner, who confirmed it is San Francisco University High School’s JV team (2026-11-13).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "davis",
+      "level": "varsity",
+      "handle": "dhsfieldhockey",
+      "foundAt": null,
+      "note": "Found by search; its name matches the address of the team’s Google Site.",
       "checkedOn": "2026-11-13"
     },
     {
@@ -88,6 +168,14 @@
       "checkedOn": "2026-11-13"
     },
     {
+      "slug": "temecula-valley",
+      "level": "varsity",
+      "handle": "tvhsfieldhockey",
+      "foundAt": null,
+      "note": "Found by search, under the same name as the program’s X and Facebook accounts (TVHSFieldHockey); may be little used.",
+      "checkedOn": "2026-11-13"
+    },
+    {
       "slug": "cathedral-catholic",
       "level": "varsity",
       "handle": "cchsdonsfieldhockey",
@@ -125,6 +213,14 @@
       "handle": "clairemontfockey",
       "foundAt": "https://clairemont.sandiegounified.org/campus_life/Athletics",
       "note": "Linked from the school’s or the program’s own page: Clairemont HS (SDUSD) athletics page, Field Hockey row Instagram link.",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "la-jolla-country-day",
+      "level": "varsity",
+      "handle": "torreyfh",
+      "foundAt": "https://boosterclub.ljcds.org/socialmedia",
+      "note": "Named on the school booster club’s \"Torrey Sports on Social Media\" page as \"Field Hockey (@torreyfh)\", as text; the school’s athletics site lists it too.",
       "checkedOn": "2026-11-13"
     },
     {
@@ -176,6 +272,22 @@
       "checkedOn": "2026-11-13"
     },
     {
+      "slug": "sage-creek",
+      "level": "varsity",
+      "handle": "scfieldhockey",
+      "foundAt": null,
+      "note": "Seen on the Sage Creek field hockey team’s site during the JV sweep (the page was not recorded).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "san-pasqual",
+      "level": "varsity",
+      "handle": "spfieldhockey",
+      "foundAt": null,
+      "note": "Found by search: \"SPHS Field Hockey (@spfieldhockey)\", bio \"San Pasqual High School Field Hockey || Avocado East League || CIF San Diego Section\".",
+      "checkedOn": "2026-11-13"
+    },
+    {
       "slug": "westview",
       "level": "varsity",
       "handle": "westview_fieldhockey",
@@ -189,6 +301,14 @@
       "handle": "bonita_fieldhockey",
       "foundAt": "https://www.bonitaathletics.org/socialmedia",
       "note": "Linked from the school’s or the program’s own page: Bonita HS (La Verne) athletics site, Social Media directory page (team-by-team Instagram list).",
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "harvard-westlake",
+      "level": "varsity",
+      "handle": "hwfieldhockey",
+      "foundAt": null,
+      "note": "Found by search: the bio reads \"4-peat LAFHA Champs\", the Los Angeles Field Hockey Association’s title Harvard-Westlake holds (hw.com refuses automated reads, so its field hockey page could not be checked).",
       "checkedOn": "2026-11-13"
     }
   ],
