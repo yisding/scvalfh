@@ -404,6 +404,25 @@ describe('the basketball refresh', () => {
   });
 });
 
+describe('the roster pages are read weekly', () => {
+  // Owner decision, 2026-11-13: one scheduled run a week reads the roster pages (the Monday morning run,
+  // Pacific); a manual run always does. The gate names a cron, so it must name one the workflow has.
+  for (const [name, text] of [['soccer', updateSoccer], ['basketball', updateBasketball]] as const) {
+    it(`${name}: only the Monday morning cron reads them, and that cron exists`, () => {
+      const body = stepBody(text, 'Fetch rosters');
+      const gate = body.match(/"\$SCHEDULE" != '([^']+)'/);
+      expect(gate, 'the Fetch rosters step names the cron that reads rosters').not.toBeNull();
+      const crons = [...text.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
+      expect(crons).toContain(gate![1]);
+      // The morning run: its hour (UTC) is 14 or 15, never an evening run's.
+      expect(Number(gate![1].split(' ')[1])).toBeGreaterThanOrEqual(13);
+      expect(body).toContain('TZ=America/Los_Angeles date +%u)" != 1');
+      expect(body).toMatch(/if \[ "\$EVENT" = schedule \]/);
+      expect(body).toContain('pnpm fetch-rosters || rc=1');
+    });
+  }
+});
+
 describe('the manual fetch inputs', () => {
   const fetch = stepBody(update, 'Fetch data');
 
