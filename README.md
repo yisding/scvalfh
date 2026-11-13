@@ -1077,7 +1077,7 @@ commitment pages and the news since Nov 5, re-read every linked SportsRecruits p
 SportsRecruits' commits feed for program ids 1 to 1,044, matching all of it against every varsity row and
 JV player. It found McKenzie Rackleff's commitment, Phoebe Miller's signing and the five sources above; no
 field hockey program had posted a fall signing class, and no decommitment was found. The rest of the feed and
-the SportsRecruits address probe were not run (both ran whole on 2026-11-03). The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows): the 60 players that refresh added, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, were not searched for commitments or profiles.
+the SportsRecruits address probe were not run (both ran whole on 2026-11-03). The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles.
 
 **When a roster refetch breaks it.** `lib/players/commits.ts` throws at import, as `lib/players/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a

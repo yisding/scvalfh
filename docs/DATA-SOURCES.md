@@ -1576,7 +1576,7 @@ address probe (both ran whole on 2026-11-03) and name-by-name web searches (the 
 nothing published after Nov 5). Not reached: the Mercury News' and Marin IJ's feeds, several student papers,
 Harvard-Westlake's site and San Diego Prep Insider (HTTP 403 or no answer), college sites behind bot
 checks, Instagram. More signing news is likely: the Marin schools' commitment ceremonies and San Diego's
-county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows): the 60 players that refresh added, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, were not searched for commitments or profiles.
+county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles.
 
 *Recall is partial.* On 2026-11-13, 38 of the 1,673 varsity rows have a commitment, at 23 of the 102
 schools (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19
