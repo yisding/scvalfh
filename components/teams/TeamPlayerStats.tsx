@@ -40,8 +40,13 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
   // characters fit 24px; "21/88" (Valley Christian) needs 44px, as the roster's wide column does.
   const numbered = table.rows.some((r) => r.jersey);
   const numberWidth = table.rows.some((r) => (r.jersey?.length ?? 0) > 2) ? 'w-11' : 'w-6';
+  // The 56px floor under each stat head evens the columns out, but five of them are 280px before a
+  // name, so it is keyed to the width the table has (`@container`), not the viewport's: the game
+  // page sets two teams' tables side by side in 280px columns at 1024 (360 at 1280), where a
+  // viewport `sm:` floor pushed the table 120px past its strip. From 28rem it fits five columns
+  // and a name; below that the columns take their own width, as on a phone.
   return (
-    <div className="max-w-[34rem] min-w-0">
+    <div className="@container max-w-[34rem] min-w-0">
       <table className="sx-table">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -53,7 +58,7 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
               <th
                 key={c.key}
                 scope="col"
-                className="text-right sm:min-w-14"
+                className="text-right @md:min-w-14"
               >
                 <span aria-hidden="true">{c.label}</span>
                 <span className="sr-only">{c.title}</span>
