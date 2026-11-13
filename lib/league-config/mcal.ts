@@ -117,7 +117,8 @@ export const MCAL: LeagueConfig = {
     // Marin Independent Journal, Oct 28, 2026 ("The game was scoreless after regulation and two overtimes"; Tam "won 3-1 in
     // the shootout"): MaxPreps records the shootout tally as the score and the game as a regulation result, which the
     // one-goal caveat cannot catch. DATA_QUALITY.resultCorrections records the game as it was played (0-0, two
-    // overtimes, a 3-1 shootout), so the snapshot holds that; this sentence says so on the bracket and the game page.
+    // overtimes, a 3-1 shootout) wherever the site or the pipeline reads it; the file a run fetched before the correction
+    // existed still holds 3-1 until the next refresh. This sentence says so on the bracket.
     resultNotes: {
       '7bb048ba-9e33-4ad1-a743-2348c6637602':
         'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1 (Marin Independent Journal, Oct 28, 2026). MaxPreps records the shootout tally, 3–1, as the score.',
