@@ -14,6 +14,7 @@ import { plural } from '../../../components/words/plural';
 import RecruitingTabs from '../../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/players/clubs';
+import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
@@ -80,6 +81,7 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
   const view = buildClubPageView(slug);
   if (!view) notFound();
   const events = clubEventLines(slug);
+  const instagram = getClubInstagram(slug);
 
   return (
     <div className="pb-section-lg">
@@ -101,14 +103,23 @@ export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {
       </PageHeader>
 
       <p className="mt-4 mb-0 max-w-prose text-body text-ink-2">{view.description}</p>
-      {view.website ? (
+      {view.website || instagram ? (
         <ul className="sx-linkrow">
-          <li>
-            {/* Free to wrap: a long club name must not run past a 320px screen. */}
-            <ExternalLink href={view.website} className="sx-action whitespace-normal">
-              {view.name} website
-            </ExternalLink>
-          </li>
+          {view.website ? (
+            <li>
+              {/* Free to wrap: a long club name must not run past a 320px screen. */}
+              <ExternalLink href={view.website} className="sx-action whitespace-normal">
+                {view.name} website
+              </ExternalLink>
+            </li>
+          ) : null}
+          {instagram ? (
+            <li>
+              <ExternalLink href={instagramUrl(instagram.handle)} className="sx-action">
+                Instagram
+              </ExternalLink>
+            </li>
+          ) : null}
         </ul>
       ) : null}
 
