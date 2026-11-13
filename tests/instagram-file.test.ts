@@ -38,7 +38,9 @@ describe('data/instagram.json', () => {
   it('names only registry teams and data/clubs.json clubs, each once', () => {
     for (const a of file.teams) expect(getTeamBySlug(a.slug), a.slug).toBeDefined();
     for (const a of file.clubs) expect(getClub(a.slug), a.slug).toBeDefined();
-    expect(new Set(file.teams.map((a) => a.slug)).size).toBe(file.teams.length);
+    expect(new Set(file.teams.map((a) => `${a.slug} ${a.level}`)).size).toBe(file.teams.length);
+    const handles = [...file.teams, ...file.clubs].map((a) => a.handle);
+    expect(new Set(handles).size).toBe(handles.length);
     expect(new Set(file.clubs.map((a) => a.slug)).size).toBe(file.clubs.length);
   });
 
@@ -51,8 +53,11 @@ describe('data/instagram.json', () => {
   });
 
   it('serves each account by slug, and a profile address per handle', () => {
-    const team = file.teams[0]!;
+    const team = file.teams.find((a) => a.level === 'varsity')!;
     expect(getTeamInstagram(team.slug)).toEqual(team);
+    expect(getTeamInstagram(team.slug, 'varsity')).toEqual(team);
+    const jv = file.teams.find((a) => a.level === 'jv');
+    if (jv) expect(getTeamInstagram(jv.slug, 'jv')).toEqual(jv);
     expect(getClubInstagram(file.clubs[0]!.slug)).toEqual(file.clubs[0]);
     expect(getTeamInstagram('no-such-team')).toBeNull();
     expect(getClubInstagram('no-such-club')).toBeNull();
@@ -93,8 +98,17 @@ describe('loadInstagram refuses a bad file', () => {
     g.clubs[0]!.slug = 'no-such-club';
     expect(() => loadInstagram(g)).toThrow('data/instagram.json: clubs no-such-club: not a club in data/clubs.json');
     const h = copy();
-    h.teams.push({ ...h.teams[0]! });
+    h.teams.push({ ...h.teams[0]!, handle: 'another.handle' });
     expect(() => loadInstagram(h)).toThrow(/listed twice/);
+  });
+
+  it('a handle two records share, or a level that is not varsity or jv', () => {
+    const f = copy();
+    f.teams.push({ ...f.teams[0]!, level: f.teams[0]!.level === 'jv' ? 'varsity' : 'jv' });
+    expect(() => loadInstagram(f)).toThrow(/is already/);
+    const g = copy();
+    (g.teams[0] as { level: string }).level = 'freshman';
+    expect(() => loadInstagram(g)).toThrow();
   });
 
 });

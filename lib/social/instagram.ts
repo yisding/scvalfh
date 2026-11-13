@@ -17,7 +17,8 @@
  *
  * Invariants, checked once at module scope so a bad file fails at import:
  *   1. a team slug is a registry team; a club slug is a club in data/clubs.json
- *   2. no slug appears twice in its list
+ *   2. no slug appears twice in its list (a team at most once per level: varsity, and JV when the JV team
+ *      keeps its own account), and no handle is two records'
  *   3. a handle is an Instagram username: lower case, letters, digits, `.` and `_`, at most 30
  *   4. `foundAt`, when set, is https and not social media
  *
@@ -60,13 +61,22 @@ export const InstagramAccountSchema = z.strictObject({
 
 export type InstagramAccount = z.infer<typeof InstagramAccountSchema>;
 
+/** Which of a school's field hockey teams an account is: the varsity program's, or its JV team's own. */
+export const INSTAGRAM_LEVELS = ['varsity', 'jv'] as const;
+export type InstagramLevel = (typeof INSTAGRAM_LEVELS)[number];
+
+/** A team's account: the varsity program's, or a JV team's when it keeps its own. */
+export const TeamInstagramSchema = InstagramAccountSchema.extend({ level: z.enum(INSTAGRAM_LEVELS) });
+
+export type TeamInstagram = z.infer<typeof TeamInstagramSchema>;
+
 export const InstagramFileSchema = z.strictObject({
   /** How the file was made. */
   builtBy: text,
   capturedAt: calendarDateKey,
   /** Method and rules, in words. */
   notes: z.array(text),
-  teams: z.array(InstagramAccountSchema),
+  teams: z.array(TeamInstagramSchema),
   clubs: z.array(InstagramAccountSchema),
 });
 
@@ -85,8 +95,9 @@ export function loadInstagram(raw: unknown): InstagramFile {
   const seenTeams = new Set<string>();
   for (const a of file.teams) {
     if (!teamSlugs.has(a.slug)) fail('teams', a.slug, 'not a registry team');
-    if (seenTeams.has(a.slug)) fail('teams', a.slug, 'listed twice');
-    seenTeams.add(a.slug);
+    const key = `${a.slug} ${a.level}`;
+    if (seenTeams.has(key)) fail('teams', a.slug, `${a.level} listed twice`);
+    seenTeams.add(key);
   }
   const seenClubs = new Set<string>();
   for (const a of file.clubs) {
@@ -94,11 +105,17 @@ export function loadInstagram(raw: unknown): InstagramFile {
     if (seenClubs.has(a.slug)) fail('clubs', a.slug, 'listed twice');
     seenClubs.add(a.slug);
   }
+  const owner = new Map<string, string>();
+  for (const [list, a] of [...file.teams.map((t) => ['teams', t] as const), ...file.clubs.map((c) => ['clubs', c] as const)]) {
+    const other = owner.get(a.handle);
+    if (other) fail(list, a.slug, `handle ${a.handle} is already ${other}'s`);
+    owner.set(a.handle, `${a.slug}${'level' in a ? ` ${a.level}` : ''}`);
+  }
   return file;
 }
 
 const FILE = loadInstagram(bundled);
-const BY_TEAM = new Map(FILE.teams.map((a) => [a.slug, a]));
+const BY_TEAM = new Map(FILE.teams.map((a) => [`${a.slug} ${a.level}`, a]));
 const BY_CLUB = new Map(FILE.clubs.map((a) => [a.slug, a]));
 
 export function getInstagramFile(): InstagramFile {
@@ -110,9 +127,9 @@ export function instagramUrl(handle: string): string {
   return `https://www.instagram.com/${handle}/`;
 }
 
-/** A team's field hockey program's official account, when the file has one. */
-export function getTeamInstagram(slug: string): InstagramAccount | null {
-  return BY_TEAM.get(slug) ?? null;
+/** A team's field hockey program's official account (or its JV team's own), when the file has one. */
+export function getTeamInstagram(slug: string, level: InstagramLevel = 'varsity'): TeamInstagram | null {
+  return BY_TEAM.get(`${slug} ${level}`) ?? null;
 }
 
 /** A club's official account, when the file has one. */

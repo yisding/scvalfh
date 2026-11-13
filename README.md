@@ -1105,16 +1105,18 @@ club in `data/clubs.json`, where one was found; the team page's Elsewhere row an
 row link it ("Instagram"). These are links, not sources: the rule that social media is never a source
 (`BANNED_HOSTS`, under Clubs and College commitments) still holds, and no fact on the site is read from
 an account. A team's account is the field hockey program's own, never the school's or the athletics
-department's account for every sport, a booster club's, a club team's or a player's. Each record says
-where the handle was found (`foundAt`: a club's website, a school's athletics page, a student paper; null
-when only a search turned it up) and how (`note`, never rendered), and every profile was opened on its
-`checkedOn` day to see that it exists and that its name and bio are the team's or the club's. A page of
-the owner's own linking the account is not required (owner decision, 2026-11-13). No record means we
-found no account we could check, not that there is none.
+department's account for every sport, a booster club's, a club team's or a player's. A team whose JV
+squad keeps its own account has a second record (`level: "jv"`), linked as "JV Instagram". Each record
+says where the handle was found (`foundAt`: a club's website, a school's athletics page, a student paper;
+null when only a search turned it up) and how (`note`, never rendered). A handle the owner's own page
+links was taken from that link; any other was opened in a browser on its `checkedOn` day to see that the
+profile exists and that its name and bio are the team's. A page of the owner's own linking the account
+is not required (owner decision, 2026-11-13). No record means we found no account we could check, not
+that there is none.
 
 The file is research, written by hand on 2026-11-13 (its `builtBy` and `notes` say how); nothing
 rewrites it. `lib/social/instagram.ts` validates it at import (lower-case handles, registry team and
-club slugs, each once, an https `foundAt` off social media), so a bad file fails `pnpm test` and the
+club slugs, a team at most once per level, no handle twice, an https `foundAt` off social media), so a bad file fails `pnpm test` and the
 build (`tests/instagram-file.test.ts`). The soccer and basketball builds read empty files in
 `data/soccer/` and `data/basketball/` until their programs are researched.
 
@@ -1172,7 +1174,7 @@ sport definition). The rest is grouped by domain:
 | `players/` | rosters, player stats, clubs and college commitments |
 | `ratings/` | Elo and Elo-adjusted scoring |
 | `schools/` | school addresses, venues and mascots |
-| `social/` | teams' and clubs' official Instagram accounts |
+| `social/` | teams' (varsity and JV) and clubs' official Instagram accounts |
 | `crosscheck/` | the si.com backfill and the cross-checks against si.com and cifsshome.org (build-time only, but for the `cifss-notes` leaf /about prints) |
 | `official/` | the official-fixtures bundles and their matching (build-time only) |
 | `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
