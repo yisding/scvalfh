@@ -241,19 +241,20 @@ describe('data/clubs.json', () => {
       ]);
     });
 
-    it('rests on 251 source entries on 118 distinct URLs, by kind', () => {
+    it('rests on 253 source entries on 120 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
       const sources = norcal.flatMap((a) => a.sources);
-      expect(sources).toHaveLength(251);
-      expect(new Set(sources.map((s) => s.url)).size).toBe(118);
+      // 2026-11-13 added two: Junali Dutta's own SportsRecruits profiles, read rendered, for her NorCal Impact tie.
+      expect(sources).toHaveLength(253);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(120);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
       // page with and without its trailing slash, Gabrielle Moll's MaxPreps career page under two
-      // name slugs), so the ties rest on 116 pages (103 from the 2026-10-03 sweep, 106 with 2026-10-04's).
+      // name slugs), so the ties rest on 118 pages (103 from the 2026-10-03 sweep, 106 with 2026-10-04's, 116 before 2026-11-13).
       const page = (url: string) => url.replace(/\/$/, '').replace(/\/athletes\/[^/]+\/bio\/?\?careerid=/, '/careerid=');
-      expect(new Set(sources.map((s) => page(s.url))).size).toBe(116);
+      expect(new Set(sources.map((s) => page(s.url))).size).toBe(118);
       expect(countBy(sources, (s) => s.kind)).toEqual({
-        sportsrecruits: 67,
+        sportsrecruits: 69,
         'club-site': 49,
         news: 34,
         event: 31,
@@ -266,7 +267,7 @@ describe('data/clubs.json', () => {
       const kinds = Object.keys(countBy(sources, (s) => s.kind));
       const urlsOf = (kind: string) => new Set(sources.filter((s) => s.kind === kind).map((s) => s.url)).size;
       expect(Object.fromEntries(kinds.map((k) => [k, urlsOf(k)]))).toEqual({
-        sportsrecruits: 43,
+        sportsrecruits: 45,
         'club-site': 11,
         news: 6,
         event: 3,
@@ -276,7 +277,7 @@ describe('data/clubs.json', () => {
         'school-site': 2,
         hudl: 1,
       });
-      // The one URL filed under two kinds (news for five players, other for two), hence 119 by kind.
+      // The one URL filed under two kinds (news for five players, other for two), hence 121 by kind.
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);

@@ -635,6 +635,26 @@ repeated. The same day's roster refresh put six JV-list players on their varsity
 among them, so her Hudl page is on her varsity row: the overlay then holds 903 profiles for 634 players (78
 Hudl and 4 NCSA from this sweep), and `data/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
 
+*2026-11-13: a search of four schools.* Sobrato, Cupertino, Lynbrook and Homestead (116 players: 72 varsity
+rows, among them the 20 Sobrato rows new to the roster that day, and 44 JV) were searched for recruiting pages
+on every platform and in every sport: a SportsRecruits address probe (4,550 addresses, name variants and
+suffixes 1 to 12; the bare live pages also read rendered, twice, under the 2026-11-13 rule, §1.1j3), every
+Hudl team of the four schools in every sport for 2022 to 2026 and a Hudl name search for every player, NCSA's
+field hockey, lacrosse, soccer, softball, volleyball and basketball school pages and a guessed address for every
+player, and FieldLevel in eight sports. Six pages for five players were kept and re-read by an independent
+refuter, each naming the school with a class year that agrees: Sobrato's Cameron Isle (Hudl and NCSA
+basketball), Lynbrook's Grace Cho (Hudl soccer), Cupertino's Allenah Watkins (NCSA field hockey; NCSA's school
+list leaves her out, her address answers) and Homestead's Olivia Leyton Bravo (NCSA field hockey) and Aalya Jain
+(NCSA softball): 909 profiles for 639 players. Not linked: an NCSA address under Sobrato goalkeeper Kinzie
+Rasley's name that serves a page headed "Regan Stuart '28" (a Sobrato field hockey goalkeeper of the class of
+2028) with her name nowhere on it, which looks like a renamed account but is linked only on the owner's word;
+bare SportsRecruits pages that show no school or place even rendered; a private Hudl profile. Sobrato's and
+Lynbrook's Hudl field hockey rosters are empty, and Cupertino and Homestead have only football teams on Hudl.
+The same search filled six Homestead grades MaxPreps leaves blank (four from Stick Together's 2025 all-league
+lists, derived; two from The Epitaph's Nov 2, 2026 game review), and Lynbrook's Trishna Sinha and Sahana
+Rajamani keep the school site's grade 11 on the owner's decision, Stick Together's 2025 list (which would make
+them 12 and 10) recorded as conflicts.
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
@@ -1174,7 +1194,11 @@ otherwise (for a row with no grade, the stated class years must agree with each 
 a high school roster of the season can hold). Not a commitment: MaxPreps' "College Interests"
 (`careerCollegeInterestsData` on a career `/bio/` page, which was empty for every in-scope player
 anyway), offers, visits, camps, watchlists, all-league lists, and a place on a college's club team
-(club lacrosse, for one). Social media only from an official account (since 2026-10-12):
+(club lacrosse, for one). A page drawn by a script (SportsRecruits' `/committed/<club>` pages and its
+profiles' TEAMS blocks and "Committed to … on M/D/YYYY" tooltips, MAX Field Hockey's search) may be cited
+since 2026-11-13 (owner decision), quoting what it shows once rendered, when two separate rendered reads
+agree, and the basis says so; until then such pages were leads only and every quote had to be in the page's
+own HTML. The club ties (§1.1j2) have been read that way since 2026-10-05. Social media only from an official account (since 2026-10-12):
 `BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook, TikTok, X, Threads, YouTube,
 Snapchat, LinkedIn and their short links everywhere in the file except as an `official-social`
 source, a post by the `account` it names: a college's athletics or team account, the player's high
@@ -1372,15 +1396,17 @@ Gotchas, found in the research:
   needs a browser User-Agent and an Accept header; its rows load only after its search form runs (a
   script), and its date column is hidden by the page's own CSS. On 2026-10-04 a rendered read listed
   Lewis and Magnano (with St. Ignatius) and Cordoni with no college, and Van De Braak with none
-  either, which is stale; since no quote can be checked against the page as served, it is not cited,
-  and its hidden dates are not used.
+  either, which is stale; since no quote could be checked against the page as served, it was not cited,
+  and its hidden dates are not used (until 2026-11-13; since then a rendered read that a second read
+  confirms may be cited, see *The rule*).
 - **SportsRecruits splits by sport, and draws some of its pages with a script.** A profile lives on
   one sport's subdomain (`nfhca.` field hockey, `iwlca.` lacrosse, `my.` soccer and others), and
   `sportsrecruits.com/athlete/<slug>` redirects there, so a probe must follow redirects. A college
   page shows only its first ten committed athletes, and its "See More Commits" call returns another
   sport's (lacrosse) entries. A club's `/committed/<club>` page and a profile's "Committed to … on
   M/D/YYYY" tooltip are drawn by a script: one rendered read saw the dates, no second read confirmed
-  them, so neither the pages nor the dates are used.
+  them, so neither the pages nor the dates were used. Since 2026-11-13 they may be, from two rendered
+  reads that agree (*The rule*).
 - **One player, two sports.** Many players have a lacrosse or soccer profile beside a field hockey
   one, and the commitment is on the other sport's (Gigi Colant's soccer profile is under her given
   name, Gabriella; Claire Johnson plays field hockey and lacrosse, and her Cal commitment is for
@@ -1577,6 +1603,14 @@ nothing published after Nov 5). Not reached: the Mercury News' and Marin IJ's fe
 Harvard-Westlake's site and San Diego Prep Insider (HTTP 403 or no answer), college sites behind bot
 checks, Instagram. More signing news is likely: the Marin schools' commitment ceremonies and San Diego's
 county signing event (Nov 12) had not been posted. The round matched the rosters as they stood before the same day's roster refresh (1,702 varsity rows, now 1,803): of the 107 rows that refresh added (and 6 it removed), 47 are players the round had matched under the same name (JV-list players who joined their varsity rosters, and rows MaxPreps re-created), and the other 60, most of them at Sobrato (20), Hollister (17) and Corning (14), teams with no MaxPreps players before, are players who were not searched for commitments or profiles.
+
+*The 2026-11-13 search of four schools.* Sobrato, Cupertino, Lynbrook and Homestead's 116 players (72 varsity,
+44 JV) were searched for a commitment in any sport: each varsity row's MaxPreps career page for her other
+sports, about 200 web searches (two for each junior, senior and ungraded player, one for each sophomore and
+freshman), the schools' athletics sites and student papers, the Morgan Hill Times, Gilroy Dispatch and Mercury
+News by name, the field hockey and other-sport lists and clubs' pages, SportsRecruits' commits feed for ids 1
+to 1,044, and the recruiting-profile search (§1.1j). None was found. Lynbrook's Trishna Sinha (a goalkeeper on
+the TFHA watchlist) and Homestead's Gabrielle Moll are the likeliest to commit. Club ties (§1.1j2): none new.
 
 *Recall is partial.* On 2026-11-13, 38 of the 1,673 varsity rows have a commitment, at 23 of the 102
 schools (San Marcos added on 2026-11-13). On 2026-11-06 it was 37 at 22 (Gilroy added on 2026-11-06). On 2026-11-03 it was 35 at 21 (Lick-Wilmerding and Leigh added on 2026-11-03). On 2026-10-22 it was 33 at 19

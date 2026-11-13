@@ -1,5 +1,5 @@
 {
-  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag) and 2026-11-03 (recruiting pages only: a SportsRecruits profile-address probe in every sport, re-read by an independent refuter) and 2026-11-06 (recruiting pages only: NCSA's field hockey school pages for the schools with JV rosters, each page re-read by an independent refuter) and 2026-11-13 (recruiting pages only: every school's field hockey team rosters on Hudl and NCSA's field hockey school pages for all 102 schools, each kept page re-read by an independent refuter)",
+  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag) and 2026-11-03 (recruiting pages only: a SportsRecruits profile-address probe in every sport, re-read by an independent refuter) and 2026-11-06 (recruiting pages only: NCSA's field hockey school pages for the schools with JV rosters, each page re-read by an independent refuter) and 2026-11-13 (recruiting pages only: every school's field hockey team rosters on Hudl and NCSA's field hockey school pages for all 102 schools, each kept page re-read by an independent refuter) and 2026-11-13 (a search of four schools, Sobrato, Cupertino, Lynbrook and Homestead, for recruiting pages in every platform and sport, and grades from Stick Together and The Epitaph)",
   "capturedAt": "2026-11-13",
   "notes": [
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays. The same rules apply to every league; a team with no public source beyond MaxPreps has empty lists.",
@@ -17,7 +17,8 @@
     "2026-11-03: another SportsRecruits profile-address probe in every sport over all 1,673 varsity rows (23,270 addresses: the first_last slug, hyphen and multi-word variants, each with no suffix and 1 to 12; 670 live, 649 pages read after dropping men's lacrosse). A page was kept by the 2026-10-12 rule (title names the player, class year agrees, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all of them. 30 pages for 30 players were linked (14 NorCal, 16 SoCal): 26 lacrosse, 3 field hockey and 1 soccer. Most were live before 2026-10-12 and that day's probe did not link them (among them the own profiles of six committed players: Storey Lewis' lacrosse page and those of Gigi Colant, Catherine Cecchini, Kaye Zilinskas, Violet Potts and Emerson Davis); Charlotte Painter's field hockey page (Fremont) was created 2026-10-25. Two lacrosse pages linked on 2026-10-12 had moved (abigail_wisbach and reagan_roach now answer Page Not Found) and were re-linked at their new addresses. Bare pages (a class year and no school or place: Anaai Trujillo, Elliot Gould, a second Emerson Davis page) and namesakes in other states were not linked. Every SportsRecruits page already linked was re-read: all 228 answer, and none shows a commitment the file lacks. NCSA, Hudl and FieldLevel were not probed, and the claimed-MaxPreps read of 2026-10-13 was not repeated: MaxPreps answered the career-page re-read with HTTP 403 after a few dozen pages, so it was stopped.",
     "2026-11-06: NCSA's field hockey school pages (ncsasports.org/field-hockey-recruiting/california/<city>/<school>/), read for the 45 schools with a JV roster, each athlete list matched against the varsity and JV names. Seven pages for varsity-file rows were linked, each naming the school and re-read by an independent refuter: Abby Scharrenberg and Carolyn Cordoni (Saint Francis), Ruhee Bhatnagar (Monta Vista), Bintu Deen (Santa Clara), Evelyn Jaimes (Greenfield), Evalina MacLennan (Glendora: the page, 'Evie Maclennan', class of 2027, does not say which of the school's two Maclennan seniors she is, and the owner identified her as Evalina) and Colette von Klemperer (Los Gatos, a row the school marks JV, whose profiles the team page shows on its JV roster; of her two NCSA pages the fuller, coco-von-klemperer, is linked). Not linked: Charlotte Painter (Fremont) and Kasia Umholtz (Helix), named on their school's NCSA page with no profile address that answers. JV players with no row here are in data/jv-profiles.json.",
     "2026-11-13: reconciled with a fresh read of every MaxPreps roster (1,803 rows). Coaches had entered grades this file supplied for 48 players (Saratoga 21, Berkeley 12, Mission Bay 9, University City 6), every one equal to the recorded value, so those notes were dropped: MaxPreps now gives the grade. Bella Vista's McKenna Matson is spelled Mackenna on MaxPreps now (same career page). Saratoga's Kaylee Stone is off MaxPreps' roster, and so is Marin Catholic's empty Alexandra Schmidt row, a duplicate of Lexie Schmidt (the school's roster lists one Schmidt, Alexandra), whose record moved to Lexie's row. Saint Francis's Frankie Jones now wears 23/24 on MaxPreps (the school site, 24), Berkeley's Natalie Jones is listed F (the school paper's forward and midfielder is kept as a conflict), Berkeley's Anisa Alejandrino So., and Mission Bay's Olivia Lynch Sr., which unlinked a class-of-2030 SportsRecruits page accepted only while her row had no grade. Six JV-listed players joined their varsity rosters (Berkeley's Sage Murphy, Leland's Riley Salgado, Marin Catholic's Laurel and Scarlett Wu, Saint Francis's Quinn Gossett, Westview's Mia Essey), so their recruiting pages moved here from data/jv-profiles.json.",
-    "2026-11-13: Hudl's public team rosters and NCSA's field hockey school pages, for all 102 schools. Hudl was read through its public GraphQL endpoint (the one its public fan pages use; the doc's EAL route), every field hockey team of the 88 schools with rows, the current season's roster or, where a team has none, its latest (Christopher's team is labelled 2023 and Convent & Stuart Hall's 2022 even on profiles created in 2026). 78 public profiles of varsity-file rows not linked before were kept, each listing a field hockey team at the row's school, its overview naming the school, and its class year agreeing with the roster (Christopher's Johanna Canseco's page gives none; it names the school): Christopher 15, University 15, Saint Francis 13, Gilroy 9, Valley Christian 7, Berkeley 5 (all on Berkeley's JV team on Hudl; Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day), Convent 5, Mitty 4, St. Ignatius 3, Marin Catholic 1 (Lexie Schmidt, class of 2027) and Pleasant Valley 1. Given-name pages (Madison McDougall, Addison Paradiso, Alexandra Pires, Lexie Osaki) are linked on the school and class year. NCSA's school pages (read through WebFetch, 99 pages for the 88 schools, with the right slugs where a name redirects to a namesake school elsewhere: Valley Christian's are -10 and -7, Southwest's is southwest-senior-high-school) added four field hockey pages, each naming the school with a class year that agrees: Samantha Brunsell (St. Ignatius), Eleanor Navarrette (Mitty), Junali Dutta (Lynbrook) and Myla McCandless (Bishop's). An independent refuter re-opened every page and kept every one. Not linked: 96 Hudl roster entries of rostered players whose profiles are private (Valley Christian 22, La Costa Canyon 16, Pleasant Valley 9 and others); Hudl pages whose class year disagrees with the roster (among them four La Jolla Country Day pages a year earlier than the rows, which may mean the grades are off); second Hudl profiles for rows that already link one; NCSA listings with no profile address that answers (Dylan Powell, Maggie Magnano, Brooklyn Barnard, Charlotte Painter, Kasia Umholtz); and 16 FieldLevel pages from an address probe of the 1,688 varsity rows then on file, which give no class year or school. JV players' pages from the same sweep are in data/jv-profiles.json."
+    "2026-11-13: Hudl's public team rosters and NCSA's field hockey school pages, for all 102 schools. Hudl was read through its public GraphQL endpoint (the one its public fan pages use; the doc's EAL route), every field hockey team of the 88 schools with rows, the current season's roster or, where a team has none, its latest (Christopher's team is labelled 2023 and Convent & Stuart Hall's 2022 even on profiles created in 2026). 78 public profiles of varsity-file rows not linked before were kept, each listing a field hockey team at the row's school, its overview naming the school, and its class year agreeing with the roster (Christopher's Johanna Canseco's page gives none; it names the school): Christopher 15, University 15, Saint Francis 13, Gilroy 9, Valley Christian 7, Berkeley 5 (all on Berkeley's JV team on Hudl; Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day), Convent 5, Mitty 4, St. Ignatius 3, Marin Catholic 1 (Lexie Schmidt, class of 2027) and Pleasant Valley 1. Given-name pages (Madison McDougall, Addison Paradiso, Alexandra Pires, Lexie Osaki) are linked on the school and class year. NCSA's school pages (read through WebFetch, 99 pages for the 88 schools, with the right slugs where a name redirects to a namesake school elsewhere: Valley Christian's are -10 and -7, Southwest's is southwest-senior-high-school) added four field hockey pages, each naming the school with a class year that agrees: Samantha Brunsell (St. Ignatius), Eleanor Navarrette (Mitty), Junali Dutta (Lynbrook) and Myla McCandless (Bishop's). An independent refuter re-opened every page and kept every one. Not linked: 96 Hudl roster entries of rostered players whose profiles are private (Valley Christian 22, La Costa Canyon 16, Pleasant Valley 9 and others); Hudl pages whose class year disagrees with the roster (among them four La Jolla Country Day pages a year earlier than the rows, which may mean the grades are off); second Hudl profiles for rows that already link one; NCSA listings with no profile address that answers (Dylan Powell, Maggie Magnano, Brooklyn Barnard, Charlotte Painter, Kasia Umholtz); and 16 FieldLevel pages from an address probe of the 1,688 varsity rows then on file, which give no class year or school. JV players' pages from the same sweep are in data/jv-profiles.json.",
+    "2026-11-13, a search of four schools (Sobrato, Cupertino, Lynbrook and Homestead; 116 players: 72 varsity rows, 44 JV), the 20 Sobrato rows new to the roster that day: a SportsRecruits address probe in every sport (4,550 addresses, name variants and suffixes 1 to 12, every live page read, the bare ones also rendered twice under the 2026-11-13 rule), every Hudl team of the four schools in every sport for 2022 to 2026 and a Hudl name search for every player, NCSA's field hockey, lacrosse, soccer, softball, volleyball and basketball school pages and a guessed address for every player, and FieldLevel in eight sports. Six pages for five players were kept, each naming the school with a class year that agrees, and an independent refuter kept all six: Sobrato's Cameron Isle (Hudl and NCSA basketball), Lynbrook's Grace Cho (Hudl soccer), Cupertino's Allenah Watkins (NCSA field hockey, not on NCSA's school list), and Homestead's Olivia Leyton Bravo (NCSA field hockey) and Aalya Jain (NCSA softball). Not linked: an NCSA address under Sobrato goalkeeper Kinzie Rasley's name that serves a page headed 'Regan Stuart '28' (Sobrato field hockey goalkeeper, class of 2028) with her name nowhere on it; bare SportsRecruits pages (a class year, no school or place, even rendered); a private Hudl profile (Rebecca Frelich); namesakes. Grades the same day: Homestead's Sarah Anton (12), Sahana Gopinath (11), Renee Lam (10) and Elle Correia (10) from Stick Together's 2025 all-league lists (derived), and Olivia Leyton Bravo (10) and Rhea Ananthateerta (10) from The Epitaph's Nov 2, 2026 game review; Lynbrook's Trishna Sinha and Sahana Rajamani keep the school site's grade 11 (owner decision), with Stick Together's 2025 list, which would make Sinha 12 and Rajamani 10, recorded as conflicts."
   ],
   "season": "26-27",
   "teams": [
@@ -2527,7 +2528,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA profile names Cupertino High School, Cupertino, CA; class of 2028, forward. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/cupertino-high-school/allenah-watkins"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2779,7 +2787,15 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "NCSA softball profile names Homestead High School, Cupertino, CA; class of 2029; no position given. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "sport": "softball",
+              "url": "https://www.ncsasports.org/softball-recruiting/california/cupertino/homestead-high-school2/aalya-jain"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -2844,6 +2860,139 @@
           "positions": null,
           "profiles": [],
           "sourceName": null
+        },
+        {
+          "athleteId": "ea303ec3-3e3d-4837-be37-966002678ecb",
+          "conflicts": [],
+          "fullName": "Sarah Anton",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 All-SCVAL list (fall 2025): 'Sarah Anton Homestead Midfield 11', so 12 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "572c5679-a6a6-4434-805a-1bf3325c02e8",
+          "conflicts": [],
+          "fullName": "Sahana Gopinath",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Sahana Gopinath Homestead Midfield 10', so 11 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d7563ecb-c0f8-4fa3-bd8e-eea735411ed3",
+          "conflicts": [],
+          "fullName": "Renee Lam",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Renee Lam Homestead Midfield 9', so 10 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e91ee125-f490-4030-8c34-9672301ed1bd",
+          "conflicts": [],
+          "fullName": "Elle Correia",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "news",
+            "note": "Stick Together's 2025 all-league JV list (fall 2025): 'Elle Correia Homestead Defense 9', so 10 in 2026-27. Added 2026-11-13.",
+            "source": "https://www.sticktogetherfh.com/all-league-2025/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "24abcb87-a244-4189-9b36-b49c813aaf8b",
+          "conflicts": [],
+          "fullName": "Olivia Leyton Bravo",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "The Epitaph (Homestead's student paper), Nov 2, 2026 game review: 'left defender, sophomore Olivia Leyton Bravo'. Added 2026-11-13.",
+            "source": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "NCSA profile names Homestead High School, Cupertino, CA; class of 2029, defender; the class year agrees with the roster's grade 10. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/homestead-high-school2/olivia-leyton-bravo"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4e244520-e870-412f-bc47-eb17614930a3",
+          "conflicts": [],
+          "fullName": "Rhea Ananthateerta",
+          "grade": {
+            "confidence": "medium",
+            "derived": false,
+            "kind": "news",
+            "note": "The Epitaph (Homestead's student paper), Nov 2, 2026 game review: 'forward, sophomore Rhea Ananthateerta scored off a penalty corner'. Added 2026-11-13.",
+            "source": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "homestead",
@@ -2882,6 +3031,20 @@
           "kind": "news",
           "title": "hhsepitaph.com — The Epitaph (Homestead HS paper), 'JV field hockey scores big with large roster', Oct 29 2025: '...forward, freshman Emry Borges said.'",
           "url": "https://hhsepitaph.com/15706/sports/jv-field-hockey-scores-big-with-large-roster/"
+        },
+        {
+          "capturedAt": "2026-11-13",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "Stick Together, 2025 All-League (SCVAL and others): each honoree's school, position and grade in fall 2025; four Homestead grades derived from it (+1 year)",
+          "url": "https://www.sticktogetherfh.com/all-league-2025/"
+        },
+        {
+          "capturedAt": "2026-11-13",
+          "confidence": "medium",
+          "kind": "news",
+          "title": "The Epitaph (Homestead's student paper), Nov 2, 2026: 'Varsity girls field hockey pulls ahead of FHS Firebirds 3-2', naming two sophomores",
+          "url": "https://hhsepitaph.com/16760/sports/game-review-varsity-girls-field-hockey-pulls-ahead-of-fhs-firebirds-3-2/"
         }
       ]
     },
@@ -5585,7 +5748,15 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "Hudl soccer profile: class of 2027; on Lynbrook's girls JV soccer team on Hudl (LHS Girls JV Soccer, which Hudl files under Sunnyvale, CA) and it names Lynbrook High School, so it is linked on that. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "hudl",
+              "sport": "soccer",
+              "url": "https://www.hudl.com/profile/21385434"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -5759,7 +5930,16 @@
         },
         {
           "athleteId": "951518b2-a8ee-4288-96ad-a4c96bed10a4",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "news",
+              "note": "Stick Together's 2025 All-SCVAL El Camino list: 'Sahana Rajamani Lynbrook D, GK 9' for fall 2025, which would make her 10 now. The school's own page (Grade 11) is kept, on the owner's decision of 2026-11-13.",
+              "other": "10",
+              "source": "https://www.sticktogetherfh.com/all-league-2025/"
+            }
+          ],
           "fullName": "Sahana Rajamani",
           "grade": {
             "confidence": "medium",
@@ -5810,7 +5990,16 @@
         },
         {
           "athleteId": "3a4d9596-1a6d-46e5-972f-b44e9451c622",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "11",
+              "kind": "news",
+              "note": "Stick Together's 2025 All-SCVAL El Camino list: 'Junior of the Year Trishna Sinha Lynbrook 11' and 'Trishna Sinha Lynbrook Goalkeeper 11' for fall 2025, which would make her 12 now; its Sep 10, 2026 issue calls her 'Trishna Sinha (Lynbrook '27)' (https://www.sticktogetherfh.com/fall-hockey-is-here-norcal-is-ready/). The school's own page (Grade 11) is kept, on the owner's decision of 2026-11-13.",
+              "other": "12",
+              "source": "https://www.sticktogetherfh.com/all-league-2025/"
+            }
+          ],
           "fullName": "Trishna Sinha",
           "grade": {
             "confidence": "medium",
@@ -8168,7 +8357,37 @@
         "note": "The school's roster page (roster.php?sport=582) still shows the 2024-25 names, none of them current.",
         "status": "none"
       },
-      "players": [],
+      "players": [
+        {
+          "athleteId": "9ab9212d-e834-402e-8bc1-e0eeebc7a54e",
+          "conflicts": [],
+          "fullName": "Cameron Isle",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "Hudl basketball profile: class of 2027, Morgan Hill, CA; on Sobrato's girls varsity basketball team on Hudl (SHS Girls Varsity Basketball) and it names Ann Sobrato High School, so it is linked on that. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "hudl",
+              "sport": "basketball",
+              "url": "https://www.hudl.com/profile/21252956"
+            },
+            {
+              "classOf": 2027,
+              "note": "NCSA basketball profile names Ann Sobrato High School, Morgan Hill, CA; class of 2027, center/power forward. Found by the 2026-11-13 search of four schools and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "sport": "basketball",
+              "url": "https://www.ncsasports.org/womens-basketball-recruiting/california/morgan-hill/ann-sobrato-high-school1/cameron-isle"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "sobrato",
       "sources": [
         {
