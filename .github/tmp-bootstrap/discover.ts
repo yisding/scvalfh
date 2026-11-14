@@ -33,7 +33,7 @@ const main = async () => {
     }
     leagueOut[id] = entry;
   }
-  writeFileSync('.github/tmp-bootstrap/out/discover.json', JSON.stringify({ teams, leagues: leagueOut }, null, 1));
+  writeFileSync('.github/tmp-bootstrap/out/discover2.json', JSON.stringify({ teams, leagues: leagueOut }, null, 1));
   console.log('teams', Object.keys(teams).length, 'leagues', leagues.size);
 };
 main().catch((e) => {
