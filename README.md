@@ -402,7 +402,8 @@ season; run it by hand or weekly). The page encodes each athlete as a 38-element
 MaxPreps added `isClaimed` in November 2026; the parser reads both layouts and nothing else), so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
-a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
+a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; the "null Player #4" rows
+MaxPreps' stat entry creates for a number nobody is rostered under read "Player #4" unless another source names her (docs/DATA-SOURCES.md); a team whose fetch fails
 keeps its previous rows with `status: "carried-forward"`. Failures are scoped to the team, and
 `--leagues scval,bval` scopes a run to leagues, as `fetch-data --leagues` does: a league outside the
 run keeps its previous rows, and one league failing never stops another being read. A team no run

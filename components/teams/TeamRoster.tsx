@@ -258,6 +258,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
             <span className="min-w-0 flex-1">
               <span className="block text-body font-medium text-ink">
                 {row.name}
+                {row.nameElsewhere ? <ElsewhereMark /> : null}
                 {row.captain ? (
                   <>
                     {' '}
