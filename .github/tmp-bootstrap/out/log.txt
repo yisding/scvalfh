@@ -1,1 +1,1 @@
-teams 17 leagues 3
+teams 2 leagues 2
