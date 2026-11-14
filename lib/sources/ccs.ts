@@ -18,7 +18,7 @@
 import { CCS } from '../league-config/sections';
 import { SOURCE_LINKS } from '../season';
 import { SPORT } from '../sports/current';
-import type { CcsCalendarEvent, CcsDivisionName, CcsEventKind } from '../types';
+import type { CcsCalendarEvent, CcsEventKind } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
 export const CCS_ICAL_URL = SOURCE_LINKS.ccsCalendar;
@@ -203,7 +203,7 @@ export interface TournamentPageRead {
   /** true when the page carried at least one of the configured CCS bracket blocks; false = NOT READ, carry the previous state. */
   recognised: boolean;
   /** One entry per CCS division whose `<li id="bracket_<GUID>">` block the page carried, in config order. */
-  divisions: Array<{ name: CcsDivisionName; bracketId: string; published: boolean }>;
+  divisions: Array<{ name: string; bracketId: string; published: boolean }>;
   /** One line for the run log. */
   reason: string;
 }
@@ -233,9 +233,10 @@ export function readTournamentPage(html: string, tournament = CCS.tournament): T
   if (html.length < 2000) {
     return { recognised: false, divisions: [], reason: `page body is only ${html.length} bytes — not recognised` };
   }
-  const configured: Array<[CcsDivisionName, string]> = tournament === null ? [] : [
+  const configured: Array<[string, string]> = tournament === null ? [] : [
     ['Division 1', tournament.division1BracketId],
     ['Division 2', tournament.division2BracketId],
+    ...(tournament.otherBrackets ?? []).map((b): [string, string] => [b.name, b.id]),
   ];
   const divisions: TournamentPageRead['divisions'] = [];
   for (const [name, bracketId] of configured) {

@@ -216,7 +216,13 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
       const divisionsPublished = Object.fromEntries(
         CCS.ccsDivisions.map((d) => [d.name, page.divisions.find((p) => p.name === d.name)?.published ?? prev?.[d.name] ?? false]),
       ) as Record<CcsDivisionName, boolean>;
-      read.bracket = { bracketPublished: Object.values(divisionsPublished).some(Boolean), divisionsPublished };
+      // A championship whose divisions this site does not name (CCS.ccsDivisions empty: volleyball's Open Division
+      // and Divisions 1-5) is published once any of its bracket blocks is.
+      const bracketPublished = CCS.ccsDivisions.length === 0
+        ? page.divisions.some((d) => d.published)
+        : Object.values(divisionsPublished).some(Boolean);
+      // No per-division answer is stored where this site names no division: the schema's two keys are field hockey's.
+      read.bracket = CCS.ccsDivisions.length === 0 ? { bracketPublished } : { bracketPublished, divisionsPublished };
       ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus, rowCount: page.divisions.filter((d) => d.published).length });
       ctx.log(`  ccs bracket: ${page.reason}`);
     }

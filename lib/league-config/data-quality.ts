@@ -4,7 +4,7 @@
  * lib/leagues.ts assertLeagues() checks them against the config.
  */
 
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../sports/current';
 import type { DataQualityConfig } from './shape';
 
 /** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
@@ -502,8 +502,27 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   notCovered: [],
 };
 
+/** Volleyball's: MaxPreps rows that cannot be matches (read 2026-11-14). */
+const VOLLEYBALL_DATA_QUALITY: DataQualityConfig = {
+  ghostTeamIds: {
+    // A tournament's unset opponent has an id of its own (Los Altos' Menlo-Atherton and Spikefest rows), so the
+    // all-zero TBA rule does not catch it.
+    'b6e1f3f8-f345-4829-80a4-0653a9a36a1d': '“Tournament Opponent”: a MaxPreps placeholder for a tournament match whose opponent is not set, not a school',
+  },
+  excludedContestIds: {},
+  sbliveIgnoredTeamIds: {},
+  ignoredMaxprepsLeagueIds: {},
+  contestDateOverrides: {},
+  resultCorrections: {},
+  addedGames: [],
+  fixtureMoves: {},
+  notCovered: [],
+};
+
 export const DATA_QUALITY: DataQualityConfig = IS_FIELD_HOCKEY
   ? FIELD_HOCKEY_DATA_QUALITY
   : IS_BASKETBALL
     ? BASKETBALL_DATA_QUALITY
-    : SOCCER_DATA_QUALITY;
+    : IS_VOLLEYBALL
+      ? VOLLEYBALL_DATA_QUALITY
+      : SOCCER_DATA_QUALITY;

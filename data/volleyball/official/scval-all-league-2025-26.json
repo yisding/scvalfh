@@ -1,0 +1,817 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Volleyball",
+  "retrievedOn": "2026-11-14",
+  "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-25%20Volleyball%20Girls%27%20standings.pdf",
+  "transcription": "By hand, from pdftotext -layout of each PDF; each row is [player, school, position, year] as printed.",
+  "notes": [
+    "Records are W-L: a volleyball match cannot end level, so the PDF prints no ties and t is stored as 0.",
+    "The standings PDF's file name reads \"2025-25\"; its title and its rows are 2025-26's.",
+    "Each all-league document names an MVP and one all-league team with an honorable mention from each school; the varsity documents also name an Outstanding Senior, Junior, Sophomore and Freshman, who are on the team or the honorable mention list too. There is no second team.",
+    "The De Anza documents print a player's graduating class (\"2028\"), the El Camino ones her grade (\"10\"); both are stored as the grade.",
+    "The El Camino JV document spells Saratoga \"Saratgoa\" and prints the year of one of its players as \"7\", which is no high school grade, so that row has none.",
+    "The El Camino varsity document prints its Outstanding Freshman's position over two lines (\"OH/O\" and \"PP\"), read as OH/OPP.",
+    "JV membership is varsity's in both divisions."
+  ],
+  "blocks": [
+    {
+      "division": "de-anza",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20All%20League%20GVB%20DeAnza%20Varsity.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Aviya Russo",
+          "school": "Los Altos",
+          "position": "OH",
+          "year": "2026"
+        },
+        {
+          "award": "Outstanding Senior",
+          "player": "Megan Lee",
+          "school": "Homestead",
+          "position": "OH",
+          "year": "2026"
+        },
+        {
+          "award": "Outstanding Junior",
+          "player": "Maura Hambly",
+          "school": "Palo Alto",
+          "position": "OH",
+          "year": "2027"
+        },
+        {
+          "award": "Outstanding Sophomore",
+          "player": "Kate Langner",
+          "school": "Los Gatos",
+          "position": "OH",
+          "year": "2028"
+        },
+        {
+          "award": "Outstanding Freshman",
+          "player": "Angela Deng",
+          "school": "Los Altos",
+          "position": "S",
+          "year": "2029"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Ella McFarlane",
+          "Los Altos",
+          "MB",
+          "2026"
+        ],
+        [
+          "Evelyn Zhang",
+          "Los Altos",
+          "MB",
+          "2026"
+        ],
+        [
+          "Ana Heath",
+          "Los Altos",
+          "Lib",
+          "2026"
+        ],
+        [
+          "Angela Deng",
+          "Los Altos",
+          "S",
+          "2029"
+        ],
+        [
+          "Megan Lee",
+          "Homestead",
+          "OH",
+          "2026"
+        ],
+        [
+          "Katie Hamburger",
+          "Homestead",
+          "OH",
+          "2028"
+        ],
+        [
+          "Natalie Chen",
+          "Homestead",
+          "Lib",
+          "2026"
+        ],
+        [
+          "Linnaea Moore",
+          "Homestead",
+          "MB",
+          "2026"
+        ],
+        [
+          "Maura Hambly",
+          "Palo Alto",
+          "OH",
+          "2027"
+        ],
+        [
+          "Olivia Roper",
+          "Palo Alto",
+          "OPP",
+          "2028"
+        ],
+        [
+          "Reese Japic",
+          "Palo Alto",
+          "OH",
+          "2026"
+        ],
+        [
+          "Emily Mulkey",
+          "Palo Alto",
+          "MB",
+          "2026"
+        ],
+        [
+          "Portia Zeidler",
+          "Los Gatos",
+          "RS/MB",
+          "2026"
+        ],
+        [
+          "Sadie Bins",
+          "Los Gatos",
+          "MB",
+          "2027"
+        ],
+        [
+          "Kate Langner",
+          "Los Gatos",
+          "OH",
+          "2028"
+        ],
+        [
+          "Sara Svihovec",
+          "Milpitas",
+          "OH",
+          "2026"
+        ],
+        [
+          "Natasha Lacuzong",
+          "Milpitas",
+          "MB",
+          "2026"
+        ],
+        [
+          "Chloe Chen",
+          "Monta Vista",
+          "S/Opp",
+          "2026"
+        ],
+        [
+          "Kylee Mark",
+          "Monta Vista",
+          "S/Opp",
+          "2027"
+        ],
+        [
+          "Halle Pattisson",
+          "Mountain View",
+          "OH",
+          "2027"
+        ]
+      ],
+      "secondTeam": [],
+      "thirdTeam": [],
+      "honorableMention": [
+        [
+          "Kat Minkevich",
+          "Los Altos",
+          "OP",
+          "2029"
+        ],
+        [
+          "Elizabeth Jerian",
+          "Palo Alto",
+          "OH",
+          "2027"
+        ],
+        [
+          "Lilian Logan",
+          "Homestead",
+          "S",
+          "2027"
+        ],
+        [
+          "Annette Bassani",
+          "Los Gatos",
+          "DS",
+          "2026"
+        ],
+        [
+          "Audrie Huang",
+          "Milpitas",
+          "Pin",
+          "2027"
+        ],
+        [
+          "Srahi Bobbili",
+          "Monta Vista",
+          "L",
+          "2028"
+        ],
+        [
+          "Juliet Kao",
+          "Mountain View",
+          "S",
+          "2029"
+        ]
+      ]
+    },
+    {
+      "division": "de-anza",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20DeAnza%20JV.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Lulu Farwell",
+          "school": "Los Gatos",
+          "position": "OH",
+          "year": "2029"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Camila Aramburo",
+          "Mountain View",
+          "L",
+          "2028"
+        ],
+        [
+          "Kimiko Aquino",
+          "Mountain View",
+          "L",
+          "2028"
+        ],
+        [
+          "Madeline Ting",
+          "Mountain View",
+          "S",
+          "2029"
+        ],
+        [
+          "Calla Holtshouse",
+          "Mountain View",
+          "S",
+          "2029"
+        ],
+        [
+          "Quinn Harr",
+          "Los Gatos",
+          "OH",
+          "2028"
+        ],
+        [
+          "Emma Jin",
+          "Los Gatos",
+          "M",
+          "2028"
+        ],
+        [
+          "Maddie De Smet",
+          "Los Gatos",
+          "S",
+          "2028"
+        ],
+        [
+          "Lydia Liu",
+          "Los Gatos",
+          "L",
+          "2028"
+        ],
+        [
+          "Kiara Fossati-Moiane",
+          "Palo Alto",
+          "S/OPP",
+          "2029"
+        ],
+        [
+          "Naia Tormala",
+          "Palo Alto",
+          "MB",
+          "2028"
+        ],
+        [
+          "Autumn Cleland",
+          "Palo Alto",
+          "OPP",
+          "2029"
+        ],
+        [
+          "Olivia Jamin",
+          "Milpitas",
+          "M",
+          "2028"
+        ],
+        [
+          "Cielo Valle",
+          "Milpitas",
+          "S",
+          "2028"
+        ],
+        [
+          "Katie Cao",
+          "Milpitas",
+          "OH/DS",
+          "2028"
+        ],
+        [
+          "Clarissa Tick",
+          "Monta Vista",
+          "S/OPP",
+          "2028"
+        ],
+        [
+          "Ariel Yu",
+          "Monta Vista",
+          "MB",
+          "2028"
+        ],
+        [
+          "Evelyn Su",
+          "Homestead",
+          "Libero",
+          "2029"
+        ],
+        [
+          "Julia Bjornsson",
+          "Homestead",
+          "OH",
+          "2029"
+        ],
+        [
+          "Emmeline Liao",
+          "Los Altos",
+          "Libero",
+          "2029"
+        ]
+      ],
+      "secondTeam": [],
+      "thirdTeam": [],
+      "honorableMention": [
+        [
+          "Vedika Raman",
+          "Mountain View",
+          "OH",
+          "2029"
+        ],
+        [
+          "Audrey Renski",
+          "Los Gatos",
+          "DS",
+          "2028"
+        ],
+        [
+          "Eve Dixon",
+          "Palo Alto",
+          "OH",
+          "2029"
+        ],
+        [
+          "Emma Tam",
+          "Milpitas",
+          "DS",
+          "2029"
+        ],
+        [
+          "Maggie Lu",
+          "Monta Vista",
+          "RS",
+          "2028"
+        ],
+        [
+          "Vivienne (Bella) Pablo",
+          "Homestead",
+          "Setter",
+          "2029"
+        ],
+        [
+          "Kailani Ing",
+          "Los Altos",
+          "S",
+          "2029"
+        ]
+      ]
+    },
+    {
+      "division": "el-camino",
+      "level": "varsity",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20El%20Camino%20Varsity.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Sophia Song",
+          "school": "Cupertino",
+          "position": "S/OPP",
+          "year": "12"
+        },
+        {
+          "award": "Outstanding Senior",
+          "player": "Kelsy Mock",
+          "school": "Wilcox",
+          "position": "S",
+          "year": "12"
+        },
+        {
+          "award": "Outstanding Junior",
+          "player": "Sienna Spencer",
+          "school": "Wilcox",
+          "position": "L",
+          "year": "11"
+        },
+        {
+          "award": "Outstanding Sophomore",
+          "player": "Miya Tang",
+          "school": "Lynbrook",
+          "position": "OH",
+          "year": "10"
+        },
+        {
+          "award": "Outstanding Freshman",
+          "player": "Nina Blanusa",
+          "school": "MacDonald",
+          "position": "OH/OPP",
+          "year": "9"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Claire Chien",
+          "Cupertino",
+          "M/S",
+          "10"
+        ],
+        [
+          "Miranda Zeng",
+          "Cupertino",
+          "S",
+          "12"
+        ],
+        [
+          "April Pamichev",
+          "Cupertino",
+          "OH",
+          "11"
+        ],
+        [
+          "Natalie Baker",
+          "Cupertino",
+          "L",
+          "10"
+        ],
+        [
+          "Aanya Hotha",
+          "Saratoga",
+          "M",
+          "11"
+        ],
+        [
+          "Iris jin",
+          "Saratoga",
+          "S",
+          "11"
+        ],
+        [
+          "Chloe Zeng",
+          "Saratoga",
+          "OH",
+          "10"
+        ],
+        [
+          "Morgan Li",
+          "Saratoga",
+          "L",
+          "11"
+        ],
+        [
+          "Ninya Udinoor",
+          "Santa Clara",
+          "L",
+          "12"
+        ],
+        [
+          "Sitara Gunapu",
+          "Santa Clara",
+          "MB",
+          "10"
+        ],
+        [
+          "Naomi Hunt",
+          "Santa Clara",
+          "OH",
+          "12"
+        ],
+        [
+          "Jessica Jacobson",
+          "Gunn",
+          "OH",
+          "10"
+        ],
+        [
+          "Grace Wong",
+          "Gunn",
+          "L",
+          "11"
+        ],
+        [
+          "Audra Yuan",
+          "Gunn",
+          "S",
+          "11"
+        ],
+        [
+          "Kelsy Mock",
+          "Wilcox",
+          "S",
+          "12"
+        ],
+        [
+          "Hanako Stone",
+          "Wilcox",
+          "OH",
+          "12"
+        ],
+        [
+          "Ivy Kuo",
+          "Lynbrook",
+          "S",
+          "10"
+        ],
+        [
+          "Keyi Xue",
+          "Lynbrook",
+          "OH",
+          "11"
+        ],
+        [
+          "Natalie Escalera",
+          "Fremont",
+          "OH",
+          "12"
+        ],
+        [
+          "Nina Blanusa",
+          "MacDonald",
+          "OH/RS",
+          "9"
+        ]
+      ],
+      "secondTeam": [],
+      "thirdTeam": [],
+      "honorableMention": [
+        [
+          "Angela Wang",
+          "Cupertino",
+          "OH",
+          "10"
+        ],
+        [
+          "Siena Ward",
+          "Saratoga",
+          "OH",
+          "9"
+        ],
+        [
+          "Linnea Martin",
+          "Santa Clara",
+          "S",
+          "12"
+        ],
+        [
+          "Elizabeth Tanriverdi",
+          "Gunn",
+          "OH",
+          "10"
+        ],
+        [
+          "Sienna Spencer",
+          "Wilcox",
+          "LIB",
+          "11"
+        ],
+        [
+          "Chelsea Li",
+          "Lynbrook",
+          "MB",
+          "12"
+        ],
+        [
+          "Zoe Shie",
+          "Fremont",
+          "LIB",
+          "12"
+        ],
+        [
+          "Gillian Mabilin",
+          "MacDonald",
+          "OH/RS",
+          "11"
+        ]
+      ]
+    },
+    {
+      "division": "el-camino",
+      "level": "jv",
+      "pdf": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20El%20Camino%20JV.pdf",
+      "overall": [
+        {
+          "award": "MVP",
+          "player": "Sofia Wilkinson",
+          "school": "Cupertino",
+          "position": "S",
+          "year": "9"
+        }
+      ],
+      "firstTeam": [
+        [
+          "Mika Lamburn",
+          "Cupertino",
+          "OH/DS",
+          "9"
+        ],
+        [
+          "Kaylin McCulloch",
+          "Cupertino",
+          "L",
+          "10"
+        ],
+        [
+          "Jenna Chang",
+          "Cupertino",
+          "M",
+          "9"
+        ],
+        [
+          "Zoe Wang",
+          "Cupertino",
+          "OH",
+          "10"
+        ],
+        [
+          "Chloe Hsieh",
+          "Lynbrook",
+          "OH",
+          "9"
+        ],
+        [
+          "Chantelle Ho",
+          "Lynbrook",
+          "S",
+          "10"
+        ],
+        [
+          "Melody Zeng",
+          "Lynbrook",
+          "DS/OH",
+          "10"
+        ],
+        [
+          "Laila Cheung",
+          "Lynbrook",
+          "OH",
+          "11"
+        ],
+        [
+          "Niya Udinoor",
+          "Santa Clara",
+          "S",
+          "9"
+        ],
+        [
+          "Emmalee Chan",
+          "Santa Clara",
+          "OP",
+          "10"
+        ],
+        [
+          "Reya Sharma",
+          "Santa Clara",
+          "L/DS",
+          "9"
+        ],
+        [
+          "Aria Mehra",
+          "Saratgoa",
+          "M",
+          "9"
+        ],
+        [
+          "YuenJen Li",
+          "Saratgoa",
+          "OH",
+          "10"
+        ],
+        [
+          "Kaylan Shab",
+          "Saratgoa",
+          "S",
+          "7"
+        ],
+        [
+          "Lily Cox",
+          "Gunn",
+          "M",
+          "9"
+        ],
+        [
+          "Tammy Kathuria",
+          "Gunn",
+          "OH",
+          "10"
+        ],
+        [
+          "Aniya Rosario",
+          "MacDonald",
+          "Libero",
+          "9"
+        ],
+        [
+          "Alana Phan-Rodriguez",
+          "Macdonald",
+          "Setter",
+          "9"
+        ],
+        [
+          "Isabella Del Vecchio",
+          "Fremont",
+          "Libero",
+          "10"
+        ],
+        [
+          "Adeline Raffetto",
+          "Wilcox",
+          "Setter",
+          "9"
+        ]
+      ],
+      "secondTeam": [],
+      "thirdTeam": [],
+      "honorableMention": [
+        [
+          "Grace Tsai",
+          "Cupertino",
+          "DS/OH",
+          "9"
+        ],
+        [
+          "Yufei Wu",
+          "Lynbrook",
+          "RS",
+          "9"
+        ],
+        [
+          "Keira Que",
+          "Santa Clara",
+          "L/DS",
+          "9"
+        ],
+        [
+          "Serena Wu",
+          "Saratoga",
+          "OH",
+          "9"
+        ],
+        [
+          "Kailyn Tsui",
+          "Gunn",
+          "L",
+          "9"
+        ],
+        [
+          "Nayla Castro",
+          "MacDonald",
+          "OH",
+          "9"
+        ],
+        [
+          "Adiya Doshayeva",
+          "Fremont",
+          "OH",
+          "9"
+        ],
+        [
+          "Kailaya Estrada",
+          "Wilcox",
+          "L",
+          "9"
+        ]
+      ]
+    }
+  ],
+  "schoolSpellings": {
+    "Saratgoa": "Saratoga"
+  },
+  "unreadableYears": [
+    {
+      "player": "Kaylan Shab",
+      "printed": "7"
+    }
+  ]
+}

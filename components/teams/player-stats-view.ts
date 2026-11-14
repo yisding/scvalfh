@@ -39,6 +39,8 @@ import type { Game, TeamSlug } from '../../lib/types';
 
 /** Whether this build's stat line is basketball's (`Sport.stats.model`): one line per player, no goalkeepers. */
 const BASKETBALL = SPORT.stats.model === 'basketball';
+/** Whether it is volleyball's: one line per player too, its rates per set played. */
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
 
 export interface StatColumn {
   key: string;
@@ -119,6 +121,8 @@ export interface PlayerStatsView {
   tables?: NamedStatTable[];
   /** Some table shows a figure this site works out from the entered totals (a per-game rate, a percentage). */
   showsDerived?: boolean;
+  /** The derived rates are per set played (volleyball), not per game: the legend says which. */
+  ratesPerSet?: boolean;
   /** Points are on the scoring table: the legend explains MaxPreps' 2-per-goal rule. */
   showsPoints: boolean;
   /** Some goalkeeper card shows a Save %, which this site works out: the footnote says how. */
@@ -378,6 +382,8 @@ interface BasketballColumn extends StatColumn {
   value: (f: Line) => number | null;
   /** Printed to one decimal (a rate or a percentage) rather than as a whole count. */
   derived?: boolean;
+  /** The decimals a derived cell prints, where not one: a hitting percentage is '.214'. */
+  digits?: number;
 }
 const total = (key: string): Pick<BasketballColumn, 'needs' | 'value'> => ({ needs: [key], value: (f) => f[key] ?? null });
 const rate = (key: string): Pick<BasketballColumn, 'needs' | 'value' | 'derived'> => ({
@@ -436,6 +442,97 @@ const BASKETBALL_TABLES: ReadonlyArray<{ id: string; kicker: string; captionWord
   },
 ];
 
+/** A per-set rate (volleyball): the total over the sets the player played. */
+const perSet = (key: string): Pick<BasketballColumn, 'needs' | 'value' | 'derived'> => ({
+  needs: [key, 'setsPlayed'],
+  value: (f) => perGameRate(f[key], f.setsPlayed),
+  derived: true,
+});
+
+/** Kills less errors over attempts, the hitting percentage volleyball prints to three places; null with no attempt. */
+export function hittingPercent(kills: number | null | undefined, errors: number | null | undefined, attempts: number | null | undefined): number | null {
+  return typeof kills === 'number' && typeof errors === 'number' && typeof attempts === 'number' && attempts > 0
+    ? (kills - errors) / attempts
+    : null;
+}
+
+/** Solo blocks plus half the block assists: MaxPreps' "total blocks", which a team's sheet adds up the same way. */
+export function totalBlocks(solo: number | null | undefined, assists: number | null | undefined): number | null {
+  if (typeof solo !== 'number' && typeof assists !== 'number') return null;
+  return (solo ?? 0) + (assists ?? 0) / 2;
+}
+
+/** A hitting percentage as volleyball prints it: '.214', '-.050', '1.000'. */
+export function threeDecimals(value: number): string {
+  const text = Math.abs(value).toFixed(3);
+  const shown = text.startsWith('0') ? text.slice(1) : text;
+  return value < 0 && Number(text) !== 0 ? `-${shown}` : shown;
+}
+
+/**
+ * Volleyball's team-page tables, at most five numeric columns each like basketball's. A column appears only
+ * when the team tracks every stat it needs.
+ */
+const VOLLEYBALL_TABLES: ReadonlyArray<{ id: string; kicker: string; captionWords: string; columns: readonly BasketballColumn[] }> = [
+  {
+    id: 'attacking', kicker: 'Attacking', captionWords: 'attacking',
+    columns: [
+      { key: 'setsPlayed', label: 'SP', title: 'Sets played', ...total('setsPlayed') },
+      { key: 'kills', label: 'K', title: 'Kills', ...total('kills') },
+      { key: 'killsPerSet', label: 'K/S', title: 'Kills per set', ...perSet('kills') },
+      { key: 'attackErrors', label: 'E', title: 'Attack errors', ...total('attackErrors') },
+      {
+        key: 'hittingPercent', label: 'Hit%', title: 'Hitting percentage',
+        needs: ['kills', 'attackErrors', 'attackAttempts'],
+        value: (f) => hittingPercent(f.kills, f.attackErrors, f.attackAttempts),
+        derived: true, digits: 3,
+      },
+    ],
+  },
+  {
+    id: 'serving', kicker: 'Serving', captionWords: 'serving',
+    columns: [
+      { key: 'aces', label: 'A', title: 'Aces', ...total('aces') },
+      { key: 'acesPerSet', label: 'A/S', title: 'Aces per set', ...perSet('aces') },
+      { key: 'serveAttempts', label: 'SA', title: 'Serve attempts', ...total('serveAttempts') },
+      { key: 'serveErrors', label: 'SE', title: 'Serve errors', ...total('serveErrors') },
+    ],
+  },
+  {
+    id: 'defense', kicker: 'Blocking and digs', captionWords: 'blocking and digs',
+    columns: [
+      { key: 'soloBlocks', label: 'BS', title: 'Solo blocks', ...total('soloBlocks') },
+      { key: 'blockAssists', label: 'BA', title: 'Block assists', ...total('blockAssists') },
+      { key: 'digs', label: 'D', title: 'Digs', ...total('digs') },
+      { key: 'digsPerSet', label: 'D/S', title: 'Digs per set', ...perSet('digs') },
+    ],
+  },
+  {
+    id: 'passing', kicker: 'Setting and serve receive', captionWords: 'assists and serve receive',
+    columns: [
+      { key: 'assists', label: 'Ast', title: 'Assists', ...total('assists') },
+      { key: 'assistsPerSet', label: 'Ast/S', title: 'Assists per set', ...perSet('assists') },
+      { key: 'receptions', label: 'R', title: 'Serve receptions', ...total('receptions') },
+      { key: 'receptionErrors', label: 'RE', title: 'Serve reception errors', ...total('receptionErrors') },
+    ],
+  },
+];
+
+/** Most kills first, then digs, assists and sets; the name breaks what is left. */
+function byKills(a: PlayerStatLine, b: PlayerStatLine): number {
+  const v = (p: PlayerStatLine, k: string) => (p.field as Line | null)?.[k] ?? -1;
+  return (
+    v(b, 'kills') - v(a, 'kills') ||
+    v(b, 'digs') - v(a, 'digs') ||
+    v(b, 'assists') - v(a, 'assists') ||
+    v(b, 'setsPlayed') - v(a, 'setsPlayed') ||
+    a.fullName.localeCompare(b.fullName)
+  );
+}
+
+/** The build's sport's line tables and row order (basketball's, or volleyball's). */
+const LINE_TABLES = VOLLEYBALL ? VOLLEYBALL_TABLES : BASKETBALL_TABLES;
+
 /** Most points first, then rebounds, assists and games; the name breaks what is left. */
 function byPoints(a: PlayerStatLine, b: PlayerStatLine): number {
   const v = (p: PlayerStatLine, k: string) => (p.field as Line | null)?.[k] ?? -1;
@@ -449,15 +546,15 @@ function byPoints(a: PlayerStatLine, b: PlayerStatLine): number {
 }
 
 /**
- * Basketball's tables for a team: every player with a line, most points first, the same order in every
- * table so a reader can follow one player down the page. A table none of whose columns the team tracks is
- * left out.
+ * Basketball's (or volleyball's) tables for a team: every player with a line, most points (kills) first, the
+ * same order in every table so a reader can follow one player down the page. A table none of whose columns
+ * the team tracks is left out.
  */
 export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' | 'players'>): NamedStatTable[] {
   const tracked = new Set<string>(team.tracked.field);
-  const players = team.players.filter((p) => p.field !== null).sort(byPoints);
+  const players = team.players.filter((p) => p.field !== null).sort(VOLLEYBALL ? byKills : byPoints);
   const out: NamedStatTable[] = [];
-  for (const spec of BASKETBALL_TABLES) {
+  for (const spec of LINE_TABLES) {
     const columns = spec.columns.filter((c) => c.needs.every((k) => tracked.has(k)));
     if (columns.length === 0) continue;
     const rows: StatRow[] = players.map((p, i) => {
@@ -467,7 +564,7 @@ export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' 
         name: p.fullName,
         jersey: p.jersey,
         values,
-        texts: columns.map((c, at) => (values[at] === null ? null : c.derived ? oneDecimal(values[at]!) : String(Math.round(values[at]!)))),
+        texts: columns.map((c, at) => (values[at] === null ? null : c.derived ? (c.digits === 3 ? threeDecimals(values[at]!) : oneDecimal(values[at]!)) : String(Math.round(values[at]!)))),
         noted: false,
       };
     });
@@ -483,7 +580,7 @@ export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' 
 }
 
 /** Whether a basketball column is worked out here rather than entered (a per-game rate, a percentage). */
-const BASKETBALL_DERIVED = new Set(BASKETBALL_TABLES.flatMap((t) => t.columns.filter((c) => c.derived).map((c) => c.key)));
+const BASKETBALL_DERIVED = new Set(LINE_TABLES.flatMap((t) => t.columns.filter((c) => c.derived).map((c) => c.key)));
 
 /**
  * The player stats section for any registry team, in every league. null only for a slug
@@ -512,7 +609,7 @@ export function buildPlayerStatsView(
 
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
   const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
-  if (BASKETBALL) {
+  if (BASKETBALL || VOLLEYBALL) {
     const tables = basketballTables(team);
     return {
       teamName: team.name,
@@ -525,6 +622,7 @@ export function buildPlayerStatsView(
       goalies: [],
       tables,
       showsDerived: tables.some((t) => t.table.columns.some((c) => BASKETBALL_DERIVED.has(c.key))),
+      ...(VOLLEYBALL ? { ratesPerSet: true } : {}),
       showsPoints: false,
       showsSavePercent: false,
       notedGames: [],

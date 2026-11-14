@@ -13,6 +13,8 @@ import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
 import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
+import { BVAL_VOLLEYBALL_SEEDS } from '../lib/registry/volleyball/bval';
+import { SCVAL_VOLLEYBALL_SEEDS } from '../lib/registry/volleyball/scval';
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/schools/mascots';
 import { TEAMS } from '../lib/teams';
 
@@ -28,6 +30,8 @@ const STEMS = [
     ...SCVAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...BVAL_SOCCER_SEEDS.map((s) => s.slug),
     ...BVAL_BASKETBALL_SEEDS.map((s) => s.slug),
+    ...SCVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
+    ...BVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot),
   ]),
 ];

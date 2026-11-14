@@ -24,7 +24,7 @@ import type {
 } from '../../lib/players/player-stats-schema';
 import { SPORT } from '../../lib/sports/current';
 import type { Game, Team, TeamId } from '../../lib/types';
-import { gamesSinceUpdate, oneDecimal, perGameRate, savePercent, shootingPercent } from '../teams/player-stats-view';
+import { gamesSinceUpdate, hittingPercent, oneDecimal, perGameRate, savePercent, shootingPercent, threeDecimals } from '../teams/player-stats-view';
 import { plural } from '../words/plural';
 import { positionWords } from '../words/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
@@ -215,23 +215,28 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
  * (rounded up), so two big nights do not lead a season board; before a team's sheet tracks games played
  * nobody on it has a per-game figure.
  */
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
+/** What a rate board divides by: games played, or in volleyball sets played (MaxPreps' "SP"). */
+const APPEARANCES: { key: 'gamesPlayed' | 'setsPlayed'; label: string; title: string; noun: string } = VOLLEYBALL
+  ? { key: 'setsPlayed', label: 'SP', title: 'Sets played', noun: 'sets' }
+  : { key: 'gamesPlayed', label: 'GP', title: 'Games played', noun: 'games' };
 function enoughGames(e: PlayerEntry): boolean {
-  const games = e.player.field?.gamesPlayed ?? null;
+  const games = e.player.field?.[APPEARANCES.key] ?? null;
   if (games === null || games <= 0) return false;
-  const most = Math.max(0, ...e.stats.players.map((p) => p.field?.gamesPlayed ?? 0));
+  const most = Math.max(0, ...e.stats.players.map((p) => p.field?.[APPEARANCES.key] ?? 0));
   return games >= Math.ceil(most / 2);
 }
-const PER_GAME_RULE = 'A player needs at least half as many games as the teammate credited with the most.';
+const PER_GAME_RULE = `A player needs at least half as many ${APPEARANCES.noun} as the teammate credited with the most.`;
 /** A per-game figure as the board prints and ranks it (one decimal), or null under the games rule. */
 const perGame = (key: FieldStatKey) => (e: PlayerEntry): number | null => {
-  const v = enoughGames(e) ? perGameRate(e.player.field?.[key], e.player.field?.gamesPlayed) : null;
+  const v = enoughGames(e) ? perGameRate(e.player.field?.[key], e.player.field?.[APPEARANCES.key]) : null;
   return v === null ? null : tenths(v);
 };
 const perGameCell = (key: FieldStatKey) => (e: PlayerEntry) => {
-  const v = perGameRate(e.player.field?.[key], e.player.field?.gamesPlayed);
+  const v = perGameRate(e.player.field?.[key], e.player.field?.[APPEARANCES.key]);
   return { text: v === null ? null : oneDecimal(v) };
 };
-const GP_COLUMN: LeaderColumnSpec<PlayerEntry> = { key: 'gamesPlayed', label: 'GP', title: 'Games played', cell: field('gamesPlayed') };
+const GP_COLUMN: LeaderColumnSpec<PlayerEntry> = { key: APPEARANCES.key, label: APPEARANCES.label, title: APPEARANCES.title, cell: field(APPEARANCES.key) };
 
 function perGameBoard(spec: { id: string; title: string; navLabel: string; statWord: string; key: FieldStatKey; column: LeaderColumnSpec<PlayerEntry>; per: { label: string; title: string } }): PlayerBoardSpec {
   return {
@@ -304,8 +309,53 @@ const BASKETBALL_PLAYER_BOARDS: PlayerBoardSpec[] = [
   }),
 ];
 
+/** Volleyball's player boards (`Sport.stats.model` 'volleyball'): four per-set rates, then two season totals. */
+const VOLLEYBALL_PLAYER_BOARDS: PlayerBoardSpec[] = [
+  perGameBoard({
+    id: 'kills-per-set', title: 'Most kills per set', navLabel: 'Kills', statWord: 'kills', key: 'kills',
+    column: { key: 'kills', label: 'K', title: 'Kills', cell: field('kills') },
+    per: { label: 'K/S', title: 'Kills per set' },
+  }),
+  perGameBoard({
+    id: 'aces-per-set', title: 'Most aces per set', navLabel: 'Aces', statWord: 'aces', key: 'aces',
+    column: { key: 'aces', label: 'A', title: 'Aces', cell: field('aces') },
+    per: { label: 'A/S', title: 'Aces per set' },
+  }),
+  perGameBoard({
+    id: 'digs-per-set', title: 'Most digs per set', navLabel: 'Digs', statWord: 'digs', key: 'digs',
+    column: { key: 'digs', label: 'D', title: 'Digs', cell: field('digs') },
+    per: { label: 'D/S', title: 'Digs per set' },
+  }),
+  perGameBoard({
+    id: 'assists-per-set', title: 'Most assists per set', navLabel: 'Assists', statWord: 'assists', key: 'assists',
+    column: { key: 'assists', label: 'Ast', title: 'Assists', cell: field('assists') },
+    per: { label: 'Ast/S', title: 'Assists per set' },
+  }),
+  totalBoard({
+    id: 'most-kills', title: 'Most kills', navLabel: 'Total kills', statWord: 'kills', key: 'kills',
+    column: { key: 'kills', label: 'K', title: 'Kills', cell: field('kills') },
+    extra: {
+      key: 'hittingPct',
+      label: 'Hit%',
+      title: 'Hitting percentage',
+      cell: (e) => {
+        const v = hittingPercent(e.player.field?.kills, e.player.field?.attackErrors, e.player.field?.attackAttempts);
+        return { text: v === null ? null : threeDecimals(v) };
+      },
+    },
+    lead: 'Kills as the coach entered them, for the season; Hit% is kills less errors over attempts, where the coach enters all three.',
+  }),
+  totalBoard({
+    id: 'most-blocks', title: 'Most solo blocks', navLabel: 'Blocks', statWord: 'solo blocks', key: 'soloBlocks',
+    column: { key: 'soloBlocks', label: 'BS', title: 'Solo blocks', cell: field('soloBlocks') },
+    extra: { key: 'blockAssists', label: 'BA', title: 'Block assists', cell: field('blockAssists') },
+    lead: 'Solo blocks as the coach entered them, for the season, with block assists beside them.',
+  }),
+];
+
 /** The build's sport's boards. */
-const BOARDS: readonly PlayerBoardSpec[] = SPORT.stats.model === 'basketball' ? BASKETBALL_PLAYER_BOARDS : PLAYER_BOARDS;
+const BOARDS: readonly PlayerBoardSpec[] =
+  SPORT.stats.model === 'basketball' ? BASKETBALL_PLAYER_BOARDS : VOLLEYBALL ? VOLLEYBALL_PLAYER_BOARDS : PLAYER_BOARDS;
 
 /** The grade and position(s) the team page's roster prints for a player, only those it has. */
 function playerFacts(p: RosterSource['players'][number]): string[] {

@@ -48,6 +48,16 @@ export interface Transcription {
   transcription: string;
   /** Sport-specific facts for the provenance notes. */
   notes: string[];
+  /**
+   * A school a document misspells past what the registry resolves ("Saratgoa"), and the school it is. The row
+   * keeps the document's spelling; only the join to a team reads this.
+   */
+  schoolSpellings?: Readonly<Record<string, string>>;
+  /**
+   * Rows whose printed year is no grade and cannot be read as one (a "7" on a JV row): stored with no grade.
+   * Each names the player and the year as printed, so nothing else is let through.
+   */
+  unreadableYears?: ReadonlyArray<{ player: string; printed: string }>;
   blocks: TranscribedBlock[];
 }
 
@@ -59,9 +69,17 @@ const YEAR_WORDS: Readonly<Record<string, number>> = {
   sr: 12, senior: 12,
 };
 
+/** The calendar year the archive's seniors graduate in: the 2025-26 school year's class of 2026. */
+const SENIOR_CLASS = 2026;
+
 export function gradeOf(raw: string): number | null {
   const t = raw.trim().toLowerCase();
   if (/^(9|10|11|12)$/.test(t)) return Number(t);
+  // A graduating class ("2028": a sophomore of 2025-26), as the girls volleyball De Anza documents print it.
+  if (/^20\d\d$/.test(t)) {
+    const grade = 12 - (Number(t) - SENIOR_CLASS);
+    return grade >= 9 && grade <= 12 ? grade : null;
+  }
   return YEAR_WORDS[t] ?? null;
 }
 
@@ -92,7 +110,7 @@ export async function buildScvalDocumentsHistory(opts: {
 
   const scvalSlugs = new Set(teamsInLeague('scval').map((t) => t.slug));
   const slugOf = (name: string): string | null => {
-    const team = resolveTeam(name);
+    const team = resolveTeam(tr.schoolSpellings?.[name] ?? name);
     return team && scvalSlugs.has(team.slug) ? team.slug : null;
   };
 
@@ -122,9 +140,11 @@ export async function buildScvalDocumentsHistory(opts: {
   const player = ([name, school, position, year]: TranscribedRow, where: string) => {
     const slug = slugOf(school);
     const grade = gradeOf(year);
+    const unreadable = (tr.unreadableYears ?? []).some((u) => u.player === name && u.printed === year);
     if (!slug) problems.push(`all-league school "${school}" (${where}) resolves to no registry team`);
-    if (grade === null) problems.push(`all-league year "${year}" of ${name} (${where}) is not a grade`);
-    return { player: name, school, slug, position: position.trim() || null, year: grade ?? 0 };
+    if (grade === null && !unreadable) problems.push(`all-league year "${year}" of ${name} (${where}) is not a grade`);
+    if (grade !== null && unreadable) problems.push(`all-league year "${year}" of ${name} (${where}) is listed as unreadable and is a grade`);
+    return { player: name, school, slug, position: position.trim() || null, year: grade };
   };
 
   const awardsOf = (division: string, level: 'varsity' | 'jv') => {

@@ -72,6 +72,11 @@ describe('scripts/vercel-ignore-build.sh', () => {
     // Two sports' refreshes since the last deployment: each project builds for its own.
     expect(decide('soccer', base, basketballData)).toBe(BUILD);
     expect(decide('basketball', base, basketballData)).toBe(BUILD);
+
+    const volleyballData = commit(['data/volleyball/snapshot.json', 'data/volleyball/rosters.json']);
+    expect(decide('volleyball', basketballData, volleyballData)).toBe(BUILD);
+    for (const other of ['field-hockey', 'soccer', 'basketball']) expect(decide(other, basketballData, volleyballData), other).toBe(SKIP);
+    expect(decide('volleyball', soccerData, basketballData)).toBe(SKIP);
   });
 
   it('builds both on a code change, even beside data', () => {
@@ -80,6 +85,7 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('field-hockey', base, code)).toBe(BUILD);
     expect(decide('soccer', base, code)).toBe(BUILD);
     expect(decide('basketball', base, code)).toBe(BUILD);
+    expect(decide('volleyball', base, code)).toBe(BUILD);
   });
 
   it('builds when it cannot decide: no previous deployment, an unknown commit, an unknown sport', () => {

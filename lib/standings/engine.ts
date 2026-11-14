@@ -302,6 +302,8 @@ function stageKeys(
     case 'head-to-head':
     case 'h2h-goals-against':
     case 'h2h-goal-diff':
+    case 'h2h-sets-won':
+    case 'h2h-set-ratio':
     case 'h2h-win-pct': {
       const h2h = headToHead(group, ctx.games);
       const gps = group.map((id) => h2h.get(id)?.gp ?? 0);
@@ -321,6 +323,13 @@ function stageKeys(
           key = -row.ga;
         } else if (stage === 'h2h-goal-diff') {
           key = row.gf - row.ga;
+        } else if (stage === 'h2h-sets-won') {
+          // "Sets won in head-to-head league matches" (a team's stored `gf` is its sets won in volleyball).
+          key = row.gf;
+        } else if (stage === 'h2h-set-ratio') {
+          // "Sets won/loss ratio amongst the tied teams", as the share of those sets won: the same order as the
+          // ratio, defined when a team has lost none, and for two teams the same as "sets won head to head".
+          key = row.gf + row.ga === 0 ? 0 : row.gf / (row.gf + row.ga);
         } else {
           key = winPct(row);
         }
@@ -430,7 +439,7 @@ function stageKeys(
       return out;
     }
     default:
-      // 'points', 'ccs-points', 'coin-flip', 'coaches-vote', 'no-rule', 'play-in': never keyed.
+      // 'points', 'ccs-points', 'coin-flip', 'coaches-vote', 'set-points', 'second-meeting', 'no-rule', 'play-in': never keyed.
       return null;
   }
 }

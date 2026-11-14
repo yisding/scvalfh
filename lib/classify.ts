@@ -117,6 +117,10 @@ function outsideTournamentPair(home: Team | undefined, away: Team | undefined, d
  *     (tests/fixtures/maxpreps/postseason-2025/) are the evidence: every CCS round, quarterfinal to final, carried
  *     the championship's id, 'Division 1' and `bracketIsPublished true`, while every crossover row carries the
  *     all-zero id. After rule 1, so a crossover MaxPreps ever filed under the tournament stays the crossover.
+ *  1d. MAXPREPS BRACKET, THE STATE CHAMPIONSHIPS: `game.bracket` is set, at least one side is a registry team, and
+ *     its `tournament` name contains "CIF State" (the CIF State Girls Volleyball Championships, Nov 10-21, 2026) →
+ *     { kind: 'other', leagueId: the shared league or null, via: 'maxpreps-bracket' }. Ahead of rules 2 and 2b,
+ *     which would read a game between two CCS teams dated after the section's first round as a CCS game.
  *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
  *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament';
  *     'league-postseason' when it is 'unbracketed-tournament' (the EAL's Super Regional); else 'ccs' when at least
@@ -141,6 +145,9 @@ function outsideTournamentPair(home: Team | undefined, away: Team | undefined, d
  *     kind is 'mcal-tournament' for a 'league-tournament' league and 'league-postseason' otherwise (the EAL).
  *  4. null.
  */
+/** MaxPreps' name for the state championships' brackets: '2026 CIF State Girls Volleyball Championships'. */
+export const CIF_STATE_RE = /\bCIF State\b/i;
+
 export function postseasonTag(game: Game): PostseasonTag | null {
   const home = teamOfSide(game.home);
   const away = teamOfSide(game.away);
@@ -181,6 +188,14 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     ((CCS.tournament !== null && bracket.tournamentId === CCS.tournament.id) || /central coast section/i.test(bracket.tournament ?? ''))
   ) {
     return { kind: 'ccs', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };
+  }
+
+  // 1d. MaxPreps' bracket fields name the state championships (the CIF State Girls Volleyball Championships, whose
+  //     regional rounds follow the section finals): a postseason game of no bracket this site draws. Ahead of the
+  //     flag and the CCS window, which would call a game between two CCS teams after the section's first round
+  //     a CCS game (Homestead v Milpitas, Nov 10, 2026, a state Division II regional).
+  if (bracket && (home || away) && CIF_STATE_RE.test(bracket.tournament ?? '')) {
+    return { kind: 'other', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };
   }
 
   const sectionPlayoffs = sectionPlayoffsPair(home, away);

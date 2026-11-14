@@ -659,7 +659,17 @@ export interface CcsConfig {
   highSeedHostsThrough: 'quarterfinals' | 'semifinals' | null;
   /** null until MaxPreps makes a tournament page for the season. */
   bracketUrl: string | null;
-  tournament: { id: string; division1BracketId: string; division2BracketId: string } | null;
+  /**
+   * MaxPreps' tournament GUID and the GUIDs of its Division 1 and Division 2 bracket blocks; `otherBrackets`
+   * names the rest where the championship has more (volleyball: the Open Division and Divisions 3-5), as the
+   * tournament page lists them. null until MaxPreps makes the tournament.
+   */
+  tournament: {
+    id: string;
+    division1BracketId: string;
+    division2BracketId: string;
+    otherBrackets?: readonly { name: string; id: string }[];
+  } | null;
   pollFrom: string;
   citations: { allocation: string; change: string };
   /** /playoffs' at-large paragraph: who decides the at-large berths and whom each league submits. */

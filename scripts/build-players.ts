@@ -11,7 +11,7 @@
  *   pnpm build-players --review    also list everything left for a person to decide
  *   pnpm build-players --no-stamp  leave the curated files alone
  *
- * One run covers all three sports whatever SCVAL_SPORT is: a player is one person in every sport.
+ * One run covers every sport whatever SCVAL_SPORT is: a player is one person in every sport.
  * It reads only files in the repository and fetches nothing, so it is safe to run at any time; run
  * it after `pnpm fetch-rosters`, after editing an overlay or data/player-identity.json, and BEFORE a
  * season rollover overwrites the rosters (a season this file has seen stays in it; one it has not

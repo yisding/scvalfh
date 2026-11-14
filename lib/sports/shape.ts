@@ -62,9 +62,10 @@ export interface SportScoring {
    * How the sport's overtime is played, which decides what a score out of overtime can be and how it is named:
    * 'sudden-victory' (field hockey: a period ends on the first goal, so the margin is one and a second period is
    * named, '2 OT'), 'two-halves' (soccer: one overtime of two full halves, any margin, never counted), or
-   * 'until-decided' (basketball: full periods until one team leads, any margin, every period counted, '3 OT').
+   * 'until-decided' (basketball: full periods until one team leads, any margin, every period counted, '3 OT'),
+   * or 'none' (volleyball: a match is sets, and the last set is played until one team wins it).
    */
-  readonly overtime: 'sudden-victory' | 'two-halves' | 'until-decided';
+  readonly overtime: 'sudden-victory' | 'two-halves' | 'until-decided' | 'none';
   /**
    * What breaks a level score in a game that must have a winner (a playoff game), where no section rule names
    * it: its words, in one of the two shapes lib/format.ts `shootoutPhrases` reads ('a shootout', 'penalty
@@ -72,10 +73,10 @@ export interface SportScoring {
    * mirrors these as SPORT_TIEBREAK_WORDS and SPORT_TIEBREAK_TAG.
    */
   readonly tiebreak: { readonly words: string; readonly tag: string } | null;
-  /** What a team scores, singular and plural: 'goal' / 'goals', 'point' / 'points'. */
+  /** What a team scores, singular and plural: 'goal' / 'goals', 'point' / 'points', 'set' / 'sets'. */
   readonly unit: string;
   readonly units: string;
-  /** The three column heads: 'GF' 'GA' 'GD', or 'PF' 'PA' 'PD'. */
+  /** The three column heads: 'GF' 'GA' 'GD', 'PF' 'PA' 'PD', or 'SW' 'SL' 'SD'. */
   readonly forAbbr: string;
   readonly againstAbbr: string;
   readonly diffAbbr: string;
@@ -88,10 +89,11 @@ export interface SportScoring {
 export interface SportStats {
   /**
    * The stat model a player's line follows: 'goals' (field hockey, soccer: a field line of goals, assists and
-   * shots, and a goalkeeper line) or 'basketball' (one line of points, shooting, rebounds and the rest, no
+   * shots, and a goalkeeper line), 'basketball' (one line of points, shooting, rebounds and the rest, no
+   * goalkeeper group) or 'volleyball' (one line of kills, aces, blocks, digs, assists and the rest, no
    * goalkeeper group). The parser's column maps, the team and game tables and the leader boards branch on it.
    */
-  readonly model: 'goals' | 'basketball';
+  readonly model: 'goals' | 'basketball' | 'volleyball';
   /**
    * What a player's main line can hold, in display order (our keys for MaxPreps' stat names): a field
    * player's line in a 'goals' sport, every player's line in basketball. Stored as `field` in every sport.
@@ -158,7 +160,7 @@ export interface SportSeason {
   /** Only varsity is verified end to end. */
   readonly level: 'Varsity';
   /** MaxPreps' `genderSport` ('girls,fieldhockey'). */
-  readonly genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball';
+  readonly genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball' | 'girls,volleyball';
   /** MaxPreps' `year` ('26-27'). */
   readonly year: string;
   /** MaxPreps' `sportSeasonName` ('Girls Varsity Field Hockey Fall 26-27'). */

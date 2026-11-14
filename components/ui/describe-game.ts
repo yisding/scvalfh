@@ -216,13 +216,15 @@ function sectionPlayoffsName(
  * Diego playoff game between two conferences carries no league on its tag, and its sides name the event.
  */
 export function postseasonTagOf(
-  game: Pick<Game, 'postseason'> & Partial<Pick<Game, 'home' | 'away' | 'contestId'>>,
+  game: Pick<Game, 'postseason'> & Partial<Pick<Game, 'home' | 'away' | 'contestId' | 'bracket'>>,
 ): string | null {
   const tag = game.postseason;
   if (!tag) return null;
   if (tag.kind === 'ccs') return 'CCS';
   if (tag.kind === 'section-playoffs') return sectionPlayoffsName(tag, game);
   if (tag.kind === 'outside-tournament') return outsideTournamentName(game);
+  // A bracket game of the state championships (lib/classify.ts rule 1d): MaxPreps' tournament name says so.
+  if (tag.kind === 'other' && /\bCIF State\b/i.test(game.bracket?.tournament ?? '')) return 'CIF State';
   // A CCS league's crossover-day game is a crossover or the play-in; the pairings say which ('SCVAL play-in').
   if (game.contestId !== undefined) {
     const pairing = pairingRoundOf({ contestId: game.contestId, postseason: tag });

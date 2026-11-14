@@ -38,8 +38,10 @@ import { z } from 'zod';
 import bundledMaxPrepsFieldHockey from '../../data/jv-rosters.json';
 import bundledSitesFieldHockey from '../../data/jv-rosters-school-sites.json';
 import bundledMaxPrepsBasketball from '../../data/basketball/jv-rosters.json';
+import bundledMaxPrepsVolleyball from '../../data/volleyball/jv-rosters.json';
 import bundledMaxPrepsSoccer from '../../data/soccer/jv-rosters.json';
 import bundledSitesBasketball from '../../data/basketball/jv-rosters-school-sites.json';
+import bundledSitesVolleyball from '../../data/volleyball/jv-rosters-school-sites.json';
 import bundledSitesSoccer from '../../data/soccer/jv-rosters-school-sites.json';
 import { readOverride, validateData } from '../data-file';
 import { getEnrichedTeamRoster } from '../players/rosters';
@@ -49,8 +51,8 @@ import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
 /** This build's copies (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledMaxPreps = process.env.SCVAL_SPORT === 'basketball' ? bundledMaxPrepsBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledMaxPrepsSoccer : bundledMaxPrepsFieldHockey;
-const bundledSites = process.env.SCVAL_SPORT === 'basketball' ? bundledSitesBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSitesSoccer : bundledSitesFieldHockey;
+const bundledMaxPreps = process.env.SCVAL_SPORT === 'basketball' ? bundledMaxPrepsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledMaxPrepsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledMaxPrepsSoccer : bundledMaxPrepsFieldHockey;
+const bundledSites = process.env.SCVAL_SPORT === 'basketball' ? bundledSitesBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSitesVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSitesSoccer : bundledSitesFieldHockey;
 
 export const JvSiteRosterPlayerSchema = z
   .object({

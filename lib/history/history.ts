@@ -15,9 +15,11 @@
 
 import bundledBracketsFieldHockey from '../../data/history-brackets-2025-26.json';
 import bundledBracketsBasketball from '../../data/basketball/history-brackets-2025-26.json';
+import bundledBracketsVolleyball from '../../data/volleyball/history-brackets-2025-26.json';
 import bundledBracketsSoccer from '../../data/soccer/history-brackets-2025-26.json';
 import bundledHistoryFieldHockey from '../../data/history-2025-26.json';
 import bundledHistoryBasketball from '../../data/basketball/history-2025-26.json';
+import bundledHistoryVolleyball from '../../data/volleyball/history-2025-26.json';
 import bundledHistorySoccer from '../../data/soccer/history-2025-26.json';
 import {
   BRACKET_SECTION_IDS,
@@ -49,9 +51,9 @@ import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledBrackets = process.env.SCVAL_SPORT === 'basketball' ? bundledBracketsBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledBracketsSoccer : bundledBracketsFieldHockey;
+const bundledBrackets = process.env.SCVAL_SPORT === 'basketball' ? bundledBracketsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledBracketsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledBracketsSoccer : bundledBracketsFieldHockey;
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledHistory = process.env.SCVAL_SPORT === 'basketball' ? bundledHistoryBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledHistorySoccer : bundledHistoryFieldHockey;
+const bundledHistory = process.env.SCVAL_SPORT === 'basketball' ? bundledHistoryBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledHistoryVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledHistorySoccer : bundledHistoryFieldHockey;
 
 export type {
   AvailableLeagueHistory,

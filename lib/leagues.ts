@@ -25,6 +25,8 @@ import { BVAL_BASKETBALL_LEAGUE } from './league-config/basketball/bval';
 import { SCVAL_BASKETBALL } from './league-config/basketball/scval';
 import { BVAL_SOCCER_LEAGUE } from './league-config/soccer/bval';
 import { SCVAL_SOCCER } from './league-config/soccer/scval';
+import { BVAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/bval';
+import { SCVAL_VOLLEYBALL } from './league-config/volleyball/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
   SHOOTOUT_INFERENCES,
@@ -39,7 +41,7 @@ import type {
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
 /**
  * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
@@ -47,11 +49,14 @@ import { IS_BASKETBALL, IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } 
  */
 export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
-  : // The soccer build (SCVAL_SPORT=soccer) and the basketball build (SCVAL_SPORT=basketball) cover SCVAL and BVAL
-    // (BVAL added 2026-11-13, so the ratings count SCVAL's games against BVAL schools).
+  : // The soccer build (SCVAL_SPORT=soccer), the basketball build (SCVAL_SPORT=basketball) and the volleyball build
+    // (SCVAL_SPORT=volleyball) cover SCVAL and BVAL (BVAL added to the winter builds 2026-11-13, so the ratings
+    // count SCVAL's games against BVAL schools).
     IS_BASKETBALL
     ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
-    : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE];
+    : IS_VOLLEYBALL
+      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE]
+      : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE];
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
@@ -341,7 +346,7 @@ export function seasonWindowBounds(): { start: string; end: string } {
 // ---------- assertLeagues (SPEC §2.4) ----------
 
 /** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
-export const UNCOMPUTABLE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule', 'coaches-vote']);
+export const UNCOMPUTABLE_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>(['coin-flip', 'ccs-points', 'no-rule', 'coaches-vote', 'set-points', 'second-meeting']);
 const CCS_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
   'aq', 'play-in', 'at-large', 'out', 'no-aq-route',
 ]);

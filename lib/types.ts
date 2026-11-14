@@ -129,7 +129,7 @@ export interface Season {
   label: string;
   sportSeasonId: string;
   allSeasonId: string;
-  genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball';
+  genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball' | 'girls,volleyball';
   teamLevel: 'Varsity' | 'JV';
   /** Config order: ccs, ncs, ns, ss, sds. */
   sections: SeasonSection[];
@@ -623,6 +623,10 @@ export type TiebreakStage =
   | 'draw-number'              // MCAL criterion 3 — lowest spring draw number wins; always resolves
   | 'record-vs-placed'         // SCVAL basketball Art. VI §1.1 — record vs. each other team from 1st place down
   | 'coaches-vote'             // SCVAL basketball Art. VI §1.1 — a blind coaches' vote, then a coin flip; uncomputable terminal
+  | 'h2h-sets-won'             // BVAL volleyball §7.3.2 — sets won in the matches between the tied teams
+  | 'h2h-set-ratio'            // SCVAL volleyball Art. V §5.1.1b, §5.2.1.2 — share of the sets between the tied teams won
+  | 'set-points'               // SCVAL volleyball Art. V §5.1.1c — points in the sets between the tied teams; uncomputable terminal
+  | 'second-meeting'           // BVAL volleyball §7.3.4 — the second-round match between the tied teams; uncomputable terminal
   | 'ccs-points'               // PCAL — uncomputable terminal; teams stay level
   | 'coin-flip'                // SCVAL §7, BVAL §6f — uncomputable terminal; teams stay level
   | 'no-rule'                  // PCAL ties whose points bucket starts at 3rd or lower — no tiebreak; teams stay level

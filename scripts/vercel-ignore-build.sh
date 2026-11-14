@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 # Vercel's "Ignored Build Step" for the projects this repo deploys (README "Deploy notes"): the field hockey
-# site, the girls soccer site (SCVAL_SPORT=soccer, soccer.ncfh.net) and the boys basketball site
-# (SCVAL_SPORT=basketball). Every push to main reaches every project; this skips a build whose changes since
+# site, the girls soccer site (SCVAL_SPORT=soccer, soccer.ncfh.net), the boys basketball site
+# (SCVAL_SPORT=basketball) and the girls volleyball site (SCVAL_SPORT=volleyball). Every push to main reaches every project; this skips a build whose changes since
 # the project's last deployment are all ANOTHER sport's data files, which its build never reads
 # (lib/sports/current.ts DATA_DIR):
 #
-#   field hockey skips a change only under data/soccer/ or data/basketball/  (the other sports' refreshes);
+#   field hockey skips a change only under data/soccer/, data/basketball/ or data/volleyball/  (the other sports' refreshes);
 #   soccer skips a change only under data/ outside data/soccer/;
-#   basketball skips a change only under data/ outside data/basketball/.
+#   basketball skips a change only under data/ outside data/basketball/;
+#   volleyball skips a change only under data/ outside data/volleyball/.
 #
 # Set in each Vercel project (Settings → Git → Ignored Build Step), naming the project's sport:
 #   bash scripts/vercel-ignore-build.sh field-hockey
 #   bash scripts/vercel-ignore-build.sh soccer
 #   bash scripts/vercel-ignore-build.sh basketball
+#   bash scripts/vercel-ignore-build.sh volleyball
 #
 # Vercel's contract: exit 0 skips the build, exit 1 builds. Anything this cannot decide (no previous
 # deployment, a previous commit outside the shallow clone, an unknown sport) builds.
@@ -27,7 +29,7 @@ build() { echo "vercel-ignore-build ($sport): build — $1"; exit 1; }
 skip() { echo "vercel-ignore-build ($sport): skip — $1"; exit 0; }
 
 case "$sport" in
-  field-hockey | soccer | basketball) ;;
+  field-hockey | soccer | basketball | volleyball) ;;
   *) build "unknown sport '$sport'" ;;
 esac
 
@@ -44,8 +46,8 @@ changed=$(git diff --name-only "$base" "$head") || build "git diff $base $head f
 while IFS= read -r file; do
   case "$sport" in
     field-hockey)
-      case "$file" in data/soccer/* | data/basketball/*) ;; *) build "$file changed" ;; esac ;;
-    soccer | basketball)
+      case "$file" in data/soccer/* | data/basketball/* | data/volleyball/*) ;; *) build "$file changed" ;; esac ;;
+    soccer | basketball | volleyball)
       # Its own folder builds; any other data file is another sport's.
       case "$file" in "data/$sport/"*) build "$file changed" ;; data/*) ;; *) build "$file changed" ;; esac ;;
   esac

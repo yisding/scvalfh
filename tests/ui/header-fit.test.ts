@@ -33,6 +33,7 @@ import { BASKETBALL_BOYS_2026 } from '../../lib/sports/basketball';
 import { SPORT_ID, SPORT_IDS, type SportId } from '../../lib/sports/current';
 import { FIELD_HOCKEY_GIRLS_2026 } from '../../lib/sports/field-hockey';
 import { SOCCER_GIRLS_2026 } from '../../lib/sports/soccer';
+import { VOLLEYBALL_GIRLS_2026 } from '../../lib/sports/volleyball';
 
 import { REPO } from '../helpers';
 
@@ -48,6 +49,8 @@ const TAIL_PX: Readonly<Record<string, readonly [number, number]>> = {
   'Field Hockey': [88.08, 94.38],
   'Girls Soccer': [83.53, 89.5],
   'Boys Basketball': [108.25, 115.98],
+  // Measured the same way on the running volleyball build, 2026-11-14.
+  'Girls Volleyball': [102.09, 109.39],
 };
 
 /** Nav labels, Public Sans 700 at 15px. */
@@ -64,6 +67,7 @@ const SEASONS = {
   'field-hockey': FIELD_HOCKEY_GIRLS_2026,
   soccer: SOCCER_GIRLS_2026,
   basketball: BASKETBALL_BOYS_2026,
+  volleyball: VOLLEYBALL_GIRLS_2026,
 } satisfies Record<SportId, unknown>;
 
 /** The wordmark's sport label, as components/layout/site.ts builds it (PROGRAM_TITLE). */
@@ -172,8 +176,8 @@ describe('the measured tables cover what the header prints', () => {
     expect(labels()).toBeCloseTo(302.5, 0);
   });
 
-  it('has a measured wordmark for all three sports, and this build prints one of them', () => {
-    expect(SPORT_IDS).toHaveLength(3);
+  it('has a measured wordmark for all four sports, and this build prints one of them', () => {
+    expect(SPORT_IDS).toHaveLength(4);
     for (const id of SPORT_IDS) expect(TAIL_PX[tailOf(id)], `${id}: "${tailOf(id)}"`).toBeDefined();
     expect(SHORT_PX[WORDMARK_SHORT], WORDMARK_SHORT).toBeDefined();
     expect(WORDMARK_TAIL).toBe(tailOf(SPORT_ID));

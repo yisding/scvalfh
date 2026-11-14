@@ -4,8 +4,8 @@
 # every route and uploads the Worker and its Static Assets with `cf deploy`.
 #
 # One Worker per sport. Each sport is its own build (lib/sports/current.ts), so the job is a matrix
-# over the three: field hockey's Worker keeps the name 'scvalfh', soccer's and basketball's are
-# 'scvalfh-soccer' and 'scvalfh-basketball' (cloudflare.config.ts). Each sport has its own SITE_URL
+# over the four: field hockey's Worker keeps the name 'scvalfh', soccer's, basketball's and volleyball's are
+# 'scvalfh-soccer', 'scvalfh-basketball' and 'scvalfh-volleyball' (cloudflare.config.ts). Each sport has its own SITE_URL
 # variable, its own GitHub Deployment environment and its own concurrency group, so one sport's
 # deploy never waits on, or is recorded as, another's.
 #
@@ -14,7 +14,7 @@
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
 # `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
 # the workflows that put commits on main, ci (a green run on main, never a pull_request run) and
-# the three refreshes, update-data, update-data-soccer and update-data-basketball (a green run),
+# the four refreshes, update-data, update-data-soccer, update-data-basketball and update-data-volleyball (a green run),
 # and every run deploys main's tip as it is when the run starts.
 #
 # What may ship. The code that ships must have passed ci on main; update-data's data commits only
@@ -22,7 +22,7 @@
 # the suite on them, and ci never runs on them. So the gate walks down from main's tip past the data
 # commits (by the bot, one parent, "data: refresh snapshot ...", "data: refresh player stats ...",
 # "data: refresh JV games ...", update-data-soccer.yml's "data: refresh soccer ..." or
-# update-data-basketball.yml's "data: refresh basketball ...") to the newest
+# update-data-basketball.yml's "data: refresh basketball ..." or update-data-volleyball.yml's "data: refresh volleyball ...") to the newest
 # other commit, the one whose code ships, requires a successful ci run on main for exactly that commit,
 # and requires that nothing but those data files (the four of data/, and the same four plus the two roster
 # files of data/soccer/ and of data/basketball/) changed above it. A soccer or basketball data commit changes nothing this Worker
@@ -67,7 +67,7 @@ name: deploy-cloudflare
 
 on:
   workflow_run:
-    workflows: [ci, update-data, update-data-soccer, update-data-basketball]
+    workflows: [ci, update-data, update-data-soccer, update-data-basketball, update-data-volleyball]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -108,6 +108,10 @@ jobs:
           - sport: basketball
             environment: cloudflare-basketball
             site_url: SITE_URL_BASKETBALL
+            optional: '1'
+          - sport: volleyball
+            environment: cloudflare-volleyball
+            site_url: SITE_URL_VOLLEYBALL
             optional: '1'
 
     # One deploy per sport at a time, and never cancelled halfway through an upload. Two data
@@ -202,7 +206,7 @@ jobs:
             while IFS= read -r file; do
               [ -n "$file" ] || continue
               case "$SCVAL_SPORT" in
-                field-hockey) case "$file" in data/soccer/* | data/basketball/*) ;; *) own="$file" ;; esac ;;
+                field-hockey) case "$file" in data/soccer/* | data/basketball/* | data/volleyball/*) ;; *) own="$file" ;; esac ;;
                 *) case "$file" in "data/$SCVAL_SPORT/"*) own="$file" ;; data/*) ;; *) own="$file" ;; esac ;;
               esac
               [ -z "$own" ] || break
@@ -211,7 +215,7 @@ jobs:
           fi
           # base: the newest commit at or below main's tip that is not an update-data data commit
           # (update-data.yml, update-data-soccer.yml and update-data-basketball.yml "Commit the data that
-          # changed": by the bot, one parent, one of those five message prefixes). Its code is the code that ships; the data commits above it only replace
+          # changed": by the bot, one parent, one of those six message prefixes). Its code is the code that ships; the data commits above it only replace
           # the data, which update-data ran the suite on before it pushed (ci never runs on them:
           # they are pushed with GITHUB_TOKEN). tests/workflows.test.ts holds the messages and the
           # file list below to what update-data.yml commits.
@@ -223,16 +227,17 @@ jobs:
                   or (.commit.message | startswith("data: refresh player stats"))
                   or (.commit.message | startswith("data: refresh JV games"))
                   or (.commit.message | startswith("data: refresh soccer"))
-                  or (.commit.message | startswith("data: refresh basketball")))
+                  or (.commit.message | startswith("data: refresh basketball"))
+                  or (.commit.message | startswith("data: refresh volleyball")))
                 and (.parents | length) == 1) | not) | .sha) // ""')
             [ -z "$base" ] || break
           done
           [ -n "$base" ] || refuse "main ($tip) sits on more than 500 data commits; deploy by hand after checking it."
-          # Between base and the tip only the data files (field hockey's four; soccer's and basketball's six each, the roster files included) may change, so the tree that ships is
+          # Between base and the tip only the data files (field hockey's four; soccer's, basketball's and volleyball's six each, the roster files included) may change, so the tree that ships is
           # base's tree with newer data.
           others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
             if .status == "identical" or .status == "ahead"
-            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json", "data/player-stats.json", "data/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json"] | join(" ")
+            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json", "data/player-stats.json", "data/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json"] | join(" ")
             else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
           [ -z "$others" ] || refuse "main ($tip) changes more than the data above $base: $others"
           # And base must have passed ci on main: a successful ci run for that exact commit, other
