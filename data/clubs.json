@@ -1905,6 +1905,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
+      "playerId": "p084197fe15",
       "fullName": "Casey Moorehouse",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -1926,6 +1927,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "44eeae29-6b41-4de2-8165-37cedbf3a839",
+      "playerId": "p084197fe15",
       "fullName": "Casey Moorehouse",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -1947,6 +1949,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
+      "playerId": "pe072bd5b7a",
       "fullName": "Beatrix Monk",
       "club": "norcal-impact",
       "clubTeam": "U16",
@@ -1968,6 +1971,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "7bf1074d-84a9-4d73-9028-ea16360038e9",
+      "playerId": "pd416f5a7f4",
       "fullName": "Colette Von Klemperer",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -1991,6 +1995,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a1861648-3e4b-469b-ac73-01011a712330",
+      "playerId": "p650d4d3d69",
       "fullName": "Caitlyn Hughes",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2044,6 +2049,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "98db9697-092f-4c09-a01a-9189d82330c7",
+      "playerId": "p231ea50a63",
       "fullName": "Clara Brunello",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2081,6 +2087,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "8a84bf39-96a1-49dc-9127-738923b07ee2",
+      "playerId": "p113b4ed4a8",
       "fullName": "Dylan Powell",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2118,6 +2125,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "291464ef-7812-41ab-920b-bcb0e341e772",
+      "playerId": "p895bdf6f63",
       "fullName": "Gianna Monge",
       "club": "sf-hawks",
       "clubTeam": "U16",
@@ -2155,6 +2163,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
+      "playerId": "pcae7735de2",
       "fullName": "Gigi Colant",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2184,6 +2193,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "ef619b65-0ca7-48ba-97da-8e3b4411632a",
+      "playerId": "p71a2bb3671",
       "fullName": "Hazel Stang",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2245,6 +2255,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "playerId": "p9a878866a7",
       "fullName": "Maggie Magnano",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2314,6 +2325,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
+      "playerId": "pd905becec2",
       "fullName": "Olivia Van De Braak",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2375,6 +2387,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "63a9c5b4-64e5-4a19-83f0-ad28aaee353b",
+      "playerId": "pa2229683f9",
       "fullName": "Samantha Brunsell",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2420,6 +2433,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "e1fceb71-79e3-46cf-80e6-c3de7ff7ad89",
+      "playerId": "pf6faef38e2",
       "fullName": "Scarlett Gammack",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2465,6 +2479,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "e79e55f0-cfce-4f33-bb37-1ea0e61ddd7f",
+      "playerId": "p0224ef2d31",
       "fullName": "Stella Kwok",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
@@ -2534,6 +2549,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "274fec66-4428-4eaf-b1b4-c20c5c729cc2",
+      "playerId": "pccbca268fb",
       "fullName": "Stella Strain",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2555,6 +2571,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
+      "playerId": "p4530d791ae",
       "fullName": "Storey Lewis",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -2608,6 +2625,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "db47b519-3041-42d1-92b7-88cd0f6094dc",
+      "playerId": "p3bd41d1e57",
       "fullName": "Violet Hesslein",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -2629,6 +2647,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "63bbce23-3e4d-4944-a855-4f4af401e4e6",
+      "playerId": "p5177acccc8",
       "fullName": "Abby Scharrenberg",
       "club": "norcal-impact",
       "clubTeam": "U16",
@@ -2650,6 +2669,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
+      "playerId": "p3d895f0fb8",
       "fullName": "Carolyn Cordoni",
       "club": "norcal-impact",
       "clubTeam": "U19",
@@ -2703,6 +2723,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
+      "playerId": "p2d2c0c1bf3",
       "fullName": "Evie Ferrini",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -2764,6 +2785,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "playerId": "p579b7fef9a",
       "fullName": "Melanie Henderson",
       "club": "fly-fhc",
       "clubTeam": null,
@@ -2793,6 +2815,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "playerId": "p579b7fef9a",
       "fullName": "Melanie Henderson",
       "club": "lightning",
       "clubTeam": null,
@@ -2822,6 +2845,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "ba145aff-114c-48c2-95d1-cb6f67d2c3a8",
+      "playerId": "p579b7fef9a",
       "fullName": "Melanie Henderson",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -2875,6 +2899,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "f1ed9be7-1b82-4055-a9f3-35cafeb66da4",
+      "playerId": "pa1c905126b",
       "fullName": "Nora Lagenfeld",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -2912,6 +2937,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
+      "playerId": "p98f6f11f59",
       "fullName": "Quinley McCarroll",
       "club": "fly-fhc",
       "clubTeam": "U14",
@@ -2941,6 +2967,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "e550ec28-cdd0-41cb-912b-3aa6e20f5d52",
+      "playerId": "p98f6f11f59",
       "fullName": "Quinley McCarroll",
       "club": "norcal-impact",
       "clubTeam": "U16/U19",
@@ -2978,6 +3005,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "54b3e7a5-82eb-4dd9-ba08-f876c5c49410",
+      "playerId": "p7fd9ea0aaa",
       "fullName": "Riya Mehrotra",
       "club": "fly-fhc",
       "clubTeam": "Black - Advanced",
@@ -3007,6 +3035,7 @@
     {
       "teamSlug": "fremont",
       "athleteId": "5e9a850d-4212-4931-89c3-d9a7c9bb884d",
+      "playerId": "p90065ed03f",
       "fullName": "Isabella Bjork",
       "club": "fly-fhc",
       "clubTeam": null,
@@ -3028,6 +3057,7 @@
     {
       "teamSlug": "cupertino",
       "athleteId": "d62e8b1b-4c90-4ce5-9eea-0575eb0fb797",
+      "playerId": "p50bcc269d9",
       "fullName": "Jaelyn Jensen",
       "club": "lightning",
       "clubTeam": "U16/U19 Girls",
@@ -3057,6 +3087,7 @@
     {
       "teamSlug": "homestead",
       "athleteId": "d1ed916b-9d92-4a2d-b32e-b0e5cbe8fafa",
+      "playerId": "pa2bca50261",
       "fullName": "Gabrielle Moll",
       "club": "fly-fhc",
       "clubTeam": "U19 (Advanced - Black)",
@@ -3094,6 +3125,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
+      "playerId": "p35fa221b4a",
       "fullName": "Bridget Schilb",
       "club": "fly-fhc",
       "clubTeam": "travel team",
@@ -3115,6 +3147,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "ad59229a-cc5c-4492-8586-a8cbb4fdaf47",
+      "playerId": "p35fa221b4a",
       "fullName": "Bridget Schilb",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3160,6 +3193,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
+      "playerId": "p563a338b20",
       "fullName": "Emma Traverso",
       "club": "fly-fhc",
       "clubTeam": "U19 Advanced Team (2025)",
@@ -3181,6 +3215,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "7bdcdcb3-f704-47a8-a8ac-740429b27160",
+      "playerId": "p1804764f48",
       "fullName": "Hana Mercado",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3218,6 +3253,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "9342402a-1e6b-4bd5-ac04-5a246d6b9265",
+      "playerId": "p785e349571",
       "fullName": "Lizzie Moorehouse",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3255,6 +3291,7 @@
     {
       "teamSlug": "palo-alto",
       "athleteId": "960cca5e-6fcb-4cae-a75b-cba717351145",
+      "playerId": "p3b513a1359",
       "fullName": "Hannah Niebuhr",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3276,6 +3313,7 @@
     {
       "teamSlug": "palo-alto",
       "athleteId": "d51b181c-f926-43ae-a466-5254246e0123",
+      "playerId": "pacfb6001a5",
       "fullName": "Yoyo Cai",
       "club": "fly-fhc",
       "clubTeam": "Green (U16)",
@@ -3297,6 +3335,7 @@
     {
       "teamSlug": "presentation",
       "athleteId": "8599db77-058e-4d9f-b592-3494a46f50b2",
+      "playerId": "pd878514b35",
       "fullName": "Brooklyn Barnard",
       "club": "fly-fhc",
       "clubTeam": "Guest goalkeeper",
@@ -3326,6 +3365,7 @@
     {
       "teamSlug": "lynbrook",
       "athleteId": "2760b7f0-efef-4775-b8cb-f27fbea09b2f",
+      "playerId": "p755ccdae77",
       "fullName": "Junali Dutta",
       "club": "norcal-impact",
       "clubTeam": "Impact Wolves",
@@ -3363,6 +3403,7 @@
     {
       "teamSlug": "monta-vista",
       "athleteId": "5496bf29-59e2-4284-8de2-6cc7b1260c04",
+      "playerId": "p6a6236a961",
       "fullName": "Ruhee Bhatnagar",
       "club": "lightning",
       "clubTeam": "U16/U19 Girls",
@@ -3392,6 +3433,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "293542d6-46b9-4771-ae2e-e7def72f338d",
+      "playerId": "p62009e0202",
       "fullName": "Alex Pires",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3421,6 +3463,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "playerId": "p6f780b64f9",
       "fullName": "Alyssa Montejano",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3450,6 +3493,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "631164df-97ba-4f2c-bdfc-7bb2192af6af",
+      "playerId": "pd9f23ba3a9",
       "fullName": "Colette Boyd",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3487,6 +3531,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "187dd89e-dcbf-4881-aed0-d4e7560c8379",
+      "playerId": "p8ed7e6a7e2",
       "fullName": "Emmie Mendez",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3516,6 +3561,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "ae5cf369-a096-4234-a5ed-cd1cc00410cd",
+      "playerId": "p12762673cb",
       "fullName": "Reese Dubenko",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3545,6 +3591,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
+      "playerId": "pfae571e712",
       "fullName": "Ryan Hemeon",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3582,6 +3629,7 @@
     {
       "teamSlug": "gilroy",
       "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
+      "playerId": "p6c40557952",
       "fullName": "Hailey Moncada",
       "club": "htc",
       "clubTeam": "HTC California (High Performance)",
@@ -3611,6 +3659,7 @@
     {
       "teamSlug": "gilroy",
       "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
+      "playerId": "p6c40557952",
       "fullName": "Hailey Moncada",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3640,6 +3689,7 @@
     {
       "teamSlug": "gilroy",
       "athleteId": "8fa110eb-da5c-438b-bf37-07ba458707c6",
+      "playerId": "p657579cb99",
       "fullName": "Lea Kim",
       "club": "infinity",
       "clubTeam": "U19",
@@ -3677,6 +3727,7 @@
     {
       "teamSlug": "leigh",
       "athleteId": "e9fd8a7f-3218-4b0d-80d3-df58d9212540",
+      "playerId": "p44803b918c",
       "fullName": "Alexis Marchak",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3706,6 +3757,7 @@
     {
       "teamSlug": "leigh",
       "athleteId": "03bb6a58-9af8-4d16-998f-e7e29f4125ea",
+      "playerId": "p4ee2f81dd0",
       "fullName": "Clara Froemming",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3743,6 +3795,7 @@
     {
       "teamSlug": "leigh",
       "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
+      "playerId": "p4217c7279c",
       "fullName": "Roxana Jafarpur",
       "club": "fly-fhc",
       "clubTeam": "U14",
@@ -3764,6 +3817,7 @@
     {
       "teamSlug": "leigh",
       "athleteId": "212229bc-8374-4229-b024-964209ff8f33",
+      "playerId": "p4217c7279c",
       "fullName": "Roxana Jafarpur",
       "club": "norcal-impact",
       "clubTeam": "U16",
@@ -3793,6 +3847,7 @@
     {
       "teamSlug": "leland",
       "athleteId": "47883949-9d6f-4bd4-afc8-b235619df8b7",
+      "playerId": "p2ff447758a",
       "fullName": "Taytem Condit",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3822,6 +3877,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "10f7e001-cdf1-4d56-80a3-58d3c26d05f0",
+      "playerId": "pc754123859",
       "fullName": "Addison Januario",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3851,6 +3907,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "f4cb8b8c-9777-408e-8691-2f1380eb1d42",
+      "playerId": "pbeb853b5c2",
       "fullName": "Autumn Goldstein",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3872,6 +3929,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "5593be14-929b-447f-b0a6-1129a72c7127",
+      "playerId": "p139997abcb",
       "fullName": "Magnolia Prentice",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3901,6 +3959,7 @@
     {
       "teamSlug": "westmont",
       "athleteId": "2ae5b3b7-538c-47d2-a75c-432c7d365822",
+      "playerId": "p65f8d53dac",
       "fullName": "Teya Halali",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -3946,6 +4005,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "3958e4a6-6d6b-4afc-bf13-feb5d238724b",
+      "playerId": "p198c26aa67",
       "fullName": "Chloe Arwin",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -3991,6 +4051,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
+      "playerId": "pa1bf6c3324",
       "fullName": "Josie Stout",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4044,6 +4105,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "cfbaf4db-28d0-400a-ad46-fb9c6018f46e",
+      "playerId": "p6203489b4f",
       "fullName": "Sadie Baker",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4073,6 +4135,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "7844f156-ab2e-4d55-a45d-34a1ed6de3b5",
+      "playerId": "p39a5fe561c",
       "fullName": "Sierra Duncan",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4110,6 +4173,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "f6c5e4c7-e181-43e6-b95d-5da916e83668",
+      "playerId": "pc9f4621e3d",
       "fullName": "Spencer White",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4147,6 +4211,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "ff39f74c-7195-4f89-a47c-3fc021b439aa",
+      "playerId": "p7b73965ba0",
       "fullName": "Tashi Perkins",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
@@ -4184,6 +4249,7 @@
     {
       "teamSlug": "lick-wilmerding",
       "athleteId": "c95652a1-f07e-4504-ab9c-b29a1f235644",
+      "playerId": "pd59a238383",
       "fullName": "Anaya Mehta-Vasisht",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4245,6 +4311,7 @@
     {
       "teamSlug": "lick-wilmerding",
       "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
+      "playerId": "p33a0b82157",
       "fullName": "Frankie Lemieux",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4314,6 +4381,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "d42d85f0-3c5b-4903-a343-3e2d76c07b57",
+      "playerId": "pee53986e10",
       "fullName": "Anoushka Gollerkeri",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4375,6 +4443,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "88b4f515-8a03-418d-885f-caf4b398ff0c",
+      "playerId": "p488b1a0730",
       "fullName": "Lula Polak",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
@@ -4436,6 +4505,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "5f1af2ca-fd57-4ff8-b02f-5233f1803792",
+      "playerId": "p6b5ab7411e",
       "fullName": "Mimi Bakker",
       "club": "sf-hawks",
       "clubTeam": "U16",
@@ -4497,6 +4567,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "1cc5d30f-9fc2-4652-baa5-7148e2542179",
+      "playerId": "p88147b8ec7",
       "fullName": "Olivia Taylor",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4558,6 +4629,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "8d5fd8bd-b28c-49b9-af6d-7849379378c2",
+      "playerId": "pe5cd405668",
       "fullName": "Rachel Flynn",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4595,6 +4667,7 @@
     {
       "teamSlug": "university-sf",
       "athleteId": "dcaa2c1a-aebc-43e7-8e78-86aa3ee97895",
+      "playerId": "pef30912d0d",
       "fullName": "Vivienne Wong",
       "club": "sf-hawks",
       "clubTeam": "U16 Hawks Blue",
@@ -4656,6 +4729,7 @@
     {
       "teamSlug": "convent-sacred-heart",
       "athleteId": "b7ea3205-acc3-475a-bd40-da0caf522f4d",
+      "playerId": "p22a84411ba",
       "fullName": "Ava Long",
       "club": "sf-hawks",
       "clubTeam": null,
@@ -4677,6 +4751,7 @@
     {
       "teamSlug": "convent-sacred-heart",
       "athleteId": "a4085944-591b-4bbb-8896-36e48a6cabe9",
+      "playerId": "p5c7cd0b507",
       "fullName": "Claire Gunning",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4746,6 +4821,7 @@
     {
       "teamSlug": "convent-sacred-heart",
       "athleteId": "79b24568-7d66-4f62-b949-475dd8f1d729",
+      "playerId": "p41a1c7608a",
       "fullName": "Jessica Long",
       "club": "sf-hawks",
       "clubTeam": "U19 Hawks Blue",
@@ -4775,6 +4851,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
+      "playerId": "pf697e822a7",
       "fullName": "Kira Kelly",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -4796,6 +4873,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
+      "playerId": "p03836f14f8",
       "fullName": "Kate Loscutoff",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -4817,6 +4895,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
+      "playerId": "pfab052a020",
       "fullName": "Amelia Zedonis",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -4838,6 +4917,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "a73c33c9-ab5d-4816-abd0-2322438b687f",
+      "playerId": "pf697e822a7",
       "fullName": "Kira Kelly",
       "club": "d-city",
       "clubTeam": null,
@@ -4859,6 +4939,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "e93260a7-6bec-48da-88ff-f39b3f77f92f",
+      "playerId": "p03836f14f8",
       "fullName": "Kate Loscutoff",
       "club": "d-city",
       "clubTeam": null,
@@ -4880,6 +4961,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "ab3cf101-b209-4cb8-924e-2fd46d5d4e7c",
+      "playerId": "pfab052a020",
       "fullName": "Amelia Zedonis",
       "club": "d-city",
       "clubTeam": null,
@@ -4901,6 +4983,7 @@
     {
       "teamSlug": "pleasant-valley",
       "athleteId": "1917b7a2-edb2-48ed-804a-5fd79664a1c2",
+      "playerId": "p585850c3e0",
       "fullName": "Lilah Letcher",
       "club": "chico-hotshots",
       "clubTeam": "U19",
@@ -4922,6 +5005,7 @@
     {
       "teamSlug": "pleasant-valley",
       "athleteId": "34c472fd-d485-49fb-9c47-d2736f9067d4",
+      "playerId": "p3542d12f2d",
       "fullName": "Kate Panighetti",
       "club": "chico-hotshots",
       "clubTeam": "U19",
@@ -4943,6 +5027,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "playerId": "p6f780b64f9",
       "fullName": "Alyssa Montejano",
       "club": "norcal-impact",
       "clubTeam": "Wolves",
@@ -4964,6 +5049,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "9cf94b17-e6b4-435b-958f-62367101bb77",
+      "playerId": "p563a338b20",
       "fullName": "Emma Traverso",
       "club": "norcal-impact",
       "clubTeam": null,
@@ -4985,6 +5071,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "playerId": "p9a878866a7",
       "fullName": "Maggie Magnano",
       "club": "htc",
       "clubTeam": null,
@@ -5006,6 +5093,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "d5e8fc2f-06a0-4da7-9cba-3f54c6be249f",
+      "playerId": "pb60c04f232",
       "fullName": "Juliet Calderon",
       "club": "infinity",
       "clubTeam": null,
@@ -5027,6 +5115,7 @@
     {
       "teamSlug": "willow-glen",
       "athleteId": "3a2b6d71-e0a6-4232-a9ac-8c8bf8fa7705",
+      "playerId": "p21ad36a67b",
       "fullName": "Isabella Alonzo",
       "club": "norcal-impact",
       "clubTeam": "NorCal Wolves",
@@ -5048,6 +5137,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
+      "playerId": "p3db6c58013",
       "fullName": "Katarina Smith",
       "club": "fly-fhc",
       "clubTeam": "U19 Fly Black",
@@ -5069,6 +5159,7 @@
     {
       "teamSlug": "fremont",
       "athleteId": "6523e0ef-d011-4582-8aca-3f50dd2020a9",
+      "playerId": "pa3d87a9cdb",
       "fullName": "Sophie Dhillon",
       "club": "fly-fhc",
       "clubTeam": null,
@@ -5090,6 +5181,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "d1f30b24-6a0a-4f56-b88e-55d0b226494d",
+      "playerId": "p91ad9351fd",
       "fullName": "Beatrix Hom",
       "club": "sf-hawks",
       "clubTeam": "U16 Yellow",
@@ -5111,6 +5203,7 @@
     {
       "teamSlug": "chico",
       "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
+      "playerId": "pccb54180ec",
       "fullName": "Evie Nielsen",
       "club": "chico-hotshots",
       "clubTeam": "Hotshots u19",
@@ -5132,6 +5225,7 @@
     {
       "teamSlug": "chico",
       "athleteId": "6ae0df69-9a49-4c16-94b3-f1ac2c06fb16",
+      "playerId": "pccb54180ec",
       "fullName": "Evie Nielsen",
       "club": "fly-fhc",
       "clubTeam": "Guest player, Cal Cup 2026",
@@ -5153,6 +5247,7 @@
     {
       "teamSlug": "chico",
       "athleteId": "c95dcf7e-8daf-4e12-9806-0800bb16faf0",
+      "playerId": "p45ecc86405",
       "fullName": "Quinn Karolyi",
       "club": "chico-hotshots",
       "clubTeam": "U16",
@@ -5174,6 +5269,7 @@
     {
       "teamSlug": "chico",
       "athleteId": "25e21b95-c6a1-4261-9f5e-78a4bed0a58e",
+      "playerId": "pdcb729d25c",
       "fullName": "Olivia Council",
       "club": "chico-hotshots",
       "clubTeam": null,
@@ -5195,6 +5291,7 @@
     {
       "teamSlug": "davis",
       "athleteId": "9f299134-dfdc-4d38-9c8e-2ca464f186ae",
+      "playerId": "pccc2a06927",
       "fullName": "Maisy Martin",
       "club": "d-city",
       "clubTeam": "Spring training program",
@@ -5216,6 +5313,7 @@
     {
       "teamSlug": "tamalpais",
       "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
+      "playerId": "pa1bf6c3324",
       "fullName": "Josie Stout",
       "club": "golden-gate-rippers",
       "clubTeam": null,
@@ -5237,6 +5335,7 @@
     {
       "teamSlug": "westmont",
       "athleteId": "59cb47b9-86b2-4b59-9ade-7dc19c465f85",
+      "playerId": "pcf9fc69b58",
       "fullName": "Kaylee True",
       "club": "fly-fhc",
       "clubTeam": "U16",
@@ -5258,6 +5357,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "c000de5f-e69a-4006-bc0e-0db632e593dc",
+      "playerId": "pcac0a06e1c",
       "fullName": "Alexa Chan",
       "club": "htc",
       "clubTeam": null,
@@ -5295,6 +5395,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "503c9e25-e9fd-4182-b7f0-f8030c649747",
+      "playerId": "p2ab67fd17c",
       "fullName": "Brooke Gibbons",
       "club": "htc",
       "clubTeam": "HTC - California",
@@ -5364,6 +5465,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "c0eb9981-b5f7-4511-bb06-fd333ee59fb1",
+      "playerId": "p1b77da4da5",
       "fullName": "Cece Jeffery",
       "club": "htc",
       "clubTeam": null,
@@ -5385,6 +5487,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "811f03a2-6ddd-4811-8886-7c84b087880c",
+      "playerId": "p99d5926a32",
       "fullName": "Kalina Parikh",
       "club": "htc",
       "clubTeam": "HTC U16 High Performance",
@@ -5406,6 +5509,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "1b6b5261-5719-42a4-b4f4-716296aff58d",
+      "playerId": "p04ebfd6cc4",
       "fullName": "Kaylyn Witt",
       "club": "htc",
       "clubTeam": null,
@@ -5427,6 +5531,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "11115ade-64df-43ba-b6bc-fe48edc75248",
+      "playerId": "p8726db7203",
       "fullName": "Layla Holderman",
       "club": "htc",
       "clubTeam": null,
@@ -5448,6 +5553,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "b9ec3340-2a3f-40bd-82fd-b99cc2fdb53e",
+      "playerId": "pc4363a4232",
       "fullName": "Leia Park",
       "club": "htc",
       "clubTeam": null,
@@ -5469,6 +5575,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "780f681e-83e2-420f-b1c1-e3f68cde2d63",
+      "playerId": "pe6a44c82aa",
       "fullName": "Lola Conway",
       "club": "htc",
       "clubTeam": null,
@@ -5530,6 +5637,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "beb9b241-ab5f-4b9b-9b4c-298739321d8e",
+      "playerId": "p3bc8e7dc86",
       "fullName": "Lydia McDonald",
       "club": "htc",
       "clubTeam": "HTC California",
@@ -5575,6 +5683,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "79df9b55-5329-4f94-983b-05f4d76bfa5b",
+      "playerId": "p31991d4be3",
       "fullName": "Myla McCandless",
       "club": "htc",
       "clubTeam": "U16",
@@ -5620,6 +5729,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "5369e061-d371-41ca-9654-bf7245e98432",
+      "playerId": "p5a19a98165",
       "fullName": "Eva Allen",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -5665,6 +5775,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "1ad802a5-00af-48e0-8def-6c9f83097760",
+      "playerId": "p434a12eb54",
       "fullName": "Reese Roldan",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -5702,6 +5813,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "16ffe819-dbaa-4046-bc8f-a29406bcaedc",
+      "playerId": "pd07e7f62ce",
       "fullName": "Rylie Storm",
       "club": "rush",
       "clubTeam": "Rush Devils",
@@ -5763,6 +5875,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "7fd8107e-38e2-492e-8ee2-2f1d16ddf779",
+      "playerId": "p215bbe711a",
       "fullName": "Sami Lee",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -5808,6 +5921,7 @@
     {
       "teamSlug": "cathedral-catholic",
       "athleteId": "31b6ec61-58d6-4bd8-8908-6aca69a8e814",
+      "playerId": "p52b9f2fac8",
       "fullName": "Emma Forster",
       "club": "rush",
       "clubTeam": "Rush Devils U19",
@@ -5845,6 +5959,7 @@
     {
       "teamSlug": "cathedral-catholic",
       "athleteId": "6e96fd19-afb7-468c-bc74-79c4461277be",
+      "playerId": "p168f8b1c6e",
       "fullName": "Kate Friedman",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -5874,6 +5989,7 @@
     {
       "teamSlug": "cathedral-catholic",
       "athleteId": "b3690c95-bb1d-4a7b-a163-16e0f4e89f1d",
+      "playerId": "pff8e8dfb2f",
       "fullName": "Lilly Morton",
       "club": "rush",
       "clubTeam": "RUSH Devils U16",
@@ -5903,6 +6019,7 @@
     {
       "teamSlug": "eastlake",
       "athleteId": "8cec8fe4-4ed6-49fc-97b7-a2b731ac5047",
+      "playerId": "p2606a5b551",
       "fullName": "Isabelle Blyton",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -5932,6 +6049,7 @@
     {
       "teamSlug": "great-oak",
       "athleteId": "f3bba43c-d023-4bd8-b7c1-e91796d5565c",
+      "playerId": "p45e6af6636",
       "fullName": "Emma Keith",
       "club": "htc",
       "clubTeam": "U16 Royal Blue",
@@ -5953,6 +6071,7 @@
     {
       "teamSlug": "great-oak",
       "athleteId": "b26c1656-7097-4a4c-a21b-f0a39f2b0a6b",
+      "playerId": "p4c20090131",
       "fullName": "Isabel Laureles",
       "club": "htc",
       "clubTeam": "U16 Royal Blue High Performance",
@@ -5974,6 +6093,7 @@
     {
       "teamSlug": "great-oak",
       "athleteId": "2e7f7546-8ddc-422f-b197-bf93a471dd7c",
+      "playerId": "pc45b14f1f1",
       "fullName": "Linnea Gustaveson",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -6011,6 +6131,7 @@
     {
       "teamSlug": "great-oak",
       "athleteId": "8dc52a5a-6629-4d6d-a40d-63ac736d3795",
+      "playerId": "p6be620c5b1",
       "fullName": "Whitley Paine",
       "club": "htc",
       "clubTeam": null,
@@ -6040,6 +6161,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "a516f586-9742-41f9-aac6-ec9bc74f04b8",
+      "playerId": "p8d5f8ded39",
       "fullName": "Abigail Ryan",
       "club": "vcrd",
       "clubTeam": null,
@@ -6061,6 +6183,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "8b4f6ecb-90b2-4a68-8706-72b7c747f5cd",
+      "playerId": "ped38af0643",
       "fullName": "Eleanor Levy",
       "club": "vcrd",
       "clubTeam": null,
@@ -6090,6 +6213,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "playerId": "pbba20946bb",
       "fullName": "Margaux Schlumberger",
       "club": "htc",
       "clubTeam": null,
@@ -6119,6 +6243,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "playerId": "pbba20946bb",
       "fullName": "Margaux Schlumberger",
       "club": "vcrd",
       "clubTeam": "RUSH DEVILS",
@@ -6164,6 +6289,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "playerId": "pbba20946bb",
       "fullName": "Margaux Schlumberger",
       "club": "wc-riptide",
       "clubTeam": null,
@@ -6185,6 +6311,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "73660d1b-b39a-43eb-bc84-61a790174d8c",
+      "playerId": "pf16c4852f1",
       "fullName": "Minka Mendoza",
       "club": "vcrd",
       "clubTeam": null,
@@ -6206,6 +6333,7 @@
     {
       "teamSlug": "helix",
       "athleteId": "73d35610-2d5b-41ae-a5fc-0c30d4a1f083",
+      "playerId": "pdf73dc2847",
       "fullName": "Ella Aguayo",
       "club": "myto",
       "clubTeam": null,
@@ -6227,6 +6355,7 @@
     {
       "teamSlug": "helix",
       "athleteId": "1b02dee8-88d4-4dc4-b22d-1eab83b92fbc",
+      "playerId": "pdb3c0a2fc5",
       "fullName": "Madison Hinchman",
       "club": "myto",
       "clubTeam": "Myto",
@@ -6264,6 +6393,7 @@
     {
       "teamSlug": "helix",
       "athleteId": "86def8a6-d725-4609-bf30-a33ef347f01d",
+      "playerId": "pbf6f933950",
       "fullName": "Zuri Stclair",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -6293,6 +6423,7 @@
     {
       "teamSlug": "huntington-beach",
       "athleteId": "baaa1d5d-3092-45a4-9ac4-3cef55a29a1a",
+      "playerId": "p6c5a879e77",
       "fullName": "Grace Moniak",
       "club": "vcrd",
       "clubTeam": "Devils",
@@ -6314,6 +6445,7 @@
     {
       "teamSlug": "huntington-beach",
       "athleteId": "2a35aafa-87d9-4ab4-bbc3-a001250e378f",
+      "playerId": "p07bbbd6715",
       "fullName": "Sarah Moniak",
       "club": "vcrd",
       "clubTeam": "VCRD Devils / Rush Devils",
@@ -6351,6 +6483,7 @@
     {
       "teamSlug": "la-costa-canyon",
       "athleteId": "256b6ddd-fab1-4586-b63c-7cff31619c96",
+      "playerId": "p0561707b29",
       "fullName": "Madeline Wilcox",
       "club": "htc",
       "clubTeam": "U16 Royal Blue High Performance",
@@ -6372,6 +6505,7 @@
     {
       "teamSlug": "la-jolla",
       "athleteId": "f999a5f0-0fea-4d22-8fbc-ae3ee98f82a8",
+      "playerId": "p1656e0af47",
       "fullName": "Adalee Branstetter",
       "club": "coastal-clash",
       "clubTeam": null,
@@ -6393,6 +6527,7 @@
     {
       "teamSlug": "la-jolla-country-day",
       "athleteId": "fc416037-115d-4c59-8fae-92d75f3a7b9f",
+      "playerId": "pa80250646e",
       "fullName": "Sonia Melvin",
       "club": "htc",
       "clubTeam": null,
@@ -6414,6 +6549,7 @@
     {
       "teamSlug": "mission-bay",
       "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
+      "playerId": "pec5e344dc5",
       "fullName": "Amelia \"mimi\" Scatena",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -6443,6 +6579,7 @@
     {
       "teamSlug": "mission-bay",
       "athleteId": "e9e4f9ae-c85f-4f11-b5f9-75315930ab0c",
+      "playerId": "pdd9d53bccf",
       "fullName": "Rosalie Orozco",
       "club": "htc",
       "clubTeam": "Royal Blue",
@@ -6464,6 +6601,7 @@
     {
       "teamSlug": "mission-vista",
       "athleteId": "f017b120-50fa-4193-874c-e44cd99d65b3",
+      "playerId": "p5fc2e9df8c",
       "fullName": "Alessandra Carreno",
       "club": "myto",
       "clubTeam": "Powerhouse U16",
@@ -6493,6 +6631,7 @@
     {
       "teamSlug": "mission-vista",
       "athleteId": "49b1f5e3-256d-490c-b698-04aba285a2fa",
+      "playerId": "pa533204e5f",
       "fullName": "Echo Howard",
       "club": "myto",
       "clubTeam": "Myto",
@@ -6530,6 +6669,7 @@
     {
       "teamSlug": "mission-vista",
       "athleteId": "0a11b8a8-b90e-43c5-b35f-296df4a8d0b7",
+      "playerId": "p3e715386f5",
       "fullName": "Thyme Stavis",
       "club": "myto",
       "clubTeam": "Powerhouse U16",
@@ -6559,6 +6699,7 @@
     {
       "teamSlug": "mt-carmel",
       "athleteId": "4d1e5c99-8ebe-499e-ae5f-5bb7e36421fd",
+      "playerId": "p264b14997b",
       "fullName": "Naiya Abalos",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -6588,6 +6729,7 @@
     {
       "teamSlug": "san-dieguito-academy",
       "athleteId": "fd2a0675-b08c-485a-abb5-b724ce388333",
+      "playerId": "pecdef3cf1f",
       "fullName": "Ella Rennie",
       "club": "coastal-clash",
       "clubTeam": "Elite Team",
@@ -6609,6 +6751,7 @@
     {
       "teamSlug": "san-marcos",
       "athleteId": "ed23c245-fc84-4024-b8c4-f1938877aaaa",
+      "playerId": "p699c081de8",
       "fullName": "McKenzie Rackleff",
       "club": "htc",
       "clubTeam": null,
@@ -6646,6 +6789,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "e3548296-e046-490e-a434-5d5737d70aa8",
+      "playerId": "pf6d74ba807",
       "fullName": "Camryn Lathrop",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -6667,6 +6811,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "811060b3-e14d-42b0-bc9c-6879d7b04d8e",
+      "playerId": "pa05d735865",
       "fullName": "Elenna Eiler",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -6688,6 +6833,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "dac8c08b-6ac2-48aa-a969-60eaa45a99d9",
+      "playerId": "p0e905037ec",
       "fullName": "Lily Cumba",
       "club": "rush",
       "clubTeam": "Elite Performance Group",
@@ -6717,6 +6863,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "fe657007-2bac-428f-a486-af93022670d2",
+      "playerId": "p9dd84023ec",
       "fullName": "Samantha Ippolito",
       "club": "rush",
       "clubTeam": "Commit Performance Group",
@@ -6770,6 +6917,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "6b4dbd37-656d-4983-9650-be13b4cfe874",
+      "playerId": "pd267e13d6c",
       "fullName": "Vivian Preclaro",
       "club": "htc",
       "clubTeam": null,
@@ -6799,6 +6947,7 @@
     {
       "teamSlug": "temecula-valley",
       "athleteId": "821926b5-2c09-4e4f-a529-8fc3a4813d29",
+      "playerId": "pbd0cc826de",
       "fullName": "Kendall Gann",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -6828,6 +6977,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "abe0174c-31c6-4401-a0e8-7cc70c66f2dc",
+      "playerId": "p8682e6cca6",
       "fullName": "Antonella Eduardo",
       "club": "htc",
       "clubTeam": null,
@@ -6849,6 +6999,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "a1ff46fb-b63e-4d7b-a825-611706758648",
+      "playerId": "p30d519743b",
       "fullName": "Ava Hauer",
       "club": "htc",
       "clubTeam": "HTC - California",
@@ -6918,6 +7069,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "316a7db0-9932-4db1-bf3b-3b7b1cb7094b",
+      "playerId": "p7dbd91826d",
       "fullName": "Dylan Rietti",
       "club": "htc",
       "clubTeam": "HTC - California",
@@ -6987,6 +7139,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "fd6cbab6-7dc7-4680-a778-3f513977e4b0",
+      "playerId": "pd15cd86d16",
       "fullName": "Izzy Adams",
       "club": "htc",
       "clubTeam": "HTC - California",
@@ -7040,6 +7193,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "ed7559a6-f259-46e7-8354-b8ef489ab6a7",
+      "playerId": "p18c43b66a5",
       "fullName": "Sophie Herman",
       "club": "htc",
       "clubTeam": null,
@@ -7069,6 +7223,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "4d7d4149-7771-4a2d-9312-c4557ed78e5e",
+      "playerId": "p8ffd277c54",
       "fullName": "Sophie Sant",
       "club": "rush",
       "clubTeam": "U19",
@@ -7122,6 +7277,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "580053c7-8b63-47ac-83ca-192a4db10631",
+      "playerId": "pd61a5067a4",
       "fullName": "Victoria Eduardo",
       "club": "htc",
       "clubTeam": null,
@@ -7159,6 +7315,7 @@
     {
       "teamSlug": "university-city",
       "athleteId": "849964fc-e6c4-4ac7-adee-137c175e4409",
+      "playerId": "pa15adfb44c",
       "fullName": "Alice Powers",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -7188,6 +7345,7 @@
     {
       "teamSlug": "university-city",
       "athleteId": "7290d895-bea2-441b-91ae-de2d3fb66a1b",
+      "playerId": "pc8600c73fd",
       "fullName": "Delia Schwab",
       "club": "htc",
       "clubTeam": null,
@@ -7209,6 +7367,7 @@
     {
       "teamSlug": "university-city",
       "athleteId": "839b2e4c-26b6-42aa-bbb1-921b731691c8",
+      "playerId": "pc0c0fc54ee",
       "fullName": "Laura Pellegrino",
       "club": "coastal-clash",
       "clubTeam": null,
@@ -7238,6 +7397,7 @@
     {
       "teamSlug": "university-city",
       "athleteId": "d776acb5-5705-4925-a450-866494c0a614",
+      "playerId": "p4db1f08893",
       "fullName": "Lucia Dewinter",
       "club": "myto",
       "clubTeam": "Powerhouse U19",
@@ -7267,6 +7427,7 @@
     {
       "teamSlug": "university-city",
       "athleteId": "57434e03-9147-45b4-b35b-92f523dcdd7a",
+      "playerId": "pfb3905662b",
       "fullName": "Melanie Flatt",
       "club": "myto",
       "clubTeam": "Myto",
@@ -7304,6 +7465,7 @@
     {
       "teamSlug": "westview",
       "athleteId": "8f52e172-ca7c-45ee-a205-e76acf5bc114",
+      "playerId": "p72c04e59b2",
       "fullName": "Brooke Lanski",
       "club": "htc",
       "clubTeam": "U19 High Performance",
@@ -7333,6 +7495,7 @@
     {
       "teamSlug": "westview",
       "athleteId": "8f52e172-ca7c-45ee-a205-e76acf5bc114",
+      "playerId": "p72c04e59b2",
       "fullName": "Brooke Lanski",
       "club": "rush",
       "clubTeam": null,
@@ -7370,6 +7533,7 @@
     {
       "teamSlug": "great-oak",
       "athleteId": "b26c1656-7097-4a4c-a21b-f0a39f2b0a6b",
+      "playerId": "p4c20090131",
       "fullName": "Isabel Laureles",
       "club": "myto",
       "clubTeam": "North Orange",
@@ -7391,6 +7555,7 @@
     {
       "teamSlug": "mission-hills",
       "athleteId": "0d5bc983-1b6a-4010-9a2d-585cbfab4d80",
+      "playerId": "pca6ac0957d",
       "fullName": "Cambria Musick",
       "club": "knights-fhc",
       "clubTeam": "Knights U19",
@@ -7412,6 +7577,7 @@
     {
       "teamSlug": "la-jolla-country-day",
       "athleteId": "6897148f-e7a5-4009-90c7-5d69a04272fa",
+      "playerId": "pc7ada514ec",
       "fullName": "Lillia Howe",
       "club": "htc",
       "clubTeam": "D1 U19",
@@ -7433,6 +7599,7 @@
     {
       "teamSlug": "la-jolla-country-day",
       "athleteId": "6897148f-e7a5-4009-90c7-5d69a04272fa",
+      "playerId": "pc7ada514ec",
       "fullName": "Lillia Howe",
       "club": "myto",
       "clubTeam": "U14, U16 and U19",
@@ -7454,6 +7621,7 @@
     {
       "teamSlug": "mission-hills",
       "athleteId": "0f34fb61-0178-4989-883a-2bcd6d8c747d",
+      "playerId": "pd8f9c7527a",
       "fullName": "Jasmine Harris",
       "club": "knights-fhc",
       "clubTeam": "U19",
@@ -7475,6 +7643,7 @@
     {
       "teamSlug": "mt-carmel",
       "athleteId": "c504d11d-dbaf-4559-ab7c-184b70ecab57",
+      "playerId": "p9311376789",
       "fullName": "Lizbeth Araujo Duran",
       "club": "coastal-clash",
       "clubTeam": "Mixed",
@@ -7496,6 +7665,7 @@
     {
       "teamSlug": "patrick-henry",
       "athleteId": "e7c3dc88-3166-4c18-a414-bb96f8eeb0eb",
+      "playerId": "p5121400843",
       "fullName": "Tina Hague",
       "club": "coastal-clash",
       "clubTeam": "Middle School Club Team",
@@ -7517,6 +7687,7 @@
     {
       "teamSlug": "san-marcos",
       "athleteId": "97428ee8-743d-483a-ac09-faae1e8c50c9",
+      "playerId": "p56f7df75ef",
       "fullName": "Sophie Zammit",
       "club": "knights-fhc",
       "clubTeam": "Varsity",
@@ -7546,6 +7717,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "6b4dbd37-656d-4983-9650-be13b4cfe874",
+      "playerId": "pd267e13d6c",
       "fullName": "Vivian Preclaro",
       "club": "rush",
       "clubTeam": null,
@@ -7567,6 +7739,7 @@
     {
       "teamSlug": "mission-bay",
       "athleteId": "b626430e-6b77-4c28-b033-f76efd116b99",
+      "playerId": "pec5e344dc5",
       "fullName": "Amelia \"mimi\" Scatena",
       "club": "coastal-clash",
       "clubTeam": "Elite U16",
@@ -7588,6 +7761,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "dac8c08b-6ac2-48aa-a969-60eaa45a99d9",
+      "playerId": "p0e905037ec",
       "fullName": "Lily Cumba",
       "club": "coastal-clash",
       "clubTeam": "U14, U12",
@@ -7609,6 +7783,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "59c4c532-7ac4-4257-b0c1-db8b103e8a22",
+      "playerId": "p928115d070",
       "fullName": "Abigail Karlander",
       "club": "rush",
       "clubTeam": "Elite Performance Group",

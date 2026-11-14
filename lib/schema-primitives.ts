@@ -83,3 +83,10 @@ export function failValidation(
 ): never {
   throw new Error(`${what} failed validation:\n${formatIssues(issues)}`);
 }
+
+/**
+ * A player's id in the player registry (data/players.json, lib/players/registry-schema.ts): `p` and
+ * at least ten lowercase hex digits. The registry is internal, but the hand-curated files that name
+ * players carry this id beside their per-season MaxPreps key, so the primitive lives here.
+ */
+export const playerId = z.string().regex(/^p[0-9a-f]{10,}$/, 'expected a player id (p + hex)');

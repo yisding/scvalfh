@@ -1,0 +1,18 @@
+{
+  "notes": [
+    "What a person has decided about who is who in data/players.json (lib/players/registry-schema.ts PlayerIdentitySchema). Curated, never guessed: every entry says why. scripts/build-players.ts reads it on every build.",
+    "sameAs ties a name on one team's lists to a MaxPreps career or to another name; rowSplits takes a MaxPreps row out of the career it is filed under; distinct keeps two careers that share a name on one team apart."
+  ],
+  "sameAs": [],
+  "rowSplits": [
+    {
+      "sport": "field-hockey",
+      "team": "leigh",
+      "page": "jv",
+      "name": "Ayva Garcia",
+      "careerId": "k2kl80co8kck4",
+      "basis": "MaxPreps files two Leigh rows under career k2kl80co8kck4 (read 2026-11-13): the varsity roster's Adriana Yam (#43, grade 10, row created 2026-08-26, career link .../athletes/adriana-yam/) and the JV roster's Ayva Garcia (#44, grade 10, row created 2026-09-16, career link .../athletes/ayva-garcia/). The two names share nothing, so they are read as two players. The career stays with the varsity row, which was created first; that choice is a convention, not a finding."
+    }
+  ],
+  "distinct": []
+}

@@ -32,7 +32,7 @@ import bundledSoccer from '../../data/soccer/jv-profiles.json';
 import { validateData } from '../data-file';
 import { classOf, getRosterEnrichment } from '../players/rosters';
 import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
-import { dateKey } from '../schema-primitives';
+import { dateKey, playerId } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
@@ -44,6 +44,11 @@ export const JvProfilePlayerSchema = z
   .object({
     /** As the team page's JV list spells the player. */
     name: z.string().min(1),
+    /**
+     * The player's id in the player registry (data/players.json), written by `pnpm build-players`:
+     * what still names her once the JV list's spelling changes. Never read by the site.
+     */
+    playerId: playerId.optional(),
     /** The player's own recruiting pages, at most one per platform in each sport. */
     profiles: z
       .array(PlayerProfileSchema.refine((p) => p.platform !== 'maxpreps', 'no claimed-MaxPreps profiles for JV players'))

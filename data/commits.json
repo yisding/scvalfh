@@ -955,6 +955,7 @@
     {
       "teamSlug": "berkeley",
       "athleteId": "4f26d495-1ad5-4ed3-bc17-488e344c7a8c",
+      "playerId": "p6cda591778",
       "fullName": "Violet Potts",
       "college": "vassar",
       "sport": "lacrosse",
@@ -984,6 +985,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "780f681e-83e2-420f-b1c1-e3f68cde2d63",
+      "playerId": "pe6a44c82aa",
       "fullName": "Lola Conway",
       "college": "michigan",
       "sport": "field-hockey",
@@ -1021,6 +1023,7 @@
     {
       "teamSlug": "bishops",
       "athleteId": "02610c42-03d0-4411-9af0-80cdaf3b2ce6",
+      "playerId": "p072e177eba",
       "fullName": "Emerson Davis",
       "college": "harvard",
       "sport": "lacrosse",
@@ -1050,6 +1053,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "5369e061-d371-41ca-9654-bf7245e98432",
+      "playerId": "p5a19a98165",
       "fullName": "Eva Allen",
       "college": "cal",
       "sport": "field-hockey",
@@ -1095,6 +1099,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "16ffe819-dbaa-4046-bc8f-a29406bcaedc",
+      "playerId": "pd07e7f62ce",
       "fullName": "Rylie Storm",
       "college": "harvard",
       "sport": "field-hockey",
@@ -1124,6 +1129,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "1ad802a5-00af-48e0-8def-6c9f83097760",
+      "playerId": "p434a12eb54",
       "fullName": "Reese Roldan",
       "college": "uc-davis",
       "sport": "field-hockey",
@@ -1161,6 +1167,7 @@
     {
       "teamSlug": "canyon-hills",
       "athleteId": "7fd8107e-38e2-492e-8ee2-2f1d16ddf779",
+      "playerId": "p215bbe711a",
       "fullName": "Sami Lee",
       "college": "columbia",
       "sport": "field-hockey",
@@ -1206,6 +1213,7 @@
     {
       "teamSlug": "cathedral-catholic",
       "athleteId": "73fea592-4d78-4966-9bbd-f2c7e2e6cb82",
+      "playerId": "p269d5af661",
       "fullName": "Lia Palecek",
       "college": "oregon",
       "sport": "lacrosse",
@@ -1235,6 +1243,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "c1d85f67-fc3f-453f-bf0a-fb9a560d7377",
+      "playerId": "p6f780b64f9",
       "fullName": "Alyssa Montejano",
       "college": "maryville",
       "sport": "field-hockey",
@@ -1264,6 +1273,7 @@
     {
       "teamSlug": "christopher",
       "athleteId": "ebeff0a6-0dd9-46e8-8183-123be7c8091f",
+      "playerId": "pfae571e712",
       "fullName": "Ryan Hemeon",
       "college": "uc-davis",
       "sport": "field-hockey",
@@ -1293,6 +1303,7 @@
     {
       "teamSlug": "harvard-westlake",
       "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "playerId": "pbba20946bb",
       "fullName": "Margaux Schlumberger",
       "college": "harvard",
       "sport": "field-hockey",
@@ -1330,6 +1341,7 @@
     {
       "teamSlug": "los-altos",
       "athleteId": "92185826-ce89-43ce-85bb-45a0452f75f6",
+      "playerId": "p3db6c58013",
       "fullName": "Katarina Smith",
       "college": "ithaca",
       "sport": "field-hockey",
@@ -1367,6 +1379,7 @@
     {
       "teamSlug": "marin-catholic",
       "athleteId": "ed437679-ab40-4c7b-be61-01c14bf179e8",
+      "playerId": "p9e7131a781",
       "fullName": "Gianna Rinaldi",
       "college": "uc-davis",
       "sport": "lacrosse",
@@ -1404,6 +1417,7 @@
     {
       "teamSlug": "redwood",
       "athleteId": "b184246a-b415-4b37-9b81-2e5a64662cc8",
+      "playerId": "p61692b3d97",
       "fullName": "Claire Johnson",
       "college": "cal",
       "sport": "lacrosse",
@@ -1441,6 +1455,7 @@
     {
       "teamSlug": "redwood",
       "athleteId": "393fad4d-6339-449a-91e9-b1b3f7a08a1b",
+      "playerId": "p15a4bf1dbc",
       "fullName": "Phoebe Miller",
       "college": "san-diego-state",
       "sport": "lacrosse",
@@ -1486,6 +1501,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "3f411bb0-05fd-4cd4-b482-957ed29837af",
+      "playerId": "p3d895f0fb8",
       "fullName": "Carolyn Cordoni",
       "college": "bates",
       "sport": "field-hockey",
@@ -1523,6 +1539,7 @@
     {
       "teamSlug": "san-dieguito-academy",
       "athleteId": "fd2a0675-b08c-485a-abb5-b724ce388333",
+      "playerId": "pecdef3cf1f",
       "fullName": "Ella Rennie",
       "college": "muhlenberg",
       "sport": "field-hockey",
@@ -1560,6 +1577,7 @@
     {
       "teamSlug": "saratoga",
       "athleteId": "1a13275a-f4aa-4129-9c1e-35f0e791793f",
+      "playerId": "pd7d2a41b0a",
       "fullName": "Emma Williams",
       "college": "bryn-mawr",
       "sport": "basketball",
@@ -1581,6 +1599,7 @@
     {
       "teamSlug": "scripps-ranch",
       "athleteId": "fe657007-2bac-428f-a486-af93022670d2",
+      "playerId": "p9dd84023ec",
       "fullName": "Samantha Ippolito",
       "college": "michigan-state",
       "sport": "field-hockey",
@@ -1650,6 +1669,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a88e5874-6319-419e-8252-627552eedcd4",
+      "playerId": "p9a878866a7",
       "fullName": "Maggie Magnano",
       "college": "uc-davis",
       "sport": "field-hockey",
@@ -1711,6 +1731,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "c768c72c-481d-420d-894c-05aa04fee9b9",
+      "playerId": "pd905becec2",
       "fullName": "Olivia Van De Braak",
       "college": "iowa",
       "sport": "field-hockey",
@@ -1764,6 +1785,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "1cf4e617-4949-403f-a731-6dd5ecbf6d8a",
+      "playerId": "p4530d791ae",
       "fullName": "Storey Lewis",
       "college": "colgate",
       "sport": "field-hockey",
@@ -1809,6 +1831,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "89a6b589-3b6e-4db7-848c-45c24a351d2b",
+      "playerId": "p027dd6e7b9",
       "fullName": "Sofie Stiefel",
       "college": "marist",
       "sport": "lacrosse",
@@ -1838,6 +1861,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "6e4625b6-0f4e-43f4-8f10-0a01ed9e43cf",
+      "playerId": "p5164e3a912",
       "fullName": "Catherine Cecchini",
       "college": "bucknell",
       "sport": "lacrosse",
@@ -1867,6 +1891,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "bb85e1e6-a02b-4c6c-880f-2d056135be63",
+      "playerId": "pcae7735de2",
       "fullName": "Gigi Colant",
       "college": "st-lawrence",
       "sport": "soccer",
@@ -1896,6 +1921,7 @@
     {
       "teamSlug": "stevenson",
       "athleteId": "7299d700-3f10-465d-a282-f2ef52c70610",
+      "playerId": "p06d859e989",
       "fullName": "Zola Ducker",
       "college": "trinity-ct",
       "sport": "lacrosse",
@@ -1933,6 +1959,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "316a7db0-9932-4db1-bf3b-3b7b1cb7094b",
+      "playerId": "p7dbd91826d",
       "fullName": "Dylan Rietti",
       "college": "richmond",
       "sport": "field-hockey",
@@ -1986,6 +2013,7 @@
     {
       "teamSlug": "torrey-pines",
       "athleteId": "a1ff46fb-b63e-4d7b-a825-611706758648",
+      "playerId": "p30d519743b",
       "fullName": "Ava Hauer",
       "college": "johns-hopkins",
       "sport": "field-hockey",
@@ -2023,6 +2051,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "4d1747da-41c6-49c2-bbc2-b98a277436b5",
+      "playerId": "p7311ac86b5",
       "fullName": "Shyla Paredes",
       "college": "cal-baptist",
       "sport": "softball",
@@ -2060,6 +2089,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "3afa21b5-fef1-4cbd-8d11-9e249a6aa635",
+      "playerId": "p68e788be03",
       "fullName": "Molly Waltz",
       "college": "uc-davis",
       "sport": "lacrosse",
@@ -2089,6 +2119,7 @@
     {
       "teamSlug": "cathedral-catholic",
       "athleteId": "3be2d89e-2190-49e7-b936-db2a67693e70",
+      "playerId": "pd5ecd3659b",
       "fullName": "Campbell Trocha",
       "college": "florida-tech",
       "sport": "lacrosse",
@@ -2118,6 +2149,7 @@
     {
       "teamSlug": "temecula-valley",
       "athleteId": "821926b5-2c09-4e4f-a529-8fc3a4813d29",
+      "playerId": "pbd0cc826de",
       "fullName": "Kendall Gann",
       "college": "barton",
       "sport": "field-hockey",
@@ -2147,6 +2179,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "a32d08b2-dc29-485c-9287-a4da168f5cdd",
+      "playerId": "pe81b7b8cd4",
       "fullName": "Kaye Zilinskas",
       "college": "uc-davis",
       "sport": "lacrosse",
@@ -2176,6 +2209,7 @@
     {
       "teamSlug": "lick-wilmerding",
       "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
+      "playerId": "p33a0b82157",
       "fullName": "Frankie Lemieux",
       "college": "dartmouth",
       "sport": "field-hockey",
@@ -2221,6 +2255,7 @@
     {
       "teamSlug": "leigh",
       "athleteId": "03bb6a58-9af8-4d16-998f-e7e29f4125ea",
+      "playerId": "p4ee2f81dd0",
       "fullName": "Clara Froemming",
       "college": "wellesley",
       "sport": "field-hockey",
@@ -2250,6 +2285,7 @@
     {
       "teamSlug": "gilroy",
       "athleteId": "f3f1c7b9-bb1c-44a8-bc64-eb6c9b0785d4",
+      "playerId": "p6c40557952",
       "fullName": "Hailey Moncada",
       "college": "mercyhurst",
       "sport": "field-hockey",
@@ -2271,6 +2307,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "3ca098fa-6a12-4449-b02e-729af06e663d",
+      "playerId": "p2d2c0c1bf3",
       "fullName": "Evie Ferrini",
       "college": "wellesley",
       "sport": "field-hockey",
@@ -2292,6 +2329,7 @@
     {
       "teamSlug": "san-marcos",
       "athleteId": "ed23c245-fc84-4024-b8c4-f1938877aaaa",
+      "playerId": "p699c081de8",
       "fullName": "McKenzie Rackleff",
       "college": "lock-haven",
       "sport": "field-hockey",

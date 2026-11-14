@@ -35,7 +35,7 @@
 
 import { z } from 'zod';
 
-import { calendarDateKey, isCalendarDate, isHttpsUrl, slugId } from '../schema-primitives';
+import { calendarDateKey, isCalendarDate, isHttpsUrl, playerId, slugId } from '../schema-primitives';
 import { TEAMS } from '../teams';
 import type { RegionId } from '../types';
 
@@ -277,6 +277,11 @@ export const ClubAffiliationSchema = z.object({
   teamSlug,
   /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
   athleteId: text,
+  /**
+   * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It
+   * outlasts `athleteId`, which MaxPreps reissues every season. Never read by the site.
+   */
+  playerId: playerId.optional(),
   /** As MaxPreps spells it; lib/players/clubs.ts refuses any other spelling. */
   fullName: text,
   club: slugId,

@@ -21,7 +21,7 @@ import { z } from 'zod';
 
 import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from '../leagues';
-import { dateKey, httpUrl, httpsUrl, slugId } from '../schema-primitives';
+import { dateKey, httpUrl, httpsUrl, playerId, slugId } from '../schema-primitives';
 import { contentKey } from '../stable-json';
 import { TEAMS, getTeamBySlug } from '../teams';
 
@@ -353,6 +353,11 @@ export const EnrichedPlayerSchema = z
   .object({
     /** The MaxPreps per-season id: the join key. */
     athleteId: z.string().min(1),
+    /**
+     * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It
+     * outlasts `athleteId`, which MaxPreps reissues every season. Never read by the site.
+     */
+    playerId: playerId.optional(),
     /** As MaxPreps spells it (for reading the file; the join is on athleteId). */
     fullName: z.string().min(1),
     /** As the source spells it, when that differs (e.g. "Gabriella" for "Gigi"). */

@@ -867,7 +867,8 @@ or respells a tied player's row, if the overlay marks that row JV, or if a seaso
 `data/rosters.json` to a season `data/clubs.json` is not for; `pnpm test` and the build then fail
 with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
 drop it by hand (on a rollover, redo the research for the new season). Never prune it
-automatically.
+automatically. Each affiliation also carries the player's `playerId` (see "The player registry"), which
+does not change with the season: on a rollover it is what says which new row a record was about.
 
 `lib/players/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
@@ -1090,7 +1091,8 @@ commitment and no new club tie, six recruiting pages (`docs/DATA-SOURCES.md` §1
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
 season rollover moves `data/rosters.json` to another season; `pnpm test` and the build then fail
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
-or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
+or drop it by hand. On a rollover the seniors graduate: redo the research for the new season. Each
+commitment also carries the player's `playerId` (see "The player registry").
 
 `lib/players/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
 name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
@@ -1410,6 +1412,47 @@ rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json`
 update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
 captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
 
+## The player registry
+
+`data/players.json` holds one record per person across all three sports and every season the repository
+has seen: an id that never changes, every spelling of the name, a graduation year, and one *stint* per
+team, season, sport and level (varsity, JV or a freshman team), each with what every source said about it
+and where the sources disagree. It is internal. No page reads it, and a test fails if anything under
+`app/` or `components/` imports it. It does name about 770 players of 2025-26 who appear nowhere else in
+the repository.
+`docs/DATA-SOURCES.md` §1.1 (m) has the rules; `lib/players/registry-schema.ts` is the contract.
+
+```bash
+pnpm build-players             # rebuild data/players.json from every sport's files (reads the repo, fetches nothing)
+pnpm build-players --review    # also list what is left for a person to decide
+pnpm build-players --check     # exit 1 if a build would change a file
+pnpm build-players --dry-run   # build and report, write nothing
+```
+
+Run it after `pnpm fetch-rosters`, after editing an overlay, and **before a season rollover**: a season the
+registry has seen stays in it once `rosters.json` is overwritten; one it has not seen is gone with the
+files. It also writes each player's `playerId` into `data/clubs.json`, `data/commits.json`,
+`data/rosters-enrichment.json` and `data/jv-profiles.json`, beside the per-season key those files join on.
+
+Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
+nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
+`review` in the file (115 items on 2026-11-14, 80 of them pairs of look-alike names nobody has ruled on). The answers go in `data/player-identity.json` (each with its reason), never into
+`data/players.json` by hand.
+
+Last season's players come from MaxPreps' stat sheets, which are not rosters (a sheet lists only the
+players a coach entered a line for):
+
+```bash
+pnpm fetch-prior-players                    # data/prior-players.json: one stat-sheet read per registry team
+SCVAL_SPORT=soccer pnpm fetch-prior-players # data/soccer/prior-players.json; likewise basketball
+pnpm fetch-prior-players --fixtures <dir>   # offline, from stats-<slug>.json captures
+```
+
+Run it once a season, after `pnpm fetch-prior-season` (the season id comes from its file). MaxPreps'
+edge refuses some of these reads with an empty 403; the script keeps what it read, exits 1 while any team
+is unread, and a later run asks only for those. 18 teams were still unread on 2026-11-14
+(`docs/DATA-SOURCES.md` §1.1 (l2) lists them).
+
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
@@ -1516,6 +1559,10 @@ pnpm fetch-prior-season                  # the season before SEASON_YEAR: 1 seas
 pnpm fetch-prior-season --year 24-25     # another season
 pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
 ```
+
+Before any of this overwrites `data/rosters.json`, run `pnpm build-players` so the season just finished
+is in the player registry, and afterwards `pnpm fetch-prior-players` for its stat sheets (see "The player
+registry").
 
 It writes every final between two registry teams, nothing else, and writes nothing at all if a
 feed fails, a live row is dated outside the season, or two teams' feeds disagree on a game (a
