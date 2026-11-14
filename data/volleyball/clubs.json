@@ -6,7 +6,7 @@
     "The youth volleyball clubs players on the 60 tracked varsity rosters (the SCVAL, BVAL, WCAL and WBAL) are tied to, and the other girls' clubs found in and around Santa Clara County. The linking rule is field hockey's (README, \"Clubs\"), with one change of place: a public page must name the player and a volleyball or beach volleyball club, and either name the player's high school, or give a class year equal to the roster's along with a hometown in the school's own area (its city or a neighbouring one). A name alone never counts, a class year that disagrees with the roster rules a match out, and social media is never a source.",
     "Club records: the candidate list was the NCVA 2025-26 Girls Power League points tables for 15s to 18s (84 club codes; ncva.com has no public club directory), then every club a player's own page names. Each record was written from the club's own site. South Bay and Peninsula clubs were looked for; the East Bay, Central Coast, San Francisco and Marin records are clubs a player is tied to or that were met on the way, and those areas were not searched for every club. The Edge Volleyball Club is an Illinois club one Fremont player's Hudl page lists (region elsewhere).",
     "No record, so no tie shown, although a player's page names the club: Apex Volleyball Club (Pioneer players' NCSA, SportsRecruits and Prep Dig pages; it plays NCVA events, but no site or city was found on either day), Frisco Bay Volleyball Club (one Mercy Burlingame player's NCSA page; no club of the name could be identified), Titans (one Palo Alto player's NCSA line), J5 Beach Volleyball and Golden Gate Beach Volleyball (one player each), BRX and Bay Area Eagles (one MaxPreps career page each), and Hudl organizations that may not be clubs (Titans Athletics, Global Challenge). Absolute, Club 415, Rage Westside, SF Juniors and Kamikaze, without a record after the 2026-11-13 round, have one now, each from its own site. NCVA Power League clubs met on no player's page whose sites were not found still have no record (among them SPVC, VVA, FPVC, ITVC, Spark, Samba, Amplify, Cloud, Lakas, Vibe, Endline, Xceleration and Paye's Place).",
-    "Status. current: a source from the 2025-26 or 2026-27 club season (the club's own 2026-27 roster, a Hudl or NCSA entry for 2026 or later, a page dated 2026, a MaxPreps career entry joined or edited in 2026). past: a Hudl or NCSA entry that ends in 2024 or earlier, or a source that says she left. unknown: everything else, such as a Hudl entry for 2025 (which may be the 2024-25 or the 2025-26 club season) or an undated club list. A Hudl year range is partly a team's lifespan on Hudl, so a past tie's year is approximate.",
+    "Status. current: a source from the 2025-26 or 2026-27 club season (the club's own 2026-27 roster, a Hudl or NCSA entry for 2026 or later, a page dated 2026, a MaxPreps career entry joined or edited in 2026). past: a Hudl or NCSA entry that ends in 2024 or earlier, or a source that says she left. unknown: everything else, such as a Hudl entry for 2025 (which may be the 2024-25 or the 2025-26 club season) or an undated club list. A Hudl year range is partly a team's lifespan on Hudl, so a past tie's year is approximate. An NCSA entry's year is the club season's end (2027 is 2026-27); a later year is a team's class label and dates nothing. A news story's date does not date a club it mentions (a profile may tell of a club she left), so a story never makes a tie current.",
     "Hudl ties: the team list of each linked Hudl profile, which is on the school's own volleyball team and so names the school. One tie per club, quoting the latest entry's team name, organization, sport and years (data fields of the page, joined with ' / '). Left out: coaches' accounts, entries that end before the player's sixth grade, and organizations that are schools. Each list was read twice, by the sweep and by the refuter, and only entries in both reads are used.",
     "Club rosters give names only (Mountain View Volleyball Club's 2026-27 LeagueApps rosters, Vision's 2025-26 teams page, Academy's SportsRecruits list, Legend's team pages), so a roster match is a tie only where a second page names the player with the same club and her school: 45 ties were completed that way and about 60 exact-name matches were left out. The Mountain View rosters are read at the cited address with '&ngmp_2023_iframe_transition=1' added, which is what the page's own frame loads.",
     "Round of 2026-11-14: the 19 WCAL and WBAL schools (307 varsity rows) by every method of the first round (Hudl team rosters, NCSA, a SportsRecruits address probe, MaxPreps career pages, Prep Dig, PrepVolleyball), NCSA read through a headless browser this time; and, for all 60 schools, NCSA name searches for every named row, Prep Dig and PrepVolleyball for every junior, senior and ungraded row, and web searches for every senior. A tie the first round already had gained the new source, its basis saying so ('Round of 2026-11-14'). Prep Dig pages whose club link goes to a Vision club in another state are not used. NCSA spellings of a club (Pandas Volleyball Club, Panda VBC, MHVC) are mapped to the club's record.",
@@ -11120,8 +11120,8 @@
       "fullName": "Divya Bhupathi",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Blue",
-      "status": "current",
-      "asOf": "2026-11-11",
+      "status": "past",
+      "asOf": "2024",
       "confidence": "high",
       "sources": [
         {
@@ -11149,7 +11149,7 @@
           "sourceDate": "2026-11-11"
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own NCSA profile lists the club in its dated Club Information; a news story names her, her school and the club. Found in the 2026-11-14 round and read twice; current as of 2026-11-11."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own NCSA profile lists the club in its dated Club Information; a news story names her, her school and the club. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
     },
     {
       "teamSlug": "kings-academy",
@@ -12357,7 +12357,7 @@
       "club": "encore-volleyball-club",
       "clubTeam": "17-1 Navy",
       "status": "current",
-      "asOf": "2027",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -12385,7 +12385,7 @@
           "sourceDate": "2026-09-03"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2027."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-27."
     },
     {
       "teamSlug": "sacred-heart-cathedral",
@@ -12603,7 +12603,7 @@
       "club": "encore-volleyball-club",
       "clubTeam": "17 Navy",
       "status": "current",
-      "asOf": "2027",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -12623,7 +12623,7 @@
           "sourceDate": "2026-09-03"
         }
       ],
-      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2027."
+      "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026-27."
     },
     {
       "teamSlug": "mercy-burlingame",
@@ -13186,8 +13186,8 @@
       "fullName": "Hana Brownfield",
       "club": "red-rock-volleyball",
       "clubTeam": "1’s",
-      "status": "current",
-      "asOf": "2029",
+      "status": "unknown",
+      "asOf": null,
       "confidence": "high",
       "sources": [
         {
@@ -13207,7 +13207,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2029."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "mercy-burlingame",
@@ -13414,8 +13414,8 @@
       "fullName": "Divya Bhupathi",
       "club": "stingray-volleyball-club",
       "clubTeam": "12 Black",
-      "status": "current",
-      "asOf": "2026-11-11",
+      "status": "past",
+      "asOf": "2020",
       "confidence": "high",
       "sources": [
         {
@@ -13435,7 +13435,7 @@
           "sourceDate": "2026-11-11"
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information; a news story names her, her school and the club. Found in the 2026-11-14 round and read twice; current as of 2026-11-11."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information; a news story names her, her school and the club. Found in the 2026-11-14 round and read twice; the latest entry ends in 2020, so past."
     },
     {
       "teamSlug": "mercy-burlingame",
@@ -13467,7 +13467,7 @@
       "club": "club-415-volleyball",
       "clubTeam": "15 National",
       "status": "current",
-      "asOf": "2027",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -13479,7 +13479,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2027."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026-27."
     },
     {
       "teamSlug": "mercy-burlingame",
@@ -13599,7 +13599,7 @@
       "club": "vision-volleyball-club",
       "clubTeam": "Blue",
       "status": "current",
-      "asOf": "2027",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -13611,7 +13611,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2027."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026-27."
     },
     {
       "teamSlug": "sacred-heart-prep",
@@ -13709,7 +13709,7 @@
       "club": "mountain-view-volleyball-club",
       "clubTeam": "17 National",
       "status": "current",
-      "asOf": "2027",
+      "asOf": "2026-27",
       "confidence": "high",
       "sources": [
         {
@@ -13721,7 +13721,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2027."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026-27."
     },
     {
       "teamSlug": "notre-dame-san-jose",
@@ -13796,8 +13796,8 @@
       "fullName": "Ella Bu",
       "club": "academy-volleyball",
       "clubTeam": "14 National West",
-      "status": "current",
-      "asOf": "2030",
+      "status": "unknown",
+      "asOf": null,
       "confidence": "high",
       "sources": [
         {
@@ -13809,7 +13809,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2030."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "los-gatos",

@@ -1516,8 +1516,8 @@ by source. Counted from the files on 2026-11-14:
   every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits address probe over every
   named varsity and JV row. Every Hudl and NCSA page was re-read by a second reader.
 - **Clubs** (`clubs.json`): **37 clubs** (South Bay 11, Peninsula 11, East Bay 4, Central Coast 4, San Francisco 4,
-  Marin 2, elsewhere 1) and **422 ties for 290 of the 876 varsity rows, at 48 of the 60 schools**: 98 current, 199
-  listed (unknown) and 125 earlier; 101 players are tied to more than one club. The most ties: Vision 80, MVVC 73,
+  Marin 2, elsewhere 1) and **422 ties for 290 of the 876 varsity rows, at 48 of the 60 schools**: 94 current, 201
+  listed (unknown) and 127 earlier; 101 players are tied to more than one club. The most ties: Vision 80, MVVC 73,
   Academy 63, Panda 31, Red Rock 29, Encore 23, Stingray 20, City Beach 17. 9 clubs have no tied player. The ties
   rest on 656 source entries on 456 URLs (Hudl 324, NCSA 81, Prep Dig and PrepVolleyball 75, MaxPreps career pages
   63, SportsRecruits 59, club sites 37, school and local papers 16, a college release 1). Most come from the team
