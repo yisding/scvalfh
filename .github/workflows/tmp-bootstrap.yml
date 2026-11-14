@@ -1,0 +1,41 @@
+# TEMPORARY (removed before this branch merges; owner approved 2026-11-14): runs .github/tmp-bootstrap/run.sh
+# on a GitHub runner and commits what it wrote back to this branch. The WCAL/WBAL soccer bootstrap reads
+# MaxPreps, which answers the development container with 403 and the runners normally.
+name: tmp-bootstrap
+
+on:
+  push:
+    branches: [ccr-4da3e359-mybwm1]
+    paths: ['.github/tmp-bootstrap/run.sh']
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SCVAL_SPORT: soccer
+      SCVAL_CONTACT: see the repository
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run
+        run: bash .github/tmp-bootstrap/run.sh 2>&1 | tee .github/tmp-bootstrap/out/log.txt
+        continue-on-error: true
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .github/tmp-bootstrap/out data public/mascots
+          git diff --cached --quiet && { echo "nothing written"; exit 0; }
+          git commit -m "tmp: bootstrap output"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
