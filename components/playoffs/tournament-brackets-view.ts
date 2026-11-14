@@ -260,6 +260,7 @@ function tie(
   const links: TournamentTie['links'] = [];
   if (upcoming && game?.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (upcoming && game?.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (upcoming && game?.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   const clock = hhmm ? leagueClock(hhmm) : 'TBD';
   return {
     key: m.id,

@@ -676,6 +676,7 @@ function nextChips(game: Game): NextChip[] {
   if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
   if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (game.urls.hudl) chips.push({ href: game.urls.hudl, label: 'Hudl TV' });
   if (game.urls.goFan) chips.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) chips.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   return chips;

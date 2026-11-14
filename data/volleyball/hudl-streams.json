@@ -1,0 +1,885 @@
+{
+  "builtBy": "Hand-run research, 2026-11-14: a headless browser over each covered school's fan.hudl.com page (past livestreams and Nov-Mar schedule), matched to the snapshot's games; see notes and docs/DATA-SOURCES.md (Hudl TV broadcasts).",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Each covered school's page on Hudl's fan site (fan.hudl.com) was opened in a browser on 2026-11-14: its past livestreams (every archived broadcast, newest first, read back past 2026-08-01) and its schedule from November 2026 to March 2027, where an event Hudl will stream is marked Upcoming. Two schools were not found on the fan site (James Lick, Notre Dame San Jose).",
+    "A broadcast is matched to a game by the school's team (Hudl's team list gives its sport, gender and level: varsity only), the Pacific date and the opponent. Where the opponent Hudl names differs from the site's, the match was read by hand: an abbreviation or misspelling (RLS for Stevenson, FV for Fountain Valley, Chap for Chaparral, Hollsiter) is confirmed; a venue camera's recording or a title naming no opponent is 'likely'; a different school (Carmel v York, Los Gatos v Leigh, King's v Harker) is not linked.",
+    "A scheduled broadcast's link was read from the school's month schedule (each event opened; the broadcast the event loads), kept when it is the school's only broadcast starting within 15 minutes of the event. The same watch page carries the live stream and then the replay.",
+    "One link per game: a confirmed match before a likely one, the home school's broadcast before the visitor's, then the broadcast nearest the game's start. A game no covered school streams on Hudl has no record; that is not a claim that no stream exists."
+  ],
+  "streams": [
+    {
+      "contestId": "3e29bccb-af6c-48ac-bd68-eb2c5e7f19ab",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDMwNDYwNQ%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "714569dd-7651-4f4b-848d-31136029cc65",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODYxNw%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "111f7795-9ec5-4812-b365-1abba628fd4d",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDM0OTEwNg%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4bd9f9a2-e8cf-4abd-b9b6-dd30174b6608",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NDY3Ng%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ac57483c-ad7d-4eda-8cb3-dbe46b46ca32",
+      "url": "https://fan.hudl.com/usa/ca/mountain-view/organization/6279/saint-francis-high-school/watch?b=QnJvYWRjYXN0NDM0OTAyNw%3D%3D",
+      "by": "Saint Francis",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c9514791-caf1-46d5-bd82-ce255e3874f4",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDM0OTIwNQ%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3c434674-d4c1-44e6-a035-743ac03820e5",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDAzOA%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "807fc2eb-980d-4f55-b1f5-324ab42b6cc1",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDM0ODc1Mg%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c94e3fac-75e3-4f87-b22c-4d7602c99689",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/4744/palo-alto-high-school/watch?b=QnJvYWRjYXN0NDM1ODY2Mg%3D%3D",
+      "by": "Palo Alto",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1ebe6f0b-dbc2-495a-a8a2-582f929cfcbe",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDM1ODcwMg%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "80087fff-2054-487f-871d-38b15352d79f",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDM2ODg5MA%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "add82699-676c-45d5-a91b-d6e6a8457f82",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDM1ODcwNA%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e2086e14-edbe-433d-9196-acef8c6dd925",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/11739/leland-high-school/watch?b=QnJvYWRjYXN0NDM5OTM1OA%3D%3D",
+      "by": "Leland",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "22889413-74ed-44c8-8cb1-3eda067b541d",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM2NQ%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2d20f5bd-6c33-4aec-a38c-e91f0fa764fb",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODYzNA%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "bb97e7b6-cb89-4c46-9622-e5dfd23af399",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDQwNzExOQ%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3a170a9a-1363-41bc-bee2-f834be48dcdb",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTIwMA%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "63dd251e-49e2-49e3-9b01-620819a0375a",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDQxNTk5Mg%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a2dd847b-3d29-4eaf-8228-a70864865108",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/4744/palo-alto-high-school/watch?b=QnJvYWRjYXN0NDQxNzk1Mw%3D%3D",
+      "by": "Palo Alto",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b2e4366f-96aa-4a12-86bb-ad15d0e2d9d7",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDM2ODg4Nw%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "fb80e16f-81fb-4581-a461-673f18dab630",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDM0ODE5Nw%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "eb239b33-0c49-4ead-b882-aeae70a5e9b6",
+      "url": "https://fan.hudl.com/usa/ca/gilroy/organization/6179/gilroy-high-school/watch?b=QnJvYWRjYXN0NDQyMDIwMA%3D%3D",
+      "by": "Gilroy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8c81ed9f-26b3-4270-a804-c94b2f759935",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM2Ng%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f1b89c50-9e91-4671-a004-9d585f36356c",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTE2Mw%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2c302175-f3fc-49af-a9f5-8ba5296d4056",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA0Ng%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "de956118-1967-43eb-97e2-51dfcea0f4c8",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NTE5MA%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "6da82614-6e83-4641-a997-f903b9712560",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDM5NzM4MQ%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7bbbbcd8-1c14-413b-bc06-2556bb329220",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDQ1ODU1MA%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8c32c017-36cd-4a51-a84d-ee4d2800e706",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTIwNQ%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "baf5d45c-fc6e-46fd-b5c3-bcfc1cbb565f",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODYzOQ%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2b63f6bd-1643-44df-8213-093074485658",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDQ2NjUwMA%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7c6f7b3b-dabc-4a91-acdb-4d34356c84c6",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDQ2NjY3Ng%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7d7e1fbe-537f-4e0d-a3c3-cd37f1e85799",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDQ2NzA2Mw%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7411b4af-74fe-4a8c-a129-f82d1bc5ea3e",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM2OQ%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "fe3dba69-9960-4f61-9ce1-12d50efc78f8",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQ5MDAzMw%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "48cd57ea-7920-4a32-b00f-85ffd95f0f6f",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/13781/ann-sobrato-high-school/watch?b=QnJvYWRjYXN0NDQ5OTA0Mg%3D%3D",
+      "by": "Ann Sobrato",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "60ba53f1-bb8d-4fed-a4cc-c6383a56efed",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDQ5NjkyMw%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "d9470774-8721-4324-8ee0-d8834f1cf798",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA1Mw%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e2423497-b22b-43c8-a227-856fbc99aff0",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NTIxMA%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "38f86290-0484-462b-8614-438c06486e42",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODY0Nw%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "699683a5-e8ec-4e4a-842e-ec13fec1b688",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTIxOQ%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ac013676-5b92-4f29-b2f9-01b0deed9d25",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/13781/ann-sobrato-high-school/watch?b=QnJvYWRjYXN0NDUxNDA3MA%3D%3D",
+      "by": "Ann Sobrato",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ee80d880-92fd-4ea1-b7d5-d93a320ee4e1",
+      "url": "https://fan.hudl.com/usa/ca/gilroy/organization/6179/gilroy-high-school/watch?b=QnJvYWRjYXN0NDUxODA4OQ%3D%3D",
+      "by": "Gilroy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "05935222-5712-4134-87c9-9e55397a77a1",
+      "url": "https://fan.hudl.com/usa/ca/gilroy/organization/6179/gilroy-high-school/watch?b=QnJvYWRjYXN0NDUzNDQxNQ%3D%3D",
+      "by": "Gilroy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "369d6bde-1f15-4b2c-807f-650b3820ecce",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM3NA%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4a2328f2-ef3d-4061-a3de-2ae516d6d6fc",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODY2Ng%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "074e4a06-bc89-4eee-81c8-4ba5a2c7bc00",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA1OA%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2559d352-28d6-4442-880a-23d78c65d46f",
+      "url": "https://fan.hudl.com/usa/ca/mountain-view/organization/6279/saint-francis-high-school/watch?b=QnJvYWRjYXN0NDU0NDU3Ng%3D%3D",
+      "by": "Saint Francis",
+      "kind": "replay",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl: \"Alumni Gym Recording\" v no opponent named; matched on the date and sport"
+    },
+    {
+      "contestId": "2d9c68a1-96c2-4ed8-865a-5457446bfd60",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDU0Mzg2OQ%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "531a18b5-6ee4-480e-b897-1bbeaaafd489",
+      "url": "https://fan.hudl.com/usa/ca/portola-valley/organization/126862/woodside-priory-school/watch?b=QnJvYWRjYXN0NDM1NDU1MQ%3D%3D",
+      "by": "Priory",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "9952e543-f975-4c5e-a19a-a06658735963",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDUzMjQwNw%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a9ca6900-52df-444a-812e-6e0a34f04128",
+      "url": "https://fan.hudl.com/usa/ca/gilroy/organization/6179/gilroy-high-school/watch?b=QnJvYWRjYXN0NDUzNDQxMw%3D%3D",
+      "by": "Gilroy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e223f7d9-876e-4c1d-817b-6f2e1c22d1f6",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDU1MDE5MQ%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "fcaf26ab-efed-4bf7-b17f-0f8a5ce2400e",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDU0NDIzMQ%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a2d807e0-91bf-4e30-b3f8-315ff9171158",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTIwMA%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c97aa8d4-70a7-4792-8c42-28507f2b8485",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTIzMw%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "d5d7aebc-18ac-4f77-b733-97e07bb4c971",
+      "url": "https://fan.hudl.com/usa/ca/san-francisco/organization/6604/sacred-heart-cathedral-high-school/watch?b=QnJvYWRjYXN0NDU1Nzk4Nw%3D%3D",
+      "by": "Sacred Heart Cathedral",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "db959fb6-5157-4e4c-bf0d-0099b7f544d5",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NDY2Mw%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ef0d970c-d150-406b-897e-835b5d4e11f7",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDU1Njc1OQ%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "73dc186c-9dce-4c03-82f2-5814996fad6f",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDU2NDQyNQ%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "5438e256-8182-4aa2-894d-5b41c6dad0c2",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDMzMDU2Ng%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3b38dc7b-ee0e-4f32-8ab4-84e99b2544d4",
+      "url": "https://fan.hudl.com/usa/ca/mountain-view/organization/6279/saint-francis-high-school/watch?b=QnJvYWRjYXN0NDU4Njk3MQ%3D%3D",
+      "by": "Saint Francis",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7480cb92-5dd0-4886-99c5-c49089baf917",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDU4NjU0OA%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a092bd0b-5313-4527-89cc-dd98b54aeb06",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDUzMjQwMg%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a5805006-8a44-403a-92c7-bed4fc315b11",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDM0MzM4MA%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a5fd017a-ebd9-4ffd-a3a3-b842bb1ba8ef",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDU4NjgxMg%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ca34fb9d-cdc2-40c0-a025-ca5acbba4a8d",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODY3OA%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "d4b21e64-4ea1-41b8-84b4-80280b5d7354",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTI0Mg%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4a5b4005-deaa-4d24-9962-ef3dfc893e9f",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA2Mg%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "30a9a3f5-757c-4344-acc3-32592cd4e3ba",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDU5OTk5MQ%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3843828d-b8a8-424f-b5eb-a6464f763159",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTIyNA%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "396da3ce-2075-4676-8d1c-4eeea5dd60ab",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/13781/ann-sobrato-high-school/watch?b=QnJvYWRjYXN0NDYwMDI3MA%3D%3D",
+      "by": "Ann Sobrato",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "dc2e35cb-f026-475e-8c8b-a94a28a4d01d",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM3OQ%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ebe4187e-98e1-49c9-8b67-f1080fad1685",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDU5OTczMA%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "df42e91f-4df8-4230-af1c-acf5d698b9ed",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NTI0MA%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "5583d224-ea2f-4675-a249-d7ce69fa3d21",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTI0OA%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8eb29847-c4f8-45cc-addf-1f537ca9dc4e",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDYyNTYyNg%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "9310a008-81cc-4712-8d3f-fd94a6adc714",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDYyMzA4OA%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "eee03f87-0d7c-494c-bd5f-495ebd9a8ba1",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODY5MA%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8e2932c8-113e-4a23-adf1-0a7c87bd6aa8",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA2NQ%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "0d1bc2a9-cfc1-4f3f-a7af-e67c33bfe730",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDM0NTI5Mw%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "387436e3-0af2-4181-87ce-2d8352ec2c0e",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDYyMzEyNQ%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "5d2312d1-b54d-4b91-bbcc-195604b134fb",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDYzODQwMQ%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8bdcd29f-6ff5-441f-9cec-646c7cbe1c6a",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTI0MA%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ef032f65-1d31-47ff-aae7-7b3f0dc3a823",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDYzODYyNw%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "88649030-0e89-4a1c-add0-a69364c60e1e",
+      "url": "https://fan.hudl.com/usa/ca/belmont/organization/66863/notre-dame-high-school/watch?b=QnJvYWRjYXN0NDY1ODc3Ng%3D%3D",
+      "by": "Notre Dame Belmont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b02ec963-9255-4448-8a1c-53ee0769f8c6",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM4MA%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3e705af5-b0d2-40ab-8de0-639b4eb65c2f",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDY2NjYyMg%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8ee78cfe-556d-468c-aa2e-c488b7a98c6a",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/13781/ann-sobrato-high-school/watch?b=QnJvYWRjYXN0NDY2NTU2OA%3D%3D",
+      "by": "Ann Sobrato",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a0bb1548-c452-4ffd-b57f-3ca88d533cdd",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTI1OA%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "adbb1cb0-965f-4f0f-a12d-b2c1272926ba",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDM0MzM5Mg%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "69f9fedd-025e-4883-8579-0f11df6b7425",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/13581/wilcox-high-school/watch?b=QnJvYWRjYXN0NDI4ODcwMA%3D%3D",
+      "by": "Wilcox",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a62a60db-e468-4d90-8a49-88213878d28c",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDY3OTc2NQ%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c5bad587-2c61-4c3e-93f2-795c6a251573",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/13781/ann-sobrato-high-school/watch?b=QnJvYWRjYXN0NDY3OTg0Mg%3D%3D",
+      "by": "Ann Sobrato",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f86466db-205c-42ce-8f82-2a7472bf8544",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDE0MTM4Mw%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1dc792a1-8c91-4245-af7c-20c58a44c530",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDI2NDA3Mw%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4ba7d057-681a-4ea9-b119-a877df7a9381",
+      "url": "https://fan.hudl.com/usa/ca/gilroy/organization/6179/gilroy-high-school/watch?b=QnJvYWRjYXN0NDcwMTE2Mg%3D%3D",
+      "by": "Gilroy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "812a0c29-b526-447a-85e5-7a88d5f9066a",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDcwMDk0NA%3D%3D",
+      "by": "Live Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "151673ed-be93-4820-8a39-34e2f0dba0f1",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDQ0NjY4Nw%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8ea4ede0-2766-451b-a628-b02fc7a89288",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTI2Ng%3D%3D",
+      "by": "Gunn",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e07cf59f-42cc-4671-9f28-91a8c775ba4b",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/15481/-lynbrook-high-school/watch?b=QnJvYWRjYXN0NDQxNTI4Nw%3D%3D",
+      "by": "Lynbrook",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f9459118-1e97-4d57-a9f2-f6fa8ad763a2",
+      "url": "https://fan.hudl.com/usa/ca/burlingame/organization/164137/mercy-high-school/watch?b=QnJvYWRjYXN0NDYyMzE1Mw%3D%3D",
+      "by": "Mercy Burlingame",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c9d31dc6-7e75-474d-b390-c83efefd9bb3",
+      "url": "https://fan.hudl.com/usa/ca/mountain-view/organization/6279/saint-francis-high-school/watch?b=QnJvYWRjYXN0NDcxOTM1Ng%3D%3D",
+      "by": "Saint Francis",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "64618c47-f277-4fda-a8f3-e37b81c362a3",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/6022/the-king-s-academy-high-school/watch?b=QnJvYWRjYXN0NDc1MjEyNQ%3D%3D",
+      "by": "The King’s Academy",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "d8b41a38-24ab-4fd1-bd13-d04f0902954b",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/11739/leland-high-school/watch?b=QnJvYWRjYXN0NDc1MzczMQ%3D%3D",
+      "by": "Leland",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ff9c1cf4-d616-4025-ab45-c7d5753db7cb",
+      "url": "https://fan.hudl.com/usa/ca/cupertino/organization/12909/monta-vista-high-school/watch?b=QnJvYWRjYXN0NDc1MTk3NQ%3D%3D",
+      "by": "Monta Vista",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b8aeb6ca-bf88-44bc-bd13-d1a395c99e12",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDc2MjI0MA%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1d24d23f-5df1-4955-ae6a-123d830a3b0e",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDc5OTM5Ng%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "18aef520-2fb2-4055-afca-fab39ce0a443",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/116165/castilleja-school/watch?b=QnJvYWRjYXN0NDgxMTEzNg%3D%3D",
+      "by": "Castilleja",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    }
+  ]
+}

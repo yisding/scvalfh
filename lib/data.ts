@@ -54,6 +54,7 @@ import { boxEvidenceFrom } from './results/box-evidence';
 import { SDS_BRACKETS_FILE } from './postseason/sds-brackets-file';
 import { withSdsFinalLinks } from './postseason/sds-final-links';
 import { withFixtureGames } from './results/fixture-games';
+import { getHudlStreamsFile, withHudlStreams } from './streams/hudl-streams';
 import { loadSnapshot } from './snapshot/snapshot-load';
 import { countsOf } from './snapshot/snapshot-migrate';
 import { divisionGames, sortStandings } from './standings/engine';
@@ -136,7 +137,8 @@ const stored = load();
 const snapshot: Snapshot = (() => {
   const listed = withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt);
   // A San Diego final's stream and tickets from the bracket file, where its game has none (lib/postseason/sds-final-links.ts).
-  const games = withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE);
+  // Then each game's Hudl TV broadcast, where a covered school streams it (lib/streams/hudl-streams.ts).
+  const games = withHudlStreams(withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE), getHudlStreamsFile());
   if (listed.listed.length === 0) return { ...stored, games };
   return { ...stored, games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
 })();

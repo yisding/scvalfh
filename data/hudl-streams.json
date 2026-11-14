@@ -1,0 +1,532 @@
+{
+  "builtBy": "Hand-run research, 2026-11-14: a headless browser over each covered school's fan.hudl.com page (past livestreams and Nov-Mar schedule), matched to the snapshot's games; see notes and docs/DATA-SOURCES.md (Hudl TV broadcasts).",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Each covered school's page on Hudl's fan site (fan.hudl.com) was opened in a browser on 2026-11-14: its past livestreams (every archived broadcast, newest first, read back past 2026-08-01) and its schedule from November 2026 to March 2027, where an event Hudl will stream is marked Upcoming. Two schools were not found on the fan site (James Lick, Notre Dame San Jose).",
+    "A broadcast is matched to a game by the school's team (Hudl's team list gives its sport, gender and level: varsity only), the Pacific date and the opponent. Where the opponent Hudl names differs from the site's, the match was read by hand: an abbreviation or misspelling (RLS for Stevenson, FV for Fountain Valley, Chap for Chaparral, Hollsiter) is confirmed; a venue camera's recording or a title naming no opponent is 'likely'; a different school (Carmel v York, Los Gatos v Leigh, King's v Harker) is not linked.",
+    "A scheduled broadcast's link was read from the school's month schedule (each event opened; the broadcast the event loads), kept when it is the school's only broadcast starting within 15 minutes of the event. The same watch page carries the live stream and then the replay.",
+    "One link per game: a confirmed match before a likely one, the home school's broadcast before the visitor's, then the broadcast nearest the game's start. A game no covered school streams on Hudl has no record; that is not a claim that no stream exists."
+  ],
+  "streams": [
+    {
+      "contestId": "96b48206-94c0-4f50-918c-d463c1ae543e",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTM5OA%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "fda38998-6adf-4314-84ed-e6019b37538b",
+      "url": "https://fan.hudl.com/usa/ca/berkeley/organization/22185/berkeley-high-school/watch?b=QnJvYWRjYXN0NDI4NDM5OA%3D%3D",
+      "by": "Berkeley",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "0ba419c5-ceae-470e-9194-817944196372",
+      "url": "https://fan.hudl.com/usa/ca/thousand-oaks/organization/1127/thousand-oaks-high-school/watch?b=QnJvYWRjYXN0NDI3Mzg3MQ%3D%3D",
+      "by": "Thousand Oaks",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a54c0410-4bad-4a8e-bc53-f9f762d92e9f",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDMwNDg1OQ%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "dafeaf3f-07a8-4052-8b41-e56cc8c04327",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDMwNTE5Nw%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2d5f415b-545a-4d9e-ba26-c24e6ff51f3f",
+      "url": "https://fan.hudl.com/usa/ca/newport-beach/organization/1358/newport-harbor-high-school/watch?b=QnJvYWRjYXN0NDM0Njk4OQ%3D%3D",
+      "by": "Newport Harbor",
+      "kind": "replay",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl: \"Davidson Field  Recording\" v no opponent named; matched on the date and sport"
+    },
+    {
+      "contestId": "2e1b098f-5f08-42dc-8835-d353440fa600",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcwMw%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7b43f9e6-bf73-46cc-8fc8-065d18c14713",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTM5OQ%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7fc90d3a-08f1-4938-af4d-89d267c36774",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDM0NzU5Mw%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8a4d7c70-1907-4b38-a059-28fd0c679f0c",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDM1NzA5NQ%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "00b87940-3763-43a3-ad1d-df2d58bd9e21",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQwMQ%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "25c3a3c0-c95d-4c21-9a43-c9542c632ab9",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDQwNjAwMg%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "25e37284-9533-4ad2-81fc-9fb1932c9923",
+      "url": "https://fan.hudl.com/usa/ca/berkeley/organization/22185/berkeley-high-school/watch?b=QnJvYWRjYXN0NDM4MjA3NA%3D%3D",
+      "by": "Berkeley",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1c6b0722-0e72-4e18-baf5-a330e5a61976",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDQyNTA0MA%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "252ac948-674c-4374-aa07-5a0fa074ef17",
+      "url": "https://fan.hudl.com/usa/ca/temecula/organization/4844/great-oak-high-school/watch?b=QnJvYWRjYXN0NDQwMjk4Ng%3D%3D",
+      "by": "Great Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed",
+      "note": "Hudl: \"Varsity vs Chap\" v Bonita Vista High School; matched on the date and sport"
+    },
+    {
+      "contestId": "f7db8ccd-1f6d-4579-bd12-789bb78e198a",
+      "url": "https://fan.hudl.com/usa/ca/berkeley/organization/22185/berkeley-high-school/watch?b=QnJvYWRjYXN0NDQzNzQwNQ%3D%3D",
+      "by": "Berkeley",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1c87e5c3-5a06-4ed4-b661-d3fc2cb21a4f",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDQ1MDMyMQ%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b4794d38-abf0-4fe2-bbc7-9fd4e9c070ea",
+      "url": "https://fan.hudl.com/usa/ca/newport-beach/organization/1358/newport-harbor-high-school/watch?b=QnJvYWRjYXN0NDQ1MDQ4NA%3D%3D",
+      "by": "Newport Harbor",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "82d386f0-979f-4e13-ae13-33e3c8f29f2e",
+      "url": "https://fan.hudl.com/usa/ca/thousand-oaks/organization/1127/thousand-oaks-high-school/watch?b=QnJvYWRjYXN0NDQyMTQwOA%3D%3D",
+      "by": "Thousand Oaks",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3891a46d-755b-480a-91cb-9e46f62ff150",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDQ2NjE2MA%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed",
+      "note": "Hudl: \"University City HS vs The Bishops School Girls' Varsity FieldHockey\" v The Bishops School; matched on the date and sport"
+    },
+    {
+      "contestId": "8ab8d409-7797-4bc5-87d4-cf7c96562aff",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQwMg%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "af5903a1-8b17-4d7f-a84d-60b494615bc0",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcwNw%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "87c88674-90b8-4163-bd27-cf7698c256c8",
+      "url": "https://fan.hudl.com/usa/ca/newport-beach/organization/1358/newport-harbor-high-school/watch?b=QnJvYWRjYXN0NDQ5NjUzMA%3D%3D",
+      "by": "Newport Harbor",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "cbc3301d-2664-4809-97a4-7a11839c003f",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQwNA%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e6488575-c728-4e7f-8060-be08967000b1",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDQ5MDI2Mg%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "6529fc62-3f74-42fd-adf0-1332eb349b8e",
+      "url": "https://fan.hudl.com/usa/ca/thousand-oaks/organization/1127/thousand-oaks-high-school/watch?b=QnJvYWRjYXN0NDQyMTQ0MA%3D%3D",
+      "by": "Thousand Oaks",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "86fd1057-aa19-41f9-abee-162ac0b5dce5",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcwOQ%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "cb79ab02-4b36-47a5-848e-619047bb6ad0",
+      "url": "https://fan.hudl.com/usa/ca/valley-center/organization/8753/valley-center-high-school/watch?b=QnJvYWRjYXN0NDUyMDM3NQ%3D%3D",
+      "by": "Valley Center",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e73e9fef-4b87-41d4-8b1c-384be3b978ba",
+      "url": "https://fan.hudl.com/usa/ca/thousand-oaks/organization/1127/thousand-oaks-high-school/watch?b=QnJvYWRjYXN0NDQyMTQ0Nw%3D%3D",
+      "by": "Thousand Oaks",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "9afebd05-777b-4c8a-82d5-c41b556788bb",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDUzNDkzMQ%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "888756e8-0e6c-4fa4-8b33-224f61522e42",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcxMw%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "af389420-2952-46b3-b655-f14ee2044116",
+      "url": "https://fan.hudl.com/usa/ca/temecula/organization/4844/great-oak-high-school/watch?b=QnJvYWRjYXN0NDQ5NDI1MQ%3D%3D",
+      "by": "Great Oak",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed",
+      "note": "Hudl: \"V vs. FV\" v Southwest High School; matched on the date and sport"
+    },
+    {
+      "contestId": "1032d052-d976-49a1-8155-7ce728e6f612",
+      "url": "https://fan.hudl.com/usa/ca/newport-beach/organization/1358/newport-harbor-high-school/watch?b=QnJvYWRjYXN0NDU0OTcyMw%3D%3D",
+      "by": "Newport Harbor",
+      "kind": "replay",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl: \"Davidson Field  Recording\" v no opponent named; matched on the date and sport"
+    },
+    {
+      "contestId": "8cd5c170-de22-412c-a6f5-094876f35041",
+      "url": "https://fan.hudl.com/usa/ca/thousand-oaks/organization/1127/thousand-oaks-high-school/watch?b=QnJvYWRjYXN0NDQyMTQ1Nw%3D%3D",
+      "by": "Thousand Oaks",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "dcb840cb-6964-4eae-92ed-aeb3c6d25fd5",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDU1ODIwMw%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f5e5dd54-45e1-4158-8e40-0180f5886864",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQwNQ%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7a264fb2-21bf-439e-aa4e-b34ed195ba0b",
+      "url": "https://fan.hudl.com/usa/ca/valley-center/organization/8753/valley-center-high-school/watch?b=QnJvYWRjYXN0NDU2MjkzNQ%3D%3D",
+      "by": "Valley Center",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "fd2f10ae-1123-4a15-bca4-d72766359385",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDU3NDc3OA%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "6a6c72bf-0613-4dd2-a7fd-e09a980e7ae3",
+      "url": "https://fan.hudl.com/usa/ca/valley-center/organization/8753/valley-center-high-school/watch?b=QnJvYWRjYXN0NDU4MTg0NA%3D%3D",
+      "by": "Valley Center",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8e88756b-bfcd-44d8-87cc-f96534939179",
+      "url": "https://fan.hudl.com/usa/ca/berkeley/organization/22185/berkeley-high-school/watch?b=QnJvYWRjYXN0NDU5ODU4NA%3D%3D",
+      "by": "Berkeley",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "97defd10-d465-4516-a398-728b894d16d2",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQxMA%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3aaa4ce8-3b69-4ea3-98de-09399dbc2c38",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDE4MTQxMw%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "49348808-21a1-4e2c-b9dd-c13fd432d7a5",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/14183/santa-clara-high-school/watch?b=QnJvYWRjYXN0NDYwNDc0OQ%3D%3D",
+      "by": "Santa Clara",
+      "kind": "replay",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl dates the broadcast Oct 12 (3:30 PM), the site Oct 13; the two teams' only meeting that week"
+    },
+    {
+      "contestId": "5b6b5786-d121-4fa5-8b2f-3620fdaf3bcd",
+      "url": "https://fan.hudl.com/usa/ca/newport-beach/organization/1358/newport-harbor-high-school/watch?b=QnJvYWRjYXN0NDYyNDA3OQ%3D%3D",
+      "by": "Newport Harbor",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a79637fd-e680-4258-babb-bf8c2ad8d496",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDYyNDg0Nw%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b45e6b34-ceb5-49f6-b32f-fbbdd60b07ad",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcxNQ%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a6bb798f-8cd2-40bf-b44d-b3da20800661",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDYyNDg4OQ%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2119e9ab-c2d5-4277-8dec-83eb27304c76",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDY1NzUwOA%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a5d6f4a7-f0cd-4de0-ad54-a3f2672216b7",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDY1ODk0OA%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "06dff81f-eb29-408f-8c31-99a32c3ea188",
+      "url": "https://fan.hudl.com/usa/ca/santa-clara/organization/14183/santa-clara-high-school/watch?b=QnJvYWRjYXN0NDYwNDc2Nw%3D%3D",
+      "by": "Santa Clara",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "38c8a346-bcb6-4f77-93b3-d1f79596474b",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcxOA%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "404d13f2-1990-4ef8-8e89-813f8b9f8cc5",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDYyNDkwNA%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "19c1fbca-90c3-471f-8c5e-84169b0432c8",
+      "url": "https://fan.hudl.com/usa/ca/berkeley/organization/22185/berkeley-high-school/watch?b=QnJvYWRjYXN0NDY2ODI5MQ%3D%3D",
+      "by": "Berkeley",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8bbf5d31-bcc3-4e8c-8386-72bc0eebdc16",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDY3MDU0Mw%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e2fb3a6e-9e73-4625-b9a8-7186485881e9",
+      "url": "https://fan.hudl.com/usa/ca/valley-center/organization/8753/valley-center-high-school/watch?b=QnJvYWRjYXN0NDY4NjIwNg%3D%3D",
+      "by": "Valley Center",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "2b925938-1a5a-4d62-8060-00d9564c7b02",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/8570/point-loma-high-school/watch?b=QnJvYWRjYXN0NDcwNzcwNw%3D%3D",
+      "by": "Point Loma",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "71de3d77-1334-4676-9cb2-d1f12bbb6451",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDY4NjE1Mg%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c1fbf49f-8841-456b-9baa-f4ea8b84f3ee",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/4195/mt--carmel-high-school/watch?b=QnJvYWRjYXN0NDIwNDcyMQ%3D%3D",
+      "by": "Mt. Carmel",
+      "kind": "replay",
+      "access": "paid",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e798ade9-729e-43d6-b130-3f3829f67030",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDcwODI2NA%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1e24ff23-d254-4d7d-bdb7-64c070e16b09",
+      "url": "https://fan.hudl.com/usa/ca/carmel/organization/14479/carmel-high-school/watch?b=QnJvYWRjYXN0NDcxNDcyNg%3D%3D",
+      "by": "Carmel",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed",
+      "note": "Hudl: \"Carmel vs RLS Girls' Varsity FieldHockey\" v RLS; matched on the date and sport"
+    },
+    {
+      "contestId": "6d4c9938-63bb-4355-809c-4cc54b730b14",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDY5NzI5MQ%3D%3D",
+      "by": "Fremont",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "30e25289-482c-4682-b2da-0540ad17fbd8",
+      "url": "https://fan.hudl.com/usa/ca/los-angeles/organization/1633/harvard-westlake-school/watch?b=QnJvYWRjYXN0NDcyMjQ2NQ%3D%3D",
+      "by": "Harvard-Westlake",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ca27178a-9f11-46c0-9397-8289585bdb76",
+      "url": "https://fan.hudl.com/usa/ca/chico/organization/6602/chico-high-school/watch?b=QnJvYWRjYXN0NDczMDgzMw%3D%3D",
+      "by": "Chico",
+      "kind": "replay",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl: \"Chico High School vs EAL Girls' Varsity FieldHockey\" v EAL; matched on the date and sport"
+    },
+    {
+      "contestId": "6370a591-e904-4ba4-a183-3e7d1e970f95",
+      "url": "https://fan.hudl.com/usa/ca/san-diego/organization/22559/university-city-high-school/watch?b=QnJvYWRjYXN0NDc3MjgyMw%3D%3D",
+      "by": "University City",
+      "kind": "replay",
+      "access": "free",
+      "match": "confirmed"
+    }
+  ]
+}

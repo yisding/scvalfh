@@ -1,0 +1,84 @@
+{
+  "builtBy": "Hand-run research, 2026-11-14: a headless browser over each covered school's fan.hudl.com page (past livestreams and Nov-Mar schedule), matched to the snapshot's games; see notes and docs/DATA-SOURCES.md (Hudl TV broadcasts).",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Each covered school's page on Hudl's fan site (fan.hudl.com) was opened in a browser on 2026-11-14: its past livestreams (every archived broadcast, newest first, read back past 2026-08-01) and its schedule from November 2026 to March 2027, where an event Hudl will stream is marked Upcoming. Two schools were not found on the fan site (James Lick, Notre Dame San Jose).",
+    "A broadcast is matched to a game by the school's team (Hudl's team list gives its sport, gender and level: varsity only), the Pacific date and the opponent. Where the opponent Hudl names differs from the site's, the match was read by hand: an abbreviation or misspelling (RLS for Stevenson, FV for Fountain Valley, Chap for Chaparral, Hollsiter) is confirmed; a venue camera's recording or a title naming no opponent is 'likely'; a different school (Carmel v York, Los Gatos v Leigh, King's v Harker) is not linked.",
+    "A scheduled broadcast's link was read from the school's month schedule (each event opened; the broadcast the event loads), kept when it is the school's only broadcast starting within 15 minutes of the event. The same watch page carries the live stream and then the replay.",
+    "One link per game: a confirmed match before a likely one, the home school's broadcast before the visitor's, then the broadcast nearest the game's start. A game no covered school streams on Hudl has no record; that is not a claim that no stream exists."
+  ],
+  "streams": [
+    {
+      "contestId": "ee2eb6c7-270f-4211-8e60-ce82d1068f73",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDkxNA%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "aee20ce1-8cfe-4383-8aca-0bc1d37d2b40",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDc0NjA1Nw%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ef8ffbe2-a37d-4c87-a17f-cbb3a788649a",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDkzOA%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "efb955af-5ab4-4389-b7a6-a6868a84ac34",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDk2MA%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "826773bf-ce57-45ea-a434-89c65c5b72a1",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDY2OTM1OQ%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "750db683-12d7-4a7b-b582-6b04d77ff0e9",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDY2OTM2NQ%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a150e47b-7bdc-480d-b136-2f6fec61ec3d",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDk3Mg%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "bf509de8-8173-4bd7-a55b-7081e8f92422",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDk3OA%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1baa9a3d-6b70-4ac2-9ec0-5e0da26eb1f0",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/6121/archbishop-mitty-high-school/watch?b=QnJvYWRjYXN0NDc0MDk4OA%3D%3D",
+      "by": "Archbishop Mitty",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    }
+  ]
+}

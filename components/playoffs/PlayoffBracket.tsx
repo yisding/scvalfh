@@ -95,6 +95,7 @@ function gameTie(entry: BracketGame, round: BracketRound): TieModel {
   const links: Array<{ href: string; label: string }> = [];
   if (unplayed && game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (unplayed && game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (unplayed && game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   const clock = game.isTimeTba ? 'TBD' : statusWords(display);
   // A final nobody reported, a postponed game: its status in words, in the note row.
   const off = state === 'off' ? statusWords(display) : null;
