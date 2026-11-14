@@ -719,6 +719,24 @@ describe('what the reviewers broke', () => {
     }
   });
 
+  it('a join can be undone before a rollover by deleting its entry, and after one from the registry as it was', () => {
+    const rows = [stat('Addison Paradiso', 'c1', { season: '25-26' }, { jersey: '24' }), row({ name: 'Addy Paradiso', careerIds: ['c2'], obs: { jersey: '24' } })];
+    const identity: PlayerIdentity = { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Addy Paradiso', careerId: 'c1', basis: 'same number' }] };
+    const apart = build(rows);
+    const joined = build(rows, { previous: apart, identity });
+    expect(joined.players).toHaveLength(1);
+    // Before the rollover: delete the entry, rebuild, and each record has its id back.
+    expect(build(rows, { previous: joined }).players).toEqual(apart.players);
+    // After it, both seasons are only carried forward and the record stays whole…
+    const nextYear = [row({ name: 'Zed New', careerIds: ['c9'], season: '27-28' })];
+    const rolled = build(nextYear, { previous: joined, identity });
+    expect(build(nextYear, { previous: rolled }).players).toHaveLength(2);
+    // …unless the build starts again from the registry as it was before the join.
+    const recovered = build(nextYear, { previous: apart });
+    expect(recovered.players).toHaveLength(3);
+    expect(recovered.players.filter((p) => p.name !== 'Zed New')).toEqual(apart.players);
+  });
+
   it('look-alikes are listed whoever they are, unless one list names both', () => {
     const file = build([
       // Last year's career and this year's, the same number: one player, probably.

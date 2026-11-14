@@ -844,16 +844,36 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     idOf.set(d, keep.id);
     formerOf.set(d, new Set([...keep.formerIds, ...rest.flatMap((p) => [p.id, ...p.formerIds])]));
   }
+  // A player split back out of a merged record takes back the id she was founded under. She was part
+  // of that record if it held one of her rows (the same statement in the same stint) or one of her
+  // identifiers; a namesake who merely hashes to the same id was not, and gets a new one.
+  const sayKey = (st: Stint, o: Observation) => `${st.season} ${st.sport} ${st.team} ${st.level} ${JSON.stringify(o, Object.keys(o).sort())}`;
+  const heldBy = new Map<string, Set<string>>();
+  for (const p of prevPlayers) {
+    for (const st of p.stints) for (const o of st.observations) heldBy.set(sayKey(st, o), (heldBy.get(sayKey(st, o)) ?? new Set()).add(p.id));
+  }
+  const wasPartOf = (d: Draft, p: Player) =>
+    p.identifiers.some((i) => d.primary.includes(identifierKey(i))) || d.stints.some((st) => st.observations.some((o) => heldBy.get(sayKey(st, o))?.has(p.id)));
   for (const d of drafts) {
     if (idOf.has(d)) continue;
-    // A player split back out of a merged record takes back the id she was founded under.
     const natural = hashId(d.primary[0], 0);
-    const holder = [...formerOf].find(([, former]) => former.has(natural));
-    const splitFrom = prevPlayers.some((p) => p.formerIds.includes(natural) && p.identifiers.some((i) => d.primary.includes(identifierKey(i))));
-    if (holder && splitFrom) {
-      holder[1].delete(natural);
-      idOf.set(d, natural);
-      continue;
+    const source = prevPlayers.find((p) => (p.id === natural || p.formerIds.includes(natural)) && wasPartOf(d, p));
+    const holder = source ? heirOf.get(source.id) : undefined;
+    if (source && holder && holder !== d) {
+      const former = formerOf.get(holder) as Set<string>;
+      if (former.has(natural)) {
+        former.delete(natural);
+        idOf.set(d, natural);
+        continue;
+      }
+      // The record that stays has been living under her id: it goes back to its own, if it has one.
+      const own = hashId(holder.primary[0], 0);
+      if (idOf.get(holder) === natural && former.has(own)) {
+        former.delete(own);
+        idOf.set(holder, own);
+        idOf.set(d, natural);
+        continue;
+      }
     }
     const id = mintId(d.primary[0], taken);
     taken.add(id);
@@ -864,8 +884,13 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   // A stint a previous build held for a pair this build reads in full, and that no source lists any
   // more, is kept as it was and marked `gone`. A player with nothing else left is kept whole.
   const stintKey = (s: Stint) => `${s.season} ${s.sport} ${s.team} ${s.level}`;
+  // A stint whose rows are still in the sources, on whichever record, is not lost: when a join is
+  // undone the stint goes back to the other player, it does not vanish.
+  // (Keys in one order: the previous file's are sorted, a fresh row's are not.)
+  const said = (o: Observation) => JSON.stringify(o, Object.keys(o).sort());
+  const stillListed = new Set(drafts.flatMap((d) => d.stints.flatMap((s) => s.observations.map((o) => `${stintKey(s)} ${said(o)}`))));
   for (const p of prevPlayers) {
-    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season));
+    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season) && !s.observations.some((o) => stillListed.has(`${stintKey(s)} ${said(o)}`)));
     if (lost.length === 0) continue;
     const heir = heirOf.get(p.id);
     if (heir) {

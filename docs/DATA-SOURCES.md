@@ -1947,8 +1947,14 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   boys basketball pairs, where the 26-27 rows were typed afresh (Jhaylen Richards / Roy-Richard, Mic
   Borgonia / Bergonia, Jhayde Domingo with the names in each other's fields). Undo a join by deleting its
   `sameAs` entry: the next build that reads the season from its files splits the record and gives each half
-  back the id it had (a join in a season the registry only carries forward stays made). Deleting a `notSame`
-  entry only puts the pair back on the review list.
+  back the id it had. **After a rollover that no longer works**: a season the registry only carries forward
+  is kept as it was, joins included, so deleting the entry leaves the record whole. To undo one then, take
+  `data/players.json` back to the commit before the join (`git log -S '<the entry's name>' --
+  data/player-identity.json` finds it; `git checkout <that commit>~1 -- data/players.json`), delete the
+  entry, and run `pnpm build-players`: the two records come back under their own ids, and everything since
+  is rebuilt or carried from that file (`tests/players-registry.test.ts` holds this). It costs whatever the
+  registry learned about past seasons in between, so settle doubts about these joins before the rollover.
+  Deleting a `notSame` entry only puts the pair back on the review list.
 - **28 items remain**, all already acted on by a rule and listed to be checked: the 23 joined careers and
   the 5 split ones.
 - **2026-11-14 build, after those answers**: 3,946 players (3,488 with a MaxPreps career, 458 known by name
