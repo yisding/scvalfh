@@ -114,7 +114,11 @@ function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: str
     const decider = r.game?.decider ?? null;
     const tally = r.game?.shootout ? `${Math.max(r.game.shootout.home, r.game.shootout.away)}${EN_DASH}${Math.min(r.game.shootout.home, r.game.shootout.away)}` : null;
     const { onPhrase } = shootoutPhrases(words);
-    if (score === null) {
+    if (score === null && winner === null) {
+      // Final with neither a score nor a winner marked: nothing says who won.
+      notes.push('No result published');
+      sentence = `${a} played ${b}; no result was published.`;
+    } else if (score === null) {
       notes.push('No score published');
       sentence = `${W} beat ${sideWords(l)}; no score was published.`;
     } else if (winner === null) {

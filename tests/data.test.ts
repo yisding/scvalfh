@@ -190,8 +190,9 @@ describe('data: games', () => {
     // 158 contests in the file, and the two De Anza fixtures no source lists (lib/results/fixture-games.ts).
     expect(all.length).toBe(160);
     expect(all.filter((g) => g.contestId.startsWith('official:')).map((g) => [g.status, g.countsFor, g.home.score])).toEqual([
-      // One fixture's day has passed with no score from any source; the other is still to come.
-      ['score-pending', 'de-anza', null],
+      // Homestead at Cupertino (Sep 9 in the PDF) is listed on the day it was moved to, Oct 13
+      // (DATA_QUALITY.fixtureMoves), which like the other fixture's day is still to come in this file.
+      ['scheduled', 'de-anza', null],
       ['scheduled', 'de-anza', null],
     ]);
     const la = data.getGames({ teamId: 'los-altos' });

@@ -627,7 +627,9 @@ function conflictFor(game: Game): GameConflict | null {
   // The stored note is rule 5's ("MaxPreps' score stands"). Where the recorded result reads the two scores
   // together instead (the other score published, or its extra goals read as the shootout: lib/results/result.ts),
   // that sentence would contradict the page, so this one states the two scores and points at the reading.
-  const mp = game.provenance.adjudicated?.maxpreps ?? (game.home.score !== null && game.away.score !== null ? { home: game.home.score, away: game.away.score } : null);
+  // What MaxPreps lists: the score an adjudication or a correction replaced, else the published one.
+  const current = game.home.score !== null && game.away.score !== null ? { home: game.home.score, away: game.away.score } : null;
+  const mp = game.provenance.adjudicated?.maxpreps ?? (game.provenance.resultCorrection ? game.provenance.resultCorrection.maxpreps : current);
   const readTogether = !game.provenance.backfill && mp !== null && (game.provenance.adjudicated !== undefined || (game.decider === 'SO' && resolveResult(game)?.ending === 'shootout'));
   const note = readTogether
     ? `si.com reports ${onGame.sblive.away}-${onGame.sblive.home} (${game.away.name}\u2013${game.home.name}) where MaxPreps lists ${mp.away}-${mp.home}; the note above says how this site reads the two.`

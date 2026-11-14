@@ -19,6 +19,7 @@
 
 import { byDateThenId, datesAtLocal } from '../format';
 import { officialContestId } from '../game-id';
+import { DATA_QUALITY } from '../league-config/data-quality';
 import { getTeamBySlug } from '../teams';
 import type { Game, GameSide, OfficialFixture, Team } from '../types';
 
@@ -26,17 +27,22 @@ const sideOf = (team: Team): GameSide => ({ teamId: team.id, slug: team.slug, na
 
 /** The game an unmatched fixture lists, or null when a school is outside the registry or the division. */
 export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: string): Game | null {
-  const home = fixture.homeSlug ? getTeamBySlug(fixture.homeSlug) : undefined;
-  const away = fixture.awaySlug ? getTeamBySlug(fixture.awaySlug) : undefined;
-  if (!home || !away || home.division !== fixture.division || away.division !== fixture.division) return null;
+  const listedHome = fixture.homeSlug ? getTeamBySlug(fixture.homeSlug) : undefined;
+  const listedAway = fixture.awaySlug ? getTeamBySlug(fixture.awaySlug) : undefined;
+  if (!listedHome || !listedAway || listedHome.division !== fixture.division || listedAway.division !== fixture.division) return null;
+  // A fixture a source moved (DATA_QUALITY.fixtureMoves) is listed on the day and at the school it was moved to;
+  // its official stamp keeps the league's date and fixture id.
+  const move = DATA_QUALITY.fixtureMoves[fixture.id];
+  const dateKey = move?.dateKey ?? fixture.dateKey;
+  const [home, away] = move && move.home === listedAway.slug ? [listedAway, listedHome] : [listedHome, listedAway];
   return {
-    contestId: officialContestId(fixture.dateKey, away.slug, home.slug),
-    ...datesAtLocal(fixture.dateKey, fixture.time),
+    contestId: officialContestId(dateKey, away.slug, home.slug),
+    ...datesAtLocal(dateKey, fixture.time),
     isDateTba: false,
     home: sideOf(home),
     away: sideOf(away),
     site: 'home',
-    status: fixture.dateKey < today ? 'score-pending' : 'scheduled',
+    status: dateKey < today ? 'score-pending' : 'scheduled',
     isLeague: true,
     leagueDivision: fixture.division,
     contestTypes: { home: null, away: null },

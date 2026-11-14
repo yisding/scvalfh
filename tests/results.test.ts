@@ -442,3 +442,33 @@ describe('a corrected score that is not a shootout says where it is from (PR #12
     expect(buildGameView('3a37744f-8264-47f8-baa3-6c660b8e3892')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('Cifsshome.org, the San Diego Section’s score listing');
   }, 120_000);
 });
+
+describe('a correction against a stored game (PR #127 review)', () => {
+  const ID = 'stored-correction-test';
+  const base = { ...game({ home: 'homestead', away: 'cupertino', hs: 1, as: 1 }), contestId: ID };
+  const correction = (homestead: number, source: string): DataQualityConfig['resultCorrections'] => ({
+    [ID]: { goals: { homestead, cupertino: 1 }, otPeriods: 0, shootout: null, source, url: 'https://example.org/box' },
+  });
+
+  it('applies an edited correction to a game stored with the earlier one, from what MaxPreps had', () => {
+    const first = applyResultCorrection(base, correction(2, 'the league’s sheet'));
+    expect([first.home.score, first.away.score]).toEqual([2, 1]);
+    expect(applyResultCorrection(first, correction(2, 'the league’s sheet')), 'unchanged: the same object').toBe(first);
+    const edited = applyResultCorrection(first, correction(3, 'the league’s sheet, corrected'));
+    expect([edited.home.score, edited.away.score]).toEqual([3, 1]);
+    expect(edited.provenance.resultCorrection).toMatchObject({ maxpreps: { home: 1, away: 1, otPeriods: 0 }, source: 'the league’s sheet, corrected' });
+  });
+
+  it('replaces an earlier adjudication, and keeps the score MaxPreps had', () => {
+    const adjudicated: Game = {
+      ...base,
+      home: { ...base.home, score: 4, result: 'W' },
+      away: { ...base.away, score: 1, result: 'L' },
+      provenance: { ...base.provenance, adjudicated: { maxpreps: { home: 1, away: 1, homeResult: 'T', awayResult: 'T' }, by: ['si.com', 'cifsshome.org'] } },
+    };
+    const g = finalizeResult(adjudicated, { corrections: correction(2, 'the league’s sheet') });
+    expect([g.home.score, g.away.score]).toEqual([2, 1]);
+    expect(g.provenance.adjudicated).toBeUndefined();
+    expect(g.provenance.resultCorrection?.maxpreps).toMatchObject({ home: 1, away: 1 });
+  });
+});

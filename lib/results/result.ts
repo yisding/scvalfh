@@ -115,7 +115,14 @@ export function applyResultCorrection(
   corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
 ): Game {
   const c = corrections[game.contestId];
-  if (!c || game.provenance.resultCorrection) return game;
+  if (!c) return game;
+  // A stored game already corrected: the correction as configured NOW is applied to what MaxPreps had, and the
+  // stored game is returned when that changes nothing, so an edited correction reaches a file written before it.
+  const stored = game.provenance.resultCorrection;
+  if (stored) {
+    const again = applyResultCorrection(uncorrected(game, stored), corrections);
+    return again.provenance.resultCorrection && !sameCorrected(game, again) ? again : game;
+  }
   const scored = game.status === 'final' && game.home.score !== null && game.away.score !== null;
   // A game MaxPreps lists with no score is scored by its correction; any other state is not a result to correct.
   if (!scored && game.status !== 'score-pending') return game;
@@ -127,8 +134,11 @@ export function applyResultCorrection(
   // The tally's winner; else the named winner of a tiebreak after a level score; else the goals'.
   const named = !shootout && goals.home === goals.away && c.shootoutWinner ? (c.shootoutWinner === h ? 1 : c.shootoutWinner === a ? -1 : 0) : 0;
   const lead = shootout ? shootout.home - shootout.away : named !== 0 ? named : goals.home - goals.away;
-  const { resultConflict: _flags, ...provenance } = game.provenance;
+  // An earlier adjudication goes with the score it chose: the correction is the record, and what MaxPreps had is
+  // the score that adjudication replaced.
+  const { resultConflict: _flags, adjudicated, ...provenance } = game.provenance;
   void _flags;
+  const had = adjudicated?.maxpreps ?? { home: game.home.score as number, away: game.away.score as number };
   return {
     ...game,
     home: { ...game.home, score: goals.home, result: lead > 0 ? 'W' : lead < 0 ? 'L' : 'T' },
@@ -143,13 +153,48 @@ export function applyResultCorrection(
     provenance: {
       ...provenance,
       resultCorrection: {
-        maxpreps: scored ? { home: game.home.score as number, away: game.away.score as number, otPeriods: game.otPeriods } : null,
+        maxpreps: scored ? { home: had.home, away: had.away, otPeriods: game.otPeriods } : null,
         source: c.source,
         url: c.url,
         ...(c.certainty ? { certainty: c.certainty } : {}),
       },
     },
   };
+}
+
+/** A corrected game as MaxPreps had it (`resultCorrection.maxpreps`; no score when it listed none), uncorrected. */
+function uncorrected(game: Game, was: NonNullable<Game['provenance']['resultCorrection']>): Game {
+  const { resultCorrection: _applied, ...provenance } = game.provenance;
+  void _applied;
+  const mp = was.maxpreps;
+  const flag = (mine: number, theirs: number) => (mine > theirs ? ('W' as const) : mine < theirs ? ('L' as const) : ('T' as const));
+  const shared = { isForfeit: false, forfeitBy: null, shootout: null, provenance };
+  if (!mp) {
+    return {
+      ...game, ...shared, status: 'score-pending', otPeriods: 0, isOt: false, decider: null,
+      home: { ...game.home, score: null, result: null },
+      away: { ...game.away, score: null, result: null },
+    };
+  }
+  return {
+    ...game, ...shared, status: 'final', otPeriods: mp.otPeriods, isOt: mp.otPeriods > 0, decider: overtimeDecider(mp.otPeriods),
+    home: { ...game.home, score: mp.home, result: flag(mp.home, mp.away) },
+    away: { ...game.away, score: mp.away, result: flag(mp.away, mp.home) },
+  };
+}
+
+/** Whether two corrected games carry the same correction: score, flags, overtime, tally and citation. */
+function sameCorrected(a: Game, b: Game): boolean {
+  // Field by field: a loaded file's keys are in another order than a freshly built object's.
+  const key = (g: Game) => {
+    const c = g.provenance.resultCorrection;
+    return JSON.stringify([
+      g.home.score, g.away.score, g.home.result, g.away.result, g.otPeriods, g.decider,
+      g.shootout ? [g.shootout.home, g.shootout.away] : null,
+      c ? [c.maxpreps ? [c.maxpreps.home, c.maxpreps.away, c.maxpreps.otPeriods] : null, c.source, c.url, c.certainty ?? null] : null,
+    ]);
+  };
+  return key(a) === key(b);
 }
 
 /** Corrections that name a contest among `games` but not its two sides: one line each, for the run log and a test. */

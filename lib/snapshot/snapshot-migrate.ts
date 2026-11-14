@@ -559,6 +559,11 @@ function unfillSettledLevelScore(g: Game): Game {
   const sblive = { home: g.home.score, away: g.away.score };
   const winner = sblive.home > sblive.away ? 'home' : 'away';
   if (!mustHaveWinner(g) || excessOver(b.maxpreps.home, sblive, winner) === null) return g;
+  // The side MaxPreps marked, where the stored flag sentence still says (flagConflictSentence): si.com naming the
+  // other side is not that level score settled, so the fill stays.
+  const flags = g.provenance.resultConflict ?? '';
+  const marked = flags.includes(`MaxPreps marks ${g.home.name} W and ${g.away.name} L`) ? 'home' : flags.includes(`MaxPreps marks ${g.home.name} L and ${g.away.name} W`) ? 'away' : null;
+  if (marked !== null && marked !== winner) return g;
   const { backfill: _fill, scoreConflict: _was, ...provenance } = g.provenance;
   void _fill;
   void _was;
@@ -706,10 +711,20 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
         }
       : v2.sbliveCrossCheck;
   const droppedIds = new Set(v2.dropped.map((d) => d.contestId));
+  // The health counts of the changed divisions follow their games, as `reclassify` keeps them.
+  const leagueHealth: LeagueHealth[] = v2.leagueHealth.map((h) => ({
+    ...h,
+    divisions: h.divisions.map((d): DivisionHealth => {
+      if (!changed.has(d.divisionId)) return d;
+      const counted = divisionGames(games, d.divisionId);
+      return { ...d, countedFinals: counted.length, backfilled: counted.filter((g) => g.provenance.scores === 'sblive').length };
+    }),
+  }));
   const out: Snapshot = {
     ...v2,
     games,
     standings,
+    ...(changed.size > 0 ? { leagueHealth } : {}),
     dropped: [
       ...v2.dropped,
       ...excluded

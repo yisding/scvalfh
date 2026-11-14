@@ -27,6 +27,9 @@ export function roundSiteOf(game: Pick<Game, 'postseason' | 'dateKey' | 'home' |
 /** The game at its round's site (neutral, the site as the venue); the same object when it already is, or has none. */
 export function withRoundSite(game: Game): Game {
   const site = roundSiteOf(game);
-  if (site === null || (game.site === 'neutral' && game.venue.text === site)) return game;
-  return { ...game, site: 'neutral', venue: { ...game.venue, text: site } };
+  if (site === null || (game.site === 'neutral' && game.venue.text === site && game.venue.name === undefined)) return game;
+  // The feed's venue name (the listed host's field) goes: the header and the structured data print a name first.
+  const { name: _listed, ...venue } = game.venue;
+  void _listed;
+  return { ...game, site: 'neutral', venue: { ...venue, text: site } };
 }
