@@ -946,6 +946,45 @@ describe('the sources as sightings', () => {
     expect(sightings.map((s) => s.careerIds)).toEqual([['c1']]);
   });
 
+  it('a "Player #N" stand-in the overlay names is that player, under the name its source gives', () => {
+    const { sightings } = currentSeasonSightings(
+      {
+        sport: 'volleyball',
+        rosters: {
+          season: '26-27',
+          teams: [{ slug: 'gilroy', players: [rosterRow({ athleteId: 'a12', careerId: 'c12', firstName: null, lastName: 'Player #12', fullName: 'Player #12', jersey: '12', positions: [], isCaptain: false })] }],
+        },
+        jvRosters: null,
+        enrichment: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                {
+                  athleteId: 'a12', fullName: 'Player #12', sourceName: null, level: null,
+                  name: { value: 'Grace Gnagne', firstName: 'Grace', lastName: 'Gnagne', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
+                  grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                },
+              ],
+            },
+          ],
+        },
+        playerStats: null,
+        jvSchoolSites: null,
+        jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings).toHaveLength(1);
+    expect(sightings[0]).toMatchObject({ careerIds: ['c12'], nameKeys: ['gracegnagne'], firstName: 'Grace', lastName: 'Gnagne' });
+    expect(sightings[0].observations).toEqual([
+      { src: 'maxpreps-roster', jersey: '12', athleteId: 'a12' },
+      { src: 'enrichment', kind: 'hudl', url: 'https://www.hudl.com/profile/1', name: 'Grace Gnagne' },
+    ]);
+    expect(build(sightings).players.map((p) => p.name)).toEqual(['Grace Gnagne']);
+  });
+
   it('a past season is its stat sheets and its all-league lists', () => {
     const sightings = pastSeasonSightings({
       sport: 'field-hockey',

@@ -230,7 +230,13 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
   number, `data/rosters-enrichment.json` fills it (`name`), as it fills any blank; an unnamed one never
   becomes a registry player (the number may be anyone's). Seven teams had them on
   2026-11-14 (Mitty, Milpitas, Gilroy, St. Ignatius, King's Academy, Castilleja, Priory: 27 rows).
-  `tests/fixtures/maxpreps/roster-volleyball-2026-11-mitty.html` is Mitty's page with five.
+  A search that day (school sites, MaxPreps' JV, freshman and earlier rosters and box scores, Hudl, news)
+  named two: Gilroy's #11 Anjelica Llamas and #12 Grace Gnagne, from the team's own Hudl roster (overlay
+  kind `hudl`). The others stay "Player #N"; each team's overlay `notes` say what was looked at and which
+  candidates were left out (a JV player with the same number is not evidence she played varsity, and
+  St. Ignatius' #20 is very likely a rostered player's old number). The stats read API shows a found name
+  on the stat lines and box scores too. `tests/fixtures/maxpreps/roster-volleyball-2026-11-mitty.html` is
+  Mitty's page with five.
 - `classYear` is the grade (9–12 here; 5–8 exist for middle school), `formattedClassYear` its label
   (`Fr.`/`So.`/`Jr.`/`Sr.`, `""` when blank; the table prints `-`). `jersey` is a **string** (`"00"`,
   `"21/88"` occur). Position is `position1..3` joined with `", "` = `formattedPositions` (e.g. `F, M`).
@@ -1913,7 +1919,8 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   only that sheet lists, it is all there is.
 - **What it reads**, per sport: `rosters.json`, `jv-rosters.json`, `rosters-enrichment.json` (each filled
   field an observation naming its source, each recorded conflict a `rejected` one that decides nothing, each
-  recruiting profile a class-year statement, `sourceName` another spelling, `level` the squad),
+  recruiting profile a class-year statement, `sourceName` another spelling, `name` the name of a MaxPreps
+  "Player #N" stand-in, `level` the squad; an unnamed stand-in is no sighting at all),
   `player-stats.json`, `jv-rosters-school-sites.json`, `jv-profiles.json`; and for a past season
   `prior-players.json` (l2) and `history-<season>.json`'s all-league lists. Game notes and box-score lines are
   not read: they carry no more identity than the stat sheet.

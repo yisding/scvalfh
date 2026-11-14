@@ -69,6 +69,7 @@ export const EnrichmentInput = z.looseObject({
           athleteId: text,
           fullName: text,
           sourceName: text.nullable(),
+          name: z.looseObject({ value: text, firstName: text, lastName: text, ...sourced }).nullable().optional(),
           level: z.enum(['varsity', 'jv']).nullable(),
           grade: z.looseObject({ value: z.number().int().min(9).max(12), derived: z.boolean(), ...sourced }).nullable(),
           positions: z.looseObject({ value: z.array(text).min(1), ...sourced }).nullable(),
@@ -220,11 +221,19 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
   const fromPage = (file: z.infer<typeof RostersInput>, page: PlayerLevel, overlay: Map<string, z.infer<typeof EnrichmentInput>['teams'][number]['players'][number]>) => {
     for (const team of file.teams) {
       for (const row of team.players) {
-        // MaxPreps' "Player #4" (lib/players/placeholder-name.ts): a number nobody is named under, not a player.
-        if (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, ''))) continue;
         const extra = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
-        const observations: Observation[] = [rosterObservation(row, page)];
-        const nameKeys = [nameKey(row.fullName)];
+        // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is a number, not a player, until a source
+        // names it; then it is that player, under that name.
+        const named = extra?.name ?? null;
+        if (named === null && (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, '')))) continue;
+        const asRow = named ? { ...row, firstName: named.firstName, lastName: named.lastName, fullName: named.value } : row;
+        // MaxPreps' row says the number and nothing of the name; the name is the source's.
+        const fromMaxPreps: Observation = { ...rosterObservation(row, page), name: undefined };
+        delete fromMaxPreps.name;
+        const observations: Observation[] = named
+          ? [fromMaxPreps, { src: 'enrichment', kind: named.kind, url: named.source, name: named.value }]
+          : [rosterObservation(row, page)];
+        const nameKeys = [nameKey(asRow.fullName)];
         if (extra) {
           if (extra.sourceName !== null) {
             observations.push({ src: 'enrichment', name: extra.sourceName });
@@ -248,15 +257,15 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
             observations.push({ src: 'profile', kind: p.platform, url: p.url, ...classYear(p.classOf) });
           }
         }
-        const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(row.fullName)}`);
+        const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(asRow.fullName)}`);
         const careerId = isSplit ? null : row.careerId;
         sightings.push({
           ...base(team.slug, extra?.level ?? page),
           careerIds: careerId ? [careerId] : [],
           ...(careerId && row.careerProfileId ? { careerProfileIds: { [careerId]: row.careerProfileId } } : {}),
           nameKeys: [...new Set(nameKeys)],
-          firstName: row.firstName,
-          lastName: row.lastName,
+          firstName: asRow.firstName,
+          lastName: asRow.lastName,
           observations,
         });
       }

@@ -31,7 +31,7 @@ import {
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from './player-stats-schema';
-import { getTeamRoster } from './rosters';
+import { getTeamRoster, placeholderNames } from './rosters';
 import type { TeamSlug } from '../types';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
@@ -45,7 +45,29 @@ function load(): PlayerStatsFile {
   );
 }
 
-const file = load();
+/**
+ * The stats run joins each line to its roster row and keeps that row's name, so a MaxPreps "Player
+ * #11" (lib/players/placeholder-name.ts) arrives under that name. Where data/rosters-enrichment.json
+ * names the number, its stat lines and box-score lines show the same name the roster does.
+ */
+function withPlaceholderNames(f: PlayerStatsFile): PlayerStatsFile {
+  return {
+    ...f,
+    teams: f.teams.map((t) => {
+      const names = placeholderNames(t.slug as TeamSlug);
+      if (names.size === 0) return t;
+      return {
+        ...t,
+        players: t.players.map((p) => (p.onRoster && names.has(p.fullName) ? { ...p, fullName: names.get(p.fullName)! } : p)),
+        ...(t.games
+          ? { games: t.games.map((g) => ({ ...g, players: g.players.map((l) => (names.has(l.name) ? { ...l, name: names.get(l.name)! } : l)) })) }
+          : {}),
+      };
+    }),
+  };
+}
+
+const file = withPlaceholderNames(load());
 const BY_SLUG = new Map<string, TeamPlayerStats>(file.teams.map((t) => [t.slug, t]));
 /** contest id → team slug → that team's box score for the game. */
 const BOX_SCORES = new Map<string, Map<string, BoxScore>>();

@@ -56,6 +56,7 @@ const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
   'maxpreps-jv': 'MaxPreps’ JV roster',
   'maxpreps-career': 'a MaxPreps career page',
   'maxpreps-team': 'MaxPreps’ team page',
+  hudl: 'the team’s Hudl page',
 };
 
 /** How the † footnote names each kind of source a shown value came from. */
@@ -66,6 +67,7 @@ const FOOTNOTE_WORDS: Record<EnrichmentSource['kind'], [one: string, many: strin
   'maxpreps-jv': ['MaxPreps’ JV roster', 'MaxPreps’ JV rosters'],
   'maxpreps-career': ['a MaxPreps career page', 'MaxPreps career pages'],
   'maxpreps-team': ['MaxPreps’ team page', 'MaxPreps’ team page'],
+  hudl: ['the team’s Hudl page', 'the team’s Hudl page'],
 };
 
 /**
@@ -152,6 +154,8 @@ export interface RosterProfileLink {
 export interface RosterRow {
   key: string;
   name: string;
+  /** The name is not MaxPreps' (it shows "Player #11" for this number): another source's, marked †. */
+  nameElsewhere: boolean;
   jersey: RosterFact | null;
   captain: boolean;
   /** Grade, position(s), height — only the ones somebody published, in that order. */
@@ -321,6 +325,7 @@ function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
   return {
     key: p.athleteId ?? `${p.fullName}-${index}`,
     name: p.fullName,
+    nameElsewhere: elsewhereSource(p.provenance.name) !== null,
     jersey:
       p.jersey === null
         ? null
@@ -343,6 +348,7 @@ function hostLabel(url: string): string | null {
 
 /** What a source link backs up, in the order its label lists them. */
 const USE_WORDS = {
+  name: ['name', 'names'],
   grade: ['grade', 'grades'],
   position: ['position', 'positions'],
   number: ['number', 'numbers'],
@@ -352,6 +358,7 @@ const USE_WORDS = {
 type SourceUse = keyof typeof USE_WORDS;
 
 const PROVENANCE_USE: Record<keyof MergedPlayer['provenance'], SourceUse> = {
+  name: 'name',
   grade: 'grade',
   positions: 'position',
   jersey: 'number',
