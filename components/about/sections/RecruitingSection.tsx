@@ -22,6 +22,10 @@ const WORDS = IS_VOLLEYBALL
         'Most ties rest on one page that names the player, the club and the school. Some rest on a club roster’s class year plus a hometown in the school’s own area.',
       nickname: 'A nickname or a given name',
       profilePlace: 'a hometown in the school’s own area',
+      // The WCAL and the WBAL joined the build on 2026-11-14, after the 2026-11-13 research: no profile, club or
+      // commitment was looked for at their nineteen schools, and the page says so wherever it says recall is partial.
+      unsearched:
+        'The WCAL and WBAL schools were added on Nov 14, 2026, after this research was done, and have not been searched, so none of their players is listed.',
     }
   : {
       clubSources:
@@ -32,6 +36,7 @@ const WORDS = IS_VOLLEYBALL
         'Most ties rest on one page that names the player, the club and the school. Some rest on a club roster’s class-year heading plus the club’s location, or on a school nickname in a news story.',
       nickname: 'A nickname or a given name (Samantha for Sami)',
       profilePlace: 'a California hometown',
+      unsearched: null,
     };
 
 /**
@@ -115,6 +120,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             whatever club they play for, so a school with no one here may still have plenty of club
             players.{clubs.regionsWithoutClubsSentence ? ` ${clubs.regionsWithoutClubsSentence}` : ''}
             {clubs.regionsNotSearchedSentence ? ` ${clubs.regionsNotSearchedSentence}` : ''}
+            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
 
@@ -159,6 +165,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
           <p>
             Recall is partial. A player with no public page that meets the rule is not listed, so a
             school with no one here may still have players headed to a college team.
+            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
 
@@ -210,6 +217,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             media is never used, apart from commitment posts by official college, school and club
             accounts. Recall is partial, so a player who is not listed here may still have
             a profile, play for a club or have committed.
+            {WORDS.unsearched ? ` ${WORDS.unsearched}` : ''}
           </p>
         </section>
       </div>

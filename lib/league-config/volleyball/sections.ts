@@ -1,6 +1,6 @@
 /**
  * The volleyball build's sections and CCS block (lib/league-config/sections.ts picks these when
- * `SCVAL_SPORT=volleyball`). One section, the CCS, in one region: the build covers SCVAL and BVAL.
+ * `SCVAL_SPORT=volleyball`). One section, the CCS, in one region: the build covers SCVAL, BVAL, the WCAL and the WBAL.
  *
  * Sources (read 2026-11-14):
  *  - CCS_PLAYOFF_CALENDAR, the CCS 2026-27 Playoff Calendar ("Updated 5/28/26"): girls volleyball entry forms
@@ -48,7 +48,7 @@ export const VOLLEYBALL_SECTIONS = [
 ] as const satisfies readonly SectionConfig[];
 
 export const VOLLEYBALL_CCS: CcsConfig = {
-  autoQualifiers: { scval: 4, bval: 6, atLarge: null, total: null },
+  autoQualifiers: { scval: 4, bval: 6, wcal: 1, wbal: 4, atLarge: null, total: null },
   // An Open Division and Divisions 1-5, each seeded on its own: CcsDivisionName names field hockey's two, so
   // none is named here. The brackets are read whole from MaxPreps' tournament pages instead (`playoffs.brackets`,
   // lib/pipeline/steps/secondary.ts) and drawn one per division (components/playoffs/TournamentBrackets.tsx).
@@ -77,14 +77,14 @@ export const VOLLEYBALL_CCS: CcsConfig = {
   },
   pollFrom: '2026-10-25',
   citations: {
-    allocation: 'SCVAL Volleyball By-Laws Article V §1-§2 (De Anza’s top three and the El Camino champion) and BVAL Girls Volleyball By-Laws §3.5 (Mt. Hamilton’s top three, the Santa Teresa and Almaden Valley champions and the play-in winner); the CCS’s own allocation of the field is in its Volleyball Bylaws, not transcribed here',
+    allocation: 'SCVAL Volleyball By-Laws Article V §1-§2 (De Anza’s top three and the El Camino champion) BVAL Girls Volleyball By-Laws §3.5 (Mt. Hamilton’s top three, the Santa Teresa and Almaden Valley champions and the play-in winner), WCAL By-Laws Article XII §17.A (the round robin’s winner is the league’s #1 seed; no WCAL document counts its automatic berths) and WBAL By-Laws §1008.1 (Foothill’s top three and the Skyline top finisher); the CCS’s own allocation of the field is in its Volleyball Bylaws, not transcribed here',
     change: 'SCVAL Volleyball By-Laws Article V §3 (a team at .500 or better in league or out of league may apply for an at-large berth)',
   },
   laterDivisions: 'Divisions 1-5',
   roundDaysNote:
     'Divisions 1-5 play a first round on Sat Oct 31, quarterfinals on Tue Nov 3 and semifinals on Thu Nov 5. The Open Division plays its quarterfinals on Sat Oct 31 and its semifinals on Wed Nov 4. Every final is on Sat Nov 7 (the CCS 2026-27 Playoff Calendar).',
   atLargeParagraph:
-    'At-large berths are the CCS committee’s call. Any SCVAL team with a league record or an out-of-league record of .500 or better may apply (SCVAL Volleyball By-Laws Article V §3); once the at-large teams are chosen, BVAL teams are seeded on their league finish (BVAL Girls Volleyball By-Laws §3.5).',
+    'At-large berths are the CCS committee’s call. Any SCVAL team with a league record or an out-of-league record of .500 or better may apply (SCVAL Volleyball By-Laws Article V §3); once the at-large teams are chosen, BVAL teams are seeded on their league finish (BVAL Girls Volleyball By-Laws §3.5). WCAL teams below first enter as at-large entries in the order of their league finish (WCAL By-Laws Article III §17.D), and the WBAL may designate a team at .500 or better in or out of league (WBAL By-Laws §1008.2).',
   sources: {
     bylaws: CCS_PLAYOFF_CALENDAR,
     index: CCS_VOLLEYBALL_CALENDAR,

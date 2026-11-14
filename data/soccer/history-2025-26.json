@@ -1338,17 +1338,21 @@
     "wbal": {
       "alsoPublished": [
         {
+          "label": "WBAL 2025-26 girls soccer standings",
+          "url": "https://hs.wbalsports.org/2025-2026/socstg.html"
+        },
+        {
           "label": "WBAL 2025-26 girls soccer honors",
           "url": "https://hs.wbalsports.org/alsocg2526.html"
         }
       ],
       "checked": [
-        "https://hs.wbalsports.org/socstg.html (girls soccer standings: the 2026-27 season)",
-        "https://hs.wbalsports.org/home.html (no standings archive is linked)"
+        "https://hs.wbalsports.org/2025-2026/socstg.html (the 2025-26 standings, linked from the league’s history page)",
+        "https://hs.wbalsports.org/alsocg2526.html (its 2025-26 season honors)"
       ],
       "checkedOn": "2026-11-14",
       "league": "West Bay Athletic League",
-      "reason": "We found no official 2025-26 final standings for WBAL girls soccer: the league’s standings page shows the current season only, and its site keeps no standings archive. The WBAL does publish its 2025-26 season honors, linked below, not reproduced: this archive shows a league’s awards only beside its official final standings. We do not show standings or awards from third-party sources.",
+      "reason": "The WBAL keeps last season’s standings and its season honors on hs.wbalsports.org. This site added WBAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
       "status": "unavailable"
     },
     "wcal": {

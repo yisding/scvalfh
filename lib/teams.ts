@@ -33,6 +33,8 @@ import { WBAL_SOCCER_SEEDS } from './registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from './registry/soccer/wcal';
 import { BVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/bval';
 import { SCVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/scval';
+import { WBAL_VOLLEYBALL_SEEDS } from './registry/volleyball/wbal';
+import { WCAL_VOLLEYBALL_SEEDS } from './registry/volleyball/wcal';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
@@ -120,9 +122,9 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HO
 } : {
   scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? SCVAL_VOLLEYBALL_SEEDS : SCVAL_SOCCER_SEEDS,
   bval: IS_BASKETBALL ? BVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? BVAL_VOLLEYBALL_SEEDS : BVAL_SOCCER_SEEDS,
-  // Soccer alone (LEAGUES lists neither in the basketball or volleyball build).
-  wcal: WCAL_SOCCER_SEEDS,
-  wbal: WBAL_SOCCER_SEEDS,
+  // Soccer and volleyball (LEAGUES lists neither in the basketball build).
+  wcal: IS_VOLLEYBALL ? WCAL_VOLLEYBALL_SEEDS : WCAL_SOCCER_SEEDS,
+  wbal: IS_VOLLEYBALL ? WBAL_VOLLEYBALL_SEEDS : WBAL_SOCCER_SEEDS,
 };
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
@@ -310,17 +312,17 @@ const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
   : // The soccer, basketball and volleyball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both MVHS;
     // CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
     // Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont).
-    // The soccer registry's WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation, Pinewood
+    // The soccer and volleyball registries' WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation, Pinewood
     // and Priory to PHS, and bring MHS (Milpitas, Mercy Burlingame) and NDHS (the two Notre Dames).
-    IS_BASKETBALL || IS_VOLLEYBALL
+    IS_BASKETBALL
     ? ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS']
     : ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'WHS'];
 
 /**
- * The registry's size: field hockey's 102 teams, basketball's or volleyball's 41 (SCVAL's 15 and BVAL's 26), or
- * soccer's 60 (those 41, the WCAL's 6 and the WBAL's 13).
+ * The registry's size: field hockey's 102 teams, basketball's 41 (SCVAL's 15 and BVAL's 26), or soccer's and
+ * volleyball's 60 (those 41, the WCAL's 6 and the WBAL's 13).
  */
-const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : IS_BASKETBALL || IS_VOLLEYBALL ? 41 : 60;
+const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : IS_BASKETBALL ? 41 : 60;
 
 function assertRegistry(): void {
   const fail = (m: string): never => {

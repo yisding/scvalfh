@@ -1,7 +1,8 @@
 /**
  * components/playoffs/tournament-brackets-view.ts: the published brackets as the drawer's rounds, read off the
  * pages the volleyball corpus captured (tests/fixtures/corpus/volleyball-2026-11-14: the CCS championship and three
- * CIF State divisions, as they stood on the evening of Nov 13, 2026). A volleyball build's registry decides which
+ * of the CIF State divisions it holds, as they stood on Nov 14, 2026, when the corpus was recaptured with the WCAL
+ * and the WBAL). A volleyball build's registry decides which
  * teams are ours, so this file sets the switch before importing anything that reads it (tests/volleyball.test.ts).
  */
 import { readFileSync } from 'node:fs';
@@ -59,8 +60,11 @@ describe('which brackets are drawn', () => {
       ['ccs-division-1', 'CCS Division 1', 'CCS Division 1', '13 teams'],
       ['ccs-division-2', 'CCS Division 2', 'CCS Division 2', '10 teams'],
       ['ccs-division-3', 'CCS Division 3', 'CCS Division 3', '13 teams'],
+      ['ccs-division-4', 'CCS Division 4', 'CCS Division 4', '10 teams'],
+      ['ccs-division-5', 'CCS Division 5', 'CCS Division 5', '10 teams'],
     ]);
-    expect(drawn.ccsOthers).toEqual(['Division 4', 'Division 5']);
+    // With the WCAL and the WBAL in the registry (2026-11-14) every CCS division holds a team of ours.
+    expect(drawn.ccsOthers).toEqual([]);
   });
 
   it('draws nothing from no brackets', () => {
@@ -102,8 +106,11 @@ describe('a CCS division', () => {
         { slug: 'milpitas', name: 'Milpitas', seed: 4, score: 2, result: 'lost', open: false },
       ],
     });
+    // The Open Division final was between two WCAL teams, in the registry since 2026-11-14.
+    expect(bracket('ccs-open-division').rounds[2].ties[0].lines.map((l) => [l.slug, l.name])).toEqual([['saint-francis', 'Saint Francis'], ['mitty', 'Mitty']]);
     // A school outside the build's leagues prints by MaxPreps' name, with no slug.
-    expect(bracket('ccs-open-division').rounds[2].ties[0].lines.map((l) => [l.slug, l.name])).toEqual([[null, 'Saint Francis'], [null, 'Archbishop Mitty']]);
+    const outside = drawn.brackets.flatMap((b) => b.rounds.flatMap((r) => r.ties.flatMap((t) => t.lines))).find((l) => l.name === 'Salinas');
+    expect(outside).toMatchObject({ slug: null, name: 'Salinas' });
   });
 });
 

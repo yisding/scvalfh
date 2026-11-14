@@ -134,8 +134,8 @@ describe('the volleyball sport switch', () => {
 });
 
 describe('SCVAL and BVAL girls volleyball', () => {
-  it('covers SCVAL and BVAL, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval']);
+  it('covers SCVAL, BVAL, the WCAL and the WBAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -150,11 +150,50 @@ describe('SCVAL and BVAL girls volleyball', () => {
     expect(slugs('west-valley')).toEqual([
       'andrew-hill', 'independence', 'james-lick', 'mt-pleasant', 'oak-grove', 'overfelt', 'san-jose', 'yerba-buena',
     ]);
-    expect(m.teams.TEAMS).toHaveLength(41);
+    expect(m.teams.teamsInLeague('scval').length + m.teams.teamsInLeague('bval').length).toBe(41);
+    expect(m.teams.TEAMS).toHaveLength(60);
     for (const team of m.teams.TEAMS) expect(team.external.maxprepsTeamUrl).toMatch(/\/volleyball\/$/);
   });
 
-  it('orders both leagues on the league record, each with its own by-laws tiebreak chain', () => {
+  it('aligns the WCAL’s six schools and the WBAL’s 13 as the leagues’ own tables do', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('wcal')).toEqual(['mitty', 'riordan', 'sacred-heart-cathedral', 'saint-francis', 'st-ignatius', 'valley-christian']);
+    expect(slugs('foothill')).toEqual([
+      'harker', 'kings-academy', 'menlo', 'mercy-burlingame', 'notre-dame-belmont', 'presentation', 'sacred-heart-prep',
+    ]);
+    expect(slugs('skyline')).toEqual(['castilleja', 'crystal-springs', 'eastside', 'notre-dame-san-jose', 'pinewood', 'priory']);
+    // Each seed is the school's soccer seed on its volleyball page; the paths are MaxPreps' own (team-context,
+    // read 2026-11-14).
+    const pathOf = (slug: string) => m.teams.getTeamBySlug(slug)?.external.maxprepsTeamUrl;
+    expect(m.teams.teamsInLeague('wcal').map((t) => t.external.maxprepsTeamUrl)).toEqual([
+      'https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/volleyball/',
+      'https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/volleyball/',
+      'https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/volleyball/',
+    ]);
+    expect(pathOf('menlo')).toBe('https://www.maxpreps.com/ca/atherton/menlo-school-knights/volleyball/');
+    expect(pathOf('mercy-burlingame')).toBe('https://www.maxpreps.com/ca/burlingame/mercy-bears/volleyball/');
+    expect(pathOf('castilleja')).toBe('https://www.maxpreps.com/ca/palo-alto/castilleja-gators/volleyball/');
+    const wcal = m.leagues.getLeague('wcal');
+    const wbal = m.leagues.getLeague('wbal');
+    for (const league of [wcal, wbal]) {
+      expect(league.rules.orderBy).toBe('win-pct');
+      expect(league.rules.classification).toBe('membership');
+      // The league publishes a schedule this site does not copy: no page may say it publishes none.
+      for (const d of league.divisions) expect(m.leagues.publishesNoSchedule(d)).toBe(false);
+    }
+    expect(wcal.rules.tiebreaks.default).toEqual(['head-to-head', 'coin-flip']);
+    expect(wbal.rules.tiebreaks.default).toEqual(['head-to-head', 'h2h-goal-diff', 'set-points']);
+    expect(wcal.divisions.map((d) => [d.id, d.gamesPerTeam])).toEqual([['wcal', 10]]);
+    expect(wbal.divisions.map((d) => [d.id, d.gamesPerTeam])).toEqual([['foothill', 12], ['skyline', 10]]);
+    // One WCAL place is marked (its #1 seed: no WCAL document counts automatic berths); the WBAL has four.
+    expect(wcal.postseason.kind === 'ccs-ladder' && wcal.postseason.autoBerths).toBe(1);
+    expect(wbal.postseason.kind === 'ccs-ladder' && wbal.postseason.autoBerths).toBe(4);
+  });
+
+  it('orders SCVAL and BVAL on the league record, each with its own by-laws tiebreak chain', () => {
     const scval = m.leagues.getLeague('scval').rules;
     const bval = m.leagues.getLeague('bval').rules;
     for (const rules of [scval, bval]) {
@@ -180,7 +219,7 @@ describe('SCVAL and BVAL girls volleyball', () => {
       date: '2026-10-28', tag: 'bval-play-in', host: 0, isPlayIn: true,
       seats: [{ division: 'west-valley', place: 1 }, { division: 'santa-teresa', place: 2 }],
     });
-    expect(m.sections.CCS.autoQualifiers).toMatchObject({ scval: 4, bval: 6, atLarge: null, total: null });
+    expect(m.sections.CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 4, atLarge: null, total: null });
   });
 
   it('opens the CCS bracket with a first round and names all six MaxPreps brackets', () => {
@@ -235,14 +274,21 @@ describe('the official schedules', () => {
 });
 
 describe('the bundled volleyball data', () => {
-  it('loads a snapshot of the 41 teams, every league match from an official fixture', () => {
+  it('loads a snapshot of the 60 teams, every SCVAL and BVAL league match from an official fixture', () => {
     const snapshot = m.data.getSnapshot();
     expect(snapshot.season.genderSport).toBe('girls,volleyball');
-    expect(snapshot.teams).toHaveLength(41);
+    expect(snapshot.teams).toHaveLength(60);
     // The loader turns a fixture with no contest into a listed game, so every league row traces to a fixture.
-    const league = snapshot.games.filter((x) => x.countsFor !== null);
+    const counted = snapshot.games.filter((x) => x.countsFor !== null);
+    const own = new Set(['wcal', 'foothill', 'skyline']);
+    const league = counted.filter((x) => !own.has(x.countsFor!));
     expect(league.length).toBeGreaterThan(200);
     expect(league.length).toBeLessThanOrEqual(244);
+    // The WCAL and the WBAL are read by membership, and their double round robins were played out: 30 WCAL
+    // matches, 42 in Foothill and 30 in Skyline, the counts of the leagues' own schedules.
+    const by = (division: string) => counted.filter((x) => x.countsFor === division).length;
+    expect([by('wcal'), by('foothill'), by('skyline')]).toEqual([30, 42, 30]);
+    for (const g of counted) expect(g.postseason, g.contestId).toBeNull();
     // A league match is one of the schedule's fixtures, on its day or the day MaxPreps has it (Lynbrook at
     // Saratoga, a Sep 23 fixture, is on MaxPreps as a league match of Aug 31), and never a postseason game.
     for (const g of league) {
@@ -311,9 +357,9 @@ describe('the bundled volleyball data', () => {
       expect(m.playerStats.getTeamPlayerStats(team.slug), team.slug).toBeDefined();
       expect(m.rosters.getTeamRoster(team.slug), team.slug).toBeDefined();
     }
-    expect(m.jv.getJvFile().teams).toHaveLength(41);
+    expect(m.jv.getJvFile().teams).toHaveLength(60);
     expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['bval']);
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['bval', 'wcal', 'wbal']);
     // The El Camino JV document prints one player's year as "7": no grade is stored for her.
     const jv = m.history.getHistoryAwards('el-camino', 'jv');
     expect(jv?.firstTeam.find((p) => p.player === 'Kaylan Shab')).toMatchObject({ slug: 'saratoga', year: null });
@@ -351,7 +397,8 @@ describe('the bundled volleyball data', () => {
     expect(m.jvRosters.getJvRoster('cupertino')).toMatchObject({ source: 'school-site', other: null });
     expect(m.jvRosters.getJvRoster('willow-glen')).toMatchObject({ source: 'school-site', other: null });
     expect(m.jvRosters.getJvRoster('leland')).toMatchObject({ source: 'school-site', other: { source: 'maxpreps' } });
-    expect(m.teams.TEAMS.filter((t) => m.jvRosters.getJvRoster(t.slug) !== null)).toHaveLength(27);
+    // 27 SCVAL and BVAL teams, and seven WCAL and WBAL teams with a JV roster on MaxPreps.
+    expect(m.teams.TEAMS.filter((t) => m.jvRosters.getJvRoster(t.slug) !== null)).toHaveLength(34);
   });
 });
 
