@@ -37,7 +37,8 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
 5. Only games that count toward the division table are used: two teams of the same division, a
    league game by the league's own evidence (SCVAL and EAL: MaxPreps' league flag; BVAL, PCAL
    and MCAL: it is on the official schedule; the Sunset, the LA independents and the San Diego divisions:
-   any game between two members inside league play, whatever MaxPreps' flag says), never a tournament, neutral or postseason game.
+   any game between two members inside league play, whatever MaxPreps' flag says; the Sunset counts one game a
+   pair, so the earlier meeting of a pair that met twice does not count), never a tournament, neutral or postseason game.
 6. A team with no results is named and listed last, never ranked by merit and never shown as 0-0-0.
 7. A tie at the top is shown as "Level on points at the top" until the league's regular phase is
    over; only then does the league's co-champion label appear.
@@ -580,28 +581,48 @@ si.com's table, which the Section's own scores site (scores.cifss.org) shows, li
 Bonita and Chaminade, and two 0-0 rows (Westlake, Los Alamitos), and files Chaparral and Temecula Valley
 under "Southwestern" [V].
 
-**Which games count.** Every game between two of the eight dated Aug 25 (Chaparral v Temecula Valley, the
-first game between two of the eight) to Oct 31 (the Section's last allowable contest [V: 2026-27 Sports
-Calendar; Blue Book Bylaw 2006]), leaving out tournament (2) and postseason (4) rows, whether or not
-MaxPreps marks it as a league game: classification `membership`, as for the San Diego divisions (owner
-decision, 2026-10-06; DESIGN §24.11). Until then the site counted only the games MaxPreps flagged, as for
-the EAL, and the flag turned out to follow whichever scorekeeper entered the game [V: snapshot 2026-10-06]:
-Great Oak's two games with Temecula Valley are flagged non-league (Sep 4) and league (Oct 2); Temecula
-Valley's games against the five Orange County schools are all flagged, Great Oak's and Chaparral's mostly
-not; the Orange County schools' games against each other are flagged only when Edison enters them. So
-MaxPreps' table (Great Oak 3-1), si.com's (2-2) and the flag-based table (2-1) disagreed on one team's
-record; every game counted, Great Oak is 4-2. There is **no round robin** [V: snapshot 2026-10-06, the 28
-pairs meet 2 or 1 times outside tournaments: 7 and 21 pairs], so `gamesPerTeam` is null: the site prints
-games played without "of N" and shows no games-left or maximum-points column, and when teams' counts differ
-by two or more the standings say that points favour teams that have played more. MaxPreps also flags Great
-Oak's Aug 27 home win over Bonita; Bonita is an independent here, so it counts for neither table [V].
+**Which games count.** One league game for each pair of the eight, seven a team: a single round robin (owner
+decision, 2026-11-14). All 28 pairs met outside a tournament between Aug 25 and Oct 20, 21 of them once and
+seven twice [V: snapshot 2026-11-13]. The Section's schedule site, cifsshome.org, where each school enters its
+own games, lists each game twice (once per school) with a game type [V: read 2026-11-14]: every one of the 21
+single meetings is "League" in both entries, and for each of the seven pairs that met twice the later meeting
+is "League" in both entries while the earlier one is "Non-League" in at least one. So the earlier meeting is a
+non-league game (`rules.nonLeagueGames`, with the sentence its game page prints) and the later one is the
+pair's league game:
+
+| Pair | Non-league meeting | MaxPreps | cifsshome.org | League game | MaxPreps | cifsshome.org |
+|---|---|---|---|---|---|---|
+| Chaparral – Temecula Valley | Aug 25 | non-league | Non-League, Non-League | Oct 5 | league | League, League |
+| Edison – Newport Harbor | Aug 26 | non-league | Non-League, Non-League | Oct 13 | league | League, League |
+| Edison – Marina | Sep 3 | non-league | Non-League, Non-League | Sep 30 | league | League, League |
+| Great Oak – Temecula Valley | Sep 4 | non-league | League, Non-League | Oct 2 | league | League, League |
+| Chaparral – Great Oak | Sep 11 | league | League, Non-League | Oct 16 | league | League, League |
+| Fountain Valley – Marina | Sep 11 | non-league | League, Non-League | Oct 12 | non-league | League, League |
+| Edison – Fountain Valley | Sep 16 | non-league | League, Non-League | Oct 9 | league | League, League |
+
+League play runs from Sep 15 (Chaparral at Edison, the first league game) to Oct 31 (the Section's last
+allowable contest [V: 2026-27 Sports Calendar; Blue Book Bylaw 2006]); no document sets a first league date, so
+Sep 15 is read off the games. Tournament (2) and postseason (4) rows never count. The classification stays
+`membership` (owner decision, 2026-10-06; DESIGN §24.11): MaxPreps' league flag does not decide, because it
+follows whichever scorekeeper entered the game [V: snapshot 2026-10-06]. It marks both Chaparral–Great Oak
+meetings and neither Fountain Valley–Marina one, and the Orange County schools' games against each other are
+flagged only when Edison enters them, so by the flag alone Fountain Valley, Marina and Newport Harbor would have
+three league games each. From 2026-10-06 to 2026-11-14 the site counted every game between two of the eight,
+which gave Edison ten games (first on 27 points) and Huntington Beach, unbeaten and the winner of their one
+meeting, seven (second on 21). With one game a pair every team has seven: Huntington Beach 7-0, Edison 6-1,
+Newport Harbor 5-2, Great Oak 4-3, Temecula Valley 3-4, Fountain Valley 2-5, Marina 1-6, Chaparral 0-7.
+`gamesPerTeam` stays null, since no schedule is published and a set count means a double round robin, so the
+site prints games played without "of N". MaxPreps also flags Great Oak's Aug 27 home win over Bonita; Bonita
+is an independent here, so it counts for neither table [V].
 
 **Points and order.** No league document awards points or orders the table, so the order is this site's
 own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citing a league rule.
 
 **Ties in a game.** Blue Book Article 200 adopts the NFHS rules and says nothing on overtime [V]. A game
-between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11 [V], a Sunset game here whether or
-not MaxPreps marks it one), and a Sunset league game has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime period [V]), so each game is
+between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11 [V], the pair's non-league meeting),
+and two Sunset league games have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime
+period [V]; Huntington Beach 1-0 Edison, Oct 8: cifsshome.org's note on one of its two entries says "Overtime"
+[V: read 2026-11-14], MaxPreps records none, so `resultCorrections` records one period), so each game is
 recorded as it is reported: `leagueOvertime: 'none'` (D2 rule 4c, a phantom si.com 0-0, applies). The
 Southern Section has no shootout rule (`SectionConfig.shootout` null).
 
@@ -875,7 +896,7 @@ it was published.
 |---|---|---|---|---|---|
 | Section | SS | SDS | SDS | SDS | SS |
 | Teams / divisions | 8 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 5 / 1 (no league) |
-| League games a team | no fixed number | 10 | 10 or 12 | 6 or 8 | no fixed number (games against each other) |
+| League games a team | 7 (one a pair; no schedule published) | 10 | 10 or 12 | 6 or 8 | no fixed number (games against each other) |
 | Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 |
 | First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | none (no rule) |
 | League evidence | division membership | division membership | division membership | division membership | division membership |

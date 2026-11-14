@@ -171,7 +171,7 @@ describeIfCaptured('the SoCal corpus run', () => {
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       mcal: { teams: 9, games: 4, leagueGames: 0, finals: 2, backfilled: 0 },
       eal: { teams: 6, games: 1, leagueGames: 0, finals: 0, backfilled: 0 },
-      sunset: { teams: 8, games: 99, leagueGames: 35, finals: 83, backfilled: 0 },
+      sunset: { teams: 8, games: 99, leagueGames: 28, finals: 83, backfilled: 0 },
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
       // One fewer than MaxPreps listed: e767ad95 (Southwest at El Capitan, Oct 30) is an excluded stray row.
@@ -248,14 +248,16 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
     ]);
   });
 
-  it('counts exactly the games between two members inside leaguePlay, whatever MaxPreps’ league flag says', () => {
+  it('counts exactly the games between two members inside leaguePlay, less the ones config names non-league, whatever MaxPreps’ league flag says', () => {
     // Rows the pipeline drops are not games: the duplicate scheduled rows config excludes (Fallbrook–Poway c7dbdbcc,
     // Fallbrook–Mission Vista 9c027452) and the phantom duplicates it detects (Great Oak–Edison, listed twice on Sep 24).
     const dropped = new Set(snapshot.dropped.map((x) => x.contestId));
     for (const d of SDS_DIVISIONS) {
+      // The Sunset pairs' earlier meetings are non-league games by config (rules.nonLeagueGames).
+      const nonLeague = getLeague(d.leagueId).rules.nonLeagueGames ?? {};
       const expected = membershipRows(d.id)
         .map((r) => r.contest.contestId)
-        .filter((id) => !Object.hasOwn(DATA_QUALITY.excludedContestIds, id) && !dropped.has(id))
+        .filter((id) => !Object.hasOwn(DATA_QUALITY.excludedContestIds, id) && !dropped.has(id) && !Object.hasOwn(nonLeague, id))
         .sort();
       const counted = snapshot.games
         .filter((g) => g.countsFor === d.id)

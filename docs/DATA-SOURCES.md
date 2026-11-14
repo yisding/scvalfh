@@ -2898,7 +2898,7 @@ The site says Metro Mesa and Metro South Bay, from the Section's 2026-27 League 
 SoCal table the rule `maxprepsTeamCount + missing − extra = expectedTeams` holds (City Eastern
 6 + 1 − 1, Metro South Bay 3 + 2 − 1, Sunset 5 + 5 − 2). The San Diego "Games a team" are a double
 round robin, (teams − 1) × 2 [V: MaxPreps' schedules, 2026-10-06], with one pair short (§3.1); the
-Sunset has no league schedule and no round robin, so it has no fixed number. Valley has no table, so it
+Sunset publishes no league schedule, so it has no fixed number in config (its teams play one league game a pair, seven each: docs/LEAGUE-RULES.md). Valley has no table, so it
 makes no league-meta or standings request (never `/leagues/null/v1`) and its health says the
 cross-check is skipped because "MaxPreps publishes no table for this division".
 
