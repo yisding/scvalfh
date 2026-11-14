@@ -1151,6 +1151,19 @@ club slugs, a team at most once per level, no handle twice, an https `foundAt` o
 build (`tests/instagram-file.test.ts`). The soccer and basketball builds read empty files in
 `data/soccer/` and `data/basketball/` until their programs are researched.
 
+### Hudl TV broadcasts
+
+`data/hudl-streams.json` (and its siblings under `data/soccer/`, `data/basketball/` and `data/volleyball/`)
+holds the Hudl TV broadcast of a game where a covered school streams it on Hudl's fan site, keyed by contest
+id: the game page shows it as a "Hudl TV" button beside "NFHS stream" (a final's replay among its result
+links), a team's Next card and the bracket cells as a pill, and the home page's next-game card as its stream
+chip when MaxPreps has no NFHS stream. MaxPreps never carries a Hudl broadcast, so the links were read from
+each school's fan.hudl.com page on 2026-11-14 and matched to the games by sport, varsity team, date and
+opponent (docs/DATA-SOURCES.md §1.12). The file is research, written by a script run by hand; nothing in the
+data jobs rewrites it. `lib/streams/hudl-streams.ts` validates it at import (each contest once, every link a
+fan.hudl.com watch page) and adds each link to its game where `lib/data.ts` reads the snapshot, so a refresh
+keeps them; a record whose game has left the snapshot is ignored (`tests/hudl-streams-file.test.ts`).
+
 ## Code layout
 
 ```

@@ -411,6 +411,8 @@ function resultLinksFor(game: Game): GameLink[] {
     );
   }
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  // The Hudl TV broadcast's page carries the replay once the game is over (lib/streams/hudl-streams.ts).
+  if (game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   return links;
 }
 

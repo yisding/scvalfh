@@ -2998,6 +2998,30 @@ then assembled onto the first round's files (each new tie or profile says it is 
   title and description, quotes piece by piece; NCSA pages re-read by headless Chromium. All agreed, except
   where a page spells the name another way (Chin, Tuipulotu, Thornton, which the notes already say; Dalessandro without its apostrophe).
 
+### 1.12 HUDL TV BROADCASTS — schools' livestreams on Hudl's fan site (`data/hudl-streams.json`)
+
+Links, not a source: no score, time or venue is read from Hudl. MaxPreps' schedule rows carry a game's NFHS
+Network stream and GoFan tickets (§1.1 (b), `nfhsStreamUrl`, `goFanUrl`) but never a Hudl broadcast, and many
+schools stream on Hudl TV instead. Researched on 2026-11-14 for every school of the four builds (135 schools):
+each school's page on fan.hudl.com was opened in a headless browser, as a fan browses it, and the data the
+page loads was kept: the school's team list (sport, gender, level), every past livestream (the "All Past
+Livestreams" list, read back past 2026-08-01; for a long list the newest ~225 already reach back past that
+date) and its schedule month by month, November 2026 to March 2027, where an event Hudl will stream is marked
+`Upcoming`; a scheduled event's broadcast was read by opening the event on that schedule. Hudl's GraphQL
+endpoint was not called directly. Two schools are not on the fan site's search (James Lick, Notre Dame San Jose).
+
+A broadcast is matched to a game by the school's varsity team in the game's sport, the Pacific date and the
+opponent; the file's `notes` give the rules, and a record whose opponent Hudl names differently says so in its
+`note` (`match: "likely"` where the broadcast names no opponent: a venue camera's "Field Recording", a "vs EAL"
+title, or Santa Clara v Mitty, dated a day off). One link per game, the home school's broadcast first. `url`
+is the broadcast's watch page, `…/watch?b=` + base64 of `Broadcast<id>`: the live stream, then the replay.
+`access` is Hudl's `requireLogin` (`no` free, `ppv` paid). A game with no record had no Hudl broadcast on a
+covered school's page that day; an outside school's stream, or one scheduled later, is not in the file.
+
+The file is research, written by a script run by hand (its `builtBy`); the data jobs do not rewrite it.
+`lib/streams/hudl-streams.ts` validates it at import and lays each link on its game's `urls.hudl` where the site
+reads the snapshot (`lib/data.ts`), so a data refresh keeps the links and the stored snapshot stays MaxPreps'.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

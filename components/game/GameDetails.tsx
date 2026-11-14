@@ -42,7 +42,7 @@ export interface GameDetailsProps {
 }
 
 /** The links drawn as buttons: somewhere to go for THIS game (the rest are reference pages). */
-const BUTTONS: ReadonlySet<string> = new Set(['Directions', 'NFHS stream', 'Tickets']);
+const BUTTONS: ReadonlySet<string> = new Set(['Directions', 'NFHS stream', 'Hudl TV', 'Tickets']);
 
 export function GameDetails({ model, className }: GameDetailsProps) {
   const { game, home, away, countsAs } = model;
@@ -59,6 +59,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
   const links: Array<{ href: string; label: string }> = [];
   if (address) links.push({ href: mapsSearchHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
