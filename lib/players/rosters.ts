@@ -38,6 +38,7 @@ import {
   type EnrichedGrade,
   type EnrichedHeight,
   type EnrichedJersey,
+  type EnrichedName,
   type EnrichedPlayer,
   type EnrichedPositions,
   type EnrichedTeam,
@@ -50,6 +51,7 @@ import {
   type Rosters,
   type TeamRoster,
 } from './rosters-schema';
+import { isPlaceholderRow } from './placeholder-name';
 import { dateKey, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
 
@@ -65,6 +67,7 @@ export type {
   EnrichedGrade,
   EnrichedHeight,
   EnrichedJersey,
+  EnrichedName,
   EnrichedPlayer,
   EnrichedPositions,
   EnrichedTeam,
@@ -145,6 +148,9 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
       const p = byId.get(e.athleteId);
       if (!p) fail(team.slug, e.fullName, `athleteId ${e.athleteId} is not a MaxPreps row of this team`);
       if (e.fullName !== p!.fullName) fail(team.slug, e.fullName, `MaxPreps spells this player "${p!.fullName}"`);
+      // A name fills only the one blank MaxPreps leaves in a name: its stand-in for a bare number.
+      if (e.name && !isPlaceholderRow(p!)) fail(team.slug, e.fullName, 'name would overwrite a MaxPreps name');
+      if (e.name && p!.jersey === null) fail(team.slug, e.fullName, 'a name is tied to a number, and this row has none');
       if (e.grade && p!.grade !== null) fail(team.slug, e.fullName, 'grade would overwrite a MaxPreps value');
       if (e.positions && p!.position !== null) fail(team.slug, e.fullName, 'positions would overwrite a MaxPreps value');
       if (e.jersey && p!.jersey !== null) fail(team.slug, e.fullName, 'jersey would overwrite a MaxPreps value');
@@ -210,6 +216,8 @@ export interface MergedPlayer extends RosterPlayer {
   /** Only where a school source says which squad the row belongs to (Los Gatos). */
   level: 'varsity' | 'jv' | null;
   provenance: {
+    /** 'maxpreps' for every row MaxPreps names; null on its "Player #11" stand-in until a source names it. */
+    name: FieldProvenance<EnrichedName>;
     grade: FieldProvenance<EnrichedGrade>;
     positions: FieldProvenance<EnrichedPositions>;
     jersey: FieldProvenance<EnrichedJersey>;
@@ -238,6 +246,7 @@ function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlay
     sourceName: e?.sourceName ?? null,
     level: e?.level ?? null,
     provenance: {
+      name: isPlaceholderRow(p) ? null : 'maxpreps',
       grade: p.grade !== null ? 'maxpreps' : null,
       positions: p.position !== null ? 'maxpreps' : null,
       jersey: p.jersey !== null ? 'maxpreps' : null,
@@ -247,6 +256,12 @@ function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlay
     profiles: e?.profiles ?? [],
   };
   if (!e) return base;
+  if (e.name) {
+    base.firstName = e.name.firstName;
+    base.lastName = e.name.lastName;
+    base.fullName = e.name.value;
+    base.provenance.name = e.name;
+  }
   if (e.grade) {
     base.grade = e.grade.value;
     base.gradeClass = (['Fr.', 'So.', 'Jr.', 'Sr.'] as const)[e.grade.value - 9];
@@ -284,6 +299,21 @@ export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefi
     enrichmentNotes: extra?.notes ?? [],
     otherRosters: OTHER_ROSTERS.get(slug) ?? NOT_CHECKED,
   };
+}
+
+/**
+ * The names other sources give a team's "Player #11" rows, keyed by the MaxPreps name they replace:
+ * what the stats read API (lib/players/player-stats.ts) shows on the stat lines and box scores the
+ * stats run joined to those rows under MaxPreps' name.
+ */
+export function placeholderNames(slug: TeamSlug): ReadonlyMap<string, string> {
+  const base = BASE_BY_SLUG.get(slug);
+  const names = new Map<string, string>();
+  for (const e of ENRICHMENT_BY_SLUG.get(slug)?.players ?? []) {
+    const row = e.name ? base?.players.find((p) => p.athleteId === e.athleteId) : undefined;
+    if (e.name && row) names.set(row.fullName, e.name.value);
+  }
+  return names;
 }
 
 export function getAllEnrichedRosters(): MergedTeamRoster[] {

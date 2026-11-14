@@ -29,6 +29,7 @@
 
 import { z } from 'zod';
 
+import { isPlaceholderName, isPlaceholderRow } from './placeholder-name';
 import { isShortName, nameKey, type Sighting } from './registry-build';
 import type { Observation, PlayerIdentity, PlayerLevel } from './registry-schema';
 import type { SportId } from '../sports/current';
@@ -68,6 +69,7 @@ export const EnrichmentInput = z.looseObject({
           athleteId: text,
           fullName: text,
           sourceName: text.nullable(),
+          name: z.looseObject({ value: text, firstName: text, lastName: text, ...sourced }).nullable().optional(),
           level: z.enum(['varsity', 'jv']).nullable(),
           grade: z.looseObject({ value: z.number().int().min(9).max(12), derived: z.boolean(), ...sourced }).nullable(),
           positions: z.looseObject({ value: z.array(text).min(1), ...sourced }).nullable(),
@@ -159,8 +161,6 @@ export function seasonYearOf(label: string): string {
 const HEIGHT = /^\d'\d{1,2}"$/;
 /** A graduation year the registry can hold; a profile stating one outside it states none. */
 const classYear = (y: number | null): { classOf?: number } => (y !== null && y >= 2020 && y <= 2040 ? { classOf: y } : {});
-/** "Player 25", "Player #7": a stat sheet's placeholder for a line nobody is named on. */
-const PLACEHOLDER = /^player\s*#?\d*$/i;
 
 // ---------------------------------------------------------------- one season's current files
 
@@ -222,8 +222,22 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
     for (const team of file.teams) {
       for (const row of team.players) {
         const extra = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
-        const observations: Observation[] = [rosterObservation(row, page)];
-        const nameKeys = [nameKey(row.fullName)];
+        // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is a number, not a player, until a source
+        // names it; then it is that player, under that name.
+        const named = extra?.name ?? null;
+        // The rule lib/players/rosters.ts holds the overlay to at load, held here too: this reads the file itself.
+        if (named !== null && (!isPlaceholderRow(row) || row.jersey === null)) {
+          throw new Error(`registry: ${team.slug} / ${row.fullName}: rosters-enrichment names a row that is not a numbered "Player #N" stand-in`);
+        }
+        if (named === null && (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, '')))) continue;
+        const asRow = named ? { ...row, firstName: named.firstName, lastName: named.lastName, fullName: named.value } : row;
+        // MaxPreps' row says the number and nothing of the name; the name is the source's.
+        const fromMaxPreps: Observation = { ...rosterObservation(row, page), name: undefined };
+        delete fromMaxPreps.name;
+        const observations: Observation[] = named
+          ? [fromMaxPreps, { src: 'enrichment', kind: named.kind, url: named.source, name: named.value }]
+          : [rosterObservation(row, page)];
+        const nameKeys = [nameKey(asRow.fullName)];
         if (extra) {
           if (extra.sourceName !== null) {
             observations.push({ src: 'enrichment', name: extra.sourceName });
@@ -247,15 +261,15 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
             observations.push({ src: 'profile', kind: p.platform, url: p.url, ...classYear(p.classOf) });
           }
         }
-        const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(row.fullName)}`);
+        const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(asRow.fullName)}`);
         const careerId = isSplit ? null : row.careerId;
         sightings.push({
           ...base(team.slug, extra?.level ?? page),
           careerIds: careerId ? [careerId] : [],
           ...(careerId && row.careerProfileId ? { careerProfileIds: { [careerId]: row.careerProfileId } } : {}),
           nameKeys: [...new Set(nameKeys)],
-          firstName: row.firstName,
-          lastName: row.lastName,
+          firstName: asRow.firstName,
+          lastName: asRow.lastName,
           observations,
         });
       }
@@ -270,6 +284,8 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
     for (const p of team.players) {
       // A line with no career link is an initial and a last name: it identifies nobody.
       if (p.careerId === null) continue;
+      // Nor does MaxPreps' "Player #4", though it has a career page: the number may be anyone's.
+      if (isPlaceholderName(p.shortName) || isPlaceholderName(p.fullName.replace(/^null\s+/, ''))) continue;
       sightings.push({
         ...base(team.slug, 'varsity'),
         softLevel: true,
@@ -343,7 +359,7 @@ export function pastSeasonSightings(files: PastSeasonFiles): Sighting[] {
     for (const team of files.priorPlayers.teams) {
       for (const p of team.players) {
         // No link and only an initial, or the sheet's placeholder for a line with no name: nobody to follow.
-        if ((p.careerId === null && p.nameFrom === 'short-name') || PLACEHOLDER.test(p.name)) continue;
+        if ((p.careerId === null && p.nameFrom === 'short-name') || isPlaceholderName(p.name)) continue;
         if (p.careerId === null && nameKey(p.name) === '') continue;
         sightings.push({
           sport,

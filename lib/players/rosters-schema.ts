@@ -221,6 +221,8 @@ export const ENRICHMENT_KINDS = [
   'maxpreps-career',
   /** a MaxPreps team home page (coach names) */
   'maxpreps-team',
+  /** the team's own page on Hudl, kept by its coaches: its roster and the players' profiles */
+  'hudl',
 ] as const;
 const enrichmentKind = z.enum(ENRICHMENT_KINDS);
 
@@ -245,6 +247,21 @@ export const EnrichedGradeSchema = z.object({
   derived: z.boolean(),
   ...sourced,
 });
+
+/**
+ * A name for a row MaxPreps names nobody on: its stat-entry stand-in, "Player #11"
+ * (lib/players/placeholder-name.ts), which another source ties to a player by the same number on the
+ * same team this season. Never a second spelling of a name MaxPreps has (that is `sourceName`).
+ */
+export const EnrichedNameSchema = z
+  .object({
+    /** As the source spells it: "Grace Gnagne". */
+    value: z.string().min(1),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    ...sourced,
+  })
+  .refine((n) => n.value === `${n.firstName} ${n.lastName}`, 'value must be firstName and lastName joined with a space');
 
 export const EnrichedPositionsSchema = z.object({
   value: z.array(z.string().min(1)).min(1),
@@ -367,6 +384,8 @@ export const EnrichedPlayerSchema = z
     fullName: z.string().min(1),
     /** As the source spells it, when that differs (e.g. "Gabriella" for "Gigi"). */
     sourceName: z.string().min(1).nullable(),
+    /** The name of a row MaxPreps names nobody on ("Player #11"); only on such a row (lib/players/rosters.ts checks). */
+    name: EnrichedNameSchema.nullable().optional(),
     /** Only where a school source says which squad a row belongs to (Los Gatos). */
     level: z.enum(['varsity', 'jv']).nullable(),
     levelSource: httpUrl.nullable(),
@@ -381,7 +400,7 @@ export const EnrichedPlayerSchema = z
   })
   .refine(
     (p) =>
-      p.sourceName !== null || p.level !== null || p.grade !== null || p.positions !== null ||
+      p.sourceName !== null || (p.name ?? null) !== null || p.level !== null || p.grade !== null || p.positions !== null ||
       p.jersey !== null || p.height !== null || p.conflicts.length > 0 || p.profiles.length > 0,
     'an enrichment record must add something',
   )
@@ -436,6 +455,7 @@ export const RosterEnrichmentSchema = z
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;
 export type EnrichedJersey = z.infer<typeof EnrichedJerseySchema>;
+export type EnrichedName = z.infer<typeof EnrichedNameSchema>;
 export type EnrichedHeight = z.infer<typeof EnrichedHeightSchema>;
 export type PlayerProfile = z.infer<typeof PlayerProfileSchema>;
 export type RosterConflict = z.infer<typeof RosterConflictSchema>;

@@ -11,6 +11,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  EnrichedNameSchema,
   RosterEnrichmentSchema,
   countRosters,
   type RosterEnrichment,
@@ -346,6 +347,20 @@ describe('data/rosters-enrichment.json', () => {
     // ...which is why lib/players/rosters.ts re-checks the join at load. Exercise that check in a child
     // process with the bad file swapped in.
     expect(loadError(bad)).toMatch(/grade would overwrite a MaxPreps value/);
+  });
+
+  it('names only a "Player #N" stand-in, never a row MaxPreps names (asserted at load)', () => {
+    const name = {
+      value: 'Ann Other', firstName: 'Ann', lastName: 'Other', kind: 'hudl' as const,
+      source: 'https://www.hudl.com/profile/1', confidence: 'high' as const, note: null,
+    };
+    expect(EnrichedNameSchema.safeParse(name).success).toBe(true);
+    expect(EnrichedNameSchema.safeParse({ ...name, value: 'Ann  Other' }).success).toBe(false);
+    const bad = structuredClone(raw);
+    const storey = base.teams.find((t) => t.slug === 'st-ignatius')!.players[0];
+    bad.teams.find((t) => t.slug === 'st-ignatius')!.players.find((p) => p.athleteId === storey.athleteId)!.name = name;
+    expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
+    expect(loadError(bad)).toMatch(/name would overwrite a MaxPreps name/);
   });
 });
 

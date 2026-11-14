@@ -402,7 +402,8 @@ season; run it by hand or weekly). The page encodes each athlete as a 38-element
 MaxPreps added `isClaimed` in November 2026; the parser reads both layouts and nothing else), so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
-a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
+a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; the "null Player #4" rows
+MaxPreps' stat entry creates for a number nobody is rostered under read "Player #4" unless another source names her (docs/DATA-SOURCES.md); a team whose fetch fails
 keeps its previous rows with `status: "carried-forward"`. Failures are scoped to the team, and
 `--leagues scval,bval` scopes a run to leagues, as `fetch-data --leagues` does: a league outside the
 run keeps its previous rows, and one league failing never stops another being read. A team no run
@@ -1504,9 +1505,9 @@ one). Two rounds: 2026-11-13 for the 41 SCVAL and BVAL schools, and 2026-11-14 f
 with the name-by-name searches the first round did not finish, at all 60. DATA-SOURCES §1.11 has the method, source
 by source. Counted from the files on 2026-11-14:
 
-- **Recruiting profiles** (`rosters-enrichment.json`, `profiles[]` only): **795 for 542 of the 876 varsity rows,
-  at 57 of the 60 schools** (398 Hudl, 197 claimed MaxPreps pages, 111 NCSA, 89 SportsRecruits); 598 of them, for
-  463 players, are on a recruiting platform rather than MaxPreps. The WCAL and WBAL schools hold 301 of them, for
+- **Recruiting profiles** (`rosters-enrichment.json`, `profiles[]` only): **797 for 544 of the 876 varsity rows,
+  at 57 of the 60 schools** (400 Hudl, 197 claimed MaxPreps pages, 111 NCSA, 89 SportsRecruits); 600 of them, for
+  465 players, are on a recruiting platform rather than MaxPreps. The WCAL and WBAL schools hold 301 of them, for
   202 of their 307 rows, at all 19. A volleyball profile names no sport; profiles in another sport: 7 softball, 3
   basketball, 2 each rowing, soccer and track and field, 1 each beach volleyball, lacrosse and swimming and diving.
   No profile was found at Evergreen Valley, James Lick or Oak Grove. `jv-profiles.json` holds **76 for 75 JV

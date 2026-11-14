@@ -1351,7 +1351,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-13 and 2026-11-14 (README, \"Girls volleyball: recruiting\"): 15 linked for 14 of the 20 players (2 NCSA, 13 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-14: MaxPreps' stat-entry stand-ins \"Player #1\", \"#6\", \"#10\", \"#14\" and \"#15\" (all from the 2026-09-03 match at Santa Clara) are not named: no source ties a name to these numbers on the 2026 varsity. Looked at MaxPreps' 2025-26 and 2026-27 varsity, JV and freshman rosters, the box scores of both seasons, Hudl (Milpitas has no volleyball team there) and local news. Candidate not used: #1 Julia Zamudio, #1 and a libero on the 2026 JV roster, who played JV against Santa Clara that day; nothing puts her on varsity. JV #15 Leila Stout is a hitter, and the #15 line is a setter's."
       ],
       "players": [
         {
@@ -7630,7 +7631,8 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-11-13 (README, \"Girls volleyball: recruiting\"): 11 linked for 10 of the 15 players (1 NCSA, 8 Hudl, 2 claimed MaxPreps).",
-        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own."
+        "No school-athletics roster sweep (grade, height, number, position, coaches) has been done, so every other value shown is MaxPreps’ own.",
+        "2026-11-14: MaxPreps' stat-entry stand-ins \"Player #11\" and \"Player #12\" (lib/players/placeholder-name.ts) are named from the team's own Hudl roster, which ties each name to the number for 2026. The 2025-26 leads (Camila Gaeta #11, a 2026 graduate; Janey Rodriguez Cruz #12, who wears #21 now) were wrong."
       ],
       "players": [
         {
@@ -7858,10 +7860,95 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "e375a363-ecf6-4abe-9425-b05f25515177",
+          "playerId": "pff5ff5d692",
+          "conflicts": [],
+          "fullName": "Player #11",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "name": {
+            "value": "Anjelica Llamas",
+            "firstName": "Anjelica",
+            "lastName": "Llamas",
+            "kind": "hudl",
+            "source": "https://www.hudl.com/profile/32385475",
+            "confidence": "high",
+            "note": "Gilroy High School's own Girls Varsity Volleyball team on Hudl lists \"11 Anjelica Llamas\" for 2026, and her profile there says jersey 11, Gilroy High School Girls Varsity Volleyball, 2026 - Present. Every other number on that Hudl roster is the MaxPreps roster's own. Read 2026-11-14."
+          },
+          "note": "MaxPreps' \"Player #11\": a stand-in its stat entry made for #11 in the 2026-09-25 match against Mt. Madonna (lib/players/placeholder-name.ts).",
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": null,
+              "note": "On Gilroy High School's own volleyball team on Hudl (Girls Varsity Volleyball, #11, 2026 - Present); no class year given.",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/32385475"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3caa6df1-27bb-483e-ba65-5ce3af1b60a0",
+          "playerId": "p7f4d96e4da",
+          "conflicts": [],
+          "fullName": "Player #12",
+          "grade": {
+            "value": 9,
+            "derived": true,
+            "kind": "hudl",
+            "source": "https://www.hudl.com/profile/32387183",
+            "confidence": "medium",
+            "note": "Class of 2030 on her Hudl profile: a freshman in 2026-27."
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "name": {
+            "value": "Grace Gnagne",
+            "firstName": "Grace",
+            "lastName": "Gnagne",
+            "kind": "hudl",
+            "source": "https://www.hudl.com/profile/32387183",
+            "confidence": "high",
+            "note": "Gilroy High School's own Girls Varsity Volleyball team on Hudl lists \"12 Grace Gnagne\" for 2026, and her profile there says jersey 12, MH, class of 2030, Gilroy High School Girls Varsity Volleyball, 2026 - Present. Read 2026-11-14."
+          },
+          "note": "MaxPreps' \"Player #12\": a stand-in its stat entry made for #12 in the 2026-09-25 match against Mt. Madonna (lib/players/placeholder-name.ts).",
+          "positions": {
+            "value": [
+              "MH"
+            ],
+            "kind": "hudl",
+            "source": "https://www.hudl.com/profile/32387183",
+            "confidence": "high",
+            "note": "MH on her Hudl profile; her line against Mt. Madonna (2 kills, 2 solo blocks) is a middle's."
+          },
+          "profiles": [
+            {
+              "classOf": 2030,
+              "note": "On Gilroy High School's own volleyball team on Hudl (Girls Varsity Volleyball, #12, MH, 2026 - Present).",
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/32387183"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "gilroy",
-      "sources": []
+      "sources": [
+        {
+          "kind": "hudl",
+          "url": "https://www.hudl.com/team/v2/820247",
+          "title": "Gilroy High School - Girls Varsity Volleyball (Hudl), 2026 roster",
+          "capturedAt": "2026-11-14",
+          "confidence": "high"
+        }
+      ]
     },
     {
       "coaches": [],

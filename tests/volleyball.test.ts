@@ -595,3 +595,38 @@ describe('the volleyball recruiting research (data/volleyball/{clubs,commits,ros
     expect(m.instagram.getClubInstagram('mountain-view-volleyball-club')?.handle).toBe('mvvcvolley');
   });
 });
+
+describe('MaxPreps\' "Player #N" stand-ins (lib/players/placeholder-name.ts)', () => {
+  it('no roster row reads "null", and every unnamed stand-in reads "Player #N" under its own number', () => {
+    for (const t of m.rosters.getAllEnrichedRosters()) {
+      for (const p of t.players) {
+        expect(p.fullName, t.slug).not.toMatch(/\bnull\b/);
+        if (p.firstName === null && /^Player #/.test(p.fullName)) expect(p.fullName, t.slug).toBe(`Player #${p.jersey}`);
+      }
+    }
+  });
+
+  it("names Gilroy's #11 and #12 from the team's own Hudl roster, on the roster, its sources, the stats and the box score", () => {
+    const named = m.rosters.getEnrichedTeamRoster('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
+    expect(named.map((p) => [p.jersey, p.fullName, p.grade, p.position])).toEqual([
+      ['11', 'Anjelica Llamas', null, null],
+      ['12', 'Grace Gnagne', 9, 'MH'],
+    ]);
+    const view = m.rosterView.buildRosterView('gilroy' as never)!;
+    expect(view.rows.filter((r) => r.nameElsewhere).map((r) => r.name).sort()).toEqual(['Anjelica Llamas', 'Grace Gnagne']);
+    expect(view.rows.filter((r) => !r.nameElsewhere).every((r) => !/^Player #/.test(r.name))).toBe(true);
+    const lines = m.playerStats.getTeamPlayerStats('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
+    expect(lines.map((p) => [p.fullName, p.onRoster]).sort()).toEqual([['Anjelica Llamas', true], ['Grace Gnagne', true]]);
+    const box = m.playerStats.getTeamPlayerStats('gilroy' as never)!.games!.flatMap((g) => g.players.filter((l) => l.jersey === '11' || l.jersey === '12'));
+    expect(box.map((l) => l.jersey).sort()).toEqual(['11', '12']);
+    for (const l of box) expect(l.name, l.jersey ?? '').toBe(l.jersey === '11' ? 'Anjelica Llamas' : 'Grace Gnagne');
+  });
+
+  it('leaves the stand-ins no source names as "Player #N", on the roster and on their stat lines', () => {
+    const mitty = m.rosters.getEnrichedTeamRoster('mitty' as never)!.players.filter((p) => p.firstName === null);
+    expect(mitty.map((p) => p.fullName)).toEqual(['Player #4', 'Player #5', 'Player #9', 'Player #11', 'Player #18']);
+    const lines = m.playerStats.getTeamPlayerStats('mitty' as never)!.players.filter((p) => /^Player #/.test(p.fullName));
+    expect(lines.length).toBeGreaterThan(0);
+    expect(lines.every((p) => p.onRoster)).toBe(true);
+  });
+});

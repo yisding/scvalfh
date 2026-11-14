@@ -71,6 +71,7 @@ import {
   type StintConflict,
 } from './registry-schema';
 import type { SportId } from '../sports/current';
+import { isPlaceholderName } from './placeholder-name';
 
 // ---------------------------------------------------------------- names and class years
 
@@ -890,6 +891,9 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   const said = (o: Observation) => JSON.stringify(o, Object.keys(o).sort());
   const stillListed = new Set(drafts.flatMap((d) => d.stints.flatMap((s) => s.observations.map((o) => `${stintKey(s)} ${said(o)}`))));
   for (const p of prevPlayers) {
+    // MaxPreps' "Player #4" (lib/players/placeholder-name.ts; "null Player #4" before the roster read
+    // dropped the "null") was never a person, so there is nobody to remember.
+    if (p.names.every((n) => isPlaceholderName(n.replace(/^null\s+/, '')))) continue;
     const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season) && !s.observations.some((o) => stillListed.has(`${stintKey(s)} ${said(o)}`)));
     if (lost.length === 0) continue;
     const heir = heirOf.get(p.id);
