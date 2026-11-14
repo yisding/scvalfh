@@ -107,7 +107,7 @@ function gameTie(entry: BracketGame, round: BracketRound): TieModel {
     ],
     // The round's heading carries its day; a game moved off it says which day.
     time: game.dateLocal.slice(0, 10) === round.dateKey ? clock : `${shortDate(game.dateLocal).split(' ')[0]} ${clock}`,
-    note: off ?? (display.deciderTag && state === 'final' ? display.deciderTag : venue ? `at ${venue}` : null),
+    note: off ?? (display.deciderTag && state === 'final' ? display.deciderTag : venue ? `At ${venue}` : null),
     links:
       links.length > 0
         ? links.map((l) => (

@@ -11,7 +11,9 @@ import type { OutsideTournamentView } from './playoff-view';
  * belonging to both:
  *
  * 1. the heading (the event's name, its dates beside it);
- * 2. the games (`#toc-games`), by day under a strip naming the round the schools' schedules give that day
+ * 2. the games (`#toc-games`): the event's bracket, drawn by the shared drawer as every other bracket on the
+ *    page is (rounds, the final, the third-place game under it), when its config reads one off the results;
+ *    otherwise by day under a strip naming the round the schools' schedules give that day
  *    ('Round 1', 'Semifinals', 'Final and third-place game') with the day at its right end, as the site's
  *    game rows (`GameList`);
  * 3. one note (whose postseason it is, then the event's own: who runs it, its rounds, that CIF does not) and
@@ -19,8 +21,8 @@ import type { OutsideTournamentView } from './playoff-view';
  * 4. `children`: the leagues' own sections (`#sunset`, `#independents`), each saying which of its teams play
  *    in it, after the tournament's.
  *
- * No seed and no bracket: none is published, and the copy rules forbid a seed word on these pages. The sources
- * are named, because nothing official publishes the event.
+ * No seed: none is published, and the copy rules forbid a seed word on these pages. The sources are named,
+ * because nothing official publishes the event.
  */
 export interface OutsideTournamentProps {
   view: OutsideTournamentView;
@@ -28,18 +30,22 @@ export interface OutsideTournamentProps {
   id: string;
   /** 'the Sunset and the LA independents': whose postseason it is, for the heading's meta. */
   whose: string;
+  /** The event as a bracket (TournamentBracket), drawn in place of the games by day when its config has one. */
+  bracket?: React.ReactNode;
   /** The leagues' sections, drawn after the tournament's. */
   children?: React.ReactNode;
   className?: string;
 }
 
-export function OutsideTournament({ view, id, whose, children, className }: OutsideTournamentProps) {
+export function OutsideTournament({ view, id, whose, bracket, children, className }: OutsideTournamentProps) {
   return (
     <>
       <section id={id} aria-labelledby={`${id}-heading`} className={['sx-section', className].filter(Boolean).join(' ')}>
         <SectionHeader id={`${id}-heading`} kicker={view.name} meta={view.dates} />
         <div id={`${id}-games`} className="sx-target">
-          {view.rounds.length === 0 ? (
+          {bracket ? (
+            bracket
+          ) : view.rounds.length === 0 ? (
             <p className="sx-empty">No tournament game is on MaxPreps yet.</p>
           ) : (
             view.rounds.map((round) => (

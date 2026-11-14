@@ -172,24 +172,28 @@ describe('the EAL Super Regional as a bracket (components/playoffs/tournament-br
   it('advances the winner a source names even where no score is published', () => {
     const [chicoCorning, lassenBv] = view.division.rounds[0].cards;
     expect([chicoCorning.winner, chicoCorning.score, chicoCorning.status]).toEqual(['top', null, 'final']);
-    expect(chicoCorning.sentence[0]).toBe('Chico beat Corning; no score was published. At Chico High School.');
-    expect([lassenBv.winner, lassenBv.note]).toEqual(['bottom', 'No score published · At Pleasant Valley High School']);
+    expect(chicoCorning.sentence[0]).toBe('Chico beat Corning; no score was posted. At Chico High School.');
+    expect([lassenBv.winner, lassenBv.note]).toEqual(['bottom', 'No score posted · At Pleasant Valley High School']);
     const [davisChico, pvBv] = view.division.rounds[1].cards;
-    expect(davisChico.sentence[0]).toBe('Chico beat Davis; no score was published. At Chico High School.');
+    expect(davisChico.sentence[0]).toBe('Chico beat Davis; no score was posted. At Chico High School.');
     expect([pvBv.winner, pvBv.score]).toEqual(['top', [2, 0]]);
     for (const c of [chicoCorning, lassenBv, davisChico, pvBv]) expect(c.href, c.key).toMatch(/^\/game\//);
   });
 
-  it('gives the final its double overtime and its 1 v 1 tally, and lists the placement games apart', () => {
-    const [final] = view.division.rounds[2].cards;
+  it('gives the final its double overtime and its 1 v 1 tally, and hangs the placement games under the final', () => {
+    const last = view.division.rounds[2];
+    const [final] = last.cards;
     expect(final.sentence[0]).toBe('Pleasant Valley and Chico drew 0–0 after double overtime; Pleasant Valley won on 1 v 1s, 3–2. At Pleasant Valley High School.');
     expect(final.note).toBe('1 v 1s 3–2, double overtime · At Pleasant Valley High School');
-    expect(view.placement.map((p) => [p.name, p.card.status, p.card.winner])).toEqual([
+    // Third place first, then fifth: each belongs to the final's round, so a phone shows them with its tab only.
+    expect(view.division.rounds.map((r) => (r.extra ?? []).length)).toEqual([0, 0, 2]);
+    const placement = last.extra!.map((e) => ({ name: e.name, card: e.cards[0] }));
+    expect(placement.map((p) => [p.name, p.card.status, p.card.winner])).toEqual([
       ['Third place', 'final', 'top'],
       // No source names the fifth-place winner: the card stays open.
       ['Fifth place', 'unreported', null],
     ]);
-    expect(view.placement[1].card.sentence[0]).toBe('Corning and Lassen were to play Sat Oct 31 at Pleasant Valley High School; no result is published.');
+    expect(placement[1].card.sentence[0]).toBe('Corning and Lassen were to play Sat Oct 31 at Pleasant Valley High School; no result is posted.');
   });
 
   it('leaves what depends on an unknown winner open', () => {

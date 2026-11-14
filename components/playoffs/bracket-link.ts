@@ -129,7 +129,10 @@ export function getBracketLink(game: Pick<Game, 'contestId' | 'postseason' | 'da
     }
     case 'outside-tournament': {
       const event = outsideEvent(game);
-      return event ? { href: `/playoffs#${event.id}-${game.dateKey}`, label: `${event.name} games` } : null;
+      if (!event) return null;
+      // Drawn as a bracket from its results (OutsideTournamentConfig.bracket; `#<event>-bracket`), else by day.
+      if (event.bracket) return { href: `/playoffs#${event.id}-bracket`, label: `${event.name} bracket` };
+      return { href: `/playoffs#${event.id}-${game.dateKey}`, label: `${event.name} games` };
     }
   }
   return null;

@@ -70,9 +70,9 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
     // other two (a fifth round that is a play-in is drawn at the head of the first round's column, named in its note).
     const rounds = [...played.matchAll(/<h3>([^<]*)<\/h3>/g)].map((m) => m[1]);
     expect(rounds, COMPONENT).toHaveLength(11);
-    expect(rounds, COMPONENT).not.toContain('Play-in, Nov 3');
-    expect(playedText, COMPONENT).toMatch(/Play-in, Nov \d+/);
-    expect(rounds.slice(0, 3), COMPONENT).toEqual(['Quarterfinals, Nov 6', 'Semifinals, Nov 11', 'Final, Nov 15']);
+    expect(rounds, COMPONENT).not.toContain('Play-in, Mon Nov 3');
+    expect(playedText, COMPONENT).toMatch(/Play-in, \w{3} Nov \d+/);
+    expect(rounds.slice(0, 3), COMPONENT).toEqual(['Quarterfinals, Thu Nov 6', 'Semifinals, Tue Nov 11', 'Final, Sat Nov 15']);
     expect(played, COMPONENT).not.toContain('<h4');
     expect(played.match(/class="sx-bracket/g)?.length, COMPONENT).toBe(3);
     // The sentence that says where the brackets come from follows the last of them.
@@ -98,7 +98,7 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
       // The registry writes the name with a straight apostrophe.
       "Bishop's (2) beat Mission Bay (7) 4–1.",
       'Canyon Crest Academy (8) and Torrey Pines (1) drew 1–1; Canyon Crest Academy won the shootout.',
-      'Rancho Bernardo (2) beat Clairemont (7) 2–0. Played Nov 6.',
+      'Rancho Bernardo (2) beat Clairemont (7) 2–0. Played Thu Nov 6.',
       'Mt. Carmel (1) and La Costa Canyon (6) drew 2–2; Mt. Carmel won the shootout. At La Jolla HS.',
       // MaxPreps posted no row for Bonita Vista v Westview; Bonita Vista's quarterfinal shows it came through.
       'Bonita Vista (8) beat Westview (9); no score was posted.',

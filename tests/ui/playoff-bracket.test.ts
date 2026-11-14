@@ -191,7 +191,7 @@ describe('PlayoffBracket before the games exist', () => {
     expect(cellOf(ticketed), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4:00 PM</span>');
     expect(cellOf(tba), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">TBD</span>');
     for (const cell of upcoming) expect(cell, COMPONENT).not.toContain('sx-tie-score');
-    expect(text, COMPONENT).toContain('at St. Ignatius College Preparatory');
+    expect(text, COMPONENT).toContain('At St. Ignatius College Preparatory');
     expect(text, COMPONENT).not.toContain('@ St. Ignatius');
     expect(html, COMPONENT).toContain('href="https://gofan.co/app/events/1"');
     expect(html, COMPONENT).toContain('href="https://www.nfhsnetwork.com/events/cifccs/gam1"');

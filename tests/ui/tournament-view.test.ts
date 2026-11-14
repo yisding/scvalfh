@@ -338,7 +338,7 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(html, PAGE).toContain('<h3>Final, Fri Oct 30</h3>');
     const finalCell = html.slice(html.indexOf('id="final"'));
     expect(finalCell.slice(0, finalCell.indexOf('</div></div>')), PAGE).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4 PM</span>');
-    expect(textOf(finalCell), PAGE).toContain('at Tamalpais');
+    expect(textOf(finalCell), PAGE).toContain('At Tamalpais');
     // The final's where and how much, from config finalSite (DESIGN §3.8): venue, address, Directions, admission.
     expect(t, PAGE).toContain('Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941.');
     expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=700%20Miller%20Ave%2C%20Mill%20Valley%2C%20CA%2094941"');
