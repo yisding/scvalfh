@@ -1299,6 +1299,20 @@ by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
 
+**Typecheck memory.** Every data/ JSON file the code imports has a `<name>.d.json.ts` sidecar beside
+it (`data/snapshot.d.json.ts` for `data/snapshot.json`, …) that types the import `unknown`.
+`allowArbitraryExtensions` in `tsconfig.json` makes tsc read the sidecar instead of the JSON.
+Bundlers ignore the sidecars, so the build still imports the real file. Without the sidecars, tsc
+infers a literal type for each file: 26 MB and ~800,000 lines of JSON across the four sports, put
+together into four-way unions by the per-sport ternaries. Measured on 2026-11-14 with `tsc --noEmit
+--extendedDiagnostics`, the sidecars cut the typecheck from 2.13 GB of heap and 54 s to 1.07 GB and
+18 s. Before that it ran past Node's default ~2 GB heap and crashed in smaller containers. Nothing
+used the inferred types: each loader passes the import as `unknown` to its zod schema (or, for an
+empty placeholder file, casts it). `resolveJsonModule` stays on because Next requires it and
+rewrites `tsconfig.json` when it is off. **A new data JSON import needs a sidecar**: copy any
+existing one. `tests/json-sidecars.test.ts` fails when one is missing, because the typecheck itself
+would pass, only slower and heavier.
+
 Imports are relative everywhere (`app/`, `components/`, `lib/`, `scripts/`, `tests/`), never the
 `@/` alias that `tsconfig.json` declares: Vitest has no path alias (`vitest.config.mts`), and the
 tests import pages, view builders and route modules directly (tests/ui/home-view.test.ts renders
