@@ -22,6 +22,8 @@ export interface TournamentBracketsProps {
   readOn: string;
   /** The names of the leagues this build covers, for the sentence about the other divisions: 'SCVAL or BVAL'. */
   leagueWords: string;
+  /** CCS games no bracket holds, drawn by round under the brackets (app/playoffs/page.tsx); usually nothing. */
+  extra?: React.ReactNode;
   /** The link row under the brackets (the official bracket, Scores). */
   children?: React.ReactNode;
 }
@@ -69,7 +71,7 @@ export function tournamentRounds(bracket: TournamentBracketView): BracketRoundMo
   }));
 }
 
-export function TournamentBrackets({ view, readOn, leagueWords, children }: TournamentBracketsProps) {
+export function TournamentBrackets({ view, readOn, leagueWords, extra, children }: TournamentBracketsProps) {
   const { brackets, ccsOthers } = view;
   if (brackets.length === 0) return null;
   // One source link per event: its first bracket's page.
@@ -97,6 +99,7 @@ export function TournamentBrackets({ view, readOn, leagueWords, children }: Tour
           <Bracket rounds={tournamentRounds(b)} label={`${b.name} bracket`} />
         </section>
       ))}
+      {extra}
       {ccsOthers.length > 0 ? (
         <p className="sx-note">
           {`CCS ${listWords(ccsOthers)} ${ccsOthers.length === 1 ? 'has' : 'have'} no ${leagueWords} team, so ${ccsOthers.length === 1 ? 'it is' : 'they are'} not drawn here; the official bracket has ${ccsOthers.length === 1 ? 'it' : 'them'}.`}

@@ -1,7 +1,8 @@
 import { EN_DASH, leagueClock, leagueClockPT, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { getTeamById } from '../../lib/teams';
-import type { ContestId, Game, TournamentBracket, TournamentBracketMatchup, TournamentBracketSide } from '../../lib/types';
+import { winningSide } from '../../lib/postseason/game-winner';
+import type { CcsPlayoffs, ContestId, Game, TournamentBracket, TournamentBracketMatchup, TournamentBracketSide } from '../../lib/types';
 
 /**
  * The published brackets of `playoffs.brackets` (lib/types.ts TournamentBracket: MaxPreps' tournament pages read
@@ -29,6 +30,13 @@ import type { ContestId, Game, TournamentBracket, TournamentBracketMatchup, Tour
  * reach it ("Los Altos or Burlingame") or `TBD`. A game the snapshot holds (one of ours) links to its game page;
  * an unplayed one carries its start time, its site and its ticket and stream links. Nothing is inferred: a game
  * whose day has passed with no result says "No result posted yet".
+ *
+ * WHEN THE PAGE IS BEHIND. The tournament page and the team feeds are two reads, and a bracket can be the previous
+ * run's copy. Where the snapshot's own game is final and the page has no result for it yet, the cell prints the
+ * game's result (`resolve`), so /playoffs never contradicts the game page it links to. And a CCS bracket game no
+ * stored bracket holds (the page failed with nothing to carry, a division that did not parse) is not dropped:
+ * `uncoveredBracketGames` gives them to the by-round paths (components/playoffs/bracket-model.ts) the page draws
+ * under the brackets.
  */
 
 export interface TournamentTieLine {
@@ -154,6 +162,35 @@ function openName(side: TournamentBracketSide, byId: ReadonlyMap<string, Tournam
   return `${teamName(feeder.sides[0])} or ${teamName(feeder.sides[1])}`;
 }
 
+/**
+ * A matchup with the snapshot's own result where the page has none yet: the winner and each side's figure from the
+ * joined final. A side is matched on its MaxPreps id; a game whose sides do not match the matchup's changes nothing.
+ */
+function resolve(m: TournamentBracketMatchup, game: Game | undefined): TournamentBracketMatchup {
+  if (m.winner !== null || !game) return m;
+  const won = winningSide(game);
+  if (won === null) return m;
+  const sideOf = (s: TournamentBracketSide) =>
+    s.teamId === null ? null : s.teamId === game.home.teamId ? ('home' as const) : s.teamId === game.away.teamId ? ('away' as const) : null;
+  const [a, b] = [sideOf(m.sides[0]), sideOf(m.sides[1])];
+  if (a === null || b === null || a === b) return m;
+  return {
+    ...m,
+    winner: a === won ? 0 : 1,
+    sides: [{ ...m.sides[0], score: game[a].score }, { ...m.sides[1], score: game[b].score }],
+  };
+}
+
+/**
+ * The CCS bracket games (`playoffs.games`) that no stored bracket holds: all of them where there are no brackets
+ * (field hockey), none once every division was read. The by-round paths draw these, so a game is never lost
+ * because its division's page was not read.
+ */
+export function uncoveredBracketGames(playoffs: Pick<CcsPlayoffs, 'games' | 'brackets'>): Game[] {
+  const covered = new Set((playoffs.brackets ?? []).flatMap((b) => b.matchups.map((m) => m.contestId)));
+  return playoffs.games.filter((g) => !covered.has(g.contestId));
+}
+
 function line(
   m: TournamentBracketMatchup,
   index: 0 | 1,
@@ -180,13 +217,14 @@ function venueWords(text: string | null | undefined): string | null {
 }
 
 function tie(
-  m: TournamentBracketMatchup,
+  stored: TournamentBracketMatchup,
   viewId: string,
   byId: ReadonlyMap<string, TournamentBracketMatchup>,
   games: ReadonlyMap<ContestId, Game>,
   today: string,
 ): TournamentTie {
-  const game = m.contestId === null ? undefined : games.get(m.contestId);
+  const game = stored.contestId === null ? undefined : games.get(stored.contestId);
+  const m = resolve(stored, game);
   const decided = m.winner !== null;
   const known = m.sides.every((s) => s.teamId !== null);
   // The game's own start: the snapshot's game when it is one of ours, else what the page prints.
@@ -259,7 +297,22 @@ function bracketView(
   regionWord: string,
 ): TournamentBracketView | null {
   const byId = new Map(bracket.matchups.map((m) => [m.id, m]));
-  const last = bracket.matchups.find((m) => m.next === null);
+  const lastId = bracket.matchups.find((m) => m.next === null)?.id;
+  // A side the page has not filled, whose feeding game the snapshot already has as a final: the winner goes through.
+  for (const m of bracket.matchups) {
+    m.sides.forEach((side, i) => {
+      const feeder = side.teamId === null && side.from !== null ? byId.get(side.from) : undefined;
+      if (!feeder || feeder.bye) return;
+      const done = resolve(feeder, feeder.contestId === null ? undefined : games.get(feeder.contestId));
+      if (done.winner === null) return;
+      const through = done.sides[done.winner];
+      const current = byId.get(m.id) ?? m;
+      const sides: [TournamentBracketSide, TournamentBracketSide] = [current.sides[0], current.sides[1]];
+      sides[i] = { ...side, teamId: through.teamId, name: through.name, seed: through.seed };
+      byId.set(m.id, { ...current, sides });
+    });
+  }
+  const last = lastId === undefined ? undefined : byId.get(lastId);
   if (!last || !holdsOurs(bracket.matchups)) return null;
 
   // A CIF State bracket: the regional our teams are in, then the state final. Else the whole tree.
@@ -291,7 +344,7 @@ function bracketView(
     .filter((round) => round.ties.length > 0);
 
   const opening = levels[levels.length - 1];
-  const drawn = regional ? levels.slice(1).flat() : bracket.matchups;
+  const drawn = regional ? levels.slice(1).flat() : [...byId.values()];
   const teams = new Set(drawn.flatMap((m) => m.sides.map((s) => s.teamId)).filter((t) => t !== null)).size;
   const count = opening.length > 0 && teams > 0 ? `${teams} teams` : '';
   const names = EVENT_NAME[bracket.event];

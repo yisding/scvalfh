@@ -36,7 +36,7 @@ import { getTeamBySlug } from '../../lib/teams';
 import type { ContestId, Game } from '../../lib/types';
 
 import { buildBrackets } from './bracket-model';
-import { bracketLinkLabel, tournamentBracketsView } from './tournament-brackets-view';
+import { bracketLinkLabel, tournamentBracketsView, uncoveredBracketGames } from './tournament-brackets-view';
 
 export interface BracketLink {
   /** '/playoffs#ccs-division-2' */
@@ -55,7 +55,8 @@ let index: Map<ContestId, BracketLink> | null = null;
 
 function buildIndex(): Map<ContestId, BracketLink> {
   const out = new Map<ContestId, BracketLink>();
-  for (const path of buildBrackets(getPlayoffs(), getCcsSeeds())) {
+  // The paths /playoffs draws: the CCS games no stored bracket holds (tournament-brackets-view.ts).
+  for (const path of buildBrackets({ ...getPlayoffs(), games: uncoveredBracketGames(getPlayoffs()) }, getCcsSeeds())) {
     for (const round of path.rounds) {
       for (const card of round.cards) {
         if (card.kind === 'game') {

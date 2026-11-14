@@ -166,6 +166,42 @@ describe('a game the snapshot holds', () => {
   });
 });
 
+describe('when the tournament page is behind the snapshot', () => {
+  // The Division III semifinal, Los Altos v Burlingame: the page of Nov 13 has no result for it.
+  const semifinal = () => {
+    const d3 = brackets.find((b) => b.event === 'cif' && b.name === 'Division III');
+    const m = d3?.matchups.find((x) => x.round === 'Semifinals' && x.sides.some((s) => s.name === 'Los Altos'));
+    if (!m?.contestId) throw new Error('the Division III semifinal has a contest');
+    return m;
+  };
+  const final = (m: ReturnType<typeof semifinal>): Game =>
+    ({
+      contestId: m.contestId, status: 'final', dateLocal: '2026-11-14T18:00:00', dateKey: '2026-11-14', isDateTba: false, isTimeTba: false,
+      home: { teamId: m.sides[1].teamId, score: 1, result: 'L' }, away: { teamId: m.sides[0].teamId, score: 3, result: 'W' },
+      venue: { text: null }, urls: { goFan: null, nfhsStream: null },
+    }) as unknown as Game;
+
+  it('prints the snapshot’s own final, and sends its winner on to the next round', () => {
+    const m = semifinal();
+    const rounds = view.tournamentBracketsView(brackets, [final(m)], '2026-11-15').brackets.find((b) => b.id === 'cif-division-iii')?.rounds;
+    expect(rounds?.[2].ties[0]).toMatchObject({
+      state: 'final', note: null,
+      sentence: 'Los Altos (8) beat Burlingame (5) 3–1.',
+      lines: [{ name: 'Los Altos', score: 3, result: 'won' }, { name: 'Burlingame', score: 1, result: 'lost' }],
+    });
+    expect(rounds?.[3].ties[0].lines).toMatchObject([{ slug: 'los-altos', name: 'Los Altos', seed: 8, open: false }, { name: 'Ripon or Nevada Union', open: true }]);
+  });
+
+  it('leaves the CCS games no bracket holds to the by-round paths', () => {
+    const d1 = brackets.find((b) => b.name === 'Division 1');
+    const held = { contestId: d1?.matchups.find((x) => x.contestId !== null)?.contestId } as Game;
+    const loose = { contestId: '11111111-1111-4111-8111-111111111111' } as Game;
+    expect(view.uncoveredBracketGames({ games: [held, loose], brackets })).toEqual([loose]);
+    expect(view.uncoveredBracketGames({ games: [held, loose], brackets: brackets.filter((b) => b.event === 'cif') })).toEqual([held, loose]);
+    expect(view.uncoveredBracketGames({ games: [held, loose] })).toEqual([held, loose]);
+  });
+});
+
 describe('roundName', () => {
   it('turns MaxPreps’ round names into the site’s', () => {
     const names = ['1st round', 'Round I', 'Quarter Finals', 'Quarterfinals', 'Semi Finals', 'Finals', 'Regional Finals', 'State Final', 'Consolation'];

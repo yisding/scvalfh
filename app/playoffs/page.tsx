@@ -16,7 +16,7 @@ import PlayoffProjection from '../../components/playoffs/PlayoffProjection';
 import SectionPlayoffs from '../../components/playoffs/SectionPlayoffs';
 import TournamentBracket from '../../components/playoffs/TournamentBracket';
 import TournamentBrackets from '../../components/playoffs/TournamentBrackets';
-import { tournamentBracketsView } from '../../components/playoffs/tournament-brackets-view';
+import { tournamentBracketsView, uncoveredBracketGames } from '../../components/playoffs/tournament-brackets-view';
 import UnbracketedResults from '../../components/playoffs/UnbracketedResults';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
 import { buildOutsideTournamentView, type LeagueKeyDate } from '../../components/playoffs/playoff-view';
@@ -122,7 +122,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const field = getCcsField();
   // The same test the page uses: a path to draw, from the bracket games or the seed file (never the page flag alone).
   const seeded =
-    buildBrackets(playoffs, getCcsSeeds()).length > 0 ||
+    buildBrackets({ ...playoffs, games: uncoveredBracketGames(playoffs) }, getCcsSeeds()).length > 0 ||
     tournamentBracketsView(playoffs.brackets, getGames(), getToday()).brackets.length > 0;
   const shares = field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ');
   // A round some divisions play later (soccer) reads as its first to its last day.
@@ -160,7 +160,9 @@ export default function PlayoffsPage() {
   // The snapshot's day (getToday, never Date.now).
   const today = getToday();
   const games = getGames();
-  const paths = buildBrackets(playoffs, getCcsSeeds());
+  // The by-round paths hold the CCS games no stored bracket does: every game where there are no brackets (field
+  // hockey), none once every division was read whole, and a division's games when its page could not be read.
+  const paths = buildBrackets({ ...playoffs, games: uncoveredBracketGames(playoffs) }, getCcsSeeds());
   // A championship MaxPreps publishes whole (volleyball): one bracket per division, every team in it, in place
   // of the by-round paths, with the CIF State divisions our teams play in ahead of the CCS's.
   const published = tournamentBracketsView(playoffs.brackets, games, today);
@@ -228,7 +230,24 @@ export default function PlayoffsPage() {
             per division when it is proven. `#bracket` wraps them; a division's own id is the anchor its games
             link to (components/playoffs/bracket-link.ts). Before seeding, one section says so. */}
         {drawsPublished ? (
-          <TournamentBrackets view={published} readOn={today} leagueWords={listWords(ccsLeagues.map((l) => l.shortName), 'or')}>
+          <TournamentBrackets
+            view={published}
+            readOn={today}
+            leagueWords={listWords(ccsLeagues.map((l) => l.shortName), 'or')}
+            extra={
+              paths.length > 0 ? (
+                <>
+                  {paths.map((path) => (
+                    <section key={path.id} id={path.id} aria-labelledby={`${path.id}-heading`} className="sx-section sx-target min-w-0">
+                      <SectionHeader id={`${path.id}-heading`} kicker={path.name === 'CCS bracket' ? 'Other CCS games' : path.name} />
+                      <PlayoffBracket path={path} />
+                    </section>
+                  ))}
+                  <p className="sx-note">MaxPreps’ bracket for these CCS games could not be read whole, so they are grouped by round.</p>
+                </>
+              ) : null
+            }
+          >
             {officialBracket}
             <Link href="/schedule" prefetch={false} className="sx-action">
               Scores
