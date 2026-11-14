@@ -23,6 +23,21 @@ export interface RegionConfig {
   shortName: 'NorCal' | 'SoCal';
 }
 
+/** One side of a tournament bracket game: a team, or whoever won or lost an earlier game (by its id). */
+export type TournamentBracketSide = { team: TeamSlug } | { winnerOf: string } | { loserOf: string };
+
+/** One game of an event's bracket (the 'unbracketed-tournament' kind's `bracket`). */
+export interface TournamentBracketGame {
+  id: string;
+  round: 'first-round' | 'semifinal' | 'final' | 'third-place' | 'fifth-place';
+  date: string;
+  /** Local start, 'HH:MM'. */
+  time: string;
+  venue: string;
+  home: TournamentBracketSide;
+  away: TournamentBracketSide;
+}
+
 /**
  * Whether a source confirms that a level final MaxPreps marks W and L was decided by the section's shootout
  * (SectionConfig.shootout.inference): 'verified' prints the shootout, 'unverified' only the credited win.
@@ -419,6 +434,16 @@ export type PostseasonConfig =
       admission: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
+      /**
+       * The event's bracket once its game schedule is known, or null (the kind's name is from the years the event
+       * published none): every game in playing order, its round, start, field and two sides, the home side first
+       * as the schedule lists it. A side is a team, or the winner or loser of an earlier game by id.
+       * components/playoffs/tournament-bracket-view.ts joins the games to it and draws it; no seed is printed.
+       */
+      bracket: {
+        source: { label: string; url: string; retrievedOn: string };
+        games: readonly TournamentBracketGame[];
+      } | null;
       sourceUrl: string;
     }
   | {

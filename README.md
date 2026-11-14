@@ -71,7 +71,8 @@ by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths),
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
 tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
 30-31, the top six qualify, no format published; the NFHS Network lists its games at Pleasant Valley,
-Chico on Sat Oct 31), which the site describes, lists the results of and never draws a bracket for. The
+Chico on Sat Oct 31), which the site draws as a bracket from the day's game schedule (`#eal-bracket` on
+/playoffs: the first round, semifinals and final, then the third- and fifth-place games; no seed is printed). The
 Sunset and the LA independents share one postseason, the Tournament of Champions (Oct 22-29), which the
 Los Angeles Field Hockey Association runs because the Southern Section holds no field hockey championship;
 the San Diego Section playoffs (Nov 2-14, Open 8,

@@ -11,7 +11,9 @@ import { describeGame } from '../components/ui/describe-game';
 import { classifyGame } from '../lib/classify';
 import * as data from '../lib/data';
 import { gameHref, gameIdToParam, isOfficialContestId, officialContestId, paramToGameId } from '../lib/game-id';
+import { tournamentBracketView } from '../components/playoffs/tournament-bracket-view';
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { getLeague } from '../lib/leagues';
 import { roundSiteOf, withRoundSite } from '../lib/postseason/round-site';
 import { fixtureGame, withFixtureGames } from '../lib/results/fixture-games';
 import { addedGame, applyResultCorrection, resolveResult, withAddedGames } from '../lib/results/result';
@@ -63,7 +65,7 @@ describe('an official fixture no source lists is a game on the schedule', () => 
 describe('a game an official source has and no feed lists (DATA_QUALITY.addedGames)', () => {
   const forfeit: AddedGame = {
     dateKey: '2026-10-30', time: '18:00', home: 'poway', away: 'valley-center', goals: { poway: 0, 'valley-center': 1 },
-    forfeitBy: 'poway', otPeriods: 0, from: 'cifss', source: 'the Section’s listing', url: null,
+    forfeitBy: 'poway', otPeriods: 0, from: 'cifss', certainty: 'reported', source: 'the Section’s listing', url: null,
   };
 
   it('records a forfeit as the Section lists it: counted in the league table, with its citation', () => {
@@ -96,10 +98,10 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
     expect(withAddedGames(listed, FETCHED, [forfeit])).toBe(listed);
   });
 
-  it('puts the 2026 EAL Super Regional’s four unlisted games on the schedule, none with a score', () => {
+  it('puts the 2026 EAL Super Regional’s five unlisted games on the schedule, none with a score', () => {
     const day = data.getGames({ date: '2026-10-31' }).filter((g) => g.postseason?.kind === 'league-postseason');
     expect(day.map((g) => [g.away.slug, g.home.slug].join(' v ')).sort()).toEqual([
-      'bella-vista v davis', 'bella-vista v pleasant-valley', 'chico v davis', 'chico v pleasant-valley', 'corning v chico', 'lassen v bella-vista',
+      'bella-vista v davis', 'bella-vista v lassen', 'bella-vista v pleasant-valley', 'chico v davis', 'chico v pleasant-valley', 'corning v chico', 'lassen v corning',
     ]);
     for (const g of day.filter((x) => isOfficialContestId(x.contestId))) expect([g.status, g.home.score], g.contestId).toEqual(['score-pending', null]);
     expect(DATA_QUALITY.addedGames.every((a) => a.source.trim() !== '')).toBe(true);
@@ -149,5 +151,60 @@ describe('where a postseason game is, and where it is filed', () => {
     expect(Object.fromEntries(rows.map((r) => [r.slug, `${r.computed.w}-${r.computed.l}`]))).toEqual({
       'granite-hills': '6-0', hilltop: '4-2', 'el-capitan': '2-4', southwest: '0-6',
     });
+  });
+});
+
+describe('the EAL Super Regional as a bracket (components/playoffs/tournament-bracket-view.ts)', () => {
+  const ps = getLeague('eal').postseason;
+  if (ps.kind !== 'unbracketed-tournament' || !ps.bracket) throw new Error('the EAL config carries the day’s bracket');
+  const games = data.getGames().filter((g) => g.postseason?.kind === 'league-postseason' && g.postseason.leagueId === 'eal');
+  const view = tournamentBracketView(ps.bracket.games, games, '2026-11-14', '1 v 1s');
+
+  it('draws the first round, the semifinals and the final, with the top two on byes and no seed printed', () => {
+    expect(view.division.rounds.map((r) => [r.name, r.cards.length, r.byes])).toEqual([
+      ['First round', 2, 'Davis, Pleasant Valley'],
+      ['Semifinals', 2, null],
+      ['Final', 1, null],
+    ]);
+    for (const r of view.division.rounds) for (const c of r.cards) for (const side of [c.top, c.bottom]) expect('seed' in side ? side.seed : null).toBeNull();
+  });
+
+  it('advances the winner a source names even where no score is published', () => {
+    const [chicoCorning, lassenBv] = view.division.rounds[0].cards;
+    expect([chicoCorning.winner, chicoCorning.score, chicoCorning.status]).toEqual(['top', null, 'final']);
+    expect(chicoCorning.sentence[0]).toBe('Chico beat Corning; no score was published. At Chico High School.');
+    expect([lassenBv.winner, lassenBv.note]).toEqual(['bottom', 'No score published · At Pleasant Valley High School']);
+    const [davisChico, pvBv] = view.division.rounds[1].cards;
+    expect(davisChico.sentence[0]).toBe('Chico beat Davis; no score was published. At Chico High School.');
+    expect([pvBv.winner, pvBv.score]).toEqual(['top', [2, 0]]);
+    for (const c of [chicoCorning, lassenBv, davisChico, pvBv]) expect(c.href, c.key).toMatch(/^\/game\//);
+  });
+
+  it('gives the final its double overtime and its 1 v 1 tally, and lists the placement games apart', () => {
+    const [final] = view.division.rounds[2].cards;
+    expect(final.sentence[0]).toBe('Pleasant Valley and Chico drew 0–0 after double overtime; Pleasant Valley won on 1 v 1s, 3–2. At Pleasant Valley High School.');
+    expect(final.note).toBe('1 v 1s 3–2, double overtime · At Pleasant Valley High School');
+    expect(view.placement.map((p) => [p.name, p.card.status, p.card.winner])).toEqual([
+      ['Third place', 'final', 'top'],
+      // No source names the fifth-place winner: the card stays open.
+      ['Fifth place', 'unreported', null],
+    ]);
+    expect(view.placement[1].card.sentence[0]).toBe('Corning and Lassen were to play Sat Oct 31 at Pleasant Valley High School; no result is published.');
+  });
+
+  it('leaves what depends on an unknown winner open', () => {
+    const none = tournamentBracketView(ps.bracket!.games, [], '2026-10-01', '1 v 1s');
+    const [semi] = none.division.rounds[1].cards;
+    expect('tbd' in semi.bottom ? semi.bottom.tbd : null).toBe('Winner of Chico v Corning');
+    expect(semi.status).toBe('scheduled');
+  });
+});
+
+describe('a game recorded from a press report', () => {
+  it('adds the Tournament of Champions third-place game: Edison 3, Newport Harbor 2 in overtime', () => {
+    const g = data.getGames({ date: '2026-10-29' }).find((x) => x.home.slug === 'edison' && x.away.slug === 'newport-harbor')!;
+    expect([g.home.score, g.away.score, g.decider, g.site, g.postseason?.kind]).toEqual([3, 2, 'OT', 'neutral', 'outside-tournament']);
+    expect(g.result).toMatchObject({ winner: 'home', ending: 'overtime', certainty: 'confirmed' });
+    expect(g.result?.basis).toContain('Daily Pilot');
   });
 });

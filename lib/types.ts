@@ -300,6 +300,12 @@ export interface AddedGame {
   from: 'cifss' | 'derived';
   /** true for a game at a neutral site (a tournament day at one school): `home` is then only the listed side. */
   neutral?: true;
+  /** The field the source names ('Pleasant Valley High School'). */
+  venue?: string;
+  /** The team the source says won a game it gives no score for: marked W and L on the sides, with no score. */
+  winner?: TeamSlug;
+  /** 'reported' for a single school-entered listing; absent for a press report or an official sheet ('confirmed'). */
+  certainty?: 'reported';
   /** What the source says of a game it gives no score for (who won, where), printed as the game's note. */
   note?: string;
   otPeriods: number;

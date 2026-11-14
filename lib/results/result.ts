@@ -506,9 +506,11 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
   const h = scored ? (a.goals as Record<string, number>)[a.home] : null;
   const w = scored ? (a.goals as Record<string, number>)[a.away] : null;
   const forfeit = a.forfeitBy !== null;
+  // With no score, the side the source says won is marked W and the other L: the bracket reads who advanced,
+  // while no record counts a game that has no score.
   const side = (team: Team, own: number | null, other: number | null): GameSide => ({
     teamId: team.id, slug: team.slug, name: team.name, score: own,
-    result: own === null || other === null ? null : outcomeOf(own, other),
+    result: own !== null && other !== null ? outcomeOf(own, other) : a.winner ? (a.winner === team.slug ? 'W' : 'L') : null,
   });
   const base: Game = {
     contestId: officialContestId(a.dateKey, away.slug, home.slug),
@@ -530,13 +532,13 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
     forfeitBy: scored && forfeit ? (a.forfeitBy === a.home ? 'home' : 'away') : null,
     decider: !scored ? null : forfeit ? 'FORFEIT' : overtimeDecider(a.otPeriods),
     shootout: null,
-    venue: { text: a.note ?? null },
+    venue: { text: a.note ?? null, ...(a.venue ? { name: a.venue } : {}) },
     urls: { maxpreps: null, nfhsStream: null, goFan: null },
     provenance: {
       scores: a.from,
       schedule: a.from,
       fetchedAt,
-      ...(scored ? { resultCorrection: { maxpreps: null, source: a.source, url: a.url, certainty: 'reported' as const } } : {}),
+      ...(scored ? { resultCorrection: { maxpreps: null, source: a.source, url: a.url, ...(a.certainty ? { certainty: a.certainty } : {}) } } : {}),
     },
   };
   return classifyGames([base])[0];

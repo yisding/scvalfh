@@ -164,12 +164,19 @@ on the schedule whether or not MaxPreps lists it).
   the snapshot; the stored file keeps them as fixtures for the pipeline's matcher.
 - *A game from another official source* (`DATA_QUALITY.addedGames`, each with its citation). Poway's forfeit to
   Valley Center on Oct 30 is on the San Diego Section's score listing (cifsshome.org) and on no MaxPreps schedule;
-  it counts in the Palomar table, as the pair's second meeting. The EAL Super Regional of Oct 31, as the owner
-  laid it out: first round Chico v Corning and Bella Vista v Lassen; semifinals Davis v Chico and Pleasant
-  Valley 2–0 Bella Vista; the final, Pleasant Valley over Chico 3–2 in a shootout after double overtime; third
-  place Davis over Bella Vista. MaxPreps has two of the six. The other four are listed with who won, from Chico
-  High field hockey's own account and the owner's report, and with no score: none is published, and none is
-  guessed. (The NFHS Network's listings pair the first-round teams the other way and are not followed.)
+  it counts in the Palomar table, as the pair's second meeting. The Tournament of Champions third-place game,
+  Edison 3–2 Newport Harbor in sudden-death overtime (Daily Pilot, Oct 30). And the EAL Super Regional of Oct 31,
+  from the day's game schedule the owner gave (a Google Sheet, home listed first): Chico v Corning and Lassen v
+  Bella Vista at 8:30; Davis v Chico and Pleasant Valley v Bella Vista at 10:00; fifth place Corning v Lassen at
+  12:30; third place Davis v Bella Vista at 1:30; the final at 2:30. MaxPreps has two of the seven (Pleasant
+  Valley 2–0 Bella Vista, and the final, Pleasant Valley over Chico 3–2 on 1 v 1s after double overtime). The
+  other five are listed with the winner where a source names one (Chico over Corning and Davis, from Chico High
+  field hockey's own account; Bella Vista over Lassen; Davis over Bella Vista for third, the owner citing Stick
+  Together) and with no score: none is published, and none is guessed. A game listed that way carries W and L
+  on its sides and no score, so the bracket advances the winner and no record counts the game. The event is
+  drawn as a bracket on /playoffs (`#eal-bracket`, `components/playoffs/tournament-bracket-view.ts`): the first
+  round, the semifinals and the final, the top two on byes, then the third- and fifth-place games; no seed is
+  printed.
 - *A league game MaxPreps types otherwise* (`leagueGameOverrides`). Granite Hills at Southwest, Oct 16, is on the
   Metro Conference schedule and typed a tournament game; it counts, so Metro South Bay is twelve games and
   Granite Hills 6-0. The two Hilltop at Granite Hills games on Oct 29 and 30 are both real (East County Sports).

@@ -14,6 +14,7 @@ import OutsideTournament from '../../components/playoffs/OutsideTournament';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
 import PlayoffProjection from '../../components/playoffs/PlayoffProjection';
 import SectionPlayoffs from '../../components/playoffs/SectionPlayoffs';
+import TournamentBracket from '../../components/playoffs/TournamentBracket';
 import UnbracketedResults from '../../components/playoffs/UnbracketedResults';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
 import { buildOutsideTournamentView, type LeagueKeyDate } from '../../components/playoffs/playoff-view';
@@ -27,6 +28,7 @@ import {
 } from '../../components/playoffs/playoffs-page-view';
 import { sectionPlayoffs } from '../../components/playoffs/this-week-inputs';
 import { titleSentence, tournamentLeague, tournamentView } from '../../components/playoffs/tournament-league';
+import { tournamentBracketView } from '../../components/playoffs/tournament-bracket-view';
 import { buildUnbracketedResults, unbracketedChampion } from '../../components/playoffs/unbracketed-view';
 import ExternalLink from '../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
@@ -399,7 +401,22 @@ export default function PlayoffsPage() {
               {champion ? <p className="m-0 mb-3 max-w-prose text-body text-ink">{champion}</p> : null}
               {/* What happened: the Super Regional's games by day as MaxPreps lists them, each day headed by the round
                   its rows name (lib/postseason/postseason-rounds.ts); from its first day, one sentence while none is listed. */}
-              {results.empty === null || today >= ps.dates.first ? <UnbracketedResults view={results} idPrefix={league.id} /> : null}
+              {/* With the day's game schedule in config, the event is drawn as a bracket (each card links its game). */}
+              {ps.bracket ? (
+                <TournamentBracket
+                  view={tournamentBracketView(
+                    ps.bracket.games,
+                    games.filter((g) => g.postseason?.kind === 'league-postseason' && g.postseason.leagueId === league.id),
+                    today,
+                    sectionOf(league.id).shootout?.words ?? 'a shootout',
+                  )}
+                  name={ps.name}
+                  idPrefix={league.id}
+                  source={ps.bracket.source}
+                />
+              ) : results.empty === null || today >= ps.dates.first ? (
+                <UnbracketedResults view={results} idPrefix={league.id} />
+              ) : null}
               <p className="sx-note">{ps.note}</p>
               <p className="sx-note">
                 {`${ps.citations.qualification}.`}{' '}

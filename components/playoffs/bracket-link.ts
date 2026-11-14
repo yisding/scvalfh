@@ -123,6 +123,8 @@ export function getBracketLink(game: Pick<Game, 'contestId' | 'postseason' | 'da
       if (!tag.leagueId) return null;
       const ps = getLeague(tag.leagueId).postseason;
       if (ps.kind !== 'unbracketed-tournament') return null;
+      // With the day's game schedule in config the event is drawn as a bracket (TournamentBracket, `#<league>-bracket`).
+      if (ps.bracket) return { href: `/playoffs#${tag.leagueId}-bracket`, label: `${ps.name} bracket` };
       return { href: `/playoffs#${tag.leagueId}-results-${game.dateKey}`, label: `${ps.name} results` };
     }
     case 'outside-tournament': {

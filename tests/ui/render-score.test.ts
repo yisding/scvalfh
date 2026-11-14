@@ -25,6 +25,7 @@ import {
   signedMargin,
 } from '../../components/ui/describe-game';
 import { GameChips, postseasonChipText } from '../../components/ui/StatusLabel';
+import { TOC } from '../../lib/league-config/sections';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
 import { LEAGUES, findDivision, findLeague } from '../../lib/leagues';
@@ -487,6 +488,9 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
       }
     }
     expect(postseasonChipText('MCAL tournament')).toBe('MCAL tourney');
+    // An event's own name is never lower-cased into "tourney of Champions": it prints the event's short name.
+    expect(postseasonChipText(TOC.name)).toBe(TOC.shortName);
+    expect(postseasonChipText('Tournament of Champions')).toBe('TOC');
     expect(postseasonChipText('SCVAL crossover')).toBe('SCVAL crossover');
   });
   it('prints the short chip word but reads the full name to a screen reader', () => {

@@ -260,32 +260,40 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
   },
   addedGames: [
-    // The EAL Super Regional, Sat Oct 31 (the Northern Section's postseason; all six teams, the top two on byes), as
-    // the owner laid it out on 2026-11-14: first round Chico v Corning and Bella Vista v Lassen; semifinals Davis v
-    // Chico and Pleasant Valley v Bella Vista; the final Pleasant Valley v Chico; and a third-place game Davis v
-    // Bella Vista, which Davis won (owner, citing Stick Together). MaxPreps has two of the six: Pleasant Valley 2-0
-    // Bella Vista and the final. Chico High field hockey's own account (instagram.com/chicohighfieldhockey, given
-    // by the owner): post DfIfh7TFtXO is the owner's evidence for the Chico v Corning game, and post DfXyOZlD8eY
-    // says "Our girls worked their way up from an 8:30 AM game, then immediately into another competitive game to
-    // reach the championship. With two beautiful goals against Davis ... our girls secured their spot in the
-    // championship game against PV." The NFHS Network's Oct 31 listings pair the same four first-round teams the
-    // other way ("Lassen vs. Chico" 8:35 AM, "Bella Vista vs. Corning Union" 10:05 AM): its titles were set before
-    // the day and are not followed. No source gives the score of any of the four missing games (Chico scored twice
-    // against Davis), so each is listed without one, never as a guess.
+    // The LAFHA Tournament of Champions' third-place game, Thu Oct 29: on no MaxPreps schedule. Daily Pilot (Los
+    // Angeles Times), Oct 30, 2026, in its report of the final: Edison beat Newport Harbor 3-2 in sudden-death
+    // overtime in the third-place game (given by the owner, 2026-11-14). Miller Field is where Huntington Beach's
+    // program site puts the "3rd Playoff" (lib/league-config/sections.ts TOC).
     {
-      dateKey: '2026-10-31',
+      dateKey: '2026-10-29',
       time: null,
-      home: 'bella-vista',
-      away: 'lassen',
-      goals: null,
+      home: 'edison',
+      away: 'newport-harbor',
+      goals: { edison: 3, 'newport-harbor': 2 },
       forfeitBy: null,
-      otPeriods: 0,
+      otPeriods: 1,
       from: 'derived',
       neutral: true,
-      note: 'Super Regional first round. Bella Vista won and went on to the semifinal; no source has published the score',
-      source: 'the owner’s account of the bracket (Nov 14, 2026): Bella Vista played Lassen in the first round and went on to the semifinal against Pleasant Valley',
-      url: null,
+      note: 'Tournament of Champions third-place game',
+      source: 'Daily Pilot (Los Angeles Times), Oct 30, 2026: Edison beat Newport Harbor 3-2 in sudden-death overtime in the Tournament of Champions third-place game; MaxPreps does not list the game',
+      url: 'https://www.latimes.com/socal/daily-pilot/sports/story/2026-10-30/harvard-westlake-rallies-to-top-huntington-beach-field-hockey-in-toc-final',
     },
+    // The EAL Super Regional, Sat Oct 31 (the Northern Section's postseason): all six teams, the top two on byes.
+    // The day's game schedule (a Google Sheet headed "10/31/2026 games. Note: Morning games are at both venues",
+    // given by the owner on 2026-11-14, home listed first) has seven games:
+    //   8:30  Chico vs. Corning (3v6), Chico HS          8:30  Lassen vs Bella Vista (4v5), PV HS
+    //   10:00 Davis vs (3 vs 6 winner), Chico HS         10:00 PV vs (4 vs 5 winner), PV HS
+    //   12:30 5th place (losers of 8:30 games), PV HS    1:30  3rd place (losers of 10:00 games), PV HS
+    //   2:30  1st place (winners of 10:00 games), PV HS
+    // MaxPreps has two of the seven: Pleasant Valley 2-0 Bella Vista (10:00) and the final (2:30). Who won the
+    // others: Chico beat Corning and then Davis (Chico High field hockey's own account, instagram.com/
+    // chicohighfieldhockey, posts DfIfh7TFtXO and DfXyOZlD8eY, given by the owner: "Our girls worked their way up
+    // from an 8:30 AM game, then immediately into another competitive game to reach the championship. With two
+    // beautiful goals against Davis ... our girls secured their spot in the championship game against PV");
+    // Bella Vista beat Lassen (it played the 10:00 semifinal); Davis beat Bella Vista for third place (owner, citing
+    // Stick Together). No source gives the winner of the 5th-place game, or the score of any of the five, so each
+    // is listed without a score, never as a guess. (The NFHS Network's listings for the day pair the first-round
+    // teams the other way; they were set beforehand and are not followed.)
     {
       dateKey: '2026-10-31',
       time: '08:30',
@@ -295,14 +303,31 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       forfeitBy: null,
       otPeriods: 0,
       from: 'derived',
-      neutral: true,
+      venue: 'Chico High School',
+      winner: 'chico',
       note: 'Super Regional first round. Chico won and went on to the semifinal; no source has published the score',
-      source: 'Chico High field hockey’s own account (two posts given by the owner, Nov 14, 2026): the game against Corning, and Chico “worked their way up from an 8:30 AM game”',
+      source: 'the day’s game schedule (“10/31/2026 games”, given by the owner Nov 14, 2026); Chico High field hockey’s own account for the result',
       url: 'https://www.instagram.com/p/DfIfh7TFtXO/',
     },
     {
       dateKey: '2026-10-31',
-      time: null,
+      time: '08:30',
+      home: 'lassen',
+      away: 'bella-vista',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      venue: 'Pleasant Valley High School',
+      winner: 'bella-vista',
+      note: 'Super Regional first round. Bella Vista won and went on to the semifinal; no source has published the score',
+      source: 'the day’s game schedule (“10/31/2026 games”, given by the owner Nov 14, 2026); Bella Vista played the 10:00 semifinal',
+      url: 'https://docs.google.com/spreadsheets/d/110pWPbVlFahEQNPYEvQkd_ColS3kDTEQS5uI87v9s8k/edit?gid=0#gid=0',
+    },
+    {
+      dateKey: '2026-10-31',
+      time: '10:00',
       home: 'davis',
       away: 'chico',
       goals: null,
@@ -310,13 +335,30 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       otPeriods: 0,
       from: 'derived',
       neutral: true,
+      venue: 'Chico High School',
+      winner: 'chico',
       note: 'Super Regional semifinal. Chico won with two goals to reach the final; no source has published the score',
-      source: 'Chico High field hockey’s own account (given by the owner, Nov 14, 2026): “With two beautiful goals against Davis ... our girls secured their spot in the championship game against PV”',
+      source: 'the day’s game schedule (“10/31/2026 games”, given by the owner Nov 14, 2026); Chico High field hockey’s own account: “With two beautiful goals against Davis ... our girls secured their spot in the championship game against PV”',
       url: 'https://www.instagram.com/p/DfXyOZlD8eY/',
     },
     {
       dateKey: '2026-10-31',
-      time: null,
+      time: '12:30',
+      home: 'corning',
+      away: 'lassen',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      venue: 'Pleasant Valley High School',
+      note: 'Super Regional fifth-place game. No source has published the result',
+      source: 'the day’s game schedule (“10/31/2026 games”, given by the owner Nov 14, 2026)',
+      url: 'https://docs.google.com/spreadsheets/d/110pWPbVlFahEQNPYEvQkd_ColS3kDTEQS5uI87v9s8k/edit?gid=0#gid=0',
+    },
+    {
+      dateKey: '2026-10-31',
+      time: '13:30',
       home: 'davis',
       away: 'bella-vista',
       goals: null,
@@ -324,9 +366,11 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       otPeriods: 0,
       from: 'derived',
       neutral: true,
+      venue: 'Pleasant Valley High School',
+      winner: 'davis',
       note: 'Super Regional third-place game. Davis won; no source has published the score',
-      source: 'the owner’s report (Nov 14, 2026), citing Stick Together: Davis beat Bella Vista for third place',
-      url: null,
+      source: 'the day’s game schedule (“10/31/2026 games”, given by the owner Nov 14, 2026); the owner’s report, citing Stick Together, that Davis won',
+      url: 'https://docs.google.com/spreadsheets/d/110pWPbVlFahEQNPYEvQkd_ColS3kDTEQS5uI87v9s8k/edit?gid=0#gid=0',
     },
     // Palomar, Fri Oct 30: the pair's second league game. cifsshome.org (the San Diego Section's own score listing,
     // read Nov 14, 2026): Poway 0, Valley Center 1, 6:00 PM, League, "Game forfeited by Poway"; si.com has the
@@ -339,6 +383,7 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       goals: { poway: 0, 'valley-center': 1 },
       forfeitBy: 'poway',
       from: 'cifss',
+      certainty: 'reported',
       otPeriods: 0,
       source: 'cifsshome.org, the San Diego Section’s score listing for Oct 30, 2026: Poway 0, Valley Center 1, a league game, “Game forfeited by Poway”; MaxPreps no longer lists the game',
       url: 'https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F30%2F2026&date_to=10%2F30%2F2026',
