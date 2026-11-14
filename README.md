@@ -1735,7 +1735,7 @@ The volleyball build covers the same two leagues (owner request, 2026-11-14), wi
 rules. The registry holds 60 teams.
 
 - **WCAL** (`lib/league-config/volleyball/wcal.ts`, `lib/registry/volleyball/wcal.ts`): the same six schools as
-  soccer, the columns of the league's 2026 composite schedule and the rows of its final standings (Archbishop
+  soccer (each volleyball seed is the school's soccer seed on its volleyball page, so the registry is not copied), the columns of the league's 2026 composite schedule and the rows of its final standings (Archbishop
   Mitty 10-0, October 28, 2026). Rules from WCAL By-Laws Article XII – Volleyball and Article III (both updated
   2024-2025): two points a win and none a loss, so the table is ordered on league wins (§13.A); head-to-head and
   then wins among the tied teams (§15.B.1-2; the later steps are not computed); no girls' league playoff. No WCAL

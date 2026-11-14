@@ -162,6 +162,20 @@ describe('SCVAL and BVAL girls volleyball', () => {
       'harker', 'kings-academy', 'menlo', 'mercy-burlingame', 'notre-dame-belmont', 'presentation', 'sacred-heart-prep',
     ]);
     expect(slugs('skyline')).toEqual(['castilleja', 'crystal-springs', 'eastside', 'notre-dame-san-jose', 'pinewood', 'priory']);
+    // Each seed is the school's soccer seed on its volleyball page; the paths are MaxPreps' own (team-context,
+    // read 2026-11-14).
+    const pathOf = (slug: string) => m.teams.getTeamBySlug(slug)?.external.maxprepsTeamUrl;
+    expect(m.teams.teamsInLeague('wcal').map((t) => t.external.maxprepsTeamUrl)).toEqual([
+      'https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/volleyball/',
+      'https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/volleyball/',
+      'https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/volleyball/',
+      'https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/volleyball/',
+    ]);
+    expect(pathOf('menlo')).toBe('https://www.maxpreps.com/ca/atherton/menlo-school-knights/volleyball/');
+    expect(pathOf('mercy-burlingame')).toBe('https://www.maxpreps.com/ca/burlingame/mercy-bears/volleyball/');
+    expect(pathOf('castilleja')).toBe('https://www.maxpreps.com/ca/palo-alto/castilleja-gators/volleyball/');
     const wcal = m.leagues.getLeague('wcal');
     const wbal = m.leagues.getLeague('wbal');
     for (const league of [wcal, wbal]) {
