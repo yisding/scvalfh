@@ -25,6 +25,8 @@ import { BVAL_BASKETBALL_LEAGUE } from './league-config/basketball/bval';
 import { SCVAL_BASKETBALL } from './league-config/basketball/scval';
 import { BVAL_SOCCER_LEAGUE } from './league-config/soccer/bval';
 import { SCVAL_SOCCER } from './league-config/soccer/scval';
+import { WBAL_SOCCER_LEAGUE } from './league-config/soccer/wbal';
+import { WCAL_SOCCER_LEAGUE } from './league-config/soccer/wcal';
 import { BVAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/bval';
 import { SCVAL_VOLLEYBALL } from './league-config/volleyball/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
@@ -51,12 +53,13 @@ export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
   : // The soccer build (SCVAL_SPORT=soccer), the basketball build (SCVAL_SPORT=basketball) and the volleyball build
     // (SCVAL_SPORT=volleyball) cover SCVAL and BVAL (BVAL added to the winter builds 2026-11-13, so the ratings
-    // count SCVAL's games against BVAL schools).
+    // count SCVAL's games against BVAL schools); the soccer build also covers the WCAL and the WBAL (owner request,
+    // 2026-11-14).
     IS_BASKETBALL
     ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
     : IS_VOLLEYBALL
       ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE]
-      : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE];
+      : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE];
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
@@ -264,6 +267,16 @@ export function leagueStandingsUrl(id: DivisionId): string | null {
   const d = getDivision(id);
   if (d.maxprepsLeagueId === null || d.maxprepsSlug === null) return null;
   return `${MAXPREPS_SPORT_WEB}/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
+}
+
+/**
+ * True where the division's league publishes no schedule document at all (official mode 'none' with no
+ * `scheduleUrl`: the EAL, the Sunset, the San Diego leagues, the LA independents). False for a division with a
+ * transcribed schedule, and for one whose league publishes a schedule this site does not copy (soccer's WCAL and
+ * WBAL), so no copy says such a league "publishes no schedule".
+ */
+export function publishesNoSchedule(d: DivisionConfig): boolean {
+  return d.official.mode === 'none' && d.official.scheduleUrl === undefined;
 }
 
 /** The rungs of the division's league ladder that apply to this division, in ladder order. */

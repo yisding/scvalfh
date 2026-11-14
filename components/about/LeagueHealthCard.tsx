@@ -171,7 +171,7 @@ export function LeagueHealthCard({ shortName, name, health, divisions, dropped, 
               </p>
               {d.knownCause ? <p className="m-0 mt-1">{d.knownCause}</p> : null}
               {d.official.mode === 'none' ? (
-                <p className="m-0 mt-1">No official schedule document. {d.official.note}</p>
+                <p className="m-0 mt-1">{d.official.published ? '' : 'No official schedule document. '}{d.official.note}</p>
               ) : (
                 <OfficialLine shortName={shortName} official={d.official} health={official} />
               )}

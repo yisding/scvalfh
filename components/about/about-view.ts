@@ -47,6 +47,7 @@ import {
   isIndependentLeague,
   leagueStandingsUrl,
   regionOf,
+  publishesNoSchedule,
 } from '../../lib/leagues';
 import { crossCheckSkipReason } from '../../lib/standings/cross-check';
 import type {
@@ -123,10 +124,12 @@ export interface HealthDivision {
         revisedOn: string | null;
       }
     | {
-        /** The league publishes no schedule (EAL, the Sunset, the San Diego leagues). */
+        /** No schedule of the league's is read: it publishes none (EAL, the Sunset, the San Diego leagues), or one this site does not copy (`published`). */
         mode: 'none';
         /** `DivisionConfig.official.note`: where its league games come from instead. */
         note: string;
+        /** True where the league publishes a schedule this site does not transcribe (soccer's WCAL and WBAL). */
+        published?: boolean;
       };
 }
 
@@ -519,12 +522,12 @@ export function buildAboutView(): AboutView {
       knownCause: d.knownCause,
       official:
         d.official.mode === 'none'
-          ? { mode: 'none', note: d.official.note }
+          ? { mode: 'none', note: d.official.note, published: !publishesNoSchedule(d) }
           : { source: d.official.source, url: d.official.scheduleUrl, mode: d.official.mode, revisedOn: d.official.revisedOn },
     }));
     // A league none of whose divisions publishes a schedule (EAL): its card names where its rules
     // come from and what stands in for a schedule, never "its own documents".
-    const noDocument = config.divisions.every((d) => d.official.mode === 'none');
+    const noDocument = config.divisions.every(publishesNoSchedule);
     const officialNotes = [
       ...new Set(config.divisions.flatMap((d) => (d.official.mode === 'none' ? [d.official.note] : []))),
     ];

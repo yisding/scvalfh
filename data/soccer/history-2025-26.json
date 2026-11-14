@@ -1334,6 +1334,42 @@
         "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-26%20Girls%27%20Soccer%20Standings.pdf"
       },
       "status": "available"
+    },
+    "wbal": {
+      "alsoPublished": [
+        {
+          "label": "WBAL 2025-26 girls soccer honors",
+          "url": "https://hs.wbalsports.org/alsocg2526.html"
+        }
+      ],
+      "checked": [
+        "https://hs.wbalsports.org/socstg.html (girls soccer standings: the 2026-27 season)",
+        "https://hs.wbalsports.org/home.html (no standings archive is linked)"
+      ],
+      "checkedOn": "2026-11-14",
+      "league": "West Bay Athletic League",
+      "reason": "We found no official 2025-26 final standings for WBAL girls soccer: the league’s standings page shows the current season only, and its site keeps no standings archive. The WBAL does publish its 2025-26 season honors, linked below, not reproduced: this archive shows a league’s awards only beside its official final standings. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "wcal": {
+      "alsoPublished": [
+        {
+          "label": "WCAL standings",
+          "url": "https://wcalsports.org/standings/"
+        },
+        {
+          "label": "WCAL awards and records",
+          "url": "https://wcalsports.org/awardsrecords/"
+        }
+      ],
+      "checked": [
+        "https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)",
+        "https://wcalsports.org/awardsrecords/ (its season honors)"
+      ],
+      "checkedOn": "2026-11-14",
+      "league": "West Catholic Athletic League",
+      "reason": "The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
     }
   },
   "season": "2025-26",

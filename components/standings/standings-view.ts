@@ -352,6 +352,10 @@ function scheduledPerText(league: LeagueConfig, official: DivisionConfig['offici
   // The subject is the league alone, so it is its `standaloneName`: 'North publishes no schedule' could
   // be read as a direction, 'North County publishes no schedule' cannot. Every other league's is its short name.
   const subject = standaloneName(league.id);
+  // A league whose own schedule exists but is not transcribed here (soccer's WCAL and WBAL).
+  if (official.scheduleUrl !== undefined) {
+    return `League games are every game between two division members on MaxPreps’ schedules inside league play (${subject}’s own schedule is not copied here)`;
+  }
   return league.rules.classification === 'membership'
     ? `League games are every game between two division members on MaxPreps’ schedules (${subject} publishes no schedule)`
     : `League games as MaxPreps marks them (${subject} publishes no schedule)`;

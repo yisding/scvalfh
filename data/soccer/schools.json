@@ -1,6 +1,6 @@
 {
-  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\".",
-  "capturedAt": "2026-11-13",
+  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\". WCAL's six schools and the WBAL's thirteen were added on 2026-11-14, each from the schoolAddress, schoolCity and schoolZipCode fields of MaxPreps' team-context payload for its girls soccer team, read 2026-11-14, with \"37Th\" written \"37th\".",
+  "capturedAt": "2026-11-14",
   "notes": [
     "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
   ],
@@ -17,11 +17,23 @@
       "region": "CA",
       "postalCode": "95118"
     },
+    "castilleja": {
+      "street": "1310 Bryant St",
+      "city": "Palo Alto",
+      "region": "CA",
+      "postalCode": "94301"
+    },
     "christopher": {
       "street": "850 Day Rd",
       "city": "Gilroy",
       "region": "CA",
       "postalCode": "95020"
+    },
+    "crystal-springs": {
+      "street": "400 Uplands Dr",
+      "city": "Hillsborough",
+      "region": "CA",
+      "postalCode": "94010"
     },
     "cupertino": {
       "street": "10100 Finch Ave",
@@ -34,6 +46,12 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95128"
+    },
+    "eastside": {
+      "street": "1041 Myrtle Street",
+      "city": "East Palo Alto",
+      "region": "CA",
+      "postalCode": "94303"
     },
     "evergreen-valley": {
       "street": "3300 Quimby Rd",
@@ -65,6 +83,12 @@
       "region": "CA",
       "postalCode": "94306"
     },
+    "harker": {
+      "street": "500 Saratoga Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95129"
+    },
     "homestead": {
       "street": "21370 Homestead Rd",
       "city": "Cupertino",
@@ -82,6 +106,12 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95127"
+    },
+    "kings-academy": {
+      "street": "562 Britton St",
+      "city": "Sunnyvale",
+      "region": "CA",
+      "postalCode": "94085"
     },
     "leigh": {
       "street": "5210 Leigh Ave",
@@ -131,11 +161,29 @@
       "region": "CA",
       "postalCode": "95134"
     },
+    "menlo": {
+      "street": "50 Valparaiso Ave",
+      "city": "Atherton",
+      "region": "CA",
+      "postalCode": "94027"
+    },
+    "mercy-burlingame": {
+      "street": "2750 Adeline Dr",
+      "city": "Burlingame",
+      "region": "CA",
+      "postalCode": "94010"
+    },
     "milpitas": {
       "street": "1285 Escuela Pkwy",
       "city": "Milpitas",
       "region": "CA",
       "postalCode": "95035"
+    },
+    "mitty": {
+      "street": "5000 Mitty Wy",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95129"
     },
     "monta-vista": {
       "street": "21840 McClellan Road",
@@ -154,6 +202,18 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95127"
+    },
+    "notre-dame-belmont": {
+      "street": "1540 Ralston Ave",
+      "city": "Belmont",
+      "region": "CA",
+      "postalCode": "94002"
+    },
+    "notre-dame-san-jose": {
+      "street": "596 S 2nd St",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95112"
     },
     "oak-grove": {
       "street": "285 Blossom Hill Rd",
@@ -179,17 +239,59 @@
       "region": "CA",
       "postalCode": "95132"
     },
+    "pinewood": {
+      "street": "26800 Fremont Rd",
+      "city": "Los Altos Hills",
+      "region": "CA",
+      "postalCode": "94022"
+    },
     "pioneer": {
       "street": "1290 Blossom Hill Road",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95118"
     },
+    "presentation": {
+      "street": "2281 Plummer Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95125"
+    },
+    "priory": {
+      "street": "302 Portola Rd",
+      "city": "Portola Valley",
+      "region": "CA",
+      "postalCode": "94028"
+    },
     "prospect": {
       "street": "18900 Prospect Rd",
       "city": "Saratoga",
       "region": "CA",
       "postalCode": "95070"
+    },
+    "riordan": {
+      "street": "175 Phelan Ave",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94112"
+    },
+    "sacred-heart-cathedral": {
+      "street": "1055 Ellis St",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94109"
+    },
+    "sacred-heart-prep": {
+      "street": "150 Valparaiso Ave",
+      "city": "Atherton",
+      "region": "CA",
+      "postalCode": "94027"
+    },
+    "saint-francis": {
+      "street": "1885 Miramonte Ave",
+      "city": "Mountain View",
+      "region": "CA",
+      "postalCode": "94040"
     },
     "san-jose": {
       "street": "275 N 24th St",
@@ -226,6 +328,18 @@
       "city": "Morgan Hill",
       "region": "CA",
       "postalCode": "95037"
+    },
+    "st-ignatius": {
+      "street": "2001 37th Ave",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94116"
+    },
+    "valley-christian": {
+      "street": "100 Skyway Dr",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95111"
     },
     "westmont": {
       "street": "4805 Westmont Ave",

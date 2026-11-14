@@ -253,6 +253,12 @@ against BVAL schools. Each sport has `lib/league-config/<sport>/bval.ts` and `li
 bundled by `scripts/build-bval-winter-fixtures.ts` (README, "BVAL in the winter builds"). The registries hold 41
 teams each. /history/2025-26 marks BVAL unavailable until its standings sheets are transcribed.
 
+**WCAL and WBAL, soccer only (2026-11-14).** The owner asked for the West Catholic and West Bay leagues on the
+soccer site. `lib/league-config/soccer/{wcal,wbal}.ts` and `lib/registry/soccer/{wcal,wbal}.ts` add 19 teams (60 in
+the soccer registry; basketball stays at 41, so `lib/teams.ts` counts each sport's own), the CCS block allocates the
+WCAL's two berths and the WBAL's four, and league games are read by membership, since neither league's schedule is
+a document that holds still (README, "WCAL and WBAL in the soccer build"). /history/2025-26 marks both unavailable.
+
 Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
 basketball build.

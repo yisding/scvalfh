@@ -214,6 +214,14 @@ export interface DivisionConfig {
         mode: 'none';
         /** One plain paragraph saying where league games come from instead. */
         note: string;
+        /**
+         * Set where the league DOES publish a schedule that this site does not transcribe (soccer's WCAL, whose
+         * composite PDF is replaced through the season, and WBAL, whose schedule pages are edited in place): the
+         * page a reader can open. Copy then never says the league "publishes no schedule" or has no documents of
+         * its own (lib/leagues.ts `publishesNoSchedule`); everything else about mode 'none' holds (no fixtures,
+         * league games read from MaxPreps' schedules).
+         */
+        scheduleUrl?: string;
       };
   /** Rows MaxPreps' own table should hold. */
   maxprepsTeamCount: number;
