@@ -546,8 +546,8 @@ jobs:
           SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # The same three assertions as gates, on the volleyball build: each reads data/volleyball/ through
-      # lib/sports/current.ts DATA_DIR, and the routes only field hockey has (lib/sports/current.ts
-      # HAS_HISTORY, HAS_RECRUITING) are expected to be absent.
+      # lib/sports/current.ts DATA_DIR. It has the recruiting pages (HAS_RECRUITING: /clubs, /clubs/<slug>,
+      # /commits, /recruiting); the route only field hockey has (HAS_CLUB_CALENDAR) is expected to be absent.
       - name: Assert every route is static
         run: pnpm assert:prerender
 

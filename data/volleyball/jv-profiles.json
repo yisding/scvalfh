@@ -1,7 +1,626 @@
 {
   "season": "26-27",
-  "builtBy": "Nothing yet: JV players' recruiting profiles are not researched for the volleyball build.",
-  "capturedAt": "2026-11-14",
-  "notes": [],
-  "teams": []
+  "builtBy": "Research by hand, 2026-11-13: Hudl's public rosters for every school's girls volleyball teams, NCSA's women's volleyball school pages and a SportsRecruits profile-address probe, over the 322 JV players MaxPreps lists; each Hudl and NCSA page re-read by an independent refuter.",
+  "capturedAt": "2026-11-13",
+  "notes": [
+    "The JV players' own recruiting pages, linked by the rule of data/volleyball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has her pages in the varsity file. Recall is partial."
+  ],
+  "teams": [
+    {
+      "slug": "los-altos",
+      "players": [
+        {
+          "name": "Gianna Ku",
+          "playerId": "p2b1baf21ba",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726052",
+              "classOf": 2030,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Dorsa Ahmadi",
+          "playerId": "pb881ec8dc1",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726051",
+              "classOf": 2030,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Kendall Abrego",
+          "playerId": "p057d59459e",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27488267",
+              "classOf": 2029,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Annika Imoto-Tar",
+          "playerId": "p20863fd582",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726054",
+              "classOf": 2030,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Polina Klochkova",
+          "playerId": "pfdf884fe2f",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726053",
+              "classOf": 2030,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Sasha Ruiz",
+          "playerId": "p214cb70311",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726057",
+              "classOf": 2030,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Mary Beth Casuga",
+          "playerId": "p28a6571663",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31726059",
+              "classOf": 2029,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Lily Schaal",
+          "playerId": "p956434d4d2",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27488268",
+              "classOf": 2029,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Alexa Costa",
+          "playerId": "pd809491976",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27488266",
+              "classOf": 2029,
+              "note": "On Los Altos High School's own volleyball team on Hudl (Los Altos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "los-gatos",
+      "players": [
+        {
+          "name": "Zeynep Akca",
+          "playerId": "pcd9f5fe1bf",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25632394",
+              "classOf": 2029,
+              "note": "On Los Gatos High School's own volleyball team on Hudl (Los Gatos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Luna Zajic",
+          "playerId": "p389497ebb3",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/25906928",
+              "classOf": 2029,
+              "note": "On Los Gatos High School's own volleyball team on Hudl (Los Gatos High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "monta-vista",
+      "players": [
+        {
+          "name": "Avnika Choudhury",
+          "playerId": "p207b030d16",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29431214",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Harshita Girdhar",
+          "playerId": "pbb4813fb69",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31444016",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Tejasvi Varma",
+          "playerId": "pb47b19de98",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/29541376",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Weiqin Wu",
+          "playerId": "p292bc07b76",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/rachel_wu3",
+              "classOf": 2029,
+              "note": "The page names Monta Vista High School and class of 2029, which agrees with the roster. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree. MaxPreps' JV roster lists her as \"Rachel (Weiqin) Wu\"; the school's own JV list, which the team page shows, as \"Weiqin Wu\"."
+            }
+          ]
+        },
+        {
+          "name": "Emmy Harimoto",
+          "playerId": "p974f9ec18a",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31444010",
+              "classOf": 2028,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2028 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Cindy Hu",
+          "playerId": "pc4f990168a",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27415189",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Aishah Khan",
+          "playerId": "p1b44293118",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27417909",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Tiffany Kwok",
+          "playerId": "p8ddc393ac3",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31444013",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Seljan Ibrahimli",
+          "playerId": "p01af6f3e50",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27356887",
+              "classOf": 2029,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Audrie Suen",
+          "playerId": "p68959af07e",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/32701350",
+              "classOf": 2030,
+              "note": "On Monta Vista High School's own volleyball team on Hudl (Monta Vista High School - Womens Junior Varsity Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lynbrook",
+      "players": [
+        {
+          "name": "Serena Au",
+          "playerId": "p40775c368a",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/lynbrook-high-school1/serena-au",
+              "classOf": 2029,
+              "note": "NCSA women's volleyball profile naming Lynbrook High School; class of 2029 agrees with the roster. Found on NCSA's page for the school on 2026-11-13 and re-read twice by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "macdonald",
+      "players": [
+        {
+          "name": "Alana Phan",
+          "playerId": "p5e785862dd",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27487248",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Samantha Consul",
+          "playerId": "p3fcb33e149",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27833225",
+              "classOf": null,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); states no class year. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Jayna Manglicmot",
+          "playerId": "p853f315dda",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27724472",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Minh Dang",
+          "playerId": "paea5bbdae2",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31814321",
+              "classOf": 2030,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Sarahi Gonzalez",
+          "playerId": "pe0b70824ba",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27500011",
+              "classOf": 2028,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2028 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Janessa Gallardo",
+          "playerId": "p40813f7ca0",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27479195",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Anika Raj",
+          "playerId": "p3353aed18e",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27486045",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Jaely Herrera",
+          "playerId": "p9fe350693e",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27498906",
+              "classOf": 2029,
+              "note": "On Kathleen MacDonald High School's own volleyball team on Hudl (Kathleen MacDonald High School - Women's Junior Varsity); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "mountain-view",
+      "players": [
+        {
+          "name": "Penelope Leblond",
+          "playerId": "p138504e8e2",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31556292",
+              "classOf": 2030,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Sienna Pattisson",
+          "playerId": "p4a4637b58a",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27849447",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Alyssa Wu",
+          "playerId": "p75bac062b1",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27849437",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Emma Alpern",
+          "playerId": "p98843374a3",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27849439",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Cella Hsu",
+          "playerId": "p92b64ca339",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31556011",
+              "classOf": 2029,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Leela Wilson",
+          "playerId": "p0e1cab84ae",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/31566004",
+              "classOf": 2030,
+              "note": "On Mountain View High School's own volleyball team on Hudl (Mountain View High School - Girls JV Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "wilcox",
+      "players": [
+        {
+          "name": "Sofia Luera",
+          "playerId": "pc548a5e14e",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27815422",
+              "classOf": 2029,
+              "note": "On Wilcox High School's own volleyball team on Hudl (Wilcox High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Adeline Raffetto",
+          "playerId": "p49e67e16e2",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27310061",
+              "classOf": 2029,
+              "note": "On Wilcox High School's own volleyball team on Hudl (Wilcox High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Kai Estrada",
+          "playerId": "pc6fb7ddcdf",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27034886",
+              "classOf": 2029,
+              "note": "On Wilcox High School's own volleyball team on Hudl (Wilcox High School - Girls JV Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "branham",
+      "players": [
+        {
+          "name": "Ailbhe Cleary",
+          "playerId": "p0263c6304f",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/ailbhe_cleary",
+              "classOf": 2029,
+              "note": "No school named: class of 2029 agrees with the roster and the hometown San Jose, CA is the school's own city. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree.",
+              "sport": "softball"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "westmont",
+      "players": [
+        {
+          "name": "Valerie Burnell",
+          "playerId": "p445150a04a",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/valerie_burnell",
+              "classOf": 2029,
+              "note": "No school named: class of 2029 agrees with the roster and the hometown Campbell, CA is the school's own city. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Natalie Peterson",
+          "playerId": "p6731305f5b",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://my.sportsrecruits.com/athlete/natalie_peterson3",
+              "classOf": 2030,
+              "note": "The page names Westmont High School and class of 2030, which agrees with the roster. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "christopher",
+      "players": [
+        {
+          "name": "Katelyn Vazquez",
+          "playerId": "p70d3a5f7c1",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27849328",
+              "classOf": 2028,
+              "note": "On Christopher High School's own volleyball team on Hudl (Christopher High School - Womens Junior Varsity Volleyball); class of 2028 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Sophia McGhie",
+          "playerId": "pee57eee5fa",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/32071034",
+              "classOf": 2029,
+              "note": "On Christopher High School's own volleyball team on Hudl (Christopher High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Alexis Nyein",
+          "playerId": "pa098b386cc",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27815883",
+              "classOf": 2029,
+              "note": "On Christopher High School's own volleyball team on Hudl (Christopher High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Zoe Guerrero",
+          "playerId": "p5fc85c16c9",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/32028309",
+              "classOf": 2030,
+              "note": "On Christopher High School's own volleyball team on Hudl (Christopher High School - Womens Junior Varsity Volleyball); class of 2030 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        },
+        {
+          "name": "Savannah Rosenberry",
+          "playerId": "p136b245477",
+          "profiles": [
+            {
+              "platform": "hudl",
+              "url": "https://www.hudl.com/profile/27816001",
+              "classOf": 2029,
+              "note": "On Christopher High School's own volleyball team on Hudl (Christopher High School - Womens Junior Varsity Volleyball); class of 2029 agrees with the roster. Found by the 2026-11-13 Hudl team-roster sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

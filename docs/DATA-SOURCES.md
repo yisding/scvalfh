@@ -2824,6 +2824,104 @@ school's elsewhere (`stevenson.fieldhockey` is Adlai Stevenson's, in Illinois). 
 (owner decision, 2026-11-13). Handles are stored lower case, as Instagram stores usernames. A school or
 club with no record had no account we could find and check on the day; it may still have one.
 
+### 1.11 VOLLEYBALL RECRUITING — profiles, clubs and commitments (`data/volleyball/*.json`)
+
+Research by hand on 2026-11-13 for the girls volleyball build's 41 SCVAL and BVAL schools (569 varsity rows, 322
+JV rows on MaxPreps), under the rules of §1.1j (profiles), §1.1j2 (clubs) and §1.1j3 (commitments). One change of
+place: rule (b) asks for the roster's class year plus a hometown in the school's own area (its city or a
+neighbouring one in Santa Clara County), not just a California one. Each pass wrote its findings apart from the
+others; the files were assembled from them once, then are kept by hand. README, "Girls volleyball: recruiting",
+has the counts.
+
+- **Hudl** (`hudl.com/api/public/graphql/query`, the public endpoint of §1.1j; queries `fanSearch`,
+  `teamHeadersForSchool`, `teamHeader{seasons}`, `roster`, taken from the fan.hudl.com bundle since introspection
+  is refused). 40 of the 41 schools matched to a Hudl school in the right city (Lynbrook is filed under Sunnyvale,
+  MacDonald as "Kathleen MacDonald High School", Sobrato as "Ann Sobrato High School"; James Lick not found). 91
+  team-season rosters (2026 and 2025) of every volleyball team that is not the boys': 1,324 member rows, 1,062 with
+  a public profile. 23 schools have a non-empty girls volleyball roster; 9 have no girls volleyball team on Hudl
+  (Cupertino, Homestead, Milpitas, Santa Teresa, Del Mar, Gunderson, Lincoln, Prospect, San Jose) and 8 an empty
+  one. Each matched profile page (`hudl.com/profile/<id>`) was read from the data in the server's HTML
+  (`window.__hudlEmbed`) and kept when its own team list has a volleyball team of the player's school and its
+  class year, when shown, is the roster's: 276 pages (230 varsity, 46 JV). 75 rostered players have only private
+  profiles. Hudl's "2025" rosters of several teams hold current and former members together, so the season label
+  is no evidence; the class year is. A second reader fetched all 272 distinct pages again and kept every one.
+  The class year sits in two places (`user.graduationYear`, or `about.overview.graduationYear` when that is null).
+- **Hudl team lists as club sources.** A kept page's team list also names the player's club teams (team name,
+  organization, sport, years). One tie per club from the latest entry present in both readers' reads; not a
+  coaches' account, not an entry that ends before the player's sixth grade (one page lists a "15s" team for
+  2017-2018 on a class-of-2027 player), not a school. The first reader's filter for school-like names dropped every
+  "Academy Volleyball" entry; the assembly rebuilt the Hudl ties from both reads instead. A range such as
+  "2020 - 2024" is partly the team's lifespan on Hudl, so a past tie's year is approximate, and "2025" on a team
+  named "25-26" is the 2025-26 club season (kept `unknown`, since "2025" alone may also be 2024-25).
+- **NCSA** (`ncsasports.org/womens-volleyball-recruiting/california/<city>/<school-slug>[/<first-last>[N]]`). The
+  school slugs came from 13 city pages; 45 school pages cover the 38 schools with players (seven schools have two
+  slugs). A school page lists its athletes' names without links, so each match's address was built and fetched:
+  27 kept (each names the school, women's volleyball and the roster's class year), seven addresses not found
+  (NCSA numbers slugs irregularly). On 2026-11-13 NCSA answered plain curl with server-rendered HTML, so the second
+  reader took exact strings, twice. The club ties come from the page's dated "Club Information" lines, not its
+  undated "Club" header field; event names in that list (qualifiers, championships) are not clubs.
+- **SportsRecruits** (`my.sportsrecruits.com/athlete/<first>_<last>[N]`). An address probe for 870 rows (the bare
+  slug and suffixes 2 to 4, continuing while pages kept turning up, to at most 30; 4,472 addresses, about 1.3 a
+  second, no 429). 1,017 live pages (957 on `my.`, the rest on the lacrosse and field hockey subdomains); 739 are
+  volleyball. The script-drawn parts (the TEAMS block with the high school, club and team, the hometown, a
+  commitment) come from one JSON call the page makes itself with no login
+  (`api.sportsrecruits.com/api/v2/resources/athletes/<data-user-id>?query[include][@fragments][]=athlete-profile:basics`);
+  the kept pages were read four times, agreeing. 44 kept (38 name the school, 6 rest on class year plus hometown).
+  406 live pages state a class year that disagrees with the roster and about 530 show at most a class year. The
+  probe wrote a hyphenated surname without its underscore, so `emi_yu_yang3` was reached by the commitment sweep
+  instead. The athlete directory search every page embeds a key for was not used. Club rosters on SportsRecruits
+  (`my.sportsrecruits.com/organization/<slug>/embed/?type=players&teamid=all`) were found for Academy only
+  (`academyvolleyballclub_girls`).
+- **MaxPreps career pages.** Each varsity row's `careerUrl` read once (569 of 569, about 1.3 s apart), then the
+  `/bio/` page of the 153 that were claimed or listed a club. `careerPlayerData.isClaimed` is true on 144, the same
+  144 that render the Claimed badge; the `career-claimed` ad-targeting string is on 199 and is not a sign of a
+  claim. `careerClubTeamsData` has no season field: a tie is `current` when the entry says year joined 2026 or
+  later or was edited in 2026, `unknown` when last edited in 2025, `past` before that. Two pages show another
+  person's name than the roster row (Palo Alto's Emi Yu-Yang, Lynbrook's Ashley Wilson); nothing is linked there.
+  `careerCollegeInterestsData` lists colleges with no status, so it is interest, never a commitment.
+- **FieldLevel** (`fieldlevel.com/app/profile/<first.last>/volleyballwomen`): 140 addresses at six schools, four
+  live, none showing a school or class year in the served HTML; stopped.
+- **Club registry.** ncva.com has no public club directory, so the candidates were the 84 club codes of the NCVA
+  2025-26 Girls Power League points tables (15s to 18s), then every club a player's page names. Records were
+  written from the clubs' own sites. With web search rationed, sites were found by guessing addresses; about 20
+  Power League clubs' sites were not found. Same-named clubs elsewhere were ruled out by reading them (Pulse in
+  Anaheim, Omni in Arizona, Prism in Washington, Prime in Orange County, Empire in Kansas; six Apex clubs in other
+  states and Canada). Hudl's team location told which club of a name a player's entry is (The Edge: Lombard,
+  Illinois). `visionvolleyballclub.net` is a Texas club, not San Jose's Vision (`visionvolleyball.com`).
+- **Club rosters.** Mountain View Volleyball Club's 2026-27 LeagueApps rosters are public at
+  `mvvclub.leagueapps.com/clubteams/<id>/teamRoster?teamId=<id>&ngmp_2023_iframe_transition=1` (the bare address
+  is a script shell); Vision's 2025-26 teams and College Bound pages, NorCal's and Legend's team pages and
+  Academy's SportsRecruits list were read too. All give names without schools. Most other clubs post no roster.
+  NCVA league play is not on AES.
+- **Prep Dig** (`prepdig.com/player/<first-last>/`, `/team/ca/<slug>/`, `/commitments/?state=california`; plain
+  curl). A player page reads "<Name> ... attends <school> in California and plays club volleyball for <club>", the
+  school linked to a team page whose title gives the city; that link is what tells Mountain View from the El
+  Monte school of the name. `los-altos`, `mountain-view`, `independence`, `lincoln` and `live-oak` team slugs are
+  namesake schools. The commitments list needs the state spelled out and ignores `class=`; its dates are entry
+  dates and are not used as a commitment's date.
+- **PrepVolleyball** (`prepvolleyball.com`): the master commitment list has no high-school column; article bodies
+  are paywalled but list "Players featured"; player pages show club and high school together.
+- **College releases.** 292 athletics sites' news feeds (D1 169, D2 41, D3 70, NAIA 12): 28,317 stories listed,
+  2,745 dated 2026-11-11 or later opened, 73 women's or beach volleyball signing releases, one naming a rostered
+  player (Cal's). Classic Sidearm feeds hold ten stories a sport; many D2, D3 and NAIA programs had posted nothing
+  by the evening of 2026-11-13. Tulane's beach release of 2026-11-12 names five signees, none ours.
+- **News.** Student papers were found for 15 of the 41 schools and read through their own WordPress search and
+  post feeds (6,091 posts since 2025-08-01 in one pass; 309 quoted-name queries on 20 hosts in another), with the
+  Los Gatan, Gilroy Dispatch, Morgan Hill Times, Silicon Valley Voice, Palo Alto Online, Mountain View Voice and
+  Los Altos Town Crier. mercurynews.com's search does not match phrases and was discarded.
+- **Web search.** The session's allowance (200 calls shared by every pass, refilling slowly) ran out within
+  minutes, twice. Name-by-name searches reached 104 of the 386 seniors, juniors and ungraded players; one pass ran 94 queries for 47
+  more players through another engine's result pages before it was stopped. Nothing rests on a search result
+  alone: every finding is a page that was then read.
+- **Blocked or failing hosts.** `absolutevb.com` (Cloudflare challenge), `cupertinotoday.com` and
+  `milpitasbeat.com` (403), `bhsbearwitness.com` (522), `overfelt.esuhsd.org` (certificate mismatch),
+  volleyballmag.com (403). `hhsepitaph.com` answers a browser User-Agent and refuses a bare one.
+- **Checking.** Every Hudl and NCSA page: a second, independent reader (303 profiles kept of 303; of the 200 ties
+  first claimed from them, 1 dropped and 8 corrected, then all rebuilt from both reads). Club-roster ties: the
+  second page fetched raw by the pass that confirmed them. Commitments: every quote matched against its page as
+  served by the pass that found it and again at assembly. SportsRecruits and MaxPreps findings were read several
+  times by one reader, not by a second.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

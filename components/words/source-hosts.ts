@@ -16,6 +16,14 @@ import { getTeamBySlug } from '../../lib/teams';
  */
 export const OUTLETS: Readonly<Record<string, { label: string; inSentence: string }>> = {
   'sticktogetherfh.com': { label: 'Stick Together', inSentence: 'Stick Together' },
+  'calbears.com': { label: 'Cal athletics', inSentence: 'Cal athletics' },
+  'elestoque.org': { label: 'El Estoque', inSentence: 'El Estoque' },
+  'elgatonews.com': { label: 'El Gato News', inSentence: 'El Gato News' },
+  'hhsepitaph.com': { label: 'The Epitaph', inSentence: 'The Epitaph' },
+  'losgatan.com': { label: 'Los Gatan', inSentence: 'the Los Gatan' },
+  'prepdig.com': { label: 'Prep Dig', inSentence: 'Prep Dig' },
+  'prepvolleyball.com': { label: 'PrepVolleyball', inSentence: 'PrepVolleyball' },
+  'vikingsportsmag.com': { label: 'Viking Magazine', inSentence: 'Viking Magazine' },
   'fhcollegepath.com': { label: 'FH College Path', inSentence: 'FH College Path' },
   'gilroydispatch.com': { label: 'Gilroy Dispatch', inSentence: 'the Gilroy Dispatch' },
   'lahstalon.org': { label: 'The Talon', inSentence: 'The Talon' },

@@ -31,6 +31,13 @@ type Modules = {
   jv: typeof import('../lib/jv/jv');
   jvRosters: typeof import('../lib/jv/jv-rosters');
   rosters: typeof import('../lib/players/rosters');
+  clubs: typeof import('../lib/players/clubs');
+  commits: typeof import('../lib/players/commits');
+  jvProfiles: typeof import('../lib/jv/jv-profiles');
+  instagram: typeof import('../lib/social/instagram');
+  commitView: typeof import('../components/commits/commit-view');
+  rosterView: typeof import('../components/teams/roster-view');
+  expectations: typeof import('../scripts/lib/prerender-expectations');
   history: typeof import('../lib/history/history');
   order: typeof import('../lib/standings/order');
   classify: typeof import('../lib/classify');
@@ -64,6 +71,13 @@ beforeAll(async () => {
     jv: await import('../lib/jv/jv'),
     jvRosters: await import('../lib/jv/jv-rosters'),
     rosters: await import('../lib/players/rosters'),
+    clubs: await import('../lib/players/clubs'),
+    commits: await import('../lib/players/commits'),
+    jvProfiles: await import('../lib/jv/jv-profiles'),
+    instagram: await import('../lib/social/instagram'),
+    commitView: await import('../components/commits/commit-view'),
+    rosterView: await import('../components/teams/roster-view'),
+    expectations: await import('../scripts/lib/prerender-expectations'),
     history: await import('../lib/history/history'),
     order: await import('../lib/standings/order'),
     classify: await import('../lib/classify'),
@@ -85,7 +99,7 @@ describe('the volleyball sport switch', () => {
     expect(SPORT_SEASON.genderSport).toBe('girls,volleyball');
     expect(SPORT_AUDIENCE).toBe('girls varsity volleyball');
     expect(DATA_DIR).toBe('data/volleyball');
-    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING]).toEqual([false, false, true, false]);
+    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING]).toEqual([false, false, true, true]);
   });
 
   it('scores sets, never ends level, has no overtime, and prints a record as W-L', () => {
@@ -458,5 +472,70 @@ describe('the volleyball stat line', () => {
     expect(m.positions.positionFromText('Lib')).toBe('Libero');
     expect(m.positions.positionFromText('S/Opp')).toBe('Setter / Opposite');
     expect(m.positions.positionFromText('Pin')).toBe('Pin');
+  });
+});
+
+describe('the volleyball recruiting research (data/volleyball/{clubs,commits,rosters-enrichment,jv-profiles}.json)', () => {
+  it('has the recruiting pages and no club calendar', () => {
+    expect([m.current.HAS_RECRUITING, m.current.HAS_CLUB_CALENDAR]).toEqual([true, false]);
+    expect(m.expectations.FIXED_PAGES).toEqual(expect.arrayContaining(['clubs', 'commits', 'recruiting']));
+    expect(m.expectations.FIXED_PAGES).not.toContain('club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).toContain('/club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs');
+  });
+
+  it('loads the clubs through the validating loader: every tie joins a varsity row of a club in the file', () => {
+    const file = m.clubs.getClubsFile();
+    expect(file.season).toBe('26-27');
+    expect(file.clubs.length).toBeGreaterThanOrEqual(30);
+    expect(file.affiliations.length).toBeGreaterThanOrEqual(240);
+    expect(file.jvAffiliations).toEqual([]);
+    for (const a of file.affiliations) {
+      expect(m.clubs.getClub(a.club), a.club).toBeDefined();
+      expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
+    }
+    // The areas searched for every club; the others say they were not.
+    expect(m.clubs.SEARCHED_REGIONS).toEqual(['peninsula', 'south-bay']);
+    // The largest clubs around these schools each have a page.
+    for (const slug of ['mountain-view-volleyball-club', 'vision-volleyball-club', 'academy-volleyball', 'panda-volleyball-club']) {
+      expect(m.clubs.getClubAffiliations(slug).length, slug).toBeGreaterThan(20);
+    }
+  });
+
+  it('lists the five commitments found, one signed, and names a sport only when it is not volleyball', () => {
+    const commitments = m.commits.getCommitments();
+    expect(commitments.map((c) => `${c.fullName}: ${c.college} ${c.sport} ${c.status}`).sort()).toEqual([
+      'Aanya Hotha: penn volleyball committed',
+      'Emi Yu-Yang: hamilton volleyball committed',
+      'Katie Hamburger: tulane beach-volleyball committed',
+      'Kylee Mark: cal-poly volleyball committed',
+      'Maura Hambly: cal volleyball signed',
+    ]);
+    const line = (name: string) => {
+      const c = commitments.find((x) => x.fullName === name)!;
+      return m.commitView.playerCommitLine(c.teamSlug, c.athleteId)!;
+    };
+    expect(line('Maura Hambly')).toMatchObject({ label: 'Signed', sport: null, srLabel: 'college signing' });
+    expect(line('Katie Hamburger')).toMatchObject({ label: 'Committed', sport: 'beach volleyball' });
+    expect(m.commitView.ledeWords(41, [])).toContain('volleyball or any other');
+  });
+
+  it('links recruiting pages on the varsity overlay and the JV lists, a volleyball profile naming no sport', () => {
+    const profiles = m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles));
+    expect(profiles.length).toBeGreaterThanOrEqual(440);
+    expect(profiles.every((p) => p.sport !== 'volleyball')).toBe(true);
+    expect(new Set(profiles.map((p) => p.platform))).toEqual(new Set(['hudl', 'maxpreps', 'ncsa', 'sportsrecruits']));
+    expect(m.rosterView.profileLabel({ platform: 'hudl' })).toBe('Hudl profile');
+    expect(m.rosterView.profileLabel({ platform: 'sportsrecruits', sport: 'softball' })).toBe('SportsRecruits softball profile');
+    const jv = m.jvProfiles.getJvProfilesFile();
+    expect(jv.teams.length).toBeGreaterThanOrEqual(10);
+    expect(jv.teams.flatMap((t) => t.players).every((p) => p.profiles.every((x) => x.platform !== 'maxpreps'))).toBe(true);
+  });
+
+  it('links the clubs’ own Instagram accounts and no team account', () => {
+    const file = m.instagram.getInstagramFile();
+    expect(file.teams).toEqual([]);
+    expect(file.clubs.length).toBeGreaterThanOrEqual(20);
+    expect(m.instagram.getClubInstagram('mountain-view-volleyball-club')?.handle).toBe('mvvcvolley');
   });
 });
