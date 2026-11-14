@@ -1,1 +1,447 @@
-teams 20 leagues 4
+=== pnpm fetch-data --no-sblive --no-vnn --no-cifss --capture tests/fixtures/corpus/vb-new ===
+$ tsx scripts/fetch-data.ts --no-sblive --no-vnn --no-cifss --capture tests/fixtures/corpus/vb-new
+WARN previous snapshot /home/runner/work/scvalfh/scvalfh/data/volleyball/snapshot.json could not be loaded, so nothing is carried: snapshot failed validation (3 issues):
+fetch-data: recording · fetchedAt 2026-11-14T16:12:56.243Z · leagues scval,bval,wcal,wbal
+maxpreps GET https://www.maxpreps.com/ca/volleyball/
+  bootstrap ok · ssid 9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/leagues/276de40b-cd8a-4af6-9eae-db57277149b9/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/212bd90a-2c53-4085-b62d-f5859215fae7/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/b45d3f42-b179-49ad-839a-62de75dff46b/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/fd923157-a05d-4a01-8449-a5222c7e7c8c/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/62f7ff4e-4492-48b8-b816-db27318ad480/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/64a5a638-db8f-4fe5-8307-43eee6fd32f4/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/08b9d499-8331-4a70-8521-ff096b4626b9/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/8a127ac4-5429-4c23-a4da-ac6dfd604b91/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/fede0b0b-e71f-4de5-9102-0bd1ca8b184c/v1
+maxpreps GET https://production.api.maxpreps.com/leagues/276de40b-cd8a-4af6-9eae-db57277149b9/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings de-anza: 7 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/212bd90a-2c53-4085-b62d-f5859215fae7/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings el-camino: 8 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/b45d3f42-b179-49ad-839a-62de75dff46b/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings mt-hamilton: 6 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/fd923157-a05d-4a01-8449-a5222c7e7c8c/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings santa-teresa: 6 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/62f7ff4e-4492-48b8-b816-db27318ad480/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings almaden-valley: 6 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/64a5a638-db8f-4fe5-8307-43eee6fd32f4/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings west-valley: 8 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/08b9d499-8331-4a70-8521-ff096b4626b9/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings wcal: 6 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/8a127ac4-5429-4c23-a4da-ac6dfd604b91/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings foothill: 7 rows
+maxpreps GET https://production.api.maxpreps.com/leagues/fede0b0b-e71f-4de5-9102-0bd1ca8b184c/standings/v1?sportseasonid=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  standings skyline: 6 rows
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=97ffffbe-54ba-4c25-86bb-41332627f64e&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=738a2432-7acb-4ad6-b041-115ec0f331c2&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0279f2de-d5ce-484d-b210-2286ded42058&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8ff5a211-5896-4289-9596-760a8179c34d&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=405614ad-a015-4270-b527-18e899c90824&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a38a628c-c65f-487f-a65e-7264b6804ce0&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a97c219c-2fbe-4fa4-9a0c-cc18502a8d24&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bc239f20-79b3-42db-a2f0-0a8ec0ec0821&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=d7c7f7a1-06be-44fb-a4a2-64599519aa4c&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=69890515-0a8d-4a73-b798-b6ed4fe4d2ef&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=09beba1b-240a-45b8-aa6e-281decefa275&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=17fad4fb-c82b-4b5a-8a31-3ce13c0ede13&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=12a470ab-e17d-4e5a-b74b-055d1f46d46b&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=4169ba3d-78d4-48ed-a4a4-2b79af41d3ee&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=c81780c9-d396-45a1-a7f9-0aae05905a97&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=554a6e7c-06b6-473a-9461-9f155294d249&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bd6662e8-a2ee-45ca-b0e8-dd03dec005c9&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=cb6e2cbf-71b1-4ef0-9c63-feef33010bf2&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=dd1fc5bd-c075-4fe3-86dc-70112b7e6217&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1959d651-408f-4764-94a5-144cea89c499&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=773e862d-e186-44aa-b268-461b4064ce52&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=fa72c6cc-34dc-4bb4-a184-9c4efaa643d3&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=2bbd7758-7073-4238-9aaf-8d4d7360b6b1&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=fa386930-cf18-4a7d-8b90-1dbddfd399da&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=30d65e43-1478-45b5-90de-fd69689344f8&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=01bf9fda-9b10-4f04-9eef-3195d7d501dc&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8c56113f-9229-43a2-a56e-4f8443494857&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aa94942a-3659-42ea-8c1a-463de8693f1f&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=23723b27-4092-4f9b-8f32-892896c67a84&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a52c60ac-fbe9-438f-b052-c1eba43afacd&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=24d74484-a18f-450e-9f4a-ccbd5299bf1f&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e0d5f596-a80c-4142-9c2a-e2bee576fdc9&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=847b67d2-64a0-459a-b726-484e88392ba6&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=177cef60-d6fd-4dd6-ace9-59ff72a4e0e6&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=f0fce34f-ad2a-43af-9d22-3672ae34f237&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1c9b4d85-17ea-4aa4-8665-0fb4da2d465d&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=b5c6ef6d-8399-41f6-99b5-2b536ea2b71a&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e1adcbbb-7b19-4e93-976e-5b963ed5f866&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aede8bb3-d592-4aaf-949a-dd3f8fbe3b62&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=9c5e65a2-4b73-4672-a5da-a9c61745d19d&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0f63870a-34f3-4d5b-9dbf-653c8410f969&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=ea81d3e5-b4ae-4673-afda-207b10865ffe&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1806a4eb-3371-4e7c-a755-835229bc515e&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=de6d3780-e8f6-4a2a-93f2-b5d89499f9b0&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1dc4836b-4daf-4573-b525-27b474bd5366&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8a8c04d2-5606-44cf-9993-34db55474240&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8c578d8d-b5c7-4f3a-a428-6ed79089ccaa&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=5e75f63f-09f0-4922-8a9d-78e239e9c1f9&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=f133ba52-590e-4f91-b798-d9c06fd9fc4c&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=5303348f-35e0-4054-aaa0-0cb11cce3b79&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=6ffd5704-345e-4ec2-bfa4-0aff6800306b&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e1db3a4f-3bcf-4281-a574-d313212296a1&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=27d82a51-2b44-492e-b2cf-114730027de3&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=65205c0e-02f1-4b46-8b8a-e310b62d1249&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=67c08b6d-5f06-432a-a783-aee8b2a7a939&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aabdd1c5-8378-485d-91d3-75827048bf70&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e5d23742-6a32-47e1-b752-d16dfcf77119&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=ac9c9167-10bf-4859-bc74-7eb0f69517c6&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+maxpreps GET https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=b22f99e1-f106-4b39-8d64-35983d4da891&sportSeasonId=9f2e0dd1-c299-4f3e-8e0e-744d108b6db7
+  schedules: 60/60 feeds read · 1856 rows
+WARN contest 099c348d-172b-413c-8c00-2e682fd3c7de: MaxPreps marks Andrew Hill W and KIPP San Jose Collegiate L on a 0-0 score.
+WARN contest f6fc7c1b-a804-403f-8a3d-5714aca579d4: MaxPreps marks St. Ignatius W and Mercy Burlingame L on a 0-0 score.
+  normalized: 1856 rows → 1095 contests · dropped 0 by config/dedupe · 1095 games
+WARN scval fixture: Los Gatos @ Homestead: official 2026-09-24, MaxPreps 2026-09-23 [scval]
+WARN scval fixture: Gunn @ Fremont: official 2026-10-15, MaxPreps 2026-10-19 [scval]
+WARN scval fixture: MacDonald @ Gunn: official 2026-10-20, MaxPreps 2026-10-26 [scval]
+WARN scval fixture: Saratoga @ MacDonald: official 2026-09-21, MaxPreps 2026-10-01 [scval]
+WARN scval fixture: Lynbrook @ Saratoga: official 2026-09-23, MaxPreps 2026-08-31 [scval]
+WARN scval fixture: Lynbrook @ Saratoga: matched a contest 23 days from the official date (2026-09-23 → 2026-08-31, contest 0c44b852-af28-49bb-bb37-a24f62e0d90f); check it is the same game [scval]
+WARN scval fixture: Palo Alto @ Cupertino: official 2026-09-17, MaxPreps 2026-10-28 [scval]
+WARN scval fixture: Palo Alto @ Cupertino: matched a contest 41 days from the official date (2026-09-17 → 2026-10-28, contest 06a44d81-ac81-4c31-a553-ff924f193c02); check it is the same game [scval]
+  scval: 98/98 official fixtures matched a contest; 0 unmatched
+WARN bval fixture: 2026-09-03 Yerba Buena @ San Jose: MaxPreps has the host the other way round [bval]
+WARN bval fixture: 2026-10-06 San Jose @ Yerba Buena: MaxPreps has the host the other way round [bval]
+WARN bval fixture: Sobrato @ Gilroy: official 2026-10-01, MaxPreps 2026-09-28 [bval]
+WARN bval fixture: Leigh v Evergreen Valley: 3 contests between 2026-10-08 and 2026-10-27 (±14 days) for 2 official fixtures: 2026-10-08 518d6cff-3de5-492f-b6f5-d008ec4d274f, 2026-10-10 d5a7f437-2571-4e8a-8da1-2ddd56778658, 2026-10-27 cf228579-3553-43fc-a81c-5bc424d5e162 [bval]
+  bval: 145/146 official fixtures matched a contest; 1 unmatched
+  sblive: skipped (--no-sblive)
+  sblive: not read (--no-sblive) — no earlier cross-check to carry and 0 earlier si.com scores still eligible
+  vnn: skipped (--no-vnn)
+WARN ccs calendar: first round: we publish 2026-10-31, CCS calendar says 2026-11-03
+WARN ccs calendar: quarterfinals: we publish 2026-11-03, CCS calendar says 2026-10-31
+  ccs calendar: 7 events · key dates DIFFER
+  ccs bracket: Division 1 PUBLISHED · Division 2 PUBLISHED · Open Division PUBLISHED · Division 3 PUBLISHED · Division 4 PUBLISHED · Division 5 PUBLISHED
+  ccs brackets: 6 read whole (Open Division 7 · Division 1 15 · Division 2 15 · Division 3 15 · Division 4 15 · Division 5 15)
+  cif bracket Division V: 31 matchups
+  cif bracket Division I: 31 matchups
+  cif bracket Division II: 31 matchups
+  cif bracket Division III: 31 matchups
+  cif bracket Open Division: 15 matchups
+  classify: f6fc7c1b-a804-403f-8a3d-5714aca579d4 level at 0-0 and marked W/L, and the game needs a winner: counted as St. Ignatius's win
+  classify: 345 league games · 66 postseason
+  cifss: skipped (--no-cifss) — no earlier cross-check to carry
+  results: 0 confirmed · 1090 reported · 0 inferred · 0 disputed
+WARN budget: snapshot.json is 2622965 bytes, past the 2.4 MB warning line of the 3200000-byte budget
+summary: teams 60 · games 1095 (league 345) · finals 1090 · pending 1 · backfilled 0 · mismatches 0 · sources ok 98/98 · requests maxpreps:79 sblive:0 official:6 · leagues scval:fresh bval:fresh wcal:fresh wbal:fresh
+official: 1 official fixture with no reported contest
+wrote data/volleyball/snapshot.json and data/volleyball/snapshot.meta.json
+=== rc=0 ===
+=== pnpm fetch-prior-season ===
+$ tsx scripts/fetch-prior-season.ts
+fetch-prior-season: 2025-26 (MaxPreps 25-26), sportSeasonId 758b6b67-5a8f-4d36-adbf-8a9d3ee48f81
+fetch-prior-season: 2 deleted row(s) dated outside 2025-26, counted as deleted:
+  cupertino: 2026-02-25 (contest 9626c446-342c-4a8d-8753-0f1be0126eb3)
+  milpitas: 2026-02-25 (contest 9626c446-342c-4a8d-8753-0f1be0126eb3)
+fetch-prior-season: 606 finals between registry teams, 2025-08-26 to 2025-11-08; left out: deleted 155, notFinal 8, outsideRegistry 438, forfeit 2, unscored 0, excludedByConfig 0; every registry team has a game
+fetch-prior-season: wrote data/volleyball/prior-season.json
+=== rc=0 ===
+=== pnpm fetch-rosters ===
+$ tsx scripts/fetch-rosters.ts
+fetch-rosters: 60 MaxPreps roster pages
+
+cupertino         ok              18 players · grade 18 · pos 18 · # 18 · ht 14 · C  2
+homestead         ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  2
+los-altos         ok              14 players · grade 14 · pos 14 · # 14 · ht 14 · C  4
+los-gatos         ok              19 players · grade 19 · pos  6 · # 19 · ht  5 · C  0
+milpitas          ok              20 players · grade 15 · pos  0 · # 20 · ht  0 · C  0
+monta-vista       ok              19 players · grade 19 · pos 15 · # 19 · ht  0 · C  2
+palo-alto         ok              19 players · grade 19 · pos 19 · # 19 · ht 19 · C  1 · duplicate career id 360ad675-c555-430a-8a2c-25d322e90a6a: "Autumn Cleland" and "Emi Yu-Yang"
+fremont           ok              16 players · grade 16 · pos 16 · # 16 · ht  0 · C  3
+gunn              ok              16 players · grade 16 · pos 16 · # 16 · ht 14 · C  3
+lynbrook          ok              16 players · grade 16 · pos 16 · # 16 · ht 16 · C  2 · duplicate career id 53b62c6b-8ee8-4bd7-96f0-095e53847566: "Vanessa Yang" and "Ashley Wilson"
+macdonald         ok              11 players · grade 11 · pos 11 · # 11 · ht 11 · C  0
+mountain-view     ok              15 players · grade 15 · pos 15 · # 15 · ht 15 · C  2
+santa-clara       ok              13 players · grade 13 · pos 13 · # 13 · ht 13 · C  1
+saratoga          ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  3
+wilcox            ok              16 players · grade 16 · pos 16 · # 16 · ht  1 · C  2
+branham           ok              14 players · grade 14 · pos 14 · # 14 · ht  4 · C  0
+evergreen-valley  empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+leigh             ok              18 players · grade 18 · pos 17 · # 18 · ht 10 · C  0
+leland            ok              12 players · grade 12 · pos 12 · # 12 · ht  3 · C  0
+pioneer           ok              15 players · grade 15 · pos 15 · # 15 · ht  3 · C  2
+westmont          ok              14 players · grade 14 · pos 14 · # 14 · ht 14 · C  2
+christopher       ok              11 players · grade 11 · pos 11 · # 11 · ht 11 · C  0
+gilroy            ok              15 players · grade 13 · pos 13 · # 15 · ht  0 · C  2
+piedmont-hills    ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  2
+santa-teresa      ok              15 players · grade  0 · pos  0 · #  0 · ht  0 · C  0
+silver-creek      ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  2
+sobrato           ok              15 players · grade 15 · pos  8 · # 15 · ht  2 · C  0
+del-mar           ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  0
+gunderson         ok              14 players · grade 14 · pos 14 · #  0 · ht  0 · C  0
+lincoln           ok              18 players · grade 18 · pos 16 · # 16 · ht  0 · C  0
+live-oak          ok              16 players · grade 16 · pos 16 · # 16 · ht 16 · C  2
+prospect          ok              15 players · grade 15 · pos 14 · # 15 · ht  0 · C  2
+willow-glen       ok              15 players · grade  0 · pos  0 · #  0 · ht  0 · C  0
+andrew-hill       ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  3
+independence      ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  3
+james-lick        empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+mt-pleasant       ok              13 players · grade 13 · pos  0 · # 13 · ht  0 · C  2
+oak-grove         empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+overfelt          ok              15 players · grade 15 · pos 15 · # 13 · ht  0 · C  1
+san-jose          ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  0
+yerba-buena       ok              15 players · grade 14 · pos 14 · # 14 · ht  0 · C  3
+mitty             ok              17 players · grade 12 · pos 12 · # 17 · ht 12 · C  0
+riordan           ok              14 players · grade 14 · pos 14 · # 13 · ht  6 · C  2
+sacred-heart-cathedral ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  0
+saint-francis     ok              17 players · grade 17 · pos 17 · # 17 · ht 17 · C  0
+st-ignatius       ok              23 players · grade 17 · pos 17 · # 23 · ht 17 · C  3
+valley-christian  ok              15 players · grade 15 · pos 11 · # 15 · ht  8 · C  0
+harker            ok              16 players · grade 16 · pos  0 · # 16 · ht  0 · C  0
+kings-academy     ok              20 players · grade 16 · pos 16 · # 20 · ht  1 · C  0
+menlo             ok              17 players · grade 17 · pos 17 · # 17 · ht  5 · C  3
+mercy-burlingame  ok              16 players · grade 16 · pos 16 · # 16 · ht  0 · C  2
+notre-dame-belmont ok              14 players · grade 14 · pos 14 · # 14 · ht  1 · C  3
+presentation      ok              13 players · grade 13 · pos  0 · # 13 · ht  1 · C  2
+sacred-heart-prep ok              15 players · grade 15 · pos 15 · # 15 · ht  6 · C  4
+castilleja        ok              15 players · grade 14 · pos 14 · # 15 · ht  0 · C  3
+crystal-springs   ok              17 players · grade 17 · pos  0 · # 17 · ht  0 · C  0
+eastside          ok              15 players · grade 15 · pos  1 · # 15 · ht  0 · C  2
+notre-dame-san-jose ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  2
+pinewood          ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  3
+priory            ok              18 players · grade 14 · pos  0 · # 18 · ht  0 · C  0
+
+SCVAL 15 teams · 15 ok
+BVAL  26 teams · 23 ok · 3 empty
+WCAL   6 teams · 6 ok
+WBAL  13 teams · 13 ok
+
+876 players on 60 teams · 818 with a grade · 684 with a position · 826 with a number · 259 with a height · 82 captains · 0 team(s) failed this run
+
+wrote data/volleyball/rosters.json
+=== rc=0 ===
+=== pnpm fetch-rosters --level jv ===
+$ tsx scripts/fetch-rosters.ts --level jv
+fetch-rosters: 60 MaxPreps JV roster pages
+
+cupertino         empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+homestead         ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  2
+los-altos         ok              14 players · grade 14 · pos 14 · # 14 · ht 14 · C  4
+los-gatos         ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  0
+milpitas          ok              16 players · grade 16 · pos 16 · # 16 · ht 10 · C  3
+monta-vista       ok              16 players · grade 16 · pos 16 · # 16 · ht  0 · C  3
+palo-alto         ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  3
+fremont           ok              17 players · grade 17 · pos 17 · # 17 · ht  0 · C  1
+gunn              ok              13 players · grade 13 · pos 13 · # 13 · ht  0 · C  0
+lynbrook          ok              12 players · grade 12 · pos 12 · # 12 · ht  0 · C  2
+macdonald         ok              15 players · grade 15 · pos 13 · # 14 · ht 12 · C  0
+mountain-view     ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  0
+santa-clara       ok              15 players · grade 14 · pos  0 · # 14 · ht 14 · C  0
+saratoga          ok              15 players · grade 15 · pos 15 · # 15 · ht  0 · C  2
+wilcox            ok              16 players · grade 16 · pos 16 · # 16 · ht  0 · C  0
+branham           ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  0
+evergreen-valley  empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+leigh             empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+leland            ok               2 players · grade  0 · pos  0 · #  0 · ht  0 · C  0
+pioneer           empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+westmont          ok              12 players · grade 12 · pos 12 · # 12 · ht  0 · C  0
+christopher       ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  2
+gilroy            empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+piedmont-hills    ok               3 players · grade  3 · pos  1 · #  3 · ht  3 · C  0
+santa-teresa      empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+silver-creek      ok              14 players · grade 14 · pos 13 · # 14 · ht  0 · C  0
+sobrato           empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+del-mar           ok              14 players · grade 14 · pos 14 · # 14 · ht 14 · C  3
+gunderson         empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+lincoln           empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+live-oak          empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+prospect          empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+willow-glen       empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+andrew-hill       ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  3
+independence      ok              17 players · grade 17 · pos 17 · # 15 · ht  0 · C  3
+james-lick        empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+mt-pleasant       ok              11 players · grade 11 · pos  0 · #  9 · ht  0 · C  2
+oak-grove         empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+overfelt          empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+san-jose          empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+yerba-buena       ok               2 players · grade  0 · pos  0 · #  0 · ht  0 · C  0
+mitty             empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+riordan           empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+sacred-heart-cathedral ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  0
+saint-francis     ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  0
+st-ignatius       empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+valley-christian  empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+harker            empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+kings-academy     ok              12 players · grade 12 · pos 11 · # 12 · ht  0 · C  1
+menlo             empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+mercy-burlingame  empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+notre-dame-belmont ok              13 players · grade 13 · pos  0 · # 13 · ht  0 · C  0
+presentation      empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+sacred-heart-prep empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+castilleja        ok              14 players · grade 14 · pos 14 · # 14 · ht  0 · C  0
+crystal-springs   ok              12 players · grade 12 · pos  0 · # 12 · ht  0 · C  0
+eastside          ok              13 players · grade 13 · pos  0 · # 13 · ht  0 · C  2
+notre-dame-san-jose empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+pinewood          empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+priory            empty            0 players · grade  - · pos  - · #  - · ht  - · C  -
+
+SCVAL 15 teams · 1 empty · 14 ok
+BVAL  26 teams · 11 ok · 15 empty
+WCAL   6 teams · 4 empty · 2 ok
+WBAL  13 teams · 8 empty · 5 ok
+
+414 players on 60 teams · 409 with a grade · 340 with a position · 404 with a number · 67 with a height · 36 captains · 0 team(s) failed this run
+
+wrote data/volleyball/jv-rosters.json
+=== rc=0 ===
+=== pnpm fetch-jv --no-sblive ===
+$ tsx scripts/fetch-jv.ts --no-sblive
+WARN previous data/volleyball/jv.json does not validate as a whole ((row): expected one entry per registry team (60), in registry order); its rows are kept one by one
+fetch-jv: 60 MaxPreps JV feeds, si.com skipped
+WARN contest c89b1237-b667-475c-98ec-d320674ae965: MaxPreps marks Andrew Hill W and KIPP San Jose Collegiate L on a 0-0 score.
+
+cupertino             MaxPreps ok              si.com unavailable     22 games · 22 final
+homestead             MaxPreps ok              si.com unavailable     24 games · 24 final
+los-altos             MaxPreps ok              si.com unavailable     27 games · 27 final
+los-gatos             MaxPreps ok              si.com unavailable     25 games · 25 final
+milpitas              MaxPreps ok              si.com unavailable     25 games · 25 final
+monta-vista           MaxPreps ok              si.com unavailable     15 games · 15 final
+palo-alto             MaxPreps ok              si.com unavailable     26 games · 26 final
+fremont               MaxPreps ok              si.com unavailable     16 games · 16 final
+gunn                  MaxPreps ok              si.com unavailable     29 games · 29 final
+lynbrook              MaxPreps ok              si.com unavailable     15 games · 15 final
+macdonald             MaxPreps ok              si.com unavailable     22 games · 22 final
+mountain-view         MaxPreps ok              si.com unavailable     25 games · 25 final
+santa-clara           MaxPreps ok              si.com unavailable     19 games · 19 final
+saratoga              MaxPreps ok              si.com unavailable     17 games · 17 final
+wilcox                MaxPreps ok              si.com unavailable     24 games · 24 final
+branham               MaxPreps ok              si.com unavailable     24 games · 24 final
+evergreen-valley      MaxPreps ok              si.com unavailable     17 games · 13 final
+leigh                 MaxPreps ok              si.com unavailable     18 games · 17 final
+leland                MaxPreps ok              si.com unavailable     17 games · 13 final
+pioneer               MaxPreps ok              si.com unavailable     20 games · 20 final
+westmont              MaxPreps ok              si.com unavailable     19 games · 19 final
+christopher           MaxPreps ok              si.com unavailable     18 games · 18 final
+gilroy                MaxPreps ok              si.com unavailable     12 games · 7 final
+piedmont-hills        MaxPreps ok              si.com unavailable     12 games · 7 final
+santa-teresa          MaxPreps ok              si.com unavailable     12 games · 5 final
+silver-creek          MaxPreps ok              si.com unavailable     13 games · 6 final
+sobrato               MaxPreps ok              si.com unavailable     23 games · 7 final
+del-mar               MaxPreps ok              si.com unavailable     25 games · 23 final
+gunderson             MaxPreps ok              si.com unavailable     14 games · 7 final
+lincoln               MaxPreps ok              si.com unavailable     21 games · 12 final
+live-oak              MaxPreps ok              si.com unavailable     20 games · 9 final
+prospect              MaxPreps ok              si.com unavailable     12 games · 5 final
+willow-glen           MaxPreps ok              si.com unavailable     17 games · 16 final
+andrew-hill           MaxPreps ok              si.com unavailable     17 games · 10 final
+independence          MaxPreps ok              si.com unavailable     27 games · 25 final
+james-lick            MaxPreps ok              si.com unavailable     14 games · 8 final
+mt-pleasant           MaxPreps ok              si.com unavailable     17 games · 11 final
+oak-grove             MaxPreps ok              si.com unavailable     17 games · 17 final
+overfelt              MaxPreps ok              si.com unavailable     15 games · 15 final
+san-jose              MaxPreps ok              si.com unavailable     16 games · 16 final
+yerba-buena           MaxPreps ok              si.com unavailable     12 games · 6 final
+mitty                 MaxPreps ok              si.com unavailable     10 games · 3 final
+riordan               MaxPreps ok              si.com unavailable     13 games · 10 final
+sacred-heart-cathedral MaxPreps ok              si.com unavailable     33 games · 32 final
+saint-francis         MaxPreps ok              si.com unavailable     20 games · 12 final
+st-ignatius           MaxPreps ok              si.com unavailable     15 games · 12 final
+valley-christian      MaxPreps ok              si.com unavailable     15 games · 9 final
+harker                MaxPreps ok              si.com unavailable     13 games · 6 final
+kings-academy         MaxPreps ok              si.com unavailable     22 games · 18 final
+menlo                 MaxPreps ok              si.com unavailable     14 games · 9 final
+mercy-burlingame      MaxPreps ok              si.com unavailable     15 games · 12 final
+notre-dame-belmont    MaxPreps ok              si.com unavailable     11 games · 6 final
+presentation          MaxPreps ok              si.com unavailable     19 games · 9 final
+sacred-heart-prep     MaxPreps ok              si.com unavailable     12 games · 8 final
+castilleja            MaxPreps ok              si.com unavailable     14 games · 5 final
+crystal-springs       MaxPreps ok              si.com unavailable     19 games · 8 final
+eastside              MaxPreps ok              si.com unavailable     16 games · 16 final
+notre-dame-san-jose   MaxPreps ok              si.com unavailable     22 games · 10 final
+pinewood              MaxPreps ok              si.com unavailable     14 games · 8 final
+priory                MaxPreps ok              si.com unavailable     15 games · 7 final
+
+SCVAL 15 teams · 15 ok
+BVAL  26 teams · 26 ok
+WCAL   6 teams · 6 ok
+WBAL  13 teams · 13 ok
+
+630 MaxPreps JV games (506 final) for 60 of 60 schools · 0 si.com JV finals · si.com filled 0, added 0, differs on 0 · 0 games and 0 si.com rows carried forward
+
+wrote data/volleyball/jv.json
+=== rc=0 ===
+=== pnpm fetch-player-stats ===
+$ tsx scripts/fetch-player-stats.ts
+fetch-player-stats: 60 MaxPreps stats rollups
+
+cupertino         ok              16 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-29T15:48:08 · 32 box scores
+homestead         none             0 players · tracks -
+los-altos         ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-04T17:16:15 · 33 box scores
+los-gatos         ok              17 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-24T17:52:22 · 28 box scores
+milpitas          ok              20 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-08T23:53:08 · 33 box scores · field assists: players add up to 1210, above MaxPreps' team total of 1208; both as published
+monta-vista       ok              17 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-09T15:33:18 · 25 box scores
+palo-alto         none             0 players · tracks -
+fremont           ok              13 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-30T15:58:07 · 4 box scores
+gunn              ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-07T14:07:07 · 36 box scores
+lynbrook          ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-06T10:37:08 · 21 box scores
+macdonald         ok              11 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-27T20:07:08 · 28 box scores · field assists: players add up to 714, above MaxPreps' team total of 643; both as published
+mountain-view     ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-06T08:23:08 · 27 box scores
+santa-clara       none             0 players · tracks -
+saratoga          ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-12T17:12:20 · 22 box scores
+wilcox            ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-02T10:19:18 · 27 box scores
+branham           ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-29T21:25:09 · 29 box scores
+evergreen-valley  none             0 players · tracks -
+leigh             ok              17 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-28T09:11:13 · 23 box scores
+leland            ok              12 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-06T08:29:07 · 25 box scores
+pioneer           ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-01T08:50:21 · 24 box scores · field assists: players add up to 695, above MaxPreps' team total of 673; both as published
+westmont          ok               4 players · tracks setsPlayed, kills, attackErrors, attackAttempts · MaxPreps 2026-10-10T18:47:10 · 1 box scores
+christopher       ok              11 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-07T21:47:07 · 27 box scores · field assists: players add up to 750, above MaxPreps' team total of 739; both as published
+gilroy            ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-28T12:11:19 · 25 box scores
+piedmont-hills    none             0 players · tracks -
+santa-teresa      none             0 players · tracks -
+silver-creek      none             0 players · tracks -
+sobrato           ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-16T15:15:21 · 1 box scores
+del-mar           ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-24T23:57:07 · 21 box scores
+gunderson         none             0 players · tracks -
+lincoln           none             0 players · tracks -
+live-oak          none             0 players · tracks -
+prospect          ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, receptionErrors · MaxPreps 2026-10-25T14:03:25 · 12 box scores
+willow-glen       none             0 players · tracks -
+andrew-hill       none             0 players · tracks -
+independence      none             0 players · tracks -
+james-lick        none             0 players · tracks -
+mt-pleasant       ok              11 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-05T17:53:18 · 1 box scores
+oak-grove         none             0 players · tracks -
+overfelt          none             0 players · tracks -
+san-jose          none             0 players · tracks -
+yerba-buena       none             0 players · tracks -
+mitty             ok              17 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-20T13:57:17 · 27 box scores
+riordan           none             0 players · tracks -
+sacred-heart-cathedral none             0 players · tracks -
+saint-francis     none             0 players · tracks -
+st-ignatius       ok              23 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-10T20:43:50 · 30 box scores
+valley-christian  ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-12T08:46:08 · 32 box scores
+harker            ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-04T03:10:08 · 25 box scores
+kings-academy     ok              20 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-05T17:05:10 · 28 box scores
+menlo             ok              16 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-11T13:34:10 · 39 box scores
+mercy-burlingame  ok              16 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-23T08:22:19 · 30 box scores
+notre-dame-belmont ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-11T12:27:10 · 29 box scores · field assists: players add up to 903, above MaxPreps' team total of 860; both as published
+presentation      ok              13 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-14T00:10:08 · 30 box scores · field assists: players add up to 683, above MaxPreps' team total of 657; both as published
+sacred-heart-prep ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-09T08:26:09 · 29 box scores
+castilleja        ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-13T13:05:12 · 26 box scores
+crystal-springs   none             0 players · tracks -
+eastside          ok              15 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-11-01T20:53:15 · 27 box scores
+notre-dame-san-jose ok              12 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, soloBlocks, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-13T14:38:19 · 6 box scores · field assists: players add up to 125, above MaxPreps' team total of 21; both as published
+pinewood          ok              14 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-09-16T19:21:31 · 1 box scores
+priory            ok              18 players · tracks setsPlayed, kills, attackErrors, attackAttempts, aces, serveErrors, serveAttempts, soloBlocks, blockAssists, digs, assists, receptions, receptionErrors · MaxPreps 2026-10-29T08:42:10 · 24 box scores
+
+SCVAL 15 teams · 12 ok · 3 none
+BVAL  26 teams · 11 ok · 15 none
+WCAL   6 teams · 3 ok · 3 none
+WBAL  13 teams · 12 ok · 1 none
+
+561 player stat lines on 38 of 60 teams · 888 box scores (383 read this run) · 0 team(s) failed this run
+
+wrote data/volleyball/player-stats.json
+=== rc=0 ===
+=== pnpm fetch-prior-players ===
+$ tsx scripts/fetch-prior-players.ts
+fetch-prior-players: volleyball 25-26, sportSeasonId 758b6b67-5a8f-4d36-adbf-8a9d3ee48f81
+
+522 players on 35 stat sheets · 517 with a class · 513 with a number · 25 team(s) with no stats that season · 0 unread
+wrote data/volleyball/prior-players.json
+=== rc=0 ===
