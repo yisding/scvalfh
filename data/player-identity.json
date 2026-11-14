@@ -1,9 +1,598 @@
 {
   "notes": [
     "What a person has decided about who is who in data/players.json (lib/players/registry-schema.ts PlayerIdentitySchema). Curated, never guessed: every entry says why. scripts/build-players.ts reads it on every build.",
-    "sameAs ties a name on one team's lists to a MaxPreps career or to another name; rowSplits takes a MaxPreps row out of the career it is filed under; distinct keeps two careers that share a name on one team apart."
+    "sameAs ties a name on one team's lists to a MaxPreps career or to another name; rowSplits takes a MaxPreps row out of the career it is filed under; distinct keeps two careers that share a name on one team apart; notSame records that two look-alike names are two people."
   ],
-  "sameAs": [],
+  "sameAs": [
+    {
+      "sport": "basketball",
+      "team": "cupertino",
+      "name": "Nate Crawford",
+      "careerId": "jbq2c65sjuraa",
+      "basis": "One player. \"Nate Crawford\": basketball 25-26 varsity grade 11 (all-league list). \"Nathan Crawford\": basketball 25-26 varsity #3 grade 11 (MaxPreps stat sheet). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "fremont",
+      "name": "Diego Lorenzo",
+      "careerId": "8c7kuru6pbidd",
+      "basis": "One player. \"Diego Lorenzo\": basketball 25-26 jv grade 10 (all-league list). \"Diego Lorenzo Lima\": basketball 26-27 varsity #31 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "los-altos",
+      "name": "Dan Wataro",
+      "careerId": "4avv6maobsm88",
+      "basis": "One player. \"Dan Wataro\": basketball 25-26 jv grade 10 (all-league list). \"Wataro Dan\": basketball 26-27 varsity #2 grade 11 (MaxPreps roster). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "los-gatos",
+      "name": "Oliver Evans",
+      "careerId": "p7u8f8jmd3etd",
+      "basis": "One player. \"Oliver Evans\": basketball 25-26 varsity #3 grade 9 (MaxPreps stat sheet, all-league list). \"Ollie Evans\": basketball 26-27 varsity #3 grade 9 (MaxPreps roster). Same school, classes of 2030 and 2029, both #3. MaxPreps has #3 Oliver Evans (class of 2029) in 25-26 and #3 Ollie Evans under a career created 2026-11-13 in 26-27, whose \"Fr.\" is last year's grade (two returning classmates carry the same stale grade); the Los Gatan (2025-12-18) names Oliver Evans as a freshman starter, and NCSA lists him as class of 2029, #3. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "macdonald",
+      "name": "Jhayde Domingo",
+      "careerId": "36jirp6p2fr44",
+      "basis": "One player. \"Jhayde Domingo\": basketball 25-26 varsity #23 grade 11 (MaxPreps stat sheet). \"Domingo Jhayde\": basketball 26-27 varsity #5 grade 12 (MaxPreps roster). Same school, both class of 2027. MaxPreps' career pages give both as a guard, class of 2027; the 26-27 row was entered with the first and last names in each other's fields (it sorts under D). Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "macdonald",
+      "name": "Jhaylen Richards",
+      "careerId": "nsdf6je7kot00",
+      "basis": "One player. \"Jhaylen Richards\": basketball 25-26 varsity #25 grade 10 (MaxPreps stat sheet). \"Jhaylen Roy-Richard\": basketball 26-27 varsity #12 grade 11 (MaxPreps roster). Same school, both class of 2028. MaxPreps' 25-26 roster has Jhaylen Richards #25 So. and its 26-27 roster Jhaylen Roy-Richard #12 Jr., both class of 2028, with no Richards left on the 26-27 roster; MacDonald's 26-27 football roster lists a \"jhalen Richard\" #12 Jr. No source states the change of surname. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "macdonald",
+      "name": "Mic Borgonia",
+      "careerId": "r3b2f4885nl22",
+      "basis": "One player. \"Mic Borgonia\": basketball 25-26 varsity #0 grade 11 (MaxPreps stat sheet). \"Mic Nicolas Bergonia\": basketball 26-27 varsity #1 grade 12 (MaxPreps roster). Same school, both class of 2027. MaxPreps' career pages give both as a guard, class of 2027; only one of the two is on each season's roster. Which surname spelling is right is not established. Decided 2026-11-14."
+    },
+    {
+      "sport": "basketball",
+      "team": "milpitas",
+      "name": "Pranav Krishnan",
+      "careerId": "sf3svg5rdut11",
+      "basis": "One player. \"Pranav Krishnan\": basketball 25-26 varsity grade 11 (all-league list). \"Pranavram Krishnan\": basketball 25-26 varsity #20 grade 11 (MaxPreps stat sheet). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "branham",
+      "name": "Angie Estrada-Harel",
+      "careerId": "7ng73ndo4qecc",
+      "basis": "One player. \"Angie Estrada-Harel\": field-hockey 25-26 varsity #13 grade 11 (MaxPreps stat sheet). \"Angelique Estrada-Harel\": field-hockey 26-27 varsity #5 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "branham",
+      "name": "Annalise Clayton",
+      "careerId": "0n7nf6qn46eff",
+      "basis": "One player. \"Annalise Clayton\": field-hockey 26-27 jv grade 10 (school's JV list). \"Annalise Clayton\": soccer 26-27 jv #24 grade 10 (MaxPreps JV roster). Same school, both class of 2029. Branham's own JV field hockey roster (2026-27, dated 2026-09-11) lists \"Clayton, Annalise, 10\"; MaxPreps has her as a sophomore, class of 2029, on JV soccer. No page lists both sports. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "branham",
+      "name": "Kathryn Wehrmaker",
+      "careerId": "0m37qur7hcuaa",
+      "basis": "One player. \"Kathryn Wehrmaker\": field-hockey 26-27 jv grade 10 (school's JV list). \"Kathryn Wehrmaker\": soccer 26-27 jv #3 grade 10 (MaxPreps JV roster). Same school, both class of 2029. Branham's own JV field hockey roster (2026-27) lists \"Wehrmaker, Kathryn, 10\"; MaxPreps has her as a sophomore, class of 2029, on JV soccer. A rare surname; no page lists both sports. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "christopher",
+      "name": "Collette Boyd",
+      "careerId": "01sae9h1btl88",
+      "basis": "One player. \"Collette Boyd\": field-hockey 25-26 varsity #13 grade 11 (MaxPreps stat sheet). \"Colette Boyd\": field-hockey 25-26 varsity grade 11 (all-league list); field-hockey 26-27 varsity #13 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027, both #13. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "christopher",
+      "name": "Erika Toledano",
+      "careerId": "8ec4m5j1eqei2",
+      "basis": "One player. \"Erika Toledano\": field-hockey 25-26 varsity grade 11 (all-league list). \"Erika Toledano (GK)\": field-hockey 26-27 varsity #30 grade 12 (MaxPreps roster, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "eastlake",
+      "name": "Cat Cortes",
+      "careerId": "gbl6pm12dfcee",
+      "basis": "One player. \"Cat Cortes\": field-hockey 25-26 varsity #GK grade 11 (MaxPreps stat sheet). \"Catalina Cortes\": field-hockey 26-27 varsity #98 grade 12 (MaxPreps roster, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "eastlake",
+      "name": "Kat Wright",
+      "careerId": "ge4c6aoaceah1",
+      "basis": "One player. \"Kat Wright\": field-hockey 25-26 varsity #3 grade 11 (MaxPreps stat sheet). \"Katerina Wright\": field-hockey 26-27 varsity #3 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027, both #3. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "fremont",
+      "name": "Arsh Ruprah",
+      "careerId": "s9pnrvqc7ljee",
+      "basis": "One player. \"Arsh Ruprah\": field-hockey 25-26 varsity grade 10 (all-league list). \"Arshpreet Ruprah\": field-hockey 26-27 varsity #5 grade 11 (MaxPreps roster, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "fremont",
+      "name": "Kaila Scott",
+      "isName": "Kalia Scott",
+      "basis": "One player. \"Kaila Scott\": field-hockey 25-26 jv grade 9 (all-league list). \"Kalia Scott\": field-hockey 26-27 jv #16 grade 10 (school's JV list). Same school, both class of 2029. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "great-oak",
+      "name": "Chevey Lane",
+      "careerId": "rhs62tinifu66",
+      "basis": "One player. \"Chevey Lane\": field-hockey 25-26 varsity #21 grade 11 (MaxPreps stat sheet). \"Chevy Lane\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "homestead",
+      "name": "Gabby Moll",
+      "careerId": "elteingmoskcc",
+      "basis": "One player. \"Gabby Moll\": field-hockey 25-26 varsity grade 11 (all-league list). \"Gabrielle Moll\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, MaxPreps stat sheet, overlay, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "la-jolla",
+      "name": "Corrina Colvin",
+      "careerId": "q01dev0shrtm6",
+      "basis": "One player. \"Corrina Colvin\": field-hockey 26-27 jv (school's JV list). \"Corra Colvin\": field-hockey 26-27 jv #22 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. The school's JV roster (ljvikings.com, 16 names) and MaxPreps' (15) match one to one on every other MaxPreps player; each lists exactly one Colvin. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "la-jolla-country-day",
+      "name": "Lily Witt",
+      "careerId": "j3trp5538j9bb",
+      "basis": "One player. \"Lily Witt\": field-hockey 25-26 varsity #2 grade 10 (MaxPreps stat sheet). \"Liliandra Witt\": field-hockey 26-27 varsity #1 grade 11 (MaxPreps roster, overlay, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "leigh",
+      "name": "Sammy Sanderson",
+      "careerId": "p99fus9ap65l5",
+      "basis": "One player. \"Sammy Sanderson\": field-hockey 25-26 varsity #16 grade 11 (MaxPreps stat sheet). \"Samantha Sanderson\": field-hockey 26-27 varsity #17 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "leland",
+      "name": "Kyriaki Pries",
+      "careerId": "4dp6j4diiafj3",
+      "basis": "One player. \"Kyriaki Pries\": field-hockey 26-27 jv (school's JV list). \"Kyraiki Pries\": field-hockey 26-27 jv grade 11 (MaxPreps JV roster). Same school, class of 2028 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "los-gatos",
+      "name": "Collette Von Klemperer",
+      "careerId": "8gjfhu3tm3nee",
+      "basis": "One player. \"Collette Von Klemperer\": field-hockey 25-26 jv grade 9 (all-league list). \"Colette Von Klemperer\": field-hockey 26-27 jv grade 10 (MaxPreps roster, overlay, recruiting profile, school's JV list). Same school, both class of 2029. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "los-gatos",
+      "name": "Franny Tolich",
+      "careerId": "709g3punvmq11",
+      "basis": "One player. \"Franny Tolich\": field-hockey 25-26 varsity #38 grade 11 (MaxPreps stat sheet). \"Francesca Tolich\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "los-gatos",
+      "name": "Kiera Faye",
+      "careerId": "qu87eb8ob4sk4",
+      "basis": "One player. \"Kiera Faye\": field-hockey 25-26 jv grade 10 (all-league list). \"Keira Faye\": field-hockey 26-27 varsity grade 11 (MaxPreps roster, overlay). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "los-gatos",
+      "name": "Mila Maletec",
+      "careerId": "rjb92gvk9abqa",
+      "basis": "One player. \"Mila Maletec\": field-hockey 25-26 jv grade 10 (all-league list). \"Mila Maletic\": field-hockey 26-27 varsity grade 11 (MaxPreps roster, overlay). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "los-gatos",
+      "name": "Scarlett Schaffer",
+      "careerId": "qq7vfb4roc5td",
+      "basis": "One player. \"Scarlett Schaffer\": field-hockey 25-26 jv grade 10 (all-league list). \"Scarlett Schafer\": field-hockey 26-27 varsity grade 11 (MaxPreps roster, overlay). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "lynbrook",
+      "name": "Wenhe (Angela) Zhang",
+      "careerId": "6taki56k1j6aa",
+      "basis": "One player. \"Wenhe (Angela) Zhang\": field-hockey 25-26 jv grade 11 (all-league list). \"Wenhe Zhang\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mission-hills",
+      "name": "Hana Terrell",
+      "careerId": "77npl5l3eqqm6",
+      "basis": "One player. \"Hana Terrell\": field-hockey 26-27 varsity #15 grade 10 (MaxPreps roster). \"Hana Tyrrell\": field-hockey 26-27 jv #5 grade 10 (MaxPreps JV roster). Same school, both class of 2029. MaxPreps' JV rosters list her as #5 in 25-26 (\"Hana Tyrell\", Fr.) and 26-27 (\"Hana Tyrrell\", So.); the varsity row \"Hana Terrell\" #15 So. was created on 2026-10-17, the day of a tournament, and has no stats, as a late call-up entered afresh would. No page lists both spellings side by side. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mitty",
+      "name": "Allie Imperato",
+      "careerId": "57ro2ijkoi444",
+      "basis": "One player. \"Allie Imperato\": field-hockey 25-26 varsity grade 12 (all-league list). \"Allison Imperato\": field-hockey 25-26 varsity #7 grade 12 (MaxPreps stat sheet). Same school, both class of 2026. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mitty",
+      "name": "Elle Navarrette",
+      "careerId": "kfrjphomtpc44",
+      "basis": "One player. \"Elle Navarrette\": field-hockey 25-26 jv grade 10 (all-league list). \"Eleanor Navarrette\": field-hockey 26-27 varsity #7 grade 11 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mitty",
+      "name": "Izzy Aguerria",
+      "careerId": "b11bod02pmq55",
+      "basis": "One player. \"Izzy Aguerria\": field-hockey 25-26 jv grade 10 (all-league list). \"Isabella Aguerria\": field-hockey 26-27 varsity #21 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "monta-vista",
+      "name": "Avantika Singh",
+      "careerId": "tbtdbk05hngtd",
+      "basis": "One player. \"Avantika Singh\": field-hockey 26-27 jv (school's JV list). \"Ava Singh\": field-hockey 26-27 jv #50 grade 10 (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. The school's JV roster (matadorathletics.org, 12 names) and MaxPreps' (12) match one to one on the other 11 players; each lists exactly one Singh. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "monta-vista",
+      "name": "Navya C. Kari",
+      "careerId": "7frat1ejtshg0",
+      "basis": "One player. \"Navya C. Kari\": field-hockey 26-27 jv (school's JV list). \"Navya Kari\": field-hockey 26-27 jv #32 grade 10 (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "monta-vista",
+      "name": "Seraphima Jenssen",
+      "careerId": "8sceag0j4nln7",
+      "basis": "One player. \"Seraphima Jenssen\": field-hockey 25-26 jv grade 10 (all-league list). \"Seraphima (Phima) Jenssen\": field-hockey 26-27 varsity #11 grade 11 (MaxPreps roster, MaxPreps stat sheet, overlay). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "monta-vista",
+      "name": "Shruti Shiv Mishra",
+      "careerId": "ea5msdh5uji44",
+      "basis": "One player. \"Shruti Shiv Mishra\": field-hockey 26-27 jv (school's JV list). \"Shruti Mishra\": field-hockey 26-27 jv #21 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "monta-vista",
+      "name": "Surya Vamsini Senthilkumar",
+      "careerId": "50v3mr0iotnrb",
+      "basis": "One player. \"Surya Vamsini Senthilkumar\": field-hockey 26-27 jv (school's JV list). \"Surya Senthilkumar\": field-hockey 26-27 jv #22 grade 11 (MaxPreps JV roster). Same school, class of 2028 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "palo-alto",
+      "name": "Hannah Neibuhr",
+      "careerId": "d3k9jonqu6np9",
+      "basis": "One player. \"Hannah Neibuhr\": field-hockey 25-26 varsity grade 11 (all-league list). \"Hannah Niebuhr\": field-hockey 25-26 varsity #8 grade 11 (MaxPreps stat sheet); field-hockey 26-27 varsity #8 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "palo-alto",
+      "name": "Peri Tepper",
+      "careerId": "l80op1j58guvf",
+      "basis": "One player. \"Peri Tepper\": field-hockey 26-27 jv #8 grade 9 (school's JV list). \"Peri Teper\": field-hockey 26-27 jv #8 grade 9 (MaxPreps JV roster). Same school, both class of 2030, both #8. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "poway",
+      "name": "Dylan Nicholas",
+      "careerId": "3bi2vlsf3rovf",
+      "basis": "One player. \"Dylan Nicholas\": field-hockey 25-26 varsity #2 grade 11 (MaxPreps stat sheet). \"Dylan-Marie Nicholas\": field-hockey 26-27 varsity #6 grade 12 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "redwood",
+      "name": "Ellie Washing",
+      "careerId": "ep06vks2243g0",
+      "basis": "One player. \"Ellie Washing\": field-hockey 25-26 varsity #11 grade 11 (MaxPreps stat sheet). \"Eleanor Washing\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, MaxPreps stat sheet, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "redwood",
+      "name": "Maggie Schwartz",
+      "careerId": "fnababv14m6p9",
+      "basis": "One player. \"Maggie Schwartz\": field-hockey 25-26 varsity #21 grade 11 (MaxPreps stat sheet). \"Margaret Schwartz\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "sage-creek",
+      "name": "Alexandra MacFreier",
+      "careerId": "27icep5tb5ol5",
+      "basis": "One player. \"Alexandra MacFreier\": field-hockey 26-27 jv (school's JV list). \"Alexandra McFreier\": field-hockey 26-27 jv grade 11 (MaxPreps JV roster). Same school, class of 2028 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "sage-creek",
+      "name": "Jackelyn Trifilo",
+      "careerId": "udnrkrlev0qg0",
+      "basis": "One player. \"Jackelyn Trifilo\": field-hockey 26-27 jv (school's JV list). \"Jackie Trifilo\": field-hockey 26-27 jv #13 grade 10 (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "sage-creek",
+      "name": "Katherine \"Kate\" Barsily",
+      "careerId": "044724kb6m1j3",
+      "basis": "One player. \"Katherine \"Kate\" Barsily\": field-hockey 26-27 jv (school's JV list). \"Kate Barsily\": field-hockey 26-27 jv #6 grade 10 (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "sage-creek",
+      "name": "Madeleine Grimsley",
+      "careerId": "r58qlueooc9h1",
+      "basis": "One player. \"Madeleine Grimsley\": field-hockey 26-27 jv (school's JV list). \"Maddie Grimsley\": field-hockey 26-27 varsity #26 grade 9 (MaxPreps roster); field-hockey 26-27 jv #16 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "sage-creek",
+      "name": "Skye Bohannon",
+      "careerId": "urg7likbn1a88",
+      "basis": "One player. \"Skye Bohannon\": field-hockey 25-26 varsity #0 grade 9 (MaxPreps stat sheet). \"Skylar Bohannon\": field-hockey 26-27 jv grade 11 (MaxPreps JV roster, school's JV list). Same school, classes of 2029 and 2028. MaxPreps' career page for Skye Bohannon says class of 2028, goalkeeper, with JV seasons in 24-25 and 25-26; Skylar Bohannon on the 26-27 JV roster is a junior, class of 2028, goalkeeper. The \"Fr.\" on the 25-26 varsity sheet contradicts her own career page. A twin cannot be excluded; nothing suggests one. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "saint-francis",
+      "name": "Katherine Tsiagkas",
+      "careerId": "j39viq8jrhtg0",
+      "basis": "One player. \"Katherine Tsiagkas\": field-hockey 25-26 varsity grade 11 (all-league list). \"Katie Tsiagkas\": field-hockey 26-27 varsity #11 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "saint-francis",
+      "name": "Neha Silvamurthy",
+      "careerId": "bbltg3ijdh9n7",
+      "basis": "One player. \"Neha Silvamurthy\": field-hockey 25-26 jv grade 10 (all-league list). \"Neha Sivamurthy\": field-hockey 26-27 varsity #17 grade 11 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "santa-clara",
+      "name": "Alva Kerely",
+      "careerId": "icafbtvji9c44",
+      "basis": "One player. \"Alva Kerely\": field-hockey 25-26 varsity grade 12 (all-league list). \"Alva Kerley\": field-hockey 25-26 varsity grade 12 (MaxPreps stat sheet); soccer 25-26 varsity #15 grade 12 (MaxPreps stat sheet). Same school, both class of 2026. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "santa-clara",
+      "name": "Bintu Dean",
+      "careerId": "qiq19nv3vtqn7",
+      "basis": "One player. \"Bintu Dean\": field-hockey 25-26 varsity #17 grade 10 (MaxPreps stat sheet). \"Bintu Deen\": field-hockey 26-27 varsity grade 11 (MaxPreps roster, MaxPreps stat sheet, overlay, recruiting profile). Same school, both class of 2028. One Bintu on each MaxPreps roster, #17 So. in 25-26 and Jr. in 26-27; the league's track finals results of 2026-05-01 list \"Bintu Deen 10 Santa Clara\", which is the same class and the better-supported spelling. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "santa-clara",
+      "name": "Sora Pham",
+      "careerId": "ibv8nqgn8nqh1",
+      "basis": "One player. \"Sora Pham\": field-hockey 25-26 varsity grade 12 (all-league list). \"Sora Pham\": soccer 25-26 varsity #0 grade 12 (MaxPreps stat sheet). Same school, both class of 2026. MaxPreps' one career record for her (class of 2026) covers varsity girls soccer 2025-26 (#0, goalkeeper) and varsity field hockey 2025 (#8); both team rosters link it. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Abby Martin",
+      "careerId": "ugpq9l5gjrp99",
+      "basis": "One player. \"Abby Martin\": field-hockey 25-26 varsity #GK grade 11 (MaxPreps stat sheet). \"Abigail Martin\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, MaxPreps stat sheet, overlay). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Adalynn Babka",
+      "careerId": "tgrvtcqp0hf22",
+      "basis": "One player. \"Adalynn Babka\": field-hockey 26-27 jv (school's JV list). \"Adalynn (Addy) Babka\": field-hockey 26-27 jv #2 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Cj Bulatao",
+      "careerId": "m0fc09akf57aa",
+      "basis": "One player. \"Cj Bulatao\": field-hockey 25-26 varsity #8 grade 11 (MaxPreps stat sheet). \"Camille (cj) Bulatao\": field-hockey 26-27 varsity (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, class of 2027 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Eliana Aldana",
+      "careerId": "u039jl1pehm99",
+      "basis": "One player. \"Eliana Aldana\": field-hockey 26-27 jv (school's JV list). \"Eliana (Ellie) Aldana\": field-hockey 26-27 jv #3 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Katherine Todd",
+      "careerId": "qgu0t401j1gaa",
+      "basis": "One player. \"Katherine Todd\": field-hockey 26-27 jv (school's JV list). \"Katie Todd\": field-hockey 26-27 jv #20 grade 10 (MaxPreps JV roster, recruiting profile). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Navneen Wimmer",
+      "careerId": "2qfuujippghvf",
+      "basis": "One player. \"Navneen Wimmer\": field-hockey 26-27 jv (school's JV list). \"Nina Wimmer\": field-hockey 26-27 jv #11 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. The school's JV roster (srfalcons.org, 13 names) and MaxPreps' (14) match one to one on the other 12 players, MaxPreps using short forms throughout (Katie for Katherine, Addy, Ellie); each lists exactly one Wimmer. Simran Wimmer, on varsity, is somebody else. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "scripps-ranch",
+      "name": "Sammy Ippolito",
+      "careerId": "c84pg6g24ofo8",
+      "basis": "One player. \"Sammy Ippolito\": field-hockey 25-26 varsity #1 grade 11 (MaxPreps stat sheet). \"Samantha Ippolito\": field-hockey 26-27 varsity grade 12 (MaxPreps roster, MaxPreps stat sheet, overlay, recruiting profile). Same school, both class of 2027. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "st-ignatius",
+      "name": "Caityln Hughes",
+      "careerId": "7anehbc8974dd",
+      "basis": "One player. \"Caityln Hughes\": field-hockey 25-26 varsity grade 10 (all-league list). \"Caitlyn Hughes\": field-hockey 25-26 varsity #12 grade 10 (MaxPreps stat sheet); field-hockey 26-27 varsity #12 grade 11 (MaxPreps roster, MaxPreps stat sheet, overlay, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "st-ignatius",
+      "name": "Sam Brunsell",
+      "careerId": "h3togds7qoki2",
+      "basis": "One player. \"Sam Brunsell\": field-hockey 25-26 jv grade 10 (all-league list). \"Samantha Brunsell\": field-hockey 26-27 varsity #15 grade 11 (MaxPreps roster, overlay, recruiting profile). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "stevenson",
+      "name": "Ella Bradford",
+      "careerId": "0q9d75i9acqbb",
+      "basis": "One player. \"Ella Bradford\": field-hockey 25-26 varsity #13 grade 10 (MaxPreps stat sheet). \"Ella Bradfrd\": field-hockey 26-27 varsity #4 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "university-city",
+      "name": "Sloan Dietrich",
+      "careerId": "q6nfnn4s9m166",
+      "basis": "One player. \"Sloan Dietrich\": field-hockey 26-27 jv (school's JV list). \"Sloane Dietrich\": field-hockey 26-27 jv #12 grade 9 (MaxPreps JV roster). Same school, class of 2030 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Addison Paradiso",
+      "careerId": "qq40o2nl80100",
+      "basis": "One player. \"Addison Paradiso\": field-hockey 25-26 varsity #24 grade 11 (MaxPreps stat sheet). \"Addy Paradiso\": field-hockey 26-27 varsity #24 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027, both #24. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Giuliana Borello",
+      "careerId": "0m3unn7lofh88",
+      "basis": "One player. \"Giuliana Borello\": field-hockey 25-26 varsity grade 10 (all-league list). \"GiGi Borello\": field-hockey 26-27 varsity #6 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028. The school's own rosters (gowarriors.net) list #6 Giuliana Borello, So., in 2025 and #6 Gigi Borello, Jr., in 2026, the only Borello in 2025; the other Borello in 2026 is a freshman, #25. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Giuliana Gigi Borello",
+      "careerId": "0m3unn7lofh88",
+      "basis": "One player. \"Giuliana Gigi Borello\": field-hockey 25-26 varsity #6 grade 10 (MaxPreps stat sheet). \"GiGi Borello\": field-hockey 26-27 varsity #6 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028, both #6. The school's own rosters (gowarriors.net) list #6 Giuliana Borello, So., in 2025 and #6 Gigi Borello, Jr., in 2026; MaxPreps' 25-26 roster prints \"Giuliana (GiGi) Borello\". Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "valley-christian",
+      "name": "Melody Gonzales",
+      "careerId": "j3fvf9a6ssfdd",
+      "basis": "One player. \"Melody Gonzales\": field-hockey 25-26 varsity #22 grade 10 (MaxPreps stat sheet). \"Mel Gonzales\": field-hockey 26-27 varsity #22 grade 11 (MaxPreps roster, MaxPreps stat sheet). Same school, both class of 2028, both #22. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "westview",
+      "name": "Eva Velasquez",
+      "careerId": "luidt115gnaee",
+      "basis": "One player. \"Eva Velasquez\": field-hockey 26-27 varsity #48 grade 11 (MaxPreps roster, MaxPreps stat sheet). \"Eva Velazquez\": field-hockey 25-26 varsity #48 grade 10 (MaxPreps stat sheet); field-hockey 26-27 jv grade 11 (MaxPreps JV roster). Same school, both class of 2028, both #48. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "gilroy",
+      "name": "Hailey Moncada",
+      "careerId": "ulbmg0hipnum6",
+      "basis": "One player. \"Hailey Moncada\": soccer 25-26 varsity #9 grade 11 (MaxPreps stat sheet). \"Hailey Moncada\": field-hockey 25-26 varsity #14 grade 11 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #14 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027. MaxPreps' field hockey career page (class of 2027, #14) also lists varsity soccer #9; her NCSA field hockey profile names Gilroy High School and soccer as a second sport; BVAL's all-league documents name her in both sports. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "gilroy",
+      "name": "Lea Kim",
+      "careerId": "12jln57iqrim6",
+      "basis": "One player. \"Lea Kim\": soccer 25-26 varsity #5 grade 11 (MaxPreps stat sheet). \"Lea Kim\": field-hockey 25-26 varsity #10 grade 11 (MaxPreps stat sheet, all-league list); field-hockey 26-27 varsity #10 grade 12 (MaxPreps roster, MaxPreps stat sheet, recruiting profile). Same school, both class of 2027. MaxPreps keeps two career records, but the field hockey one's own bio reads \"Field Hockey Goalkeeper. Soccer Forward\"; both are class of 2027 and each roster has one Lea Kim. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "gunn",
+      "name": "Maleia Griffen",
+      "careerId": "gmr25gg0hhii2",
+      "basis": "One player. \"Maleia Griffen\": soccer 25-26 jv grade 9 (all-league list). \"Maleia Griffin\": soccer 26-27 jv (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "gunn",
+      "name": "Mitchelle Tchoub",
+      "careerId": "6p5o5j1nlbnl5",
+      "basis": "One player. \"Mitchelle Tchoub\": soccer 25-26 jv grade 9 (all-league list). \"Michelle Tchoub\": soccer 26-27 jv (MaxPreps JV roster). Same school, class of 2029 on the one record that gives a class. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "homestead",
+      "name": "Hailey Cutler",
+      "careerId": "pu6kmccd73j00",
+      "basis": "One player. \"Hailey Cutler\": soccer 25-26 jv grade 10 (all-league list). \"Hailey Cutler\": field-hockey 26-27 varsity grade 11 (MaxPreps roster, overlay). Same school, both class of 2028. MaxPreps' one career record for her lists both field hockey (varsity 2026, JV 2024) and girls soccer (JV 2024-25). Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "los-altos",
+      "name": "Mia Jones",
+      "careerId": "e3f8q5pug4ksc",
+      "basis": "One player. \"Mia Jones\": soccer 25-26 jv grade 9 (all-league list). \"Mia Jones\": field-hockey 26-27 varsity grade 10 (MaxPreps roster, overlay). Same school, both class of 2029. MaxPreps' one career record for her lists varsity field hockey 2026 and JV girls soccer 2025-26 (#14, with game stats). A common name, and this rests on MaxPreps' own linkage alone; no sign of a second Mia Jones at the school. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "macdonald",
+      "name": "Eliliyah Delp",
+      "careerId": "gu05i00etsgtd",
+      "basis": "One player. \"Eliliyah Delp\": soccer 25-26 jv grade 10 (all-league list). \"Eliyah Delp\": soccer 26-27 jv grade 11 (MaxPreps JV roster). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "milpitas",
+      "name": "Eliseadrienne Tayaba",
+      "careerId": "dk4d67bs6ijqa",
+      "basis": "One player. \"Eliseadrienne Tayaba\": soccer 25-26 varsity #3 (MaxPreps stat sheet). \"Elise Tayaba\": soccer 25-26 varsity #3 grade 12 (MaxPreps stat sheet, all-league list). Same school, class of 2026 on the one record that gives a class, both #3. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "milpitas",
+      "name": "Kayla Sujin Cho",
+      "careerId": "uf6pffv3esb11",
+      "basis": "One player. \"Kayla Sujin Cho\": soccer 25-26 varsity #6 (MaxPreps stat sheet). \"Kayla Cho\": soccer 25-26 varsity #6 grade 11 (MaxPreps stat sheet). Same school, class of 2027 on the one record that gives a class, both #6. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "milpitas",
+      "name": "Madeline Garrison",
+      "careerId": "jde3koeehondd",
+      "basis": "One player. \"Madeline Garrison\": soccer 25-26 varsity #11 (MaxPreps stat sheet). \"Maddie Garrison\": soccer 25-26 varsity #11 grade 11 (MaxPreps stat sheet). Same school, class of 2027 on the one record that gives a class, both #11. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "milpitas",
+      "name": "Maya Corielle",
+      "careerId": "c8f5to5p0if00",
+      "basis": "One player. \"Maya Corielle\": soccer 25-26 varsity #1 grade 10 (MaxPreps stat sheet). \"Maya Coriell\": soccer 25-26 varsity #1 grade 10 (MaxPreps stat sheet, all-league list). Same school, both class of 2028, both #1. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "monta-vista",
+      "name": "Lily Ann Frefel",
+      "careerId": "r3a6rljs7om55",
+      "basis": "One player. \"Lily Ann Frefel\": soccer 26-27 varsity #9 (MaxPreps roster); soccer 26-27 jv #9 (MaxPreps JV roster). \"Lily Frefel\": soccer 25-26 varsity #9 grade 9 (MaxPreps stat sheet); soccer 26-27 varsity #9 grade 10 (MaxPreps roster). Same school, class of 2029 on the one record that gives a class, both #9. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "monta-vista",
+      "name": "Styliani Kougiouris",
+      "careerId": "o3bi1omv4unk4",
+      "basis": "One player. \"Styliani Kougiouris\": soccer 26-27 varsity #19 (MaxPreps roster); soccer 26-27 jv #19 (MaxPreps JV roster). \"Stella Kougiouris\": soccer 25-26 varsity #19 grade 9 (MaxPreps stat sheet); soccer 26-27 varsity #19 grade 10 (MaxPreps roster). Same school, class of 2029 on the one record that gives a class, both #19. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "saratoga",
+      "name": "Sienna Sordello",
+      "careerId": "5jtoels6r88bb",
+      "basis": "One player. \"Sienna Sordello\": soccer 25-26 varsity grade 10 (all-league list). \"Siena Sordello\": soccer 25-26 varsity #12 grade 10 (MaxPreps stat sheet). Same school, both class of 2028. No other player of the team has either name. Decided 2026-11-14."
+    },
+    {
+      "sport": "soccer",
+      "team": "wilcox",
+      "name": "Breanna Plancarte",
+      "careerId": "bt6bkdtjnpt99",
+      "basis": "One player. \"Breanna Plancarte\": soccer 25-26 varsity grade 12 (all-league list). \"Breanna Plancarte Medina\": soccer 25-26 varsity #4 grade 12 (MaxPreps stat sheet). Same school, both class of 2026. No other player of the team has either name. Decided 2026-11-14."
+    }
+  ],
   "rowSplits": [
     {
       "sport": "field-hockey",
@@ -14,5 +603,25 @@
       "basis": "MaxPreps files two Leigh rows under career k2kl80co8kck4 (read 2026-11-13): the varsity roster's Adriana Yam (#43, grade 10, row created 2026-08-26, career link .../athletes/adriana-yam/) and the JV roster's Ayva Garcia (#44, grade 10, row created 2026-09-16, career link .../athletes/ayva-garcia/). The two names share nothing, so they are read as two players. The career stays with the varsity row, which was created first; that choice is a convention, not a finding."
     }
   ],
-  "distinct": []
+  "distinct": [],
+  "notSame": [
+    {
+      "sport": "field-hockey",
+      "team": "mission-vista",
+      "names": [
+        "Jaili Benitez",
+        "Jarenuvi Benitez"
+      ],
+      "basis": "Two people. MaxPreps' career page for Jarenuvi Benitez says \"Graduated 2026\" (varsity 24-25 and 25-26, a senior); Jaili Benitez was added to the 26-27 roster on 2026-08-15 and has fall 2026 stats. A 2026 graduate is not playing in fall 2026. Read 2026-11-14."
+    },
+    {
+      "sport": "field-hockey",
+      "team": "mt-carmel",
+      "names": [
+        "Abigail Teuben",
+        "Audrey Teuben"
+      ],
+      "basis": "Two people. Audrey Teuben was a senior on Mt. Carmel's 25-26 varsity (#10) and is not on its 26-27 roster; Abigail Teuben is on the school's own 26-27 JV list. A 2025 senior is not on a 2026 JV team. Read 2026-11-14."
+    }
+  ]
 }

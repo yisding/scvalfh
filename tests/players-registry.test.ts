@@ -27,7 +27,7 @@ import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/regi
 import { SPORT_IDS } from '../lib/sports/current';
 import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
 
-const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [] };
+const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [] };
 
 /** A roster-row sighting: field hockey, 26-27, varsity unless said otherwise. */
 function row(over: Partial<Sighting> & { name: string; obs?: Partial<Observation> }): Sighting {
@@ -719,6 +719,24 @@ describe('what the reviewers broke', () => {
     }
   });
 
+  it('a join can be undone before a rollover by deleting its entry, and after one from the registry as it was', () => {
+    const rows = [stat('Addison Paradiso', 'c1', { season: '25-26' }, { jersey: '24' }), row({ name: 'Addy Paradiso', careerIds: ['c2'], obs: { jersey: '24' } })];
+    const identity: PlayerIdentity = { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Addy Paradiso', careerId: 'c1', basis: 'same number' }] };
+    const apart = build(rows);
+    const joined = build(rows, { previous: apart, identity });
+    expect(joined.players).toHaveLength(1);
+    // Before the rollover: delete the entry, rebuild, and each record has its id back.
+    expect(build(rows, { previous: joined }).players).toEqual(apart.players);
+    // After it, both seasons are only carried forward and the record stays whole…
+    const nextYear = [row({ name: 'Zed New', careerIds: ['c9'], season: '27-28' })];
+    const rolled = build(nextYear, { previous: joined, identity });
+    expect(build(nextYear, { previous: rolled }).players).toHaveLength(2);
+    // …unless the build starts again from the registry as it was before the join.
+    const recovered = build(nextYear, { previous: apart });
+    expect(recovered.players).toHaveLength(3);
+    expect(recovered.players.filter((p) => p.name !== 'Zed New')).toEqual(apart.players);
+  });
+
   it('look-alikes are listed whoever they are, unless one list names both', () => {
     const file = build([
       // Last year's career and this year's, the same number: one player, probably.
@@ -748,6 +766,49 @@ describe('what the reviewers broke', () => {
       'same-name-other-sport: Lea Kim',
     ]);
     expect(file.review.find((r) => r.names.includes('Addy Paradiso'))?.note).toMatch(/both wear #24/);
+  });
+
+  it('a pair a person has said is two people is no longer listed, in one sport or across two', () => {
+    const rows = [
+      stat('Audrey Teuben', 'c1', { season: '25-26' }, { grade: 12 }),
+      jv('Abigail Teuben'),
+      row({ name: 'Lea Kim', careerIds: ['c8'], obs: { grade: 12 } }),
+      row({ name: 'Lea Kim', careerIds: ['c9'], sport: 'soccer', obs: { grade: 12 } }),
+    ];
+    expect(build(rows).review.map((r) => r.kind).sort()).toEqual(['possible-match', 'same-name-other-sport']);
+    const settled = build(rows, {
+      identity: {
+        ...NO_IDENTITY,
+        notSame: [
+          { sport: 'field-hockey', team: 'alpha', names: ['Abigail Teuben', 'Audrey Teuben'], basis: 'sisters' },
+          { sport: 'field-hockey', team: 'alpha', names: ['Lea Kim', 'Lea Kim'], basis: 'namesakes' },
+        ],
+      },
+    });
+    expect(settled.review).toEqual([]);
+    expect(settled.players).toHaveLength(4);
+    // A decision about one sport's team says nothing about the same two names in another sport.
+    const elsewhere = build(rows, { identity: { ...NO_IDENTITY, notSame: [{ sport: 'soccer', team: 'alpha', names: ['Abigail Teuben', 'Audrey Teuben'], basis: 'other girls' }] } });
+    expect(elsewhere.review.map((r) => r.kind).sort()).toEqual(['possible-match', 'same-name-other-sport']);
+    // The answer also clears an item carried forward from a season no build reads any more.
+    const before = build(rows);
+    const carried = buildRegistry({ previous: before, identity: NO_IDENTITY, built: [], sightings: [], builtBy: 'test' });
+    expect(carried.review).toHaveLength(2);
+    const answered = buildRegistry({
+      previous: before,
+      built: [],
+      sightings: [],
+      builtBy: 'test',
+      identity: {
+        ...NO_IDENTITY,
+        notSame: [
+          { sport: 'field-hockey', team: 'alpha', names: ['Audrey Teuben', 'Abigail Teuben'], basis: 'sisters' },
+          { sport: 'field-hockey', team: 'alpha', names: ['Lea Kim', 'Lea Kim'], basis: 'namesakes' },
+        ],
+      },
+    });
+    expect(answered.review).toEqual([]);
+    expect(answered.players).toEqual(before.players);
   });
 
   it('review items about seasons a build no longer reads are kept', () => {

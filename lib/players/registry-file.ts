@@ -59,7 +59,7 @@ export function readPlayersFile(root: string): PlayersFile | null {
 }
 
 export function readPlayerIdentity(root: string): PlayerIdentity {
-  return readJson(root, PLAYER_IDENTITY_FILE, PlayerIdentitySchema) ?? { notes: [], sameAs: [], rowSplits: [], distinct: [] };
+  return readJson(root, PLAYER_IDENTITY_FILE, PlayerIdentitySchema) ?? { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [] };
 }
 
 /** The sources only a season's live files carry: a past season that has them was seen live. */

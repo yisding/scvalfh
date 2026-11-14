@@ -844,16 +844,36 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     idOf.set(d, keep.id);
     formerOf.set(d, new Set([...keep.formerIds, ...rest.flatMap((p) => [p.id, ...p.formerIds])]));
   }
+  // A player split back out of a merged record takes back the id she was founded under. She was part
+  // of that record if it held one of her rows (the same statement in the same stint) or one of her
+  // identifiers; a namesake who merely hashes to the same id was not, and gets a new one.
+  const sayKey = (st: Stint, o: Observation) => `${st.season} ${st.sport} ${st.team} ${st.level} ${JSON.stringify(o, Object.keys(o).sort())}`;
+  const heldBy = new Map<string, Set<string>>();
+  for (const p of prevPlayers) {
+    for (const st of p.stints) for (const o of st.observations) heldBy.set(sayKey(st, o), (heldBy.get(sayKey(st, o)) ?? new Set()).add(p.id));
+  }
+  const wasPartOf = (d: Draft, p: Player) =>
+    p.identifiers.some((i) => d.primary.includes(identifierKey(i))) || d.stints.some((st) => st.observations.some((o) => heldBy.get(sayKey(st, o))?.has(p.id)));
   for (const d of drafts) {
     if (idOf.has(d)) continue;
-    // A player split back out of a merged record takes back the id she was founded under.
     const natural = hashId(d.primary[0], 0);
-    const holder = [...formerOf].find(([, former]) => former.has(natural));
-    const splitFrom = prevPlayers.some((p) => p.formerIds.includes(natural) && p.identifiers.some((i) => d.primary.includes(identifierKey(i))));
-    if (holder && splitFrom) {
-      holder[1].delete(natural);
-      idOf.set(d, natural);
-      continue;
+    const source = prevPlayers.find((p) => (p.id === natural || p.formerIds.includes(natural)) && wasPartOf(d, p));
+    const holder = source ? heirOf.get(source.id) : undefined;
+    if (source && holder && holder !== d) {
+      const former = formerOf.get(holder) as Set<string>;
+      if (former.has(natural)) {
+        former.delete(natural);
+        idOf.set(d, natural);
+        continue;
+      }
+      // The record that stays has been living under her id: it goes back to its own, if it has one.
+      const own = hashId(holder.primary[0], 0);
+      if (idOf.get(holder) === natural && former.has(own)) {
+        former.delete(own);
+        idOf.set(holder, own);
+        idOf.set(d, natural);
+        continue;
+      }
     }
     const id = mintId(d.primary[0], taken);
     taken.add(id);
@@ -864,8 +884,13 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   // A stint a previous build held for a pair this build reads in full, and that no source lists any
   // more, is kept as it was and marked `gone`. A player with nothing else left is kept whole.
   const stintKey = (s: Stint) => `${s.season} ${s.sport} ${s.team} ${s.level}`;
+  // A stint whose rows are still in the sources, on whichever record, is not lost: when a join is
+  // undone the stint goes back to the other player, it does not vanish.
+  // (Keys in one order: the previous file's are sorted, a fresh row's are not.)
+  const said = (o: Observation) => JSON.stringify(o, Object.keys(o).sort());
+  const stillListed = new Set(drafts.flatMap((d) => d.stints.flatMap((s) => s.observations.map((o) => `${stintKey(s)} ${said(o)}`))));
   for (const p of prevPlayers) {
-    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season));
+    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season) && !s.observations.some((o) => stillListed.has(`${stintKey(s)} ${said(o)}`)));
     if (lost.length === 0) continue;
     const heir = heirOf.get(p.id);
     if (heir) {
@@ -964,13 +989,18 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const ids = [...new Set(rows.map(idOfRow))];
     return { ...r, seasons: [...new Set(rows.flatMap((i) => (members.get(clusters.find(i)) as number[]).map((j) => all[j].season)))].sort(), players: ids };
   });
-  review.push(...lookAlikes(players, seasonsOf));
+  const settledPairs = settledBy(identity);
+  review.push(...lookAlikes(players, seasonsOf, settledPairs));
   // An item about seasons this build did not read cannot be found again: it is kept, for the players still here.
   const sameItem = (a: ReviewItem, b: ReviewItem) => a.kind === b.kind && a.sport === b.sport && a.team === b.team && [...a.names].sort().join('|') === [...b.names].sort().join('|');
   const nowId = new Map(players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p.id] as const)));
   for (const old of previous?.review ?? []) {
     if (old.seasons.every((season) => fullyBuilt(old.sport, season))) continue;
     if (review.some((r) => sameItem(r, old))) continue;
+    // A pair a person has since said is two people is settled, whichever season it was found in.
+    const pairKinds: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport'];
+    const [first, second = first] = old.names;
+    if (pairKinds.includes(old.kind) && settledPairs.has(settledKey(old.kind === 'possible-match' ? old.sport : null, old.team, first, second))) continue;
     const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
     // Two players since found to be one, or gone: nothing left to decide.
     if (ids.length !== new Set(old.players).size) continue;
@@ -1001,6 +1031,22 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   return checked.data;
 }
 
+/**
+ * The key a `notSame` decision is found by. Two different names are a pair inside one sport's team,
+ * so the sport is part of it; one name twice is the same name at one school in two sports, so it is
+ * not (`sport` null).
+ */
+function settledKey(sport: SportId | null, team: string, a: string, b: string): string {
+  return `${sport ?? '*'} ${team} ${[nameKey(a), nameKey(b)].sort().join(' ')}`;
+}
+
+/** Every pair a person has said is two people, under both keys it can be asked by. */
+function settledBy(identity: PlayerIdentity): Set<string> {
+  return new Set(
+    identity.notSame.map((e) => settledKey(nameKey(e.names[0]) === nameKey(e.names[1]) ? null : e.sport, e.team, e.names[0], e.names[1])),
+  );
+}
+
 /** The class years a player's accepted observations imply. */
 function classYearsOf(p: Player): Set<number> {
   return new Set(classClaims(p.stints).flatMap((c) => (c.rejected ? [] : [c.classOf])));
@@ -1014,8 +1060,10 @@ function classYearsOf(p: Player): Set<number> {
  * two people unless they wear the same number there, so those are left out: sisters are not a
  * question.
  */
-function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[]): ReviewItem[] {
+function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[], settled: ReadonlySet<string>): ReviewItem[] {
   const out: ReviewItem[] = [];
+  const isSettled = (sport: SportId | null, team: string, a: Player, b: Player) =>
+    a.names.some((x) => b.names.some((y) => settled.has(settledKey(sport, team, x, y))));
   const gap = (a: Player, b: Player) => {
     let g = 0;
     for (const x of classYearsOf(a)) for (const y of classYearsOf(b)) g = Math.max(g, Math.abs(x - y));
@@ -1044,7 +1092,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const keysA = new Set(fullOf(a).map(nameKey));
         if (fullOf(b).some((y) => keysA.has(nameKey(y)))) continue;
         const pair = fullOf(a).flatMap((x) => fullOf(b).map((y) => [x, y] as const)).find(([x, y]) => namesLookAlike(x, y));
-        if (!pair || gap(a, b) > 1) continue;
+        if (!pair || gap(a, b) > 1 || isSettled(sport, team, a, b)) continue;
         const [la, lb] = [lists(a, sport, team), lists(b, sport, team)];
         const together = [...la.keys()].filter((k) => lb.has(k));
         const sameNumber = together.some((k) => la.get(k) !== undefined && la.get(k) === lb.get(k));
@@ -1075,7 +1123,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const team = k.slice(0, k.indexOf(' '));
         const sportsA = new Set(a.stints.filter((s) => s.team === team).map((s) => s.sport));
         const sportsB = new Set(b.stints.filter((s) => s.team === team).map((s) => s.sport));
-        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1) continue;
+        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1 || isSettled(null, team, a, b)) continue;
         out.push({
           kind: 'same-name-other-sport',
           sport: [...sportsA].sort()[0],
