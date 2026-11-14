@@ -87,6 +87,8 @@ export function bracketRounds(division: BracketDivisionView, anchorPrefix?: stri
     name: round.name,
     dateLabel: round.dateLabel,
     ties: round.cards.map((card) => tie(card, anchorPrefix)),
+    byes: round.byes,
+    extra: round.extra?.map((e) => ({ key: e.name, name: e.name, ties: e.cards.map((card) => tie(card, anchorPrefix)) })),
   }));
   const [first, second, ...rest] = rounds;
   if (rounds.length < 5 || !/^play-in$/i.test(first.name)) return rounds;
@@ -94,21 +96,11 @@ export function bracketRounds(division: BracketDivisionView, anchorPrefix?: stri
     ...t,
     note: [`${first.name}, ${first.dateLabel}`, t.note].filter(Boolean).join(', '),
   }));
-  return [{ ...second, ties: [...playIn, ...second.ties] }, ...rest];
+  return [{ ...second, ties: [...playIn, ...second.ties], byes: [first.byes, second.byes].filter(Boolean).join('; ') || null }, ...rest];
 }
 
 export function BracketView({ division, label, anchorPrefix }: BracketViewProps) {
-  const byes = division.rounds.filter((round) => round.byes !== null);
-  return (
-    <>
-      <Bracket rounds={bracketRounds(division, anchorPrefix)} label={label} />
-      {byes.map((round) => (
-        <p key={round.key} className="sx-note">
-          Byes: {round.byes}
-        </p>
-      ))}
-    </>
-  );
+  return <Bracket rounds={bracketRounds(division, anchorPrefix)} label={label} />;
 }
 
 /** A 2025 archive division (/history/2025-26), through the shared model. */

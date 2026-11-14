@@ -22,6 +22,10 @@ import BracketRounds from './BracketRounds';
  * (`.sx-tie-pair`; drawn only where a round has exactly twice the next round's cells). Below that one
  * round shows at a time, chosen with the tab row (BracketRounds.tsx, the only client code).
  *
+ * What hangs off a round and not off the tree is drawn under that round's cells (`.sx-round-foot`): the teams
+ * with a bye past it, and a placement game (third place, fifth place) under the final. So on a phone each shows
+ * with its own round's tab and nowhere else, and from 1024px it sits below its column.
+ *
  * A cell is one sentence for a screen reader; the drawn lines are hidden from it. A cell whose game
  * has a page is one link to it (an anchor cannot hold another, so its names are then plain text and
  * its extra links sit in the note row above the cell's link); without a game page a registry team's
@@ -51,7 +55,7 @@ export interface TieModel {
   time?: string | null;
   /** `live`: the period ('2nd half'), when the source gives one. */
   period?: string | null;
-  /** One line under the two: 'Overtime', 'at La Jolla HS'. */
+  /** One line under the two: 'Overtime', 'At La Jolla HS'. */
   note?: React.ReactNode;
   /** Links under the two lines (tickets, a stream): outside the cell's own link. */
   links?: React.ReactNode;
@@ -74,6 +78,13 @@ export interface BracketRoundModel {
   /** 'Sat Nov 7': after the name in the heading. */
   dateLabel?: string | null;
   ties: readonly TieModel[];
+  /**
+   * Games played beside this round that no line of the tree leads from ('Third place', 'Fifth place'), each
+   * under its own heading below the round's cells. They belong to the round: on a phone they show with its tab.
+   */
+  extra?: readonly { key: string; name: string; ties: readonly TieModel[] }[];
+  /** 'Davis, Pleasant Valley': the teams that skip this round, printed under its cells as "Byes: …". */
+  byes?: string | null;
 }
 
 export interface BracketProps {
@@ -187,7 +198,7 @@ export function Bracket({ rounds, label, className }: BracketProps) {
           return {
             key: round.key,
             tab: round.name,
-            ids: round.ties.flatMap((tie) => (tie.id ? [tie.id] : [])),
+            ids: [...round.ties, ...(round.extra ?? []).flatMap((e) => e.ties)].flatMap((tie) => (tie.id ? [tie.id] : [])),
             content: (
               <>
                 <h3>{round.dateLabel ? `${round.name}, ${round.dateLabel}` : round.name}</h3>
@@ -198,6 +209,18 @@ export function Bracket({ rounds, label, className }: BracketProps) {
                     dense={rounds.length >= 5}
                   />
                 </div>
+                {/* Under the round's cells, in a row of its own so the columns' cells stay level (.sx-round-foot). */}
+                {(round.extra && round.extra.length > 0) || round.byes ? (
+                  <div className="sx-round-foot">
+                    {(round.extra ?? []).map((extra) => (
+                      <section key={extra.key} aria-label={extra.name} className="sx-round-extra">
+                        <h4>{extra.name}</h4>
+                        <Ties ties={extra.ties} paired={false} dense={rounds.length >= 5} />
+                      </section>
+                    ))}
+                    {round.byes ? <p className="sx-note m-0">Byes: {round.byes}</p> : null}
+                  </div>
+                ) : null}
               </>
             ),
           };

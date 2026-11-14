@@ -178,7 +178,7 @@ function gameTie(game: TournamentGameView, idPrefix: string, id: string): TieMod
     return slug === display.home.slug ? display.home.glyph : slug === display.away.slug ? display.away.glyph : undefined;
   };
   const result = (side: 'home' | 'away') => (game.winner === null ? null : game.winner === side ? 'won' : 'lost');
-  const notes = [state === 'upcoming' && game.site ? `at ${game.site}` : null, game.note].filter(Boolean);
+  const notes = [state === 'upcoming' && game.site ? `At ${game.site}` : null, game.note].filter(Boolean);
   return {
     key: game.id,
     id: `${idPrefix}${id}`,

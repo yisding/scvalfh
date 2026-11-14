@@ -145,6 +145,12 @@ export interface OutsideTournamentConfig {
   /** One paragraph for /playoffs, the home card and a team's postseason line. Says it is not a CIF event. */
   note: string;
   sources: readonly { label: string; href: string }[];
+  /**
+   * The event as a bracket, where its games make one: each round's winners met in the next, so the tree is read
+   * off the results (no organizer publishes it, and no seed is printed). `basis` is the sentence under the
+   * bracket saying so. null lists the games by day instead.
+   */
+  bracket: { basis: string; games: readonly TournamentBracketGame[] } | null;
 }
 
 export interface DivisionConfig {
