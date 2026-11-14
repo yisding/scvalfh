@@ -300,17 +300,28 @@ export function withBoxOvertime(game: Game): Game {
   return game;
 }
 
+/** The game without a tally `unfoldShootout` read into it; the same object when its tally is recorded or absent. */
+function withoutReadTally(game: Game): Game {
+  if (!game.provenance.shootoutSource) return game;
+  const { shootoutSource: _read, ...provenance } = game.provenance;
+  void _read;
+  return { ...game, shootout: null, provenance };
+}
+
 /**
  * Step 4: on an 'SO' final with no tally, a second source's score that is the level score plus a tally (the
  * loser's side also raised: `readExcess` 'tally') becomes `shootout`, and `provenance.shootoutSource` says whose
  * score it was read from. Two sources that give different tallies give none. The published score stays the
  * goals in play.
  */
-export function unfoldShootout(game: Game): Game {
-  if (game.status !== 'final' || game.decider !== 'SO' || game.shootout !== null || game.home.score === null) return game;
+export function unfoldShootout(stored: Game): Game {
   // A cited correction is the record: no tally is read into it from another listing (Granite Hills 0, Hilltop 0 on
   // Oct 30: si.com's 2-1 there is the previous day's score copied across).
-  if (game.provenance.resultCorrection) return game;
+  if (stored.provenance.resultCorrection) return stored;
+  // A tally this step read on an earlier pass (`shootoutSource` marks it) is read again from today's evidence, so
+  // a source that changed its score, or dropped it, changes or drops the tally. A recorded tally is left alone.
+  const game = withoutReadTally(stored);
+  if (game.status !== 'final' || game.decider !== 'SO' || game.shootout !== null || game.home.score === null) return game;
   const winner = markedWinner(game);
   if (!winner) return game;
   const tallies = otherScores(game)
@@ -319,6 +330,12 @@ export function unfoldShootout(game: Game): Game {
   if (tallies.length === 0) return game;
   const [first] = tallies;
   if (tallies.some((t) => t.extra.home !== first.extra.home || t.extra.away !== first.extra.away)) return game;
+  const was = stored.provenance.shootoutSource;
+  const same =
+    was !== undefined && stored.shootout !== null &&
+    stored.shootout.home === first.extra.home && stored.shootout.away === first.extra.away &&
+    was.source === first.o.source && was.score.home === first.o.score.home && was.score.away === first.o.score.away;
+  if (same) return stored;
   return {
     ...game,
     shootout: first.extra,

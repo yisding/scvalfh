@@ -45,22 +45,29 @@ function statusOf(opponent: UnbeatenOpponent, fixed: boolean): string {
   return nothingLeft(fixed);
 }
 
+/** The record cell: blank before the first meeting. */
+function recordOf(opponent: UnbeatenOpponent): string {
+  return opponent.played === 0 ? '' : recordString(opponent.record);
+}
+
+/**
+ * The link's accessible name. It BEGINS with the row's visible text, word for word (name, record,
+ * status), so a voice-control user can say what they see (WCAG 2.5.3, axe label-content-name-mismatch),
+ * then adds what the short cells leave out: how many games the record covers, and where a meeting that
+ * exists only on the league's schedule comes from.
+ */
 function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string, fixed: boolean): string {
-  const played =
-    opponent.played === 0
-      ? 'not played yet'
-      : `${recordString(opponent.record)} in ${plural(opponent.played, 'game')}`;
-  const ahead =
-    opponent.nextDate !== null
-      ? `next meeting ${monthDay(opponent.nextDate)}`
-      : opponent.remaining > 0
-        ? `${opponent.remaining} still to play`
-        : opponent.nextFixtureDate !== null
-          ? `next meeting ${monthDay(opponent.nextFixtureDate)} on ${leagueShort}’s schedule`
-          : opponent.unreportedFixtures > 0
-            ? `${opponent.unreportedFixtures} scheduled per ${leagueShort} with no result reported`
-            : nothingLeft(fixed);
-  return `${opponent.name}: ${played}, ${ahead}`;
+  const shown = [opponent.shortName, recordOf(opponent), statusOf(opponent, fixed)].filter((part) => part !== '').join(' ');
+  const played = opponent.played === 0 ? 'not played yet' : `${plural(opponent.played, 'game')} played`;
+  const scheduleOnly =
+    opponent.nextDate !== null || opponent.remaining > 0
+      ? null
+      : opponent.nextFixtureDate !== null
+        ? `next meeting ${monthDay(opponent.nextFixtureDate)} on ${leagueShort}’s schedule`
+        : opponent.unreportedFixtures > 0
+          ? `${opponent.unreportedFixtures} scheduled per ${leagueShort} with no result reported`
+          : null;
+  return [shown, played, scheduleOnly].filter((part) => part !== null).join(', ');
 }
 
 function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOpponent; leagueShort: string; fixed: boolean }) {
@@ -79,9 +86,11 @@ function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOppon
           {team ? <TeamMonogram team={team} size={24} /> : null}
           <span>{opponent.shortName}</span>
         </span>
+        {/* The spaces between the cells are for the text a tool reads off the row ("Leigh 0-2-0 no games
+            left", which the accessible name begins with); a flex row lays out no whitespace. */}{' '}
         <span className="sx-num shrink-0 text-ink-2" aria-hidden="true">
-          {opponent.played === 0 ? '' : recordString(opponent.record)}
-        </span>
+          {recordOf(opponent)}
+        </span>{' '}
         {/* A fixed status column, so the records to its left end on one right edge down the list. */}
         <span className="w-[6.5rem] shrink-0 text-right text-cell text-ink-2" aria-hidden="true">
           {statusOf(opponent, fixed)}

@@ -850,7 +850,7 @@ function scoreNoteFor(
       if (evidence) notes.push(evidence);
     }
   }
-  if (display.kind === 'final' && game.decider !== 'SO' && evidence && (p.adjudicated || result?.certainty === 'disputed' || result?.certainty === 'confirmed') && !p.resultCorrection) {
+  if (display.kind === 'final' && game.decider !== 'SO' && evidence && (p.adjudicated || p.resultCorrection || result?.certainty === 'disputed' || result?.certainty === 'confirmed')) {
     // The sources differ on this score: which one is published, and why (lib/results/result.ts adjudicateScore).
     notes.push(p.adjudicated ? `${evidence} This site shows ${level}.` : evidence);
   }

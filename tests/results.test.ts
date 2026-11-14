@@ -121,6 +121,25 @@ describe('a second source’s score against a level score with the winner marked
     expect(g.shootout).toBeNull();
   });
 
+  // A tally read on an earlier pass follows its evidence (PR #127 review): finalizing a stored game again with a
+  // changed score re-reads the tally, and with the evidence gone the tally goes too. A recorded tally stays.
+  it('re-reads a tally it read before when the evidence changes or goes', () => {
+    const base = game({ home: 'vista', away: 'escondido', hs: 0, as: 0, results: MARKED_HOME });
+    const first = unfoldShootout(withSblive(base, 3, 2));
+    expect(first.shootout).toEqual({ home: 3, away: 2 });
+    expect(unfoldShootout(first), 'unchanged evidence: the same object').toBe(first);
+    const changed = unfoldShootout(withSblive(first, 5, 4));
+    expect(changed.shootout).toEqual({ home: 5, away: 4 });
+    expect(changed.provenance.shootoutSource).toEqual({ source: 'sblive', score: { home: 5, away: 4 } });
+    const { scoreConflict: _gone, ...bare } = first.provenance;
+    void _gone;
+    const dropped = unfoldShootout({ ...first, provenance: bare });
+    expect(dropped.shootout).toBeNull();
+    expect(dropped.provenance.shootoutSource).toBeUndefined();
+    const recorded = { ...withSblive(base, 5, 4), decider: 'SO' as const, shootout: { home: 3, away: 2 } };
+    expect(unfoldShootout(recorded), 'a recorded tally is not read over').toBe(recorded);
+  });
+
   // Westview 0, Poway 0 (Aug 22, a tournament), marked T and T: cifsshome.org records Westview 1-0.
   it('marks a result disputed when another source names a different outcome', () => {
     const tie = game({ home: 'westview', away: 'poway', hs: 0, as: 0, league: false, contestTypes: { home: 2, away: 2 } });
@@ -413,4 +432,13 @@ describe('the committed snapshot, as the loader records it', () => {
       if (g?.status === 'final') expect(g.provenance.resultCorrection, id).toBeDefined();
     }
   });
+});
+
+describe('a corrected score that is not a shootout says where it is from (PR #127 review)', () => {
+  it('prints the correction’s source on the game page', async () => {
+    const { buildGameView } = await import('../components/game/game-view');
+    // Olympian 6, Sage Creek 0 (the Section's bracket sheet; MaxPreps has no score) and Helix 2, Bonita Vista 1.
+    expect(buildGameView('dba373ca-9805-4eb4-a479-553059994aee')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('The San Diego Section’s Division II bracket sheet');
+    expect(buildGameView('3a37744f-8264-47f8-baa3-6c660b8e3892')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('Cifsshome.org, the San Diego Section’s score listing');
+  }, 120_000);
 });

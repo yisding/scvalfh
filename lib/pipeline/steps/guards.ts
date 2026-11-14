@@ -23,6 +23,7 @@ import { byDateThenId } from '../../format';
 import type { LeagueConfig } from '../../league-config/shape';
 import { LEAGUES, getLeague } from '../../leagues';
 import { divisionGames } from '../../standings/engine';
+import { applyResultCorrection, withAddedGames } from '../../results/result';
 import { teamsInLeague } from '../../teams';
 import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';
 import { RunAbort } from '../contract';
@@ -96,6 +97,10 @@ function describe(g: Game): string {
 
 /** §7.5 trigger c, per league in the run that is not already frozen. */
 export function checkFinalsRegression(ctx: PipelineContext, state: RunState): void {
+  // The last update's count was taken after step 11c scored the games a configured correction scores and added
+  // the games no feed lists (lib/league-config/data-quality.ts), so this run's count is taken the same way: a
+  // game MaxPreps still lists with no score is not a final that vanished.
+  const known = withAddedGames(state.games, ctx.fetchedAt).map((g) => applyResultCorrection(g));
   for (const leagueId of ctx.leaguesInRun()) {
     if (ctx.leagues.state(leagueId) === 'frozen') continue;
     const league = getLeague(leagueId);
@@ -106,10 +111,10 @@ export function checkFinalsRegression(ctx: PipelineContext, state: RunState): vo
     for (const division of league.divisions) {
       const prev = previousDivisionHealth(ctx.previous, division.id)?.countedFinals;
       if (prev === undefined || prev === null) continue;
-      const now = divisionGames(state.games, division.id).length;
+      const now = divisionGames(known, division.id).length;
       const drop = prev - now;
       if (drop <= 0) continue;
-      const vanished = vanishedFinals(ctx, state.games, division.id);
+      const vanished = vanishedFinals(ctx, known, division.id);
       for (const g of vanished) {
         ctx.warn(`finals regression ${division.id}: ${describe(g)} was final in the last update and is not counted now`, {
           league: leagueId,

@@ -18,6 +18,7 @@ import {
   FINALS_REGRESSION_FREEZE,
   SYSTEMIC_FAILED_FEEDS_SHARE,
   SYSTEMIC_MIN_GAMES_SHARE,
+  checkFinalsRegression,
   checkSystemic,
   divisionClassification,
   finalsMissingReason,
@@ -250,6 +251,41 @@ describe('trigger c: finals regression', () => {
     const h = health(snapshot, 'bval');
     expect(h?.state).toBe('partial');
     expect(h?.reasons).toEqual(['2 BVAL results that were final in the last update are missing from MaxPreps now; the table is computed without them.']);
+  });
+});
+
+describe('trigger c against a game a configured correction scores (PR #127 review)', () => {
+  // Helix 2, Bonita Vista 1 (Oct 7, Metro Mesa): MaxPreps lists the game with no score and
+  // DATA_QUALITY.resultCorrections scores it, so the published snapshot counts one more final than the feed has.
+  // The next run's feed is unchanged: that game has not vanished, and Metro is not partial for it.
+  it('counts this run’s finals with the same corrections the last update had', () => {
+    const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as Snapshot;
+    const loaded = loadSnapshot(raw as unknown);
+    const helix = '3a37744f-8264-47f8-baa3-6c660b8e3892';
+    const unscored = raw.games.find((g) => g.contestId === helix)!;
+    const scored = loaded.games.find((g) => g.contestId === helix)!;
+    expect(unscored.status, 'the feed still has no score').not.toBe('final');
+    expect(scored.status).toBe('final');
+    // The last update as the pipeline wrote it: each Metro division's count is of its games, the scored one included.
+    const previous: Snapshot = {
+      ...loaded,
+      leagueHealth: loaded.leagueHealth.map((h) =>
+        h.leagueId === 'metro' ? { ...h, divisions: h.divisions.map((d) => ({ ...d, countedFinals: divisionGames(loaded.games, d.divisionId).length })) } : h,
+      ),
+    };
+    const ctx = new PipelineContext({
+      args: testRunArgs({ leagues: null }),
+      transport: { mode: 'fixture', get: async () => ({ url: '', httpStatus: 200, body: '' }) },
+      previous,
+      sink: SILENT_SINK,
+    });
+    // This run, after classify: the same games, with that one as the feed has it (classified, no score).
+    const state = emptyRunState();
+    state.games = loaded.games.map((g) => (g === scored ? { ...unscored, countsFor: scored.countsFor } : g));
+    expect(divisionGames(state.games, scored.countsFor!).length, 'one final short before the correction').toBe(divisionGames(loaded.games, scored.countsFor!).length - 1);
+    checkFinalsRegression(ctx, state);
+    expect(ctx.leagues.state('metro'), 'lib/pipeline/steps/guards.ts checkFinalsRegression').toBe('fresh');
+    expect(ctx.leagues.reasons('metro')).toEqual([]);
   });
 });
 
