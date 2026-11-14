@@ -261,3 +261,22 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
     }
   });
 });
+
+describe('a game the owner reported before its day (DATA_QUALITY.addedGames, reportedOn)', () => {
+  it('lists Santa Teresa at Cupertino, Tue Nov 24: varsity at 7:00, non-league, with no score', () => {
+    const [g, ...more] = m.data.getGames({ date: '2026-11-24' }).filter((x) => x.home.slug === 'cupertino');
+    expect(more).toEqual([]);
+    expect([g.contestId, g.dateLocal, g.status, g.away.slug, g.isLeague, g.countsFor]).toEqual([
+      'official:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T19:00:00', 'scheduled', 'santa-teresa', false, null,
+    ]);
+    expect([g.home.score, g.away.score]).toEqual([null, null]);
+  });
+
+  it('lists its JV game at 5:30, non-league, with no score', () => {
+    const jv = m.jv.getJvGames().filter((x) => x.dateKey === '2026-11-24' && x.home.slug === 'cupertino');
+    expect(jv.map((x) => [x.contestId, x.dateLocal, x.status, x.away.slug, x.isLeague, x.countsFor])).toEqual([
+      ['added-jv:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T17:30:00', 'scheduled', 'santa-teresa', false, null],
+    ]);
+    expect(m.jv.getJvClassification(jv[0].contestId)?.kind).toBe('non-league');
+  });
+});

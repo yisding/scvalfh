@@ -178,6 +178,14 @@ on the schedule whether or not MaxPreps lists it).
   drawn as a bracket on /playoffs (`#eal-bracket`, `components/playoffs/tournament-bracket-view.ts`): the first
   round, the semifinals and the final, the top two on byes, then the third- and fifth-place games; no seed is
   printed.
+- *A game reported before its day* (`DATA_QUALITY.addedGames` with `reportedOn`). An added game normally joins
+  only a snapshot stamped on or after its own day; one with `reportedOn` joins every snapshot stamped on or after
+  the day it was reported, so it is on the schedule before it is played: scheduled, then "score not reported"
+  after its day, until a feed lists the pair that day (an earlier run's `official:` id then maps to the feed's
+  contest in `supersededGames`). Its `jv` gives the JV game, which `lib/jv/jv-added.ts` lists
+  (`added-jv:<date>-<away>-at-<home>`) until a JV game of the pair is listed within three days of it. Boys
+  basketball: Santa Teresa at Cupertino, Tue Nov 24, 2026, varsity 7:00 and JV 5:30, non-league, given by the
+  owner on 2026-11-14 and on neither school's MaxPreps schedule that day.
 - *A league game MaxPreps types otherwise* (`leagueGameOverrides`). Granite Hills at Southwest, Oct 16, is on the
   Metro Conference schedule and typed a tournament game; it counts, so Metro South Bay is twelve games and
   Granite Hills 6-0. The two Hilltop at Granite Hills games on Oct 29 and 30 are both real (East County Sports).

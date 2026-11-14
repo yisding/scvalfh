@@ -497,7 +497,25 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
   resultCorrections: {},
-  addedGames: [],
+  addedGames: [
+    // A non-league game on neither school's MaxPreps schedule (read 2026-11-14), given by the owner on 2026-11-14:
+    // Cupertino hosts Santa Teresa on Tue Nov 24, varsity at 7:00 PM and JV at 5:30 PM. Listed without a score until
+    // MaxPreps lists the game.
+    {
+      dateKey: '2026-11-24',
+      time: '19:00',
+      home: 'cupertino',
+      away: 'santa-teresa',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      reportedOn: '2026-11-14',
+      jv: { dateKey: '2026-11-24', time: '17:30' },
+      source: 'the owner, Nov 14, 2026: Cupertino hosts Santa Teresa on Tue Nov 24, varsity 7 PM, JV 5:30 PM; MaxPreps does not list the game',
+      url: null,
+    },
+  ],
   fixtureMoves: {},
   notCovered: [],
 };

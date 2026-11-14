@@ -308,6 +308,17 @@ export interface AddedGame {
   certainty?: 'reported';
   /** What the source says of a game it gives no score for (who won, where), printed as the game's note. */
   note?: string;
+  /**
+   * The day the source gave a game still to be played (YYYY-MM-DD): the game joins every file stamped on or after
+   * it, so it is on the schedule before its day. Absent for a game reported after it was played, which joins the
+   * files stamped on or after its own day (an earlier capture never saw it).
+   */
+  reportedOn?: string;
+  /**
+   * The JV game the source gives with it (Cupertino's JV plays Santa Teresa's at 5:30 before the 7:00 varsity
+   * game): lib/jv/jv-added.ts lists it as a JV game until MaxPreps lists the pair's JV game.
+   */
+  jv?: { dateKey: string; time: string | null };
   otPeriods: number;
   /** The source and what it says, one sentence without a final period. */
   source: string;
