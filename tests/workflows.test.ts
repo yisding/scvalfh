@@ -20,7 +20,7 @@ import { withFixtureGames } from '../lib/results/fixture-games';
 
 import { getClubSlugs } from '../lib/players/clubs';
 import { gameIdToParam } from '../lib/game-id';
-import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
+import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, seasonWindowBounds } from '../lib/leagues';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { REPO, runScript } from './helpers';
 
@@ -474,6 +474,80 @@ describe('the manual fetch inputs', () => {
     expect(fetch).toContain('args+=(--accept-regression "$ACCEPT_REGRESSION")');
     // Never interpolated into the script itself.
     expect(fetch.slice(fetch.indexOf('run: |'))).not.toContain('inputs.');
+  });
+});
+
+describe('the field hockey refresh stops at the season window, before it installs anything', () => {
+  // Owner decision, 2026-11-14: the window ends a week after the last final (Nov 14), and a fire outside it
+  // costs no checkout, install or test run. The `window` job has none of the repo's code, so it carries the
+  // two dates itself; this holds them to the sections' windows the scripts' own guard reads.
+  // The job's only step, so its body ends where the next job starts.
+  const gate = stepBody(update, 'Season window').split('\n  refresh:\n')[0];
+  const script = gate
+    .slice(gate.indexOf('run: |') + 'run: |'.length)
+    .split('\n')
+    .map((l) => l.replace(/^ {10}/, ''))
+    .join('\n');
+
+  /** The gate's script on a given Pacific day (a `date` that prints it), and what it wrote to GITHUB_OUTPUT. */
+  function runGate(today: string, force = ''): string {
+    const dir = mkdtempSync(path.join(tmpdir(), 'window-gate-'));
+    try {
+      writeFileSync(path.join(dir, 'date'), `#!/bin/sh\necho ${today}\n`, { mode: 0o755 });
+      const out = path.join(dir, 'output');
+      const r = spawnSync('bash', ['-c', script], {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          PATH: `${dir}:${process.env.PATH}`,
+          SEASON_START: /SEASON_START: '([^']+)'/.exec(gate)![1],
+          SEASON_END: /SEASON_END: '([^']+)'/.exec(gate)![1],
+          FORCE: force,
+          GITHUB_OUTPUT: out,
+          GITHUB_STEP_SUMMARY: path.join(dir, 'summary'),
+        },
+      });
+      expect(r.status, r.stderr).toBe(0);
+      return readFileSync(out, 'utf8').trim();
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+
+  it('carries the sections’ own window, start and end', () => {
+    const { start, end } = seasonWindowBounds();
+    expect(gate).toContain(`SEASON_START: '${start}'`);
+    expect(gate).toContain(`SEASON_END: '${end}'`);
+    expect(gate).toContain('TZ=America/Los_Angeles date +%F');
+  });
+
+  it('is in season on the window’s two ends and out of season the day before and the day after', () => {
+    expect(runGate('2026-08-01')).toBe('in_season=true');
+    expect(runGate('2026-11-21')).toBe('in_season=true');
+    expect(runGate('2026-07-31')).toBe('in_season=false');
+    expect(runGate('2026-11-22')).toBe('in_season=false');
+  });
+
+  it('runs out of season only when a manual run forces it, the input passed through env', () => {
+    expect(runGate('2026-12-05', '1')).toBe('in_season=true');
+    expect(gate).toContain("FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}");
+    expect(gate.slice(gate.indexOf('run: |'))).not.toContain('inputs.');
+  });
+
+  it('the refresh job, checkout included, runs only when the window job says so', () => {
+    expect(update).toMatch(/\n {2}refresh:\n {4}needs: window\n {4}if: needs\.window\.outputs\.in_season == 'true'\n/);
+    expect(update).toMatch(/\n {2}window:\n[\s\S]*?\n {6}in_season: \$\{\{ steps\.check\.outputs\.in_season \}\}\n/);
+    const windowJob = update.slice(update.indexOf('\n  window:\n'), update.indexOf('\n  refresh:\n'));
+    expect(windowJob).not.toMatch(/uses: |pnpm/);
+  });
+
+  it('fires in no month the window never reaches: every in-window run is August to November in UTC', () => {
+    const crons = [...update.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
+    expect(crons).toEqual(['0 14 * 8-11 *', '0 5 * 8-11 *']);
+    // The latest fire of the window's last Pacific day is the 05:00 UTC one, the next UTC day.
+    const lastFire = new Date(`${seasonWindowBounds().end}T05:00:00Z`);
+    lastFire.setUTCDate(lastFire.getUTCDate() + 1);
+    expect(lastFire.getUTCMonth() + 1).toBeLessThanOrEqual(11);
   });
 });
 

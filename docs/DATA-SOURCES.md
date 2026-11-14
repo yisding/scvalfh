@@ -3752,8 +3752,8 @@ unrecognised page is not read and the previous bracket state is carried), and th
 2026-10-29, §1.4; `bracketGameIndex` is 0 and unused). Re-derive the CCS CloudFront PDF URLs each time;
 never poll the CCS bracket page itself expecting data.
 
-**Cadence (observed 2026-10-29).** There is no extra run on game days: the two crons (`0 14 * 8-12 *` and
-`0 5 * 8-12 *`, 7 AM and 10 PM Pacific during PDT, 6 AM and 9 PM after Nov 1) are the only schedule, and
+**Cadence (observed 2026-10-29).** There is no extra run on game days: the two crons (`0 14 * 8-11 *` and
+`0 5 * 8-11 *`, 7 AM and 10 PM Pacific during PDT, 6 AM and 9 PM after Nov 1) are the only schedule, and
 GitHub started them late every day of Oct 21–29 (the git log of `data/snapshot.meta.json`: the 05:00 UTC run
 4.2–6.2 h late, the 14:00 UTC run 3.2–5.7 h late). In PST that is about 1–3 AM and 9–11:45 AM Pacific, so
 nothing lands between about noon and 1 AM: a game played in the afternoon or evening is first on the site
