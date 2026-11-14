@@ -1,6 +1,6 @@
 {
   "builtBy": "Research by hand, 2026-11-13, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, SportsRecruits' commits feed for program ids 6 to 453), 292 college athletics sites' news feeds from 2026-11-11 on, school and local papers, the clubs' commitment pages and the players' own recruiting pages. Every quote was checked against its page as served that day, twice.",
-  "capturedAt": "2026-11-13",
+  "capturedAt": "2026-11-14",
   "season": "26-27",
   "notes": [
     "Players on the 41 tracked varsity rosters a public page says have committed to, or signed with, a college team, in volleyball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
@@ -130,6 +130,132 @@
         }
       ],
       "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "stanford",
+      "name": "Stanford University",
+      "shortName": "Stanford",
+      "city": "Stanford",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Atlantic Coast Conference",
+          "url": "https://gostanford.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WVB",
+          "what": "The NCAA directory's Division I women's volleyball member list: Stanford University, Atlantic Coast Conference."
+        },
+        {
+          "url": "https://gostanford.com/sports/womens-volleyball",
+          "what": "Stanford's women's volleyball page names the Atlantic Coast Conference."
+        }
+      ],
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "uc-irvine",
+      "name": "University of California, Irvine",
+      "shortName": "UC Irvine",
+      "city": "Irvine",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Big West Conference",
+          "url": "https://ucirvinesports.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WVB",
+          "what": "The NCAA directory's Division I women's volleyball member list: University of California, Irvine, Big West Conference."
+        },
+        {
+          "url": "https://bigwest.org/sports/wvball",
+          "what": "The Big West's women's volleyball page lists UC Irvine."
+        }
+      ],
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "nevada",
+      "name": "University of Nevada, Reno",
+      "shortName": "Nevada",
+      "city": "Reno",
+      "state": "NV",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Mountain West Conference",
+          "url": "https://nevadawolfpack.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://nevadawolfpack.com/sports/womens-volleyball",
+          "what": "Sidearm page metadata: school_name 'University of Nevada', school_division 'DI', school_conference 'Mountain West'."
+        },
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WVB",
+          "what": "The NCAA directory's Division I women's volleyball member list: University of Nevada, Reno, Mountain West Conference."
+        }
+      ],
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "uc-riverside",
+      "name": "University of California, Riverside",
+      "shortName": "UC Riverside",
+      "city": "Riverside",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Big West Conference",
+          "url": "https://gohighlanders.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WVB",
+          "what": "The NCAA directory's Division I women's volleyball member list: University of California, Riverside, Big West Conference."
+        },
+        {
+          "url": "https://bigwest.org/sports/wvball",
+          "what": "The Big West's women's volleyball page lists UC Riverside."
+        }
+      ],
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "portland",
+      "name": "University of Portland",
+      "shortName": "Portland",
+      "city": "Portland",
+      "state": "OR",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "West Coast Conference",
+          "url": "https://portlandpilots.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://portlandpilots.com/sports/womens-volleyball",
+          "what": "Sidearm page metadata: school_name 'University of Portland', school_division 'DI', school_conference 'West Coast'."
+        }
+      ],
+      "checkedOn": "2026-11-14"
     }
   ],
   "commitments": [
@@ -314,6 +440,175 @@
         }
       ],
       "basis": "The Saratoga Falcon, Saratoga High's student newspaper (its footer: 'the student journalists of Saratoga High School'), reported on 2026-05-20 that junior Aanya Hotha committed on March 16 to play volleyball at Penn ('will play middle for the Quakers'); a junior in May 2026 is the class of 2027, the roster's class. PrepVolleyball lists 'Aanya Hotha | 2027 MB | Vision' among the players featured in its commitment update of April 1, 2026 (the article body is for subscribers and the college is not shown), which agrees on class year, position and timing. Penn's site had no signing release as of 2026-11-13 (the Ivy League does not use the National Letter of Intent)."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "e642fc81-191c-43e1-8434-d151331edc99",
+      "fullName": "Chayse Courtney",
+      "college": "stanford",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepvolleyball.com/player-profile/chayse-courtney/pid-36914",
+          "kind": "other",
+          "quote": "Chayse Courtney Outside Hitter - Class of 2028 - Stanford Follow: Club: Vision Team: 17 Gold Jersey Number: 14 High School: Archbishop Mitty State: California",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepvolleyball.com/high-school-volleyball-details/women/archbishop-mitty/hsid-4927",
+          "kind": "other",
+          "quote": "Archbishop Mitty Nickname: Archbishop Mitty State: California Email: Website: Commitments Articles Videos Players Name Commitment Savannah Baron Holy Cross Makenna Crosson Minnesota Chayse Courtney Stanford",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": null,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/player/chayse-courtney/",
+          "kind": "other",
+          "quote": "Chayse Courtney is a 6'1\" Outside Hitter/Right-Side Hitter in the 2028 class. Courtney attends Archbishop Mitty in California and plays club volleyball for Vision Volleyball Club. … Stanford Committed on06/16/2026",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Chayse Courtney Class 2028 State: California High School: Archbishop Mitty COMMITTED 6/19/26",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://visionvolleyball.com/college-bound",
+          "kind": "club-site",
+          "quote": "Class of 2028 Chayse Courtney 17G, OH 6'1\" Stanford",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "PrepVolleyball's player page (position, class of 2028, college, club Vision 17 Gold, high school Archbishop Mitty) and its Archbishop Mitty school page (Commitments: 'Chayse Courtney Stanford'); Prep Dig's player page (attends Archbishop Mitty, its school link going to Prep Dig's team page for the school in San Jose, CA) with 'Stanford Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Vision Volleyball Club's College Bound list agrees (class of 2028, Stanford; no school). A class-of-2028 player cannot sign before November 2027. Found by the 2026-11-14 round (Prep Dig, PrepVolleyball and name passes), every page read twice."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "33208838-91db-4fc4-9940-0af6a6962123",
+      "fullName": "Abby Cardenas",
+      "college": "uc-irvine",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepdig.com/player/abby-cardenas/",
+          "kind": "other",
+          "quote": "Abby Cardenas is a 6'0\" Right-Side Hitter/Outside Hitter in the 2028 class. Cardenas attends Saint Francis in California and plays club volleyball for Vision Volleyball Club. … UC-Irvine Committed",
+          "statedSchool": "Saint Francis",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Abby Cardenas Class 2028 State: California High School: Saint Francis COMMITTED 11/9/26",
+          "statedSchool": "Saint Francis",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Dig's player page: class of 2028 (the roster's), attends Saint Francis (its school link goes to Prep Dig's team page for Saint Francis High School in Mountain View, CA), and 'UC-Irvine Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Her Hudl profile, on Saint Francis's own volleyball team, carries a 'committed' flag but names no college, so it is not cited. Undated. A class-of-2028 player cannot sign before November 2027. Found by the 2026-11-14 Prep Dig pass and read twice."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "5d513b7a-5e17-4d28-8028-55f95b68911b",
+      "fullName": "Eileen Pfeffer",
+      "college": "nevada",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepdig.com/player/eileen-pfeffer/",
+          "kind": "other",
+          "quote": "Eileen Pfeffer is a 5'11\" Middle Blocker in the 2027 class. Pfeffer attends St. Ignatius College Prep in California and plays club volleyball for Vision Volleyball Club. … Nevada Committed",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Eileen Pfeffer Class 2027 State: California High School: St. Ignatius College Prep COMMITTED 11/10/26",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Dig's player page: class of 2027 (the roster's), attends St. Ignatius College Prep (its school link goes to Prep Dig's team page for the school in San Francisco, CA), and 'Nevada Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Nevada posted a volleyball signing-day release on 2026-11-11, but its site refused automated reads on 2026-11-14, so whether it names her was not checked and the status stays 'committed'. Undated. Found by the 2026-11-14 Prep Dig pass and read twice."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "48f1ad14-afc1-4374-8fe7-6ec0de2c1fc0",
+      "fullName": "Whitney Fleming",
+      "college": "uc-riverside",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepdig.com/player/whitney-fleming/",
+          "kind": "other",
+          "quote": "Whitney Fleming is a 5'10\" Outside Hitter/Right-Side Hitter in the 2027 class. Fleming attends Valley Christian in California and plays club volleyball for Vision Volleyball Club. … UC-Riverside Committed on04/29/2026",
+          "statedSchool": "Valley Christian",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Whitney Fleming Class 2027 State: California High School: Valley Christian COMMITTED 4/29/26",
+          "statedSchool": "Valley Christian",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://visionvolleyball.com/college-bound",
+          "kind": "club-site",
+          "quote": "Whitney Fleming 17G OH 5'11\" UC Riverside",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Dig's player page: class of 2027 (the roster's), attends Valley Christian (its school link goes to Prep Dig's team page for Valley Christian High School in San Jose, CA, not the Cerritos school), and 'UC-Riverside Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Vision Volleyball Club's College Bound list agrees (UC Riverside; no school). UC Riverside's site refused automated reads on 2026-11-14, so a signing release was not checked and the status stays 'committed'. Found by the 2026-11-14 name and Prep Dig passes, read twice."
+    },
+    {
+      "teamSlug": "notre-dame-san-jose",
+      "athleteId": "2b9a46be-ba99-4f77-8b23-c46b20cdee42",
+      "fullName": "Orli Jones",
+      "college": "portland",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/orli_jones3",
+          "kind": "sportsrecruits",
+          "quote": "Watch Orli's recruiting video • 2027 • Setter • Santa Clara, CA • Committed to University of Portland",
+          "statedSchool": "Notre Dame San Jose",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits volleyball profile: the served page's description gives the class of 2027 (the roster's), Santa Clara, CA and 'Committed to University of Portland'; its TEAMS block, drawn by script from the profile JSON and read in two separate fetches that agree, names Notre Dame San Jose. The commitment entry was created on 2026-07-14, an entry date, so it is not used. Found by the 2026-11-14 SportsRecruits probe."
     }
   ]
 }
