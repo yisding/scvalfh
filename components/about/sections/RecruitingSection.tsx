@@ -9,7 +9,7 @@ import { HAS_RECRUITING, IS_VOLLEYBALL, SPORT } from '../../../lib/sports/curren
 
 /**
  * The words that differ by sport: where the research looked and how a place backs a match. Field hockey's
- * were written with its 2026-10 sweeps (README, "Clubs"); volleyball's with the 2026-11-13 round
+ * were written with its 2026-10 sweeps (README, "Clubs"); volleyball's with the 2026-11-13 and 2026-11-14 rounds
  * (data/volleyball/clubs.json's notes).
  */
 const WORDS = IS_VOLLEYBALL
@@ -22,10 +22,9 @@ const WORDS = IS_VOLLEYBALL
         'Most ties rest on one page that names the player, the club and the school. Some rest on a club roster’s class year plus a hometown in the school’s own area.',
       nickname: 'A nickname or a given name',
       profilePlace: 'a hometown in the school’s own area',
-      // The WCAL and the WBAL joined the build on 2026-11-14, after the 2026-11-13 research: no profile, club or
-      // commitment was looked for at their nineteen schools, and the page says so wherever it says recall is partial.
-      unsearched:
-        'The WCAL and WBAL schools were added on Nov 14, 2026, after this research was done, and have not been searched, so none of their players is listed.',
+      // The WCAL and the WBAL joined the build on 2026-11-14, after the 2026-11-13 research; the round of 2026-11-14
+      // searched their nineteen schools the same way (README, "Girls volleyball: recruiting"), so no school is unsearched.
+      unsearched: null,
     }
   : {
       clubSources:

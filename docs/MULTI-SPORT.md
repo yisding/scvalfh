@@ -338,8 +338,8 @@ volleyball like we did for field hockey". The volleyball build now has /clubs, /
 **WCAL and WBAL (2026-11-14).** The owner asked for the two leagues on the volleyball site too.
 `lib/league-config/volleyball/{wcal,wbal}.ts` and `lib/registry/volleyball/{wcal,wbal}.ts` add the same 19 schools
 as soccer, in volleyball's own WBAL divisions (60 teams); league matches are read by membership, the corpus was
-recaptured with all four leagues, and the recruiting research does not cover the new schools (README, "WCAL and
-WBAL in the volleyball build").
+recaptured with all four leagues, and a second recruiting round (2026-11-14) covered the new schools (README, "WCAL
+and WBAL in the volleyball build", "Girls volleyball: recruiting").
 
 Not done yet: a refit of the rating constants on finished seasons; the CCS Volleyball Bylaws' allocation;
 BVAL's 2025-26 standings; "match" for "game" in the site's own copy; the
