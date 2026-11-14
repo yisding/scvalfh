@@ -150,15 +150,15 @@ function wcalNotTranscribed() {
   return {
     status: 'unavailable' as const,
     league: getLeague('wcal').name,
-    reason: 'The WCAL publishes its final standings and all-league teams on wcalsports.org. This site added WCAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.',
+    reason: 'The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.',
     checkedOn: '2026-11-14',
     checked: [
       'https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)',
-      'https://wcalsports.org/awardsrecords/ (its all-league teams)',
+      'https://wcalsports.org/awardsrecords/ (its season honors)',
     ],
     alsoPublished: [
       { label: 'WCAL standings', url: 'https://wcalsports.org/standings/' },
-      { label: 'WCAL all-league teams', url: 'https://wcalsports.org/awardsrecords/' },
+      { label: 'WCAL awards and records', url: 'https://wcalsports.org/awardsrecords/' },
     ],
   };
 }
@@ -167,13 +167,13 @@ function wbalNoStandings() {
   return {
     status: 'unavailable' as const,
     league: getLeague('wbal').name,
-    reason: 'We found no official 2025-26 final standings for WBAL girls soccer: the league’s standings page shows the current season only, and its site keeps no standings archive. The WBAL does publish its 2025-26 all-league teams, linked below. We do not show standings or awards from third-party sources.',
+    reason: 'We found no official 2025-26 final standings for WBAL girls soccer: the league’s standings page shows the current season only, and its site keeps no standings archive. The WBAL does publish its 2025-26 season honors, linked below, not reproduced: this archive shows a league’s awards only beside its official final standings. We do not show standings or awards from third-party sources.',
     checkedOn: '2026-11-14',
     checked: [
       'https://hs.wbalsports.org/socstg.html (girls soccer standings: the 2026-27 season)',
-      'https://hs.wbalsports.org/champsg2526.html (2025-26 girls champions: no standings)',
+      'https://hs.wbalsports.org/home.html (no standings archive is linked)',
     ],
-    alsoPublished: [{ label: 'WBAL 2025-26 girls soccer all-league teams', url: 'https://hs.wbalsports.org/alsocg2526.html' }],
+    alsoPublished: [{ label: 'WBAL 2025-26 girls soccer honors', url: 'https://hs.wbalsports.org/alsocg2526.html' }],
   };
 }
 

@@ -46,7 +46,7 @@ export const WCAL_SOCCER_LEAGUE: LeagueConfig = {
       expectedTeams: 6, gamesPerTeam: 10,
       leaguePlay: { first: '2027-01-06', last: '2027-02-17' },
       official: {
-        mode: 'none',
+        mode: 'none', scheduleUrl: WCAL_SCHEDULES,
         note: 'The WCAL publishes a composite girls soccer schedule on wcalsports.org and says its schedules are constantly changing, so this site does not copy it. A league game here is a game between two WCAL teams from January 6 to February 17, 2027, the dates of the schedule’s double round robin.',
       },
       maxprepsTeamCount: 6, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'records-only', knownCause: null,

@@ -264,6 +264,16 @@ export function leagueStandingsUrl(id: DivisionId): string | null {
   return `${MAXPREPS_SPORT_WEB}/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
 }
 
+/**
+ * True where the division's league publishes no schedule document at all (official mode 'none' with no
+ * `scheduleUrl`: the EAL, the Sunset, the San Diego leagues, the LA independents). False for a division with a
+ * transcribed schedule, and for one whose league publishes a schedule this site does not copy (soccer's WCAL and
+ * WBAL), so no copy says such a league "publishes no schedule".
+ */
+export function publishesNoSchedule(d: DivisionConfig): boolean {
+  return d.official.mode === 'none' && d.official.scheduleUrl === undefined;
+}
+
 /** The rungs of the division's league ladder that apply to this division, in ladder order. */
 export function ladderFor(id: DivisionId): readonly LadderRung[] {
   const d = getDivision(id);

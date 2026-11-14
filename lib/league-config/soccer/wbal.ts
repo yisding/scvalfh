@@ -51,7 +51,7 @@ export const WBAL_SOCCER_LEAGUE: LeagueConfig = {
       maxprepsName: 'West Bay - Foothill', maxprepsSlug: 'west-bay--foothill',
       expectedTeams: 7, gamesPerTeam: 12,
       leaguePlay: { first: '2026-12-18', last: '2027-02-15' },
-      official: { mode: 'none', note: note('Foothill', 'from December 18, 2026 to February 15, 2027') },
+      official: { mode: 'none', scheduleUrl: FOOTHILL_SCHEDULE, note: note('Foothill', 'from December 18, 2026 to February 15, 2027') },
       // MaxPreps keeps Presentation's girls soccer team in no league (read 2026-11-14).
       maxprepsTeamCount: 6, maxprepsMissing: ['presentation'], maxprepsExtraRows: {}, reportedTrust: 'records-only',
       knownCause: 'MaxPreps lists Presentation in no league, so its West Bay Foothill table has six teams and leaves Presentation’s games out of the others’ league records. Presentation is in the WBAL’s own Foothill table and schedule.',
@@ -64,7 +64,7 @@ export const WBAL_SOCCER_LEAGUE: LeagueConfig = {
       maxprepsName: 'West Bay - Skyline', maxprepsSlug: 'west-bay--skyline',
       expectedTeams: 6, gamesPerTeam: 10,
       leaguePlay: { first: '2027-01-07', last: '2027-02-12' },
-      official: { mode: 'none', note: note('Skyline', 'from January 7 to February 12, 2027') },
+      official: { mode: 'none', scheduleUrl: SKYLINE_SCHEDULE, note: note('Skyline', 'from January 7 to February 12, 2027') },
       maxprepsTeamCount: 6, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'records-only', knownCause: null,
       home: { miniRows: 3, lineAfter: 1, lineLabel: 'Berth-playoff line' },
       ladderLine: { after: 1, label: 'Berth-playoff line' },
