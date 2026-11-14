@@ -259,8 +259,11 @@ export function classifyGame(game: Game, opts: ClassifyOptions = {}): DivisionId
   const types = game.contestTypes ?? { home: null, away: null };
   if (rules.classification === 'membership') {
     if (game.postseason !== null && game.postseason !== undefined) return null;
+    // A contest the config names a league game (rules.leagueGameOverrides) counts whatever MaxPreps types it:
+    // Granite Hills at Southwest, Oct 16, is on the conference's schedule and typed a tournament game.
+    const named = rules.leagueGameOverrides.includes(game.contestId);
     for (const t of [types.home, types.away]) {
-      if (t !== null && rules.excludeContestTypes.includes(t)) return null;
+      if (!named && t !== null && rules.excludeContestTypes.includes(t)) return null;
     }
     const config = league.divisions.find((d) => d.id === division);
     if (!config) return null;

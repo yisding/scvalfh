@@ -26,6 +26,8 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     // Harvard-Westlake 6-0 Temecula Valley twice, on Thu Oct 22 (b5fbcc70) and Fri Oct 23; the other round-1
     // games were Thu Oct 22, so the Oct 23 row is the duplicate. Newport Harbor at Glendora was moved from Thu
     // Oct 22 to Sat Oct 24 (45732090, 3-0); the Oct 22 row stayed behind without a score.
+    // A scrimmage (owner, 2026-11-14): MaxPreps lists it as a non-league final with the note "Scrimmage".
+    '5c14da41-b4c8-412f-aff3-34c8b454af35': 'Presentation at Willow Glen, Aug 31: a scrimmage (MaxPreps’ own note on the row says so), not a game',
     // Two stray San Diego rows found in the data audit of 2026-11-13, each a third counted meeting of a pair in a
     // double round robin. 8c6b3f6a (Oct 13, no time) repeats the Oct 6 game (72a06852): same host, same 4-0, and
     // on Oct 13 both teams played other Avocado games at other schools (Torrey Pines home to Canyon Crest at 4:00,
@@ -76,9 +78,10 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
     'ca27178a-9f11-46c0-9397-8289585bdb76': {
       goals: { 'pleasant-valley': 0, chico: 0 },
-      otPeriods: 0,
+      // Double overtime: Chico's own account (owner, 2026-11-14), "our girls pushed PV into double overtime and shootouts".
+      otPeriods: 2,
       shootout: { 'pleasant-valley': 3, chico: 2 },
-      source: 'MaxPreps’ page for the game, read Nov 13, 2026: level 0-0 at the final, and its shootout column has Pleasant Valley 3, Chico 2; MaxPreps’ schedule feed carries only the level score and the winner',
+      source: 'MaxPreps’ page for the game, read Nov 13, 2026: level 0-0 at the final, and its shootout column has Pleasant Valley 3, Chico 2; Chico High field hockey’s own account says the final went to “double overtime and shootouts”',
       url: 'https://www.maxpreps.com/ca/field-hockey/game/chico-vs-pleasant-valley-chico/10-31-2026/?c=ca27178a-9f11-46c0-9397-8289585bdb76',
     },
     // The San Diego Section's own bracket sheet (read Nov 13, 2026) has two results MaxPreps lacks or shortens:
@@ -110,6 +113,141 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       source: 'cifsshome.org, the San Diego Section’s score listing for Oct 7, 2026: Helix 2, Bonita Vista 1; MaxPreps lists the game with no score',
       url: 'https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F07%2F2026&date_to=10%2F07%2F2026',
     },
+    // The source search of 2026-11-14: MaxPreps' game pages (not its feed) for every level game with the winner
+    // marked and every doubtful overtime, read beside cifsshome.org and si.com. The page's box has a Final column
+    // (goals in play) and, after a shootout, an SO column. cifsshome.org and si.com show the same games as the level
+    // score, as the level score plus one goal, or as the level score plus the tally. A correction marked 'reported'
+    // is this site's reading of a box that does not say it in words, or one whose sources disagree on the tally.
+    'f99ce5ed-794d-4957-99c1-95494dc3d4d6': {
+      goals: { clairemont: 0, eastlake: 0 },
+      otPeriods: 0,
+      shootout: { eastlake: 2, clairemont: 0 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 0-0 at the final, shootout column Eastlake 2, Clairemont 0; cifsshome.org and si.com have 0-0',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/clairemont-san-diego-vs-eastlake-chula-vista/9-1-2026/?c=f99ce5ed-794d-4957-99c1-95494dc3d4d6',
+    },
+    'd8aad805-99f8-4c64-8a1b-3c305465fd88': {
+      goals: { poway: 0, 'mt-carmel': 0 },
+      otPeriods: 1,
+      shootout: { 'mt-carmel': 2, poway: 0 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 0-0 at the final, shootout column Mt. Carmel 2, Poway 0; cifsshome.org has 2-0 with the note “Overtime”, and si.com 2-0, the shootout entered as the score',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/mt-carmel-san-diego-vs-poway/9-11-2026/?c=d8aad805-99f8-4c64-8a1b-3c305465fd88',
+    },
+    'e6488575-c728-4e7f-8060-be08967000b1': {
+      goals: { 'university-city': 0, 'rancho-bernardo': 0 },
+      otPeriods: 0,
+      shootout: { 'university-city': 3, 'rancho-bernardo': 2 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 0-0 at the final, shootout column University City 3, Rancho Bernardo 2; cifsshome.org has 3-2 and 1-0, si.com 3-2',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/rancho-bernardo-san-diego-vs-university-city-san-diego/9-22-2026/?c=e6488575-c728-4e7f-8060-be08967000b1',
+    },
+    '829af66a-3bd6-43f4-a969-06a046bb1fab': {
+      goals: { 'canyon-crest-academy': 0, 'cathedral-catholic': 0 },
+      otPeriods: 1,
+      shootout: { 'cathedral-catholic': 3, 'canyon-crest-academy': 2 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 0-0 at the final, shootout column Cathedral Catholic 3, Canyon Crest Academy 2; cifsshome.org and si.com have 0-0, and Cathedral Catholic’s goalkeeper played 10 overtime minutes',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/canyon-crest-academy-san-diego-vs-cathedral-catholic-san-diego/9-22-2026/?c=829af66a-3bd6-43f4-a969-06a046bb1fab',
+    },
+    '096fffe7-ce79-4463-be5e-3b7f80131a10': {
+      goals: { vista: 0, escondido: 0 },
+      otPeriods: 1,
+      shootout: { vista: 3, escondido: 2 },
+      certainty: 'reported',
+      source: 'cifsshome.org, read Nov 14, 2026: Vista 3, Escondido 2 with the note “Overtime > Shootouts”, and si.com the same; MaxPreps’ page has 0-0 at the final and a shootout column of Vista 4, Escondido 3, so the tally is 3-2 in two listings and 4-3 in one',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/escondido-vs-vista/10-5-2026/?c=096fffe7-ce79-4463-be5e-3b7f80131a10',
+    },
+    'e73eb917-8a7b-4471-9b89-1a7cb923675a': {
+      goals: { 'canyon-crest-academy': 1, 'rancho-bernardo': 1 },
+      otPeriods: 0,
+      shootout: { 'canyon-crest-academy': 3, 'rancho-bernardo': 1 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 1-1 at the final, shootout column Canyon Crest Academy 3, Rancho Bernardo 1; cifsshome.org and si.com have 2-1, the level score with the one goal credited to the winner',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/canyon-crest-academy-san-diego-vs-rancho-bernardo-san-diego/10-6-2026/?c=e73eb917-8a7b-4471-9b89-1a7cb923675a',
+    },
+    '9fc49911-f3da-4f81-8baf-5be5e0b157d9': {
+      goals: { westview: 1, 'mission-vista': 1 },
+      otPeriods: 0,
+      shootout: { 'mission-vista': 3, westview: 2 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 1-1 at the final, shootout column Mission Vista 3, Westview 2; cifsshome.org and si.com also carry 4-3, the level score with the shootout added',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/mission-vista-oceanside-vs-westview-san-diego/10-17-2026/?c=9fc49911-f3da-4f81-8baf-5be5e0b157d9',
+    },
+    '747082fd-259d-4fb8-8837-ece21a945993': {
+      goals: { 'university-sf': 0, gilroy: 0 },
+      otPeriods: 0,
+      shootout: { 'university-sf': 3, gilroy: 2 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 0-0 at the final, shootout column University 3, Gilroy 2',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/gilroy-vs-university-san-francisco/9-12-2026/?c=747082fd-259d-4fb8-8837-ece21a945993',
+    },
+    '9afebd05-777b-4c8a-82d5-c41b556788bb': {
+      goals: { chico: 1, davis: 1 },
+      otPeriods: 0,
+      shootout: { chico: 2, davis: 1 },
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: level 1-1 at the final, shootout column Chico 2, Davis 1; the Chico Enterprise-Record (Oct 1, 2026) reports that Chico won “a penalty shootout” at home against Davis',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/chico-vs-davis-sr/9-28-2026/?c=9afebd05-777b-4c8a-82d5-c41b556788bb',
+    },
+    'ad3d21f9-9b02-43a3-9f08-f4a85ca8da8e': {
+      goals: { 'la-jolla': 0, 'scripps-ranch': 0 },
+      otPeriods: 1,
+      shootout: { 'la-jolla': 2, 'scripps-ranch': 1 },
+      certainty: 'reported',
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: La Jolla 1-0 at the final with a shootout column of La Jolla 2, Scripps Ranch 1, and La Jolla’s goalkeeper played 10 overtime minutes; read as level 0-0 in play and a 2-1 shootout, the 1-0 being the one goal the San Diego officials’ procedure credits the shootout winner (no source says so in words)',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/la-jolla-vs-scripps-ranch-san-diego/9-24-2026/?c=ad3d21f9-9b02-43a3-9f08-f4a85ca8da8e',
+    },
+    'f2c12a72-8c12-44e3-b431-9c28599e064b': {
+      goals: { 'cathedral-catholic': 0, 'mission-bay': 0 },
+      otPeriods: 1,
+      shootout: { 'mission-bay': 2, 'cathedral-catholic': 1 },
+      certainty: 'reported',
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: Mission Bay 1-0 at the final with a shootout column of Mission Bay 2, Cathedral Catholic 1, and Cathedral Catholic’s goalkeeper played 10 overtime minutes; read as level 0-0 in play and a 2-1 shootout, the 1-0 being the one goal the San Diego officials’ procedure credits the shootout winner (no source says so in words)',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/cathedral-catholic-san-diego-vs-mission-bay-san-diego/10-29-2026/?c=f2c12a72-8c12-44e3-b431-9c28599e064b',
+    },
+    '59b0f6a5-dd40-4dd1-8ce9-07e9eea393c1': {
+      goals: { 'mission-hills': 1, 'del-norte': 1 },
+      otPeriods: 2,
+      shootout: { 'del-norte': 2, 'mission-hills': 0 },
+      certainty: 'reported',
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: 1-1 after regulation, two overtime periods, a shootout column of Del Norte 2, Mission Hills 0, and one goal each in the team totals; read as level 1-1 through overtime and a 2-0 shootout, the second Del Norte goal being the one credited to the shootout winner (no source says so in words)',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/del-norte-san-diego-vs-mission-hills-san-marcos/9-14-2026/?c=59b0f6a5-dd40-4dd1-8ce9-07e9eea393c1',
+    },
+    '8ed6f41f-8746-462e-8e12-bbe2509aa47d': {
+      goals: { greenfield: 1, hollister: 3 },
+      otPeriods: 0,
+      shootout: null,
+      certainty: 'reported',
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: the box has six period columns, labelled 1, 2 and OT1 to OT4, with Hollister ahead 1-0 after the third and 3-0 after the fifth, which no overtime allows; si.com has 3-1 with no overtime, so the columns are the game’s periods and no overtime was played',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/greenfield-vs-hollister/9-30-2026/?c=8ed6f41f-8746-462e-8e12-bbe2509aa47d',
+    },
+    'a8fc056b-e3e2-4edb-8f2e-95892e3bfdbc': {
+      goals: { corning: 2, 'bella-vista': 0 },
+      otPeriods: 0,
+      shootout: null,
+      certainty: 'reported',
+      source: 'MaxPreps’ page for the game, read Nov 14, 2026: Corning led 1-0 after the first column and its second goal is under “OT1”; a game that was not level has no overtime, so the goal is a later period’s and no overtime was played',
+      url: 'https://www.maxpreps.com/ca/field-hockey/game/bella-vista-fair-oaks-vs-corning/10-5-2026/?c=a8fc056b-e3e2-4edb-8f2e-95892e3bfdbc',
+    },
+    // EAL, Sep 2: MaxPreps has Pleasant Valley 1-0 at Chico with three overtime periods (box 0 0 0 0 1), which the
+    // Section's rule of overtime and then 1 v 1s cannot give. Chico's own account, on the Oct 31 final (owner,
+    // 2026-11-14): "For the second time this season, our girls pushed PV into double overtime and shootouts"; and
+    // the Chico Enterprise-Record (Oct 1) calls the Sep 28 Davis game Chico's shootout "for the second time this
+    // season". Their other meeting (Oct 6) was a 2-1 regulation game, so Sep 2 is that first one: level 0-0 through
+    // two overtime periods, Pleasant Valley winning the 1 v 1s, the 1 in MaxPreps' fifth column being that win.
+    '8a4d7c70-1907-4b38-a059-28fd0c679f0c': {
+      goals: { chico: 0, 'pleasant-valley': 0 },
+      otPeriods: 2,
+      shootout: null,
+      shootoutWinner: 'pleasant-valley',
+      source: 'Chico High field hockey’s own account (given by the owner, Nov 14, 2026): the Oct 31 final was “the second time this season” Chico took Pleasant Valley to “double overtime and shootouts”, and this is the first; MaxPreps records the 1 v 1 win as a 1-0 score after three overtime periods',
+      url: 'https://www.instagram.com/p/DfXyOZlD8eY/',
+    },
+    // Metro South Bay, Oct 30: MaxPreps has Granite Hills 1-0 with no overtime. East County Sports (Nov 2, 2026):
+    // "Granite Hills prevailed 1-0 in overtime ... Kendall Ehlers, Molina and Stonier delivered scoring conversions
+    // during the overtime procedure". So the game was level 0-0 in play and settled in the shootout, the 1-0 being
+    // the credited goal; the report gives three Granite Hills conversions and no Hilltop count.
+    'dbac5f77-1d98-4463-9b49-739a7943446b': {
+      goals: { 'granite-hills': 0, hilltop: 0 },
+      otPeriods: 1,
+      shootout: null,
+      shootoutWinner: 'granite-hills',
+      source: 'East County Sports, Nov 2, 2026: Granite Hills “prevailed 1-0 in overtime” on three “scoring conversions during the overtime procedure”, so the game was level 0-0 in play and won in the shootout; MaxPreps has the credited 1-0 and no overtime',
+      url: 'https://www.eastcountysports.com/2026/11/02/eagles-complete-stunning-title-run/',
+    },
     // MCAL tournament semifinal, Wed Oct 28: MaxPreps has Tamalpais 3, Marin Catholic 1 as a regulation result. The
     // Marin Independent Journal (Oct 28, 2026): "The game was scoreless after regulation and two overtimes"; Tamalpais
     // "won 3-1 in the shootout". So the goals in play are 0-0, two overtime periods were played and 3-1 is the tally.
@@ -121,6 +259,91 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       url: null,
     },
   },
+  addedGames: [
+    // The EAL Super Regional, Sat Oct 31 (the Northern Section's postseason; all six teams, the top two on byes), as
+    // the owner laid it out on 2026-11-14: first round Chico v Corning and Bella Vista v Lassen; semifinals Davis v
+    // Chico and Pleasant Valley v Bella Vista; the final Pleasant Valley v Chico; and a third-place game Davis v
+    // Bella Vista, which Davis won (owner, citing Stick Together). MaxPreps has two of the six: Pleasant Valley 2-0
+    // Bella Vista and the final. Chico High field hockey's own account (instagram.com/chicohighfieldhockey, given
+    // by the owner): post DfIfh7TFtXO is the owner's evidence for the Chico v Corning game, and post DfXyOZlD8eY
+    // says "Our girls worked their way up from an 8:30 AM game, then immediately into another competitive game to
+    // reach the championship. With two beautiful goals against Davis ... our girls secured their spot in the
+    // championship game against PV." The NFHS Network's Oct 31 listings pair the same four first-round teams the
+    // other way ("Lassen vs. Chico" 8:35 AM, "Bella Vista vs. Corning Union" 10:05 AM): its titles were set before
+    // the day and are not followed. No source gives the score of any of the four missing games (Chico scored twice
+    // against Davis), so each is listed without one, never as a guess.
+    {
+      dateKey: '2026-10-31',
+      time: null,
+      home: 'bella-vista',
+      away: 'lassen',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      note: 'Super Regional first round. Bella Vista won and went on to the semifinal; no source has published the score',
+      source: 'the owner’s account of the bracket (Nov 14, 2026): Bella Vista played Lassen in the first round and went on to the semifinal against Pleasant Valley',
+      url: null,
+    },
+    {
+      dateKey: '2026-10-31',
+      time: '08:30',
+      home: 'chico',
+      away: 'corning',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      note: 'Super Regional first round. Chico won and went on to the semifinal; no source has published the score',
+      source: 'Chico High field hockey’s own account (two posts given by the owner, Nov 14, 2026): the game against Corning, and Chico “worked their way up from an 8:30 AM game”',
+      url: 'https://www.instagram.com/p/DfIfh7TFtXO/',
+    },
+    {
+      dateKey: '2026-10-31',
+      time: null,
+      home: 'davis',
+      away: 'chico',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      note: 'Super Regional semifinal. Chico won with two goals to reach the final; no source has published the score',
+      source: 'Chico High field hockey’s own account (given by the owner, Nov 14, 2026): “With two beautiful goals against Davis ... our girls secured their spot in the championship game against PV”',
+      url: 'https://www.instagram.com/p/DfXyOZlD8eY/',
+    },
+    {
+      dateKey: '2026-10-31',
+      time: null,
+      home: 'davis',
+      away: 'bella-vista',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      neutral: true,
+      note: 'Super Regional third-place game. Davis won; no source has published the score',
+      source: 'the owner’s report (Nov 14, 2026), citing Stick Together: Davis beat Bella Vista for third place',
+      url: null,
+    },
+    // Palomar, Fri Oct 30: the pair's second league game. cifsshome.org (the San Diego Section's own score listing,
+    // read Nov 14, 2026): Poway 0, Valley Center 1, 6:00 PM, League, "Game forfeited by Poway"; si.com has the
+    // same 1-0. MaxPreps listed the fixture on Oct 6 and has since removed it from both schedules.
+    {
+      dateKey: '2026-10-30',
+      time: '18:00',
+      home: 'poway',
+      away: 'valley-center',
+      goals: { poway: 0, 'valley-center': 1 },
+      forfeitBy: 'poway',
+      from: 'cifss',
+      otPeriods: 0,
+      source: 'cifsshome.org, the San Diego Section’s score listing for Oct 30, 2026: Poway 0, Valley Center 1, a league game, “Game forfeited by Poway”; MaxPreps no longer lists the game',
+      url: 'https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F30%2F2026&date_to=10%2F30%2F2026',
+    },
+  ],
   fixtureMoves: {
     // SCVAL De Anza: the PDF has Homestead at Cupertino on Wed Sep 9; it was not played then (no MaxPreps contest of
     // the pair until their Oct 5 meeting). si.com (6575658) and the NFHS Network (game82e9fefce, on Homestead's
@@ -193,6 +416,7 @@ const SOCCER_DATA_QUALITY: DataQualityConfig = {
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
   resultCorrections: {},
+  addedGames: [],
   fixtureMoves: {},
   notCovered: [],
 };
@@ -217,6 +441,7 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
   resultCorrections: {},
+  addedGames: [],
   fixtureMoves: {},
   notCovered: [],
 };

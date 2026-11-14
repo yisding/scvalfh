@@ -30,12 +30,16 @@
  * is a tally a-b; (a >= 2, 0) may be a tally or another score altogether and is recorded as a difference only.
  */
 
-import { SPORT_OVERTIME_IS_SUDDEN_VICTORY, numberWord, sideOutcome } from '../format';
+import { classifyGames } from '../classify';
+import { SPORT_OVERTIME_IS_SUDDEN_VICTORY, byDateThenId, datesAtLocal, localDateKey, numberWord, sideOutcome } from '../format';
+import { officialContestId } from '../game-id';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import type { DataQualityConfig } from '../league-config/shape';
 import { isLevelWithWinner, settleLevelFinal } from '../postseason/level-final';
 import { SPORT } from '../sports/current';
-import type { CifssConflictRow, Decider, Game, GameResult, Outcome } from '../types';
+import { withRoundSite } from '../postseason/round-site';
+import { getTeamBySlug } from '../teams';
+import type { AddedGame, CifssConflictRow, Decider, Game, GameResult, GameSide, Outcome, Team } from '../types';
 import { boxGoals, boxOvertimeMinutes, withBoxScore, type BoxEvidence } from './box-evidence';
 import { shootoutRuleSectionOf } from './section-rule';
 
@@ -120,7 +124,9 @@ export function applyResultCorrection(
   if (!h || !a || !(h in c.goals) || !(a in c.goals)) return game;
   const goals = { home: c.goals[h], away: c.goals[a] };
   const shootout = c.shootout ? { home: c.shootout[h], away: c.shootout[a] } : null;
-  const lead = shootout ? shootout.home - shootout.away : goals.home - goals.away;
+  // The tally's winner; else the named winner of a tiebreak after a level score; else the goals'.
+  const named = !shootout && goals.home === goals.away && c.shootoutWinner ? (c.shootoutWinner === h ? 1 : c.shootoutWinner === a ? -1 : 0) : 0;
+  const lead = shootout ? shootout.home - shootout.away : named !== 0 ? named : goals.home - goals.away;
   const { resultConflict: _flags, ...provenance } = game.provenance;
   void _flags;
   return {
@@ -132,7 +138,7 @@ export function applyResultCorrection(
     isOt: c.otPeriods > 0,
     isForfeit: false,
     forfeitBy: null,
-    decider: shootout ? 'SO' : overtimeDecider(c.otPeriods),
+    decider: shootout || named !== 0 ? 'SO' : overtimeDecider(c.otPeriods),
     shootout,
     provenance: {
       ...provenance,
@@ -302,6 +308,9 @@ export function withBoxOvertime(game: Game): Game {
  */
 export function unfoldShootout(game: Game): Game {
   if (game.status !== 'final' || game.decider !== 'SO' || game.shootout !== null || game.home.score === null) return game;
+  // A cited correction is the record: no tally is read into it from another listing (Granite Hills 0, Hilltop 0 on
+  // Oct 30: si.com's 2-1 there is the previous day's score copied across).
+  if (game.provenance.resultCorrection) return game;
   const winner = markedWinner(game);
   if (!winner) return game;
   const tallies = otherScores(game)
@@ -350,12 +359,12 @@ export function resolveResult(game: Game): GameResult | null {
         }
       : null;
 
-  if (game.isForfeit || game.decider === 'FORFEIT') {
+  if ((game.isForfeit || game.decider === 'FORFEIT') && !p.resultCorrection) {
     return { winner, ending: 'forfeit', certainty: 'reported', basis: 'MaxPreps records a forfeit' };
   }
 
   if (p.resultCorrection) {
-    const ending = game.shootout ? 'shootout' : game.otPeriods > 0 ? 'overtime' : 'regulation';
+    const ending = game.isForfeit ? 'forfeit' : game.shootout || game.decider === 'SO' ? 'shootout' : game.otPeriods > 0 ? 'overtime' : 'regulation';
     return { winner, ending, certainty: p.resultCorrection.certainty ?? 'confirmed', basis: p.resultCorrection.source };
   }
 
@@ -473,7 +482,7 @@ export function finalizeResult(
   // The correction first: a corrected game is settled by its citation and carries no box evidence.
   const evidenced = withBoxScore(withCifssScore(applyResultCorrection(game, opts.corrections), opts.cifss), opts.box);
   const scored = withBoxOvertime(adjudicateScore(evidenced));
-  const read = unfoldShootout(settleLevelFinal(scored));
+  const read = withRoundSite(unfoldShootout(settleLevelFinal(scored)));
   const result = resolveResult(read);
   if (sameResult(read.result, result)) return read;
   if (result === null) {
@@ -482,6 +491,82 @@ export function finalizeResult(
     return rest;
   }
   return { ...read, result };
+}
+
+/**
+ * The game an AddedGame lists (DataQualityConfig.addedGames): contest id `official:<date>-<away>-at-<home>`, the
+ * source's date, start, host and result, classified like any other game (lib/classify.ts), with the citation in
+ * `provenance.resultCorrection` so the game page prints it. null when a school is outside the registry.
+ */
+export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
+  const home = getTeamBySlug(a.home);
+  const away = getTeamBySlug(a.away);
+  if (!home || !away) return null;
+  const scored = a.goals !== null && a.home in a.goals && a.away in a.goals;
+  const h = scored ? (a.goals as Record<string, number>)[a.home] : null;
+  const w = scored ? (a.goals as Record<string, number>)[a.away] : null;
+  const forfeit = a.forfeitBy !== null;
+  const side = (team: Team, own: number | null, other: number | null): GameSide => ({
+    teamId: team.id, slug: team.slug, name: team.name, score: own,
+    result: own === null || other === null ? null : outcomeOf(own, other),
+  });
+  const base: Game = {
+    contestId: officialContestId(a.dateKey, away.slug, home.slug),
+    ...datesAtLocal(a.dateKey, a.time),
+    isDateTba: false,
+    home: side(home, h, w),
+    away: side(away, w, h),
+    site: a.neutral ? 'neutral' : 'home',
+    // Unscored: still to play before its day, played with no score published after it. Never 0-0.
+    status: scored ? 'final' : a.dateKey < localDateKey(fetchedAt) ? 'score-pending' : 'scheduled',
+    isLeague: home.division === away.division,
+    leagueDivision: home.division === away.division ? home.division : null,
+    contestTypes: { home: null, away: null },
+    countsFor: null,
+    postseason: null,
+    otPeriods: scored ? a.otPeriods : 0,
+    isOt: scored && a.otPeriods > 0,
+    isForfeit: scored && forfeit,
+    forfeitBy: scored && forfeit ? (a.forfeitBy === a.home ? 'home' : 'away') : null,
+    decider: !scored ? null : forfeit ? 'FORFEIT' : overtimeDecider(a.otPeriods),
+    shootout: null,
+    venue: { text: a.note ?? null },
+    urls: { maxpreps: null, nfhsStream: null, goFan: null },
+    provenance: {
+      scores: a.from,
+      schedule: a.from,
+      fetchedAt,
+      ...(scored ? { resultCorrection: { maxpreps: null, source: a.source, url: a.url, certainty: 'reported' as const } } : {}),
+    },
+  };
+  return classifyGames([base])[0];
+}
+
+/**
+ * `games` with every configured added game no feed lists: one is left out while a feed game of the same two
+ * schools on the same date exists (the feed has it after all) or its id is already there, and none is added to a
+ * file stamped before its day or without both schools' games. The same array when nothing is added.
+ */
+export function withAddedGames(
+  games: readonly Game[],
+  fetchedAt: string,
+  added: DataQualityConfig['addedGames'] = DATA_QUALITY.addedGames,
+): Game[] {
+  const ids = new Set(games.map((g) => g.contestId));
+  const pairOn = new Set(games.map((g) => `${g.dateKey}|${[g.home.slug, g.away.slug].sort().join('~')}`));
+  const more: Game[] = [];
+  // Only into a file that could hold the game: one stamped on or after its day (an earlier capture never saw it)
+  // whose games include both schools (a run restricted to other leagues carries neither's schedule).
+  const today = localDateKey(fetchedAt);
+  const slugs = new Set(games.flatMap((g) => [g.home.slug, g.away.slug]));
+  for (const a of added) {
+    if (a.dateKey > today || !slugs.has(a.home) || !slugs.has(a.away)) continue;
+    const g = addedGame(a, fetchedAt);
+    if (!g || ids.has(g.contestId) || pairOn.has(`${a.dateKey}|${[a.home, a.away].sort().join('~')}`)) continue;
+    ids.add(g.contestId);
+    more.push(g);
+  }
+  return more.length > 0 ? [...games, ...more].sort(byDateThenId) : (games as Game[]);
 }
 
 /** `finalizeResult` over a list: the same array when no game changes. */

@@ -49,7 +49,9 @@ import { buildLeagueTournament } from './postseason/postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { boxEvidenceFrom } from './results/box-evidence';
+import { withFixtureGames } from './results/fixture-games';
 import { loadSnapshot } from './snapshot/snapshot-load';
+import { countsOf } from './snapshot/snapshot-migrate';
 import { divisionGames, sortStandings } from './standings/engine';
 import { outcomesFor, playoffOutcomeLabel } from './standings/ladder';
 import { missingOfficialResults } from './standings/missing';
@@ -119,7 +121,19 @@ function load(): Snapshot {
   return loadSnapshot(readOverride('lib/data.ts', 'SCVAL_SNAPSHOT', bundledSnapshot), { box });
 }
 
-const snapshot = load();
+/** The file as stored (and brought up to the current rules): its unmatched fixtures are still fixtures. */
+const stored = load();
+
+/**
+ * What the site reads: the stored snapshot with a game for every official fixture no source lists
+ * (lib/results/fixture-games.ts), so a league's own schedule puts a game on the site's schedule. Those fixtures
+ * leave `officialFixtures`, which keeps only the ones that cannot be games (a school outside the registry).
+ */
+const snapshot: Snapshot = (() => {
+  const listed = withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt);
+  if (listed.listed.length === 0) return stored;
+  return { ...stored, games: listed.games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
+})();
 
 // ---------------------------------------------------------------- basics
 
@@ -609,7 +623,8 @@ export interface StandingContext {
 
 function missingRows(division: DivisionId, asOf?: string): MissingOfficialRow[] {
   const today = localDateKey(asOf ?? snapshot.fetchedAt);
-  return missingOfficialResults(snapshot.games, snapshot.officialFixtures ?? [], division, today);
+  // From the stored file: a fixture with no result is "missing" as a fixture, whether or not it is listed as a game.
+  return missingOfficialResults(stored.games, stored.officialFixtures ?? [], division, today);
 }
 
 export function getStandingContext(division: DivisionId, asOf?: string): ReadonlyMap<TeamId, StandingContext> {

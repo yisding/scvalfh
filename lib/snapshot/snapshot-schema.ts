@@ -29,12 +29,14 @@ const id = slugId;
 export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
 export const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts); never in a stored file. */
+export const OFFICIAL_ID_RE = /^official:\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
 const contestId = z
   .string()
   .refine(
-    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v),
-    'expected a contest GUID, sblive:<digits> or cifsds:<away>-at-<home>',
+    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v) || OFFICIAL_ID_RE.test(v),
+    'expected a contest GUID, sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>',
   );
 const outcome = z.enum(['W', 'L', 'T']);
 /** One team's box score of a game, as far as it bears on the result (lib/types.ts BoxSide). */

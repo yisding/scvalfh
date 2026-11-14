@@ -29,6 +29,7 @@ import {
   getSection,
   leagueOfDivision,
 } from '../../lib/leagues';
+import { isOfficialContestId } from '../../lib/game-id';
 import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { resolveResult } from '../../lib/results/result';
 import { shootoutRuleSectionOf, shootoutSectionOf } from '../../lib/results/section-rule';
@@ -141,6 +142,7 @@ export interface GameDisplay {
 }
 
 const UNREPORTED_NOTE = 'We will update when MaxPreps posts it.';
+const OFFICIAL_ONLY_NOTE = 'On the league’s schedule for this day; no source has listed the game or a score.';
 
 /** The word after the league's short name in a postseason chip; `ccs` is the section's own chip. */
 const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = {
@@ -386,7 +388,8 @@ function deciderTagFor(game: Game): string | null {
   // `shootoutText` instead. A San Diego level W/L final, or a level playoff final elsewhere, gets no tag: the
   // tiebreak is not verified.
   if (game.decider === 'SO') {
-    return game.shootout || tiebreakRuleOf(game).inference === 'unverified' ? null : SPORT_TIEBREAK_TAG;
+    // With a stored tally too: the tag says how the game ended, and `shootoutText` adds the tally where there is room.
+    return tiebreakRuleOf(game).inference === 'unverified' ? null : SPORT_TIEBREAK_TAG;
   }
   if (overtimeInDoubt(game)) return null;
   // Soccer's overtime is one stage of two halves, whatever count MaxPreps holds for it.
@@ -495,7 +498,9 @@ export function describeGame(game: Game, perspective?: Perspective | null): Game
         kind: 'unreported',
         statusLabel: 'SCORE NOT REPORTED',
         statusTone: 'ink-3',
-        note: UNREPORTED_NOTE,
+        // A game only the league's schedule has (lib/results/fixture-games.ts): no source has listed it at all.
+        // or one recorded from another official source with no score (DATA_QUALITY.addedGames), whose own note says what is known.
+        note: !isOfficialContestId(game.contestId) ? UNREPORTED_NOTE : game.official ? OFFICIAL_ONLY_NOTE : 'No source has published the score.',
         showScores: true, // two en dashes, never two zeroes
         home: sideView(game.home.name, game.home.slug, null, 'level', 'pending'),
         away: sideView(game.away.name, game.away.slug, null, 'level', 'pending'),

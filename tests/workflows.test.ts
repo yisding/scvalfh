@@ -15,6 +15,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { localDateKey } from '../lib/format';
+import { withFixtureGames } from '../lib/results/fixture-games';
+
 import { getClubSlugs } from '../lib/players/clubs';
 import { gameIdToParam } from '../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../lib/leagues';
@@ -460,7 +463,9 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 describe('assert:prerender on a .next that has served traffic', () => {
   const SNAPSHOT = path.join(REPO, 'data', 'snapshot.json');
   // Loaded as the build (and the script) loads it: a file written before a league was added is upgraded.
-  const snapshot = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
+  const stored = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
+  // As the site reads it (lib/data.ts): a league fixture no source lists is a game with a page of its own.
+  const snapshot = { ...stored, games: withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt).games };
   const OK_META = JSON.stringify({ status: 200, headers: { 'content-type': 'image/png' } });
   const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
 

@@ -39,7 +39,12 @@ export function sdsRules(shortName: string): LeagueRules {
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'division',
     classification: 'membership', excludeContestTypes: [2, 4],
     // The playoffs open with the play-ins on Mon Nov 2 (SDFHOA calendar); the Master Calendar's last contest is Oct 30.
-    postseasonFrom: '2026-11-02', leagueGameOverrides: [],
+    postseasonFrom: '2026-11-02',
+    // Granite Hills at Southwest, Fri Oct 16 (ee4e4cd0): MaxPreps types it a tournament game, but it is the pair's
+    // first Metro South Bay meeting: East County Sports' 2026 Metro Conference schedule lists "Friday, Oct. 16 ...
+    // Granite Hills at Southwest", Southwest's own cifsshome.org row types it League, and Granite Hills' tournament
+    // was the next day (three games on Sat Oct 17). Without it the pair has one league game of two.
+    leagueGameOverrides: ['ee4e4cd0-2ca9-4134-a6d8-af29ca742019'],
     matcher: 'two-phase',
     tiebreaks: { default: ['no-rule'] },
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',

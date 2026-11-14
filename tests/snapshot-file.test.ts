@@ -153,8 +153,11 @@ describeIfPresent('the committed snapshot: si.com score cross-check (owner decis
     for (const row of x.conflicts) {
       const game = snapshot.games.find((g) => g.contestId === row.contestId);
       expect(game, row.contestId).toBeDefined();
-      expect(game?.home.score).toBe(row.maxpreps.home);
-      expect(game?.away.score).toBe(row.maxpreps.away);
+      // MaxPreps' score as the cross-check saw it: the published one, unless the recorded result is another
+      // (lib/results/result.ts), and then the game keeps MaxPreps' version beside it.
+      const p = game?.provenance;
+      const mp = p?.adjudicated?.maxpreps ?? p?.resultCorrection?.maxpreps ?? { home: game?.home.score, away: game?.away.score };
+      expect({ home: mp.home, away: mp.away }).toEqual(row.maxpreps);
       expect(game?.provenance.scores).not.toBe('sblive');
       expect(row.maxpreps).not.toEqual(row.sblive);
     }

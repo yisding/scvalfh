@@ -281,6 +281,33 @@ export interface GameResult {
   basis?: string;
 }
 
+/**
+ * A game no feed lists, recorded from an official source (DataQualityConfig.addedGames; owner decision,
+ * 2026-11-14: a game an official league or section source has is on the schedule whether or not MaxPreps lists
+ * it). Poway's forfeit to Valley Center on Oct 30 is on the San Diego Section's own score listing and on no
+ * MaxPreps schedule. `goals` null lists the game without a score.
+ */
+export interface AddedGame {
+  dateKey: string;
+  /** Local start 'HH:MM', or null. */
+  time: string | null;
+  home: TeamSlug;
+  away: TeamSlug;
+  goals: Readonly<Record<TeamSlug, number>> | null;
+  /** The team that forfeited, when the source records a forfeit (its nominal score counts in no goal total). */
+  forfeitBy: TeamSlug | null;
+  /** Where the listing comes from, as a source id: 'cifss' for the Section's score listing; 'derived' for an owner's report. */
+  from: 'cifss' | 'derived';
+  /** true for a game at a neutral site (a tournament day at one school): `home` is then only the listed side. */
+  neutral?: true;
+  /** What the source says of a game it gives no score for (who won, where), printed as the game's note. */
+  note?: string;
+  otPeriods: number;
+  /** The source and what it says, one sentence without a final period. */
+  source: string;
+  url: string | null;
+}
+
 /** One team's box score of a game, as far as it bears on the result; a field is absent when the coach did not track it. */
 export interface BoxSide {
   /** The goals (points) the team's players total. */
@@ -302,6 +329,8 @@ export interface ResultCorrection {
   goals: Readonly<Record<TeamSlug, number>>;
   otPeriods: number;
   shootout: Readonly<Record<TeamSlug, number>> | null;
+  /** The team that won the tiebreak after a level score, where the source says who won it and gives no tally. */
+  shootoutWinner?: TeamSlug;
   /** The source and what it says, one sentence without a final period. */
   source: string;
   url: string | null;

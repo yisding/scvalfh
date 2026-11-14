@@ -336,7 +336,9 @@ describeIfCaptured('the section shootout and level games', () => {
 
   it('decides a level San Diego final MaxPreps marks W and L as a shootout win, across conferences too', () => {
     expect(getSection('sds').shootout, 'lib/league-config/sections.ts').not.toBeNull();
-    const games = levelWithResult();
+    // MaxPreps' own level finals marked W and L; a game a cited correction made level (59b0f6a5, ad3d21f9: a credited
+    // one-goal win read as a shootout, DATA_QUALITY.resultCorrections) is a different record.
+    const games = levelWithResult().filter((g) => !g.provenance.resultCorrection?.maxpreps || g.provenance.resultCorrection.maxpreps.home === g.provenance.resultCorrection.maxpreps.away);
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
     expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/pipeline/normalize.ts').toEqual(
       ['f99ce5ed', '7551a71d', 'ce29e835', 'd8aad805', 'ae312fa8', 'e6488575', '829af66a', 'fb944ba7'].sort(),
@@ -345,7 +347,9 @@ describeIfCaptured('the section shootout and level games', () => {
       expect(g.decider, `lib/pipeline/normalize.ts: ${g.contestId}`).toBe('SO');
       // MaxPreps stores no tally. One is recorded only where a second source's score is the level score with the
       // tally added (lib/results/result.ts unfoldShootout), and then the game says which source.
-      expect(g.shootout === null, `lib/results/result.ts: a tally needs its source: ${g.contestId}`).toBe(g.provenance.shootoutSource === undefined);
+      expect(g.shootout === null, `lib/results/result.ts: a tally needs its source: ${g.contestId}`).toBe(
+        g.provenance.shootoutSource === undefined && g.provenance.resultCorrection === undefined,
+      );
       expect(g.result, `lib/results/result.ts: ${g.contestId}`).toMatchObject({ winner: g.home.result === 'W' ? 'home' : 'away' });
       expect(['shootout', 'unstated'], `lib/results/result.ts: ${g.contestId}`).toContain(g.result?.ending);
       expect(g.provenance.resultConflict, `lib/pipeline/normalize.ts: ${g.contestId}`).toBeUndefined();

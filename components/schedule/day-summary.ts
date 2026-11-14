@@ -149,7 +149,10 @@ function eventOf(game: Game): string | null {
   const tag = game.postseason;
   if (game.countsFor !== null || !tag) return null;
   if (tag.kind === 'ccs') return getBracketLink(game)?.division ?? postseasonTagOf(game);
-  if (tag.kind !== 'outside-tournament' && tag.leagueId !== null) return null;
+  // A San Diego Section playoff game is the Section's event whatever conferences its sides are in, as a CCS game
+  // is: Canyon Hills v Bishop's, two City Western schools, is the Open Division final (Nov 14), and under "City"
+  // it read as one of the league's own games (owner report, 2026-11-14).
+  if (tag.kind !== 'outside-tournament' && tag.kind !== 'section-playoffs' && tag.leagueId !== null) return null;
   return postseasonTagOf(game);
 }
 

@@ -44,7 +44,7 @@ import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
 import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final';
 import type { BoxEvidence } from '../results/box-evidence';
-import { excessOver, finalizeResult } from '../results/result';
+import { excessOver, finalizeResult, withAddedGames } from '../results/result';
 import { stableStringify } from '../stable-json';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import { CCS } from '../league-config/sections';
@@ -611,7 +611,9 @@ export function needsRecordedResults(raw: unknown, box?: BoxEvidence): boolean {
   if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.standings)) return false;
   try {
     const cifss = cifssRowsOf(raw);
-    return (raw.games as Game[]).some((g) => exclusionOf(g) !== null || recorded(g, cifss, box) !== g);
+    const games = raw.games as Game[];
+    if (withAddedGames(games, String(raw.fetchedAt)) !== games) return true;
+    return games.some((g) => exclusionOf(g) !== null || recorded(g, cifss, box) !== g);
   } catch {
     return false;
   }
@@ -640,15 +642,26 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
       if (team) changed.add(team.division);
     }
   }
-  const kept = v2.games.filter((g) => exclusionOf(g) === null);
+  // and games an official source has and no feed lists (DATA_QUALITY.addedGames) join them.
+  const kept = withAddedGames(v2.games.filter((g) => exclusionOf(g) === null), v2.fetchedAt);
+  const stored = new Map(v2.games.map((g) => [g.contestId, g]));
   const games = kept.map((g) => recorded(g, cifss, box));
   const unfilled: Game[] = [];
-  games.forEach((g, i) => {
-    const was = kept[i];
+  games.forEach((g) => {
+    const was = stored.get(g.contestId);
+    if (!was) {
+      // An added game: its teams' rows are recounted.
+      for (const side of [g.home, g.away]) {
+        const team = side.teamId ? getTeamById(side.teamId) : undefined;
+        if (team) changed.add(team.division);
+      }
+      return;
+    }
     if (was.provenance.backfill && !g.provenance.backfill) unfilled.push(g);
     const moved =
       was.home.score !== g.home.score || was.away.score !== g.away.score || was.decider !== g.decider || was.otPeriods !== g.otPeriods ||
-      was.home.result !== g.home.result || was.away.result !== g.away.result || stableStringify(was.shootout) !== stableStringify(g.shootout);
+      was.home.result !== g.home.result || was.away.result !== g.away.result || stableStringify(was.shootout) !== stableStringify(g.shootout) ||
+      was.countsFor !== g.countsFor;
     if (!moved) return;
     for (const side of [g.home, g.away]) {
       const team = side.teamId ? getTeamById(side.teamId) : undefined;

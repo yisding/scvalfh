@@ -187,7 +187,13 @@ describe('data: teams', () => {
 describe('data: games', () => {
   it('filters by team, league, division, league games, postseason, status and date', () => {
     const all = data.getGames();
-    expect(all.length).toBe(158);
+    // 158 contests in the file, and the two De Anza fixtures no source lists (lib/results/fixture-games.ts).
+    expect(all.length).toBe(160);
+    expect(all.filter((g) => g.contestId.startsWith('official:')).map((g) => [g.status, g.countsFor, g.home.score])).toEqual([
+      // One fixture's day has passed with no score from any source; the other is still to come.
+      ['score-pending', 'de-anza', null],
+      ['scheduled', 'de-anza', null],
+    ]);
     const la = data.getGames({ teamId: 'los-altos' });
     expect(la.length).toBeGreaterThan(15);
     for (const g of la) expect([g.home.slug, g.away.slug]).toContain('los-altos');
@@ -207,7 +213,7 @@ describe('data: games', () => {
     expect(data.getGames({ league: 'bval', leagueOnly: true })).toEqual([]);
     expect(data.getGames({ division: 'de-anza', leagueOnly: true }).every((g) => g.countsFor === 'de-anza')).toBe(true);
     expect(data.getGames({ postseason: true })).toEqual([]);
-    expect(data.getGames({ postseason: false })).toHaveLength(158);
+    expect(data.getGames({ postseason: false })).toHaveLength(160);
     expect(data.getGames({ teamId: 'not-a-team' })).toEqual([]);
   });
 
@@ -531,10 +537,11 @@ describe('data: the secondary-source read API', () => {
   it('returns what the snapshot carries, and is safe to call when it carries nothing', () => {
     expect(data.getDropped()).toEqual([]);
     expect(data.getSupersededGames()).toEqual({});
-    expect(data.getOfficialFixtures()).toHaveLength(2);
-    expect(data.getOfficialFixtures({ league: 'scval' })).toHaveLength(2);
+    // The file's two unmatched SCVAL fixtures are on the schedule as games, so none is left as a bare fixture.
+    expect(data.getOfficialFixtures()).toEqual([]);
+    expect(data.getOfficialFixtures({ league: 'scval' })).toEqual([]);
     expect(data.getOfficialFixtures({ league: 'bval' })).toEqual([]);
-    expect(data.getOfficialFixtures({ division: 'de-anza', slug: 'cupertino' })).toHaveLength(2);
+    expect(data.getGames({ teamId: 'cupertino' }).filter((g) => g.contestId.startsWith('official:'))).toHaveLength(2);
     expect(data.getOfficialFixtures({ slug: 'wilcox' })).toEqual([]);
     expect(data.getSources().length).toBeGreaterThan(20);
     expect(data.getSources({ league: 'mcal' })).toEqual([]);

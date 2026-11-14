@@ -5,7 +5,7 @@
  */
 
 import type {
-  CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
+  AddedGame, CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
   PlayoffStatus, RegionId, ResultCorrection, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from '../types';
 
@@ -582,6 +582,12 @@ export interface DataQualityConfig {
    * `source` is the citation the game page prints.
    */
   resultCorrections: Readonly<Record<ContestId, ResultCorrection>>;
+  /**
+   * Games no feed lists, recorded from an official source (lib/types.ts AddedGame; lib/results/result.ts
+   * `withAddedGames` puts each on the schedule, classified like any other game, until a feed lists the pair on
+   * that date). In date order.
+   */
+  addedGames: readonly AddedGame[];
   /**
    * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
    * other school, than its league's document says. D2 rule 2 (lib/crosscheck/backfill.ts) looks for si.com's Final of the pair

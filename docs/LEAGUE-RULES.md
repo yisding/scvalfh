@@ -119,9 +119,10 @@ when a stored snapshot is loaded):
 A tournament game marked T and T stays a tie: pool games end level, and 22 of the 24 level tournament finals of
 2026 are marked that way. A tournament game marked W and L was played to a winner (owner decision, 2026-11-13).
 
-On 2026-11-13 the field hockey site's 964 finals record as 942 in play (50 of them in overtime; 3 of the 942
-confirmed by a citation), 2 rescored from two agreeing sources, 2 forfeits, 9 shootouts (5 confirmed, 4
-inferred), 7 unstated and 2 disputed. The games this changed: Saint Francis 1, Archbishop Mitty
+On 2026-11-14 the field hockey site's 964 finals record as 938 in play (44 of them in overtime), 3 forfeits, 19
+shootouts (14 confirmed, 4 reported, 1 inferred), 2 rescored from two agreeing sources and 2 unstated (Huntington
+Beach 0, Hockaday 0 and San Pasqual 0, Westview 0, whose pages show no shootout column); 2 of those in play are
+disputed. The games this changed: Saint Francis 1, Archbishop Mitty
 1 (CCS semifinal, Nov 11) was a tie in both teams' records while the bracket advanced Saint Francis; Huntington
 Beach 0, Hockaday 0 and University 0, Gilroy 0 were ties; Mission Vista–Westview was published as si.com's 4-3
 and is now 1–1 with a 3–2 shootout; Tamalpais–Marin Catholic was 3-1 and is now 0–0 after two overtimes with a
@@ -137,10 +138,46 @@ sheet, Olympian 6–0 over Sage Creek (a quarterfinal MaxPreps still lists with 
 Mission Bay 3–2 La Jolla Country Day; and from cifsshome.org, Helix 2–1 over Bonita Vista (Oct 7, unscored on
 MaxPreps; one school-entered source, so `reported`). A correction can score a game MaxPreps lists with no score.
 
-**Not found.** The EAL Super Regional holds two games in every source (Pleasant Valley 2–0 Bella Vista and the
-final). Chico reached the final with no earlier game listed, and Davis, Lassen and Corning have none, so at least
-one game (Chico's, probably against Davis) is missing from MaxPreps, si.com and the press; the NFHS Network lists
-"Lassen vs. Chico" and "Bella Vista vs. Corning" for Oct 31 with no scores. Nothing is recorded for it [U].
+**Read from MaxPreps' game pages on 2026-11-14.** The page for a game (not the feed the pipeline reads) has a
+box with a Final column, which is the goals in play, and after a shootout an SO column. Fourteen games now carry
+what their page shows, each as a correction with its citation: the shootout tallies of Eastlake 2–0 Clairemont,
+Mt. Carmel 2–0 Poway, University City 3–2 Rancho Bernardo, Cathedral Catholic 3–2 Canyon Crest Academy, Canyon
+Crest Academy 3–1 Rancho Bernardo, Mission Vista 3–2 Westview, University 3–2 Gilroy and Chico 2–1 Davis; three
+one-goal San Diego results whose page has an SO column and so are read as a level score and a shootout, the one
+goal being the credit (La Jolla–Scripps Ranch, Mission Bay–Cathedral Catholic, Del Norte–Mission Hills; marked
+`reported`, since no source says it in words); Vista–Escondido, whose tally is 3–2 on cifsshome.org and si.com
+and 4–3 on MaxPreps' page (`reported`, 3–2); and two overtime counts that are period scores entered in overtime
+columns (Hollister 3–1 Greenfield, Corning 2–0 Bella Vista: no overtime). A correction can also name the winner
+of a tiebreak with no tally (`shootoutWinner`): Granite Hills 0, Hilltop 0 (Oct 30, East County Sports), and
+Pleasant Valley 0, Chico 0 on Sep 2, which MaxPreps has as 1-0 after three overtimes and Chico's own account
+calls double overtime and shootouts. Reading these pages in the pipeline, for every level final with the winner
+marked, is the follow-up that would make the corrections unnecessary.
+
+**Games the feeds do not carry** (owner decision, 2026-11-14: a game an official league or section source has is
+on the schedule whether or not MaxPreps lists it).
+
+- *A league's own fixture.* An official fixture no source lists is a game on the schedule
+  (`lib/results/fixture-games.ts`, contest id `official:<date>-<away>-at-<home>`): the schedule's date, start
+  and host, counted for its division, no score. Before its day it is scheduled; after it, "score not reported",
+  never 0-0. It goes the day a source lists the game. On 2026-11-13 that is one PCAL fixture (Santa Catalina at
+  Greenfield, Oct 6), 88 girls soccer fixtures and 26 boys basketball fixtures. The site adds them when it reads
+  the snapshot; the stored file keeps them as fixtures for the pipeline's matcher.
+- *A game from another official source* (`DATA_QUALITY.addedGames`, each with its citation). Poway's forfeit to
+  Valley Center on Oct 30 is on the San Diego Section's score listing (cifsshome.org) and on no MaxPreps schedule;
+  it counts in the Palomar table, as the pair's second meeting. The EAL Super Regional of Oct 31, as the owner
+  laid it out: first round Chico v Corning and Bella Vista v Lassen; semifinals Davis v Chico and Pleasant
+  Valley 2–0 Bella Vista; the final, Pleasant Valley over Chico 3–2 in a shootout after double overtime; third
+  place Davis over Bella Vista. MaxPreps has two of the six. The other four are listed with who won, from Chico
+  High field hockey's own account and the owner's report, and with no score: none is published, and none is
+  guessed. (The NFHS Network's listings pair the first-round teams the other way and are not followed.)
+- *A league game MaxPreps types otherwise* (`leagueGameOverrides`). Granite Hills at Southwest, Oct 16, is on the
+  Metro Conference schedule and typed a tournament game; it counts, so Metro South Bay is twelve games and
+  Granite Hills 6-0. The two Hilltop at Granite Hills games on Oct 29 and 30 are both real (East County Sports).
+- *A scrimmage is not a game.* Presentation at Willow Glen, Aug 31, is excluded.
+- *Where a final is played.* A Section round with one named site is at that site, a neutral one, whoever a feed
+  lists as host: the San Diego Section's three finals are at La Jolla High School (`lib/postseason/round-site.ts`).
+- *Where a playoff game is filed.* A San Diego Section playoff game is listed under the Section's playoffs on a
+  day page, never under a conference, even when both teams are in one (Canyon Hills v Bishop's, the Open final).
 
 To record a result from a better source, add the contest to `resultCorrections` in
 `lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)
