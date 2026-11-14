@@ -9405,23 +9405,7 @@
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/willow-glen-high-school/olivia-pitkin3",
           "kind": "ncsa",
-          "quote": "Club Information Seasons of Club Experience 2 seasons 2023 Fusion Volleyball Club CA (16u) Made the 16-1 Power team as a 14 yo. 2022 Fusion Volleyball Club CA (14u) #1 Outside Hitter and DS",
-          "statedSchool": "Willow Glen High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/willow-glen-high-school/olivia-pitkin3",
-          "kind": "ncsa",
           "quote": "2023 Fusion Volleyball Club CA (16u)",
-          "statedSchool": "Willow Glen High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/willow-glen-high-school/olivia-pitkin3",
-          "kind": "ncsa",
-          "quote": "2022 Fusion Volleyball Club CA (14u)",
           "statedSchool": "Willow Glen High School",
           "statedClassYear": 2027,
           "sourceDate": null
@@ -9536,14 +9520,6 @@
           "kind": "other",
           "quote": "Laurie Nguyen Setter - Class of 2028 Club: Vision Team: N/A Jersey Number: N/A High School: Archbishop Mitty State: California",
           "statedSchool": "Archbishop Mitty (state: California)",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepvolleyball.com/player-profile/laurie-nguyen/pid-40238",
-          "kind": "other",
-          "quote": "Laurie Nguyen Setter - Class of 2028 Club: Vision Team: N/A Jersey Number: N/A High School: Archbishop Mitty State: California Rating:",
-          "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2028,
           "sourceDate": null
         }
@@ -9692,23 +9668,7 @@
         {
           "url": "https://prepdig.com/player/chayse-courtney/",
           "kind": "other",
-          "quote": "Class 2028 Height 6'1\" HS Archbishop Mitty | CA ... is a 6'1\" Outside Hitter/Right-Side Hitter in the 2028 class. Courtney attends Archbishop Mitty in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Archbishop Mitty (Prep Dig team link: Archbishop Mitty High School Volleyball | San Jose, CA | Prep Dig)",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepdig.com/player/chayse-courtney/",
-          "kind": "other",
           "quote": "Chayse Courtney is a 6'1\" Outside Hitter/Right-Side Hitter in the 2028 class. Courtney attends Archbishop Mitty in California and plays club volleyball for Vision Volleyball Club.",
-          "statedSchool": "Archbishop Mitty",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepvolleyball.com/player-profile/chayse-courtney/pid-36914",
-          "kind": "other",
-          "quote": "Chayse Courtney Outside Hitter - Class of 2028 - Stanford Follow: Club: Vision Team: 17 Gold Jersey Number: 14 High School: Archbishop Mitty State: California Rating:",
           "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2028,
           "sourceDate": null
@@ -9724,7 +9684,7 @@
       "clubTeam": "16 Gold 25-26",
       "status": "unknown",
       "asOf": null,
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/19125833",
@@ -9735,7 +9695,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "riordan",
@@ -9934,7 +9894,7 @@
       "clubTeam": "17 Blue 25-26",
       "status": "unknown",
       "asOf": null,
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/21118994",
@@ -9953,18 +9913,26 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
       "fullName": "Mariana Platosh",
       "club": "sf-elite-volleyball-club",
-      "clubTeam": "16 Nono",
+      "clubTeam": "16-2",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/mariana-platosh",
+          "kind": "ncsa",
+          "quote": "2025 SF Elite (16-2)",
+          "statedSchool": "Sacred Heart Cathedral Preparatory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
         {
           "url": "https://www.hudl.com/profile/25528998",
           "kind": "hudl",
@@ -9977,22 +9945,6 @@
           "url": "https://my.sportsrecruits.com/athlete/mariana_platosh2",
           "kind": "sportsrecruits",
           "quote": "17 Gold, SF Elite Volleyball-Girls South San Francisco , CA LOCATION",
-          "statedSchool": "Sacred Heart Cathedral Preparatory",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/mariana-platosh",
-          "kind": "ncsa",
-          "quote": "2025 SF Elite (16-2)",
-          "statedSchool": "Sacred Heart Cathedral Preparatory",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/mariana-platosh",
-          "kind": "ncsa",
-          "quote": "2024 SF Elite (15-2 Power)",
           "statedSchool": "Sacred Heart Cathedral Preparatory",
           "statedClassYear": 2028,
           "sourceDate": null
@@ -10213,7 +10165,7 @@
       "clubTeam": "Red Rock Girls RWC 16-1",
       "status": "unknown",
       "asOf": null,
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/19028524",
@@ -10224,7 +10176,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "saint-francis",
@@ -10234,7 +10186,7 @@
       "clubTeam": "G16 White",
       "status": "past",
       "asOf": "2024",
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/19028524",
@@ -10245,7 +10197,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "saint-francis",
@@ -10255,7 +10207,7 @@
       "clubTeam": "Encore 14 Navy",
       "status": "past",
       "asOf": "2024",
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/19028524",
@@ -10266,7 +10218,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "saint-francis",
@@ -10293,17 +10245,9 @@
           "statedSchool": "Saint Francis Highschool",
           "statedClassYear": 2028,
           "sourceDate": null
-        },
-        {
-          "url": "https://prepdig.com/player/abby-cardenas/",
-          "kind": "other",
-          "quote": "Class 2028 Height 6'0\" HS Saint Francis | CA ... is a 6'0\" Right-Side Hitter/Outside Hitter in the 2028 class. Cardenas attends Saint Francis in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Saint Francis (Prep Dig team link: Saint Francis High School Volleyball | Mountain View, CA | Prep Dig)",
-          "statedClassYear": 2028,
-          "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "saint-francis",
@@ -10384,7 +10328,7 @@
       "clubTeam": "Girls 15 Red",
       "status": "unknown",
       "asOf": null,
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/25537453",
@@ -10395,7 +10339,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "saint-francis",
@@ -10458,14 +10402,6 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.hudl.com/profile/21212970",
-          "kind": "hudl",
-          "quote": "Absolute 17 Black / Absolute Volleyball Club / Volleyball / 2025",
-          "statedSchool": "St. Ignatius College Prep",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
           "url": "https://my.sportsrecruits.com/athlete/eileen_pfeffer2",
           "kind": "sportsrecruits",
           "quote": "Absolute 17 Black, Absolute Volleyball Club 10 STATS",
@@ -10474,10 +10410,10 @@
           "sourceDate": null
         },
         {
-          "url": "https://my.sportsrecruits.com/athlete/eileen_pfeffer2",
-          "kind": "sportsrecruits",
-          "quote": "TEAMS St. Ignatius College Preparatory Girl's Volleyball, St. Ignatius College Preparatory Girl's Volleyball San Francisco , California LOCATION Absolute 17 Black, Absolute Volleyball Club 10",
-          "statedSchool": "St. Ignatius College Preparatory",
+          "url": "https://www.hudl.com/profile/21212970",
+          "kind": "hudl",
+          "quote": "Absolute 17 Black / Absolute Volleyball Club / Volleyball / 2025",
+          "statedSchool": "St. Ignatius College Prep",
           "statedClassYear": 2027,
           "sourceDate": null
         }
@@ -10489,19 +10425,11 @@
       "athleteId": "4c58dbe2-e6f5-4213-85aa-04468f80c46c",
       "fullName": "Neve Harlan",
       "club": "absolute-volleyball-club",
-      "clubTeam": "Absolute 17 Black",
+      "clubTeam": "17 Black",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.hudl.com/profile/18931165",
-          "kind": "hudl",
-          "quote": "Absolute 17 Black / Absolute Volleyball Club / Volleyball / 2025",
-          "statedSchool": "St. Ignatius College Prep",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
         {
           "url": "https://my.sportsrecruits.com/athlete/neve_harlan2",
           "kind": "sportsrecruits",
@@ -10511,10 +10439,10 @@
           "sourceDate": null
         },
         {
-          "url": "https://my.sportsrecruits.com/athlete/neve_harlan2",
-          "kind": "sportsrecruits",
-          "quote": "TEAMS St. Ignatius College Preparatory Girl's Volleyball, St. Ignatius College Preparatory Girl's Volleyball San Francisco , California LOCATION 17 Black, Absolute 8 STATS Defensive Specialist, Libero POSITION",
-          "statedSchool": "St. Ignatius College Preparatory",
+          "url": "https://www.hudl.com/profile/18931165",
+          "kind": "hudl",
+          "quote": "Absolute 17 Black / Absolute Volleyball Club / Volleyball / 2025",
+          "statedSchool": "St. Ignatius College Prep",
           "statedClassYear": 2027,
           "sourceDate": null
         }
@@ -10561,28 +10489,20 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/whitney-fleming/bio/?careerid=t3gbr0schpjm6",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"17 Gold \",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2025,\"season\":\"Spring\",\"modifiedOn\":\"2025-10-04T04:20:56\"",
-          "statedSchool": "Valley Christian (San Jose, CA)",
-          "statedClassYear": 2027,
-          "sourceDate": "2025-10-04"
-        },
-        {
-          "url": "https://prepdig.com/player/whitney-fleming/",
-          "kind": "other",
-          "quote": "Whitney Whitney Fleming is a 5'10\" Outside Hitter/Right-Side Hitter in the 2027 class. Fleming attends Valley Christian in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Valley Christian (Prep Dig team link: San Jose, CA)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
           "url": "https://prepdig.com/player/whitney-fleming/",
           "kind": "other",
           "quote": "Whitney Fleming is a 5'10\" Outside Hitter/Right-Side Hitter in the 2027 class. Fleming attends Valley Christian in California and plays club volleyball for Vision Volleyball Club.",
           "statedSchool": "Valley Christian",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/whitney-fleming/bio/?careerid=t3gbr0schpjm6",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"17 Gold \",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2025,\"season\":\"Spring\",\"modifiedOn\":\"2025-10-04T04:20:56\"",
+          "statedSchool": "Valley Christian (San Jose, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": "2025-10-04"
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; the club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -10623,14 +10543,6 @@
           "kind": "hudl",
           "quote": "15 Blue 25-26 / Vision Volleyball Club / Volleyball / 2025",
           "statedSchool": "Valley Christian High School",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepdig.com/player/ava-benitey-2/",
-          "kind": "other",
-          "quote": "Ava Ava Benitey is a 5'2\" DS/L/Setter in the 2029 class. Benitey attends Valley Christian in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Valley Christian (Prep Dig team link: San Jose, CA)",
           "statedClassYear": 2029,
           "sourceDate": null
         },
@@ -10685,28 +10597,20 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/tatyana-borovick/bio/?careerid=qjmevlrjfe5ue",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-10-16T08:16:14\"",
-          "statedSchool": "Valley Christian (San Jose, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-10-16"
-        },
-        {
-          "url": "https://prepdig.com/player/tatyana-jade-borovick/",
-          "kind": "other",
-          "quote": "Tatyana Tatyana Jade Borovick is a 6'0\" Outside Hitter/Middle Blocker in the 2029 class. Jade Borovick attends Valley Christian in California and plays club volleyball for Vision Volleyball Club . | Tatyana Jade Borovick is staying at Vision Volleyball Club on 16 Gold",
-          "statedSchool": "Valley Christian (Prep Dig team link: San Jose, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
           "url": "https://prepdig.com/player/tatyana-jade-borovick/",
           "kind": "other",
           "quote": "Tatyana Jade Borovick is a 6'0\" Outside Hitter/Middle Blocker in the 2029 class. Jade Borovick attends Valley Christian in California and plays club volleyball for Vision Volleyball Club.",
           "statedSchool": "Valley Christian",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/tatyana-borovick/bio/?careerid=qjmevlrjfe5ue",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-10-16T08:16:14\"",
+          "statedSchool": "Valley Christian (San Jose, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-10-16"
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; the club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-10-16."
@@ -10751,28 +10655,20 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/grace-paedon/bio/?careerid=68q3jdovuqiee",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-08-09T13:15:14\"",
-          "statedSchool": "Valley Christian (San Jose, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-08-09"
-        },
-        {
-          "url": "https://prepdig.com/player/grace-paedon/",
-          "kind": "other",
-          "quote": "Grace Grace Paedon is a 6'2\" Middle Blocker in the 2029 class. Paedon attends Valley Christian in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Valley Christian (Prep Dig team link: San Jose, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
           "url": "https://prepdig.com/player/grace-paedon/",
           "kind": "other",
           "quote": "Grace Paedon is a 6'2\" Middle Blocker in the 2029 class. Paedon attends Valley Christian in California and plays club volleyball for Vision Volleyball Club.",
           "statedSchool": "Valley Christian",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/grace-paedon/bio/?careerid=68q3jdovuqiee",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-08-09T13:15:14\"",
+          "statedSchool": "Valley Christian (San Jose, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-08-09"
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; the club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-08-09."
@@ -10964,18 +10860,18 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.hudl.com/profile/26779352",
-          "kind": "hudl",
-          "quote": "16 Blue 25-26 / Vision Volleyball Club / Volleyball / 2025",
-          "statedSchool": "Valley Christian High School",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/valley-christian-high-school7/isabella-vu4",
           "kind": "ncsa",
           "quote": "2023 Vision Volleyball Club",
           "statedSchool": "Valley Christian High School - San Jose",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.hudl.com/profile/26779352",
+          "kind": "hudl",
+          "quote": "16 Blue 25-26 / Vision Volleyball Club / Volleyball / 2025",
+          "statedSchool": "Valley Christian High School",
           "statedClassYear": 2028,
           "sourceDate": null
         }
@@ -10987,19 +10883,11 @@
       "athleteId": "1083abdd-34a7-495e-8971-840be439ec10",
       "fullName": "Divya Bhupathi",
       "club": "vision-volleyball-club",
-      "clubTeam": "Vision 14 Blue",
+      "clubTeam": "15 Blue",
       "status": "current",
       "asOf": "2026-11-11",
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.hudl.com/profile/18931166",
-          "kind": "hudl",
-          "quote": "Vision 14 Blue / Vision Volleyball Club / Volleyball / 2022 - 2024",
-          "statedSchool": "The Harker School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/harker-high-school/divya-bhupathi",
           "kind": "ncsa",
@@ -11009,26 +10897,10 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/harker-high-school/divya-bhupathi",
-          "kind": "ncsa",
-          "quote": "2023 Vision volleyball Club (CA) (14 Blue)",
-          "statedSchool": "Harker High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/harker-high-school/divya-bhupathi",
-          "kind": "ncsa",
-          "quote": "2022 Vision Volleyball Club (13 Gold)",
-          "statedSchool": "Harker High School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/harker-high-school/divya-bhupathi",
-          "kind": "ncsa",
-          "quote": "2021 Vision Volleyball Club (12 Blue)",
-          "statedSchool": "Harker High School",
+          "url": "https://www.hudl.com/profile/18931166",
+          "kind": "hudl",
+          "quote": "Vision 14 Blue / Vision Volleyball Club / Volleyball / 2022 - 2024",
+          "statedSchool": "The Harker School",
           "statedClassYear": 2027,
           "sourceDate": null
         },
@@ -11253,24 +11125,24 @@
       "athleteId": "4dc0648b-e6fb-49b1-9e78-e8edc353691b",
       "fullName": "Georgia Pimentel",
       "club": "academy-volleyball",
-      "clubTeam": "15 National North",
+      "clubTeam": "Academy West 14 National",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.hudl.com/profile/16973815",
-          "kind": "hudl",
-          "quote": "15 National North / Academy Volleyball / Volleyball / 2025",
-          "statedSchool": "Menlo School",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
           "url": "https://my.sportsrecruits.com/athlete/georgia_pimentel4",
           "kind": "sportsrecruits",
           "quote": "Academy West 14 National, Academy of Volleyball STATS",
           "statedSchool": null,
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.hudl.com/profile/16973815",
+          "kind": "hudl",
+          "quote": "15 National North / Academy Volleyball / Volleyball / 2025",
+          "statedSchool": "Menlo School",
           "statedClassYear": 2029,
           "sourceDate": null
         }
@@ -11304,20 +11176,20 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/athletes/gianna-goudey/bio/?careerid=66s2g4bn4e044",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Academy of Volleyball\",\"organizationTeamName\":\"Academy National 15-1 North\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2025,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2025-11-09T18:19:15\"",
-          "statedSchool": "Menlo School (Atherton, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2025-11-09"
-        },
-        {
           "url": "https://prepdig.com/player/gianna-goudey-2/",
           "kind": "other",
           "quote": "Gianna Goudey is a 5'11\" Right-Side Hitter/Setter in the 2029 class. Goudey attends Menlo School in California and plays club volleyball for Academy of Volleyball Club North (CA).",
           "statedSchool": "Menlo School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/athletes/gianna-goudey/bio/?careerid=66s2g4bn4e044",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Academy of Volleyball\",\"organizationTeamName\":\"Academy National 15-1 North\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2025,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2025-11-09T18:19:15\"",
+          "statedSchool": "Menlo School (Atherton, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2025-11-09"
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; the club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -11349,14 +11221,6 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/athletes/adrianna-ananyi/bio/?careerid=bvjm3b8drusvf",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Red Rock Volleyball Club\",\"organizationTeamName\":\"RedRock Eric\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2026,\"season\":\"Spring,Winter\",\"modifiedOn\":\"2026-07-29T00:28:52\"",
-          "statedSchool": "Menlo School (Atherton, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-07-29"
-        },
-        {
           "url": "https://prepdig.com/player/adrianna-ananyi/",
           "kind": "other",
           "quote": "Adrianna Ananyi is a 5'9\" Middle Blocker in the 2029 class. Ananyi attends Menlo School in California and plays club volleyball for Red Rock Volleyball Club.",
@@ -11371,6 +11235,14 @@
           "statedSchool": "Menlo School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/athletes/adrianna-ananyi/bio/?careerid=bvjm3b8drusvf",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Red Rock Volleyball Club\",\"organizationTeamName\":\"RedRock Eric\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2026,\"season\":\"Spring,Winter\",\"modifiedOn\":\"2026-07-29T00:28:52\"",
+          "statedSchool": "Menlo School (Atherton, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-29"
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; the club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; current as of 2026-07-29."
@@ -11522,11 +11394,19 @@
       "athleteId": "638d3bd8-a6ce-4908-a505-8edc871b1aa0",
       "fullName": "Genevie Kwon",
       "club": "academy-volleyball",
-      "clubTeam": "15 National West",
+      "clubTeam": "15-1",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
+          "kind": "ncsa",
+          "quote": "2025 Academy West - 15 Nationals (15-1)",
+          "statedSchool": "Sacred Heart Preparatory",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
         {
           "url": "https://www.hudl.com/profile/19027264",
           "kind": "hudl",
@@ -11550,22 +11430,6 @@
           "statedSchool": "Sacred Heart Prep",
           "statedClassYear": 2029,
           "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
-          "kind": "ncsa",
-          "quote": "2025 Academy West - 15 Nationals (15-1)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
-          "kind": "ncsa",
-          "quote": "2024 Academy West - 14 Nationals (14-1)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
         }
       ],
       "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list; her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -11575,19 +11439,11 @@
       "athleteId": "638d3bd8-a6ce-4908-a505-8edc871b1aa0",
       "fullName": "Genevie Kwon",
       "club": "red-rock-volleyball",
-      "clubTeam": "Red Rock 12-1 Gil",
+      "clubTeam": "13-1",
       "status": "past",
       "asOf": "2024",
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.hudl.com/profile/19027264",
-          "kind": "hudl",
-          "quote": "Red Rock 12-1 Gil / Red Rock Volleyball / Volleyball / 2022 - 2023",
-          "statedSchool": "Sacred Heart Prep ",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
           "kind": "ncsa",
@@ -11597,18 +11453,10 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
-          "kind": "ncsa",
-          "quote": "2023 Red Rock Volleyball (12-1)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/genevie-kwon1",
-          "kind": "ncsa",
-          "quote": "2022 Red Rock Volleyball Club (11-1)",
-          "statedSchool": "Sacred Heart Preparatory",
+          "url": "https://www.hudl.com/profile/19027264",
+          "kind": "hudl",
+          "quote": "Red Rock 12-1 Gil / Red Rock Volleyball / Volleyball / 2022 - 2023",
+          "statedSchool": "Sacred Heart Prep ",
           "statedClassYear": 2029,
           "sourceDate": null
         }
@@ -11728,7 +11576,7 @@
       "clubTeam": "Red Rock Girls RWC 15-2",
       "status": "unknown",
       "asOf": null,
-      "confidence": "high",
+      "confidence": "medium",
       "sources": [
         {
           "url": "https://www.hudl.com/profile/29676588",
@@ -11739,7 +11587,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her Hudl profile (on her school's own volleyball team) lists the club in its team list. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown. The page spells her name differently from the roster (a nickname or variant), so medium."
     },
     {
       "teamSlug": "pinewood",
@@ -11857,18 +11705,18 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://my.sportsrecruits.com/athlete/ella_simeoni3",
-          "kind": "sportsrecruits",
-          "quote": "16-1 Wolverines, SF Tremors 8 Archbishop Riordan San Francisco , CA LOCATION",
-          "statedSchool": "Archbishop Riordan",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/archbishop-riordan-high-school/ella-simeoni",
           "kind": "ncsa",
           "quote": "2026 SF Tremors (16-1 Wolverines)",
           "statedSchool": "Archbishop Riordan High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://my.sportsrecruits.com/athlete/ella_simeoni3",
+          "kind": "sportsrecruits",
+          "quote": "16-1 Wolverines, SF Tremors 8 Archbishop Riordan San Francisco , CA LOCATION",
+          "statedSchool": "Archbishop Riordan",
           "statedClassYear": 2028,
           "sourceDate": null
         }
@@ -11936,25 +11784,17 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://my.sportsrecruits.com/athlete/alexis_leo2",
-          "kind": "sportsrecruits",
-          "quote": "Mountain View Volleyball Club 1 The Harker School San Jose , CA LOCATION",
-          "statedSchool": "The Harker School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://my.sportsrecruits.com/athlete/alexis_leo2",
-          "kind": "sportsrecruits",
-          "quote": "Mountain View Volleyball Club CLUB 5'3\" HT Women's Volleyball ... TEAMS Mountain View Volleyball Club 1 The Harker School San Jose , CA LOCATION",
-          "statedSchool": "The Harker School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/the-harker-school/alexis-leo",
           "kind": "ncsa",
           "quote": "2025 Mountain view volleyball club (17)",
+          "statedSchool": "The Harker School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://my.sportsrecruits.com/athlete/alexis_leo2",
+          "kind": "sportsrecruits",
+          "quote": "Mountain View Volleyball Club 1 The Harker School San Jose , CA LOCATION",
           "statedSchool": "The Harker School",
           "statedClassYear": 2027,
           "sourceDate": null
@@ -12066,14 +11906,6 @@
           "statedSchool": "Presentation (San Jose, CA)",
           "statedClassYear": 2027,
           "sourceDate": "2024-09-28"
-        },
-        {
-          "url": "https://www.maxpreps.com/ca/san-jose/presentation-panthers/athletes/annabelle-gonzales/bio/?careerid=64rrg6o62ag99",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"City Beach\",\"organizationTeamName\":\"City Beach 16 Black\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Fremont\",\"yearJoined\":2024,\"season\":\"Spring,Fall,Winter,Summer\",\"modifiedOn\":\"2024-09-29T02:48:12\"",
-          "statedSchool": "Presentation (San Jose, CA)",
-          "statedClassYear": 2027,
-          "sourceDate": "2024-09-29"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -12139,20 +11971,20 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.maxpreps.com/ca/hillsborough/crystal-springs-uplands-gryphons/athletes/alexis-law-hing/bio/?careerid=at7p056f3r4sc",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 15 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-09-07T17:58:25\"",
-          "statedSchool": "Crystal Springs Uplands (Hillsborough, CA)",
-          "statedClassYear": 2030,
-          "sourceDate": "2026-09-07"
-        },
-        {
           "url": "https://prepdig.com/player/alexis-law-hing/",
           "kind": "other",
           "quote": "Alexis Law-Hing is a 5'6\" DS/L/Outside Hitter in the 2030 class. Law-Hing attends Crystal Springs Uplands in California and plays club volleyball for Vision Volleyball Club.",
           "statedSchool": "Crystal Springs Uplands",
           "statedClassYear": 2030,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/hillsborough/crystal-springs-uplands-gryphons/athletes/alexis-law-hing/bio/?careerid=at7p056f3r4sc",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 15 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-09-07T17:58:25\"",
+          "statedSchool": "Crystal Springs Uplands (Hillsborough, CA)",
+          "statedClassYear": 2030,
+          "sourceDate": "2026-09-07"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; current as of 2026-09-07."
@@ -12162,24 +11994,24 @@
       "athleteId": "ba79c4d2-20e2-40db-a2ad-7d7d05978f75",
       "fullName": "Cierra Huynh",
       "club": "city-beach-volleyball-club",
-      "clubTeam": "16 Black",
+      "clubTeam": "16 National",
       "status": "current",
       "asOf": "2026",
       "confidence": "high",
       "sources": [
         {
-          "url": "https://my.sportsrecruits.com/athlete/cierra_huynh",
-          "kind": "sportsrecruits",
-          "quote": "16 Black, City Beach Volleyball Club Notre Dame San Jose San Jose , CA LOCATION",
-          "statedSchool": "Notre Dame San Jose",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/notre-dame-high-school-san-jose/cierra-huynh",
           "kind": "ncsa",
           "quote": "2026 City Beach (16 National)",
           "statedSchool": "Notre Dame High School (San Jose)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://my.sportsrecruits.com/athlete/cierra_huynh",
+          "kind": "sportsrecruits",
+          "quote": "16 Black, City Beach Volleyball Club Notre Dame San Jose San Jose , CA LOCATION",
+          "statedSchool": "Notre Dame San Jose",
           "statedClassYear": 2028,
           "sourceDate": null
         }
@@ -12218,20 +12050,20 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/layla-marquez/bio/?careerid=87mlaud8m2r88",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2026-08-26T05:43:32\"",
-          "statedSchool": "Archbishop Mitty (San Jose, CA)",
-          "statedClassYear": 2030,
-          "sourceDate": "2026-08-26"
-        },
-        {
           "url": "https://prepdig.com/player/layla-marquez/",
           "kind": "other",
           "quote": "Layla Marquez is a 5'10\" Outside Hitter/Right-Side Hitter in the 2030 class. Marquez attends Archbishop Mitty in California and plays club volleyball for Vision Volleyball Club.",
           "statedSchool": "Archbishop Mitty",
           "statedClassYear": 2030,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/layla-marquez/bio/?careerid=87mlaud8m2r88",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Vision Volleyball Club\",\"organizationTeamName\":\"Vision 16 Gold\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Los Gatos\",\"yearJoined\":2026,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2026-08-26T05:43:32\"",
+          "statedSchool": "Archbishop Mitty (San Jose, CA)",
+          "statedClassYear": 2030,
+          "sourceDate": "2026-08-26"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-08-26."
@@ -12247,18 +12079,10 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/athletes/ella-simeoni/bio/?careerid=2koqa3711emj3",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Encore Volleyball Club\",\"organizationTeamName\":\"17-1 Navy\",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-09-03T15:00:41\"",
-          "statedSchool": "Archbishop Riordan (San Francisco, CA)",
-          "statedClassYear": 2028,
-          "sourceDate": "2026-09-03"
-        },
-        {
-          "url": "https://prepdig.com/player/ella-simeoni/",
-          "kind": "other",
-          "quote": "Class 2028 Height 5'10\" HS Archbishop Riordan | CA ... is a 5'10\" Middle Blocker/Right-Side Hitter in the 2028 class. Simeoni attends Archbishop Riordan in California and plays club volleyball for Encore Volleyball .",
-          "statedSchool": "Archbishop Riordan (Prep Dig team link: Archbishop Riordan High School Volleyball | San Francisco, CA | Prep Dig)",
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/archbishop-riordan-high-school/ella-simeoni",
+          "kind": "ncsa",
+          "quote": "2027 Encore Volleyball Club (17-1 Navy)",
+          "statedSchool": "Archbishop Riordan High School",
           "statedClassYear": 2028,
           "sourceDate": null
         },
@@ -12271,12 +12095,12 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/archbishop-riordan-high-school/ella-simeoni",
-          "kind": "ncsa",
-          "quote": "2027 Encore Volleyball Club (17-1 Navy)",
-          "statedSchool": "Archbishop Riordan High School",
+          "url": "https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/athletes/ella-simeoni/bio/?careerid=2koqa3711emj3",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Encore Volleyball Club\",\"organizationTeamName\":\"17-1 Navy\",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2026,\"season\":\"\",\"modifiedOn\":\"2026-09-03T15:00:41\"",
+          "statedSchool": "Archbishop Riordan (San Francisco, CA)",
           "statedClassYear": 2028,
-          "sourceDate": null
+          "sourceDate": "2026-09-03"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2027."
@@ -12328,18 +12152,18 @@
       "athleteId": "6b4da4a1-8feb-4035-810f-0ad6a00c77ca",
       "fullName": "Cyrhen Cuadra",
       "club": "sf-elite-volleyball-club",
-      "clubTeam": "16-Pele",
+      "clubTeam": "Liberty",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/athletes/cyrhen-cuadra/bio/?careerid=89i6ml8cr3s55",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"SF Elite\",\"organizationTeamName\":\"16-Pele\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"S San Francisco\",\"yearJoined\":2024,\"season\":\"Spring\",\"modifiedOn\":\"2024-11-14T12:17:10\"",
-          "statedSchool": "Sacred Heart Cathedral Preparatory (San Francisco, CA)",
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/cyrhen-cuadra",
+          "kind": "ncsa",
+          "quote": "2023 SF Elite (Liberty)",
+          "statedSchool": "Sacred Heart Cathedral Preparatory",
           "statedClassYear": 2027,
-          "sourceDate": "2024-11-14"
+          "sourceDate": null
         },
         {
           "url": "https://prepdig.com/player/cyrhen-cuadra/",
@@ -12350,20 +12174,12 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/cyrhen-cuadra",
-          "kind": "ncsa",
-          "quote": "2024 SF Elite Volleyball Club (USA)",
-          "statedSchool": "Sacred Heart Cathedral Preparatory",
+          "url": "https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/athletes/cyrhen-cuadra/bio/?careerid=89i6ml8cr3s55",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"SF Elite\",\"organizationTeamName\":\"16-Pele\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"S San Francisco\",\"yearJoined\":2024,\"season\":\"Spring\",\"modifiedOn\":\"2024-11-14T12:17:10\"",
+          "statedSchool": "Sacred Heart Cathedral Preparatory (San Francisco, CA)",
           "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/cyrhen-cuadra",
-          "kind": "ncsa",
-          "quote": "2023 SF Elite (Liberty)",
-          "statedSchool": "Sacred Heart Cathedral Preparatory",
-          "statedClassYear": 2027,
-          "sourceDate": null
+          "sourceDate": "2024-11-14"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -12423,19 +12239,11 @@
       "athleteId": "6a43439e-2410-44b7-af2f-d49068ef325e",
       "fullName": "Emerson Kjellesvig",
       "club": "mountain-view-volleyball-club",
-      "clubTeam": "mvvc 17 black",
+      "clubTeam": "Mountain View Volleyball Club (CA)",
       "status": "current",
       "asOf": "2026-09-04",
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/emerson-kjellesvig/bio/?careerid=stdh0tb2d6jdd",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"MVVC\",\"organizationTeamName\":\"mvvc 17 black\",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"Sunnyvale\",\"yearJoined\":2025,\"season\":\"Spring,Fall\",\"modifiedOn\":\"2026-09-04T18:26:41\"",
-          "statedSchool": "King's Academy (Sunnyvale, CA)",
-          "statedClassYear": 2027,
-          "sourceDate": "2026-09-04"
-        },
         {
           "url": "https://prepdig.com/player/emerson-kjellesvig/",
           "kind": "other",
@@ -12443,6 +12251,14 @@
           "statedSchool": "The King's Academy",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/emerson-kjellesvig/bio/?careerid=stdh0tb2d6jdd",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"MVVC\",\"organizationTeamName\":\"mvvc 17 black\",\"sport\":\"Volleyball\",\"ageGroup\":\"17s\",\"clubOrganizationCity\":\"Sunnyvale\",\"yearJoined\":2025,\"season\":\"Spring,Fall\",\"modifiedOn\":\"2026-09-04T18:26:41\"",
+          "statedSchool": "King's Academy (Sunnyvale, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-09-04"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-09-04."
@@ -12494,19 +12310,11 @@
       "athleteId": "7759ada5-8aed-4edc-a988-6662d0107333",
       "fullName": "Olivia Eastburn",
       "club": "encore-volleyball-club",
-      "clubTeam": "15 Navy",
+      "clubTeam": "17 Navy",
       "status": "current",
       "asOf": "2027",
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/olivia-eastburn/bio/?careerid=hcfe7b5i31gn7",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Encore Volleyball Club\",\"organizationTeamName\":\"15 Navy\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City \",\"yearJoined\":2024,\"season\":\"Spring,Summer\",\"modifiedOn\":\"2026-09-03T17:11:08\"",
-          "statedSchool": "Mercy (Burlingame, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-09-03"
-        },
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/olivia-eastburn2",
           "kind": "ncsa",
@@ -12516,20 +12324,12 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/olivia-eastburn2",
-          "kind": "ncsa",
-          "quote": "2026 Encore Volleyball Club (15 Navy)",
-          "statedSchool": "Mercy High School (Burlingame)",
+          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/olivia-eastburn/bio/?careerid=hcfe7b5i31gn7",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Encore Volleyball Club\",\"organizationTeamName\":\"15 Navy\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City \",\"yearJoined\":2024,\"season\":\"Spring,Summer\",\"modifiedOn\":\"2026-09-03T17:11:08\"",
+          "statedSchool": "Mercy (Burlingame, CA)",
           "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/olivia-eastburn2",
-          "kind": "ncsa",
-          "quote": "2025 Encore Volleyball Club (14 Navy)",
-          "statedSchool": "Mercy High School (Burlingame)",
-          "statedClassYear": 2029,
-          "sourceDate": null
+          "sourceDate": "2026-09-03"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2027."
@@ -12545,20 +12345,20 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/deanica-de-lira/bio/?careerid=oqbf8o5pdbqo8",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"SF Elite\",\"organizationTeamName\":\"16 Gold Symone\",\"sport\":\"Volleyball\",\"ageGroup\":\"U16\",\"clubOrganizationCity\":\"S San Francisco\",\"yearJoined\":2026,\"season\":\"Winter\",\"modifiedOn\":\"2026-08-30T13:52:04\"",
-          "statedSchool": "Mercy (Burlingame, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-08-30"
-        },
-        {
           "url": "https://prepdig.com/player/deanica-de/",
           "kind": "other",
           "quote": "Deanica De Lira is a 5'7\" Right-Side Hitter/Outside Hitter in the 2029 class. De Lira attends Mercy in California and plays club volleyball for SF Elite.",
           "statedSchool": "Mercy",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/deanica-de-lira/bio/?careerid=oqbf8o5pdbqo8",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"SF Elite\",\"organizationTeamName\":\"16 Gold Symone\",\"sport\":\"Volleyball\",\"ageGroup\":\"U16\",\"clubOrganizationCity\":\"S San Francisco\",\"yearJoined\":2026,\"season\":\"Winter\",\"modifiedOn\":\"2026-08-30T13:52:04\"",
+          "statedSchool": "Mercy (Burlingame, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-08-30"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-08-30."
@@ -12574,20 +12374,20 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/isela-santana/bio/?careerid=fs7ppebve5hvf",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Academy Volleyball Club - 16s HP-1\",\"organizationTeamName\":\"16s Hp1\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Burlingame\",\"yearJoined\":2026,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2026-09-30T19:55:32\"",
-          "statedSchool": "Mercy (Burlingame, CA)",
-          "statedClassYear": 2029,
-          "sourceDate": "2026-09-30"
-        },
-        {
           "url": "https://prepdig.com/player/isela-santana/",
           "kind": "other",
           "quote": "Isela Santana is a 5'1\" DS/L in the 2029 class. Santana attends Mercy in California and plays club volleyball for Academy Volleyball.",
           "statedSchool": "Mercy",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/burlingame/mercy-bears/athletes/isela-santana/bio/?careerid=fs7ppebve5hvf",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Academy Volleyball Club - 16s HP-1\",\"organizationTeamName\":\"16s Hp1\",\"sport\":\"Volleyball\",\"ageGroup\":\"16s\",\"clubOrganizationCity\":\"Burlingame\",\"yearJoined\":2026,\"season\":\"Winter,Spring\",\"modifiedOn\":\"2026-09-30T19:55:32\"",
+          "statedSchool": "Mercy (Burlingame, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-09-30"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2026-09-30."
@@ -12645,28 +12445,20 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/elle-chang/bio/?careerid=ad9afmt03e5bb",
-          "kind": "maxpreps-career",
-          "quote": "\"clubOrganizationName\":\"Academy of Volleyball\",\"organizationTeamName\":\"15 HP Cristine\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2024,\"season\":\"Fall,Spring\",\"modifiedOn\":\"2025-03-30T23:52:58\"",
-          "statedSchool": "Sacred Heart Prep (Atherton, CA)",
-          "statedClassYear": 2028,
-          "sourceDate": "2025-03-30"
-        },
-        {
-          "url": "https://prepdig.com/player/elle-chang/",
-          "kind": "other",
-          "quote": "Class 2028 Height 5'1\" HS Sacred Heart Prep | CA ... is a 5'1\" DS/L in the 2028 class. Chang attends Sacred Heart Prep in California and plays club volleyball for Academy Volleyball .",
-          "statedSchool": "Sacred Heart Prep (Prep Dig team link: Sacred Heart Prep Volleyball | Atherton, CA | Prep Dig)",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
-        {
           "url": "https://prepdig.com/player/elle-chang/",
           "kind": "other",
           "quote": "Elle Chang is a 5'1\" DS/L in the 2028 class. Chang attends Sacred Heart Prep in California and plays club volleyball for Academy Volleyball.",
           "statedSchool": "Sacred Heart Prep",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/athletes/elle-chang/bio/?careerid=ad9afmt03e5bb",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Academy of Volleyball\",\"organizationTeamName\":\"15 HP Cristine\",\"sport\":\"Volleyball\",\"ageGroup\":\"15s\",\"clubOrganizationCity\":\"Redwood City\",\"yearJoined\":2024,\"season\":\"Fall,Spring\",\"modifiedOn\":\"2025-03-30T23:52:58\"",
+          "statedSchool": "Sacred Heart Prep (Atherton, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": "2025-03-30"
         }
       ],
       "basis": "The club-teams block of her own MaxPreps career page (the page her roster row links) lists the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -12703,22 +12495,6 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://my.sportsrecruits.com/athlete/alexis_leo2",
-          "kind": "sportsrecruits",
-          "quote": "I play club volleyball for Vision Volleyball Club and am grateful for my amazing coach and teammates.",
-          "statedSchool": "The Harker School",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://prepdig.com/player/alexis-leo/",
-          "kind": "other",
-          "quote": "Class 2027 Height 5'3\" HS The Harker School | CA ... is a 5'3\" DS/L in the 2027 class. Leo attends The Harker School in California and plays club volleyball for Vision VBC .",
-          "statedSchool": "The Harker School (Prep Dig team link: The Harker School Volleyball | San Jose, CA | Prep Dig)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/the-harker-school/alexis-leo",
           "kind": "ncsa",
           "quote": "2024 Vision Volleyball Club",
@@ -12727,15 +12503,15 @@
           "sourceDate": null
         },
         {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/the-harker-school/alexis-leo",
-          "kind": "ncsa",
-          "quote": "2023 Vision Volleyball Club",
+          "url": "https://my.sportsrecruits.com/athlete/alexis_leo2",
+          "kind": "sportsrecruits",
+          "quote": "I play club volleyball for Vision Volleyball Club and am grateful for my amazing coach and teammates.",
           "statedSchool": "The Harker School",
           "statedClassYear": 2027,
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information; her own SportsRecruits profile lists the club in its TEAMS block (script-drawn, read in separate fetches that agree). Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "sacred-heart-prep",
@@ -12748,10 +12524,10 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://prepdig.com/player/reah-canada/",
-          "kind": "other",
-          "quote": "Class 2027 Height 5'4\" HS Sacred Heart Prep | CA ... is a 5'4\" DS/L in the 2027 class. Canada attends Sacred Heart Prep in California and plays club volleyball for Academy Volleyball .",
-          "statedSchool": "Sacred Heart Prep (Prep Dig team link: Sacred Heart Prep Volleyball | Atherton, CA | Prep Dig)",
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/reah-canada",
+          "kind": "ncsa",
+          "quote": "2023 Academy (14 HP Michal)",
+          "statedSchool": "Sacred Heart Preparatory",
           "statedClassYear": 2027,
           "sourceDate": null
         },
@@ -12760,14 +12536,6 @@
           "kind": "other",
           "quote": "Reah Canada is a 5'4\" DS/L in the 2027 class. Canada attends Sacred Heart Prep in California and plays club volleyball for Academy Volleyball.",
           "statedSchool": "Sacred Heart Prep",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/reah-canada",
-          "kind": "ncsa",
-          "quote": "2023 Academy (14 HP Michal)",
-          "statedSchool": "Sacred Heart Preparatory",
           "statedClassYear": 2027,
           "sourceDate": null
         }
@@ -12805,14 +12573,6 @@
       "asOf": null,
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://prepdig.com/player/kylie-hider/",
-          "kind": "other",
-          "quote": "Class 2028 Height 6'0\" HS Valley Christian | CA ... is a 6'0\" Middle Blocker/Outside Hitter in the 2028 class. Hider attends Valley Christian in California and plays club volleyball for Vision Volleyball Club .",
-          "statedSchool": "Valley Christian (Prep Dig team link: Valley Christian High School Volleyball | San Jose, CA | Prep Dig)",
-          "statedClassYear": 2028,
-          "sourceDate": null
-        },
         {
           "url": "https://prepdig.com/player/kylie-hider/",
           "kind": "other",
@@ -13087,20 +12847,20 @@
       "confidence": "high",
       "sources": [
         {
-          "url": "https://prepdig.com/player/selena-ghane/",
-          "kind": "other",
-          "quote": "Selena Ghane is a 5'5\" DS/L in the 2029 class. Ghane attends The Harker School in California and plays club volleyball for Academy Volleyball.",
-          "statedSchool": "The Harker School",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
           "url": "https://news.harker.org/jv-volleyball-captain-helps-club-team-to-high-ranking/",
           "kind": "news",
           "quote": "Ghane went on to help her team (Academy West 14 National, which won the NorCal Invitational in June)",
           "statedSchool": "Harker (Harker News, the school's own news site: \"ninth grader Selena Ghane ... captains the junior varsity volleyball team\")",
           "statedClassYear": null,
           "sourceDate": "2025-10-02"
+        },
+        {
+          "url": "https://prepdig.com/player/selena-ghane/",
+          "kind": "other",
+          "quote": "Selena Ghane is a 5'5\" DS/L in the 2029 class. Ghane attends The Harker School in California and plays club volleyball for Academy Volleyball.",
+          "statedSchool": "The Harker School",
+          "statedClassYear": 2029,
+          "sourceDate": null
         }
       ],
       "basis": "A news story names her, her school and the club; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
@@ -13248,14 +13008,6 @@
           "statedSchool": "St Ignatius College Preparatory",
           "statedClassYear": 2029,
           "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/st-ignatius-college-preparatory1/samantha-lowry3",
-          "kind": "ncsa",
-          "quote": "2025 SF Elite (14-1)",
-          "statedSchool": "St Ignatius College Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
         }
       ],
       "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026."
@@ -13369,14 +13121,6 @@
           "statedSchool": "Mercy High School (Burlingame)",
           "statedClassYear": 2030,
           "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/sophia-sari",
-          "kind": "ncsa",
-          "quote": "2023 SF Elite Volleyball Club",
-          "statedSchool": "Mercy High School (Burlingame)",
-          "statedClassYear": 2030,
-          "sourceDate": null
         }
       ],
       "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
@@ -13395,30 +13139,6 @@
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/belmont/notre-dame-high-school-belmont/emily-weisman1",
           "kind": "ncsa",
           "quote": "2026 Red Rock Volleyball Club (16-1s)",
-          "statedSchool": "Notre Dame High School (Belmont)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/belmont/notre-dame-high-school-belmont/emily-weisman1",
-          "kind": "ncsa",
-          "quote": "2024 Red Rock Volleyball Club (15-1s)",
-          "statedSchool": "Notre Dame High School (Belmont)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/belmont/notre-dame-high-school-belmont/emily-weisman1",
-          "kind": "ncsa",
-          "quote": "2023 Red Rock Volleyball Club (14-1s)",
-          "statedSchool": "Notre Dame High School (Belmont)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/belmont/notre-dame-high-school-belmont/emily-weisman1",
-          "kind": "ncsa",
-          "quote": "2022 Red Rock Volleyball Club (13-2s)",
           "statedSchool": "Notre Dame High School (Belmont)",
           "statedClassYear": 2027,
           "sourceDate": null
@@ -13452,35 +13172,11 @@
       "athleteId": "d100457f-a5d0-4b6d-a02a-67f16a6746e8",
       "fullName": "Anaya Mehta",
       "club": "academy-volleyball",
-      "clubTeam": "Academy West 15 National",
+      "clubTeam": "Academy 12 HP2",
       "status": "unknown",
       "asOf": null,
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/anaya-mehta1",
-          "kind": "ncsa",
-          "quote": "2025 Academy Volleyball Club (Academy West 15 National)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/anaya-mehta1",
-          "kind": "ncsa",
-          "quote": "2024 Academy Volleyball Club (Academy 14 National)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/anaya-mehta1",
-          "kind": "ncsa",
-          "quote": "2023 Academy Volleyball Club (Academy 13 National)",
-          "statedSchool": "Sacred Heart Preparatory",
-          "statedClassYear": 2029,
-          "sourceDate": null
-        },
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/sacred-heart-preparatory/anaya-mehta1",
           "kind": "ncsa",
@@ -13628,14 +13324,6 @@
       "asOf": null,
       "confidence": "high",
       "sources": [
-        {
-          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/pioneer-high-school11/courtney-white39",
-          "kind": "ncsa",
-          "quote": "2025 Fusion Volleyball (CA) (16 Titanium)",
-          "statedSchool": "Pioneer High School (San Jose)",
-          "statedClassYear": 2027,
-          "sourceDate": null
-        },
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/pioneer-high-school11/courtney-white39",
           "kind": "ncsa",
