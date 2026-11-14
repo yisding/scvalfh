@@ -95,6 +95,17 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       source: 'the San Diego Section’s Division II bracket sheet, read Nov 13, 2026: the quarterfinal, moved to Fri Nov 6 at Olympian, ended 6-0; MaxPreps lists the game with no score',
       url: 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit#gid=742825713',
     },
+    // Sunset, Thu Oct 8: Huntington Beach 1, Edison 0 (owner, 2026-11-14). cifsshome.org lists the game twice, once per
+    // school, both 1-0 and both "League"; one entry's note is "Overtime". MaxPreps has the score and no overtime. The
+    // note gives no count of periods, so one is recorded.
+    '95a91c87-abfe-418e-9c40-bda8bdfef138': {
+      goals: { 'huntington-beach': 1, edison: 0 },
+      otPeriods: 1,
+      shootout: null,
+      source: 'cifsshome.org, read Nov 14, 2026: Huntington Beach 1, Edison 0 with the note “Overtime” on one of its two entries for the game; MaxPreps has the score and records no overtime',
+      url: 'https://www.cifsshome.org/widget/schedule-score?section_id=1&year=2026&sport_id=30&date_from=10%2F08%2F2026&date_to=10%2F08%2F2026',
+      certainty: 'reported',
+    },
     '10c379a5-577c-4dc7-b70f-2a49ed09ca51': {
       goals: { 'mission-bay': 3, 'la-jolla-country-day': 2 },
       otPeriods: 1,

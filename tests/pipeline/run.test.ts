@@ -401,7 +401,10 @@ describe('readPrevious', () => {
     const previous = readPrevious(file, { log: () => {}, warn: (line) => warns.push(line) });
     expect(warns).toEqual([]);
     expect(previous).not.toBeNull();
-    expect(previous!.games.filter((g) => g.countsFor === 'sunset')).toHaveLength(committed().games.filter((g) => g.countsFor === 'sunset').length);
+    // As the current rule counts them (the committed file may itself predate a rule; loadSnapshot reclassifies it).
+    const current = loadSnapshot(committed()).games.filter((g) => g.countsFor === 'sunset');
+    expect(current.length).toBeGreaterThan(0);
+    expect(previous!.games.filter((g) => g.countsFor === 'sunset')).toHaveLength(current.length);
   });
 
   it('warns and returns null for a file no upgrade can load', () => {
