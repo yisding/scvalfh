@@ -1844,6 +1844,94 @@ Gotchas, all **[V]**:
   measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.
 
+**(l2) Last season's players** — `data/prior-players.json` (`lib/players/prior-players-schema.ts`; one copy
+per sport), built once a season by `pnpm fetch-prior-players` (`scripts/fetch-prior-players.ts`) and read only
+by the player registry (m). No page reads it. **[V] 2026-11-14.**
+- The source is the stat-sheet rollup of (k), asked for with LAST season's varsity `sportSeasonId` (the one
+  `data/prior-season.json` was built from): `team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
+  honours the season id, as the schedule read of (l) does. It is read for who is on it, not for the numbers
+  (`lib/sources/maxpreps-stats-names.ts`): every table of every group has a `Name` column whose cell holds the
+  short name ("S. Lewis"), the career link (`…/athletes/storey-lewis/?careerid=…`) and the class as a caption
+  ("(Jr)"; 77 of 2,265 cells in the 2026-11-14 captures were blank), and most have `Jersey`.
+- **It is not a roster.** A sheet lists the players a coach entered a line for. A team with no stats that
+  season answers the 400 "No data was found" envelope and is status `none`, which says nothing about who
+  played. The full name is rebuilt from the career link's words and the sheet's own last name
+  (`nameFrom: career-url`), which loses a capital or an apostrophe inside a first name; the registry prefers
+  any other source's spelling.
+- **Why not the roster pages.** MaxPreps does serve a past season's roster at `<team URL>/25-26/roster/`
+  (the overlay cites several), but no such page was ever captured, and MaxPreps' web pages answer the
+  research sandbox with its WAF's 403 (§1.4 "Access from the research sandbox"); the API is not behind it.
+  Reading those pages from a network that can (the Actions runner) would give the real 2025-26 rosters,
+  positions and heights included; nothing here does that yet.
+- **The edge refuses some calls.** On 2026-11-14 about half the rollup reads came back as an empty 403
+  (`retry-after: 0`), the same teams on most passes, whatever the pace (600 ms to 8 s apart, one at a time).
+  The MaxPreps client does not retry a 403, so the script keeps what an earlier run read, marks the rest
+  `error` and exits 1; a later run asks only for those. After five passes: field hockey 733 players on 54
+  sheets, 35 teams with no stats, 13 unread (Cupertino, Monta Vista, Sobrato, Westmont, Monterey, Huntington
+  Beach, Marina, Canyon Crest Academy, Fallbrook, Rancho Buena Vista, San Dieguito Academy, San Pasqual,
+  Hilltop); girls soccer 423 on 31, 7 with none, 3 unread (Cupertino, Westmont, Mt. Pleasant); boys basketball
+  245 on 20, 19 with none, 2 unread (Leigh, Lincoln). The committed files were built from those captures with
+  `--fixtures`.
+
+**(m) The player registry** — `data/players.json` (`lib/players/registry-schema.ts`), built by
+`pnpm build-players` (`scripts/build-players.ts`; the rules are `lib/players/registry-build.ts`, the reading
+of each file `lib/players/registry-sources.ts`). One record per person across all three sports and every
+season the repository holds. **Internal: no page reads it**, nothing under `app/` or `components/` may import
+it (`tests/players-registry.test.ts`), and it is read from disk, never bundled.
+- **Three layers.** A *player* has an id this repository mints (`p` + ten hex digits of the SHA-256 of the
+  first identifier) and never changes, a display name, every spelling any source uses, a graduation year
+  (`classOf`) and the keys other sources know the player by (`identifiers`: MaxPreps career ids, or a name on
+  one team's lists). A *stint* is that player on one team in one season of one sport at one level: number,
+  position, height and captaincy live there, so a varsity 9 and a JV 10 in one autumn are two stints, not a
+  disagreement. An *observation* is what one source said about a stint, kept as it said it; a stint's fields
+  are the first observation's to state them (MaxPreps' roster page for that level, then the overlay, the
+  school's JV list, the stat sheet, the all-league list), and every other statement is listed under
+  `conflicts`. Nobody types a conflict in. A grade is read against `classOf`, so a source that says grade 10
+  in 25-26 and one that says grade 12 in 26-27 disagree and `classOfConflicts` says so.
+- **What it reads**, per sport: `rosters.json`, `jv-rosters.json`, `rosters-enrichment.json` (each filled
+  field an observation naming its source, each recorded conflict a `rejected` one that decides nothing, each
+  recruiting profile a class-year statement, `sourceName` another spelling, `level` the squad),
+  `player-stats.json`, `jv-rosters-school-sites.json`, `jv-profiles.json`; and for a past season
+  `prior-players.json` (l2) and `history-<season>.json`'s all-league lists. Game notes and box-score lines are
+  not read: they carry no more identity than the stat sheet.
+- **Who is who.** (1) One MaxPreps career id is one player, in any season, sport, school or level, as long as
+  the names it is listed under could be one person's. **A career id is not always a person**: a coach who
+  retypes this year's players over last year's rows leaves one id under two people (Piedmont Hills boys
+  basketball: `8or0ehjm6ab33` is Nicolas Finuliar, #21, a junior on the 25-26 sheet and Andrew Duong, #21, a
+  senior on the 26-27 roster, while Finuliar is now #24 under `aco59i9pqajcc`, which was Bodi Anderson's;
+  a third id there, and one each at Bishop's and Vista field hockey: five in all. Leigh's is the same
+  thing inside one season, settled by hand in `rowSplits`). Such an id stays with the name it carries
+  latest, the other rows are known by name, and it is listed for review. (2) Two careers on one team that
+  share a name are one player when their class years do not contradict (MaxPreps keeps some players under
+  two career records: 23 pairs, 7 of them at Hollister). (3) A row with no id (a school's JV list, an
+  all-league row) joins the one player of its own team and sport with that exact name, when the class years
+  do not contradict; otherwise it is a player known by name. (4) Nothing is joined on a nickname or a near
+  spelling: those are only suggested. A name is compared letters-only (`nameKey`), and never across teams or
+  sports.
+- **`review`** lists what the rules would not decide alone, and **`data/player-identity.json`** is where a
+  person answers (`sameAs`, `rowSplits`, `distinct`; each entry says why). The registry itself is never edited
+  by hand. On 2026-11-14: 23 `same-name-two-careers` (all joined), 17 `possible-match` (14 field hockey, 2
+  girls soccer, 1 boys basketball; not joined: "Gabby Moll" on the 2025-26 all-league list and Homestead's
+  Gabrielle Moll, and the like) and 5 `career-two-names`. One `rowSplits` entry, Leigh's.
+- **2026-11-14 build**: 4,011 players (3,523 with a MaxPreps career, 488 known by name alone: 289 on a
+  school's own JV list only, 170 on a 2025-26 all-league list only), 4,841 stints, 7,609
+  observations, 582 players in more than one season, 15 in more than one sport, 49 conflicts inside a stint
+  and 57 class-year conflicts.
+- **Seasons.** `built` names the (sport, season) pairs a build read. A season whose files are gone is
+  carried forward from the previous `data/players.json` as it was, which is how the registry outlives the
+  rollover that overwrites `rosters.json`: **run `pnpm build-players` before the rollover**. A past season
+  the registry saw live is only topped up from its later files (its all-league lists), never rebuilt from
+  them.
+- **`playerId` in the curated files.** `data/clubs.json`, `data/commits.json`, `data/rosters-enrichment.json`
+  and `data/jv-profiles.json` join to a roster row by team and MaxPreps' per-season `athleteId` (or by name),
+  which a new season makes meaningless. `pnpm build-players` writes each record's `playerId` beside that key.
+  The site does not read it (the schemas take it as optional and the loaders still join on `athleteId`); it
+  is what a rollover re-keys from, instead of redoing the match. `tests/players-registry.test.ts` fails when
+  a record has none or names another row's player.
+- **It may lag.** The winter refreshes refetch rosters weekly and do not run `pnpm build-players`, so a new
+  row can be missing here until someone does. The tests hold what the file says to be true and its ids
+  stable, not the file complete; `pnpm build-players --check` says whether a build would change anything.
+
 ### 1.2 SECONDARY — SBLive / Scorebook Live (now `si.com/high-school/stats`)
 
 ⚠️ All `scorebooklive.com` URLs now 301-redirect to `si.com` — target si.com directly (a

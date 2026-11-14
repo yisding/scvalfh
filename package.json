@@ -15,6 +15,8 @@
     "fetch-player-stats": "tsx scripts/fetch-player-stats.ts",
     "fetch-jv": "tsx scripts/fetch-jv.ts",
     "fetch-prior-season": "tsx scripts/fetch-prior-season.ts",
+    "fetch-prior-players": "tsx scripts/fetch-prior-players.ts",
+    "build-players": "tsx scripts/build-players.ts",
     "fetch-mascots": "tsx scripts/fetch-mascots.ts",
     "discover-season": "tsx scripts/discover-season.ts",
     "build-history": "tsx scripts/build-history.ts",
