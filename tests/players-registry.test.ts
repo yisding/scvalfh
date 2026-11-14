@@ -328,6 +328,17 @@ describe('what a stint shows', () => {
     expect(file.players[0].stints.map((s) => `${s.level} ${s.name} ${s.jersey}`)).toEqual(['jv Mae Tran 3']);
   });
 
+  it('a freshman team is its own level, and a stat line follows the highest squad a player is listed on', () => {
+    const file = build([
+      row({ name: 'Ty Boone', careerIds: ['c1'], sport: 'basketball', level: 'freshman', observations: [{ src: 'school-jv-roster', name: 'Ty Boone', grade: 9, jersey: '11' }] }),
+      row({ name: 'Ty Boone', careerIds: ['c1'], sport: 'basketball', level: 'jv', obs: { grade: 9, jersey: '30' } }),
+      { ...row({ name: 'T. Boone', careerIds: ['c1'], sport: 'basketball' }), softLevel: true, nameKeys: [], observations: [{ src: 'maxpreps-stats', name: 'T. Boone', jersey: '30' }] },
+    ]);
+    expect(file.players).toHaveLength(1);
+    expect(file.players[0].stints.map((s) => `${s.level} ${s.jersey} ${s.observations.length}`)).toEqual(['freshman 11 1', 'jv 30 2']);
+    expect(file.players[0].stints.flatMap((s) => s.conflicts)).toEqual([]);
+  });
+
   it('the name shown is the latest season\'s, and a stat sheet\'s only when no other source spells it', () => {
     const file = build([
       row({ name: "Nia D'Souza", careerIds: ['c1'] }),

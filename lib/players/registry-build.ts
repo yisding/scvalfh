@@ -55,6 +55,7 @@ import { createHash } from 'node:crypto';
 import { resolveName, type NoteRosterPlayer } from './note-stats';
 import {
   OBSERVATION_SOURCES,
+  PLAYER_LEVELS,
   PlayersFileSchema,
   countPlayers,
   identifierKey,
@@ -176,6 +177,8 @@ export interface BuildInput {
 const pairKey = (sport: string, season: string) => `${sport} ${season}`;
 const teamKey = (s: { sport: string; team: string }) => `${s.sport} ${s.team}`;
 const byText = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+/** Varsity before JV before the freshman team. */
+const byLevel = (a: PlayerLevel, b: PlayerLevel) => PLAYER_LEVELS.indexOf(a) - PLAYER_LEVELS.indexOf(b);
 
 // ---------------------------------------------------------------- stints from observations
 
@@ -184,7 +187,7 @@ const SOURCE_RANK = new Map<ObservationSource, number>(OBSERVATION_SOURCES.map((
 /** A stint's observations in the order its fields are read: the level's own MaxPreps page first. */
 function inPrecedence(observations: readonly Observation[], level: PlayerLevel): Observation[] {
   const rank = (o: Observation) => {
-    if (level === 'jv' && o.src === 'maxpreps-jv-roster') return -1;
+    if (level !== 'varsity' && o.src === 'maxpreps-jv-roster') return -1;
     return SOURCE_RANK.get(o.src) ?? OBSERVATION_SOURCES.length;
   };
   return observations
@@ -292,7 +295,7 @@ interface ClassClaim {
 /** Every class year a player's observations imply, latest season first, varsity before JV. */
 function classClaims(stints: readonly Stint[]): ClassClaim[] {
   const ordered = [...stints].sort(
-    (a, b) => byText(b.season, a.season) || byText(b.level, a.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
+    (a, b) => byText(b.season, a.season) || byLevel(a.level, b.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
   );
   const claims: ClassClaim[] = [];
   for (const stint of ordered) {
@@ -606,12 +609,13 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       throw new Error(`registry: ${spelling(indices[0])} (${all[indices[0]].team}) has neither a career id nor a name to be known by`);
     }
 
-    // A soft level follows the player's only real one on that team that season.
+    // A soft level (a stat sheet is filed under varsity) gives way to where the player's own rows put
+    // her on that team that season: the highest squad she is really listed on.
     const hard = new Set(indices.filter((i) => !all[i].softLevel).map((i) => `${pairKey(all[i].sport, all[i].season)} ${all[i].team} ${all[i].level}`));
     const levelOf = (s: Sighting): PlayerLevel => {
       if (!s.softLevel) return s.level;
       const at = (level: PlayerLevel) => hard.has(`${pairKey(s.sport, s.season)} ${s.team} ${level}`);
-      return !at(s.level) && at(s.level === 'varsity' ? 'jv' : 'varsity') ? (s.level === 'varsity' ? 'jv' : 'varsity') : s.level;
+      return at(s.level) ? s.level : (PLAYER_LEVELS.find(at) ?? s.level);
     };
     const grouped = new Map<string, { key: Parameters<typeof resolveStint>[0]; observations: Observation[] }>();
     for (const i of indices) {
@@ -667,7 +671,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   // ---- 6. the records
   const players: Player[] = drafts.map((d) => {
     const ordered = [...d.stints].sort(
-      (a, b) => byText(b.season, a.season) || byText(b.level, a.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
+      (a, b) => byText(b.season, a.season) || byLevel(a.level, b.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
     );
     const spelledBy = (s: Stint) => s.observations.find((o) => o.name === s.name)?.src;
     const name = (ordered.find((s) => spelledBy(s) !== 'maxpreps-stats') ?? ordered[0]).name;

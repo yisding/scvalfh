@@ -45,7 +45,13 @@ export const seasonYear = z.string().regex(/^\d{2}-\d{2}$/, 'expected a season y
 
 export { playerId };
 
-export const PLAYER_LEVELS = ['varsity', 'jv'] as const;
+/**
+ * The squads a school fields, highest first. Field hockey and soccer have varsity and JV; some
+ * basketball programs also field a freshman team. No file in the repository lists a freshman team's
+ * players yet, so nothing is filed under 'freshman' today: the level exists so that the first source
+ * that does (a MaxPreps freshman roster page, a school's own list) has somewhere to go.
+ */
+export const PLAYER_LEVELS = ['varsity', 'jv', 'freshman'] as const;
 export type PlayerLevel = (typeof PLAYER_LEVELS)[number];
 
 /** Where an observation was read. The order is the precedence a stint's fields are resolved by. */
@@ -95,7 +101,7 @@ export const ObservationSchema = z
     captain: z.literal(true).optional(),
     /** MaxPreps' per-season athlete id for the row this was read from: the join other files use. */
     athleteId: text.optional(),
-    /** The honour, for `all-league`: "firstTeam", "secondTeam", "honorableMention". */
+    /** The honour, for `all-league`: "firstTeam", "secondTeam", "thirdTeam", "honorableMention". */
     award: text.optional(),
     /** True when the grade was computed from another season's class year, not read for this one. */
     derived: z.literal(true).optional(),

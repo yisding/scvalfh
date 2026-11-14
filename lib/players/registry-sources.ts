@@ -129,6 +129,8 @@ const AwardList = z.looseObject({
   firstTeam: z.array(AwardRow).optional(),
   secondTeam: z.array(AwardRow).optional(),
   honorableMention: z.array(AwardRow).optional(),
+  /** Basketball's lists name a third team. */
+  thirdTeam: z.array(AwardRow).optional(),
 });
 
 export const HistoryInput = z.looseObject({
@@ -310,7 +312,7 @@ export interface PastSeasonFiles {
   history: z.infer<typeof HistoryInput> | null;
 }
 
-const AWARDS = ['firstTeam', 'secondTeam', 'honorableMention'] as const;
+const AWARDS = ['firstTeam', 'secondTeam', 'thirdTeam', 'honorableMention'] as const;
 
 export function pastSeasonSightings(files: PastSeasonFiles): Sighting[] {
   const { sport, season } = files;
