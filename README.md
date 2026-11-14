@@ -1460,6 +1460,17 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   box score per side, and /leaders has kills, aces, digs and assists per set, kills and solo blocks, beside
   the school boards (record, league record, average margin in sets, Elo). 23 of the 41 teams had entered
   stats on 2026-11-14. A roster's positions read Outside hitter, Middle blocker, Setter, Libero and so on.
+- **JV rosters**: MaxPreps' JV roster pages list players for 25 of the 41 schools, and
+  `data/volleyball/jv-rosters-school-sites.json` transcribes the 2026-27 JV lists 13 schools publish themselves
+  (173 players, read 2026-11-14 in a sweep of all 41 schools' sites): Gunn, Leland, Lynbrook, Monta Vista,
+  Santa Clara, Saratoga and Willow Glen (homecampus, `/lower/volleyball-girls-junior-varsity/roster/`), Los
+  Gatos and Palo Alto (5 Star), Fremont (its roster page's JV sheet), Cupertino (chs.fuhsd.org's JV tab),
+  Branham (a Google Doc its fall sports page links) and Yerba Buena (ybsn.org, the student sports site its
+  athletics page links). 27 team pages have a JV roster section: Cupertino and Willow Glen have no MaxPreps
+  list, and Leland's and Yerba Buena's MaxPreps lists name two players each. Left out: MacDonald's page (last
+  season's list: its Varsity column is MaxPreps' 2025-26 varsity roster) and Ann Sobrato's olinesports JV page
+  (no season named, and it lists players in their second varsity season). The other 26 schools' sites publish
+  no JV list (Milpitas' 5 Star and Overfelt's homecampus roster pages are empty for 2026-27).
 - **A forfeit entered 0-0 with the winner marked** is that side's win, in every sport (`sideOutcome` in
   `lib/format.ts`): Andrew Hill v KIPP San Jose Collegiate, Oct 16, was the first one any build held.
 - **No cifsshome.org cross-check**: a girls volleyball season is past the listing's 60-page cap in every
@@ -1492,7 +1503,7 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## The player registry
 
 `data/players.json` holds one record per person across all four sports and every season the repository
-has seen (4,992 on 2026-11-14, once girls volleyball was added): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
+has seen (4,992 on 2026-11-14, once girls volleyball was added, and 5,044 with its schools' own JV lists): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
 team, season, sport and level (varsity, JV or a freshman team), each with what every source said about it
 and where the sources disagree. It is internal. No page reads it, and a test fails if anything under
 `app/` or `components/` imports it. It does name about 770 players of 2025-26 who appear nowhere else in
@@ -1514,7 +1525,7 @@ files. It also writes each player's `playerId` into `data/clubs.json`, `data/com
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
 `review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
-kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
+kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65, and its schools' own JV lists to 76: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
 `data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
 Deleting a `sameAs` entry undoes the join on the next build that still reads that season's files. After a
 rollover it does not (a carried-forward season is kept as it was): `docs/DATA-SOURCES.md` §1.1 (m) gives

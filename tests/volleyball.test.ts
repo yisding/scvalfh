@@ -29,6 +29,7 @@ type Modules = {
   statsSource: typeof import('../lib/sources/maxpreps-player-stats');
   statsView: typeof import('../components/teams/player-stats-view');
   jv: typeof import('../lib/jv/jv');
+  jvRosters: typeof import('../lib/jv/jv-rosters');
   rosters: typeof import('../lib/players/rosters');
   history: typeof import('../lib/history/history');
   order: typeof import('../lib/standings/order');
@@ -59,6 +60,7 @@ beforeAll(async () => {
     statsSource: await import('../lib/sources/maxpreps-player-stats'),
     statsView: await import('../components/teams/player-stats-view'),
     jv: await import('../lib/jv/jv'),
+    jvRosters: await import('../lib/jv/jv-rosters'),
     rosters: await import('../lib/players/rosters'),
     history: await import('../lib/history/history'),
     order: await import('../lib/standings/order'),
@@ -252,6 +254,41 @@ describe('the bundled volleyball data', () => {
     // The El Camino JV document prints one player's year as "7": no grade is stored for her.
     const jv = m.history.getHistoryAwards('el-camino', 'jv');
     expect(jv?.firstTeam.find((p) => p.player === 'Kaylan Shab')).toMatchObject({ slug: 'saratoga', year: null });
+  });
+
+  it('holds the JV lists 13 schools publish themselves, and shows one where it is the fuller list', () => {
+    const file = m.jvRosters.getJvSiteRostersFile();
+    expect(file.teams.map((t) => t.slug)).toEqual([
+      'cupertino',
+      'los-gatos',
+      'monta-vista',
+      'palo-alto',
+      'fremont',
+      'gunn',
+      'lynbrook',
+      'santa-clara',
+      'saratoga',
+      'branham',
+      'leland',
+      'willow-glen',
+      'yerba-buena',
+    ]);
+    expect(file.teams.reduce((n, t) => n + t.players.length, 0)).toBe(173);
+    for (const t of file.teams) {
+      expect(t.season, t.slug).toBe('2026-27');
+      expect(t.seasonEvidence.length, t.slug).toBeGreaterThan(30);
+      expect(t.checkedOn <= file.capturedAt, t.slug).toBe(true);
+      expect(`${t.readUrl} ${t.pageUrl}`, t.slug).not.toMatch(/maxpreps/);
+      for (const p of t.players) {
+        expect(p.name, t.slug).not.toBe(p.name.toLowerCase());
+        expect(p.name, t.slug).not.toBe(p.name.toUpperCase());
+      }
+    }
+    // MaxPreps' JV pages list nobody for Cupertino and Willow Glen, and two players for Leland.
+    expect(m.jvRosters.getJvRoster('cupertino')).toMatchObject({ source: 'school-site', other: null });
+    expect(m.jvRosters.getJvRoster('willow-glen')).toMatchObject({ source: 'school-site', other: null });
+    expect(m.jvRosters.getJvRoster('leland')).toMatchObject({ source: 'school-site', other: { source: 'maxpreps' } });
+    expect(m.teams.TEAMS.filter((t) => m.jvRosters.getJvRoster(t.slug) !== null)).toHaveLength(27);
   });
 });
 

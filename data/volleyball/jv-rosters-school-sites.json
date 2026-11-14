@@ -1,6 +1,1527 @@
 {
-  "builtBy": "Nothing yet: no school athletics site has been read for a JV girls volleyball roster.",
+  "builtBy": "Read on 2026-11-14 from each school’s own athletics site or the page it links as its roster (readUrl), transformed by a script and checked against the page by hand: one entry per school whose site publishes a current-season JV girls volleyball roster.",
   "capturedAt": "2026-11-14",
-  "notes": [],
-  "teams": []
+  "notes": [
+    "A school’s own JV list, transcribed as the school printed it: name, number, grade, position and height where the page gives them, null where it does not. Nothing is guessed. A name printed all in lower case or all in capitals is re-cased the way MaxPreps roster rows are (lib/sources/person-name.ts recaseName).",
+    "The team page shows the fuller of this list and MaxPreps’ JV roster (data/volleyball/jv-rosters.json), each counted without the players on the varsity roster; the school’s own list on a tie (lib/jv/jv-rosters.ts).",
+    "Grades come from the page’s grade or class word. A captain is marked only where the page marks one.",
+    "Left out: MacDonald’s page (its Varsity column is MaxPreps’ 2025-26 varsity roster, 11 of 14, so the list is last season’s) and Ann Sobrato’s olinesports JV page (no season named; five of its twelve are on this season’s varsity roster and one was on last season’s).",
+    "Not refreshed by any scheduled job. Re-read by hand; checkedOn says when each list was read."
+  ],
+  "teams": [
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls",
+      "players": [
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Dora Avar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Bethea",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Aanya Dhar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Rana Erel",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Hwang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Raim Kim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Yubeen Kwon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Mika Lamburn",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Noelle Lee",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Srivardhini Pragadesh",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ayoni Roy",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Clara Yu-Svensson",
+          "position": null
+        }
+      ],
+      "readUrl": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls",
+      "season": "2026-27",
+      "seasonEvidence": "The page names no season; all 13 names on its Varsity tab are on MaxPreps’ 2026-27 roster, and its schedule link reads “updated on 8/31/26”.",
+      "slug": "cupertino"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Zeynep Akca",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Suzu Banno",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Chancey Cappello",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Beatrix Carter",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Cassidy",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Kayleigh Fong",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ayana Koshalieva",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Harper Kruse",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Harper Stephenson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "YiZe Sun",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Maya Weitz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ellie Yang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Luna Zajic",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139304?schoolYear=2026-2027",
+      "season": "2026-27",
+      "seasonEvidence": "Read with schoolYear=2026-2027 for the team the page’s level selector names “Junior Varsity” (139304); schoolYear=2025-2026 returns a different list.",
+      "slug": "los-gatos"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Ahn",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Avnika Choudhury",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sophia Da Pont",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Harshita Girdhar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Guillier",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emmy Harimoto",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Cindy Hu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Seljan Ibrahimli",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Yana Jeleva",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Aishah Khan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tiffany Kwok",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Elizabeth Qiu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Audrie Suen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tejasvi Varma",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mia Wang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Wang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Weiqin Wu",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "monta-vista"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Elle Martin",
+          "position": "MB"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "1",
+          "name": "Kiara Fossati-Moiane",
+          "position": "S"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "2",
+          "name": "Eve Dixon",
+          "position": "OH"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "3",
+          "name": "Mila Kalember",
+          "position": "L"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "4",
+          "name": "Emmylou Filo",
+          "position": "OH/MB"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "5",
+          "name": "Carina Greenfield",
+          "position": "L/OH"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "6",
+          "name": "Callie Popek",
+          "position": "S"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "7",
+          "name": "Maia Ratchev",
+          "position": "L"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "8",
+          "name": "Maia Wadhwani",
+          "position": "OH"
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "10",
+          "name": "Sophie Smith",
+          "position": "OH/MB"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "12",
+          "name": "Maia Fisch",
+          "position": "OH/L"
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "13",
+          "name": "Dalia Bendavid",
+          "position": "L"
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "15",
+          "name": "Amelia Lyon",
+          "position": "OH"
+        }
+      ],
+      "readUrl": "https://www.palyathletics.com/sport/RefreshRosterAthleteStyle2ViewComponent/148395?schoolYear=2026-2027",
+      "season": "2026-27",
+      "seasonEvidence": "Read with schoolYear=2026-2027 for the team the page’s level selector names “Junior Varsity” (148395); schoolYear=2025-2026 lists nobody.",
+      "slug": "palo-alto"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://fremontathletics.org/girls-volleyball-roster.html",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "1",
+          "name": "Zoey Salud",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "2",
+          "name": "Zhorya Washington",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "3",
+          "name": "Mahati Canakoti",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "4",
+          "name": "Raisya Sandra",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "5",
+          "name": "Magumi Pugel",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "6",
+          "name": "Yarden Kopel",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "7",
+          "name": "Jazzmine Washington",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "8",
+          "name": "Moira Ysabelle Miranda",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "9",
+          "name": "Emily Huang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "10",
+          "name": "Andrea Alvendina",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "11",
+          "name": "Evangelina John",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "12",
+          "name": "Saanvi Venkumahanti",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "13",
+          "name": "Grace Seymour",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "14",
+          "name": "Sonya Sok",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "15",
+          "name": "Nadia Navone",
+          "position": null
+        }
+      ],
+      "readUrl": "https://docs.google.com/spreadsheets/d/12h9ev3DXGEpaxCAU7fKJGQAdA9uR71-lpd1T5Clmf_Q/gviz/tq?tqx=out:csv&sheet=JV",
+      "season": "2026-27",
+      "seasonEvidence": "The roster page is headed “2026–27”; its JV button reads the sheet named JV from the same spreadsheet as the varsity list.",
+      "slug": "fremont"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emilia Bauer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Soklinda Chhuo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Carrie Chung",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Gal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Phoenix Gao",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kaylee Hernandez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ella Lyon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Filoli Montes",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Victoria Ong",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Claire Park",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ayaka Sasaki",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kailyn Tsui",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Evelyn Wang",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "gunn"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Shreya Atmuri",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Serena Au",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Rojin Karamveysi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Riya Katariya",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jessica Li",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Claire Namvar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mia Ooi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Katherine Vu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Maanya Vyas",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Yufei Wu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sarah Yang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Melody Zeng",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Hannah Zhu",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "lynbrook"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": "11",
+          "name": "Sofia Kassai",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "15",
+          "name": "Vera Lau",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": "20",
+          "name": "Jillian Palomo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Hillary Argueta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Cihak",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Gabrielle Leilani Dellona",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Danika Driz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "McKenzie Dyer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Mariangel Gonzalez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Rhianna Jabbal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Jacklyn Le",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ariana Maestre",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Sana Nezhad",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Andrea Lindsay Tecson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Annabelle Wang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Bhea Hulog",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "santa-clara"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lily Ahn",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Brielle Clement",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Janielle Fan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Disha Gande",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Nethra Iyer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jocelyn Kao",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Caitlin Kuntay",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ariana Lau",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ha Nguyen Le",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Madina Noorzay",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Savannah Rich",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kaylan Shab",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Dhrishti Shah",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jessica Shu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Samantha Weber",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Christina Wu",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "saratoga"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Louam Berlie",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Vesper Bottu-Manzi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Angelica Builes",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ailbhe Cleary",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Camila Cuevas-Carrillo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Anya Desai",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Bella Marie Ford",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Sheena King",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Paulina Kise",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Grace Loo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Natalia Marchand-Fontanez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Ogaz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Sydney Sneller",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Amanda Stratman",
+          "position": null
+        }
+      ],
+      "readUrl": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/export?format=txt",
+      "season": "2026-27",
+      "seasonEvidence": "The document is headed “BRANHAM GIRLS JV VOLLEYBALL 2026-2027 ROSTER”; branham.cuhsd.org’s fall sports page links it as the JV roster.",
+      "slug": "branham"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mila Atala",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Melena Balanoj",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Chen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Cherepova",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Esha Kumar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Genevieve Lam",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Keira Mullins",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Maya Otell",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Li",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "leland"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sadie Chu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ellie Crew",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Amaya Fujii",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Caoilinn Kavanagh",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Reese Maddox",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Robin Maric",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Blake Penhallegon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Reid",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Riepling",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Anna Villatoro",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "willow-glen"
+    },
+    {
+      "checkedOn": "2026-11-14",
+      "pageUrl": "https://ybsn.org/girls-vb-roster-26-27",
+      "players": [
+        {
+          "captain": true,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Allison Nguyen",
+          "position": null
+        },
+        {
+          "captain": true,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Zyanne Dayandayan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jessica Bao",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Angelie Carillo Salcido",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia De Paz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chole Ho",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ninette Martinez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jaylene Nguyen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Dafne Pulido",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Vylette Rodriguez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ivy Tran",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ann Thai",
+          "position": null
+        }
+      ],
+      "readUrl": "https://ybsn.org/girls-vb-roster-26-27",
+      "season": "2026-27",
+      "seasonEvidence": "The page is titled “Girls Vb roster 26-27” and lists these names under its “JV” heading; Yerba Buena’s athletics page links the site as “YB Sports Page”.",
+      "slug": "yerba-buena"
+    }
+  ]
 }

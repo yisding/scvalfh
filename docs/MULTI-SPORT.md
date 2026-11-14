@@ -292,6 +292,9 @@ with its season already played, so the postseason code ran on real results the d
 - **Data.** Under `data/volleyball/`, from the usual fetchers, and a corpus of the run
   (`tests/fixtures/corpus/volleyball-2026-11-14/`, captured with `--no-cifss`) that rebuilds the snapshot
   offline. `data/players.json` was rebuilt with the fourth sport.
+- **JV rosters from the schools' sites** (added 2026-11-14). `data/volleyball/jv-rosters-school-sites.json`
+  holds the 2026-27 JV lists 13 of the 41 schools publish themselves, found in a sweep of every school's
+  site; README, "Girls volleyball", names each source and what was left out.
 - **Deploy.** `update-data-volleyball.yml` (Aug–Dec, twenty minutes after field hockey's refresh), ci's
   `volleyball` job, the deploy gate's matrix and `scripts/vercel-ignore-build.sh` know the fourth sport. The
   hosting project and its domain are the owner's to create.
