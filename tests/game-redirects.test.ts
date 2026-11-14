@@ -31,6 +31,12 @@ describe('supersededGameRedirects', () => {
       { source: '/game/sblive-6543072/opengraph-image', destination: `/game/${GUID}/opengraph-image`, permanent: true },
     ]);
     expect(supersededGameRedirects({})).toEqual([]);
+    // A MaxPreps GUID in upper case (GUID_RE allows it) is kept as spelled.
+    expect(supersededGameRedirects({ 'sblive:1': GUID.toUpperCase() })[0]).toEqual({
+      source: '/game/sblive-1',
+      destination: `/game/${GUID.toUpperCase()}`,
+      permanent: true,
+    });
   });
 
   it('refuses a key that is a MaxPreps id (its redirect would hide a live page) or a target with route syntax', () => {

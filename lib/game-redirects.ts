@@ -28,8 +28,11 @@ export interface GameRedirect {
   permanent: true;
 }
 
-/** A URL segment the redirect's path pattern reads literally: no path-to-regexp syntax (`:`, `(`, `*`, …). */
-const PLAIN_PARAM = /^[a-z0-9-]+$/;
+/**
+ * A URL segment the redirect's path pattern reads literally: no path-to-regexp syntax (`:`, `(`, `*`, …). Either
+ * case: a MaxPreps GUID is matched case-insensitively (lib/game-id.ts GUID_RE) and kept as the feed spells it.
+ */
+const PLAIN_PARAM = /^[A-Za-z0-9-]+$/;
 
 /**
  * Two redirects per superseded id, in key order: the page, and its `opengraph-image` (a card a social site cached
