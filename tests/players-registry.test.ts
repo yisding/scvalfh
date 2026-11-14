@@ -684,6 +684,17 @@ describe('what the reviewers broke', () => {
     expect(named(back, 'Quit Early')[0].stints.map((s) => `${s.jersey} ${s.gone ?? false}`)).toEqual(['14 false']);
   });
 
+  it('a "Player #N" stand-in a previous build made a player of is not remembered once no source lists it', () => {
+    // Gilroy volleyball, 2026-10: two stand-ins once made one registry player, "null Player #12".
+    const before = build([
+      row({ name: 'Ada Stone', careerIds: ['c1'], obs: { jersey: '9' } }),
+      row({ name: 'null Player #12', careerIds: ['c12'], obs: { jersey: '12' } }),
+    ]);
+    expect(before.players).toHaveLength(2);
+    const after = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { jersey: '9' } })], { previous: before });
+    expect(after.players.map((p) => p.name)).toEqual(['Ada Stone']);
+  });
+
   it('a player whose career id passes to somebody else between builds is kept, under her name', () => {
     const before = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } })]);
     const after = build([row({ name: 'Bob Jones', careerIds: ['c1'], obs: { grade: 10 } })], { previous: before });

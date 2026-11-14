@@ -7435,6 +7435,7 @@
         },
         {
           "athleteId": "e375a363-ecf6-4abe-9425-b05f25515177",
+          "playerId": "pff5ff5d692",
           "conflicts": [],
           "fullName": "Player #11",
           "grade": null,
@@ -7465,6 +7466,7 @@
         },
         {
           "athleteId": "3caa6df1-27bb-483e-ba65-5ce3af1b60a0",
+          "playerId": "p7f4d96e4da",
           "conflicts": [],
           "fullName": "Player #12",
           "grade": {
