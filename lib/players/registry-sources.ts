@@ -225,6 +225,10 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
         // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is a number, not a player, until a source
         // names it; then it is that player, under that name.
         const named = extra?.name ?? null;
+        // The rule lib/players/rosters.ts holds the overlay to at load, held here too: this reads the file itself.
+        if (named !== null && (!isPlaceholderRow(row) || row.jersey === null)) {
+          throw new Error(`registry: ${team.slug} / ${row.fullName}: rosters-enrichment names a row that is not a numbered "Player #N" stand-in`);
+        }
         if (named === null && (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, '')))) continue;
         const asRow = named ? { ...row, firstName: named.firstName, lastName: named.lastName, fullName: named.value } : row;
         // MaxPreps' row says the number and nothing of the name; the name is the source's.

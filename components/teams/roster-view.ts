@@ -521,7 +521,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     showNumbers: rows.some((r) => r.jersey !== null),
     numberChars: Math.max(0, ...rows.map((r) => r.jersey?.text.length ?? 0)),
     jvLeftOut: team.players.length - varsity.length,
-    hasElsewhere: rows.some((r) => r.jersey?.elsewhere || r.facts.some((f) => f.elsewhere)),
+    hasElsewhere: rows.some((r) => r.nameElsewhere || r.jersey?.elsewhere || r.facts.some((f) => f.elsewhere)),
     hasDerivedGrade: players.some((p) => {
       const g = elsewhereSource(p.provenance.grade);
       return g !== null && 'derived' in g && g.derived;

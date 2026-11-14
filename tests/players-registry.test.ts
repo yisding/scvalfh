@@ -996,6 +996,37 @@ describe('the sources as sightings', () => {
     expect(build(sightings).players.map((p) => p.name)).toEqual(['Grace Gnagne']);
   });
 
+  it('refuses an overlay name on a row MaxPreps already names, as the roster loader does', () => {
+    expect(() =>
+      currentSeasonSightings(
+        {
+          sport: 'volleyball',
+          rosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({})] }] },
+          jvRosters: null,
+          enrichment: {
+            season: '26-27',
+            teams: [
+              {
+                slug: 'alpha',
+                players: [
+                  {
+                    athleteId: 'a1', fullName: 'Xia Lam', sourceName: null, level: null,
+                    name: { value: 'Ann Other', firstName: 'Ann', lastName: 'Other', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
+                    grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                  },
+                ],
+              },
+            ],
+          },
+          playerStats: null,
+          jvSchoolSites: null,
+          jvProfiles: null,
+        },
+        NO_IDENTITY,
+      ),
+    ).toThrow(/alpha \/ Xia Lam: rosters-enrichment names a row that is not a numbered "Player #N" stand-in/);
+  });
+
   it('a past season is its stat sheets and its all-league lists', () => {
     const sightings = pastSeasonSightings({
       sport: 'field-hockey',

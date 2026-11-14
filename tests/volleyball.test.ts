@@ -609,8 +609,8 @@ describe('MaxPreps\' "Player #N" stand-ins (lib/players/placeholder-name.ts)', (
     const lines = m.playerStats.getTeamPlayerStats('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
     expect(lines.map((p) => [p.fullName, p.onRoster]).sort()).toEqual([['Anjelica Llamas', true], ['Grace Gnagne', true]]);
     const box = m.playerStats.getTeamPlayerStats('gilroy' as never)!.games!.flatMap((g) => g.players.filter((l) => l.jersey === '11' || l.jersey === '12'));
-    expect(box.length).toBeGreaterThan(0);
-    expect(box.every((l) => l.name === 'Anjelica Llamas' || l.name === 'Grace Gnagne')).toBe(true);
+    expect(box.map((l) => l.jersey).sort()).toEqual(['11', '12']);
+    for (const l of box) expect(l.name, l.jersey ?? '').toBe(l.jersey === '11' ? 'Anjelica Llamas' : 'Grace Gnagne');
   });
 
   it('leaves the stand-ins no source names as "Player #N", on the roster and on their stat lines', () => {
