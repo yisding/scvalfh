@@ -23,7 +23,9 @@
           "name": "Final",
           "date": "2026-11-14",
           "time": "18:00",
-          "site": "La Jolla High School"
+          "site": "La Jolla High School",
+          "stream": "https://www.nfhsnetwork.com/events/cifsds/gam9695576557",
+          "tickets": "https://gofan.co/event/7066792?schoolId=CIFSD"
         }
       ],
       "seeds": [
@@ -82,7 +84,9 @@
           "name": "Final",
           "date": "2026-11-14",
           "time": "15:30",
-          "site": "La Jolla High School"
+          "site": "La Jolla High School",
+          "stream": "https://www.nfhsnetwork.com/events/cifsds/gamcc89dac120",
+          "tickets": "https://gofan.co/event/7066791?schoolId=CIFSD"
         }
       ],
       "seeds": [
@@ -164,7 +168,9 @@
           "name": "Final",
           "date": "2026-11-14",
           "time": "13:00",
-          "site": "La Jolla High School"
+          "site": "La Jolla High School",
+          "stream": "https://www.nfhsnetwork.com/events/cifsds/gamc94f36a793",
+          "tickets": "https://gofan.co/event/7066793?schoolId=CIFSD"
         }
       ],
       "seeds": [

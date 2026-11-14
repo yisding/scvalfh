@@ -49,6 +49,8 @@ import { buildLeagueTournament } from './postseason/postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { boxEvidenceFrom } from './results/box-evidence';
+import { SDS_BRACKETS_FILE } from './postseason/sds-brackets-file';
+import { withSdsFinalLinks } from './postseason/sds-final-links';
 import { withFixtureGames } from './results/fixture-games';
 import { loadSnapshot } from './snapshot/snapshot-load';
 import { countsOf } from './snapshot/snapshot-migrate';
@@ -131,8 +133,10 @@ const stored = load();
  */
 const snapshot: Snapshot = (() => {
   const listed = withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt);
-  if (listed.listed.length === 0) return stored;
-  return { ...stored, games: listed.games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
+  // A San Diego final's stream and tickets from the bracket file, where its game has none (lib/postseason/sds-final-links.ts).
+  const games = withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE);
+  if (listed.listed.length === 0) return { ...stored, games };
+  return { ...stored, games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
 })();
 
 // ---------------------------------------------------------------- basics
