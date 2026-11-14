@@ -64,7 +64,8 @@ function leagueSchema(leagueId: LeagueId) {
     slug: teamSlug.nullable(),
     /** null = the source left the cell empty. */
     position: z.string().nullable(),
-    year: z.number().int().min(9).max(12),
+    /** null = the document's year cell is not a grade (SCVAL girls volleyball 2025-26: one JV row prints "7"). */
+    year: z.number().int().min(9).max(12).nullable(),
   });
 
   const awards = z.object({

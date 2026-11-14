@@ -351,11 +351,11 @@ export function plural(n: number, one: string, many: string = `${one}s`): string
 
 /**
  * Whether a game of this build's sport cannot end level (basketball: overtime is played until one team leads;
- * `Sport.scoring.allowsTies` false). Read from the inlined SCVAL_SPORT (next.config.ts `env`, vite.config.ts
+ * volleyball: a match is the best of five sets; `Sport.scoring.allowsTies` false). Read from the inlined SCVAL_SPORT (next.config.ts `env`, vite.config.ts
  * `define`), not from lib/sports/current, so this leaf never loads a sport definition into a client bundle
  * (docs/MULTI-SPORT.md, "Guards"); tests/sports.test.ts holds it to the sport's own `allowsTies`.
  */
-export const SPORT_HAS_NO_TIES = process.env.SCVAL_SPORT === 'basketball';
+export const SPORT_HAS_NO_TIES = process.env.SCVAL_SPORT === 'basketball' || process.env.SCVAL_SPORT === 'volleyball';
 
 /**
  * What breaks a level score in a game that must have a winner, in this build's sport, when no section rule names
@@ -373,10 +373,10 @@ export const SPORT_TIEBREAK_TAG = process.env.SCVAL_SPORT === 'soccer' ? 'PK' : 
 /**
  * Whether the sport's overtime ends on the first score (field hockey: sudden victory in every league rule this
  * site reads), so a game cannot come out of it more than one goal apart. false for soccer (two full periods)
- * and basketball (full periods until one team leads).
+ * and basketball (full periods until one team leads), and for volleyball, which has no overtime.
  */
 export const SPORT_OVERTIME_IS_SUDDEN_VICTORY =
-  process.env.SCVAL_SPORT !== 'soccer' && process.env.SCVAL_SPORT !== 'basketball';
+  process.env.SCVAL_SPORT !== 'soccer' && process.env.SCVAL_SPORT !== 'basketball' && process.env.SCVAL_SPORT !== 'volleyball';
 /**
  * Whether an overtime of the sport is counted in periods a reader names ('2 OT', 'double overtime'). false for
  * soccer: its overtime is one stage of two halves, which MaxPreps may record as 1 or 2 periods, so every soccer
@@ -501,8 +501,8 @@ export function streakString(streak: { count: number; result: Outcome } | null):
  * derivation every outcome on the site goes through (standings, form, chips, series summaries):
  * a stored shootout tally decides when present; a decider 'SO' with complementary result flags
  * {W, L} (an EAL 1 v 1 win, a San Diego Section shootout win MaxPreps records as a level score, or a
- * level playoff final with the winner marked: no tally stored) takes that side's flag; anything else is
- * read off the score. Config-free on purpose: `decider` 'SO' is only ever written where a level score has a
+ * level playoff final with the winner marked: no tally stored) takes that side's flag, and so does a forfeit
+ * entered level with the winner marked; anything else is read off the score. Config-free on purpose: `decider` 'SO' is only ever written where a level score has a
  * winner (lib/pipeline/normalize.ts for two teams of a section whose `shootout` rule is set,
  * lib/postseason/level-final.ts for a game that must have one), so nothing here needs to know why.
  */
@@ -527,6 +527,17 @@ export function sideOutcome(
     return mine.result;
   }
   const [us, them] = [mine.score as number, theirs.score as number];
+  // A forfeit entered with no score (0-0) and the winner marked: a forfeit has a winner, the side marked W
+  // (Andrew Hill v KIPP San Jose Collegiate, girls volleyball, Oct 16, 2026). A forfeit with a nominal score
+  // (1-0) is read off it, as before.
+  if (
+    game.decider === 'FORFEIT' &&
+    us === them &&
+    (mine.result === 'W' || mine.result === 'L') &&
+    theirs.result === (mine.result === 'W' ? 'L' : 'W')
+  ) {
+    return mine.result;
+  }
   return us > them ? 'W' : us < them ? 'L' : 'T';
 }
 

@@ -30,8 +30,10 @@ const update = read('update-data.yml');
 const updateSoccer = read('update-data-soccer.yml');
 /** The basketball site's refresh (SCVAL_SPORT=basketball): the soccer workflow's job for data/basketball/. */
 const updateBasketball = read('update-data-basketball.yml');
+/** The volleyball site's refresh (SCVAL_SPORT=volleyball): the same job for data/volleyball/. */
+const updateVolleyball = read('update-data-volleyball.yml');
 const deploy = read('deploy-cloudflare.yml');
-const updates = [update, updateSoccer, updateBasketball];
+const updates = [update, updateSoccer, updateBasketball, updateVolleyball];
 
 /** Every path the refreshes stage: the arguments of their `git add` lines. */
 const committedFiles = new Set(
@@ -77,6 +79,12 @@ describe('the update-data commit and the deploy gate', () => {
       'data/soccer/rosters.json',
       'data/soccer/snapshot.json',
       'data/soccer/snapshot.meta.json',
+      'data/volleyball/jv-rosters.json',
+      'data/volleyball/jv.json',
+      'data/volleyball/player-stats.json',
+      'data/volleyball/rosters.json',
+      'data/volleyball/snapshot.json',
+      'data/volleyball/snapshot.meta.json',
     ]);
   });
 
@@ -407,10 +415,40 @@ describe('the basketball refresh', () => {
   });
 });
 
+describe('the volleyball refresh', () => {
+  it('builds the volleyball data: SCVAL_SPORT=volleyball for the whole job', () => {
+    expect(updateVolleyball).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: volleyball$/m);
+  });
+
+  it('commits and restores only data/volleyball/ files', () => {
+    const paths = [...updateVolleyball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
+    expect(paths.length).toBeGreaterThan(0);
+    for (const p of paths) expect(p.startsWith('data/volleyball/'), p).toBe(true);
+  });
+
+  it('tests the volleyball data files it just wrote, with test files that exist', () => {
+    const body = stepBody(updateVolleyball, 'Test');
+    const files = [...body.matchAll(/tests\/[\w.-]+\.test\.ts/g)].map((m) => m[0]);
+    expect(files).toEqual(['tests/volleyball.test.ts']);
+    for (const f of files) expect(existsSync(path.join(REPO, f)), f).toBe(true);
+  });
+
+  it('reads no si.com page, no school calendar and no cifsshome.org listing', () => {
+    // A girls volleyball season is past the listing's 60-page cap in every Section, so its report is never whole.
+    expect(stepBody(updateVolleyball, 'Fetch data')).toContain('--no-sblive --no-vnn --no-cifss');
+    expect(stepBody(updateVolleyball, 'Fetch JV games')).toContain('--no-sblive');
+  });
+
+  it('runs in the fall season’s months, after field hockey’s refresh', () => {
+    const crons = [...updateVolleyball.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
+    expect(crons).toEqual(['20 14 * 8-12 *', '20 6 * 8-12 *']);
+  });
+});
+
 describe('the roster pages are read weekly', () => {
   // Owner decision, 2026-11-13: one scheduled run a week reads the roster pages (the Monday morning run,
   // Pacific); a manual run always does. The gate names a cron, so it must name one the workflow has.
-  for (const [name, text] of [['soccer', updateSoccer], ['basketball', updateBasketball]] as const) {
+  for (const [name, text] of [['soccer', updateSoccer], ['basketball', updateBasketball], ['volleyball', updateVolleyball]] as const) {
     it(`${name}: only the Monday morning cron reads them, and that cron exists`, () => {
       const body = stepBody(text, 'Fetch rosters');
       const gate = body.match(/"\$SCHEDULE" != '([^']+)'/);

@@ -33,12 +33,31 @@ const BASKETBALL_POSITION_WORDS: Readonly<Record<string, string>> = {
   PF: 'Power forward',
 };
 
+/**
+ * MaxPreps' volleyball position codes: OH, DS, MB, OPP, S, L, MH and RS on the 2026 girls rosters read
+ * 2026-11-14. MB and MH are one position (middle blocker, middle hitter) under two codes, each printed in its
+ * own words; OPP and RS are the opposite, or right-side, hitter the same way.
+ */
+const VOLLEYBALL_POSITION_WORDS: Readonly<Record<string, string>> = {
+  OH: 'Outside hitter',
+  MB: 'Middle blocker',
+  MH: 'Middle hitter',
+  OPP: 'Opposite',
+  RS: 'Right side',
+  S: 'Setter',
+  L: 'Libero',
+  DS: 'Defensive specialist',
+};
+
 const BASKETBALL = SPORT.stats.model === 'basketball';
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
 
 /** The build's sport's position codes, in words. */
 export const POSITION_WORDS: Readonly<Record<string, string>> = BASKETBALL
   ? BASKETBALL_POSITION_WORDS
-  : GOAL_SPORT_POSITION_WORDS;
+  : VOLLEYBALL
+    ? VOLLEYBALL_POSITION_WORDS
+    : GOAL_SPORT_POSITION_WORDS;
 
 /**
  * Every spelling the all-league documents use for one position, lower-cased, with its code. "Mid
@@ -50,6 +69,13 @@ const SPELLINGS: Readonly<Record<string, string>> = BASKETBALL
       g: 'G', guard: 'G', f: 'F', forward: 'F', wing: 'F', c: 'C', center: 'C', post: 'C',
       pg: 'PG', 'point guard': 'PG', sg: 'SG', 'shooting guard': 'SG',
       sf: 'SF', 'small forward': 'SF', pf: 'PF', 'power forward': 'PF',
+    }
+  : VOLLEYBALL
+  ? {
+      // The 2025-26 SCVAL all-league documents' spellings: "Lib", "Libero", "LIB", "OP", "Opp", "M", "Setter" ("Pin", a pin hitter, is kept as written).
+      oh: 'OH', outside: 'OH', 'outside hitter': 'OH', mb: 'MB', m: 'MB', middle: 'MB', 'middle blocker': 'MB',
+      mh: 'MH', 'middle hitter': 'MH', opp: 'OPP', op: 'OPP', opposite: 'OPP', rs: 'RS', 'right side': 'RS',
+      s: 'S', setter: 'S', l: 'L', lib: 'L', libero: 'L', ds: 'DS', 'defensive specialist': 'DS',
     }
   : {
       f: 'F', forward: 'F', attack: 'F',

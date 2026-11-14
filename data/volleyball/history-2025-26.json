@@ -1,0 +1,1238 @@
+{
+  "leagues": {
+    "bval": {
+      "alsoPublished": [
+        {
+          "label": "BVAL standings",
+          "url": "https://bval.org/standings/"
+        }
+      ],
+      "checked": [
+        "https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)"
+      ],
+      "checkedOn": "2026-11-14",
+      "league": "Blossom Valley Athletic League",
+      "reason": "BVAL publishes its official standings on bval.org. This site added BVAL girls volleyball on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "scval": {
+      "divisions": [
+        {
+          "awards": {
+            "jv": {
+              "division": "de-anza",
+              "firstTeam": [
+                {
+                  "player": "Camila Aramburo",
+                  "position": "L",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 10
+                },
+                {
+                  "player": "Kimiko Aquino",
+                  "position": "L",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 10
+                },
+                {
+                  "player": "Madeline Ting",
+                  "position": "S",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 9
+                },
+                {
+                  "player": "Calla Holtshouse",
+                  "position": "S",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 9
+                },
+                {
+                  "player": "Quinn Harr",
+                  "position": "OH",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Emma Jin",
+                  "position": "M",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Maddie De Smet",
+                  "position": "S",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Lydia Liu",
+                  "position": "L",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Kiara Fossati-Moiane",
+                  "position": "S/OPP",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 9
+                },
+                {
+                  "player": "Naia Tormala",
+                  "position": "MB",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 10
+                },
+                {
+                  "player": "Autumn Cleland",
+                  "position": "OPP",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 9
+                },
+                {
+                  "player": "Olivia Jamin",
+                  "position": "M",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 10
+                },
+                {
+                  "player": "Cielo Valle",
+                  "position": "S",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 10
+                },
+                {
+                  "player": "Katie Cao",
+                  "position": "OH/DS",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 10
+                },
+                {
+                  "player": "Clarissa Tick",
+                  "position": "S/OPP",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Ariel Yu",
+                  "position": "MB",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Evelyn Su",
+                  "position": "Libero",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 9
+                },
+                {
+                  "player": "Julia Bjornsson",
+                  "position": "OH",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 9
+                },
+                {
+                  "player": "Emmeline Liao",
+                  "position": "Libero",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 9
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Vedika Raman",
+                  "position": "OH",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 9
+                },
+                {
+                  "player": "Audrey Renski",
+                  "position": "DS",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Eve Dixon",
+                  "position": "OH",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 9
+                },
+                {
+                  "player": "Emma Tam",
+                  "position": "DS",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 9
+                },
+                {
+                  "player": "Maggie Lu",
+                  "position": "RS",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Vivienne (Bella) Pablo",
+                  "position": "Setter",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 9
+                },
+                {
+                  "player": "Kailani Ing",
+                  "position": "S",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 9
+                }
+              ],
+              "level": "jv",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Lulu Farwell, Los Gatos, OH, 9"
+                }
+              ],
+              "secondTeam": []
+            },
+            "varsity": {
+              "division": "de-anza",
+              "firstTeam": [
+                {
+                  "player": "Ella McFarlane",
+                  "position": "MB",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 12
+                },
+                {
+                  "player": "Evelyn Zhang",
+                  "position": "MB",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 12
+                },
+                {
+                  "player": "Ana Heath",
+                  "position": "Lib",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 12
+                },
+                {
+                  "player": "Angela Deng",
+                  "position": "S",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 9
+                },
+                {
+                  "player": "Megan Lee",
+                  "position": "OH",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 12
+                },
+                {
+                  "player": "Katie Hamburger",
+                  "position": "OH",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 10
+                },
+                {
+                  "player": "Natalie Chen",
+                  "position": "Lib",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 12
+                },
+                {
+                  "player": "Linnaea Moore",
+                  "position": "MB",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 12
+                },
+                {
+                  "player": "Maura Hambly",
+                  "position": "OH",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 11
+                },
+                {
+                  "player": "Olivia Roper",
+                  "position": "OPP",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 10
+                },
+                {
+                  "player": "Reese Japic",
+                  "position": "OH",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 12
+                },
+                {
+                  "player": "Emily Mulkey",
+                  "position": "MB",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 12
+                },
+                {
+                  "player": "Portia Zeidler",
+                  "position": "RS/MB",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 12
+                },
+                {
+                  "player": "Sadie Bins",
+                  "position": "MB",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 11
+                },
+                {
+                  "player": "Kate Langner",
+                  "position": "OH",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 10
+                },
+                {
+                  "player": "Sara Svihovec",
+                  "position": "OH",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 12
+                },
+                {
+                  "player": "Natasha Lacuzong",
+                  "position": "MB",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 12
+                },
+                {
+                  "player": "Chloe Chen",
+                  "position": "S/Opp",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 12
+                },
+                {
+                  "player": "Kylee Mark",
+                  "position": "S/Opp",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 11
+                },
+                {
+                  "player": "Halle Pattisson",
+                  "position": "OH",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 11
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Kat Minkevich",
+                  "position": "OP",
+                  "school": "Los Altos",
+                  "slug": "los-altos",
+                  "year": 9
+                },
+                {
+                  "player": "Elizabeth Jerian",
+                  "position": "OH",
+                  "school": "Palo Alto",
+                  "slug": "palo-alto",
+                  "year": 11
+                },
+                {
+                  "player": "Lilian Logan",
+                  "position": "S",
+                  "school": "Homestead",
+                  "slug": "homestead",
+                  "year": 11
+                },
+                {
+                  "player": "Annette Bassani",
+                  "position": "DS",
+                  "school": "Los Gatos",
+                  "slug": "los-gatos",
+                  "year": 12
+                },
+                {
+                  "player": "Audrie Huang",
+                  "position": "Pin",
+                  "school": "Milpitas",
+                  "slug": "milpitas",
+                  "year": 11
+                },
+                {
+                  "player": "Srahi Bobbili",
+                  "position": "L",
+                  "school": "Monta Vista",
+                  "slug": "monta-vista",
+                  "year": 10
+                },
+                {
+                  "player": "Juliet Kao",
+                  "position": "S",
+                  "school": "Mountain View",
+                  "slug": "mountain-view",
+                  "year": 9
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Aviya Russo, Los Altos, OH, 12"
+                },
+                {
+                  "award": "Outstanding Senior",
+                  "value": "Megan Lee, Homestead, OH, 12"
+                },
+                {
+                  "award": "Outstanding Junior",
+                  "value": "Maura Hambly, Palo Alto, OH, 11"
+                },
+                {
+                  "award": "Outstanding Sophomore",
+                  "value": "Kate Langner, Los Gatos, OH, 10"
+                },
+                {
+                  "award": "Outstanding Freshman",
+                  "value": "Angela Deng, Los Altos, S, 9"
+                }
+              ],
+              "secondTeam": []
+            }
+          },
+          "division": "de-anza",
+          "label": "De Anza",
+          "standings": {
+            "jv": [
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Mountain View",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "mountain-view",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Los Gatos",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "los-gatos",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "Palo Alto",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "palo-alto",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Milpitas",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "milpitas",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Monta Vista",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "monta-vista",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Homestead",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "homestead",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Los Altos",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "los-altos",
+                "t": 0,
+                "w": 4
+              }
+            ],
+            "varsity": [
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "Los Altos",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "los-altos",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Homestead",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "homestead",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Palo Alto",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "palo-alto",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Los Gatos",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "los-gatos",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Milpitas",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "milpitas",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Monta Vista",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "monta-vista",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "Mountain View",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "mountain-view",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": {
+              "division": "el-camino",
+              "firstTeam": [
+                {
+                  "player": "Mika Lamburn",
+                  "position": "OH/DS",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 9
+                },
+                {
+                  "player": "Kaylin McCulloch",
+                  "position": "L",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 10
+                },
+                {
+                  "player": "Jenna Chang",
+                  "position": "M",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 9
+                },
+                {
+                  "player": "Zoe Wang",
+                  "position": "OH",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 10
+                },
+                {
+                  "player": "Chloe Hsieh",
+                  "position": "OH",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 9
+                },
+                {
+                  "player": "Chantelle Ho",
+                  "position": "S",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 10
+                },
+                {
+                  "player": "Melody Zeng",
+                  "position": "DS/OH",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 10
+                },
+                {
+                  "player": "Laila Cheung",
+                  "position": "OH",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 11
+                },
+                {
+                  "player": "Niya Udinoor",
+                  "position": "S",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Emmalee Chan",
+                  "position": "OP",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 10
+                },
+                {
+                  "player": "Reya Sharma",
+                  "position": "L/DS",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Aria Mehra",
+                  "position": "M",
+                  "school": "Saratgoa",
+                  "slug": "saratoga",
+                  "year": 9
+                },
+                {
+                  "player": "YuenJen Li",
+                  "position": "OH",
+                  "school": "Saratgoa",
+                  "slug": "saratoga",
+                  "year": 10
+                },
+                {
+                  "player": "Kaylan Shab",
+                  "position": "S",
+                  "school": "Saratgoa",
+                  "slug": "saratoga",
+                  "year": null
+                },
+                {
+                  "player": "Lily Cox",
+                  "position": "M",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 9
+                },
+                {
+                  "player": "Tammy Kathuria",
+                  "position": "OH",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Aniya Rosario",
+                  "position": "Libero",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 9
+                },
+                {
+                  "player": "Alana Phan-Rodriguez",
+                  "position": "Setter",
+                  "school": "Macdonald",
+                  "slug": "macdonald",
+                  "year": 9
+                },
+                {
+                  "player": "Isabella Del Vecchio",
+                  "position": "Libero",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 10
+                },
+                {
+                  "player": "Adeline Raffetto",
+                  "position": "Setter",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 9
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Grace Tsai",
+                  "position": "DS/OH",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 9
+                },
+                {
+                  "player": "Yufei Wu",
+                  "position": "RS",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 9
+                },
+                {
+                  "player": "Keira Que",
+                  "position": "L/DS",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 9
+                },
+                {
+                  "player": "Serena Wu",
+                  "position": "OH",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 9
+                },
+                {
+                  "player": "Kailyn Tsui",
+                  "position": "L",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 9
+                },
+                {
+                  "player": "Nayla Castro",
+                  "position": "OH",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 9
+                },
+                {
+                  "player": "Adiya Doshayeva",
+                  "position": "OH",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 9
+                },
+                {
+                  "player": "Kailaya Estrada",
+                  "position": "L",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 9
+                }
+              ],
+              "level": "jv",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Sofia Wilkinson, Cupertino, S, 9"
+                }
+              ],
+              "secondTeam": []
+            },
+            "varsity": {
+              "division": "el-camino",
+              "firstTeam": [
+                {
+                  "player": "Claire Chien",
+                  "position": "M/S",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 10
+                },
+                {
+                  "player": "Miranda Zeng",
+                  "position": "S",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 12
+                },
+                {
+                  "player": "April Pamichev",
+                  "position": "OH",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 11
+                },
+                {
+                  "player": "Natalie Baker",
+                  "position": "L",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 10
+                },
+                {
+                  "player": "Aanya Hotha",
+                  "position": "M",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 11
+                },
+                {
+                  "player": "Iris jin",
+                  "position": "S",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 11
+                },
+                {
+                  "player": "Chloe Zeng",
+                  "position": "OH",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 10
+                },
+                {
+                  "player": "Morgan Li",
+                  "position": "L",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 11
+                },
+                {
+                  "player": "Ninya Udinoor",
+                  "position": "L",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 12
+                },
+                {
+                  "player": "Sitara Gunapu",
+                  "position": "MB",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 10
+                },
+                {
+                  "player": "Naomi Hunt",
+                  "position": "OH",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 12
+                },
+                {
+                  "player": "Jessica Jacobson",
+                  "position": "OH",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Grace Wong",
+                  "position": "L",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 11
+                },
+                {
+                  "player": "Audra Yuan",
+                  "position": "S",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 11
+                },
+                {
+                  "player": "Kelsy Mock",
+                  "position": "S",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 12
+                },
+                {
+                  "player": "Hanako Stone",
+                  "position": "OH",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 12
+                },
+                {
+                  "player": "Ivy Kuo",
+                  "position": "S",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 10
+                },
+                {
+                  "player": "Keyi Xue",
+                  "position": "OH",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 11
+                },
+                {
+                  "player": "Natalie Escalera",
+                  "position": "OH",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 12
+                },
+                {
+                  "player": "Nina Blanusa",
+                  "position": "OH/RS",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 9
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Angela Wang",
+                  "position": "OH",
+                  "school": "Cupertino",
+                  "slug": "cupertino",
+                  "year": 10
+                },
+                {
+                  "player": "Siena Ward",
+                  "position": "OH",
+                  "school": "Saratoga",
+                  "slug": "saratoga",
+                  "year": 9
+                },
+                {
+                  "player": "Linnea Martin",
+                  "position": "S",
+                  "school": "Santa Clara",
+                  "slug": "santa-clara",
+                  "year": 12
+                },
+                {
+                  "player": "Elizabeth Tanriverdi",
+                  "position": "OH",
+                  "school": "Gunn",
+                  "slug": "gunn",
+                  "year": 10
+                },
+                {
+                  "player": "Sienna Spencer",
+                  "position": "LIB",
+                  "school": "Wilcox",
+                  "slug": "wilcox",
+                  "year": 11
+                },
+                {
+                  "player": "Chelsea Li",
+                  "position": "MB",
+                  "school": "Lynbrook",
+                  "slug": "lynbrook",
+                  "year": 12
+                },
+                {
+                  "player": "Zoe Shie",
+                  "position": "LIB",
+                  "school": "Fremont",
+                  "slug": "fremont",
+                  "year": 12
+                },
+                {
+                  "player": "Gillian Mabilin",
+                  "position": "OH/RS",
+                  "school": "MacDonald",
+                  "slug": "macdonald",
+                  "year": 11
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "MVP",
+                  "value": "Sophia Song, Cupertino, S/OPP, 12"
+                },
+                {
+                  "award": "Outstanding Senior",
+                  "value": "Kelsy Mock, Wilcox, S, 12"
+                },
+                {
+                  "award": "Outstanding Junior",
+                  "value": "Sienna Spencer, Wilcox, L, 11"
+                },
+                {
+                  "award": "Outstanding Sophomore",
+                  "value": "Miya Tang, Lynbrook, OH, 10"
+                },
+                {
+                  "award": "Outstanding Freshman",
+                  "value": "Nina Blanusa, MacDonald, OH/OPP, 9"
+                }
+              ],
+              "secondTeam": []
+            }
+          },
+          "division": "el-camino",
+          "label": "El Camino",
+          "standings": {
+            "jv": [
+              {
+                "l": 1,
+                "leagueRecord": "13-1",
+                "name": "Cupertino",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "cupertino",
+                "t": 0,
+                "w": 13
+              },
+              {
+                "l": 1,
+                "leagueRecord": "13-1",
+                "name": "Lynbrook",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "lynbrook",
+                "t": 0,
+                "w": 13
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Santa Clara",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "santa-clara",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Saratoga",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "saratoga",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 8,
+                "leagueRecord": "6-8",
+                "name": "Gunn",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "gunn",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 9,
+                "leagueRecord": "5-9",
+                "name": "MacDonald",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "macdonald",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 10,
+                "leagueRecord": "4-10",
+                "name": "Fremont",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "fremont",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 13,
+                "leagueRecord": "1-13",
+                "name": "Wilcox",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "wilcox",
+                "t": 0,
+                "w": 1
+              }
+            ],
+            "varsity": [
+              {
+                "l": 3,
+                "leagueRecord": "11-3",
+                "name": "Cupertino",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "cupertino",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 4,
+                "leagueRecord": "10-4",
+                "name": "Saratoga",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "saratoga",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "11-4",
+                "name": "Santa Clara",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "santa-clara",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 5,
+                "leagueRecord": "9-5",
+                "name": "Gunn",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "gunn",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Wilcox",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "wilcox",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 8,
+                "leagueRecord": "6-8",
+                "name": "Lynbrook",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "lynbrook",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 11,
+                "leagueRecord": "3-11",
+                "name": "Fremont",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "fremont",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 14,
+                "leagueRecord": "0-14",
+                "name": "MacDonald",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "macdonald",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
+        }
+      ],
+      "league": "Santa Clara Valley Athletic League",
+      "provenance": {
+        "allLeaguePdfs": {
+          "de-anza": {
+            "jv": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20DeAnza%20JV.pdf",
+            "varsity": "https://www.scval.com/standings/2025-26%20SCVAL%20All%20League%20GVB%20DeAnza%20Varsity.pdf"
+          },
+          "el-camino": {
+            "jv": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20El%20Camino%20JV.pdf",
+            "varsity": "https://www.scval.com/standings/2025-26%20SCVAL%20All-league%20GVB%20El%20Camino%20Varsity.pdf"
+          }
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Standings: pdftotext -layout. All-league awards: By hand, from pdftotext -layout of each PDF; each row is [player, school, position, year] as printed.",
+        "notes": [
+          "SCVAL girls volleyball, from scval.com/standings. Rows are in the PDF's own \"SCHOOL by finish\" order; nothing is recomputed, since the PDF carries no game-level data.",
+          "The PDF's \"Overall record\" column is empty, so every overallRecord is null.",
+          "Division membership is the 2025-26 PDF's, which is not the 2026-27 alignment; the page says which teams moved.",
+          "School spellings are the documents' own (\"Mt. View\", \"Monta VIsta\"); `slug` is the join key.",
+          "Grades are stored as 9-12 whatever the document wrote (\"Jr\", \"Junior\", \"Soph\", \"Frosh\", \"11\").",
+          "An overall award is stored as \"Player, School, Position, Grade\" from the document's four cells. Two players named for one award are two entries under the same title.",
+          "Records are W-L: a volleyball match cannot end level, so the PDF prints no ties and t is stored as 0.",
+          "The standings PDF's file name reads \"2025-25\"; its title and its rows are 2025-26's.",
+          "Each all-league document names an MVP and one all-league team with an honorable mention from each school; the varsity documents also name an Outstanding Senior, Junior, Sophomore and Freshman, who are on the team or the honorable mention list too. There is no second team.",
+          "The De Anza documents print a player's graduating class (\"2028\"), the El Camino ones her grade (\"10\"); both are stored as the grade.",
+          "The El Camino JV document spells Saratoga \"Saratgoa\" and prints the year of one of its players as \"7\", which is no high school grade, so that row has none.",
+          "The El Camino varsity document prints its Outstanding Freshman's position over two lines (\"OH/O\" and \"PP\"), read as OH/OPP.",
+          "JV membership is varsity's in both divisions."
+        ],
+        "retrievedOn": "2026-11-14",
+        "source": "scval-documents",
+        "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-25%20Volleyball%20Girls%27%20standings.pdf"
+      },
+      "status": "available"
+    }
+  },
+  "season": "2025-26",
+  "sport": "Girls Volleyball"
+}

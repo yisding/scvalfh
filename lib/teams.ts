@@ -31,12 +31,14 @@ import { BVAL_SOCCER_SEEDS } from './registry/soccer/bval';
 import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from './registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from './registry/soccer/wcal';
+import { BVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/bval';
+import { SCVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import { SCHOOL_ADDRESSES } from './schools/schools';
 import { MAXPREPS_WEB, SBLIVE_WEB } from './season';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from './sports/current';
+import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from './sports/current';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = MAXPREPS_WEB;
@@ -116,9 +118,9 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HO
   metro: METRO_SEEDS,
   independents: INDEPENDENTS_SEEDS,
 } : {
-  scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : SCVAL_SOCCER_SEEDS,
-  bval: IS_BASKETBALL ? BVAL_BASKETBALL_SEEDS : BVAL_SOCCER_SEEDS,
-  // Soccer alone (LEAGUES lists neither in the basketball build).
+  scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? SCVAL_VOLLEYBALL_SEEDS : SCVAL_SOCCER_SEEDS,
+  bval: IS_BASKETBALL ? BVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? BVAL_VOLLEYBALL_SEEDS : BVAL_SOCCER_SEEDS,
+  // Soccer alone (LEAGUES lists neither in the basketball or volleyball build).
   wcal: WCAL_SOCCER_SEEDS,
   wbal: WBAL_SOCCER_SEEDS,
 };
@@ -305,20 +307,20 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
  */
 const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
   ? ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS']
-  : // The soccer and basketball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both MVHS;
+  : // The soccer, basketball and volleyball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both MVHS;
     // CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
     // Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont).
     // The soccer registry's WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation, Pinewood
     // and Priory to PHS, and bring MHS (Milpitas, Mercy Burlingame) and NDHS (the two Notre Dames).
-    IS_BASKETBALL
+    IS_BASKETBALL || IS_VOLLEYBALL
     ? ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS']
     : ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'WHS'];
 
 /**
- * The registry's size: field hockey's 102 teams, basketball's 41 (SCVAL's 15 and BVAL's 26), or soccer's 60 (those
- * 41, the WCAL's 6 and the WBAL's 13).
+ * The registry's size: field hockey's 102 teams, basketball's or volleyball's 41 (SCVAL's 15 and BVAL's 26), or
+ * soccer's 60 (those 41, the WCAL's 6 and the WBAL's 13).
  */
-const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : IS_BASKETBALL ? 41 : 60;
+const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : IS_BASKETBALL || IS_VOLLEYBALL ? 41 : 60;
 
 function assertRegistry(): void {
   const fail = (m: string): never => {

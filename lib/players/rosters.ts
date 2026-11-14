@@ -25,9 +25,11 @@
 import { z } from 'zod';
 import bundledEnrichmentFieldHockey from '../../data/rosters-enrichment.json';
 import bundledEnrichmentBasketball from '../../data/basketball/rosters-enrichment.json';
+import bundledEnrichmentVolleyball from '../../data/volleyball/rosters-enrichment.json';
 import bundledEnrichmentSoccer from '../../data/soccer/rosters-enrichment.json';
 import bundledRostersFieldHockey from '../../data/rosters.json';
 import bundledRostersBasketball from '../../data/basketball/rosters.json';
+import bundledRostersVolleyball from '../../data/volleyball/rosters.json';
 import bundledRostersSoccer from '../../data/soccer/rosters.json';
 import { readOverride, validateData } from '../data-file';
 import {
@@ -55,9 +57,9 @@ import type { TeamSlug } from '../types';
 const MODULE = 'lib/players/rosters.ts';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
+const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledEnrichmentVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
+const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledRostersVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
 
 export type {
   EnrichedGrade,

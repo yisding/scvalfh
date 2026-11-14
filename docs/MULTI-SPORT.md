@@ -4,7 +4,8 @@ The owner wants the site to cover more California high school sports, with baske
 This note records how the code divides between sports (an audit of every layer, 2026-11-04) and the
 order of work. The first step, the sport seam in `lib/sports/`, has landed, and so have a soccer
 build, SCVAL girls soccer, 2026-27 ("Girls soccer: SCVAL" below), and a basketball build, SCVAL boys
-basketball, 2026-27 ("Boys basketball: SCVAL" below). The rest is a plan.
+basketball, 2026-27 ("Boys basketball: SCVAL" below), and a volleyball build, SCVAL and BVAL girls
+volleyball, 2026 ("Girls volleyball: SCVAL and BVAL" below). The rest is a plan.
 
 ## Decision: one sport per build
 
@@ -268,6 +269,42 @@ Milpitas and Wilcox) have their tiles in `public/mascots/`, fetched with `SCVAL_
 Gunn's and Milpitas' are MaxPreps'; the other three are `SOURCE_OVERRIDES` (README, "School mascots"),
 Wilcox's a file in `scripts/mascot-sources/`, the owner's choice of logo.
 `tests/mascots.test.ts` holds every sport's registry to its tiles from the one field hockey test run.
+
+## Girls volleyball: SCVAL and BVAL (2026-11-14)
+
+The owner asked for a volleyball site "like basketball and soccer", SCVAL and BVAL only, girls. It is the fourth
+build (`SCVAL_SPORT=volleyball`), switched module by module like the other two, and the first of them made
+with its season already played, so the postseason code ran on real results the day it was built.
+
+- **The sport.** `lib/sports/volleyball.ts` (`VOLLEYBALL`, `VOLLEYBALL_GIRLS_2026`), ids read from the hub
+  (`maxpreps.com/ca/volleyball/`, the girls'), team contexts and the six leagues. `current.ts` gained
+  `IS_VOLLEYBALL`; every data switch is four-way. `Sport.scoring.overtime` gained `'none'` and
+  `Sport.stats.model` `'volleyball'`.
+- **The score is sets.** `gf` / `ga` hold sets won and lost, labelled SW / SL / SD. `lib/format.ts` reads a
+  volleyball build as a sport with no ties and no sudden-victory overtime.
+- **The leagues and registry.** `lib/league-config/volleyball/{scval,bval,sections}.ts` and
+  `lib/registry/volleyball/{scval,bval}.ts` (the same 41 schools as basketball, in volleyball's divisions).
+  The engine gained four tiebreak stages: `h2h-sets-won` and `h2h-set-ratio` (computed) and `set-points` and
+  `second-meeting` (uncomputable terminals).
+- **The official schedules.** `scripts/build-scval-volleyball-fixtures.ts` (the grid's bye cells are read and
+  checked) and `scripts/build-bval-winter-fixtures.ts`, which now knows a third sport and passes over the
+  play-in line of two BVAL documents.
+- **The CCS block.** `CcsConfig.tournament` gained `otherBrackets`, so the tournament page is recognised and
+  read as published where the championship has an Open Division and Divisions 3-5 as well; a build with no
+  named divisions stores no `divisionsPublished`. `lib/classify.ts` rule 1d keeps CIF State bracket games out
+  of the CCS.
+- **Stats.** The parser's column maps, the team tables, the box score and the player boards have a volleyball
+  branch each, built on basketball's one-line-per-player model with rates per set played.
+- **Data.** Under `data/volleyball/`, from the usual fetchers, and a corpus of the run
+  (`tests/fixtures/corpus/volleyball-2026-11-14/`, captured with `--no-cifss`) that rebuilds the snapshot
+  offline. `data/players.json` was rebuilt with the fourth sport.
+- **Deploy.** `update-data-volleyball.yml` (Aug–Dec, twenty minutes after field hockey's refresh), ci's
+  `volleyball` job, the deploy gate's matrix and `scripts/vercel-ignore-build.sh` know the fourth sport. The
+  hosting project and its domain are the owner's to create.
+
+Not done yet: a refit of the rating constants on finished seasons; the CCS Volleyball Bylaws' allocation;
+BVAL's 2025-26 standings; a bracket drawn per CCS division; "match" for "game" in the site's own copy; the
+smoke and axe passes on the volleyball build.
 
 ## Guards that must keep passing
 

@@ -19,6 +19,7 @@
 
 import bundledFieldHockey from '../../data/jv.json';
 import bundledBasketball from '../../data/basketball/jv.json';
+import bundledVolleyball from '../../data/volleyball/jv.json';
 import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
@@ -38,7 +39,7 @@ import {
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): JvFile {
   return validateData('jv', JvFileSchema, readOverride('lib/jv/jv.ts', 'SCVAL_JV', bundled));

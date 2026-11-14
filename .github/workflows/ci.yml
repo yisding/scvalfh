@@ -47,6 +47,9 @@
 #
 # The basketball job does the same for the boys basketball site (SCVAL_SPORT=basketball), the third build:
 # tests/basketball*.test.ts load its configuration and data in the gates job's suite.
+#
+# The volleyball job does the same for the girls volleyball site (SCVAL_SPORT=volleyball), the fourth build:
+# tests/volleyball.test.ts loads its configuration and data in the gates job's suite.
 
 name: ci
 
@@ -476,6 +479,73 @@ jobs:
           SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # The same three assertions as gates, on the basketball build: each reads data/basketball/ through
+      # lib/sports/current.ts DATA_DIR, and the routes only field hockey has (lib/sports/current.ts
+      # HAS_HISTORY, HAS_RECRUITING) are expected to be absent.
+      - name: Assert every route is static
+        run: pnpm assert:prerender
+
+      - name: Assert the weight budgets
+        run: pnpm assert:budgets
+
+      - name: Assert copy honesty in the built pages
+        run: pnpm assert:copy
+
+      - name: Build with vinext
+        run: pnpm build:vinext
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      - name: Assert every route is prerendered (vinext)
+        run: pnpm exec tsx scripts/assert-vinext-prerender.ts
+
+      # This sport's Cloudflare Worker (deploy-cloudflare.yml deploys one per sport): built as the
+      # cloudflare job builds field hockey's, and checked for every route packaged and for its own
+      # Worker name (cloudflare.config.ts WORKER_NAMES), since a second sport uploaded under field
+      # hockey's name would replace that site.
+      - name: Build the Worker
+        run: pnpm build:cloudflare
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+          SITE_URL: https://scvalfh.example.invalid
+
+      - name: Assert every route is packaged, under this sport's Worker name
+        run: |
+          set -euo pipefail
+          pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
+          name=$(node -p 'require("./.cloudflare/output/v0/workers/default/worker.config.json").name')
+          [ "$name" = "scvalfh-$SCVAL_SPORT" ] || { echo "Worker name '$name', expected scvalfh-$SCVAL_SPORT"; exit 1; }
+
+  volleyball:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SCVAL_SPORT: volleyball
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node (see the gates job).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # data/volleyball/snapshot.json, pinned as the field hockey builds are.
+      - name: Build
+        run: pnpm build
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      # The same three assertions as gates, on the volleyball build: each reads data/volleyball/ through
       # lib/sports/current.ts DATA_DIR, and the routes only field hockey has (lib/sports/current.ts
       # HAS_HISTORY, HAS_RECRUITING) are expected to be absent.
       - name: Assert every route is static

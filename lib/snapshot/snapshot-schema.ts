@@ -83,6 +83,10 @@ const tiebreakStage = z.enum([
   'coin-flip',
   'record-vs-placed',
   'coaches-vote',
+  'h2h-sets-won',
+  'h2h-set-ratio',
+  'set-points',
+  'second-meeting',
   'no-rule',
   'play-in',
 ]);
@@ -382,7 +386,7 @@ export const SeasonSchema = z.object({
   label: z.string(),
   sportSeasonId: z.string(),
   allSeasonId: z.string(),
-  genderSport: z.enum(['girls,fieldhockey', 'girls,soccer', 'boys,basketball']),
+  genderSport: z.enum(['girls,fieldhockey', 'girls,soccer', 'boys,basketball', 'girls,volleyball']),
   teamLevel: z.enum(['Varsity', 'JV']),
   sections: z.array(
     z.object({

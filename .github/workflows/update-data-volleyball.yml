@@ -1,0 +1,244 @@
+# The girls volleyball site's data refresh (SCVAL_SPORT=volleyball; docs/MULTI-SPORT.md): update-data.yml's job
+# for data/volleyball/, narrowed to what the volleyball build reads, as update-data-basketball.yml is for
+# basketball. It fetches the snapshot (MaxPreps, the bundled official SCVAL and BVAL fixtures, the CCS calendar
+# and MaxPreps' CCS tournament page; si.com and the VNN school calendars are field hockey's sources, and the
+# cifsshome.org listing is too long to read for volleyball), then the player stats and the JV games, then the
+# varsity and JV rosters (weekly, on the Monday morning run), tests them, and commits
+# data/volleyball/snapshot.json, its meta file, data/volleyball/player-stats.json, data/volleyball/jv.json,
+# data/volleyball/rosters.json and data/volleyball/jv-rosters.json only where the CONTENT changed (the same
+# contentHash rule as update-data.yml).
+#
+# Schedule: 20 minutes after field hockey's refresh (6:20 and 14:20 UTC: 11:20 PM and 7:20 AM Pacific during
+# daylight time, when most of the season is played), in the fall season's months. A league night's varsity
+# match starts at 6:45 or 7:00 and can run five sets, so the evening run is an hour later than field hockey's.
+# The scripts' own guard is the volleyball season window (lib/league-config/volleyball/sections.ts: Aug 1 –
+# Dec 1 Pacific; lib/pipeline/steps/window.ts), so a run outside it writes nothing.
+#
+# All four refreshes share the `update-data` concurrency group, so they never push at the same time, and each
+# rebases before it pushes. The commit messages start "data: refresh volleyball", which deploy-cloudflare.yml
+# accepts as a data commit, so a volleyball refresh never holds back field hockey's Worker deploy
+# (tests/workflows.test.ts holds the files and messages to the gate). The push is what makes the hosting
+# rebuild the volleyball project; the other projects skip a build that touched only data/volleyball/
+# (scripts/vercel-ignore-build.sh).
+
+name: update-data-volleyball
+
+on:
+  schedule:
+    - cron: '20 14 * 8-12 *'
+    - cron: '20 6 * 8-12 *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even outside the Aug 1 - Dec 1 volleyball season window'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Shared with update-data.yml: one refresh at a time on main, whichever sport.
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # 41 schedule feeds and six league tables, the official revision checks, the CCS calendar and bracket
+    # page; then 41 stats rollups (and a box score per new final) and 41 JV feeds.
+    timeout-minutes: 30
+
+    env:
+      SCVAL_SPORT: volleyball
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # pnpm BEFORE setup-node (see update-data.yml).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Exit 1 only on a run abort (nothing written, the previous snapshot stays). The official SCVAL and
+      # BVAL fixtures are bundled (data/volleyball/official/), so no pdftotext is needed. --no-cifss: a season
+      # of girls volleyball is more than cifsshome.org's 60-page cap in every Section the cross-check reads
+      # (240 pages a run, and a report that is never complete), so the listing is not read.
+      - name: Fetch data
+        timeout-minutes: 15
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=(--no-sblive --no-vnn --no-cifss)
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-data "${args[@]}"
+
+      # Never fatal, as in update-data.yml: a stats outage must not cost the day's scores.
+      - name: Fetch player stats
+        id: stats
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-player-stats "${args[@]}"
+
+      # Never fatal either. MaxPreps' JV feeds only: the volleyball build reads no si.com page. The JV games the
+      # league's own schedule lists are not in this file: the build adds them from the snapshot (lib/jv/jv-official.ts).
+      - name: Fetch JV games
+        id: jv
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=(--no-sblive)
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-jv "${args[@]}"
+
+      # Never fatal. The varsity and JV roster pages (maxpreps.com/…/roster/ and …/jv/roster/): coaches post
+      # them in the first weeks of the season and edit them rarely, and nothing else re-reads them, so without
+      # this a roster posted after the site was set up would never appear. Each script leaves its file alone
+      # when nothing but its stamps would change, and keeps a team's previous rows when its page fails.
+      # Weekly (owner decision, 2026-11-13): a scheduled run reads them only on the Monday morning run (the
+      # '20 14 * 8-12 *' cron on a Monday, Pacific), so a roster edit shows within a week; a manual run always reads them.
+      - name: Fetch rosters
+        id: rosters
+        continue-on-error: true
+        timeout-minutes: 10
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          set -uo pipefail
+          if [ "$EVENT" = schedule ]; then
+            if [ "$SCHEDULE" != '20 14 * 8-12 *' ] || [ "$(TZ=America/Los_Angeles date +%u)" != 1 ]; then
+              echo "rosters are read on the Monday morning run only; skipped"
+              exit 0
+            fi
+          fi
+          # Each script exits 1 when any team's page failed (it still writes its file, keeping that team's
+          # previous rows), so the JV pages are read whatever the varsity run said.
+          rc=0
+          pnpm fetch-rosters || rc=1
+          pnpm fetch-rosters --level jv || rc=1
+          exit "$rc"
+
+      # tests/volleyball.test.ts loads every volleyball data file through its validating loader. When they fail and the stats or JV file changed in this
+      # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
+      - name: Test
+        id: test
+        run: |
+          set -uo pipefail
+          run() { pnpm exec vitest run tests/volleyball.test.ts; }
+          if run; then exit 0; fi
+          if git diff --quiet -- data/volleyball/player-stats.json data/volleyball/jv.json data/volleyball/rosters.json data/volleyball/jv-rosters.json; then
+            echo "::error::the volleyball tests failed and neither the volleyball stats nor the volleyball JV file changed in this run"
+            exit 1
+          fi
+          echo "::warning::the volleyball tests failed; testing again with the committed stats and JV files"
+          git checkout -- data/volleyball/player-stats.json data/volleyball/jv.json data/volleyball/rosters.json data/volleyball/jv-rosters.json
+          echo "restored=true" >> "$GITHUB_OUTPUT"
+          run
+
+      - name: Commit the data that changed
+        id: commit
+        run: |
+          set -euo pipefail
+          # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff
+          # never is quiet).
+          PREV="${RUNNER_TEMP:-/tmp}/previous-volleyball-meta.json"
+          git show HEAD:data/volleyball/snapshot.meta.json > "$PREV" 2>/dev/null || true
+          SNAPSHOT=$(node -e '
+            const fs = require("node:fs");
+            const hashOf = (p) => {
+              try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
+              catch { return null; }
+            };
+            const next = hashOf("data/volleyball/snapshot.meta.json");
+            const prev = hashOf(process.argv[1]);
+            process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
+          ' "$PREV")
+          if [ "$SNAPSHOT" != "true" ]; then
+            echo "no snapshot change — only the run timestamp moved"
+            git checkout -- data/volleyball/snapshot.json data/volleyball/snapshot.meta.json
+          fi
+          if git diff --quiet -- data/volleyball/player-stats.json; then STATS=false; else STATS=true; fi
+          if git diff --quiet -- data/volleyball/jv.json; then JV=false; else JV=true; fi
+          if git diff --quiet -- data/volleyball/rosters.json data/volleyball/jv-rosters.json; then ROSTERS=false; else ROSTERS=true; fi
+          echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
+          echo "stats=$STATS" >> "$GITHUB_OUTPUT"
+          echo "jv=$JV" >> "$GITHUB_OUTPUT"
+          echo "rosters=$ROSTERS" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$STATS" != "true" ] && [ "$JV" != "true" ] && [ "$ROSTERS" != "true" ]; then
+            echo "nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
+          SUMMARY=$(node -e '
+            const meta = require("./data/volleyball/snapshot.meta.json");
+            const s = require("./data/volleyball/player-stats.json").counts;
+            const j = require("./data/volleyball/jv.json").counts;
+            const c = meta.counts;
+            process.stdout.write(`${c.games} games, ${c.finals} finals · ${s.players} players · JV ${j.games} games, ${j.finals} final`);
+          ')
+          # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
+          # author github-actions[bot], one parent, a message starting "data: refresh volleyball", nothing but
+          # the six files below (tests/workflows.test.ts).
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$SNAPSHOT" = "true" ]; then
+            git add data/volleyball/snapshot.json data/volleyball/snapshot.meta.json
+          fi
+          if [ "$STATS" = "true" ]; then
+            git add data/volleyball/player-stats.json
+          fi
+          if [ "$JV" = "true" ]; then
+            git add data/volleyball/jv.json
+          fi
+          if [ "$ROSTERS" = "true" ]; then
+            git add data/volleyball/rosters.json data/volleyball/jv-rosters.json
+          fi
+          git commit -m "data: refresh volleyball ${DAY} · ${SUMMARY}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Rebase-then-push so a commit landed in between (another sport's refresh, a human) is not clobbered.
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-data-volleyball"
+            echo ""
+            echo "- snapshot changed: \`${{ steps.commit.outputs.snapshot || 'false' }}\`"
+            echo "- player stats changed: \`${{ steps.commit.outputs.stats || 'false' }}\`"
+            echo "- player stats fetch: \`${{ steps.stats.outcome || 'skipped' }}\`"
+            echo "- JV games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
+            echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
+            echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
+            echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
+            echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

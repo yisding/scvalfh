@@ -28,6 +28,7 @@ import { z } from 'zod';
 
 import bundledFieldHockey from '../../data/jv-profiles.json';
 import bundledBasketball from '../../data/basketball/jv-profiles.json';
+import bundledVolleyball from '../../data/volleyball/jv-profiles.json';
 import bundledSoccer from '../../data/soccer/jv-profiles.json';
 import { validateData } from '../data-file';
 import { classOf, getRosterEnrichment } from '../players/rosters';
@@ -38,7 +39,7 @@ import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export const JvProfilePlayerSchema = z
   .object({

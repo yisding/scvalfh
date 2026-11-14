@@ -151,24 +151,73 @@ export const BASKETBALL_DERIVED_COLUMNS = new Set([
  */
 export const BASKETBALL_SKIPPED_GROUPS = new Set(['Game Stats', 'Misc Totals', 'Per 32']);
 
+/**
+ * Volleyball (`Sport.stats.model` 'volleyball'): MaxPreps column name → our key, one map per group of the
+ * rollup [V] Los Gatos and Pioneer 2026, read 2026-11-14. Every group carries MatchGamesPlayed (the column head
+ * reads "SP", sets played), which must agree across them, as a 'goals' sport's two field subgroups must.
+ */
+const VOLLEYBALL_SETS = { MatchGamesPlayed: 'setsPlayed' } as const;
+export const VOLLEYBALL_GROUP_COLUMNS = {
+  Attacking: { ...VOLLEYBALL_SETS, AttacksKills: 'kills', AttacksAttempts: 'attackAttempts', AttacksErrors: 'attackErrors' },
+  Serving: { ...VOLLEYBALL_SETS, ServingAces: 'aces', TotalServes: 'serveAttempts', ServingErrors: 'serveErrors' },
+  Blocking: { ...VOLLEYBALL_SETS, BlocksSolo: 'soloBlocks', BlocksAssists: 'blockAssists' },
+  Digging: { ...VOLLEYBALL_SETS, Digs: 'digs' },
+  'Ball Handling': { ...VOLLEYBALL_SETS, Assists: 'assists' },
+  'Serve Receiving': { ...VOLLEYBALL_SETS, ServingReceivedSuccess: 'receptions', ServingReceivedErrors: 'receptionErrors' },
+} as const satisfies Record<string, Record<string, FieldStatKey>>;
+
+/**
+ * Volleyball's columns that are read for nothing: the per-set and per-match rates and the percentages are
+ * arithmetic on the counts (TotalBlocks is solo blocks plus half the block assists), and the rest are counts
+ * this site does not show (service points, blocking, digging and ball-handling errors, ball-handling attempts).
+ */
+export const VOLLEYBALL_DERIVED_COLUMNS = new Set([
+  'KillsPerGame',
+  'KillPercentage',
+  'HittingPercentage',
+  'AcesPerGame',
+  'ServingAcePercentage',
+  'ServingPercentage',
+  'ServingPoints',
+  'TotalBlocks',
+  'BlocksPerGame',
+  'BlocksPerMatch',
+  'BlocksErrors',
+  'DigsErrors',
+  'DigsPerGame',
+  'DigsPerMatch',
+  'AssistsPerGame',
+  'BallHandlingAttempt',
+  'AssistsErrors',
+  'ReceptionsPerGame',
+  'ServingReceivesPerMatch',
+]);
+
 /** Minutes can be fractional; every other kept stat is a whole count. */
 const FRACTIONAL = new Set(['minutes', 'overtimeMinutes']);
 
 type GroupSpec = { kind: 'field' | 'goalkeeping'; columns: Readonly<Record<string, string>> };
 
 const BASKETBALL = SPORT.stats.model === 'basketball';
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
 
 const GROUPS: Readonly<Record<string, GroupSpec>> = BASKETBALL
   ? {
       Shooting: { kind: 'field', columns: BASKETBALL_SHOOTING_COLUMNS },
       Totals: { kind: 'field', columns: BASKETBALL_TOTALS_COLUMNS },
     }
-  : {
-      'Field Stats': { kind: 'field', columns: FIELD_COLUMNS },
-      'Goaltending Stats': { kind: 'goalkeeping', columns: GOALIE_COLUMNS },
-    };
+  : VOLLEYBALL
+    ? Object.fromEntries(
+        Object.entries(VOLLEYBALL_GROUP_COLUMNS).map(([name, columns]) => [name, { kind: 'field' as const, columns }]),
+      )
+    : {
+        'Field Stats': { kind: 'field', columns: FIELD_COLUMNS },
+        'Goaltending Stats': { kind: 'goalkeeping', columns: GOALIE_COLUMNS },
+      };
 const SKIPPED_GROUPS: ReadonlySet<string> = BASKETBALL ? BASKETBALL_SKIPPED_GROUPS : new Set();
-const DERIVED: ReadonlySet<string> = BASKETBALL ? BASKETBALL_DERIVED_COLUMNS : DERIVED_COLUMNS;
+const DERIVED: ReadonlySet<string> = BASKETBALL ? BASKETBALL_DERIVED_COLUMNS : VOLLEYBALL ? VOLLEYBALL_DERIVED_COLUMNS : DERIVED_COLUMNS;
+/** The count of appearances a merged player's two records may share, so it is the larger and never the sum. */
+const APPEARANCES_KEY = VOLLEYBALL ? 'setsPlayed' : 'gamesPlayed';
 
 // ---------------------------------------------------------------- the wire format
 
@@ -464,8 +513,9 @@ export function parsePlayerStats(
   }
   const kept = order.filter((k) => byKey.get(k)!.field !== null || byKey.get(k)!.goalkeeping !== null);
   const players = mergeDuplicateRecords(kept.map((k) => [playerKeyOf.get(k)!, byKey.get(k)!] as const), warnings);
-  // MaxPreps' points in a 'goals' sport are 2 per goal and 1 per assist; basketball's points are scored.
-  for (const p of BASKETBALL ? [] : players) {
+  // MaxPreps' points in a 'goals' sport are 2 per goal and 1 per assist; basketball's points are scored, and
+  // volleyball's line has none.
+  for (const p of SPORT.stats.model === 'goals' ? players : []) {
     const f = p.field;
     if (f && f.points !== null && f.goals !== null && f.assists !== null && f.points !== 2 * f.goals + f.assists) {
       warnings.push(`${p.shortName}: points ${f.points} is not 2 × ${f.goals} goals + ${f.assists} assists`);
@@ -525,7 +575,7 @@ function mergeLines<T extends Record<string, number | null>>(a: T | null, b: T |
   for (const [stat, value] of Object.entries(b)) {
     const was = out[stat] ?? null;
     if (value === null) continue;
-    out[stat] = was === null ? value : stat === 'gamesPlayed' ? Math.max(was, value) : was + value;
+    out[stat] = was === null ? value : stat === APPEARANCES_KEY ? Math.max(was, value) : was + value;
   }
   return out as T;
 }

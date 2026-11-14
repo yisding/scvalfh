@@ -1,0 +1,3415 @@
+{
+  "counts": {
+    "players": 342,
+    "teams": 41,
+    "teamsUnread": 0,
+    "teamsWithNone": 18,
+    "teamsWithPlayers": 23,
+    "withGrade": 341,
+    "withJersey": 333
+  },
+  "fetchedAt": "2026-11-14T05:05:29.675Z",
+  "season": "25-26",
+  "source": {
+    "builtBy": "scripts/fetch-prior-players.ts",
+    "id": "maxpreps-api",
+    "notes": [
+      "One entry per registry team: the players on the team's MaxPreps season stat sheet for this past season (team-season-player-stats/rollup/v1, asked for with that season's varsity sportSeasonId), read for who is on it, not for the numbers.",
+      "Not a roster: a sheet lists only the players a coach entered a line for. Status none means MaxPreps has no stats for the team that season, which says nothing about who played.",
+      "A name is rebuilt from the player's career link and the sheet's last name (nameFrom: career-url); where the row links nothing it is the sheet's own short name (nameFrom: short-name). The class is the sheet's caption; a blank one is null.",
+      "A team with status error or pending has not been read. Nothing is claimed for it, and a later run asks again."
+    ]
+  },
+  "sport": "volleyball",
+  "sportSeasonId": "758b6b67-5a8f-4d36-adbf-8a9d3ee48f81",
+  "teams": [
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "fajha4earc7rb",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/sophia-song/?careerid=fajha4earc7rb",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Sophia Song",
+          "nameFrom": "career-url",
+          "shortName": "S. Song"
+        },
+        {
+          "careerId": "cc5jppu51ejo8",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/yuna-kim/?careerid=cc5jppu51ejo8",
+          "grade": 9,
+          "jersey": "6",
+          "name": "Yuna Kim",
+          "nameFrom": "career-url",
+          "shortName": "Y. Kim"
+        },
+        {
+          "careerId": "tgfunos5nfhaa",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/kathryn-gee/?careerid=tgfunos5nfhaa",
+          "grade": 9,
+          "jersey": "21",
+          "name": "Kathryn Gee",
+          "nameFrom": "career-url",
+          "shortName": "K. Gee"
+        },
+        {
+          "careerId": "lksaoejqr7rue",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/claire-chien/?careerid=lksaoejqr7rue",
+          "grade": 10,
+          "jersey": "11",
+          "name": "Claire Chien",
+          "nameFrom": "career-url",
+          "shortName": "C. Chien"
+        },
+        {
+          "careerId": "13quhrqkiu533",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/gitu-karthick/?careerid=13quhrqkiu533",
+          "grade": 10,
+          "jersey": "5",
+          "name": "Gitu Karthick",
+          "nameFrom": "career-url",
+          "shortName": "G. Karthick"
+        },
+        {
+          "careerId": "m3dt17h0ui8g0",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/natalie-baker/?careerid=m3dt17h0ui8g0",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Natalie Baker",
+          "nameFrom": "career-url",
+          "shortName": "N. Baker"
+        },
+        {
+          "careerId": "d55p4uf80l1n7",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/april-pamichev/?careerid=d55p4uf80l1n7",
+          "grade": 11,
+          "jersey": "9",
+          "name": "April Pamichev",
+          "nameFrom": "career-url",
+          "shortName": "A. Pamichev"
+        },
+        {
+          "careerId": "6jmp1efs4e1vf",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/miranda-zeng/?careerid=6jmp1efs4e1vf",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Miranda Zeng",
+          "nameFrom": "career-url",
+          "shortName": "M. Zeng"
+        },
+        {
+          "careerId": "k4aqmpntfv777",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/rola-ali/?careerid=k4aqmpntfv777",
+          "grade": 10,
+          "jersey": "7",
+          "name": "Rola Ali",
+          "nameFrom": "career-url",
+          "shortName": "R. Ali"
+        },
+        {
+          "careerId": "3kimjvl48c4vf",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/kendra-swinehart/?careerid=3kimjvl48c4vf",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Kendra Swinehart",
+          "nameFrom": "career-url",
+          "shortName": "K. Swinehart"
+        },
+        {
+          "careerId": "618dbadqlbpi2",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/cupertino-pioneers/athletes/angela-wang/?careerid=618dbadqlbpi2",
+          "grade": 10,
+          "jersey": "12",
+          "name": "Angela Wang",
+          "nameFrom": "career-url",
+          "shortName": "A. Wang"
+        }
+      ],
+      "slug": "cupertino",
+      "status": "ok",
+      "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "q1k6g8uga02o8",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/natalie-chen/?careerid=q1k6g8uga02o8",
+          "grade": 12,
+          "jersey": "1",
+          "name": "Natalie Chen",
+          "nameFrom": "career-url",
+          "shortName": "N. Chen"
+        },
+        {
+          "careerId": "kd35mmpokkal5",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/lauren-ou/?careerid=kd35mmpokkal5",
+          "grade": 10,
+          "jersey": "16",
+          "name": "Lauren Ou",
+          "nameFrom": "career-url",
+          "shortName": "L. Ou"
+        },
+        {
+          "careerId": "b9hecl9l3alqa",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/megan-lee/?careerid=b9hecl9l3alqa",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Megan Lee",
+          "nameFrom": "career-url",
+          "shortName": "M. Lee"
+        },
+        {
+          "careerId": "fp75lb39cc400",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/johanna-lee/?careerid=fp75lb39cc400",
+          "grade": 12,
+          "jersey": "15",
+          "name": "Johanna Lee",
+          "nameFrom": "career-url",
+          "shortName": "J. Lee"
+        },
+        {
+          "careerId": "ta5ov8upa6tk4",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/katie-hamburger/?careerid=ta5ov8upa6tk4",
+          "grade": 10,
+          "jersey": "2",
+          "name": "Katie Hamburger",
+          "nameFrom": "career-url",
+          "shortName": "K. Hamburger"
+        },
+        {
+          "careerId": "a3dc8oon6fjee",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/lilian-logan/?careerid=a3dc8oon6fjee",
+          "grade": 11,
+          "jersey": "3",
+          "name": "Lilian Logan",
+          "nameFrom": "career-url",
+          "shortName": "L. Logan"
+        },
+        {
+          "careerId": "lhc60e04l3e99",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/selina-wang/?careerid=lhc60e04l3e99",
+          "grade": 10,
+          "jersey": "9",
+          "name": "Selina Wang",
+          "nameFrom": "career-url",
+          "shortName": "S. Wang"
+        },
+        {
+          "careerId": "2mtr8s1cifto8",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/meredith-tan/?careerid=2mtr8s1cifto8",
+          "grade": 12,
+          "jersey": "12",
+          "name": "Meredith Tan",
+          "nameFrom": "career-url",
+          "shortName": "M. Tan"
+        },
+        {
+          "careerId": "vpfqnmvltdedd",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/myley-markley/?careerid=vpfqnmvltdedd",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Myley Markley",
+          "nameFrom": "career-url",
+          "shortName": "M. Markley"
+        },
+        {
+          "careerId": "md2stq7p2ksj3",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/linnaea-moore/?careerid=md2stq7p2ksj3",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Linnaea Moore",
+          "nameFrom": "career-url",
+          "shortName": "L. Moore"
+        },
+        {
+          "careerId": "1o66rblueiqsc",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/zsofi-timar/?careerid=1o66rblueiqsc",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Zsofi Timar",
+          "nameFrom": "career-url",
+          "shortName": "Z. Timar"
+        },
+        {
+          "careerId": "rfkfaho01p6o8",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/tayla-yip/?careerid=rfkfaho01p6o8",
+          "grade": 10,
+          "jersey": "10",
+          "name": "Tayla Yip",
+          "nameFrom": "career-url",
+          "shortName": "T. Yip"
+        },
+        {
+          "careerId": "f1q83vi3ohicc",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/kaitlyn-liu/?careerid=f1q83vi3ohicc",
+          "grade": 9,
+          "jersey": "5",
+          "name": "Kaitlyn Liu",
+          "nameFrom": "career-url",
+          "shortName": "K. Liu"
+        },
+        {
+          "careerId": "ft3p503luasvf",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/ella-fan/?careerid=ft3p503luasvf",
+          "grade": 9,
+          "jersey": "8",
+          "name": "Ella Fan",
+          "nameFrom": "career-url",
+          "shortName": "E. Fan"
+        },
+        {
+          "careerId": "r4lfnlvfaq399",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/sarah-xiao/?careerid=r4lfnlvfaq399",
+          "grade": 10,
+          "jersey": "6",
+          "name": "Sarah Xiao",
+          "nameFrom": "career-url",
+          "shortName": "S. Xiao"
+        }
+      ],
+      "slug": "homestead",
+      "status": "ok",
+      "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "6ooh0j00adnl5",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/xochi-cook/?careerid=6ooh0j00adnl5",
+          "grade": 11,
+          "jersey": "5",
+          "name": "Xochi Cook",
+          "nameFrom": "career-url",
+          "shortName": "X. Cook"
+        },
+        {
+          "careerId": "rjcs1n97fleqa",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/angela-deng/?careerid=rjcs1n97fleqa",
+          "grade": 9,
+          "jersey": "6",
+          "name": "Angela Deng",
+          "nameFrom": "career-url",
+          "shortName": "A. Deng"
+        },
+        {
+          "careerId": "jkagdv07q6qk4",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/kat-minkevich/?careerid=jkagdv07q6qk4",
+          "grade": 9,
+          "jersey": "7",
+          "name": "Kat Minkevich",
+          "nameFrom": "career-url",
+          "shortName": "K. Minkevich"
+        },
+        {
+          "careerId": "6hilagf3uaeff",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/kaitlyn-king/?careerid=6hilagf3uaeff",
+          "grade": 9,
+          "jersey": "2",
+          "name": "Kaitlyn King",
+          "nameFrom": "career-url",
+          "shortName": "K. King"
+        },
+        {
+          "careerId": "s10t6hu3i1il5",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/ana-heath/?careerid=s10t6hu3i1il5",
+          "grade": 12,
+          "jersey": "1",
+          "name": "Ana Heath",
+          "nameFrom": "career-url",
+          "shortName": "A. Heath"
+        },
+        {
+          "careerId": "svm0gahif8p00",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/aviya-russo/?careerid=svm0gahif8p00",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Aviya Russo",
+          "nameFrom": "career-url",
+          "shortName": "A. Russo"
+        },
+        {
+          "careerId": "kt9m3f8p470td",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/anastasia-marinopoulos/?careerid=kt9m3f8p470td",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Anastasia Marinopoulos",
+          "nameFrom": "career-url",
+          "shortName": "A. Marinopoulos"
+        },
+        {
+          "careerId": "89aahi12bu7td",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/aleshia-thorpe/?careerid=89aahi12bu7td",
+          "grade": 11,
+          "jersey": "9",
+          "name": "Aleshia Thorpe",
+          "nameFrom": "career-url",
+          "shortName": "A. Thorpe"
+        },
+        {
+          "careerId": "csghptfk8tdm6",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/ella-mcfarlane/?careerid=csghptfk8tdm6",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Ella McFarlane",
+          "nameFrom": "career-url",
+          "shortName": "E. McFarlane"
+        },
+        {
+          "careerId": "k8a2cneabmddd",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/evelyn-zhang/?careerid=k8a2cneabmddd",
+          "grade": 11,
+          "jersey": "14",
+          "name": "Evelyn Zhang",
+          "nameFrom": "career-url",
+          "shortName": "E. Zhang"
+        },
+        {
+          "careerId": "r1hb2985gboqa",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/mila-wong/?careerid=r1hb2985gboqa",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Mila Wong",
+          "nameFrom": "career-url",
+          "shortName": "M. Wong"
+        },
+        {
+          "careerId": "e9qjfm9ipdqj3",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/thais-ross/?careerid=e9qjfm9ipdqj3",
+          "grade": 10,
+          "jersey": "12",
+          "name": "Thais Ross",
+          "nameFrom": "career-url",
+          "shortName": "T. Ross"
+        },
+        {
+          "careerId": "sd1nksps53dk4",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/reiko-wald/?careerid=sd1nksps53dk4",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Reiko Wald",
+          "nameFrom": "career-url",
+          "shortName": "R. Wald"
+        },
+        {
+          "careerId": "9ag1at0k49cue",
+          "careerUrl": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/pristyne-lim/?careerid=9ag1at0k49cue",
+          "grade": 10,
+          "jersey": "10",
+          "name": "Pristyne Lim",
+          "nameFrom": "career-url",
+          "shortName": "P. Lim"
+        }
+      ],
+      "slug": "los-altos",
+      "status": "ok",
+      "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "d9upt5aua4nue",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/caylin-thomas/?careerid=d9upt5aua4nue",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Caylin Thomas",
+          "nameFrom": "career-url",
+          "shortName": "C. Thomas"
+        },
+        {
+          "careerId": "dd5ujgrnflhp9",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/ella-crites/?careerid=dd5ujgrnflhp9",
+          "grade": 12,
+          "jersey": "23",
+          "name": "Ella Crites",
+          "nameFrom": "career-url",
+          "shortName": "E. Crites"
+        },
+        {
+          "careerId": "t3ilphgr1t8bb",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/annette-bassani/?careerid=t3ilphgr1t8bb",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Annette Bassani",
+          "nameFrom": "career-url",
+          "shortName": "A. Bassani"
+        },
+        {
+          "careerId": "gvvo0gj7dopee",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/lulu-farwell/?careerid=gvvo0gj7dopee",
+          "grade": 9,
+          "jersey": "11",
+          "name": "Lulu Farwell",
+          "nameFrom": "career-url",
+          "shortName": "L. Farwell"
+        },
+        {
+          "careerId": "iqhlhkm9uskvf",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/kate-langner/?careerid=iqhlhkm9uskvf",
+          "grade": 10,
+          "jersey": "1",
+          "name": "Kate Langner",
+          "nameFrom": "career-url",
+          "shortName": "K. Langner"
+        },
+        {
+          "careerId": "opq0go4bd5d88",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/violet-ford-pustelnik/?careerid=opq0go4bd5d88",
+          "grade": 11,
+          "jersey": "6",
+          "name": "Violet Ford-Pustelnik",
+          "nameFrom": "career-url",
+          "shortName": "V. Ford-Pustelnik"
+        },
+        {
+          "careerId": "eanhine400866",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/nadia-wilk/?careerid=eanhine400866",
+          "grade": 11,
+          "jersey": "18",
+          "name": "Nadia Wilk",
+          "nameFrom": "career-url",
+          "shortName": "N. Wilk"
+        },
+        {
+          "careerId": "roo9rt2h1ctj3",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/grace-krasniewicz/?careerid=roo9rt2h1ctj3",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Grace Krasniewicz",
+          "nameFrom": "career-url",
+          "shortName": "G. Krasniewicz"
+        },
+        {
+          "careerId": "j8c2sgtgogdo8",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/portia-zeidler/?careerid=j8c2sgtgogdo8",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Portia Zeidler",
+          "nameFrom": "career-url",
+          "shortName": "P. Zeidler"
+        },
+        {
+          "careerId": "b050u98v6p4qa",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/sienna-mcgrath/?careerid=b050u98v6p4qa",
+          "grade": 11,
+          "jersey": "5",
+          "name": "Sienna McGrath",
+          "nameFrom": "career-url",
+          "shortName": "S. McGrath"
+        },
+        {
+          "careerId": "q53i32gdpvlo8",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/silvia-miletich/?careerid=q53i32gdpvlo8",
+          "grade": 11,
+          "jersey": "8",
+          "name": "Silvia Miletich",
+          "nameFrom": "career-url",
+          "shortName": "S. Miletich"
+        },
+        {
+          "careerId": "hdbvpkr2kj2qa",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/ammie-vo-robinson/?careerid=hdbvpkr2kj2qa",
+          "grade": 12,
+          "jersey": "9",
+          "name": "Ammie Vo-Robinson",
+          "nameFrom": "career-url",
+          "shortName": "A. Vo-Robinson"
+        },
+        {
+          "careerId": "u23vc4nqh6j11",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/sadie-bins/?careerid=u23vc4nqh6j11",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Sadie Bins",
+          "nameFrom": "career-url",
+          "shortName": "S. Bins"
+        },
+        {
+          "careerId": "2foo0frelmho8",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/britt-melinauskas/?careerid=2foo0frelmho8",
+          "grade": 11,
+          "jersey": "17",
+          "name": "Britt Melinauskas",
+          "nameFrom": "career-url",
+          "shortName": "B. Melinauskas"
+        },
+        {
+          "careerId": "9r6i4t9v9n1vf",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/capri-allen/?careerid=9r6i4t9v9n1vf",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Capri Allen",
+          "nameFrom": "career-url",
+          "shortName": "C. Allen"
+        },
+        {
+          "careerId": "tf8kebque64vf",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/leilah-bakhtiari/?careerid=tf8kebque64vf",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Leilah Bakhtiari",
+          "nameFrom": "career-url",
+          "shortName": "L. Bakhtiari"
+        },
+        {
+          "careerId": "d4fnd564lj6l5",
+          "careerUrl": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/stella-kanter/?careerid=d4fnd564lj6l5",
+          "grade": 9,
+          "jersey": "12",
+          "name": "Stella Kanter",
+          "nameFrom": "career-url",
+          "shortName": "S. Kanter"
+        }
+      ],
+      "slug": "los-gatos",
+      "status": "ok",
+      "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "ajtnfldhqkmcc",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/inaaya-dominguez/?careerid=ajtnfldhqkmcc",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Inaaya Dominguez",
+          "nameFrom": "career-url",
+          "shortName": "I. Dominguez"
+        },
+        {
+          "careerId": "1rfqvupsg0300",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/ellie-chu/?careerid=1rfqvupsg0300",
+          "grade": 10,
+          "jersey": "7",
+          "name": "Ellie Chu",
+          "nameFrom": "career-url",
+          "shortName": "E. Chu"
+        },
+        {
+          "careerId": "9kqim7vql82bb",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/kaitlyn-nguyen/?careerid=9kqim7vql82bb",
+          "grade": 11,
+          "jersey": "3",
+          "name": "Kaitlyn Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "K. Nguyen"
+        },
+        {
+          "careerId": "6bbb967v54a11",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/julia-grigorescu/?careerid=6bbb967v54a11",
+          "grade": 12,
+          "jersey": "16",
+          "name": "Julia Grigorescu",
+          "nameFrom": "career-url",
+          "shortName": "J. Grigorescu"
+        },
+        {
+          "careerId": "d20bt4rkg7hk4",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/varadha-biju/?careerid=d20bt4rkg7hk4",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Varadha Biju",
+          "nameFrom": "career-url",
+          "shortName": "V. Biju"
+        },
+        {
+          "careerId": "5rqdc1hjsrlo8",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/isabella-lee/?careerid=5rqdc1hjsrlo8",
+          "grade": 11,
+          "jersey": "23",
+          "name": "Isabella Lee",
+          "nameFrom": "career-url",
+          "shortName": "I. Lee"
+        },
+        {
+          "careerId": "0vkljkabkt1cc",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/sara-svihovec/?careerid=0vkljkabkt1cc",
+          "grade": 12,
+          "jersey": "24",
+          "name": "Sara Svihovec",
+          "nameFrom": "career-url",
+          "shortName": "S. Svihovec"
+        },
+        {
+          "careerId": "6vgjrdh53lno8",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/natasha-lacuzong/?careerid=6vgjrdh53lno8",
+          "grade": 12,
+          "jersey": "9",
+          "name": "Natasha Lacuzong",
+          "nameFrom": "career-url",
+          "shortName": "N. Lacuzong"
+        },
+        {
+          "careerId": "ltu7c1vtv77ue",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/ahnnayah-jhazmyn-buenaflor/?careerid=ltu7c1vtv77ue",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Ahnnayah Jhazmyn Buenaflor",
+          "nameFrom": "career-url",
+          "shortName": "A. Buenaflor"
+        },
+        {
+          "careerId": "23tfv0kl9cv77",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/hyacinth-simmons/?careerid=23tfv0kl9cv77",
+          "grade": 12,
+          "jersey": "22",
+          "name": "Hyacinth Simmons",
+          "nameFrom": "career-url",
+          "shortName": "H. Simmons"
+        },
+        {
+          "careerId": "b4k8hr0dvqh33",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/mia-tam/?careerid=b4k8hr0dvqh33",
+          "grade": 11,
+          "jersey": "17",
+          "name": "Mia Tam",
+          "nameFrom": "career-url",
+          "shortName": "M. Tam"
+        },
+        {
+          "careerId": "fh4q2v94imqj3",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/ashley-chen/?careerid=fh4q2v94imqj3",
+          "grade": 11,
+          "jersey": "11",
+          "name": "Ashley Chen",
+          "nameFrom": "career-url",
+          "shortName": "A. Chen"
+        },
+        {
+          "careerId": "kh02cc05gg4j3",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/amy-liang/?careerid=kh02cc05gg4j3",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Amy Liang",
+          "nameFrom": "career-url",
+          "shortName": "A. Liang"
+        },
+        {
+          "careerId": "oujgtvele3see",
+          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/audrie-huang/?careerid=oujgtvele3see",
+          "grade": 11,
+          "jersey": "5",
+          "name": "Audrie Huang",
+          "nameFrom": "career-url",
+          "shortName": "A. Huang"
+        }
+      ],
+      "slug": "milpitas",
+      "status": "ok",
+      "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "03ah8b90tg3dd",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/julia-yang/?careerid=03ah8b90tg3dd",
+          "grade": 11,
+          "jersey": "1",
+          "name": "Julia Yang",
+          "nameFrom": "career-url",
+          "shortName": "J. Yang"
+        },
+        {
+          "careerId": "tic5ktvftt9ff",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/tracy-he/?careerid=tic5ktvftt9ff",
+          "grade": 10,
+          "jersey": "20",
+          "name": "Tracy He",
+          "nameFrom": "career-url",
+          "shortName": "T. He"
+        },
+        {
+          "careerId": "2tqrel8ju3qsc",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/kylee-mark/?careerid=2tqrel8ju3qsc",
+          "grade": 11,
+          "jersey": "8",
+          "name": "Kylee Mark",
+          "nameFrom": "career-url",
+          "shortName": "K. Mark"
+        },
+        {
+          "careerId": "ruvrtkra34ni2",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/nicole-jeleva/?careerid=ruvrtkra34ni2",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Nicole Jeleva",
+          "nameFrom": "career-url",
+          "shortName": "N. Jeleva"
+        },
+        {
+          "careerId": "3170qv0jpncvf",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/chloe-chen/?careerid=3170qv0jpncvf",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Chloe Chen",
+          "nameFrom": "career-url",
+          "shortName": "C. Chen"
+        },
+        {
+          "careerId": "2du2nuduq6gsc",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/isabella-wong/?careerid=2du2nuduq6gsc",
+          "grade": 10,
+          "jersey": "25",
+          "name": "Isabella Wong",
+          "nameFrom": "career-url",
+          "shortName": "I. Wong"
+        },
+        {
+          "careerId": "0dmthodjl79aa",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/leah-desai/?careerid=0dmthodjl79aa",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Leah Desai",
+          "nameFrom": "career-url",
+          "shortName": "L. Desai"
+        },
+        {
+          "careerId": "ccome7pfjnkbb",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/srahi-bobbili/?careerid=ccome7pfjnkbb",
+          "grade": 10,
+          "jersey": "9",
+          "name": "Srahi Bobbili",
+          "nameFrom": "career-url",
+          "shortName": "S. Bobbili"
+        },
+        {
+          "careerId": "7r1dmua0o51g0",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/jocelyn-zou/?careerid=7r1dmua0o51g0",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Jocelyn Zou",
+          "nameFrom": "career-url",
+          "shortName": "J. Zou"
+        },
+        {
+          "careerId": "86g5tpsbdnc66",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/emily-chan/?careerid=86g5tpsbdnc66",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Emily Chan",
+          "nameFrom": "career-url",
+          "shortName": "E. Chan"
+        },
+        {
+          "careerId": "jej1mc61di7k4",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/jenna-bergendahl/?careerid=jej1mc61di7k4",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Jenna Bergendahl",
+          "nameFrom": "career-url",
+          "shortName": "J. Bergendahl"
+        },
+        {
+          "careerId": "hde1afgvrskdd",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/kaylee-kwok/?careerid=hde1afgvrskdd",
+          "grade": 11,
+          "jersey": "14",
+          "name": "Kaylee Kwok",
+          "nameFrom": "career-url",
+          "shortName": "K. Kwok"
+        },
+        {
+          "careerId": "jab780r3akj11",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/victoria-woo/?careerid=jab780r3akj11",
+          "grade": 12,
+          "jersey": "15",
+          "name": "Victoria Woo",
+          "nameFrom": "career-url",
+          "shortName": "V. Woo"
+        },
+        {
+          "careerId": "jtpusgdnhtsj3",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/clarissa-tick/?careerid=jtpusgdnhtsj3",
+          "grade": 10,
+          "jersey": "22",
+          "name": "Clarissa Tick",
+          "nameFrom": "career-url",
+          "shortName": "C. Tick"
+        },
+        {
+          "careerId": "f7epi78anks44",
+          "careerUrl": "https://www.maxpreps.com/ca/cupertino/monta-vista-matadors/athletes/elva-tang/?careerid=f7epi78anks44",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Elva Tang",
+          "nameFrom": "career-url",
+          "shortName": "E. Tang"
+        }
+      ],
+      "slug": "monta-vista",
+      "status": "ok",
+      "teamId": "405614ad-a015-4270-b527-18e899c90824"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "palo-alto",
+      "status": "none",
+      "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "pg2uhgt2nv322",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/natalie-escalera/?careerid=pg2uhgt2nv322",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Natalie Escalera",
+          "nameFrom": "career-url",
+          "shortName": "N. Escalera"
+        },
+        {
+          "careerId": "vh6de5md3mm99",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/sophia-liu/?careerid=vh6de5md3mm99",
+          "grade": 10,
+          "jersey": "13",
+          "name": "Sophia Liu",
+          "nameFrom": "career-url",
+          "shortName": "S. Liu"
+        },
+        {
+          "careerId": "24q2glgqtnl77",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/mckayla-hsu/?careerid=24q2glgqtnl77",
+          "grade": 12,
+          "jersey": "1",
+          "name": "McKayla Hsu",
+          "nameFrom": "career-url",
+          "shortName": "M. Hsu"
+        },
+        {
+          "careerId": "q77u6qh8j81qa",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/maya-camarena/?careerid=q77u6qh8j81qa",
+          "grade": 11,
+          "jersey": "9",
+          "name": "Maya Camarena",
+          "nameFrom": "career-url",
+          "shortName": "M. Camarena"
+        },
+        {
+          "careerId": "2htakhieceh55",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/ella-ahn/?careerid=2htakhieceh55",
+          "grade": 10,
+          "jersey": "14",
+          "name": "Ella Ahn",
+          "nameFrom": "career-url",
+          "shortName": "E. Ahn"
+        },
+        {
+          "careerId": "7dahm97h5aqh1",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/saanvi-doshi/?careerid=7dahm97h5aqh1",
+          "grade": 10,
+          "jersey": "2",
+          "name": "Saanvi Doshi",
+          "nameFrom": "career-url",
+          "shortName": "S. Doshi"
+        },
+        {
+          "careerId": "7hurn7prq79o8",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/alexandra-chen/?careerid=7hurn7prq79o8",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Alexandra Chen",
+          "nameFrom": "career-url",
+          "shortName": "A. Chen"
+        },
+        {
+          "careerId": "d3k7qs7ehdr11",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/nora-whelan/?careerid=d3k7qs7ehdr11",
+          "grade": 11,
+          "jersey": "8",
+          "name": "Nora Whelan",
+          "nameFrom": "career-url",
+          "shortName": "N. Whelan"
+        },
+        {
+          "careerId": "7qh5pf82sot44",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/golden-beardsley/?careerid=7qh5pf82sot44",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Golden Beardsley",
+          "nameFrom": "career-url",
+          "shortName": "G. Beardsley"
+        },
+        {
+          "careerId": "mde8u3lorloh1",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/khadija-azim/?careerid=mde8u3lorloh1",
+          "grade": 11,
+          "jersey": "16",
+          "name": "Khadija Azim",
+          "nameFrom": "career-url",
+          "shortName": "K. Azim"
+        },
+        {
+          "careerId": "on81vlv3fjnj3",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/alya-ismail/?careerid=on81vlv3fjnj3",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Alya Ismail",
+          "nameFrom": "career-url",
+          "shortName": "A. Ismail"
+        },
+        {
+          "careerId": "tcb13uksqdo55",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/jessica-khoan/?careerid=tcb13uksqdo55",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Jessica Khoan",
+          "nameFrom": "career-url",
+          "shortName": "J. Khoan"
+        },
+        {
+          "careerId": "o70u67omgf6h1",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/zoe-shie/?careerid=o70u67omgf6h1",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Zoe Shie",
+          "nameFrom": "career-url",
+          "shortName": "Z. Shie"
+        },
+        {
+          "careerId": "dagviq0ntv2td",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/baileigh-flores/?careerid=dagviq0ntv2td",
+          "grade": 11,
+          "jersey": "12",
+          "name": "Baileigh Flores",
+          "nameFrom": "career-url",
+          "shortName": "B. Flores"
+        },
+        {
+          "careerId": "e8tfvmb53nv66",
+          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/fremont-firebirds/athletes/karissa-pulido/?careerid=e8tfvmb53nv66",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Karissa Pulido",
+          "nameFrom": "career-url",
+          "shortName": "K. Pulido"
+        }
+      ],
+      "slug": "fremont",
+      "status": "ok",
+      "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "6ha5dk09kfa99",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/audra-yuan/?careerid=6ha5dk09kfa99",
+          "grade": 11,
+          "jersey": "6",
+          "name": "Audra Yuan",
+          "nameFrom": "career-url",
+          "shortName": "A. Yuan"
+        },
+        {
+          "careerId": "ptebf1u5hq2g0",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/grace-wong/?careerid=ptebf1u5hq2g0",
+          "grade": 11,
+          "jersey": "3",
+          "name": "Grace Wong",
+          "nameFrom": "career-url",
+          "shortName": "G. Wong"
+        },
+        {
+          "careerId": "gqho42op7phn7",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/zara-mayor/?careerid=gqho42op7phn7",
+          "grade": 11,
+          "jersey": "7",
+          "name": "Zara Mayor",
+          "nameFrom": "career-url",
+          "shortName": "Z. Mayor"
+        },
+        {
+          "careerId": "l2orqc5dmrfdd",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/rachel-halverson/?careerid=l2orqc5dmrfdd",
+          "grade": 11,
+          "jersey": "17",
+          "name": "Rachel Halverson",
+          "nameFrom": "career-url",
+          "shortName": "R. Halverson"
+        },
+        {
+          "careerId": "6ioeknimb6r66",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/elizabeth-tanriverdi/?careerid=6ioeknimb6r66",
+          "grade": 10,
+          "jersey": "9",
+          "name": "Elizabeth Tanriverdi",
+          "nameFrom": "career-url",
+          "shortName": "E. Tanriverdi"
+        },
+        {
+          "careerId": "3cu7k1r8i1m99",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/tai-ford/?careerid=3cu7k1r8i1m99",
+          "grade": 10,
+          "jersey": "5",
+          "name": "Tai Ford",
+          "nameFrom": "career-url",
+          "shortName": "T. Ford"
+        },
+        {
+          "careerId": "8ol0q744nfkj3",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/kirsten-rios/?careerid=8ol0q744nfkj3",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Kirsten Rios",
+          "nameFrom": "career-url",
+          "shortName": "K. Rios"
+        },
+        {
+          "careerId": "vskbhclphvsk4",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/brooke-selker/?careerid=vskbhclphvsk4",
+          "grade": 11,
+          "jersey": "8",
+          "name": "Brooke Selker",
+          "nameFrom": "career-url",
+          "shortName": "B. Selker"
+        },
+        {
+          "careerId": "sqsvi7j3fvvbb",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/jessica-jacobson/?careerid=sqsvi7j3fvvbb",
+          "grade": 10,
+          "jersey": "14",
+          "name": "Jessica Jacobson",
+          "nameFrom": "career-url",
+          "shortName": "J. Jacobson"
+        },
+        {
+          "careerId": "rvn84t45e7maa",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/solimar-tabares/?careerid=rvn84t45e7maa",
+          "grade": 11,
+          "jersey": "18",
+          "name": "Solimar Tabares",
+          "nameFrom": "career-url",
+          "shortName": "S. Tabares"
+        },
+        {
+          "careerId": "6jej717tmi6h1",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/catherine-bell/?careerid=6jej717tmi6h1",
+          "grade": 11,
+          "jersey": "1",
+          "name": "Catherine Bell",
+          "nameFrom": "career-url",
+          "shortName": "C. Bell"
+        },
+        {
+          "careerId": "6d840rib22a55",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/mia-quan/?careerid=6d840rib22a55",
+          "grade": 10,
+          "jersey": "2",
+          "name": "Mia Quan",
+          "nameFrom": "career-url",
+          "shortName": "M. Quan"
+        },
+        {
+          "careerId": "3o83mn0vrcdi2",
+          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/gunn-titans/athletes/mabel-johnson/?careerid=3o83mn0vrcdi2",
+          "grade": 9,
+          "jersey": "4",
+          "name": "Mabel Johnson",
+          "nameFrom": "career-url",
+          "shortName": "M. Johnson"
+        }
+      ],
+      "slug": "gunn",
+      "status": "ok",
+      "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "2bg7kdu2n8vtd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/laila-cheung/?careerid=2bg7kdu2n8vtd",
+          "grade": 11,
+          "jersey": "26",
+          "name": "Laila Cheung",
+          "nameFrom": "career-url",
+          "shortName": "L. Cheung"
+        },
+        {
+          "careerId": "qap1s4ia9rcj3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/ashley-wilson/?careerid=qap1s4ia9rcj3",
+          "grade": 9,
+          "jersey": "1",
+          "name": "Ashley Wilson",
+          "nameFrom": "career-url",
+          "shortName": "A. Wilson"
+        },
+        {
+          "careerId": "mmqrcuduqlc00",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/caroline-feng/?careerid=mmqrcuduqlc00",
+          "grade": 9,
+          "jersey": "4",
+          "name": "Caroline Feng",
+          "nameFrom": "career-url",
+          "shortName": "C. Feng"
+        },
+        {
+          "careerId": "r6q9sb90jhudd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/miya-tang/?careerid=r6q9sb90jhudd",
+          "grade": 10,
+          "jersey": "8",
+          "name": "Miya Tang",
+          "nameFrom": "career-url",
+          "shortName": "M. Tang"
+        },
+        {
+          "careerId": "seddkao07oiaa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/jacey-tseng/?careerid=seddkao07oiaa",
+          "grade": 11,
+          "jersey": "5",
+          "name": "Jacey Tseng",
+          "nameFrom": "career-url",
+          "shortName": "J. Tseng"
+        },
+        {
+          "careerId": "li4lljkof6hbb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/rucha-kore/?careerid=li4lljkof6hbb",
+          "grade": 11,
+          "jersey": "11",
+          "name": "Rucha Kore",
+          "nameFrom": "career-url",
+          "shortName": "R. Kore"
+        },
+        {
+          "careerId": "mns8bu9tc5qaa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/noelle-pan/?careerid=mns8bu9tc5qaa",
+          "grade": 9,
+          "jersey": "24",
+          "name": "Noelle Pan",
+          "nameFrom": "career-url",
+          "shortName": "N. Pan"
+        },
+        {
+          "careerId": "bn6qhgi5lbsp9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/ivy-kuo/?careerid=bn6qhgi5lbsp9",
+          "grade": 10,
+          "jersey": "43",
+          "name": "Ivy Kuo",
+          "nameFrom": "career-url",
+          "shortName": "I. Kuo"
+        },
+        {
+          "careerId": "n0oetsucftqp9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/emmy-liu/?careerid=n0oetsucftqp9",
+          "grade": 10,
+          "jersey": "20",
+          "name": "Emmy Liu",
+          "nameFrom": "career-url",
+          "shortName": "E. Liu"
+        },
+        {
+          "careerId": "mo8bnbr7idlaa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/joanna-chen/?careerid=mo8bnbr7idlaa",
+          "grade": 11,
+          "jersey": "23",
+          "name": "Joanna Chen",
+          "nameFrom": "career-url",
+          "shortName": "J. Chen"
+        },
+        {
+          "careerId": "dps5ud5s178sc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/keyi-xue/?careerid=dps5ud5s178sc",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Keyi Xue",
+          "nameFrom": "career-url",
+          "shortName": "K. Xue"
+        },
+        {
+          "careerId": "45ms15vp8ss22",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/arelyn-ma/?careerid=45ms15vp8ss22",
+          "grade": 11,
+          "jersey": "14",
+          "name": "Arelyn Ma",
+          "nameFrom": "career-url",
+          "shortName": "A. Ma"
+        },
+        {
+          "careerId": "sb1cbhdlg4erb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/chelsea-li/?careerid=sb1cbhdlg4erb",
+          "grade": 12,
+          "jersey": "36",
+          "name": "Chelsea Li",
+          "nameFrom": "career-url",
+          "shortName": "C. Li"
+        },
+        {
+          "careerId": "e828bredkqp22",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/lana-weshahy/?careerid=e828bredkqp22",
+          "grade": 11,
+          "jersey": "38",
+          "name": "Lana Weshahy",
+          "nameFrom": "career-url",
+          "shortName": "L. Weshahy"
+        },
+        {
+          "careerId": "oa1i2tnab1dn7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/ariel-bowers/?careerid=oa1i2tnab1dn7",
+          "grade": 11,
+          "jersey": "41",
+          "name": "Ariel Bowers",
+          "nameFrom": "career-url",
+          "shortName": "A. Bowers"
+        },
+        {
+          "careerId": "k0gi5299ojoqa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/jessica-wang/?careerid=k0gi5299ojoqa",
+          "grade": 12,
+          "jersey": "32",
+          "name": "Jessica Wang",
+          "nameFrom": "career-url",
+          "shortName": "J. Wang"
+        },
+        {
+          "careerId": "5jeeups9g3jn7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/lynbrook-vikings/athletes/nicole-guo/?careerid=5jeeups9g3jn7",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Nicole Guo",
+          "nameFrom": "career-url",
+          "shortName": "N. Guo"
+        }
+      ],
+      "slug": "lynbrook",
+      "status": "ok",
+      "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "09o1ctk56j3i2",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/clareese-pangilinan/?careerid=09o1ctk56j3i2",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Clareese Pangilinan",
+          "nameFrom": "career-url",
+          "shortName": "C. Pangilinan"
+        },
+        {
+          "careerId": "uri64ovu7ulee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/mackenzie-alexander/?careerid=uri64ovu7ulee",
+          "grade": 9,
+          "jersey": "17",
+          "name": "Mackenzie Alexander",
+          "nameFrom": "career-url",
+          "shortName": "M. Alexander"
+        },
+        {
+          "careerId": "h787m55oe0fh1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/gillian-mabilin/?careerid=h787m55oe0fh1",
+          "grade": 11,
+          "jersey": "12",
+          "name": "Gillian Mabilin",
+          "nameFrom": "career-url",
+          "shortName": "G. Mabilin"
+        },
+        {
+          "careerId": "sjjlgp5p80411",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/tatiana-rueda/?careerid=sjjlgp5p80411",
+          "grade": 12,
+          "jersey": "16",
+          "name": "Tatiana Rueda",
+          "nameFrom": "career-url",
+          "shortName": "T. Rueda"
+        },
+        {
+          "careerId": "kbo2qe8g02155",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/makayla-tacci/?careerid=kbo2qe8g02155",
+          "grade": 10,
+          "jersey": "1",
+          "name": "Makayla Tacci",
+          "nameFrom": "career-url",
+          "shortName": "M. Tacci"
+        },
+        {
+          "careerId": "o8uko57959788",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/hana-aman/?careerid=o8uko57959788",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Hana Aman",
+          "nameFrom": "career-url",
+          "shortName": "H. Aman"
+        },
+        {
+          "careerId": "sq6mng0ulhq77",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/nina-blanusa/?careerid=sq6mng0ulhq77",
+          "grade": 9,
+          "jersey": "9",
+          "name": "Nina Blanusa",
+          "nameFrom": "career-url",
+          "shortName": "N. Blanusa"
+        },
+        {
+          "careerId": "fn5ljn9bo1dee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/camila-nguyen/?careerid=fn5ljn9bo1dee",
+          "grade": 10,
+          "jersey": "15",
+          "name": "Camila Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "C. Nguyen"
+        },
+        {
+          "careerId": "8vt8nkjcg02td",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/eddyne-pacheco-ortega/?careerid=8vt8nkjcg02td",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Eddyne Pacheco Ortega",
+          "nameFrom": "career-url",
+          "shortName": "E. Pacheco Ortega"
+        },
+        {
+          "careerId": "fa4hr8556llrb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/darlene-tran/?careerid=fa4hr8556llrb",
+          "grade": 11,
+          "jersey": "3",
+          "name": "Darlene Tran",
+          "nameFrom": "career-url",
+          "shortName": "D. Tran"
+        },
+        {
+          "careerId": "pbgo53fj5o044",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/nelly-garcia-barron/?careerid=pbgo53fj5o044",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Nelly Garcia Barron",
+          "nameFrom": "career-url",
+          "shortName": "N. Garcia Barron"
+        },
+        {
+          "careerId": "008g88n8k1ci2",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/jayna-cardenas/?careerid=008g88n8k1ci2",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Jayna Cardenas",
+          "nameFrom": "career-url",
+          "shortName": "J. Cardenas"
+        },
+        {
+          "careerId": "6ub0ksjvhfg11",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/hibba-khan/?careerid=6ub0ksjvhfg11",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Hibba Khan",
+          "nameFrom": "career-url",
+          "shortName": "H. Khan"
+        },
+        {
+          "careerId": "eoi3ujkoelll5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/saniyah-vaswani/?careerid=eoi3ujkoelll5",
+          "grade": 10,
+          "jersey": "7",
+          "name": "Saniyah Vaswani",
+          "nameFrom": "career-url",
+          "shortName": "S. Vaswani"
+        },
+        {
+          "careerId": "427jnu0nc8k99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/macdonald-condor/athletes/chloe-doan/?careerid=427jnu0nc8k99",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Chloe Doan",
+          "nameFrom": "career-url",
+          "shortName": "C. Doan"
+        }
+      ],
+      "slug": "macdonald",
+      "status": "ok",
+      "teamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "mountain-view",
+      "status": "none",
+      "teamId": "09beba1b-240a-45b8-aa6e-281decefa275"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "0elj8iumrvqn7",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/naomi-hunt/?careerid=0elj8iumrvqn7",
+          "grade": 12,
+          "jersey": "15",
+          "name": "Naomi Hunt",
+          "nameFrom": "career-url",
+          "shortName": "N. Hunt"
+        },
+        {
+          "careerId": "p6jqnig0ded88",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/anishka-kannan/?careerid=p6jqnig0ded88",
+          "grade": 10,
+          "jersey": "17",
+          "name": "Anishka Kannan",
+          "nameFrom": "career-url",
+          "shortName": "A. Kannan"
+        },
+        {
+          "careerId": "qlfptvjp8l2i2",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/shenoa-gonzalez/?careerid=qlfptvjp8l2i2",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Shenoa Gonzalez",
+          "nameFrom": "career-url",
+          "shortName": "S. Gonzalez"
+        },
+        {
+          "careerId": "9ecr1e6qpmgbb",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/isabel-hunt/?careerid=9ecr1e6qpmgbb",
+          "grade": 9,
+          "jersey": "25",
+          "name": "Isabel Hunt",
+          "nameFrom": "career-url",
+          "shortName": "I. Hunt"
+        },
+        {
+          "careerId": "9qcsc7oc5bnk4",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/linnea-martin/?careerid=9qcsc7oc5bnk4",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Linnea Martin",
+          "nameFrom": "career-url",
+          "shortName": "L. Martin"
+        },
+        {
+          "careerId": "9v5gssl712ubb",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/mindy-nguyen/?careerid=9v5gssl712ubb",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Mindy Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "M. Nguyen"
+        },
+        {
+          "careerId": "h9ast2o1qvm11",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/ariel-tepora/?careerid=h9ast2o1qvm11",
+          "grade": 11,
+          "jersey": "6",
+          "name": "Ariel Tepora",
+          "nameFrom": "career-url",
+          "shortName": "A. Tepora"
+        },
+        {
+          "careerId": "12hu3ll2g25n7",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/sitara-gunapu/?careerid=12hu3ll2g25n7",
+          "grade": 10,
+          "jersey": "24",
+          "name": "Sitara Gunapu",
+          "nameFrom": "career-url",
+          "shortName": "S. Gunapu"
+        },
+        {
+          "careerId": "27efb84ej0fl5",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/ninya-udinoor/?careerid=27efb84ej0fl5",
+          "grade": 12,
+          "jersey": "16",
+          "name": "Ninya Udinoor",
+          "nameFrom": "career-url",
+          "shortName": "N. Udinoor"
+        },
+        {
+          "careerId": "uitac14nqplh1",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/sadhana-arun/?careerid=uitac14nqplh1",
+          "grade": 11,
+          "jersey": "11",
+          "name": "Sadhana Arun",
+          "nameFrom": "career-url",
+          "shortName": "S. Arun"
+        },
+        {
+          "careerId": "4j6tqk0qdg9k4",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/jalayna-bleisner/?careerid=4j6tqk0qdg9k4",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Jalayna Bleisner",
+          "nameFrom": "career-url",
+          "shortName": "J. Bleisner"
+        },
+        {
+          "careerId": "ska7b762kfk99",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/ashlynn-tran/?careerid=ska7b762kfk99",
+          "grade": 12,
+          "jersey": "1",
+          "name": "Ashlynn Tran",
+          "nameFrom": "career-url",
+          "shortName": "A. Tran"
+        },
+        {
+          "careerId": "gsskpfgetqmqa",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/adwita-ram/?careerid=gsskpfgetqmqa",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Adwita Ram",
+          "nameFrom": "career-url",
+          "shortName": "A. Ram"
+        },
+        {
+          "careerId": "vrn65afd8mpbb",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/jana-bergman/?careerid=vrn65afd8mpbb",
+          "grade": 11,
+          "jersey": "8",
+          "name": "Jana Bergman",
+          "nameFrom": "career-url",
+          "shortName": "J. Bergman"
+        },
+        {
+          "careerId": "pp56v8u2a1200",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/kaleya-garcia/?careerid=pp56v8u2a1200",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Kaleya Garcia",
+          "nameFrom": "career-url",
+          "shortName": "K. Garcia"
+        }
+      ],
+      "slug": "santa-clara",
+      "status": "ok",
+      "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "saratoga",
+      "status": "none",
+      "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "5k0aks6u255o8",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/remie-fierro/?careerid=5k0aks6u255o8",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Remie Fierro",
+          "nameFrom": "career-url",
+          "shortName": "R. Fierro"
+        },
+        {
+          "careerId": "3b80trgc1r0ff",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/rupinder-kaur/?careerid=3b80trgc1r0ff",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Rupinder Kaur",
+          "nameFrom": "career-url",
+          "shortName": "R. Kaur"
+        },
+        {
+          "careerId": "g01aeg4sdvkj3",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/isha-bisht/?careerid=g01aeg4sdvkj3",
+          "grade": 12,
+          "jersey": "9",
+          "name": "Isha Bisht",
+          "nameFrom": "career-url",
+          "shortName": "I. Bisht"
+        },
+        {
+          "careerId": "urb747emqiqff",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/rivera-amarillas/?careerid=urb747emqiqff",
+          "grade": 9,
+          "jersey": "15",
+          "name": "Rivera Amarillas",
+          "nameFrom": "career-url",
+          "shortName": "R. Amarillas"
+        },
+        {
+          "careerId": "ruf6bid37crm6",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/saha-patel/?careerid=ruf6bid37crm6",
+          "grade": 10,
+          "jersey": "1",
+          "name": "Saha Patel",
+          "nameFrom": "career-url",
+          "shortName": "S. Patel"
+        },
+        {
+          "careerId": "dr078cug1gree",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/katalina-sanchez/?careerid=dr078cug1gree",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Katalina Sanchez",
+          "nameFrom": "career-url",
+          "shortName": "K. Sanchez"
+        },
+        {
+          "careerId": "q91oebesbkeh1",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/sienna-spencer/?careerid=q91oebesbkeh1",
+          "grade": 11,
+          "jersey": "6",
+          "name": "Sienna Spencer",
+          "nameFrom": "career-url",
+          "shortName": "S. Spencer"
+        },
+        {
+          "careerId": "rqo095ug17t88",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/emma-gaba/?careerid=rqo095ug17t88",
+          "grade": 11,
+          "jersey": "5",
+          "name": "Emma Gaba",
+          "nameFrom": "career-url",
+          "shortName": "E. Gaba"
+        },
+        {
+          "careerId": "mrlv5nj9eqe33",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/hanako-stone/?careerid=mrlv5nj9eqe33",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Hanako Stone",
+          "nameFrom": "career-url",
+          "shortName": "H. Stone"
+        },
+        {
+          "careerId": "d489i4gp8ru44",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/rebecca-li/?careerid=d489i4gp8ru44",
+          "grade": 10,
+          "jersey": "12",
+          "name": "Rebecca Li",
+          "nameFrom": "career-url",
+          "shortName": "R. Li"
+        },
+        {
+          "careerId": "3oldcv4kghoue",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/kelsy-mock/?careerid=3oldcv4kghoue",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Kelsy Mock",
+          "nameFrom": "career-url",
+          "shortName": "K. Mock"
+        },
+        {
+          "careerId": "tgb5c0pta00o8",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/aanika-verma/?careerid=tgb5c0pta00o8",
+          "grade": 9,
+          "jersey": "14",
+          "name": "Aanika Verma",
+          "nameFrom": "career-url",
+          "shortName": "A. Verma"
+        },
+        {
+          "careerId": "6d925e6kq5nqa",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/apple-viray/?careerid=6d925e6kq5nqa",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Apple Viray",
+          "nameFrom": "career-url",
+          "shortName": "A. Viray"
+        },
+        {
+          "careerId": "avllu5mj0lho8",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/dorma-yang/?careerid=avllu5mj0lho8",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Dorma Yang",
+          "nameFrom": "career-url",
+          "shortName": "D. Yang"
+        },
+        {
+          "careerId": "3j3de8ebng0k4",
+          "careerUrl": "https://www.maxpreps.com/ca/santa-clara/wilcox-chargers/athletes/aarya-shinde/?careerid=3j3de8ebng0k4",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Aarya Shinde",
+          "nameFrom": "career-url",
+          "shortName": "A. Shinde"
+        }
+      ],
+      "slug": "wilcox",
+      "status": "ok",
+      "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "4p173nklpnvcc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/sophia-liu/?careerid=4p173nklpnvcc",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Sophia Liu",
+          "nameFrom": "career-url",
+          "shortName": "S. Liu"
+        },
+        {
+          "careerId": "ul0197uj59d11",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/trinity-longoria/?careerid=ul0197uj59d11",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Trinity Longoria",
+          "nameFrom": "career-url",
+          "shortName": "T. Longoria"
+        },
+        {
+          "careerId": "30p3jtl6amlh1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/sienna-rochette/?careerid=30p3jtl6amlh1",
+          "grade": 11,
+          "jersey": "18",
+          "name": "Sienna Rochette",
+          "nameFrom": "career-url",
+          "shortName": "S. Rochette"
+        },
+        {
+          "careerId": "gnuscfr8k30h1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/faith-park/?careerid=gnuscfr8k30h1",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Faith Park",
+          "nameFrom": "career-url",
+          "shortName": "F. Park"
+        },
+        {
+          "careerId": "12a49rsmev400",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/gunjan-joshi/?careerid=12a49rsmev400",
+          "grade": 10,
+          "jersey": "28",
+          "name": "Gunjan Joshi",
+          "nameFrom": "career-url",
+          "shortName": "G. Joshi"
+        },
+        {
+          "careerId": "uvoejkuv5vdtd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/hayley-foss/?careerid=uvoejkuv5vdtd",
+          "grade": 9,
+          "jersey": "44",
+          "name": "Hayley Foss",
+          "nameFrom": "career-url",
+          "shortName": "H. Foss"
+        },
+        {
+          "careerId": "dciika65q98sc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/stav-argiris/?careerid=dciika65q98sc",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Stav Argiris",
+          "nameFrom": "career-url",
+          "shortName": "S. Argiris"
+        },
+        {
+          "careerId": "aqgdvji14tp99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/lan-legentry/?careerid=aqgdvji14tp99",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Lan LeGentry",
+          "nameFrom": "career-url",
+          "shortName": "L. LeGentry"
+        },
+        {
+          "careerId": "4audi6bljsm88",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/jaydin-levin/?careerid=4audi6bljsm88",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Jaydin Levin",
+          "nameFrom": "career-url",
+          "shortName": "J. Levin"
+        },
+        {
+          "careerId": "voeghpuvkj088",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/kaci-nguyen/?careerid=voeghpuvkj088",
+          "grade": 12,
+          "jersey": "4",
+          "name": "Kaci Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "K. Nguyen"
+        },
+        {
+          "careerId": "i4p5cq6026a88",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/emily-lloyd/?careerid=i4p5cq6026a88",
+          "grade": 10,
+          "jersey": "27",
+          "name": "Emily Lloyd",
+          "nameFrom": "career-url",
+          "shortName": "E. Lloyd"
+        },
+        {
+          "careerId": "2n8kaa59a6ip9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/emma-burstein/?careerid=2n8kaa59a6ip9",
+          "grade": 9,
+          "jersey": "25",
+          "name": "Emma Burstein",
+          "nameFrom": "career-url",
+          "shortName": "E. Burstein"
+        },
+        {
+          "careerId": "7ka0lkql9pqvf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/teagan-cummings/?careerid=7ka0lkql9pqvf",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Teagan Cummings",
+          "nameFrom": "career-url",
+          "shortName": "T. Cummings"
+        },
+        {
+          "careerId": "rrk84q41kru44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/katelyn-kiratsous/?careerid=rrk84q41kru44",
+          "grade": 11,
+          "jersey": "3",
+          "name": "Katelyn Kiratsous",
+          "nameFrom": "career-url",
+          "shortName": "K. Kiratsous"
+        },
+        {
+          "careerId": "alr7kd23i59ue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/brianna-gassmann/?careerid=alr7kd23i59ue",
+          "grade": 10,
+          "jersey": "24",
+          "name": "Brianna Gassmann",
+          "nameFrom": "career-url",
+          "shortName": "B. Gassmann"
+        },
+        {
+          "careerId": "p2q0nakcu0544",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/valeriya-tomkiv/?careerid=p2q0nakcu0544",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Valeriya Tomkiv",
+          "nameFrom": "career-url",
+          "shortName": "V. Tomkiv"
+        },
+        {
+          "careerId": "e0797hm79oo44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/branham-bruins/athletes/evie-park/?careerid=e0797hm79oo44",
+          "grade": 9,
+          "jersey": "2",
+          "name": "Evie Park",
+          "nameFrom": "career-url",
+          "shortName": "E. Park"
+        }
+      ],
+      "slug": "branham",
+      "status": "ok",
+      "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "evergreen-valley",
+      "status": "none",
+      "teamId": "554a6e7c-06b6-473a-9461-9f155294d249"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "tkh3u1cjq7el5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/teagan-cooling/?careerid=tkh3u1cjq7el5",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Teagan Cooling",
+          "nameFrom": "career-url",
+          "shortName": "T. Cooling"
+        },
+        {
+          "careerId": "fpjm1pildictd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/yulissa-ting/?careerid=fpjm1pildictd",
+          "grade": 9,
+          "jersey": "4",
+          "name": "Yulissa Ting",
+          "nameFrom": "career-url",
+          "shortName": "Y. Ting"
+        },
+        {
+          "careerId": "o11m2vnoe85j3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/laila-marvel/?careerid=o11m2vnoe85j3",
+          "grade": 10,
+          "jersey": "16",
+          "name": "Laila Marvel",
+          "nameFrom": "career-url",
+          "shortName": "L. Marvel"
+        },
+        {
+          "careerId": "216nr8af25cg0",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/sierra-gist/?careerid=216nr8af25cg0",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Sierra Gist",
+          "nameFrom": "career-url",
+          "shortName": "S. Gist"
+        },
+        {
+          "careerId": "6r89vu1fosqqa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/megan-chiu/?careerid=6r89vu1fosqqa",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Megan Chiu",
+          "nameFrom": "career-url",
+          "shortName": "M. Chiu"
+        },
+        {
+          "careerId": "1473h0il445vf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/aleksandra-kuligowska/?careerid=1473h0il445vf",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Aleksandra Kuligowska",
+          "nameFrom": "career-url",
+          "shortName": "A. Kuligowska"
+        },
+        {
+          "careerId": "97cng3smp70i2",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/leilani-stepp/?careerid=97cng3smp70i2",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Leilani Stepp",
+          "nameFrom": "career-url",
+          "shortName": "L. Stepp"
+        },
+        {
+          "careerId": "p6djvfv3oq844",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/alya-stylianou/?careerid=p6djvfv3oq844",
+          "grade": 10,
+          "jersey": "7",
+          "name": "Alya Stylianou",
+          "nameFrom": "career-url",
+          "shortName": "A. Stylianou"
+        },
+        {
+          "careerId": "t7sh36s98ksl5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/kylo-tchir/?careerid=t7sh36s98ksl5",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Kylo Tchir",
+          "nameFrom": "career-url",
+          "shortName": "K. Tchir"
+        },
+        {
+          "careerId": "jmb112ea5jnk4",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/amy-choi/?careerid=jmb112ea5jnk4",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Amy Choi",
+          "nameFrom": "career-url",
+          "shortName": "A. Choi"
+        },
+        {
+          "careerId": "cpp1hcbc0l0l5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/melissa-mcnelly/?careerid=cpp1hcbc0l0l5",
+          "grade": 12,
+          "jersey": "12",
+          "name": "Melissa McNelly",
+          "nameFrom": "career-url",
+          "shortName": "M. McNelly"
+        },
+        {
+          "careerId": "ba66iaka406ue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/lili-pon/?careerid=ba66iaka406ue",
+          "grade": 11,
+          "jersey": "1",
+          "name": "Lili Pon",
+          "nameFrom": "career-url",
+          "shortName": "L. Pon"
+        },
+        {
+          "careerId": "r464oqhfcml55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/sierra-kakes/?careerid=r464oqhfcml55",
+          "grade": 10,
+          "jersey": "15",
+          "name": "Sierra Kakes",
+          "nameFrom": "career-url",
+          "shortName": "S. Kakes"
+        },
+        {
+          "careerId": "h719kc61ju144",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/beatrice-magnaghi/?careerid=h719kc61ju144",
+          "grade": 11,
+          "jersey": "9",
+          "name": "Beatrice Magnaghi",
+          "nameFrom": "career-url",
+          "shortName": "B. Magnaghi"
+        },
+        {
+          "careerId": "9g28rgmsofs22",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/alma-salomon/?careerid=9g28rgmsofs22",
+          "grade": 9,
+          "jersey": "14",
+          "name": "Alma Salomon",
+          "nameFrom": "career-url",
+          "shortName": "A. Salomon"
+        },
+        {
+          "careerId": "vir7adqin1p99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/livia-haen/?careerid=vir7adqin1p99",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Livia Haen",
+          "nameFrom": "career-url",
+          "shortName": "L. Haen"
+        }
+      ],
+      "slug": "leigh",
+      "status": "ok",
+      "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "iv2n3jb2cgv33",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/chloe-nielson/?careerid=iv2n3jb2cgv33",
+          "grade": 12,
+          "jersey": "17",
+          "name": "Chloe Nielson",
+          "nameFrom": "career-url",
+          "shortName": "C. Nielson"
+        },
+        {
+          "careerId": "2agv342ij8144",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/anaya-lewis/?careerid=2agv342ij8144",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Anaya Lewis",
+          "nameFrom": "career-url",
+          "shortName": "A. Lewis"
+        },
+        {
+          "careerId": "7chfb8plv9fvf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/emily-rex/?careerid=7chfb8plv9fvf",
+          "grade": 10,
+          "jersey": "21",
+          "name": "Emily Rex",
+          "nameFrom": "career-url",
+          "shortName": "E. Rex"
+        },
+        {
+          "careerId": "t5phijqlgpq11",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/madeline-liao/?careerid=t5phijqlgpq11",
+          "grade": 12,
+          "jersey": "16",
+          "name": "Madeline Liao",
+          "nameFrom": "career-url",
+          "shortName": "M. Liao"
+        },
+        {
+          "careerId": "2rgio2rs1s3sc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/catherine-lewis/?careerid=2rgio2rs1s3sc",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Catherine Lewis",
+          "nameFrom": "career-url",
+          "shortName": "C. Lewis"
+        },
+        {
+          "careerId": "b6omadqh3jsg0",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/emma-youri/?careerid=b6omadqh3jsg0",
+          "grade": 10,
+          "jersey": "7",
+          "name": "Emma Youri",
+          "nameFrom": "career-url",
+          "shortName": "E. Youri"
+        },
+        {
+          "careerId": "ngpdnh36telk4",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/seraphina-powell/?careerid=ngpdnh36telk4",
+          "grade": 9,
+          "jersey": "12",
+          "name": "Seraphina Powell",
+          "nameFrom": "career-url",
+          "shortName": "S. Powell"
+        },
+        {
+          "careerId": "i8cni74seff55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/celesta-coutinho/?careerid=i8cni74seff55",
+          "grade": 10,
+          "jersey": "15",
+          "name": "Celesta Coutinho",
+          "nameFrom": "career-url",
+          "shortName": "C. Coutinho"
+        },
+        {
+          "careerId": "ivq223255v2cc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/kayla-krisman/?careerid=ivq223255v2cc",
+          "grade": 9,
+          "jersey": "28",
+          "name": "Kayla Krisman",
+          "nameFrom": "career-url",
+          "shortName": "K. Krisman"
+        },
+        {
+          "careerId": "nca9gbqrf52n7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/nalani-matsumura/?careerid=nca9gbqrf52n7",
+          "grade": 12,
+          "jersey": "18",
+          "name": "Nalani Matsumura",
+          "nameFrom": "career-url",
+          "shortName": "N. Matsumura"
+        },
+        {
+          "careerId": "u46jdg0toepue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/mia-cuboni/?careerid=u46jdg0toepue",
+          "grade": 9,
+          "jersey": "5",
+          "name": "Mia Cuboni",
+          "nameFrom": "career-url",
+          "shortName": "M. Cuboni"
+        },
+        {
+          "careerId": "26jmpr16hkbdd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/nylah-dorsey/?careerid=26jmpr16hkbdd",
+          "grade": 12,
+          "jersey": "23",
+          "name": "Nylah Dorsey",
+          "nameFrom": "career-url",
+          "shortName": "N. Dorsey"
+        },
+        {
+          "careerId": "55n197ngf4mqa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/amaya-carrillo/?careerid=55n197ngf4mqa",
+          "grade": 12,
+          "jersey": "24",
+          "name": "Amaya Carrillo",
+          "nameFrom": "career-url",
+          "shortName": "A. Carrillo"
+        },
+        {
+          "careerId": "crk94se083jcc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/julia-nikolov/?careerid=crk94se083jcc",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Julia Nikolov",
+          "nameFrom": "career-url",
+          "shortName": "J. Nikolov"
+        },
+        {
+          "careerId": "h04aagnlnictd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/leland-chargers/athletes/ellisa-kim/?careerid=h04aagnlnictd",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Ellisa Kim",
+          "nameFrom": "career-url",
+          "shortName": "E. Kim"
+        }
+      ],
+      "slug": "leland",
+      "status": "ok",
+      "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "3du0ivn7cao55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/sadie-rhyasen/?careerid=3du0ivn7cao55",
+          "grade": 10,
+          "jersey": "16",
+          "name": "Sadie Rhyasen",
+          "nameFrom": "career-url",
+          "shortName": "S. Rhyasen"
+        },
+        {
+          "careerId": "sbjiedgu8s8ee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/gigi-hernandez/?careerid=sbjiedgu8s8ee",
+          "grade": 10,
+          "jersey": "19",
+          "name": "Gigi Hernandez",
+          "nameFrom": "career-url",
+          "shortName": "G. Hernandez"
+        },
+        {
+          "careerId": "tguh181kahvg0",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/mary-gonzalez/?careerid=tguh181kahvg0",
+          "grade": 11,
+          "jersey": "08",
+          "name": "Mary Gonzalez",
+          "nameFrom": "career-url",
+          "shortName": "M. Gonzalez"
+        },
+        {
+          "careerId": "s73eafpa9cs99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/gelila-belay/?careerid=s73eafpa9cs99",
+          "grade": 11,
+          "jersey": "03",
+          "name": "Gelila Belay",
+          "nameFrom": "career-url",
+          "shortName": "G. Belay"
+        },
+        {
+          "careerId": "frnvtccp4ilaa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/kaitlyn-kubo/?careerid=frnvtccp4ilaa",
+          "grade": 12,
+          "jersey": "01",
+          "name": "Kaitlyn Kubo",
+          "nameFrom": "career-url",
+          "shortName": "K. Kubo"
+        },
+        {
+          "careerId": "cnb9u9e5kpa88",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/ella-rhyasen/?careerid=cnb9u9e5kpa88",
+          "grade": 11,
+          "jersey": "02",
+          "name": "Ella Rhyasen",
+          "nameFrom": "career-url",
+          "shortName": "E. Rhyasen"
+        },
+        {
+          "careerId": "nv33ss3p4ffee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/carlotta-laudani/?careerid=nv33ss3p4ffee",
+          "grade": 12,
+          "jersey": "12",
+          "name": "Carlotta Laudani",
+          "nameFrom": "career-url",
+          "shortName": "C. Laudani"
+        },
+        {
+          "careerId": "pkk9n86rrnqdd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/lauren-parubrub/?careerid=pkk9n86rrnqdd",
+          "grade": 9,
+          "jersey": "18",
+          "name": "Lauren Parubrub",
+          "nameFrom": "career-url",
+          "shortName": "L. Parubrub"
+        },
+        {
+          "careerId": "1ig2bknn3k4j3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/sienna-mccarthy/?careerid=1ig2bknn3k4j3",
+          "grade": 12,
+          "jersey": "09",
+          "name": "Sienna MCCarthy",
+          "nameFrom": "career-url",
+          "shortName": "S. MCCarthy"
+        },
+        {
+          "careerId": "eo8tsu0gmog66",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/gia-suvarna/?careerid=eo8tsu0gmog66",
+          "grade": 9,
+          "jersey": "17",
+          "name": "Gia Suvarna",
+          "nameFrom": "career-url",
+          "shortName": "G. Suvarna"
+        },
+        {
+          "careerId": "3igj7ngbrhuee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/mia-moraski/?careerid=3igj7ngbrhuee",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Mia Moraski",
+          "nameFrom": "career-url",
+          "shortName": "M. Moraski"
+        },
+        {
+          "careerId": "799c3nppd80sc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/eva-rhyasen/?careerid=799c3nppd80sc",
+          "grade": 11,
+          "jersey": "05",
+          "name": "Eva Rhyasen",
+          "nameFrom": "career-url",
+          "shortName": "E. Rhyasen"
+        },
+        {
+          "careerId": "m3t8rthdmo5m6",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/madeline-carley/?careerid=m3t8rthdmo5m6",
+          "grade": 11,
+          "jersey": "24",
+          "name": "Madeline Carley",
+          "nameFrom": "career-url",
+          "shortName": "M. Carley"
+        },
+        {
+          "careerId": "nhipdcaqeplp9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/julianne-garcia/?careerid=nhipdcaqeplp9",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Julianne Garcia",
+          "nameFrom": "career-url",
+          "shortName": "J. Garcia"
+        },
+        {
+          "careerId": "p3kj8dal7obdd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/sage-murdock/?careerid=p3kj8dal7obdd",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Sage Murdock",
+          "nameFrom": "career-url",
+          "shortName": "S. Murdock"
+        },
+        {
+          "careerId": "tpln58hhtouue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/harris-yee/?careerid=tpln58hhtouue",
+          "grade": 12,
+          "jersey": "07",
+          "name": "Harris Yee",
+          "nameFrom": "career-url",
+          "shortName": "H. Yee"
+        },
+        {
+          "careerId": "vtvnmd9u4mrl5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/steffi-cao/?careerid=vtvnmd9u4mrl5",
+          "grade": 12,
+          "jersey": "04",
+          "name": "Steffi Cao",
+          "nameFrom": "career-url",
+          "shortName": "S. Cao"
+        },
+        {
+          "careerId": "rdrrmvfvf9qrb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/pioneer-mustangs/athletes/courtney-white/?careerid=rdrrmvfvf9qrb",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Courtney White",
+          "nameFrom": "career-url",
+          "shortName": "C. White"
+        }
+      ],
+      "slug": "pioneer",
+      "status": "ok",
+      "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "hkjnenjimg5ee",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/helen-ho/?careerid=hkjnenjimg5ee",
+          "grade": 12,
+          "jersey": null,
+          "name": "Helen Ho",
+          "nameFrom": "career-url",
+          "shortName": "H. Ho"
+        },
+        {
+          "careerId": "uamvn0h7a5e11",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/agatha-kogan/?careerid=uamvn0h7a5e11",
+          "grade": 12,
+          "jersey": null,
+          "name": "Agatha Kogan",
+          "nameFrom": "career-url",
+          "shortName": "A. Kogan"
+        },
+        {
+          "careerId": "p0t54q4o2g5m6",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/zeena-makhamreh/?careerid=p0t54q4o2g5m6",
+          "grade": 12,
+          "jersey": null,
+          "name": "Zeena Makhamreh",
+          "nameFrom": "career-url",
+          "shortName": "Z. Makhamreh"
+        },
+        {
+          "careerId": "2u1npetfc0tp9",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/kai-oberhofer/?careerid=2u1npetfc0tp9",
+          "grade": 11,
+          "jersey": null,
+          "name": "Kai Oberhofer",
+          "nameFrom": "career-url",
+          "shortName": "K. Oberhofer"
+        },
+        {
+          "careerId": "t25n2hn32nh22",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/andrea-dern/?careerid=t25n2hn32nh22",
+          "grade": 11,
+          "jersey": null,
+          "name": "Andrea Dern",
+          "nameFrom": "career-url",
+          "shortName": "A. Dern"
+        },
+        {
+          "careerId": "j56obj1uen2j3",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/alicia-riddell/?careerid=j56obj1uen2j3",
+          "grade": 11,
+          "jersey": null,
+          "name": "Alicia Riddell",
+          "nameFrom": "career-url",
+          "shortName": "A. Riddell"
+        },
+        {
+          "careerId": "q4s7spd135iue",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/melissa-pasic/?careerid=q4s7spd135iue",
+          "grade": 11,
+          "jersey": null,
+          "name": "Melissa Pasic",
+          "nameFrom": "career-url",
+          "shortName": "M. Pasic"
+        },
+        {
+          "careerId": "2urr781riqej3",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/madison-bek/?careerid=2urr781riqej3",
+          "grade": 9,
+          "jersey": null,
+          "name": "Madison Bek",
+          "nameFrom": "career-url",
+          "shortName": "M. Bek"
+        },
+        {
+          "careerId": "aheu4mg9nlg99",
+          "careerUrl": "https://www.maxpreps.com/ca/campbell/westmont-warriors/athletes/orion-chang/?careerid=aheu4mg9nlg99",
+          "grade": 11,
+          "jersey": null,
+          "name": "Orion Chang",
+          "nameFrom": "career-url",
+          "shortName": "O. Chang"
+        }
+      ],
+      "slug": "westmont",
+      "status": "ok",
+      "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "skh7hoeo0c211",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/aubrey-luna/?careerid=skh7hoeo0c211",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Aubrey Luna",
+          "nameFrom": "career-url",
+          "shortName": "A. Luna"
+        },
+        {
+          "careerId": "h0cjgvl4mk3td",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/ireland-elerath/?careerid=h0cjgvl4mk3td",
+          "grade": 11,
+          "jersey": "50",
+          "name": "Ireland Elerath",
+          "nameFrom": "career-url",
+          "shortName": "I. Elerath"
+        },
+        {
+          "careerId": "2m92f3pvt0fj3",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/kiely-jantz/?careerid=2m92f3pvt0fj3",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Kiely Jantz",
+          "nameFrom": "career-url",
+          "shortName": "K. Jantz"
+        },
+        {
+          "careerId": "a4b6fgs14pkrb",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/jenny-lee/?careerid=a4b6fgs14pkrb",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Jenny Lee",
+          "nameFrom": "career-url",
+          "shortName": "J. Lee"
+        },
+        {
+          "careerId": "0uhclbffm56ue",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/melody-dangelo/?careerid=0uhclbffm56ue",
+          "grade": 10,
+          "jersey": "9",
+          "name": "Melody D'Angelo",
+          "nameFrom": "career-url",
+          "shortName": "M. D'Angelo"
+        },
+        {
+          "careerId": "bt3d7p3hcaf99",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/alyssa-aguaristi/?careerid=bt3d7p3hcaf99",
+          "grade": 12,
+          "jersey": "45",
+          "name": "Alyssa Aguaristi",
+          "nameFrom": "career-url",
+          "shortName": "A. Aguaristi"
+        },
+        {
+          "careerId": "7r75pt1de9o11",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/cali-smiley/?careerid=7r75pt1de9o11",
+          "grade": 11,
+          "jersey": "34",
+          "name": "Cali Smiley",
+          "nameFrom": "career-url",
+          "shortName": "C. Smiley"
+        },
+        {
+          "careerId": "9otdfqpq03kdd",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/maddie-ridgway/?careerid=9otdfqpq03kdd",
+          "grade": 11,
+          "jersey": "26",
+          "name": "Maddie Ridgway",
+          "nameFrom": "career-url",
+          "shortName": "M. Ridgway"
+        },
+        {
+          "careerId": "f2habtetrjdsc",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/finley-corona/?careerid=f2habtetrjdsc",
+          "grade": 12,
+          "jersey": "2",
+          "name": "Finley Corona",
+          "nameFrom": "career-url",
+          "shortName": "F. Corona"
+        },
+        {
+          "careerId": "ob6g31mg1cdue",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/brooke-demare/?careerid=ob6g31mg1cdue",
+          "grade": 12,
+          "jersey": "16",
+          "name": "Brooke DeMare",
+          "nameFrom": "career-url",
+          "shortName": "B. DeMare"
+        },
+        {
+          "careerId": "ksntoe8l4mq99",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/harper-corona/?careerid=ksntoe8l4mq99",
+          "grade": 9,
+          "jersey": "1",
+          "name": "Harper Corona",
+          "nameFrom": "career-url",
+          "shortName": "H. Corona"
+        },
+        {
+          "careerId": "6s1vgc2srq0ee",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/amaya-tovar/?careerid=6s1vgc2srq0ee",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Amaya Tovar",
+          "nameFrom": "career-url",
+          "shortName": "A. Tovar"
+        },
+        {
+          "careerId": "liq6aoh6c96o8",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/hannah-mcghie/?careerid=liq6aoh6c96o8",
+          "grade": 12,
+          "jersey": "18",
+          "name": "Hannah McGhie",
+          "nameFrom": "career-url",
+          "shortName": "H. McGhie"
+        },
+        {
+          "careerId": "lvosdb8trgj66",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/mehreen-nahal/?careerid=lvosdb8trgj66",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Mehreen Nahal",
+          "nameFrom": "career-url",
+          "shortName": "M. Nahal"
+        },
+        {
+          "careerId": "41v9fe9uhdl00",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/juliet-tassio/?careerid=41v9fe9uhdl00",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Juliet Tassio",
+          "nameFrom": "career-url",
+          "shortName": "J. Tassio"
+        }
+      ],
+      "slug": "christopher",
+      "status": "ok",
+      "teamId": "773e862d-e186-44aa-b268-461b4064ce52"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "fn0qruulu6qdd",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/brooke-rogers/?careerid=fn0qruulu6qdd",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Brooke Rogers",
+          "nameFrom": "career-url",
+          "shortName": "B. Rogers"
+        },
+        {
+          "careerId": "37soorjsc8655",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/brianna-sanders/?careerid=37soorjsc8655",
+          "grade": 11,
+          "jersey": "24",
+          "name": "Brianna Sanders",
+          "nameFrom": "career-url",
+          "shortName": "B. Sanders"
+        },
+        {
+          "careerId": "iocufolahdvrb",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/ariadna-urias/?careerid=iocufolahdvrb",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Ariadna Urias",
+          "nameFrom": "career-url",
+          "shortName": "A. Urias"
+        },
+        {
+          "careerId": "8v5nn49614eo8",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/sienna-schwinges/?careerid=8v5nn49614eo8",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Sienna Schwinges",
+          "nameFrom": "career-url",
+          "shortName": "S. Schwinges"
+        },
+        {
+          "careerId": "7ega02b6u9u00",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/lauren-pulford/?careerid=7ega02b6u9u00",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Lauren Pulford",
+          "nameFrom": "career-url",
+          "shortName": "L. Pulford"
+        },
+        {
+          "careerId": "7444jm2bd70vf",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/sasha-wortham/?careerid=7444jm2bd70vf",
+          "grade": 10,
+          "jersey": "10",
+          "name": "Sasha Wortham",
+          "nameFrom": "career-url",
+          "shortName": "S. Wortham"
+        },
+        {
+          "careerId": "b0gf158milm00",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/bella-gutierrez/?careerid=b0gf158milm00",
+          "grade": 12,
+          "jersey": "20",
+          "name": "Bella Gutierrez",
+          "nameFrom": "career-url",
+          "shortName": "B. Gutierrez"
+        },
+        {
+          "careerId": "f0499iubsaf44",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/camila-gaeta/?careerid=f0499iubsaf44",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Camila Gaeta",
+          "nameFrom": "career-url",
+          "shortName": "C. Gaeta"
+        },
+        {
+          "careerId": "t3k94amm5d1k4",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/nicole-rivera-sanchez/?careerid=t3k94amm5d1k4",
+          "grade": 12,
+          "jersey": "9",
+          "name": "Nicole Rivera Sanchez",
+          "nameFrom": "career-url",
+          "shortName": "N. Rivera Sanchez"
+        },
+        {
+          "careerId": "q8r172edl3avf",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/tiara-wortham/?careerid=q8r172edl3avf",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Tiara Wortham",
+          "nameFrom": "career-url",
+          "shortName": "T. Wortham"
+        },
+        {
+          "careerId": "062k650gng611",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/bella-rodrigo/?careerid=062k650gng611",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Bella Rodrigo",
+          "nameFrom": "career-url",
+          "shortName": "B. Rodrigo"
+        },
+        {
+          "careerId": "107m9v7f3skrb",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/janey-rodriguez-cruz/?careerid=107m9v7f3skrb",
+          "grade": 11,
+          "jersey": "12",
+          "name": "Janey Rodriguez Cruz",
+          "nameFrom": "career-url",
+          "shortName": "J. Rodriguez Cruz"
+        },
+        {
+          "careerId": "b2pv2cbtabb77",
+          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/player-21/?careerid=b2pv2cbtabb77",
+          "grade": null,
+          "jersey": "21",
+          "name": "Player #21",
+          "nameFrom": "short-name",
+          "shortName": "Player #21"
+        }
+      ],
+      "slug": "gilroy",
+      "status": "ok",
+      "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "ai41q5au7mv99",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/mary-an-nguyen/?careerid=ai41q5au7mv99",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Mary An Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "M. Nguyen"
+        },
+        {
+          "careerId": "pq1j4gmu01r44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/valerie-lam/?careerid=pq1j4gmu01r44",
+          "grade": 11,
+          "jersey": "10",
+          "name": "Valerie Lam",
+          "nameFrom": "career-url",
+          "shortName": "V. Lam"
+        },
+        {
+          "careerId": "08m1hov38s0h1",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/zimo-zhou/?careerid=08m1hov38s0h1",
+          "grade": 11,
+          "jersey": "14",
+          "name": "Zimo Zhou",
+          "nameFrom": "career-url",
+          "shortName": "Z. Zhou"
+        },
+        {
+          "careerId": "0ngurkkss4566",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/lauren-chiu/?careerid=0ngurkkss4566",
+          "grade": 10,
+          "jersey": "3",
+          "name": "Lauren Chiu",
+          "nameFrom": "career-url",
+          "shortName": "L. Chiu"
+        },
+        {
+          "careerId": "6enhma7n9jj44",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/eden-ng/?careerid=6enhma7n9jj44",
+          "grade": 12,
+          "jersey": "1",
+          "name": "Eden Ng",
+          "nameFrom": "career-url",
+          "shortName": "E. Ng"
+        },
+        {
+          "careerId": "n6b9ffeqk1m77",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/alexis-musselwhite/?careerid=n6b9ffeqk1m77",
+          "grade": 12,
+          "jersey": "5",
+          "name": "Alexis Musselwhite",
+          "nameFrom": "career-url",
+          "shortName": "A. Musselwhite"
+        },
+        {
+          "careerId": "51s1cjsi5cfdd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/erika-liberato/?careerid=51s1cjsi5cfdd",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Erika Liberato",
+          "nameFrom": "career-url",
+          "shortName": "E. Liberato"
+        },
+        {
+          "careerId": "urtvbd8p2ub33",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/allison-williams/?careerid=urtvbd8p2ub33",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Allison Williams",
+          "nameFrom": "career-url",
+          "shortName": "A. Williams"
+        },
+        {
+          "careerId": "ta0fdvm5n1344",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/katelyn-young/?careerid=ta0fdvm5n1344",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Katelyn Young",
+          "nameFrom": "career-url",
+          "shortName": "K. Young"
+        },
+        {
+          "careerId": "11f5c7bdmi5aa",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/devin-caditan/?careerid=11f5c7bdmi5aa",
+          "grade": 11,
+          "jersey": "12",
+          "name": "Devin Caditan",
+          "nameFrom": "career-url",
+          "shortName": "D. Caditan"
+        },
+        {
+          "careerId": "d09pjhja0gqo8",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/devynn-butler/?careerid=d09pjhja0gqo8",
+          "grade": 11,
+          "jersey": "15",
+          "name": "Devynn Butler",
+          "nameFrom": "career-url",
+          "shortName": "D. Butler"
+        },
+        {
+          "careerId": "t5vcue3ho6on7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/elliot-hanley/?careerid=t5vcue3ho6on7",
+          "grade": 9,
+          "jersey": "4",
+          "name": "Elliot Hanley",
+          "nameFrom": "career-url",
+          "shortName": "E. Hanley"
+        },
+        {
+          "careerId": "cnm9s5hm3pco8",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/kaitlyn-shi/?careerid=cnm9s5hm3pco8",
+          "grade": 11,
+          "jersey": "9",
+          "name": "Kaitlyn Shi",
+          "nameFrom": "career-url",
+          "shortName": "K. Shi"
+        },
+        {
+          "careerId": "60qon46gc7vff",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/brianna-maldonado/?careerid=60qon46gc7vff",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Brianna Maldonado",
+          "nameFrom": "career-url",
+          "shortName": "B. Maldonado"
+        },
+        {
+          "careerId": "0lf7esfuto422",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/piedmont-hills-pirates/athletes/ysabelle-vocal/?careerid=0lf7esfuto422",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Ysabelle Vocal",
+          "nameFrom": "career-url",
+          "shortName": "Y. Vocal"
+        }
+      ],
+      "slug": "piedmont-hills",
+      "status": "ok",
+      "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "santa-teresa",
+      "status": "none",
+      "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "silver-creek",
+      "status": "none",
+      "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "318u7buqm56dd",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/jordyn-scettrini/?careerid=318u7buqm56dd",
+          "grade": 12,
+          "jersey": "1",
+          "name": "Jordyn Scettrini",
+          "nameFrom": "career-url",
+          "shortName": "J. Scettrini"
+        },
+        {
+          "careerId": "vuubbb16rttn7",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/olivia-scatena/?careerid=vuubbb16rttn7",
+          "grade": 11,
+          "jersey": "7",
+          "name": "Olivia Scatena",
+          "nameFrom": "career-url",
+          "shortName": "O. Scatena"
+        },
+        {
+          "careerId": "41tsnnbn1efh1",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/nicole-richey/?careerid=41tsnnbn1efh1",
+          "grade": 10,
+          "jersey": "6",
+          "name": "Nicole Richey",
+          "nameFrom": "career-url",
+          "shortName": "N. Richey"
+        },
+        {
+          "careerId": "20asq8jt8j2dd",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/alexia-durling/?careerid=20asq8jt8j2dd",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Alexia Durling",
+          "nameFrom": "career-url",
+          "shortName": "A. Durling"
+        },
+        {
+          "careerId": "qu26j863eofh1",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/maddilyn-forbes/?careerid=qu26j863eofh1",
+          "grade": 12,
+          "jersey": "9",
+          "name": "Maddilyn Forbes",
+          "nameFrom": "career-url",
+          "shortName": "M. Forbes"
+        },
+        {
+          "careerId": "5rv6fkc5365i2",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/isabella-hammer/?careerid=5rv6fkc5365i2",
+          "grade": 11,
+          "jersey": "14",
+          "name": "Isabella Hammer",
+          "nameFrom": "career-url",
+          "shortName": "I. Hammer"
+        },
+        {
+          "careerId": "cm78e16ga4pee",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/violette-angeles/?careerid=cm78e16ga4pee",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Violette Angeles",
+          "nameFrom": "career-url",
+          "shortName": "V. Angeles"
+        },
+        {
+          "careerId": "p809f90v80355",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/ashley-nguyen/?careerid=p809f90v80355",
+          "grade": 11,
+          "jersey": "6",
+          "name": "Ashley Nguyen",
+          "nameFrom": "career-url",
+          "shortName": "A. Nguyen"
+        },
+        {
+          "careerId": "oiv8528gbm9j3",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/madeline-blair/?careerid=oiv8528gbm9j3",
+          "grade": 9,
+          "jersey": "5",
+          "name": "Madeline Blair",
+          "nameFrom": "career-url",
+          "shortName": "M. Blair"
+        },
+        {
+          "careerId": "84bj7ebh4vdaa",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/mikaylee-forbes/?careerid=84bj7ebh4vdaa",
+          "grade": 12,
+          "jersey": "3",
+          "name": "Mikaylee Forbes",
+          "nameFrom": "career-url",
+          "shortName": "M. Forbes"
+        },
+        {
+          "careerId": "hf5i33s884dvf",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/claire-winans/?careerid=hf5i33s884dvf",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Claire Winans",
+          "nameFrom": "career-url",
+          "shortName": "C. Winans"
+        },
+        {
+          "careerId": "nih21furpchi2",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/sophia-chattha/?careerid=nih21furpchi2",
+          "grade": 11,
+          "jersey": "13",
+          "name": "Sophia Chattha",
+          "nameFrom": "career-url",
+          "shortName": "S. Chattha"
+        },
+        {
+          "careerId": "a1fmncuns1vcc",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/jordan-bouton/?careerid=a1fmncuns1vcc",
+          "grade": 12,
+          "jersey": "12",
+          "name": "Jordan Bouton",
+          "nameFrom": "career-url",
+          "shortName": "J. Bouton"
+        },
+        {
+          "careerId": "saceubvovq1l5",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/melodee-glover/?careerid=saceubvovq1l5",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Melodee Glover",
+          "nameFrom": "career-url",
+          "shortName": "M. Glover"
+        },
+        {
+          "careerId": "t6k46ap4mk699",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/rae-barua/?careerid=t6k46ap4mk699",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Rae Barua",
+          "nameFrom": "career-url",
+          "shortName": "R. Barua"
+        },
+        {
+          "careerId": "mm380p4c512rb",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/annabella-ramos/?careerid=mm380p4c512rb",
+          "grade": 9,
+          "jersey": "5",
+          "name": "Annabella Ramos",
+          "nameFrom": "career-url",
+          "shortName": "A. Ramos"
+        }
+      ],
+      "slug": "sobrato",
+      "status": "ok",
+      "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "9iil0aljs0e77",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/jade-padilla/?careerid=9iil0aljs0e77",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Jade Padilla",
+          "nameFrom": "career-url",
+          "shortName": "J. Padilla"
+        },
+        {
+          "careerId": "krgp6978tfsrb",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/quanaysia-johnson/?careerid=krgp6978tfsrb",
+          "grade": 11,
+          "jersey": "25",
+          "name": "Quanaysia Johnson",
+          "nameFrom": "career-url",
+          "shortName": "Q. Johnson"
+        },
+        {
+          "careerId": "11glf6l49t0o8",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/kaylee-arelleno/?careerid=11glf6l49t0o8",
+          "grade": 12,
+          "jersey": "12",
+          "name": "Kaylee Arelleno",
+          "nameFrom": "career-url",
+          "shortName": "K. Arelleno"
+        },
+        {
+          "careerId": "ourjk7goes1m6",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/mailey-japlit/?careerid=ourjk7goes1m6",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Mailey Japlit",
+          "nameFrom": "career-url",
+          "shortName": "M. Japlit"
+        },
+        {
+          "careerId": "as7r1uascfj88",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/lauren-uppal/?careerid=as7r1uascfj88",
+          "grade": 12,
+          "jersey": "10",
+          "name": "Lauren Uppal",
+          "nameFrom": "career-url",
+          "shortName": "L. Uppal"
+        },
+        {
+          "careerId": "qrofabrbakq11",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/chimaya-morgan/?careerid=qrofabrbakq11",
+          "grade": 11,
+          "jersey": "21",
+          "name": "Chimaya Morgan",
+          "nameFrom": "career-url",
+          "shortName": "C. Morgan"
+        },
+        {
+          "careerId": "bnhfctevcjfff",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/jasmine-patel/?careerid=bnhfctevcjfff",
+          "grade": 11,
+          "jersey": "17",
+          "name": "Jasmine Patel",
+          "nameFrom": "career-url",
+          "shortName": "J. Patel"
+        },
+        {
+          "careerId": "uleoteq7ppsm6",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/mikayla-manalastas/?careerid=uleoteq7ppsm6",
+          "grade": 11,
+          "jersey": "4",
+          "name": "Mikayla Manalastas",
+          "nameFrom": "career-url",
+          "shortName": "M. Manalastas"
+        },
+        {
+          "careerId": "pfc86e7do1tl5",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/sophia-sidor/?careerid=pfc86e7do1tl5",
+          "grade": 11,
+          "jersey": "18",
+          "name": "Sophia Sidor",
+          "nameFrom": "career-url",
+          "shortName": "S. Sidor"
+        },
+        {
+          "careerId": "pmuplmu7iag22",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/brianna-hillman/?careerid=pmuplmu7iag22",
+          "grade": 9,
+          "jersey": "14",
+          "name": "Brianna Hillman",
+          "nameFrom": "career-url",
+          "shortName": "B. Hillman"
+        },
+        {
+          "careerId": "rlaafl61fbbsc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/niarah-aimonetti/?careerid=rlaafl61fbbsc",
+          "grade": 12,
+          "jersey": "7",
+          "name": "Niarah Aimonetti",
+          "nameFrom": "career-url",
+          "shortName": "N. Aimonetti"
+        },
+        {
+          "careerId": "30nek83j7uf55",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/rei-morita/?careerid=30nek83j7uf55",
+          "grade": 11,
+          "jersey": "2",
+          "name": "Rei Morita",
+          "nameFrom": "career-url",
+          "shortName": "R. Morita"
+        },
+        {
+          "careerId": "cd6tmsbc27o33",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/zienelle-guevara/?careerid=cd6tmsbc27o33",
+          "grade": 11,
+          "jersey": "1",
+          "name": "Zienelle Guevara",
+          "nameFrom": "career-url",
+          "shortName": "Z. Guevara"
+        },
+        {
+          "careerId": "2mcfao68btmn7",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/elizabeth-verdin/?careerid=2mcfao68btmn7",
+          "grade": 12,
+          "jersey": "8",
+          "name": "Elizabeth Verdin",
+          "nameFrom": "career-url",
+          "shortName": "E. Verdin"
+        },
+        {
+          "careerId": "v9tqi98gtal66",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/kaylani-birondo/?careerid=v9tqi98gtal66",
+          "grade": 10,
+          "jersey": "5",
+          "name": "Kaylani Birondo",
+          "nameFrom": "career-url",
+          "shortName": "K. Birondo"
+        },
+        {
+          "careerId": "mttlf7j4aaeo8",
+          "careerUrl": "https://www.maxpreps.com/ca/san-jose/del-mar-dons/athletes/lissette-ochoa-ramirez/?careerid=mttlf7j4aaeo8",
+          "grade": 10,
+          "jersey": "6",
+          "name": "Lissette Ochoa Ramirez",
+          "nameFrom": "career-url",
+          "shortName": "L. Ochoa Ramirez"
+        }
+      ],
+      "slug": "del-mar",
+      "status": "ok",
+      "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "gunderson",
+      "status": "none",
+      "teamId": "aa94942a-3659-42ea-8c1a-463de8693f1f"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "lincoln",
+      "status": "none",
+      "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "live-oak",
+      "status": "none",
+      "teamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd"
+    },
+    {
+      "error": null,
+      "players": [
+        {
+          "careerId": "nj2pok3pqas44",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/kaitlynn-rieden/?careerid=nj2pok3pqas44",
+          "grade": 10,
+          "jersey": "8",
+          "name": "Kaitlynn Rieden",
+          "nameFrom": "career-url",
+          "shortName": "K. Rieden"
+        },
+        {
+          "careerId": "fsvsf3c10krbb",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/shyla-wang/?careerid=fsvsf3c10krbb",
+          "grade": 12,
+          "jersey": "6",
+          "name": "Shyla Wang",
+          "nameFrom": "career-url",
+          "shortName": "S. Wang"
+        },
+        {
+          "careerId": "8qdul0876eeee",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/lina-soni/?careerid=8qdul0876eeee",
+          "grade": 10,
+          "jersey": "2",
+          "name": "Lina Soni",
+          "nameFrom": "career-url",
+          "shortName": "L. Soni"
+        },
+        {
+          "careerId": "hk5a5ru8c5gee",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/risa-ono/?careerid=hk5a5ru8c5gee",
+          "grade": 10,
+          "jersey": "5",
+          "name": "Risa Ono",
+          "nameFrom": "career-url",
+          "shortName": "R. Ono"
+        },
+        {
+          "careerId": "ansfdo0mjpq77",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/hannah-law/?careerid=ansfdo0mjpq77",
+          "grade": 11,
+          "jersey": "9",
+          "name": "Hannah Law",
+          "nameFrom": "career-url",
+          "shortName": "H. Law"
+        },
+        {
+          "careerId": "qf6gtmger0fk4",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/amery-wang/?careerid=qf6gtmger0fk4",
+          "grade": 11,
+          "jersey": "7",
+          "name": "Amery Wang",
+          "nameFrom": "career-url",
+          "shortName": "A. Wang"
+        },
+        {
+          "careerId": "0it15mc9vm333",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/verlane-rubina/?careerid=0it15mc9vm333",
+          "grade": 12,
+          "jersey": "14",
+          "name": "Verlane Rubina",
+          "nameFrom": "career-url",
+          "shortName": "V. Rubina"
+        },
+        {
+          "careerId": "6568qjak41gm6",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/priyanka-kumar/?careerid=6568qjak41gm6",
+          "grade": 12,
+          "jersey": "13",
+          "name": "Priyanka Kumar",
+          "nameFrom": "career-url",
+          "shortName": "P. Kumar"
+        },
+        {
+          "careerId": "41vh18cc8lmqa",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/naaliyah-yap/?careerid=41vh18cc8lmqa",
+          "grade": 12,
+          "jersey": "11",
+          "name": "Naaliyah Yap",
+          "nameFrom": "career-url",
+          "shortName": "N. Yap"
+        },
+        {
+          "careerId": "95dags4n7hj88",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/thien-tran/?careerid=95dags4n7hj88",
+          "grade": 12,
+          "jersey": "23",
+          "name": "Thien Tran",
+          "nameFrom": "career-url",
+          "shortName": "T. Tran"
+        },
+        {
+          "careerId": "6f3t7kpncva00",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/ana-famenka/?careerid=6f3t7kpncva00",
+          "grade": 11,
+          "jersey": "20",
+          "name": "Ana Famenka",
+          "nameFrom": "career-url",
+          "shortName": "A. Famenka"
+        },
+        {
+          "careerId": "02p59sratl1m6",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/adrian-yong/?careerid=02p59sratl1m6",
+          "grade": 11,
+          "jersey": "18",
+          "name": "Adrian Yong",
+          "nameFrom": "career-url",
+          "shortName": "A. Yong"
+        },
+        {
+          "careerId": "icops43uj2uue",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/giuditta-cusmano/?careerid=icops43uj2uue",
+          "grade": 10,
+          "jersey": "16",
+          "name": "Giuditta Cusmano",
+          "nameFrom": "career-url",
+          "shortName": "G. Cusmano"
+        },
+        {
+          "careerId": "f4lbsjtfrh555",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/meiko-quarton/?careerid=f4lbsjtfrh555",
+          "grade": 10,
+          "jersey": "24",
+          "name": "Meiko Quarton",
+          "nameFrom": "career-url",
+          "shortName": "M. Quarton"
+        },
+        {
+          "careerId": "hmm61r2c344td",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/roshini-balamurugan/?careerid=hmm61r2c344td",
+          "grade": 12,
+          "jersey": "15",
+          "name": "Roshini Balamurugan",
+          "nameFrom": "career-url",
+          "shortName": "R. Balamurugan"
+        },
+        {
+          "careerId": "cc9dgh21q65aa",
+          "careerUrl": "https://www.maxpreps.com/ca/saratoga/prospect-panthers/athletes/angela-damato/?careerid=cc9dgh21q65aa",
+          "grade": 12,
+          "jersey": "26",
+          "name": "Angela D'Amato",
+          "nameFrom": "career-url",
+          "shortName": "A. D'Amato"
+        }
+      ],
+      "slug": "prospect",
+      "status": "ok",
+      "teamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "willow-glen",
+      "status": "none",
+      "teamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "andrew-hill",
+      "status": "none",
+      "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "independence",
+      "status": "none",
+      "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "james-lick",
+      "status": "none",
+      "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "mt-pleasant",
+      "status": "none",
+      "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "oak-grove",
+      "status": "none",
+      "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "overfelt",
+      "status": "none",
+      "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "san-jose",
+      "status": "none",
+      "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
+    },
+    {
+      "error": null,
+      "players": [],
+      "slug": "yerba-buena",
+      "status": "none",
+      "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
+    }
+  ]
+}

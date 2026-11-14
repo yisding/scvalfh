@@ -74,6 +74,10 @@ export const UNREAD_WITH_NOTE =
 
 /** Whether this build's box score is basketball's (`Sport.stats.model`): two tables per side, no goalkeepers. */
 const BASKETBALL = SPORT.stats.model === 'basketball';
+/** Whether it is volleyball's: two tables per side too (attacking and serving; blocks, digs, assists, receptions). */
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
+/** A sport whose box score is one line per player in two tables. */
+const LINE_BOX = BASKETBALL || VOLLEYBALL;
 
 export interface GameStatsSide {
   key: string;
@@ -82,6 +86,8 @@ export interface GameStatsSide {
   scoring: StatTable | null;
   /** The side's second table: goalkeeping, or in basketball rebounds, assists and the rest. */
   goalies: StatTable | null;
+  /** What the first table is, for its caption: 'scoring' unless given (volleyball: 'attacking and serving'). */
+  firstCaption?: string;
   /** What the second table is, for its caption: 'goalkeeping' unless given ('rebounds, assists and defense'). */
   secondCaption?: string;
   /** Why there is no table, when there is none; null when there is one. */
@@ -242,8 +248,29 @@ const BASKETBALL_MORE: readonly BasketballBoxColumn[] = [
   { key: 'turnovers', label: 'TO', title: 'Turnovers', ...boxCount('turnovers') },
 ];
 
+/** Volleyball's box score, two tables of five columns each. */
+const VOLLEYBALL_ATTACK: readonly BasketballBoxColumn[] = [
+  { key: 'kills', label: 'K', title: 'Kills', ...boxCount('kills') },
+  { key: 'attackErrors', label: 'E', title: 'Attack errors', ...boxCount('attackErrors') },
+  { key: 'attackAttempts', label: 'TA', title: 'Attack attempts', ...boxCount('attackAttempts') },
+  { key: 'aces', label: 'A', title: 'Aces', ...boxCount('aces') },
+  { key: 'serveErrors', label: 'SE', title: 'Serve errors', ...boxCount('serveErrors') },
+];
+const VOLLEYBALL_MORE: readonly BasketballBoxColumn[] = [
+  { key: 'soloBlocks', label: 'BS', title: 'Solo blocks', ...boxCount('soloBlocks') },
+  { key: 'blockAssists', label: 'BA', title: 'Block assists', ...boxCount('blockAssists') },
+  { key: 'digs', label: 'D', title: 'Digs', ...boxCount('digs') },
+  { key: 'assists', label: 'Ast', title: 'Assists', ...boxCount('assists') },
+  { key: 'receptions', label: 'R', title: 'Serve receptions', ...boxCount('receptions') },
+];
+/** The build's two box tables, the second one's caption, and the stats a side's rows are ordered on. */
+const LINE_FIRST = VOLLEYBALL ? VOLLEYBALL_ATTACK : BASKETBALL_SCORING;
+const LINE_SECOND = VOLLEYBALL ? VOLLEYBALL_MORE : BASKETBALL_MORE;
+const LINE_SECOND_CAPTION = VOLLEYBALL ? 'blocks, digs, assists and serve receive' : 'rebounds, assists and defense';
+const LINE_ORDER: readonly [string, string, string] = VOLLEYBALL ? ['kills', 'digs', 'assists'] : ['points', 'rebounds', 'assists'];
+
 /**
- * One of a side's basketball tables: every player the coach entered a line for, most points first (then
+ * One of a side's basketball (or volleyball) tables: every player the coach entered a line for, most points first (then
  * rebounds, assists, MaxPreps' order), the same order in both tables. Unlike a goals sport's scoring table,
  * a player with a line of zeros stays: they played, and a 0-for-4 night is part of the box score.
  */
@@ -255,7 +282,7 @@ function basketballTable(box: Entries, spec: readonly BasketballBoxColumn[]): St
   const rows: StatRow[] = box.players
     .map((p, i) => ({ p, i }))
     .filter(({ p }) => p.field !== null && Object.keys(p.field).length > 0)
-    .sort((a, b) => n(b.p, 'points') - n(a.p, 'points') || n(b.p, 'rebounds') - n(a.p, 'rebounds') || n(b.p, 'assists') - n(a.p, 'assists') || a.i - b.i)
+    .sort((a, b) => n(b.p, LINE_ORDER[0]) - n(a.p, LINE_ORDER[0]) || n(b.p, LINE_ORDER[1]) - n(a.p, LINE_ORDER[1]) || n(b.p, LINE_ORDER[2]) - n(a.p, LINE_ORDER[2]) || a.i - b.i)
     .map(({ p, i }) => ({
       key: `${i}`,
       name: p.name,
@@ -315,12 +342,13 @@ function sideView(
       notes: [],
     };
   }
-  if (BASKETBALL) {
-    const scoring = basketballTable(box, BASKETBALL_SCORING);
-    const more = basketballTable(box, BASKETBALL_MORE);
-    const second = { goalies: more, secondCaption: 'rebounds, assists and defense' };
+  if (LINE_BOX) {
+    const scoring = basketballTable(box, LINE_FIRST);
+    const more = basketballTable(box, LINE_SECOND);
+    const second = { goalies: more, secondCaption: LINE_SECOND_CAPTION, ...(VOLLEYBALL ? { firstCaption: 'attacking and serving' } : {}) };
     if (!scoring && !more) return { ...base, scoring, ...second, empty: 'No stats entered on MaxPreps for this game.', notes: [] };
-    const note = model.game.forfeitBy ? null : pointsNote(box, model.game[which].score);
+    // Basketball's entered points are its score; a volleyball score is sets won, which no entry adds up to.
+    const note = model.game.forfeitBy || !BASKETBALL ? null : pointsNote(box, model.game[which].score);
     return { ...base, scoring, ...second, empty: null, notes: note ? [note] : [] };
   }
   const scoring = scoringTable(box);
@@ -340,8 +368,8 @@ function sideView(
 /** The section's model, or null when there is nothing to show: not a final, or no table on either side. */
 export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = getGameStatsEntry): GameStatsView | null {
   if (model.game.status !== 'final') return null;
-  // Basketball's score is its points, overtime included: no tiebreak sits outside it.
-  const caveat = !BASKETBALL && tiebreakInDoubt(model);
+  // Basketball's score is its points, overtime included, and volleyball's its sets: no tiebreak sits outside either.
+  const caveat = !LINE_BOX && tiebreakInDoubt(model);
   const sides = [
     sideView(model, model.away, 'away', lookup, caveat),
     sideView(model, model.home, 'home', lookup, caveat),
@@ -349,7 +377,7 @@ export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = g
   if (!sides.some((s) => s.scoring || s.goalies)) return null;
   const marked = sides.some((s) => [...(s.scoring?.rows ?? []), ...(s.goalies?.rows ?? [])].some((r) => r.noted));
   const shown = new Set(sides.flatMap((s) => [...(s.scoring?.columns ?? []), ...(s.goalies?.columns ?? [])]).map((c) => c.label));
-  const legend = (BASKETBALL ? [...BASKETBALL_SCORING, ...BASKETBALL_MORE] : [...FIELD_COLUMNS, ...GOALIE_COLUMNS])
+  const legend = (LINE_BOX ? [...LINE_FIRST, ...LINE_SECOND] : [...FIELD_COLUMNS, ...GOALIE_COLUMNS])
     .filter((c) => shown.has(c.label))
     .map((c) => `${c.label} ${c.title.toLowerCase()}`);
   return {

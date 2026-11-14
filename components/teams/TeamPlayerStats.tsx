@@ -266,7 +266,9 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
           MaxPreps{view.updated ? `, last updated ${view.updated}` : ''}.
           {view.more ? ' Shooting and more lists only players with at least one of those stats.' : ''}
           {view.showsDerived
-            ? ' The per-game figures and the percentages are worked out here from those totals: a per-game figure is over the games the player is credited with.'
+            ? view.ratesPerSet
+              ? ' The per-set figures and the hitting percentage are worked out here from those totals: a per-set figure is over the sets the player is credited with, and the hitting percentage is kills less errors over attempts.'
+              : ' The per-game figures and the percentages are worked out here from those totals: a per-game figure is over the games the player is credited with.'
             : ''}
         </p>
         {view.goalkeepingEntered ? (

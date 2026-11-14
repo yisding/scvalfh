@@ -274,7 +274,16 @@ export const RULES_REQUIRE_CLAIM = /\brules require\b/i;
  *  - the other builds' programs: 'girls', 'soccer', 'field hockey'.
  * `noTiesSportClaims` applies them to a page's text after the proper nouns the data carries (a tournament called
  * the "Double Goal Coaches Classic", an opponent's name) are taken out.
+ *
+ * Volleyball cannot end level either (a match is the best of five sets), and its build is the girls' program,
+ * so there the other builds' programs are 'boys', 'soccer', 'field hockey' and 'basketball' (OTHER_PROGRAMS,
+ * read from the inlined SCVAL_SPORT as lib/format.ts reads it).
  */
+const OTHER_PROGRAMS =
+  process.env.SCVAL_SPORT === 'volleyball'
+    ? /\bboys\b|\bsoccer\b|\bfield hockey\b|\bbasketball\b/gi
+    : /\bgirls\b|\bsoccer\b|\bfield hockey\b/gi;
+
 export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp }> = [
   // "Field goal" is basketball's own word (the stat tables' FG columns); every other goal is another sport's.
   { what: 'says "goal(s)"', pattern: /(?<!\bfield\s)\bgoals?\b/gi },
@@ -282,7 +291,7 @@ export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp
   { what: 'speaks of a tied game', pattern: /(?<!-way\s)\bties?\b(?!\s+for\b)(?![-\s]?break)(?!\s+(?:are\s+)?broken\b)/gi },
   { what: 'prints a W-L-T record', pattern: /\bW-L-T\b|\b0-0-0\b|won-lost-tied|win-loss-tie|win\/loss\/tie/gi },
   { what: 'uses a goalkeeper’s word', pattern: /\b(?:goal)?keepers?\b|\bgoalies?\b|\bgoalkeeping\b|\bshutouts?\b|\bclean[ -]sheets?\b|\bshootouts?\b/gi },
-  { what: 'names another build’s program', pattern: /\bgirls\b|\bsoccer\b|\bfield hockey\b/gi },
+  { what: 'names another build’s program', pattern: OTHER_PROGRAMS },
 ];
 
 /**

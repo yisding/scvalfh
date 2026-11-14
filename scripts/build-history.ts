@@ -60,7 +60,7 @@ import { HttpClient } from '../lib/sources/http';
 import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
-import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY } from '../lib/sports/current';
+import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
 import { buildScvalDocumentsHistory, transcriptionPath, type Transcription } from './lib/history-scval-documents';
@@ -115,7 +115,7 @@ function pick<T extends { division: string; level: string }>(
 }
 
 /**
- * Another sport's build (SCVAL_SPORT=soccer or basketball): its file has the SCVAL entry, built from
+ * Another sport's build (SCVAL_SPORT=soccer, basketball or volleyball): its file has the SCVAL entry, built from
  * scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
  * (scripts/lib/history-scval-documents.ts), and a BVAL entry marked unavailable (bvalNotTranscribed); the soccer file also has the WCAL's and the
  * WBAL's, unavailable too (wcalNotTranscribed, wbalNoStandings). `--from` is
@@ -128,12 +128,14 @@ function pick<T extends { division: string; level: string }>(
  * standings were published.
  */
 function bvalNotTranscribed() {
-  const sport = IS_BASKETBALL ? 'boys basketball' : 'girls soccer';
+  const sport = IS_BASKETBALL ? 'boys basketball' : IS_VOLLEYBALL ? 'girls volleyball' : 'girls soccer';
+  // The winter builds added BVAL on 2026-11-13; the volleyball build was made with it on 2026-11-14.
+  const [added, checkedOn] = IS_VOLLEYBALL ? ['November 14, 2026', '2026-11-14'] : ['November 13, 2026', '2026-11-13'];
   return {
     status: 'unavailable' as const,
     league: getLeague('bval').name,
-    reason: `BVAL publishes its official standings on bval.org. This site added BVAL ${sport} on November 13, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.`,
-    checkedOn: '2026-11-13',
+    reason: `BVAL publishes its official standings on bval.org. This site added BVAL ${sport} on ${added} and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.`,
+    checkedOn,
     checked: ['https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)'],
     alsoPublished: [{ label: 'BVAL standings', url: 'https://bval.org/standings/' }],
   };
@@ -191,7 +193,7 @@ async function mainOtherSport(args: Args): Promise<number> {
     return 1;
   }
   const { entry, problems } = built;
-  const leagues = IS_BASKETBALL
+  const leagues = IS_BASKETBALL || IS_VOLLEYBALL
     ? { scval: entry, bval: bvalNotTranscribed() }
     : { scval: entry, bval: bvalNotTranscribed(), wcal: wcalNotTranscribed(), wbal: wbalNoStandings() };
   const history = { season: transcription.season, sport: transcription.sport, leagues };
