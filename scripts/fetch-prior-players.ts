@@ -24,7 +24,9 @@
  * yet read (error or pending) unless --refresh, and a team whose read fails keeps what an earlier
  * run read. MaxPreps' edge answers some of these calls with an empty 403 when they come quickly;
  * the client does not retry a 403, so run it again later rather than faster. The process exits 1
- * while any team is unread, and still writes what it read.
+ * while any team is unread, and still writes what it read; a run that read nothing writes nothing.
+ * --ssid is taken on trust: the script checks each answer is for the id it asked for, not that the
+ * id is --year's.
  *
  * Why the stat sheets and not the roster pages: no roster page of a past season was ever captured,
  * and the page for one cannot be read from every network this runs on. The sheet lists only the
@@ -218,6 +220,12 @@ export async function main(argv: readonly string[]): Promise<number> {
       (unread.length ? `: ${unread.join(', ')}` : ''),
   );
   const exitCode = unread.length ? 1 : 0;
+  // A run that read no sheet at all (every call refused) has nothing to say: whatever file is there,
+  // this season's or another's, is worth more than a list of 'error'.
+  if (c.teamsWithPlayers === 0 && teams.some((t) => t.status === 'error')) {
+    console.error(`FAILED: no stat sheet could be read. Nothing written: ${path.relative(process.cwd(), args.out)} is as it was.`);
+    return 1;
+  }
   if (args.dryRun) {
     console.log('dry run: nothing written');
     return exitCode;

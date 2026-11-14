@@ -13,7 +13,8 @@
  * the sheet), a position, a height, or the full name as the roster spelled it. The full name is
  * rebuilt from the career link's own words and the sheet's last name (`nameFromCareerUrl`), which
  * loses an apostrophe or a capital inside a first name; the registry prefers any other source's
- * spelling (lib/players/registry-build.ts).
+ * spelling (lib/players/registry-build.ts). A link whose name segment is not plain words gives no
+ * name at all, and the row keeps the sheet's short one.
  *
  * Loud on drift like its neighbours: a table with no Name column, a row whose cells do not line up
  * with its columns, or one career listed under two classes or two short names throws.
@@ -105,6 +106,9 @@ const capitalizeWords = (words: readonly string[]): string =>
 export function nameFromCareerUrl(careerUrl: string | null, shortName: string): string | null {
   const segment = careerUrl ? /\/athletes\/([^/?#]+)\//.exec(careerUrl)?.[1] : undefined;
   if (!segment) return null;
+  // MaxPreps builds the segment from the name; one holding anything but letters and hyphens was built
+  // from a name with a mangled character ("soland039%3be" for "Solan&#039;e") and cannot be read back.
+  if (!/^[a-z]+(-[a-z]+)*$/i.test(segment)) return null;
   const words = segment.toLowerCase().split('-').filter(Boolean);
   if (words.length === 0) return null;
   const last = /^\p{L}\.\s+(.+)$/u.exec(shortName)?.[1] ?? null;

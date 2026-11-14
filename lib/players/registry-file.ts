@@ -71,11 +71,12 @@ const LIVE_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster',
  * all-league lists). A past season the previous registry already holds from its live files is only
  * topped up from those, never rebuilt from them.
  */
-export function readBuildInput(root: string, builtBy: string): BuildInput {
+export function readBuildInput(root: string, builtBy: string): BuildInput & { skipped: string[] } {
   const previous = readPlayersFile(root);
   const identity = readPlayerIdentity(root);
   const built: Array<BuildInput['built'][number]> = [];
   const sightings: Sighting[] = [];
+  const skipped: string[] = [];
 
   for (const sport of SPORT_IDS) {
     const dir = sportDataDir(sport);
@@ -95,6 +96,7 @@ export function readBuildInput(root: string, builtBy: string): BuildInput {
         identity,
       );
       current = now.season;
+      skipped.push(...now.skipped);
       built.push({ sport, season: now.season });
       sightings.push(...now.sightings);
     }
@@ -119,5 +121,5 @@ export function readBuildInput(root: string, builtBy: string): BuildInput {
       sightings.push(...pastSeasonSightings({ sport, season, priorPlayers, history }));
     }
   }
-  return { previous, identity, built, sightings, builtBy };
+  return { previous, identity, built, sightings, builtBy, skipped };
 }

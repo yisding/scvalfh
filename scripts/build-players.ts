@@ -23,7 +23,8 @@
  * name a player by team and MaxPreps' per-season athlete id (or, for JV profiles, by team and name),
  * which a new season makes meaningless. Each record gains a `playerId`, written beside that key and
  * never read by the site: the durable half of the join, which is what a rollover re-keys from.
- * Nothing else in those files is touched, and their formatting is kept.
+ * Nothing else in those files is touched. A file is rewritten only when an id in it changes, and then
+ * as JSON.stringify writes it (two-space indent, a final newline), which is how all four are kept.
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -107,9 +108,10 @@ export function stampCuratedFiles(root: string, sport: SportId, index: StampInde
     const text = readFileSync(file, 'utf8');
     return { rel, text, json: JSON.parse(text) as Json };
   };
-  const finish = (f: { rel: string; text: string }, json: Json) => {
-    const text = `${JSON.stringify(json, null, 2)}\n`;
-    if (text !== f.text) changed.set(f.rel, text);
+  // A file is rewritten only when an id in it changes: one a person saved with other line endings
+  // or escapes is not "changed" by that. When it is rewritten, it is as JSON.stringify writes it.
+  const finish = (f: { rel: string; text: string; json: Json }, json: Json) => {
+    if (JSON.stringify(json) !== JSON.stringify(f.json)) changed.set(f.rel, `${JSON.stringify(json, null, 2)}\n`);
   };
   const byAthlete = (season: unknown, team: unknown, athleteId: unknown, label: string): string | null => {
     const id = index.byAthlete.get(`${sport} ${String(season)} ${String(team)} ${String(athleteId)}`);
@@ -172,6 +174,7 @@ export function main(argv: readonly string[]): number {
   const args = parseArgs(argv);
   const root = process.cwd();
   const input = readBuildInput(root, 'scripts/build-players.ts');
+  for (const line of input.skipped) console.warn(`WARN ${line}`);
   const file = buildRegistry(input);
   const text = stableStringify(file);
   const out = path.join(root, PLAYERS_FILE);

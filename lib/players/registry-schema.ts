@@ -151,6 +151,12 @@ export const StintSchema = z
     captain: z.boolean(),
     observations: z.array(ObservationSchema).min(1),
     conflicts: z.array(StintConflictSchema),
+    /**
+     * True when no source lists this stint any more: a build read the season's files and the player
+     * was not in them, so the stint is kept as an earlier build left it (a player who left the team
+     * in October was still on it in September).
+     */
+    gone: z.literal(true).optional(),
   })
   .strict()
   .refine((s) => s.observations.some((o) => o.name === s.name), 'name is not one of the observations\'')
@@ -228,8 +234,12 @@ export const PlayerSchema = z
  *   name-ambiguous         a name with no id matches more than one player of its team
  *   name-class-mismatch    a name with no id matches one player whose class year is two or more
  *                          years off, so it was kept apart
- *   possible-match         a name with no id that a nickname or a one-letter spelling ties to
- *                          exactly one player of its team: not joined, only suggested
+ *   possible-match         two players of one team whose names look like one person's (a nickname,
+ *                          a middle name, a slip of the pen) and whose class years do not
+ *                          contradict: not joined, only suggested
+ *   same-name-other-sport  the same name at the same school in two sports, with class years that
+ *                          do not contradict and no MaxPreps career id in common: names are never
+ *                          joined across sports, so this is only a suggestion
  *   career-two-names       one MaxPreps career id is listed under two unrelated names
  */
 export const REVIEW_KINDS = [
@@ -237,6 +247,7 @@ export const REVIEW_KINDS = [
   'name-ambiguous',
   'name-class-mismatch',
   'possible-match',
+  'same-name-other-sport',
   'career-two-names',
 ] as const;
 
@@ -245,6 +256,8 @@ export const ReviewItemSchema = z
     kind: z.enum(REVIEW_KINDS),
     sport: z.enum(SPORT_IDS),
     team: text,
+    /** The seasons of the rows involved: an item about seasons a later build no longer reads is kept as it was. */
+    seasons: z.array(seasonYear).min(1),
     /** The spellings involved. */
     names: z.array(text).min(1),
     /** The players involved, by id. */

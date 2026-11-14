@@ -52,7 +52,6 @@
 
 import { createHash } from 'node:crypto';
 
-import { resolveName, type NoteRosterPlayer } from './note-stats';
 import {
   OBSERVATION_SOURCES,
   PLAYER_LEVELS,
@@ -72,17 +71,26 @@ import {
   type StintConflict,
 } from './registry-schema';
 import type { SportId } from '../sports/current';
-import type { TeamSlug } from '../types';
 
 // ---------------------------------------------------------------- names and class years
 
-/** "Zoë  O'Brien-Smith" → "zoeobriensmith": a name compared across sources' spellings. */
-export function nameKey(name: string): string {
+/** Letters NFKD leaves whole: folded by hand so "Đỗ" and "Do", "Søren" and "Soren" are one name. */
+const FOLD: Readonly<Record<string, string>> = { đ: 'd', ø: 'o', ł: 'l', æ: 'ae', œ: 'oe', ß: 'ss', þ: 'th', ð: 'd', ı: 'i' };
+
+function fold(name: string): string {
   return name
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^a-z]/g, '');
+    .replace(/[đøłæœßþðı]/g, (c) => FOLD[c] ?? c);
+}
+
+/**
+ * "Zoë  O'Brien-Smith" → "zoeobriensmith": a name compared across sources' spellings. Empty for a
+ * name with no Latin letter at all, which therefore matches nothing.
+ */
+export function nameKey(name: string): string {
+  return fold(name).replace(/[^a-z]/g, '');
 }
 
 /** Words a roster types beside a name that are not part of it: "(GK)", "Jr.", a grade. */
@@ -90,10 +98,7 @@ const NOT_A_NAME = new Set(['gk', 'jr', 'sr', 'ii', 'iii', 'iv', 'slug']);
 
 /** "Sienna Steele (GK) 10" → ["sienna", "steele"]. */
 export function nameTokens(name: string): string[] {
-  return name
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
+  return fold(name)
     .replace(/['’]/g, '')
     .split(/[^a-z]+/)
     .filter((w) => w.length > 1 && !NOT_A_NAME.has(w));
@@ -111,26 +116,62 @@ function editDistance(a: string, b: string): number {
   return row[b.length];
 }
 
-/**
- * Whether two spellings could be one person's: the same name, a shared last name ("Cammie Pearce",
- * "Cameron Pearce"), or the same first name with last names a slip apart ("Kate Keenan", "Kate
- * Kennan"). "Andrew Duong" and "Nicolas Finuliar" could not. Used only to notice that one MaxPreps
- * career id is carrying two people; it never joins anything.
- */
-export function namesCompatible(a: string, b: string): boolean {
-  if (nameKey(a) === nameKey(b)) return true;
-  const x = nameTokens(a);
-  const y = nameTokens(b);
-  if (x.length === 0 || y.length === 0) return true;
-  const lastX = x[x.length - 1];
-  const lastY = y[y.length - 1];
-  if (x.includes(lastY) || y.includes(lastX)) return true;
-  return x[0] === y[0] && editDistance(lastX, lastY) <= 2;
+/** A slip of the pen: two letters in a long word, one in a middling one, none in a short one. */
+function slipApart(a: string, b: string): boolean {
+  const shorter = Math.min(a.length, b.length);
+  return editDistance(a, b) <= (shorter >= 6 ? 2 : shorter >= 4 ? 1 : 0);
 }
 
-/** "S. Lewis", "A. dawson": a stat sheet's initial-and-last-name, which identifies nobody. */
+/**
+ * Whether two spellings could be one person's: the same name, a shared last name ("Cammie Pearce",
+ * "Cameron Pearce"; a last name is never the other's first: "James Taylor" is not "Taylor Swift"),
+ * or first names that start alike with last names a slip apart ("Katie Keenan", "Kate Kennan").
+ * "Andrew Duong" and "Nicolas Finuliar" could not. Used to notice that one MaxPreps career id is
+ * carrying two people, and to keep an id from passing to another person; it never joins anything.
+ */
+export function namesCompatible(a: string, b: string): boolean {
+  const ka = nameKey(a);
+  const kb = nameKey(b);
+  if (ka === '' || kb === '') return a.trim() === b.trim();
+  if (ka === kb) return true;
+  const x = nameTokens(a);
+  const y = nameTokens(b);
+  if (x.length === 0 || y.length === 0) return false;
+  const lastX = x[x.length - 1];
+  const lastY = y[y.length - 1];
+  if (lastX === lastY) return true;
+  // A multi-word last name written whole by one source and in part by another.
+  if ((lastY.length >= 3 && x.slice(1).includes(lastY)) || (lastX.length >= 3 && y.slice(1).includes(lastX))) return true;
+  return x[0].slice(0, 2) === y[0].slice(0, 2) && lastX.length >= 4 && lastY.length >= 4 && slipApart(lastX, lastY);
+}
+
+/**
+ * Whether two spellings LOOK like one person's, for the review list only: more generous than
+ * `namesCompatible`. The same words in another order, one name inside the other ("Paula Neira",
+ * "Paula Neira Munoz"; "Wenhe (Angela) Zhang", "Wenhe Zhang"), a shared last name under first names
+ * with the same initial ("Abby Martin", "Abigail Martin"), or a slip of the pen anywhere
+ * ("Caityln Hughes", "Caitlyn Hughes").
+ */
+export function namesLookAlike(a: string, b: string): boolean {
+  const ka = nameKey(a);
+  const kb = nameKey(b);
+  if (ka === '' || kb === '') return false;
+  if (ka === kb) return true;
+  const x = nameTokens(a);
+  const y = nameTokens(b);
+  if (x.length === 0 || y.length === 0) return false;
+  const [small, large] = x.length <= y.length ? [x, y] : [y, x];
+  if (small.length >= 2 && small.every((w) => large.includes(w))) return true;
+  const lastX = x[x.length - 1];
+  const lastY = y[y.length - 1];
+  if (lastX === lastY && x[0][0] === y[0][0]) return true;
+  if (x[0] === y[0] && lastX.length >= 4 && lastY.length >= 4 && slipApart(lastX, lastY)) return true;
+  return Math.min(ka.length, kb.length) >= 8 && editDistance(ka, kb) <= 2;
+}
+
+/** "S. Lewis", "A. dawson", "S.Lewis": a stat sheet's initial-and-last-name, which identifies nobody. */
 export function isShortName(name: string): boolean {
-  return /^\p{L}\.\s/u.test(name);
+  return /^\p{L}\.\s*\p{L}/u.test(name);
 }
 
 /** The graduation year of a player in `grade` during `season`: in "26-27" a senior is class of 2027. */
@@ -156,7 +197,7 @@ export interface Sighting {
   careerProfileIds?: Record<string, string>;
   /** `nameKey`s the row can be matched by. Empty when its only name is a short one. */
   nameKeys: string[];
-  /** The roster's own name parts, for the suggestion rule. */
+  /** The roster's own name parts (kept for callers; the resolver reads the observations' names). */
   firstName?: string | null;
   lastName?: string | null;
   observations: Observation[];
@@ -196,13 +237,14 @@ function inPrecedence(observations: readonly Observation[], level: PlayerLevel):
     .map((x) => x.o);
 }
 
-const POSITION_WORDS: Readonly<Record<string, string>> = {
-  goalkeeper: 'G', goalie: 'G', keeper: 'G', goal: 'G', gk: 'G', pg: 'G', sg: 'G', guard: 'G',
-  forward: 'F', attack: 'F', attacker: 'F', striker: 'F', st: 'F', cf: 'F', sf: 'F', pf: 'F', wing: 'F',
-  midfield: 'M', midfielder: 'M', mid: 'M', cm: 'M', dm: 'M', am: 'M',
-  defense: 'D', defence: 'D', defender: 'D', back: 'D', fullback: 'D', sweeper: 'D', cb: 'D', lb: 'D', rb: 'D', fb: 'D',
-  center: 'C', centre: 'C',
-};
+/** What a position word means, by what it contains: the first match wins. */
+const POSITION_RULES: ReadonlyArray<[RegExp, string]> = [
+  [/keep|goal|^gk$|^g$|guard|^pg$|^sg$/, 'G'],
+  [/mid|^m$|^mf$|^cm$|^dm$|^am$|^cam$|^cdm$/, 'M'],
+  [/def|back|sweep|^d$|^cb$|^lb$|^rb$|^fb$/, 'D'],
+  [/forw|attack|strik|wing|^f$|^st$|^cf$|^sf$|^pf$|^lw$|^rw$|^w$|^a$/, 'F'],
+  [/^cent(er|re)$|^c$/, 'C'],
+];
 
 /** "Midfield/Defense" → {M, D}; "F, M" → {F, M}: what two sources' position words are compared as. */
 export function positionCodes(positions: readonly string[]): Set<string> {
@@ -211,7 +253,7 @@ export function positionCodes(positions: readonly string[]): Set<string> {
     for (const part of p.split(/[/,&]|\bor\b|\band\b/i)) {
       const w = part.trim().toLowerCase();
       if (!w) continue;
-      out.add(POSITION_WORDS[w] ?? (w.length <= 2 ? w.toUpperCase() : w[0].toUpperCase()));
+      out.add(POSITION_RULES.find(([rule]) => rule.test(w))?.[1] ?? w.toUpperCase());
     }
   }
   return out;
@@ -252,13 +294,12 @@ function resolveStint(
     conflicts.push(c);
   };
   for (const o of observations) {
-    const forced = o.rejected === true;
-    if (o.grade !== undefined && (forced || o.grade !== grade)) add('grade', grade === null ? null : String(grade), String(o.grade), o);
-    if (o.jersey !== undefined && (forced || o.jersey !== jersey)) add('jersey', jersey, o.jersey, o);
-    if (o.height !== undefined && (forced || o.height !== height)) add('height', height, o.height, o);
-    if (o.positions !== undefined && (forced || positionsDisagree(o.positions, positions))) {
-      add('positions', positions.length ? positions.join(', ') : null, o.positions.join(', '), o);
-    }
+    if (o.grade !== undefined && o.grade !== grade) add('grade', grade === null ? null : String(grade), String(o.grade), o);
+    if (o.jersey !== undefined && o.jersey !== jersey) add('jersey', jersey, o.jersey, o);
+    if (o.height !== undefined && o.height !== height) add('height', height, o.height, o);
+    // A rejected statement is a conflict whenever it is not word for word what the stint shows.
+    const differs = o.rejected === true ? o.positions?.join(', ') !== positions.join(', ') : o.positions !== undefined && positionsDisagree(o.positions, positions);
+    if (o.positions !== undefined && differs) add('positions', positions.length ? positions.join(', ') : null, o.positions.join(', '), o);
   }
   return {
     ...key,
@@ -308,9 +349,30 @@ function classClaims(stints: readonly Stint[]): ClassClaim[] {
   return claims;
 }
 
+/**
+ * The graduation year most of a player's sources agree on. Each (season, sport, source) counts
+ * once, so a roster page and its overlay are two voices and two rows of one page are one. A tie
+ * goes to the latest season's best source. One stale roster (a coach who copied last year's grades
+ * into this year's rows) is thus outvoted by last year's stat sheet and all-league list.
+ */
+function resolveClassOf(claims: readonly ClassClaim[]): number | null {
+  const voices = new Map<number, Set<string>>();
+  for (const c of claims) {
+    if (c.rejected) continue;
+    const who = `${c.stint.season} ${c.stint.sport} ${c.o.src} ${c.o.kind ?? ''}`;
+    voices.set(c.classOf, (voices.get(c.classOf) ?? new Set()).add(who));
+  }
+  let best: number | null = null;
+  for (const c of claims) {
+    if (c.rejected) continue;
+    if (best === null || (voices.get(c.classOf) as Set<string>).size > (voices.get(best) as Set<string>).size) best = c.classOf;
+  }
+  return best;
+}
+
 // ---------------------------------------------------------------- the build
 
-/** Union-find over sighting indices, keeping each cluster's members. */
+/** Union-find over row indices, keeping each cluster's members. */
 class Clusters {
   private readonly parent: number[];
   /** root → its members, in index order. */
@@ -325,7 +387,7 @@ class Clusters {
     while (this.parent[i] !== r) [i, this.parent[i]] = [this.parent[i], r];
     return r;
   }
-  /** Joins two clusters; the smaller index stays the root, so the result does not depend on call order. */
+  /** Joins two clusters; the smaller index stays the root. */
   union(a: number, b: number): void {
     const x = this.find(a);
     const y = this.find(b);
@@ -338,9 +400,11 @@ class Clusters {
   }
 }
 
+const hashId = (key: string, n: number): string => `p${createHash('sha256').update(n === 0 ? key : `${key}#${n}`).digest('hex').slice(0, 10)}`;
+
 function mintId(key: string, taken: ReadonlySet<string>): string {
   for (let n = 0; ; n += 1) {
-    const id = `p${createHash('sha256').update(n === 0 ? key : `${key}#${n}`).digest('hex').slice(0, 10)}`;
+    const id = hashId(key, n);
     if (!taken.has(id)) return id;
   }
 }
@@ -351,12 +415,25 @@ function compareIdentifiers(a: PlayerIdentifier, b: PlayerIdentifier): number {
   return byText(identifierKey(a), identifierKey(b));
 }
 
+/** A sighting as the build works on it. */
+interface Row extends Sighting {
+  /** The previous player a carried stint belonged to. */
+  prev?: string;
+  /** True when a person's `sameAs` decided who this row is: no rule second-guesses it. */
+  curated?: boolean;
+  /** Keys the row answered to before curation or the career guard changed them: only for keeping an id. */
+  formerKeys: string[];
+}
+
+const ROSTER_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'school-jv-roster']);
+
 export function buildRegistry(input: BuildInput): PlayersFile {
   const { previous, identity } = input;
   const builtPairs = new Set(input.built.map((b) => pairKey(b.sport, b.season)));
   if (builtPairs.size !== input.built.length) throw new Error('registry: a (sport, season) pair is listed twice under built');
   /** pair → the sources read afresh for it; absent for a pair rebuilt in full. */
   const toppedUp = new Map(input.built.flatMap((b) => (b.sources ? [[pairKey(b.sport, b.season), new Set(b.sources)] as const] : [])));
+  const fullyBuilt = (sport: string, season: string) => builtPairs.has(pairKey(sport, season)) && !toppedUp.has(pairKey(sport, season));
   const distinct = new Set(
     identity.distinct.flatMap((d) => [`${d.careerIds[0]}|${d.careerIds[1]}`, `${d.careerIds[1]}|${d.careerIds[0]}`]),
   );
@@ -371,7 +448,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   }
 
   // ---- 0. what the previous registry holds for the pairs this build does not rebuild
-  const carried: Sighting[] = [];
+  const carried: Row[] = [];
   for (const p of previous?.players ?? []) {
     const careers = p.identifiers.flatMap((i) => (i.kind === 'maxpreps-career' ? [i] : []));
     const names = p.identifiers.flatMap((i) => (i.kind === 'name' ? [i] : []));
@@ -395,34 +472,55 @@ export function buildRegistry(input: BuildInput): PlayersFile {
         careerProfileIds: Object.fromEntries(careers.flatMap((c) => (c.careerProfileId ? [[c.careerId, c.careerProfileId]] : []))),
         nameKeys: [...new Set([...own, ...spelled])],
         observations,
+        prev: p.id,
+        formerKeys: [],
       });
     }
   }
 
-  // ---- 1. curation: a name a person has tied to a career, or to another name
+  // ---- 1. curation, then one fixed order: nothing below depends on the order rows arrived in
   const sameAs = new Map(identity.sameAs.map((e) => [`${e.sport} ${e.team} ${nameKey(e.name)}`, e]));
-  const all: Sighting[] = [...carried, ...input.sightings].map((s) => {
-    if (s.careerIds.length > 0) return s;
-    const hit = s.nameKeys.map((k) => sameAs.get(`${s.sport} ${s.team} ${k}`)).find((e) => e !== undefined);
-    if (!hit) return s;
-    return hit.careerId !== undefined ? { ...s, careerIds: [hit.careerId] } : { ...s, nameKeys: [nameKey(hit.isName as string)] };
-  });
+  const all: Row[] = [...carried, ...input.sightings.map((s): Row => ({ ...s, formerKeys: [] }))]
+    .map((s): Row => ({ ...s, nameKeys: [...new Set(s.nameKeys.filter((k) => k !== ''))].sort(), careerIds: [...new Set(s.careerIds)].sort() }))
+    // A row with neither an id nor a usable name (a name with no Latin letter) names nobody.
+    .filter((s) => s.careerIds.length > 0 || s.nameKeys.length > 0)
+    .map((s): Row => {
+      if (s.careerIds.length > 0) return s;
+      const hit = s.nameKeys.map((k) => sameAs.get(`${s.sport} ${s.team} ${k}`)).find((e) => e !== undefined);
+      if (!hit) return s;
+      const formerKeys = s.nameKeys.map((k) => `name:${s.sport}:${s.team}:${k}`);
+      return hit.careerId !== undefined
+        ? { ...s, careerIds: [hit.careerId], curated: true, formerKeys }
+        : { ...s, nameKeys: [nameKey(hit.isName as string)], curated: true, formerKeys };
+    });
+  const orderKey = (s: Row) =>
+    [s.sport, s.season, s.team, PLAYER_LEVELS.indexOf(s.level), s.careerIds.join(','), s.nameKeys.join(','), JSON.stringify(s.observations), s.prev ?? ''].join('\u0001');
+  all.sort((a, b) => byText(orderKey(a), orderKey(b)));
+  const knownCareers = new Set(all.flatMap((s) => (s.curated ? [] : s.careerIds)));
+  for (const e of identity.sameAs) {
+    if (e.careerId !== undefined && !knownCareers.has(e.careerId)) {
+      throw new Error(`registry: data/player-identity.json sameAs ties "${e.name}" (${e.team}) to MaxPreps career ${e.careerId}, which no source lists`);
+    }
+  }
 
   // ---- 2. one career id, one player — unless the id is carrying two people
-  type PendingReview = Omit<ReviewItem, 'players'> & { sightings: number[] };
+  type PendingReview = Omit<ReviewItem, 'players' | 'seasons'> & { rows: number[] };
   const reviews: PendingReview[] = [];
   const fullNames = (s: Sighting): string[] => [...new Set(s.observations.flatMap((o) => (o.name && !isShortName(o.name) ? [o.name] : [])))];
+  const spelling = (i: number): string => fullNames(all[i])[0] ?? all[i].observations.find((o) => o.name)?.name ?? '?';
   const withCareer = new Map<string, number[]>();
   all.forEach((s, i) => {
     for (const id of s.careerIds) withCareer.set(id, [...(withCareer.get(id) ?? []), i]);
   });
-  /** Rows taken off a career id: index → the id they no longer carry. */
-  const takenOff = new Map<number, string>();
-  /** Named rows a career's unnamed rows (a stat sheet's short names) go with: careerId → group → indices. */
+  /** Rows taken off career ids: index → the ids they no longer carry. */
+  const takenOff = new Map<number, Set<string>>();
+  const takeOff = (i: number, careerId: string) => takenOff.set(i, (takenOff.get(i) ?? new Set()).add(careerId));
+  /** careerId → its rows by person, the id's keeper first. */
   const groupsOf = new Map<string, number[][]>();
   for (const careerId of [...withCareer.keys()].sort()) {
     const indices = withCareer.get(careerId) as number[];
-    const namedRows = indices.filter((i) => fullNames(all[i]).length > 0);
+    // What a person decided is not second-guessed: a curated row goes with the id's keeper.
+    const namedRows = indices.filter((i) => !all[i].curated && fullNames(all[i]).length > 0);
     // Rows whose names could be one person's are one group.
     const groups: number[][] = [];
     for (const i of namedRows) {
@@ -435,44 +533,47 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     // MaxPreps' record under this id is whoever it lists latest; on a tie, the varsity roster's row.
     const latest = (g: number[]) => g.map((i) => all[i].season).sort().at(-1) as string;
     const onVarsityPage = (g: number[]) => g.some((i) => all[i].observations.some((o) => o.src === 'maxpreps-roster'));
-    const label = (g: number[]) => fullNames(all[g[0]])[0];
+    const label = (g: number[]) => g.flatMap((i) => fullNames(all[i])).sort((a, b) => byText(nameKey(a), nameKey(b)) || byText(a, b))[0];
     groups.sort((a, b) => byText(latest(b), latest(a)) || Number(onVarsityPage(b)) - Number(onVarsityPage(a)) || byText(nameKey(label(a)), nameKey(label(b))));
     groupsOf.set(careerId, groups);
-    for (const g of groups.slice(1)) for (const i of g) takenOff.set(i, careerId);
+    for (const g of groups.slice(1)) for (const i of g) takeOff(i, careerId);
     const first = all[groups[0][0]];
     reviews.push({
       kind: 'career-two-names',
       sport: first.sport,
       team: first.team,
       names: groups.map(label),
-      sightings: groups.map((g) => g[0]),
+      rows: groups.map((g) => g[0]),
       note:
         `MaxPreps career ${careerId} is listed as ${groups.map((g) => `${label(g)} (${[...new Set(g.map((i) => all[i].season))].sort().join(', ')})`).join(' and as ')}, ` +
         `names that share nothing: read as ${groups.length} players, and the career id stays with ${label(groups[0])}. A coach who retypes a name over last year's row leaves this behind.`,
     });
   }
-  // A row with only a short name goes with the named rows of its own season, else with the id's keeper.
+  // A row with only a short name goes with the named rows of its own season, else with the id's
+  // keeper; a curated row goes with the keeper.
   for (const [careerId, groups] of groupsOf) {
     for (const i of withCareer.get(careerId) as number[]) {
-      if (fullNames(all[i]).length > 0) continue;
+      if (groups.some((g) => g.includes(i))) continue;
       const s = all[i];
       const sameSeason = groups.filter((g) => g.some((j) => all[j].sport === s.sport && all[j].season === s.season));
       const short = s.observations.find((o) => o.name)?.name;
       const lastWord = short ? nameTokens(short).at(-1) : undefined;
       const byLast = sameSeason.filter((g) => lastWord !== undefined && g.some((j) => fullNames(all[j]).some((n) => nameTokens(n).includes(lastWord))));
-      const home = sameSeason.length === 1 ? sameSeason[0] : byLast.length === 1 ? byLast[0] : groups[0];
-      if (home !== groups[0]) takenOff.set(i, careerId);
+      const home = s.curated ? groups[0] : sameSeason.length === 1 ? sameSeason[0] : byLast.length === 1 ? byLast[0] : groups[0];
+      if (home !== groups[0]) takeOff(i, careerId);
       home.push(i);
     }
   }
-  for (const [i, careerId] of takenOff) {
+  for (const [i, ids] of takenOff) {
     const s = all[i];
     all[i] = {
       ...s,
-      careerIds: s.careerIds.filter((id) => id !== careerId),
-      careerProfileIds: Object.fromEntries(Object.entries(s.careerProfileIds ?? {}).filter(([id]) => id !== careerId)),
-      // A short-name row has no name of its own to be found by: it borrows its group's.
-      nameKeys: s.nameKeys,
+      careerIds: s.careerIds.filter((id) => !ids.has(id)),
+      careerProfileIds: Object.fromEntries(Object.entries(s.careerProfileIds ?? {}).filter(([id]) => !ids.has(id))),
+      // Known from here on by the names it carries.
+      nameKeys: [...new Set([...s.nameKeys, ...fullNames(s).map(nameKey)].filter((k) => k !== ''))].sort(),
+      // …and still answering, for its id's sake, to the career it was read under.
+      formerKeys: [...s.formerKeys, ...[...ids].map((id) => `mp:${id}`)],
     };
   }
 
@@ -485,11 +586,20 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       else clusters.union(first, i);
     }
   });
-  // The rows taken off an id stay together, group by group.
+  // The rows taken off an id stay together, person by person.
   for (const groups of groupsOf.values()) for (const g of groups.slice(1)) for (const i of g.slice(1)) clusters.union(g[0], i);
+  // A previous player known by name alone stays one player, whatever teams her stints were on.
+  const nameOnlyBefore = new Set((previous?.players ?? []).filter((p) => p.identifiers.every((i) => i.kind === 'name')).map((p) => p.id));
+  const firstOfPrev = new Map<string, number>();
+  all.forEach((s, i) => {
+    if (s.prev === undefined || !nameOnlyBefore.has(s.prev) || s.careerIds.length > 0) return;
+    const first = firstOfPrev.get(s.prev);
+    if (first === undefined) firstOfPrev.set(s.prev, i);
+    else clusters.union(first, i);
+  });
 
   const members = clusters.members;
-  /** The class years a set of sightings implies, rejected statements left out. */
+  /** The class years a set of rows implies, rejected statements left out. */
   const classYears = (indices: readonly number[]): Set<number> => {
     const out = new Set<number>();
     for (const i of indices) {
@@ -501,15 +611,15 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     }
     return out;
   };
-  /** The smallest gap between two sets of class years; 0 when either gives none. */
+  /**
+   * The widest gap between two sets of class years; 0 when either gives none. Widest, not
+   * narrowest: three careers a year apart each are not one player spanning three classes.
+   */
   const classGap = (a: ReadonlySet<number>, b: ReadonlySet<number>): number => {
-    if (a.size === 0 || b.size === 0) return 0;
-    let gap = Number.POSITIVE_INFINITY;
-    for (const x of a) for (const y of b) gap = Math.min(gap, Math.abs(x - y));
+    let gap = 0;
+    for (const x of a) for (const y of b) gap = Math.max(gap, Math.abs(x - y));
     return gap;
   };
-
-  const spelling = (i: number): string => all[i].observations.find((o) => o.name && !isShortName(o.name))?.name ?? all[i].observations.find((o) => o.name)?.name ?? '?';
 
   // ---- 3. names, one team at a time
   const byTeamName = new Map<string, number[]>();
@@ -526,35 +636,46 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const careersOf = (root: number) => [...new Set((members.get(root) as number[]).flatMap((i) => all[i].careerIds))].sort();
     const careerRoots = () => [...new Set(indices.map((i) => clusters.find(i)))].filter(hasCareer).sort((a, b) => a - b);
 
-    // Two careers under one name on one team.
-    const roots = careerRoots();
-    for (const other of roots.slice(1)) {
-      const base = clusters.find(roots[0]);
-      if (clusters.find(other) === base) continue;
-      const a = careersOf(base);
-      const b = careersOf(other);
-      if (a.some((x) => b.some((y) => distinct.has(`${x}|${y}`)))) continue;
-      const gap = classGap(classYears(members.get(base) as number[]), classYears(members.get(other) as number[]));
-      const merged = gap <= 1;
-      reviews.push({
-        kind: 'same-name-two-careers',
-        sport,
-        team,
-        names: [...new Set([spelling(roots[0]), spelling(other)])],
-        sightings: [roots[0], other],
-        note: merged
-          ? `MaxPreps careers ${a.join(', ')} and ${b.join(', ')} share this name on this team and their class years do not contradict: treated as one player.`
-          : `MaxPreps careers ${a.join(', ')} and ${b.join(', ')} share this name on this team, but their class years are ${gap} apart: kept as two players.`,
-      });
-      if (merged) clusters.union(base, other);
+    // Two careers under one name on one team: each joins the first earlier one it does not contradict.
+    const settled: number[] = [];
+    for (const start of careerRoots()) {
+      const root = clusters.find(start);
+      if (settled.some((r) => clusters.find(r) === root)) continue;
+      let joined = false;
+      for (const earlier of settled) {
+        const base = clusters.find(earlier);
+        const a = careersOf(base);
+        const b = careersOf(root);
+        if (a.some((x) => b.some((y) => distinct.has(`${x}|${y}`)))) continue;
+        const gap = classGap(classYears(members.get(base) as number[]), classYears(members.get(root) as number[]));
+        const merged = gap <= 1;
+        reviews.push({
+          kind: 'same-name-two-careers',
+          sport,
+          team,
+          names: [...new Set([spelling(earlier), spelling(start)])],
+          rows: [earlier, start],
+          note: merged
+            ? `MaxPreps careers ${a.join(', ')} and ${b.join(', ')} are listed under one name on this team (one of the spellings may be the overlay's) and their class years do not contradict: treated as one player.`
+            : `MaxPreps careers ${a.join(', ')} and ${b.join(', ')} are listed under one name on this team, but their class years are ${gap} apart: kept as two players.`,
+        });
+        if (merged) {
+          clusters.union(base, root);
+          joined = true;
+          break;
+        }
+      }
+      if (!joined) settled.push(start);
     }
 
     // Rows with no id.
     const loose = indices.filter((i) => !hasCareer(clusters.find(i)));
     for (const i of loose) {
-      const own = classYears([i]);
+      if (hasCareer(clusters.find(i))) continue;
+      const own = classYears(members.get(clusters.find(i)) as number[]);
       const candidates = careerRoots();
-      const fits = candidates.filter((r) => classGap(classYears(members.get(r) as number[]), own) <= 1);
+      // A row a person tied to this name is not held to the class years.
+      const fits = all[i].curated ? candidates : candidates.filter((r) => classGap(classYears(members.get(r) as number[]), own) <= 1);
       if (fits.length === 1) {
         clusters.union(fits[0], i);
       } else if (candidates.length === 1) {
@@ -563,7 +684,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
           sport,
           team,
           names: [spelling(i)],
-          sightings: [i, candidates[0]],
+          rows: [i, candidates[0]],
           note: `A ${all[i].observations[0].src} row of ${all[i].season} with this name gives a class year two or more years from this team's player of the same name: kept apart.`,
         });
       } else if (candidates.length > 1) {
@@ -572,7 +693,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
           sport,
           team,
           names: [spelling(i)],
-          sightings: [i, ...candidates],
+          rows: [i, ...candidates],
           note: `A ${all[i].observations[0].src} row of ${all[i].season} with this name fits ${fits.length} of this team's ${candidates.length} players of that name: not joined to any.`,
         });
       }
@@ -580,27 +701,45 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     // What is left under this name with no id is one player known by name.
     const left = indices.filter((i) => !hasCareer(clusters.find(i)));
     for (const i of left.slice(1)) clusters.union(left[0], i);
+    if (left.length > 1) {
+      const years = [...classYears(members.get(clusters.find(left[0])) as number[])];
+      if (years.length > 0 && Math.max(...years) - Math.min(...years) >= 2) {
+        reviews.push({
+          kind: 'name-class-mismatch',
+          sport,
+          team,
+          names: [spelling(left[0])],
+          rows: [left[0]],
+          note: `Rows with this name and no id give class years ${Math.min(...years)} to ${Math.max(...years)}: filed as one player known by name, who may be two.`,
+        });
+      }
+    }
   }
 
   // ---- 4. players
   interface Draft {
-    root: number;
+    root: number | null;
     identifiers: PlayerIdentifier[];
-    /** Every key the cluster answers to, a name key included even once a career is known. */
-    keys: string[];
+    /** The identifiers' keys: what the player is known by. */
+    primary: string[];
+    /** Every other key its rows answer or answered to: only for keeping an id. */
+    secondary: string[];
+    /** Every full spelling its rows carry. */
+    spellings: string[];
     stints: Stint[];
   }
   const drafts: Draft[] = [];
   for (const [root, indices] of [...members]) {
     const careerIds = [...new Set(indices.flatMap((i) => all[i].careerIds))].sort();
-    const profileOf = (id: string) => indices.map((i) => all[i].careerProfileIds?.[id]).find((v) => v !== undefined) ?? null;
+    const profileOf = (id: string) => indices.flatMap((i) => (all[i].careerProfileIds?.[id] ? [all[i].careerProfileIds?.[id] as string] : [])).sort()[0] ?? null;
     const careers: PlayerIdentifier[] = careerIds.map((careerId) => ({ kind: 'maxpreps-career', careerId, careerProfileId: profileOf(careerId) }));
     const nameIds = new Map<string, PlayerIdentifier>();
+    const everyName = new Set<string>();
     for (const i of indices) {
-      if (all[i].careerIds.length > 0) continue;
       for (const k of all[i].nameKeys) {
         const id: PlayerIdentifier = { kind: 'name', sport: all[i].sport, team: all[i].team, name: k };
-        nameIds.set(identifierKey(id), id);
+        everyName.add(identifierKey(id));
+        if (all[i].careerIds.length === 0) nameIds.set(identifierKey(id), id);
       }
     }
     const names = [...nameIds.values()].sort(compareIdentifiers);
@@ -608,20 +747,25 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     if (identifiers.length === 0) {
       throw new Error(`registry: ${spelling(indices[0])} (${all[indices[0]].team}) has neither a career id nor a name to be known by`);
     }
+    const primary = identifiers.map(identifierKey);
 
-    // A soft level (a stat sheet is filed under varsity) gives way to where the player's own rows put
-    // her on that team that season: the highest squad she is really listed on.
-    const hard = new Set(indices.filter((i) => !all[i].softLevel).map((i) => `${pairKey(all[i].sport, all[i].season)} ${all[i].team} ${all[i].level}`));
+    // A soft level (a stat sheet is filed under varsity) gives way to the squad a roster lists the
+    // player on that team that season: the highest one, when her own level's roster does not.
+    const listed = new Set(
+      indices
+        .filter((i) => !all[i].softLevel && all[i].observations.some((o) => ROSTER_SOURCES.has(o.src)))
+        .map((i) => `${pairKey(all[i].sport, all[i].season)} ${all[i].team} ${all[i].level}`),
+    );
     const levelOf = (s: Sighting): PlayerLevel => {
       if (!s.softLevel) return s.level;
-      const at = (level: PlayerLevel) => hard.has(`${pairKey(s.sport, s.season)} ${s.team} ${level}`);
+      const at = (level: PlayerLevel) => listed.has(`${pairKey(s.sport, s.season)} ${s.team} ${level}`);
       return at(s.level) ? s.level : (PLAYER_LEVELS.find(at) ?? s.level);
     };
     const grouped = new Map<string, { key: Parameters<typeof resolveStint>[0]; observations: Observation[] }>();
     for (const i of indices) {
       const s = all[i];
       const key = { season: s.season, sport: s.sport, team: s.team, level: levelOf(s) };
-      const k = `${key.season} ${key.sport} ${key.team} ${key.level}`;
+      const k = `${key.season} ${key.sport} ${key.team} ${PLAYER_LEVELS.indexOf(key.level)}`;
       const entry = grouped.get(k) ?? { key, observations: [] };
       entry.observations.push(...s.observations);
       grouped.set(k, entry);
@@ -630,42 +774,106 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       const { key, observations } = grouped.get(k) as { key: Parameters<typeof resolveStint>[0]; observations: Observation[] };
       return resolveStint(key, observations);
     });
-    drafts.push({ root, identifiers, keys: [...careers, ...names].map(identifierKey), stints });
+    drafts.push({
+      root,
+      identifiers,
+      primary,
+      secondary: [...new Set([...everyName, ...indices.flatMap((i) => all[i].formerKeys)])].filter((k) => !primary.includes(k)).sort(),
+      spellings: [...new Set(indices.flatMap((i) => fullNames(all[i])))],
+      stints,
+    });
   }
   drafts.sort((a, b) => compareIdentifiers(a.identifiers[0], b.identifiers[0]));
 
-  // ---- 5. ids: an id stays with the identifiers it had
-  const prevOwner = new Map<string, Player>();
-  for (const p of previous?.players ?? []) for (const i of p.identifiers) prevOwner.set(identifierKey(i), p);
-  const claims = new Map<string, Draft[]>();
-  for (const d of drafts) {
-    for (const p of new Set(d.keys.flatMap((k) => (prevOwner.has(k) ? [prevOwner.get(k) as Player] : [])))) {
-      claims.set(p.id, [...(claims.get(p.id) ?? []), d]);
-    }
+  // ---- 5. ids: an id stays with the person it named
+  const prevPlayers = previous?.players ?? [];
+  const owner = new Map<string, Draft>();
+  for (const d of drafts) for (const k of d.primary) owner.set(k, d);
+  const couldBe = (d: Draft, p: Player) => d.spellings.length === 0 || d.spellings.some((a) => p.names.some((b) => namesCompatible(a, b)));
+  const sharesName = (d: Draft, p: Player) => d.spellings.some((a) => p.names.some((b) => nameKey(a) === nameKey(b)));
+  /** Each previous player → the one draft that is still her. */
+  const heirOf = new Map<string, Draft>();
+  for (const p of prevPlayers) {
+    const keys = p.identifiers.map(identifierKey);
+    const first = identifierKey([...p.identifiers].sort(compareIdentifiers)[0]);
+    const claimants = drafts.filter(
+      (d) =>
+        (d.primary.some((k) => keys.includes(k)) ||
+          // A name the draft only used to answer to counts while nobody else is known by it; a career
+          // id its rows were taken off always does (the id's new holder is somebody else by definition).
+          d.secondary.some((k) => keys.includes(k) && (k.startsWith('mp:') || owner.get(k) === undefined || owner.get(k) === d))) &&
+        // An id never passes to a row that could not be the same person (a retyped roster slot).
+        couldBe(d, p),
+    );
+    if (claimants.length === 0) continue;
+    const rank = (d: Draft) => [sharesName(d, p) ? 0 : 1, d.primary.includes(first) ? 0 : 1, d.primary.some((k) => keys.includes(k)) ? 0 : 1];
+    claimants.sort((a, b) => {
+      const [x, y] = [rank(a), rank(b)];
+      return x[0] - y[0] || x[1] - y[1] || x[2] - y[2] || b.stints.length - a.stints.length || compareIdentifiers(a.identifiers[0], b.identifiers[0]);
+    });
+    heirOf.set(p.id, claimants[0]);
+  }
+  const inherited = new Map<Draft, Player[]>();
+  for (const p of prevPlayers) {
+    const d = heirOf.get(p.id);
+    if (d) inherited.set(d, [...(inherited.get(d) ?? []), p]);
   }
   const idOf = new Map<Draft, string>();
   const formerOf = new Map<Draft, Set<string>>();
-  const taken = new Set<string>();
-  // A previous player split across clusters goes to the one holding her first identifier.
-  const prevById = new Map((previous?.players ?? []).map((p) => [p.id, p]));
-  for (const prevId of [...claims.keys()].sort()) {
-    const p = prevById.get(prevId) as Player;
-    const claimants = claims.get(prevId) as Draft[];
-    const first = identifierKey([...p.identifiers].sort(compareIdentifiers)[0]);
-    const winner = claimants.find((d) => d.keys.includes(first)) ?? claimants[0];
-    const former = formerOf.get(winner) ?? new Set<string>();
-    formerOf.set(winner, former);
-    if (!idOf.has(winner)) idOf.set(winner, prevId);
-    else former.add(prevId);
-    for (const old of p.formerIds) former.add(old);
-    taken.add(prevId);
-    for (const old of p.formerIds) taken.add(old);
+  const taken = new Set(prevPlayers.flatMap((p) => [p.id, ...p.formerIds]));
+  for (const [d, ps] of inherited) {
+    // The record with the most behind it keeps its id; the others' become former ids.
+    const [keep, ...rest] = [...ps].sort(
+      (a, b) => b.stints.length - a.stints.length || Number(b.identifiers[0].kind === 'maxpreps-career') - Number(a.identifiers[0].kind === 'maxpreps-career') || byText(a.id, b.id),
+    );
+    idOf.set(d, keep.id);
+    formerOf.set(d, new Set([...keep.formerIds, ...rest.flatMap((p) => [p.id, ...p.formerIds])]));
   }
   for (const d of drafts) {
     if (idOf.has(d)) continue;
-    const id = mintId(identifierKey(d.identifiers[0]), taken);
+    // A player split back out of a merged record takes back the id she was founded under.
+    const natural = hashId(d.primary[0], 0);
+    const holder = [...formerOf].find(([, former]) => former.has(natural));
+    const splitFrom = prevPlayers.some((p) => p.formerIds.includes(natural) && p.identifiers.some((i) => d.primary.includes(identifierKey(i))));
+    if (holder && splitFrom) {
+      holder[1].delete(natural);
+      idOf.set(d, natural);
+      continue;
+    }
+    const id = mintId(d.primary[0], taken);
     taken.add(id);
     idOf.set(d, id);
+  }
+
+  // ---- 5b. a season being rebuilt does not forget who was in it
+  // A stint a previous build held for a pair this build reads in full, and that no source lists any
+  // more, is kept as it was and marked `gone`. A player with nothing else left is kept whole.
+  const stintKey = (s: Stint) => `${s.season} ${s.sport} ${s.team} ${s.level}`;
+  for (const p of prevPlayers) {
+    const lost = p.stints.filter((s) => fullyBuilt(s.sport, s.season));
+    if (lost.length === 0) continue;
+    const heir = heirOf.get(p.id);
+    if (heir) {
+      const has = new Set(heir.stints.map(stintKey));
+      for (const s of lost) if (!has.has(stintKey(s))) heir.stints.push({ ...s, gone: true });
+      heir.stints.sort((a, b) => byText(a.season, b.season) || byText(a.sport, b.sport) || byText(a.team, b.team) || byLevel(a.level, b.level));
+      continue;
+    }
+    // Nobody is her any more. She comes back only if her identifiers are still free.
+    const primary = p.identifiers.map(identifierKey);
+    if (primary.some((k) => owner.has(k))) continue;
+    const ghost: Draft = {
+      root: null,
+      identifiers: p.identifiers,
+      primary,
+      secondary: [],
+      spellings: p.names,
+      stints: lost.map((s) => ({ ...s, gone: true as const })),
+    };
+    for (const k of primary) owner.set(k, ghost);
+    drafts.push(ghost);
+    idOf.set(ghost, p.id);
+    formerOf.set(ghost, new Set(p.formerIds));
   }
 
   // ---- 6. the records
@@ -673,8 +881,9 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const ordered = [...d.stints].sort(
       (a, b) => byText(b.season, a.season) || byLevel(a.level, b.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
     );
-    const spelledBy = (s: Stint) => s.observations.find((o) => o.name === s.name)?.src;
-    const name = (ordered.find((s) => spelledBy(s) !== 'maxpreps-stats') ?? ordered[0]).name;
+    // A stint's name is a stat sheet's only when no other source of the stint spells one.
+    const fromSheetOnly = (s: Stint) => s.observations.every((o) => o.name === undefined || o.src === 'maxpreps-stats');
+    const name = (ordered.find((s) => !fromSheetOnly(s)) ?? ordered[0]).name;
     const names = [name];
     const keys = new Set([nameKey(name)]);
     const offer = (candidate: string, onlyIfNewKey: boolean) => {
@@ -687,11 +896,11 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     // A stat sheet's rebuilt or abbreviated name is listed only when no other source spells that name.
     for (const s of ordered) for (const o of s.observations) if (o.name && o.src === 'maxpreps-stats' && !isShortName(o.name)) offer(o.name, true);
 
-    const all_claims = classClaims(d.stints);
-    const classOf = all_claims.find((c) => !c.rejected)?.classOf ?? null;
+    const claims = classClaims(d.stints);
+    const classOf = resolveClassOf(claims);
     const classOfConflicts: ClassOfConflict[] = [];
     const seen = new Set<string>();
-    for (const c of all_claims) {
+    for (const c of claims) {
       if (c.classOf === classOf) continue;
       const conflict: ClassOfConflict = {
         classOf: c.classOf,
@@ -719,13 +928,35 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       stints: d.stints,
     };
   });
-  const idOfRoot = new Map(drafts.map((d) => [d.root, idOf.get(d) as string]));
-  const idOfSighting = (i: number) => idOfRoot.get(clusters.find(i)) as string;
+  const idOfRoot = new Map(drafts.flatMap((d) => (d.root === null ? [] : [[d.root, idOf.get(d) as string] as const])));
+  const idOfRow = (i: number) => idOfRoot.get(clusters.find(i)) as string;
 
   // ---- 7. what a person should look at
-  const review: ReviewItem[] = reviews.map(({ sightings, ...r }) => ({ ...r, players: [...new Set(sightings.map(idOfSighting))] }));
-  review.push(...possibleMatches(all, members, clusters, idOfSighting, classYears, classGap));
-  review.sort((a, b) => byText(a.kind, b.kind) || byText(a.sport, b.sport) || byText(a.team, b.team) || byText(a.names.join('|'), b.names.join('|')) || byText(a.players.join('|'), b.players.join('|')));
+  const seasonsOf = (ids: readonly string[]) => {
+    const byId = new Map(players.map((p) => [p.id, p]));
+    return [...new Set(ids.flatMap((id) => byId.get(id)?.stints.map((s) => s.season) ?? []))].sort();
+  };
+  const review: ReviewItem[] = reviews.map(({ rows, ...r }) => {
+    const ids = [...new Set(rows.map(idOfRow))];
+    return { ...r, seasons: [...new Set(rows.flatMap((i) => (members.get(clusters.find(i)) as number[]).map((j) => all[j].season)))].sort(), players: ids };
+  });
+  review.push(...lookAlikes(players, seasonsOf));
+  // An item about seasons this build did not read cannot be found again: it is kept, for the players still here.
+  const sameItem = (a: ReviewItem, b: ReviewItem) => a.kind === b.kind && a.sport === b.sport && a.team === b.team && [...a.names].sort().join('|') === [...b.names].sort().join('|');
+  const nowId = new Map(players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p.id] as const)));
+  for (const old of previous?.review ?? []) {
+    if (old.seasons.every((season) => fullyBuilt(old.sport, season))) continue;
+    if (review.some((r) => sameItem(r, old))) continue;
+    const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
+    // Two players since found to be one, or gone: nothing left to decide.
+    if (ids.length !== new Set(old.players).size) continue;
+    review.push({ ...old, players: ids });
+  }
+  review.sort(
+    (a, b) =>
+      byText(a.kind, b.kind) || byText(a.sport, b.sport) || byText(a.team, b.team) || byText(a.names.join('|'), b.names.join('|')) ||
+      byText(a.players.join('|'), b.players.join('|')) || byText(a.note, b.note),
+  );
   const unique = review.filter((r, i) => i === 0 || JSON.stringify(r) !== JSON.stringify(review[i - 1]));
 
   players.sort((a, b) => byText(a.id, b.id));
@@ -746,55 +977,100 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   return checked.data;
 }
 
-/** A player known by name alone whom a nickname or a near spelling ties to exactly one rostered player of the team. */
-function possibleMatches(
-  all: readonly Sighting[],
-  members: ReadonlyMap<number, number[]>,
-  clusters: Clusters,
-  idOfSighting: (i: number) => string,
-  classYears: (indices: readonly number[]) => Set<number>,
-  classGap: (a: ReadonlySet<number>, b: ReadonlySet<number>) => number,
-): ReviewItem[] {
-  /** team → one entry per rostered career cluster, under the roster's own name parts. */
-  const rostered = new Map<string, Array<NoteRosterPlayer & { root: number }>>();
-  all.forEach((s, i) => {
-    if (s.careerIds.length === 0 || !s.firstName || !s.lastName) return;
-    const root = clusters.find(i);
-    const list = rostered.get(teamKey(s)) ?? [];
-    const fullName = s.observations.find((o) => o.name)?.name;
-    if (fullName && !list.some((p) => p.root === root && p.fullName === fullName)) {
-      list.push({ root, athleteId: null, careerId: s.careerIds[0], careerUrl: null, fullName, firstName: s.firstName, lastName: s.lastName, jersey: null });
-    }
-    rostered.set(teamKey(s), list);
-  });
+/** The class years a player's accepted observations imply. */
+function classYearsOf(p: Player): Set<number> {
+  return new Set(classClaims(p.stints).flatMap((c) => (c.rejected ? [] : [c.classOf])));
+}
+
+/**
+ * Pairs of players a person should look at: two players of one team whose names look like one
+ * person's, and one name at one school in two sports. Never joined here.
+ *
+ * A pair one list names side by side (two rows of one roster page, two lines of one stat sheet) is
+ * two people unless they wear the same number there, so those are left out: sisters are not a
+ * question.
+ */
+function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[]): ReviewItem[] {
   const out: ReviewItem[] = [];
-  for (const [root, indices] of members) {
-    if (indices.some((i) => all[i].careerIds.length > 0)) continue;
-    const s = all[indices[0]];
-    const written = s.observations.find((o) => o.name && !isShortName(o.name))?.name;
-    const candidates = rostered.get(teamKey(s));
-    if (!written || !candidates) continue;
-    const hit = resolveName(written, s.team as TeamSlug, candidates, []);
-    if (!hit || hit.via === 'roster') continue;
-    const other = (hit.player as NoteRosterPlayer & { root: number }).root;
-    if (other === root) continue;
-    if (classGap(classYears(indices), classYears(members.get(other) as number[])) > 1) continue;
-    out.push({
-      kind: 'possible-match',
-      sport: s.sport,
-      team: s.team,
-      names: [written, hit.player.fullName],
-      players: [idOfSighting(indices[0]), idOfSighting((members.get(other) as number[])[0])],
-      note: `"${written}" (${s.observations[0].src}, ${s.season}) may be this team's ${hit.player.fullName} (${hit.via}): not joined. If they are one player, say so in data/player-identity.json sameAs.`,
-    });
+  const gap = (a: Player, b: Player) => {
+    let g = 0;
+    for (const x of classYearsOf(a)) for (const y of classYearsOf(b)) g = Math.max(g, Math.abs(x - y));
+    return g;
+  };
+  const careers = (p: Player) => p.identifiers.flatMap((i) => (i.kind === 'maxpreps-career' ? [i.careerId] : []));
+  const lists = (p: Player, sport: string, team: string) =>
+    new Map(p.stints.filter((s) => s.sport === sport && s.team === team).flatMap((s) => s.observations.map((o) => [`${s.season} ${s.level} ${o.src}`, o.jersey] as const)));
+  const fullOf = (p: Player) => p.names.filter((n) => !isShortName(n));
+
+  const byTeam = new Map<string, Player[]>();
+  const bySchoolName = new Map<string, Player[]>();
+  for (const p of players) {
+    for (const t of new Set(p.stints.map((s) => `${s.sport} ${s.team}`))) byTeam.set(t, [...(byTeam.get(t) ?? []), p]);
+    for (const team of new Set(p.stints.map((s) => s.team))) {
+      for (const k of new Set(fullOf(p).map(nameKey))) if (k) bySchoolName.set(`${team} ${k}`, [...(bySchoolName.get(`${team} ${k}`) ?? []), p]);
+    }
+  }
+  for (const t of [...byTeam.keys()].sort()) {
+    const [sport, team] = t.split(' ') as [SportId, string];
+    const roster = byTeam.get(t) as Player[];
+    for (let i = 0; i < roster.length; i += 1) {
+      for (let j = i + 1; j < roster.length; j += 1) {
+        const [a, b] = [roster[i], roster[j]];
+        // One name outright is the name rules' business (they joined it, or listed why not).
+        const keysA = new Set(fullOf(a).map(nameKey));
+        if (fullOf(b).some((y) => keysA.has(nameKey(y)))) continue;
+        const pair = fullOf(a).flatMap((x) => fullOf(b).map((y) => [x, y] as const)).find(([x, y]) => namesLookAlike(x, y));
+        if (!pair || gap(a, b) > 1) continue;
+        const [la, lb] = [lists(a, sport, team), lists(b, sport, team)];
+        const together = [...la.keys()].filter((k) => lb.has(k));
+        const sameNumber = together.some((k) => la.get(k) !== undefined && la.get(k) === lb.get(k));
+        if (together.length > 0 && !sameNumber) continue;
+        const numbers = (p: Player) => new Set(p.stints.filter((s) => s.sport === sport && s.team === team && s.jersey).map((s) => s.jersey as string));
+        const shared = [...numbers(a)].filter((n) => numbers(b).has(n));
+        out.push({
+          kind: 'possible-match',
+          sport,
+          team,
+          seasons: seasonsOf([a.id, b.id]),
+          names: [pair[0], pair[1]],
+          players: [a.id, b.id],
+          note:
+            `"${pair[0]}" (${seasonsOf([a.id]).join(', ')}) and "${pair[1]}" (${seasonsOf([b.id]).join(', ')}) may be one player of this team` +
+            (shared.length ? `; both wear #${shared.sort().join(', #')}` : '') +
+            (careers(a).length && careers(b).length ? '; each has its own MaxPreps career id' : '') +
+            `: not joined. If they are one, say so in data/player-identity.json sameAs.`,
+        });
+      }
+    }
+  }
+  for (const k of [...bySchoolName.keys()].sort()) {
+    const same = bySchoolName.get(k) as Player[];
+    for (let i = 0; i < same.length; i += 1) {
+      for (let j = i + 1; j < same.length; j += 1) {
+        const [a, b] = [same[i], same[j]];
+        const team = k.slice(0, k.indexOf(' '));
+        const sportsA = new Set(a.stints.filter((s) => s.team === team).map((s) => s.sport));
+        const sportsB = new Set(b.stints.filter((s) => s.team === team).map((s) => s.sport));
+        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1) continue;
+        out.push({
+          kind: 'same-name-other-sport',
+          sport: [...sportsA].sort()[0],
+          team,
+          seasons: seasonsOf([a.id, b.id]),
+          names: [...new Set([a.name, b.name])],
+          players: [a.id, b.id],
+          note: `${a.name} (${[...sportsA].sort().join(', ')}) and ${b.name} (${[...sportsB].sort().join(', ')}) share a name at this school and no MaxPreps career id: a name is never joined across sports, so they are two records.`,
+        });
+      }
+    }
   }
   return out;
 }
 
 const NOTES = [
   'One record per person across every sport and season this repository holds. Internal: no page reads this file.',
-  'A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team\'s lists. Rows are joined on a career id, or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match).',
-  'A stint is one player on one team in one season of one sport at one level; its fields are the first of its observations to state them, in the order MaxPreps roster page, overlay, school JV list, stat sheet, all-league list, recruiting profile. Every other statement that differs is listed under conflicts.',
-  'classOf is the graduation year implied by the latest season\'s best source; classOfConflicts lists every statement implying another year.',
+  'A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team\'s lists. Rows are joined on a career id (unless it is listed under names that could not be one person\'s), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match).',
+  'A stint is one player on one team in one season of one sport at one level; its fields are the first of its observations to state them, in the order MaxPreps roster page, overlay, school JV list, stat sheet, all-league list, recruiting profile. Every other statement that differs is listed under conflicts. A stint marked gone is one no source lists any more, kept as an earlier build left it.',
+  'classOf is the graduation year most of the player\'s sources imply (a tie goes to the latest season\'s best source); classOfConflicts lists every statement implying another year.',
   'Stints of a (sport, season) not named under built are carried forward from the previous build as they were. What a person has decided about who is who lives in data/player-identity.json; this file is never edited by hand.',
 ];

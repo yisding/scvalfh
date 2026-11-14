@@ -98,8 +98,8 @@ describe('who is who', () => {
     expect(p.stints.flatMap((s) => s.conflicts)).toEqual([]);
     expect(p.stints.map((s) => `${s.season} ${s.sport} ${s.team} ${s.level} ${s.jersey}`)).toEqual([
       '25-26 field-hockey beta varsity 4',
-      '26-27 field-hockey alpha jv 10',
       '26-27 field-hockey alpha varsity 9',
+      '26-27 field-hockey alpha jv 10',
       '26-27 soccer alpha varsity null',
     ]);
   });
@@ -206,7 +206,7 @@ describe('who is who', () => {
     ]);
     expect(file.players).toHaveLength(2);
     expect(file.review).toHaveLength(1);
-    expect(file.review[0]).toMatchObject({ kind: 'possible-match', names: ['Gabby Moll', 'Gabrielle Moll'] });
+    expect(file.review[0]).toMatchObject({ kind: 'possible-match', names: ['Gabrielle Moll', 'Gabby Moll'], seasons: ['25-26', '26-27'] });
   });
 
   it('sameAs joins what a person has decided, to a career or to another name', () => {
@@ -256,7 +256,7 @@ describe('who is who', () => {
     expect(file.players).toHaveLength(6);
     expect(who('Adriana Yam')).toBe('mp:c1 | 26-27 varsity null');
     expect(who('Ayva Garcia')).toBe('name:field-hockey:alpha:ayvagarcia | 26-27 jv null');
-    expect(who('Cameron Pearce')).toBe('mp:c2 | 26-27 jv null; 26-27 varsity null');
+    expect(who('Cameron Pearce')).toBe('mp:c2 | 26-27 varsity null; 26-27 jv null');
     expect(who('Andrew Duong')).toBe('mp:c3 | 26-27 varsity 21');
     expect(who('Nicolas Finuliar')).toBe('mp:c4 | 25-26 varsity 21; 26-27 varsity 24');
     expect(who('Bodi Anderson')).toBe('name:field-hockey:alpha:bodianderson | 25-26 varsity 24');
@@ -335,7 +335,7 @@ describe('what a stint shows', () => {
       { ...row({ name: 'T. Boone', careerIds: ['c1'], sport: 'basketball' }), softLevel: true, nameKeys: [], observations: [{ src: 'maxpreps-stats', name: 'T. Boone', jersey: '30' }] },
     ]);
     expect(file.players).toHaveLength(1);
-    expect(file.players[0].stints.map((s) => `${s.level} ${s.jersey} ${s.observations.length}`)).toEqual(['freshman 11 1', 'jv 30 2']);
+    expect(file.players[0].stints.map((s) => `${s.level} ${s.jersey} ${s.observations.length}`)).toEqual(['jv 30 2', 'freshman 11 1']);
     expect(file.players[0].stints.flatMap((s) => s.conflicts)).toEqual([]);
   });
 
@@ -459,6 +459,273 @@ describe('ids', () => {
   });
 });
 
+describe('what the reviewers broke', () => {
+  const jv = (name: string, obs: Partial<Observation> = {}, over: Partial<Sighting> = {}): Sighting =>
+    row({ name, level: 'jv', observations: [{ src: 'school-jv-roster', name, ...obs }], ...over });
+  const stat = (name: string, careerId: string, over: Partial<Sighting> = {}, obs: Partial<Observation> = {}): Sighting => ({
+    ...row({ name, careerIds: [careerId], ...over }),
+    softLevel: true,
+    nameKeys: isShortName(name) ? [] : [nameKey(name)],
+    observations: [{ src: 'maxpreps-stats', name, ...obs }],
+  });
+  const shuffles = <T,>(items: T[]): T[][] => [items, [...items].reverse(), [...items.slice(1), items[0]], [...items.slice(2), ...items.slice(0, 2)]];
+  const rebuilt = (sightings: Sighting[], times = 3, over: Partial<BuildInput> = {}) => {
+    const out = [build(sightings, over)];
+    for (let i = 0; i < times; i += 1) out.push(build(sightings, { ...over, previous: out[out.length - 1] }));
+    return out;
+  };
+
+  it('the result does not depend on the order the rows arrive in', () => {
+    const rows = [
+      row({ name: 'Sam Kim', careerIds: ['a'], obs: { grade: 12, jersey: '9' } }),
+      row({ name: 'Sam Kim', careerIds: ['b'], obs: { grade: 11, jersey: '19' } }),
+      row({ name: 'Sam Kim', careerIds: ['c'], obs: { grade: 10 } }),
+      row({ name: 'Sam Kim', careerIds: ['a'], obs: { grade: 12, jersey: '19' } }),
+      jv('Sam Kim', { grade: 11 }),
+      jv('Sam Kim', { grade: 10 }),
+      row({ name: 'Zed Young', careerIds: ['d'], level: 'jv' }),
+      row({ name: 'Amy Young', careerIds: ['d'], level: 'jv' }),
+      row({ name: 'Bob Marsh', careerIds: ['d'], team: 'beta', level: 'jv' }),
+    ];
+    const [first, ...others] = shuffles(rows).map((r) => build(r));
+    for (const other of others) expect(other).toEqual(first);
+    // Three careers a year apart each are not one player spanning three classes.
+    expect(first.players.filter((p) => p.names.includes('Sam Kim')).length).toBeGreaterThan(1);
+  });
+
+  it('a rebuild of the same rows never moves an id', () => {
+    // A career player, an all-league row that joins her, and a namesake kept apart for her class year.
+    const rows = [
+      row({ name: 'Sam Kim', careerIds: ['c1'], season: '25-26', obs: { grade: 10 } }),
+      row({ name: 'Sam Kim', observations: [{ src: 'all-league', name: 'Sam Kim', grade: 11, award: 'firstTeam' }] }),
+      jv('Sam Kim', { grade: 9 }),
+    ];
+    const [first, ...later] = rebuilt(rows);
+    expect(first.players).toHaveLength(2);
+    for (const again of later) expect(again).toEqual(first);
+  });
+
+  it('what a person decided is not undone by the career guard', () => {
+    const identity: PlayerIdentity = { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Liz Smyth', careerId: 'c1', basis: 'the owner says so' }] };
+    for (const season of ['26-27', '25-26']) {
+      const file = build([row({ name: 'Elizabeth Smith', careerIds: ['c1'], season }), jv('Liz Smyth')], { identity });
+      expect(file.players).toHaveLength(1);
+      expect(file.players[0].identifiers.map(identifierKey)).toEqual(['mp:c1']);
+      expect(file.players[0].names).toContain('Liz Smyth');
+      expect(file.review).toEqual([]);
+    }
+    // A name tied to another name joins it whatever the class years say.
+    const tied = build([row({ name: 'Elizabeth Smith', careerIds: ['c1'], obs: { grade: 12 } }), jv('Liz Smyth', { grade: 9 })], {
+      identity: { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Liz Smyth', isName: 'Elizabeth Smith', basis: 'the owner says so' }] },
+    });
+    expect(tied.players).toHaveLength(1);
+    // A career nobody lists is a mistake in the curation file, not a new player.
+    expect(() => build([jv('Liz Smyth')], { identity })).toThrow(/which no source lists/);
+  });
+
+  it('adding a sameAs keeps the id the name had, as a former id', () => {
+    const rows = [row({ name: 'Elizabeth Smith', careerIds: ['c1'] }), jv('Liz Smyth')];
+    const before = build(rows);
+    const liz = named(before, 'Liz Smyth')[0];
+    const after = build(rows, {
+      previous: before,
+      identity: { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', name: 'Liz Smyth', careerId: 'c1', basis: 'the owner says so' }] },
+    });
+    expect(after.players).toHaveLength(1);
+    expect([after.players[0].id, ...after.players[0].formerIds]).toContain(liz.id);
+  });
+
+  it('a name-only player whose list row gives way to a MaxPreps row keeps her id', () => {
+    const before = build([jv('Ann Lee')]);
+    const after = build([row({ name: 'Ann Lee', careerIds: ['c9'], level: 'jv' })], { previous: before });
+    expect(after.players).toHaveLength(1);
+    expect(after.players[0].id).toBe(before.players[0].id);
+  });
+
+  it('the record with the most behind it keeps its id when two become one', () => {
+    for (const name of ['Ana Ruiz', 'Bo Chen', 'Cat Diaz', 'Dee Evans', 'Eli Ford', 'Fay Gomez']) {
+      const career = [
+        row({ name, careerIds: ['c1'], season: '24-25', obs: { grade: 10 } }),
+        row({ name, careerIds: ['c1'], season: '25-26', obs: { grade: 11 } }),
+        row({ name, careerIds: ['c1'], obs: { grade: 12 } }),
+      ];
+      // A namesake three classes younger, kept apart…
+      const before = build([...career, jv(name, { grade: 9 })]);
+      expect(before.players).toHaveLength(2);
+      const established = before.players.find((p) => p.stints.length === 3) as Player;
+      // …until a person says the grade was a mistake.
+      const after = build([...career, jv(name)], { previous: before });
+      expect(after.players).toHaveLength(1);
+      expect(after.players[0].id, name).toBe(established.id);
+      expect(after.players[0].formerIds).toHaveLength(1);
+    }
+  });
+
+  it('a merge undone gives each player back the id she had', () => {
+    const apart = [row({ name: 'Sol Reyes', careerIds: ['c1'], obs: { grade: 12 } }), row({ name: 'Sol Reyes', careerIds: ['c2'], obs: { grade: 9 } })];
+    const together = [row({ name: 'Sol Reyes', careerIds: ['c1'], obs: { grade: 12 } }), row({ name: 'Sol Reyes', careerIds: ['c2'], obs: { grade: 12 } })];
+    const b0 = build(apart);
+    const b1 = build(together, { previous: b0 });
+    const b2 = build(apart, { previous: b1 });
+    const b3 = build(together, { previous: b2 });
+    const b4 = build(apart, { previous: b3 });
+    const ids = (f: PlayersFile) => Object.fromEntries(f.players.map((p) => [p.identifiers.map(identifierKey).join('+'), [p.id, ...p.formerIds].join(',')]));
+    expect(ids(b2)).toEqual(ids(b0));
+    expect(ids(b4)).toEqual(ids(b0));
+    expect(ids(b3)).toEqual(ids(b1));
+  });
+
+  it('an id never passes to another person with the career id', () => {
+    const before = build([stat('Nicolas Finuliar', 'c1', { season: '25-26' }, { grade: 11 })]);
+    const nicolas = before.players[0].id;
+    const after = build([stat('Nicolas Finuliar', 'c1', { season: '25-26' }, { grade: 11 }), row({ name: 'Andrew Duong', careerIds: ['c1'], obs: { grade: 12 } })], { previous: before });
+    expect(named(after, 'Nicolas Finuliar')[0].id).toBe(nicolas);
+    expect(named(after, 'Andrew Duong')[0]).toMatchObject({ formerIds: [] });
+    expect(named(after, 'Andrew Duong')[0].id).not.toBe(nicolas);
+    // Even when last year's row is gone from the sources and only the registry remembers it.
+    const later = build([row({ name: 'Andrew Duong', careerIds: ['c1'], obs: { grade: 12 } })], { previous: before });
+    expect(named(later, 'Andrew Duong')[0].id).not.toBe(nicolas);
+    expect(named(later, 'Nicolas Finuliar')[0]).toMatchObject({ id: nicolas, identifiers: [{ kind: 'name', sport: 'field-hockey', team: 'alpha', name: 'nicolasfinuliar' }] });
+  });
+
+  it('a row split off two careers at once leaves both', () => {
+    const before = build([row({ name: 'Old Person', careerIds: ['c1'], season: '25-26', obs: { grade: 12 } }), row({ name: 'Old Person', careerIds: ['c2'], season: '25-26', obs: { grade: 12 } })]);
+    expect(before.players).toHaveLength(1);
+    const after = build([row({ name: 'Xavier Yu', careerIds: ['c1'] }), row({ name: 'Zane Wolfe', careerIds: ['c2'] })], { previous: before });
+    expect(after.players.map((p) => `${p.name}: ${p.identifiers.map(identifierKey).join(',')}`).sort()).toEqual([
+      'Old Person: name:field-hockey:alpha:oldperson',
+      'Xavier Yu: mp:c1',
+      'Zane Wolfe: mp:c2',
+    ]);
+    expect(named(after, 'Old Person')[0].id).toBe(before.players[0].id);
+  });
+
+  it('a player known by name on two teams is carried forward as one, short names and all', () => {
+    const rows = [
+      row({ name: 'Ann Lee', careerIds: ['c1'] }),
+      row({ name: 'Liz Smyth', careerIds: ['c1'], season: '25-26' }),
+      row({ name: 'Liz Smyth', careerIds: ['c1'], season: '25-26', team: 'beta' }),
+      row({ name: 'Kim Park', careerIds: ['c3'] }),
+      row({ name: 'Ann Lee', careerIds: ['c3'], level: 'jv' }),
+      stat('A. Lee', 'c3', { team: 'beta' }),
+      stat('Nicolas Finuliar', 'c5', { team: 'beta' }),
+      row({ name: 'Andrew Duong', careerIds: ['c5'] }),
+    ];
+    const first = build(rows);
+    const carriedOn = buildRegistry({ previous: first, identity: NO_IDENTITY, built: [], sightings: [], builtBy: 'test' });
+    expect(carriedOn.players).toEqual(first.players);
+    expect(named(first, 'Liz Smyth')).toHaveLength(1);
+    expect(named(first, 'Nicolas Finuliar')[0].identifiers).toEqual([{ kind: 'name', sport: 'field-hockey', team: 'beta', name: 'nicolasfinuliar' }]);
+  });
+
+  it('a name with no Latin letter names nobody, and is never a reason to join', () => {
+    const file = build([
+      row({ name: '李明', careerIds: ['c1'], nameKeys: [nameKey('李明')], obs: { grade: 10 } }),
+      row({ name: '王芳', careerIds: ['c2'], nameKeys: [nameKey('王芳')], obs: { grade: 10 } }),
+      row({ name: '李明', careerIds: ['c3'], season: '25-26', obs: { grade: 9 } }),
+      row({ name: '#12', nameKeys: [''], level: 'jv', observations: [{ src: 'school-jv-roster', name: '#12' }] }),
+    ]);
+    expect(file.players.map((p) => p.identifiers.map(identifierKey).join(',')).sort()).toEqual(['mp:c1', 'mp:c2', 'mp:c3']);
+    expect(nameKey('Đỗ Minh')).toBe(nameKey('Do Minh'));
+    expect(nameKey('Søren Łukasz')).toBe('sorenlukasz');
+  });
+
+  it('namesCompatible is not fooled by short last names or a last name that is the other\'s first', () => {
+    const other = [['Emma Lee', 'Emma Liu'], ['Andrew Do', 'Andrew Ha'], ['James Taylor', 'Taylor Swift'], ['Olivia Van de Braak', 'Kim De'], ['李明', '王芳']];
+    const same = [['Katie Keenan', 'Kate Kennan'], ['Olivia Van De Braak', 'Olivia Braak'], ['李明', '李明']];
+    for (const [a, b] of other) expect(namesCompatible(a, b), `${a} / ${b}`).toBe(false);
+    for (const [a, b] of same) expect(namesCompatible(a, b), `${a} / ${b}`).toBe(true);
+    expect(isShortName('S.Lewis')).toBe(true);
+  });
+
+  it('the class year is the one most sources give, and a tie goes to the latest season', () => {
+    // A coach copied last year's grades into this year's roster: last year's two sources outvote it.
+    const file = build([
+      row({ name: 'Milo Grant', careerIds: ['c1'], obs: { grade: 9 } }),
+      stat('Milo Grant', 'c1', { season: '25-26' }, { grade: 9 }),
+      row({ name: 'Milo Grant', season: '25-26', observations: [{ src: 'all-league', name: 'Milo Grant', grade: 9, award: 'firstTeam' }] }),
+    ]);
+    expect(file.players).toHaveLength(1);
+    expect(file.players[0].classOf).toBe(2029);
+    expect(file.players[0].classOfConflicts).toEqual([{ classOf: 2030, season: '26-27', sport: 'field-hockey', team: 'alpha', level: 'varsity', src: 'maxpreps-roster' }]);
+  });
+
+  it('a varsity stat line stays on varsity when the player\'s only other row is a JV award', () => {
+    const file = build([
+      stat('Rocco Lane', 'c1', { season: '25-26' }, { jersey: '32' }),
+      row({ name: 'Rocco Lane', season: '25-26', level: 'jv', observations: [{ src: 'all-league', name: 'Rocco Lane', grade: 10, award: 'firstTeam' }] }),
+    ]);
+    expect(file.players[0].stints.map((s) => `${s.level} ${s.observations.map((o) => o.src).join('+')}`)).toEqual(['varsity maxpreps-stats', 'jv all-league']);
+  });
+
+  it('a rejected statement that says what the stint shows is not a conflict', () => {
+    const file = build([
+      { ...row({ name: 'Una Hale', careerIds: ['c1'] }), observations: [{ src: 'maxpreps-roster', name: 'Una Hale', grade: 10 }, { src: 'enrichment', kind: 'news', url: 'https://n.test', grade: 10, rejected: true }] },
+    ]);
+    expect(file.players[0].stints[0].conflicts).toEqual([]);
+    expect([...positionCodes(['Center Mid', 'CAM', 'Point Guard', 'Right Wing', 'Left Back', 'MF', 'LW'])].sort()).toEqual(['D', 'F', 'G', 'M']);
+  });
+
+  it('a season being rebuilt does not forget a player or a stint no source lists any more', () => {
+    const september = build([
+      row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } }),
+      row({ name: 'Ada Stone', careerIds: ['c1'], level: 'jv', obs: { grade: 11 } }),
+      row({ name: 'Quit Early', careerIds: ['c2'], obs: { grade: 10, jersey: '4' } }),
+    ]);
+    const november = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } })], { previous: september });
+    expect(november.players).toHaveLength(2);
+    expect(named(november, 'Ada Stone')[0].stints.map((s) => `${s.level} ${s.gone ?? false}`)).toEqual(['varsity false', 'jv true']);
+    const quit = named(november, 'Quit Early')[0];
+    expect(quit).toMatchObject({ id: named(september, 'Quit Early')[0].id, classOf: 2029 });
+    expect(quit.stints).toEqual([{ ...named(september, 'Quit Early')[0].stints[0], gone: true }]);
+    // Built again, nothing moves; and a row that comes back is read afresh.
+    expect(build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } })], { previous: november })).toEqual(november);
+    const back = build([row({ name: 'Quit Early', careerIds: ['c2'], obs: { grade: 10, jersey: '14' } })], { previous: november });
+    expect(named(back, 'Quit Early')[0].stints.map((s) => `${s.jersey} ${s.gone ?? false}`)).toEqual(['14 false']);
+  });
+
+  it('look-alikes are listed whoever they are, unless one list names both', () => {
+    const file = build([
+      // Last year's career and this year's, the same number: one player, probably.
+      stat('Addison Paradiso', 'c1', { season: '25-26' }, { grade: 10, jersey: '24' }),
+      row({ name: 'Addy Paradiso', careerIds: ['c2'], obs: { grade: 11, jersey: '24' } }),
+      // Sisters on one roster: not a question.
+      row({ name: 'Evelyn Williams', careerIds: ['c3'], obs: { grade: 11, jersey: '2' } }),
+      row({ name: 'Emma Williams', careerIds: ['c4'], obs: { grade: 10, jersey: '3' } }),
+      // Two rows of one roster with one number: a duplicate, probably.
+      row({ name: 'Brooklyn Green', careerIds: ['c5'], obs: { jersey: '69' } }),
+      row({ name: 'Brooklynn Green', careerIds: ['c6'], obs: { jersey: '69' } }),
+      // Two names with no id.
+      jv('Kalia Scott'),
+      row({ name: 'Kaila Scott', season: '25-26', level: 'jv', observations: [{ src: 'all-league', name: 'Kaila Scott', award: 'firstTeam' }] }),
+      // A middle name.
+      jv('Shruti Shiv Mishra'),
+      row({ name: 'Shruti Mishra', careerIds: ['c7'], level: 'jv' }),
+      // The same name in another sport.
+      row({ name: 'Lea Kim', careerIds: ['c8'], obs: { grade: 12 } }),
+      row({ name: 'Lea Kim', careerIds: ['c9'], sport: 'soccer', obs: { grade: 12 } }),
+    ]);
+    expect(file.review.map((r) => `${r.kind}: ${[...r.names].sort().join(' / ')}`).sort()).toEqual([
+      'possible-match: Addison Paradiso / Addy Paradiso',
+      'possible-match: Brooklyn Green / Brooklynn Green',
+      'possible-match: Kaila Scott / Kalia Scott',
+      'possible-match: Shruti Mishra / Shruti Shiv Mishra',
+      'same-name-other-sport: Lea Kim',
+    ]);
+    expect(file.review.find((r) => r.names.includes('Addy Paradiso'))?.note).toMatch(/both wear #24/);
+  });
+
+  it('review items about seasons a build no longer reads are kept', () => {
+    const first = build([row({ name: 'Gabrielle Moll', careerIds: ['c1'], season: '25-26' }), jv('Gabby Moll', {}, { season: '25-26' })]);
+    expect(first.review).toHaveLength(1);
+    const next = build([row({ name: 'Gabrielle Moll', careerIds: ['c1'] })], { previous: first });
+    expect(next.review.map((r) => `${r.kind} ${r.names.join('/')} ${r.players.join('/')}`)).toEqual(first.review.map((r) => `${r.kind} ${r.names.join('/')} ${r.players.join('/')}`));
+    // …and one about a season nothing lists any more, between players the build cannot compare again.
+    const kept = buildRegistry({ previous: first, identity: NO_IDENTITY, built: [], sightings: [], builtBy: 'test' });
+    expect(kept.review).toEqual(first.review);
+  });
+});
+
 describe('the sources as sightings', () => {
   const rosterRow = (over: Record<string, unknown>) => ({
     athleteId: 'a1', careerProfileId: 'guid-1', careerId: 'c1', firstName: 'Xia', lastName: 'Lam', fullName: 'Xia Lam',
@@ -529,13 +796,18 @@ describe('the sources as sightings', () => {
     expect(file.review).toEqual([]);
   });
 
-  it('refuses files of different seasons', () => {
-    expect(() =>
-      currentSeasonSightings(
-        { sport: 'soccer', rosters: { season: '26-27', teams: [] }, jvRosters: { season: '25-26', teams: [] }, enrichment: null, playerStats: null, jvSchoolSites: null, jvProfiles: null },
-        NO_IDENTITY,
-      ),
-    ).toThrow(/soccer jv-rosters is for season 25-26/);
+  it('a file for another season is left out and named, not refused', () => {
+    const { sightings, skipped } = currentSeasonSightings(
+      {
+        sport: 'soccer',
+        rosters: { season: '27-28', teams: [{ slug: 'alpha', players: [rosterRow({})] }] },
+        jvRosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({ athleteId: 'a2', careerId: 'c2' })] }] },
+        enrichment: null, playerStats: null, jvSchoolSites: null, jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings.map((s) => s.careerIds)).toEqual([['c1']]);
+    expect(skipped).toEqual(['soccer jv-rosters is for season 26-27, the rosters for 27-28: left out']);
   });
 
   it('a past season is its stat sheets and its all-league lists', () => {
@@ -699,9 +971,19 @@ describe('the registry is internal', () => {
     }
   });
 
-  it('no module under lib/ imports data/players.json', () => {
+  it('no other module under lib/ loads the registry\'s files, by any means', () => {
+    const OWN = new Set(INTERNAL.map((m) => `${m}.ts`));
+    const FILES = /players\.json|player-identity\.json|prior-players\.json/;
+    const LOADS = /\b(import|require|readFile|readFileSync|createReadStream|fetch|join|resolve)\b/;
     for (const file of sourceFiles(path.join(ROOT, 'lib'))) {
-      expect(/from\s+['"][^'"]*data\/(players|player-identity|[a-z-]*\/?prior-players)\.json['"]/.test(readFileSync(file, 'utf8')), repoPath(file, ROOT)).toBe(false);
+      const rel = repoPath(file, ROOT);
+      if (OWN.has(rel)) continue;
+      const text = readFileSync(file, 'utf8');
+      // A comment may name the file; a line that names it and loads something may not.
+      const loading = text.split('\n').filter((line) => FILES.test(line) && LOADS.test(line.replace(/^\s*(\*|\/\/).*$/, '')));
+      expect(loading, rel).toEqual([]);
+      // …and the one module that knows where the files are is the registry's own.
+      expect(/registry-file['"]/.test(text), rel).toBe(false);
     }
   });
 });

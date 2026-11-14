@@ -46,8 +46,9 @@ describe('nameFromCareerUrl', () => {
     expect(nameFromCareerUrl(career('linnea-boublik-whiteley', 'a'), 'L. Boublik-Whiteley')).toBe('Linnea Boublik-Whiteley');
   });
 
-  it('falls back to the link\'s own words when the two disagree, and to nothing without a link', () => {
+  it('falls back to the link\'s own words when the two disagree, and to nothing without a readable link', () => {
     expect(nameFromCareerUrl(career('ayva-garcia', 'a'), 'A. Yam')).toBe('Ayva Garcia');
+    expect(nameFromCareerUrl(career('soland039%3be-campos', 'a'), 'S. Campos')).toBeNull();
     expect(nameFromCareerUrl(null, 'S. Lewis')).toBeNull();
     expect(nameFromCareerUrl('https://www.maxpreps.com/ca/town/school/', 'S. Lewis')).toBeNull();
   });
@@ -123,9 +124,10 @@ describe('data/prior-players.json', () => {
       const prior = JSON.parse(readFileSync(path.join(ROOT, sportDataDir(sport), 'prior-season.json'), 'utf8')) as { maxprepsYear: string; sportSeasonId: string };
       expect(file.season).toBe(prior.maxprepsYear);
       expect(file.sportSeasonId).toBe(prior.sportSeasonId);
-      // Every team of this sport's rosters file, once.
+      // Teams of this sport's registry (a team added since is simply not in it yet).
       const rosters = JSON.parse(readFileSync(path.join(ROOT, sportDataDir(sport), 'rosters.json'), 'utf8')) as { teams: Array<{ slug: string }> };
-      expect(file.teams.map((t) => t.slug)).toEqual(rosters.teams.map((t) => t.slug));
+      const known = new Set(rosters.teams.map((t) => t.slug));
+      expect(file.teams.map((t) => t.slug).filter((slug) => !known.has(slug))).toEqual([]);
     });
   }
 });

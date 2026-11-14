@@ -472,8 +472,8 @@
           "careerUrl": "https://www.maxpreps.com/ca/palo-alto/palo-alto-vikings/athletes/player-25/?careerid=a67g8nrkkpdk4",
           "grade": null,
           "jersey": "25",
-          "name": "Player 25",
-          "nameFrom": "career-url",
+          "name": "Player #25",
+          "nameFrom": "short-name",
           "shortName": "Player #25"
         }
       ],

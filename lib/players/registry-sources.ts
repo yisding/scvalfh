@@ -157,6 +157,10 @@ export function seasonYearOf(label: string): string {
 }
 
 const HEIGHT = /^\d'\d{1,2}"$/;
+/** A graduation year the registry can hold; a profile stating one outside it states none. */
+const classYear = (y: number | null): { classOf?: number } => (y !== null && y >= 2020 && y <= 2040 ? { classOf: y } : {});
+/** "Player 25", "Player #7": a stat sheet's placeholder for a line nobody is named on. */
+const PLACEHOLDER = /^player\s*#?\d*$/i;
 
 // ---------------------------------------------------------------- one season's current files
 
@@ -185,17 +189,30 @@ function rosterObservation(row: Row, page: PlayerLevel): Observation {
   };
 }
 
-/** The season the current files are for, and every sighting they hold. */
-export function currentSeasonSightings(files: CurrentSeasonFiles, identity: PlayerIdentity): { season: string; sightings: Sighting[] } {
-  const { sport } = files;
-  const season = files.rosters.season;
-  const same = (label: string, other: string | undefined) => {
-    if (other !== undefined && other !== season) throw new Error(`registry: ${sport} ${label} is for season ${other}, the rosters for ${season}`);
+/**
+ * The season the current files are for, and every sighting they hold. The season is the varsity
+ * rosters'. A file for another season is left out and named in `skipped`, not refused: in the middle
+ * of a rollover one file moves before the others, and a registry that lags is better than a build
+ * that stops.
+ */
+export function currentSeasonSightings(given: CurrentSeasonFiles, identity: PlayerIdentity): { season: string; sightings: Sighting[]; skipped: string[] } {
+  const { sport } = given;
+  const season = given.rosters.season;
+  const skipped: string[] = [];
+  const same = <T extends { season: string }>(label: string, file: T | null): T | null => {
+    if (file !== null && file.season !== season) {
+      skipped.push(`${sport} ${label} is for season ${file.season}, the rosters for ${season}: left out`);
+      return null;
+    }
+    return file;
   };
-  same('jv-rosters', files.jvRosters?.season);
-  same('rosters-enrichment', files.enrichment?.season);
-  same('player-stats', files.playerStats?.season);
-  same('jv-profiles', files.jvProfiles?.season);
+  const files: CurrentSeasonFiles = {
+    ...given,
+    jvRosters: same('jv-rosters', given.jvRosters),
+    enrichment: same('rosters-enrichment', given.enrichment),
+    playerStats: same('player-stats', given.playerStats),
+    jvProfiles: same('jv-profiles', given.jvProfiles),
+  };
 
   const split = new Set(identity.rowSplits.filter((r) => r.sport === sport).map((r) => `${r.team} ${r.page} ${r.careerId} ${nameKey(r.name)}`));
   const sightings: Sighting[] = [];
@@ -223,10 +240,11 @@ export function currentSeasonSightings(files: CurrentSeasonFiles, identity: Play
               : c.field === 'jersey' ? { jersey: c.other }
               : c.field === 'position' ? { positions: c.other.split(',').map((p) => p.trim()).filter(Boolean) }
               : HEIGHT.test(c.other) ? { height: c.other } : null;
-            if (said) observations.push({ ...cite(c), ...said, rejected: true });
+            // A statement the registry cannot hold (a grade of "13", a position of ",") is left out.
+            if (said && !(said.positions !== undefined && said.positions.length === 0)) observations.push({ ...cite(c), ...said, rejected: true });
           }
           for (const p of extra.profiles) {
-            observations.push({ src: 'profile', kind: p.platform, url: p.url, ...(p.classOf !== null ? { classOf: p.classOf } : {}) });
+            observations.push({ src: 'profile', kind: p.platform, url: p.url, ...classYear(p.classOf) });
           }
         }
         const isSplit = row.careerId !== null && split.has(`${team.slug} ${page} ${row.careerId} ${nameKey(row.fullName)}`);
@@ -264,7 +282,8 @@ export function currentSeasonSightings(files: CurrentSeasonFiles, identity: Play
 
   for (const team of files.jvSchoolSites?.teams ?? []) {
     if (seasonYearOf(team.season) !== season) {
-      throw new Error(`registry: ${sport} jv-rosters-school-sites ${team.slug} is for ${team.season}, the rosters for ${season}`);
+      skipped.push(`${sport} jv-rosters-school-sites ${team.slug} is for ${team.season}, the rosters for ${season}: left out`);
+      continue;
     }
     for (const p of team.players) {
       sightings.push({
@@ -294,12 +313,12 @@ export function currentSeasonSightings(files: CurrentSeasonFiles, identity: Play
         ...base(team.slug, 'jv'),
         careerIds: [],
         nameKeys: [nameKey(p.name)],
-        observations: p.profiles.map((x) => ({ src: 'profile' as const, kind: x.platform, url: x.url, name: p.name, ...(x.classOf !== null ? { classOf: x.classOf } : {}) })),
+        observations: p.profiles.map((x) => ({ src: 'profile' as const, kind: x.platform, url: x.url, name: p.name, ...classYear(x.classOf) })),
       });
     }
   }
 
-  return { season, sightings: sightings.filter((s) => s.careerIds.length > 0 || s.nameKeys.some((k) => k !== '')) };
+  return { season, sightings: sightings.filter((s) => s.careerIds.length > 0 || s.nameKeys.some((k) => k !== '')), skipped };
 }
 
 // ---------------------------------------------------------------- a past season
@@ -323,8 +342,9 @@ export function pastSeasonSightings(files: PastSeasonFiles): Sighting[] {
     }
     for (const team of files.priorPlayers.teams) {
       for (const p of team.players) {
-        // No link and only an initial: nobody to follow.
-        if (p.careerId === null && p.nameFrom === 'short-name') continue;
+        // No link and only an initial, or the sheet's placeholder for a line with no name: nobody to follow.
+        if ((p.careerId === null && p.nameFrom === 'short-name') || PLACEHOLDER.test(p.name)) continue;
+        if (p.careerId === null && nameKey(p.name) === '') continue;
         sightings.push({
           sport,
           season,
