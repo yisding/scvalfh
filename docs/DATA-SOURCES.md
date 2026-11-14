@@ -2532,7 +2532,7 @@ place every result reached **[V, 2026-11-06]**. So the pipeline reads it (step 0
   (`'absent-game'`), the better-placed team hosting as "@ Higher Seed" says. Each carries `provenance.scores
   'cifsds-sheet'` and `urls.cifsds`, prints † "Score via the CIF San Diego Section", and says on its game page
   why. A tab not read keeps the previous snapshot's results for its division; a `cifsds:` game MaxPreps posts
-  later is superseded (`supersededGames`);
+  later is superseded (`supersededGames`), and its page redirects to MaxPreps' game;
 - the sheet's games with both teams known and no score yet ("fixtures": date, "Game Time", "@ <place>") give the
   times: a MaxPreps contest on the same date with no time takes the sheet's (`provenance.schedule
   'cifsds-sheet'`; one MaxPreps times keeps its own), and a game MaxPreps has not posted is listed as a scheduled
@@ -3486,8 +3486,8 @@ Load-bearing rules baked into it:
   (MaxPreps' own numbers) is kept for cross-check and freshness display — see §2,
   `docs/LEAGUE-RULES.md` and `docs/BYLAWS-2026-27.md` for the ordering rules.
 - `leagueHealth` (one row per league: `fresh`, `partial`, `degraded` or `frozen`, with reasons),
-  `dropped` (contests removed on purpose, with the reason) and `supersededGames` (a si.com-only
-  game later replaced by MaxPreps' own) are part of the snapshot and shown on `/about`.
+  `dropped` (contests removed on purpose, with the reason) and `supersededGames` (a game no feed
+  listed, later replaced by MaxPreps' own; its old page redirects there, `lib/game-redirects.ts`) are part of the snapshot and shown on `/about`.
 ## 5. Cron fetch plan
 
 **Core sweep — 131 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
@@ -3655,7 +3655,7 @@ scores, and a si.com game that is not a junk row (rule 7).**
    `SourceStatus` rows name each si.com page read.
 10. **Supersede and carry-forward:** a MaxPreps contest that later matches a filled fixture wins;
     no `sblive:` game is emitted for it, a score difference becomes an ordinary conflict, and the
-    old `sblive:<id>` page stays as a stub linking the MaxPreps game (`supersededGames`, carried for
+    old `sblive:<id>` page is a permanent (308) redirect to the MaxPreps game (`supersededGames`, carried for
     the rest of the season). An earlier si.com fill is decided again only by the si.com data that
     covers it (a scoreboard row of the pair near the date, or a team page of either side). Whenever
     this run did not read that data — its page failed (a partial failure is enough), the item was

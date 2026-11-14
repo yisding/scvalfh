@@ -37,8 +37,8 @@ import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
  * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
- * route (`/game/sblive-<id>`). The `supersededGames` stub pages are NOT listed: they are not in
- * `games` (they exist only to keep an old link resolving, with rel=canonical to the MaxPreps game).
+ * route (`/game/sblive-<id>`). A `supersededGames` key is NOT listed: it is not in `games`, and
+ * next.config.ts redirects it to the MaxPreps game that replaced it (lib/game-redirects.ts).
  *
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because

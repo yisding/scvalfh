@@ -228,7 +228,7 @@ export function getContentRemovals(): readonly ContentRemoval[] {
   return snapshot.contentRemovals ?? [];
 }
 
-/** 'sblive:<id>' games a MaxPreps contest has since superseded → that contest (D2 rule 10). */
+/** Retired game ids a MaxPreps contest has since superseded → that contest (D2 rule 10; next.config.ts redirects each). */
 export function getSupersededGames(): Readonly<Record<ContestId, ContestId>> {
   return snapshot.supersededGames;
 }

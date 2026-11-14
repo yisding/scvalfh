@@ -3,7 +3,6 @@ import { ImageResponse } from 'next/og';
 
 import {
   buildGameView,
-  buildSupersededStub,
   gameKicker,
   gameStaticParams,
   type GameModel,
@@ -25,8 +24,8 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  * scheduled game shows the start time in the score column instead of a number, never a `0`.
  *
  * Params are EXACTLY the page's (`gameStaticParams`: `gameIdToParam`, so a si.com game is
- * `/game/sblive-<n>/opengraph-image`, never a raw `sblive:<n>` path, plus the superseded stubs,
- * whose card is the MaxPreps game's). The kicker names the league (`BVAL · Santa Teresa`,
+ * `/game/sblive-<n>/opengraph-image`, never a raw `sblive:<n>` path; a superseded id's card is
+ * redirected to its MaxPreps game's by next.config.ts, lib/game-redirects.ts). The kicker names the league (`BVAL · Santa Teresa`,
  * `Non-league`, `MCAL semifinal`), and a si.com score says `Score via si.com` (SPEC §8.4).
  *
  * The record under each name is `GameSideModel.sub` from the same model, so it is the league
@@ -60,7 +59,7 @@ export function generateStaticParams(): Array<{ id: string }> {
 export default async function Image({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
   // paramToGameId runs inside buildGameView before any accessor that can throw (SPEC §8.1).
-  const model = buildGameView(id) ?? buildSupersededStub(id)?.targetModel;
+  const model = buildGameView(id);
   if (!model) notFound();
 
   const { game, away, home, display } = model;

@@ -5,7 +5,7 @@
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6; it holds
  * two si.com-only PCAL games and one si.com score on a score-pending MaxPreps contest). The MCAL
- * postseason note and the superseded-stub pages do not occur in the corpus, so one block runs on a
+ * postseason note and the superseded-game redirects do not occur in the corpus, so one block runs on a
  * copy of it with one MCAL one-goal final tagged as a tournament game and one `supersededGames`
  * entry. Every assertion message names the module that produced the value.
  */
@@ -87,16 +87,12 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
     const og = L.ogParams();
     expect(og, 'app/game/[id]/opengraph-image.tsx: OG params === page params').toEqual(page);
     const games = L.d.getGames();
-    const superseded = Object.keys(L.d.getSupersededGames());
-    expect(page.length, 'components/game/game-view.ts gameStaticParams count').toBe(games.length + superseded.length);
+    expect(page.length, 'components/game/game-view.ts gameStaticParams count').toBe(games.length);
     for (const { id } of page) {
       expect(id, 'components/game/game-view.ts param').not.toContain(':');
       const contestId = L.ids.paramToGameId(id);
       expect(L.ids.gameIdToParam(contestId), `lib/game-id.ts round trip ${id}`).toBe(id);
-      expect(
-        !!L.d.getGameById(contestId) || superseded.includes(contestId),
-        `components/game/game-view.ts ${id} resolves`,
-      ).toBe(true);
+      expect(!!L.d.getGameById(contestId), `components/game/game-view.ts ${id} resolves`).toBe(true);
     }
     const sblive = games.filter((g) => g.contestId.startsWith('sblive:'));
     expect(sblive.length, 'lib/data.ts: the corpus has si.com-only games').toBeGreaterThan(0);
@@ -112,11 +108,6 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
     expect(model?.canonical, 'components/game/game-view.ts canonical').toBe(L.ids.gameHref(g.contestId));
     expect(L.m.buildGameView('nope'), 'components/game/game-view.ts unknown').toBeUndefined();
     expect(L.m.buildGameView('sblive-1'), 'components/game/game-view.ts unknown sblive').toBeUndefined();
-    expect(L.m.buildSupersededStub('sblive-1'), 'components/game/game-view.ts unknown stub').toBeUndefined();
-    // The superseded map is a plain JSON object: no prototype member is ever a "target".
-    for (const param of ['constructor', '__proto__', 'toString', 'hasOwnProperty', 'valueOf']) {
-      expect(L.m.buildSupersededStub(param), `components/game/game-view.ts stub for "${param}"`).toBeUndefined();
-    }
   });
 });
 
@@ -247,7 +238,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
   });
 });
 
-describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
+describe('MCAL postseason note and superseded redirects (corpus copy)', () => {
   let S: Loaded;
   let tournament: Game;
   let target: Game;
@@ -355,35 +346,26 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(plain.resultConflictNote, 'components/game/game-view.ts: no conflict, no note').toBeNull();
   });
 
-  it('a superseded si.com id is a stub page, in both param lists, canonical to the MaxPreps game', async () => {
-    const page = S.pageParams();
-    expect(S.ogParams(), 'app/game/[id]/opengraph-image.tsx: OG params === page params (stubs)').toEqual(page);
-    expect(page.map((p) => p.id), 'components/game/game-view.ts stub param').toContain('sblive-999999');
-    const stub = S.m.buildSupersededStub('sblive-999999')!;
-    expect(stub.sentence, 'components/game/game-view.ts stub sentence').toBe('MCAL game — this result is now on MaxPreps.');
-    expect(stub.targetHref, 'components/game/game-view.ts stub target').toBe(S.ids.gameHref(target.contestId));
-    const html = await S.renderPage('sblive-999999');
-    expect(textOf(html), 'app/game/[id]/page.tsx stub').toContain('MCAL game — this result is now on MaxPreps.');
-    expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
-    const meta = await S.metadata('sblive-999999');
-    expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
-    expect(S.m.buildGameView('sblive-999999'), 'components/game/game-view.ts: a stub has no game model').toBeUndefined();
-  });
-
-  it('a superseded San Diego bracket-sheet id is a stub page too', async () => {
-    // MaxPreps posting a game the bracket sheet carried as `cifsds:<away>-at-<home>` supersedes that id
-    // exactly as it does an si.com one; the param list has always included it, so the page must render.
-    expect(S.pageParams().map((p) => p.id), 'components/game/game-view.ts stub param').toContain('cifsds-alpha-at-beta');
-    const stub = S.m.buildSupersededStub('cifsds-alpha-at-beta')!;
-    expect(stub, 'components/game/game-view.ts buildSupersededStub: cifsds id').toBeDefined();
-    expect(stub.param).toBe('cifsds-alpha-at-beta');
-    expect(stub.targetHref).toBe(S.ids.gameHref(target.contestId));
-    const html = await S.renderPage('cifsds-alpha-at-beta');
-    expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
-    const meta = await S.metadata('cifsds-alpha-at-beta');
-    expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
-    // A prefixed id that is not in the map is still nothing.
-    expect(S.m.buildSupersededStub('cifsds-gamma-at-delta')).toBeUndefined();
+  it('a superseded id is no page: next.config.ts redirects it, and its OG image, to the MaxPreps game', async () => {
+    // si.com (`sblive:`) and San Diego bracket-sheet (`cifsds:`) ids alike: neither param list carries them
+    // any more, so no page or card is prerendered that the redirect would hide.
+    const page = S.pageParams().map((p) => p.id);
+    expect(S.ogParams().map((p) => p.id), 'app/game/[id]/opengraph-image.tsx: OG params === page params').toEqual(page);
+    for (const param of ['sblive-999999', 'cifsds-alpha-at-beta']) {
+      expect(page, `components/game/game-view.ts gameStaticParams: no page for ${param}`).not.toContain(param);
+      expect(S.m.buildGameView(param), `components/game/game-view.ts: ${param} has no game model`).toBeUndefined();
+    }
+    const { gameRedirects } = await import('../../lib/game-redirects');
+    const to = S.ids.gameHref(target.contestId);
+    expect(gameRedirects(), 'lib/game-redirects.ts gameRedirects (the corpus copy via SCVAL_SNAPSHOT)').toEqual([
+      { source: '/game/cifsds-alpha-at-beta', destination: to, permanent: true },
+      { source: '/game/cifsds-alpha-at-beta/opengraph-image', destination: `${to}/opengraph-image`, permanent: true },
+      { source: '/game/sblive-999999', destination: to, permanent: true },
+      { source: '/game/sblive-999999/opengraph-image', destination: `${to}/opengraph-image`, permanent: true },
+    ]);
+    // next.config.ts returns exactly these.
+    const { default: config } = await import('../../next.config');
+    expect(await config.redirects!(), 'next.config.ts redirects()').toEqual(gameRedirects());
   });
 });
 

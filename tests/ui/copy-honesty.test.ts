@@ -9,8 +9,7 @@
  *                                                 built by components/standings/standings-view.ts)
  *   components/teams/team-view.ts                 buildTeamPageView(slug)
  *   components/teams/teams-index-view.ts          buildTeamsByLeague()
- *   components/game/game-view.ts                  buildGameView(param) for every game,
- *                                                 buildSupersededStub
+ *   components/game/game-view.ts                  buildGameView(param) for every game
  *
  * Rules (every string VALUE in the model, keys excluded):
  *  1. no "Gabilan" in any case, except the lowercase slug inside a MaxPreps URL;
@@ -158,12 +157,7 @@ beforeAll(async () => {
   s.push({ producer: TIV, label: 'teams index', league: null, value: teamsIndexView.buildTeamsByLeague() });
 
   for (const { id: param } of gameView.gameStaticParams()) {
-    const model = gameView.buildGameView(param);
-    if (!model) {
-      const stub = gameView.buildSupersededStub(param);
-      s.push({ producer: GV, label: `superseded stub ${param}`, league: null, value: stub });
-      continue;
-    }
+    const model = gameView.buildGameView(param)!;
     const g = model.game;
     // A game belongs to a league's views when it counts there or is that league's postseason game.
     const league = leagueOfDivision(g.countsFor) ?? g.postseason?.leagueId ?? null;
@@ -235,11 +229,7 @@ async function collectEal(): Promise<EalCorpus> {
     s.push({ producer: TP, label: `/teams/${t.slug} attributes (EAL corpus)`, league: t.league, value: attributeText(html) });
   }
   for (const { id: param } of gm.gameStaticParams()) {
-    const model = gm.buildGameView(param);
-    if (!model) {
-      s.push({ producer: GV, label: `superseded stub ${param} (EAL corpus)`, league: null, value: gm.buildSupersededStub(param) });
-      continue;
-    }
+    const model = gm.buildGameView(param)!;
     const g = model.game;
     const league = leagueOfDivision(g.countsFor) ?? g.postseason?.leagueId ?? null;
     s.push({ producer: GV, label: `game ${param} (EAL corpus)`, league, value: model, unplayed: g.status !== 'final' });

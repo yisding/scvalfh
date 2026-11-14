@@ -61,8 +61,11 @@ export interface ExpectedFamilies {
   /** The league-tournament leagues: the /playoffs/[league] family. */
   tournament: readonly string[];
   gameParams: readonly string[];
-  /** One stub per `supersededGames` key: a game page, but never in the sitemap. */
-  stubParams: readonly string[];
+  /**
+   * One per `supersededGames` key: never a page (next.config.ts redirects it to its MaxPreps game,
+   * lib/game-redirects.ts), so never a prerendered file and never in the sitemap.
+   */
+  redirectParams: readonly string[];
   /** The distinct game dates, sorted. */
   dates: readonly string[];
   slugs: readonly string[];
@@ -83,7 +86,7 @@ export function sample(list: readonly string[]): string {
 /**
  * Each family's expected params, and the cross-checks that make them trustworthy: the snapshot's
  * leagues and tournament leagues are the config's, its teams are the registry's by name and in
- * order, and no superseded stub is also a live game. Each disagreement goes to `fail`.
+ * order, and no redirected (superseded) id is also a live game, whose page the redirect would hide. Each disagreement goes to `fail`.
  */
 export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void): ExpectedFamilies {
   const snapshotLeagues = snapshot.season.leagues.map((l) => l.id);
@@ -92,9 +95,9 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
   }
 
   const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-  const stubParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
-  const overlap = stubParams.filter((p) => gameParams.includes(p));
-  if (overlap.length) fail(`superseded stubs that are also live games: ${sample(overlap)}`);
+  const redirectParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
+  const overlap = redirectParams.filter((p) => gameParams.includes(p));
+  if (overlap.length) fail(`superseded (redirected) ids that are also live games: ${sample(overlap)}`);
 
   const slugs = snapshot.teams.map((t) => t.slug);
   const registry = TEAMS.map((t) => t.slug);
@@ -119,7 +122,7 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     leagueIds: [...LEAGUE_IDS],
     tournament,
     gameParams,
-    stubParams,
+    redirectParams,
     dates: [...new Set(snapshot.games.map((g) => g.dateKey))].sort(),
     slugs,
     clubSlugs: getClubSlugs(),
@@ -178,7 +181,7 @@ export function makeFamilyChecker(
     family('standings', expected.leagueIds, { og: true });
     family('schedule', expected.leagueIds, { og: true });
     family('playoffs', expected.tournament, { og: true });
-    family('game', [...expected.gameParams, ...expected.stubParams], { og: true });
+    family('game', expected.gameParams, { og: true });
     family('scores', expected.dates, { og: true });
     family('teams', expected.slugs, { og: true });
     // One JV calendar per league (app/jv/[league]); it takes the root OG card.

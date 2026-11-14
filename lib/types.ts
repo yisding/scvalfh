@@ -1235,9 +1235,10 @@ export interface Snapshot {
   /** Official fixtures, ALL leagues, that matched no published game. */
   officialFixtures?: OfficialFixture[];
   /**
-   * NEW. 'sblive:<id>' games that D2 published in an earlier run and that a MaxPreps contest has since superseded
-   * (rule 10), mapped to that contest. Carried forward for the season so /game/sblive-<id> keeps resolving as a
-   * stub page (canonical → the MaxPreps game). Empty object when none.
+   * NEW. Games an earlier build published that a MaxPreps contest has since superseded (D2 rule 10: an si.com
+   * `sblive:` fill, a San Diego bracket-sheet `cifsds:` game, an added or league-schedule `official:` game), mapped
+   * to that contest. Carried forward for the season so the old /game/<param> keeps resolving: next.config.ts
+   * redirects it to the MaxPreps game (lib/game-redirects.ts). Empty object when none.
    */
   supersededGames: Record<ContestId, ContestId>;
   /**
