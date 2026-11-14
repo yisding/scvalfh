@@ -15,6 +15,8 @@ import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
 import PlayoffProjection from '../../components/playoffs/PlayoffProjection';
 import SectionPlayoffs from '../../components/playoffs/SectionPlayoffs';
 import TournamentBracket from '../../components/playoffs/TournamentBracket';
+import TournamentBrackets from '../../components/playoffs/TournamentBrackets';
+import { tournamentBracketsView, uncoveredBracketGames } from '../../components/playoffs/tournament-brackets-view';
 import UnbracketedResults from '../../components/playoffs/UnbracketedResults';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
 import { buildOutsideTournamentView, type LeagueKeyDate } from '../../components/playoffs/playoff-view';
@@ -68,6 +70,10 @@ import { SPORT } from '../../lib/sports/current';
  * The page is BRACKET-FIRST: once a section's bracket exists it is the first thing under the league row.
  *
  * NorCal (`<div id="norcal" data-region-scope>`), in order:
+ *  0. Where MaxPreps publishes the championship whole (`playoffs.brackets`: volleyball), the brackets themselves, one
+ *     section per division with every team in it (components/playoffs/TournamentBrackets.tsx): the CIF State
+ *     divisions a team of ours plays in (`#cif-division-iii`), then the CCS divisions that hold one
+ *     (`#ccs-open-division`, `#ccs-division-1`). They take the place of item 1.
  *  1. The CCS bracket (`#bracket`), one section per division (`#ccs-division-1`, `#ccs-division-2`, the anchors
  *     its games link to: components/playoffs/bracket-link.ts), each drawn by the site's one bracket drawer
  *     (components/playoffs/Bracket.tsx). `seeded` is "the model has a path to draw" — a bracket game in
@@ -115,7 +121,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const { keyDates } = playoffs;
   const field = getCcsField();
   // The same test the page uses: a path to draw, from the bracket games or the seed file (never the page flag alone).
-  const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
+  const seeded =
+    buildBrackets({ ...playoffs, games: uncoveredBracketGames(playoffs) }, getCcsSeeds()).length > 0 ||
+    tournamentBracketsView(playoffs.brackets, getGames(), getToday()).brackets.length > 0;
   const shares = field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ');
   // A round some divisions play later (soccer) reads as its first to its last day.
   const semis = ccsRoundDays(keyDates, 'semifinals', shortDate);
@@ -149,8 +157,17 @@ export default function PlayoffsPage() {
   const tournamentLeagues = summaries.filter((s) => tournamentIds.has(s.id));
   const unbracketedLeagues = summaries.filter((s) => UNBRACKETED_LEAGUE_IDS.includes(s.id));
 
-  const paths = buildBrackets(playoffs, getCcsSeeds());
-  const seeded = paths.length > 0;
+  // The snapshot's day (getToday, never Date.now).
+  const today = getToday();
+  const games = getGames();
+  // The by-round paths hold the CCS games no stored bracket does: every game where there are no brackets (field
+  // hockey), none once every division was read whole, and a division's games when its page could not be read.
+  const paths = buildBrackets({ ...playoffs, games: uncoveredBracketGames(playoffs) }, getCcsSeeds());
+  // A championship MaxPreps publishes whole (volleyball): one bracket per division, every team in it, in place
+  // of the by-round paths, with the CIF State divisions our teams play in ahead of the CCS's.
+  const published = tournamentBracketsView(playoffs.brackets, games, today);
+  const drawsPublished = published.brackets.length > 0;
+  const seeded = paths.length > 0 || drawsPublished;
   const pending = seeded ? pendingRounds(playoffs, paths) : [];
   // Every path's division is proven (the feed's bracket name or the seed file): the footnote can say how CCS
   // numbers them. A division the MaxPreps page has posted that no game or seed has reached yet is named below —
@@ -176,9 +193,6 @@ export default function PlayoffsPage() {
   const noPostseasonLeagues = summaries.filter((s) => NO_POSTSEASON_LEAGUE_IDS.includes(s.id));
   const sds = sectionPlayoffs();
 
-  // The snapshot's day (getToday, never Date.now).
-  const today = getToday();
-  const games = getGames();
   // The note under the qualification tables, dated on the snapshot's day against the seeding meeting (a whole
   // sentence as one text node, so the built HTML carries it verbatim).
   const seedingDay = keyDates.seedingMeeting.slice(0, 10);
@@ -215,7 +229,31 @@ export default function PlayoffsPage() {
             says why not `bracketPublished`), the CCS bracket is the first thing under the league row, one section
             per division when it is proven. `#bracket` wraps them; a division's own id is the anchor its games
             link to (components/playoffs/bracket-link.ts). Before seeding, one section says so. */}
-        {seeded ? (
+        {drawsPublished ? (
+          <TournamentBrackets
+            view={published}
+            readOn={today}
+            leagueWords={listWords(ccsLeagues.map((l) => l.shortName), 'or')}
+            extra={
+              paths.length > 0 ? (
+                <>
+                  {paths.map((path) => (
+                    <section key={path.id} id={path.id} aria-labelledby={`${path.id}-heading`} className="sx-section sx-target min-w-0">
+                      <SectionHeader id={`${path.id}-heading`} kicker={path.name === 'CCS bracket' ? 'Other CCS games' : path.name} />
+                      <PlayoffBracket path={path} />
+                    </section>
+                  ))}
+                  <p className="sx-note">MaxPreps’ bracket for these CCS games could not be read whole, so they are grouped by round.</p>
+                </>
+              ) : null
+            }
+          >
+            {officialBracket}
+            <Link href="/schedule" prefetch={false} className="sx-action">
+              Scores
+            </Link>
+          </TournamentBrackets>
+        ) : seeded ? (
           <div id="bracket" className="sx-target">
             {/* With two divisions, a jump to each (2026-11-03): Division 2 starts a screen or two down. */}
             {paths.length > 1 ? (

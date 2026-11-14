@@ -50,7 +50,8 @@ export const VOLLEYBALL_SECTIONS = [
 export const VOLLEYBALL_CCS: CcsConfig = {
   autoQualifiers: { scval: 4, bval: 6, atLarge: null, total: null },
   // An Open Division and Divisions 1-5, each seeded on its own: CcsDivisionName names field hockey's two, so
-  // none is named here, and the bracket is drawn by round, each game under MaxPreps' own bracket name.
+  // none is named here. The brackets are read whole from MaxPreps' tournament pages instead (`playoffs.brackets`,
+  // lib/pipeline/steps/secondary.ts) and drawn one per division (components/playoffs/TournamentBrackets.tsx).
   ccsDivisions: [],
   keyDates: {
     entriesDue: '2026-10-29T00:01:00', seedingMeeting: '2026-10-29T11:00:00',

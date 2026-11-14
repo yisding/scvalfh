@@ -31,7 +31,9 @@ docs/MULTI-SPORT.md.
 Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
 and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
 under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
-player stats per set. See "Girls volleyball" under "Local development" and docs/MULTI-SPORT.md.
+player stats per set. Its /playoffs draws one bracket per division, read whole from MaxPreps' tournament pages
+(`playoffs.brackets`): the CIF State divisions an SCVAL or BVAL team plays in (the NorCal regional, then the
+state final), then the CCS's Open Division and Divisions 1-3. See "Girls volleyball" under "Local development" and docs/MULTI-SPORT.md.
 
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials

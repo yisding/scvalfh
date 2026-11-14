@@ -293,6 +293,18 @@ with its season already played, so the postseason code ran on real results the d
   read as published where the championship has an Open Division and Divisions 3-5 as well; a build with no
   named divisions stores no `divisionsPublished`. `lib/classify.ts` rule 1d keeps CIF State bracket games out
   of the CCS.
+- **The brackets, one per division (2026-11-14).** MaxPreps' tournament pages are server HTML that carries a
+  whole bracket (every matchup, seed, result, and the ids that join one game to the next), so a build that names
+  no CCS division of its own (`CCS.ccsDivisions` empty) reads them whole: `lib/sources/maxpreps-tournament.ts`
+  parses a page, step 09 (`lib/pipeline/steps/secondary.ts` `stepBrackets`) stores every CCS division from the
+  tournament page the bracket poll already reads, and one page per CIF State division a team of ours plays in
+  (the `bracket.url` of its games; resource `tournament-bracket`, corpus path `maxpreps/tournament/<bracket id>`),
+  as `playoffs.brackets`, each bracket carried from the previous snapshot when its page was not read. /playoffs
+  draws one bracket per division with a team of ours in it (`components/playoffs/tournament-brackets-view.ts`,
+  `TournamentBrackets.tsx`): the CIF State divisions first, each as the NorCal regional and the state final, then
+  the CCS's Open Division and Divisions 1-3; Divisions 4 and 5 hold no SCVAL or BVAL team and are named in one
+  line. A game's "Bracket" link lands on its own card, a CIF State game's included (`bracket-link.ts`). Basketball
+  and soccer take the same path once MaxPreps publishes their brackets.
 - **Stats.** The parser's column maps, the team tables, the box score and the player boards have a volleyball
   branch each, built on basketball's one-line-per-player model with rates per set played.
 - **Data.** Under `data/volleyball/`, from the usual fetchers, and a corpus of the run
@@ -306,7 +318,7 @@ with its season already played, so the postseason code ran on real results the d
   hosting project and its domain are the owner's to create.
 
 Not done yet: a refit of the rating constants on finished seasons; the CCS Volleyball Bylaws' allocation;
-BVAL's 2025-26 standings; a bracket drawn per CCS division; "match" for "game" in the site's own copy; the
+BVAL's 2025-26 standings; "match" for "game" in the site's own copy; the
 smoke and axe passes on the volleyball build.
 
 ## Guards that must keep passing

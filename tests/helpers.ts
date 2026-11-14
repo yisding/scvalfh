@@ -22,7 +22,7 @@ export const FIXTURE_DIR = path.join(REPO, 'tests', 'fixtures', 'maxpreps');
 export const CORPUS_ROOT = path.join(REPO, 'tests', 'fixtures', 'corpus');
 export const VARIANTS_DIR = path.join(CORPUS_ROOT, 'variants');
 
-export type CorpusName = 'scval' | 'all-2026-10-02' | 'eal-2026-10-04' | 'socal-2026-10-06';
+export type CorpusName = 'scval' | 'all-2026-10-02' | 'eal-2026-10-04' | 'socal-2026-10-06' | 'volleyball-2026-11-14';
 
 /** The EAL-only live capture (2026-10-04): the Eastern Athletic League's schedules, standings and si.com scoreboards. */
 export const EAL_CORPUS: CorpusName = 'eal-2026-10-04';

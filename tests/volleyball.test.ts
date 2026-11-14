@@ -37,6 +37,8 @@ type Modules = {
   ccs: typeof import('../lib/sources/ccs');
   positions: typeof import('../components/words/position-words');
   describeGame: typeof import('../components/ui/describe-game');
+  bracketsView: typeof import('../components/playoffs/tournament-brackets-view');
+  bracketLink: typeof import('../components/playoffs/bracket-link');
 };
 
 let m: Modules;
@@ -68,6 +70,8 @@ beforeAll(async () => {
     ccs: await import('../lib/sources/ccs'),
     positions: await import('../components/words/position-words'),
     describeGame: await import('../components/ui/describe-game'),
+    bracketsView: await import('../components/playoffs/tournament-brackets-view'),
+    bracketLink: await import('../components/playoffs/bracket-link'),
   };
 });
 
@@ -241,6 +245,51 @@ describe('the bundled volleyball data', () => {
     }
     const ccs = m.data.getSnapshot().games.filter((g) => /Central Coast Section/.test(g.bracket?.tournament ?? ''));
     for (const g of ccs) expect(g.postseason?.kind, g.contestId).toBe('ccs');
+  });
+
+  // Whatever the day's data is (update-data-volleyball.yml runs this file on what it fetched): the published
+  // brackets are whole, every one drawn holds a team of ours, and every bracket game of ours has its card.
+  it('holds the published brackets whole, and draws one per division our teams are in', () => {
+    const snapshot = m.data.getSnapshot();
+    const brackets = snapshot.playoffs.brackets ?? [];
+    expect(brackets.length).toBeGreaterThan(0);
+    expect(new Set(brackets.map((b) => b.bracketId)).size).toBe(brackets.length);
+    const drawn = m.bracketsView.tournamentBracketsView(brackets, snapshot.games, m.data.getToday());
+    expect(new Set(drawn.brackets.map((b) => b.id)).size).toBe(drawn.brackets.length);
+    // CIF State first, then the CCS; a division left undrawn is a CCS one, named for the note.
+    const events = drawn.brackets.map((b) => b.event);
+    expect(events).toEqual([...events].sort((a, b) => (a === b ? 0 : a === 'cif' ? -1 : 1)));
+    expect(drawn.brackets.length + drawn.ccsOthers.length).toBe(brackets.length);
+    for (const b of drawn.brackets) {
+      const slugs = b.rounds.flatMap((r) => r.ties.flatMap((t) => t.lines.map((l) => l.slug))).filter((slug) => slug !== null);
+      expect(slugs.length, b.name).toBeGreaterThan(0);
+      for (const slug of slugs) expect(m.teams.getTeamBySlug(slug), `${b.name} ${slug}`).toBeDefined();
+      // A round's games feed the next two to one, once the opening round's byes are set aside.
+      b.rounds.slice(1, -1).forEach((r, i) => {
+        if (b.event === 'ccs' || i < b.rounds.length - 3) expect(r.ties.length, `${b.name} ${r.name}`).toBe(b.rounds[i + 2].ties.length * 2);
+      });
+    }
+  });
+
+  it('links every published bracket game of ours to its card on /playoffs', () => {
+    const snapshot = m.data.getSnapshot();
+    const drawn = m.bracketsView.tournamentBracketsView(snapshot.playoffs.brackets, snapshot.games, m.data.getToday());
+    const cards = new Map(drawn.brackets.flatMap((b) => b.rounds.flatMap((r) => r.ties.map((t) => [t.contestId, { id: t.id, event: b.event }] as const))));
+    const inBrackets = new Set((snapshot.playoffs.brackets ?? []).flatMap((b) => b.matchups.map((x) => x.contestId)));
+    const ours = snapshot.games.filter((g) => g.bracket?.published && inBrackets.has(g.contestId));
+    expect(ours.length).toBeGreaterThan(0);
+    for (const g of ours) {
+      const card = cards.get(g.contestId);
+      expect(card, g.contestId).toBeDefined();
+      expect(m.bracketLink.getBracketLink(g), g.contestId).toMatchObject({
+        href: `/playoffs#${card?.id}`,
+        label: card?.event === 'cif' ? 'CIF State bracket' : 'CCS bracket',
+      });
+    }
+    // Every CCS game and every CIF State game the snapshot holds is in a bracket that was read.
+    for (const g of snapshot.games.filter((x) => x.bracket?.published && x.postseason?.via === 'maxpreps-bracket')) {
+      expect(inBrackets.has(g.contestId), `${g.dateKey} ${g.away.name} at ${g.home.name}`).toBe(true);
+    }
   });
 
   it('holds a stats entry, a roster and a JV entry for every team, and last season’s SCVAL archive', () => {
