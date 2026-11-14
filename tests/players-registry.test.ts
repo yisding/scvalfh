@@ -769,6 +769,25 @@ describe('what the reviewers broke', () => {
     });
     expect(settled.review).toEqual([]);
     expect(settled.players).toHaveLength(4);
+    // The answer also clears an item carried forward from a season no build reads any more.
+    const before = build(rows);
+    const carried = buildRegistry({ previous: before, identity: NO_IDENTITY, built: [], sightings: [], builtBy: 'test' });
+    expect(carried.review).toHaveLength(2);
+    const answered = buildRegistry({
+      previous: before,
+      built: [],
+      sightings: [],
+      builtBy: 'test',
+      identity: {
+        ...NO_IDENTITY,
+        notSame: [
+          { sport: 'field-hockey', team: 'alpha', names: ['Audrey Teuben', 'Abigail Teuben'], basis: 'sisters' },
+          { sport: 'field-hockey', team: 'alpha', names: ['Lea Kim', 'Lea Kim'], basis: 'namesakes' },
+        ],
+      },
+    });
+    expect(answered.review).toEqual([]);
+    expect(answered.players).toEqual(before.players);
   });
 
   it('review items about seasons a build no longer reads are kept', () => {

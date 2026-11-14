@@ -964,6 +964,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const ids = [...new Set(rows.map(idOfRow))];
     return { ...r, seasons: [...new Set(rows.flatMap((i) => (members.get(clusters.find(i)) as number[]).map((j) => all[j].season)))].sort(), players: ids };
   });
+  const settledPairs = new Set(identity.notSame.map((e) => `${e.team} ${[nameKey(e.names[0]), nameKey(e.names[1])].sort().join(' ')}`));
   review.push(...lookAlikes(players, seasonsOf, identity));
   // An item about seasons this build did not read cannot be found again: it is kept, for the players still here.
   const sameItem = (a: ReviewItem, b: ReviewItem) => a.kind === b.kind && a.sport === b.sport && a.team === b.team && [...a.names].sort().join('|') === [...b.names].sort().join('|');
@@ -971,6 +972,10 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   for (const old of previous?.review ?? []) {
     if (old.seasons.every((season) => fullyBuilt(old.sport, season))) continue;
     if (review.some((r) => sameItem(r, old))) continue;
+    // A pair a person has since said is two people is settled, whichever season it was found in.
+    const pairKinds: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport'];
+    const [first, second = first] = old.names;
+    if (pairKinds.includes(old.kind) && settledPairs.has(`${old.team} ${[nameKey(first), nameKey(second)].sort().join(' ')}`)) continue;
     const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
     // Two players since found to be one, or gone: nothing left to decide.
     if (ids.length !== new Set(old.players).size) continue;
