@@ -67,7 +67,10 @@
     "official/revision/el-camino": "official/revision/el-camino.txt",
     "official/revision/mt-hamilton": "official/revision/mt-hamilton.txt",
     "official/revision/santa-teresa": "official/revision/santa-teresa.txt",
-    "official/revision/west-valley": "official/revision/west-valley.txt"
+    "official/revision/west-valley": "official/revision/west-valley.txt",
+    "maxpreps/tournament/03154bfd-27dc-46b2-ae38-ebc9c4311de6": "maxpreps/tournament/03154bfd-27dc-46b2-ae38-ebc9c4311de6.html",
+    "maxpreps/tournament/cc4e6cc2-b002-46c5-bcd6-767e314cb33f": "maxpreps/tournament/cc4e6cc2-b002-46c5-bcd6-767e314cb33f.html",
+    "maxpreps/tournament/f16579ea-d6ea-422e-97f9-fd758faf1069": "maxpreps/tournament/f16579ea-d6ea-422e-97f9-fd758faf1069.html"
   },
   "capturedAt": {
     "ccs/bracket": "2026-11-14T04:59:00.681Z",
@@ -131,6 +134,9 @@
     "official/revision/el-camino": "2026-11-14T04:59:00.681Z",
     "official/revision/mt-hamilton": "2026-11-14T04:59:00.681Z",
     "official/revision/santa-teresa": "2026-11-14T04:59:00.681Z",
-    "official/revision/west-valley": "2026-11-14T04:59:00.681Z"
+    "official/revision/west-valley": "2026-11-14T04:59:00.681Z",
+    "maxpreps/tournament/03154bfd-27dc-46b2-ae38-ebc9c4311de6": "2026-11-14T06:20:00.000Z",
+    "maxpreps/tournament/cc4e6cc2-b002-46c5-bcd6-767e314cb33f": "2026-11-14T06:20:00.000Z",
+    "maxpreps/tournament/f16579ea-d6ea-422e-97f9-fd758faf1069": "2026-11-14T06:20:00.000Z"
   }
 }

@@ -85,6 +85,8 @@ function sortKey(row: SourceStatus, seq: number): SortKey {
   if (kind === 'cifss-scores') return [3, 1, cifssSectionIndex(row.url), 0, '', seq];
   if (kind === 'ccs-calendar') return [4, 0, 0, 0, '', seq];
   if (kind === 'ccs-bracket') return [4, 1, 0, 0, '', seq];
+  // After the CCS page, by label: 'cif bracket Division I', '… II', '… III' sort in division order.
+  if (kind === 'tournament-bracket') return [4, 1, 1, 0, row.label, seq];
   if (kind === 'sds-bracket-sheet') return [4, 2, sdsTabIndex(row.url), 0, '', seq];
   return [5, 0, 0, 0, '', seq];
 }

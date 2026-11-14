@@ -159,6 +159,7 @@ export function stepAssemble(
       bracketPublished: secondary.bracketPublished,
       ...(secondary.divisionsPublished ? { divisionsPublished: { ...secondary.divisionsPublished } } : {}),
       bracketUrl: CCS.bracketUrl,
+      ...(secondary.brackets ? { brackets: secondary.brackets } : {}),
       // The bracket games are the 'ccs'-tagged games on or after the quarterfinals, or marked published by
       // MaxPreps' feed: the same objects as `games` (lib/postseason/ccs-bracket.ts). Empty until the committee enters them.
       games: ccsBracketGames(games, CCS.keyDates),

@@ -16,6 +16,7 @@ import { CCS_ICAL_URL } from '../sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '../sources/cifss';
 import type { HttpClient } from '../sources/http';
 import { maxprepsLeagueMetaUrl, maxprepsScheduleUrl, maxprepsStandingsUrl, type MaxPrepsClient } from '../sources/maxpreps';
+import { isTournamentPageUrl } from '../sources/maxpreps-tournament';
 import { sbliveScoresUrl } from '../sources/sblive';
 import { SCVAL_STANDINGS_INDEX, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
@@ -202,6 +203,16 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     url: () => {
       if (CCS.bracketUrl === null) throw new Error('no MaxPreps CCS tournament page is configured for this season');
       return CCS.bracketUrl;
+    },
+    fetch: (c, url) => httpText(c.http, url),
+  },
+  'tournament-bracket': {
+    host: 'other',
+    ext: '.html',
+    // The URL is the game feed's own (`Game.bracket.url`), so only a MaxPreps tournament page is ever requested.
+    url: (key) => {
+      if (!isTournamentPageUrl(key.url)) throw new Error(`${ERR}: ${key.url} is not a MaxPreps tournament page`);
+      return key.url;
     },
     fetch: (c, url) => httpText(c.http, url),
   },

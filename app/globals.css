@@ -969,7 +969,11 @@
     /* Three rows shared by every column (heading, cells, foot), so a foot under one column moves no cell out of
        line with the cells it joins. */
     .sx-bracket { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-columns: none; grid-template-rows: auto 1fr auto; column-gap: 2.5rem; }
-    .sx-round, .sx-round[data-current] { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; gap: 0; }
+    /* One column the width of the round: a cell fills it (so the 1.25rem connectors on either side meet across the
+       2.5rem gap) and a long school name is cut with an ellipsis instead of widening the cell over the next round.
+       `justify-content: normal` undoes the phone rule's space-around, which a grid reads as "size the column to
+       its content and center it". */
+    .sx-round, .sx-round[data-current] { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); justify-content: normal; gap: 0; }
     .sx-round > h3 { margin-bottom: 1rem; }
     .sx-round-ties { display: flex; flex-direction: column; justify-content: space-around; gap: 0.75rem; }
     .sx-round-foot { grid-row: 3; margin-top: 1rem; }

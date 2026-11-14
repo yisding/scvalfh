@@ -8,7 +8,7 @@ import type { CifssSectionKey } from '../sources/cifss';
 import type { RawResponse } from '../sources/http';
 import type {
   CcsCalendarEvent, CcsDivisionName, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
-  SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
+  SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug, TournamentBracket,
 } from '../types';
 
 /** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
@@ -26,6 +26,8 @@ export type ResourceKey =
   | { kind: 'vnn-ics'; team: TeamSlug }
   | { kind: 'ccs-ical' }
   | { kind: 'ccs-bracket' }
+  /** One division's page of a MaxPreps tournament a team of ours plays in (the CIF State championships): `url` is the game feed's `bracket.url`. */
+  | { kind: 'tournament-bracket'; bracketId: string; url: string }
   /** One page of a Section's cifsshome.org listing, season start through `through` (YYYY-MM-DD). */
   | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string }
   /** One tab of the San Diego Section's bracket sheet, as CSV (a division id of data/sds-brackets-2026.json). */
@@ -35,7 +37,7 @@ export type ResourceKey =
  * 'maxpreps/bootstrap', 'maxpreps/league-meta/<division>', 'maxpreps/standings/<division>',
  * 'maxpreps/schedule/<slug>', 'scval/pdf-text/<division>', 'scval/standings-index',
  * 'official/revision/<division>', 'official/changes/<league>', 'sblive/scores/<date>', 'sblive/team-games/<slug>',
- * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'cifss/<section>/<page>', 'sds/bracket-sheet/<division>'
+ * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'maxpreps/tournament/<bracket id>', 'cifss/<section>/<page>', 'sds/bracket-sheet/<division>'
  */
 export function resourcePath(key: ResourceKey): string {
   switch (key.kind) {
@@ -65,6 +67,8 @@ export function resourcePath(key: ResourceKey): string {
       return 'ccs/ical';
     case 'ccs-bracket':
       return 'ccs/bracket';
+    case 'tournament-bracket':
+      return `maxpreps/tournament/${key.bracketId}`;
     case 'cifss-scores':
       return `cifss/${key.section}/${key.page}`;
     case 'sds-bracket-sheet':
@@ -173,6 +177,8 @@ export interface SecondaryStepResult {
   bracketPublished: boolean;
   /** The per-division answer, when a recognised page was read or a previous one carried (lib/types.ts CcsPlayoffs). */
   divisionsPublished?: Record<CcsDivisionName, boolean>;
+  /** The published brackets read whole, or carried (lib/types.ts CcsPlayoffs.brackets); absent when there is none. */
+  brackets?: TournamentBracket[];
 }
 
 export interface PipelineSteps { official: OfficialStep; sblive: SbliveStep }

@@ -1,7 +1,7 @@
 # The girls volleyball site's data refresh (SCVAL_SPORT=volleyball; docs/MULTI-SPORT.md): update-data.yml's job
 # for data/volleyball/, narrowed to what the volleyball build reads, as update-data-basketball.yml is for
 # basketball. It fetches the snapshot (MaxPreps, the bundled official SCVAL and BVAL fixtures, the CCS calendar
-# and MaxPreps' CCS tournament page; si.com and the VNN school calendars are field hockey's sources, and the
+# and MaxPreps' CCS tournament page, with the CIF State bracket pages its teams' games name; si.com and the VNN school calendars are field hockey's sources, and the
 # cifsshome.org listing is too long to read for volleyball), then the player stats and the JV games, then the
 # varsity and JV rosters (weekly, on the Monday morning run), tests them, and commits
 # data/volleyball/snapshot.json, its meta file, data/volleyball/player-stats.json, data/volleyball/jv.json,
