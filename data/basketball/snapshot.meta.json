@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "712c6aa93d73a312cd11c1e1f3d5ac8e6f035ccaab135a21a4419315ec760111",
+  "contentHash": "bfce20d70203a5ff365695f20c4b3e24afe7cf1fa938bb13c280eb092bb91127",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 266,
+        "games": 264,
         "leagueGames": 120,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 199,
+        "games": 196,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 429,
+    "games": 424,
     "leagueGames": 216,
     "mismatches": 0,
     "pending": 0,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-13T21:22:46.508Z",
+  "fetchedAt": "2026-11-14T13:22:49.727Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -259,7 +259,7 @@
     },
     {
       "label": "branham schedule",
-      "rowCount": 15,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -279,7 +279,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -399,7 +399,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -409,17 +409,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 3,
+      "rowCount": 4,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 0,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -433,8 +433,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-13",
-  "warnings": 9,
+  "today": "2026-11-14",
+  "warnings": 8,
   "window": {
     "firstGame": "2026-11-17T18:00:00",
     "lastGame": "2027-02-16T19:00:00",
