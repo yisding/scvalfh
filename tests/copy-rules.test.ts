@@ -995,6 +995,10 @@ describe('noTiesSportClaims (a basketball page prints no other sport’s words)'
     expect(noTiesSportClaims('No public page we found ties one of them to this club; the pages that tie them to it')).toEqual([]);
     expect(noTiesSportClaims('Most ties rest on one page. Every tie links its pages, and such a tie is never shown as current')).toEqual([]);
     expect(noTiesSportClaims('with a public source for every tie; 1 point for a tie')).toHaveLength(1);
+    // The exemption is the club phrases alone: a tied game worded with "every" or "each" is still found.
+    expect(noTiesSportClaims('1 point for every tie')).toHaveLength(1);
+    expect(noTiesSportClaims('Each tie awards one point')).toHaveLength(1);
+    expect(noTiesSportClaims('Most ties end 1-1; such a tie counts')).toHaveLength(2);
   });
 
   it('takes a proper noun the data prints out before it reads the copy', () => {
