@@ -92,6 +92,15 @@ const slugify = (s: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
+/** The segment with its percent-escapes read ("sof%C3%ADa" → "sofía"); as it is when they do not decode. */
+function decodeSegment(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
 const capitalizeWords = (words: readonly string[]): string =>
   words.map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join(' ');
 
@@ -108,8 +117,8 @@ export function nameFromCareerUrl(careerUrl: string | null, shortName: string): 
   if (!segment) return null;
   // MaxPreps builds the segment from the name; one holding anything but letters and hyphens was built
   // from a name with a mangled character ("soland039%3be" for "Solan&#039;e") and cannot be read back.
-  if (!/^[a-z]+(-[a-z]+)*$/i.test(segment)) return null;
-  const words = segment.toLowerCase().split('-').filter(Boolean);
+  if (!/^\p{L}+(-\p{L}+)*$/u.test(decodeSegment(segment))) return null;
+  const words = decodeSegment(segment).toLowerCase().split('-').filter(Boolean);
   if (words.length === 0) return null;
   const last = /^\p{L}\.\s+(.+)$/u.exec(shortName)?.[1] ?? null;
   if (last) {

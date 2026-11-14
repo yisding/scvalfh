@@ -49,6 +49,8 @@ describe('nameFromCareerUrl', () => {
   it('falls back to the link\'s own words when the two disagree, and to nothing without a readable link', () => {
     expect(nameFromCareerUrl(career('ayva-garcia', 'a'), 'A. Yam')).toBe('Ayva Garcia');
     expect(nameFromCareerUrl(career('soland039%3be-campos', 'a'), 'S. Campos')).toBeNull();
+    expect(nameFromCareerUrl(career('sofía-durazo', 'a'), 'S. Durazo')).toBe('Sofía Durazo');
+    expect(nameFromCareerUrl(career('sof%C3%ADa-durazo', 'a'), 'S. Durazo')).toBe('Sofía Durazo');
     expect(nameFromCareerUrl(null, 'S. Lewis')).toBeNull();
     expect(nameFromCareerUrl('https://www.maxpreps.com/ca/town/school/', 'S. Lewis')).toBeNull();
   });
