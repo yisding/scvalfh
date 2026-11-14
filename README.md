@@ -27,9 +27,10 @@ documents. BVAL was added to both winter builds on 2026-11-13 so the ratings cou
 against BVAL schools (see "BVAL in the winter builds"). See "Boys basketball" under "Local development" and
 docs/MULTI-SPORT.md.
 
-**Girls volleyball (SCVAL and BVAL, 2026).** The same code builds a fourth site, NorCal High School Girls
-Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
-and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
+**Girls volleyball (SCVAL, BVAL, WCAL and WBAL, 2026).** The same code builds a fourth site, NorCal High School Girls
+Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8),
+the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), the WCAL's 6 and the WBAL's 13
+(Foothill 7, Skyline 6; both leagues added 2026-11-14, see "WCAL and WBAL in the volleyball build"), 60 teams, fall 2026, from the data
 under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
 player stats per set. Its /playoffs draws one bracket per division, read whole from MaxPreps' tournament pages
 (`playoffs.brackets`): the CIF State divisions an SCVAL or BVAL team plays in (the NorCal regional, then the
@@ -1719,11 +1720,47 @@ The soccer build also covers the West Catholic Athletic League and the West Bay 
 - **MaxPreps** keeps Presentation's girls soccer team in no league, so its West Bay Foothill table has six rows
   (`maxprepsMissing`); its WCAL and West Bay Skyline tables match the leagues'.
 - **Last season**: the WCAL's 2025-26 final standings and all-league teams are on wcalsports.org and not
-  transcribed yet; the WBAL's site keeps no standings archive (its 2025-26 all-league teams are published). Both
-  cards on /history/2025-26 are marked unavailable and link what the league publishes (`scripts/build-history.ts`
-  `wcalNotTranscribed`, `wbalNoStandings`).
+  transcribed yet; nor are the WBAL's, which its history page links (hs.wbalsports.org/2025-2026/socstg.html, and
+  its all-league page). Both cards on /history/2025-26 are marked unavailable and link what the league publishes
+  (`scripts/build-history.ts` `wcalNotTranscribed`, `wbalNotTranscribed`). An earlier version of the WBAL card said
+  the site kept no standings archive; that was wrong, and was corrected the same day.
 - **Addresses** for the nineteen schools are MaxPreps' school fields (`data/soccer/schools.json`), and the fourteen
   schools no other registry holds have MaxPreps' mascot tiles in `public/mascots/`.
+
+### WCAL and WBAL in the volleyball build
+
+The volleyball build covers the same two leagues (owner request, 2026-11-14), with volleyball's own divisions and
+rules. The registry holds 60 teams.
+
+- **WCAL** (`lib/league-config/volleyball/wcal.ts`, `lib/registry/volleyball/wcal.ts`): the same six schools as
+  soccer, the columns of the league's 2026 composite schedule and the rows of its final standings (Archbishop
+  Mitty 10-0, October 28, 2026). Rules from WCAL By-Laws Article XII – Volleyball and Article III (both updated
+  2024-2025): two points a win and none a loss, so the table is ordered on league wins (§13.A); head-to-head and
+  then wins among the tied teams (§15.B.1-2; the later steps are not computed); no girls' league playoff. No WCAL
+  document counts the league's automatic CCS berths: §17.A makes the round robin's winner its #1 seed and Article
+  III §17.D enters the rest as at-large entries in order of finish, so one place is marked. League play was a
+  double round robin, ten matches a team, Sep 22 to Oct 28, 2026.
+- **WBAL** (`lib/league-config/volleyball/wbal.ts`, `lib/registry/volleyball/wbal.ts`): Foothill (Harker, The
+  King's Academy, Menlo, Mercy Burlingame, Notre Dame Belmont, Presentation, Sacred Heart Prep) and Skyline
+  (Castilleja, Crystal Springs Uplands, Eastside College Prep, Notre Dame San Jose, Pinewood, Priory), the varsity
+  tables on hs.wbalsports.org/vbstg.html. These are not soccer's divisions. Rules from WBAL By-Laws Article X –
+  Volleyball: the round robin's winner is champion (§1007.1) and the table is ordered on the match record; ties
+  are broken on head-to-head and then the set difference among the tied teams (§1007.4 steps 1-2, `h2h-goal-diff`:
+  a volleyball score is sets), and stay level from step 3, the points in those sets. §1007.4 is "For CCS
+  Advancement only", and the league's own table prints such teams tied (T4 in both divisions in 2026); the site's
+  table applies the steps and cites them. Four automatic CCS berths (§1008.1): Foothill's top three and the
+  Skyline top finisher, unless Foothill's fourth-place team, below .500 in and out of league, needs a playoff with
+  it. Foothill played twelve league matches a team (Sep 9 to Oct 27), Skyline ten (Sep 22 to Oct 27).
+- **League matches are read by membership**, as in the soccer build and for the same reason: a match between two
+  members of one division inside its league play that MaxPreps does not type as a tournament game. On 2026-11-14
+  every team's computed league record matched its league's own final standings and MaxPreps' table.
+- **Recruiting**: the 2026-11-13 sweep for recruiting pages, clubs and commitments covered the SCVAL and BVAL
+  schools only. The nineteen WCAL and WBAL teams have placeholder entries in `rosters-enrichment.json` that say
+  so, and no profile, club tie or commitment is listed for their players; an absence there says nothing.
+- **Last season**: neither league's 2025 final standings are transcribed; /history/2025-26 marks both
+  unavailable and links the WCAL's standings and awards pages and the WBAL's 2025-26 standings and all-league pages.
+- **The test corpus** (`tests/fixtures/corpus/volleyball-2026-11-14/`) was recaptured on 2026-11-14 with all four
+  leagues.
 
 ### Last season's standings in the soccer and basketball builds
 

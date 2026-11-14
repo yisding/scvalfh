@@ -68570,7 +68570,7 @@
             "source": "scval-pdf",
             "total": 42
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 42,
           "reportedRows": 7,
           "reportedTable": "ok"
         },
@@ -68588,7 +68588,7 @@
             "source": "scval-pdf",
             "total": 56
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 56,
           "reportedRows": 8,
           "reportedTable": "ok"
         }
@@ -68620,7 +68620,7 @@
             "source": "bval-docx",
             "total": 30
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 30,
           "reportedRows": 6,
           "reportedTable": "ok"
         },
@@ -68638,7 +68638,7 @@
             "source": "bval-docx",
             "total": 30
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 29,
           "reportedRows": 6,
           "reportedTable": "ok"
         },
@@ -68656,7 +68656,7 @@
             "source": "bval-docx",
             "total": 30
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 30,
           "reportedRows": 6,
           "reportedTable": "ok"
         },
@@ -68674,7 +68674,7 @@
             "source": "bval-docx",
             "total": 56
           },
-          "previousCountedFinals": null,
+          "previousCountedFinals": 56,
           "reportedRows": 8,
           "reportedTable": "ok"
         }
@@ -68700,7 +68700,7 @@
           "meta": "ok",
           "missingLeaguePast": 0,
           "official": null,
-          "previousCountedFinals": null,
+          "previousCountedFinals": 30,
           "reportedRows": 6,
           "reportedTable": "ok"
         }
@@ -68726,7 +68726,7 @@
           "meta": "ok",
           "missingLeaguePast": 0,
           "official": null,
-          "previousCountedFinals": null,
+          "previousCountedFinals": 42,
           "reportedRows": 7,
           "reportedTable": "ok"
         },
@@ -68738,7 +68738,7 @@
           "meta": "ok",
           "missingLeaguePast": 0,
           "official": null,
-          "previousCountedFinals": null,
+          "previousCountedFinals": 30,
           "reportedRows": 6,
           "reportedTable": "ok"
         }
@@ -86512,7 +86512,7 @@
       "slug": "pinewood",
       "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
       "tiebreak": {
-        "note": "Level at 3-7 (.300) with Priory and unresolved by every criterion — WBAL By-Laws Article X – Volleyball §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams above the tie, then a coin toss — we compute none of these, so the teams stay level). We show them level.",
+        "note": "Level at 3-7 (.300) with Priory and unresolved by every criterion — WBAL By-Laws Article X – Volleyball §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams placed above them, then a coin toss — we compute none of these, so the teams stay level). We show them level.",
         "resolvedBy": "set-points",
         "shared": true,
         "tiedWith": [
@@ -86633,7 +86633,7 @@
       "slug": "priory",
       "teamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "tiebreak": {
-        "note": "Level at 3-7 (.300) with Pinewood and unresolved by every criterion — WBAL By-Laws Article X – Volleyball §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams above the tie, then a coin toss — we compute none of these, so the teams stay level). We show them level.",
+        "note": "Level at 3-7 (.300) with Pinewood and unresolved by every criterion — WBAL By-Laws Article X – Volleyball §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams placed above them, then a coin toss — we compute none of these, so the teams stay level). We show them level.",
         "resolvedBy": "set-points",
         "shared": true,
         "tiedWith": [

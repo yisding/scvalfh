@@ -95,7 +95,7 @@ export const WBAL_VOLLEYBALL_LEAGUE: LeagueConfig = {
       stages: {
         'head-to-head': `${BYLAWS} §1007.4 step 1 (head-to-head among the tied teams; the by-law breaks ties for CCS advancement only, and the league’s own table prints them level)`,
         'h2h-goal-diff': `${BYLAWS} §1007.4 step 2 (games won less games lost in the matches among the tied teams)`,
-        'set-points': `${BYLAWS} §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams above the tie, then a coin toss — we compute none of these, so the teams stay level)`,
+        'set-points': `${BYLAWS} §1007.4 steps 3-6 (points won less points lost among the tied teams, games and points won against the teams placed above them, then a coin toss — we compute none of these, so the teams stay level)`,
       },
     },
     coChampionsLabel: 'Co-champions',

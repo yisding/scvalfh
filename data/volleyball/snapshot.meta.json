@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
-  "commitSummary": "SCVAL +98 finals · BVAL +145 · WCAL +30 · WBAL +72",
-  "contentHash": "f1328781ddb97dcf358733e886c355e160ec998292c2463b172e6b33f55664d7",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
+  "contentHash": "6f1f78ab53aec894d756d34c3826267455a265910d798a8ed1e2be55ac04f7b9",
   "counts": {
     "byLeague": {
       "bval": {
@@ -46,7 +46,7 @@
     {
       "backfilled": 0,
       "countedFinals": 98,
-      "finalsDelta": 98,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 0,
       "reasons": [],
@@ -55,7 +55,7 @@
     {
       "backfilled": 0,
       "countedFinals": 145,
-      "finalsDelta": 145,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -64,7 +64,7 @@
     {
       "backfilled": 0,
       "countedFinals": 30,
-      "finalsDelta": 30,
+      "finalsDelta": 0,
       "id": "wcal",
       "missingPast": 0,
       "reasons": [],
@@ -73,7 +73,7 @@
     {
       "backfilled": 0,
       "countedFinals": 72,
-      "finalsDelta": 72,
+      "finalsDelta": 0,
       "id": "wbal",
       "missingPast": 0,
       "reasons": [],

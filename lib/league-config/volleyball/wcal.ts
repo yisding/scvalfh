@@ -83,7 +83,7 @@ export const WCAL_VOLLEYBALL_LEAGUE: LeagueConfig = {
       coChampions: `${BYLAWS} §14.C (two teams level for the title that each beat the other are co-champions)`,
       stages: {
         'head-to-head': `${BYLAWS} §15.B.1-2 (head-to-head in league matches; with more than two teams level, the most wins in the matches among them)`,
-        'coin-flip': `${BYLAWS} §15.B.3-6 (wins against the teams above the tie, against the highest-placed team above it and against the teams below it, then a coin flip or drawing — we compute none of these, so the teams stay level)`,
+        'coin-flip': `${BYLAWS} §15.B.3-6 (wins against the teams placed above the level teams, against the highest-placed of those and against the teams placed below, then a coin flip or drawing — we compute none of these, so the teams stay level)`,
       },
     },
     coChampionsLabel: 'Co-champions',

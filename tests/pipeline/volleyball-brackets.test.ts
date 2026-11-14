@@ -14,7 +14,7 @@ const CIF_DIVISION_II = 'maxpreps/tournament/03154bfd-27dc-46b2-ae38-ebc9c4311de
 const names = (s: Snapshot) => (s.playoffs.brackets ?? []).map((b) => `${b.event} ${b.name} ${b.matchups.length}`);
 const ALL = [
   'ccs Open Division 7', 'ccs Division 1 15', 'ccs Division 2 15', 'ccs Division 3 15', 'ccs Division 4 15', 'ccs Division 5 15',
-  'cif Division I 31', 'cif Division II 31', 'cif Division III 31',
+  'cif Open Division 15', 'cif Division I 31', 'cif Division II 31', 'cif Division III 31', 'cif Division V 31',
 ];
 
 let support: typeof import('./support/run-corpus');
@@ -35,6 +35,7 @@ describe('the published brackets', () => {
     expect(schema.PlayoffsSchema.safeParse(first.playoffs).success).toBe(true);
     expect(first.sources.filter((s) => s.kind === 'tournament-bracket').map((s) => [s.label, s.status, s.rowCount])).toEqual([
       ['cif bracket Division I', 'ok', 31], ['cif bracket Division II', 'ok', 31], ['cif bracket Division III', 'ok', 31],
+      ['cif bracket Division V', 'ok', 31], ['cif bracket Open Division', 'ok', 15],
     ]);
   });
 

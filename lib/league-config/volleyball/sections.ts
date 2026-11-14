@@ -1,6 +1,6 @@
 /**
  * The volleyball build's sections and CCS block (lib/league-config/sections.ts picks these when
- * `SCVAL_SPORT=volleyball`). One section, the CCS, in one region: the build covers SCVAL and BVAL.
+ * `SCVAL_SPORT=volleyball`). One section, the CCS, in one region: the build covers SCVAL, BVAL, the WCAL and the WBAL.
  *
  * Sources (read 2026-11-14):
  *  - CCS_PLAYOFF_CALENDAR, the CCS 2026-27 Playoff Calendar ("Updated 5/28/26"): girls volleyball entry forms
