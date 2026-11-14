@@ -67,8 +67,8 @@ describe('the soccer sport switch', () => {
 });
 
 describe('SCVAL girls soccer', () => {
-  it('covers SCVAL and BVAL, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval']);
+  it('covers SCVAL, BVAL, the WCAL and the WBAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -80,7 +80,7 @@ describe('SCVAL girls soccer', () => {
       'cupertino', 'fremont', 'lynbrook', 'macdonald', 'milpitas', 'monta-vista', 'saratoga', 'wilcox',
     ]);
     expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
-    expect(m.teams.TEAMS).toHaveLength(41);
+    expect(m.teams.TEAMS).toHaveLength(60);
   });
 
   it('aligns BVAL’s 26 schools as its three girls division schedules do', () => {
@@ -96,6 +96,38 @@ describe('SCVAL girls soccer', () => {
     expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(6);
   });
 
+  it('aligns the WCAL’s six schools as its composite schedule does, with two automatic berths', () => {
+    expect(m.teams.teamsInDivision('wcal').map((t) => t.slug).sort()).toEqual([
+      'mitty', 'riordan', 'sacred-heart-cathedral', 'saint-francis', 'st-ignatius', 'valley-christian',
+    ]);
+    const { rules, postseason, divisions } = m.leagues.getLeague('wcal');
+    expect(rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
+    expect(rules.leagueOvertime).toBe('none');
+    expect(rules.classification).toBe('membership');
+    expect(divisions.map((d) => [d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      [6, 10, { first: '2027-01-06', last: '2027-02-17' }],
+    ]);
+    expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(2);
+  });
+
+  it('aligns the WBAL’s 13 schools as its two division tables do, with a playoff for the fourth berth', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('foothill')).toEqual([
+      'castilleja', 'crystal-springs', 'kings-academy', 'menlo', 'notre-dame-belmont', 'presentation', 'sacred-heart-prep',
+    ]);
+    expect(slugs('skyline')).toEqual(['eastside', 'harker', 'mercy-burlingame', 'notre-dame-san-jose', 'pinewood', 'priory']);
+    const wbal = m.leagues.getLeague('wbal');
+    expect(wbal.rules.points).toEqual({ win: 3, tie: 1, loss: 0 });
+    expect(wbal.rules.leagueOvertime).toBe('none');
+    expect(wbal.divisions.map((d) => [d.id, d.gamesPerTeam])).toEqual([['foothill', 12], ['skyline', 10]]);
+    expect(wbal.postseason.kind).toBe('ccs-ladder');
+    if (wbal.postseason.kind !== 'ccs-ladder') return;
+    expect(wbal.postseason.autoBerths).toBe(4);
+    expect(wbal.postseason.ladder.filter((r) => r.status !== 'no-aq-route').map((r) => [r.divisions, r.places, r.status])).toEqual([
+      [['foothill'], [1, 3], 'aq'], [['foothill'], [4, 4], 'play-in'], [['skyline'], [1, 1], 'play-in'],
+    ]);
+  });
+
   it('gives De Anza three automatic CCS berths and El Camino one (By-Laws Article V §2)', () => {
     const scval = m.leagues.getLeague('scval');
     expect(scval.postseason.kind).toBe('ccs-ladder');
@@ -108,7 +140,7 @@ describe('SCVAL girls soccer', () => {
 
   it('dates the CCS rounds from the CCS calendar, and leaves the field size and hosting null', () => {
     const { CCS, ccsRoundDays, ccsLastDay } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, atLarge: null, total: null });
+    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 2, wbal: 4, atLarge: null, total: null });
     expect(CCS.keyDates).toMatchObject({
       seedingMeeting: '2027-02-18T15:00:00',
       quarterfinals: '2027-02-20',
@@ -126,14 +158,14 @@ describe('SCVAL girls soccer', () => {
 });
 
 describe('the soccer data files', () => {
-  it('bundles a soccer snapshot of the 15 teams', () => {
+  it('bundles a soccer snapshot of the registry’s teams', () => {
     const snapshot = m.data.getSnapshot();
     expect(snapshot.season.genderSport).toBe('girls,soccer');
     expect(snapshot.season.sportSeasonId).toBe(m.current.SPORT_SEASON.sportSeasonId);
     expect(snapshot.teams.map((t) => t.slug)).toEqual(m.teams.TEAMS.map((t) => t.slug));
   });
 
-  it('loads the player stats, JV games and rosters of the same 15 teams', () => {
+  it('loads the player stats, JV games and rosters of the same teams', () => {
     const slugs = m.teams.TEAMS.map((t) => t.slug).sort();
     expect(m.playerStats.getPlayerStats().teams.map((t) => t.slug).sort()).toEqual(slugs);
     expect(m.jv.getJvFile().teams.map((t) => t.slug).sort()).toEqual(slugs);

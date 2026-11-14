@@ -117,7 +117,8 @@ function pick<T extends { division: string; level: string }>(
 /**
  * Another sport's build (SCVAL_SPORT=soccer or basketball): its file has the SCVAL entry, built from
  * scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
- * (scripts/lib/history-scval-documents.ts), and a BVAL entry marked unavailable (bvalNotTranscribed). `--from` is
+ * (scripts/lib/history-scval-documents.ts), and a BVAL entry marked unavailable (bvalNotTranscribed); the soccer file also has the WCAL's and the
+ * WBAL's, unavailable too (wcalNotTranscribed, wbalNoStandings). `--from` is
  * a folder holding the standings PDF's text (tests/fixtures/<sport>/scval-history); `--bval-from` and
  * `--retrieved-on` are field hockey's.
  */
@@ -138,6 +139,44 @@ function bvalNotTranscribed() {
   };
 }
 
+/**
+ * The WCAL and the WBAL in the soccer build, added 2026-11-14. The WCAL's 2025-26 archive on
+ * wcalsports.org/standings/ holds its final girls soccer standings and wcalsports.org/awardsrecords/ its
+ * all-league teams; neither is transcribed here yet, so the card says so and links both. The WBAL's standings
+ * page (hs.wbalsports.org/socstg.html) shows the current season only and the site has no standings archive; its
+ * 2025-26 all-league teams are published, and the card links them.
+ */
+function wcalNotTranscribed() {
+  return {
+    status: 'unavailable' as const,
+    league: getLeague('wcal').name,
+    reason: 'The WCAL publishes its final standings and all-league teams on wcalsports.org. This site added WCAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.',
+    checkedOn: '2026-11-14',
+    checked: [
+      'https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)',
+      'https://wcalsports.org/awardsrecords/ (its all-league teams)',
+    ],
+    alsoPublished: [
+      { label: 'WCAL standings', url: 'https://wcalsports.org/standings/' },
+      { label: 'WCAL all-league teams', url: 'https://wcalsports.org/awardsrecords/' },
+    ],
+  };
+}
+
+function wbalNoStandings() {
+  return {
+    status: 'unavailable' as const,
+    league: getLeague('wbal').name,
+    reason: 'We found no official 2025-26 final standings for WBAL girls soccer: the league’s standings page shows the current season only, and its site keeps no standings archive. The WBAL does publish its 2025-26 all-league teams, linked below. We do not show standings or awards from third-party sources.',
+    checkedOn: '2026-11-14',
+    checked: [
+      'https://hs.wbalsports.org/socstg.html (girls soccer standings: the 2026-27 season)',
+      'https://hs.wbalsports.org/champsg2526.html (2025-26 girls champions: no standings)',
+    ],
+    alsoPublished: [{ label: 'WBAL 2025-26 girls soccer all-league teams', url: 'https://hs.wbalsports.org/alsocg2526.html' }],
+  };
+}
+
 async function mainOtherSport(args: Args): Promise<number> {
   if (args.bvalFrom) {
     console.error('FAILED: --bval-from is field hockey\'s: this build transcribes SCVAL alone');
@@ -152,7 +191,10 @@ async function mainOtherSport(args: Args): Promise<number> {
     return 1;
   }
   const { entry, problems } = built;
-  const history = { season: transcription.season, sport: transcription.sport, leagues: { scval: entry, bval: bvalNotTranscribed() } };
+  const leagues = IS_BASKETBALL
+    ? { scval: entry, bval: bvalNotTranscribed() }
+    : { scval: entry, bval: bvalNotTranscribed(), wcal: wcalNotTranscribed(), wbal: wbalNoStandings() };
+  const history = { season: transcription.season, sport: transcription.sport, leagues };
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));
   if (!parsed.success) {
