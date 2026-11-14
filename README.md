@@ -673,7 +673,7 @@ its bundle's fixtures.
 
 A fifth JV layer, `lib/jv/jv-added.ts` (`mergeJvAdded`), lists the JV game of a varsity game no feed lists
 (`DATA_QUALITY.addedGames` with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
-it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, reported by the owner on 2026-11-14 (see
+it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, from Cupertino's own schedule, given by the owner on 2026-11-14 (see
 docs/LEAGUE-RULES.md, "A game reported before its day").
 
 #### JV standings

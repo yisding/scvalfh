@@ -185,7 +185,8 @@ on the schedule whether or not MaxPreps lists it).
   contest in `supersededGames`). Its `jv` gives the JV game, which `lib/jv/jv-added.ts` lists
   (`added-jv:<date>-<away>-at-<home>`) until a JV game of the pair is listed within three days of it. Boys
   basketball: Santa Teresa at Cupertino, Tue Nov 24, 2026, varsity 7:00 and JV 5:30, non-league, given by the
-  owner on 2026-11-14 and on neither school's MaxPreps schedule that day.
+  owner on 2026-11-14 with Cupertino's own printable schedule (chs.fuhsd.org, updated 11/11/26) and on neither
+  school's MaxPreps schedule that day.
 - *A league game MaxPreps types otherwise* (`leagueGameOverrides`). Granite Hills at Southwest, Oct 16, is on the
   Metro Conference schedule and typed a tournament game; it counts, so Metro South Bay is twelve games and
   Granite Hills 6-0. The two Hilltop at Granite Hills games on Oct 29 and 30 are both real (East County Sports).
