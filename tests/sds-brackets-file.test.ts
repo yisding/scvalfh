@@ -88,6 +88,18 @@ describe('the 2025 brackets in this file shape', () => {
 });
 
 describe('a transcription slip is refused', () => {
+  it('a stream or ticket link on a round that is not the Final', () => {
+    const f = copy();
+    f.divisions[1].rounds[0].stream = 'https://www.nfhsnetwork.com/events/cifsds/gam0000000000';
+    refused(f, 'a stream or ticket link belongs to the Final');
+    const g = copy();
+    g.divisions[1].rounds.at(-1)!.tickets = 'http://gofan.co/event/1';
+    refused(g, 'expected an https URL');
+    const ok = copy();
+    ok.divisions[1].rounds.at(-1)!.stream = 'https://www.nfhsnetwork.com/events/cifsds/gam0000000000';
+    expect(sds2025Schema.safeParse(ok).success).toBe(true);
+  });
+
   it('a Division II team in the Open Division', () => {
     const f = copy();
     f.divisions[0].seeds[7].slug = unplacedII[0];
