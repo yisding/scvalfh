@@ -1,14 +1,15 @@
 {
-  "builtBy": "Research by hand, 2026-11-13, for the girls volleyball build (the 41 SCVAL and BVAL schools): the club records from each club's own website; the ties from the players' Hudl, NCSA, SportsRecruits and MaxPreps career pages, the clubs' own rosters, Prep Dig's player pages, school and local papers and one college's signing release. Every Hudl and NCSA page was re-read by an independent refuter; no script rebuilds this file.",
-  "capturedAt": "2026-11-13",
+  "builtBy": "Research by hand, 2026-11-13 (the 41 SCVAL and BVAL schools) and 2026-11-14 (the 19 WCAL and WBAL schools, and the name searches the first round did not finish): the club records from each club's own website; the ties from the players' Hudl, NCSA, SportsRecruits and MaxPreps career pages, the clubs' own rosters, Prep Dig's and PrepVolleyball's player pages, school and local papers and one college's signing release. Every Hudl and NCSA page was re-read by a second reader; no script rebuilds this file.",
+  "capturedAt": "2026-11-14",
   "season": "26-27",
   "notes": [
-    "The youth volleyball clubs players on the 41 tracked varsity rosters are tied to, and the other girls' clubs found in and around Santa Clara County. The linking rule is field hockey's (README, \"Clubs\"), with one change of place: a public page must name the player and a volleyball or beach volleyball club, and either name the player's high school, or give a class year equal to the roster's along with a hometown in the school's own area. A name alone never counts, a class year that disagrees with the roster rules a match out, and social media is never a source.",
+    "The youth volleyball clubs players on the 60 tracked varsity rosters (the SCVAL, BVAL, WCAL and WBAL) are tied to, and the other girls' clubs found in and around Santa Clara County. The linking rule is field hockey's (README, \"Clubs\"), with one change of place: a public page must name the player and a volleyball or beach volleyball club, and either name the player's high school, or give a class year equal to the roster's along with a hometown in the school's own area (its city or a neighbouring one). A name alone never counts, a class year that disagrees with the roster rules a match out, and social media is never a source.",
     "Club records: the candidate list was the NCVA 2025-26 Girls Power League points tables for 15s to 18s (84 club codes; ncva.com has no public club directory), then every club a player's own page names. Each record was written from the club's own site. South Bay and Peninsula clubs were looked for; the East Bay, Central Coast, San Francisco and Marin records are clubs a player is tied to or that were met on the way, and those areas were not searched for every club. The Edge Volleyball Club is an Illinois club one Fremont player's Hudl page lists (region elsewhere).",
-    "No record, so no tie shown, although a player's page names the club: Apex Volleyball Club (two Pioneer players' NCSA pages, three SportsRecruits pages and one Prep Dig page; it plays NCVA events, but no site or city was found), Absolute Volleyball Club (Los Gatos' Britt Melinauskas, on Hudl, SportsRecruits and PrepVolleyball; its site answered with a bot challenge), J5 Beach Volleyball and Golden Gate Beach Volleyball (one player each), BRX, Club 415 and Bay Area Eagles (one MaxPreps career page each), and three Hudl organizations that may not be clubs (Titans Athletics, Global Challenge). About 20 NCVA Power League clubs have no record because their websites were not found without a web search (the session's search allowance ran out): among them SPVC, VVA, FPVC, ITVC, Spark, Samba, Amplify, Cloud, Lakas, Vibe, Kamikaze, Endline, Xceleration, Paye's Place, Elite (Burlingame) and Celsius (San Jose).",
+    "No record, so no tie shown, although a player's page names the club: Apex Volleyball Club (Pioneer players' NCSA, SportsRecruits and Prep Dig pages; it plays NCVA events, but no site or city was found on either day), Frisco Bay Volleyball Club (one Mercy Burlingame player's NCSA page; no club of the name could be identified), Titans (one Palo Alto player's NCSA line), J5 Beach Volleyball and Golden Gate Beach Volleyball (one player each), BRX and Bay Area Eagles (one MaxPreps career page each), and Hudl organizations that may not be clubs (Titans Athletics, Global Challenge). Absolute, Club 415, Rage Westside, SF Juniors and Kamikaze, without a record after the 2026-11-13 round, have one now, each from its own site. NCVA Power League clubs met on no player's page whose sites were not found still have no record (among them SPVC, VVA, FPVC, ITVC, Spark, Samba, Amplify, Cloud, Lakas, Vibe, Endline, Xceleration and Paye's Place).",
     "Status. current: a source from the 2025-26 or 2026-27 club season (the club's own 2026-27 roster, a Hudl or NCSA entry for 2026 or later, a page dated 2026, a MaxPreps career entry joined or edited in 2026). past: a Hudl or NCSA entry that ends in 2024 or earlier, or a source that says she left. unknown: everything else, such as a Hudl entry for 2025 (which may be the 2024-25 or the 2025-26 club season) or an undated club list. A Hudl year range is partly a team's lifespan on Hudl, so a past tie's year is approximate.",
     "Hudl ties: the team list of each linked Hudl profile, which is on the school's own volleyball team and so names the school. One tie per club, quoting the latest entry's team name, organization, sport and years (data fields of the page, joined with ' / '). Left out: coaches' accounts, entries that end before the player's sixth grade, and organizations that are schools. Each list was read twice, by the sweep and by the refuter, and only entries in both reads are used.",
     "Club rosters give names only (Mountain View Volleyball Club's 2026-27 LeagueApps rosters, Vision's 2025-26 teams page, Academy's SportsRecruits list, Legend's team pages), so a roster match is a tie only where a second page names the player with the same club and her school: 45 ties were completed that way and about 60 exact-name matches were left out. The Mountain View rosters are read at the cited address with '&ngmp_2023_iframe_transition=1' added, which is what the page's own frame loads.",
+    "Round of 2026-11-14: the 19 WCAL and WBAL schools (307 varsity rows) by every method of the first round (Hudl team rosters, NCSA, a SportsRecruits address probe, MaxPreps career pages, Prep Dig, PrepVolleyball), NCSA read through a headless browser this time; and, for all 60 schools, NCSA name searches for every named row, Prep Dig and PrepVolleyball for every junior, senior and ungraded row, and web searches for every senior. A tie the first round already had gained the new source, its basis saying so ('Round of 2026-11-14'). Prep Dig pages whose club link goes to a Vision club in another state are not used. NCSA spellings of a club (Pandas Volleyball Club, Panda VBC, MHVC) are mapped to the club's record.",
     "JV players' club ties are not listed: the volleyball JV lists are not rows of the varsity file, so jvAffiliations is empty."
   ],
   "clubs": [
@@ -2979,8 +2980,8 @@
       "fullName": "Aleshia Thorpe",
       "club": "panda-volleyball-club",
       "clubTeam": "16-1",
-      "status": "past",
-      "asOf": "2024",
+      "status": "unknown",
+      "asOf": null,
       "confidence": "high",
       "sources": [
         {
@@ -2990,9 +2991,17 @@
           "statedSchool": "Los Altos High School",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/los-altos/los-altos-high-school-los-altos/aleshia-thorpe1",
+          "kind": "ncsa",
+          "quote": "2025 Panda VBC",
+          "statedSchool": "Los Altos High School (Los Altos)",
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page."
+      "basis": "Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Round of 2026-11-14: Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "los-altos",
@@ -3044,9 +3053,17 @@
           "statedSchool": "Los Altos High School",
           "statedClassYear": 2027,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/los-altos/los-altos-high-school-los-altos/aleshia-thorpe1",
+          "kind": "ncsa",
+          "quote": "2026 Vision (CA)",
+          "statedSchool": "Los Altos High School (Los Altos)",
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
-      "basis": "The club's roster page lists her name on 16 BLUE with no school; her Hudl profile (the page lists Los Altos High School's own volleyball team, so it names the school and the sport, class of 2027) lists the club team '16 Blue 25-26' of 'Vision Volleyball Club' for 2025 (the quote is the page's description line, preceded by its school team entry where the description names the club instead, then the club team entry's name, organization, sport and years joined with ' / '); and her SportsRecruits volleyball profile's own data (drawn by script on the page; read twice on 2026-11-13 through the public data call the page makes, both reads identical) gives the club, club team, high school and class year joined in the quote with ' / '; and her SportsRecruits volleyball profile's own data (drawn by script; read twice on 2026-11-13 through the page's public data call, both reads identical) gives club 'Vision', team '16 Blue', Los Altos High School and class of 2027. Together the pages name the player, the club and her high school. The roster is the club's '2026 Team Rosters' page, i.e. the 2025-26 club season; its 2026-27 rosters are not posted. Nothing read suggests she has left, so status is current as of 2025-26. Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Her own SportsRecruits volleyball profile (The page names Los Altos High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, as a club and team she entered herself. Script-drawn content, read from the profile JSON in separate fetches that agree; the page gives no season or date, so the status is unknown."
+      "basis": "The club's roster page lists her name on 16 BLUE with no school; her Hudl profile (the page lists Los Altos High School's own volleyball team, so it names the school and the sport, class of 2027) lists the club team '16 Blue 25-26' of 'Vision Volleyball Club' for 2025 (the quote is the page's description line, preceded by its school team entry where the description names the club instead, then the club team entry's name, organization, sport and years joined with ' / '); and her SportsRecruits volleyball profile's own data (drawn by script on the page; read twice on 2026-11-13 through the public data call the page makes, both reads identical) gives the club, club team, high school and class year joined in the quote with ' / '; and her SportsRecruits volleyball profile's own data (drawn by script; read twice on 2026-11-13 through the page's public data call, both reads identical) gives club 'Vision', team '16 Blue', Los Altos High School and class of 2027. Together the pages name the player, the club and her high school. The roster is the club's '2026 Team Rosters' page, i.e. the 2025-26 club season; its 2026-27 rosters are not posted. Nothing read suggests she has left, so status is current as of 2025-26. Her Hudl profile is on Los Altos High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Her own SportsRecruits volleyball profile (The page names Los Altos High School and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, as a club and team she entered herself. Script-drawn content, read from the profile JSON in separate fetches that agree; the page gives no season or date, so the status is unknown. Round of 2026-11-14: Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026."
     },
     {
       "teamSlug": "los-altos",
@@ -4464,9 +4481,17 @@
           "statedSchool": "Monta Vista High School",
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/cupertino/monte-vista-high-school-cupertino/lakshmi-kanjirakkai-unni",
+          "kind": "ncsa",
+          "quote": "2025 Panda Volleyball (17 Black)",
+          "statedSchool": "Monta vista high school (Cupertino)",
+          "statedClassYear": 2028,
+          "sourceDate": null
         }
       ],
-      "basis": "The club-teams block (careerClubTeamsData) of her own MaxPreps career page, the page her Monta Vista (Cupertino, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page (read 2026-11-13, and again on the /bio/ page the same day, agreeing). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026. Her Hudl profile is on Monta Vista High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page."
+      "basis": "The club-teams block (careerClubTeamsData) of her own MaxPreps career page, the page her Monta Vista (Cupertino, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page (read 2026-11-13, and again on the /bio/ page the same day, agreeing). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026. Her Hudl profile is on Monta Vista High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Round of 2026-11-14: Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "monta-vista",
@@ -4656,9 +4681,17 @@
           "statedSchool": "Palo Alto High School",
           "statedClassYear": 2029,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/palo-alto/palo-alto-high-school/autumn-cleland",
+          "kind": "ncsa",
+          "quote": "2024 Vision Volleyball (13 Blue)",
+          "statedSchool": "Palo Alto High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
         }
       ],
-      "basis": "Her Hudl profile is on Palo Alto High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page."
+      "basis": "Her Hudl profile is on Palo Alto High School's own volleyball team (so the page names the school and the sport) and its team list has this club team; the quote joins that entry's team name, organization, sport and years with ' / ' (data fields of the page, read on 2026-11-13 by the sweep and again by an independent refuter). One entry for this club on the page. Round of 2026-11-14: Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
     },
     {
       "teamSlug": "palo-alto",
@@ -9645,6 +9678,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "db72a5a6-6d26-428d-b46c-af68f914ab62",
+      "playerId": "p388708c4d7",
       "fullName": "Laurie Nguyen",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -9674,6 +9708,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "7ba0fc05-49ca-447a-829d-3cc6615d6225",
+      "playerId": "pb52a962cd1",
       "fullName": "Nandini Mohan",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -9695,6 +9730,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "7ba0fc05-49ca-447a-829d-3cc6615d6225",
+      "playerId": "pb52a962cd1",
       "fullName": "Nandini Mohan",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G14 Red",
@@ -9716,6 +9752,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "1d23dd5f-4083-4340-84c4-4251e38ec0bd",
+      "playerId": "p2b019fec5e",
       "fullName": "Selma Mahmoud",
       "club": "norstar-volleyball",
       "clubTeam": "NorStar 15-1",
@@ -9737,6 +9774,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "1d23dd5f-4083-4340-84c4-4251e38ec0bd",
+      "playerId": "p2b019fec5e",
       "fullName": "Selma Mahmoud",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 13 White",
@@ -9758,6 +9796,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "ab6e6a00-4649-4f40-87ab-88c257a4c2a6",
+      "playerId": "p03e2e06bee",
       "fullName": "Momoko Thompson",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Gold 25-26",
@@ -9787,6 +9826,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "e642fc81-191c-43e1-8434-d151331edc99",
+      "playerId": "p269ec98971",
       "fullName": "Chayse Courtney",
       "club": "vision-volleyball-club",
       "clubTeam": "17 Gold 25-26",
@@ -9824,6 +9864,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "eeb846d9-36c4-4a68-9ec1-d6d7fa5676ed",
+      "playerId": "pfe8bdc0403",
       "fullName": "Thas Ettori",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -9845,6 +9886,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "5445ee41-554b-4e8c-b716-589a0b797d6b",
+      "playerId": "p00d914e1ae",
       "fullName": "Rusne Zukauskaite",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -9866,6 +9908,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "5d94ab1f-857d-4117-8d6a-022760313db0",
+      "playerId": "p5c7652717c",
       "fullName": "Tyina Canales",
       "club": "sf-tremors",
       "clubTeam": "SF Tremors 16 Wolverines ",
@@ -9887,6 +9930,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "fe21d586-0038-4bd2-9e2f-295d0e130765",
+      "playerId": "p708eb288a0",
       "fullName": "Marlee Elisara",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "14 Saga",
@@ -9908,6 +9952,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "93dde144-9e2d-4e6c-8d9a-e8254ded0c20",
+      "playerId": "p7dc5d9a92b",
       "fullName": "Kepafingo Haungatau-Rios",
       "club": "encore-volleyball-club",
       "clubTeam": "16 Navy",
@@ -9929,6 +9974,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "93dde144-9e2d-4e6c-8d9a-e8254ded0c20",
+      "playerId": "p7dc5d9a92b",
       "fullName": "Kepafingo Haungatau-Rios",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 14 White",
@@ -9950,6 +9996,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "93dde144-9e2d-4e6c-8d9a-e8254ded0c20",
+      "playerId": "p7dc5d9a92b",
       "fullName": "Kepafingo Haungatau-Rios",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "Team 4",
@@ -9971,6 +10018,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "cdb30a50-5dd4-410c-a50a-a5123f55aa52",
+      "playerId": "pbca1c67458",
       "fullName": "Delfina Haungatau-Rios",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 14 White",
@@ -9992,6 +10040,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "cdb30a50-5dd4-410c-a50a-a5123f55aa52",
+      "playerId": "pbca1c67458",
       "fullName": "Delfina Haungatau-Rios",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "Team 4",
@@ -10013,6 +10062,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "cdb30a50-5dd4-410c-a50a-a5123f55aa52",
+      "playerId": "pbca1c67458",
       "fullName": "Delfina Haungatau-Rios",
       "club": "encore-volleyball-club",
       "clubTeam": "16 Navy",
@@ -10034,6 +10084,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "19236974-11c5-4899-aacd-c494fee1a4e6",
+      "playerId": "p8dfe57211a",
       "fullName": "Cali Tangaan",
       "club": "vision-volleyball-club",
       "clubTeam": "17 Blue 25-26",
@@ -10063,6 +10114,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
+      "playerId": "p6806e97635",
       "fullName": "Mariana Platosh",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "16-2",
@@ -10100,6 +10152,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "b662d5c6-6a5f-4d3a-bb34-3454f09c4a39",
+      "playerId": "paab59b9962",
       "fullName": "Olivia Poole",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Girls 17 Red",
@@ -10129,6 +10182,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "b662d5c6-6a5f-4d3a-bb34-3454f09c4a39",
+      "playerId": "paab59b9962",
       "fullName": "Olivia Poole",
       "club": "encore-volleyball-club",
       "clubTeam": "Encore 15 White",
@@ -10150,6 +10204,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "b662d5c6-6a5f-4d3a-bb34-3454f09c4a39",
+      "playerId": "paab59b9962",
       "fullName": "Olivia Poole",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 16 National-Mark",
@@ -10171,6 +10226,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "afb74d1f-7dea-44f7-aa3b-1aa628f52824",
+      "playerId": "p068051edd3",
       "fullName": "MollyAnn Caulfield",
       "club": "norstar-volleyball",
       "clubTeam": "NorStar 17-1",
@@ -10192,6 +10248,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "afb74d1f-7dea-44f7-aa3b-1aa628f52824",
+      "playerId": "p068051edd3",
       "fullName": "MollyAnn Caulfield",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G15 Red",
@@ -10213,6 +10270,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "8fc240c5-99ec-49d4-a8ea-736f29fbd510",
+      "playerId": "p28743e81c7",
       "fullName": "Brooke Whitesell",
       "club": "academy-volleyball",
       "clubTeam": "17 National West",
@@ -10242,6 +10300,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "8fc240c5-99ec-49d4-a8ea-736f29fbd510",
+      "playerId": "p28743e81c7",
       "fullName": "Brooke Whitesell",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G15 Red",
@@ -10263,6 +10322,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "5ce6947e-81da-4556-9277-51b93ed46640",
+      "playerId": "p3b54133e40",
       "fullName": "Julia Agbuya",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Girls 16 Red",
@@ -10284,6 +10344,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "011b32d6-6baf-426d-932f-afd4b6d7cdfe",
+      "playerId": "p16c7532b91",
       "fullName": "Colette Findley",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Girls 16 Red",
@@ -10305,6 +10366,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "32273e12-95f3-4d3f-8c12-f6b06daea17a",
+      "playerId": "p2137b83f39",
       "fullName": "Vivi Casamento",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls RWC 16-1",
@@ -10326,6 +10388,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "32273e12-95f3-4d3f-8c12-f6b06daea17a",
+      "playerId": "p2137b83f39",
       "fullName": "Vivi Casamento",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G16 White",
@@ -10347,6 +10410,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "32273e12-95f3-4d3f-8c12-f6b06daea17a",
+      "playerId": "p2137b83f39",
       "fullName": "Vivi Casamento",
       "club": "encore-volleyball-club",
       "clubTeam": "Encore 14 Navy",
@@ -10368,6 +10432,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "33208838-91db-4fc4-9940-0af6a6962123",
+      "playerId": "pab347f2b61",
       "fullName": "Abby Cardenas",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -10397,6 +10462,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "b9d1c1bc-572a-4b38-856e-c9dd2a757895",
+      "playerId": "p894b3d8b26",
       "fullName": "Sophia Gamini",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 17 Blue",
@@ -10418,6 +10484,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "b9d1c1bc-572a-4b38-856e-c9dd2a757895",
+      "playerId": "p894b3d8b26",
       "fullName": "Sophia Gamini",
       "club": "encore-volleyball-club",
       "clubTeam": "Encore 15 Premier Navy",
@@ -10439,6 +10506,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "2cd6e8be-d331-4def-8891-fee77c2f4838",
+      "playerId": "p508163f066",
       "fullName": "Josie Daniel",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Gold 25-26",
@@ -10468,6 +10536,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "43a2eb71-7465-4159-ae08-7de5372b8c5c",
+      "playerId": "p990a1cf518",
       "fullName": "Millie Young",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Girls 15 Red",
@@ -10489,6 +10558,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "09d180dd-e363-402f-b08c-a3b254e91203",
+      "playerId": "pc601e43940",
       "fullName": "Kate Fong",
       "club": "academy-volleyball",
       "clubTeam": "15 National North",
@@ -10510,6 +10580,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "29999217-3ede-4c42-a27f-969f535d1933",
+      "playerId": "p62f9e40835",
       "fullName": "Madelyn Luceno",
       "club": "academy-volleyball",
       "clubTeam": "17 National West",
@@ -10539,6 +10610,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "5d513b7a-5e17-4d28-8028-55f95b68911b",
+      "playerId": "pf57c8e0f76",
       "fullName": "Eileen Pfeffer",
       "club": "absolute-volleyball-club",
       "clubTeam": "Absolute 17 Black",
@@ -10568,6 +10640,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "4c58dbe2-e6f5-4213-85aa-04468f80c46c",
+      "playerId": "pa7c735aee0",
       "fullName": "Neve Harlan",
       "club": "absolute-volleyball-club",
       "clubTeam": "17 Black",
@@ -10597,6 +10670,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "4c58dbe2-e6f5-4213-85aa-04468f80c46c",
+      "playerId": "pa7c735aee0",
       "fullName": "Neve Harlan",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 14 Blue",
@@ -10618,6 +10692,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "48f1ad14-afc1-4374-8fe7-6ec0de2c1fc0",
+      "playerId": "p074403cb46",
       "fullName": "Whitney Fleming",
       "club": "vision-volleyball-club",
       "clubTeam": "17 Gold 25-26",
@@ -10655,6 +10730,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "48f1ad14-afc1-4374-8fe7-6ec0de2c1fc0",
+      "playerId": "p074403cb46",
       "fullName": "Whitney Fleming",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G16 Red",
@@ -10676,6 +10752,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "04c7d4a4-7537-4f7f-83b8-592328bfdfd8",
+      "playerId": "p40cb85679f",
       "fullName": "Ava Benitey",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Blue 25-26",
@@ -10705,6 +10782,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "703ee275-d25e-4ae0-9a02-152c39fb762e",
+      "playerId": "p833f607694",
       "fullName": "Penelope Griffin",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 16 Blue",
@@ -10726,6 +10804,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "3b071796-e9e7-40da-9e85-e91c93319ccd",
+      "playerId": "pdd776b1ef7",
       "fullName": "Tatyana Borovick",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Gold 25-26",
@@ -10763,6 +10842,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "3b071796-e9e7-40da-9e85-e91c93319ccd",
+      "playerId": "pdd776b1ef7",
       "fullName": "Tatyana Borovick",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 12 HP Keba",
@@ -10784,6 +10864,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "44862681-2e7d-4118-ac16-37677e2660ef",
+      "playerId": "pcd82cfda11",
       "fullName": "Grace Paedon",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Gold 25-26",
@@ -10821,6 +10902,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "481b995b-ae6c-4aa2-99bf-d3b136cc8048",
+      "playerId": "pe63ca5cd72",
       "fullName": "Kayce Gruenberg",
       "club": "city-beach-volleyball-club",
       "clubTeam": "15-Black",
@@ -10842,6 +10924,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "481b995b-ae6c-4aa2-99bf-d3b136cc8048",
+      "playerId": "pe63ca5cd72",
       "fullName": "Kayce Gruenberg",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 16 National-Mark",
@@ -10863,6 +10946,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "44d7c9b1-e2ae-4edf-976f-88e1e0de6872",
+      "playerId": "p14fc2473f4",
       "fullName": "Sara Abooameri",
       "club": "stingray-volleyball-club",
       "clubTeam": "Stingray 16 Blue",
@@ -10884,6 +10968,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "413e03f9-724c-4345-8bbe-56b9cadadc70",
+      "playerId": "p25936c7d0b",
       "fullName": "Danielle Whitmill",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Gold 25-26",
@@ -10905,6 +10990,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "13e9c1ad-7db9-4823-aa56-4b847c1df57f",
+      "playerId": "p1c822ca0d9",
       "fullName": "Ellie Dong",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G15 Black",
@@ -10926,6 +11012,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "e76a9c79-ef78-411e-8042-d4ce1b9a5fd4",
+      "playerId": "p0eabc9e047",
       "fullName": "Kennedy McCracken",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Blue 25-26",
@@ -10955,6 +11042,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "e76a9c79-ef78-411e-8042-d4ce1b9a5fd4",
+      "playerId": "p0eabc9e047",
       "fullName": "Kennedy McCracken",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 14 National",
@@ -10976,6 +11064,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "e76a9c79-ef78-411e-8042-d4ce1b9a5fd4",
+      "playerId": "p0eabc9e047",
       "fullName": "Kennedy McCracken",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "Team 5",
@@ -10997,6 +11086,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "229a3d84-531c-441d-9d19-0023ef83d3a8",
+      "playerId": "p5638086e08",
       "fullName": "Isabella Vu",
       "club": "vision-volleyball-club",
       "clubTeam": "16 Blue 25-26",
@@ -11026,6 +11116,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "1083abdd-34a7-495e-8971-840be439ec10",
+      "playerId": "pf851baa863",
       "fullName": "Divya Bhupathi",
       "club": "vision-volleyball-club",
       "clubTeam": "15 Blue",
@@ -11063,6 +11154,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "179fbadb-00a7-44d7-8c56-32d146421238",
+      "playerId": "pbb13e0fa36",
       "fullName": "Yuju Kim",
       "club": "legacy-one-volleyball-club",
       "clubTeam": "2025-2026 Legacy One - 15-1",
@@ -11084,6 +11176,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "e51df03c-1b71-4bd3-86f2-436e7702e653",
+      "playerId": "p47b00c00c5",
       "fullName": "Ava Esson",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G13 White",
@@ -11105,6 +11198,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "716ed1a5-2f09-496a-9f10-8bf824f7d662",
+      "playerId": "pba318b2a66",
       "fullName": "Shuwen Jin",
       "club": "vision-volleyball-club",
       "clubTeam": "15 White 25-26",
@@ -11126,6 +11220,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "716ed1a5-2f09-496a-9f10-8bf824f7d662",
+      "playerId": "pba318b2a66",
       "fullName": "Shuwen Jin",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "G14 Red",
@@ -11147,6 +11242,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "d0091587-41be-4115-b938-925886053aa7",
+      "playerId": "p17ed48ae19",
       "fullName": "Mia Galang",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Girls 16 White",
@@ -11168,6 +11264,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "79bbbf95-5a6c-4b4c-a04d-85fc61bbc7df",
+      "playerId": "p6db65a59d7",
       "fullName": "Elisa Urias",
       "club": "panda-volleyball-club",
       "clubTeam": "25-26 Panda 17-Black",
@@ -11189,6 +11286,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "0f0abef2-7ab7-4986-8934-e7c4828d8f66",
+      "playerId": "p50b06e9d98",
       "fullName": "Jamie Johnson",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 16 Blue",
@@ -11218,6 +11316,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "0cd0d27c-4117-468f-8213-34b507d9dabd",
+      "playerId": "p7017bcad48",
       "fullName": "Kiley McGibben",
       "club": "vision-volleyball-club",
       "clubTeam": "17 Gold 25-26",
@@ -11247,6 +11346,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "0cd0d27c-4117-468f-8213-34b507d9dabd",
+      "playerId": "p7017bcad48",
       "fullName": "Kiley McGibben",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 17 National",
@@ -11268,6 +11368,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "4dc0648b-e6fb-49b1-9e78-e8edc353691b",
+      "playerId": "p794beaeda5",
       "fullName": "Georgia Pimentel",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 14 National",
@@ -11297,6 +11398,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "5f449fa2-4438-4be6-9e01-1aa2dde3a312",
+      "playerId": "p886657fe8e",
       "fullName": "Gianna Goudey",
       "club": "academy-volleyball",
       "clubTeam": "15 National North",
@@ -11342,6 +11444,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "34749c9c-e01f-4782-b6a8-1a355117df27",
+      "playerId": "pb97ea7edd3",
       "fullName": "Adrianna Ananyi",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls RWC 15-1",
@@ -11395,6 +11498,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "959ba35f-c849-4776-af02-fb3d7f67dfb8",
+      "playerId": "p9c50b85256",
       "fullName": "Amelia MacDonnell",
       "club": "norstar-volleyball",
       "clubTeam": "NorStar 16-1",
@@ -11424,6 +11528,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "959ba35f-c849-4776-af02-fb3d7f67dfb8",
+      "playerId": "p9c50b85256",
       "fullName": "Amelia MacDonnell",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 13 HP - Mark",
@@ -11445,6 +11550,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "1afc2b81-2b62-4486-8f68-7679ef8c3bb0",
+      "playerId": "p0ad0468f5c",
       "fullName": "Vivienne Butler",
       "club": "vision-volleyball-club",
       "clubTeam": "17 Blue 25-26",
@@ -11466,6 +11572,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "f1dd0e24-cd83-40a5-a531-35e95b37e287",
+      "playerId": "p1c640c68a7",
       "fullName": "Ella McKinney",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls RWC 17-1",
@@ -11487,6 +11594,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "de9d9a26-7838-470d-a638-f4e4936166da",
+      "playerId": "pe8f67fa221",
       "fullName": "Gigi Castaillac",
       "club": "encore-volleyball-club",
       "clubTeam": "16 Red",
@@ -11516,6 +11624,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "67684afa-aad6-45ca-b691-e53a412058e7",
+      "playerId": "pa0b21542ba",
       "fullName": "Hadley Mahon",
       "club": "encore-volleyball-club",
       "clubTeam": "Encore 16 Navy",
@@ -11537,6 +11646,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "638d3bd8-a6ce-4908-a505-8edc871b1aa0",
+      "playerId": "p38d360eaf5",
       "fullName": "Genevie Kwon",
       "club": "academy-volleyball",
       "clubTeam": "15-1",
@@ -11582,6 +11692,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "638d3bd8-a6ce-4908-a505-8edc871b1aa0",
+      "playerId": "p38d360eaf5",
       "fullName": "Genevie Kwon",
       "club": "red-rock-volleyball",
       "clubTeam": "13-1",
@@ -11611,6 +11722,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "f9727d3a-bde0-4718-a677-62f6194b006a",
+      "playerId": "p43b0e54684",
       "fullName": "Sofia Peypoch",
       "club": "encore-volleyball-club",
       "clubTeam": "18 Navy",
@@ -11632,6 +11744,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "f9727d3a-bde0-4718-a677-62f6194b006a",
+      "playerId": "p43b0e54684",
       "fullName": "Sofia Peypoch",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 15 HP Ed",
@@ -11653,6 +11766,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "80a2752d-1506-485a-9f04-98d1642a1cf2",
+      "playerId": "p31ba226090",
       "fullName": "Sadie Kollar",
       "club": "encore-volleyball-club",
       "clubTeam": "18 Navy",
@@ -11674,6 +11788,7 @@
     {
       "teamSlug": "castilleja",
       "athleteId": "696a6745-1c91-43a2-a52d-a6e587a83f7c",
+      "playerId": "pf887819b4c",
       "fullName": "Juli Pierre",
       "club": "academy-volleyball",
       "clubTeam": "16 National West",
@@ -11695,6 +11810,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "f27e1d6b-6291-44ca-9f29-b8f0a2887c1e",
+      "playerId": "p0dad1e71e4",
       "fullName": "Joanna Zhao",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls Hybrid 15-1",
@@ -11716,6 +11832,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "3de82891-3ae8-40a1-98cc-00d4146a1f75",
+      "playerId": "p923ecca0b1",
       "fullName": "Alex Dongnguyen",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls RWC 15-2",
@@ -11737,6 +11854,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "b89adc22-8f9d-45ac-8b11-796d88ceb7f3",
+      "playerId": "p1e3ab35196",
       "fullName": "Clara Eaton",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 13 HP - Mark",
@@ -11758,6 +11876,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "5c20578b-5273-4bfc-b5a1-7350ff11a68e",
+      "playerId": "p2a0288adba",
       "fullName": "Amani Lee-Seyon",
       "club": "academy-volleyball",
       "clubTeam": "17 HP-1 West",
@@ -11779,6 +11898,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "2779f601-33da-4142-aa4c-1cfe0dc6306a",
+      "playerId": "p5899d01b0a",
       "fullName": "Zea Rao",
       "club": "blue-banner-volleyball",
       "clubTeam": "15 Harry/Angie",
@@ -11800,6 +11920,7 @@
     {
       "teamSlug": "pinewood",
       "athleteId": "3a8a4bb1-bb95-4a9b-9d03-e6bc851a67b6",
+      "playerId": "pe039525b60",
       "fullName": "Adelynn Wang",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock Girls RWC 15-1",
@@ -11821,6 +11942,7 @@
     {
       "teamSlug": "priory",
       "athleteId": "a5023aa2-e6eb-4f63-89ec-7d0fc7fc826f",
+      "playerId": "paadde0254e",
       "fullName": "Camila Revuelta",
       "club": "academy-volleyball",
       "clubTeam": "17 HP-1 West",
@@ -11842,6 +11964,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "1541e9a4-cf01-411c-aa10-89a78d91b91b",
+      "playerId": "p103424fac3",
       "fullName": "Ella Simeoni",
       "club": "sf-tremors",
       "clubTeam": "16-1 Wolverines",
@@ -11871,6 +11994,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "7e88cf62-cce3-4412-87f2-2604a565b4ba",
+      "playerId": "p0bc655f22e",
       "fullName": "Isabella Saavedra",
       "club": "sf-tremors",
       "clubTeam": "16-1 WOLVERINES",
@@ -11892,6 +12016,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "fcb535dc-169d-4f8d-a0ea-0d8113563ea9",
+      "playerId": "pff46a1d45e",
       "fullName": "Amelia Houtzer",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 16 Gold",
@@ -11921,6 +12046,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "2bd6205c-55f2-45f4-95b7-b705cd26d896",
+      "playerId": "pb4569491b2",
       "fullName": "Alexis Leo",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "17",
@@ -11950,6 +12076,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "98558c81-beff-4402-97da-57db8dbb959d",
+      "playerId": "p9d3346e22f",
       "fullName": "Isabella Reyes",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 18 National",
@@ -11979,6 +12106,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "453a9bfc-c6e1-4cfb-871b-a011b22c3731",
+      "playerId": "pda39ef20be",
       "fullName": "Minnie Evans",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 16 National",
@@ -12000,6 +12128,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "959ba35f-c849-4776-af02-fb3d7f67dfb8",
+      "playerId": "p9c50b85256",
       "fullName": "Amelia MacDonnell",
       "club": "club-415-volleyball",
       "clubTeam": "17 National",
@@ -12029,6 +12158,7 @@
     {
       "teamSlug": "presentation",
       "athleteId": "ade4a844-547b-462d-8854-7ad0ca60120d",
+      "playerId": "p7efc123a89",
       "fullName": "Annabelle Gonzales",
       "club": "city-beach-volleyball-club",
       "clubTeam": "City Beach",
@@ -12058,6 +12188,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "8fb1d523-2829-4536-b61d-4d6fef23eee0",
+      "playerId": "p69c7ac67c3",
       "fullName": "Brie Eisenberg",
       "club": "academy-volleyball",
       "clubTeam": "Academy West 17 National",
@@ -12079,6 +12210,7 @@
     {
       "teamSlug": "crystal-springs",
       "athleteId": "38a7fc53-b074-426f-bfb1-874b3552c42a",
+      "playerId": "p1b1046c36b",
       "fullName": "Sherry Chen",
       "club": "rage-westside-volleyball-club",
       "clubTeam": "Rage Westside 15 Walker",
@@ -12100,6 +12232,7 @@
     {
       "teamSlug": "crystal-springs",
       "athleteId": "aa0b8e5e-fcd9-44c6-b353-a2c817a7324a",
+      "playerId": "p12b6139d62",
       "fullName": "Alexis Law-Hing",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 15 Gold",
@@ -12137,6 +12270,7 @@
     {
       "teamSlug": "notre-dame-san-jose",
       "athleteId": "ba79c4d2-20e2-40db-a2ad-7d7d05978f75",
+      "playerId": "p8cb0eb937f",
       "fullName": "Cierra Huynh",
       "club": "city-beach-volleyball-club",
       "clubTeam": "16 National",
@@ -12166,6 +12300,7 @@
     {
       "teamSlug": "notre-dame-san-jose",
       "athleteId": "2b9a46be-ba99-4f77-8b23-c46b20cdee42",
+      "playerId": "pd3209d04a6",
       "fullName": "Orli Jones",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "17 Red",
@@ -12187,6 +12322,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "4f539dbc-572e-4a0b-ac4c-081084ae7cf6",
+      "playerId": "p8df2a34a59",
       "fullName": "Layla Marquez",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 16 Gold",
@@ -12216,6 +12352,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "1541e9a4-cf01-411c-aa10-89a78d91b91b",
+      "playerId": "p103424fac3",
       "fullName": "Ella Simeoni",
       "club": "encore-volleyball-club",
       "clubTeam": "17-1 Navy",
@@ -12253,6 +12390,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "b066a5ba-a967-45dd-8120-0e73f752c9ea",
+      "playerId": "pe421ad3e73",
       "fullName": "Mymy Lapuz",
       "club": "club-415-volleyball",
       "clubTeam": "18- National",
@@ -12274,6 +12412,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "180495fe-775f-46bd-9b52-2a182a878a7b",
+      "playerId": "p0070d66d1b",
       "fullName": "Caylee Chinn",
       "club": "slainte-volleyball-club",
       "clubTeam": "18 Nationals",
@@ -12295,6 +12434,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "6b4da4a1-8feb-4035-810f-0ad6a00c77ca",
+      "playerId": "p0057f9289f",
       "fullName": "Cyrhen Cuadra",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "Liberty",
@@ -12332,6 +12472,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "33208838-91db-4fc4-9940-0af6a6962123",
+      "playerId": "pab347f2b61",
       "fullName": "Abby Cardenas",
       "club": "club-415-volleyball",
       "clubTeam": "Club 415",
@@ -12353,6 +12494,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "1f462f1c-5198-4734-a5f0-048213a30c19",
+      "playerId": "pfb01220a63",
       "fullName": "Giulia McManigal",
       "club": "absolute-volleyball-club",
       "clubTeam": "Black",
@@ -12382,6 +12524,7 @@
     {
       "teamSlug": "kings-academy",
       "athleteId": "6a43439e-2410-44b7-af2f-d49068ef325e",
+      "playerId": "pac3ce0560c",
       "fullName": "Emerson Kjellesvig",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "Mountain View Volleyball Club (CA)",
@@ -12411,6 +12554,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "23342513-862a-47cf-9318-06649833c69f",
+      "playerId": "p3604685886",
       "fullName": "Katherine Cieslewicz",
       "club": "vision-volleyball-club",
       "clubTeam": "Vision 15 Gold",
@@ -12432,6 +12576,7 @@
     {
       "teamSlug": "menlo",
       "athleteId": "4c2e9316-4898-47f2-a47e-a2dab983732b",
+      "playerId": "p4f8af0f8e7",
       "fullName": "Zoe Andruha",
       "club": "norstar-volleyball",
       "clubTeam": "Norstar",
@@ -12453,6 +12598,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "7759ada5-8aed-4edc-a988-6662d0107333",
+      "playerId": "pdbf3a9a5a6",
       "fullName": "Olivia Eastburn",
       "club": "encore-volleyball-club",
       "clubTeam": "17 Navy",
@@ -12482,6 +12628,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "3aed15a4-a0ce-4200-8fe7-73f51d29afbf",
+      "playerId": "p28a1353d06",
       "fullName": "Deanica De Lira",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "16 Gold Symone",
@@ -12511,6 +12658,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "b6b2b868-e618-4023-9467-cd229059dc7e",
+      "playerId": "p03fb51586f",
       "fullName": "Isela Santana",
       "club": "academy-volleyball",
       "clubTeam": "16s Hp1",
@@ -12540,6 +12688,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "204bf482-019e-4fe0-b0d5-0e5fd0975af4",
+      "playerId": "p65b181e4ae",
       "fullName": "Alyssa Trehan",
       "club": "academy-volleyball",
       "clubTeam": "Academy North 17 Nationals Alan",
@@ -12561,6 +12710,7 @@
     {
       "teamSlug": "presentation",
       "athleteId": "8f51e060-225c-40d9-bce2-c247734f9823",
+      "playerId": "p5702dbdba3",
       "fullName": "Isabella Beatz",
       "club": "fusion-volleyball",
       "clubTeam": "Fusion",
@@ -12582,6 +12732,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "abf7adf8-01f0-4761-a284-f93a4f23cfad",
+      "playerId": "pcf45756c29",
       "fullName": "Elle Chang",
       "club": "academy-volleyball",
       "clubTeam": "15 HP Cristine",
@@ -12611,6 +12762,7 @@
     {
       "teamSlug": "eastside",
       "athleteId": "9804c154-ba50-47c7-8d1c-480d5a0ac1e4",
+      "playerId": "p12988a9c89",
       "fullName": "Raevynn Cantrell",
       "club": "red-rock-volleyball",
       "clubTeam": "Red Rock 18 Luciana",
@@ -12632,6 +12784,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "2bd6205c-55f2-45f4-95b7-b705cd26d896",
+      "playerId": "pb4569491b2",
       "fullName": "Alexis Leo",
       "club": "vision-volleyball-club",
       "clubTeam": null,
@@ -12661,6 +12814,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "2541e466-592c-44a0-b2e9-044bfef06302",
+      "playerId": "p41f7675367",
       "fullName": "Reah Canada",
       "club": "academy-volleyball",
       "clubTeam": "14 HP Michal",
@@ -12690,6 +12844,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "a76e7cc0-ca4d-4308-9516-ab81396f11f8",
+      "playerId": "pf55cfac116",
       "fullName": "Lily Jensen-Pelletier",
       "club": "academy-volleyball",
       "clubTeam": null,
@@ -12711,6 +12866,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "b0a9c3db-0978-4b0d-b89b-d559d26a8f52",
+      "playerId": "p30274a5aca",
       "fullName": "Kylie Hider",
       "club": "vision-volleyball-club",
       "clubTeam": null,
@@ -12732,6 +12888,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "bb58d9ad-1902-43dd-b267-2abcc7b37b1c",
+      "playerId": "pe5e6c61c86",
       "fullName": "Britt Melinauskas",
       "club": "absolute-volleyball-club",
       "clubTeam": null,
@@ -12753,6 +12910,7 @@
     {
       "teamSlug": "los-gatos",
       "athleteId": "bf21c06b-b29a-4dbe-9717-be9ef8ca72d4",
+      "playerId": "p2669ee612b",
       "fullName": "Sadie Bins",
       "club": "vision-volleyball-club",
       "clubTeam": null,
@@ -12774,6 +12932,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "180495fe-775f-46bd-9b52-2a182a878a7b",
+      "playerId": "p0070d66d1b",
       "fullName": "Caylee Chinn",
       "club": "sf-tremors",
       "clubTeam": "16-1 Wolverines",
@@ -12795,6 +12954,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "98c9916e-0ba6-4bc2-a929-3a8978a134ff",
+      "playerId": "p058003c0d5",
       "fullName": "Stella Broshear",
       "club": "vision-volleyball-club",
       "clubTeam": null,
@@ -12816,6 +12976,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "734506f2-801f-4112-bd3a-9e3e986422f7",
+      "playerId": "pa0b97e4efe",
       "fullName": "Kaila Lock",
       "club": "mountain-view-volleyball-club",
       "clubTeam": null,
@@ -12837,6 +12998,7 @@
     {
       "teamSlug": "mitty",
       "athleteId": "d280d57e-62e7-4eea-b7d9-49451d68b25e",
+      "playerId": "p0dc93a9add",
       "fullName": "Cassandra Hubbard",
       "club": "mountain-view-volleyball-club",
       "clubTeam": null,
@@ -12858,6 +13020,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "15080187-f27a-46c5-8196-001c34ed0bca",
+      "playerId": "p7f06143974",
       "fullName": "Zoie Loui",
       "club": "sf-tremors",
       "clubTeam": null,
@@ -12879,6 +13042,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "7e88cf62-cce3-4412-87f2-2604a565b4ba",
+      "playerId": "p0bc655f22e",
       "fullName": "Isabella Saavedra",
       "club": "club-415-volleyball",
       "clubTeam": "CLUB 415 VOLLEYBALL 17-1 NATIONAL",
@@ -12900,6 +13064,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "4838d98e-de17-4522-92e0-8bc9dfa921a4",
+      "playerId": "p01d6ef0a6d",
       "fullName": "Elsa Dack",
       "club": "sf-tremors",
       "clubTeam": "SF Tremors 17 wolverines",
@@ -12921,6 +13086,7 @@
     {
       "teamSlug": "saint-francis",
       "athleteId": "bbe7e067-e031-4d1a-8e2e-7dc5aba91752",
+      "playerId": "p0e9c43017c",
       "fullName": "Jasi Lemoge",
       "club": "norstar-volleyball",
       "clubTeam": "NorStar 16-1",
@@ -12942,6 +13108,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "5d513b7a-5e17-4d28-8028-55f95b68911b",
+      "playerId": "pf57c8e0f76",
       "fullName": "Eileen Pfeffer",
       "club": "vision-volleyball-club",
       "clubTeam": null,
@@ -12963,6 +13130,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "d66abda3-e90e-4ccc-a575-7c6c22bac5aa",
+      "playerId": "pd913f83414",
       "fullName": "Jiya Gupta",
       "club": "red-rock-volleyball",
       "clubTeam": null,
@@ -12984,6 +13152,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "355450b0-156c-45b4-9c30-873e34b1a832",
+      "playerId": "p9b0bfc80b9",
       "fullName": "Selena Ghane",
       "club": "academy-volleyball",
       "clubTeam": "14 National",
@@ -13013,13 +13182,22 @@
     {
       "teamSlug": "menlo",
       "athleteId": "9f1437d9-cc2c-499a-8d42-e89bc52e3ddf",
+      "playerId": "p05dc0ebc1c",
       "fullName": "Hana Brownfield",
       "club": "red-rock-volleyball",
-      "clubTeam": null,
-      "status": "unknown",
-      "asOf": null,
+      "clubTeam": "1’s",
+      "status": "current",
+      "asOf": "2029",
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/atherton/menlo-school/hana-brownfield",
+          "kind": "ncsa",
+          "quote": "2029 RedRock Volleyball Club (1’s)",
+          "statedSchool": "Menlo School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
         {
           "url": "https://prepdig.com/player/hana-brownfield/",
           "kind": "other",
@@ -13029,11 +13207,12 @@
           "sourceDate": null
         }
       ],
-      "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information; Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; current as of 2029."
     },
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "98558c81-beff-4402-97da-57db8dbb959d",
+      "playerId": "p9d3346e22f",
       "fullName": "Isabella Reyes",
       "club": "sf-tremors",
       "clubTeam": null,
@@ -13055,6 +13234,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "2541e466-592c-44a0-b2e9-044bfef06302",
+      "playerId": "p41f7675367",
       "fullName": "Reah Canada",
       "club": "encore-volleyball-club",
       "clubTeam": null,
@@ -13076,6 +13256,7 @@
     {
       "teamSlug": "riordan",
       "athleteId": "1541e9a4-cf01-411c-aa10-89a78d91b91b",
+      "playerId": "p103424fac3",
       "fullName": "Ella Simeoni",
       "club": "slainte-volleyball-club",
       "clubTeam": "13 Amber",
@@ -13097,6 +13278,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
+      "playerId": "p6806e97635",
       "fullName": "Mariana Platosh",
       "club": "red-rock-volleyball",
       "clubTeam": "14-1 Power",
@@ -13118,6 +13300,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
+      "playerId": "p6806e97635",
       "fullName": "Mariana Platosh",
       "club": "sf-juniors-volleyball-club",
       "clubTeam": "13-1 Power",
@@ -13139,6 +13322,7 @@
     {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
+      "playerId": "p6806e97635",
       "fullName": "Mariana Platosh",
       "club": "slainte-volleyball-club",
       "clubTeam": "12-1 Power",
@@ -13160,6 +13344,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "8b2d86fe-e546-4471-800f-e6627c058821",
+      "playerId": "p2b43472e7a",
       "fullName": "Soraya Steger",
       "club": "encore-volleyball-club",
       "clubTeam": "Open",
@@ -13181,6 +13366,7 @@
     {
       "teamSlug": "st-ignatius",
       "athleteId": "b3676bce-0b2f-43b1-8dc6-66a9ca699df9",
+      "playerId": "p0ba1acb6e2",
       "fullName": "Samantha Lowry",
       "club": "sf-elite-volleyball-club",
       "clubTeam": "15-1",
@@ -13202,6 +13388,7 @@
     {
       "teamSlug": "valley-christian",
       "athleteId": "229a3d84-531c-441d-9d19-0023ef83d3a8",
+      "playerId": "p5638086e08",
       "fullName": "Isabella Vu",
       "club": "red-rock-volleyball",
       "clubTeam": null,
@@ -13223,6 +13410,7 @@
     {
       "teamSlug": "harker",
       "athleteId": "1083abdd-34a7-495e-8971-840be439ec10",
+      "playerId": "pf851baa863",
       "fullName": "Divya Bhupathi",
       "club": "stingray-volleyball-club",
       "clubTeam": "12 Black",
@@ -13252,6 +13440,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "7759ada5-8aed-4edc-a988-6662d0107333",
+      "playerId": "pdbf3a9a5a6",
       "fullName": "Olivia Eastburn",
       "club": "kamikaze-volleyball-club",
       "clubTeam": "13 1's",
@@ -13273,6 +13462,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
+      "playerId": "p40d08c101d",
       "fullName": "Sophia Sari",
       "club": "club-415-volleyball",
       "clubTeam": "15 National",
@@ -13294,6 +13484,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
+      "playerId": "p40d08c101d",
       "fullName": "Sophia Sari",
       "club": "encore-volleyball-club",
       "clubTeam": null,
@@ -13315,6 +13506,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
+      "playerId": "p40d08c101d",
       "fullName": "Sophia Sari",
       "club": "rage-westside-volleyball-club",
       "clubTeam": null,
@@ -13336,6 +13528,7 @@
     {
       "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
+      "playerId": "p40d08c101d",
       "fullName": "Sophia Sari",
       "club": "sf-elite-volleyball-club",
       "clubTeam": null,
@@ -13357,6 +13550,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "6dedcfea-6e3a-4c2f-a1e9-6d17dadff59d",
+      "playerId": "pdee792c608",
       "fullName": "Emily Weisman",
       "club": "red-rock-volleyball",
       "clubTeam": "16-1s",
@@ -13378,6 +13572,7 @@
     {
       "teamSlug": "notre-dame-belmont",
       "athleteId": "6dedcfea-6e3a-4c2f-a1e9-6d17dadff59d",
+      "playerId": "pdee792c608",
       "fullName": "Emily Weisman",
       "club": "rage-westside-volleyball-club",
       "clubTeam": "15-1s",
@@ -13399,6 +13594,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "d100457f-a5d0-4b6d-a02a-67f16a6746e8",
+      "playerId": "p2f48c83438",
       "fullName": "Anaya Mehta",
       "club": "vision-volleyball-club",
       "clubTeam": "Blue",
@@ -13420,6 +13616,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "d100457f-a5d0-4b6d-a02a-67f16a6746e8",
+      "playerId": "p2f48c83438",
       "fullName": "Anaya Mehta",
       "club": "academy-volleyball",
       "clubTeam": "Academy 12 HP2",
@@ -13441,6 +13638,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "d100457f-a5d0-4b6d-a02a-67f16a6746e8",
+      "playerId": "p2f48c83438",
       "fullName": "Anaya Mehta",
       "club": "encore-volleyball-club",
       "clubTeam": "Encore 12-3",
@@ -13462,6 +13660,7 @@
     {
       "teamSlug": "sacred-heart-prep",
       "athleteId": "e7384213-1e95-4ab0-971a-26b20cb4c805",
+      "playerId": "p5a37bd7e48",
       "fullName": "Delaney D'Alessandro",
       "club": "academy-volleyball",
       "clubTeam": "National",
@@ -13483,6 +13682,7 @@
     {
       "teamSlug": "eastside",
       "athleteId": "9804c154-ba50-47c7-8d1c-480d5a0ac1e4",
+      "playerId": "p12988a9c89",
       "fullName": "Raevynn Cantrell",
       "club": "encore-volleyball-club",
       "clubTeam": "15-3's",
@@ -13504,6 +13704,7 @@
     {
       "teamSlug": "notre-dame-san-jose",
       "athleteId": "ba79c4d2-20e2-40db-a2ad-7d7d05978f75",
+      "playerId": "p8cb0eb937f",
       "fullName": "Cierra Huynh",
       "club": "mountain-view-volleyball-club",
       "clubTeam": "17 National",
@@ -13525,6 +13726,7 @@
     {
       "teamSlug": "notre-dame-san-jose",
       "athleteId": "ba79c4d2-20e2-40db-a2ad-7d7d05978f75",
+      "playerId": "p8cb0eb937f",
       "fullName": "Cierra Huynh",
       "club": "tropical-touch-volleyball-club",
       "clubTeam": "15",
@@ -13546,6 +13748,7 @@
     {
       "teamSlug": "branham",
       "athleteId": "e8059f37-c0ea-4093-b102-77f0906cb8ca",
+      "playerId": "p15dcf1ee52",
       "fullName": "Katelyn Kiratsous",
       "club": "stingray-volleyball-club",
       "clubTeam": "16-1",
@@ -13567,6 +13770,7 @@
     {
       "teamSlug": "pioneer",
       "athleteId": "65357e34-c5cc-4174-a1d3-ca3c83a1994a",
+      "playerId": "p454a4299c0",
       "fullName": "Courtney White",
       "club": "fusion-volleyball",
       "clubTeam": "16 Titanium",
@@ -13584,6 +13788,204 @@
         }
       ],
       "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
+      "teamSlug": "crystal-springs",
+      "athleteId": "e2737058-e631-4bbf-9c15-8fc3d34b1dee",
+      "playerId": "p2875d38568",
+      "fullName": "Ella Bu",
+      "club": "academy-volleyball",
+      "clubTeam": "14 National West",
+      "status": "current",
+      "asOf": "2030",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/hillsborough/crystal-springs-uplands-school/ella-bu",
+          "kind": "ncsa",
+          "quote": "2030 Academy Volleyball Club (14 National West)",
+          "statedSchool": "Crystal Springs Uplands School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2030."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "5538999c-8333-489c-a7a9-e75dfb00cd18",
+      "playerId": "p3db434a9a4",
+      "fullName": "Nadia Wilk",
+      "club": "vision-volleyball-club",
+      "clubTeam": "Power",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/los-gatos/los-gatos-high-school1/nadia-wilk",
+          "kind": "ncsa",
+          "quote": "2026 Vision Volleyball Club (Power)",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "5538999c-8333-489c-a7a9-e75dfb00cd18",
+      "playerId": "p3db434a9a4",
+      "fullName": "Nadia Wilk",
+      "club": "panda-volleyball-club",
+      "clubTeam": "Power",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/los-gatos/los-gatos-high-school1/nadia-wilk",
+          "kind": "ncsa",
+          "quote": "2025 Panda Volleyball Club (CA) (Power)",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "034feacd-23eb-472a-aa33-931e25f639fb",
+      "playerId": "p9650e8384d",
+      "fullName": "Emma Jin",
+      "club": "panda-volleyball-club",
+      "clubTeam": "16 -1",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/los-gatos/los-gatos-high-school1/emma-jin",
+          "kind": "ncsa",
+          "quote": "2026 Pandas Volleyball Club (16 -1)",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026."
+    },
+    {
+      "teamSlug": "monta-vista",
+      "athleteId": "03756162-510c-49f4-97f1-dd473c62576e",
+      "playerId": "p6bc4b8b59d",
+      "fullName": "Lakshmi Kanjirakkai Unni",
+      "club": "tropical-touch-volleyball-club",
+      "clubTeam": "17-1",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/cupertino/monte-vista-high-school-cupertino/lakshmi-kanjirakkai-unni",
+          "kind": "ncsa",
+          "quote": "2024 Tropical Touch Volleyball Club (CA) (CA) (17-1)",
+          "statedSchool": "Monta vista high school (Cupertino)",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
+    },
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "7cddccc1-1f50-428d-a945-43e648a94a2d",
+      "playerId": "pacf809f09b",
+      "fullName": "Autumn Cleland",
+      "club": "mountain-view-volleyball-club",
+      "clubTeam": "15 Red",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/palo-alto/palo-alto-high-school/autumn-cleland",
+          "kind": "ncsa",
+          "quote": "2025 MVVC (15 Red)",
+          "statedSchool": "Palo Alto High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
+      "teamSlug": "santa-teresa",
+      "athleteId": "a3c3d917-9afd-4894-8a06-7b6a5ecb3ee1",
+      "playerId": "pf635d1bd83",
+      "fullName": "Alexa Huether",
+      "club": "morgan-hill-volleyball-club",
+      "clubTeam": "Power 16",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/santa-teresa-high-school/alexa-huether",
+          "kind": "ncsa",
+          "quote": "2024 Morgan Hill Volleyball Club (Power 16)",
+          "statedSchool": "Santa Teresa High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "e9df3462-d8d7-496b-8db3-bf6dad1d88a0",
+      "playerId": "p3e03bcf4ca",
+      "fullName": "Maia Handog",
+      "club": "morgan-hill-volleyball-club",
+      "clubTeam": "15u Power",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/gilroy/christopher-high-school/maia-handog",
+          "kind": "ncsa",
+          "quote": "2025 MHVC (15u Power)",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "13e9c1ad-7db9-4823-aa56-4b847c1df57f",
+      "playerId": "p1c822ca0d9",
+      "fullName": "Ellie Dong",
+      "club": "panda-volleyball-club",
+      "clubTeam": "15 2s",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-jose/valley-christian-high-school7/ellie-dong1",
+          "kind": "ncsa",
+          "quote": "2024 Pandas Volleyball Club (15 2s)",
+          "statedSchool": "Valley Christian High School - San Jose",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
     }
   ]
 }

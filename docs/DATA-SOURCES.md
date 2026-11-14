@@ -2922,6 +2922,64 @@ has the counts.
   served by the pass that found it and again at assembly. SportsRecruits and MaxPreps findings were read several
   times by one reader, not by a second.
 
+**Round of 2026-11-14.** The WCAL and WBAL joined the build on 2026-11-14 (19 schools, 307 varsity rows, 92 JV rows
+on MaxPreps), and the first round's name searches had stopped early. The same rules, run again by separate passes,
+then assembled onto the first round's files (each new tie or profile says it is from this round):
+
+- **Hudl**, as above, for the 19 schools: 18 matched (Notre Dame San Jose not found); 41 girls' volleyball teams at
+  16 schools, 77 team-season rosters, 59 with members. Eastside's only Hudl teams are boys' basketball, Presentation
+  has none, and Harker's girls rosters hold classes of 2021 to 2027 only. 257 rows matched a roster member; 208
+  public pages, each fetched in two separate passes with identical parsed records; 206 kept, 2 ruled out by class
+  year, 52 matches private. A name that is a nickname or another spelling (Momo for Momoko, Chin for Chinn,
+  Tuipulotu for Tuipolotu) is kept when school and class year agree, and its note says so. A row matched to two
+  Hudl accounts keeps the one with the later team entry.
+- **NCSA through a headless browser.** NCSA's pages now load only in a browser; headless Chromium read them, one
+  page every 2.5 to 4 s, no login. Two findings changed the method: a school page's "Select an athlete" list gives
+  each listed athlete's exact address (`…/caitlin-brown27`), so addresses need not be guessed; but the lists are
+  incomplete, and the athlete slug is global (any city/school path ending in it redirects to that athlete's own
+  page, whatever the sport or state). So every named varsity and JV row at all 60 schools was also looked up by
+  name: `<first-last>`, suffixes 1 and 2, and 3 to 6 only where an earlier address was someone else's. 3,377 page
+  loads, no block. 89 pages kept (two runs agreeing on each; four with a name spelled differently, two ungraded
+  rows on the school alone), 11 of them in another sport; 15 not linked (10 name another school, one a Live Oak
+  High School in Live Oak, CA, four a class year that disagrees). The club ties come from the dated "Club
+  Information" lines, as before. `hometown` is not read from NCSA: its header gives the school's city.
+- **SportsRecruits** probe, as above, for the 379 named WCAL and WBAL rows (hyphen to underscore or dropped, joined
+  multi-word surnames, middle names dropped): 1,747 addresses, 465 live pages, each read through the page's own
+  JSON call; 45 kept for 42 players (41 name the school with its city; two rest on rule (b), Menlo Park for Menlo
+  and San Carlos for Notre Dame Belmont; two keep a school whose city is misspelled or a neighbouring one). A school
+  name shared by schools elsewhere (Notre Dame, Saint Francis, St. Ignatius, Valley Christian, Presentation, Mercy,
+  King's Academy, Pinewood) counts only with the city. 133 live pages state a class year that disagrees.
+- **MaxPreps career pages** for the 307 rows, as above: 53 claimed.
+- **Prep Dig and PrepVolleyball** for every named junior, senior and ungraded row at all 60 schools, and every
+  WCAL and WBAL row: Prep Dig's 19 team pages (slugs guessed, city checked in the title; `notre-dame-2` is
+  Belmont's, `valley-christian-1` San Jose's, `saint-francis` Mountain View's), its player pages (`-2`, `-3` while
+  the page was someone else's), and its WordPress search as a finder only (the record carries contact data that
+  was not stored; every quote is from the HTML page). PrepVolleyball's player search
+  (`prepvolleyball.com/player-search?field_address_administrative_area=CA&combine=<name>`) needs no login. A Prep
+  Dig page whose club link goes to a Vision club in another state is not used as a club source.
+- **Club records.** Absolute (San Rafael; the site answered on 2026-11-14), Club 415, Rage Westside, SF Juniors and
+  Kamikaze were written from their own sites. Apex and Frisco Bay still have none.
+- **College releases**, from the NCAA directory's member list for women's volleyball and beach volleyball
+  (`web3.ncaa.org/directory/api/directory/memberList?type=12&division=<I|II|III>&sportCode=WVB`, each program's
+  `athleticWebUrl`; D1 348, D2 288, D3 415) plus 14 West Coast NAIA sites: about 890 feeds read from 2026-11-11 on.
+  72 sites answered with a bot check (Incapsula) and were not read, among them Cal, UC Irvine, UC Riverside, Nevada
+  and Tulane; six volleyball signing releases were listed but not opened for that reason (Bowling Green, Florida,
+  Montana, Nevada, Southeast Missouri, Syracuse). No release named a rostered player. The college records added
+  (Stanford, UC Irvine, Nevada, UC Riverside, Portland) cite the NCAA directory or the college's own Sidearm page
+  metadata for division and conference.
+- **News**, for the 19 schools: student papers found for 7 (Harker's Aquila and Harker News, Menlo's Coat of Arms,
+  Castilleja's Counterpoint, Saint Francis's Lancer, Mitty's Monarch, Crystal Springs' Gryphon Gazette), Sacred
+  Heart Prep's PDF issues, Saint Francis's athletics feed, schools' college-athletes pages, Palo Alto Online, The
+  Almanac, the Mountain View Voice, Cal-Hi Sports and Bay Preps Insider. The other schools' news lists are drawn by
+  script and gave no stories; the San Mateo Daily Journal (403), Los Altos Town Crier and SF Examiner (429) were not
+  read.
+- **Web search** by name: every senior at the 60 schools, 40 of the 271 juniors, no ungraded row; one standard
+  query per player. Nothing rests on a search result alone.
+- **Checking.** Every new profile, club source and commitment source was fetched again at assembly by a script
+  separate from the passes: Hudl through `window.__hudlEmbed`, MaxPreps for the claimed flag, SportsRecruits for
+  title and description, quotes piece by piece; NCSA pages re-read by headless Chromium. All agreed, except
+  where a page spells the name another way (Chin, Tuipulotu, Thornton, which the notes already say; Dalessandro without its apostrophe).
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

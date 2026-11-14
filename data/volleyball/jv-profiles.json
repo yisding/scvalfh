@@ -1,7 +1,7 @@
 {
   "season": "26-27",
-  "builtBy": "Research by hand, 2026-11-13: Hudl's public rosters for every school's girls volleyball teams, NCSA's women's volleyball school pages and a SportsRecruits profile-address probe, over the 322 JV players MaxPreps lists; each Hudl and NCSA page re-read by an independent refuter.",
-  "capturedAt": "2026-11-13",
+  "builtBy": "Research by hand, 2026-11-13 and 2026-11-14: Hudl's public rosters for every school's girls volleyball teams, NCSA's women's volleyball school pages and name search, and a SportsRecruits profile-address probe, over the JV players MaxPreps lists (322 at the SCVAL and BVAL schools, 92 at the WCAL and WBAL schools); each Hudl and NCSA page re-read by a second reader.",
+  "capturedAt": "2026-11-14",
   "notes": [
     "The JV players' own recruiting pages, linked by the rule of data/volleyball/rosters-enrichment.json's profiles[]. Joined on team slug + the name the team page's JV list gives. No claimed-MaxPreps pages (the JV career pages were not read). A player on both the JV list and the varsity roster has her pages in the varsity file. Recall is partial."
   ],
@@ -627,6 +627,7 @@
       "players": [
         {
           "name": "Chelsie Chinn",
+          "playerId": "p4b0c281993",
           "profiles": [
             {
               "platform": "hudl",
@@ -638,6 +639,7 @@
         },
         {
           "name": "Taylor Lui",
+          "playerId": "pf1e414c3ab",
           "profiles": [
             {
               "platform": "hudl",
@@ -649,6 +651,7 @@
         },
         {
           "name": "Mika Pfalzer",
+          "playerId": "p2bb84963b1",
           "profiles": [
             {
               "platform": "hudl",
@@ -660,6 +663,7 @@
         },
         {
           "name": "Cate Szeto",
+          "playerId": "p976eb24c98",
           "profiles": [
             {
               "platform": "hudl",
@@ -671,6 +675,7 @@
         },
         {
           "name": "Peyton Niu",
+          "playerId": "pba85122f2e",
           "profiles": [
             {
               "platform": "hudl",
@@ -682,6 +687,7 @@
         },
         {
           "name": "Alani Sanith",
+          "playerId": "pe5ef4ccba1",
           "profiles": [
             {
               "platform": "hudl",
@@ -693,6 +699,7 @@
         },
         {
           "name": "Tatum Pollack",
+          "playerId": "p982406833d",
           "profiles": [
             {
               "platform": "hudl",
@@ -704,6 +711,7 @@
         },
         {
           "name": "Anna Manfreda",
+          "playerId": "p1fd2380f5c",
           "profiles": [
             {
               "platform": "hudl",
@@ -715,6 +723,7 @@
         },
         {
           "name": "Stella Polyzos",
+          "playerId": "p0eb050544b",
           "profiles": [
             {
               "platform": "hudl",
@@ -731,6 +740,7 @@
       "players": [
         {
           "name": "Mary Shepard",
+          "playerId": "p01f37013e5",
           "profiles": [
             {
               "platform": "hudl",
@@ -742,6 +752,7 @@
         },
         {
           "name": "Emerson Ray",
+          "playerId": "pf4547ca381",
           "profiles": [
             {
               "platform": "hudl",
@@ -753,6 +764,7 @@
         },
         {
           "name": "Kaya Chu",
+          "playerId": "p9fd59d889b",
           "profiles": [
             {
               "platform": "hudl",
@@ -764,12 +776,13 @@
               "platform": "ncsa",
               "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/mountain-view/saint-francis-high-school/kaya-chu",
               "classOf": 2030,
-              "note": "NCSA women's volleyball profile naming Saint Francis High School (Mountain View); class of 2030 agrees with the JV list. Found on NCSA's page for the school on 2026-11-14 and read twice."
+              "note": "NCSA women's volleyball profile naming Saint Francis High School (Mountain View); class of 2030 agrees with the JV list. Found on NCSA (2026-11-14, school list or name search) and read twice."
             }
           ]
         },
         {
           "name": "Maria Konovalova",
+          "playerId": "p9f4a529fcb",
           "profiles": [
             {
               "platform": "hudl",
@@ -781,6 +794,7 @@
         },
         {
           "name": "Bella Herrera",
+          "playerId": "p70a5d603a6",
           "profiles": [
             {
               "platform": "hudl",
@@ -792,6 +806,7 @@
         },
         {
           "name": "Charlotte Baird",
+          "playerId": "pd63d1e2573",
           "profiles": [
             {
               "platform": "hudl",
@@ -803,6 +818,7 @@
         },
         {
           "name": "Madelyn Caulfield",
+          "playerId": "pe4df781064",
           "profiles": [
             {
               "platform": "hudl",
@@ -814,6 +830,7 @@
         },
         {
           "name": "Callie Yulo",
+          "playerId": "p0f65352192",
           "profiles": [
             {
               "platform": "hudl",
@@ -825,6 +842,7 @@
         },
         {
           "name": "Lillian McCune",
+          "playerId": "pd4372c6571",
           "profiles": [
             {
               "platform": "hudl",
@@ -836,6 +854,7 @@
         },
         {
           "name": "Wesley Daniel",
+          "playerId": "p209b62103c",
           "profiles": [
             {
               "platform": "hudl",
@@ -847,6 +866,7 @@
         },
         {
           "name": "Kaia Bailey",
+          "playerId": "p5fc5b979c1",
           "profiles": [
             {
               "platform": "sportsrecruits",
@@ -863,12 +883,25 @@
       "players": [
         {
           "name": "Caitlin Brown",
+          "playerId": "p982e8471be",
           "profiles": [
             {
               "platform": "ncsa",
               "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/sunnyvale/the-kings-academy12/caitlin-brown27",
               "classOf": 2029,
-              "note": "NCSA women's volleyball profile naming The Kings Academy; class of 2029 agrees with the JV list. Found on NCSA's page for the school on 2026-11-14 and read twice."
+              "note": "NCSA women's volleyball profile naming The Kings Academy; class of 2029 agrees with the JV list. Found on NCSA (2026-11-14, school list or name search) and read twice."
+            }
+          ]
+        },
+        {
+          "name": "Naomi Shen",
+          "playerId": "p5c6f652c6a",
+          "profiles": [
+            {
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/sunnyvale/the-kings-academy16/naomi-shen2",
+              "classOf": 2029,
+              "note": "NCSA women's volleyball profile naming The King's Academy; class of 2029 agrees with the JV list. Found on NCSA (2026-11-14, school list or name search) and read twice."
             }
           ]
         }
@@ -879,6 +912,7 @@
       "players": [
         {
           "name": "Aashi Agrawal",
+          "playerId": "p4687fa7482",
           "profiles": [
             {
               "platform": "hudl",
@@ -890,6 +924,7 @@
         },
         {
           "name": "Riley Erickson",
+          "playerId": "p15167e4bf9",
           "profiles": [
             {
               "platform": "hudl",
@@ -901,6 +936,7 @@
         },
         {
           "name": "Kayla Choe",
+          "playerId": "pe2b5e4283d",
           "profiles": [
             {
               "platform": "hudl",
@@ -912,6 +948,7 @@
         },
         {
           "name": "Aria Hwang",
+          "playerId": "pa001cf5e86",
           "profiles": [
             {
               "platform": "hudl",
@@ -923,6 +960,7 @@
         },
         {
           "name": "Bianca Bagabaldo",
+          "playerId": "p66effcf788",
           "profiles": [
             {
               "platform": "hudl",
@@ -934,6 +972,7 @@
         },
         {
           "name": "Jamison Glore",
+          "playerId": "p15343a33e4",
           "profiles": [
             {
               "platform": "hudl",
