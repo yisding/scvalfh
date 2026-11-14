@@ -112,7 +112,11 @@ function GeneratedRules({ league }: { league: LeagueConfig }) {
       {anyStepSeparates ? <p>{MULTI_TEAM_WORDS[rules.multiTeam]}</p> : null}
       <p className="text-cell text-ink-2">
         {`A step this site cannot compute (${
-          ordersByRecord(rules) ? 'a coaches’ vote, a coin flip' : 'a coin flip, a draw, a play-in'
+          ordersByRecord(rules)
+            ? rules.tiebreaks.default.some((stage) => stage === 'set-points' || stage === 'second-meeting')
+              ? 'the points scored in each set, a later match between the tied teams'
+              : 'a coaches’ vote, a coin flip'
+            : 'a coin flip, a draw, a play-in'
         }) leaves the teams level at the same place, with a footnote citing the rule. Our display order is not a league ruling.`}
       </p>
       {rules.citations.incomplete ? <p>If the season ends with games unplayed: {rules.citations.incomplete}.</p> : null}

@@ -252,6 +252,10 @@ export default function PlayoffsPage() {
                   9-16) once every path's division is proven; else the honest grouping sentence of 2026-10-06. */}
               {divisionsKnown && overall
                 ? `CCS numbers each division’s eight teams 1-8; CCS ${overall.name} holds the committee’s overall seeds ${overall.seeds[0]}-${overall.seeds[1]}.`
+                : ccsDivisionLabels(playoffs).length === 0
+                  ? // A championship whose divisions this site does not name (CCS.ccsDivisions empty: soccer's five,
+                    // basketball's and volleyball's Open Division and Divisions 1-5).
+                    'CCS plays this championship in several divisions, each with its own bracket. The games above are every division’s, grouped by round and not by division; the official bracket shows each division’s own.'
                 : `The CCS field is two eight-team divisions, ${listWords(ccsDivisionLabels(playoffs))}. Our data does not say which division a game belongs to, so the games above are grouped by round and, where the bracket splits into independent paths, by path.`}
             </p>
             <p className="sx-linkrow">

@@ -1,6 +1,7 @@
 /**
- * Writes data/<sport>/official/bval-2026.json, the BVAL official fixtures of the build's winter sport (boys
- * basketball or girls soccer), from the text of the league's 2026-27 division schedules
+ * Writes data/<sport>/official/bval-2026.json, the BVAL official fixtures of the build's sport (boys
+ * basketball, girls soccer or girls volleyball: the name is from when both were winter sports), from the text
+ * of the league's 2026-27 division schedules
  * (tests/fixtures/official/source/bval-<sport>-<gender>-<division>-2026.txt: `pandoc -t plain --wrap=none` of
  * each Google Doc's .docx download, byte for byte).
  *
@@ -11,6 +12,9 @@
  * `<DIVISION> DIVISION`, the team list, chair, game times, the `BVAL MEETINGS` lines, which contain `@` and are
  * not games), then date headings (`Wednesday, January 6th`) each followed by `Away @ Home [time note]` lines,
  * dated notes (`CCS Sportsmanship Game ONLY`, `CCS Seeding Meeting`), and the footer's revision date (`10/12/26`).
+ * Volleyball's Santa Teresa and West Valley documents end with the play-in for the league's last automatic berth
+ * (`Santa Teresa 2nd Place @ West Valley Division Champion (…)`): a pairing of places, not a fixture
+ * (lib/league-config/volleyball/bval.ts `pairings`), so it is passed over by PLACE_PAIRING_RE.
  *
  * Times. A game with no note is played at the document's GAME TIMES (basketball JV 5:30 and varsity 7:00, soccer
  * JV 5:00 and varsity 7:00). A note gives the day's two starts, JV first unless it labels them ("4p/615p",
@@ -39,7 +43,7 @@ import {
   type OfficialBundle,
 } from '../lib/official/schema';
 import { assertDoubleRoundRobin } from '../lib/official/validate';
-import { IS_BASKETBALL, SPORT_ID } from '../lib/sports/current';
+import { IS_BASKETBALL, IS_VOLLEYBALL, SPORT_ID } from '../lib/sports/current';
 import { resolveOfficialName } from '../lib/teams';
 import type { DivisionId } from '../lib/types';
 import { runCliIfMain } from './cli';
@@ -47,7 +51,7 @@ import { runCliIfMain } from './cli';
 const REPO = path.resolve(import.meta.dirname, '..');
 const SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
 
-/** The day the documents were read and transcribed. */
+/** The day the winter documents were read and transcribed. */
 export const TRANSCRIBED_ON = '2026-11-13';
 
 export interface WinterSource {
@@ -59,12 +63,14 @@ export interface WinterSource {
 
 interface WinterSport {
   out: string;
+  /** The day the documents were read, where it is not TRANSCRIBED_ON (volleyball: 2026-11-14). */
+  transcribedOn?: string;
   /** The document's GAME TIMES line, 24h. */
   defaults: { varsity: string; jv: string };
   sources: readonly WinterSource[];
 }
 
-export const WINTER: Readonly<Record<'basketball' | 'soccer', WinterSport>> = {
+export const WINTER: Readonly<Record<'basketball' | 'soccer' | 'volleyball', WinterSport>> = {
   basketball: {
     out: 'data/basketball/official/bval-2026.json',
     // "GAME TIMES: JV @ 5:30pm / Varsity @ 7:00pm"
@@ -86,6 +92,18 @@ export const WINTER: Readonly<Record<'basketball' | 'soccer', WinterSport>> = {
       { division: 'west-valley', file: 'bval-soccer-girls-west-valley-2026.txt', sha256: '4f0c1c3fd4ef2a4117e680d1e9d0eef7de69db4ef6adb6dae5709a9244ea0849' },
     ],
   },
+  volleyball: {
+    out: 'data/volleyball/official/bval-2026.json',
+    transcribedOn: '2026-11-14',
+    // "GAME TIMES: JV @ 5:30PM, Varsity @ 7:00PM"
+    defaults: { varsity: '19:00', jv: '17:30' },
+    sources: [
+      { division: 'mt-hamilton', file: 'bval-volleyball-girls-mt-hamilton-2026.txt', sha256: '4a01f0a2318b3c2a29d4838840aca19478c4e0ce9a58d1bda60be3abe6a1a8ba' },
+      { division: 'santa-teresa', file: 'bval-volleyball-girls-santa-teresa-2026.txt', sha256: '44b92c7022e6d0585c597add6c997d6e1483a174d2231ad10641745db4ba4d41' },
+      { division: 'almaden-valley', file: 'bval-volleyball-girls-almaden-valley-2026.txt', sha256: 'ab42b90af4cc51e2c57b29da3886c59a7de27901a848a98f16bd3554f458300e' },
+      { division: 'west-valley', file: 'bval-volleyball-girls-west-valley-2026.txt', sha256: '94baad9cd57b8e6774b306de4eeab92cf28d9c32cc9046f12105dbf0e0bfa2cc' },
+    ],
+  },
 };
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -95,6 +113,9 @@ const DIVISION_RE = /^([A-Z. ]+) DIVISION$/;
 const REVISION_RE = /^(\d{1,2}\/\d{1,2}\/\d{2})$/;
 /** `Away @ Home` and an optional time note, which starts at a digit or a `V ` / `JV ` label (and may touch the name). */
 const GAME_RE = /^([A-Za-z.' ]+?)\s*@\s*([A-Za-z.' ]+?)\s*((?:J?V\s*)?\d[\w/: ]*)?$/;
+
+/** A pairing of two divisions' places ("Santa Teresa 2nd Place @ West Valley Division Champion (…)"), not a fixture. */
+const PLACE_PAIRING_RE = /\b\d(?:st|nd|rd|th) Place @ .+ Champion\b/;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -187,6 +208,7 @@ export function parseDivisionText(division: DivisionId, text: string): ParsedDiv
       continue;
     }
     if (!line.includes('@')) continue; // dated notes: "CCS Seeding Meeting", "(must be approved by CCS)", footnotes
+    if (PLACE_PAIRING_RE.test(line)) continue;
     const game = GAME_RE.exec(line);
     if (!game || date === null) throw new Error(`${division}: unreadable game line "${line}"`);
     out.games.push({ date, away: game[1].trim(), home: game[2].trim(), note: game[3]?.trim() || null });
@@ -230,8 +252,9 @@ export function fixturesOf(sport: WinterSport, parsed: ParsedDivision): BundleFi
 
 function sportOfBuild(): WinterSport {
   if (IS_BASKETBALL) return WINTER.basketball;
+  if (IS_VOLLEYBALL) return WINTER.volleyball;
   if (SPORT_ID === 'soccer') return WINTER.soccer;
-  throw new Error('build-bval-winter-fixtures: run with SCVAL_SPORT=basketball or SCVAL_SPORT=soccer');
+  throw new Error('build-bval-winter-fixtures: run with SCVAL_SPORT=basketball, SCVAL_SPORT=soccer or SCVAL_SPORT=volleyball');
 }
 
 export function buildBundle(
@@ -260,7 +283,7 @@ export function buildBundle(
     schema: OFFICIAL_BUNDLE_SCHEMA,
     league: 'bval',
     source: 'bval-docx',
-    transcribedOn: TRANSCRIBED_ON,
+    transcribedOn: sport.transcribedOn ?? TRANSCRIBED_ON,
     documents,
     fixtures: fixtures.sort(compareBundleFixtures),
     events: [],

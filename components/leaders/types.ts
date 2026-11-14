@@ -41,7 +41,15 @@ export type LeaderColumnKey =
   | 'steals'
   | 'blocks'
   | 'threePointsMade'
-  | 'threePointPct';
+  | 'threePointPct'
+  // volleyball's player boards
+  | 'setsPlayed'
+  | 'kills'
+  | 'aces'
+  | 'digs'
+  | 'soloBlocks'
+  | 'blockAssists'
+  | 'hittingPct';
 
 export interface LeaderColumn {
   key: LeaderColumnKey;

@@ -25,6 +25,12 @@ documents. BVAL was added to both winter builds on 2026-11-13 so the ratings cou
 against BVAL schools (see "BVAL in the winter builds"). See "Boys basketball" under "Local development" and
 docs/MULTI-SPORT.md.
 
+**Girls volleyball (SCVAL and BVAL, 2026).** The same code builds a fourth site, NorCal High School Girls
+Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
+and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
+under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
+player stats per set. See "Girls volleyball" under "Local development" and docs/MULTI-SPORT.md.
+
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
 Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture" below.
@@ -1397,6 +1403,75 @@ teams). What it leaves out, as soccer does: /clubs, /commits and /recruiting, si
 region toggle. MaxPreps also has a freshman season for some of these schools; the SCVAL
 fields two official boys teams, varsity and JV (By-Laws Article II), and the site covers those two.
 
+### Girls volleyball
+
+`SCVAL_SPORT=volleyball` builds the SCVAL and BVAL girls volleyball site from `data/volleyball/` (added
+2026-11-14, with the 2026 season's league play finished and the CCS finals played). Every command takes it:
+
+```bash
+SCVAL_SPORT=volleyball pnpm build-scval-volleyball-fixtures     # data/volleyball/official/scval-2026.json, from the two schedule texts
+SCVAL_SPORT=volleyball pnpm build-bval-winter-fixtures          # data/volleyball/official/bval-2026.json, from the four division texts
+SCVAL_SPORT=volleyball pnpm fetch-data --no-sblive --no-vnn --no-cifss   # data/volleyball/snapshot.json
+SCVAL_SPORT=volleyball pnpm fetch-rosters                        # data/volleyball/rosters.json
+SCVAL_SPORT=volleyball pnpm fetch-rosters --level jv             # data/volleyball/jv-rosters.json
+SCVAL_SPORT=volleyball pnpm fetch-jv --no-sblive                 # data/volleyball/jv.json
+SCVAL_SPORT=volleyball pnpm fetch-player-stats                   # data/volleyball/player-stats.json
+SCVAL_SPORT=volleyball pnpm fetch-prior-season                   # data/volleyball/prior-season.json (2025, seeds the ratings)
+SCVAL_SPORT=volleyball pnpm fetch-prior-players                  # data/volleyball/prior-players.json
+SCVAL_SPORT=volleyball pnpm build-history --from tests/fixtures/volleyball/scval-history   # data/volleyball/history-2025-26.json
+SCVAL_SPORT=volleyball pnpm build                                # or pnpm build:vinext / build:cloudflare
+SCVAL_SPORT=volleyball pnpm exec tsx scripts/assert-prerender.ts # and assert-budgets, assert-copy
+```
+
+What is volleyball's own (each from a document or a live response read 2026-11-14, cited in
+`lib/league-config/volleyball/` and `lib/sports/volleyball.ts`):
+
+- **A score is sets won.** A varsity match is the best of five sets (SCVAL Volleyball By-Laws Article IV §2.1,
+  BVAL Girls Volleyball By-Laws §3.7) and MaxPreps records each side's sets, so a final reads 3-1, the for /
+  against / difference columns are SW, SL and SD (`Sport.scoring`), and there is no overtime
+  (`Sport.scoring.overtime: 'none'`). No match ends level, so records read W-L; a tournament's two-set split
+  that MaxPreps marks as a tie is printed as it stands. Site copy still says "game" for a match.
+- **Tables are ordered on the league record** in both leagues (`orderBy: 'win-pct'`). SCVAL breaks a tie on the
+  matches, then the share of sets, won between the tied teams (`head-to-head`, `h2h-set-ratio`), then on the
+  points scored in those sets, which no feed here carries, so the teams stay level (`set-points`). BVAL breaks it
+  on head-to-head, sets won head-to-head (`h2h-sets-won`), the record against the division from the top down
+  (`record-vs-placed`), then the second-round match (`second-meeting`, not computed).
+- **The official schedules are bundles built by scripts**, as basketball's are: SCVAL's two PDFs (98 fixtures;
+  De Anza's seven teams take turns on a bye, which the grid prints and the parser checks) and BVAL's four
+  Google Docs (146 fixtures). Each fixture carries its JV match. MaxPreps' six league tables hold the same
+  teams as the schedules, and on 2026-11-14 every team's computed league record matched MaxPreps' table.
+- **CCS**: SCVAL has four automatic berths (De Anza 1-3, El Camino 1) and BVAL six (Mt. Hamilton 1-3, the Santa
+  Teresa and Almaden Valley champions, and the winner of a play-in on Wed Oct 28, Santa Teresa's second-place
+  team at the West Valley champion: a `bval-play-in` pairing). The championship is an Open Division and
+  Divisions 1-5; /playoffs draws every division's games by round, not by division (`ccsDivisions: []`), and
+  links MaxPreps' bracket, whose six blocks `CCS.tournament` names. The CCS calendar feed names the Oct 31 and
+  Nov 3 rounds the other way round from the CCS Playoff Calendar; the Playoff Calendar's order is used, and the
+  run logs the difference.
+- **CIF State**: the regional and state rounds after the section finals (Nov 10-21) are listed as postseason
+  games of another championship (`postseason.kind: 'other'`, labelled "CIF State"; `lib/classify.ts` rule 1d),
+  never as CCS games, and are not drawn as a bracket.
+- **Ratings**: the margin is in sets, capped at 3, and a set of expected margin is 150 Elo points by rule of
+  thumb (`provisionalNote` says so on the Elo board). No Elo-adjusted boards (`adjustedScoring: null`).
+- **Player stats**: `Sport.stats.model: 'volleyball'`. A player's one line (13 keys: sets played, kills, attack
+  errors and attempts, aces, serve errors and attempts, solo blocks, block assists, digs, assists, serve
+  receptions and reception errors) is read from the six groups of MaxPreps' rollup; the per-set rates and the
+  hitting percentage are worked out from the counts. The team page shows four small tables, the game page a
+  box score per side, and /leaders has kills, aces, digs and assists per set, kills and solo blocks, beside
+  the school boards (record, league record, average margin in sets, Elo). 23 of the 41 teams had entered
+  stats on 2026-11-14. A roster's positions read Outside hitter, Middle blocker, Setter, Libero and so on.
+- **A forfeit entered 0-0 with the winner marked** is that side's win, in every sport (`sideOutcome` in
+  `lib/format.ts`): Andrew Hill v KIPP San Jose Collegiate, Oct 16, was the first one any build held.
+- **No cifsshome.org cross-check**: a girls volleyball season is past the listing's 60-page cap in every
+  Section it reads, so the refresh runs with `--no-cifss` and /about says no comparison has been made.
+- **Last season**: /history/2025-26 has SCVAL's 2025-26 final standings and all-league teams from scval.com's
+  PDFs (`data/volleyball/official/scval-all-league-2025-26.json`; the De Anza documents print a graduating class
+  for a grade, and one El Camino JV row prints "7", stored with no grade). BVAL is marked unavailable, as in
+  the winter builds.
+
+What it leaves out, as the winter builds do: /clubs, /commits and /recruiting, si.com, the VNN calendars and
+the region toggle. Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS
+Volleyball Bylaws' allocation of the field, and the smoke and axe passes on this build.
+
 ## Tests
 
 `pnpm test` runs the full Vitest suite: snapshot-schema validation, standings/tiebreak arithmetic
@@ -1415,8 +1490,8 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 
 ## The player registry
 
-`data/players.json` holds one record per person across all three sports and every season the repository
-has seen (3,946 on 2026-11-14): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
+`data/players.json` holds one record per person across all four sports and every season the repository
+has seen (4,992 on 2026-11-14, once girls volleyball was added): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
 team, season, sport and level (varsity, JV or a freshman team), each with what every source said about it
 and where the sources disagree. It is internal. No page reads it, and a test fails if anything under
 `app/` or `components/` imports it. It does name about 770 players of 2025-26 who appear nowhere else in
@@ -1438,7 +1513,7 @@ files. It also writes each player's `playerId` into `data/clubs.json`, `data/com
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
 `review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
-kept apart); the 28 items left are joins and splits a rule already made, listed to be checked. The answers go in `data/player-identity.json` (each with its reason), never into
+kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
 `data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
 Deleting a `sameAs` entry undoes the join on the next build that still reads that season's files. After a
 rollover it does not (a carried-forward season is kept as it was): `docs/DATA-SOURCES.md` §1.1 (m) gives

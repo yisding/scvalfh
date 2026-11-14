@@ -501,6 +501,12 @@ function resultConflictNoteFor(game: Game): string | null {
   // A shootout win is level on goals and a win here: `scoreNote` says so, so no tie sentence.
   if (game.decider === 'SO') return `${note}.`;
   const level = game.home.score !== null && game.home.score === game.away.score;
+  // A forfeit entered with no score and the winner marked is that side's win (lib/format.ts sideOutcome).
+  const forfeitOutcome = game.decider === 'FORFEIT' && level ? sideOutcome(game, 'home') : null;
+  if (forfeitOutcome === 'W' || forfeitOutcome === 'L') {
+    const winner = forfeitOutcome === 'W' ? game.home.name : game.away.name;
+    return `${note}. MaxPreps records a forfeit, so this site counts it as ${winner}\u2019s win.`;
+  }
   return level
     ? `${note}. The score is level, so this site counts it as a tie.`
     : `${note}. This site goes by the published score.`;

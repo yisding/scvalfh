@@ -30,6 +30,7 @@ import { z } from 'zod';
 
 import bundledFieldHockey from '../../data/instagram.json';
 import bundledBasketball from '../../data/basketball/instagram.json';
+import bundledVolleyball from '../../data/volleyball/instagram.json';
 import bundledSoccer from '../../data/soccer/instagram.json';
 import { validateData } from '../data-file';
 import { getClub } from '../players/clubs';
@@ -38,7 +39,7 @@ import { calendarDateKey, slugId } from '../schema-primitives';
 import { TEAMS } from '../teams';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const text = z.string().trim().min(1);
 

@@ -72,6 +72,12 @@ const gdCell = (r: ComputedRecord): LeaderCell => {
  * and the adjusted model is a goal model: lib/ratings/adjusted-scoring.ts HAS_ADJUSTED_SCORING).
  */
 const BASKETBALL = SPORT.stats.model === 'basketball';
+/**
+ * Whether they are volleyball's: the records, the average margin in sets, and Elo. A match's score is its sets
+ * won, at most three, so sets a match is no scoring rate worth a board, and there is no clean-sheet or
+ * Elo-adjusted board for the reasons basketball has none.
+ */
+const VOLLEYBALL = SPORT.stats.model === 'volleyball';
 const rate = (goals: number, games: number) => (games > 0 ? goals / games : 0);
 /** A rate as a board prints it: two places for goals a game, one for points a game. */
 const rateText = (goals: number, games: number) => rate(goals, games).toFixed(BASKETBALL ? 1 : 2);
@@ -206,7 +212,9 @@ function marginBoard(lines: readonly SchoolLine[], min: number, scope: BoardScop
         },
       ],
       rankedBy: 2,
-      note: `${SCORE_UNITS_TITLE} scored less ${SCORE_UNITS} allowed in every completed game, divided by the games played. Equal averages are split by more games played. A forfeit has no score, so it is left out.`,
+      note: VOLLEYBALL
+        ? 'Sets won less sets lost in every completed match, divided by the matches played. Equal averages are split by more matches played. A forfeit has no score, so it is left out.'
+        : `${SCORE_UNITS_TITLE} scored less ${SCORE_UNITS} allowed in every completed game, divided by the games played. Equal averages are split by more games played. A forfeit has no score, so it is left out.`,
       empty: `No team has played ${plural(min, 'game')} yet.`,
     },
     scope,
@@ -327,7 +335,7 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
         note:
           `League games only, as the standings count them${scope.independents > 0 ? '; the independents’ table counts their games against each other' : ''}. ` +
           // One league (basketball: SCVAL alone) has nothing to compare across.
-          (BASKETBALL ? 'Divisions play different numbers of league games, so this compares percentages.' : 'Leagues play different numbers of league games, so this compares percentages, not points.'),
+          (BASKETBALL || VOLLEYBALL ? 'Divisions play different numbers of league games, so this compares percentages.' : 'Leagues play different numbers of league games, so this compares percentages, not points.'),
       },
       lines,
       scope,
@@ -359,7 +367,9 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   );
   // Basketball: records, the two scoring rates, the average margin, Elo. No Elo-adjusted board (no scoring
   // model for the sport) and no clean sheets (no basketball team is held scoreless).
-  const boards: LeaderBoard[] = BASKETBALL
+  const boards: LeaderBoard[] = VOLLEYBALL
+    ? [...recordBoards, marginBoard(lines, overallMin.min, scope), elo.board]
+    : BASKETBALL
     ? [...recordBoards, scoredBoard, allowedBoard, marginBoard(lines, overallMin.min, scope), elo.board]
     : [
     ...recordBoards,
@@ -399,7 +409,9 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   const leagueBelow = belowMinimum(lines, (l) => l.league.gp, leagueMin.min);
   if (overallMin.median > 0) {
     const lead = `need at least ${plural(overallMin.min, 'result')}, half the median of ${overallMin.median}`;
-    if (rateBelow.join() === overallBelow.join()) {
+    if (VOLLEYBALL) {
+      notes.push(`Records and the average margin ${lead}${notYet(overallBelow)}`);
+    } else if (rateBelow.join() === overallBelow.join()) {
       notes.push(`Records and ${SCORE_UNITS} per game ${lead}${notYet(overallBelow)}`);
     } else {
       notes.push(`Records ${lead}${notYet(overallBelow)}`);
@@ -415,7 +427,7 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   }
   if (elo.minimum.median > 0) {
     notes.push(
-      `${BASKETBALL ? 'The Elo board needs' : 'The Elo-adjusted goals board and the Elo board need'} at least ${plural(elo.minimum.min, 'game')} against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `${BASKETBALL || VOLLEYBALL ? 'The Elo board needs' : 'The Elo-adjusted goals board and the Elo board need'} at least ${plural(elo.minimum.min, 'game')} against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
   return { boards, notes };

@@ -44,6 +44,8 @@ export const metadata: Metadata = {
   description:
     SPORT.stats.model === 'basketball'
       ? `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most points per game, the best average margins and the highest Elo ratings, and the players with the most points, rebounds and assists per game, steals, blocks and three-pointers.`
+      : SPORT.stats.model === 'volleyball'
+        ? `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the best average margins and the highest Elo ratings, and the players with the most kills, aces, digs and assists per set, kills and solo blocks.`
       : `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
