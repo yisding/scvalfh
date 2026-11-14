@@ -377,6 +377,8 @@ export function countPlayers(players: readonly Player[], review: number): Player
  *              that career's player: it is resolved by its name instead.
  *   distinct   the two MaxPreps careers on `team` are two people, though they share a name: the
  *              resolver never joins them, and a bare name that fits both is left for review.
+ *   notSame    the two names at `team` are two people (sisters, namesakes), though they look like
+ *              one: the pair is no longer listed for review. `sport` is the sport of the first.
  */
 export const PlayerIdentitySchema = z
   .object({
@@ -398,6 +400,7 @@ export const PlayerIdentitySchema = z
       z.object({ sport: z.enum(SPORT_IDS), team: text, page: z.enum(PLAYER_LEVELS), name: text, careerId: text, basis: text }).strict(),
     ),
     distinct: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, careerIds: z.tuple([text, text]), basis: text }).strict()),
+    notSame: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, names: z.tuple([text, text]), basis: text }).strict()),
   })
   .strict();
 export type PlayerIdentity = z.infer<typeof PlayerIdentitySchema>;

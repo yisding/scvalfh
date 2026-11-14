@@ -964,7 +964,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const ids = [...new Set(rows.map(idOfRow))];
     return { ...r, seasons: [...new Set(rows.flatMap((i) => (members.get(clusters.find(i)) as number[]).map((j) => all[j].season)))].sort(), players: ids };
   });
-  review.push(...lookAlikes(players, seasonsOf));
+  review.push(...lookAlikes(players, seasonsOf, identity));
   // An item about seasons this build did not read cannot be found again: it is kept, for the players still here.
   const sameItem = (a: ReviewItem, b: ReviewItem) => a.kind === b.kind && a.sport === b.sport && a.team === b.team && [...a.names].sort().join('|') === [...b.names].sort().join('|');
   const nowId = new Map(players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p.id] as const)));
@@ -1014,8 +1014,12 @@ function classYearsOf(p: Player): Set<number> {
  * two people unless they wear the same number there, so those are left out: sisters are not a
  * question.
  */
-function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[]): ReviewItem[] {
+function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[], identity: PlayerIdentity): ReviewItem[] {
   const out: ReviewItem[] = [];
+  /** Pairs a person has said are two people: `<team> <name key> <name key>`, keys in order. */
+  const settled = new Set(identity.notSame.map((e) => `${e.team} ${[nameKey(e.names[0]), nameKey(e.names[1])].sort().join(' ')}`));
+  const isSettled = (team: string, a: Player, b: Player) =>
+    a.names.some((x) => b.names.some((y) => settled.has(`${team} ${[nameKey(x), nameKey(y)].sort().join(' ')}`)));
   const gap = (a: Player, b: Player) => {
     let g = 0;
     for (const x of classYearsOf(a)) for (const y of classYearsOf(b)) g = Math.max(g, Math.abs(x - y));
@@ -1044,7 +1048,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const keysA = new Set(fullOf(a).map(nameKey));
         if (fullOf(b).some((y) => keysA.has(nameKey(y)))) continue;
         const pair = fullOf(a).flatMap((x) => fullOf(b).map((y) => [x, y] as const)).find(([x, y]) => namesLookAlike(x, y));
-        if (!pair || gap(a, b) > 1) continue;
+        if (!pair || gap(a, b) > 1 || isSettled(team, a, b)) continue;
         const [la, lb] = [lists(a, sport, team), lists(b, sport, team)];
         const together = [...la.keys()].filter((k) => lb.has(k));
         const sameNumber = together.some((k) => la.get(k) !== undefined && la.get(k) === lb.get(k));
@@ -1075,7 +1079,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const team = k.slice(0, k.indexOf(' '));
         const sportsA = new Set(a.stints.filter((s) => s.team === team).map((s) => s.sport));
         const sportsB = new Set(b.stints.filter((s) => s.team === team).map((s) => s.sport));
-        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1) continue;
+        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1 || isSettled(team, a, b)) continue;
         out.push({
           kind: 'same-name-other-sport',
           sport: [...sportsA].sort()[0],

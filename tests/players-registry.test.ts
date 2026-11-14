@@ -27,7 +27,7 @@ import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/regi
 import { SPORT_IDS } from '../lib/sports/current';
 import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
 
-const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [] };
+const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [] };
 
 /** A roster-row sighting: field hockey, 26-27, varsity unless said otherwise. */
 function row(over: Partial<Sighting> & { name: string; obs?: Partial<Observation> }): Sighting {
@@ -748,6 +748,27 @@ describe('what the reviewers broke', () => {
       'same-name-other-sport: Lea Kim',
     ]);
     expect(file.review.find((r) => r.names.includes('Addy Paradiso'))?.note).toMatch(/both wear #24/);
+  });
+
+  it('a pair a person has said is two people is no longer listed, in one sport or across two', () => {
+    const rows = [
+      stat('Audrey Teuben', 'c1', { season: '25-26' }, { grade: 12 }),
+      jv('Abigail Teuben'),
+      row({ name: 'Lea Kim', careerIds: ['c8'], obs: { grade: 12 } }),
+      row({ name: 'Lea Kim', careerIds: ['c9'], sport: 'soccer', obs: { grade: 12 } }),
+    ];
+    expect(build(rows).review.map((r) => r.kind).sort()).toEqual(['possible-match', 'same-name-other-sport']);
+    const settled = build(rows, {
+      identity: {
+        ...NO_IDENTITY,
+        notSame: [
+          { sport: 'field-hockey', team: 'alpha', names: ['Abigail Teuben', 'Audrey Teuben'], basis: 'sisters' },
+          { sport: 'field-hockey', team: 'alpha', names: ['Lea Kim', 'Lea Kim'], basis: 'namesakes' },
+        ],
+      },
+    });
+    expect(settled.review).toEqual([]);
+    expect(settled.players).toHaveLength(4);
   });
 
   it('review items about seasons a build no longer reads are kept', () => {
