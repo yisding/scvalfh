@@ -9,9 +9,11 @@
  * Gilroy, St. Ignatius, King's Academy, Castilleja and Priory girls volleyball, 2026-10). Earlier
  * seasons' stat sheets carry the same placeholder as "Player 25" or "Player #25".
  *
- * It is not a player: the number may be anyone's (Gilroy's "Player #11" and "Player #12" were
- * nearly joined into one person by the registry), so it is never a roster row, never a registry
- * player, and a stat line under it keeps the sheet's own "Player #4".
+ * It is a number that played, not a known person. The roster keeps the row under "Player #4", the
+ * word "null" dropped (lib/sources/maxpreps-roster.ts), and its stat lines join to it as any row's
+ * do; data/rosters-enrichment.json gives it a name where another source ties one to the number. Left
+ * unnamed it is never a registry player: the number may be anyone's (Gilroy's "Player #11" and
+ * "Player #12" were once joined into one person under "null Player #12").
  */
 export const PLACEHOLDER_NAME = /^player\s*#?\s*\d*$/i;
 

@@ -225,9 +225,10 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
   `firstName` null, `lastName` `"Player #4"`, no grade or position, a career page of its own
   (`/athletes/player-4/`) — and it shows on the roster. MaxPreps builds `formattedName` as
   `${firstName} ${lastName}`, so it and the table both print **`"null Player #4"`**. The cross-check runs
-  on that spelling; then `parseRosterPage` leaves the row out with a warning (it names nobody, and
-  the number may be anyone's), and the stats join keeps its stat line under the sheet's own
-  `"Player #4"`, off the roster. The registry never makes a player of one. Seven teams had them on
+  on that spelling; then `parseRosterPage` drops the "null", keeps the row as `"Player #4"` and names it
+  in a warning, and its stat lines join to it as any row's do. Where another source ties a name to the
+  number, `data/rosters-enrichment.json` fills it (`name`), as it fills any blank; an unnamed one never
+  becomes a registry player (the number may be anyone's). Seven teams had them on
   2026-11-14 (Mitty, Milpitas, Gilroy, St. Ignatius, King's Academy, Castilleja, Priory: 27 rows).
   `tests/fixtures/maxpreps/roster-volleyball-2026-11-mitty.html` is Mitty's page with five.
 - `classYear` is the grade (9–12 here; 5–8 exist for middle school), `formattedClassYear` its label

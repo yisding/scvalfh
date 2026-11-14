@@ -136,8 +136,8 @@ export interface RosterPage {
   athleteCount: number;
   staffCount: number;
   /**
-   * Soft-deleted rows already removed, and so are the "Player #4" rows MaxPreps' stat entry creates
-   * for a number nobody is rostered under (lib/players/placeholder-name.ts; named in `warnings`).
+   * Soft-deleted rows already removed. A "Player #4" row MaxPreps' stat entry created for a number
+   * nobody is rostered under stays, under that name (lib/players/placeholder-name.ts; named in `warnings`).
    */
   players: RosterPlayer[];
   /** How many `isDeleted` rows were dropped. */
@@ -488,13 +488,14 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     else seen.set(key, p.fullName);
   }
 
-  // Only now, after the cross-check held MaxPreps' own spelling against its own table: a row that names
-  // nobody is left out (it is not a player, lib/players/placeholder-name.ts), and a name part MaxPreps
-  // printed as the word "null" is dropped from the full name.
+  // Only now, after the cross-check held MaxPreps' own spelling against its own table: a name part
+  // MaxPreps printed as the word "null" is dropped, so its stat-entry stand-in reads "Player #4"
+  // (lib/players/placeholder-name.ts). The row stays: the number played, and a name another source
+  // gives it is filled from data/rosters-enrichment.json.
   const placeholders = players.filter(isPlaceholderRow);
   if (placeholders.length > 0) {
     warnings.push(
-      `left out ${placeholders.length} stat-entry placeholder row${placeholders.length === 1 ? '' : 's'} that name${placeholders.length === 1 ? 's' : ''} nobody: ` +
+      `${placeholders.length} stat-entry placeholder row${placeholders.length === 1 ? '' : 's'} with no name on MaxPreps: ` +
         placeholders.map((p) => p.lastName).join(', '),
     );
   }
@@ -505,10 +506,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     athleteCount: countData.athleteCount,
     staffCount: countData.staffCount,
     // Recased only now, for the same reason.
-    players: players
-      .filter((p) => !isPlaceholderRow(p))
-      .map(withoutNullPart)
-      .map(recaseNameParts),
+    players: players.map(withoutNullPart).map(recaseNameParts),
     deletedRows,
     warnings,
   };

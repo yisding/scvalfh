@@ -457,14 +457,22 @@ describe("maxpreps roster: stat-entry placeholders (Mitty girls volleyball, 2026
     ]);
   });
 
-  it('leaves the placeholder rows out, names them in a warning, and keeps every named player', () => {
+  it('keeps each placeholder row under "Player #N" (no "null"), names them in a warning, and keeps every named player', () => {
     const page = parseIt(html);
     expect(page.athleteCount).toBe(17);
-    expect(page.players).toHaveLength(12);
-    expect(page.players.some((p) => /null|Player #/.test(p.fullName))).toBe(false);
-    expect(page.players.every((p) => p.firstName !== null)).toBe(true);
+    expect(page.players).toHaveLength(17);
+    expect(page.players.some((p) => /null/.test(p.fullName))).toBe(false);
+    const stand = page.players.filter((p) => p.firstName === null);
+    expect(stand.map((p) => [p.fullName, p.lastName, p.jersey])).toEqual([
+      ['Player #4', 'Player #4', '4'],
+      ['Player #5', 'Player #5', '5'],
+      ['Player #9', 'Player #9', '9'],
+      ['Player #11', 'Player #11', '11'],
+      ['Player #18', 'Player #18', '18'],
+    ]);
+    expect(stand.every((p) => p.grade === null && p.position === null && p.careerId !== null)).toBe(true);
     expect(page.warnings).toEqual([
-      'left out 5 stat-entry placeholder rows that name nobody: Player #4, Player #5, Player #9, Player #11, Player #18',
+      '5 stat-entry placeholder rows with no name on MaxPreps: Player #4, Player #5, Player #9, Player #11, Player #18',
     ]);
   });
 
