@@ -416,6 +416,7 @@ export default function PlayoffsPage() {
                   )}
                   name={ps.name}
                   idPrefix={league.id}
+                  basis={`Pairings, times and fields from the day’s game schedule (read ${shortDate(ps.bracket.source.retrievedOn)}); results as the sources have them.`}
                   source={ps.bracket.source}
                 />
               ) : results.empty === null || today >= ps.dates.first ? (
@@ -460,6 +461,21 @@ export default function PlayoffsPage() {
               key={event.id}
               id={event.id}
               view={buildOutsideTournamentView(event, games)}
+              bracket={
+                event.bracket ? (
+                  <TournamentBracket
+                    view={tournamentBracketView(
+                      event.bracket.games,
+                      games.filter((g) => g.postseason?.kind === 'outside-tournament'),
+                      today,
+                      sectionOf(leaguesOf[0].id).shootout?.words ?? 'a shootout',
+                    )}
+                    name={event.name}
+                    idPrefix={event.id}
+                    basis={event.bracket.basis}
+                  />
+                ) : undefined
+              }
               whose={listWords(leaguesOf.map((l) => `the ${isIndependentLeague(l.id) ? l.name : l.shortName}`))}
             >
               {leaguesOf.map((league) => (

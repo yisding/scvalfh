@@ -1,4 +1,4 @@
-import { EN_DASH, leagueClock, leagueClockPT, monthDay, renderScore, shortDate } from '../../lib/format';
+import { EN_DASH, leagueClock, leagueClockPT, renderScore, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { LiveBracketCard, LiveBracketDivision, LiveBracketRound, LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
@@ -123,7 +123,7 @@ function cardView(card: LiveBracketCard, round: LiveBracketRound, today: string)
     if (decider === 'SO') notes.push('Shootout');
     if (score === null) notes.push('No score posted');
     const tail: string[] = [];
-    if (card.dateKey !== round.date) tail.push(`Played ${monthDay(card.dateKey)}`);
+    if (card.dateKey !== round.date) tail.push(`Played ${shortDate(card.dateKey)}`);
     if (card.site) tail.push(`At ${card.site}`);
     notes.push(...tail);
     sentence = `${resultSentence(card, top, bottom, score)}${tail.map((t) => ` ${t}.`).join('')}`;
@@ -175,7 +175,7 @@ export function sdsBracketView(division: LiveBracketDivision, today: string): Sd
   const rounds: BracketRoundView[] = division.rounds.map((round, roundIndex) => ({
     key: `${division.id}-${roundIndex}`,
     name: round.name,
-    dateLabel: monthDay(round.date),
+    dateLabel: shortDate(round.date),
     cards: round.cards.map((card) => cardView(card, round, today)),
     byes: byesOf(division, roundIndex),
   }));

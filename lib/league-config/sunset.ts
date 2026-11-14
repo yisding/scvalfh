@@ -3,6 +3,11 @@
 import { SITE_POINTS_CITATIONS, SS_BLUE_BOOK_FH_URL, SS_FIELD_HOCKEY_URL } from './sections';
 import type { LeagueConfig } from './shape';
 
+/** The game page's sentence for a pair's earlier, non-league meeting (rules.nonLeagueGames). */
+function nonLeague(a: string, b: string, leagueDate: string): string {
+  return `${a} and ${b} met twice; this earlier game is not counted as a Sunset league game. Their league game is the ${leagueDate} meeting, which both schools list as a league game on cifsshome.org.`;
+}
+
 export const SUNSET: LeagueConfig = {
   // A field-hockey-only grouping, NOT the all-sports Sunset League (Orange County: Huntington Beach, Edison,
   // Fountain Valley, Marina, Los Alamitos, Newport Harbor, Corona del Mar [U]): hence the name, which the copy
@@ -13,8 +18,15 @@ export const SUNSET: LeagueConfig = {
   // them under "Sunset", but MaxPreps marks none of their nine 2026 games against the five Orange County schools
   // as a league game, and both play every one of the other independents home and away.
   //
-  // 'membership' (owner decision, 2026-10-06; DESIGN §24.11): every game between two of the eight counts, whatever
-  // MaxPreps' league flag says. The flag follows whichever scorekeeper entered the game: Great Oak's two games
+  // A single round robin (owner decision, 2026-11-14): each pair's ONE league game counts, seven a team. All 28
+  // pairs met outside a tournament before the Tournament of Champions; seven met twice, and for each of those
+  // cifsshome.org (the Section's schedule site, where each school enters its own games; read 2026-11-14) has the
+  // later meeting as "League" in both schools' entries and the earlier one as "Non-League" in at least one, while
+  // every one of the 21 single meetings is "League" in both. So the earlier meeting of each of the seven pairs is
+  // a non-league game (rules.nonLeagueGames, with MaxPreps' and cifsshome.org's tags beside each).
+  //
+  // 'membership' (owner decision, 2026-10-06; DESIGN §24.11): MaxPreps' league flag does not decide what counts.
+  // The flag follows whichever scorekeeper entered the game: Great Oak's two games
   // with Temecula Valley are flagged non-league (Sep 4) and league (Oct 2); Temecula Valley's games against the
   // five Orange County schools are all flagged, Great Oak's and Chaparral's mostly not; the Orange County schools'
   // games against each other are flagged only when Edison enters them. So MaxPreps' Sunset table (Great Oak
@@ -45,14 +57,16 @@ export const SUNSET: LeagueConfig = {
       // schools carry the zero-GUID league this season.
       maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297',
       maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
-      // No fixed schedule: the 28 pairs meet {2: 7, 1: 21} times outside tournaments (snapshot of 2026-10-06), so no "of N".
+      // No published schedule, so no "of N" (null): the seven league games a team are this site's reading of the
+      // schools' own tags (rules.nonLeagueGames), and a set count here means a double round robin (assertLeagues).
       expectedTeams: 8, gamesPerTeam: null,
-      // First: Chaparral–Temecula Valley, Aug 25 (the first game between two of the eight; it counts: membership).
+      // First: Chaparral at Edison, Tue Sep 15, the first league game (the seven earlier games between two of the
+      // eight, Aug 25 to Sep 11, are six of the non-league meetings and a tournament game).
       // Last: the Section's last allowable contest, Sat Oct 31 (Blue Book Bylaw 2006; 2026-27 Sports Calendar).
-      leaguePlay: { first: '2026-08-25', last: '2026-10-31' },
+      leaguePlay: { first: '2026-09-15', last: '2026-10-31' },
       official: {
         mode: 'none',
-        note: 'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The eight teams here are eight of the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26; the other two, Bonita and Chaminade, are listed with the LA independents (that group’s note says why). For 2026-27, MaxPreps’ table lists three of the eight, with Bonita and Chaminade, and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists six of the eight, with Bonita, Chaminade, and Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. This site counts every game between two of the eight outside a tournament as a Sunset game, whether or not MaxPreps marks it as one: MaxPreps’ flag follows whoever entered the game (it marks one of Great Oak’s two games with Temecula Valley and none of the Orange County schools’ games against each other except Edison’s), so no two sources agree on a record. Teams play different numbers of games.',
+        note: 'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The eight teams here are eight of the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26; the other two, Bonita and Chaminade, are listed with the LA independents (that group’s note says why). For 2026-27, MaxPreps’ table lists three of the eight, with Bonita and Chaminade, and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists six of the eight, with Bonita, Chaminade, and Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. This site counts one league game for each pair of the eight, seven a team: all 28 pairs met outside a tournament, and where a pair met twice the league game is the later meeting, the one both schools list as a league game on the Section’s schedule site (cifsshome.org); the earlier meeting, which at least one of the two lists as non-league, does not count. MaxPreps’ own flag is not used: it follows whoever entered the game (it marks none of the Orange County schools’ games against each other except Edison’s), so no two sources agree on a record.',
       },
       // 5 rows + the 5 Orange County schools MaxPreps assigns to no league − the 2 independents = 8.
       maxprepsTeamCount: 5,
@@ -64,7 +78,7 @@ export const SUNSET: LeagueConfig = {
         '742a32d0-2dc9-4aa8-ad92-8c4576f73a12': 'Chaminade: listed with the LA independents here (MaxPreps marks none of its games against the five Orange County schools as a league game)',
       },
       reportedTrust: 'informational',
-      knownCause: 'MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, counts only the games its scorekeepers flagged as league games, and orders them by winning percentage. This site counts every game between two of the eight, orders all eight by 3-1-0 points, and lists Bonita and Chaminade with the LA independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps counts, is not counted here. si.com uses its own league labels, so its Sunset records differ from both.',
+      knownCause: 'MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, counts only the games its scorekeepers flagged as league games, and orders them by winning percentage. This site counts one league game for each pair of the eight (the later meeting where a pair met twice), orders all eight by 3-1-0 points, and lists Bonita and Chaminade with the LA independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps counts, is not counted here. si.com uses its own league labels, so its Sunset records differ from both.',
       home: { miniRows: 8, lineAfter: null, lineLabel: null },
       // No postseason, so no line to draw.
       ladderLine: null,
@@ -72,18 +86,38 @@ export const SUNSET: LeagueConfig = {
   ],
   rules: {
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'league',
-    // Every game between two of the eight inside leaguePlay counts (lib/classify.ts 'membership', as the San Diego
-    // divisions and the LA independents); tournament (2) and postseason (4) rows never do.
+    // A game between two of the eight inside leaguePlay counts (lib/classify.ts 'membership', as the San Diego
+    // divisions and the LA independents) unless it is a pair's earlier, non-league meeting (nonLeagueGames);
+    // tournament (2) and postseason (4) rows never do.
     classification: 'membership', excludeContestTypes: [2, 4],
     postseasonFrom: null, leagueGameOverrides: [],
+    // The earlier meeting of each pair that met twice (see the header). After each: MaxPreps' flag for the two
+    // meetings, then cifsshome.org's two entries for each (read 2026-11-14). Six are dated before leaguePlay.first
+    // and are listed all the same, so the list is the whole account; Edison–Fountain Valley (Sep 16) is inside it.
+    nonLeagueGames: {
+      // MaxPreps: non-league, then league (Oct 5). cifsshome.org: Non-League/Non-League, then League/League.
+      '11de52a1-9d07-43b3-9d49-bc29e7d1d914': nonLeague('Chaparral', 'Temecula Valley', 'Oct 5'),
+      // MaxPreps: non-league, then league (Oct 13). cifsshome.org: Non-League/Non-League, then League/League.
+      'ebdd1733-1ab9-447a-89db-34971dce5356': nonLeague('Edison', 'Newport Harbor', 'Oct 13'),
+      // MaxPreps: non-league, then league (Sep 30). cifsshome.org: Non-League/Non-League, then League/League.
+      'c9eb7c63-ceab-450a-b092-8a3b8c1cab39': nonLeague('Edison', 'Marina', 'Sep 30'),
+      // MaxPreps: non-league, then league (Oct 2). cifsshome.org: League/Non-League, then League/League.
+      '0994415b-6a76-45f1-8d63-0347a8f03e08': nonLeague('Great Oak', 'Temecula Valley', 'Oct 2'),
+      // MaxPreps: league both times (Sep 11, Oct 16). cifsshome.org: League/Non-League, then League/League.
+      '252ac948-674c-4374-aa07-5a0fa074ef17': nonLeague('Chaparral', 'Great Oak', 'Oct 16'),
+      // MaxPreps: non-league both times (Sep 11, Oct 12). cifsshome.org: League/Non-League, then League/League.
+      'd942ef67-ae4c-4e16-bf03-1128c425be53': nonLeague('Fountain Valley', 'Marina', 'Oct 12'),
+      // MaxPreps: non-league, then league (Oct 9). cifsshome.org: League/Non-League, then League/League.
+      'ee4807e9-e585-4d86-b92d-0f4fe84a5a56': nonLeague('Edison', 'Fountain Valley', 'Oct 9'),
+    },
     matcher: 'two-phase',
     tiebreaks: { default: ['no-rule'] },
     // 'none' keeps D2 rule 4c (a phantom si.com 0-0 tie) and records a level game as a tie: no rule says otherwise.
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'none',
     citations: {
       ...SITE_POINTS_CITATIONS,
-      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is any game between two of the eight on MaxPreps’ schedules outside a tournament, and the pairs meet once or twice',
-      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). A Sunset game has ended level (Fountain Valley 1-1 Marina, Sep 11) and one has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
+      doubleRoundRobin: 'no league schedule is published; the eight play a single round robin, seven league games a team, and where a pair met twice the league game is the later meeting, which both schools list as a league game on cifsshome.org',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Two Sunset league games have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2; Huntington Beach 1-0 Edison, Oct 8) and none has ended level, so this site records each game as it is reported',
       coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
       stages: {
         'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is',

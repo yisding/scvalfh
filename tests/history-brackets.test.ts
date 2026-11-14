@@ -148,8 +148,8 @@ describe('the 2025 San Diego Section brackets', () => {
       '4 Cathedral Catholic',
     ]);
     const moved = d.rounds[1].games[3];
-    expect(gameNote(moved, d.rounds[1])).toBe('Played Nov 6');
-    expect(gameSentenceTail(moved, d.rounds[1])).toBe(' Played Nov 6.');
+    expect(gameNote(moved, d.rounds[1])).toBe('Played Thu Nov 6');
+    expect(gameSentenceTail(moved, d.rounds[1])).toBe(' Played Thu Nov 6.');
     expect(finalLine(d.rounds[3].games[0])).toBe('Drew 2-2 with La Costa Canyon in the final and won the shootout 3-2');
   });
 

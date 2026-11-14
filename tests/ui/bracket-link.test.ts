@@ -56,10 +56,11 @@ describe('getBracketLink', () => {
     expect(getBracketLink(regular), LINK).toBeNull();
   });
 
-  it('never says "bracket" for the Tournament of Champions, which publishes none, and no CCS word off a CCS game', () => {
+  it('names each event’s own bracket, and no CCS word off a CCS game', () => {
     for (const g of postseason) {
       const { label } = getBracketLink(g)!;
-      if (g.postseason?.kind === 'outside-tournament') expect(label, LINK).not.toMatch(/bracket/i);
+      // The Tournament of Champions publishes no bracket; the site draws one from its results (owner, 2026-11-14).
+      if (g.postseason?.kind === 'outside-tournament') expect(label, LINK).toBe('Tournament of Champions bracket');
       // The EAL's Super Regional is drawn as a bracket from its game schedule (owner, 2026-11-14).
       if (g.postseason?.kind === 'league-postseason') expect(label, LINK).toBe('Super Regional bracket');
       if (g.postseason?.kind !== 'ccs') expect(label, LINK).not.toMatch(/\bCCS\b/);

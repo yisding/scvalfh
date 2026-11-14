@@ -13,6 +13,7 @@ import {
   crossDivisionNote,
   isLeagueGame,
   leaguesOf,
+  nonLeagueGameNote,
   postseasonTag,
 } from '../lib/classify';
 import type { Game } from '../lib/types';
@@ -290,7 +291,7 @@ describe('classify: the LA independents (membership, DESIGN §24.10)', () => {
     const flagged = game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' });
     expect(flagged.leagueDivision).toBeNull();
     expect(flagged.countsFor).toBeNull();
-    const sunset = game({ home: 'great-oak', away: 'chaparral', hs: 6, as: 0, date: '2026-09-11' });
+    const sunset = game({ home: 'chaparral', away: 'great-oak', hs: 0, as: 2, date: '2026-10-16' });
     expect(sunset.countsFor).toBe('sunset');
   });
 });
@@ -394,19 +395,41 @@ describe('classify: the San Diego Section playoffs tag (section-playoffs)', () =
 });
 
 describe('classify: Sunset (membership, no postseason; DESIGN §24.11)', () => {
-  it('counts every game between two of the eight inside Aug 25 – Oct 31, flagged by MaxPreps or not, tournament rows aside', () => {
-    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11' }).countsFor).toBe('sunset');
-    // Fountain Valley 1-1 Marina, Sep 11: MaxPreps marks it non-league; it counts.
-    expect(game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', league: false }).countsFor).toBe('sunset');
-    // Great Oak at Temecula Valley, Sep 4: non-league on MaxPreps, league on Oct 2; both count.
-    expect(game({ home: 'temecula-valley', away: 'great-oak', hs: 1, as: 2, date: '2026-09-04', league: false }).countsFor).toBe('sunset');
+  it('counts a game between two of the eight inside Sep 15 – Oct 31, flagged by MaxPreps or not, tournament rows aside', () => {
+    expect(game({ home: 'marina', away: 'fountain-valley', hs: 0, as: 2, date: '2026-10-12' }).countsFor).toBe('sunset');
+    // Fountain Valley 2-0 at Marina, Oct 12: MaxPreps marks it non-league; it counts.
+    expect(game({ home: 'marina', away: 'fountain-valley', hs: 0, as: 2, date: '2026-10-12', league: false }).countsFor).toBe('sunset');
     expect(
-      game({ home: 'fountain-valley', away: 'marina', hs: 1, as: 1, date: '2026-09-11', contestTypes: { home: 0, away: 2 } }).countsFor,
+      game({ home: 'marina', away: 'fountain-valley', hs: 0, as: 2, date: '2026-10-12', contestTypes: { home: 0, away: 2 } }).countsFor,
     ).toBeNull();
-    // Before the first game between two of the eight (Aug 25): nothing counts.
-    expect(game({ home: 'edison', away: 'marina', hs: 1, as: 1, date: '2026-08-20', league: false }).countsFor).toBeNull();
+    // Before the first league game (Chaparral at Edison, Sep 15): nothing counts.
+    expect(game({ home: 'edison', away: 'marina', hs: 1, as: 1, date: '2026-09-14', league: false }).countsFor).toBeNull();
     // A Sunset team against an independent: never a Sunset game, flagged or not (Bonita at Great Oak, Aug 27).
     expect(game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' }).countsFor).toBeNull();
+  });
+
+  it('counts one league game a pair: the earlier meeting of a pair that met twice is a non-league game, with its note', () => {
+    // Fountain Valley at Edison, Sep 16 (inside league play; cifsshome.org: League in one entry, Non-League in the other)
+    // and the pair's league game, Oct 9 (League in both).
+    const first = game({ home: 'edison', away: 'fountain-valley', hs: 7, as: 0, date: '2026-09-16', league: false, contestId: 'ee4807e9-e585-4d86-b92d-0f4fe84a5a56' });
+    const second = game({ home: 'fountain-valley', away: 'edison', hs: 0, as: 11, date: '2026-10-09' });
+    expect(first.countsFor).toBeNull();
+    expect(second.countsFor).toBe('sunset');
+    // Chaparral at Great Oak, Sep 11: MaxPreps flags both meetings; only the Oct 16 one counts.
+    expect(game({ home: 'great-oak', away: 'chaparral', hs: 6, as: 0, date: '2026-09-11', contestId: '252ac948-674c-4374-aa07-5a0fa074ef17' }).countsFor).toBeNull();
+    // Flagged a league game on MaxPreps or not, a named game does not count.
+    expect(game({ home: 'edison', away: 'fountain-valley', hs: 7, as: 0, date: '2026-09-16', contestId: 'ee4807e9-e585-4d86-b92d-0f4fe84a5a56' }).countsFor).toBeNull();
+    const note = 'Edison and Fountain Valley met twice; this earlier game is not counted as a Sunset league game. Their league game is the Oct 9 meeting, which both schools list as a league game on cifsshome.org.';
+    expect(nonLeagueGameNote(first)).toBe(note);
+    expect(nonLeagueGameNote(second)).toBeNull();
+    const [classified, other] = classifyGames([first, second]);
+    expect(classified.provenance.classificationNote).toBe(note);
+    expect(other.provenance.classificationNote).toBeUndefined();
+    // Each of the eight is named in the list so that every team is left with seven league games: Edison and
+    // Fountain Valley lose two each, Chaparral, Great Oak, Marina and Temecula Valley two, Newport Harbor one,
+    // Huntington Beach none (it met every team once).
+    const sunset = LEAGUES.find((l) => l.id === 'sunset')!;
+    expect(Object.keys(sunset.rules.nonLeagueGames ?? {})).toHaveLength(7);
   });
 
   it('tags a contestType 4 Sunset game other: the Southern Section holds no playoffs', () => {

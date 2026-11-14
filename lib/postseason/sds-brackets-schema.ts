@@ -94,6 +94,10 @@ export function sdsBracketsSchema(window: { first: string; last: string }) {
     time: z.string().regex(CLOCK, 'expected HH:MM').optional(),
     /** The neutral site, where the Section names one (La Jolla High School for the finals). */
     site: z.string().min(1).optional(),
+    /** The Final's NFHS Network stream, where MaxPreps may not carry it (lib/postseason/sds-final-links.ts). */
+    stream: httpsUrl.optional(),
+    /** The Final's ticket page (GoFan, the Section's ticket partner), likewise. */
+    tickets: httpsUrl.optional(),
   });
 
   const division = z
@@ -117,6 +121,10 @@ export function sdsBracketsSchema(window: { first: string; last: string }) {
     })
     .refine((d) => d.rounds.length === (d.size === 8 ? 3 : 4), {
       message: 'an 8-team bracket has 3 rounds and a 12-team bracket 4',
+      path: ['rounds'],
+    })
+    .refine((d) => d.rounds.slice(0, -1).every((r) => r.stream === undefined && r.tickets === undefined), {
+      message: 'a stream or ticket link belongs to the Final (the one round that is a single game)',
       path: ['rounds'],
     })
     .refine((d) => d.playIn === undefined || d.size === 12, {

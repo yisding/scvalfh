@@ -145,6 +145,12 @@ export interface OutsideTournamentConfig {
   /** One paragraph for /playoffs, the home card and a team's postseason line. Says it is not a CIF event. */
   note: string;
   sources: readonly { label: string; href: string }[];
+  /**
+   * The event as a bracket, where its games make one: each round's winners met in the next, so the tree is read
+   * off the results (no organizer publishes it, and no seed is printed). `basis` is the sentence under the
+   * bracket saying so. null lists the games by day instead.
+   */
+  bracket: { basis: string; games: readonly TournamentBracketGame[] } | null;
 }
 
 export interface DivisionConfig {
@@ -173,15 +179,15 @@ export interface DivisionConfig {
   expectedTeams: number;
   /**
    * Official double round robin: (expectedTeams - 1) * 2. Drives "games left". null only where the league
-   * has no fixed schedule (the Sunset: no league schedule is published and its teams meet 0, 1 or 2 times),
-   * so no reader may print "of N", LEFT or MAX for it; assertLeagues allows null only with classification
-   * 'contest-type' or 'membership' (the Sunset's pairs meet once or twice, the LA independents' two or three
-   * times) and official mode 'none'.
+   * has no published schedule (the Sunset: its seven league games a team are this site's reading of the schools'
+   * own tags, rules.nonLeagueGames), so no reader may print "of N", LEFT or MAX for it; assertLeagues allows
+   * null only with classification 'contest-type' or 'membership' (the Sunset's pairs play one league game, the
+   * LA independents meet two or three times) and official mode 'none'.
    */
   gamesPerTeam: number | null;
   /**
    * First and last league date. From the league's official schedule where there is one; otherwise the
-   * first league game on MaxPreps' schedules (the Sunset: Aug 18; each San Diego division: its earliest
+   * first league game on MaxPreps' schedules (the Sunset: Sep 15; each San Diego division: its earliest
    * game between two members, in the inventory read Mon Oct 5 Pacific) and the section's last allowed league date.
    */
   leaguePlay: { first: string; last: string };
@@ -277,6 +283,12 @@ export interface LeagueRules {
   postseasonFrom: string | null;
   /** Human escape hatch: contests that are league games despite postseasonFrom. */
   leagueGameOverrides: readonly ContestId[];
+  /**
+   * 'membership' only: games between two members, inside leaguePlay, that are NOT league games, each with the
+   * sentence the game page prints (`provenance.classificationNote`). The Sunset: its eight teams play a single
+   * round robin, and seven pairs also met in an earlier non-league game (lib/league-config/sunset.ts).
+   */
+  nonLeagueGames?: Readonly<Record<ContestId, string>>;
   /** 'legacy' = the original SCVAL matcher, byte-for-byte; 'two-phase' = §7.8. */
   matcher: 'legacy' | 'two-phase';
   tiebreaks: {

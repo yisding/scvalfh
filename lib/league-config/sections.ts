@@ -92,7 +92,23 @@ export const TOC: OutsideTournamentConfig = {
   entrants: ['huntington-beach', 'newport-harbor', 'edison', 'great-oak', 'temecula-valley', 'harvard-westlake', 'bonita', 'glendora'],
   finalSite: 'Huntington Beach High School',
   note:
-    'The Tournament of Champions is the postseason for the Sunset and the LA independents: eight teams, five from the Sunset and three LA independents, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF. Round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games below are as MaxPreps lists them.',
+    'The Tournament of Champions is the postseason for the Sunset and the LA independents: eight teams, five from the Sunset and three LA independents, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF. Round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games are as MaxPreps lists them.',
+  // The tree as the results give it (2026-11-14): the four first-round winners met in the semifinals, the semifinal
+  // winners in the final and the losers for third place (Daily Pilot, Oct 30: Edison 3, Newport Harbor 2 in
+  // sudden-death overtime). Hosts and starts are MaxPreps'; Glendora v Newport Harbor was played Sat Oct 24.
+  bracket: {
+    basis: 'No bracket is published for the event: this one is drawn from its results, each round’s winners meeting in the next. Hosts and times as MaxPreps lists them.',
+    games: [
+      { id: 'r1-a', round: 'first-round', date: '2026-10-24', time: '08:30', venue: 'Glendora', home: { team: 'glendora' }, away: { team: 'newport-harbor' } },
+      { id: 'r1-b', round: 'first-round', date: '2026-10-22', time: '16:00', venue: 'Huntington Beach', home: { team: 'huntington-beach' }, away: { team: 'bonita' } },
+      { id: 'r1-c', round: 'first-round', date: '2026-10-22', time: '15:30', venue: 'Edison', home: { team: 'edison' }, away: { team: 'great-oak' } },
+      { id: 'r1-d', round: 'first-round', date: '2026-10-22', time: '16:00', venue: 'Harvard-Westlake', home: { team: 'harvard-westlake' }, away: { team: 'temecula-valley' } },
+      { id: 'sf-a', round: 'semifinal', date: '2026-10-27', time: '16:00', venue: 'Huntington Beach', home: { winnerOf: 'r1-b' }, away: { winnerOf: 'r1-a' } },
+      { id: 'sf-b', round: 'semifinal', date: '2026-10-27', time: '18:00', venue: 'Harvard-Westlake', home: { winnerOf: 'r1-d' }, away: { winnerOf: 'r1-c' } },
+      { id: 'third', round: 'third-place', date: '2026-10-29', time: '16:00', venue: 'Huntington Beach (Miller Field)', home: { loserOf: 'sf-b' }, away: { loserOf: 'sf-a' } },
+      { id: 'final', round: 'final', date: '2026-10-29', time: '18:00', venue: 'Huntington Beach High School', home: { winnerOf: 'sf-a' }, away: { winnerOf: 'sf-b' } },
+    ],
+  },
   sources: [
     { label: 'Harvard-Westlake Chronicle on the 2026 Tournament of Champions', href: 'https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/' },
     { label: 'Huntington Beach field hockey: TOC events', href: 'https://www.hbfieldhockey.com/events' },

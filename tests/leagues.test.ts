@@ -389,7 +389,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayEnds('bval')).toBe('2026-10-30');
     expect(leaguePlayEnds('mcal')).toBe('2026-10-22');
     expect(leaguePlayEnds('eal')).toBe('2026-10-28');
-    expect(leaguePlayStarts('sunset')).toBe('2026-08-25');
+    expect(leaguePlayStarts('sunset')).toBe('2026-09-15');
     expect(leaguePlayEnds('sunset')).toBe('2026-10-31');
     expect(leaguePlayStarts('city')).toBe('2026-09-01');
     expect(leaguePlayStarts('north-county')).toBe('2026-09-09');
@@ -943,14 +943,19 @@ describe('leagues: the Sunset (Southern Section)', () => {
     expect(division.searchAliases).toEqual(['Sunset']);
   });
 
-  it('counts every game between two of the eight (membership), with no fixed schedule and a five-row MaxPreps table', () => {
+  it('counts one league game for each pair of the eight (membership, less the seven earlier meetings), with no published schedule and a five-row MaxPreps table', () => {
+    // The earlier meeting of each pair that met twice is a non-league game (owner decision, 2026-11-14), each with its sentence.
+    expect(Object.keys(sunset.rules.nonLeagueGames ?? {})).toHaveLength(7);
+    for (const note of Object.values(sunset.rules.nonLeagueGames ?? {})) {
+      expect(note).toMatch(/^[A-Z][A-Za-z ]+ and [A-Z][A-Za-z ]+ met twice; this earlier game is not counted as a Sunset league game\. Their league game is the (Sep|Oct) \d+ meeting, which both schools list as a league game on cifsshome\.org\.$/);
+    }
     expect(sunset.rules).toMatchObject({
       classification: 'membership', excludeContestTypes: [2, 4], postseasonFrom: null, orderScope: 'site',
       gamesWord: 'league', matcher: 'two-phase', tiebreaks: { default: ['no-rule'] }, leagueOvertime: 'none',
       coChampionsLabel: 'Sunset co-leaders', unresolvedSuffix: '', drawNumbers: null, leagueGameOverrides: [],
     });
     expect(division).toMatchObject({
-      expectedTeams: 8, gamesPerTeam: null, leaguePlay: { first: '2026-08-25', last: '2026-10-31' },
+      expectedTeams: 8, gamesPerTeam: null, leaguePlay: { first: '2026-09-15', last: '2026-10-31' },
       maxprepsLeagueId: 'aa46adc4-c188-4e3b-b5fd-857064176297', maxprepsName: 'Sunset', maxprepsSlug: 'sunset',
       maxprepsTeamCount: 5, reportedTrust: 'informational', ladderLine: null,
       home: { miniRows: 8, lineAfter: null, lineLabel: null },
@@ -963,20 +968,20 @@ describe('leagues: the Sunset (Southern Section)', () => {
     expect(getTeamById('4c2dd7e8-2f3e-43aa-891b-9218932cdf9d')?.slug).toBe('bonita');
     expect(getTeamById('742a32d0-2dc9-4aa8-ad92-8c4576f73a12')?.slug).toBe('chaminade');
     expect(division.official.mode === 'none' && division.official.note).toBe(
-      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The eight teams here are eight of the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26; the other two, Bonita and Chaminade, are listed with the LA independents (that group’s note says why). For 2026-27, MaxPreps’ table lists three of the eight, with Bonita and Chaminade, and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists six of the eight, with Bonita, Chaminade, and Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. This site counts every game between two of the eight outside a tournament as a Sunset game, whether or not MaxPreps marks it as one: MaxPreps’ flag follows whoever entered the game (it marks one of Great Oak’s two games with Temecula Valley and none of the Orange County schools’ games against each other except Edison’s), so no two sources agree on a record. Teams play different numbers of games.',
+      'No Sunset document exists that we could find: no league site, bylaws, schedule or standings. The eight teams here are eight of the ten in MaxPreps’ Sunset table in 2024-25 and 2025-26; the other two, Bonita and Chaminade, are listed with the LA independents (that group’s note says why). For 2026-27, MaxPreps’ table lists three of the eight, with Bonita and Chaminade, and assigns the five Orange County schools to no league; si.com’s table (also shown on the Southern Section’s scores site) lists six of the eight, with Bonita, Chaminade, and Westlake and Los Alamitos with no games, and puts Chaparral and Temecula Valley in a separate table. This site counts one league game for each pair of the eight, seven a team: all 28 pairs met outside a tournament, and where a pair met twice the league game is the later meeting, the one both schools list as a league game on the Section’s schedule site (cifsshome.org); the earlier meeting, which at least one of the two lists as non-league, does not count. MaxPreps’ own flag is not used: it follows whoever entered the game (it marks none of the Orange County schools’ games against each other except Edison’s), so no two sources agree on a record.',
     );
     expect(division.knownCause).toBe(
-      'MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, counts only the games its scorekeepers flagged as league games, and orders them by winning percentage. This site counts every game between two of the eight, orders all eight by 3-1-0 points, and lists Bonita and Chaminade with the LA independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps counts, is not counted here. si.com uses its own league labels, so its Sunset records differ from both.',
+      'MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, counts only the games its scorekeepers flagged as league games, and orders them by winning percentage. This site counts one league game for each pair of the eight (the later meeting where a pair met twice), orders all eight by 3-1-0 points, and lists Bonita and Chaminade with the LA independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps counts, is not counted here. si.com uses its own league labels, so its Sunset records differ from both.',
     );
   });
 
-  it('cites no league rule: the 3-1-0 order is this site’s, and the overtime citation names the Oct 2 overtime game', () => {
+  it('cites no league rule: the 3-1-0 order is this site’s, and the overtime citation names the Oct 2 and Oct 8 overtime games', () => {
     expect(sunset.rules.citations).toEqual({
       points: 'this site’s 3-1-0 points (the league publishes no points rule)',
       pointsShort: 'site 3-1-0',
       order: 'no league document orders the table; this site orders it by its own 3-1-0 points',
-      doubleRoundRobin: 'no league schedule is published and there is no round robin: a Sunset game is any game between two of the eight on MaxPreps’ schedules outside a tournament, and the pairs meet once or twice',
-      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). A Sunset game has ended level (Fountain Valley 1-1 Marina, Sep 11) and one has been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so this site records each game as it is reported',
+      doubleRoundRobin: 'no league schedule is published; the eight play a single round robin, seven league games a team, and where a pair met twice the league game is the later meeting, which both schools list as a league game on cifsshome.org',
+      overtime: 'No league or Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules). Two Sunset league games have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2; Huntington Beach 1-0 Edison, Oct 8) and none has ended level, so this site records each game as it is reported',
       coChampions: 'no published rule names a champion; teams level on points at the top are shown level',
       stages: { 'no-rule': 'No Sunset document exists that we could find, so no rule breaks this tie and it is left as it is' },
     });

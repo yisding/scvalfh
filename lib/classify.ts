@@ -250,6 +250,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
  * division's league rule:
  *  - 'membership' (the San Diego divisions and the LA independents):
  *        null if game.postseason !== null
+ *        null if the contest is in rules.nonLeagueGames (the Sunset pairs' earlier, non-league meetings)
  *        null if contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes ([2, 4]: tournament and
  *          postseason rows)
  *        null unless division.leaguePlay.first <= game.dateKey <= division.leaguePlay.last
@@ -277,6 +278,9 @@ export function classifyGame(game: Game, opts: ClassifyOptions = {}): DivisionId
     // A contest the config names a league game (rules.leagueGameOverrides) counts whatever MaxPreps types it:
     // Granite Hills at Southwest, Oct 16, is on the conference's schedule and typed a tournament game.
     const named = rules.leagueGameOverrides.includes(game.contestId);
+    // A game between two members that the config names a non-league game (rules.nonLeagueGames): the Sunset
+    // pairs' earlier meetings, which the schools themselves list as non-league.
+    if (rules.nonLeagueGames && game.contestId in rules.nonLeagueGames) return null;
     for (const t of [types.home, types.away]) {
       if (!named && t !== null && rules.excludeContestTypes.includes(t)) return null;
     }
@@ -324,16 +328,22 @@ export function crossDivisionNote(game: Game): string | null {
   return `MaxPreps marks this as a league game; it is between two divisions of the ${league.name}, so it counts in neither table.`;
 }
 
+/** The config's sentence for a game between two members that it names a non-league game (rules.nonLeagueGames), or null. */
+export function nonLeagueGameNote(game: Pick<Game, 'contestId' | 'leagueDivision'>): string | null {
+  if (game.leagueDivision === null) return null;
+  return leagueOfDivisionId(game.leagueDivision)?.rules.nonLeagueGames?.[game.contestId] ?? null;
+}
+
 /**
- * Sets postseason (if not already set), then countsFor, on a copy of every game; a game that `crossDivisionNote`
- * explains also gets that note as `provenance.classificationNote`, unless a note is already there (the official
- * match's own).
+ * Sets postseason (if not already set), then countsFor, on a copy of every game; a game that `nonLeagueGameNote`
+ * or `crossDivisionNote` explains also gets that note as `provenance.classificationNote`, unless a note is
+ * already there (the official match's own).
  */
 export function classifyGames(games: readonly Game[], opts: ClassifyOptions = {}): Game[] {
   return games.map((g) => {
     const tagged: Game = { ...g, postseason: g.postseason ?? postseasonTag(g) };
     const counted: Game = { ...tagged, countsFor: classifyGame(tagged, opts) };
-    const note = counted.provenance.classificationNote ? null : crossDivisionNote(counted);
+    const note = counted.provenance.classificationNote ? null : (nonLeagueGameNote(counted) ?? crossDivisionNote(counted));
     return note ? { ...counted, provenance: { ...counted.provenance, classificationNote: note } } : counted;
   });
 }

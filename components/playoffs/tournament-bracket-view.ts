@@ -13,7 +13,7 @@
  * returned apart (`placement`), since they hang off no line of it. No seed is printed.
  */
 
-import { EN_DASH, leagueClock, leagueClockPT, monthDay, renderScore, shootoutPhrases, shortDate } from '../../lib/format';
+import { EN_DASH, leagueClock, leagueClockPT, renderScore, shootoutPhrases, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { TournamentBracketGame, TournamentBracketSide } from '../../lib/league-config/shape';
 import { winningSide } from '../../lib/postseason/game-winner';
@@ -24,9 +24,11 @@ import { isTbdSide } from '../history/bracket-view';
 import { capitalized } from '../words/capitalized';
 
 export interface TournamentBracketView {
+  /**
+   * The tree's rounds. The third- and fifth-place games hang off no line of it, so they are the last round's
+   * `extra` (third place first), drawn under the final and shown with it.
+   */
   division: BracketDivisionView;
-  /** The third- and fifth-place games, in playing order, each as a card with its round's name. */
-  placement: Array<{ name: string; card: BracketCardView }>;
 }
 
 interface Resolved {
@@ -93,7 +95,7 @@ function sideView(side: TournamentBracketSide, slug: string | null, resolved: Re
 
 const sideWords = (side: BracketSideView): string => (isTbdSide(side) ? `the ${side.tbd.charAt(0).toLowerCase()}${side.tbd.slice(1)}` : side.name);
 
-function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: string, words: string): BracketCardView {
+function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: string, words: string, roundDate: string): BracketCardView {
   const top = sideView(r.spec.home, r.home, resolved);
   const bottom = sideView(r.spec.away, r.away, resolved);
   const view = r.game ? renderScore(r.game) : null;
@@ -116,11 +118,11 @@ function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: str
     const { onPhrase } = shootoutPhrases(words);
     if (score === null && winner === null) {
       // Final with neither a score nor a winner marked: nothing says who won.
-      notes.push('No result published');
-      sentence = `${a} played ${b}; no result was published.`;
+      notes.push('No result posted');
+      sentence = `${a} played ${b}; no result was posted.`;
     } else if (score === null) {
-      notes.push('No score published');
-      sentence = `${W} beat ${sideWords(l)}; no score was published.`;
+      notes.push('No score posted');
+      sentence = `${W} beat ${sideWords(l)}; no score was posted.`;
     } else if (winner === null) {
       sentence = `${a} and ${b} drew ${score[0]}${EN_DASH}${score[1]}.`;
     } else {
@@ -137,11 +139,13 @@ function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: str
         sentence = `${W} beat ${sideWords(l)} ${s}.`;
       }
     }
+    // The round's heading carries its day; a game played on another says which.
+    if (r.spec.date !== roundDate) notes.push(`Played ${shortDate(r.spec.date)}`);
     notes.push(at);
     sentence += ` ${at}.`;
   } else if (status === 'unreported') {
-    notes.push(leagueClock(r.spec.time), at, 'No result published');
-    sentence = `${a} and ${b} were to play ${shortDate(r.spec.date)} at ${r.spec.venue}; no result is published.`;
+    notes.push(leagueClock(r.spec.time), at, 'No result posted');
+    sentence = `${a} and ${b} were to play ${shortDate(r.spec.date)} at ${r.spec.venue}; no result is posted.`;
   } else {
     notes.push(when, at);
     sentence = `${a} plays ${b}, ${shortDate(r.spec.date)}, ${leagueClockPT(r.spec.time)}, at ${r.spec.venue}.`;
@@ -184,18 +188,25 @@ export function tournamentBracketView(
       const byes = next
         .flatMap((r) => [r.spec.home, r.spec.away])
         .flatMap((s) => ('team' in s && !playing.has(s.team) ? [getTeamBySlug(s.team)?.name ?? s.team] : []));
+      // The round's day is the day most of its games are on (the earliest of a tie).
+      const dates = here.map((r) => r.spec.date).sort();
+      const date = dates.reduce((best, d) => (dates.filter((x) => x === d).length > dates.filter((x) => x === best).length ? d : best), dates[0]);
       return [{
         key: round,
         name: ROUND_NAME[round],
-        dateLabel: monthDay(here[0].spec.date),
-        cards: here.map((r) => cardOf(r, resolved, today, words)),
+        dateLabel: shortDate(date),
+        cards: here.map((r) => cardOf(r, resolved, today, words, date)),
         byes: byes.length > 0 ? byes.join(', ') : null,
       }];
     });
-  const placement = all
-    .filter((r) => !tree.includes(r.spec.round))
-    .sort((x, y) => x.spec.time.localeCompare(y.spec.time))
-    .reverse()
-    .map((r) => ({ name: ROUND_NAME[r.spec.round], card: cardOf(r, resolved, today, words) }));
-  return { division: { rounds }, placement };
+  // The placement games, third place first, under the last round of the tree.
+  const order: TournamentBracketGame['round'][] = ['third-place', 'fifth-place'];
+  const last = rounds[rounds.length - 1];
+  const lastDate = all.filter((r) => r.spec.round === last?.key).map((r) => r.spec.date).sort()[0];
+  const extra = order.flatMap((round) => {
+    const here = all.filter((r) => r.spec.round === round);
+    return here.length > 0 ? [{ name: ROUND_NAME[round], cards: here.map((r) => cardOf(r, resolved, today, words, lastDate ?? r.spec.date)) }] : [];
+  });
+  if (last && extra.length > 0) last.extra = extra;
+  return { division: { rounds } };
 }

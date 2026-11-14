@@ -112,9 +112,10 @@ league heading.
 None of the four Southern California leagues publishes a schedule, standings or a points rule that we
 could find, so the site orders their tables by its own 3-1-0 points and says so on every page. The
 Sunset is a field-hockey-only grouping of eight Southern Section schools in Orange and
-Riverside counties (not the all-sports Sunset League); its league games are every game between two of the
-eight outside a tournament, whether or not MaxPreps marks them, and there is no round robin, so the site
-shows games played without "of N". In the San
+Riverside counties (not the all-sports Sunset League); its eight teams play a single round robin, one league game for
+each pair and seven a team; where a pair met twice the league game is the later meeting, which both schools
+list as a league game on cifsshome.org, whatever MaxPreps marks (owner decision, 2026-11-14), and no schedule
+is published, so the site shows games played without "of N". In the San
 Diego Section every pair of division-mates is scheduled twice except, on 2026-10-05 (Pacific), Metro
 Mesa's Bonita Vista and Helix, who meet once, and a game counts for a division when both sides are its
 members, whatever MaxPreps' league flag says (the flag misses many of them). Under the Section's
@@ -1810,16 +1811,19 @@ a field-hockey-only grouping of eight Southern Section schools
 Valley), not the all-sports Sunset League, which has different members. MaxPreps' 2024-25 and 2025-26
 Sunset tables list these eight and two more, Bonita and Chaminade, which the site lists with the
 LA independents (owner decision, 2026-10-06, below). No Sunset website, schedule,
-standings or rules document exists that we could find. **Which games count:** every game between two of
-the eight, Aug 25 to Oct 31 (the Section's last allowable contest), outside tournaments, whether or not
-MaxPreps marks it a league game (classification `membership`, as for the San Diego divisions; owner
-decision, 2026-10-06). MaxPreps' flag follows whichever scorekeeper entered the game (it marks one of Great
-Oak's two games with Temecula Valley, and none of the Orange County schools' games against each other
-except Edison's), so MaxPreps' table, si.com's and a flag-based table disagreed on Great Oak's record (3-1,
-2-2 and 2-1); every game counted, Great Oak is 4-2. There is no round robin (of the 28 pairs, 7 meet
-twice and 21 once outside tournaments), so `gamesPerTeam` is null: GP is shown without "of N",
-there is no games-left or maximum-points column, and when teams' counts differ by two or more the
-table says points favour teams that have played more. **Points:** no league rule is published, so this
+standings or rules document exists that we could find. **Which games count:** one league game for each
+pair of the eight, seven a team, Sep 15 to Oct 31 (the Section's last allowable contest), outside
+tournaments (owner decision, 2026-11-14). All 28 pairs met outside a tournament, seven of them twice; for each
+of those seven, cifsshome.org (where each school enters its own games) has the later meeting as "League" in
+both schools' entries and the earlier one as "Non-League" in at least one, so the earlier meeting is a
+non-league game (`rules.nonLeagueGames` in `lib/league-config/sunset.ts`; its game page says so) and every
+team has seven league games. The classification stays `membership` (as for the San Diego divisions; owner
+decision, 2026-10-06): MaxPreps' flag does not decide, because it follows whichever scorekeeper entered the
+game (it marks both Chaparral–Great Oak meetings, neither Fountain Valley–Marina one, and none of the Orange
+County schools' games against each other except Edison's). Until 2026-11-14 every game between two of the
+eight counted, which put Edison (10 games, 27 points) above unbeaten Huntington Beach (7 games, 21 points).
+No schedule is published, so `gamesPerTeam` is null: GP is shown without "of N" and there is no games-left
+or maximum-points column. **Points:** no league rule is published, so this
 site applies its own 3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the
 NFHS rules and says nothing on overtime. A game between Sunset teams has ended level (Fountain Valley
 1-1 Marina, Sep 11; MaxPreps does not mark it as a league game) and a Sunset league game has been

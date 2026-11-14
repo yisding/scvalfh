@@ -1,4 +1,4 @@
-import { monthDay } from '../../lib/format';
+import { monthDay, shortDate } from '../../lib/format';
 import {
   bracketSides,
   historySchoolName,
@@ -94,7 +94,7 @@ export function gameSentenceTail(game: HistoryBracketGame, round: HistoryBracket
 
 function whenWhere(game: HistoryBracketGame, round: HistoryBracketRound): string[] {
   const parts: string[] = [];
-  if (game.date && game.date !== round.date) parts.push(`Played ${monthDay(game.date)}`);
+  if (game.date && game.date !== round.date) parts.push(`Played ${shortDate(game.date)}`);
   if (game.site) parts.push(`At ${game.site}`);
   return parts;
 }
@@ -150,8 +150,8 @@ export function thirdPlaceLine(division: HistoryBracketDivision): string | null 
   return third ? `Third place, ${monthDay(third.date)}: ${gameSentence(third.game)}` : null;
 }
 
-/** A round's heading date: "Nov 5". */
-export const roundDate = (round: HistoryBracketRound): string => monthDay(round.date);
+/** A round's heading date, with its weekday as every bracket on the site prints it: "Thu Nov 5". */
+export const roundDate = (round: HistoryBracketRound): string => shortDate(round.date);
 
 // ---------------------------------------------------------------- the shared card model (plan final-08)
 
@@ -210,6 +210,8 @@ export interface BracketRoundView {
   cards: BracketCardView[];
   /** "Mt. Carmel (1), Rancho Bernardo (2)": the teams that skip this round, or null. */
   byes: string | null;
+  /** Games beside this round that feed nothing ('Third place', 'Fifth place'), drawn under its cards. */
+  extra?: Array<{ name: string; cards: BracketCardView[] }>;
 }
 
 export interface BracketDivisionView {
