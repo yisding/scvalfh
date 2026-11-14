@@ -684,6 +684,41 @@ describe('what the reviewers broke', () => {
     expect(named(back, 'Quit Early')[0].stints.map((s) => `${s.jersey} ${s.gone ?? false}`)).toEqual(['14 false']);
   });
 
+  it('a player whose career id passes to somebody else between builds is kept, under her name', () => {
+    const before = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } })]);
+    const after = build([row({ name: 'Bob Jones', careerIds: ['c1'], obs: { grade: 10 } })], { previous: before });
+    expect(after.players).toHaveLength(2);
+    expect(named(after, 'Ada Stone')[0]).toMatchObject({ id: before.players[0].id, identifiers: [{ kind: 'name', sport: 'field-hockey', team: 'alpha', name: 'adastone' }] });
+    expect(named(after, 'Ada Stone')[0].stints).toEqual([{ ...before.players[0].stints[0], gone: true }]);
+    expect(named(after, 'Bob Jones')[0].id).not.toBe(before.players[0].id);
+    expect(build([row({ name: 'Bob Jones', careerIds: ['c1'], obs: { grade: 10 } })], { previous: after })).toEqual(after);
+  });
+
+  it('a gone stint is still gone once its season is only carried forward', () => {
+    const september = build([row({ name: 'Ada Stone', careerIds: ['c1'] }), row({ name: 'Quit Early', careerIds: ['c2'] })]);
+    const november = build([row({ name: 'Ada Stone', careerIds: ['c1'] })], { previous: september });
+    const nextYear = build([row({ name: 'Ada Stone', careerIds: ['c1'], season: '27-28' })], { previous: november });
+    expect(named(nextYear, 'Quit Early')[0].stints.map((s) => `${s.season} ${s.gone ?? false}`)).toEqual(['26-27 true']);
+    expect(named(nextYear, 'Ada Stone')[0].stints.map((s) => `${s.season} ${s.gone ?? false}`)).toEqual(['26-27 false', '27-28 false']);
+  });
+
+  it('sameAs joins two records that each have a career, and keeps both ids', () => {
+    const rows = [
+      stat('Addison Paradiso', 'c1', { season: '25-26' }, { grade: 10, jersey: '24' }),
+      row({ name: 'Addy Paradiso', careerIds: ['c2'], obs: { grade: 11, jersey: '24' } }),
+    ];
+    const before = build(rows);
+    expect(before.players).toHaveLength(2);
+    expect(before.review.map((r) => r.kind)).toEqual(['possible-match']);
+    for (const entry of [{ name: 'Addy Paradiso', careerId: 'c1' }, { name: 'Addison Paradiso', isName: 'Addy Paradiso' }]) {
+      const after = build(rows, { previous: before, identity: { ...NO_IDENTITY, sameAs: [{ sport: 'field-hockey', team: 'alpha', basis: 'same number, same class', ...entry }] } });
+      expect(after.players).toHaveLength(1);
+      expect(after.players[0].identifiers.map(identifierKey)).toEqual(['mp:c1', 'mp:c2']);
+      expect([after.players[0].id, ...after.players[0].formerIds].sort()).toEqual(before.players.map((p) => p.id).sort());
+      expect(after.review).toEqual([]);
+    }
+  });
+
   it('look-alikes are listed whoever they are, unless one list names both', () => {
     const file = build([
       // Last year's career and this year's, the same number: one player, probably.

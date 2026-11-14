@@ -423,6 +423,8 @@ interface Row extends Sighting {
   curated?: boolean;
   /** Keys the row answered to before curation or the career guard changed them: only for keeping an id. */
   formerKeys: string[];
+  /** True for a carried stint an earlier build already marked `gone`. */
+  gone?: boolean;
 }
 
 const ROSTER_SOURCES: ReadonlySet<ObservationSource> = new Set(['maxpreps-roster', 'maxpreps-jv-roster', 'school-jv-roster']);
@@ -474,6 +476,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
         observations,
         prev: p.id,
         formerKeys: [],
+        ...(stint.gone ? { gone: true } : {}),
       });
     }
   }
@@ -485,6 +488,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     // A row with neither an id nor a usable name (a name with no Latin letter) names nobody.
     .filter((s) => s.careerIds.length > 0 || s.nameKeys.length > 0)
     .map((s): Row => {
+      // A row with a career of its own is joined after the careers are (below), not rewritten here.
       if (s.careerIds.length > 0) return s;
       const hit = s.nameKeys.map((k) => sameAs.get(`${s.sport} ${s.team} ${k}`)).find((e) => e !== undefined);
       if (!hit) return s;
@@ -588,6 +592,15 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   });
   // The rows taken off an id stay together, person by person.
   for (const groups of groupsOf.values()) for (const g of groups.slice(1)) for (const i of g.slice(1)) clusters.union(g[0], i);
+  // What a person decided about a name whose rows have a career of their own ("Addy Paradiso",
+  // under this year's id, is last year's "Addison Paradiso"): the two records are joined whole.
+  for (const e of identity.sameAs) {
+    const named = (name: string) => all.flatMap((s, i) => (s.sport === e.sport && s.team === e.team && s.nameKeys.includes(nameKey(name)) ? [i] : []));
+    const from = named(e.name);
+    const to = e.careerId !== undefined ? [firstWithCareer.get(e.careerId)].flatMap((i) => (i === undefined ? [] : [i])) : named(e.isName as string);
+    if (to.length === 0) continue;
+    for (const i of from) clusters.union(to[0], i);
+  }
   // A previous player known by name alone stays one player, whatever teams her stints were on.
   const nameOnlyBefore = new Set((previous?.players ?? []).filter((p) => p.identifiers.every((i) => i.kind === 'name')).map((p) => p.id));
   const firstOfPrev = new Map<string, number>();
@@ -761,18 +774,20 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       const at = (level: PlayerLevel) => listed.has(`${pairKey(s.sport, s.season)} ${s.team} ${level}`);
       return at(s.level) ? s.level : (PLAYER_LEVELS.find(at) ?? s.level);
     };
-    const grouped = new Map<string, { key: Parameters<typeof resolveStint>[0]; observations: Observation[] }>();
+    const grouped = new Map<string, { key: Parameters<typeof resolveStint>[0]; observations: Observation[]; gone: boolean }>();
     for (const i of indices) {
       const s = all[i];
       const key = { season: s.season, sport: s.sport, team: s.team, level: levelOf(s) };
       const k = `${key.season} ${key.sport} ${key.team} ${PLAYER_LEVELS.indexOf(key.level)}`;
-      const entry = grouped.get(k) ?? { key, observations: [] };
+      const entry = grouped.get(k) ?? { key, observations: [], gone: true };
       entry.observations.push(...s.observations);
+      // A stint stays `gone` only while nothing but its own carried row speaks for it.
+      entry.gone = entry.gone && s.gone === true;
       grouped.set(k, entry);
     }
-    const stints = [...grouped.keys()].sort().map((k) => {
-      const { key, observations } = grouped.get(k) as { key: Parameters<typeof resolveStint>[0]; observations: Observation[] };
-      return resolveStint(key, observations);
+    const stints = [...grouped.keys()].sort().map((k): Stint => {
+      const { key, observations, gone } = grouped.get(k) as { key: Parameters<typeof resolveStint>[0]; observations: Observation[]; gone: boolean };
+      return { ...resolveStint(key, observations), ...(gone ? { gone: true as const } : {}) };
     });
     drafts.push({
       root,
@@ -859,12 +874,21 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       heir.stints.sort((a, b) => byText(a.season, b.season) || byText(a.sport, b.sport) || byText(a.team, b.team) || byLevel(a.level, b.level));
       continue;
     }
-    // Nobody is her any more. She comes back only if her identifiers are still free.
-    const primary = p.identifiers.map(identifierKey);
-    if (primary.some((k) => owner.has(k))) continue;
+    // Nobody is her any more. She keeps her identifiers if they are free; if somebody else now holds
+    // one (a coach retyped another player over her row, and she is in no file to be told apart by),
+    // she is known from here on by her name on the teams she was on.
+    const own = p.identifiers.map(identifierKey);
+    const byName = [...new Map(
+      lost
+        .flatMap((s) => p.names.filter((n) => !isShortName(n) && nameKey(n) !== '').map((n): PlayerIdentifier => ({ kind: 'name', sport: s.sport, team: s.team, name: nameKey(n) })))
+        .map((i) => [identifierKey(i), i] as const),
+    ).values()].sort(compareIdentifiers);
+    const identifiers = own.some((k) => owner.has(k)) ? byName.filter((i) => !owner.has(identifierKey(i))) : p.identifiers;
+    if (identifiers.length === 0) continue;
+    const primary = identifiers.map(identifierKey);
     const ghost: Draft = {
       root: null,
-      identifiers: p.identifiers,
+      identifiers,
       primary,
       secondary: [],
       spellings: p.names,
