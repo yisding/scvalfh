@@ -1,0 +1,1 @@
+teams 20 leagues 4
