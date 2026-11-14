@@ -990,6 +990,13 @@ describe('noTiesSportClaims (a basketball page prints no other sport’s words)'
     expect(noTiesSportClaims('a field of goals')).toHaveLength(1);
   });
 
+  it('leaves a player’s tie to a club, as the recruiting pages word it, and still finds a tied game beside it', () => {
+    expect(noTiesSportClaims('the players that a public page ties to it, each tie checked twice when it was added')).toEqual([]);
+    expect(noTiesSportClaims('No public page we found ties one of them to this club; the pages that tie them to it')).toEqual([]);
+    expect(noTiesSportClaims('Most ties rest on one page. Every tie links its pages, and such a tie is never shown as current')).toEqual([]);
+    expect(noTiesSportClaims('with a public source for every tie; 1 point for a tie')).toHaveLength(1);
+  });
+
   it('takes a proper noun the data prints out before it reads the copy', () => {
     const text = 'Gunn at the Double Goal Coaches Classic at Tech';
     expect(noTiesSportClaims(text)).toHaveLength(1);

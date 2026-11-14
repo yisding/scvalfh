@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export default function RecruitingPage() {
-  // Field hockey's alone (recruiting): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  // Field hockey's and volleyball's (recruiting): another build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
   if (!HAS_RECRUITING) notFound();
   const view = buildRecruitingView();
 

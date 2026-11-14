@@ -18,7 +18,7 @@
 import { getClubSlugs } from '../../lib/players/clubs';
 import { gameIdToParam } from '../../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
@@ -40,17 +40,18 @@ const ALL_FIXED_PAGES = [
 ] as const;
 
 /**
- * The fixed pages this build prerenders: a route only field hockey has (lib/sports/current.ts HAS_RECRUITING)
- * is a 404 in another sport's build, which `next build` writes as a not-found page and vinext skips, so it is
- * not expected.
+ * The fixed pages this build prerenders: a route this sport's build does not have (lib/sports/current.ts
+ * HAS_RECRUITING: field hockey and volleyball; HAS_CLUB_CALENDAR: field hockey) is a 404 there, which
+ * `next build` writes as a not-found page and vinext skips, so it is not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
-  (p) => HAS_RECRUITING || !['clubs', 'club-calendar', 'commits', 'recruiting'].includes(p),
+  (p) => (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) && (HAS_CLUB_CALENDAR || p !== 'club-calendar'),
 );
 
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
-  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/club-calendar', '/commits', '/recruiting']),
+  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
+  ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
 ];
 

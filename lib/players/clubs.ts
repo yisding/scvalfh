@@ -47,7 +47,7 @@ import {
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import type { TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { HAS_RECRUITING, IS_VOLLEYBALL } from '../sports/current';
 
 /** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
@@ -102,9 +102,10 @@ function loadAndJoin(
 }
 
 /** The file, and the merged roster row each tied player joined to at load time, by `playerKey`. */
-// Club affiliations are field hockey's research alone: the soccer build's file is an empty placeholder
-// (data/soccer/clubs.json) that the schema's at-least-one-club rule would refuse, so it is served as it is.
-const { file, rows: ROW_BY_PLAYER } = IS_FIELD_HOCKEY
+// Club affiliations are researched for field hockey and volleyball (lib/sports/current.ts HAS_RECRUITING): the
+// soccer and basketball builds' files are empty placeholders (data/soccer/clubs.json) that the schema's
+// at-least-one-club rule would refuse, so they are served as they are.
+const { file, rows: ROW_BY_PLAYER } = HAS_RECRUITING
   ? loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season)
   : { file: bundled as unknown as ClubsFile, rows: new Map<string, MergedPlayer>() };
 
@@ -212,20 +213,24 @@ export function getAffiliatedPlayer(a: Pick<ClubAffiliation, 'teamSlug' | 'athle
 }
 
 /**
- * The areas the notes say were swept for clubs: the six of notes[4] and the five Southern California
- * areas of the 2026-10-06 sweep. /clubs names those that hold none; a region that holds a club but is
- * not here (sacramento, north-state) is said not to have been searched for every club.
+ * The areas the notes say were swept for clubs. Field hockey's: the six of notes[4] and the five Southern
+ * California areas of the 2026-10-06 sweep. Volleyball's: the South Bay and the Peninsula, the area of the 41
+ * SCVAL and BVAL schools (data/volleyball/clubs.json's notes). /clubs names those that hold none; a region that
+ * holds a club but is not here (field hockey's sacramento and north-state; volleyball's east-bay and
+ * central-coast) is said not to have been searched for every club.
  */
-export const SEARCHED_REGIONS: readonly ClubRegion[] = [
-  'san-francisco',
-  'peninsula',
-  'south-bay',
-  'east-bay',
-  'marin',
-  'central-coast',
-  'ventura',
-  'los-angeles',
-  'orange-county',
-  'inland-empire',
-  'san-diego',
-];
+export const SEARCHED_REGIONS: readonly ClubRegion[] = IS_VOLLEYBALL
+  ? ['peninsula', 'south-bay']
+  : [
+      'san-francisco',
+      'peninsula',
+      'south-bay',
+      'east-bay',
+      'marin',
+      'central-coast',
+      'ventura',
+      'los-angeles',
+      'orange-county',
+      'inland-empire',
+      'san-diego',
+    ];

@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from '../leagues';
 import { dateKey, httpUrl, httpsUrl, playerId, slugId } from '../schema-primitives';
+import { SPORT_ID } from '../sports/current';
 import { contentKey } from '../stable-json';
 import { TEAMS, getTeamBySlug } from '../teams';
 
@@ -324,9 +325,13 @@ export const PlayerProfileSchema = z
     /** The graduation year the profile states, when it states one. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     note: z.string().min(1).nullable(),
-    /** The profile's sport when it is not field hockey; a field hockey profile has none. */
-    sport: z.enum(COMMIT_SPORTS).exclude(['field-hockey']).optional(),
+    /**
+     * The profile's sport when it is not the build's own (field hockey's file names no field hockey profile's
+     * sport, volleyball's no volleyball profile's); a profile in the build's sport has none.
+     */
+    sport: z.enum(COMMIT_SPORTS).optional(),
   })
+  .refine((p) => p.sport !== SPORT_ID, { message: `a ${SPORT_ID} profile names no sport: it is this build's own`, path: ['sport'] })
   .refine((p) => {
     const host = hostOf(p.url);
     if (host === null) return false;
@@ -336,8 +341,8 @@ export const PlayerProfileSchema = z
   }, 'url is not a valid URL on the platform it names')
   .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none');
 
-/** A profile's uniqueness key, platform and sport (field hockey when it names none): one profile per pair. */
-export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? 'field-hockey'}`;
+/** A profile's uniqueness key, platform and sport (the build's own when it names none): one profile per pair. */
+export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? SPORT_ID}`;
 
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({

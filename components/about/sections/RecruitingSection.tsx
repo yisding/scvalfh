@@ -5,10 +5,37 @@ import { buildCommitsView } from '../../commits/commit-view';
 import { buildRecruitingView } from '../../recruiting/recruiting-view';
 import SectionHeader from '../../ui/SectionHeader';
 import { getClubs } from '../../../lib/players/clubs';
-import { HAS_RECRUITING } from '../../../lib/sports/current';
+import { HAS_RECRUITING, IS_VOLLEYBALL, SPORT } from '../../../lib/sports/current';
 
 /**
- * /about#recruiting: the hand-researched pages (/clubs, /commits, /recruiting; field hockey's alone,
+ * The words that differ by sport: where the research looked and how a place backs a match. Field hockey's
+ * were written with its 2026-10 sweeps (README, "Clubs"); volleyball's with the 2026-11-13 round
+ * (data/volleyball/clubs.json's notes).
+ */
+const WORDS = IS_VOLLEYBALL
+  ? {
+      clubSources:
+        'the club’s own site or rosters, a SportsRecruits, NCSA, Hudl or FieldLevel profile, a MaxPreps career page, or local news',
+      place: 'a hometown in the school’s own area',
+      otherClubs: 'Social-media posts, and clubs in other sports, do not count.',
+      restOn:
+        'Most ties rest on one page that names the player, the club and the school. Some rest on a club roster’s class year plus a hometown in the school’s own area.',
+      nickname: 'A nickname or a given name',
+      profilePlace: 'a hometown in the school’s own area',
+    }
+  : {
+      clubSources:
+        'the club’s own site, a SportsRecruits, NCSA, Hudl or FieldLevel profile, a MaxPreps career page, the NFHCA’s high school watchlists, MAX Field Hockey’s club and school pages, or local news such as the Gilroy Dispatch and Stick Together',
+      place: 'a location in the school’s half of the state, Northern or Southern California',
+      otherClubs: 'Social-media posts, and lacrosse, soccer and ice hockey clubs, do not count.',
+      restOn:
+        'Most ties rest on one page that names the player, the club and the school. Some rest on a club roster’s class-year heading plus the club’s location, or on a school nickname in a news story.',
+      nickname: 'A nickname or a given name (Samantha for Sami)',
+      profilePlace: 'a California hometown',
+    };
+
+/**
+ * /about#recruiting: the hand-researched pages (/clubs, /commits, /recruiting; field hockey's and volleyball's,
  * lib/sports/current.ts HAS_RECRUITING). What they cover (`#clubs-coverage`, `#commits-coverage`,
  * DESIGN §17.1, §21.4), and how a player is matched to a club (`#clubs-matched`), a commitment is
  * matched (`#commits-matched`) and the by-school lists are gathered (`#recruiting-built`). This is
@@ -27,15 +54,13 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
       <SectionHeader kicker="Clubs, commitments and recruiting" />
       <div className="sx-prose">
         <p id="clubs-coverage">
-          Club field hockey: the{' '}
+          Club {SPORT.noun}: the{' '}
           <Link href="/clubs" prefetch={false}>
             club teams
           </Link>{' '}
           pages list {getClubs().length} youth clubs (the clubs found around these schools, plus any other club
           a player here is tied to) and, for each, the players on these varsity rosters that a public
-          page ties to it: the club&rsquo;s own site, a SportsRecruits, NCSA, Hudl or FieldLevel profile, a
-          MaxPreps career page, the NFHCA&rsquo;s high school watchlists, MAX Field Hockey&rsquo;s
-          club and school pages, or local news such as the Gilroy Dispatch and Stick Together. It was
+          page ties to it: {WORDS.clubSources}. It was
           researched by hand, each tie checked twice when it was added, and is not part of the
           twice-daily update. Only players already on these rosters are
           named, social media is never used, and recall is partial.
@@ -46,7 +71,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             college commitments
           </Link>{' '}
           page lists the players on these varsity rosters that a public page says have committed to
-          play a sport in college, field hockey or any other
+          play a sport in college, {SPORT.noun} or any other
           {commitCount > 0 ? ` (${commitCount} found)` : ''}, from
           players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
           news. It was researched by hand with the club pages&rsquo; matching rule, each commitment
@@ -63,19 +88,16 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             are not named here: a club&rsquo;s page links its own roster where one is public.
           </p>
           <p>
-            A player is tied to a club only when a public page names the player and a field hockey
+            A player is tied to a club only when a public page names the player and a {SPORT.noun}{' '}
             club, and also either names the player&rsquo;s high school, or gives a class year that
-            matches the player&rsquo;s grade along with a location in the school&rsquo;s half of
-            the state, Northern or Southern California. A name alone
+            matches the player&rsquo;s grade along with {WORDS.place}. A name alone
             never counts, and a class year that disagrees with the roster rules a match out. A
-            nickname (Abby for Abigail) counts when the page otherwise meets that rule and a second
-            page, or the player&rsquo;s own, backs the match.
-            Social-media posts, and lacrosse, soccer and ice hockey clubs, do not count.
+            nickname {IS_VOLLEYBALL ? '' : '(Abby for Abigail) '}counts when the page otherwise meets that rule and a second
+            page, or the player&rsquo;s own, backs the match.{' '}
+            {WORDS.otherClubs}
           </p>
           <p>
-            Most ties rest on one page that names the player, the club and the school. Some rest on a
-            club roster&rsquo;s class-year heading plus the club&rsquo;s location, or on a school
-            nickname in a news story. Every tie links the pages it rests on, and each was checked
+            {WORDS.restOn} Every tie links the pages it rests on, and each was checked
             twice, in two separate passes, when it was added.
           </p>
           <p>
@@ -108,12 +130,10 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             A commitment is listed only when a public page says the player has committed to, or
             signed with, a college to play a sport on one of its teams, and the page also either
             names the player&rsquo;s high school, or gives a class year that matches the
-            player&rsquo;s grade along with a location in the school&rsquo;s half of the state,
-            Northern or Southern California. Field hockey is this
+            player&rsquo;s grade along with {WORDS.place}. {SPORT.name} is this
             site&rsquo;s sport, but many players here also play another, and a commitment in any
             sport counts: each row names the sport. A name alone never counts, and a class year that
-            disagrees with the roster rules a match out. A nickname or a given name (Samantha for
-            Sami) counts when the page otherwise meets that rule and a second page, or the
+            disagrees with the roster rules a match out. {WORDS.nickname} counts when the page otherwise meets that rule and a second page, or the
             player&rsquo;s own, backs the match. A college a player is only interested in,
             has an offer from or has visited is not a commitment, and neither is a place on a
             college&rsquo;s club team.
@@ -166,10 +186,10 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
           </p>
           <p>
             <strong>Recruiting profiles</strong> are
-            players&rsquo; own pages on NCSA, SportsRecruits, Hudl, FieldLevel and the like, in field
-            hockey or any other sport (a profile in another sport says which). A profile is linked
+            players&rsquo; own pages on NCSA, SportsRecruits, Hudl, FieldLevel and the like, in {SPORT.noun}{' '}
+            or any other sport (a profile in another sport says which). A profile is linked
             only when it names the player and a sport, and either names the school or shows the class
-            year the roster shows along with a California hometown. A MaxPreps profile is the
+            year the roster shows along with {WORDS.profilePlace}. A MaxPreps profile is the
             player&rsquo;s own page on MaxPreps, where the rosters come from, linked only where the
             player or a parent has claimed it. They were last gathered on{' '}
             {recruiting.profilesCheckedOn}.
@@ -183,7 +203,7 @@ export function RecruitingSection({ commitCount }: { commitCount: number }) {
             <strong>Commitment lines</strong> link the
             player&rsquo;s entry among the college commitments, which cites a source for each one.
             &ldquo;Signed&rdquo; appears only where a source says so, and a commitment in a sport
-            other than field hockey names it. They were checked on {recruiting.commitsCheckedOn}.
+            other than {SPORT.noun} names it. They were checked on {recruiting.commitsCheckedOn}.
           </p>
           <p>
             None of this is part of the twice-daily update: it is research done by hand, and social

@@ -79,7 +79,7 @@ describe('the volleyball sport switch', () => {
     expect(SPORT_SEASON.genderSport).toBe('girls,volleyball');
     expect(SPORT_AUDIENCE).toBe('girls varsity volleyball');
     expect(DATA_DIR).toBe('data/volleyball');
-    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING]).toEqual([false, false, true, false]);
+    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING]).toEqual([false, false, true, true]);
   });
 
   it('scores sets, never ends level, has no overtime, and prints a record as W-L', () => {
