@@ -8,7 +8,7 @@
 import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
 import { byDateThenId, dayDiff } from '../../format';
-import { isSbliveContestId } from '../../game-id';
+import { isOfficialContestId, isSbliveContestId } from '../../game-id';
 import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
 import { CCS } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
@@ -67,13 +67,16 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
   }
   // A San Diego bracket sheet game (`cifsds:`) MaxPreps has posted since: the contest of the same two teams
   // the sheet's step matched it to (lib/postseason/sds-sheet-results.ts, within SDS_SHEET_DATE_TOLERANCE_DAYS).
+  // Likewise a game an earlier run listed from DATA_QUALITY.addedGames (`official:`) that a feed lists now, so a
+  // link to a game reported before its day still leads to it.
+  const prefixed = (id: ContestId): boolean => isCifsdsContest(id) || isOfficialContestId(id);
   for (const g of previous?.games ?? []) {
-    if (!isCifsdsContest(g.contestId) || ids.has(g.contestId)) continue;
+    if (!prefixed(g.contestId) || ids.has(g.contestId)) continue;
     const pair = [g.home.slug, g.away.slug].sort().join('~');
     const now = games
       .filter(
         (c) =>
-          !isCifsdsContest(c.contestId) &&
+          !prefixed(c.contestId) &&
           !isSbliveContestId(c.contestId) &&
           [c.home.slug, c.away.slug].sort().join('~') === pair &&
           Math.abs(dayDiff(c.dateKey, g.dateKey)) <= SDS_SHEET_DATE_TOLERANCE_DAYS,

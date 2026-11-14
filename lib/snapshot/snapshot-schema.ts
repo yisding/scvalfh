@@ -29,7 +29,11 @@ const id = slugId;
 export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
 export const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
-/** A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts); never in a stored file. */
+/**
+ * A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts; never in a stored
+ * file), or a game no feed lists recorded from DATA_QUALITY.addedGames (stored, and a `supersededGames` key once a
+ * feed lists it).
+ */
 export const OFFICIAL_ID_RE = /^official:\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
 const contestId = z

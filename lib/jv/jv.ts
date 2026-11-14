@@ -24,9 +24,11 @@ import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
+import { DATA_QUALITY } from '../league-config/data-quality';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
+import { mergeJvAdded, type JvAddedMergeResult } from './jv-added';
 import { mergeJvSchoolSites, type JvSchoolSiteMergeResult } from './jv-school-sites';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
@@ -66,14 +68,21 @@ const official: JvOfficialMergeResult = mergeJvOfficial({
   slots: JV_SLOTS,
   fetchedAt: file.fetchedAt,
 });
+// The JV game of a varsity game no feed lists, where the source gives one (lib/jv/jv-added.ts).
+const reported: JvAddedMergeResult = mergeJvAdded({
+  games: official.games,
+  added: DATA_QUALITY.addedGames,
+  today: localDateKey(file.fetchedAt),
+  fetchedAt: file.fetchedAt,
+});
 const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
-  official.games,
+  reported.games,
   getSnapshot().games,
   getOfficialFixtures(),
   JV_CORRECTIONS.leagueGames,
   { claims: official.claims, divisions: new Set(JV_SLOTS.map((s) => s.division)) },
 );
-const games: Game[] = withJvClassification(official.games, classes);
+const games: Game[] = withJvClassification(reported.games, classes);
 /** The divisions whose schedule schedules the JV round: a bundle carries a JV slot on every fixture or on none. */
 const JV_SCHEDULED_DIVISIONS: ReadonlySet<DivisionId> = new Set(JV_SLOTS.map((s) => s.division));
 const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt), JV_SCHEDULED_DIVISIONS);
@@ -91,6 +100,11 @@ export function getJvMerge(): JvMergeResult {
 /** What the league's own JV schedule added, timed and matched (lib/jv/jv-official.ts), after the other merges. */
 export function getJvOfficialMerge(): JvOfficialMergeResult {
   return official;
+}
+
+/** The JV games of varsity games no feed lists that this build added (lib/jv/jv-added.ts). */
+export function getJvAddedMerge(): JvAddedMergeResult {
+  return reported;
 }
 
 /** Every JV game the site lists, classified, oldest first. */

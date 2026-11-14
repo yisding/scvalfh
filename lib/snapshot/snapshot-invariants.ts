@@ -18,7 +18,7 @@ import {
   getSection,
   statusesOf,
 } from '../leagues';
-import { CIFSDS_ID_RE, SBLIVE_ID_RE, SnapshotObject } from './snapshot-schema';
+import { CIFSDS_ID_RE, OFFICIAL_ID_RE, SBLIVE_ID_RE, SnapshotObject } from './snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../teams';
 import type { DivisionId, Snapshot, TiebreakStage } from '../types';
 
@@ -300,10 +300,10 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (!getTeamBySlug(r.slug)) issue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
   });
 
-  // 10. superseded si.com games.
+  // 10. superseded si.com games, San Diego bracket sheet games and added games (DATA_QUALITY.addedGames, `official:`).
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from)) {
-      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits> or cifsds:<away>-at-<home>');
+    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from) && !OFFICIAL_ID_RE.test(from)) {
+      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>');
     }
     if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);

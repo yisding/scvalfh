@@ -671,6 +671,11 @@ double round robin (Article V §2). The SCVAL soccer schedules give starting tim
 no field hockey document schedules a JV round, so neither has slots; a league gets them by adding `jv` to
 its bundle's fixtures.
 
+A fifth JV layer, `lib/jv/jv-added.ts` (`mergeJvAdded`), lists the JV game of a varsity game no feed lists
+(`DATA_QUALITY.addedGames` with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
+it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, from Cupertino's own schedule, given by the owner on 2026-11-14 (see
+docs/LEAGUE-RULES.md, "A game reported before its day").
+
 #### JV standings
 
 `lib/jv/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one

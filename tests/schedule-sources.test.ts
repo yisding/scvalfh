@@ -15,6 +15,7 @@ import { tournamentBracketView } from '../components/playoffs/tournament-bracket
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
 import { getLeague } from '../lib/leagues';
 import { roundSiteOf, withRoundSite } from '../lib/postseason/round-site';
+import { mergeJvAdded } from '../lib/jv/jv-added';
 import { fixtureGame, withFixtureGames } from '../lib/results/fixture-games';
 import { addedGame, applyResultCorrection, resolveResult, withAddedGames } from '../lib/results/result';
 import type { AddedGame, OfficialFixture } from '../lib/types';
@@ -96,6 +97,30 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
     expect(withAddedGames(partial, FETCHED, [forfeit])).toBe(partial);
     const listed = [poway, vc, game({ home: 'poway', away: 'valley-center', hs: 0, as: 1, date: '2026-10-30' })];
     expect(withAddedGames(listed, FETCHED, [forfeit])).toBe(listed);
+  });
+
+  it('puts a game reported before its day on the schedule from the day it was reported, scheduled', () => {
+    const poway = game({ home: 'poway', away: 'del-norte', hs: 1, as: 0, date: '2026-10-20' });
+    const vc = game({ home: 'valley-center', away: 'del-norte', hs: 0, as: 1, date: '2026-10-21' });
+    const ahead: AddedGame = { ...forfeit, dateKey: '2026-11-20', goals: null, forfeitBy: null, from: 'derived', reportedOn: '2026-11-14' };
+    const out = withAddedGames([poway, vc], FETCHED, [ahead]);
+    const g = out.find((x) => x.contestId === 'official:2026-11-20-valley-center-at-poway');
+    expect([g?.status, g?.home.score, g?.away.score]).toEqual(['scheduled', null, null]);
+    // Not into a capture from before the report, and not without `reportedOn` (an earlier capture never saw it).
+    expect(withAddedGames([poway, vc], '2026-11-13T12:00:00.000Z', [ahead])).toHaveLength(2);
+    expect(withAddedGames([poway, vc], FETCHED, [{ ...ahead, reportedOn: undefined }])).toHaveLength(2);
+  });
+
+  it('lists the JV game a reported game comes with until a JV game of the pair is listed near its day', () => {
+    const ahead: AddedGame = {
+      ...forfeit, dateKey: '2026-11-20', goals: null, forfeitBy: null, from: 'derived', reportedOn: '2026-11-14',
+      jv: { dateKey: '2026-11-20', time: '16:30' },
+    };
+    const [g] = mergeJvAdded({ games: [], added: [ahead], today: '2026-11-14', fetchedAt: FETCHED }).games;
+    expect([g.contestId, g.dateLocal, g.status, g.home.score]).toEqual(['added-jv:2026-11-20-valley-center-at-poway', '2026-11-20T16:30:00', 'scheduled', null]);
+    expect(mergeJvAdded({ games: [], added: [ahead], today: '2026-11-13', fetchedAt: FETCHED }).added).toEqual([]);
+    const listed = game({ home: 'valley-center', away: 'poway', date: '2026-11-21' });
+    expect(mergeJvAdded({ games: [listed], added: [ahead], today: '2026-11-14', fetchedAt: FETCHED }).added).toEqual([]);
   });
 
   it('puts the 2026 EAL Super Regional’s five unlisted games on the schedule, none with a score', () => {
