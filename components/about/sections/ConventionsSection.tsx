@@ -1,4 +1,4 @@
-import { RECORD_NOUN_WORDS, SCORE_UNITS } from '../../words/score-words';
+import { ALLOWS_TIES, RECORD_NOUN_WORDS, SCORE_UNITS } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import type { ShootoutSection } from '../about-view';
 
@@ -46,6 +46,20 @@ export function ConventionsSection({ shootoutSections }: { shootoutSections: rea
               )}
             </li>
           ))}
+          {/* lib/postseason/level-final.ts: a level final with the winner marked, in a game that must have one. No
+              source this site reads says how the tie was broken, so the row carries no decider tag. */}
+          <li>
+            {ALLOWS_TIES
+              ? 'A postseason or tournament game that MaxPreps lists as level and marks as won was played to a winner: it is counted as the marked team’s win in records and form. The score shown is always the score in play. Where a second source records that level score with a shootout added (si.com’s 4–3 where MaxPreps has 1–1 is a 3–2 shootout), or a cited report gives it, the shootout is shown beside the score; where nothing says how the level score was broken, the game shows no decider tag and its page says so.'
+              : 'A game cannot end level. One that MaxPreps lists as level and marks as won is counted as the marked team’s win; it shows the score as MaxPreps has it.'}
+          </li>
+          <li>
+            No source is always right, so a score is checked against the others this site reads: si.com,
+            cifsshome.org and each team&rsquo;s own box score. Where two of them agree on a score that is not
+            MaxPreps&rsquo; and nothing supports MaxPreps&rsquo;, their score is shown, and the game&rsquo;s page
+            says what each source has. Where one source differs and nothing settles it, MaxPreps&rsquo; score
+            stands and the page says so.
+          </li>
           <li>
             {`A forfeit counts in ${RECORD_NOUN_WORDS} but not in ${SCORE_UNITS} for/against/differential — marked with a dagger everywhere a total would otherwise be misleading.`}
           </li>

@@ -5,8 +5,8 @@
  */
 
 import type {
-  CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
-  PlayoffStatus, RegionId, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  AddedGame, CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
+  PlayoffStatus, RegionId, ResultCorrection, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from '../types';
 
 /**
@@ -21,6 +21,21 @@ export interface RegionConfig {
   name: 'Northern California' | 'Southern California';
   /** 'NorCal' | 'SoCal': the two buttons of the region switcher. */
   shortName: 'NorCal' | 'SoCal';
+}
+
+/** One side of a tournament bracket game: a team, or whoever won or lost an earlier game (by its id). */
+export type TournamentBracketSide = { team: TeamSlug } | { winnerOf: string } | { loserOf: string };
+
+/** One game of an event's bracket (the 'unbracketed-tournament' kind's `bracket`). */
+export interface TournamentBracketGame {
+  id: string;
+  round: 'first-round' | 'semifinal' | 'final' | 'third-place' | 'fifth-place';
+  date: string;
+  /** Local start, 'HH:MM'. */
+  time: string;
+  venue: string;
+  home: TournamentBracketSide;
+  away: TournamentBracketSide;
 }
 
 /**
@@ -251,8 +266,11 @@ export interface LeagueRules {
    */
   classification: 'contest-type' | 'official-fixtures' | 'membership';
   /**
-   * contestTypes that never count (either row); applies to every classification. SCVAL: [] (byte-identity).
-   * BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
+   * contestTypes that never count (either row); applies to every classification. Always includes 2 (asserted): a
+   * tournament game never counts toward a league record, in any league or sport (owner decision, 2026-11-13; no
+   * 2026 game was counted that way). SCVAL: [2] (no 2026 SCVAL game has a league row and a tournament row, so its
+   * tables are unchanged). BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the
+   * 2025 EAL tournament).
    */
   excludeContestTypes: readonly number[];
   /** Games between two members on/after this local date are postseason (MCAL '2026-10-23', EAL '2026-10-30'). */
@@ -416,6 +434,16 @@ export type PostseasonConfig =
       admission: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
+      /**
+       * The event's bracket once its game schedule is known, or null (the kind's name is from the years the event
+       * published none): every game in playing order, its round, start, field and two sides, the home side first
+       * as the schedule lists it. A side is a team, or the winner or loser of an earlier game by id.
+       * components/playoffs/tournament-bracket-view.ts joins the games to it and draws it; no seed is printed.
+       */
+      bracket: {
+        source: { label: string; url: string; retrievedOn: string };
+        games: readonly TournamentBracketGame[];
+      } | null;
       sourceUrl: string;
     }
   | {
@@ -572,6 +600,19 @@ export interface DataQualityConfig {
    * (Game.provenance.dateCorrection). Keys are contest GUIDs, `dateKey` a YYYY-MM-DD (assertLeagues).
    */
   contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
+  /**
+   * A final's result recorded from a better source than the feed, by contest GUID (lib/types.ts ResultCorrection;
+   * lib/results/result.ts applies it before anything counts the game). For a result the feed cannot state: a
+   * shootout MaxPreps stores as the score. `goals` and `shootout` name both sides by slug (assertLeagues), and
+   * `source` is the citation the game page prints.
+   */
+  resultCorrections: Readonly<Record<ContestId, ResultCorrection>>;
+  /**
+   * Games no feed lists, recorded from an official source (lib/types.ts AddedGame; lib/results/result.ts
+   * `withAddedGames` puts each on the schedule, classified like any other game, until a feed lists the pair on
+   * that date). In date order.
+   */
+  addedGames: readonly AddedGame[];
   /**
    * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
    * other school, than its league's document says. D2 rule 2 (lib/crosscheck/backfill.ts) looks for si.com's Final of the pair

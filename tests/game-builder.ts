@@ -13,13 +13,15 @@
  * lib/pipeline/normalize.ts sets it: a level final flagged {W, L} between two teams of a section whose
  * `shootout` rule is set (the Northern Section's EAL, the San Diego Section, across its conferences)
  * is 'SO' (no tally) unless it is a tournament row the section's rule does not cover; otherwise forfeit,
- * then the overtime count. A 'membership' division (San Diego)
+ * then the overtime count; then, as the classify step does, a level postseason final flagged {W, L} is 'SO' in
+ * any section (lib/postseason/level-final.ts). A 'membership' division (San Diego)
  * counts by membership and date, so its games need no stamp; a game MaxPreps flags between two
  * divisions of one such league carries lib/classify.ts's cross-division note, as classifyGames sets it.
  */
 
 import { classifyGame, crossDivisionNote, postseasonTag } from '../lib/classify';
 import { getDivision, getSection, leagueOfDivision } from '../lib/leagues';
+import { settleLevelFinal } from '../lib/postseason/level-final';
 import { countsOf } from '../lib/snapshot/snapshot-migrate';
 import { resolveTeam } from '../lib/teams';
 import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag, Snapshot } from '../lib/types';
@@ -171,7 +173,8 @@ export function game(spec: GameSpec): Game {
   };
   const classified: Game = { ...tagged, countsFor: classifyGame(tagged) };
   const note = crossDivisionNote(classified);
-  return note ? { ...classified, provenance: { ...classified.provenance, classificationNote: note } } : classified;
+  // As the pipeline's classify step: a level postseason final marked W and L is the marked side's win.
+  return settleLevelFinal(note ? { ...classified, provenance: { ...classified.provenance, classificationNote: note } } : classified);
 }
 
 /**

@@ -23,11 +23,22 @@ export const isSbliveContestId = (id: string): boolean => id.startsWith(SBLIVE_P
 /** True for a San Diego Section bracket sheet game's contest id (`cifsds:`). */
 export const isCifsdsContestId = (id: string): boolean => id.startsWith(CIFSDS_PREFIX);
 
-const PREFIXED_ID = /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+)$/;
+/**
+ * The contest-id prefix of a game only a league's own schedule has (`official:<date>-<away>-at-<home>`,
+ * lib/results/fixture-games.ts): listed on the site until a source has the game itself.
+ */
+export const OFFICIAL_PREFIX = 'official:';
+/** `official:2027-01-22-cupertino-at-wilcox`: the contest id of an official fixture no source lists. */
+export const officialContestId = (dateKey: string, awaySlug: string, homeSlug: string): string =>
+  `${OFFICIAL_PREFIX}${dateKey}-${awaySlug}-at-${homeSlug}`;
+/** True for a schedule-only game's contest id (`official:`). */
+export const isOfficialContestId = (id: string): boolean => id.startsWith(OFFICIAL_PREFIX);
+
+const PREFIXED_ID = /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+|official:\d{4}-\d{2}-\d{2}-[a-z0-9-]+-at-[a-z0-9-]+)$/;
 /** True for the two non-MaxPreps id families (`sblive:<n>`, `cifsds:<away>-at-<home>`): the ids a MaxPreps contest can supersede. */
 export const isPrefixedContestId = (id: string): boolean => PREFIXED_ID.test(id);
 
-const PREFIXED_PARAM = /^(sblive-\d+|cifsds-[a-z0-9-]+-at-[a-z0-9-]+)$/;
+const PREFIXED_PARAM = /^(sblive-\d+|cifsds-[a-z0-9-]+-at-[a-z0-9-]+|official-\d{4}-\d{2}-\d{2}-[a-z0-9-]+-at-[a-z0-9-]+)$/;
 
 /** 'sblive:123' → 'sblive-123', 'cifsds:a-at-b' → 'cifsds-a-at-b'; a GUID is returned unchanged. */
 export function gameIdToParam(contestId: string): string {

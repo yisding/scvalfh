@@ -297,7 +297,7 @@ describe('every league, rendered', () => {
     for (const game of games) {
       const html = renderToStaticMarkup(createElement(GameRow, { game }));
       expect(html, `components/game-row/GameRow.tsx ${game.contestId}`).toContain(
-        `href="/game/${game.contestId.replace(/^(sblive|cifsds):/, '$1-')}"`,
+        `href="/game/${game.contestId.replace(/^(sblive|cifsds|official):/, '$1-')}"`,
       );
     }
   });

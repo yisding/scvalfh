@@ -362,14 +362,16 @@ describe('snapshot schema: checkAgainstConfig', () => {
       { ...ssSds, home: { ...ssSds.home, result: 'W' }, away: { ...ssSds.away, result: 'L' }, decider: 'SO' },
       /decider SO but the sides are not two teams of a section that decides level games by shootout/,
     ]);
-    // Two San Diego teams at an invitational tournament (contestType 2): the SDFHOA procedures do not cover it.
+    // Two San Diego teams at an invitational tournament (contestType 2): the SDFHOA procedures do not cover it,
+    // so normalize reads no 'SO' there.
     const tourney = game({
       home: 'mt-carmel', away: 'poway', hs: 0, as: 0, league: false, date: '2026-08-21', contestTypes: { home: 2, away: 2 },
     });
-    cases.push([
-      { ...tourney, home: { ...tourney.home, result: 'W' }, away: { ...tourney.away, result: 'L' }, decider: 'SO' },
-      /decider SO on a tournament row, which the San Diego Section's shootout rule does not cover/,
-    ]);
+    // Marked W and L, a tournament game was played to a winner in any section (lib/postseason/level-final.ts).
+    const settled = baseSnapshot();
+    settled.games.push({ ...tourney, home: { ...tourney.home, result: 'W' }, away: { ...tourney.away, result: 'L' }, decider: 'SO' });
+    settled.counts.games += 1;
+    expect(() => parseSnapshot(settled)).not.toThrow();
     // No tally and a score that is not level.
     cases.push([oneVOneGame({ away: { ...so.away, score: 0 } }), /decider SO without a tally needs a level score flagged W\/L/]);
     // No tally and no W/L flags.

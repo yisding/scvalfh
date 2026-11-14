@@ -1,5 +1,5 @@
 import { getStandingFor } from '../../lib/data';
-import { monthDay, recordWords } from '../../lib/format';
+import { SPORT_TIEBREAK_TAG, monthDay, recordWords } from '../../lib/format';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3 } from '../../lib/types';
 
@@ -129,16 +129,18 @@ export function shootoutNote(game: Pick<Game, 'shootout'>, display: GameDisplay)
   if (!winner) return null;
   if (game.shootout) {
     const { home, away } = game.shootout;
-    return `${winner.shortName} wins shootout ${Math.max(home, away)}-${Math.min(home, away)}`;
+    // 'wins shootout 3-2'; the soccer build's is 'wins on penalty kicks 3-2'.
+    const how = SPORT_TIEBREAK_TAG === 'PK' ? 'on penalty kicks' : 'shootout';
+    return `${winner.shortName} wins ${how} ${Math.max(home, away)}-${Math.min(home, away)}`;
   }
-  if (display.deciderTag !== 'SO') return null;
+  if (display.deciderTag !== SPORT_TIEBREAK_TAG) return null;
   const how = (display.shootoutLabel ?? 'decided by a shootout').replace(/^decided /, '');
   return `${winner.shortName} wins ${how}`;
 }
 
-/** The second status line of a final: `OT`, `2 OT`, `SO`, `F`. A stored shootout tally is `SO` too. */
+/** The second status line of a final: `OT`, `2 OT`, `SO` (soccer's `PK`), `F`. A stored shootout tally is `SO` too. */
 function deciderWord(game: Pick<Game, 'shootout'>, display: Pick<GameDisplay, 'deciderTag'>): string | null {
-  return display.deciderTag ?? (game.shootout ? 'SO' : null);
+  return display.deciderTag ?? (game.shootout ? SPORT_TIEBREAK_TAG : null);
 }
 
 /**

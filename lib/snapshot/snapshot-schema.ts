@@ -29,14 +29,22 @@ const id = slugId;
 export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
 export const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts); never in a stored file. */
+export const OFFICIAL_ID_RE = /^official:\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
 const contestId = z
   .string()
   .refine(
-    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v),
-    'expected a contest GUID, sblive:<digits> or cifsds:<away>-at-<home>',
+    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v) || OFFICIAL_ID_RE.test(v),
+    'expected a contest GUID, sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>',
   );
 const outcome = z.enum(['W', 'L', 'T']);
+/** One team's box score of a game, as far as it bears on the result (lib/types.ts BoxSide). */
+const boxSide = z.object({
+  goals: z.number().int().min(0).optional(),
+  goalsAgainst: z.number().int().min(0).optional(),
+  overtimeMinutes: z.number().min(0).optional(),
+});
 // SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
 const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
 const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
@@ -201,6 +209,14 @@ export const GameSchema = z
     forfeitBy: z.enum(['home', 'away']).nullable(),
     decider: decider.nullable(),
     shootout: z.object({ home: z.number().int(), away: z.number().int() }).nullable(),
+    result: z
+      .object({
+        winner: z.enum(['home', 'away']).nullable(),
+        ending: z.enum(['regulation', 'overtime', 'shootout', 'forfeit', 'unstated']),
+        certainty: z.enum(['confirmed', 'reported', 'inferred', 'disputed']),
+        basis: z.string().min(1).optional(),
+      })
+      .optional(),
     bracket: GameBracketSchema.optional(),
     venue: z.object({
       text: z.string().nullable(),
@@ -233,6 +249,26 @@ export const GameSchema = z
         })
         .optional(),
       backfill: backfillProvenance.optional(),
+      cifssScore: z.object({ home: z.number().int(), away: z.number().int(), url: httpUrl }).optional(),
+      shootoutSource: z
+        .object({ source: z.enum(['sblive', 'cifss']), score: z.object({ home: z.number().int(), away: z.number().int() }) })
+        .optional(),
+      boxScore: z.object({ home: boxSide.optional(), away: boxSide.optional() }).optional(),
+      overtimeEvidence: z.literal('box-score').optional(),
+      adjudicated: z
+        .object({
+          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), homeResult: outcome.nullable(), awayResult: outcome.nullable() }),
+          by: z.array(z.string().min(1)).min(1),
+        })
+        .optional(),
+      resultCorrection: z
+        .object({
+          maxpreps: z.object({ home: z.number().int(), away: z.number().int(), otPeriods: z.number().int().min(0) }).nullable(),
+          certainty: z.literal('reported').optional(),
+          source: z.string().min(1),
+          url: httpUrl.nullable(),
+        })
+        .optional(),
       sectionSheet: z.object({ rule: z.enum(['absent-game', 'score-pending']), note: z.string().min(1) }).optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
@@ -262,6 +298,8 @@ export const GameSchema = z
   // 4. Shootout data only with decider === 'SO' (an EAL 1 v 1 win is 'SO' with no stored tally).
   .refine((g) => g.shootout === null || g.decider === 'SO', 'shootout data without decider SO')
   .refine((g) => g.isOt === g.otPeriods > 0, 'isOt/otPeriods mismatch')
+  // A recorded result only on a final.
+  .refine((g) => g.result === undefined || g.status === 'final', 'a result on a game that is not final')
   .refine((g) => g.dateKey === g.dateLocal.slice(0, 10), 'dateKey does not match dateLocal');
 
 // ---------------------------------------------------------------- standings

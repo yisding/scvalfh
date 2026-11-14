@@ -28,11 +28,25 @@
  * (reclassified above) — gets it rebuilt on load (`needsPlayoffGames` / `rebuildPlayoffGames`), so the
  * committed file heals itself the way stale tags do. Today's file has no bracket game: a no-op.
  *
- * All four return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "Recorded results" (v2 → v2, 2026-11-13). Every final carries its recorded result (`Game.result`), decided by
+ * lib/results/result.ts from the game alone, and the same module applies cited corrections, counts a level final
+ * that must have a winner for the marked side and reads a shootout tally out of a second source's score. A file
+ * written before any of that (or before a rule or a correction was added) is brought up to the current rules on
+ * load by `needsRecordedResults` / `recordStoredResults`, with the standings rows of the teams whose score,
+ * winner or tally moved recomputed: Saint Francis 1, Archbishop Mitty 1 (the CCS semifinal of Nov 11, 2026) was
+ * stored as a tie with a result conflict; Tamalpais 3, Marin Catholic 1 was 0-0 and a 3-1 shootout. Runs after
+ * `reclassify`, so it reads the current tags.
+ *
+ * All five return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
 import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
+import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final';
+import type { BoxEvidence } from '../results/box-evidence';
+import { excessOver, finalizeResult, withAddedGames } from '../results/result';
+import { stableStringify } from '../stable-json';
+import { DATA_QUALITY } from '../league-config/data-quality';
 import { CCS } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
@@ -40,6 +54,7 @@ import { buildCrossCheck } from '../standings/cross-check';
 import { assertFullTable, computeStandings, divisionGames } from '../standings/engine';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '../teams';
 import type {
+  CifssConflictRow,
   DivisionHealth,
   DivisionId,
   Game,
@@ -524,6 +539,202 @@ export function reclassify(raw: unknown): unknown {
     leagueHealth,
     // 6. counts
     counts: countsOf(games, standings),
+  };
+  return out;
+}
+
+// ---------------------------------------------------------------- "recorded results" (v2 → v2)
+
+/**
+ * A stored game D2 rule 4a filled with si.com's score because MaxPreps' level score was marked W and L, where the
+ * game must have a winner and si.com's score is that level score with goals added (lib/crosscheck/backfill.ts
+ * `readsAsSettledLevelScore`, which now keeps the pipeline from making the fill): back to MaxPreps' level score with
+ * the winner marked and si.com's score kept as the differing one, as the cross-check would have left it. The
+ * same object for every other game.
+ */
+function unfillSettledLevelScore(g: Game): Game {
+  const b = g.provenance.backfill;
+  if (!b || b.rule !== 'contradictory-result' || !b.maxpreps || b.maxpreps.home !== b.maxpreps.away) return g;
+  if (g.status !== 'final' || g.home.score === null || g.away.score === null || g.home.score === g.away.score) return g;
+  const sblive = { home: g.home.score, away: g.away.score };
+  const winner = sblive.home > sblive.away ? 'home' : 'away';
+  if (!mustHaveWinner(g) || excessOver(b.maxpreps.home, sblive, winner) === null) return g;
+  // The side MaxPreps marked, where the stored flag sentence still says (flagConflictSentence): si.com naming the
+  // other side is not that level score settled, so the fill stays.
+  const flags = g.provenance.resultConflict ?? '';
+  const marked = flags.includes(`MaxPreps marks ${g.home.name} W and ${g.away.name} L`) ? 'home' : flags.includes(`MaxPreps marks ${g.home.name} L and ${g.away.name} W`) ? 'away' : null;
+  if (marked !== null && marked !== winner) return g;
+  const { backfill: _fill, scoreConflict: _was, ...provenance } = g.provenance;
+  void _fill;
+  void _was;
+  const level = b.maxpreps.home;
+  const home = { ...g.home, score: level, result: winner === 'home' ? ('W' as const) : ('L' as const) };
+  const away = { ...g.away, score: level, result: winner === 'away' ? ('W' as const) : ('L' as const) };
+  return {
+    ...g,
+    home,
+    away,
+    provenance: {
+      ...provenance,
+      scores: 'maxpreps-api',
+      resultConflict: provenance.resultConflict ?? flagConflictSentence(home, away),
+      scoreConflict: {
+        sblive,
+        note: `Sources disagree: we show MaxPreps’ ${level}-${level} (${g.away.name}–${g.home.name}); si.com reports ${sblive.away}-${sblive.home}. MaxPreps’ score stands.`,
+      },
+    },
+  };
+}
+
+/** Why the config now drops a stored game (the pipeline's applyExclusions rule: a ghost side first), or null. */
+function exclusionOf(g: Game): { reason: 'ghost-team' | 'excluded-by-config'; note: string } | null {
+  for (const id of [g.home.teamId, g.away.teamId]) {
+    if (id !== null && id in DATA_QUALITY.ghostTeamIds) return { reason: 'ghost-team', note: DATA_QUALITY.ghostTeamIds[id] };
+  }
+  const why = DATA_QUALITY.excludedContestIds[g.contestId];
+  return why === undefined ? null : { reason: 'excluded-by-config', note: why };
+}
+
+/** One stored game as the current rules record it (lib/results/result.ts), given the file's cifss conflict rows. */
+function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>, box: BoxEvidence | undefined): Game {
+  return finalizeResult(unfillSettledLevelScore(g), { cifss: cifss.get(g.contestId), box });
+}
+
+function cifssRowsOf(raw: Json): Map<string, CifssConflictRow> {
+  const rows = isObject(raw.cifssCrossCheck) && Array.isArray(raw.cifssCrossCheck.conflicts) ? (raw.cifssCrossCheck.conflicts as CifssConflictRow[]) : [];
+  return new Map(rows.map((r) => [r.contestId, r]));
+}
+
+/**
+ * A v2 object with at least one game the current rules record differently (lib/results/result.ts
+ * `finalizeResult`): a file written before `Game.result` existed, or before a rule or a correction was added.
+ * False for anything else, including a file `parseSnapshot` would reject for another reason. `box` is the season's
+ * box-score evidence (lib/results/box-evidence.ts) when the caller has the player-stats file to hand: lib/data.ts
+ * does, so the site weighs it; without it each game's stored box evidence is left as it is.
+ */
+export function needsRecordedResults(raw: unknown, box?: BoxEvidence): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.standings)) return false;
+  try {
+    const cifss = cifssRowsOf(raw);
+    const games = raw.games as Game[];
+    if (withAddedGames(games, String(raw.fetchedAt)) !== games) return true;
+    return games.some((g) => exclusionOf(g) !== null || recorded(g, cifss, box) !== g);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The same file with every game recorded by the current rules. In order: (0) rows the config now excludes are
+ * dropped and listed in `dropped`; (1) the games; (2) the standings rows of
+ * every division with a team in a game whose score, winner or tally moved, recomputed by the engine with MaxPreps'
+ * reported rows carried over (the other divisions' rows stay byte-identical; a game that only gained its `result`
+ * moves none); (3) the cross-check from the merged rows; (4) the si.com cross-check, where a fill was undone: its
+ * `backfilled` row becomes a `conflicts` row; (5) `counts`; (6) `playoffs.games`, rebuilt so it holds the new
+ * objects. Throws on input `needsRecordedResults` rejects.
+ */
+export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
+  if (!needsRecordedResults(raw, box)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot with a result to record');
+  const v2 = raw as unknown as Snapshot;
+  const cifss = cifssRowsOf(raw as Json);
+  const changed = new Set<DivisionId>();
+  // (0) rows the config has since excluded (DATA_QUALITY.excludedContestIds, ghostTeamIds: a duplicate found after
+  //     the file was written) leave the games, as the pipeline's normalize step would drop them, and are recorded.
+  const excluded = v2.games.filter((g) => exclusionOf(g) !== null);
+  for (const g of excluded) {
+    for (const side of [g.home, g.away]) {
+      const team = side.teamId ? getTeamById(side.teamId) : undefined;
+      if (team) changed.add(team.division);
+    }
+  }
+  // and games an official source has and no feed lists (DATA_QUALITY.addedGames) join them.
+  const kept = withAddedGames(v2.games.filter((g) => exclusionOf(g) === null), v2.fetchedAt);
+  const stored = new Map(v2.games.map((g) => [g.contestId, g]));
+  const games = kept.map((g) => recorded(g, cifss, box));
+  const unfilled: Game[] = [];
+  games.forEach((g) => {
+    const was = stored.get(g.contestId);
+    if (!was) {
+      // An added game: its teams' rows are recounted.
+      for (const side of [g.home, g.away]) {
+        const team = side.teamId ? getTeamById(side.teamId) : undefined;
+        if (team) changed.add(team.division);
+      }
+      return;
+    }
+    if (was.provenance.backfill && !g.provenance.backfill) unfilled.push(g);
+    const moved =
+      was.home.score !== g.home.score || was.away.score !== g.away.score || was.decider !== g.decider || was.otPeriods !== g.otPeriods ||
+      was.home.result !== g.home.result || was.away.result !== g.away.result || stableStringify(was.shootout) !== stableStringify(g.shootout) ||
+      was.countsFor !== g.countsFor;
+    if (!moved) return;
+    for (const side of [g.home, g.away]) {
+      const team = side.teamId ? getTeamById(side.teamId) : undefined;
+      if (team) changed.add(team.division);
+    }
+  });
+  let standings = v2.standings;
+  if (changed.size > 0) {
+    const reported = new Map<TeamId, ReportedRecord>();
+    for (const row of v2.standings) if (row.reported) reported.set(row.teamId, row.reported);
+    const recomputed = computeStandings(games, { reported });
+    standings = [];
+    for (const league of LEAGUES) {
+      for (const d of league.divisions) {
+        standings.push(...(changed.has(d.id) ? recomputed : v2.standings).filter((r) => r.division === d.id));
+      }
+    }
+    assertFullTable(standings);
+  }
+  const unfilledIds = new Set(unfilled.map((g) => g.contestId));
+  const sbliveCrossCheck =
+    v2.sbliveCrossCheck && unfilled.length > 0
+      ? {
+          ...v2.sbliveCrossCheck,
+          backfilled: v2.sbliveCrossCheck.backfilled.filter((r) => !unfilledIds.has(r.contestId)),
+          conflicts: [
+            ...v2.sbliveCrossCheck.conflicts,
+            ...v2.sbliveCrossCheck.backfilled
+              .filter((r) => unfilledIds.has(r.contestId) && r.maxpreps !== null)
+              .map((r) => ({
+                contestId: r.contestId,
+                dateKey: r.dateKey,
+                label: r.label,
+                maxpreps: r.maxpreps as { home: number; away: number },
+                sblive: r.sblive,
+                aligned: true,
+                maxprepsUrl: r.maxprepsUrl,
+                sbliveUrl: r.sbliveUrl,
+                note: unfilled.find((g) => g.contestId === r.contestId)?.provenance.scoreConflict?.note ?? r.note,
+              })),
+          ].sort((x, y) => x.dateKey.localeCompare(y.dateKey)),
+        }
+      : v2.sbliveCrossCheck;
+  const droppedIds = new Set(v2.dropped.map((d) => d.contestId));
+  // The health counts of the changed divisions follow their games, as `reclassify` keeps them.
+  const leagueHealth: LeagueHealth[] = v2.leagueHealth.map((h) => ({
+    ...h,
+    divisions: h.divisions.map((d): DivisionHealth => {
+      if (!changed.has(d.divisionId)) return d;
+      const counted = divisionGames(games, d.divisionId);
+      return { ...d, countedFinals: counted.length, backfilled: counted.filter((g) => g.provenance.scores === 'sblive').length };
+    }),
+  }));
+  const out: Snapshot = {
+    ...v2,
+    games,
+    standings,
+    ...(changed.size > 0 ? { leagueHealth } : {}),
+    dropped: [
+      ...v2.dropped,
+      ...excluded
+        .filter((g) => !droppedIds.has(g.contestId))
+        .map((g) => ({ contestId: g.contestId, ...(exclusionOf(g) as { reason: 'ghost-team' | 'excluded-by-config'; note: string }), dateKey: g.dateKey, teams: [g.home.name, g.away.name] as [string, string] })),
+    ],
+    ...(changed.size > 0 ? { crossCheck: buildCrossCheck(standings) } : {}),
+    ...(sbliveCrossCheck ? { sbliveCrossCheck } : {}),
+    counts: countsOf(games, standings),
+    playoffs: { ...v2.playoffs, games: ccsBracketGames(games, CCS.keyDates) },
   };
   return out;
 }

@@ -99,6 +99,16 @@ byte-identical to the build before the seam.
     W-L-T record words.
   - Basketball has no ties and only overtime, with any number of periods. Soccer has ties and penalty
     kicks (shaped like 'SO', named differently).
+  - Done (2026-11-13): `Sport.scoring.overtime` ('sudden-victory', 'two-halves', 'until-decided') and
+    `Sport.scoring.tiebreak` (words and tag: 'a shootout' / 'SO', 'penalty kicks' / 'PK', none for
+    basketball), mirrored in `lib/format.ts` for client modules. The stored decider stays 'SO' in every
+    sport. A level final marked W and L in a game that must have a winner (any postseason game; any
+    basketball game) is the marked side's win (`lib/postseason/level-final.ts`). Soccer's overtime is never
+    counted ('OT'), basketball's always is ('3 OT'), and a coach's overtime note is believed on any score
+    in both. docs/LEAGUE-RULES.md, "How a game's result is read", has the table.
+  - Done (2026-11-13): `Game.result` and `lib/results/result.ts` are every sport's: the recorded winner, ending
+    and certainty of each final, the reading of a second source's score, and cited corrections
+    (`DATA_QUALITY.resultCorrections`, one list per sport).
 - **Goal vocabulary.**
   - The `h2h-goal-diff`, `h2h-goals-against` and `division-goals-against` tiebreak stages.
   - The GF/GA/GD columns, legend and "no goal differential" in `components/standings/standings-table/`.

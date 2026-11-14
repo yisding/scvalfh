@@ -26,12 +26,12 @@ import {
 } from '../../lib/data';
 import { getTeamPostseasonLine, type TeamPostseasonLine } from '../playoffs/team-postseason-line';
 import {
+  SPORT_TIEBREAK_TAG,
   dateSpan,
   monthDay,
   ordinal,
   recordString,
   renderScore,
-  scoreSentence,
   shortDate,
   shootoutPhrases,
   sideOutcome,
@@ -71,7 +71,7 @@ import { gameAddress } from '../../lib/schools/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { getBracketPlace } from '../playoffs/bracket-place';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, shootoutSectionOf } from '../ui/describe-game';
+import { describeGame, tiebreakRuleOf } from '../ui/describe-game';
 import { maxPrepsLabel } from '../words/maxpreps-label';
 import { SPORT_AUDIENCE } from '../../lib/sports/current';
 import {
@@ -625,8 +625,8 @@ export function earlierMeeting(
   const decider =
     display.deciderTag === 'F'
       ? ' by forfeit'
-      : display.deciderTag === 'SO'
-        ? ` ${shootoutPhrases(shootoutSectionOf(game)?.shootout?.words ?? 'a shootout').onPhrase}`
+      : display.deciderTag === SPORT_TIEBREAK_TAG
+        ? ` ${shootoutPhrases(tiebreakRuleOf(game).words).onPhrase}`
         : display.deciderTag
           ? ` in ${display.deciderTag}`
           : '';
@@ -635,8 +635,9 @@ export function earlierMeeting(
   // A section whose shootout is 'unverified' (San Diego: no tally anywhere, and si.com and the Section's
   // power rankings record Mt. Carmel–Poway, Sep 11, as 2-0 where MaxPreps has 0-0 marked W and L) gets no
   // 'SO' tag from describeGame, and this line never says a shootout decided it: "credited with the win
-  // on a level 0–0 score" (shootoutPhrases(words, 'unverified')).
-  const rule = game.decider === 'SO' ? shootoutSectionOf(game)?.shootout ?? null : null;
+  // on a level 0–0 score" (shootoutPhrases(words, 'unverified')). So does a level playoff final outside a
+  // shootout section, whose winner MaxPreps marks without saying how (tiebreakRuleOf).
+  const rule = game.decider === 'SO' ? tiebreakRuleOf(game) : null;
   if (rule?.inference === 'unverified' && outcome !== 'T') {
     const phrases = shootoutPhrases(rule.words, rule.inference);
     const level = `a level ${mine.glyph}\u2013${theirs.glyph} score`;
@@ -776,7 +777,7 @@ function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: re
   const opponent = (other.slug ? getTeamBySlug(other.slug)?.shortName : undefined) ?? other.name;
   const what = upcoming
     ? `${game.site === 'neutral' || mineIsHome ? 'vs' : 'at'} ${opponent}, ${shortDate(game.dateKey)}${game.isTimeTba ? '' : `, ${timeOfDayPT(game.dateLocal)}`}.`
-    : scoreSentence(game);
+    : describeGame(game).sentence;
   return {
     label: place.round.split(' · ')[0],
     sentence: [`${place.round}: ${what}`, place.next].filter(Boolean).join(' '),

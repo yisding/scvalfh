@@ -147,16 +147,19 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 [ -n "$origin" ] || fail / "no canonical URL naming the site origin"
 [[ "$og" == "<meta property=\"og:image\" content=\"$origin/"* ]] || fail / "og:image '${og#*content=\"}' is not an absolute URL on $origin"
 
-# The counts every family must have, from the snapshot this tree holds (the one the server was
-# built from), never from the server: games (the superseded-game stubs are prerendered but kept
+# The counts every family must have, from the snapshot this tree holds as lib/data.ts loads it (the
+# one the server was built from), never from the server: games (the superseded-game stubs are prerendered but kept
 # out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, the clubs
 # of data/clubs.json (every club has a page, one with no tied player included), and each stub as
 # `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N, cifsds:A-at-B → cifsds-A-at-B).
-facts=$(node -e '
-  const fs = require("fs");
-  const s = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));
+facts=$(node_modules/.bin/tsx -e '
+  import fs from "node:fs";
+  import { getSnapshot } from "./lib/data";
+  // The snapshot as the site loads it: lib/data.ts adds a game for each official fixture and each
+  // configured game the feeds lack, and every one of them has a page.
+  const s = getSnapshot();
   const clubs = JSON.parse(fs.readFileSync("data/clubs.json", "utf8")).clubs;
-  const param = (id) => /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+)$/.test(id) ? id.replace(":", "-") : id;
+  const param = (id: string) => /^(sblive:\d+|cifsds:[a-z0-9-]+-at-[a-z0-9-]+)$/.test(id) ? id.replace(":", "-") : id;
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
     s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));

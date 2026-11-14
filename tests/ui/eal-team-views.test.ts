@@ -223,21 +223,21 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
   it('names Chico first, tags it (SO), and says MaxPreps marks Chico the winner and the tally is not shown', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.decider, 'lib/pipeline/normalize.ts decider').toBe('SO');
-    expect(game.shootout, 'lib/pipeline/normalize.ts shootout').toBeNull();
+    expect(game.shootout, 'DATA_QUALITY.resultCorrections: the tally on MaxPreps’ game page').toEqual({ home: 2, away: 1 });
     const model = eal.gm.buildGameView(game.contestId)!;
     const title = eal.gm.gameTitle(model);
     expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);
     expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').toContain('SO');
-    const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
-      `Level at 1–1; MaxPreps marks Chico the winner, which under the EAL’s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as Chico’s win and does not show the 1 v 1 tally.`,
+    // The tally is recorded from a cited source, so the note says where each number is from.
+    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toMatch(
+      /^MaxPreps’ page for the game, read Nov 14, 2026: level 1-1 at the final, shootout column Chico 2, Davis 1; .*\. This site shows the goals in play, 1–1, and the tally apart\.$/,
     );
     expect(model.resultConflictNote, 'components/game/game-view.ts: no level-score-marked-W/L note').toBeNull();
     const text = textOf(await eal.renderGame(game.contestId));
     expect(text, 'app/game/[id]/page.tsx note').toContain(model.scoreNote!);
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/counts it as a tie|level, so this site counts/);
     expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
-      'Chico 1, Davis 1, final; Chico won on 1 v 1s.',
+      'Chico 1, Davis 1, final; Chico won on 1 v 1s, 2–1.',
     );
   });
 
@@ -258,38 +258,31 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
   });
 });
 
-describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, impossible under the rules)', () => {
-  it('shows no overtime tag, and carries the note that MaxPreps may have recorded a 1 v 1 as a goal', async () => {
+describe('the 9/2 Pleasant Valley at Chico game page (MaxPreps: 1-0 in three overtimes; recorded: 0-0, two overtimes, 1 v 1s)', () => {
+  it('shows the level score, the SO tag and the citation, never MaxPreps’ three overtimes', async () => {
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
-    expect(game.otPeriods, 'lib/pipeline/normalize.ts otPeriods as MaxPreps has it').toBe(3);
+    expect([game.home.score, game.away.score, game.otPeriods, game.decider]).toEqual([0, 0, 2, 'SO']);
+    expect(game.provenance.resultCorrection?.maxpreps).toEqual({ home: 0, away: 1, otPeriods: 3 });
     const model = eal.gm.buildGameView(game.contestId)!;
-    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBeNull();
-    expect(eal.gm.gameTitle(model), 'components/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
-    expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').not.toMatch(/\bOT\b/);
+    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBe('SO');
     expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
-      'Chico 0, Pleasant Valley 1, final.',
+      'Chico 0, Pleasant Valley 0, final; Pleasant Valley won on 1 v 1s.',
     );
-    const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
-      `MaxPreps records 3 overtime periods for this game, but the EAL plays one 10-minute overtime period and then 1 v 1s (${rule}), so MaxPreps may have recorded a 1 v 1 win as a goal. The score is shown as MaxPreps has it.`,
-    );
+    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toContain('double overtime and shootouts');
     const text = textOf(await eal.renderGame(game.contestId));
-    expect(text, 'app/game/[id]/page.tsx note').toContain(model.scoreNote!);
-    expect(text, 'app/game/[id]/page.tsx: no overtime tag').not.toMatch(/\b2 OT\b|after overtime/);
+    expect(text, 'app/game/[id]/page.tsx: no three-overtime claim').not.toMatch(/3 overtime|\b3 OT\b/);
   });
 
-  it('keeps the same quiet on the team page rows and the earlier-meeting line', async () => {
+  it('words the earlier-meeting line as a 1 v 1 loss', async () => {
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     const html = await eal.renderTeam('chico');
-    const text = textOf(html);
     expect(html, 'app/teams/[slug]/page.tsx: the game is linked').toContain(`href="/game/${game.contestId}"`);
-    expect(text, 'app/teams/[slug]/page.tsx: no OT tag on a team page').not.toMatch(/\b2 OT\b/);
     const earlier = eal.v.earlierMeeting(
       eal.d.getTeamBySlug('chico')!,
       eal.d.getTeamBySlug('pleasant-valley')!,
       '2026-10-06',
     );
-    expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–1 at home, Sep 2');
+    expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–0 on 1 v 1s at home, Sep 2');
   });
 });
 

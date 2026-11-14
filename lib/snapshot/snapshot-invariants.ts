@@ -8,6 +8,8 @@ import { z } from 'zod';
 
 import { classifyGame } from '../classify';
 import { CCS, SECTIONS } from '../league-config/sections';
+import { mustHaveWinner } from '../postseason/level-final';
+import { resolveResult } from '../results/result';
 import {
   CCS_LEAGUE_IDS,
   LEAGUES,
@@ -150,16 +152,17 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
     // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
     // shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout, which covers games between its
-    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/pipeline/normalize.ts is.
+    // conferences too), or in a game that must have a winner (a postseason game; a sport with no ties:
+    // lib/postseason/level-final.ts); without a tally, a level score flagged W/L. Keyed on the section, as lib/pipeline/normalize.ts is.
     if (g.decider === 'SO') {
       const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
       const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
       const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
-      if (!section?.shootout) {
-        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
-      } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
-        // The San Diego procedures do not cover invitational tournaments; lib/pipeline/normalize.ts reads no 'SO' there.
-        issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
+      if (mustHaveWinner(g)) {
+        // A postseason or tournament game, or any game of a sport with no ties, marked W and L on a level score
+        // is the marked side's win in any section (lib/postseason/level-final.ts).
+      } else if (!section?.shootout) {
+        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout, and the game is not one that must have a winner (${g.contestId})`);
       }
       if (g.shootout === null) {
         const flags = [g.home.result, g.away.result].sort().join('');
@@ -167,6 +170,17 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
           issue(ctx, ['games', i, 'decider'], `decider SO without a tally needs a level score flagged W/L (${g.contestId})`);
         }
       }
+    }
+    // A recorded result is exactly what lib/results/result.ts resolves from the game: the record cannot drift
+    // from the score, flags, decider and tally it summarizes.
+    if (g.result) {
+      const now = resolveResult(g);
+      if (!now || now.winner !== g.result.winner || now.ending !== g.result.ending || now.certainty !== g.result.certainty || now.basis !== g.result.basis) {
+        issue(ctx, ['games', i, 'result'], `result is not what resolveResult gives (${g.contestId})`);
+      }
+    }
+    if (g.provenance.shootoutSource && (g.shootout === null || g.decider !== 'SO')) {
+      issue(ctx, ['games', i, 'provenance', 'shootoutSource'], 'a shootout source without a shootout tally');
     }
     if (SBLIVE_ID_RE.test(g.contestId)) {
       if (g.provenance.scores !== 'sblive') issue(ctx, ['games', i, 'provenance', 'scores'], 'a sblive: game must carry sblive scores');

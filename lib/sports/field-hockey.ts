@@ -61,6 +61,8 @@ export const FIELD_HOCKEY = {
   },
   scoring: {
     allowsTies: true,
+    overtime: 'sudden-victory',
+    tiebreak: { words: 'a shootout', tag: 'SO' },
     unit: 'goal',
     units: 'goals',
     forAbbr: 'GF',

@@ -7,7 +7,7 @@
  *
  * Game rows: games carrying a postseason tag other than 'other' (an 'other' tag names no event the site knows,
  * describe-game.ts prints no chip for it, so neither does this) with at least one registry side in a league of
- * the region. A final (or a played game with no score yet) reads as the site-wide `scoreSentence`; a game to
+ * the region. A final (or a played game with no score yet) reads as the site-wide score sentence (`describeGame(…).sentence`); a game to
  * come as `<away> at <home>` ('vs' at a neutral site, `matchupJoiner`), short names. The label is the page's
  * round word for that contest ('MCAL final', 'SCVAL crossover · #1 v #1', 'CCS quarterfinal') or, failing one,
  * the tag's own words (`postseasonTagOf`: 'San Diego Section playoffs', 'Tournament of Champions').
@@ -23,11 +23,13 @@
  * box and no skeleton; the key dates list covers a quiet week). Added 2026-10-29 (plan final-03).
  */
 
-import { matchupJoiner, renderScore, scoreSentence, shiftDateKey, shortDate, timeOfDayPT } from '../../lib/format';
+import { matchupJoiner, renderScore, shiftDateKey, shortDate, timeOfDayPT } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { ContestId, Game, LeagueId, RegionId, Team } from '../../lib/types';
+import { describeGame } from '../ui/describe-game';
+
 
 import { postseasonTagOf } from '../ui/describe-game';
 import { shortNameOf } from '../words/team-short-name';
@@ -140,7 +142,7 @@ function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: 
   const text =
     view.kind === 'scheduled'
       ? `${shortNameOf(game.away.slug, game.away.name)} ${matchupJoiner(game)} ${shortNameOf(game.home.slug, game.home.name)}`
-      : scoreSentence(game);
+      : describeGame(game).sentence;
   return {
     dateKey: game.dateKey,
     time: game.isTimeTba ? null : timeOfDayPT(game.dateLocal),

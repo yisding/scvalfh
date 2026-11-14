@@ -58,6 +58,20 @@ export interface SportRatings {
 export interface SportScoring {
   /** Whether a game may end level. false (basketball): overtime is played until one team leads, so a record is W-L. */
   readonly allowsTies: boolean;
+  /**
+   * How the sport's overtime is played, which decides what a score out of overtime can be and how it is named:
+   * 'sudden-victory' (field hockey: a period ends on the first goal, so the margin is one and a second period is
+   * named, '2 OT'), 'two-halves' (soccer: one overtime of two full halves, any margin, never counted), or
+   * 'until-decided' (basketball: full periods until one team leads, any margin, every period counted, '3 OT').
+   */
+  readonly overtime: 'sudden-victory' | 'two-halves' | 'until-decided';
+  /**
+   * What breaks a level score in a game that must have a winner (a playoff game), where no section rule names
+   * it: its words, in one of the two shapes lib/format.ts `shootoutPhrases` reads ('a shootout', 'penalty
+   * kicks'), and the chip tag of a win by it ('SO', 'PK'). null where nothing does (basketball). lib/format.ts
+   * mirrors these as SPORT_TIEBREAK_WORDS and SPORT_TIEBREAK_TAG.
+   */
+  readonly tiebreak: { readonly words: string; readonly tag: string } | null;
   /** What a team scores, singular and plural: 'goal' / 'goals', 'point' / 'points'. */
   readonly unit: string;
   readonly units: string;

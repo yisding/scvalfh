@@ -51,10 +51,11 @@ describe('San Diego team pages (socal corpus)', () => {
     const mtCarmel = data.getTeamBySlug('mt-carmel')!;
     const poway = data.getTeamBySlug('poway')!;
     expect(view.earlierMeeting(mtCarmel, poway, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
-      'Earlier: credited with the win on a level 0–0 score away, Sep 11',
+      // MaxPreps' page for the game has the shootout (Mt. Carmel 2-0), so it is no longer only a credited win.
+      'Earlier: won 0–0 in a shootout away, Sep 11',
     );
     expect(view.earlierMeeting(poway, mtCarmel, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
-      'Earlier: lost on a level 0–0 score at home, Sep 11',
+      'Earlier: lost 0–0 in a shootout at home, Sep 11',
     );
     for (const team of data.getTeams()) {
       const card = view.buildTeamPageView(team.slug)!.nextCard;

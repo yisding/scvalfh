@@ -27,6 +27,8 @@ import { DATA_QUALITY } from '../league-config/data-quality';
 import { GUID_RE } from '../game-id';
 import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
 import { getLeague, getSection } from '../leagues';
+import { flagConflictSentence, isLevelWithWinner } from '../postseason/level-final';
+import { SPORT } from '../sports/current';
 import { getTeamById, resolveTeam } from '../teams';
 import type {
   ContestId,
@@ -191,32 +193,48 @@ export function splitLocation(raw: string | null | undefined): {
   return { text: trimmed };
 }
 
+/** The count a word before "OT" names: "double OT" is 2, "triple overtime" 3. */
+const OT_COUNT_WORDS: Readonly<Record<string, number>> = {
+  double: 2, two: 2, triple: 3, three: 3, quadruple: 4, four: 4, five: 5, six: 6,
+};
+
 /**
- * The overtime periods a game note says were played: 2 for "double OT" / "2OT", 1 for any other
- * mention of overtime ("tied in OT 1:1", "won in overtime"), 0 for none. "OT" counts only in
- * capitals and as a word of its own (never "OTHS"); a mention right after "no", "not", "without"
- * or "never" ("no OT", "not overtime", "without OT") is not overtime.
+ * The overtime periods a game note says were played: the count it names ("double OT" / "2OT" 2, "triple
+ * overtime" / "3 OT" / "OT3" 3, up to 6), 1 for any other mention of overtime ("tied in OT 1:1", "won in
+ * overtime"), 0 for none; the largest count of the note's mentions. "OT" counts only in capitals and as a word
+ * of its own (never "OTHS"); a mention right after "no", "not", "without" or "never" ("no OT", "not overtime",
+ * "without OT") is not overtime. A digit that is part of a score ("3-2 OT", "OT 2-1", "62-60 3OT" reads 3) is
+ * not a count.
  * Homestead–Cupertino (Oct 5): MaxPreps records 0 overtime periods, the coach's note "tied in OT
  * 1:1  goal scored by Emery Borges".
  */
-export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
+export function overtimeFromNote(text: string | null | undefined): number {
   if (!text) return 0;
   const ot = /(?<![\p{L}])OT(?![\p{L}])|\bover[\s-]?times?\b/giu;
-  let periods: 0 | 1 | 2 = 0;
+  let periods = 0;
   for (const m of text.matchAll(ot)) {
     // "OT" only in capitals; "overtime" in any case.
     if (/^ot$/i.test(m[0]) && m[0] !== 'OT') continue;
     const before = text.slice(0, m.index);
     const after = text.slice(m.index + m[0].length);
-    // What makes THIS mention a second period: "double OT", "two overtimes", "2OT", "2 overtimes",
-    // "OT2". A "2" that is part of a score ("3-2 OT", "OT 2-1") does not.
-    const counted = /\b(?:double|two)[\s-]?$/i.exec(before) ?? /(?:^|[\s(])2[\s-]?$/.exec(before);
-    const doubled = counted !== null || /^2(?![\d:\-–])/.test(after);
+    // What gives THIS mention a count: "double OT", "two overtimes", "2OT", "3 overtimes", "OT2". A digit
+    // that is part of a score ("3-2 OT", "OT 2-1") does not.
+    const word = /\b(double|two|triple|three|quadruple|four|five|six)[\s-]?$/i.exec(before);
+    const digitBefore = word ? null : /(?:^|[\s(])([2-6])[\s-]?$/.exec(before);
+    const digitAfter = word || digitBefore ? null : /^([2-6])(?![\d:\-–])/.exec(after);
+    const counted = word ?? digitBefore;
+    const count = word
+      ? OT_COUNT_WORDS[word[1].toLowerCase()]
+      : digitBefore
+        ? Number(digitBefore[1])
+        : digitAfter
+          ? Number(digitAfter[1])
+          : 1;
     // "no OT", "not OT", "without overtime", "never OT", "no double OT": negated whatever counts
     // it. Only a negation right before the mention: "no goals in OT" still says there was one.
     const stem = counted ? before.slice(0, before.length - counted[0].length) : before;
     if (/\b(?:no|not|without|never)\s*$/i.test(stem)) continue;
-    periods = doubled ? 2 : periods === 2 ? 2 : 1;
+    periods = Math.max(periods, count);
   }
   return periods;
 }
@@ -261,15 +279,6 @@ function scoreLine(row: ScheduleRow): string {
   return row.contest.teams.map((t) => `${t.name ?? 'TBA'} ${t.score ?? '–'}`).join(', ');
 }
 
-/** A level score whose result flags are complementary W and L (either order): a shootout win's shape (an EAL 1 v 1 win). */
-function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
-  return (
-    home.score !== null &&
-    home.score === away.score &&
-    ((home.result === 'W' && away.result === 'L') || (home.result === 'L' && away.result === 'W'))
-  );
-}
-
 /**
  * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
  * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
@@ -291,10 +300,9 @@ function resultConflictOf(
       { side: away, own: away.score, other: home.score },
     ].filter(({ side, own, other }) => side.result !== null && side.result !== impliedOutcome(own, other));
     if (wrong.length > 0) {
-      notes.push(
-        `MaxPreps marks ${home.name} ${home.result ?? 'unflagged'} and ${away.name} ${away.result ?? 'unflagged'} ` +
-          `on a ${home.score}-${away.score} score.`,
-      );
+      // lib/postseason/level-final.ts drops this sentence again from a level postseason final: there the flags
+      // are the result (the classify step, once the game's postseason tag is known).
+      notes.push(flagConflictSentence(home, away));
     }
   }
   const scored = copies
@@ -514,19 +522,22 @@ function toGame(
   }
 
   // MaxPreps' overtime count, unless it records none and the coach's note on a final says the game
-  // went to overtime. Only a level score or a one-goal margin can come out of overtime (it is
-  // sudden victory everywhere this site covers), so a note on any other score is not believed.
+  // went to overtime. Where the sport's overtime is sudden victory (field hockey, in every league rule this
+  // site reads) only a level score or a one-goal margin can come out of it, so a note on any other score is
+  // not believed. Soccer's overtime is two full halves and basketball's full periods until one team leads
+  // (Sport.scoring.overtime), so there a note is believed on any score.
   const maxprepsOt = cf.overtimePeriodsPlayed ?? 0;
   const notedOt =
     maxprepsOt === 0 && status === 'final' && !isForfeit && home.score !== null && away.score !== null
       ? overtimeFromNote(location.text)
       : 0;
-  if (notedOt > 0 && Math.abs(home.score! - away.score!) > 1) {
+  const marginFitsOt = SPORT.scoring.overtime !== 'sudden-victory' || Math.abs((home.score ?? 0) - (away.score ?? 0)) <= 1;
+  if (notedOt > 0 && !marginFitsOt) {
     warnings.push(
       `contest ${c.contestId}: the note says overtime, but ${home.score}-${away.score} cannot come out of sudden victory; not read as overtime`,
     );
   }
-  const otFromNote = notedOt > 0 && Math.abs(home.score! - away.score!) <= 1;
+  const otFromNote = notedOt > 0 && marginFitsOt;
   const otPeriods = otFromNote ? notedOt : maxprepsOt;
   const forfeitBy: Game['forfeitBy'] = !isForfeit
     ? null
@@ -544,7 +555,9 @@ function toGame(
     // Guidelines §VII.E.4) and the San Diego Section by a shootout (SDFHOA 2026 procedures): a level
     // final MaxPreps flags W/L between two teams of one of those sections is a shootout win, 'SO'
     // with no tally stored. Otherwise the decider is MaxPreps' overtime count as recorded (never
-    // clamped: 3 periods stays '2OT'; the view adds a caveat).
+    // clamped: 3 periods stays '2OT'; the view adds a caveat). A level final marked W/L in a game that must
+    // have a winner whatever the section (a playoff game; any basketball game) becomes 'SO' in the classify
+    // step, once its postseason tag is known (lib/postseason/level-final.ts).
     if (isForfeit) decider = 'FORFEIT';
     else if (shootoutSection !== null && isLevelWithWinner(home, away)) decider = 'SO';
     else decider = otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';

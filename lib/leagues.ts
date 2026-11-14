@@ -636,6 +636,7 @@ export function assertLeagues(): void {
       if (!rules.unresolvedSuffix) fail(`${l.id}: a league tournament needs an unresolvedSuffix`);
     }
     if (rules.excludeContestTypes.includes(0)) fail(`${l.id}: excludeContestTypes may not contain 0 (the league flag)`);
+    if (!rules.excludeContestTypes.includes(2)) fail(`${l.id}: excludeContestTypes must contain 2 (a tournament game never counts toward a league record)`);
     // 'shootout' is built only where no official fixtures decide what counts (none to match level games against):
     // MaxPreps' league flag (EAL) or division membership (the San Diego leagues).
     if (rules.leagueOvertime === 'shootout' && rules.classification === 'official-fixtures') {
@@ -848,6 +849,24 @@ export function assertLeagues(): void {
   // 8. ignored MaxPreps leagues are never configured
   for (const id of Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)) {
     if (ALL_DIVISIONS.some((d) => d.maxprepsLeagueId === id)) fail(`ignored MaxPreps league ${id} is configured`);
+  }
+  // A result correction names its contest by GUID, both teams' goals, the overtime played, a tally with a winner
+  // after a level score, and its source.
+  for (const [id, c] of Object.entries(DATA_QUALITY.resultCorrections)) {
+    if (!LOWERCASE_GUID_RE.test(id)) fail(`resultCorrections: ${id} is not a contest GUID`);
+    const slugs = Object.keys(c.goals);
+    // Shape only: this module never reads the registry; lib/results/result.ts checks the slugs against the game's sides.
+    if (slugs.length !== 2) fail(`resultCorrections ${id}: goals names the two teams by slug`);
+    if (Object.values(c.goals).some((n) => !Number.isInteger(n) || n < 0)) fail(`resultCorrections ${id}: goals are whole numbers`);
+    if (!Number.isInteger(c.otPeriods) || c.otPeriods < 0) fail(`resultCorrections ${id}: otPeriods is a whole number`);
+    if (c.shootout) {
+      const tally = slugs.map((s) => c.shootout?.[s]);
+      if (Object.keys(c.shootout).length !== 2 || tally.some((n) => n === undefined || !Number.isInteger(n) || n < 0)) fail(`resultCorrections ${id}: shootout names the same two teams`);
+      if (tally[0] === tally[1]) fail(`resultCorrections ${id}: a shootout tally has a winner`);
+      if (c.goals[slugs[0]] !== c.goals[slugs[1]]) fail(`resultCorrections ${id}: a shootout follows a level score`);
+    }
+    if (!c.source.trim() || /\.$/.test(c.source.trim())) fail(`resultCorrections ${id}: needs a source, one sentence without a final period`);
+    if (id in DATA_QUALITY.excludedContestIds) fail(`resultCorrections ${id}: the contest is excluded`);
   }
   // A date correction names its contest by GUID, a real date inside a season window, and its source; a
   // contest is never both corrected and excluded (the correction would be for nothing).

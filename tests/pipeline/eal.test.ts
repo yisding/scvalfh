@@ -174,7 +174,9 @@ describe('the EAL games', () => {
     const g = gameOf('9afebd05');
     expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
     expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('SO');
-    expect(g!.shootout, 'lib/pipeline/normalize.ts: no tally stored').toBeNull();
+    // MaxPreps' feed stores no tally; the game's page has one (Chico 2, Davis 1), recorded as a cited correction.
+    expect(g!.shootout, 'DATA_QUALITY.resultCorrections: the tally from MaxPreps’ game page').toEqual({ home: 2, away: 1 });
+    expect(g!.result, 'lib/results/result.ts').toMatchObject({ ending: 'shootout', certainty: 'confirmed' });
     expect(g!.provenance.resultConflict, 'lib/pipeline/normalize.ts: resultConflict').toBeUndefined();
     expect(g!.countsFor, 'lib/classify.ts').toBe(DIVISION);
     expect(divisionGames(snapshot.games, DIVISION).map((x) => x.contestId)).toContain(g!.contestId);
@@ -184,12 +186,17 @@ describe('the EAL games', () => {
     expect(g!.home.score, 'level on goals').toBe(g!.away.score);
   });
 
-  it('keeps MaxPreps three overtime periods on the 9/2 game as it has them (8a4d7c70)', () => {
+  it('records the 9/2 game as level through two overtimes and won on 1 v 1s, not MaxPreps’ 1-0 in three (8a4d7c70)', () => {
     expect(corpusHas('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
     const g = gameOf('8a4d7c70');
     expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
-    expect(g!.otPeriods, 'lib/pipeline/normalize.ts: otPeriods').toBe(3);
-    expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('2OT');
+    // Chico's own account: the Oct 31 final was "the second time this season" it took Pleasant Valley to "double
+    // overtime and shootouts" (DATA_QUALITY.resultCorrections); MaxPreps' fifth column holds the 1 v 1 win.
+    expect([g!.home.score, g!.away.score], 'goals in play').toEqual([0, 0]);
+    expect(g!.otPeriods, 'DATA_QUALITY.resultCorrections: otPeriods').toBe(2);
+    expect(g!.decider, 'lib/results/result.ts: decider').toBe('SO');
+    expect(g!.provenance.resultCorrection?.maxpreps, 'MaxPreps’ version is kept').toEqual({ home: 0, away: 1, otPeriods: 3 });
+    expect(sideOutcome(g!, g!.home.slug === 'pleasant-valley' ? 'home' : 'away')).toBe('W');
   });
 
   it('counts no game of contestType 2, 4 or 5 in the EAL table', () => {

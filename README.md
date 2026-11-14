@@ -71,7 +71,8 @@ by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths),
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
 tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
 30-31, the top six qualify, no format published; the NFHS Network lists its games at Pleasant Valley,
-Chico on Sat Oct 31), which the site describes, lists the results of and never draws a bracket for. The
+Chico on Sat Oct 31), which the site draws as a bracket from the day's game schedule (`#eal-bracket` on
+/playoffs: the first round, semifinals and final, then the third- and fifth-place games; no seed is printed). The
 Sunset and the LA independents share one postseason, the Tournament of Champions (Oct 22-29), which the
 Los Angeles Field Hockey Association runs because the Southern Section holds no field hockey championship;
 the San Diego Section playoffs (Nov 2-14, Open 8,
@@ -1604,7 +1605,19 @@ this site extends them to the table and says so). The four Southern California l
 points rule, no standings and no table order that we could find, so the order is this site's own
 3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
-1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
+1 v 1s or a shootout. Every final carries a recorded result (`Game.result`: the winner, how the game
+ended, how certain the record is and what it rests on), decided in `lib/results/result.ts` from MaxPreps'
+score and flags, the differing scores si.com and cifsshome.org carry, the San Diego Section's bracket sheet
+each team's own box score, and the cited corrections in `DATA_QUALITY.resultCorrections`. Every source is
+wrong now and then, so they are weighed: where two agree on a score that is not MaxPreps' and nothing
+defends MaxPreps', theirs is published. A game an official source has and no feed lists is still on
+the schedule: a league fixture no source has (`lib/results/fixture-games.ts`), and games recorded from a
+section's listing or the owner's report (`DATA_QUALITY.addedGames`), each without a score where none is
+published. The score shown is always the score in play,
+with a shootout tally kept apart: a postseason or tournament game MaxPreps lists as level with one side
+marked the winner counts as that side's win, and a second source's score that is the level score with a
+shootout added gives the tally (docs/LEAGUE-RULES.md, "How a game's result is read", has every case in all
+three sports). They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
 by-law citation next to it) and one engine in `lib/standings/engine.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,

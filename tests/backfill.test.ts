@@ -454,6 +454,22 @@ describe('backfill rule 4: a clearly wrong MaxPreps final', () => {
     expect(g.provenance.scoreConflict?.note).toMatch(/MaxPreps reported 2-1 \(Monterey–Salinas\)\.$/);
     expect(res.rows[0]).toMatchObject({ rule: 'contradictory-result', sblive: { home: 2, away: 1 }, maxpreps: { home: 1, away: 2 } });
 
+    // A tournament game level at 1-1 with the winner marked, where si.com has 4-3 (Mission Vista–Westview, Oct 17):
+    // the flags are the result and si.com's score is the level score with the shootout added, so MaxPreps' goals
+    // in play stand and si.com's score is left for the cross-check (lib/results/result.ts reads the tally from it).
+    const level = game({
+      home: 'westview', away: 'mission-vista', date: '2026-10-17', hs: 1, as: 1, league: false,
+      contestTypes: { home: 2, away: 2 }, results: { home: 'L', away: 'W' },
+    });
+    const flagged = { ...level, decider: 'REG' as const, provenance: { ...level.provenance, resultConflict: 'MaxPreps marks Westview L and Mission Vista W on a 1-1 score.' } };
+    const kept = applyBackfill(input({ games: [flagged], sblive: [sb('2026-10-17', ['mission-vista', 4], ['westview', 3])] }));
+    expect(kept.games[0]).toBe(flagged);
+    expect(kept.rows).toEqual([]);
+    // The same flags outside a tournament: no rule says the game needed a winner, so si.com's score is published.
+    const plain = { ...flagged, contestTypes: { home: 1, away: 1 } };
+    const filled = applyBackfill(input({ games: [plain], sblive: [sb('2026-10-17', ['mission-vista', 4], ['westview', 3])] }));
+    expect(filled.games[0].provenance.backfill?.rule).toBe('contradictory-result');
+
     // The same si.com score as MaxPreps: nothing to override.
     const agree = applyBackfill(input({ games: [bad], sblive: [sb('2026-09-09', ['monterey', 2], ['salinas', 1])] }));
     expect(agree.games[0]).toBe(bad);

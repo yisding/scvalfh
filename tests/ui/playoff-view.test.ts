@@ -591,7 +591,7 @@ describe('/playoffs (rendered)', () => {
     const text = textOf(html);
     expect(html, PAGE).toMatch(/id="eal-heading"><div><h2 [^>]*>EAL<\/h2><span [^>]*>Super Regional<\/span>/);
     expect(text, PAGE).toContain(
-      'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
+      'The Northern Section’s field hockey postseason was the Super Regional, on Sat Oct 31: all six EAL teams played, the top two with byes into the semifinals.',
     );
     expect(text, PAGE).toContain(
       'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',

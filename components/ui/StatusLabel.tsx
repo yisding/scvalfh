@@ -43,12 +43,15 @@ export function statusCase(label: string): string {
  */
 function deciderWords(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel' | 'shootoutText'>): string | null {
   if (display.shootoutText) {
-    return `shootout ${display.shootoutText.replace(/[()]/g, '').replace(/\s*SO$/, '').replace('\u2013', '-')}`;
+    // '(4–3 SO)' is 'shootout 4-3'; the soccer build's '(4–3 PK)' is 'penalty kicks 4-3'.
+    const tally = display.shootoutText.replace(/[()]/g, '').replace(/\s*(?:SO|PK)$/, '').replace('\u2013', '-');
+    return `${/PK\)$/.test(display.shootoutText) ? 'penalty kicks' : 'shootout'} ${tally}`;
   }
   const tag = display.deciderTag;
   if (!tag) return null;
   if (tag === 'F') return 'forfeit';
   if (tag === 'SO') return display.shootoutLabel ?? 'shootout';
+  if (tag === 'PK') return display.shootoutLabel ?? 'penalty kicks';
   if (tag === 'OT') return 'overtime';
   const periods = /^(\d+) OT$/.exec(tag)?.[1];
   return periods ? `${periods} overtimes` : 'overtime';
@@ -77,11 +80,23 @@ export function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark
  */
 const CHIP_WORD: Readonly<Record<string, string>> = { tournament: 'tourney' };
 
-/** The chip's printed words: `MCAL tournament` is `MCAL tourney`; every other tag is itself. */
+/**
+ * An event whose own name is the tag prints its short name: `Tournament of Champions` is `TOC`
+ * (OutsideTournamentConfig.shortName in lib/league-config/sections.ts, which this client-safe module cannot
+ * import; tests/ui/render-score.test.ts holds the two together). It once read "tourney of Champions": the
+ * word rule below lower-cased the first word of a proper name.
+ */
+const CHIP_NAME: Readonly<Record<string, string>> = { 'Tournament of Champions': 'TOC' };
+
+/**
+ * The chip's printed words: `MCAL tournament` is `MCAL tourney`, `Tournament of Champions` is `TOC`; every
+ * other tag is itself. Only the common noun is shortened: a capitalized word is part of a name and is kept.
+ */
 export function postseasonChipText(tag: string): string {
+  if (CHIP_NAME[tag]) return CHIP_NAME[tag];
   return tag
     .split(' ')
-    .map((word) => CHIP_WORD[word.toLowerCase()] ?? word)
+    .map((word) => CHIP_WORD[word] ?? word)
     .join(' ');
 }
 

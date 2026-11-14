@@ -174,7 +174,8 @@ describeIfCaptured('the SoCal corpus run', () => {
       sunset: { teams: 8, games: 99, leagueGames: 35, finals: 83, backfilled: 0 },
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
-      metro: { teams: 9, games: 93, leagueGames: 31, finals: 59, backfilled: 0 },
+      // One fewer than MaxPreps listed: e767ad95 (Southwest at El Capitan, Oct 30) is an excluded stray row.
+      metro: { teams: 9, games: 92, leagueGames: 30, finals: 59, backfilled: 0 },
       // Not in the run: the Sunset and San Diego feeds' 34 games against the five independents (32 final), none
       // counted for the group's table (which counts games between two of the five: Bonita–Chaminade is in neither
       // team's feed here, both being out of the run, and the frozen league keeps no counted games).
@@ -278,7 +279,8 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
       'palomar:42/42',
       'valley:30/30',
       'metro-mesa:19/20',
-      'metro-south-bay:12/12',
+      // e767ad95 (Southwest at El Capitan, Oct 30) is excluded: the pair's second game was played Oct 27.
+      'metro-south-bay:11/12',
     ]);
   });
 
@@ -334,14 +336,22 @@ describeIfCaptured('the section shootout and level games', () => {
 
   it('decides a level San Diego final MaxPreps marks W and L as a shootout win, across conferences too', () => {
     expect(getSection('sds').shootout, 'lib/league-config/sections.ts').not.toBeNull();
-    const games = levelWithResult();
+    // MaxPreps' own level finals marked W and L; a game a cited correction made level (59b0f6a5, ad3d21f9: a credited
+    // one-goal win read as a shootout, DATA_QUALITY.resultCorrections) is a different record.
+    const games = levelWithResult().filter((g) => !g.provenance.resultCorrection?.maxpreps || g.provenance.resultCorrection.maxpreps.home === g.provenance.resultCorrection.maxpreps.away);
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
     expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/pipeline/normalize.ts').toEqual(
       ['f99ce5ed', '7551a71d', 'ce29e835', 'd8aad805', 'ae312fa8', 'e6488575', '829af66a', 'fb944ba7'].sort(),
     );
     for (const g of games) {
       expect(g.decider, `lib/pipeline/normalize.ts: ${g.contestId}`).toBe('SO');
-      expect(g.shootout, `lib/pipeline/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
+      // MaxPreps stores no tally. One is recorded only where a second source's score is the level score with the
+      // tally added (lib/results/result.ts unfoldShootout), and then the game says which source.
+      expect(g.shootout === null, `lib/results/result.ts: a tally needs its source: ${g.contestId}`).toBe(
+        g.provenance.shootoutSource === undefined && g.provenance.resultCorrection === undefined,
+      );
+      expect(g.result, `lib/results/result.ts: ${g.contestId}`).toMatchObject({ winner: g.home.result === 'W' ? 'home' : 'away' });
+      expect(['shootout', 'unstated'], `lib/results/result.ts: ${g.contestId}`).toContain(g.result?.ending);
       expect(g.provenance.resultConflict, `lib/pipeline/normalize.ts: ${g.contestId}`).toBeUndefined();
       const winner = g.home.result === 'W' ? 'home' : 'away';
       expect(sideOutcome(g, winner), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('W');

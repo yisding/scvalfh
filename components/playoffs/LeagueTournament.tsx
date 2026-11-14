@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { placeWords, plural, scoreSentence, shortDate } from '../../lib/format';
+import { placeWords, plural, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { rowState } from '../game-row/summary';
 import { describeGame } from '../ui/describe-game';
@@ -189,7 +189,7 @@ function gameTie(game: TournamentGameView, idPrefix: string, id: string): TieMod
     href: game.game ? gameHref(game.game.contestId) : null,
     sentence: [
       game.outcome ? `${game.line}. ${game.outcome}` : `${game.line}.`,
-      game.game && state !== 'upcoming' ? ` ${scoreSentence(game.game)}` : '',
+      game.game && state !== 'upcoming' ? ` ${describeGame(game.game).sentence}` : '',
     ],
   };
 }

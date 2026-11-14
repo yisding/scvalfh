@@ -75,16 +75,18 @@ import type { FormEntry } from '../ui/FormStrip';
 import {
   describeGame,
   gameContextNoun,
-  overtimeInDoubt,
+  overtimeDoubtOf,
   postseasonTagOf,
   resultSentence,
   shootoutCitationParts,
   shootoutGroupName,
-  shootoutSectionOf,
+  shootoutRuleSectionOf,
   type GameDisplay,
   type SideView,
 } from '../ui/describe-game';
 import { capitalized } from '../words/capitalized';
+import { SCORE_UNITS } from '../words/score-words';
+import { otherScores, resolveResult } from '../../lib/results/result';
 import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 // ---------------------------------------------------------------- types
@@ -622,8 +624,18 @@ function conflictFor(game: Game): GameConflict | null {
   // Rule 5 (plain disagreement): the cross-check row holds both values and MaxPreps' stands. Rule 4
   // (si.com published over a clearly wrong MaxPreps row): MaxPreps' value is in the backfill record.
   const maxpreps = row?.maxpreps ?? game.provenance.backfill?.maxpreps ?? null;
+  // The stored note is rule 5's ("MaxPreps' score stands"). Where the recorded result reads the two scores
+  // together instead (the other score published, or its extra goals read as the shootout: lib/results/result.ts),
+  // that sentence would contradict the page, so this one states the two scores and points at the reading.
+  // What MaxPreps lists: the score an adjudication or a correction replaced, else the published one.
+  const current = game.home.score !== null && game.away.score !== null ? { home: game.home.score, away: game.away.score } : null;
+  const mp = game.provenance.adjudicated?.maxpreps ?? (game.provenance.resultCorrection ? game.provenance.resultCorrection.maxpreps : current);
+  const readTogether = !game.provenance.backfill && mp !== null && (game.provenance.adjudicated !== undefined || (game.decider === 'SO' && resolveResult(game)?.ending === 'shootout'));
+  const note = readTogether
+    ? `si.com reports ${onGame.sblive.away}-${onGame.sblive.home} (${game.away.name}\u2013${game.home.name}) where MaxPreps lists ${mp.away}-${mp.home}; the note above says how this site reads the two.`
+    : onGame.note;
   return {
-    note: onGame.note,
+    note,
     maxpreps,
     sblive: row?.sblive ?? onGame.sblive,
     sbliveUrl: row?.sbliveUrl ?? game.urls.sblive ?? null,
@@ -708,7 +720,8 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     const label = slot ? `${league.shortName} ${ROUND_WORD[slot.round]}` : league.postseason.name;
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
     const notes = [sentence];
-    const shootout = slot?.note ?? (mayHideShootout(game) ? SHOOTOUT_NOTE : null);
+    // A game recorded from a cited correction says so in its score note (scoreNoteFor), once.
+    const shootout = game.provenance.resultCorrection ? null : (slot?.note ?? (mayHideShootout(game) ? SHOOTOUT_NOTE : null));
     if (shootout) notes.push(shootout);
     return {
       contextLabel: label,
@@ -792,7 +805,9 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
  * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
  * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
  * its conferences too. The EAL's sentences are unchanged, word for word. Goals come from the view's
- * glyphs, never from the score fields.
+ * glyphs, never from the score fields. One note needs no section rule: a level final in a game that had to
+ * have a winner (a playoff game anywhere; any basketball game), which says MaxPreps marks the winner and not
+ * how.
  */
 function scoreNoteFor(
   game: Game,
@@ -800,18 +815,61 @@ function scoreNoteFor(
   away: GameSideModel,
   home: GameSideModel,
 ): string | null {
-  const section = shootoutSectionOf(game);
-  if (!section?.shootout) return null;
+  // The section whose rule reaches THIS game: a tournament game between two San Diego teams has none.
+  const section = shootoutRuleSectionOf(game);
+  const notes: string[] = [];
+  const level = `${display.home.glyph}\u2013${display.away.glyph}`;
+  const result = resolveResult(game);
+  // What the record rests on, where a second source or a correction is part of it (lib/results/result.ts).
+  const p = game.provenance;
+  const evidence =
+    result?.basis && (otherScores(game).length > 0 || p.shootoutSource || p.resultCorrection || p.adjudicated || (p.boxScore && result.basis.includes('box score')))
+      ? `${capitalized(result.basis)}.`
+      : null;
+  const established = result?.ending === 'shootout';
+  if (display.kind === 'final' && game.decider === 'SO' && game.shootout !== null && evidence) {
+    // A tally this site read from a second source or took from a correction: say where each number is from.
+    notes.push(`${evidence} This site shows the ${SCORE_UNITS} in play, ${level}, and the tally apart.`);
+  }
+  if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null && !section?.shootout) {
+    // No section rule reaches this game: it is level with the winner marked in a game that had to have one
+    // (lib/postseason/level-final.ts).
+    const outcome = sideOutcome(game, 'home');
+    if (outcome === 'W' || outcome === 'L') {
+      const winner = outcome === 'W' ? home.name : away.name;
+      const how = established
+        ? ''
+        : evidence
+          ? ''
+          : '; MaxPreps does not say how the tie was broken';
+      notes.push(
+        !SPORT.scoring.allowsTies
+          ? `MaxPreps lists a level ${level} score and marks ${winner} the winner. A ${SPORT.noun} game cannot end level, so one of the two numbers is wrong; this site shows the score as MaxPreps has it and counts the game as ${winner}\u2019s win.`
+          : game.postseason
+            ? `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A postseason game has to have a winner, so this site counts it as ${winner}\u2019s win${how}.`
+            : `MaxPreps lists ${level} with no tally and marks ${winner} the winner. A tournament game marked that way was played to a winner, so this site counts it as ${winner}\u2019s win${how}.`,
+      );
+      if (evidence) notes.push(evidence);
+    }
+  }
+  if (display.kind === 'final' && game.decider !== 'SO' && evidence && (p.adjudicated || p.resultCorrection || result?.certainty === 'disputed' || result?.certainty === 'confirmed')) {
+    // The sources differ on this score: which one is published, and why (lib/results/result.ts adjudicateScore).
+    notes.push(p.adjudicated ? `${evidence} This site shows ${level}.` : evidence);
+  }
+  if (display.kind === 'final' && p.overtimeEvidence === 'box-score') {
+    notes.push('MaxPreps records no overtime for this game; a goalkeeper’s box score has overtime minutes, so it is shown as an overtime game.');
+  }
+  const doubt = overtimeDoubtOf(game);
+  if (!section?.shootout) return notes.length > 0 ? notes.join(' ') : null;
   const group = shootoutGroupName(section);
   const phrases = shootoutPhrases(section.shootout.words);
   const { source, procedure } = shootoutCitationParts(section.shootout.citation);
-  const notes: string[] = [];
   if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null) {
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
       // A score from the Section's own bracket sheet confirms the shootout ("2-2 (SO)"): the verified wording.
-      if (section.shootout.inference === 'unverified' && game.provenance.scores !== 'cifsds-sheet') {
+      if (!established) {
         // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
@@ -821,18 +879,26 @@ function scoreNoteFor(
         const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
         notes.push(
           `MaxPreps lists ${display.home.glyph}\u2013${display.away.glyph} with no tally and marks ${winner} the winner; a level ${group} varsity game${scope} goes to a sudden-victory period and then ${section.shootout.words} (${source}), so this site counts it as ${winner}\u2019s win.${
-            section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
+            evidence ? ` ${evidence}` : section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
           }`,
         );
       } else {
         const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
         notes.push(
-          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
+          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.${evidence ? ` ${evidence}` : ''}`,
         );
       }
     }
   }
-  if (overtimeInDoubt(game)) {
+  if (doubt?.why === 'margin') {
+    // One period recorded and more than a goal between the sides (Corning 2, Bella Vista 0, Oct 5): a period
+    // that ends on the first goal cannot give that, in either section.
+    const scope = section.shootout.coversTournaments ? '' : ' in a regular-season game outside a tournament';
+    notes.push(
+      `MaxPreps records overtime for this game and a ${level} score, but the ${group}\u2019s one overtime period ends on the first goal and is followed by ${section.shootout.words}${scope} (${source}), so MaxPreps may have recorded ${phrases.win} as goals. The score is shown as MaxPreps has it.`,
+    );
+  }
+  if (doubt?.why === 'periods') {
     // Both sections with a shootout rule play one 10-minute overtime period before it (NS Guidelines
     // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both. overtimeInDoubt leaves out
     // postseason games and, where the rule does not reach them, tournament rows; the San Diego sentence

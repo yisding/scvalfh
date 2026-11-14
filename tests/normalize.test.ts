@@ -292,6 +292,8 @@ const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
  * (San Diego, inventory 2026-10-06) and the two Tournament of Champions duplicates (Southern Section, 2026-10-29). */
 const SOCAL_EXCLUDED_ROWS = [
   'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c',
+  '5c14da41-b4c8-412f-aff3-34c8b454af35',
+  '8c6b3f6a-4a53-4e4e-87c2-690b6b45d182', 'e767ad95-30ad-4777-b1bb-0dac58d9db3f',
   '0017b5bb-5319-4742-84df-e6585dcb7056', '3702e126-9414-4c0b-a13c-61e78ead2ed9',
 ];
 
@@ -914,6 +916,15 @@ describe('normalize: overtime a game note states (Homestead, Oct 5)', () => {
     expect(overtimeFromNote('OT2 winner')).toBe(2);
     expect(overtimeFromNote('went to 2 overtimes')).toBe(2);
     expect(overtimeFromNote('two overtimes')).toBe(2);
+    // Basketball plays as many periods as it takes: the note's own count, by digit or by word.
+    expect(overtimeFromNote('Won 62-60 3OT')).toBe(3);
+    expect(overtimeFromNote('triple overtime win')).toBe(3);
+    expect(overtimeFromNote('4 OT')).toBe(4);
+    expect(overtimeFromNote('OT3')).toBe(3);
+    expect(overtimeFromNote('went to OT, then double OT')).toBe(2);
+    // A digit that belongs to a score is never a count.
+    expect(overtimeFromNote('won 4-3 OT')).toBe(1);
+    expect(overtimeFromNote('OT 3-2')).toBe(1);
     // The count is the accepted mention's, never another, negated one's or a score's.
     expect(overtimeFromNote('won in overtime, no double OT')).toBe(1);
     expect(overtimeFromNote('won in OT 2-1')).toBe(1);

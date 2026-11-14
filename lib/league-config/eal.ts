@@ -105,7 +105,25 @@ export const EAL: LeagueConfig = {
     admission: `There is no admission fee (${NS_FH}, Game Management §VII).`,
     // Past tense from 2026-11-03: the Super Regional was played on Sat Oct 31 (MaxPreps lists both games, the second
     // "Super regional championship"), so the note reads as a finished event.
-    note: 'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
+    note: 'The Northern Section’s field hockey postseason was the Super Regional, on Sat Oct 31: all six EAL teams played, the top two with byes into the semifinals. The first round and one semifinal were at Chico High School and Pleasant Valley High School; the rest of the day was at Pleasant Valley. MaxPreps lists two of its seven games, so the others are shown from the day’s game schedule, with the winner where a source names one and no score where none is published. There was no admission fee. There is no NorCal or State path.',
+    // The day's game schedule (a Google Sheet headed "10/31/2026 games", given by the owner on 2026-11-14; home is
+    // listed first). The pairing numbers it prints (3v6, 4v5) are not shown: the site names no seed for the event.
+    bracket: {
+      source: {
+        label: 'Super Regional game schedule (Google Sheet)',
+        url: 'https://docs.google.com/spreadsheets/d/110pWPbVlFahEQNPYEvQkd_ColS3kDTEQS5uI87v9s8k/edit?gid=0#gid=0',
+        retrievedOn: '2026-11-14',
+      },
+      games: [
+        { id: 'r1-a', round: 'first-round', date: '2026-10-31', time: '08:30', venue: 'Chico High School', home: { team: 'chico' }, away: { team: 'corning' } },
+        { id: 'r1-b', round: 'first-round', date: '2026-10-31', time: '08:30', venue: 'Pleasant Valley High School', home: { team: 'lassen' }, away: { team: 'bella-vista' } },
+        { id: 'sf-a', round: 'semifinal', date: '2026-10-31', time: '10:00', venue: 'Chico High School', home: { team: 'davis' }, away: { winnerOf: 'r1-a' } },
+        { id: 'sf-b', round: 'semifinal', date: '2026-10-31', time: '10:00', venue: 'Pleasant Valley High School', home: { team: 'pleasant-valley' }, away: { winnerOf: 'r1-b' } },
+        { id: 'fifth', round: 'fifth-place', date: '2026-10-31', time: '12:30', venue: 'Pleasant Valley High School', home: { loserOf: 'r1-a' }, away: { loserOf: 'r1-b' } },
+        { id: 'third', round: 'third-place', date: '2026-10-31', time: '13:30', venue: 'Pleasant Valley High School', home: { loserOf: 'sf-a' }, away: { loserOf: 'sf-b' } },
+        { id: 'final', round: 'final', date: '2026-10-31', time: '14:30', venue: 'Pleasant Valley High School', home: { winnerOf: 'sf-b' }, away: { winnerOf: 'sf-a' } },
+      ],
+    },
     sourceUrl: NS_GUIDELINES_URL,
   },
   phases: [
