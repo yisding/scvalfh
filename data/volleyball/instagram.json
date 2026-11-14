@@ -181,6 +181,20 @@
       "foundAt": "https://absolutevb.com/",
       "note": "Linked from the club’s own website",
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "sf-juniors-volleyball-club",
+      "handle": "sfjuniors",
+      "foundAt": "https://www.sfjuniors.com/",
+      "note": "Linked from the club’s own website",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "kamikaze-volleyball-club",
+      "handle": "kamikaze_volleyball_club",
+      "foundAt": "https://www.kamikazevolleyball.com/",
+      "note": "Linked from the club’s own website",
+      "checkedOn": "2026-11-14"
     }
   ]
 }

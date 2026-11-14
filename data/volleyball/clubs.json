@@ -2681,6 +2681,151 @@
         }
       ],
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "sf-juniors-volleyball-club",
+      "name": "San Francisco Juniors Volleyball Club",
+      "shortName": "SF Juniors",
+      "aliases": [
+        "SF Juniors",
+        "SF Juniors VBC",
+        "San Francisco Juniors",
+        "SFJ"
+      ],
+      "website": "https://www.sfjuniors.com/",
+      "city": "San Francisco",
+      "region": "san-francisco",
+      "youth": true,
+      "description": "A nonprofit girls club for ages 18 and under in San Francisco, a member of the NCVA with teams from 10-and-under to 18-and-under, which calls itself the longest-operating youth volleyball club in the city and says the 2027 season is its 30th.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Girls club teams 2026-2027 (Power 11-1 to 18-1, Premier 12-2 and 14-2, 10 and 11 Starters)",
+          "detail": "Season typically January through May; Power teams play the NCVA Power League, Premier teams the NCVA Premier League, Starters teams the WCVBA Juniors League",
+          "source": "https://www.sfjuniors.com/page/show/8186747-our-programs"
+        },
+        {
+          "name": "Season dues by team",
+          "detail": "Power 11-1 to 16-1 $4,200, 18-1 Power and Premier teams $3,700; at least 2 practices a week",
+          "source": "https://www.sfjuniors.com/page/show/9613693-costs"
+        },
+        {
+          "name": "Summer program (grades 3-12)",
+          "detail": "Typically twice a week, June through August, about 15 sessions",
+          "source": "https://www.sfjuniors.com/page/show/8186747-our-programs"
+        },
+        {
+          "name": "Fall clinics (grades 3-8)",
+          "detail": "Pre-tryout skill clinics; no dates posted",
+          "source": "https://www.sfjuniors.com/page/show/8186747-our-programs"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.sfjuniors.com/",
+          "what": "Home page: 2027 coaching staff by team, 'longest-operating youth volleyball club (VBC) in San Francisco', 30th season in 2027, San Francisco PO Box (Instagram link)"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/8031435-about-us",
+          "what": "About: nonprofit 501(c)(3) program for girls 18 and under, NCVA region, teams 10 and under to 18 and under"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/8031437-facilities",
+          "what": "Practice locations (three San Francisco schools) and NCVA venues"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/8168423-2027-teams-",
+          "what": "2026-2027 team list with coaches (no player names)"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/8186747-our-programs",
+          "what": "Programs: club season, leagues, tournaments, summer program, fall clinics"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/9613693-costs",
+          "what": "Season dues and included tournaments by team"
+        },
+        {
+          "url": "https://www.sfjuniors.com/page/show/8170367-our-staff",
+          "what": "Staff biographies"
+        },
+        {
+          "url": "https://ncva.com/downloads/2025_NCVA_GPL_Points_15.pdf",
+          "what": "NCVA Girls Power League points: SF Juniors teams (club code SFJRS) in the 13s to 17s tables, e.g. 'SF Juniors 15 Black' (G15SFJRS1NC)"
+        }
+      ],
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "kamikaze-volleyball-club",
+      "name": "Kamikaze Volleyball Club",
+      "shortName": "Kamikaze",
+      "aliases": [
+        "Kamikaze",
+        "Kamikaze VBC",
+        "Kamikaze Volleyball"
+      ],
+      "website": "https://www.kamikazevolleyball.com/",
+      "city": "San Mateo",
+      "region": "peninsula",
+      "youth": true,
+      "description": "A San Mateo club founded in 2011 that fields girls Power and Premier teams from 12U to 18U in the NCVA, adds a limited number of boys teams for 2026-27, and runs summer beach camps in Foster City.",
+      "founded": 2011,
+      "programs": [
+        {
+          "name": "Girls Power teams, 12U-18U",
+          "detail": "2026-2027 season, November 2026 to May 2027; 2-3 practices a week; NCVA Power League, California Kickoff, Far Western and Red Rock Rave (all tournaments TBC); club fees $6,500",
+          "source": "https://www.kamikazevolleyball.com/schedule?gender=girls"
+        },
+        {
+          "name": "Girls Premier teams",
+          "detail": "November 2026 to May 2027; 2 practices a week; NCVA Premier League, California Kickoff, Far Western and one other tournament (TBC); club fees $5,500",
+          "source": "https://www.kamikazevolleyball.com/schedule?gender=girls"
+        },
+        {
+          "name": "Girls open gyms and tryouts",
+          "detail": "Summer open gyms at Brewer Island (15U-18U tryout July 25); a later round of girls open gyms September 19 and 26, pre-tryout October 7, tryout October 10 and makeup October 11 at Sportshouse and Brewer Island; no year printed beside the dates, under the 2026-2027 season heading",
+          "source": "https://www.kamikazevolleyball.com/schedule?gender=girls"
+        },
+        {
+          "name": "Beach camp (all ages)",
+          "detail": "Eight weekly sessions listed June 15 to August 3 at Catamaran Park, Foster City; registration 'coming soon'",
+          "source": "https://www.kamikazevolleyball.com/schedule?gender=beach"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.kamikazevolleyball.com/",
+          "what": "Home page (rendered in a browser): 12U-18U programs, girls open gyms and tryouts, San Mateo, CA 94401 (Instagram link)"
+        },
+        {
+          "url": "https://www.kamikazevolleyball.com/about",
+          "what": "About: founded in 2011, competitive program, local, regional and national competition"
+        },
+        {
+          "url": "https://www.kamikazevolleyball.com/contact",
+          "what": "Contact: email at kamikazevbc.com, San Mateo, CA 94401, Instagram account"
+        },
+        {
+          "url": "https://www.kamikazevolleyball.com/schedule?gender=girls",
+          "what": "Programs and schedule (rendered): 2026-2027 girls Power and Premier fees, open gyms and tryouts, boys note"
+        },
+        {
+          "url": "https://www.kamikazevolleyball.com/schedule?gender=beach",
+          "what": "Beach camp dates at Catamaran Park, Foster City"
+        },
+        {
+          "url": "https://kamikazevbc.com/",
+          "what": "Older club site (contact form only); same domain as the club's email address"
+        },
+        {
+          "url": "https://ncva.com/downloads/2025_NCVA_GPL_Points_14.pdf",
+          "what": "NCVA Girls Power League points: 'Kamikaze 14 Andoni' (G14KAMIK1NC); also 'Kamikaze 16 Andoni' (G16KAMIK1NC) in the 16s table"
+        }
+      ],
+      "checkedOn": "2026-11-14"
     }
   ],
   "jvAffiliations": [],
@@ -12929,6 +13074,27 @@
       "basis": "Prep Dig or PrepVolleyball names her school and her club. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
+      "teamSlug": "riordan",
+      "athleteId": "1541e9a4-cf01-411c-aa10-89a78d91b91b",
+      "fullName": "Ella Simeoni",
+      "club": "slainte-volleyball-club",
+      "clubTeam": "13 Amber",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/archbishop-riordan-high-school/ella-simeoni",
+          "kind": "ncsa",
+          "quote": "2023 Slainte Volleyball Club (CA) (13 Amber)",
+          "statedSchool": "Archbishop Riordan High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
       "fullName": "Mariana Platosh",
@@ -12953,22 +13119,43 @@
       "teamSlug": "sacred-heart-cathedral",
       "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
       "fullName": "Mariana Platosh",
-      "club": "slainte-volleyball-club",
-      "clubTeam": "12-1 Power",
+      "club": "sf-juniors-volleyball-club",
+      "clubTeam": "13-1 Power",
       "status": "past",
-      "asOf": "2020",
+      "asOf": "2022",
       "confidence": "high",
       "sources": [
         {
           "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/mariana-platosh",
           "kind": "ncsa",
-          "quote": "2020 Slainte Volleyball Club (12-1 Power)",
+          "quote": "2022 SF Juniors (13-1 Power)",
           "statedSchool": "Sacred Heart Cathedral Preparatory",
           "statedClassYear": 2028,
           "sourceDate": null
         }
       ],
-      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2020, so past."
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2022, so past."
+    },
+    {
+      "teamSlug": "sacred-heart-cathedral",
+      "athleteId": "44f1f1ad-de4e-4285-af22-d102e3286cb3",
+      "fullName": "Mariana Platosh",
+      "club": "slainte-volleyball-club",
+      "clubTeam": "12-1 Power",
+      "status": "past",
+      "asOf": "2021",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/san-francisco/sacred-heart-cathedral-preparatory/mariana-platosh",
+          "kind": "ncsa",
+          "quote": "2021 Slainte VBC (12-1 Power)",
+          "statedSchool": "Sacred Heart Cathedral Preparatory",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2021, so past."
     },
     {
       "teamSlug": "st-ignatius",
@@ -13064,6 +13251,27 @@
     },
     {
       "teamSlug": "mercy-burlingame",
+      "athleteId": "7759ada5-8aed-4edc-a988-6662d0107333",
+      "fullName": "Olivia Eastburn",
+      "club": "kamikaze-volleyball-club",
+      "clubTeam": "13 1's",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/olivia-eastburn2",
+          "kind": "ncsa",
+          "quote": "2024 Kamikaze Volleyball Club (13 1's)",
+          "statedSchool": "Mercy High School (Burlingame)",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; the latest entry ends in 2024, so past."
+    },
+    {
+      "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
       "fullName": "Sophia Sari",
       "club": "club-415-volleyball",
@@ -13108,6 +13316,27 @@
       "teamSlug": "mercy-burlingame",
       "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
       "fullName": "Sophia Sari",
+      "club": "rage-westside-volleyball-club",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/burlingame/mercy-high-school-burlingame/sophia-sari",
+          "kind": "ncsa",
+          "quote": "2025 Rage Westside CA",
+          "statedSchool": "Mercy High School (Burlingame)",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
+    },
+    {
+      "teamSlug": "mercy-burlingame",
+      "athleteId": "a80a4d4f-4727-4e6d-afa8-4a89dc98f478",
+      "fullName": "Sophia Sari",
       "club": "sf-elite-volleyball-club",
       "clubTeam": null,
       "status": "past",
@@ -13145,6 +13374,27 @@
         }
       ],
       "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; current as of 2026."
+    },
+    {
+      "teamSlug": "notre-dame-belmont",
+      "athleteId": "6dedcfea-6e3a-4c2f-a1e9-6d17dadff59d",
+      "fullName": "Emily Weisman",
+      "club": "rage-westside-volleyball-club",
+      "clubTeam": "15-1s",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/womens-volleyball-recruiting/california/belmont/notre-dame-high-school-belmont/emily-weisman1",
+          "kind": "ncsa",
+          "quote": "2025 Rage Westside Volleyball Club (15-1s)",
+          "statedSchool": "Notre Dame High School (Belmont)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own NCSA profile lists the club in its dated Club Information. Found in the 2026-11-14 round and read twice; no source gives a 2026 club season, so the status is unknown."
     },
     {
       "teamSlug": "sacred-heart-prep",
