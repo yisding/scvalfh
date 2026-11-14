@@ -34,6 +34,7 @@ import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
 import { recaseNameParts } from './person-name';
 import { SPORT_SEASON_ID, maxprepsJvTeamUrl } from '../season';
+import { isPlaceholderRow } from '../players/placeholder-name';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '../players/rosters-schema';
 import type { Team } from '../types';
 
@@ -134,7 +135,10 @@ export interface RosterPage {
   /** MaxPreps' own count, which excludes soft-deleted rows. */
   athleteCount: number;
   staffCount: number;
-  /** Soft-deleted rows already removed. */
+  /**
+   * Soft-deleted rows already removed, and so are the "Player #4" rows MaxPreps' stat entry creates
+   * for a number nobody is rostered under (lib/players/placeholder-name.ts; named in `warnings`).
+   */
   players: RosterPlayer[];
   /** How many `isDeleted` rows were dropped. */
   deletedRows: number;
@@ -484,14 +488,39 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     else seen.set(key, p.fullName);
   }
 
+  // Only now, after the cross-check held MaxPreps' own spelling against its own table: a row that names
+  // nobody is left out (it is not a player, lib/players/placeholder-name.ts), and a name part MaxPreps
+  // printed as the word "null" is dropped from the full name.
+  const placeholders = players.filter(isPlaceholderRow);
+  if (placeholders.length > 0) {
+    warnings.push(
+      `left out ${placeholders.length} stat-entry placeholder row${placeholders.length === 1 ? '' : 's'} that name${placeholders.length === 1 ? 's' : ''} nobody: ` +
+        placeholders.map((p) => p.lastName).join(', '),
+    );
+  }
+
   return {
     teamId,
     canonicalUrl: pp.canonicalUrl ?? null,
     athleteCount: countData.athleteCount,
     staffCount: countData.staffCount,
-    // Recased only now: the cross-check above holds MaxPreps' own spelling against its own table.
-    players: players.map(recaseNameParts),
+    // Recased only now, for the same reason.
+    players: players
+      .filter((p) => !isPlaceholderRow(p))
+      .map(withoutNullPart)
+      .map(recaseNameParts),
     deletedRows,
     warnings,
   };
+}
+
+/**
+ * MaxPreps builds `formattedName` (and the table's name) as `${firstName} ${lastName}`, so a part the
+ * coach left blank comes out as the word "null": "null Player #4" (2026-10). The name is then the part
+ * that is there.
+ */
+export function withoutNullPart<P extends { firstName: string | null; lastName: string | null; fullName: string }>(p: P): P {
+  if (p.firstName === null && p.lastName !== null && p.fullName === `null ${p.lastName}`) return { ...p, fullName: p.lastName };
+  if (p.lastName === null && p.firstName !== null && p.fullName === `${p.firstName} null`) return { ...p, fullName: p.firstName };
+  return p;
 }

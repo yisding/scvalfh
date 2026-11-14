@@ -220,6 +220,16 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
 - `isDeleted` rows are soft-deleted: the public table hides them (`useRosterAthletes` →
   `.filter(a => !a.isDeleted)`) and `athleteCount` excludes them. **Drop them first.** One exists
   (Santa Clara: 17 rows, 16 shown).
+- **Stat-entry placeholders** (girls volleyball, 2026-10; `lib/players/placeholder-name.ts`): when a stat
+  keeper enters a match for a number not on the roster, MaxPreps creates an athlete for it on the spot —
+  `firstName` null, `lastName` `"Player #4"`, no grade or position, a career page of its own
+  (`/athletes/player-4/`) — and it shows on the roster. MaxPreps builds `formattedName` as
+  `${firstName} ${lastName}`, so it and the table both print **`"null Player #4"`**. The cross-check runs
+  on that spelling; then `parseRosterPage` leaves the row out with a warning (it names nobody, and
+  the number may be anyone's), and the stats join keeps its stat line under the sheet's own
+  `"Player #4"`, off the roster. The registry never makes a player of one. Seven teams had them on
+  2026-11-14 (Mitty, Milpitas, Gilroy, St. Ignatius, King's Academy, Castilleja, Priory: 27 rows).
+  `tests/fixtures/maxpreps/roster-volleyball-2026-11-mitty.html` is Mitty's page with five.
 - `classYear` is the grade (9–12 here; 5–8 exist for middle school), `formattedClassYear` its label
   (`Fr.`/`So.`/`Jr.`/`Sr.`, `""` when blank; the table prints `-`). `jersey` is a **string** (`"00"`,
   `"21/88"` occur). Position is `position1..3` joined with `", "` = `formattedPositions` (e.g. `F, M`).

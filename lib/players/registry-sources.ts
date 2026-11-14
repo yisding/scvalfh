@@ -29,6 +29,7 @@
 
 import { z } from 'zod';
 
+import { isPlaceholderName, isPlaceholderRow } from './placeholder-name';
 import { isShortName, nameKey, type Sighting } from './registry-build';
 import type { Observation, PlayerIdentity, PlayerLevel } from './registry-schema';
 import type { SportId } from '../sports/current';
@@ -159,8 +160,6 @@ export function seasonYearOf(label: string): string {
 const HEIGHT = /^\d'\d{1,2}"$/;
 /** A graduation year the registry can hold; a profile stating one outside it states none. */
 const classYear = (y: number | null): { classOf?: number } => (y !== null && y >= 2020 && y <= 2040 ? { classOf: y } : {});
-/** "Player 25", "Player #7": a stat sheet's placeholder for a line nobody is named on. */
-const PLACEHOLDER = /^player\s*#?\d*$/i;
 
 // ---------------------------------------------------------------- one season's current files
 
@@ -221,6 +220,8 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
   const fromPage = (file: z.infer<typeof RostersInput>, page: PlayerLevel, overlay: Map<string, z.infer<typeof EnrichmentInput>['teams'][number]['players'][number]>) => {
     for (const team of file.teams) {
       for (const row of team.players) {
+        // MaxPreps' "Player #4" (lib/players/placeholder-name.ts): a number nobody is named under, not a player.
+        if (isPlaceholderRow(row) || isPlaceholderName(row.fullName.replace(/^null\s+/, ''))) continue;
         const extra = row.athleteId !== null ? overlay.get(`${team.slug} ${row.athleteId}`) : undefined;
         const observations: Observation[] = [rosterObservation(row, page)];
         const nameKeys = [nameKey(row.fullName)];
@@ -270,6 +271,8 @@ export function currentSeasonSightings(given: CurrentSeasonFiles, identity: Play
     for (const p of team.players) {
       // A line with no career link is an initial and a last name: it identifies nobody.
       if (p.careerId === null) continue;
+      // Nor does MaxPreps' "Player #4", though it has a career page: the number may be anyone's.
+      if (isPlaceholderName(p.shortName) || isPlaceholderName(p.fullName.replace(/^null\s+/, ''))) continue;
       sightings.push({
         ...base(team.slug, 'varsity'),
         softLevel: true,
@@ -343,7 +346,7 @@ export function pastSeasonSightings(files: PastSeasonFiles): Sighting[] {
     for (const team of files.priorPlayers.teams) {
       for (const p of team.players) {
         // No link and only an initial, or the sheet's placeholder for a line with no name: nobody to follow.
-        if ((p.careerId === null && p.nameFrom === 'short-name') || PLACEHOLDER.test(p.name)) continue;
+        if ((p.careerId === null && p.nameFrom === 'short-name') || isPlaceholderName(p.name)) continue;
         if (p.careerId === null && nameKey(p.name) === '') continue;
         sightings.push({
           sport,

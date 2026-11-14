@@ -23,6 +23,7 @@ import {
   pendingRoster,
   parseRosterTable,
   rosterUrl,
+  withoutNullPart,
 } from '../lib/sources/maxpreps-roster';
 import { RostersSchema, countRosters } from '../lib/players/rosters-schema';
 import { SPORT_SEASON_ID } from '../lib/season';
@@ -439,5 +440,48 @@ describe('maxpreps roster: the current layout (38 columns, isClaimed)', () => {
     const old = fixture('st-ignatius');
     const inserted = withPageProps(old, (pp) => rows(pp).forEach((r) => r.splice(30, 0, false)));
     expect(parseIt(inserted).players).toEqual(parseIt(old).players);
+  });
+});
+
+describe("maxpreps roster: stat-entry placeholders (Mitty girls volleyball, 2026-11-14)", () => {
+  // MaxPreps' stat entry created an athlete for five numbers nobody is rostered under (2026-10-19): no
+  // first name, the last name "Player #4", and MaxPreps' own page prints them as "null Player #4".
+  const html = fixture('volleyball-2026-11-mitty');
+  const MITTY = getTeamBySlug('mitty')!.id;
+  const parseIt = (h: string) =>
+    parseRosterPage(h, { expectedTeamId: MITTY, url: 'test', sportSeasonId: '9f2e0dd1-c299-4f3e-8e0e-744d108b6db7' });
+
+  it('MaxPreps itself prints the placeholders as "null Player #N", in the array and the table', () => {
+    expect(parseRosterTable(html)!.filter((t) => t.name.startsWith('null Player #')).map((t) => t.jersey)).toEqual([
+      '4', '5', '9', '11', '18',
+    ]);
+  });
+
+  it('leaves the placeholder rows out, names them in a warning, and keeps every named player', () => {
+    const page = parseIt(html);
+    expect(page.athleteCount).toBe(17);
+    expect(page.players).toHaveLength(12);
+    expect(page.players.some((p) => /null|Player #/.test(p.fullName))).toBe(false);
+    expect(page.players.every((p) => p.firstName !== null)).toBe(true);
+    expect(page.warnings).toEqual([
+      'left out 5 stat-entry placeholder rows that name nobody: Player #4, Player #5, Player #9, Player #11, Player #18',
+    ]);
+  });
+
+  it('still holds every row, placeholders included, to the rendered table first', () => {
+    const renamed = withPageProps(html, (pp) => {
+      const row = rows(pp).find((r) => r[COL.lastName] === 'Player #4')!;
+      row[COL.formattedName] = 'null Player #40';
+    });
+    expect(() => parseIt(renamed)).toThrow(/null Player #40: name is "null Player #40" in athleteData but "null Player #4"/);
+  });
+});
+
+describe('withoutNullPart', () => {
+  it('drops a blank name part MaxPreps spelled out as "null", and nothing else', () => {
+    expect(withoutNullPart({ firstName: null, lastName: 'Smith', fullName: 'null Smith' }).fullName).toBe('Smith');
+    expect(withoutNullPart({ firstName: 'Ava', lastName: null, fullName: 'Ava null' }).fullName).toBe('Ava');
+    expect(withoutNullPart({ firstName: 'Null', lastName: 'Smith', fullName: 'Null Smith' }).fullName).toBe('Null Smith');
+    expect(withoutNullPart({ firstName: 'Ava', lastName: 'Smith', fullName: 'Ava Smith' }).fullName).toBe('Ava Smith');
   });
 });

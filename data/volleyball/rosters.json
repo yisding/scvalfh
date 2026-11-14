@@ -2,14 +2,14 @@
   "counts": {
     "captains": 82,
     "errors": 0,
-    "players": 876,
+    "players": 849,
     "teams": 60,
     "withGrade": 818,
     "withHeight": 259,
-    "withJersey": 826,
+    "withJersey": 799,
     "withPosition": 684
   },
-  "fetchedAt": "2026-11-14T16:13:36.018Z",
+  "fetchedAt": "2026-11-14T17:26:02.634Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-rosters.ts",
@@ -28,7 +28,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
       "players": [
@@ -437,7 +437,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
       "players": [
@@ -732,7 +732,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
       "players": [
@@ -1043,7 +1043,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
       "players": [
@@ -1433,29 +1433,10 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
       "players": [
-        {
-          "athleteId": "8ea92b24-5ec2-47e2-a412-c89e465162c5",
-          "careerId": "n0evbs6t84i55",
-          "careerProfileId": "e49e19ce-7dc6-43e1-833e-487960a158c6",
-          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/player-1/?careerid=n0evbs6t84i55",
-          "createdOn": "2026-10-23T00:20:30",
-          "firstName": null,
-          "fullName": "null Player #1",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "1",
-          "lastName": "Player #1",
-          "position": null,
-          "positions": [],
-          "rosterId": "9a5bb5f7-9ca1-4270-96b4-24eea224587d"
-        },
         {
           "athleteId": "08c4a3d7-585e-4e2d-af14-cecb62ae522d",
           "careerId": "ajtnfldhqkmcc",
@@ -1533,25 +1514,6 @@
           "rosterId": "2007cdaf-22e1-45c1-a1c7-ffc1bd3f9137"
         },
         {
-          "athleteId": "4de2ff9a-8dc4-45e2-ae25-98535f94bf6d",
-          "careerId": "rqcqpoj221sg0",
-          "careerProfileId": "23ace67b-a9fc-4dc4-a235-a2fe8034e9df",
-          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/player-6/?careerid=rqcqpoj221sg0",
-          "createdOn": "2026-10-23T00:20:31",
-          "firstName": null,
-          "fullName": "null Player #6",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "6",
-          "lastName": "Player #6",
-          "position": null,
-          "positions": [],
-          "rosterId": "54cf65ca-4535-4849-873c-da1ad1e99d8b"
-        },
-        {
           "athleteId": "2140b711-ab98-41da-9f80-99c0dc1ab06f",
           "careerId": "1rfqvupsg0300",
           "careerProfileId": "3f8b6e7d-85c2-4b11-ade5-03a063395cec",
@@ -1609,25 +1571,6 @@
           "rosterId": "2e176b9e-e266-48b5-827e-ec7975325540"
         },
         {
-          "athleteId": "d912f60a-86cb-4353-94b0-400d3454eee2",
-          "careerId": "no44jr2bv6666",
-          "careerProfileId": "1c4304bc-f0fb-492b-81c4-8b3bf30782ce",
-          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/player-10/?careerid=no44jr2bv6666",
-          "createdOn": "2026-10-23T00:20:31",
-          "firstName": null,
-          "fullName": "null Player #10",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "10",
-          "lastName": "Player #10",
-          "position": null,
-          "positions": [],
-          "rosterId": "f5ba6a8b-84d2-4704-8c8b-9ecc37cf46eb"
-        },
-        {
           "athleteId": "b8fbb8ee-4c0a-4856-81d3-a9a972ba17cb",
           "careerId": "fh4q2v94imqj3",
           "careerProfileId": "ea3b2b75-4aef-40c6-b1ca-865dc0c5e976",
@@ -1664,44 +1607,6 @@
           "position": null,
           "positions": [],
           "rosterId": "f472f8da-de96-48f2-baa5-d8bbd58f50c1"
-        },
-        {
-          "athleteId": "4791eda2-10db-46e2-b243-df67b33fa70a",
-          "careerId": "cr5pgj9lt7ak4",
-          "careerProfileId": "4a8a48f6-129e-43cb-9c2b-693b530f6bcd",
-          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/player-14/?careerid=cr5pgj9lt7ak4",
-          "createdOn": "2026-10-23T00:20:32",
-          "firstName": null,
-          "fullName": "null Player #14",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "14",
-          "lastName": "Player #14",
-          "position": null,
-          "positions": [],
-          "rosterId": "044890b6-443f-4aa9-9e7e-54cae58e8be2"
-        },
-        {
-          "athleteId": "61276140-8619-4908-a3f6-6ce592f5607a",
-          "careerId": "tbn3dul8fje88",
-          "careerProfileId": "7ad7dc55-dca8-45b2-a1cd-fc87def9c75f",
-          "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/player-15/?careerid=tbn3dul8fje88",
-          "createdOn": "2026-10-23T00:20:33",
-          "firstName": null,
-          "fullName": "null Player #15",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "15",
-          "lastName": "Player #15",
-          "position": null,
-          "positions": [],
-          "rosterId": "3942215c-4167-4b14-89db-1eafe5fbabc2"
         },
         {
           "athleteId": "b66b6dea-3cd2-4e6e-9822-683abbe4bb2c",
@@ -1823,14 +1728,16 @@
       "staffCount": 3,
       "status": "ok",
       "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
-      "warnings": []
+      "warnings": [
+        "left out 5 stat-entry placeholder rows that name nobody: Player #1, Player #6, Player #10, Player #14, Player #15"
+      ]
     },
     {
       "athleteCount": 19,
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
       "players": [
@@ -2248,7 +2155,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
       "players": [
@@ -2669,7 +2576,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
       "players": [
@@ -3026,7 +2933,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
       "players": [
@@ -3388,7 +3295,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
       "players": [
@@ -3749,7 +3656,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef",
       "name": "MacDonald",
       "players": [
@@ -4000,7 +3907,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
       "players": [
@@ -4332,7 +4239,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
       "players": [
@@ -4634,7 +4541,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
       "players": [
@@ -4945,7 +4852,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
       "players": [
@@ -5305,7 +5212,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
       "name": "Branham",
       "players": [
@@ -5619,7 +5526,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
       "players": [],
@@ -5635,7 +5542,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
       "players": [
@@ -6034,7 +5941,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
       "players": [
@@ -6306,7 +6213,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
       "name": "Pioneer",
       "players": [
@@ -6641,7 +6548,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
       "players": [
@@ -6960,7 +6867,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
       "players": [
@@ -7216,7 +7123,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
       "players": [
@@ -7349,44 +7256,6 @@
             "RS"
           ],
           "rosterId": "09bde31e-9230-470b-86c4-7a1256b47cc6"
-        },
-        {
-          "athleteId": "e375a363-ecf6-4abe-9425-b05f25515177",
-          "careerId": "4dlgea0qb7tl5",
-          "careerProfileId": "0bcd0e07-c063-429b-9c22-72a45119a20e",
-          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/player-11/?careerid=4dlgea0qb7tl5",
-          "createdOn": "2026-10-28T01:39:12",
-          "firstName": null,
-          "fullName": "null Player #11",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "11",
-          "lastName": "Player #11",
-          "position": null,
-          "positions": [],
-          "rosterId": "c293b90b-239e-4de0-860e-d6dd83c56f3f"
-        },
-        {
-          "athleteId": "3caa6df1-27bb-483e-ba65-5ce3af1b60a0",
-          "careerId": "23tbhegmpnj66",
-          "careerProfileId": "a8e5ec0f-7add-4387-b682-61c77b97ddb1",
-          "careerUrl": "https://www.maxpreps.com/ca/gilroy/gilroy-mustangs/athletes/player-12/?careerid=23tbhegmpnj66",
-          "createdOn": "2026-10-28T01:39:13",
-          "firstName": null,
-          "fullName": "null Player #12",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "12",
-          "lastName": "Player #12",
-          "position": null,
-          "positions": [],
-          "rosterId": "3619ba14-b994-4eb0-8fe5-1c52134a81c8"
         },
         {
           "athleteId": "9f801e08-bd8d-4ed9-88f8-2e07d11b5bad",
@@ -7548,14 +7417,16 @@
       "staffCount": 1,
       "status": "ok",
       "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
-      "warnings": []
+      "warnings": [
+        "left out 2 stat-entry placeholder rows that name nobody: Player #11, Player #12"
+      ]
     },
     {
       "athleteCount": 13,
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
       "players": [
@@ -7854,7 +7725,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
       "players": [
@@ -8156,7 +8027,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
       "players": [
@@ -8459,7 +8330,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
       "players": [
@@ -8778,7 +8649,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
       "players": [
@@ -9121,7 +8992,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
       "players": [
@@ -9440,7 +9311,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
       "players": [
@@ -9832,7 +9703,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
       "players": [
@@ -10201,7 +10072,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
       "players": [
@@ -10532,7 +10403,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
       "players": [
@@ -10834,7 +10705,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
       "players": [
@@ -11133,7 +11004,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
       "players": [
@@ -11427,7 +11298,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
       "players": [],
@@ -11443,7 +11314,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
       "name": "Mt. Pleasant",
       "players": [
@@ -11707,7 +11578,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
       "players": [],
@@ -11723,7 +11594,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
       "players": [
@@ -12058,7 +11929,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
       "players": [
@@ -12357,7 +12228,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
       "players": [
@@ -12693,7 +12564,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
       "players": [
@@ -12762,44 +12633,6 @@
           "rosterId": "1c3d6906-df43-4746-9fc3-876fd37ef4b1"
         },
         {
-          "athleteId": "f6ddfbf3-86f8-408a-a2f7-034a74616e0f",
-          "careerId": "o1hllk1f0aeqa",
-          "careerProfileId": "ce6d5a74-dc68-4a39-98cb-5367da9497d8",
-          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/player-4/?careerid=o1hllk1f0aeqa",
-          "createdOn": "2026-10-19T21:16:08",
-          "firstName": null,
-          "fullName": "null Player #4",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "4",
-          "lastName": "Player #4",
-          "position": null,
-          "positions": [],
-          "rosterId": "abf7aed2-3560-42fb-b9ff-c326bdb7cf35"
-        },
-        {
-          "athleteId": "b8b0c581-0404-4bf3-a274-6379e3e50b48",
-          "careerId": "e51nic89r9800",
-          "careerProfileId": "9e42f6e8-463c-40c9-85c8-e1026e9faead",
-          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/player-5/?careerid=e51nic89r9800",
-          "createdOn": "2026-10-19T21:14:48",
-          "firstName": null,
-          "fullName": "null Player #5",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "5",
-          "lastName": "Player #5",
-          "position": null,
-          "positions": [],
-          "rosterId": "4003fb24-993f-4724-8400-939f89285a81"
-        },
-        {
           "athleteId": "6932d5ff-6119-4597-8dbe-34bebe225740",
           "careerId": "nse1670jrnon7",
           "careerProfileId": "c3896bf2-73b5-4636-93fd-a95b590bc9f4",
@@ -12843,25 +12676,6 @@
           "rosterId": "66e5b1a0-d0cb-483a-bbe6-2b9494835c89"
         },
         {
-          "athleteId": "9923eaff-d6d5-4979-894a-0784ffb1567f",
-          "careerId": "un5pof9s01333",
-          "careerProfileId": "2f46824a-af73-4789-9bcc-8600c3c553fa",
-          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/player-9/?careerid=un5pof9s01333",
-          "createdOn": "2026-10-19T21:16:08",
-          "firstName": null,
-          "fullName": "null Player #9",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "9",
-          "lastName": "Player #9",
-          "position": null,
-          "positions": [],
-          "rosterId": "cbe7f1d7-6fd8-45e2-aa31-cb2360891d43"
-        },
-        {
           "athleteId": "ab6e6a00-4649-4f40-87ab-88c257a4c2a6",
           "careerId": "af45s14olal00",
           "careerProfileId": "08938664-43cb-4c9d-8f6a-ef342fac8e55",
@@ -12881,25 +12695,6 @@
             "MH"
           ],
           "rosterId": "f29b1464-030a-45bb-8f5c-a05d68380a03"
-        },
-        {
-          "athleteId": "aed3acc7-9778-4ccb-9d20-598b8c71f986",
-          "careerId": "6cciqc9q684td",
-          "careerProfileId": "197abeb8-5c4d-4409-8d84-a0d16aaacfe4",
-          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/player-11/?careerid=6cciqc9q684td",
-          "createdOn": "2026-10-19T21:05:11",
-          "firstName": null,
-          "fullName": "null Player #11",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "11",
-          "lastName": "Player #11",
-          "position": null,
-          "positions": [],
-          "rosterId": "e830243d-f460-46b2-a08b-5342eee3980c"
         },
         {
           "athleteId": "0b36cdc3-7fa8-48ce-b8fb-8fa26ecc17c3",
@@ -13007,25 +12802,6 @@
           "rosterId": "a375b8b9-38ec-4506-a562-f1b70166ee78"
         },
         {
-          "athleteId": "ecfe15f7-7fb1-4dd7-a169-782387764dda",
-          "careerId": "do82hveojmpi2",
-          "careerProfileId": "008ac460-9b0b-4a76-ae0b-6a52f5fc2e06",
-          "careerUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/player-18/?careerid=do82hveojmpi2",
-          "createdOn": "2026-10-19T21:16:09",
-          "firstName": null,
-          "fullName": "null Player #18",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "18",
-          "lastName": "Player #18",
-          "position": null,
-          "positions": [],
-          "rosterId": "c9ab2007-c29a-41da-b25c-d7c533c0c160"
-        },
-        {
           "athleteId": "4f539dbc-572e-4a0b-ac4c-081084ae7cf6",
           "careerId": "87mlaud8m2r88",
           "careerProfileId": "93698a10-471f-4bd7-9e7b-28d1f2539833",
@@ -13052,14 +12828,16 @@
       "staffCount": 4,
       "status": "ok",
       "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
-      "warnings": []
+      "warnings": [
+        "left out 5 stat-entry placeholder rows that name nobody: Player #4, Player #5, Player #9, Player #11, Player #18"
+      ]
     },
     {
       "athleteCount": 14,
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
       "players": [
@@ -13375,7 +13153,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
       "players": [
@@ -13710,7 +13488,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
       "players": [
@@ -14084,7 +13862,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius",
       "players": [
@@ -14216,25 +13994,6 @@
             "RS"
           ],
           "rosterId": "14b9da0f-9924-4b07-b452-80c728084d28"
-        },
-        {
-          "athleteId": "25c31528-2390-466d-a275-6714c6a2bc06",
-          "careerId": "mv02sn3167gdd",
-          "careerProfileId": "e50a32ee-a2ae-4811-86d0-f8ee3d4d9228",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-8/?careerid=mv02sn3167gdd",
-          "createdOn": "2026-09-14T20:22:03",
-          "firstName": null,
-          "fullName": "null Player #8",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "8",
-          "lastName": "Player #8",
-          "position": null,
-          "positions": [],
-          "rosterId": "f5e9e74b-65c3-43c5-8311-ee38ec7ac60f"
         },
         {
           "athleteId": "a9ea5237-ca29-401c-9e0d-8e01d57be434",
@@ -14407,44 +14166,6 @@
           "rosterId": "16f06404-b737-4d4d-bd6a-2ab7cd485b95"
         },
         {
-          "athleteId": "1f4075e7-1ad0-463a-aa8a-37004ca92818",
-          "careerId": "keci9j6o812m6",
-          "careerProfileId": "c3340b80-6402-464e-b95e-1fee2115c19e",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-18/?careerid=keci9j6o812m6",
-          "createdOn": "2026-09-14T20:22:04",
-          "firstName": null,
-          "fullName": "null Player #18",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "18",
-          "lastName": "Player #18",
-          "position": null,
-          "positions": [],
-          "rosterId": "7c9716b5-79c2-4b07-bd3f-aa91f8dd3218"
-        },
-        {
-          "athleteId": "702bd1ef-1ab5-4ff2-9a53-a4717d479598",
-          "careerId": "med6hint16k11",
-          "careerProfileId": "af239985-b08e-49ed-b1ff-3281b82c80bc",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-20/?careerid=med6hint16k11",
-          "createdOn": "2026-09-26T05:49:04",
-          "firstName": null,
-          "fullName": "null Player #20",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "20",
-          "lastName": "Player #20",
-          "position": null,
-          "positions": [],
-          "rosterId": "6707e3f1-cdb0-427c-992e-47c3a648ce82"
-        },
-        {
           "athleteId": "794467ed-5e7e-4367-9b60-ff7f9a3efe47",
           "careerId": "rodrjhr2rvi00",
           "careerProfileId": "037f3a47-3f3e-4281-8ed8-539ea70a7141",
@@ -14464,25 +14185,6 @@
             "MB"
           ],
           "rosterId": "1a23a5b6-5363-4a39-a713-2936ba431837"
-        },
-        {
-          "athleteId": "a8a379ba-d360-4427-a114-ffdca8a8f528",
-          "careerId": "a6d91tg1jm3ee",
-          "careerProfileId": "009a47de-fbe0-40e2-a356-5e5f07d68ee8",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-23/?careerid=a6d91tg1jm3ee",
-          "createdOn": "2026-09-14T20:26:31",
-          "firstName": null,
-          "fullName": "null Player #23",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "23",
-          "lastName": "Player #23",
-          "position": null,
-          "positions": [],
-          "rosterId": "547e79bf-7ba2-4f64-9ec2-1dc8a482981e"
         },
         {
           "athleteId": "b48104f9-138d-4dc4-b8f0-687230faee8e",
@@ -14506,25 +14208,6 @@
           "rosterId": "f9839fe2-d4da-4584-a62f-5b2a79e6cb1a"
         },
         {
-          "athleteId": "b81dda22-df63-4cbc-b118-cbfc0a96f335",
-          "careerId": "hc79o409onvue",
-          "careerProfileId": "a61f282d-044f-466a-872b-44432ae5a105",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-25/?careerid=hc79o409onvue",
-          "createdOn": "2026-09-28T08:00:47",
-          "firstName": null,
-          "fullName": "null Player #25",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "25",
-          "lastName": "Player #25",
-          "position": null,
-          "positions": [],
-          "rosterId": "dbd6b079-1432-4e17-afe4-0ad9278310f0"
-        },
-        {
           "athleteId": "614d915d-e747-4249-81c8-7ae0913ac216",
           "careerId": "9modmplgt01qa",
           "careerProfileId": "7f3e79b0-8e99-4f7c-9375-4b384c2bdda2",
@@ -14544,25 +14227,6 @@
             "MB"
           ],
           "rosterId": "4d42186b-83bc-4941-a052-78805207a438"
-        },
-        {
-          "athleteId": "61c05808-d1f4-4d19-8518-23dbf4bf0fb6",
-          "careerId": "o0ga7805u5f44",
-          "careerProfileId": "557d90d8-a2ca-4e5c-9a2c-d37cba1d51d7",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/player-30/?careerid=o0ga7805u5f44",
-          "createdOn": "2026-09-26T05:48:22",
-          "firstName": null,
-          "fullName": "null Player #30",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "30",
-          "lastName": "Player #30",
-          "position": null,
-          "positions": [],
-          "rosterId": "29b9a3bb-156a-4660-bcf6-6483a552f236"
         }
       ],
       "rosterUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/volleyball/roster/",
@@ -14570,14 +14234,16 @@
       "staffCount": 4,
       "status": "ok",
       "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
-      "warnings": []
+      "warnings": [
+        "left out 6 stat-entry placeholder rows that name nobody: Player #8, Player #18, Player #20, Player #23, Player #25, Player #30"
+      ]
     },
     {
       "athleteCount": 15,
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
       "players": [
@@ -14906,7 +14572,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
       "name": "Harker",
       "players": [
@@ -15227,7 +14893,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
       "name": "The King’s Academy",
       "players": [
@@ -15381,25 +15047,6 @@
           "rosterId": "3ed51d0a-461e-4598-bd49-918a95f61644"
         },
         {
-          "athleteId": "5751e367-c478-4c99-b1e9-fb8a5d7b2e91",
-          "careerId": "qkgi3ciqb6u77",
-          "careerProfileId": "9ed791dc-953f-4627-8c78-6fd96aa0e63b",
-          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/player-8/?careerid=qkgi3ciqb6u77",
-          "createdOn": "2026-09-30T14:39:09",
-          "firstName": null,
-          "fullName": "null Player #8",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "8",
-          "lastName": "Player #8",
-          "position": null,
-          "positions": [],
-          "rosterId": "34d39a39-e7bf-4d2e-a78c-7cc731567e38"
-        },
-        {
           "athleteId": "f6378cf1-5647-4cbf-8ed9-c10fe36b5691",
           "careerId": "gh2fcv8bp7q55",
           "careerProfileId": "28da6309-10a1-4b88-af69-650e61ae442d",
@@ -15528,25 +15175,6 @@
           "rosterId": "aad4f2f1-659e-48f4-a9e9-90a02eea475c"
         },
         {
-          "athleteId": "2efe5474-1d40-43d1-8723-9597512a1032",
-          "careerId": "kacqnhbvkdv22",
-          "careerProfileId": "116379e0-ec04-4652-a664-65ad1a7095c0",
-          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/player-15/?careerid=kacqnhbvkdv22",
-          "createdOn": "2026-09-30T14:39:10",
-          "firstName": null,
-          "fullName": "null Player #15",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "15",
-          "lastName": "Player #15",
-          "position": null,
-          "positions": [],
-          "rosterId": "9a9134f0-cd17-4a23-bc74-a0a3e4175c46"
-        },
-        {
           "athleteId": "3c11f02a-e22c-4ac6-a307-09eb1fadbb1e",
           "careerId": "0cl7af3v4kuqa",
           "careerProfileId": "4a46cc69-81c0-449f-ac77-e80ab9bac517",
@@ -15589,25 +15217,6 @@
           "rosterId": "b855263e-2299-4a62-87c3-9bed3525b20e"
         },
         {
-          "athleteId": "f8e15930-f96a-427b-b553-8b189f9bdc39",
-          "careerId": "a0vpomt46d2aa",
-          "careerProfileId": "c97178a8-d99d-4f6b-aa79-c208eb82135e",
-          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/player-18/?careerid=a0vpomt46d2aa",
-          "createdOn": "2026-09-30T14:39:11",
-          "firstName": null,
-          "fullName": "null Player #18",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "18",
-          "lastName": "Player #18",
-          "position": null,
-          "positions": [],
-          "rosterId": "45fd3f29-3398-479e-8220-38271d11c9c8"
-        },
-        {
           "athleteId": "6a43439e-2410-44b7-af2f-d49068ef325e",
           "careerId": "stdh0tb2d6jdd",
           "careerProfileId": "1f5e9df3-cdcd-465b-a4c7-9f4f84487750",
@@ -15628,25 +15237,6 @@
             "MH"
           ],
           "rosterId": "17b92302-abdd-4139-93f5-3a3ec9a73bd1"
-        },
-        {
-          "athleteId": "ed2e9fef-4ea6-4fe3-a529-0ae16a030108",
-          "careerId": "af43oe33snk33",
-          "careerProfileId": "613a68a9-2bac-4e4d-817e-01dfb2955763",
-          "careerUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/athletes/player-42/?careerid=af43oe33snk33",
-          "createdOn": "2026-09-30T14:39:11",
-          "firstName": null,
-          "fullName": "null Player #42",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "42",
-          "lastName": "Player #42",
-          "position": null,
-          "positions": [],
-          "rosterId": "4f75328a-5d4d-4741-8739-add2eb523d0b"
         }
       ],
       "rosterUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/volleyball/roster/",
@@ -15654,14 +15244,16 @@
       "staffCount": 4,
       "status": "ok",
       "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
-      "warnings": []
+      "warnings": [
+        "left out 4 stat-entry placeholder rows that name nobody: Player #8, Player #15, Player #18, Player #42"
+      ]
     },
     {
       "athleteCount": 17,
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
       "name": "Menlo School",
       "players": [
@@ -16041,7 +15633,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79",
       "name": "Mercy Burlingame",
       "players": [
@@ -16404,7 +15996,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
       "name": "Notre Dame Belmont",
       "players": [
@@ -16716,7 +16308,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
       "name": "Presentation",
       "players": [
@@ -16980,7 +16572,7 @@
       "deletedRows": 0,
       "division": "foothill",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
       "name": "Sacred Heart Prep",
       "players": [
@@ -17319,7 +16911,7 @@
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249",
       "name": "Castilleja",
       "players": [
@@ -17621,25 +17213,6 @@
             "S"
           ],
           "rosterId": "810d1f30-f3d6-4234-9aa2-7171473e37e8"
-        },
-        {
-          "athleteId": "f8df8087-0553-4e15-bb28-f42681a6dad9",
-          "careerId": "b7lj6r31nalm6",
-          "careerProfileId": "10d2f17d-6312-4ed3-b516-f244b33b9bc3",
-          "careerUrl": "https://www.maxpreps.com/ca/palo-alto/castilleja-gators/athletes/player-19/?careerid=b7lj6r31nalm6",
-          "createdOn": "2026-10-28T17:29:42",
-          "firstName": null,
-          "fullName": "null Player #19",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "19",
-          "lastName": "Player #19",
-          "position": null,
-          "positions": [],
-          "rosterId": "7289a4f5-3a26-4d2a-93da-1cddcd98c921"
         }
       ],
       "rosterUrl": "https://www.maxpreps.com/ca/palo-alto/castilleja-gators/volleyball/roster/",
@@ -17647,14 +17220,16 @@
       "staffCount": 3,
       "status": "ok",
       "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249",
-      "warnings": []
+      "warnings": [
+        "left out 1 stat-entry placeholder row that names nobody: Player #19"
+      ]
     },
     {
       "athleteCount": 17,
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
       "players": [
@@ -17994,7 +17569,7 @@
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
       "name": "Eastside College Prep",
       "players": [
@@ -18298,7 +17873,7 @@
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "e5d23742-6a32-47e1-b752-d16dfcf77119",
       "name": "Notre Dame San Jose",
       "players": [
@@ -18630,7 +18205,7 @@
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
       "name": "Pinewood",
       "players": [
@@ -18967,29 +18542,10 @@
       "deletedRows": 0,
       "division": "skyline",
       "error": null,
-      "fetchedAt": "2026-11-14T16:13:36.018Z",
+      "fetchedAt": "2026-11-14T17:26:02.634Z",
       "maxprepsTeamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "name": "Priory",
       "players": [
-        {
-          "athleteId": "38ad4f72-4aed-4d48-b1f4-f2c0d03fa0ff",
-          "careerId": "5p263timp91dd",
-          "careerProfileId": "be85f6db-e59a-4cbb-8cce-9eb7eada2b95",
-          "careerUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/athletes/player-0/?careerid=5p263timp91dd",
-          "createdOn": "2026-10-16T21:36:30",
-          "firstName": null,
-          "fullName": "null Player #0",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "0",
-          "lastName": "Player #0",
-          "position": null,
-          "positions": [],
-          "rosterId": "07ac05a8-3314-4c5a-a562-3a1a100cb077"
-        },
         {
           "athleteId": "21013fa3-d092-4d1e-90ea-ea6f6d93a80e",
           "careerId": "kjpess3rat7ff",
@@ -19103,25 +18659,6 @@
           "position": null,
           "positions": [],
           "rosterId": "2341020d-d200-4ec2-b224-19a49b52b8e1"
-        },
-        {
-          "athleteId": "aac5f04b-aa06-49f7-a2c1-ce2830cd6b84",
-          "careerId": "9p1tuodgb2uj3",
-          "careerProfileId": "b30eb80d-8c02-4f85-85ad-00249dbb0e0c",
-          "careerUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/athletes/player-8/?careerid=9p1tuodgb2uj3",
-          "createdOn": "2026-10-16T21:40:11",
-          "firstName": null,
-          "fullName": "null Player #8",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "8",
-          "lastName": "Player #8",
-          "position": null,
-          "positions": [],
-          "rosterId": "024de0c0-6c79-462d-88dc-10b08f7b86e0"
         },
         {
           "athleteId": "a5023aa2-e6eb-4f63-89ec-7d0fc7fc826f",
@@ -19274,44 +18811,6 @@
           "position": null,
           "positions": [],
           "rosterId": "625df4ca-e4c2-44cf-ba5c-544a666a4671"
-        },
-        {
-          "athleteId": "7bb9e2ce-78e1-4c64-a614-3b821b852493",
-          "careerId": "n4pm3kpmeunk4",
-          "careerProfileId": "3aee747f-957c-4606-b5c9-fb61224a0a2e",
-          "careerUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/athletes/player-21/?careerid=n4pm3kpmeunk4",
-          "createdOn": "2026-10-16T21:40:12",
-          "firstName": null,
-          "fullName": "null Player #21",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "21",
-          "lastName": "Player #21",
-          "position": null,
-          "positions": [],
-          "rosterId": "2ec73bf0-abe0-48f0-a23b-3e8816d1c002"
-        },
-        {
-          "athleteId": "237a1210-ddef-47eb-a039-465c0690de20",
-          "careerId": "s5lu2m5la4ej3",
-          "careerProfileId": "13ca6701-f00a-45ec-861b-838ec0e48754",
-          "careerUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/athletes/player-22/?careerid=s5lu2m5la4ej3",
-          "createdOn": "2026-10-16T21:40:12",
-          "firstName": null,
-          "fullName": "null Player #22",
-          "grade": null,
-          "gradeClass": null,
-          "height": null,
-          "heightInches": null,
-          "isCaptain": false,
-          "jersey": "22",
-          "lastName": "Player #22",
-          "position": null,
-          "positions": [],
-          "rosterId": "795b01ba-fdaa-422e-863e-7ffe6c31662b"
         }
       ],
       "rosterUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/volleyball/roster/",
@@ -19319,7 +18818,9 @@
       "staffCount": 3,
       "status": "ok",
       "teamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
-      "warnings": []
+      "warnings": [
+        "left out 4 stat-entry placeholder rows that name nobody: Player #0, Player #8, Player #21, Player #22"
+      ]
     }
   ]
 }

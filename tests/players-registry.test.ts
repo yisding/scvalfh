@@ -906,6 +906,46 @@ describe('the sources as sightings', () => {
     expect(skipped).toEqual(['soccer jv-rosters is for season 26-27, the rosters for 27-28: left out']);
   });
 
+  it("MaxPreps' \"Player #N\" stand-ins are nobody: no sighting from a roster row or a stat line (Gilroy volleyball, 2026-10)", () => {
+    // Gilroy's #11 and #12 once came out as one registry player under "null Player #12".
+    const { sightings } = currentSeasonSightings(
+      {
+        sport: 'volleyball',
+        rosters: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                rosterRow({}),
+                rosterRow({ athleteId: 'a11', careerId: 'c11', firstName: null, lastName: 'Player #11', fullName: 'null Player #11', jersey: '11', positions: [], isCaptain: false }),
+                rosterRow({ athleteId: 'a12', careerId: 'c12', firstName: null, lastName: 'Player #12', fullName: 'Player #12', jersey: '12', positions: [], isCaptain: false }),
+              ],
+            },
+          ],
+        },
+        jvRosters: null,
+        enrichment: null,
+        playerStats: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                { careerId: 'c11', fullName: 'Player #11', shortName: 'Player #11', jersey: '11', onRoster: false },
+                { careerId: 'c12', fullName: 'null Player #12', shortName: 'Player #12', jersey: '12', onRoster: true },
+              ],
+            },
+          ],
+        },
+        jvSchoolSites: null,
+        jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings.map((s) => s.careerIds)).toEqual([['c1']]);
+  });
+
   it('a past season is its stat sheets and its all-league lists', () => {
     const sightings = pastSeasonSightings({
       sport: 'field-hockey',
