@@ -1945,8 +1945,10 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   at Mission Hills (a varsity row created on a tournament day, no page listing both spellings), Skye /
   Skylar Bohannon at Sage Creek (same class and position; a twin cannot be excluded), and the MacDonald
   boys basketball pairs, where the 26-27 rows were typed afresh (Jhaylen Richards / Roy-Richard, Mic
-  Borgonia / Bergonia, Jhayde Domingo with the names in each other's fields). Undo any of them by deleting
-  its entry: the next build splits the record and gives each half back the id it had.
+  Borgonia / Bergonia, Jhayde Domingo with the names in each other's fields). Undo a join by deleting its
+  `sameAs` entry: the next build that reads the season from its files splits the record and gives each half
+  back the id it had (a join in a season the registry only carries forward stays made). Deleting a `notSame`
+  entry only puts the pair back on the review list.
 - **28 items remain**, all already acted on by a rule and listed to be checked: the 23 joined careers and
   the 5 split ones.
 - **2026-11-14 build, after those answers**: 3,946 players (3,488 with a MaxPreps career, 458 known by name

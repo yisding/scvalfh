@@ -964,8 +964,8 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     const ids = [...new Set(rows.map(idOfRow))];
     return { ...r, seasons: [...new Set(rows.flatMap((i) => (members.get(clusters.find(i)) as number[]).map((j) => all[j].season)))].sort(), players: ids };
   });
-  const settledPairs = new Set(identity.notSame.map((e) => `${e.team} ${[nameKey(e.names[0]), nameKey(e.names[1])].sort().join(' ')}`));
-  review.push(...lookAlikes(players, seasonsOf, identity));
+  const settledPairs = settledBy(identity);
+  review.push(...lookAlikes(players, seasonsOf, settledPairs));
   // An item about seasons this build did not read cannot be found again: it is kept, for the players still here.
   const sameItem = (a: ReviewItem, b: ReviewItem) => a.kind === b.kind && a.sport === b.sport && a.team === b.team && [...a.names].sort().join('|') === [...b.names].sort().join('|');
   const nowId = new Map(players.flatMap((p) => [p.id, ...p.formerIds].map((id) => [id, p.id] as const)));
@@ -975,7 +975,7 @@ export function buildRegistry(input: BuildInput): PlayersFile {
     // A pair a person has since said is two people is settled, whichever season it was found in.
     const pairKinds: ReadonlyArray<ReviewItem['kind']> = ['possible-match', 'same-name-other-sport'];
     const [first, second = first] = old.names;
-    if (pairKinds.includes(old.kind) && settledPairs.has(`${old.team} ${[nameKey(first), nameKey(second)].sort().join(' ')}`)) continue;
+    if (pairKinds.includes(old.kind) && settledPairs.has(settledKey(old.kind === 'possible-match' ? old.sport : null, old.team, first, second))) continue;
     const ids = [...new Set(old.players.flatMap((id) => (nowId.has(id) ? [nowId.get(id) as string] : [])))];
     // Two players since found to be one, or gone: nothing left to decide.
     if (ids.length !== new Set(old.players).size) continue;
@@ -1006,6 +1006,22 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   return checked.data;
 }
 
+/**
+ * The key a `notSame` decision is found by. Two different names are a pair inside one sport's team,
+ * so the sport is part of it; one name twice is the same name at one school in two sports, so it is
+ * not (`sport` null).
+ */
+function settledKey(sport: SportId | null, team: string, a: string, b: string): string {
+  return `${sport ?? '*'} ${team} ${[nameKey(a), nameKey(b)].sort().join(' ')}`;
+}
+
+/** Every pair a person has said is two people, under both keys it can be asked by. */
+function settledBy(identity: PlayerIdentity): Set<string> {
+  return new Set(
+    identity.notSame.map((e) => settledKey(nameKey(e.names[0]) === nameKey(e.names[1]) ? null : e.sport, e.team, e.names[0], e.names[1])),
+  );
+}
+
 /** The class years a player's accepted observations imply. */
 function classYearsOf(p: Player): Set<number> {
   return new Set(classClaims(p.stints).flatMap((c) => (c.rejected ? [] : [c.classOf])));
@@ -1019,12 +1035,10 @@ function classYearsOf(p: Player): Set<number> {
  * two people unless they wear the same number there, so those are left out: sisters are not a
  * question.
  */
-function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[], identity: PlayerIdentity): ReviewItem[] {
+function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string[]) => string[], settled: ReadonlySet<string>): ReviewItem[] {
   const out: ReviewItem[] = [];
-  /** Pairs a person has said are two people: `<team> <name key> <name key>`, keys in order. */
-  const settled = new Set(identity.notSame.map((e) => `${e.team} ${[nameKey(e.names[0]), nameKey(e.names[1])].sort().join(' ')}`));
-  const isSettled = (team: string, a: Player, b: Player) =>
-    a.names.some((x) => b.names.some((y) => settled.has(`${team} ${[nameKey(x), nameKey(y)].sort().join(' ')}`)));
+  const isSettled = (sport: SportId | null, team: string, a: Player, b: Player) =>
+    a.names.some((x) => b.names.some((y) => settled.has(settledKey(sport, team, x, y))));
   const gap = (a: Player, b: Player) => {
     let g = 0;
     for (const x of classYearsOf(a)) for (const y of classYearsOf(b)) g = Math.max(g, Math.abs(x - y));
@@ -1053,7 +1067,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const keysA = new Set(fullOf(a).map(nameKey));
         if (fullOf(b).some((y) => keysA.has(nameKey(y)))) continue;
         const pair = fullOf(a).flatMap((x) => fullOf(b).map((y) => [x, y] as const)).find(([x, y]) => namesLookAlike(x, y));
-        if (!pair || gap(a, b) > 1 || isSettled(team, a, b)) continue;
+        if (!pair || gap(a, b) > 1 || isSettled(sport, team, a, b)) continue;
         const [la, lb] = [lists(a, sport, team), lists(b, sport, team)];
         const together = [...la.keys()].filter((k) => lb.has(k));
         const sameNumber = together.some((k) => la.get(k) !== undefined && la.get(k) === lb.get(k));
@@ -1084,7 +1098,7 @@ function lookAlikes(players: readonly Player[], seasonsOf: (ids: readonly string
         const team = k.slice(0, k.indexOf(' '));
         const sportsA = new Set(a.stints.filter((s) => s.team === team).map((s) => s.sport));
         const sportsB = new Set(b.stints.filter((s) => s.team === team).map((s) => s.sport));
-        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1 || isSettled(team, a, b)) continue;
+        if ([...sportsA].some((s) => sportsB.has(s)) || gap(a, b) > 1 || isSettled(null, team, a, b)) continue;
         out.push({
           kind: 'same-name-other-sport',
           sport: [...sportsA].sort()[0],

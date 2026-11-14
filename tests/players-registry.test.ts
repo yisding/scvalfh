@@ -769,6 +769,9 @@ describe('what the reviewers broke', () => {
     });
     expect(settled.review).toEqual([]);
     expect(settled.players).toHaveLength(4);
+    // A decision about one sport's team says nothing about the same two names in another sport.
+    const elsewhere = build(rows, { identity: { ...NO_IDENTITY, notSame: [{ sport: 'soccer', team: 'alpha', names: ['Abigail Teuben', 'Audrey Teuben'], basis: 'other girls' }] } });
+    expect(elsewhere.review.map((r) => r.kind).sort()).toEqual(['possible-match', 'same-name-other-sport']);
     // The answer also clears an item carried forward from a season no build reads any more.
     const before = build(rows);
     const carried = buildRegistry({ previous: before, identity: NO_IDENTITY, built: [], sightings: [], builtBy: 'test' });

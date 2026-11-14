@@ -378,7 +378,10 @@ export function countPlayers(players: readonly Player[], review: number): Player
  *   distinct   the two MaxPreps careers on `team` are two people, though they share a name: the
  *              resolver never joins them, and a bare name that fits both is left for review.
  *   notSame    the two names at `team` are two people (sisters, namesakes), though they look like
- *              one: the pair is no longer listed for review. `sport` is the sport of the first.
+ *              one: the pair is no longer listed for review. Two different names are a pair of
+ *              `sport`'s team; one name given twice is that name at the school in two sports. It
+ *              only settles the question: two MaxPreps careers under ONE name on one team are kept
+ *              apart by `distinct`.
  */
 export const PlayerIdentitySchema = z
   .object({

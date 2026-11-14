@@ -1439,7 +1439,9 @@ nickname or a near spelling: those, and anything else the rules would not decide
 `review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
 kept apart); the 28 items left are joins and splits a rule already made, listed to be checked. The answers go in `data/player-identity.json` (each with its reason), never into
 `data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
-Deleting an entry undoes it on the next build.
+Deleting a `sameAs` entry undoes the join on the next build that still reads that season's files (a join
+in a season the registry only carries forward stays made); deleting a `notSame` entry puts the pair back
+on the review list.
 
 Last season's players come from MaxPreps' stat sheets, which are not rosters (a sheet lists only the
 players a coach entered a line for):
