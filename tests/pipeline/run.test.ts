@@ -91,11 +91,11 @@ describe('parseRunArgs (§7.12 flags)', () => {
 });
 
 describe('step 01: the season window', () => {
-  it('outside Aug 1 – Nov 30 it logs "out of season" and returns nothing to write; --force runs anyway', async () => {
+  it('outside Aug 1 – Nov 21 it logs "out of season" and returns nothing to write; --force runs anyway', async () => {
     for (const at of ['2026-07-15T20:00:00.000Z', '2026-12-15T20:00:00.000Z']) {
       const run = await runCorpus({ corpus: 'scval', fetchedAt: at });
       expect(run.result, at).toBeNull();
-      expect(run.ctx.logLines.join('\n')).toMatch(/out of season: .* is outside Aug 1 – Nov 30 Pacific/);
+      expect(run.ctx.logLines.join('\n')).toMatch(/out of season: .* is outside Aug 1 – Nov 21 Pacific/);
       expect(run.ctx.logLines.some((l) => l.startsWith('maxpreps GET'))).toBe(false);
     }
     for (const at of ['2026-08-15T20:00:00.000Z', '2026-11-15T20:00:00.000Z']) {

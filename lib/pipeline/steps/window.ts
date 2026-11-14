@@ -1,6 +1,6 @@
 /**
  * Step 01 (SPEC §7.4): the season-window guard. Outside the union of the sections' season windows
- * (2026-08-01 … 2026-11-30) there is nothing to fetch, so the run logs, exits 0 and writes nothing —
+ * (2026-08-01 … 2026-11-21) there is nothing to fetch, so the run logs, exits 0 and writes nothing —
  * rather than rewriting the snapshot's stamp every day — unless `--force`. `today` is the context's
  * localDateKey(fetchedAt), never the wall clock.
  */

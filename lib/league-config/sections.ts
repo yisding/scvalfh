@@ -124,7 +124,10 @@ const FIELD_HOCKEY_SECTIONS = [
     officialUrl: 'https://cifccs.org/sports/fh/index',
     rulesSource: { name: 'CCS Field Hockey Bylaws 2026-27', url: CCS_BYLAWS_URL, format: 'PDF' },
     shootout: null,
-    seasonWindow: { start: '2026-08-01', end: '2026-11-30' },
+    // The end is OUR choice, as for the San Diego Section: one week after the Nov 14 final, so a late score
+    // or box score still lands. It is also the latest end, so it is where the data refresh stops
+    // (seasonWindowBounds; .github/workflows/update-data.yml's SEASON_END is held to it).
+    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
     noChampionshipNote: null,
     outsideTournament: null,
   },
@@ -137,7 +140,9 @@ const FIELD_HOCKEY_SECTIONS = [
     // its rules source is the Section's site, the page this config already links.
     rulesSource: { name: 'CIF North Coast Section website', url: 'https://www.cifncs.org/', format: 'web page' },
     shootout: null,
-    seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
+    // The end is OUR choice: the CCS and San Diego windows' end. MCAL's tournament is over in October, and
+    // nothing in the North Coast Section is played after it.
+    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
     outsideTournament: null,

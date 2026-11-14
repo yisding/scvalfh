@@ -396,7 +396,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayStarts('metro')).toBe('2026-09-28');
     for (const id of ['city', 'north-county', 'metro']) expect(leaguePlayEnds(id), id).toBe('2026-10-30');
     // The Northern, Southern and San Diego Sections' windows sit inside the union.
-    expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-30' });
+    expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-21' });
   });
 
   it('sets the overtime rule, the order scope and the MCAL schedule-changes page', () => {
