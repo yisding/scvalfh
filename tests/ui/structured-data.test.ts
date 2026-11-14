@@ -83,8 +83,7 @@ describe('gameJsonLd', () => {
   it('describes every corpus game as the page does: title, start, status, sides and only a published place', async () => {
     const { dateTimeAttr } = await import('../../lib/format');
     for (const { id } of gv.gameStaticParams()) {
-      const model = gv.buildGameView(id);
-      if (!model) continue; // a superseded stub: no event of its own
+      const model = gv.buildGameView(id)!;
       const { game } = model;
       const node = sd.gameJsonLd(model);
       const where = `components/metadata/structured-data.ts gameJsonLd ${id}`;

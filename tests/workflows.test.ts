@@ -597,10 +597,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       standings: [...LEAGUE_IDS],
       schedule: [...LEAGUE_IDS],
       playoffs: [...TOURNAMENT_LEAGUE_IDS],
-      game: [
-        ...snapshot.games.map((g) => gameIdToParam(g.contestId)),
-        ...Object.keys(snapshot.supersededGames).map(gameIdToParam),
-      ],
+      game: snapshot.games.map((g) => gameIdToParam(g.contestId)),
       scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
       teams: snapshot.teams.map((t) => t.slug),
     };

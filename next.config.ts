@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import { gameRedirects } from './lib/game-redirects';
+
 /**
  * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
  * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
@@ -97,6 +99,18 @@ const nextConfig: NextConfig = {
    * What the rule does cover is every route AND the OG image routes AND /manifest.webmanifest AND
    * the four icon routes, all built from the same snapshot and all wanting the same freshness.
    */
+  /**
+   * A retired game page goes to the game that replaced it: each `supersededGames` key of this sport's snapshot (an
+   * si.com fill, a San Diego bracket-sheet game, an added or league-schedule game MaxPreps lists now) is a 308 from
+   * `/game/<old>` to `/game/<maxpreps>`, and the same for its OG image (lib/game-redirects.ts). Built from the
+   * snapshot at build time, like every page, so a data commit's redeploy brings the new ones. Every server applies
+   * them before it looks for a page, and vinext bakes them into its server entry, so the Worker has them without a
+   * filesystem; scripts/smoke-server.sh checks each one on all three servers.
+   */
+  async redirects() {
+    return gameRedirects();
+  },
+
   async headers() {
     return [
       {

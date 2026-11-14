@@ -2524,7 +2524,10 @@ prerendered too. It is NOT `output: 'export'`, though: serving it needs Next.js'
 host adapter that provides one, `vinext start` or vinext's Cloudflare Worker (see "vinext" and
 "Cloudflare Workers" below), because the 404s for unknown dynamic params and the metadata routes
 (`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
-framework.
+framework, and so are the `redirects()` in `next.config.ts`: a game page MaxPreps has since replaced (an si.com
+fill, a San Diego bracket-sheet game, a league-schedule or added game — the snapshot's `supersededGames`) is a 308
+to the MaxPreps game, built from the snapshot at build time (`lib/game-redirects.ts`). Every server applies them,
+the Worker included (vinext bakes them into its server entry), and `scripts/smoke-server.sh` checks each one.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.

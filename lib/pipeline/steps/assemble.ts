@@ -7,8 +7,9 @@
 
 import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
-import { byDateThenId, dayDiff } from '../../format';
+import { byDateThenId, dayDiff, localDateKey } from '../../format';
 import { isOfficialContestId, isSbliveContestId } from '../../game-id';
+import { withFixtureGames } from '../../results/fixture-games';
 import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
 import { CCS } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
@@ -46,16 +47,15 @@ export function budgetLabel(bytes: number): string {
 /**
  * D2 rule 10: a `sblive:<id>` game an earlier run published that a MaxPreps contest now supersedes
  * (the contest matched the same official fixture) maps to that contest, as does a `cifsds:` game (the San
- * Diego Section's bracket sheet) MaxPreps has since posted; the mapping is carried
- * for the rest of the season. Only keys that are no longer games and values that are games survive
- * (snapshot refinement 10).
+ * Diego Section's bracket sheet) MaxPreps has since posted, and a game the previous build listed from a league's
+ * own schedule (lib/results/fixture-games.ts) that a source lists now; the mapping is carried
+ * for the rest of the season, and next.config.ts redirects each key's page to its target's
+ * (lib/game-redirects.ts). Only keys that are no longer games and values that are games survive
+ * (snapshot refinement 10); a carried target that is itself superseded now is followed to its own.
  */
 export function supersededGamesOf(games: readonly Game[], previous: Snapshot | null): Record<ContestId, ContestId> {
   const ids = new Set(games.map((g) => g.contestId));
   const out: Record<ContestId, ContestId> = {};
-  for (const [from, to] of Object.entries(previous?.supersededGames ?? {})) {
-    if (!ids.has(from) && ids.has(to)) out[from] = to;
-  }
   const byFixture = new Map<string, ContestId>();
   for (const g of games) {
     if (g.official && !isSbliveContestId(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
@@ -84,7 +84,32 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
       .sort((a, b) => Math.abs(dayDiff(a.dateKey, g.dateKey)) - Math.abs(dayDiff(b.dateKey, g.dateKey)) || a.contestId.localeCompare(b.contestId));
     if (now[0]) out[g.contestId] = now[0].contestId;
   }
-  return out;
+  // A game the previous build listed from a league's own schedule: not stored (its fixture stayed in
+  // `officialFixtures`, and lib/data.ts made the game where the site reads the snapshot), so it is rebuilt from the
+  // previous snapshot exactly as lib/data.ts built it. Its fixture is matched now: the game carrying that fixture's
+  // stamp replaced it (a MaxPreps contest, else an si.com fill).
+  if (previous?.officialFixtures?.length) {
+    const stamped = new Map<string, ContestId>();
+    for (const g of games) {
+      if (!g.official || isOfficialContestId(g.contestId)) continue;
+      const held = stamped.get(g.official.fixtureId);
+      if (!held || (isSbliveContestId(held) && !isSbliveContestId(g.contestId))) stamped.set(g.official.fixtureId, g.contestId);
+    }
+    const { listed } = withFixtureGames(previous.games, previous.officialFixtures, localDateKey(previous.fetchedAt), previous.fetchedAt);
+    for (const g of listed) {
+      const winner = g.official ? stamped.get(g.official.fixtureId) : undefined;
+      if (winner && !ids.has(g.contestId) && !(g.contestId in out)) out[g.contestId] = winner;
+    }
+  }
+  // Carried from earlier runs: a key that is a game again drops out, and a target superseded since is followed
+  // (an si.com fill MaxPreps has replaced), so an old link never ends on a page that is gone.
+  for (const [from, first] of Object.entries(previous?.supersededGames ?? {})) {
+    if (ids.has(from) || Object.hasOwn(out, from)) continue;
+    let to = first;
+    for (let hop = 0; !ids.has(to) && Object.hasOwn(out, to) && hop < 8; hop++) to = out[to];
+    if (ids.has(to) && to !== from) out[from] = to;
+  }
+  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
 }
 
 function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {

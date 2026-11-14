@@ -16,8 +16,8 @@
  *    California amendment), `playoffs/<id>.html` for each league-tournament league (still MCAL only:
  *    the EAL, the Sunset and the three San Diego leagues have no page of their own, only a card,
  *    `id="<league>"`, on /playoffs);
- *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
- *    stub per `supersededGames` key (counted separately);
+ *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`), and no
+ *    page for a `supersededGames` key (next.config.ts redirects it: lib/game-redirects.ts);
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
  *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
@@ -98,7 +98,7 @@ if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL):
 
 // ---------------------------------------------------------------- config agrees with the snapshot
 const expected = expectedFamilies(snapshot, fail);
-const { gameParams, stubParams, dates, slugs, clubSlugs } = expected;
+const { gameParams, redirectParams, dates, slugs, clubSlugs } = expected;
 
 // ---------------------------------------------------------------- fixed pages
 for (const p of FIXED_PAGES) if (!fileSet.has(`${p}.html`)) fail(`fixed page not prerendered: ${p}.html`);
@@ -129,7 +129,7 @@ const totalHtml = files.filter((f) => f.endsWith('.html') && !f.startsWith('_'))
 console.log(
   `prerendered (next): ${totalHtml} pages — fixed ${FIXED_PAGES.length}; standings ${pagesIn('standings').length}/${expected.leagueIds.length}; ` +
     `schedule ${pagesIn('schedule').length}/${expected.leagueIds.length}; playoffs ${pagesIn('playoffs').length}/${expected.tournament.length}; ` +
-    `game ${pagesIn('game').length} (${gameParams.length} games + ${stubParams.length} superseded stubs); ` +
+    `game ${pagesIn('game').length}/${gameParams.length} (+ ${redirectParams.length} superseded ids redirected); ` +
     `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}; ` +
     `clubs ${pagesIn('clubs').length}/${clubSlugs.length}`,
 );
