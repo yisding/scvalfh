@@ -7,6 +7,9 @@
  * target: the hidden twin never scrolls, so the CCS links land on the division):
  *   - a CCS game: its division's path, `#ccs-division-1` (app/playoffs/page.tsx; `#bracket-1` while a path's
  *     division is unproven), 'CCS bracket';
+ *   - a game of a championship MaxPreps publishes whole (volleyball's CCS divisions and the CIF State divisions our
+ *     teams play in): its own card, `#ccs-division-1-<matchup>` / `#cif-division-iii-<matchup>`
+ *     (components/playoffs/TournamentBrackets.tsx), 'CCS bracket' / 'CIF State bracket';
  *   - a San Diego Section game: its card, `#sds-<division>-<round>-<card>` (components/history/HistoryBracket.tsx
  *     BracketView `idPrefix`), 'Section bracket';
  *   - a league tournament's game (MCAL): its slot, `#mcal-qf-1` (components/playoffs/LeagueTournament.tsx), 'MCAL
@@ -26,13 +29,14 @@
  */
 
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
-import { getLeaguePairings, getLeagueTournament, getPlayoffs, getTournamentLeagueIds } from '../../lib/data';
+import { getGames, getLeaguePairings, getLeagueTournament, getPlayoffs, getToday, getTournamentLeagueIds } from '../../lib/data';
 import { CCS_LEAGUE_IDS, getLeague, getSection } from '../../lib/leagues';
 import { getSdsBrackets } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import type { ContestId, Game } from '../../lib/types';
 
 import { buildBrackets } from './bracket-model';
+import { bracketLinkLabel, tournamentBracketsView, uncoveredBracketGames } from './tournament-brackets-view';
 
 export interface BracketLink {
   /** '/playoffs#ccs-division-2' */
@@ -51,7 +55,8 @@ let index: Map<ContestId, BracketLink> | null = null;
 
 function buildIndex(): Map<ContestId, BracketLink> {
   const out = new Map<ContestId, BracketLink>();
-  for (const path of buildBrackets(getPlayoffs(), getCcsSeeds())) {
+  // The paths /playoffs draws: the CCS games no stored bracket holds (tournament-brackets-view.ts).
+  for (const path of buildBrackets({ ...getPlayoffs(), games: uncoveredBracketGames(getPlayoffs()) }, getCcsSeeds())) {
     for (const round of path.rounds) {
       for (const card of round.cards) {
         if (card.kind === 'game') {
@@ -63,6 +68,22 @@ function buildIndex(): Map<ContestId, BracketLink> {
             seeds: card.seeds,
           });
         }
+      }
+    }
+  }
+  // A championship MaxPreps publishes whole (volleyball): the game's own card in its division's bracket, which
+  // replaces the by-round path above. A CIF State game ('other': no bracket of the CCS's) is found only here.
+  for (const bracket of tournamentBracketsView(getPlayoffs().brackets, getGames(), getToday()).brackets) {
+    for (const round of bracket.rounds) {
+      for (const tie of round.ties) {
+        if (tie.contestId === null) continue;
+        out.set(tie.contestId, {
+          href: `/playoffs#${tie.id}`,
+          label: bracketLinkLabel(bracket.event),
+          division: bracket.name,
+          round: round.name,
+          ...(tie.gameSeeds ? { seeds: tie.gameSeeds } : {}),
+        });
       }
     }
   }
@@ -100,16 +121,18 @@ function outsideEvent(game: Pick<Game, 'home' | 'away'>) {
 }
 
 /**
- * The game's place on /playoffs, or null for a game that is no postseason game (or an 'other' tag, which names no
- * event the site draws).
+ * The game's place on /playoffs, or null for a game that is no postseason game (or an 'other' tag in no bracket the
+ * site draws).
  */
 export function getBracketLink(game: Pick<Game, 'contestId' | 'postseason' | 'dateKey' | 'home' | 'away'>): BracketLink | null {
   const tag = game.postseason;
-  if (!tag || tag.kind === 'other') return null;
+  if (!tag) return null;
   index ??= buildIndex();
   const known = index.get(game.contestId);
   if (known) return known;
   switch (tag.kind) {
+    case 'other':
+      return null;
     case 'ccs':
       return { href: '/playoffs#bracket', label: 'CCS bracket' };
     case 'section-playoffs':

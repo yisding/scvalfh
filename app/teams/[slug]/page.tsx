@@ -300,11 +300,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             kicker="JV roster"
             meta={jvRoster.rows.length > 0 ? plural(jvRoster.rows.length, 'player') : undefined}
           />
-          {/* Optional data, closed by default: the school's other team, as long as the varsity list. */}
-          <details className="sx-disclosure">
-            <summary>Show JV roster</summary>
-            <TeamJvRoster view={jvRoster} />
-          </details>
+          {/* Shown in full, as the varsity roster above is: no disclosure to open. */}
+          <TeamJvRoster view={jvRoster} />
         </section>
       ) : null}
     </div>

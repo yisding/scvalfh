@@ -188,14 +188,14 @@
           ]
         },
         {
-          "name": "Rachel (Weiqin) Wu",
-          "playerId": "pc94e9887d5",
+          "name": "Weiqin Wu",
+          "playerId": "p292bc07b76",
           "profiles": [
             {
               "platform": "sportsrecruits",
               "url": "https://my.sportsrecruits.com/athlete/rachel_wu3",
               "classOf": 2029,
-              "note": "The page names Monta Vista High School and class of 2029, which agrees with the roster. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree."
+              "note": "The page names Monta Vista High School and class of 2029, which agrees with the roster. School/teams read from the page's own profile JSON (served without login), in separate fetches that agree. MaxPreps' JV roster lists her as \"Rachel (Weiqin) Wu\"; the school's own JV list, which the team page shows, as \"Weiqin Wu\"."
             }
           ]
         },

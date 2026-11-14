@@ -2430,6 +2430,16 @@ the untested plan the paragraph carried since the preseason).
   null, "divisions": [] }`, so `getCcsSeeds()` is null and no seed is printed) and runs `pnpm test` before
   committing it: `tests/ccs-bracket-file.test.ts` refuses a wrong count, a repeated or non-CCS team, seeds
   9-16 or the divisions out of order, and the data cron's own Test step gates its commit on the suite.
+- **Whole brackets, where the site names no CCS division of its own** (volleyball; read 2026-11-14). A
+  published bracket block on a MaxPreps tournament page lists every matchup: each school's id, name and seed,
+  each side's result, the contest's id, an unplayed game's start, and the ids of the matchup that feeds each
+  side and of the one its winner goes to (the all-zero GUID is "none"); a bye is a matchup with one school.
+  `lib/sources/maxpreps-tournament.ts` reads all of it and the pipeline stores it as `playoffs.brackets`: the
+  CCS divisions from the tournament page above, and each CIF State division a registry team plays in from the
+  page its games' `bracket.url` names (a `maxpreps.com/tournament/….htm` URL, checked before it is requested;
+  source rows `cif bracket Division …`). The CIF State pages draw two regionals side by side; the tree is read
+  from the ids, never from a round's place on the page. A page that fails, or a block that does not parse whole,
+  keeps the previous snapshot's bracket.
 The poll opened on `CCS.pollFrom`, Oct 25, and runs on every cron run (§5.6). Fallback: CCS posts results as
 plain text on X/Twitter.
 

@@ -13,9 +13,11 @@ note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site r
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
-**Girls soccer (SCVAL and BVAL, 2026-27).** The same code builds a second site, NorCal High School Girls Soccer,
-when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8) and the BVAL's 26
-(Mt. Hamilton 8, Santa Teresa 8, West Valley 10), winter 2026-27, from the data under `data/soccer/`. See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
+**Girls soccer (SCVAL, BVAL, WCAL and WBAL, 2026-27).** The same code builds a second site, NorCal High School Girls Soccer,
+when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), the BVAL's 26
+(Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6 and the WBAL's 13 (Foothill 7, Skyline 6), 60 teams,
+winter 2026-27, from the data under `data/soccer/`. The WCAL and the WBAL were added on 2026-11-14 (see "WCAL and
+WBAL in the soccer build"). See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
 
 **Boys basketball (SCVAL and BVAL, 2026-27).** The same code builds a third site, NorCal High School Boys
 Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El Camino 8)
@@ -29,9 +31,11 @@ docs/MULTI-SPORT.md.
 Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
 and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
 under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
-player stats per set. It has field hockey's recruiting pages too (/clubs, /commits, /recruiting), from research of
-2026-11-13. See "Girls volleyball" and "Girls volleyball: recruiting" under "Local development" and
-docs/MULTI-SPORT.md.
+player stats per set. Its /playoffs draws one bracket per division, read whole from MaxPreps' tournament pages
+(`playoffs.brackets`): the CIF State divisions an SCVAL or BVAL team plays in (the NorCal regional, then the
+state final), then the CCS's Open Division and Divisions 1-3. It has field hockey's recruiting pages too (/clubs,
+/commits, /recruiting), from research of 2026-11-13. See "Girls volleyball" and "Girls volleyball: recruiting"
+under "Local development" and docs/MULTI-SPORT.md.
 
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
@@ -1323,7 +1327,7 @@ and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading
 ### Girls soccer
 
 One sport per build (docs/MULTI-SPORT.md). `SCVAL_SPORT` picks it: unset (or `field-hockey`) builds this
-site; `soccer` builds the SCVAL girls soccer site from `data/soccer/`. Every command takes it:
+site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL and WBAL) from `data/soccer/`. Every command takes it:
 
 ```bash
 SCVAL_SPORT=soccer pnpm fetch-data --no-sblive --no-vnn   # data/soccer/snapshot.json (si.com and VNN are field hockey's)
@@ -1462,6 +1466,17 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   box score per side, and /leaders has kills, aces, digs and assists per set, kills and solo blocks, beside
   the school boards (record, league record, average margin in sets, Elo). 23 of the 41 teams had entered
   stats on 2026-11-14. A roster's positions read Outside hitter, Middle blocker, Setter, Libero and so on.
+- **JV rosters**: MaxPreps' JV roster pages list players for 25 of the 41 schools, and
+  `data/volleyball/jv-rosters-school-sites.json` transcribes the 2026-27 JV lists 13 schools publish themselves
+  (173 players, read 2026-11-14 in a sweep of all 41 schools' sites): Gunn, Leland, Lynbrook, Monta Vista,
+  Santa Clara, Saratoga and Willow Glen (homecampus, `/lower/volleyball-girls-junior-varsity/roster/`), Los
+  Gatos and Palo Alto (5 Star), Fremont (its roster page's JV sheet), Cupertino (chs.fuhsd.org's JV tab),
+  Branham (a Google Doc its fall sports page links) and Yerba Buena (ybsn.org, the student sports site its
+  athletics page links). 27 team pages have a JV roster section: Cupertino and Willow Glen have no MaxPreps
+  list, and Leland's and Yerba Buena's MaxPreps lists name two players each. Left out: MacDonald's page (last
+  season's list: its Varsity column is MaxPreps' 2025-26 varsity roster) and Ann Sobrato's olinesports JV page
+  (no season named, and it lists players in their second varsity season). The other 26 schools' sites publish
+  no JV list (Milpitas' 5 Star and Overfelt's homecampus roster pages are empty for 2026-27).
 - **A forfeit entered 0-0 with the winner marked** is that side's win, in every sport (`sideOutcome` in
   `lib/format.ts`): Andrew Hill v KIPP San Jose Collegiate, Oct 16, was the first one any build held.
 - **No cifsshome.org cross-check**: a girls volleyball season is past the listing's 60-page cap in every
@@ -1552,7 +1567,7 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## The player registry
 
 `data/players.json` holds one record per person across all four sports and every season the repository
-has seen (4,992 on 2026-11-14, once girls volleyball was added): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
+has seen (4,992 on 2026-11-14, once girls volleyball was added, and 5,044 with its schools' own JV lists): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
 team, season, sport and level (varsity, JV or a freshman team), each with what every source said about it
 and where the sources disagree. It is internal. No page reads it, and a test fails if anything under
 `app/` or `components/` imports it. It does name about 770 players of 2025-26 who appear nowhere else in
@@ -1574,7 +1589,7 @@ files. It also writes each player's `playerId` into `data/clubs.json`, `data/com
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
 `review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
-kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
+kept apart); the 28 items left were joins and splits a rule already made, listed to be checked. Adding girls volleyball the same day brought the list to 65, and its schools' own JV lists to 76: its new items are not answered yet. The answers go in `data/player-identity.json` (each with its reason), never into
 `data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
 Deleting a `sameAs` entry undoes the join on the next build that still reads that season's files. After a
 rollover it does not (a carried-forward season is kept as it was): `docs/DATA-SOURCES.md` §1.1 (m) gives
@@ -1671,6 +1686,44 @@ finals between registry teams in 2025-26 (114 with SCVAL alone) and 335 girls so
   `bvalNotTranscribed`).
 - **Addresses** for the fourteen schools field hockey does not have are MaxPreps' school fields
   (`data/<sport>/schools.json`).
+
+### WCAL and WBAL in the soccer build
+
+The soccer build also covers the West Catholic Athletic League and the West Bay Athletic League (owner request,
+2026-11-14); the basketball build does not. The registry holds 60 teams.
+
+- **WCAL** (`lib/league-config/soccer/wcal.ts`, `lib/registry/soccer/wcal.ts`): six teams in one table, Archbishop
+  Mitty, Archbishop Riordan, Sacred Heart Cathedral, Saint Francis, St. Ignatius and Valley Christian, the columns
+  of the league's 2026-27 composite schedule (wcalsports.org/schedules/). Rules from WCAL By-Laws Article VII –
+  Soccer (updated 2024-2025): 3-1-0 points (§11), no overtime in league games (§4.H), head-to-head and then points
+  among the tied teams (§13.B.1-2; the later steps are not computed), two automatic CCS berths (§14.A). League play
+  is a double round robin, ten games a team, Jan 6 to Feb 17, 2027.
+- **WBAL** (`lib/league-config/soccer/wbal.ts`, `lib/registry/soccer/wbal.ts`): Foothill (Castilleja, Crystal
+  Springs Uplands, The King's Academy, Menlo, Notre Dame Belmont, Presentation, Sacred Heart Prep) and Skyline
+  (Eastside College Prep, Harker, Mercy Burlingame, Notre Dame San Jose, Pinewood, Priory), the varsity tables on
+  hs.wbalsports.org/socstg.html. Rules from WBAL By-Laws Article VI – Soccer: 3-1-0 points (§604.2), a level game
+  is a tie (§604.7), and four CCS berths (§607.2): Foothill's first three, and the winner of a one-game playoff
+  between Foothill's fourth-place team and the Skyline winner, at the Skyline winner. The league publishes no date
+  for that playoff, so the ladder marks the two places and no pairing is drawn. Foothill plays twelve league games
+  a team (Dec 18, then Jan 5 to Feb 15), Skyline ten (Jan 7 to Feb 12).
+- **League games are read by membership, not from a bundled schedule.** The WCAL says its schedules "are
+  constantly changing" and the PDF's address changes when it is replaced; the WBAL edits its schedule pages in
+  place. So neither is transcribed: a league game is a game between two members of one division inside its league
+  play (`classification: 'membership'`, as for the San Diego field hockey leagues), and each division's /about card
+  says so.
+  `official.scheduleUrl` on a mode-'none' division marks a league whose schedule exists but is not copied, so no
+  page says it "publishes no schedule" (`publishesNoSchedule` in `lib/leagues.ts`).
+- **Castilleja has no JV team** (the WBAL's JV Foothill table lists six schools), and MaxPreps answers its JV
+  roster address with another season's page, so `pnpm fetch-rosters --level jv` records an error for it and exits 1;
+  the refresh job's roster step is not fatal.
+- **MaxPreps** keeps Presentation's girls soccer team in no league, so its West Bay Foothill table has six rows
+  (`maxprepsMissing`); its WCAL and West Bay Skyline tables match the leagues'.
+- **Last season**: the WCAL's 2025-26 final standings and all-league teams are on wcalsports.org and not
+  transcribed yet; the WBAL's site keeps no standings archive (its 2025-26 all-league teams are published). Both
+  cards on /history/2025-26 are marked unavailable and link what the league publishes (`scripts/build-history.ts`
+  `wcalNotTranscribed`, `wbalNoStandings`).
+- **Addresses** for the nineteen schools are MaxPreps' school fields (`data/soccer/schools.json`), and the fourteen
+  schools no other registry holds have MaxPreps' mascot tiles in `public/mascots/`.
 
 ### Last season's standings in the soccer and basketball builds
 

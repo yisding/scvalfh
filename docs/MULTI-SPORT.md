@@ -254,6 +254,12 @@ against BVAL schools. Each sport has `lib/league-config/<sport>/bval.ts` and `li
 bundled by `scripts/build-bval-winter-fixtures.ts` (README, "BVAL in the winter builds"). The registries hold 41
 teams each. /history/2025-26 marks BVAL unavailable until its standings sheets are transcribed.
 
+**WCAL and WBAL, soccer only (2026-11-14).** The owner asked for the West Catholic and West Bay leagues on the
+soccer site. `lib/league-config/soccer/{wcal,wbal}.ts` and `lib/registry/soccer/{wcal,wbal}.ts` add 19 teams (60 in
+the soccer registry; basketball stays at 41, so `lib/teams.ts` counts each sport's own), the CCS block allocates the
+WCAL's two berths and the WBAL's four, and league games are read by membership, since neither league's schedule is
+a document that holds still (README, "WCAL and WBAL in the soccer build"). /history/2025-26 marks both unavailable.
+
 Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
 basketball build.
@@ -288,11 +294,26 @@ with its season already played, so the postseason code ran on real results the d
   read as published where the championship has an Open Division and Divisions 3-5 as well; a build with no
   named divisions stores no `divisionsPublished`. `lib/classify.ts` rule 1d keeps CIF State bracket games out
   of the CCS.
+- **The brackets, one per division (2026-11-14).** MaxPreps' tournament pages are server HTML that carries a
+  whole bracket (every matchup, seed, result, and the ids that join one game to the next), so a build that names
+  no CCS division of its own (`CCS.ccsDivisions` empty) reads them whole: `lib/sources/maxpreps-tournament.ts`
+  parses a page, step 09 (`lib/pipeline/steps/secondary.ts` `stepBrackets`) stores every CCS division from the
+  tournament page the bracket poll already reads, and one page per CIF State division a team of ours plays in
+  (the `bracket.url` of its games; resource `tournament-bracket`, corpus path `maxpreps/tournament/<bracket id>`),
+  as `playoffs.brackets`, each bracket carried from the previous snapshot when its page was not read. /playoffs
+  draws one bracket per division with a team of ours in it (`components/playoffs/tournament-brackets-view.ts`,
+  `TournamentBrackets.tsx`): the CIF State divisions first, each as the NorCal regional and the state final, then
+  the CCS's Open Division and Divisions 1-3; Divisions 4 and 5 hold no SCVAL or BVAL team and are named in one
+  line. A game's "Bracket" link lands on its own card, a CIF State game's included (`bracket-link.ts`). Basketball
+  and soccer take the same path once MaxPreps publishes their brackets.
 - **Stats.** The parser's column maps, the team tables, the box score and the player boards have a volleyball
   branch each, built on basketball's one-line-per-player model with rates per set played.
 - **Data.** Under `data/volleyball/`, from the usual fetchers, and a corpus of the run
   (`tests/fixtures/corpus/volleyball-2026-11-14/`, captured with `--no-cifss`) that rebuilds the snapshot
   offline. `data/players.json` was rebuilt with the fourth sport.
+- **JV rosters from the schools' sites** (added 2026-11-14). `data/volleyball/jv-rosters-school-sites.json`
+  holds the 2026-27 JV lists 13 of the 41 schools publish themselves, found in a sweep of every school's
+  site; README, "Girls volleyball", names each source and what was left out.
 - **Deploy.** `update-data-volleyball.yml` (Aug–Dec, twenty minutes after field hockey's refresh), ci's
   `volleyball` job, the deploy gate's matrix and `scripts/vercel-ignore-build.sh` know the fourth sport. The
   hosting project and its domain are the owner's to create.
@@ -315,7 +336,7 @@ volleyball like we did for field hockey". The volleyball build now has /clubs, /
 - /club-calendar stays field hockey's (`HAS_CLUB_CALENDAR`): `data/club-events.json` is field hockey research.
 
 Not done yet: a refit of the rating constants on finished seasons; the CCS Volleyball Bylaws' allocation;
-BVAL's 2025-26 standings; a bracket drawn per CCS division; "match" for "game" in the site's own copy; the
+BVAL's 2025-26 standings; "match" for "game" in the site's own copy; the
 smoke and axe passes on the volleyball build; a volleyball club calendar; the volleyball programs' own Instagram
 accounts.
 

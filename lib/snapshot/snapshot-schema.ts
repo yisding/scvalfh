@@ -435,6 +435,50 @@ export const CcsCalendarEventSchema = z.object({
   detail: z.string().nullable(),
 });
 
+const bracketSide = z.object({
+  teamId: guid.nullable(),
+  name: z.string().min(1).nullable(),
+  seed: z.number().int().min(1).nullable(),
+  score: z.number().int().min(0).nullable(),
+  from: guid.nullable(),
+});
+/** One published bracket of a MaxPreps tournament page (lib/types.ts TournamentBracket). */
+export const TournamentBracketSchema = z
+  .object({
+    event: z.enum(['ccs', 'cif']),
+    tournament: z.string(),
+    bracketId: guid,
+    name: z.string().min(1),
+    url: httpUrl,
+    matchups: z
+      .array(
+        z.object({
+          id: guid,
+          round: z.string().min(1),
+          roundDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD'),
+          next: guid.nullable(),
+          contestId: guid.nullable(),
+          dateLocal: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/, 'expected YYYY-MM-DDTHH:MM:SS').nullable(),
+          bye: z.boolean(),
+          winner: z.union([z.literal(0), z.literal(1)]).nullable(),
+          site: z.string().min(1).nullable(),
+          sides: z.tuple([bracketSide, bracketSide]),
+        }),
+      )
+      .min(1),
+  })
+  .superRefine((b, ctx) => {
+    // The tree is whole: every link names a matchup of this bracket, and exactly one game is the last.
+    const ids = new Set(b.matchups.map((m) => m.id));
+    if (ids.size !== b.matchups.length) ctx.addIssue({ code: 'custom', message: 'a matchup id repeats' });
+    if (b.matchups.filter((m) => m.next === null).length !== 1) ctx.addIssue({ code: 'custom', message: 'expected exactly one last matchup' });
+    b.matchups.forEach((m, i) => {
+      for (const link of [m.next, m.sides[0].from, m.sides[1].from]) {
+        if (link !== null && !ids.has(link)) ctx.addIssue({ code: 'custom', path: ['matchups', i], message: `links to ${link}, which is not in the bracket` });
+      }
+    });
+  });
+
 export const PlayoffsSchema = z.object({
   keyDates: z.object({
     entriesDue: z.string(),
@@ -471,6 +515,8 @@ export const PlayoffsSchema = z.object({
   // Per CCS division, when the run read a recognised tournament page or carried one (lib/sources/ccs.ts readTournamentPage).
   divisionsPublished: z.object({ 'Division 1': z.boolean(), 'Division 2': z.boolean() }).optional(),
   bracketUrl: httpUrl.nullable(),
+  // The published brackets read whole from MaxPreps' tournament pages (lib/types.ts TournamentBracket).
+  brackets: z.array(TournamentBracketSchema).optional(),
   games: z.array(GameSchema),
 });
 
@@ -491,6 +537,7 @@ export const SourceStatusSchema = z.object({
       'sblive-team-games',
       'ccs-calendar',
       'ccs-bracket',
+      'tournament-bracket',
       'school-calendar',
       'cifss-scores',
       'sds-bracket-sheet',

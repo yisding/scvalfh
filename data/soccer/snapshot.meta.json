@@ -6,8 +6,8 @@
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "3a9fbb91366fd29c6e06fc6a8bf9e7d6bee7b9b93dfdd49870422d5856952477",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
+  "contentHash": "bdb9890ed65b69a11db4cc1aa3012cc64ba0520c6306af68a52efd3ffc0187f6",
   "counts": {
     "byLeague": {
       "bval": {
@@ -23,17 +23,31 @@
         "games": 153,
         "leagueGames": 84,
         "teams": 15
+      },
+      "wbal": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 66,
+        "leagueGames": 17,
+        "teams": 13
+      },
+      "wcal": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 47,
+        "leagueGames": 18,
+        "teams": 6
       }
     },
     "finals": 0,
-    "games": 327,
-    "leagueGames": 212,
+    "games": 404,
+    "leagueGames": 247,
     "mismatches": 0,
     "pending": 0,
-    "teams": 41
+    "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-13T20:58:01.825Z",
+  "fetchedAt": "2026-11-14T05:54:23.329Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -52,12 +66,30 @@
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "wcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "wbal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 88,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 52,
+    "maxpreps": 77,
     "official": 5,
     "sblive": 0
   },
@@ -370,6 +402,131 @@
     {
       "label": "BVAL · West Valley official schedule revision check",
       "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "wcal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "wcal reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "mitty schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "riordan schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-cathedral schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "saint-francis schedule",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "st-ignatius schedule",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "valley-christian schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "foothill league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "skyline league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "foothill reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "skyline reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "castilleja schedule",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "crystal-springs schedule",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "kings-academy schedule",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "menlo schedule",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "notre-dame-belmont schedule",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "presentation schedule",
+      "rowCount": 5,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-prep schedule",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "eastside schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "harker schedule",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "mercy-burlingame schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "notre-dame-san-jose schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "pinewood schedule",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "priory schedule",
+      "rowCount": 7,
       "status": "ok"
     },
     {

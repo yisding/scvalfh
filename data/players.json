@@ -36,15 +36,15 @@
   "builtBy": "scripts/build-players.ts",
   "counts": {
     "classOfConflicts": 60,
-    "multiSeason": 850,
+    "multiSeason": 870,
     "multiSport": 35,
-    "nameOnly": 487,
-    "observations": 9791,
-    "players": 4992,
-    "review": 65,
-    "stintConflicts": 64,
-    "stints": 6125,
-    "withCareer": 4505
+    "nameOnly": 534,
+    "observations": 10003,
+    "players": 5064,
+    "review": 77,
+    "stintConflicts": 68,
+    "stints": 6222,
+    "withCareer": 4530
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
@@ -337,6 +337,47 @@
       ]
     },
     {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p004b14749c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "andrealindsaytecson",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ],
+      "name": "Andrea Lindsay Tecson",
+      "names": [
+        "Andrea Lindsay Tecson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Andrea Lindsay Tecson",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Andrea Lindsay Tecson",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ]
+    },
+    {
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
@@ -507,6 +548,12 @@
               "jersey": "3",
               "name": "Danika Driz",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Danika Driz",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -1256,6 +1303,16 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "5",
+              "name": "Carina Greenfield",
+              "positions": [
+                "L/OH"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -1304,6 +1361,11 @@
                 "MH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Seljan Ibrahimli",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             },
             {
               "classOf": 2029,
@@ -1847,6 +1909,12 @@
                 "MH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Ailbhe Cleary",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             },
             {
               "classOf": 2029,
@@ -2903,6 +2971,12 @@
                 "RS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Emma Cassidy",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -5862,6 +5936,46 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p067d4ef1df",
+      "identifiers": [
+        {
+          "careerId": "e8up42hvfopn7",
+          "careerProfileId": "34c12aad-ecaf-4d3f-a8d6-daf858c8e17d",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Serena Zou",
+      "names": [
+        "Serena Zou"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Serena Zou",
+          "observations": [
+            {
+              "athleteId": "b6087e85-6652-46bc-a3d0-57c5f1c3981b",
+              "grade": 9,
+              "name": "Serena Zou",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -6205,6 +6319,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "stevenson"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p06fa451699",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "emmachen",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Emma Chen",
+      "names": [
+        "Emma Chen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Emma Chen",
+          "observations": [
+            {
+              "name": "Emma Chen",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
         }
       ]
     },
@@ -6651,6 +6805,45 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "silver-creek"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0774ce55d7",
+      "identifiers": [
+        {
+          "careerId": "27oh7sejn4sn7",
+          "careerProfileId": "21618902-71b1-4a4f-8c35-d322577f285f",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Sadie Arya",
+      "names": [
+        "Sadie Arya"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Sadie Arya",
+          "observations": [
+            {
+              "athleteId": "b7eaae25-1ff1-4995-9422-1a981c61f398",
+              "name": "Sadie Arya",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -7902,6 +8095,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0900639125",
+      "identifiers": [
+        {
+          "careerId": "c1vfgbu49essc",
+          "careerProfileId": "a0191d2a-0fe8-42fb-9055-6749398022c8",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Kathryn Faries",
+      "names": [
+        "Kathryn Faries"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "00",
+          "level": "varsity",
+          "name": "Kathryn Faries",
+          "observations": [
+            {
+              "athleteId": "9084d5ea-f257-450a-a36a-c4e59217ddae",
+              "jersey": "00",
+              "name": "Kathryn Faries",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -8561,6 +8794,27 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kaylee Ouyang",
+          "observations": [
+            {
+              "athleteId": "6780c7ef-4589-4c15-a841-30af18ea8042",
+              "grade": 11,
+              "name": "Kaylee Ouyang",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
         }
       ]
     },
@@ -9139,6 +9393,26 @@
             "DS/OH"
           ],
           "season": "25-26",
+          "sport": "volleyball",
+          "team": "lynbrook"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Melody Zeng",
+          "observations": [
+            {
+              "name": "Melody Zeng",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "volleyball",
           "team": "lynbrook"
         }
@@ -12326,6 +12600,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Kaylan Shab",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -12529,6 +12808,45 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "leigh"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p0d84be00af",
+      "identifiers": [
+        {
+          "careerId": "s7rb88it2mrqa",
+          "careerProfileId": "f0d8fe02-a173-4dd0-a598-491d4a4c5fe2",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Vanessa Flores",
+      "names": [
+        "Vanessa Flores"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Vanessa Flores",
+          "observations": [
+            {
+              "athleteId": "e7dd4ee4-5b27-417e-be64-46e748f8b265",
+              "name": "Vanessa Flores",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "silver-creek"
         }
       ]
     },
@@ -13114,6 +13432,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Caitlin Kuntay",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -13252,6 +13575,16 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "4",
+              "name": "Emmylou Filo",
+              "positions": [
+                "OH/MB"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -13573,6 +13906,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Phoenix Gao",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -16356,6 +16694,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Claire Namvar",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -18920,6 +19263,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p137d009f0a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "nethraiyer",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ],
+      "name": "Nethra Iyer",
+      "names": [
+        "Nethra Iyer"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Nethra Iyer",
+          "observations": [
+            {
+              "name": "Nethra Iyer",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -18954,6 +19337,16 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "7",
+              "name": "Maia Ratchev",
+              "positions": [
+                "L"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -19654,6 +20047,45 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "bonita"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p13e00c0cc5",
+      "identifiers": [
+        {
+          "careerId": "mqru6hl8t3il5",
+          "careerProfileId": "c73edd10-b429-44af-a90d-3dac5abeccb5",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Addison Obrien",
+      "names": [
+        "Addison Obrien"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Addison Obrien",
+          "observations": [
+            {
+              "athleteId": "f9e1d3ca-a120-484c-a726-2902845f498b",
+              "name": "Addison Obrien",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -23887,6 +24319,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Chloe Ahn",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -28060,6 +28497,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Aishah Khan",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "name": "Aishah Khan",
@@ -28615,6 +29057,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Evelyn Wang",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -29159,6 +29606,16 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "15",
+              "name": "Amelia Lyon",
+              "positions": [
+                "OH"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -30419,6 +30876,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Mia Ooi",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -32179,6 +32641,26 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "lynbrook"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Yufei Wu",
+          "observations": [
+            {
+              "name": "Yufei Wu",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "lynbrook"
         }
       ]
     },
@@ -32747,6 +33229,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Avnika Choudhury",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "name": "Avnika Choudhury",
@@ -32799,6 +33286,12 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Paulina Kise",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -33233,6 +33726,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "del-norte"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p20b63c5abf",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "choleho",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Chole Ho",
+      "names": [
+        "Chole Ho"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Chole Ho",
+          "observations": [
+            {
+              "name": "Chole Ho",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -34751,7 +35284,15 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "1",
+              "other": "11",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
           "grade": 11,
           "height": "5'5\"",
           "jersey": "1",
@@ -34765,6 +35306,13 @@
               "jersey": "1",
               "name": "Sofia Kassai",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 11,
+              "jersey": "11",
+              "name": "Sofia Kassai",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -35742,7 +36290,7 @@
       "identifiers": [
         {
           "careerId": "egm9l84ngqk00",
-          "careerProfileId": null,
+          "careerProfileId": "82ef1a49-ac56-43eb-bf69-3167d1356b41",
           "kind": "maxpreps-career"
         }
       ],
@@ -35769,6 +36317,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "7",
+          "level": "varsity",
+          "name": "Madison Harrington",
+          "observations": [
+            {
+              "athleteId": "c9095245-9a51-4a3e-abb2-01f25a238eb7",
+              "jersey": "7",
+              "name": "Madison Harrington",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -36102,6 +36671,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Olivia Wang",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -36730,6 +37304,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Savannah Rich",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -39255,6 +39834,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Samantha Weber",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -40014,6 +40598,27 @@
             "RS",
             "MH"
           ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Charlotte Bethea",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Charlotte Bethea",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
           "season": "26-27",
           "sport": "volleyball",
           "team": "cupertino"
@@ -42461,6 +43066,53 @@
       ]
     },
     {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p292bc07b76",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "weiqinwu",
+          "sport": "volleyball",
+          "team": "monta-vista"
+        }
+      ],
+      "name": "Weiqin Wu",
+      "names": [
+        "Weiqin Wu"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Weiqin Wu",
+          "observations": [
+            {
+              "name": "Weiqin Wu",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
+              "classOf": 2029,
+              "kind": "sportsrecruits",
+              "name": "Weiqin Wu",
+              "src": "profile",
+              "url": "https://my.sportsrecruits.com/athlete/rachel_wu3"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "monta-vista"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -44597,6 +45249,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Ella Lyon",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -46554,6 +47211,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p2cb7741db3",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sadiechu",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Sadie Chu",
+      "names": [
+        "Sadie Chu"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Sadie Chu",
+          "observations": [
+            {
+              "name": "Sadie Chu",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -46703,6 +47400,12 @@
               "jersey": "17",
               "name": "Chloe Cihak",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Chloe Cihak",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -47166,6 +47869,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Kaylee Hernandez",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -48574,6 +49282,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Ayana Koshalieva",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -48915,6 +49629,12 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Kayleigh Fong",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -48968,6 +49688,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "clairemont"
+        }
+      ]
+    },
+    {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p2f24aeae9e",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "yizesun",
+          "sport": "volleyball",
+          "team": "los-gatos"
+        }
+      ],
+      "name": "YiZe Sun",
+      "names": [
+        "YiZe Sun"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "YiZe Sun",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "YiZe Sun",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "los-gatos"
         }
       ]
     },
@@ -52462,6 +53223,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Shreya Atmuri",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -52945,6 +53711,48 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3396ce7afc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "moiraysabellemiranda",
+          "sport": "volleyball",
+          "team": "fremont"
+        }
+      ],
+      "name": "Moira Ysabelle Miranda",
+      "names": [
+        "Moira Ysabelle Miranda"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": "8",
+          "level": "jv",
+          "name": "Moira Ysabelle Miranda",
+          "observations": [
+            {
+              "grade": 9,
+              "jersey": "8",
+              "name": "Moira Ysabelle Miranda",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "fremont"
+        }
+      ]
+    },
+    {
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
@@ -53111,6 +53919,46 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "macdonald"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p33c5d6a6bf",
+      "identifiers": [
+        {
+          "careerId": "o9bmddauoi2vf",
+          "careerProfileId": "b809e1e5-25ad-4da9-90c6-456f8aeed1fa",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Adelyn Reierson",
+      "names": [
+        "Adelyn Reierson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "16",
+          "level": "varsity",
+          "name": "Adelyn Reierson",
+          "observations": [
+            {
+              "athleteId": "2e5a40a6-105f-4436-855c-90f0bc5bf30a",
+              "jersey": "16",
+              "name": "Adelyn Reierson",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -53879,6 +54727,45 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "silver-creek"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p34a30921e8",
+      "identifiers": [
+        {
+          "careerId": "3ekjucq5us5dd",
+          "careerProfileId": "e7ba9258-1495-4433-bf37-2610b95463fc",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Paige Feichtmeir",
+      "names": [
+        "Paige Feichtmeir"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Paige Feichtmeir",
+          "observations": [
+            {
+              "athleteId": "a07faed1-d2e1-4774-8637-4cb040ce9a51",
+              "name": "Paige Feichtmeir",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -55424,6 +56311,13 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "7",
+              "name": "Jazzmine Washington",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -57849,6 +58743,13 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "2",
+              "name": "Zhorya Washington",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -58221,6 +59122,12 @@
                 "RS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Luna Zajic",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             },
             {
               "classOf": 2029,
@@ -60433,6 +61340,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "la-jolla"
+        }
+      ]
+    },
+    {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3a3690c5c6",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "nataliamarchandfontanez",
+          "sport": "volleyball",
+          "team": "branham"
+        }
+      ],
+      "name": "Natalia Marchand-Fontanez",
+      "names": [
+        "Natalia Marchand-Fontanez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Natalia Marchand-Fontanez",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Natalia Marchand-Fontanez",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "branham"
         }
       ]
     },
@@ -63025,6 +63973,47 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "san-dieguito-academy"
+        }
+      ]
+    },
+    {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p3c443c17ef",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ayoniroy",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Ayoni Roy",
+      "names": [
+        "Ayoni Roy"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ayoni Roy",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Ayoni Roy",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
         }
       ]
     },
@@ -66478,6 +67467,13 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "9",
+              "name": "Emily Huang",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -66798,6 +67794,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Christina Wu",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -67574,6 +68575,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Serena Au",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2029,
               "kind": "ncsa",
               "name": "Serena Au",
@@ -67692,6 +68698,48 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "macdonald"
+        }
+      ]
+    },
+    {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p408bf1c359",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "andreaalvendina",
+          "sport": "volleyball",
+          "team": "fremont"
+        }
+      ],
+      "name": "Andrea Alvendina",
+      "names": [
+        "Andrea Alvendina"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": "10",
+          "level": "jv",
+          "name": "Andrea Alvendina",
+          "observations": [
+            {
+              "grade": 10,
+              "jersey": "10",
+              "name": "Andrea Alvendina",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "fremont"
         }
       ]
     },
@@ -70027,6 +71075,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Elizabeth Qiu",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -72780,6 +73833,46 @@
       ]
     },
     {
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p44ebc309a0",
+      "identifiers": [
+        {
+          "careerId": "3kv99qs87uho8",
+          "careerProfileId": "ad1972f7-57ba-4d54-b46f-b15277508cd6",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Hailey Johnson",
+      "names": [
+        "Hailey Johnson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Hailey Johnson",
+          "observations": [
+            {
+              "athleteId": "5e781bb0-69a7-4b24-8dff-aa9c140c1dd8",
+              "grade": 12,
+              "name": "Hailey Johnson",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -74470,6 +75563,11 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Jocelyn Kao",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -75810,6 +76908,16 @@
                 "RS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "2",
+              "name": "Eve Dixon",
+              "positions": [
+                "OH"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -82423,6 +83531,11 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Filoli Montes",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -82815,6 +83928,13 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "3",
+              "name": "Mahati Canakoti",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -85352,6 +86472,12 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Chancey Cappello",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -86595,6 +87721,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p5040c0ca24",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "oliviali",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Olivia Li",
+      "names": [
+        "Olivia Li"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Olivia Li",
+          "observations": [
+            {
+              "name": "Olivia Li",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -87202,6 +88368,16 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "10",
+              "name": "Sophie Smith",
+              "positions": [
+                "OH/MB"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -87368,33 +88544,69 @@
       ]
     },
     {
-      "classOf": null,
+      "classOf": 2027,
       "classOfConflicts": [],
-      "formerIds": [],
+      "formerIds": [
+        "p9a515136cb"
+      ],
       "id": "p50eceef83d",
       "identifiers": [
         {
           "careerId": "209jebd86u7sc",
           "careerProfileId": "6031409e-69db-4139-8358-cfc4af3a4b1e",
           "kind": "maxpreps-career"
+        },
+        {
+          "careerId": "filkgnu20uih1",
+          "careerProfileId": "125c2cb3-44fc-4387-8422-1b1cacad9976",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Nevaeh Corona",
       "names": [
-        "Nevaeh Corona"
+        "Nevaeh Corona",
+        "Naveah Corona"
       ],
       "stints": [
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 11,
           "height": null,
-          "jersey": null,
+          "jersey": "10",
+          "level": "varsity",
+          "name": "Naveah Corona",
+          "observations": [
+            {
+              "grade": 11,
+              "jersey": "10",
+              "name": "Naveah Corona",
+              "src": "maxpreps-stats"
+            }
+          ],
+          "positions": [],
+          "season": "25-26",
+          "sport": "soccer",
+          "team": "overfelt"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": "10",
           "level": "varsity",
           "name": "Nevaeh Corona",
           "observations": [
             {
               "athleteId": "9766731b-056c-41c2-9d7f-4cc34b9e2935",
+              "name": "Nevaeh Corona",
+              "src": "maxpreps-roster"
+            },
+            {
+              "athleteId": "eabfda93-a63c-4f20-895b-1f650e425629",
+              "grade": 12,
+              "jersey": "10",
               "name": "Nevaeh Corona",
               "src": "maxpreps-roster"
             }
@@ -88400,6 +89612,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Camila Cuevas-Carrillo",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -89009,6 +90227,13 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "11",
+              "name": "Evangelina John",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -89105,6 +90330,12 @@
               "jersey": "8",
               "name": "Rhianna Jabbal",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Rhianna Jabbal",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -90087,7 +91318,15 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "5",
+              "other": "12",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
+            }
+          ],
           "grade": 9,
           "height": null,
           "jersey": "5",
@@ -90103,6 +91342,13 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "12",
+              "name": "Saanvi Venkumahanti",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -90510,6 +91756,47 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "fremont"
+        }
+      ]
+    },
+    {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p53fb70c797",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "raimkim",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Raim Kim",
+      "names": [
+        "Raim Kim"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Raim Kim",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Raim Kim",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
         }
       ]
     },
@@ -91370,6 +92657,11 @@
                 "RS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Chloe Gal",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -91568,6 +92860,12 @@
               "jersey": "12",
               "name": "Annabelle Wang",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Annabelle Wang",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -92707,6 +94005,46 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "leigh"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p5639bc2653",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "milaatala",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Mila Atala",
+      "names": [
+        "Mila Atala"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Mila Atala",
+          "observations": [
+            {
+              "name": "Mila Atala",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
         }
       ]
     },
@@ -95477,6 +96815,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p58d57e023c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "annavillatoro",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Anna Villatoro",
+      "names": [
+        "Anna Villatoro"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Anna Villatoro",
+          "observations": [
+            {
+              "name": "Anna Villatoro",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -96090,10 +97468,9 @@
       "id": "p59927b371b",
       "identifiers": [
         {
-          "kind": "name",
-          "name": "shiralevy",
-          "sport": "soccer",
-          "team": "homestead"
+          "careerId": "una56ebr00r77",
+          "careerProfileId": "62615e2e-57a8-4267-8271-c640b0f04a5f",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Shira Levy",
@@ -96124,6 +97501,27 @@
             "D"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Shira Levy",
+          "observations": [
+            {
+              "athleteId": "91e7ba41-31ca-4c7c-91fe-0daac95227e7",
+              "grade": 10,
+              "name": "Shira Levy",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -96360,6 +97758,27 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "cupertino"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Yubeen Kwon",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Yubeen Kwon",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
         }
       ]
     },
@@ -96439,6 +97858,12 @@
                 "RS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Beatrix Carter",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -98060,6 +99485,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Sophia Da Pont",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -102423,6 +103853,16 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "3",
+              "name": "Mila Kalember",
+              "positions": [
+                "L"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -103042,6 +104482,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Lily Ahn",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -104245,6 +105690,12 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Grace Loo",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -105251,6 +106702,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Katherine Vu",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -112119,6 +113575,16 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "1",
+              "name": "Kiara Fossati-Moiane",
+              "positions": [
+                "S"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -113127,6 +114593,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Audrie Suen",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2030,
               "kind": "hudl",
               "name": "Audrie Suen",
@@ -113242,6 +114713,46 @@
           "season": "26-27",
           "sport": "basketball",
           "team": "macdonald"
+        }
+      ]
+    },
+    {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p689dd86275",
+      "identifiers": [
+        {
+          "careerId": "bvs5ekc1ncddd",
+          "careerProfileId": "03466462-b991-4978-91fe-eadc9ecddcda",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Amelia Hong",
+      "names": [
+        "Amelia Hong"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Amelia Hong",
+          "observations": [
+            {
+              "athleteId": "98a5e7f0-8f9e-46b0-9199-3fa106935c0a",
+              "grade": 9,
+              "name": "Amelia Hong",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
         }
       ]
     },
@@ -115543,6 +117054,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6a8efc1c50",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "emmacherepova",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Emma Cherepova",
+      "names": [
+        "Emma Cherepova"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Emma Cherepova",
+          "observations": [
+            {
+              "name": "Emma Cherepova",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ]
+    },
+    {
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -115747,6 +117298,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "saint-francis"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6ae500eb33",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "angeliecarillosalcido",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Angelie Carillo Salcido",
+      "names": [
+        "Angelie Carillo Salcido"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Angelie Carillo Salcido",
+          "observations": [
+            {
+              "name": "Angelie Carillo Salcido",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -116285,10 +117876,9 @@
       "id": "p6b7e33b947",
       "identifiers": [
         {
-          "kind": "name",
-          "name": "pennymacaskill",
-          "sport": "soccer",
-          "team": "homestead"
+          "careerId": "nuvff1p6042i2",
+          "careerProfileId": "f61c9366-bb37-4fd7-bc2b-3a75a5033d57",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Penny MacAskill",
@@ -116319,6 +117909,27 @@
             "F"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Penny MacAskill",
+          "observations": [
+            {
+              "athleteId": "b06373d0-6b2d-4b29-8b2f-ccd651d2a63e",
+              "grade": 10,
+              "name": "Penny MacAskill",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -117991,6 +119602,45 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6d06a1e662",
+      "identifiers": [
+        {
+          "careerId": "2srm0vip4adaa",
+          "careerProfileId": "68c39f9a-18dc-4d62-8516-6184e70b75c4",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Claire Barragan",
+      "names": [
+        "Claire Barragan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Claire Barragan",
+          "observations": [
+            {
+              "athleteId": "0521a864-5798-47a4-9bf4-366a19882c2c",
+              "name": "Claire Barragan",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
+        }
+      ]
+    },
+    {
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -118531,6 +120181,46 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "p6d648dcaae",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "emmareid",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Emma Reid",
+      "names": [
+        "Emma Reid"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Emma Reid",
+          "observations": [
+            {
+              "name": "Emma Reid",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "p6d6793ab14",
       "identifiers": [
         {
@@ -119001,6 +120691,46 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6de0cdb595",
+      "identifiers": [
+        {
+          "careerId": "momnnku6cslp9",
+          "careerProfileId": "f4bda642-366f-4b63-8d48-29d648849c22",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Emily Regidor",
+      "names": [
+        "Emily Regidor"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Emily Regidor",
+          "observations": [
+            {
+              "athleteId": "07fe52e2-12a2-400e-88db-75d56cbb4cf6",
+              "grade": 9,
+              "name": "Emily Regidor",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -119127,6 +120857,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Angelica Builes",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -120045,6 +121781,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Olivia Ogaz",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -120244,6 +121986,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "san-marcos"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p6f41a92d45",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "oliviadepaz",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Olivia De Paz",
+      "names": [
+        "Olivia De Paz"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Olivia De Paz",
+          "observations": [
+            {
+              "name": "Olivia De Paz",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -121602,7 +123384,15 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "positions",
+              "kept": "DS",
+              "other": "L",
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
+            }
+          ],
           "grade": 10,
           "height": null,
           "jersey": "13",
@@ -121618,6 +123408,16 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "13",
+              "name": "Dalia Bendavid",
+              "positions": [
+                "L"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -122322,6 +124122,46 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "gunderson"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p72317c07bc",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jaylenenguyen",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Jaylene Nguyen",
+      "names": [
+        "Jaylene Nguyen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Jaylene Nguyen",
+          "observations": [
+            {
+              "name": "Jaylene Nguyen",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -124275,6 +126115,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "davis"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p73b79047fe",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ivytran",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Ivy Tran",
+      "names": [
+        "Ivy Tran"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ivy Tran",
+          "observations": [
+            {
+              "name": "Ivy Tran",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -127312,7 +129192,7 @@
       "identifiers": [
         {
           "careerId": "82t9auv6f6icc",
-          "careerProfileId": null,
+          "careerProfileId": "a6927676-64b5-4913-a9cb-99e17b155ec1",
           "kind": "maxpreps-career"
         }
       ],
@@ -127339,6 +129219,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "12",
+          "level": "varsity",
+          "name": "Caroline Leitch",
+          "observations": [
+            {
+              "athleteId": "80f0eab7-61b8-41f5-ae30-30619059e7ae",
+              "jersey": "12",
+              "name": "Caroline Leitch",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -127453,6 +129354,12 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Bella Marie Ford",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -127939,7 +129846,7 @@
       "identifiers": [
         {
           "careerId": "cartc4sc331o8",
-          "careerProfileId": null,
+          "careerProfileId": "91f735bb-04fd-41d1-b2dc-b280f3d8346b",
           "kind": "maxpreps-career"
         }
       ],
@@ -127966,6 +129873,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Puran Shahrivar",
+          "observations": [
+            {
+              "athleteId": "7662eb55-fa4c-4a38-a091-4e887f12d8b2",
+              "grade": 10,
+              "name": "Puran Shahrivar",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -128180,6 +130108,13 @@
               "jersey": "15",
               "name": "Vera Lau",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "15",
+              "name": "Vera Lau",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -129549,6 +131484,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Janielle Fan",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -131159,6 +133099,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7aee9a6ea1",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "caoilinnkavanagh",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Caoilinn Kavanagh",
+      "names": [
+        "Caoilinn Kavanagh"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Caoilinn Kavanagh",
+          "observations": [
+            {
+              "name": "Caoilinn Kavanagh",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -131933,6 +133913,45 @@
           "season": "25-26",
           "sport": "basketball",
           "team": "live-oak"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7b6a4f99d7",
+      "identifiers": [
+        {
+          "careerId": "9qp7pdt7utnee",
+          "careerProfileId": "3a4d4bdf-b971-4117-84e4-47a95ed94f64",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Kinsley Ozawa",
+      "names": [
+        "Kinsley Ozawa"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kinsley Ozawa",
+          "observations": [
+            {
+              "athleteId": "05e269b6-26da-41b5-9a3d-62c38b268b33",
+              "name": "Kinsley Ozawa",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -133325,6 +135344,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "poway"
+        }
+      ]
+    },
+    {
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7d30fc5e91",
+      "identifiers": [
+        {
+          "careerId": "8uqodjl06k2ff",
+          "careerProfileId": "1c28b716-47e5-4573-95fc-ca7c687b3e8b",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Mia Arias",
+      "names": [
+        "Mia Arias"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Mia Arias",
+          "observations": [
+            {
+              "athleteId": "6e895b0a-674a-4ac4-aa32-c5e022d63555",
+              "grade": 11,
+              "name": "Mia Arias",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
         }
       ]
     },
@@ -134834,6 +136893,53 @@
     },
     {
       "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7f24f9db89",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "calliepopek",
+          "sport": "volleyball",
+          "team": "palo-alto"
+        }
+      ],
+      "name": "Callie Popek",
+      "names": [
+        "Callie Popek"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": "6",
+          "level": "jv",
+          "name": "Callie Popek",
+          "observations": [
+            {
+              "grade": 10,
+              "jersey": "6",
+              "name": "Callie Popek",
+              "positions": [
+                "S"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
+            }
+          ],
+          "positions": [
+            "S"
+          ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "palo-alto"
+        }
+      ]
+    },
+    {
+      "classOf": 2029,
       "classOfConflicts": [
         {
           "classOf": 2028,
@@ -135110,6 +137216,47 @@
       ]
     },
     {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p7f7b11dbda",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "hillaryargueta",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ],
+      "name": "Hillary Argueta",
+      "names": [
+        "Hillary Argueta"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Hillary Argueta",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Hillary Argueta",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -135341,6 +137488,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Claire Park",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -137002,6 +139154,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p8177d52631",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "dhrishtishah",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ],
+      "name": "Dhrishti Shah",
+      "names": [
+        "Dhrishti Shah"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Dhrishti Shah",
+          "observations": [
+            {
+              "name": "Dhrishti Shah",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ]
+    },
+    {
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -137488,6 +139680,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Jessica Li",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -139830,6 +142027,12 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Harper Stephenson",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -139970,6 +142173,12 @@
               "jersey": "18",
               "name": "McKenzie Dyer",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "McKenzie Dyer",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -141480,6 +143689,46 @@
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "p85d5ecdcdd",
+      "identifiers": [
+        {
+          "careerId": "dimciavp71c22",
+          "careerProfileId": "57108055-5138-4a9d-bcf9-9b73deb4e529",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Kate Merlin",
+      "names": [
+        "Kate Merlin"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kate Merlin",
+          "observations": [
+            {
+              "athleteId": "d812eb2e-6587-48e0-8291-e8c7969eafe7",
+              "grade": 11,
+              "name": "Kate Merlin",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "p85dfd8af71",
       "identifiers": [
         {
@@ -141755,7 +144004,7 @@
       "identifiers": [
         {
           "careerId": "q07qin66jevk4",
-          "careerProfileId": null,
+          "careerProfileId": "0f455a84-81ac-4f69-be28-9f95638b1226",
           "kind": "maxpreps-career"
         }
       ],
@@ -141782,6 +144031,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Emily Anton",
+          "observations": [
+            {
+              "athleteId": "a9b0df79-627b-4fc3-a559-271a6c13d20f",
+              "grade": 10,
+              "name": "Emily Anton",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -143762,6 +146032,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p87e9265e86",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "emilyguillier",
+          "sport": "volleyball",
+          "team": "monta-vista"
+        }
+      ],
+      "name": "Emily Guillier",
+      "names": [
+        "Emily Guillier"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Emily Guillier",
+          "observations": [
+            {
+              "name": "Emily Guillier",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "monta-vista"
+        }
+      ]
+    },
+    {
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
@@ -144060,6 +146370,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Ariana Lau",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -145831,6 +148146,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p89dbf3981b",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "elliecrew",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Ellie Crew",
+      "names": [
+        "Ellie Crew"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ellie Crew",
+          "observations": [
+            {
+              "name": "Ellie Crew",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -145865,6 +148220,12 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Sheena King",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -146340,6 +148701,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Kailyn Tsui",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -147446,7 +149812,7 @@
       "identifiers": [
         {
           "careerId": "r4t8psnupo600",
-          "careerProfileId": null,
+          "careerProfileId": "9c552104-8d78-4103-8e3a-0bcce2b5cea3",
           "kind": "maxpreps-career"
         }
       ],
@@ -147473,6 +149839,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Neve Keren",
+          "observations": [
+            {
+              "athleteId": "f246b051-4cb2-4d21-9a0b-b3bc010a966f",
+              "grade": 12,
+              "name": "Neve Keren",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -149515,14 +151902,16 @@
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 11,
           "height": null,
-          "jersey": null,
+          "jersey": "3",
           "level": "varsity",
           "name": "Violeta Murillo",
           "observations": [
             {
               "athleteId": "146dfcfe-457c-4f1c-8147-e5b40abbf041",
+              "grade": 11,
+              "jersey": "3",
               "name": "Violeta Murillo",
               "src": "maxpreps-roster"
             }
@@ -150624,6 +153013,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Tiffany Kwok",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             },
             {
               "classOf": 2029,
@@ -151789,6 +154183,15 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Elle Martin",
+              "positions": [
+                "MB"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -155815,7 +158218,7 @@
       "identifiers": [
         {
           "careerId": "ao7df2ja59g55",
-          "careerProfileId": null,
+          "careerProfileId": "19605e37-ec06-4a03-a970-93cee3883451",
           "kind": "maxpreps-career"
         }
       ],
@@ -155842,6 +158245,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "10",
+          "level": "varsity",
+          "name": "Isabella Cain",
+          "observations": [
+            {
+              "athleteId": "38d2ca33-511a-4281-b419-7f353844d357",
+              "jersey": "10",
+              "name": "Isabella Cain",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -155967,6 +158391,13 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "1",
+              "name": "Zoey Salud",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -157967,6 +160398,46 @@
       ]
     },
     {
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p958be042eb",
+      "identifiers": [
+        {
+          "careerId": "38t1ksethrho8",
+          "careerProfileId": "b5a457dd-cb3a-454e-b111-e99c6c9d1658",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Aubrey Phan",
+      "names": [
+        "Aubrey Phan"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Aubrey Phan",
+          "observations": [
+            {
+              "athleteId": "092ad3ea-a243-43b7-95d8-1b437eb72730",
+              "grade": 11,
+              "name": "Aubrey Phan",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -159138,7 +161609,7 @@
       "identifiers": [
         {
           "careerId": "ktqcbf9hcm4i2",
-          "careerProfileId": null,
+          "careerProfileId": "b8154e70-4a07-4b06-8cc7-dc853e1acf5e",
           "kind": "maxpreps-career"
         }
       ],
@@ -159165,6 +161636,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Kaelyn Walukiewicz",
+          "observations": [
+            {
+              "athleteId": "69688c5f-2390-4449-848b-2e4a2fee93e2",
+              "grade": 12,
+              "name": "Kaelyn Walukiewicz",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -159362,6 +161854,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Emmy Harimoto",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2028,
               "kind": "hudl",
               "name": "Emmy Harimoto",
@@ -159526,6 +162023,46 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "gunderson"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p9791581f22",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "reesemaddox",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Reese Maddox",
+      "names": [
+        "Reese Maddox"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Reese Maddox",
+          "observations": [
+            {
+              "name": "Reese Maddox",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
         }
       ]
     },
@@ -162118,68 +164655,6 @@
       ]
     },
     {
-      "classOf": 2027,
-      "classOfConflicts": [],
-      "formerIds": [],
-      "id": "p9a515136cb",
-      "identifiers": [
-        {
-          "careerId": "filkgnu20uih1",
-          "careerProfileId": "125c2cb3-44fc-4387-8422-1b1cacad9976",
-          "kind": "maxpreps-career"
-        }
-      ],
-      "name": "Naveah Corona",
-      "names": [
-        "Naveah Corona"
-      ],
-      "stints": [
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 11,
-          "height": null,
-          "jersey": "10",
-          "level": "varsity",
-          "name": "Naveah Corona",
-          "observations": [
-            {
-              "grade": 11,
-              "jersey": "10",
-              "name": "Naveah Corona",
-              "src": "maxpreps-stats"
-            }
-          ],
-          "positions": [],
-          "season": "25-26",
-          "sport": "soccer",
-          "team": "overfelt"
-        },
-        {
-          "captain": false,
-          "conflicts": [],
-          "grade": 12,
-          "height": null,
-          "jersey": "10",
-          "level": "varsity",
-          "name": "Naveah Corona",
-          "observations": [
-            {
-              "athleteId": "eabfda93-a63c-4f20-895b-1f650e425629",
-              "grade": 12,
-              "jersey": "10",
-              "name": "Naveah Corona",
-              "src": "maxpreps-roster"
-            }
-          ],
-          "positions": [],
-          "season": "26-27",
-          "sport": "soccer",
-          "team": "overfelt"
-        }
-      ]
-    },
-    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -164617,6 +167092,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Hannah Zhu",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -169767,6 +172247,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa273c7cd89",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "hanguyenle",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ],
+      "name": "Ha Nguyen Le",
+      "names": [
+        "Ha Nguyen Le"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ha Nguyen Le",
+          "observations": [
+            {
+              "name": "Ha Nguyen Le",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -170701,6 +173221,46 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "macdonald"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa36ff51bb3",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "madinanoorzay",
+          "sport": "volleyball",
+          "team": "saratoga"
+        }
+      ],
+      "name": "Madina Noorzay",
+      "names": [
+        "Madina Noorzay"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Madina Noorzay",
+          "observations": [
+            {
+              "name": "Madina Noorzay",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "saratoga"
         }
       ]
     },
@@ -173531,6 +176091,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa6197f0440",
+      "identifiers": [
+        {
+          "careerId": "kvjdibc3jqftd",
+          "careerProfileId": "c8255091-4a27-46e8-9175-b4473e4db480",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Kinsey Uhl",
+      "names": [
+        "Kinsey Uhl"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "37",
+          "level": "varsity",
+          "name": "Kinsey Uhl",
+          "observations": [
+            {
+              "athleteId": "79e5f56c-0b0a-4c3a-a8d7-34d1fad3fcf3",
+              "jersey": "37",
+              "name": "Kinsey Uhl",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -173988,6 +176588,46 @@
           "season": "25-26",
           "sport": "volleyball",
           "team": "branham"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa6a0c68abe",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "amayafujii",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Amaya Fujii",
+      "names": [
+        "Amaya Fujii"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Amaya Fujii",
+          "observations": [
+            {
+              "name": "Amaya Fujii",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
         }
       ]
     },
@@ -174991,6 +177631,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Jessica Shu",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -176483,6 +179128,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa931f6932c",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "sarahyang",
+          "sport": "volleyball",
+          "team": "lynbrook"
+        }
+      ],
+      "name": "Sarah Yang",
+      "names": [
+        "Sarah Yang"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Sarah Yang",
+          "observations": [
+            {
+              "name": "Sarah Yang",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "lynbrook"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -176804,6 +179489,47 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pa9564f58bb",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "bheahulog",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ],
+      "name": "Bhea Hulog",
+      "names": [
+        "Bhea Hulog"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Bhea Hulog",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Bhea Hulog",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ]
+    },
+    {
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
@@ -176884,6 +179610,27 @@
             "OH/DS"
           ],
           "season": "25-26",
+          "sport": "volleyball",
+          "team": "cupertino"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Mika Lamburn",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Mika Lamburn",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "volleyball",
           "team": "cupertino"
         }
@@ -179445,6 +182192,46 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "monta-vista"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pabb48a7489",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "oliviariepling",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Olivia Riepling",
+      "names": [
+        "Olivia Riepling"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Olivia Riepling",
+          "observations": [
+            {
+              "name": "Olivia Riepling",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
         }
       ]
     },
@@ -182132,6 +184919,12 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 11,
+              "name": "Vesper Bottu-Manzi",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -183154,6 +185947,45 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "sage-creek"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "paf86da9a32",
+      "identifiers": [
+        {
+          "careerId": "rp5bvc5us0h77",
+          "careerProfileId": "8b80c648-2f89-40d1-8787-f4ebdb39bd7b",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Rylann Duebelbeis",
+      "names": [
+        "Rylann Duebelbeis"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Rylann Duebelbeis",
+          "observations": [
+            {
+              "athleteId": "6d7459d5-53ea-4f2d-b258-b94c66042bd0",
+              "name": "Rylann Duebelbeis",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -184193,6 +187025,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Emilia Bauer",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -184293,6 +187130,27 @@
             "OH",
             "DS"
           ],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Noelle Lee",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Noelle Lee",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
           "season": "26-27",
           "sport": "volleyball",
           "team": "cupertino"
@@ -185441,6 +188299,13 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "13",
+              "name": "Grace Seymour",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -185810,6 +188675,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Ellie Yang",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -188216,6 +191087,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb443404949",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "annthai",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Ann Thai",
+      "names": [
+        "Ann Thai"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ann Thai",
+          "observations": [
+            {
+              "name": "Ann Thai",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ]
+    },
+    {
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -188646,6 +191557,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Tejasvi Varma",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             },
             {
               "classOf": 2029,
@@ -190943,6 +193859,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pb7b153ce62",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "genevievelam",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Genevieve Lam",
+      "names": [
+        "Genevieve Lam"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Genevieve Lam",
+          "observations": [
+            {
+              "name": "Genevieve Lam",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -191155,7 +194111,7 @@
           "team": "yerba-buena"
         },
         {
-          "captain": false,
+          "captain": true,
           "conflicts": [],
           "grade": null,
           "height": null,
@@ -191167,6 +194123,12 @@
               "athleteId": "1d51d001-4921-4eb6-906b-f4e4c6c85029",
               "name": "Allison Nguyen",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "captain": true,
+              "name": "Allison Nguyen",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
             }
           ],
           "positions": [],
@@ -192916,6 +195878,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Suzu Banno",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -194135,6 +197103,11 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Harshita Girdhar",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             },
             {
               "classOf": 2029,
@@ -199435,6 +202408,47 @@
       ]
     },
     {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pbffc27ca01",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "mariangelgonzalez",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ],
+      "name": "Mariangel Gonzalez",
+      "names": [
+        "Mariangel Gonzalez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Mariangel Gonzalez",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Mariangel Gonzalez",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -199989,6 +203003,12 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Louam Berlie",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -200479,6 +203499,13 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "14",
+              "name": "Sonya Sok",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -200555,6 +203582,46 @@
           "season": "26-27",
           "sport": "soccer",
           "team": "evergreen-valley"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc0b77fd04a",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "robinmaric",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Robin Maric",
+      "names": [
+        "Robin Maric"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Robin Maric",
+          "observations": [
+            {
+              "name": "Robin Maric",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
         }
       ]
     },
@@ -201149,6 +204216,46 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc185f9d7eb",
+      "identifiers": [
+        {
+          "careerId": "2jvjb98o3if00",
+          "careerProfileId": "bdfdee54-7c2c-44f8-a125-846e7b6f8487",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Elise Shafie",
+      "names": [
+        "Elise Shafie"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Elise Shafie",
+          "observations": [
+            {
+              "athleteId": "6484a831-38bd-4f91-84f3-815622109376",
+              "grade": 9,
+              "name": "Elise Shafie",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -201717,6 +204824,16 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "8",
+              "name": "Maia Wadhwani",
+              "positions": [
+                "OH"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -202259,7 +205376,7 @@
       "identifiers": [
         {
           "careerId": "3arapihll4fsc",
-          "careerProfileId": null,
+          "careerProfileId": "c2ca030f-aa96-4531-86c3-4349f73aa7dd",
           "kind": "maxpreps-career"
         }
       ],
@@ -202286,6 +205403,32 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "3",
+          "level": "varsity",
+          "name": "Mariana Nanez",
+          "observations": [
+            {
+              "athleteId": "a1658d3c-9d5b-469c-ad9f-357dd9fbcbe5",
+              "jersey": "3",
+              "name": "Mariana Nanez",
+              "positions": [
+                "D"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "D"
+          ],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -203565,6 +206708,48 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc3f1e4713d",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "magumipugel",
+          "sport": "volleyball",
+          "team": "fremont"
+        }
+      ],
+      "name": "Magumi Pugel",
+      "names": [
+        "Magumi Pugel"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": "5",
+          "level": "jv",
+          "name": "Magumi Pugel",
+          "observations": [
+            {
+              "grade": 9,
+              "jersey": "5",
+              "name": "Magumi Pugel",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "fremont"
+        }
+      ]
+    },
+    {
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
@@ -204078,7 +207263,7 @@
       "identifiers": [
         {
           "careerId": "p5rrrnu80dr44",
-          "careerProfileId": null,
+          "careerProfileId": "a5bd5438-5611-48dd-b626-5949b0f817aa",
           "kind": "maxpreps-career"
         }
       ],
@@ -204105,6 +207290,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "6",
+          "level": "varsity",
+          "name": "Elizabeth Leitch",
+          "observations": [
+            {
+              "athleteId": "d8131893-2603-4828-bbc3-a16a5a7df3bc",
+              "jersey": "6",
+              "name": "Elizabeth Leitch",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -204859,6 +208065,11 @@
               "src": "maxpreps-jv-roster"
             },
             {
+              "name": "Cindy Hu",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            },
+            {
               "classOf": 2029,
               "kind": "hudl",
               "name": "Cindy Hu",
@@ -205034,6 +208245,12 @@
               "jersey": "10",
               "name": "Ariana Maestre",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Ariana Maestre",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -207246,6 +210463,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Victoria Ong",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -208351,6 +211573,47 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pc8f19b4fb1",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "ranaerel",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Rana Erel",
+      "names": [
+        "Rana Erel"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Rana Erel",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Rana Erel",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -208797,13 +212060,6 @@
                 "OPP"
               ],
               "src": "maxpreps-jv-roster"
-            },
-            {
-              "classOf": 2029,
-              "kind": "sportsrecruits",
-              "name": "Rachel (Weiqin) Wu",
-              "src": "profile",
-              "url": "https://my.sportsrecruits.com/athlete/rachel_wu3"
             }
           ],
           "positions": [
@@ -208916,6 +212172,11 @@
                 "L"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Ayaka Sasaki",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -209335,6 +212596,47 @@
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pc9e63afce9",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "srivardhinipragadesh",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Srivardhini Pragadesh",
+      "names": [
+        "Srivardhini Pragadesh"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Srivardhini Pragadesh",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Srivardhini Pragadesh",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pc9e90e912a",
       "identifiers": [
         {
@@ -209718,6 +213020,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Anya Desai",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -212694,6 +216002,47 @@
       ]
     },
     {
+      "classOf": 2029,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcd26333424",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "avahwang",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Ava Hwang",
+      "names": [
+        "Ava Hwang"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Ava Hwang",
+          "observations": [
+            {
+              "grade": 10,
+              "name": "Ava Hwang",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -213098,6 +216447,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Mia Wang",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -213146,6 +216500,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Zeynep Akca",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             },
             {
               "classOf": 2029,
@@ -213213,6 +216573,46 @@
           "season": "25-26",
           "sport": "soccer",
           "team": "los-gatos"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pcdbae75667",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "blakepenhallegon",
+          "sport": "volleyball",
+          "team": "willow-glen"
+        }
+      ],
+      "name": "Blake Penhallegon",
+      "names": [
+        "Blake Penhallegon"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Blake Penhallegon",
+          "observations": [
+            {
+              "name": "Blake Penhallegon",
+              "src": "school-jv-roster",
+              "url": "https://www.willowglenathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "willow-glen"
         }
       ]
     },
@@ -215426,6 +218826,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Soklinda Chhuo",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -216798,6 +220203,11 @@
               "athleteId": "a9d10335-8234-46ca-ac5d-ac4498a0e14f",
               "name": "Melena Balanoj",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Melena Balanoj",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -218389,7 +221799,7 @@
       ]
     },
     {
-      "classOf": null,
+      "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
       "id": "pd297d04d80",
@@ -218408,7 +221818,7 @@
         {
           "captain": false,
           "conflicts": [],
-          "grade": null,
+          "grade": 9,
           "height": null,
           "jersey": null,
           "level": "jv",
@@ -218418,6 +221828,12 @@
               "athleteId": "d94ae9d1-c70e-4255-af93-99cb9cb1b82f",
               "name": "Sana Nezhad",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Sana Nezhad",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -218502,6 +221918,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Maya Weitz",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -218832,10 +222254,9 @@
       "id": "pd30e5a7751",
       "identifiers": [
         {
-          "kind": "name",
-          "name": "haeilkim",
-          "sport": "soccer",
-          "team": "homestead"
+          "careerId": "ek94ens1o7l99",
+          "careerProfileId": "4d7ab695-9f6b-4980-bd03-192ceb29bc3b",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Haeil Kim",
@@ -218866,6 +222287,27 @@
             "F"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Haeil Kim",
+          "observations": [
+            {
+              "athleteId": "3649b36b-ea60-4079-9d68-cfc659f6d5a7",
+              "grade": 11,
+              "name": "Haeil Kim",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -220554,6 +223996,11 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Yana Jeleva",
+              "src": "school-jv-roster",
+              "url": "https://www.matadorathletics.org/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -222062,7 +225509,7 @@
       "identifiers": [
         {
           "careerId": "1bgl6lhrlji88",
-          "careerProfileId": null,
+          "careerProfileId": "5b0a50b3-bb2a-471d-bd03-65e38c03ad3e",
           "kind": "maxpreps-career"
         }
       ],
@@ -222100,6 +225547,27 @@
             "M"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "16",
+          "level": "varsity",
+          "name": "Darcy Armstrong",
+          "observations": [
+            {
+              "athleteId": "d978358e-fb7b-46ac-ad5f-975ac1730439",
+              "jersey": "16",
+              "name": "Darcy Armstrong",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -222550,10 +226018,9 @@
       "id": "pd74dd479e4",
       "identifiers": [
         {
-          "kind": "name",
-          "name": "elisenyland",
-          "sport": "soccer",
-          "team": "los-gatos"
+          "careerId": "n8j001kuho577",
+          "careerProfileId": "312723c3-d1c2-4038-98c4-77f4b4d4f3b3",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Elise Nyland",
@@ -222584,6 +226051,27 @@
             "F"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "22",
+          "level": "varsity",
+          "name": "Elise Nyland",
+          "observations": [
+            {
+              "athleteId": "f9afbc2f-c732-4bb9-9166-b8ec2f5671d6",
+              "jersey": "22",
+              "name": "Elise Nyland",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -225708,6 +229196,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Disha Gande",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -227533,6 +231026,27 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "cupertino"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Dora Avar",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Dora Avar",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
         }
       ]
     },
@@ -227581,6 +231095,45 @@
           "season": "26-27",
           "sport": "volleyball",
           "team": "christopher"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pdbea85e2a1",
+      "identifiers": [
+        {
+          "careerId": "elu7q3j3ch355",
+          "careerProfileId": "504eef81-4c8a-4b45-964d-0d10d4813547",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Olivia Madsen",
+      "names": [
+        "Olivia Madsen"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Olivia Madsen",
+          "observations": [
+            {
+              "athleteId": "58f71d80-5af4-4353-94e5-25b88bd5cc73",
+              "name": "Olivia Madsen",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "los-gatos"
         }
       ]
     },
@@ -229445,6 +232998,47 @@
           "season": "25-26",
           "sport": "field-hockey",
           "team": "chico"
+        }
+      ]
+    },
+    {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pde77f7f4cf",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "aanyadhar",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Aanya Dhar",
+      "names": [
+        "Aanya Dhar"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Aanya Dhar",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Aanya Dhar",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
         }
       ]
     },
@@ -231585,6 +235179,47 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe0eb87ed72",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "zyannedayandayan",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Zyanne Dayandayan",
+      "names": [
+        "Zyanne Dayandayan"
+      ],
+      "stints": [
+        {
+          "captain": true,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Zyanne Dayandayan",
+          "observations": [
+            {
+              "captain": true,
+              "name": "Zyanne Dayandayan",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -232225,6 +235860,46 @@
       "classOf": 2030,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pe1dc9f8868",
+      "identifiers": [
+        {
+          "careerId": "udmrbggooogn7",
+          "careerProfileId": "510d4f08-de54-435f-953a-e73d345e109c",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Placidia Ong",
+      "names": [
+        "Placidia Ong"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Placidia Ong",
+          "observations": [
+            {
+              "athleteId": "2a47bdaa-2520-4d33-953d-1aa63f858a07",
+              "grade": 9,
+              "name": "Placidia Ong",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pe2076b538f",
       "identifiers": [
         {
@@ -232307,6 +235982,16 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "12",
+              "name": "Maia Fisch",
+              "positions": [
+                "OH/L"
+              ],
+              "src": "school-jv-roster",
+              "url": "https://www.palyathletics.com/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -233530,6 +237215,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Rojin Karamveysi",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -234771,6 +238461,13 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "4",
+              "name": "Raisya Sandra",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -235198,6 +238895,12 @@
                 "OH"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 11,
+              "name": "Sydney Sneller",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -235809,6 +239512,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe652793f34",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "dafnepulido",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Dafne Pulido",
+      "names": [
+        "Dafne Pulido"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Dafne Pulido",
+          "observations": [
+            {
+              "name": "Dafne Pulido",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ]
+    },
+    {
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -236287,6 +240030,46 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "scripps-ranch"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pe6e1bb6d01",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "vyletterodriguez",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Vylette Rodriguez",
+      "names": [
+        "Vylette Rodriguez"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Vylette Rodriguez",
+          "observations": [
+            {
+              "name": "Vylette Rodriguez",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
         }
       ]
     },
@@ -238752,10 +242535,9 @@
       "id": "pe9c5a0d5f3",
       "identifiers": [
         {
-          "kind": "name",
-          "name": "caliananelson",
-          "sport": "soccer",
-          "team": "los-gatos"
+          "careerId": "cdrcbee60kcrb",
+          "careerProfileId": "b7ec0002-52ba-4a0b-96f4-7339ebb76e5d",
+          "kind": "maxpreps-career"
         }
       ],
       "name": "Caliana Nelson",
@@ -238786,6 +242568,27 @@
             "F"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "32",
+          "level": "varsity",
+          "name": "Caliana Nelson",
+          "observations": [
+            {
+              "athleteId": "f5a9d961-207e-4483-8628-6d607989336f",
+              "jersey": "32",
+              "name": "Caliana Nelson",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "los-gatos"
         }
@@ -239639,6 +243442,51 @@
               "athleteId": "d150ddf5-7bdc-4664-a884-bd0b5140d553",
               "name": "Ninette Martinez",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Ninette Martinez",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pea9ff6c8f0",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "jessicabao",
+          "sport": "volleyball",
+          "team": "yerba-buena"
+        }
+      ],
+      "name": "Jessica Bao",
+      "names": [
+        "Jessica Bao"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Jessica Bao",
+          "observations": [
+            {
+              "name": "Jessica Bao",
+              "src": "school-jv-roster",
+              "url": "https://ybsn.org/girls-vb-roster-26-27"
             }
           ],
           "positions": [],
@@ -240211,6 +244059,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 11,
+              "name": "Amanda Stratman",
+              "src": "school-jv-roster",
+              "url": "https://docs.google.com/document/d/1MVL4LAGyXNC5p1jJwjED08y1C028p2OAMZFDpTcflek/edit"
             }
           ],
           "positions": [
@@ -240376,6 +244230,11 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Carrie Chung",
+              "src": "school-jv-roster",
+              "url": "https://www.gunnathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -240919,6 +244778,13 @@
                 "S"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "jersey": "15",
+              "name": "Nadia Navone",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -241519,6 +245385,47 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pec0f95f834",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "gabrielleleilanidellona",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ],
+      "name": "Gabrielle Leilani Dellona",
+      "names": [
+        "Gabrielle Leilani Dellona"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Gabrielle Leilani Dellona",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Gabrielle Leilani Dellona",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "santa-clara"
+        }
+      ]
+    },
+    {
       "classOf": 2028,
       "classOfConflicts": [],
       "formerIds": [],
@@ -241923,6 +245830,46 @@
       ]
     },
     {
+      "classOf": 2027,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pec86cf70c0",
+      "identifiers": [
+        {
+          "careerId": "4uftqjqmmg2g0",
+          "careerProfileId": "e86d41ab-1c18-4467-a3b8-fe35411e6baf",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Tvisha Bartwal",
+      "names": [
+        "Tvisha Bartwal"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Tvisha Bartwal",
+          "observations": [
+            {
+              "athleteId": "f23466f2-66d6-44f3-a77a-75031af43bde",
+              "grade": 12,
+              "name": "Tvisha Bartwal",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "soccer",
+          "team": "homestead"
+        }
+      ]
+    },
+    {
       "classOf": 2029,
       "classOfConflicts": [],
       "formerIds": [],
@@ -242097,7 +246044,7 @@
       "identifiers": [
         {
           "careerId": "f5qlvsmn8lv77",
-          "careerProfileId": null,
+          "careerProfileId": "5f284a73-9caa-4313-b388-a71b0e790c03",
           "kind": "maxpreps-career"
         }
       ],
@@ -242124,6 +246071,27 @@
           ],
           "positions": [],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Perennial Ong",
+          "observations": [
+            {
+              "athleteId": "aa9ac5c7-1ed1-428f-bb23-124bfaa11449",
+              "grade": 12,
+              "name": "Perennial Ong",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -243790,6 +247758,46 @@
       "classOf": null,
       "classOfConflicts": [],
       "formerIds": [],
+      "id": "pee3ee3b22f",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "mayaotell",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Maya Otell",
+      "names": [
+        "Maya Otell"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Maya Otell",
+          "observations": [
+            {
+              "name": "Maya Otell",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ]
+    },
+    {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
       "id": "pee4b662291",
       "identifiers": [
         {
@@ -244092,6 +248100,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Riya Katariya",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -245043,6 +249056,46 @@
       ]
     },
     {
+      "classOf": null,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pef46d15635",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "eshakumar",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ],
+      "name": "Esha Kumar",
+      "names": [
+        "Esha Kumar"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Esha Kumar",
+          "observations": [
+            {
+              "name": "Esha Kumar",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "leland"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -245867,6 +249920,11 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Maanya Vyas",
+              "src": "school-jv-roster",
+              "url": "https://www.lynbrookvikings.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -247781,6 +251839,47 @@
       ]
     },
     {
+      "classOf": 2030,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pf2226c6782",
+      "identifiers": [
+        {
+          "kind": "name",
+          "name": "clarayusvensson",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ],
+      "name": "Clara Yu-Svensson",
+      "names": [
+        "Clara Yu-Svensson"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Clara Yu-Svensson",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Clara Yu-Svensson",
+              "src": "school-jv-roster",
+              "url": "https://chs.fuhsd.org/student-life/athletics/fall-sports/volleyball-girls"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "volleyball",
+          "team": "cupertino"
+        }
+      ]
+    },
+    {
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -249669,7 +253768,7 @@
       "identifiers": [
         {
           "careerId": "csg3i8v6mu5p9",
-          "careerProfileId": null,
+          "careerProfileId": "18418ac1-b793-4252-843e-3c6a232acd66",
           "kind": "maxpreps-career"
         }
       ],
@@ -249707,6 +253806,27 @@
             "F"
           ],
           "season": "25-26",
+          "sport": "soccer",
+          "team": "homestead"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "level": "varsity",
+          "name": "Jaina Nguyen",
+          "observations": [
+            {
+              "athleteId": "bdc9f209-de44-4e63-b858-1a3694329896",
+              "grade": 10,
+              "name": "Jaina Nguyen",
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
           "sport": "soccer",
           "team": "homestead"
         }
@@ -252332,7 +256452,15 @@
       "stints": [
         {
           "captain": false,
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "jersey",
+              "kept": "16",
+              "other": "20",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
+            }
+          ],
           "grade": 11,
           "height": "5'2\"",
           "jersey": "16",
@@ -252346,6 +256474,13 @@
               "jersey": "16",
               "name": "Jillian Palomo",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 11,
+              "jersey": "20",
+              "name": "Jillian Palomo",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -253205,6 +257340,13 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "jersey": "6",
+              "name": "Yarden Kopel",
+              "src": "school-jv-roster",
+              "url": "https://fremontathletics.org/girls-volleyball-roster.html"
             }
           ],
           "positions": [
@@ -253958,6 +258100,12 @@
               "jersey": "9",
               "name": "Jacklyn Le",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 9,
+              "name": "Jacklyn Le",
+              "src": "school-jv-roster",
+              "url": "https://www.schsathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -255506,6 +259654,12 @@
                 "DS"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "grade": 10,
+              "name": "Harper Kruse",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/volleyball/girls/?tab=roster"
             }
           ],
           "positions": [
@@ -258714,6 +262868,11 @@
                 "MB"
               ],
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Brielle Clement",
+              "src": "school-jv-roster",
+              "url": "https://www.shs-athletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [
@@ -259067,6 +263226,11 @@
               "athleteId": "1d971a77-85c3-4682-9b8d-836efb088bc2",
               "name": "Keira Mullins",
               "src": "maxpreps-jv-roster"
+            },
+            {
+              "name": "Keira Mullins",
+              "src": "school-jv-roster",
+              "url": "https://www.lelandathletics.com/lower/volleyball-girls-junior-varsity/roster/?selected_year=2026"
             }
           ],
           "positions": [],
@@ -261393,6 +265557,23 @@
     {
       "kind": "possible-match",
       "names": [
+        "Natalia Marchand",
+        "Natalia Marchand-Fontanez"
+      ],
+      "note": "\"Natalia Marchand\" (26-27) and \"Natalia Marchand-Fontanez\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pbb60545097",
+        "p3a3690c5c6"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "branham"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
         "Maia Handog",
         "Maja Ysabel Handog"
       ],
@@ -261406,6 +265587,57 @@
       ],
       "sport": "volleyball",
       "team": "christopher"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Andrea Alvendia",
+        "Andrea Alvendina"
+      ],
+      "note": "\"Andrea Alvendia\" (26-27) and \"Andrea Alvendina\" (26-27) may be one player of this team; both wear #10: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "p3d2829488a",
+        "p408bf1c359"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "fremont"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Megumi Pugel",
+        "Magumi Pugel"
+      ],
+      "note": "\"Megumi Pugel\" (26-27) and \"Magumi Pugel\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "p073dc35dd1",
+        "pc3f1e4713d"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "fremont"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Moira Ysabella Miranda",
+        "Moira Ysabelle Miranda"
+      ],
+      "note": "\"Moira Ysabella Miranda\" (26-27) and \"Moira Ysabelle Miranda\" (26-27) may be one player of this team; both wear #8: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "p74f354eb55",
+        "p3396ce7afc"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "fremont"
     },
     {
       "kind": "possible-match",
@@ -261467,7 +265699,7 @@
         "Yufei(Fiona) Wu",
         "Yufei Wu"
       ],
-      "note": "\"Yufei(Fiona) Wu\" (26-27) and \"Yufei Wu\" (25-26) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "note": "\"Yufei(Fiona) Wu\" (26-27) and \"Yufei Wu\" (25-26, 26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
       "players": [
         "p54ef89412c",
         "p1fcda31fd7"
@@ -261514,6 +265746,40 @@
       ],
       "sport": "volleyball",
       "team": "macdonald"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Rachel (Weiqin) Wu",
+        "Weiqin Wu"
+      ],
+      "note": "\"Rachel (Weiqin) Wu\" (26-27) and \"Weiqin Wu\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pc94e9887d5",
+        "p292bc07b76"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "monta-vista"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Callie Popok",
+        "Callie Popek"
+      ],
+      "note": "\"Callie Popok\" (26-27) and \"Callie Popek\" (26-27) may be one player of this team; both wear #6: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pd6be6f8cba",
+        "p7f24f9db89"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "palo-alto"
     },
     {
       "kind": "possible-match",
@@ -261590,6 +265856,74 @@
     {
       "kind": "possible-match",
       "names": [
+        "Mariangela Gonzalez",
+        "Mariangel Gonzalez"
+      ],
+      "note": "\"Mariangela Gonzalez\" (26-27) and \"Mariangel Gonzalez\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "p5af9d28dc0",
+        "pbffc27ca01"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "santa-clara"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Dhrishti Shan",
+        "Dhrishti Shah"
+      ],
+      "note": "\"Dhrishti Shan\" (26-27) and \"Dhrishti Shah\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pfbb8f4c025",
+        "p8177d52631"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "saratoga"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Madina Nooray",
+        "Madina Noorzay"
+      ],
+      "note": "\"Madina Nooray\" (26-27) and \"Madina Noorzay\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pea05e56db0",
+        "pa36ff51bb3"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "saratoga"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Nethra Lyer",
+        "Nethra Iyer"
+      ],
+      "note": "\"Nethra Lyer\" (26-27) and \"Nethra Iyer\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "pffb4734893",
+        "p137d009f0a"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "saratoga"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
         "Kai Estrada",
         "Kailaya Estrada"
       ],
@@ -261604,6 +265938,23 @@
       ],
       "sport": "volleyball",
       "team": "wilcox"
+    },
+    {
+      "kind": "possible-match",
+      "names": [
+        "Jenny Nguyen",
+        "Jaylene Nguyen"
+      ],
+      "note": "\"Jenny Nguyen\" (26-27) and \"Jaylene Nguyen\" (26-27) may be one player of this team: not joined. If they are one, say so in data/player-identity.json sameAs.",
+      "players": [
+        "paacfd7ebfd",
+        "p72317c07bc"
+      ],
+      "seasons": [
+        "26-27"
+      ],
+      "sport": "volleyball",
+      "team": "yerba-buena"
     },
     {
       "kind": "same-name-two-careers",
@@ -261975,6 +266326,23 @@
       ],
       "sport": "field-hockey",
       "team": "willow-glen"
+    },
+    {
+      "kind": "same-name-two-careers",
+      "names": [
+        "Naveah Corona",
+        "Nevaeh Corona"
+      ],
+      "note": "MaxPreps careers filkgnu20uih1 and 209jebd86u7sc are listed under one name on this team (one of the spellings may be the overlay's) and their class years do not contradict: treated as one player.",
+      "players": [
+        "p50eceef83d"
+      ],
+      "seasons": [
+        "25-26",
+        "26-27"
+      ],
+      "sport": "soccer",
+      "team": "overfelt"
     },
     {
       "kind": "same-name-two-careers",

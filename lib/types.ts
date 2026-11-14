@@ -778,6 +778,60 @@ export interface CcsCalendarEvent {
   detail: string | null;
 }
 
+/**
+ * One side of a matchup on a MaxPreps tournament page (lib/sources/maxpreps-tournament.ts). `teamId` is MaxPreps'
+ * school id, which is the registry's team id for a team of ours; null while the side is still to be decided.
+ */
+export interface TournamentBracketSide {
+  teamId: string | null;
+  /** MaxPreps' name for the school ('St. Ignatius College Preparatory'); null while undecided. */
+  name: string | null;
+  seed: number | null;
+  /** What the page prints as the side's result (sets won, goals, points); null before a result. */
+  score: number | null;
+  /** The matchup whose winner fills this side; null in the bracket's opening round. */
+  from: string | null;
+}
+
+export interface TournamentBracketMatchup {
+  id: string;
+  /** The page's own round name ('1st round', 'Quarter Finals', 'Regional Finals'). */
+  round: string;
+  /** The round's day as its header gives it, YYYY-MM-DD. */
+  roundDate: string;
+  /** The matchup its winner goes to; null for the last game. */
+  next: string | null;
+  /** MaxPreps' contest id once the page links the game; null for a bye and before it is listed. */
+  contestId: ContestId | null;
+  /** The game's own start, 'YYYY-MM-DDTHH:MM:SS' Pacific, where the page prints one (an unplayed game); else null. */
+  dateLocal: string | null;
+  /** A bye: one side, no game. */
+  bye: boolean;
+  /** The side the page marks as the winner (0 = first listed); null before a result and on a bye. */
+  winner: 0 | 1 | null;
+  /** Where the page says it is played ('Santiago Canyon College'), without its leading '@'; else null. */
+  site: string | null;
+  sides: [TournamentBracketSide, TournamentBracketSide];
+}
+
+/**
+ * One published bracket of a MaxPreps tournament page, whole: every matchup in page order, joined into a tree by
+ * `next` and each side's `from`. `event` says whose it is: 'ccs' = a division of the CCS championship
+ * (CCS.bracketUrl), 'cif' = a division of the CIF State championships that a team of ours plays in (found from the
+ * `bracket.url` of its games).
+ */
+export interface TournamentBracket {
+  event: 'ccs' | 'cif';
+  /** '2026 CIF State Girls Volleyball Championships' (the page's heading); '' when the page names none. */
+  tournament: string;
+  bracketId: string;
+  /** 'Open Division', 'Division 1', 'Division III'. */
+  name: string;
+  /** The page it was read from. */
+  url: string;
+  matchups: TournamentBracketMatchup[];
+}
+
 export interface CcsPlayoffs {
   keyDates: CcsKeyDates;
   ccsCalendar?: CcsCalendarEvent[];
@@ -803,6 +857,13 @@ export interface CcsPlayoffs {
   divisionsPublished?: Record<CcsDivisionName, boolean>;
   /** null until MaxPreps makes a tournament page for the season (soccer, 2026-11-06). */
   bracketUrl: string | null;
+  /**
+   * The published brackets read whole from MaxPreps' tournament pages (lib/pipeline/steps/secondary.ts), for a
+   * championship whose divisions this site does not name itself (CCS.ccsDivisions empty: volleyball's Open Division
+   * and Divisions 1-5): the CCS divisions in page order, then the CIF State divisions a team of ours plays in.
+   * Carried from the previous snapshot, bracket by bracket, when a page was not read. Absent when none was ever read.
+   */
+  brackets?: TournamentBracket[];
   /**
    * The CCS bracket games: lib/postseason/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
    * dated on or after the quarterfinals or that MaxPreps' feed marks published (`Game.bracket.published`), the
@@ -922,7 +983,7 @@ export type SourceKind =
   | 'bootstrap' | 'league-meta' | 'reported-standings' | 'team-schedule'
   | 'official-schedule' | 'official-revision-check' | 'standings-index'
   | 'sblive-scoreboard' | 'sblive-team-games'
-  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar' | 'cifss-scores' | 'sds-bracket-sheet';
+  | 'ccs-calendar' | 'ccs-bracket' | 'tournament-bracket' | 'school-calendar' | 'cifss-scores' | 'sds-bracket-sheet';
 
 export interface SourceStatus {
   id: SourceId;

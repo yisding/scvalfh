@@ -3,16 +3,16 @@
     "errors": 0,
     "goalkeepers": 0,
     "players": 0,
-    "teams": 41,
+    "teams": 60,
     "teamsWithStats": 0
   },
-  "fetchedAt": "2026-11-13T03:39:26.871Z",
+  "fetchedAt": "2026-11-14T05:55:41.435Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
     "id": "maxpreps-api",
     "notes": [
-      "One entry per registry team, all 2 leagues (SCVAL, BVAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 4 leagues (SCVAL, BVAL, WCAL, WBAL) and the , read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
       "Every number is what the coach entered on MaxPreps, for all of this season's varsity games, league and non-league alike. Coverage is the coach's choice: a team MaxPreps has no stats for is status none.",
       "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
@@ -45,7 +45,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -66,7 +66,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -87,7 +87,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -108,7 +108,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
@@ -129,7 +129,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -150,7 +150,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -171,7 +171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -192,7 +192,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -213,7 +213,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -234,7 +234,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef",
       "name": "MacDonald",
@@ -255,7 +255,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
@@ -276,7 +276,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
@@ -297,7 +297,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -318,7 +318,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
@@ -339,7 +339,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
       "name": "Branham",
@@ -360,7 +360,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
@@ -381,7 +381,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
@@ -402,7 +402,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
@@ -423,7 +423,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
@@ -444,7 +444,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
       "name": "Pioneer",
@@ -465,7 +465,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
@@ -486,7 +486,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -507,7 +507,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
@@ -528,7 +528,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -549,7 +549,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -570,7 +570,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -591,7 +591,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -612,7 +612,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
@@ -633,7 +633,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -654,7 +654,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
@@ -675,7 +675,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
@@ -696,7 +696,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -717,7 +717,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -738,7 +738,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -759,7 +759,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -780,7 +780,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
       "name": "Mt. Pleasant",
@@ -801,7 +801,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -822,7 +822,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
@@ -843,7 +843,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
@@ -864,7 +864,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-13T03:39:26.871Z",
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -873,6 +873,405 @@
       "statsUrl": "https://www.maxpreps.com/ca/san-jose/yerba-buena-warriors/soccer/girls/winter/stats/",
       "status": "none",
       "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+      "name": "Archbishop Mitty",
+      "players": [],
+      "slug": "mitty",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+      "name": "Archbishop Riordan",
+      "players": [],
+      "slug": "riordan",
+      "statsUrl": "https://www.maxpreps.com/ca/san-francisco/archbishop-riordan-crusaders/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+      "name": "Sacred Heart Cathedral",
+      "players": [],
+      "slug": "sacred-heart-cathedral",
+      "statsUrl": "https://www.maxpreps.com/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+      "name": "Saint Francis",
+      "players": [],
+      "slug": "saint-francis",
+      "statsUrl": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+      "name": "St. Ignatius",
+      "players": [],
+      "slug": "st-ignatius",
+      "statsUrl": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+      "name": "Valley Christian",
+      "players": [],
+      "slug": "valley-christian",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249",
+      "name": "Castilleja",
+      "players": [],
+      "slug": "castilleja",
+      "statsUrl": "https://www.maxpreps.com/ca/palo-alto/castilleja-gators/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+      "name": "Crystal Springs Uplands",
+      "players": [],
+      "slug": "crystal-springs",
+      "statsUrl": "https://www.maxpreps.com/ca/hillsborough/crystal-springs-uplands-gryphons/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+      "name": "The King’s Academy",
+      "players": [],
+      "slug": "kings-academy",
+      "statsUrl": "https://www.maxpreps.com/ca/sunnyvale/kings-academy-knights/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+      "name": "Menlo School",
+      "players": [],
+      "slug": "menlo",
+      "statsUrl": "https://www.maxpreps.com/ca/atherton/menlo-school-knights/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
+      "name": "Notre Dame Belmont",
+      "players": [],
+      "slug": "notre-dame-belmont",
+      "statsUrl": "https://www.maxpreps.com/ca/belmont/notre-dame-tigers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
+      "name": "Presentation",
+      "players": [],
+      "slug": "presentation",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/presentation-panthers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
+      "name": "Sacred Heart Prep",
+      "players": [],
+      "slug": "sacred-heart-prep",
+      "statsUrl": "https://www.maxpreps.com/ca/atherton/sacred-heart-prep-gators/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "27d82a51-2b44-492e-b2cf-114730027de3",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
+      "name": "Eastside College Prep",
+      "players": [],
+      "slug": "eastside",
+      "statsUrl": "https://www.maxpreps.com/ca/east-palo-alto/eastside-college-prep-panthers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
+      "name": "Harker",
+      "players": [],
+      "slug": "harker",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/harker-eagles/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79",
+      "name": "Mercy Burlingame",
+      "players": [],
+      "slug": "mercy-burlingame",
+      "statsUrl": "https://www.maxpreps.com/ca/burlingame/mercy-bears/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "e5d23742-6a32-47e1-b752-d16dfcf77119",
+      "name": "Notre Dame San Jose",
+      "players": [],
+      "slug": "notre-dame-san-jose",
+      "statsUrl": "https://www.maxpreps.com/ca/san-jose/notre-dame-regents/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "e5d23742-6a32-47e1-b752-d16dfcf77119",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
+      "name": "Pinewood",
+      "players": [],
+      "slug": "pinewood",
+      "statsUrl": "https://www.maxpreps.com/ca/los-altos-hills/pinewood-panthers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-11-14T05:55:41.435Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
+      "name": "Priory",
+      "players": [],
+      "slug": "priory",
+      "statsUrl": "https://www.maxpreps.com/ca/portola-valley/priory-panthers/soccer/girls/winter/stats/",
+      "status": "none",
+      "teamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "totals": {
         "field": {},
         "goalkeeping": {}

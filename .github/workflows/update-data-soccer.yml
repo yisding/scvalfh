@@ -44,8 +44,8 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # 15 schedule feeds and two league tables, the official revision checks, the CCS calendar and the
-    # cifsshome.org listings; then 15 stats rollups and 15 JV feeds. Far less than field hockey's run.
+    # 60 schedule feeds and eight league tables, the official revision checks, the CCS calendar and the
+    # cifsshome.org listings; then 60 stats rollups and 60 JV feeds. Far less than field hockey's run.
     timeout-minutes: 30
 
     env:

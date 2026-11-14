@@ -29,6 +29,7 @@ type Modules = {
   statsSource: typeof import('../lib/sources/maxpreps-player-stats');
   statsView: typeof import('../components/teams/player-stats-view');
   jv: typeof import('../lib/jv/jv');
+  jvRosters: typeof import('../lib/jv/jv-rosters');
   rosters: typeof import('../lib/players/rosters');
   clubs: typeof import('../lib/players/clubs');
   commits: typeof import('../lib/players/commits');
@@ -43,6 +44,8 @@ type Modules = {
   ccs: typeof import('../lib/sources/ccs');
   positions: typeof import('../components/words/position-words');
   describeGame: typeof import('../components/ui/describe-game');
+  bracketsView: typeof import('../components/playoffs/tournament-brackets-view');
+  bracketLink: typeof import('../components/playoffs/bracket-link');
 };
 
 let m: Modules;
@@ -66,6 +69,7 @@ beforeAll(async () => {
     statsSource: await import('../lib/sources/maxpreps-player-stats'),
     statsView: await import('../components/teams/player-stats-view'),
     jv: await import('../lib/jv/jv'),
+    jvRosters: await import('../lib/jv/jv-rosters'),
     rosters: await import('../lib/players/rosters'),
     clubs: await import('../lib/players/clubs'),
     commits: await import('../lib/players/commits'),
@@ -80,6 +84,8 @@ beforeAll(async () => {
     ccs: await import('../lib/sources/ccs'),
     positions: await import('../components/words/position-words'),
     describeGame: await import('../components/ui/describe-game'),
+    bracketsView: await import('../components/playoffs/tournament-brackets-view'),
+    bracketLink: await import('../components/playoffs/bracket-link'),
   };
 });
 
@@ -255,6 +261,51 @@ describe('the bundled volleyball data', () => {
     for (const g of ccs) expect(g.postseason?.kind, g.contestId).toBe('ccs');
   });
 
+  // Whatever the day's data is (update-data-volleyball.yml runs this file on what it fetched): the published
+  // brackets are whole, every one drawn holds a team of ours, and every bracket game of ours has its card.
+  it('holds the published brackets whole, and draws one per division our teams are in', () => {
+    const snapshot = m.data.getSnapshot();
+    const brackets = snapshot.playoffs.brackets ?? [];
+    expect(brackets.length).toBeGreaterThan(0);
+    expect(new Set(brackets.map((b) => b.bracketId)).size).toBe(brackets.length);
+    const drawn = m.bracketsView.tournamentBracketsView(brackets, snapshot.games, m.data.getToday());
+    expect(new Set(drawn.brackets.map((b) => b.id)).size).toBe(drawn.brackets.length);
+    // CIF State first, then the CCS; a division left undrawn is a CCS one, named for the note.
+    const events = drawn.brackets.map((b) => b.event);
+    expect(events).toEqual([...events].sort((a, b) => (a === b ? 0 : a === 'cif' ? -1 : 1)));
+    expect(drawn.brackets.length + drawn.ccsOthers.length).toBe(brackets.length);
+    for (const b of drawn.brackets) {
+      const slugs = b.rounds.flatMap((r) => r.ties.flatMap((t) => t.lines.map((l) => l.slug))).filter((slug) => slug !== null);
+      expect(slugs.length, b.name).toBeGreaterThan(0);
+      for (const slug of slugs) expect(m.teams.getTeamBySlug(slug), `${b.name} ${slug}`).toBeDefined();
+      // A round's games feed the next two to one, once the opening round's byes are set aside.
+      b.rounds.slice(1, -1).forEach((r, i) => {
+        if (b.event === 'ccs' || i < b.rounds.length - 3) expect(r.ties.length, `${b.name} ${r.name}`).toBe(b.rounds[i + 2].ties.length * 2);
+      });
+    }
+  });
+
+  it('links every published bracket game of ours to its card on /playoffs', () => {
+    const snapshot = m.data.getSnapshot();
+    const drawn = m.bracketsView.tournamentBracketsView(snapshot.playoffs.brackets, snapshot.games, m.data.getToday());
+    const cards = new Map(drawn.brackets.flatMap((b) => b.rounds.flatMap((r) => r.ties.map((t) => [t.contestId, { id: t.id, event: b.event }] as const))));
+    const inBrackets = new Set((snapshot.playoffs.brackets ?? []).flatMap((b) => b.matchups.map((x) => x.contestId)));
+    const ours = snapshot.games.filter((g) => g.bracket?.published && inBrackets.has(g.contestId));
+    expect(ours.length).toBeGreaterThan(0);
+    for (const g of ours) {
+      const card = cards.get(g.contestId);
+      expect(card, g.contestId).toBeDefined();
+      expect(m.bracketLink.getBracketLink(g), g.contestId).toMatchObject({
+        href: `/playoffs#${card?.id}`,
+        label: card?.event === 'cif' ? 'CIF State bracket' : 'CCS bracket',
+      });
+    }
+    // Every CCS game and every CIF State game the snapshot holds is in a bracket that was read.
+    for (const g of snapshot.games.filter((x) => x.bracket?.published && x.postseason?.via === 'maxpreps-bracket')) {
+      expect(inBrackets.has(g.contestId), `${g.dateKey} ${g.away.name} at ${g.home.name}`).toBe(true);
+    }
+  });
+
   it('holds a stats entry, a roster and a JV entry for every team, and last season’s SCVAL archive', () => {
     for (const team of m.teams.TEAMS) {
       expect(m.playerStats.getTeamPlayerStats(team.slug), team.slug).toBeDefined();
@@ -266,6 +317,41 @@ describe('the bundled volleyball data', () => {
     // The El Camino JV document prints one player's year as "7": no grade is stored for her.
     const jv = m.history.getHistoryAwards('el-camino', 'jv');
     expect(jv?.firstTeam.find((p) => p.player === 'Kaylan Shab')).toMatchObject({ slug: 'saratoga', year: null });
+  });
+
+  it('holds the JV lists 13 schools publish themselves, and shows one where it is the fuller list', () => {
+    const file = m.jvRosters.getJvSiteRostersFile();
+    expect(file.teams.map((t) => t.slug)).toEqual([
+      'cupertino',
+      'los-gatos',
+      'monta-vista',
+      'palo-alto',
+      'fremont',
+      'gunn',
+      'lynbrook',
+      'santa-clara',
+      'saratoga',
+      'branham',
+      'leland',
+      'willow-glen',
+      'yerba-buena',
+    ]);
+    expect(file.teams.reduce((n, t) => n + t.players.length, 0)).toBe(173);
+    for (const t of file.teams) {
+      expect(t.season, t.slug).toBe('2026-27');
+      expect(t.seasonEvidence.length, t.slug).toBeGreaterThan(30);
+      expect(t.checkedOn <= file.capturedAt, t.slug).toBe(true);
+      expect(`${t.readUrl} ${t.pageUrl}`, t.slug).not.toMatch(/maxpreps/);
+      for (const p of t.players) {
+        expect(p.name, t.slug).not.toBe(p.name.toLowerCase());
+        expect(p.name, t.slug).not.toBe(p.name.toUpperCase());
+      }
+    }
+    // MaxPreps' JV pages list nobody for Cupertino and Willow Glen, and two players for Leland.
+    expect(m.jvRosters.getJvRoster('cupertino')).toMatchObject({ source: 'school-site', other: null });
+    expect(m.jvRosters.getJvRoster('willow-glen')).toMatchObject({ source: 'school-site', other: null });
+    expect(m.jvRosters.getJvRoster('leland')).toMatchObject({ source: 'school-site', other: { source: 'maxpreps' } });
+    expect(m.teams.TEAMS.filter((t) => m.jvRosters.getJvRoster(t.slug) !== null)).toHaveLength(27);
   });
 });
 

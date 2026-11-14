@@ -18,6 +18,7 @@
  *   sblive-*              sbliveScoresUrl(date) / the registry's si.com team page → HttpClient(SBLIVE_HTTP_OPTIONS)
  *   vnn-ics               vnnIcsUrl(VNN_SITE_IDS[team].siteId) → HttpClient.text
  *   ccs-ical, ccs-bracket CCS_ICAL_URL, CCS.bracketUrl → HttpClient.text
+ *   tournament-bracket    the key's own url (a game's `bracket.url`, a maxpreps.com/tournament/ page) → HttpClient.text
  *   cifss-scores          cifssListingUrl(section, season start → through, page) → HttpClient.text
  *   sds-bracket-sheet     sdsBracketSheetCsvUrl(division) (the Section's bracket sheet, one tab as CSV) → HttpClient.text
  */

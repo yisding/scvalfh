@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "a8117e9d5be8fdd1c104a370559a5937e7d1932419107ba75423b1b36c26305a",
+  "contentHash": "39383f5baf28d36edf19662ec16bedcc719e485e2093ff76398e835a37c43ec5",
   "counts": {
     "byLeague": {
       "bval": {
@@ -394,6 +394,21 @@
     {
       "label": "ccs bracket",
       "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "cif bracket Division I",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "cif bracket Division II",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "cif bracket Division III",
+      "rowCount": 31,
       "status": "ok"
     }
   ],

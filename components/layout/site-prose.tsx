@@ -4,7 +4,7 @@ import ExternalLink from '../ui/ExternalLink';
 import { listWords } from '../../lib/format';
 import { SECTIONS } from '../../lib/league-config/sections';
 import type { LeagueConfig } from '../../lib/league-config/shape';
-import { LEAGUES_PROPER, getSection } from '../../lib/leagues';
+import { LEAGUES_PROPER, getSection, publishesNoSchedule } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
 import { SITE_SCOPE_NOTE } from './site';
@@ -33,7 +33,7 @@ export interface SiteProseProps {
 
 /** Leagues that publish no schedule or standings document of their own (the EAL, and every SoCal league). */
 function hasNoDocument(league: LeagueConfig): boolean {
-  return league.divisions.every((d) => d.official.mode === 'none');
+  return league.divisions.every(publishesNoSchedule);
 }
 
 /** Leagues that publish no rules this site follows: the table order is the site's own (orderScope 'site'). */
