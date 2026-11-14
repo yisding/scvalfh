@@ -189,9 +189,18 @@ const commitCitedBy = (html: string) =>
 const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set<string>([]);
 const NO_TIES_SKIPPED_BLOCKS: readonly string[] = [];
 /** Strings the snapshot prints verbatim, which are names and never this site's copy. */
-const PROPER_NOUNS: string[] = getSnapshot().games.flatMap((g) =>
-  [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
-);
+const PROPER_NOUNS: string[] = [
+  ...getSnapshot().games.flatMap((g) =>
+    [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
+  ),
+  // What a club's own site says of itself (data/clubs.json, printed on /clubs/<slug>): a club that also runs a
+  // boys' program is a fact about the club, not this site naming another build's program.
+  ...clubsFile.clubs.flatMap((c) => [
+    c.description,
+    ...c.programs.flatMap((p) => [p.name, p.detail]),
+    ...c.sources.map((s) => s.what),
+  ]).filter((s): s is string => typeof s === 'string' && s.length > 0),
+];
 
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');

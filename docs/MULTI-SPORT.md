@@ -25,8 +25,9 @@ own origin (a subdomain such as `soccer.` is a hosting choice on top of this). W
   and may be false for another sport (for example "EAL school", Red Bluff, the Sunset "field hockey
   league"), so they are per sport by nature.
 
-The cost: `/clubs`, `/commits` and `/recruiting` exist only for field hockey today, so their presence
-must become per sport. (`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
+The cost: `/clubs`, `/commits` and `/recruiting` existed only for field hockey at first, so their presence
+is per sport (`HAS_RECRUITING`: field hockey, and volleyball since 2026-11-13; `/club-calendar` is still field
+hockey's alone, `HAS_CLUB_CALENDAR`). (`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
 sports would need links between origins.
 
 ## The seam: `lib/sports/`
@@ -169,7 +170,7 @@ prerendered page has the same text and markup as before (compared page by page, 
 aside), and the field hockey tests, golden files and asserts pass as they were.
 
 - **The switch.** `SCVAL_SPORT` (unset or `field-hockey`, or `soccer`), read once in
-  `lib/sports/current.ts` (`SPORT_ID`, `IS_FIELD_HOCKEY`, `DATA_DIR`, `HAS_HISTORY`, `HAS_RECRUITING`).
+  `lib/sports/current.ts` (`SPORT_ID`, `IS_FIELD_HOCKEY`, `DATA_DIR`, `HAS_HISTORY`, `HAS_RECRUITING`, `HAS_CLUB_CALENDAR`).
   `next.config.ts` (`env`) and `vite.config.ts` (`define`) inline it, so the browser, the prerender and a
   Worker agree.
 - **The sport.** `lib/sports/soccer.ts` (`SOCCER`, `SOCCER_GIRLS_2026`), its MaxPreps ids read live.
@@ -296,9 +297,27 @@ with its season already played, so the postseason code ran on real results the d
   `volleyball` job, the deploy gate's matrix and `scripts/vercel-ignore-build.sh` know the fourth sport. The
   hosting project and its domain are the owner's to create.
 
+**Recruiting (2026-11-13).** The owner asked for "a search for recruiting pages, commits, and clubs for
+volleyball like we did for field hockey". The volleyball build now has /clubs, /clubs/[slug], /commits and
+/recruiting (`HAS_RECRUITING`), from `data/volleyball/{clubs,commits,rosters-enrichment,jv-profiles,instagram}.json`
+(README, "Girls volleyball: recruiting"; DATA-SOURCES §1.11). What made the pages every recruiting build's:
+
+- A profile or a commitment in the build's own sport names no sport, whichever build it is
+  (`lib/players/rosters-schema.ts` and `components/commits/commit-view.ts` compare with `SPORT_ID`, where they
+  compared with `'field-hockey'`).
+- `lib/players/clubs.ts` validates the file in every recruiting build; `SEARCHED_REGIONS` is per sport (volleyball:
+  the Peninsula and the South Bay).
+- /about#recruiting takes its sport words, and the few sentences about where the research looked, from the sport
+  (`components/about/sections/RecruitingSection.tsx`).
+- The copy rules: the tied-game pattern of a sport with no ties leaves a player's tie to a club
+  (`CLUB_TIE_WORDS`), and a club's own description is data, so a club that also runs a boys' program is not the
+  site naming another build's program.
+- /club-calendar stays field hockey's (`HAS_CLUB_CALENDAR`): `data/club-events.json` is field hockey research.
+
 Not done yet: a refit of the rating constants on finished seasons; the CCS Volleyball Bylaws' allocation;
 BVAL's 2025-26 standings; a bracket drawn per CCS division; "match" for "game" in the site's own copy; the
-smoke and axe passes on the volleyball build.
+smoke and axe passes on the volleyball build; a volleyball club calendar; the volleyball programs' own Instagram
+accounts.
 
 ## Guards that must keep passing
 

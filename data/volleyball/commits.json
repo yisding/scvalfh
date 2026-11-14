@@ -1,8 +1,319 @@
 {
-  "builtBy": "Nothing yet: college commitments are not researched for the volleyball build.",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Research by hand, 2026-11-13, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, SportsRecruits' commits feed for program ids 6 to 453), 292 college athletics sites' news feeds from 2026-11-11 on, school and local papers, the clubs' commitment pages and the players' own recruiting pages. Every quote was checked against its page as served that day, twice.",
+  "capturedAt": "2026-11-13",
   "season": "26-27",
-  "notes": [],
-  "colleges": [],
-  "commitments": []
+  "notes": [
+    "Players on the 41 tracked varsity rosters a public page says have committed to, or signed with, a college team, in volleyball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
+    "Five commitments, four in volleyball and one in beach volleyball. Maura Hambly's is signed: Cal's own release of 2026-11-11 names her with Palo Alto High School. Aanya Hotha's (Penn), Kylee Mark's (Cal Poly) and Katie Hamburger's (Tulane, beach) rest on their schools' student papers, with Prep Dig or PrepVolleyball agreeing for the first two; neither Penn nor Cal Poly had posted a signing release by 2026-11-13, and Tulane's beach release of 2026-11-12 names five other signees, so those three stay committed. Emi Yu-Yang's (Hamilton) is medium: her own SportsRecruits page gives the class year, Palo Alto and the commitment but no school.",
+    "Recall is partial. The fall signing period opened two days before the search, and many colleges had posted nothing. SportsRecruits' commits feed was read for 434 of about 3,700 programs. Only 15 of the 41 schools' student papers were found. Name-by-name web searches covered about a third of the seniors and juniors before the session's search allowance ran out; the rest were searched on the school and local papers' own sites and on Prep Dig.",
+    "Tulane's beach volleyball conference is left blank: the schedule page read on 2026-11-13 was an earlier season's."
+  ],
+  "colleges": [
+    {
+      "slug": "cal",
+      "name": "University of California, Berkeley",
+      "shortName": "Cal",
+      "city": "Berkeley",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Atlantic Coast Conference",
+          "url": "https://calbears.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://theacc.com/standings.aspx?path=wvball",
+          "what": "The ACC's 2026 women's volleyball standings list California; the page's Sidearm metadata gives Division 'DI'."
+        },
+        {
+          "url": "https://calbears.com/news/2026/11/11/cal-volleyball-officially-signs-nationally-ranked-class",
+          "what": "Cal's release: 'the Bears' class ranks No. 23 in the country and No. 6 in the ACC'."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "penn",
+      "name": "University of Pennsylvania",
+      "shortName": "Penn",
+      "city": "Philadelphia",
+      "state": "PA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Ivy League",
+          "url": "https://pennathletics.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://pennathletics.com/sports/womens-volleyball",
+          "what": "Sidearm page metadata: school_division 'DI', school_conference 'Ivy League'."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "cal-poly",
+      "name": "California Polytechnic State University, San Luis Obispo",
+      "shortName": "Cal Poly",
+      "city": "San Luis Obispo",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d1",
+          "conference": "Big West Conference",
+          "url": "https://gopoly.com/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://bigwest.org/sports/wvball",
+          "what": "The Big West's women's volleyball page names Cal Poly; its Sidearm metadata gives Division 'DI'."
+        },
+        {
+          "url": "https://gopoly.com/sports/womens-volleyball",
+          "what": "Cal Poly's page: 'Mustang Volleyball Remains Unbeaten After 11 Big West Matches', 'Clinches Big West Championship Berth'."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "tulane",
+      "name": "Tulane University",
+      "shortName": "Tulane",
+      "city": "New Orleans",
+      "state": "LA",
+      "programs": [
+        {
+          "sport": "beach-volleyball",
+          "division": "ncaa-d1",
+          "conference": null,
+          "url": "https://tulanegreenwave.com/sports/beach-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://tulanegreenwave.com/sports/beach-volleyball",
+          "what": "Tulane University Athletics' beach volleyball page (HTTP 200, read 2026-11-13). The conference is left blank: the schedule page read that day listed a 'C-USA Beach Volleyball Championship' but was an earlier season's, so the 2026-27 conference was not confirmed."
+        },
+        {
+          "url": "https://hhsepitaph.com/16820/sports/katie-hamburger-serves-her-future-at-tulane-university/",
+          "what": "The Epitaph's story calls it 'Tulane University’s Division 1 beach volleyball program'."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "hamilton",
+      "name": "Hamilton College",
+      "shortName": "Hamilton",
+      "city": "Clinton",
+      "state": "NY",
+      "programs": [
+        {
+          "sport": "volleyball",
+          "division": "ncaa-d3",
+          "conference": "NESCAC",
+          "url": "https://athletics.hamilton.edu/sports/womens-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://athletics.hamilton.edu/sports/womens-volleyball",
+          "what": "Sidearm page metadata: school_name 'Hamilton College', school_division 'DIII', school_conference 'NESCAC'."
+        }
+      ],
+      "checkedOn": "2026-11-13"
+    }
+  ],
+  "commitments": [
+    {
+      "teamSlug": "homestead",
+      "athleteId": "50e3163e-cc20-497a-946e-825c21aed2c1",
+      "playerId": "p15b2b4ebc3",
+      "fullName": "Katie Hamburger",
+      "college": "tulane",
+      "sport": "beach-volleyball",
+      "status": "committed",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://hhsepitaph.com/16820/sports/katie-hamburger-serves-her-future-at-tulane-university/",
+          "kind": "news",
+          "quote": "varsity girls volleyball team captain, junior Katie Hamburger committed to Tulane University’s Division 1 beach volleyball program over the summer.",
+          "statedSchool": "Homestead High School (The Epitaph is its student newspaper)",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-11-05"
+        }
+      ],
+      "basis": "The Epitaph ('Homestead High School's student newspaper', 21370 Homestead Rd, Cupertino), 2026-11-05, names her as the varsity girls volleyball captain and a junior (class of 2028, the roster's class) who committed to Tulane's beach volleyball program 'over the summer' (2026). Found by the news sub-sweep and re-read here."
+    },
+    {
+      "teamSlug": "monta-vista",
+      "athleteId": "a016dc49-fbf4-41db-bb72-2f9a9f33c629",
+      "playerId": "pb5182bcb6b",
+      "fullName": "Kylee Mark",
+      "college": "cal-poly",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": "2025-09",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://elestoque.org/2025/09/06/sports/how-does-one-go-d1/",
+          "kind": "news",
+          "quote": "Junior Kylee Mark shares her volleyball and Cal Poly SLO commitment journey",
+          "statedSchool": "Monta Vista High School (El Estoque is its student news site)",
+          "statedClassYear": 2027,
+          "sourceDate": "2025-09-06"
+        },
+        {
+          "url": "https://elestoque.org/2025/09/06/sports/how-does-one-go-d1/",
+          "kind": "news",
+          "quote": "Kylee Mark poses with her Cal Poly SLO shirt, announcing her commitment.",
+          "statedSchool": "Monta Vista High School (El Estoque is its student news site)",
+          "statedClassYear": 2027,
+          "sourceDate": "2025-09-06"
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Kylee Mark S Class 2027 State: California High School: Monta Vista COMMITTED 2/6/26",
+          "statedSchool": "Monta Vista",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-06"
+        },
+        {
+          "url": "https://prepdig.com/team/ca/monta-vista/",
+          "kind": "other",
+          "quote": "8 Kylee Mark 2027 S 5'11\"",
+          "statedSchool": "Monta Vista (Cupertino, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "El Estoque ('The Student News Site of Monta Vista High School'), 2025-09-06: its subheading and photo caption call it her Cal Poly SLO commitment; the body tells of the offer and quotes her 'I was pretty set on committing right away'. A junior in September 2025 is the class of 2027. Prep Dig independently lists her as committed: its California commitments list (High School: Monta Vista, class 2027) and its Monta Vista team roster (Monta Vista, Cupertino, CA) both carry a college logo link titled 'Cal Poly-San Luis Obispo' (https://prepdig.com/college/cal-poly-san-luis-obispo/), and her player page's recruiting table reads 'Cal Poly-San Luis Obispo Committed'. The news sub-sweep read the El Estoque body alone as an offer and would have left her out; the headline, the caption and Prep Dig settle it. Cal Poly's volleyball page listed no signing release as of 2026-11-13, so the status stays 'committed'. Prep Dig's 2/6/26 is an entry date and is not used."
+    },
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "8071510b-1a35-438a-801b-b4a687232247",
+      "playerId": "pa3def23eb3",
+      "fullName": "Emi Yu-Yang",
+      "college": "hamilton",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sportsrecruits.com/athlete/emi_yu_yang3",
+          "kind": "sportsrecruits",
+          "quote": "Watch Emi's recruiting video • 2027 • Setter, Defensive Specialist • Marin Volleyball Club • Palo Alto, CA • Committed to Hamilton College",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Rule (b): her own SportsRecruits volleyball profile's description (in the page's served HTML meta tags, not drawn by script; fetched twice on 2026-11-13, both reads identical) gives the class of 2027, the roster's class, and the hometown Palo Alto, CA, the school's city, with 'Committed to Hamilton College'. The roster lists her as a setter, as the profile does. SportsRecruits' commits feed lists 'Emi Yu-Yang, 2027, Volleyball' under program id 183. No page naming Palo Alto High School was found, so medium. Her Hudl profile, which is on Palo Alto High School's own volleyball team, lists the same club, Marin Volleyball Club, for 2026 (data/volleyball/clubs.json), so the SportsRecruits page's club agrees with a page that names her school; the commitment itself still rests on the one page."
+    },
+    {
+      "teamSlug": "palo-alto",
+      "athleteId": "f52d2285-903c-455d-99a6-2703907921ca",
+      "playerId": "p5760da96b9",
+      "fullName": "Maura Hambly",
+      "college": "cal",
+      "sport": "volleyball",
+      "status": "signed",
+      "asOf": "2026-11-11",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://calbears.com/news/2026/11/11/cal-volleyball-officially-signs-nationally-ranked-class",
+          "kind": "college",
+          "quote": "The class features Destinee Chukelu, Breya Dawson, Maura Hambly and Emma Kingston.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://calbears.com/news/2026/11/11/cal-volleyball-officially-signs-nationally-ranked-class",
+          "kind": "college",
+          "quote": "Maura Hambly - OH | 5-10 | Stanford, CA | Palo Alto High School/Vision Volleyball Club",
+          "statedSchool": "Palo Alto High School",
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://vikingsportsmag.com/online-exclusives/2025/10/21/from-stanford-to-cal-forging-a-new-path/",
+          "kind": "news",
+          "quote": "Her official commitment to Cal makes Hambly the first person in the Paly Class of 2027 to commit Division I.",
+          "statedSchool": "Paly (Palo Alto High School; Viking Magazine is its sports magazine)",
+          "statedClassYear": 2027,
+          "sourceDate": "2025-10-21"
+        },
+        {
+          "url": "https://prepdig.com/player/maura-hambly/",
+          "kind": "other",
+          "quote": "Committed to University of California, Berkeley",
+          "statedSchool": "Palo Alto",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/commitments/?state=california",
+          "kind": "other",
+          "quote": "Maura Hambly OH Class 2027 State: California High School: Palo Alto COMMITTED 4/14/26",
+          "statedSchool": "Palo Alto",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-04-14"
+        },
+        {
+          "url": "https://calbears.com/news/2026/11/11/cal-volleyball-officially-signs-nationally-ranked-class",
+          "kind": "college",
+          "quote": "The California volleyball program officially put together one of its best recruiting classes in years on Wednesday, inking a four-player class. The class features Destinee Chukelu, Breya Dawson, Maura Hambly and Emma Kingston.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        }
+      ],
+      "basis": "Cal's own signing release of 2026-11-11 (headline 'Cal Volleyball Officially Signs Nationally Ranked Class', 'inking a four-player class') names Maura Hambly, outside hitter, with 'Palo Alto High School/Vision Volleyball Club'. Viking Magazine (Palo Alto High's sports magazine, 2025-10-21) reports the commitment and the class of 2027. Prep Dig's player page, its California commitments list and its Palo Alto team roster (Palo Alto, CA) show the same college; on the list and roster the college is a logo link titled 'California' (https://prepdig.com/college/california/). Prep Dig's list date (4/14/26) and its player page's 'Committed on 07/10/2025' are entry dates and are not used. The release gives her hometown as Stanford, CA."
+    },
+    {
+      "teamSlug": "saratoga",
+      "athleteId": "f80e5cd1-2a15-43c2-ac1e-68840fa139bb",
+      "playerId": "p5c9b1cf11f",
+      "fullName": "Aanya Hotha",
+      "college": "penn",
+      "sport": "volleyball",
+      "status": "committed",
+      "asOf": "2026-03-16",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://saratogafalcon.org/34811/sports/aanya-hotha-commits-to-play-division-i-volleyball-at-the-university-of-pennsylvania/",
+          "kind": "news",
+          "quote": "After being scouted by many schools, the junior committed on March 16 to continue her athletic and academic journey in Pennsylvania.",
+          "statedSchool": "Saratoga High School (The Saratoga Falcon is its student newspaper)",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-05-20"
+        },
+        {
+          "url": "https://prepvolleyball.com/club/commitment-update-april-1-2026-3668",
+          "kind": "other",
+          "quote": "Aanya Hotha | 2027 MB | Vision",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-03-31"
+        }
+      ],
+      "basis": "The Saratoga Falcon, Saratoga High's student newspaper (its footer: 'the student journalists of Saratoga High School'), reported on 2026-05-20 that junior Aanya Hotha committed on March 16 to play volleyball at Penn ('will play middle for the Quakers'); a junior in May 2026 is the class of 2027, the roster's class. PrepVolleyball lists 'Aanya Hotha | 2027 MB | Vision' among the players featured in its commitment update of April 1, 2026 (the article body is for subscribers and the college is not shown), which agrees on class year, position and timing. Penn's site had no signing release as of 2026-11-13 (the Ivy League does not use the National Letter of Intent)."
+    }
+  ]
 }

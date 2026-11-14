@@ -29,7 +29,9 @@ docs/MULTI-SPORT.md.
 Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
 and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
 under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
-player stats per set. See "Girls volleyball" under "Local development" and docs/MULTI-SPORT.md.
+player stats per set. It has field hockey's recruiting pages too (/clubs, /commits, /recruiting), from research of
+2026-11-13. See "Girls volleyball" and "Girls volleyball: recruiting" under "Local development" and
+docs/MULTI-SPORT.md.
 
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
@@ -1469,9 +1471,67 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   for a grade, and one El Camino JV row prints "7", stored with no grade). BVAL is marked unavailable, as in
   the winter builds.
 
-What it leaves out, as the winter builds do: /clubs, /commits and /recruiting, si.com, the VNN calendars and
-the region toggle. Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS
-Volleyball Bylaws' allocation of the field, and the smoke and axe passes on this build.
+What it leaves out, as the winter builds do: si.com, the VNN calendars, /club-calendar and the region toggle.
+Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS Volleyball Bylaws'
+allocation of the field, and the smoke and axe passes on this build.
+
+### Girls volleyball: recruiting
+
+The volleyball build has /clubs, /clubs/[slug], /commits and /recruiting, and its team rosters show the same
+profile, club and commitment lines field hockey's do (`HAS_RECRUITING` in `lib/sports/current.ts`). The data is
+research by hand of 2026-11-13, in `data/volleyball/`, under field hockey's schemas, loaders and rules ("Rosters",
+"Clubs" and "College commitments" above), with one change of place: where field hockey accepts a class year plus a
+location in the school's half of the state, volleyball asks for a hometown in the school's own area (its city or a
+neighbouring one in Santa Clara County). DATA-SOURCES §1.11 has the method, source by source. Counted from the
+files on 2026-11-13:
+
+- **Recruiting profiles** (`rosters-enrichment.json`, `profiles[]` only): **441 for 324 of the 569
+  varsity rows, at 38 of the 41 schools** (230 Hudl, 144 claimed MaxPreps pages, 41 SportsRecruits, 26 NCSA); 297 of them, for 250 players,
+  are on a recruiting platform rather than MaxPreps. A volleyball profile names no sport; profiles in another sport:
+  1 softball. `jv-profiles.json` holds **47 for 47 JV players at
+  10 schools** (42 Hudl, 4 SportsRecruits, 1 NCSA). Hudl's public rosters were read for every school's girls volleyball
+  teams (23 schools have one with members), NCSA's women's volleyball page for every school with players, every
+  varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits address probe ran over 870 of the
+  891 varsity and JV rows. Every Hudl and NCSA page was re-read by an independent refuter, who kept all of them.
+- **Clubs** (`clubs.json`): **32 clubs** (South Bay 11, Peninsula 8, East Bay 4, Central Coast 4, San Francisco 3, Marin 1, elsewhere 1) and **250 ties for 177 of the
+  569 varsity rows, at 29 of the 41 schools**: 60 current, 109 listed
+  (unknown) and 81 earlier; 56 players are tied to more than one club. The most ties: MVVC 53, Vision 42, Academy 34, Panda 27, Stingray 17, Red Rock 16, City Beach 14, NorStar 11.
+  11 clubs have no tied player. The ties rest on 408 source entries on 257 URLs (Hudl 234, club sites 37, SportsRecruits 35, MaxPreps career pages 33, NCSA 27, Prep Dig and PrepVolleyball 26, school and local papers 15, a college release 1).
+  Most come from the team list of a player's own Hudl page, which sits on her school's team; a club's own roster
+  gives names only, so a roster match counts only with a second page that names the player, the club and her
+  school. Only the Peninsula and the South Bay were searched for every club (`SEARCHED_REGIONS`); /clubs says so of
+  the others. JV players' clubs are not listed.
+- **College commitments** (`commits.json`): **5 players at
+  4 schools, to 5 colleges**: Maura Hambly (Palo
+  Alto) signed with Cal on 2026-11-11 (Cal's own release names her with Palo Alto High School); Aanya Hotha
+  (Saratoga) to Penn, Kylee Mark (Monta Vista) to Cal Poly and Katie Hamburger (Homestead) to Tulane in beach
+  volleyball, each from her school's student paper; Emi Yu-Yang (Palo Alto) to Hamilton, medium confidence, from
+  her own SportsRecruits page. Every quote was checked against its page as served, twice.
+- **Instagram** (`instagram.json`): 24 clubs' accounts, each linked from the club's own site; no
+  team account has been looked for.
+
+What the research did not reach, so that an absence here says little:
+
+- **Web search was rationed.** The session's search allowance ran out early, so name-by-name web searches covered
+  104 of the 386 seniors, juniors and ungraded players (and 47 more through another engine before that was stopped); every other
+  SCVAL name was searched on its school paper's and local paper's own site search, and every BVAL and SCVAL name
+  on Prep Dig's player pages. About 20 NCVA clubs' websites were not found for the same reason.
+- **Clubs with no record**, so their players' ties are not shown: Apex Volleyball Club (at least four Pioneer
+  players' pages name it; no site or city found), Absolute Volleyball Club (its site answered with a bot
+  challenge), two beach clubs and three clubs named on one MaxPreps page each (`clubs.json`'s notes list them).
+- **Name-only roster matches.** About 60 players' exact names are on a club roster with no second page tying
+  the name to the school; they are not listed.
+- **Private or bare pages.** 75 rostered players have only private Hudl profiles; about 530 live SportsRecruits
+  pages show at most a class year. 18 schools have no usable Hudl volleyball roster.
+- **Commitments.** The fall signing period opened two days before the search and many colleges had posted
+  nothing; SportsRecruits' commits feed was read for 434 of about 3,700 programs; student papers were found for 15
+  of the 41 schools. Leland's calendar lists a signing day on 2026-11-18.
+- **Not searched at all:** school athletics sites for roster values, NCSA's beach volleyball pages, FieldLevel
+  beyond 140 addresses, the JV rows' MaxPreps career pages, and a second reader for the SportsRecruits pages.
+
+`pnpm build-players` stamped each record's `playerId` and added the profiles to `data/players.json`. Re-run it
+after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
+`pnpm test` and the build for this sport as it does for field hockey ("When a roster refetch breaks it").
 
 ## Tests
 
