@@ -1415,7 +1415,7 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## The player registry
 
 `data/players.json` holds one record per person across all three sports and every season the repository
-has seen: an id that never changes, every spelling of the name, a graduation year, and one *stint* per
+has seen (3,946 on 2026-11-14): an id that never changes, every spelling of the name, a graduation year, and one *stint* per
 team, season, sport and level (varsity, JV or a freshman team), each with what every source said about it
 and where the sources disagree. It is internal. No page reads it, and a test fails if anything under
 `app/` or `components/` imports it. It does name about 770 players of 2025-26 who appear nowhere else in
@@ -1436,8 +1436,10 @@ files. It also writes each player's `playerId` into `data/clubs.json`, `data/com
 
 Players are matched on MaxPreps' career id, or on an identical name inside one team, and never on a
 nickname or a near spelling: those, and anything else the rules would not decide alone, are listed under
-`review` in the file (115 items on 2026-11-14, 80 of them pairs of look-alike names nobody has ruled on). The answers go in `data/player-identity.json` (each with its reason), never into
-`data/players.json` by hand.
+`review` in the file. The 87 look-alike pairs of the first build were answered on 2026-11-14 (85 joined, 2
+kept apart); the 28 items left are joins and splits a rule already made, listed to be checked. The answers go in `data/player-identity.json` (each with its reason), never into
+`data/players.json` by hand: `sameAs` for a pair that is one player, `notSame` for a pair that is two.
+Deleting an entry undoes it on the next build.
 
 Last season's players come from MaxPreps' stat sheets, which are not rosters (a sheet lists only the
 players a coach entered a line for):

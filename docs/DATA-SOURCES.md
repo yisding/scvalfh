@@ -1922,20 +1922,36 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   spelling: those are only suggested. A name is compared letters-only (`nameKey`), and never across teams or
   sports. The result does not depend on the order the rows are read in.
 - **`review`** lists what the rules would not decide alone, and **`data/player-identity.json`** is where a
-  person answers (`sameAs`, `rowSplits`, `distinct`; each entry says why, and what a person decided is not
-  second-guessed by any rule). The registry itself is never edited by hand. On 2026-11-14, 115 items: 23
-  `same-name-two-careers` (all joined); 5 `career-two-names`; 80 `possible-match` (61 field hockey, 11 girls
-  soccer, 8 boys basketball), which is every pair of players of one team whose names look like one person's
-  and whose class years do not contradict, unless one list names both under different numbers: last year's
-  career and this year's under a new id ("Addison Paradiso" #24 on Valley Christian's 25-26 sheet, "Addy
-  Paradiso" #24 on its 26-27 roster), an all-league misspelling, a school list's middle name; and 7
-  `same-name-other-sport` (one name at one school in two sports with no career id in common). An
-  independent audit of the first build judged about 63 of the look-alike pairs to be one person each. One
-  `rowSplits` entry, Leigh's. Nobody has answered any of them yet.
-- **2026-11-14 build**: 4,030 players (3,522 with a MaxPreps career, 508 known by name alone: 289 on a
-  school's own JV list only, 190 on a 2025-26 all-league list only), 4,866 stints, 7,638 observations, 586
-  players in more than one season, 15 in more than one sport, 50 conflicts inside a stint and 55 class-year
-  conflicts.
+  person answers (`sameAs`, `rowSplits`, `distinct`, `notSame`; each entry says why, and what a person
+  decided is not second-guessed by any rule). The registry itself is never edited by hand. The first build
+  listed 115 items: 23 `same-name-two-careers` (all joined by the rule), 5 `career-two-names` (all split by
+  the rule), 80 `possible-match` (every pair of players of one team whose names look like one person's and
+  whose class years do not contradict, unless one list names both under different numbers) and 7
+  `same-name-other-sport` (one name at one school in two sports with no career id in common).
+- **The 87 look-alike and cross-sport items were answered on 2026-11-14**: 85 are one player each (84
+  `sameAs` entries, the three Borello records at Valley Christian being one) and 2 are two people
+  (`notSame`: Mission Vista's Jarenuvi and Jaili Benitez, Mt. Carmel's Audrey and Abigail Teuben; in each
+  the first graduated in 2026 and the second plays in fall 2026). Each entry's `basis` gives what it rests
+  on. Most rest on the repository's own rows: one distinctive surname at one school, the same class, and
+  either the same number in both seasons (14), last season's stat-sheet career against this season's new
+  one (33), an all-league list's spelling, or a school's JV list that matches MaxPreps' name for name
+  apart from this one (Monta Vista, Sage Creek, Scripps Ranch, La Jolla). The 20 that did not were read
+  against public pages: MaxPreps' own rosters and career pages, which answered (a career page lists every
+  sport, which settles the cross-sport names: Sora Pham, Hailey Cutler, Mia Jones), the schools' rosters
+  (Valley Christian's gowarriors.net for Giuliana / Gigi Borello #6; Branham's JV field hockey roster for
+  Annalise Clayton and Kathryn Wehrmaker), NCSA (Hailey Moncada, Oliver Evans), the Los Gatan, BVAL's
+  all-league documents and a league track result ("Bintu Deen", the better-supported of two spellings).
+  **The weakest**: Mia Jones at Los Altos (a common name, MaxPreps' linkage alone), Hana Terrell / Tyrrell
+  at Mission Hills (a varsity row created on a tournament day, no page listing both spellings), Skye /
+  Skylar Bohannon at Sage Creek (same class and position; a twin cannot be excluded), and the MacDonald
+  boys basketball pairs, where the 26-27 rows were typed afresh (Jhaylen Richards / Roy-Richard, Mic
+  Borgonia / Bergonia, Jhayde Domingo with the names in each other's fields). Undo any of them by deleting
+  its entry: the next build splits the record and gives each half back the id it had.
+- **28 items remain**, all already acted on by a rule and listed to be checked: the 23 joined careers and
+  the 5 split ones.
+- **2026-11-14 build, after those answers**: 3,946 players (3,488 with a MaxPreps career, 458 known by name
+  alone), 4,834 stints, 7,638 observations, 631 players in more than one season, 22 in more than one sport,
+  50 conflicts inside a stint and 57 class-year conflicts. Before them it was 4,030 players.
 - **Seasons.** `built` names the (sport, season) pairs a build read. A season whose files are gone is
   carried forward from the previous `data/players.json` as it was, which is how the registry outlives the
   rollover that overwrites `rosters.json`: **run `pnpm build-players` before the rollover**. A past season
