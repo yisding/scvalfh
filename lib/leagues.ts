@@ -29,6 +29,8 @@ import { WBAL_SOCCER_LEAGUE } from './league-config/soccer/wbal';
 import { WCAL_SOCCER_LEAGUE } from './league-config/soccer/wcal';
 import { BVAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/bval';
 import { SCVAL_VOLLEYBALL } from './league-config/volleyball/scval';
+import { WBAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/wbal';
+import { WCAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/wcal';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
   SHOOTOUT_INFERENCES,
@@ -53,12 +55,12 @@ export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
   : // The soccer build (SCVAL_SPORT=soccer), the basketball build (SCVAL_SPORT=basketball) and the volleyball build
     // (SCVAL_SPORT=volleyball) cover SCVAL and BVAL (BVAL added to the winter builds 2026-11-13, so the ratings
-    // count SCVAL's games against BVAL schools); the soccer build also covers the WCAL and the WBAL (owner request,
-    // 2026-11-14).
+    // count SCVAL's games against BVAL schools); the soccer and volleyball builds also cover the WCAL and the WBAL
+    // (owner requests, 2026-11-14).
     IS_BASKETBALL
     ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
     : IS_VOLLEYBALL
-      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE]
+      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE]
       : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE];
 
 /**
