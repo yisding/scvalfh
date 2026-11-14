@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "6f1f78ab53aec894d756d34c3826267455a265910d798a8ed1e2be55ac04f7b9",
+  "contentHash": "3857e04d12508fed9a2199e4852b0ddad0c6e204a05dfe9bfb170b6f369c7536",
   "counts": {
     "byLeague": {
       "bval": {
@@ -41,7 +41,7 @@
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-14T16:12:56.243Z",
+  "fetchedAt": "2026-11-14T19:17:11.755Z",
   "leagues": [
     {
       "backfilled": 0,
