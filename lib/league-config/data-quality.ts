@@ -497,7 +497,26 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
   resultCorrections: {},
-  addedGames: [],
+  addedGames: [
+    // A non-league game on neither school's MaxPreps schedule (read 2026-11-14), given by the owner on 2026-11-14 with
+    // Cupertino's own schedule: the printable 2026-2027 Boys Basketball Schedule linked from chs.fuhsd.org's boys
+    // basketball page ("updated on 11/11/26"), first row "Tuesday 24-Nov | Santa Teresa High School | CHS | 5:30/7:00"
+    // (JV/varsity). Listed without a score until MaxPreps lists the game.
+    {
+      dateKey: '2026-11-24',
+      time: '19:00',
+      home: 'cupertino',
+      away: 'santa-teresa',
+      goals: null,
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      reportedOn: '2026-11-14',
+      jv: { dateKey: '2026-11-24', time: '17:30' },
+      source: 'Cupertino High School’s 2026-2027 Boys Basketball Schedule (updated Nov 11, 2026): Santa Teresa at CHS on Tue Nov 24, JV 5:30 PM, varsity 7 PM; MaxPreps does not list the game',
+      url: 'https://chs.fuhsd.org/uploaded/Athletics_26-27/Basketball_boys_26.pdf',
+    },
+  ],
   fixtureMoves: {},
   notCovered: [],
 };
