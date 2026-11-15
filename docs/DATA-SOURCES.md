@@ -2882,6 +2882,12 @@ for Christopher, Willow Glen, Live Oak or Del Mar (`delmarfieldhockey` is Delmar
 only ever hit other schools (`chsfockey` is Columbia's, `ghsfockey` Greenfield, Massachusetts's). The
 same could be done for the other leagues and the other builds.
 
+On 2026-11-15 the owner gave four San Diego Section accounts: San Marcos `smhs_fieldhockey` (profile opened:
+"San Marcos High School Field Hockey", bio "San Marcos, CA 92078"), Poway `powayfieldhockey`, Bishop's
+`tbsfhockey` and Canyon Hills `chhsfhock` (its post on the Open final, opened, is by "Canyon Hills Field
+Hockey"). Instagram then answered the other two profiles with its login page, so they rest on the owner's
+word, as the note of each says.
+
 **The other builds** (`data/soccer/`, `data/basketball/`, `data/volleyball/instagram.json`, 2026-11-14):
 the same method and rule for that build's program, the girls soccer, boys basketball or girls
 volleyball program's own account, or one the school's boys and girls teams share; a boys-only soccer

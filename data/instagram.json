@@ -1,6 +1,6 @@
 {
-  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, search results and the owner’s own reports and confirmations. Each record’s note says where its handle was found. A second round on 2026-11-14 went back over the 64 teams and 9 clubs then without a record (their schools’ athletics and team pages, program sites and student papers read by script, and searches limited to Instagram), opening each profile it kept in a browser: it added one team (Tamalpais) and two clubs; the owner then gave four SCVAL teams’ accounts, and trying likely handles found seven BVAL teams’.",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, search results and the owner’s own reports and confirmations. Each record’s note says where its handle was found. A second round on 2026-11-14 went back over the 64 teams and 9 clubs then without a record (their schools’ athletics and team pages, program sites and student papers read by script, and searches limited to Instagram), opening each profile it kept in a browser: it added one team (Tamalpais) and two clubs; the owner then gave four SCVAL teams’ accounts, and trying likely handles found seven BVAL teams’. On 2026-11-15 the owner gave four San Diego teams’ accounts (San Marcos, Poway, Bishop’s, Canyon Hills).",
+  "capturedAt": "2026-11-15",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its field hockey program’s own (level varsity), or its JV team’s own (level jv); never the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
@@ -406,6 +406,38 @@
       "foundAt": "https://westview.powayusd.com/apps/pages/index.jsp?uREC_ID=3782301&type=d&pREC_ID=2447992",
       "note": "Linked from the school’s or the program’s own page: Westview HS (Poway USD) Field Hockey team page linking instagram.com/westview_fieldhockey/.",
       "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "san-marcos",
+      "level": "varsity",
+      "handle": "smhs_fieldhockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-15) as San Marcos field hockey’s account. Profile opened: \"San Marcos High School Field Hockey\", bio \"2021 Palomar League Champions … 2019 CIF Division 2 Runner-Up … San Marcos, CA 92078\"",
+      "checkedOn": "2026-11-15"
+    },
+    {
+      "slug": "poway",
+      "level": "varsity",
+      "handle": "powayfieldhockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-15) as Poway field hockey’s account. Not opened: Instagram asked for a login",
+      "checkedOn": "2026-11-15"
+    },
+    {
+      "slug": "bishops",
+      "level": "varsity",
+      "handle": "tbsfhockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-15) as The Bishop’s School field hockey’s account. Not opened: Instagram asked for a login",
+      "checkedOn": "2026-11-15"
+    },
+    {
+      "slug": "canyon-hills",
+      "level": "varsity",
+      "handle": "chhsfhock",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-15) as Canyon Hills field hockey’s account, with its post on the 2026 Open final (DfwDs9VM4Kt). The post, opened, is by \"Canyon Hills Field Hockey\", Nov 14, 2026: “It’s a wrap for our 2026 season … ❤️ Coach Kat”",
+      "checkedOn": "2026-11-15"
     },
     {
       "slug": "bonita",

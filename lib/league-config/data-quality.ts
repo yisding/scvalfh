@@ -306,7 +306,10 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     //  - Division I: San Marcos 4, Poway 2 (owner, 2026-11-15, with an Instagram post of the game); San Marcos'
     //    goals were three by Arden Pantel (#14) and one by Brenna Kirsch (#5). A two-goal margin was settled in
     //    regulation (overtime is sudden victory).
-    //  - Open: Bishop's beat Canyon Hills (owner, 2026-11-15); no score had been published. The winner alone is
+    //  - Open: Bishop's beat Canyon Hills (owner, 2026-11-15). Canyon Hills field hockey's own post that night
+    //    (chhsfhock, Nov 14): "It's a wrap for our 2026 season. While it wasn't the outcome we'd hoped for ...
+    //    For 60 minutes, you played with heart" (sixty minutes is regulation: no overtime is recorded, and it gives
+    //    no score). No score had been published. The winner alone is
     //    recorded (`goals` null): the game stays score pending until MaxPreps or the Section's sheet scores it,
     //    and that score then stands on its own.
     '607baf70-0136-4bf7-bc72-a3def7973c55': {
@@ -322,8 +325,8 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       winner: 'bishops',
       otPeriods: 0,
       shootout: null,
-      source: 'the owner’s report, Nov 15, 2026',
-      url: null,
+      source: 'the owner’s report, Nov 15, 2026, and Canyon Hills field hockey’s own post that night: “It’s a wrap for our 2026 season. While it wasn’t the outcome we’d hoped for …”',
+      url: 'https://www.instagram.com/chhsfhock/p/DfwDs9VM4Kt/',
       certainty: 'reported',
     },
   },
