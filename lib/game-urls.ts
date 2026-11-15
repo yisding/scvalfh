@@ -17,7 +17,9 @@
  *     each game it superseded (an si.com fill, a bracket-sheet game or a schedule-only game a feed lists now:
  *     lib/pipeline/steps/assemble.ts supersededGamesOf), and those games' aliases.
  *  3. A slug always beats an alias: a segment that is some game's slug now is nobody's alias.
- *  4. An alias belongs to one game: the one that had it most recently (a slug just left beats an inherited alias).
+ *  4. An alias belongs to one game: the one that had it most recently. A slug a game just left comes first, then a
+ *     segment claimed for the first time (a legacy param), then an alias already held, and last a superseded id
+ *     recorded in an earlier run, which its game normally holds as an alias already.
  *
  * Pure: no I/O, no clock, and no import beyond the two id leaves, so proxy.ts can bundle it.
  */
@@ -165,24 +167,29 @@ export function withGameAliases<T extends UrlGame>(games: readonly T[], history:
     live.add(game.slug);
   }
 
-  // Each game's claims: `fresh` are segments it (or a game it replaced) was published at until now; `kept` are
-  // aliases it already had.
+  // Each game's claims, in rule 4's order. `left`: the slug it had in the previous snapshot, or that a game it
+  // replaces in this run had. `fresh`: segments claimed for the first time (its legacy param; those of a game it
+  // replaces in this run). `kept`: aliases it, or that game, already had. `carried`: the legacy segments of an id
+  // superseded in an EARLIER run. `superseded` is carried all season, so these come up on every run; the game has
+  // them among its aliases unless another game has had the segment since, and that game keeps it.
   const claims = [...games]
     .sort((a, b) => (a.contestId < b.contestId ? -1 : a.contestId > b.contestId ? 1 : 0))
     .map((game) => {
+      const left: string[] = [];
       const fresh: string[] = [];
       const kept: string[] = [...(game.aliases ?? [])];
+      const carried: string[] = [];
       const prior = before.get(game.contestId);
-      if (prior?.slug) fresh.push(prior.slug);
+      if (prior?.slug) left.push(prior.slug);
       kept.push(...(prior?.aliases ?? []));
       if (history.publishedAtLegacyParam?.(game)) fresh.push(...legacySegments(game.contestId));
       for (const from of replaced.get(game.contestId) ?? []) {
-        fresh.push(...legacySegments(from));
         const gone = before.get(from);
-        if (gone?.slug) fresh.push(gone.slug);
+        (gone ? fresh : carried).push(...legacySegments(from));
+        if (gone?.slug) left.push(gone.slug);
         kept.push(...(gone?.aliases ?? []));
       }
-      return { game, fresh, kept };
+      return { game, tiers: [left, fresh, kept, carried] };
     });
 
   const owner = new Map<string, string>();
@@ -190,8 +197,9 @@ export function withGameAliases<T extends UrlGame>(games: readonly T[], history:
     if (!isGameUrlSegment(segment) || live.has(segment) || owner.has(segment)) return;
     owner.set(segment, contestId);
   };
-  for (const { game, fresh } of claims) for (const segment of fresh) claim(segment, game.contestId);
-  for (const { game, kept } of claims) for (const segment of kept) claim(segment, game.contestId);
+  for (const tier of [0, 1, 2, 3]) {
+    for (const { game, tiers } of claims) for (const segment of tiers[tier]) claim(segment, game.contestId);
+  }
 
   const aliases = new Map<string, string[]>();
   for (const [segment, contestId] of owner) aliases.set(contestId, [...(aliases.get(contestId) ?? []), segment]);

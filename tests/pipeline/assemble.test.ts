@@ -124,6 +124,19 @@ describe('gameUrlsOf: each game’s slug and aliases, against the previous snaps
       [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina', old.contestId],
       [other.contestId]: ['2026-10-06-santa-catalina-at-greenfield', other.contestId],
     });
+    // The record keeps where the page was (lib/snapshot/content-dates.ts): a contest back on another day has its
+    // old slug and aliases as aliases again, unless a game has that slug now.
+    const kept = { ...gone, contentRemovals: [{ ...gone.contentRemovals![0], slug: '2026-09-04-greenfield-at-santa-catalina', aliases: ['2026-08-28-greenfield-at-santa-catalina'] }] } as Snapshot;
+    const back = { ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-11', official: null }), contestId: old.contestId };
+    expect(urls(gameUrlsOf([back, other], kept, [], {}, AT))[old.contestId]).toEqual([
+      '2026-09-11-greenfield-at-santa-catalina',
+      ...['2026-08-28-greenfield-at-santa-catalina', '2026-09-04-greenfield-at-santa-catalina', old.contestId].sort(),
+    ]);
+    const taker = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', official: null });
+    expect(urls(gameUrlsOf([back, taker], kept, [], {}, AT))[old.contestId]).toEqual([
+      '2026-09-11-greenfield-at-santa-catalina',
+      ...['2026-08-28-greenfield-at-santa-catalina', old.contestId].sort(),
+    ]);
     // A removal of a game that is still there (it only changed its date) vouches for nothing new.
     const moved = { ...loaded([old]), contentRemovals: [{ contestId: old.contestId, dateKey: '2026-08-28', slugs: [], removedAt: AT }] } as Snapshot;
     expect(urls(gameUrlsOf([old, other], moved, [], {}, AT))[other.contestId]).toEqual(['2026-10-06-santa-catalina-at-greenfield']);

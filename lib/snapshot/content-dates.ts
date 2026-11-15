@@ -100,7 +100,9 @@ export function contentRemovalsOf(
   const fresh: ContentRemoval[] = previous.games.flatMap((prior) => {
     const current = now.get(prior.contestId);
     if (current !== undefined && current.dateKey === prior.dateKey) return [];
-    return [{ contestId: prior.contestId, dateKey: prior.dateKey, slugs: sideSlugs(prior), removedAt: fetchedAt }];
+    // A contest gone altogether leaves its page's URLs on the record, for the day it comes back (ContentRemoval.slug).
+    const urls = current === undefined ? { ...(prior.slug ? { slug: prior.slug } : {}), ...(prior.aliases ? { aliases: prior.aliases } : {}) } : {};
+    return [{ contestId: prior.contestId, dateKey: prior.dateKey, slugs: sideSlugs(prior), removedAt: fetchedAt, ...urls }];
   });
   const byKey = new Map<string, ContentRemoval>();
   for (const r of [...(previous.contentRemovals ?? []), ...fresh]) {

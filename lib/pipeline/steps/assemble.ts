@@ -125,7 +125,8 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
  * A game is given its id, the URL before slugs, as an alias only where it may have been published at it and
  * nothing here can say otherwise: with no previous snapshot (a first run, or a file that would not load), and for
  * a contest the previous snapshot records as gone that is back (`contentRemovals`). Anything else new was first
- * seen now, and its id was never a URL.
+ * seen now, and its id was never a URL. A contest that is back also gets the slug and aliases its removal record
+ * kept (ContentRemoval.slug), as aliases it already had: whatever has used one of them since keeps it.
  */
 export function gameUrlsOf(
   games: readonly Game[],
@@ -141,9 +142,17 @@ export function gameUrlsOf(
   const leaveFree = withFixtureGames(games, unmatched, today, fetchedAt).listed.map(baseGameSlug);
   const slugged = withGameSlugs(games, { previous: before, superseded, leaveFree });
   const reserved = withFixtureGames(slugged, unmatched, today, fetchedAt).listed.map((g) => g.slug!);
+  // Contests the previous snapshot records as gone, each with the URLs its latest such record kept.
   const known = new Set(before.map((g) => g.contestId));
-  const returned = new Set((previous?.contentRemovals ?? []).map((r) => r.contestId).filter((id) => !known.has(id)));
-  return withGameAliases(slugged, {
+  const returned = new Map<ContestId, string[]>();
+  const removals = [...(previous?.contentRemovals ?? [])].sort((a, b) => a.removedAt.localeCompare(b.removedAt));
+  for (const r of removals) {
+    if (known.has(r.contestId)) continue;
+    const had = [...(r.slug ? [r.slug] : []), ...(r.aliases ?? [])];
+    if (had.length > 0 || !returned.has(r.contestId)) returned.set(r.contestId, had);
+  }
+  const remembering = slugged.map((g) => (returned.get(g.contestId)?.length ? { ...g, aliases: returned.get(g.contestId) } : g));
+  return withGameAliases(remembering, {
     previous: before,
     superseded,
     reserved,

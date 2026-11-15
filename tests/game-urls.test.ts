@@ -193,6 +193,28 @@ describe('rules 2-4: aliases', () => {
     expect(carried[0].aliases).toEqual(['cifsds-a-at-b', 'sblive-6543072']);
   });
 
+  it('a superseded id recorded in an earlier run never takes a segment another game has had since', () => {
+    // Run 1: A (the lower contest id) supersedes the schedule-only game official:X on another day, so X is A's alias.
+    const superseded = { 'official:2026-11-24-a-at-b': GUID_A };
+    const fixture = { ...g('official:2026-11-24-a-at-b', '2026-11-24', 'a', 'b'), slug: '2026-11-24-a-at-b' };
+    const a = g(GUID_A, '2026-11-25', 'a', 'b');
+    const run = (games: UrlGame[], previous: UrlGame[]) =>
+      withGameAliases(withGameSlugs(games, { previous, superseded }), { previous, superseded });
+    const one = run([a], [fixture]);
+    expect(one[0].aliases).toEqual(['2026-11-24-a-at-b', 'official-2026-11-24-a-at-b']);
+    // Run 2: B is scheduled on the 24th, at the slug: it is B's page, nobody's alias.
+    const two = run([a, g(GUID_B, '2026-11-24', 'a', 'b')], one);
+    expect(urls(two)).toEqual({ [GUID_A]: ['2026-11-25-a-at-b', 'official-2026-11-24-a-at-b'], [GUID_B]: ['2026-11-24-a-at-b'] });
+    // Run 3: B moves away. The slug it just left is B's alias, though A's carried supersede names the segment too.
+    const three = run([a, g(GUID_B, '2026-12-01', 'a', 'b')], two);
+    expect(urls(three)).toEqual({
+      [GUID_A]: ['2026-11-25-a-at-b', 'official-2026-11-24-a-at-b'],
+      [GUID_B]: ['2026-12-01-a-at-b', '2026-11-24-a-at-b'],
+    });
+    // Run 4 and after: it stays B's, an alias B holds against a claim A's supersede repeats on every run.
+    expect(urls(run([a, g(GUID_B, '2026-12-01', 'a', 'b')], three))).toEqual(urls(three));
+  });
+
   it('a game seen for the first time by the pipeline has no alias: its id was never a URL', () => {
     const now = withGameAliases(withGameSlugs([g(GUID_A, '2026-10-06', 'a', 'b')]));
     expect(now[0]).not.toHaveProperty('aliases');

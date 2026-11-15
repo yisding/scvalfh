@@ -751,6 +751,8 @@ export const SnapshotObject = z.object({
         dateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         slugs: z.array(z.string().min(1)),
         removedAt: z.string().min(20),
+        slug: z.string().regex(GAME_SLUG_RE).optional(),
+        aliases: z.array(z.string().refine(isGameUrlSegment)).min(1).optional(),
       }),
     )
     .optional(),

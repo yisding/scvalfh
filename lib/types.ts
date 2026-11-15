@@ -1223,6 +1223,13 @@ export interface ContentRemoval {
   slugs: TeamSlug[];
   /** The run that saw it gone (that run's `fetchedAt`). */
   removedAt: string;
+  /**
+   * Where its page was, when the contest left the snapshot altogether (not when it only changed its date): its slug
+   * and aliases then (lib/game-urls.ts). If the contest comes back, every one of them is an alias of it again
+   * (lib/pipeline/steps/assemble.ts gameUrlsOf), so a link to the page it had still arrives.
+   */
+  slug?: string;
+  aliases?: string[];
 }
 
 export interface Snapshot {

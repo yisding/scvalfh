@@ -209,8 +209,9 @@ echo "200 every page in /sitemap.xml ($(grep -c . <<< "$paths"):$families)"
 # URL before slugs: /game/<MaxPreps GUID>, /game/sblive-<n>, /game/cifsds-<a>-at-<b>, /game/official-<date>-<a>-at-<b>)
 # is a permanent redirect to the game's slug, and its OG image to that page's (next.config.ts redirects() for a
 # slug, proxy.ts for an id; lib/game-aliases.ts). The slug is a page the sitemap lists, so it was fetched above.
-# One hop, or two for an id whose first answer is itself an alias of the same game (an `official-` id of a game at
-# a neutral site: lib/game-aliases.ts legacyGameTarget), and that alias is checked in its own right.
+# One hop, or two in the one case lib/game-aliases.ts legacyGameTarget describes: an `official-` id whose first
+# answer is that segment without its prefix, itself an alias of the same game (a game at a neutral site). That
+# alias has its own row here, which must go straight to the slug, so no chain is longer and none can loop.
 n_redirects=0
 quiet=1
 while read -r from to; do
@@ -219,8 +220,13 @@ while read -r from to; do
   for suffix in '' /opengraph-image; do
     expect "/game/$from$suffix" 308 '' ''
     hop=$(header location); hop=${hop#/game/}; hop=${hop%"$suffix"}
-    [ "$(header location)" = "/game/$hop$suffix" ] && { [ "$hop" = "$to" ] || grep -qxF "$hop $to" <<< "$aliases"; } ||
-      fail "/game/$from$suffix" "location '$(header location)', expected /game/$to$suffix"
+    ok=0
+    if [ "$(header location)" = "/game/$hop$suffix" ]; then
+      if [ "$hop" = "$to" ]; then ok=1
+      elif [ "official-$hop" = "$from" ] && grep -qxF "$hop $to" <<< "$aliases"; then ok=1
+      fi
+    fi
+    [ "$ok" = 1 ] || fail "/game/$from$suffix" "location '$(header location)', expected /game/$to$suffix"
   done
   n_redirects=$((n_redirects + 1))
 done <<< "$aliases"

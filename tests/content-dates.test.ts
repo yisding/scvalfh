@@ -108,6 +108,16 @@ describe('contentRemovalsOf (lib/pipeline/steps/assemble.ts) and the pages a rem
     expect(contentRemovalsOf([kept, deleted], { games: [kept, deleted] }, RUN)).toEqual([]);
   });
 
+  it('a contest gone altogether leaves its page’s slug and aliases on the record; one that only moved does not', () => {
+    const gone = { ...deleted, slug: '2026-09-16-los-altos-at-cupertino', aliases: [deleted.contestId] };
+    const was = { ...before, slug: '2026-09-23-los-altos-at-fremont', aliases: [before.contestId] };
+    const out = contentRemovalsOf([kept, moved], { games: [kept, gone, was] }, RUN);
+    expect(out.find((r) => r.contestId === deleted.contestId)).toMatchObject({ slug: '2026-09-16-los-altos-at-cupertino', aliases: [deleted.contestId] });
+    const stillThere = out.find((r) => r.contestId === before.contestId)!;
+    expect(stillThere).not.toHaveProperty('slug');
+    expect(stillThere).not.toHaveProperty('aliases');
+  });
+
   it('records a contest gone from the snapshot, and one that left its old date', () => {
     expect(contentRemovalsOf([kept, moved], { games: [kept, deleted, before] }, RUN)).toEqual([
       { contestId: deleted.contestId, dateKey: '2026-09-16', slugs: ['cupertino', 'los-altos'], removedAt: RUN },
