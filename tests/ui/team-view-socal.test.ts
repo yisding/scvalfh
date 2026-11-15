@@ -83,7 +83,7 @@ describe('San Diego team pages (socal corpus)', () => {
     const hilltop = textOf(html);
     const at = html.indexOf('<section id="schedule"');
     expect(html.slice(at, html.indexOf('</section>', at)), 'components/teams/TeamGameLog.tsx').toContain(
-      `href="/game/${first.contestId.replace(':', '-')}"`,
+      `href="/game/${first.slug}"`,
     );
     expect(hilltop).toContain('vs Southwest');
     expect(hilltop).not.toContain('0-0-0');

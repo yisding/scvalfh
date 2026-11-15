@@ -4,7 +4,7 @@ import { gameHref, gameIdToParam, paramToGameId } from '../lib/game-id';
 
 const GUID = '30e15701-fddc-4695-9f1c-148e19f58ca5';
 
-describe('game ids in URLs', () => {
+describe('game ids and their legacy URL params', () => {
   it('leaves a MaxPreps GUID unchanged', () => {
     expect(gameIdToParam(GUID)).toBe(GUID);
     expect(paramToGameId(GUID)).toBe(GUID);
@@ -26,10 +26,13 @@ describe('game ids in URLs', () => {
     }
   });
 
-  it('builds the game href', () => {
-    expect(gameHref(GUID)).toBe(`/game/${GUID}`);
-    expect(gameHref('sblive:6541425')).toBe('/game/sblive-6541425');
-    expect(gameHref('cifsds:mira-mesa-at-san-pasqual')).toBe('/game/cifsds-mira-mesa-at-san-pasqual');
+  it('builds the game href from the slug, never from the id (tests/game-urls.test.ts has the slug rules)', () => {
+    const side = (slug: string) => ({ slug, name: slug });
+    const game = { contestId: GUID, dateKey: '2026-10-06', site: 'home' as const, away: side('santa-catalina'), home: side('greenfield') };
+    expect(gameHref(game)).toBe('/game/2026-10-06-santa-catalina-at-greenfield');
+    expect(gameHref({ ...game, slug: '2026-10-06-santa-catalina-at-greenfield-2' })).toBe(
+      '/game/2026-10-06-santa-catalina-at-greenfield-2',
+    );
   });
 
   it('leaves anything else alone', () => {

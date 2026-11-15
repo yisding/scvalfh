@@ -1,12 +1,19 @@
 /**
- * Game ids in URLs (SPEC §13.3). Pure and client-safe: no runtime imports.
+ * Game ids, and the game link (SPEC §13.3). Pure and client-safe: its one import is the slug leaf.
  *
- * A MaxPreps contest id is a GUID and is its own URL param. A game that only si.com has (owner
- * decision D2, rule 2) carries the contest id `sblive:<digits>`, and a San Diego Section playoff game that
- * only the Section's bracket sheet has carries `cifsds:<away>-at-<home>` (lib/postseason/sds-sheet-results.ts).
- * ':' is not a friendly path character, so their params are `sblive-<digits>` and `cifsds-<away>-at-<home>`.
- * A GUID never starts with `sblive-` or `cifsds-`, so the map is a bijection.
+ * A game's page is `/game/<slug>` (lib/game-slug.ts: `2026-10-06-santa-catalina-at-greenfield`); `gameHref` is
+ * the one way to build that link. The contest id is the game's identity, not its URL: a MaxPreps contest id is a
+ * GUID, a game that only si.com has (owner decision D2, rule 2) carries `sblive:<digits>`, a San Diego Section
+ * playoff game that only the Section's bracket sheet has carries `cifsds:<away>-at-<home>`
+ * (lib/postseason/sds-sheet-results.ts), and a game only a league's schedule or an added source has carries
+ * `official:<date>-<away>-at-<home>`.
+ *
+ * Until slugs, the id WAS the URL segment (the "legacy param"): the GUID itself, and `sblive-<digits>`,
+ * `cifsds-<away>-at-<home>`, `official-<date>-<away>-at-<home>` for the others, ':' not being a friendly path
+ * character. `gameIdToParam` still gives that segment, for the aliases that redirect it (lib/game-urls.ts).
  */
+
+import { gameSlug, type GameSlugFacts } from './game-slug';
 
 /** A MaxPreps contest GUID, either case (the shape of the id, not proof MaxPreps has the contest). */
 export const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -40,7 +47,7 @@ export const isPrefixedContestId = (id: string): boolean => PREFIXED_ID.test(id)
 
 const PREFIXED_PARAM = /^(sblive-\d+|cifsds-[a-z0-9-]+-at-[a-z0-9-]+|official-\d{4}-\d{2}-\d{2}-[a-z0-9-]+-at-[a-z0-9-]+)$/;
 
-/** 'sblive:123' → 'sblive-123', 'cifsds:a-at-b' → 'cifsds-a-at-b'; a GUID is returned unchanged. */
+/** The legacy param of a contest id: 'sblive:123' → 'sblive-123', 'cifsds:a-at-b' → 'cifsds-a-at-b'; a GUID is returned unchanged. */
 export function gameIdToParam(contestId: string): string {
   return PREFIXED_ID.test(contestId) ? contestId.replace(':', '-') : contestId;
 }
@@ -50,7 +57,7 @@ export function paramToGameId(param: string): string {
   return PREFIXED_PARAM.test(param) ? param.replace('-', ':') : param;
 }
 
-/** `/game/<param>` — the only way app/ and components/ build a game link. */
-export function gameHref(contestId: string): string {
-  return `/game/${gameIdToParam(contestId)}`;
+/** `/game/<slug>` — the only way app/ and components/ build a game link. */
+export function gameHref(game: GameSlugFacts & { slug?: string }): string {
+  return `/game/${gameSlug(game)}`;
 }

@@ -436,10 +436,10 @@ describe('the committed snapshot, as the loader records it', () => {
 
 describe('a corrected score that is not a shootout says where it is from (PR #127 review)', () => {
   it('prints the correction’s source on the game page', async () => {
-    const { buildGameView } = await import('../components/game/game-view');
+    const { buildGameViewOf } = await import('../components/game/game-view');
     // Olympian 6, Sage Creek 0 (the Section's bracket sheet; MaxPreps has no score) and Helix 2, Bonita Vista 1.
-    expect(buildGameView('dba373ca-9805-4eb4-a479-553059994aee')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('The San Diego Section’s Division II bracket sheet');
-    expect(buildGameView('3a37744f-8264-47f8-baa3-6c660b8e3892')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('Cifsshome.org, the San Diego Section’s score listing');
+    expect(buildGameViewOf('dba373ca-9805-4eb4-a479-553059994aee')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('The San Diego Section’s Division II bracket sheet');
+    expect(buildGameViewOf('3a37744f-8264-47f8-baa3-6c660b8e3892')?.scoreNote, 'components/game/game-view.ts scoreNoteFor').toContain('Cifsshome.org, the San Diego Section’s score listing');
   }, 120_000);
 });
 

@@ -1,7 +1,7 @@
 import { ALLOWS_TIES } from '../../words/score-words';
 import SectionHeader from '../../ui/SectionHeader';
 import { plural } from '../../../lib/format';
-import type { BackfillRow } from '../../../lib/types';
+import type { BackfillRowView } from '../about-view';
 import { shootoutTeamsWho, type ShootoutSection } from '../about-view';
 import BackfillTable from '../BackfillTable';
 
@@ -12,7 +12,7 @@ export function BackfillsSection({
   backfilled,
   shootoutSections,
 }: {
-  backfilled: readonly BackfillRow[];
+  backfilled: readonly BackfillRowView[];
   shootoutSections: readonly ShootoutSection[];
 }) {
   return (

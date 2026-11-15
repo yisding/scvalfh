@@ -45,11 +45,16 @@ describe('an official fixture no source lists is a game on the schedule', () => 
 
   it('has a URL of its own, and leaves a fixture with a school outside the registry a fixture', () => {
     expect(isOfficialContestId(officialContestId('2026-10-06', 'santa-catalina', 'greenfield'))).toBe(true);
-    expect(gameHref('official:2026-10-06-santa-catalina-at-greenfield')).toBe('/game/official-2026-10-06-santa-catalina-at-greenfield');
     expect(paramToGameId(gameIdToParam('official:2026-10-06-santa-catalina-at-greenfield'))).toBe('official:2026-10-06-santa-catalina-at-greenfield');
     const outside = { ...fixture, id: 'x', awaySlug: null } as OfficialFixture;
     const out = withFixtureGames([], [fixture, outside], '2026-11-14', FETCHED);
     expect(out.listed.map((g) => g.contestId)).toEqual(['official:2026-10-06-santa-catalina-at-greenfield']);
+    // Its page is at its slug: the date and the sides, which is its id without the prefix.
+    expect(out.listed.map((g) => g.slug)).toEqual(['2026-10-06-santa-catalina-at-greenfield']);
+    expect(gameHref(out.listed[0])).toBe('/game/2026-10-06-santa-catalina-at-greenfield');
+    // A slug a stored game holds is not taken twice.
+    const taken = { ...out.listed[0], contestId: 'sblive:1', official: undefined };
+    expect(withFixtureGames([taken], [fixture], '2026-11-14', FETCHED).listed.map((g) => g.slug)).toEqual(['2026-10-06-santa-catalina-at-greenfield-2']);
     expect(out.rest).toEqual([outside]);
     // Once a game carries the fixture's stamp, the fixture adds nothing.
     const matched = { ...fixtureGame(fixture, '2026-11-14', FETCHED)!, contestId: '00000000-0000-4000-8000-00000000abcd' };

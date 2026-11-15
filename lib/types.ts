@@ -482,6 +482,18 @@ export interface BackfillProvenance {
 
 export interface Game {
   contestId: ContestId;
+  /**
+   * The game's URL segment, `/game/<slug>` (lib/game-slug.ts: `2026-10-06-santa-catalina-at-greenfield`). Stored:
+   * the pipeline assigns it with the previous snapshot beside it (lib/game-urls.ts), and a file written before slugs
+   * existed gets its slugs on load, so every game the site reads has one. Absent only on a game not assembled yet.
+   */
+  slug?: string;
+  /**
+   * Every other segment this game was published at: a slug it had before its date, host or opponent's name changed,
+   * its legacy id param (`/game/<contest id>` was the URL before slugs), and those of the games it superseded. Each
+   * redirects to `slug` (next.config.ts, proxy.ts). Absent when there are none.
+   */
+  aliases?: string[];
   dateLocal: string;
   dateUtc: string;
   dateKey: string;
@@ -1211,6 +1223,13 @@ export interface ContentRemoval {
   slugs: TeamSlug[];
   /** The run that saw it gone (that run's `fetchedAt`). */
   removedAt: string;
+  /**
+   * Where its page was, when the contest left the snapshot altogether (not when it only changed its date): its slug
+   * and aliases then (lib/game-urls.ts). If the contest comes back, every one of them is an alias of it again
+   * (lib/pipeline/steps/assemble.ts gameUrlsOf), so a link to the page it had still arrives.
+   */
+  slug?: string;
+  aliases?: string[];
 }
 
 export interface Snapshot {
@@ -1242,8 +1261,9 @@ export interface Snapshot {
   /**
    * NEW. Games an earlier build published that a MaxPreps contest has since superseded (D2 rule 10: an si.com
    * `sblive:` fill, a San Diego bracket-sheet `cifsds:` game, an added or league-schedule `official:` game), mapped
-   * to that contest. Carried forward for the season so the old /game/<param> keeps resolving: next.config.ts
-   * redirects it to the MaxPreps game (lib/game-redirects.ts). Empty object when none.
+   * to that contest. Carried forward for the season. The pipeline reads it when it assigns URLs: the contest
+   * takes over the superseded game's slug and aliases, its old id URL among them (lib/game-urls.ts), so every
+   * URL it was published at still arrives. Empty object when none.
    */
   supersededGames: Record<ContestId, ContestId>;
   /**

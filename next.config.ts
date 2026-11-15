@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
-import { gameRedirects } from './lib/game-redirects';
+import { getGames } from './lib/data';
+import { renamedGameRedirects } from './lib/game-aliases';
 
 /**
  * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
@@ -100,15 +101,18 @@ const nextConfig: NextConfig = {
    * the four icon routes, all built from the same snapshot and all wanting the same freshness.
    */
   /**
-   * A retired game page goes to the game that replaced it: each `supersededGames` key of this sport's snapshot (an
-   * si.com fill, a San Diego bracket-sheet game, an added or league-schedule game MaxPreps lists now) is a 308 from
-   * `/game/<old>` to `/game/<maxpreps>`, and the same for its OG image (lib/game-redirects.ts). Built from the
-   * snapshot at build time, like every page, so a data commit's redeploy brings the new ones. Every server applies
-   * them before it looks for a page, and vinext bakes them into its server entry, so the Worker has them without a
-   * filesystem; scripts/smoke-server.sh checks each one on all three servers.
+   * A game's page is `/game/<slug>` (lib/game-slug.ts), and the slug follows the game: one moved to another day,
+   * or whose host or opponent's name changed, has a new slug, and the one it had is an alias (`Game.aliases`,
+   * lib/game-urls.ts). Each such alias is a 308 to the page it is at now, and the same for its OG image
+   * (lib/game-aliases.ts). Built at build time from the games as the pages read them (lib/data.ts), so a data
+   * commit's redeploy brings the new ones; vinext bakes them into its server entry, so the Worker has them too.
+   *
+   * The OLD ID URLS (`/game/<MaxPreps GUID>` and the rest) are not here: there is one per game published before
+   * slugs, more than the 1,024 redirects a config may carry on Vercel, so proxy.ts answers those.
+   * scripts/smoke-server.sh checks both kinds on all three servers.
    */
   async redirects() {
-    return gameRedirects();
+    return renamedGameRedirects(getGames());
   },
 
   async headers() {

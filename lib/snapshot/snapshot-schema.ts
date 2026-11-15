@@ -18,6 +18,8 @@
 import { z } from 'zod';
 
 import { GUID_RE } from '../game-id';
+import { GAME_SLUG_RE } from '../game-slug';
+import { isGameUrlSegment } from '../game-urls';
 import { dateKey, httpUrl, slugId } from '../schema-primitives';
 import { OFFICIAL_SOURCE_IDS, type Snapshot } from '../types';
 
@@ -194,6 +196,8 @@ const backfillProvenance = z.object({
 export const GameSchema = z
   .object({
     contestId,
+    slug: z.string().regex(GAME_SLUG_RE, 'a game slug is <YYYY-MM-DD>-<words>').optional(),
+    aliases: z.array(z.string().refine(isGameUrlSegment, 'an alias is a game slug or a legacy id param')).min(1).optional(),
     dateLocal: z.string().min(10),
     dateUtc: z.string().min(10),
     dateKey: dateOnly,
@@ -747,6 +751,8 @@ export const SnapshotObject = z.object({
         dateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         slugs: z.array(z.string().min(1)),
         removedAt: z.string().min(20),
+        slug: z.string().regex(GAME_SLUG_RE).optional(),
+        aliases: z.array(z.string().refine(isGameUrlSegment)).min(1).optional(),
       }),
     )
     .optional(),

@@ -2,6 +2,7 @@ import { ordersByRecord } from '../../lib/standings/order';
 import { getCommitsFile } from '../../lib/players/commits';
 import { HAS_RECRUITING } from '../../lib/sports/current';
 import {
+  getGameById,
   areKeyDatesConfirmed,
   getAllStandings,
   getCcsCalendar,
@@ -24,6 +25,7 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { listWords, numberWord } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import {
   getAvailableHistoryLeagues,
   getHistorySeason,
@@ -318,6 +320,9 @@ export interface AboutDisclaimer {
 }
 
 /** Everything /about prints that is read from the data, one slice per consumer; see the module comment. */
+/** A backfill row as /about lists it: the stored row and its game's link. */
+export type BackfillRowView = BackfillRow & { href: string | null };
+
 export interface AboutView {
   lede: AboutLede;
   jumpList: JumpListItem[];
@@ -328,7 +333,8 @@ export interface AboutView {
   shootoutSections: ShootoutSection[];
   crossCheck: AboutCrossCheck;
   /** Every score taken from si.com (/about#backfills). */
-  backfilled: BackfillRow[];
+  /** Each si.com-sourced score, with the link to its game's page (null when the game is no longer listed). */
+  backfilled: BackfillRowView[];
   jv: AboutJv;
   /** Every contest the last update left out on purpose (/about#dropped). */
   dropped: readonly DroppedContest[];
@@ -461,7 +467,10 @@ export function buildAboutView(): AboutView {
 
   const sbliveCross = getSbliveCrossCheck();
   const cifssCross = getCifssCrossCheck();
-  const backfilled = sbliveCross?.backfilled ?? [];
+  const backfilled: BackfillRowView[] = (sbliveCross?.backfilled ?? []).map((row) => {
+    const game = getGameById(row.contestId);
+    return { ...row, href: game ? gameHref(game) : null };
+  });
   const dropped = getDropped();
   const officialFixtures = getOfficialFixtures();
   const officialStandingsPdfUrl = getOfficialStandingsPdfUrl();

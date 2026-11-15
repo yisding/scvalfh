@@ -155,7 +155,7 @@ export function GameRow({
     >
       <div className="sx-game-grid">
         <Link
-          href={gameHref(game.contestId)}
+          href={gameHref(game)}
           prefetch={false}
           className="sx-game-link"
           aria-label={`${display.sentence}${chipsSentence(display, showChips)}`}

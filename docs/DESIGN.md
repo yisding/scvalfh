@@ -220,7 +220,7 @@ equivalent moment; this is it. **[R-9]**
 | `/standings` | "Where do we stand?" Both divisions, De Anza first, `#de-anza` / `#el-camino` anchors | static | — |
 | `/schedule` | "What's the whole season look like?" All ~174 contests, date-grouped | static shell + client filters | — |
 | `/scores/[date]` | "What were Tuesday's scores?" One day's slate | static, `generateStaticParams` over every date with a contest (~50) | `date` = `YYYY-MM-DD` |
-| `/game/[id]` | "What was the final, and can I send it to the group chat?" | static, `generateStaticParams` over all 174 games | `id` = snapshot game id |
+| `/game/[id]` | "What was the final, and can I send it to the group chat?" | static, `generateStaticParams` over all 174 games | `id` = the game's slug (`2026-10-06-santa-catalina-at-greenfield`: README, "Game URLs"); every URL it had before redirects to it |
 | `/teams` | "Find my school." 16 monogram tiles by division | static | — |
 | `/teams/[slug]` | "How is *my* team doing?" | static, `generateStaticParams` over 16 | `slug` = `homestead`, `los-gatos`, … |
 | `/playoffs` | "Are we in, and who do we play?" Two modes on `snapshot.playoffs.seededAt` | static | — |
@@ -2100,13 +2100,13 @@ interface FormStripProps {
   label: string;                   // "Homestead last 5 league games"
 }
 interface FormEntry {
-  outcome: Outcome; contestId?: string; opponent?: string;
-  score?: string; date?: string;   // contestId links the chip; standings strips pass outcomes only (toFormEntries)
+  outcome: Outcome; href?: string; opponent?: string;
+  score?: string; date?: string;   // href (gameHref(game)) links the chip; standings strips pass outcomes only (toFormEntries)
 }
 ```
 
 Row of `ResultChip`s with a **2px surface gap** between them. Newest gets a 2px `--sx-text`
-underline + visually-hidden "most recent". Each chip with a `contestId` links to `/game/[id]` with
+underline + visually-hidden "most recent". Each chip with an `href` links to `/game/[id]` with
 `aria-label="Loss 0-7 vs Saint Francis, Sep 24"`. One sentence `aria-label` on the strip.
 Rules for zero/partial/skipped games are in §5.5. The direction caption and the `+ N non-league`
 caption are rendered by the page around the strip, not by the strip: the team page puts the
@@ -2807,7 +2807,7 @@ unknown param is a 404 (including its OG image).
 | `/schedule` | league cards, recent and next game days grouped by league, and an "Every game day" index of `#YYYY-MM-DD` rows | 1 |
 | `/schedule/[league]` | one league's whole season with the client filters | 4 |
 | `/scores/[date]` | one day grouped by league, then "Non-league" | one per game date |
-| `/game/[id]` | the shareable game (an si.com-sourced id reads `sblive-123`); a game MaxPreps later published is a stub linking to it | one per game |
+| `/game/[id]` | the shareable game, at its slug (`<date>-<away>-at-<home>`); every URL it had before, its old id URL included, redirects to it | one per game |
 | `/teams`, `/teams/[slug]` | find my school (grouped section → league → division); one team | 1 and 43 |
 | `/playoffs` | the CCS picture: `#scval #bval #pcal`, key dates, bracket | 1 |
 | `/playoffs/[league]` | league tournaments: `/playoffs/mcal` | 1 |

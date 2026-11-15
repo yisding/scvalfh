@@ -38,15 +38,17 @@ import { localDateKey } from '../../../lib/format';
  * text previews the score itself. List rows no longer expand, so every off-site link a row used
  * to offer (Directions, Stream, Tickets, the MaxPreps game) is in Details.
  *
- * `id` is `gameIdToParam(Game.contestId)`: the MaxPreps GUID itself (the snapshot's dedupe key, so
- * it is stable across rebuilds and cannot collide on a doubleheader), or `sblive-<n>` for a game
- * only si.com has (owner decision D2; the contest id `sblive:<n>` has a ':' no path should carry).
- * `buildGameView` runs `paramToGameId` first. A `supersededGames` key — a game no MaxPreps feed listed
- * that MaxPreps has since published — is not a page: next.config.ts 308s it to the MaxPreps game
- * (lib/game-redirects.ts, SPEC §8.1). The OG image's params are exactly these params (`gameStaticParams`).
+ * `id` is the game's slug (`Game.slug`, lib/game-slug.ts): `2026-10-06-santa-catalina-at-greenfield`, the
+ * date and the two sides as the page words the matchup, with `-2` on the second game of a same-day pair. It
+ * is stored with the game, so it is stable across rebuilds, and it follows the game: one moved to another
+ * day has the new date in its URL. Every segment the game was published at before is an alias
+ * (`Game.aliases`, lib/game-urls.ts) and is not a page: a slug it had is a 308 from next.config.ts, and its
+ * contest id, which was the URL before slugs (`/game/<MaxPreps GUID>`, `/game/sblive-<n>`, …), is a 308 from
+ * proxy.ts (lib/game-aliases.ts, SPEC §8.1). The OG image's params are exactly these params
+ * (`gameStaticParams`).
  *
  * No `searchParams` anywhere, so the route stays fully static (DESIGN decision 7), and
- * `dynamicParams = false` means an id that is not in the snapshot 404s instead of being rendered on
+ * `dynamicParams = false` means a slug that is not in the snapshot 404s instead of being rendered on
  * demand from a snapshot that does not have it.
  */
 

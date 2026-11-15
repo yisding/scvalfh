@@ -17,14 +17,12 @@ type Data = typeof import('../../lib/data');
 type Model = typeof import('../../components/game/game-view');
 type Leagues = typeof import('../../lib/leagues');
 type Format = typeof import('../../lib/format');
-type GameIds = typeof import('../../lib/game-id');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let d: Data;
 let m: Model;
 let leagues: Leagues;
 let fmt: Format;
-let ids: GameIds;
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
@@ -33,7 +31,6 @@ beforeAll(async () => {
   m = await import('../../components/game/game-view');
   leagues = await import('../../lib/leagues');
   fmt = await import('../../lib/format');
-  ids = await import('../../lib/game-id');
 }, 600_000);
 
 afterAll(() => {
@@ -50,7 +47,7 @@ describe('recordAsOf', () => {
       const standing = d.getStandingFor(team.slug);
       const latest = form?.leagueGames.filter((g) => g.outcome !== null).at(-1);
       if (!latest || !standing) continue;
-      const model = m.buildGameView(ids.gameIdToParam(latest.contestId));
+      const model = m.buildGameViewOf(latest.contestId);
       expect(model, latest.contestId).toBeDefined();
       if (!model) continue;
       const side = model.home.team?.slug === team.slug ? model.home : model.away;
@@ -90,7 +87,7 @@ describe('recordAsOf', () => {
 
   it('never prints 0-0-0 — a side with no league result yet gets the honest line', () => {
     for (const game of d.getGames()) {
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+      const model = m.buildGameViewOf(game.contestId);
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null) continue;
         expect(side.sub.startsWith('0-0-0'), game.contestId).toBe(false);
@@ -101,7 +98,7 @@ describe('recordAsOf', () => {
   it("keeps 'not reported' for teams with no results — a team with results never reads as a gap", () => {
     let checked = 0;
     for (const game of d.getGames()) {
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+      const model = m.buildGameViewOf(game.contestId);
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null || !side.standing?.hasReportedResults) continue;
         // DESIGN §8's missing-data line on a team that later posted a record read as a site gap.
@@ -116,7 +113,7 @@ describe('recordAsOf', () => {
     let checked = 0;
     for (const game of d.getGames()) {
       if (game.countsFor !== null || game.postseason !== null) continue;
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+      const model = m.buildGameViewOf(game.contestId);
       expect(model, game.contestId).toBeDefined();
       if (!model) continue;
       for (const side of [model.away, model.home]) {

@@ -159,7 +159,7 @@ Per-league pages show their own region's league chips.
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
-| `/game/[id]` | One game's detail page (one static page per game; OG card per game). On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
+| `/game/[id]` | One game's detail page (one static page per game; OG card per game), at the game's slug: `/game/2026-10-06-santa-catalina-at-greenfield` (the date, then away `at` home, `vs` at a neutral site, `-2` on a same-day rematch). See "Game URLs" under "Deploy notes". On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table, the independents' included (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
 | `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts; Santa Catalina's are York's, which plays its PCAL JV slot, each read from York's side, with York's JV table line), its player stats and roster, then its JV roster where one was found (`#jv-roster`) (102 pages, all nine leagues and the five independents; an independent's "league" figures are its games against the other four); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
@@ -2538,10 +2538,40 @@ prerendered too. It is NOT `output: 'export'`, though: serving it needs Next.js'
 host adapter that provides one, `vinext start` or vinext's Cloudflare Worker (see "vinext" and
 "Cloudflare Workers" below), because the 404s for unknown dynamic params and the metadata routes
 (`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
-framework, and so are the `redirects()` in `next.config.ts`: a game page MaxPreps has since replaced (an si.com
-fill, a San Diego bracket-sheet game, a league-schedule or added game — the snapshot's `supersededGames`) is a 308
-to the MaxPreps game, built from the snapshot at build time (`lib/game-redirects.ts`). Every server applies them,
-the Worker included (vinext bakes them into its server entry), and `scripts/smoke-server.sh` checks each one.
+framework, and so are the redirects of old game URLs (next).
+
+### Game URLs
+
+A game's page is `/game/<slug>`, and the slug says what the game is: `2026-10-06-santa-catalina-at-greenfield`
+(`lib/game-slug.ts`: the date, the away side, `at` or, at a neutral site, `vs`, the home side; a registry team is its
+slug, any other school its name; the second game of a pair on one day ends `-2`). The slug is stored with the game
+(`Game.slug`) and follows it: a game moved to another day, or whose host or opponent's name changed, gets the slug of
+what it is now. The contest id (a MaxPreps GUID, `sblive:<n>`, …) stays the game's identity in the data and is never
+in a link.
+
+Every other URL segment a game was published at is one of its **aliases** (`Game.aliases`, `lib/game-urls.ts`) and
+is a permanent (308) redirect to the slug, as is its OG image:
+
+- a slug the game had before it changed;
+- its contest id as a URL segment, which was the URL before slugs (`/game/<MaxPreps GUID>`, `/game/sblive-<n>`,
+  `/game/cifsds-<away>-at-<home>`, `/game/official-<date>-<away>-at-<home>`);
+- and those of any game it superseded (an si.com fill, a San Diego bracket-sheet game or a league-schedule game
+  that MaxPreps lists now: the snapshot's `supersededGames`).
+
+A slug in use always beats an alias, and an alias belongs to one game, the one that had it last. The pipeline assigns
+both on every run with the previous snapshot beside it (`lib/pipeline/steps/assemble.ts` `gameUrlsOf`); a snapshot
+written before slugs gets them when it is read (`lib/snapshot/snapshot-load.ts`), each game keeping its id as an alias.
+
+Two places answer the redirects, both built from the snapshot (`lib/game-aliases.ts`):
+
+- `next.config.ts` `redirects()` carries the old **slugs**: few, one per change. (Vercel allows a config 1,024
+  redirects.)
+- `proxy.ts` carries the old **id** URLs, one per game published before slugs (about a thousand a sport). It is the
+  site's only request-time code, and its matcher runs it for those four URL shapes only: a slug starts with a date,
+  so no page the site links to ever touches it.
+
+`tests/game-aliases.test.ts` follows every old URL of every sport's committed snapshot to its page, and
+`scripts/smoke-server.sh` does the same against each of the three servers.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.

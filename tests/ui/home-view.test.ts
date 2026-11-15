@@ -574,7 +574,7 @@ describe('the team views (components/home/team-card.ts ← home-view.ts teamView
         .filter((g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= data.today)
         .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name));
       const newest = played.at(-1);
-      expect(v.last?.href ?? null, `${HV}: ${v.slug} last`).toBe(newest ? gameHref(newest.contestId) : null);
+      expect(v.last?.href ?? null, `${HV}: ${v.slug} last`).toBe(newest ? gameHref(newest) : null);
       if (!newest || !v.last) continue;
       expect(Object.hasOwn(v.last, 'recap'), `${HV}: ${v.slug} carries no recap`).toBe(false);
       const unreported = describeGame(newest, v.slug).kind === 'unreported';

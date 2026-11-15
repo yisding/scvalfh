@@ -16,8 +16,8 @@
 #
 # What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
-# schedule, playoffs; a superseded game id is no page but a 308 to its MaxPreps game, with its OG
-# image, and is kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §17; no
+# schedule, playoffs; a game is at its slug, and every alias of it, its old id URL included, is no
+# page but a 308 to that slug, with its OG image, and is kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §17; no
 # OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, the two region wrappers #norcal
 # #socal and the Southern California sections, leagues and divisions (DESIGN-socal §2.4) and the Southern
@@ -150,8 +150,11 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 # The counts every family must have, from the snapshot this tree holds as lib/data.ts loads it (the
 # one the server was built from), never from the server: games, distinct game dates, teams, leagues,
 # league-tournament leagues, the clubs of data/clubs.json (every club has a page, one with no tied player
-# included), and each superseded id as `<param> <target param>` (lib/game-id.ts gameIdToParam: sblive:N →
-# sblive-N, cifsds:A-at-B → cifsds-A-at-B, official:D-A-at-B → official-D-A-at-B).
+# included), and each old URL segment of a game as `<segment> <the game's slug>`: every alias (`Game.aliases`,
+# lib/game-urls.ts: a slug it had, and the id it was published at before slugs, a MaxPreps GUID or sblive-N,
+# cifsds-A-at-B, official-D-A-at-B), and for a schedule-only game (not stored, so nothing lists an alias for it)
+# its `official-` id segment where its slug is that id without the prefix, which is where proxy.ts sends it. A
+# game first listed since slugs has no alias, and its id was never a URL.
 facts=$(node_modules/.bin/tsx -e '
   import fs from "node:fs";
   import { getSnapshot } from "./lib/data";
@@ -163,9 +166,15 @@ facts=$(node_modules/.bin/tsx -e '
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
     s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
-  for (const [from, to] of Object.entries(s.supersededGames || {})) console.log(param(from) + " " + param(to));')
+  const old = new Map<string, string>();
+  for (const g of s.games) {
+    const official = g.contestId === "official:" + g.slug ? [param(g.contestId)] : [];
+    for (const segment of [...official, ...(g.aliases ?? [])]) old.set(segment, g.slug!);
+  }
+  for (const g of s.games) old.delete(g.slug!);
+  for (const [segment, slug] of old) console.log(segment + " " + slug);')
 read -r n_games n_dates n_teams n_leagues n_tournaments n_clubs <<< "$(sed -n 1p <<< "$facts")"
-superseded=$(sed -n '3,$p' <<< "$facts")
+aliases=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
 # generateStaticParams family with EXACTLY the snapshot's count, or data/clubs.json's for /clubs/
@@ -189,28 +198,47 @@ for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_l
   [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot or data/clubs.json)"
   families+=" $n /${family%:*}/"
 done
-while read -r from _; do
-  [ -z "$from" ] || ! grep -qxF "/game/$from" <<< "$paths" || fail /sitemap.xml "lists the redirected superseded id /game/$from"
-done <<< "$superseded"
+listed_aliases=$(grep -xFf <(sed -n 's#^\([^ ]*\) .*#/game/\1#p' <<< "$aliases") <<< "$paths" || true)
+[ -z "$listed_aliases" ] || fail /sitemap.xml "lists a redirected game alias: $(sed -n 1p <<< "$listed_aliases")"
 quiet=1
 while read -r path; do [ -z "$path" ] || page "$path"; done <<< "$paths"
 quiet=0
 echo "200 every page in /sitemap.xml ($(grep -c . <<< "$paths"):$families)"
 
-# Superseded games (SPEC §8.1): a page MaxPreps has since replaced (/game/sblive-<n>, /game/cifsds-<a>-at-<b>,
-# /game/official-<date>-<a>-at-<b>) is a permanent redirect to the MaxPreps game, its OG image to that game's
-# (next.config.ts redirects(), lib/game-redirects.ts), and the target answers.
+# Old game URLs (SPEC §8.1): every segment a game was published at before (a slug it had; its contest id, the
+# URL before slugs: /game/<MaxPreps GUID>, /game/sblive-<n>, /game/cifsds-<a>-at-<b>, /game/official-<date>-<a>-at-<b>)
+# is a permanent redirect to the game's slug, and its OG image to that page's (next.config.ts redirects() for a
+# slug, proxy.ts for an id; lib/game-aliases.ts). The slug is a page the sitemap lists, so it was fetched above.
+# One hop, or two in the one case lib/game-aliases.ts legacyGameTarget describes: an `official-` id whose first
+# answer is that segment without its prefix, itself an alias of the same game (a game at a neutral site). That
+# alias has its own row here, which must go straight to the slug, so no chain is longer and none can loop.
 n_redirects=0
+quiet=1
 while read -r from to; do
   [ -n "$from" ] || continue
+  grep -qxF "/game/$to" <<< "$paths" || fail "/game/$from" "its game's page /game/$to is not in the sitemap"
   for suffix in '' /opengraph-image; do
     expect "/game/$from$suffix" 308 '' ''
-    [ "$(header location)" = "/game/$to$suffix" ] || fail "/game/$from$suffix" "location '$(header location)', expected /game/$to$suffix"
+    hop=$(header location); hop=${hop#/game/}; hop=${hop%"$suffix"}
+    ok=0
+    if [ "$(header location)" = "/game/$hop$suffix" ]; then
+      if [ "$hop" = "$to" ]; then ok=1
+      elif [ "official-$hop" = "$from" ] && grep -qxF "$hop $to" <<< "$aliases"; then ok=1
+      fi
+    fi
+    [ "$ok" = 1 ] || fail "/game/$from$suffix" "location '$(header location)', expected /game/$to$suffix"
   done
-  expect "/game/$to" 200 text/html "$public"
   n_redirects=$((n_redirects + 1))
-done <<< "$superseded"
-echo "308 every superseded game page and its OG image ($n_redirects)"
+done <<< "$aliases"
+quiet=0
+echo "308 every old game URL and its OG image ($n_redirects)"
+# A query string survives the redirect, and an id that never was a game here is the 404 it always was.
+if [ -n "$aliases" ]; then
+  read -r from to <<< "$(sed -n 1p <<< "$aliases")"
+  expect "/game/$from?utm_source=share" 308 '' ''
+  [[ "$(header location)" == /game/*'?utm_source=share' ]] ||
+    fail "/game/$from?utm_source=share" "location '$(header location)' lost the query string"
+fi
 
 # Anchors that old links and the jump links rely on, with no JavaScript (SPEC §8.1).
 expect /standings 200 text/html "$public"
@@ -300,7 +328,8 @@ if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect 
 # the site does not have: each is the root not-found page as a no-store 404.
 for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico \
   /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/eal /playoffs/sunset /playoffs/city \
-  /playoffs/independents /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope; do
+  /playoffs/independents /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope \
+  /game/00000000-0000-4000-8000-000000000000 /game/cifsds-nobody-at-nowhere /game/1999-01-01-nobody-at-nowhere; do
   expect "$path" 404 text/html "$nostore"
   grep -qF '>Page not found</h1>' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)

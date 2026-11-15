@@ -51,7 +51,7 @@ export function SeasonSeries({ model, className }: SeasonSeriesProps) {
               // the link scrolls into view, and the series is one game page per meeting.
               // Navigation still fetches on click.
               <Link
-                href={gameHref(game.contestId)}
+                href={gameHref(game)}
                 prefetch={false}
                 className={`sx-tap no-underline ${gameLogRowClass(game)}`}
               >

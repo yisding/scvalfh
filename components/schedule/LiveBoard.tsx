@@ -73,7 +73,7 @@ export function LiveBoard({ region, games, idSuffix, stamp }: LiveBoardProps) {
           const scores = display.away.hasScore && display.home.hasScore;
           return (
             <li key={game.contestId} className="sx-livegame">
-              <Link href={gameHref(game.contestId)} prefetch={false} className="sx-game-link" aria-label={display.sentence} />
+              <Link href={gameHref(game)} prefetch={false} className="sx-game-link" aria-label={display.sentence} />
               {/* The competition, in the words its strip would carry in the list ("CCS Division 1", "SCVAL"). */}
               <span className="sx-livegame-kicker">{dayGroups([game])[0]?.name}</span>
               <Side side={display.away} />

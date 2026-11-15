@@ -159,14 +159,15 @@ describe('a game the snapshot holds', () => {
     if (!final?.contestId) throw new Error('the Division 1 final has a contest');
     // Milpitas at Homestead, as the snapshot has it: the page lists Homestead first.
     const game = {
-      contestId: final.contestId, dateLocal: '2026-11-07T18:00:00', dateKey: '2026-11-07', isDateTba: false, isTimeTba: false,
+      contestId: final.contestId, slug: '2026-11-07-milpitas-at-homestead',
+      dateLocal: '2026-11-07T18:00:00', dateKey: '2026-11-07', isDateTba: false, isTimeTba: false,
       home: { teamId: final.sides[0].teamId }, away: { teamId: final.sides[1].teamId }, venue: { text: '@ Santa Clara HS' },
       urls: { goFan: null, nfhsStream: null },
     } as unknown as Game;
     const tie = view.tournamentBracketsView(brackets, [game], TODAY).brackets.find((b) => b.id === 'ccs-division-1')?.rounds[3].ties[0];
     expect(tie).toMatchObject({
       id: `ccs-division-1-${final.id.slice(0, 8)}`,
-      href: `/game/${final.contestId}`,
+      href: '/game/2026-11-07-milpitas-at-homestead',
       contestId: final.contestId,
       gameSeeds: { home: 3, away: 4 },
     });
@@ -183,7 +184,8 @@ describe('when the tournament page is behind the snapshot', () => {
   };
   const final = (m: ReturnType<typeof semifinal>): Game =>
     ({
-      contestId: m.contestId, status: 'final', dateLocal: '2026-11-14T18:00:00', dateKey: '2026-11-14', isDateTba: false, isTimeTba: false,
+      contestId: m.contestId, slug: '2026-11-14-los-altos-at-burlingame', status: 'final',
+      dateLocal: '2026-11-14T18:00:00', dateKey: '2026-11-14', isDateTba: false, isTimeTba: false,
       home: { teamId: m.sides[1].teamId, score: 1, result: 'L' }, away: { teamId: m.sides[0].teamId, score: 3, result: 'W' },
       venue: { text: null }, urls: { goFan: null, nfhsStream: null },
     }) as unknown as Game;

@@ -16,8 +16,8 @@
  *    California amendment), `playoffs/<id>.html` for each league-tournament league (still MCAL only:
  *    the EAL, the Sunset and the three San Diego leagues have no page of their own, only a card,
  *    `id="<league>"`, on /playoffs);
- *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`), and no
- *    page for a `supersededGames` key (next.config.ts redirects it: lib/game-redirects.ts);
+ *  - `game/*.html` = every game, at its slug (`Game.slug`, lib/game-slug.ts), and no page for an alias
+ *    (`Game.aliases`: next.config.ts and proxy.ts redirect those, lib/game-aliases.ts);
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
  *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
@@ -129,7 +129,7 @@ const totalHtml = files.filter((f) => f.endsWith('.html') && !f.startsWith('_'))
 console.log(
   `prerendered (next): ${totalHtml} pages — fixed ${FIXED_PAGES.length}; standings ${pagesIn('standings').length}/${expected.leagueIds.length}; ` +
     `schedule ${pagesIn('schedule').length}/${expected.leagueIds.length}; playoffs ${pagesIn('playoffs').length}/${expected.tournament.length}; ` +
-    `game ${pagesIn('game').length}/${gameParams.length} (+ ${redirectParams.length} superseded ids redirected); ` +
+    `game ${pagesIn('game').length}/${gameParams.length} (+ ${redirectParams.length} aliases redirected); ` +
     `scores ${pagesIn('scores').length}/${dates.length}; teams ${pagesIn('teams').length}/${slugs.length}; ` +
     `clubs ${pagesIn('clubs').length}/${clubSlugs.length}`,
 );

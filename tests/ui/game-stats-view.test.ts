@@ -16,9 +16,8 @@ import {
   buildGameStatsView,
   type GameStatsLookup,
 } from '../../components/game/game-stats-view';
-import { buildGameView, type GameModel } from '../../components/game/game-view';
+import { buildGameViewOf, type GameModel } from '../../components/game/game-view';
 import { getSnapshot } from '../../lib/data';
-import { gameIdToParam } from '../../lib/game-id';
 import type { NoteCredit } from '../../lib/players/note-stats';
 import { getAllPlayerStatsWithNotes, getGameStatsEntry, getPlayerStats } from '../../lib/players/player-stats';
 import type { BoxScore } from '../../lib/players/player-stats-schema';
@@ -43,7 +42,7 @@ function pickGame(): Game {
   return game;
 }
 const GAME = pickGame();
-const model = (): GameModel => buildGameView(gameIdToParam(GAME.contestId))!;
+const model = (): GameModel => buildGameViewOf(GAME.contestId)!;
 const AWAY = GAME.away.slug!;
 const HOME = GAME.home.slug!;
 
@@ -285,7 +284,7 @@ describe('game notes on the game page', () => {
     for (const team of getAllPlayerStatsWithNotes()) {
       for (const c of team.noteCredits) {
         const where = `${team.slug} ${c.contestId} ${c.fullName}`;
-        const view = buildGameStatsView(buildGameView(gameIdToParam(c.contestId))!)!;
+        const view = buildGameStatsView(buildGameViewOf(c.contestId)!)!;
         expect(view, where).not.toBeNull();
         expect(view.notedFrom).toBe(c.note);
         const side = view.sides.find((s) => s.key === team.slug)!;
@@ -338,7 +337,7 @@ describe('every box score in data/player-stats.json', () => {
 
   it('gives a game a section only with a table in it, and no scoring row of zeros', () => {
     for (const game of finals) {
-      const view = buildGameStatsView(buildGameView(gameIdToParam(game.contestId))!);
+      const view = buildGameStatsView(buildGameViewOf(game.contestId)!);
       if (!view) continue;
       expect(view.sides.some((s) => s.scoring || s.goalies), game.contestId).toBe(true);
       for (const side of view.sides) {

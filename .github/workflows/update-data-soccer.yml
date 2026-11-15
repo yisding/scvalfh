@@ -140,11 +140,12 @@ jobs:
       # (which reads the job's SCVAL_SPORT) holds the JV pages to the JV games just fetched. When they fail
       # and the stats or JV file changed in this run, both go back to the committed ones and it runs
       # again, so only a bad snapshot blocks the commit.
+      # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
         run: |
           set -uo pipefail
-          run() { pnpm exec vitest run tests/soccer.test.ts tests/jv-hub.test.ts; }
+          run() { pnpm exec vitest run tests/soccer.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts; }
           if run; then exit 0; fi
           if git diff --quiet -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json; then
             echo "::error::tests/soccer.test.ts failed and neither the soccer stats nor the soccer JV file changed in this run"

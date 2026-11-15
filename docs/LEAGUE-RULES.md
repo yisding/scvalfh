@@ -160,8 +160,9 @@ on the schedule whether or not MaxPreps lists it).
 - *A league's own fixture.* An official fixture no source lists is a game on the schedule
   (`lib/results/fixture-games.ts`, contest id `official:<date>-<away>-at-<home>`): the schedule's date, start
   and host, counted for its division, no score. Before its day it is scheduled; after it, "score not reported",
-  never 0-0. It goes the day a source lists the game, and its page then redirects to that game (the next run
-  records it in `supersededGames`; next.config.ts, `lib/game-redirects.ts`). On 2026-11-13 that is one PCAL fixture (Santa Catalina at
+  never 0-0. It goes the day a source lists the game, which takes over its page: the same URL when the date is
+  the same (`/game/<date>-<away>-at-<home>`), a redirect to the new one otherwise (the next run records it in
+  `supersededGames` and the game's `aliases`; `lib/game-urls.ts`). On 2026-11-13 that is one PCAL fixture (Santa Catalina at
   Greenfield, Oct 6), 88 girls soccer fixtures and 26 boys basketball fixtures. The site adds them when it reads
   the snapshot; the stored file keeps them as fixtures for the pipeline's matcher.
 - *A game from another official source* (`DATA_QUALITY.addedGames`, each with its citation). Poway's forfeit to

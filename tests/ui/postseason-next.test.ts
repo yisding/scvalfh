@@ -127,8 +127,8 @@ describe('the round label of a CCS league crossover-day game', () => {
     expect(describeGame.postseasonTagOf(byId(PLAY_IN_ID)), 'describe-game postseasonTagOf').toBe('SCVAL play-in');
     expect(describeGame.describeGame(byId(PLAY_IN_ID)).postseasonTag, 'GameRow chip').toBe('SCVAL play-in');
     expect(describeGame.postseasonTagOf(byId(CROSSOVER_ID))).toBe('SCVAL crossover');
-    expect(gameView.buildGameView(PLAY_IN_ID)?.contextLabel, 'components/game/game-view.ts').toBe('SCVAL play-in');
-    expect(gameView.buildGameView(CROSSOVER_ID)?.contextLabel).toBe('SCVAL crossover');
+    expect(gameView.buildGameViewOf(PLAY_IN_ID)?.contextLabel, 'components/game/game-view.ts').toBe('SCVAL play-in');
+    expect(gameView.buildGameViewOf(CROSSOVER_ID)?.contextLabel).toBe('SCVAL crossover');
   });
 
   it('the home card of a team in the play-in names it', () => {

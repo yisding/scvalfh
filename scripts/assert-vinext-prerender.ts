@@ -21,15 +21,15 @@
  * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/snapshot.json or
  * SCVAL_SNAPSHOT), cross-checked against lib/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
- * tournament, `game/<param>` for every game (param = lib/game-id.ts gameIdToParam: `sblive:N` →
- * `sblive-N`; a `supersededGames` key is no page, next.config.ts redirects it), `scores/<date>` for every distinct game
+ * tournament, `game/<slug>` for every game (`Game.slug`, lib/game-slug.ts; an alias is no page,
+ * next.config.ts and proxy.ts redirect it), `scores/<date>` for every distinct game
  * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
  * through lib/players/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
  * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
  * No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
  * standings, schedule, playoffs, teams, scores), never by count. The prerendered sitemap must list
- * exactly the prerendered pages, and never a redirected superseded id (SPEC §8.1, §12.3); the clubs pages are in it, so that check covers them too.
+ * exactly the prerendered pages, and never a redirected alias (SPEC §8.1, §12.3); the clubs pages are in it, so that check covers them too.
  *
  * `--cloudflare` also checks what the Worker actually ships, because a Worker has no filesystem to
  * seed a cache from: staticAssetsAdapter() (vite.config.ts) copies each prerendered file into the
@@ -86,7 +86,7 @@ if (revalidating.length) fail('revalidates at runtime: ' + revalidating.map((r) 
 const files = (fs.readdirSync(dir, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
 const fileSet = new Set(files);
 
-// A raw contest id in a URL: `sblive:123` must be prerendered as `sblive-123` (lib/game-id.ts).
+// A raw contest id in a URL: a game is prerendered at its slug, never at `sblive:123` (lib/game-slug.ts).
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 
@@ -103,7 +103,7 @@ const { gameParams, redirectParams } = expected;
 const { allFamilies, counts } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.route', fail });
 allFamilies(expected);
 console.log(`prerendered: ${routes.length} routes; ${counts.join('; ')} ` +
-  `(game = ${gameParams.length} games; ${redirectParams.length} superseded ids redirected)`);
+  `(game = ${gameParams.length} games; ${redirectParams.length} aliases redirected)`);
 
 // The prerendered sitemap lists exactly the prerendered pages (every page but the 404 and the
 // pages whose prerender ended in notFound()), one for one: a page left out of either is one a crawler
@@ -129,7 +129,7 @@ if (unrendered.length) fail('in the sitemap but not prerendered: ' + sample(unre
 if (unlisted.length) fail('prerendered but not in the sitemap: ' + sample(unlisted));
 if (new Set(sitemapFiles).size !== sitemapFiles.length) fail('the sitemap lists a URL twice');
 const listedRedirects = sitemapFiles.filter((f) => redirectFiles.has(f));
-if (listedRedirects.length) fail('redirected superseded ids listed in the sitemap: ' + sample(listedRedirects));
+if (listedRedirects.length) fail('redirected aliases listed in the sitemap: ' + sample(listedRedirects));
 
 if (cloudflare) checkCloudflare();
 
