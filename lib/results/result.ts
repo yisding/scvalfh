@@ -583,7 +583,7 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
     site: a.neutral ? 'neutral' : 'home',
     // Unscored: still to play before its day, played with no score published after it. Never 0-0.
     status: scored ? 'final' : a.dateKey < localDateKey(fetchedAt) ? 'score-pending' : 'scheduled',
-    isLeague: home.division === away.division,
+    isLeague: home.division === away.division && !a.nonLeague,
     leagueDivision: home.division === away.division ? home.division : null,
     contestTypes: { home: null, away: null },
     countsFor: null,

@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { jvTableTitle } from '../../jv/jv-standings-view';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
-import { getTeamBySlug } from '../../../lib/data';
-import { listWords, plural } from '../../../lib/format';
+import { listWords, numberWord, plural } from '../../../lib/format';
 import { getJvOfficialMerge } from '../../../lib/jv/jv';
 import { JV_SCHOOL_SITES } from '../../../lib/jv/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../../lib/jv/jv-standings';
@@ -13,8 +12,10 @@ import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
 import { ordersByRecord } from '../../../lib/standings/order';
 import type { AboutJv } from '../about-view';
 
+const SCHOOL_SITES_WORD = numberWord(JV_SCHOOL_SITES.length).replace(/^./, (c) => c.toUpperCase());
+
 /**
- * /about#jv: where the JV games come from (MaxPreps, then si.com, then two schools' own sites), how a JV
+ * /about#jv: where the JV games come from (MaxPreps, then si.com, then three schools' own pages), how a JV
  * game counts for a JV table, when a table is shown, the PCAL's York / Santa Catalina pairing, and
  * the JV rosters on the team pages.
  */
@@ -92,13 +93,11 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           different scores is not used.
         </p>
         <p>
-          Two schools publish their JV results on their own athletics sites,{' '}
+          {SCHOOL_SITES_WORD} schools publish their own JV results:{' '}
           {JV_SCHOOL_SITES.map((s, i) => (
             <span key={s.school}>
               {i === 0 ? '' : i === JV_SCHOOL_SITES.length - 1 ? ' and ' : ', '}
-              <ExternalLink href={s.url}>
-                {getTeamBySlug(s.school)?.name ?? s.school}
-              </ExternalLink>
+              <ExternalLink href={s.url}>{s.label}</ExternalLink>
             </span>
           ))}
           , read by hand once JV league play ended. They are used on the same terms as si.com, after it: today

@@ -300,6 +300,11 @@ export interface AddedGame {
   from: 'cifss' | 'derived';
   /** true for a game at a neutral site (a tournament day at one school): `home` is then only the listed side. */
   neutral?: true;
+  /**
+   * true for a game the two schools played outside their league schedule although they share a division (a third
+   * meeting): it is not flagged as a league game, so it counts for no table, as a MaxPreps non-league game would.
+   */
+  nonLeague?: true;
   /** The field the source names ('Pleasant Valley High School'). */
   venue?: string;
   /** The team the source says won a game it gives no score for: marked W and L on the sides, with no score. */

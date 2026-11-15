@@ -8,7 +8,8 @@
  *   2. while no JV game of the two schools is listed within ±JV_OFFICIAL_WINDOW_DAYS of its date (MaxPreps has it
  *      after all, and its row, with its score, is the game);
  *   3. as a scheduled game with the source's date, start and host, no score, contest id
- *      `added-jv:<date>-<away>-at-<home>`, a league game only when the two schools share a division, and
+ *      `added-jv:<date>-<away>-at-<home>`, a league game only when the two schools share a division and the varsity
+ *      game is not marked `nonLeague`, and
  *      `provenance.schedule` the source.
  *
  * Pure: no I/O, no clock.
@@ -33,7 +34,7 @@ export function addedJvGame(a: AddedGame, today: string, fetchedAt: string): Gam
   const home = getTeamBySlug(a.home);
   const away = getTeamBySlug(a.away);
   if (!home || !away) return null;
-  const sameDivision = home.division === away.division;
+  const sameDivision = home.division === away.division && !a.nonLeague;
   return {
     contestId: `${ADDED_JV_PREFIX}${a.jv.dateKey}-${away.slug}-at-${home.slug}`,
     ...datesAtLocal(a.jv.dateKey, a.jv.time),

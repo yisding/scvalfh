@@ -757,6 +757,10 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   play had ended. They fill 12 scores and add 3 games (marked †, "Score via the school's athletics
   site"), and disagree with MaxPreps once (St. Ignatius at Homestead, Sep 21: 6-0 against MaxPreps'
   5-0; MaxPreps' score is shown and the other noted). With them the De Anza JV table is shown (26 of 30).
+  Homestead's athletic director's weekly update (read 2026-11-15) is a third: it adds Homestead's JV games at
+  Leigh (Sep 15) and at Los Altos (Oct 7), played with no score reported (rows with `score: null`, never used
+  to fill or contradict a score), and disagrees with MaxPreps once (Los Gatos at Homestead, Sep 2: 3-1 against
+  MaxPreps' 3-2).
 
 `lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
 (`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).

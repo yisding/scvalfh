@@ -62,6 +62,16 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       timeTba: true,
       source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
     },
+    // SCVAL De Anza, Cupertino v Homestead 5-5, the pair's first league meeting (the PDF's Sep 9 fixture). MaxPreps
+    // added the contest on Oct 29, dated Wed Sep 9 at 4:00 PM, the league's day. Homestead's athletic director's weekly
+    // update (owner, 2026-11-15) has "Tied 5 - 5 (OT) vs Cupertino (Friday 9/11)" for varsity and "Lost 2 - 1 vs
+    // Cupertino (Friday 9/11)" for JV, and si.com's row of the game (6762239) is dated Sep 11 too. The update gives
+    // no start time. The JV game moves with it (lib/jv/jv-corrections.ts).
+    '9ecb5378-55b3-4163-a0cc-7c8fc039ff47': {
+      dateKey: '2026-09-11',
+      timeTba: true,
+      source: 'Homestead’s athletic director’s weekly update has the 5-5 tie on Friday Sep 11, and si.com dates it Sep 11 too; MaxPreps dates it Sep 9, the league schedule’s day, at 4:00 PM',
+    },
   },
   contestHostOverrides: {
     // MCAL tournament final, Fri Oct 30: MaxPreps lists it as Redwood @ Tamalpais, the site on the 2026 play-off sheet
@@ -105,6 +115,18 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       shootout: null,
       source: 'the San Diego Section’s Division II bracket sheet, read Nov 13, 2026: the quarterfinal, moved to Fri Nov 6 at Olympian, ended 6-0; MaxPreps lists the game with no score',
       url: 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit#gid=742825713',
+    },
+    // SCVAL De Anza, Cupertino v Homestead 5-5 (moved to Sep 11 above): Homestead's athletic director's weekly update
+    // (owner, 2026-11-15) has "Tied 5 - 5 (OT) vs Cupertino (Friday 9/11)". MaxPreps has the score and no overtime. A
+    // tie scores the same with or without it (Article IV), so no table moves; one period is recorded, as the update
+    // gives no count.
+    '9ecb5378-55b3-4163-a0cc-7c8fc039ff47': {
+      goals: { homestead: 5, cupertino: 5 },
+      otPeriods: 1,
+      shootout: null,
+      source: 'Homestead’s athletic director’s weekly update: “Tied 5 - 5 (OT) vs Cupertino (Friday 9/11)”; MaxPreps has the score and records no overtime',
+      url: 'https://docs.google.com/document/d/1t2Gq_2HQvs8_9pm8yEnIqZzV9UkPv9H9NYCTSIaeKK8/edit',
+      certainty: 'reported',
     },
     // Sunset, Thu Oct 8: Huntington Beach 1, Edison 0 (owner, 2026-11-14). cifsshome.org lists the game twice, once per
     // school, both 1-0 and both "League"; one entry's note is "Overtime". MaxPreps has the score and no overtime. The
@@ -282,6 +304,27 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
   },
   addedGames: [
+    // SCVAL De Anza schools, Tue Oct 13 at Homestead: a third, non-league meeting of Cupertino and Homestead (their
+    // league games are Sep 11, 5-5, and Oct 5, 1-1). Homestead varsity field hockey's Instagram (posted Oct 14):
+    // "3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!"; the owner (2026-11-15) has two goals to #7
+    // and one to #8, and that Gabrielle Moll scored the two (so Hailey Cutler the one).
+    // si.com (6575658) has it Final, Homestead 3-0, at 4:45 PM at Homestead, the NFHS Network streamed it on
+    // Homestead's channel, and Homestead's athletic director's weekly update has "Played vs Cupertino" for varsity
+    // with no score. MaxPreps lists the JV game (1-0, non-league) and not this one.
+    {
+      dateKey: '2026-10-13',
+      time: '16:45',
+      home: 'homestead',
+      away: 'cupertino',
+      goals: { homestead: 3, cupertino: 0 },
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      nonLeague: true,
+      note: 'Non-league: the pair’s third meeting. Homestead’s goals: two by Gabrielle Moll and one by Hailey Cutler',
+      source: 'Homestead varsity field hockey’s Instagram, posted Oct 14, 2026: “3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!”; si.com has the same 3-0 (game 6575658); MaxPreps does not list the game',
+      url: 'https://www.instagram.com/p/Defq2JemLgM/',
+    },
     // The LAFHA Tournament of Champions' third-place game, Thu Oct 29: on no MaxPreps schedule. Daily Pilot (Los
     // Angeles Times), Oct 30, 2026, in its report of the final: Edison beat Newport Harbor 3-2 in sudden-death
     // overtime in the third-place game (given by the owner, 2026-11-14). Miller Field is where Huntington Beach's
@@ -412,15 +455,11 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
   ],
   fixtureMoves: {
-    // SCVAL De Anza: the PDF has Homestead at Cupertino on Wed Sep 9; it was not played then (no MaxPreps contest of
-    // the pair until their Oct 5 meeting). si.com (6575658) and the NFHS Network (game82e9fefce, on Homestead's
-    // channel) both have it on Tue Oct 13 at 4:45 PM at Homestead, Homestead 3-0, read 2026-10-22; MaxPreps still
-    // has no contest for it. si.com's 5-5 Sep 11 row of the pair (6762239) has no recap and is not this game.
-    'de-anza:2026-09-09:homestead@cupertino': {
-      dateKey: '2026-10-13',
-      home: 'homestead',
-      source: 'si.com and the NFHS Network both have it on Oct 13 at Homestead.',
-    },
+    // None. 'de-anza:2026-09-09:homestead@cupertino' was moved to Oct 13 at Homestead (si.com's Homestead 3-0 and an
+    // NFHS Network stream, read 2026-10-22) until MaxPreps listed the pair's first meeting on Oct 29: the 5-5 tie,
+    // played Sep 11 (contestDateOverrides above). Homestead's athletic director's weekly update (owner, 2026-11-15)
+    // has varsity "Played vs Cupertino (Tuesday 10/13)" with no score and the JV game as "Won 1 - 0", which MaxPreps
+    // lists as a non-league game: Oct 13 was a third, non-league meeting, listed in addedGames below (Homestead 3-0).
   },
   notCovered: [
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
