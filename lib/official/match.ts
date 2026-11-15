@@ -15,13 +15,18 @@
  * Both ignore every contest `isExcluded` returns true for (postseason, MCAL tournament window,
  * contestType 2/4 in a league that excludes them): such a contest never consumes a fixture.
  * Pure: no I/O, no clock (`today` is an option).
+ *
+ * Each matcher is split in two, so the claims pipeline can decide across games and apply per game:`decideOfficialMatches` makes every cross-game
+ * decision (which contest takes which fixture, the notes each contest carries, the log lines and reasons), and
+ * `applyOfficialDecision` writes one contest's decision onto that one game. `matchOfficialFixtures` is their
+ * composition, so its callers and tests see exactly what they saw before the split.
  */
 
 import { postseasonTag } from '../classify';
 import { divisionLabel, getDivision, leagueOfDivision } from '../leagues';
 import { dayDiff, monthDay, shiftDateKey, shortDate } from '../format';
 import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '../teams';
-import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
+import type { ContestId, DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
 
 export interface MatchOptions {
   matcher: 'legacy' | 'two-phase';
@@ -52,6 +57,28 @@ export interface MatchResult {
   matched: number;
   /** Matched contests MaxPreps does NOT flag as league games: `<contestId> (<away> @ <home>) — <note>`. */
   leagueDisagreements: string[];
+}
+
+/** A contest that matched a fixture: its stamp, and the sentences its provenance carries. */
+export interface OfficialStampDecision {
+  stamp: OfficialStamp;
+  /** Becomes `provenance.leagueFlagConflict`, unless the game already carries one from MaxPreps. */
+  leagueFlagNote?: string;
+  /** Becomes `provenance.hostConflict`. */
+  hostNote?: string;
+}
+
+/** One contest's decision: a stamp, or (two-phase only) the "not on the official schedule" note. */
+export type OfficialDecision = OfficialStampDecision | { classificationNote: string };
+
+/**
+ * Every cross-game decision of one league's match. A contest is in at most one of the two maps: the
+ * classification note is only given to a contest that took no fixture.
+ */
+export interface OfficialDecisions extends Omit<MatchResult, 'games'> {
+  stamps: Map<ContestId, OfficialStampDecision>;
+  /** Two-phase only. Always empty for 'legacy'. */
+  classificationNotes: Map<ContestId, string>;
 }
 
 type Pass = OfficialStamp['pass'];
@@ -113,7 +140,7 @@ function fixtureSideName(slug: TeamSlug | null, gridName: string): string {
  *      then differs from `dateKey`. A NON-LEAGUE candidate is capped at ±rescheduleWindowDays; a
  *      league one is not (the published De Anza grid moved ST. IGNATIUS @ LOS ALTOS 29 days).
  */
-function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[], opts: MatchOptions): MatchResult {
+function decideLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[], opts: MatchOptions): OfficialDecisions {
   const warnings: string[] = [];
   const leagueDisagreements: string[] = [];
   /** contestId → the sentence the game itself will carry. */
@@ -248,22 +275,24 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
     stamp(fixture, game, 'rescheduled');
   }
 
-  const out = games.map((g) => {
-    const stamp = official.get(g.contestId);
-    if (!stamp) return g;
-    const note = disagreed.get(g.contestId);
-    const hostNote = hostDisagreed.get(g.contestId);
-    const provenance = {
-      ...g.provenance,
-      ...(note && !g.provenance.leagueFlagConflict ? { leagueFlagConflict: note } : {}),
-      ...(hostNote ? { hostConflict: hostNote } : {}),
-    };
-    return { ...g, official: stamp, provenance };
-  });
+  const stamps = new Map<ContestId, OfficialStampDecision>();
+  for (const [contestId, stamp] of official) {
+    const note = disagreed.get(contestId);
+    const hostNote = hostDisagreed.get(contestId);
+    stamps.set(contestId, { stamp, ...(note ? { leagueFlagNote: note } : {}), ...(hostNote ? { hostNote } : {}) });
+  }
 
   unmatched.sort(compareLegacy);
 
-  return { games: out, unmatched, warnings, reasons: [], matched, leagueDisagreements };
+  return {
+    stamps,
+    classificationNotes: new Map(),
+    unmatched,
+    warnings,
+    reasons: [],
+    matched,
+    leagueDisagreements,
+  };
 }
 
 // ---------------------------------------------------------------- two-phase (BVAL, PCAL, MCAL)
@@ -289,11 +318,11 @@ function excludedContestType(game: Game, excluded: readonly number[]): number | 
   return null;
 }
 
-function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixture[], opts: MatchOptions): MatchResult {
+function decideTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixture[], opts: MatchOptions): OfficialDecisions {
   const warnings: string[] = [];
   const reasons: string[] = [];
   const leagueDisagreements: string[] = [];
-  const stamps = new Map<string, OfficialStamp>();
+  const official = new Map<string, OfficialStamp>();
   const hostNotes = new Map<string, string>();
   const flagNotes = new Map<string, string>();
   const consumed = new Set<string>();
@@ -322,7 +351,7 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
   const assign = (fixture: OfficialFixture, game: Game, pass: Pass) => {
     consumed.add(game.contestId);
     done.add(fixture.id);
-    stamps.set(game.contestId, stampOf(fixture, pass));
+    official.set(game.contestId, stampOf(fixture, pass));
     if (!game.isLeague) {
       const l = league(fixture);
       const note =
@@ -457,24 +486,19 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
     }
   }
 
+  const stamps = new Map<ContestId, OfficialStampDecision>();
+  for (const [contestId, stamp] of official) {
+    const flag = flagNotes.get(contestId);
+    const host = hostNotes.get(contestId);
+    stamps.set(contestId, { stamp, ...(flag ? { leagueFlagNote: flag } : {}), ...(host ? { hostNote: host } : {}) });
+  }
+
   // Published: a same-division final in an official-fixtures division that matched no fixture.
   const divisions = new Set(fixtures.map((f) => f.division));
-  const out = games.map((g) => {
-    const stamp = stamps.get(g.contestId);
-    if (stamp) {
-      const flag = flagNotes.get(g.contestId);
-      const host = hostNotes.get(g.contestId);
-      return {
-        ...g,
-        official: stamp,
-        provenance: {
-          ...g.provenance,
-          ...(flag && !g.provenance.leagueFlagConflict ? { leagueFlagConflict: flag } : {}),
-          ...(host ? { hostConflict: host } : {}),
-        },
-      };
-    }
+  const classificationNotes = new Map<ContestId, string>();
+  for (const g of games) {
     if (
+      !official.has(g.contestId) &&
       g.status === 'final' &&
       g.leagueDivision !== null &&
       divisions.has(g.leagueDivision) &&
@@ -482,15 +506,54 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
       postseasonTag(g) === null
     ) {
       const l = leagueOfDivision(g.leagueDivision);
-      return {
-        ...g,
-        provenance: { ...g.provenance, classificationNote: `Not on the official ${l.shortName} schedule; not counted.` },
-      };
+      classificationNotes.set(g.contestId, `Not on the official ${l.shortName} schedule; not counted.`);
     }
-    return g;
-  });
+  }
 
-  return { games: out, unmatched, warnings, reasons, matched: done.size, leagueDisagreements };
+  return { stamps, classificationNotes, unmatched, warnings, reasons, matched: done.size, leagueDisagreements };
+}
+
+/**
+ * Decide which contest each official fixture stamps, and every note, log line and reason the match
+ * produces, without changing any game. `fixtures` are one league's.
+ */
+export function decideOfficialMatches(
+  games: readonly Game[],
+  fixtures: readonly OfficialFixture[],
+  opts: MatchOptions,
+): OfficialDecisions {
+  for (const f of fixtures) getDivision(f.division); // unknown division → throws (a build bug)
+  return opts.matcher === 'legacy' ? decideLegacy(games, fixtures, opts) : decideTwoPhase(games, fixtures, opts);
+}
+
+/** The decision for one contest, if the match made one. */
+export function officialDecisionOf(decisions: OfficialDecisions, contestId: ContestId): OfficialDecision | undefined {
+  const stamp = decisions.stamps.get(contestId);
+  if (stamp) return stamp;
+  const classificationNote = decisions.classificationNotes.get(contestId);
+  return classificationNote === undefined ? undefined : { classificationNote };
+}
+
+/**
+ * Write one contest's decision onto its game. A game with no decision is returned as the same object, so a
+ * caller can tell untouched games by identity. A league-flag note never replaces the sentence MaxPreps'
+ * own flag conflict already put there.
+ */
+export function applyOfficialDecision(game: Game, decision: OfficialDecision | undefined): Game {
+  if (!decision) return game;
+  if ('classificationNote' in decision) {
+    return { ...game, provenance: { ...game.provenance, classificationNote: decision.classificationNote } };
+  }
+  const { stamp, leagueFlagNote, hostNote } = decision;
+  return {
+    ...game,
+    official: stamp,
+    provenance: {
+      ...game.provenance,
+      ...(leagueFlagNote && !game.provenance.leagueFlagConflict ? { leagueFlagConflict: leagueFlagNote } : {}),
+      ...(hostNote ? { hostConflict: hostNote } : {}),
+    },
+  };
 }
 
 /**
@@ -503,6 +566,13 @@ export function matchOfficialFixtures(
   fixtures: readonly OfficialFixture[],
   opts: MatchOptions,
 ): MatchResult {
-  for (const f of fixtures) getDivision(f.division); // unknown division → throws (a build bug)
-  return opts.matcher === 'legacy' ? matchLegacy(games, fixtures, opts) : matchTwoPhase(games, fixtures, opts);
+  const decisions = decideOfficialMatches(games, fixtures, opts);
+  return {
+    games: games.map((g) => applyOfficialDecision(g, officialDecisionOf(decisions, g.contestId))),
+    unmatched: decisions.unmatched,
+    warnings: decisions.warnings,
+    reasons: decisions.reasons,
+    matched: decisions.matched,
+    leagueDisagreements: decisions.leagueDisagreements,
+  };
 }
