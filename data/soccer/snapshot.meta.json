@@ -7,20 +7,20 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "5fa7450f14a0e7b212e752f132026ad3cf0401e47b65a8ebda92c15bd815185c",
+  "contentHash": "69d9b57c278d238bb813e3384e192f6ac4f06693a700f3c52b28787e4ee58b3f",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 190,
-        "leagueGames": 128,
+        "games": 194,
+        "leagueGames": 132,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 154,
+        "games": 153,
         "leagueGames": 84,
         "teams": 15
       },
@@ -40,14 +40,14 @@
       }
     },
     "finals": 0,
-    "games": 405,
-    "leagueGames": 247,
+    "games": 408,
+    "leagueGames": 251,
     "mismatches": 0,
     "pending": 0,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-14T19:25:19.730Z",
+  "fetchedAt": "2026-11-15T12:56:08.529Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 88,
+  "officialFixturesUnmatched": 84,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -131,7 +131,7 @@
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 24,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -251,12 +251,12 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
       "label": "leigh schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -266,7 +266,7 @@
     },
     {
       "label": "piedmont-hills schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -276,12 +276,12 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "willow-glen schedule",
-      "rowCount": 17,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -570,8 +570,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-14",
-  "warnings": 16,
+  "today": "2026-11-15",
+  "warnings": 17,
   "window": {
     "firstGame": "2026-11-19T19:00:00",
     "lastGame": "2027-02-17T18:00:00",
