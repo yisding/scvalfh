@@ -127,18 +127,39 @@ export interface ApplyVnnResult {
   warnings: string[];
 }
 
+/** What a school calendar adds to one game: the venue name MaxPreps lacks, and/or a confirmed start time. */
+export interface VnnDecision {
+  venueName?: string;
+  timeConfirmed?: true;
+}
+
+export interface VnnDecisions {
+  /** By contest id; a game the calendars add nothing to has no entry and is left as it is. */
+  decisions: Map<string, VnnDecision>;
+  venuesAdded: number;
+  timesConfirmed: number;
+  unmatched: number;
+  warnings: string[];
+}
+
+/** One decision applied to the game it is for; the start time is only ever confirmed, never rewritten. */
+export function applyVnnDecision(game: Game, decision: VnnDecision): Game {
+  return {
+    ...game,
+    ...(decision.timeConfirmed ? { timeConfirmed: true } : {}),
+    ...(decision.venueName !== undefined ? { venue: { ...game.venue, name: decision.venueName } } : {}),
+  };
+}
+
 /**
- * Attach `venue.name` and `timeConfirmed` where MaxPreps has neither.
+ * Decide which games gain `venue.name` and `timeConfirmed`, and what the calendars and MaxPreps disagree on.
  *
  * Varsity only (the snapshot is a varsity season). The start time is CONFIRMED, never rewritten:
  * `dateLocal` stays MaxPreps'. When MaxPreps says the time is TBA the calendar's time is reported as
  * a warning rather than written in, because filling it would put an unsourced timestamp in the field
  * the whole site formats from.
  */
-export function applyVnnEvents(
-  games: readonly Game[],
-  events: readonly VnnEvent[],
-): ApplyVnnResult {
+export function decideVnn(games: readonly Game[], events: readonly VnnEvent[]): VnnDecisions {
   const warnings: string[] = [];
   const byKey = new Map<string, VnnEvent>();
   for (const e of events) {
@@ -154,11 +175,12 @@ export function applyVnnEvents(
   let venuesAdded = 0;
   let timesConfirmed = 0;
   const matched = new Set<string>();
+  const decisions = new Map<string, VnnDecision>();
 
-  const out = games.map((game) => {
+  for (const game of games) {
     const key = `${game.dateKey}|${unorderedPairKey(sideJoinKey(game.home), sideJoinKey(game.away))}`;
     const event = byKey.get(key);
-    if (!event) return game;
+    if (!event) continue;
     matched.add(key);
 
     const wantVenue = !game.venue.name && !!event.venue;
@@ -176,24 +198,30 @@ export function applyVnnEvents(
           `${event.schoolSlug}'s calendar ${icsTime} PT`,
       );
     }
-    if (!wantVenue && !timeAgrees) return game;
+    if (!wantVenue && !timeAgrees) continue;
     if (wantVenue) venuesAdded += 1;
     if (timeAgrees) timesConfirmed += 1;
-    return {
-      ...game,
-      ...(timeAgrees ? { timeConfirmed: true } : {}),
-      ...(wantVenue ? { venue: { ...game.venue, name: event.venue as string } } : {}),
-    };
-  });
+    decisions.set(game.contestId, {
+      ...(wantVenue ? { venueName: event.venue as string } : {}),
+      ...(timeAgrees ? { timeConfirmed: true as const } : {}),
+    });
+  }
 
   const varsity = events.filter((e) => e.level === 'Varsity').length;
-  return {
-    games: out,
-    venuesAdded,
-    timesConfirmed,
-    unmatched: Math.max(0, varsity - matched.size),
-    warnings,
-  };
+  return { decisions, venuesAdded, timesConfirmed, unmatched: Math.max(0, varsity - matched.size), warnings };
+}
+
+/** Attach `venue.name` and `timeConfirmed` where MaxPreps has neither: decide, then apply to each game. */
+export function applyVnnEvents(
+  games: readonly Game[],
+  events: readonly VnnEvent[],
+): ApplyVnnResult {
+  const d = decideVnn(games, events);
+  const out = games.map((game) => {
+    const decision = d.decisions.get(game.contestId);
+    return decision ? applyVnnDecision(game, decision) : game;
+  });
+  return { games: out, venuesAdded: d.venuesAdded, timesConfirmed: d.timesConfirmed, unmatched: d.unmatched, warnings: d.warnings };
 }
 
 // ---------------------------------------------------------------- carry-forward
