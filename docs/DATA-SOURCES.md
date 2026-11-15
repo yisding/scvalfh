@@ -2896,9 +2896,8 @@ same could be done for the other leagues and the other builds.
 
 On 2026-11-15 the owner gave four San Diego Section accounts: San Marcos `smhs_fieldhockey` (profile opened:
 "San Marcos High School Field Hockey", bio "San Marcos, CA 92078"), Poway `powayfieldhockey`, Bishop's
-`tbsfhockey` and Canyon Hills `chhsfhock` (its post on the Open final, opened, is by "Canyon Hills Field
-Hockey"). Instagram then answered the other two profiles with its login page, so they rest on the owner's
-word, as the note of each says. The owner also gave Archbishop Mitty's account, `amhsfh`, which replaces
+`tbsfhockey` and Canyon Hills `chhsfhock`. Instagram answered Poway's and Bishop's profiles with its login
+page, and Canyon Hills' was not opened, so those three rest on the owner's word, as the note of each says. The owner also gave Archbishop Mitty's account, `amhsfh`, which replaces
 `mittyfieldhockey` (found by search on 2026-11-13), on the owner's word.
 
 **The other builds** (`data/soccer/`, `data/basketball/`, `data/volleyball/instagram.json`, 2026-11-14):

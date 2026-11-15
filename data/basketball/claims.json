@@ -1,72 +1,6 @@
 {
-  "fetchedAt": "2026-11-15T13:50:08.245Z",
+  "fetchedAt": "2026-11-15T20:19:32.005Z",
   "fixtures": [
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Redwood City",
-              "name": "Sequoia",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
-            },
-            "contestId": "fc219121-aeb4-479c-8d20-8b39294064d8",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T18:00:00",
-            "dateUtc": "2026-11-18T02:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Milpitas",
-              "name": "Milpitas",
-              "result": null,
-              "score": null,
-              "slug": "milpitas",
-              "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T20:53:37",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/7070171?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/milpitas-vs-sequoia-redwood-city/11-17-2026/?c=fc219121-aeb4-479c-8d20-8b39294064d8",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam9b50975aa4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "fc219121-aeb4-479c-8d20-8b39294064d8"
-        }
-      },
-      "id": "2026-11-17-name:sequoia-at-milpitas",
-      "published": [
-        {
-          "contestId": "fc219121-aeb4-479c-8d20-8b39294064d8"
-        }
-      ]
-    },
     {
       "claims": {
         "maxpreps": {
@@ -534,72 +468,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Milpitas",
-              "name": "Milpitas",
-              "result": null,
-              "score": null,
-              "slug": "milpitas",
-              "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
-            },
-            "contestId": "d23088ae-7a21-47e6-b72c-3938bbf908a9",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-21",
-            "dateLocal": "2026-11-21T13:00:00",
-            "dateUtc": "2026-11-21T21:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Fremont",
-              "name": "American",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "a8b730ad-94a0-4d67-a162-07f2298eb7e4"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T20:53:39",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/american-fremont-vs-milpitas/11-21-2026/?c=d23088ae-7a21-47e6-b72c-3938bbf908a9",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "d23088ae-7a21-47e6-b72c-3938bbf908a9"
-        }
-      },
-      "id": "2026-11-21-milpitas-at-name:american",
-      "published": [
-        {
-          "contestId": "d23088ae-7a21-47e6-b72c-3938bbf908a9"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "San Francisco",
               "name": "Washington",
               "result": null,
@@ -724,6 +592,72 @@
       "published": [
         {
           "contestId": "59f44c5c-ab2f-4126-8418-4c0f03e49cfa"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-23",
+            "dateLocal": "2026-11-23T15:00:00",
+            "dateUtc": "2026-11-23T23:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Felton",
+              "name": "San Lorenzo Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-15T11:07:47",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-san-lorenzo-valley-felton/11-23-2026/?c=e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "@ Monte Vista Christian HS Mission 831…"
+            }
+          },
+          "ref": "e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1"
+        }
+      },
+      "id": "2026-11-23-gilroy-at-name:sanlorenzovalley",
+      "published": [
+        {
+          "contestId": "e1735d60-b97c-4dd0-a0a5-1f99b9f4faf1"
         }
       ]
     },
@@ -1416,7 +1350,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-15T13:50:08.245Z",
+          "builtAt": "2026-11-15T20:19:32.005Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -2474,6 +2408,72 @@
       "published": [
         {
           "contestId": "c87a9333-eb0a-44d7-a409-8868435523b9"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Stockton",
+              "name": "Franklin",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "2b373d0a-74a1-40d4-8bb7-0d8d54764084"
+            },
+            "contestId": "5c42d152-56dd-4454-b97a-24661339199a",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-30",
+            "dateLocal": "2026-11-30T19:00:00",
+            "dateUtc": "2026-12-01T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Milpitas",
+              "name": "Milpitas",
+              "result": null,
+              "score": null,
+              "slug": "milpitas",
+              "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-15T11:50:04",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/7070175?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/franklin-stockton-vs-milpitas/11-30-2026/?c=5c42d152-56dd-4454-b97a-24661339199a",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gamfe1333a6e2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "5c42d152-56dd-4454-b97a-24661339199a"
+        }
+      },
+      "id": "2026-11-30-name:franklin-at-milpitas",
+      "published": [
+        {
+          "contestId": "5c42d152-56dd-4454-b97a-24661339199a"
         }
       ]
     },
@@ -13217,7 +13217,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/christopher-gilroy-vs-leigh-san-jose/1-6-2027/?c=cca74bec-0e7d-4d4f-8ae9-312f690814d5",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam0754b673a6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -16717,7 +16717,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/evergreen-valley-san-jose-vs-leigh-san-jose/1-13-2027/?c=8ba1c682-e63e-42d8-a61a-60cbdf08ab3a",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam9591243ce5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -22679,7 +22679,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-santa-teresa-san-jose/1-22-2027/?c=0c25f0c7-f586-4ecc-b7eb-398602ba5287",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/game62ef15c12?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -24617,7 +24617,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-westmont-campbell/1-27-2027/?c=4f892d1e-b838-47b5-933f-4859be7ec767",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam3782f26918?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -26795,7 +26795,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-pioneer-san-jose/2-1-2027/?c=380c16d6-bc81-4bbf-8c77-5b809ddfead7",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamf8f333ffd2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -32098,7 +32098,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-willow-glen-san-jose/2-10-2027/?c=c0870159-c34d-45e7-a0b9-10e8f7113de8",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam956af70690?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null

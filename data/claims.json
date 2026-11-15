@@ -70589,12 +70589,14 @@
             "home": "bishops",
             "result": {
               "certainty": "reported",
-              "goals": null,
+              "goals": {
+                "bishops": 1,
+                "canyon-hills": 0
+              },
               "otPeriods": 0,
               "shootout": null,
-              "source": "the owner’s report, Nov 15, 2026, and Canyon Hills field hockey’s own post that night: “It’s a wrap for our 2026 season. While it wasn’t the outcome we’d hoped for …”",
-              "url": "https://www.instagram.com/chhsfhock/p/DfwDs9VM4Kt/",
-              "winner": "bishops"
+              "source": "the owner’s report, Nov 15, 2026: Bishop’s 1, Canyon Hills 0, the goal by Cece Jeffery; MaxPreps lists the game with no score",
+              "url": null
             },
             "sources": {
               "maxpreps": "10a472ed-c57c-4874-ae7b-295d7f032db6"
@@ -70657,8 +70659,13 @@
             }
           },
           "reconstructed": [
+            "flags",
+            "decider",
+            "forfeit",
+            "resultConflict",
             "venue",
-            "site"
+            "site",
+            "shootout"
           ],
           "ref": "10a472ed-c57c-4874-ae7b-295d7f032db6"
         }
