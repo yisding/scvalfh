@@ -6,32 +6,37 @@
  * carry reads the VNN claims, the si.com step carries the fills and disagreements it did not read again from the si.com
  * claims and publishes its rule-2 games on fixtures of their own, the bracket sheet carries a tab it does not read
  * from the sheet's claims and publishes its own games on fixtures created from them, and the results step weighs the
- * cifsshome.org and box-score claims; classification, the guards and the results still work over the game list.
+ * cifsshome.org and box-score claims.
+ *
+ * What the run publishes is the view (lib/claims/view.ts): the fixtures in order, each folded from its claims with
+ * the cross-game decisions every stage took about it (`FixtureDecisions`, in memory only, never stored) through
+ * lib/claims/resolve.ts. The editor's claims (the fixture ledger) are rebuilt every run and stored for information
+ * only.
  *
  * Types only. lib/claims/schema.ts is the zod form of `ClaimsFile` as written on disk, where `seenAt` equal to the
  * file's `fetchedAt` and a MaxPreps game's `provenance.fetchedAt` are left out (lib/claims/store.ts toFile).
  */
 
 import type {
-  BackfillProvenance, BoxSide, CifssConflictRow, ContestId, DivisionId, Game, LeagueId,
+  BoxSide, CifssConflictRow, ContestId, DivisionId, Game,
   OfficialFixture, OfficialStamp, SbliveCrossCheck, StreetAddress, TeamId, TeamSlug, DroppedContest,
 } from '../types';
-import type { BackfillPublished } from '../crosscheck/backfill';
+import type { BackfillDecision, BackfillPublished } from '../crosscheck/backfill';
+import type { ReconcileDecision } from '../crosscheck/crosscheck';
+import type { OfficialDecision } from '../official/match';
+import type { SdsSheetDecision } from '../postseason/sds-sheet-results';
 import type { BoxEvidence } from '../results/box-evidence';
 import type { ScheduleRow } from '../sources/maxpreps';
 import type { CanonicalFixture } from '../fixtures/shape';
 import type { CifssRow } from '../sources/cifss';
 import type { SbliveGame } from '../sources/sblive';
 import type { SdsSheetFixture, SdsSheetResult } from '../sources/sds-bracket-sheet';
-import type { VnnEvent } from '../sources/vnn-ics';
+import type { VnnEvent, VnnStageDecision } from '../sources/vnn-ics';
 import type { SportId } from '../sports/current';
 
 export const CLAIMS_SCHEMA_VERSION = 1 as const;
 
 export type ClaimSource = 'maxpreps' | 'official' | 'sblive' | 'cifss' | 'sdsSheet' | 'vnn' | 'box' | 'editor';
-
-/** Every source, in the order new fixtures are minted from its claims (§6.2). */
-export const CLAIM_SOURCES: readonly ClaimSource[] = ['maxpreps', 'sblive', 'sdsSheet', 'editor', 'official', 'cifss', 'vnn', 'box'];
 
 /** Our own id: `${dateKey}-${awayKey}-at-${homeKey}` (+ `~2`, `~3` … on collision). Never published; never re-minted. */
 export type FixtureId = string;
@@ -219,56 +224,47 @@ export interface ClaimsFile {
 
 // ---------------------------------------------------------------- run-level facts and decisions (in memory only, never stored)
 
-export type Stage = 'maxpreps' | 'official' | 'sblive' | 'vnn' | 'sdsSheet' | 'classify' | 'results';
-export const STAGES: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'classify', 'results'];
+/**
+ * The stages of a run, in order: the view (lib/claims/view.ts) is resolved through each in turn, and a fixture's game
+ * is folded through them (lib/claims/resolve.ts). `guards` is step 11's frozen-league substitution.
+ */
+export type Stage = 'maxpreps' | 'official' | 'sblive' | 'vnn' | 'sdsSheet' | 'classify' | 'guards' | 'results';
+export const STAGES: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'classify', 'guards', 'results'];
 
-/** Whether each source's scope was read this run. A scope not read keeps its stored claims (older seenAt). */
-export interface SourceReads {
-  maxprepsFeeds: ReadonlyMap<TeamSlug, 'ok' | 'failed' | 'skipped' | 'not-fetched'>;  // state.feeds
-  officialDivisions: ReadonlyMap<DivisionId, 'read' | 'carried' | 'degraded'>;      // steps/official.ts read/failure sets
-  sblive: { read: boolean; consulted: (pairKey: string, date: string) => boolean };  // steps/sblive.ts
-  vnnSites: ReadonlyMap<TeamSlug, 'answered' | 'not-answered' | 'not-in-run'>;      // steps/secondary.ts
-  sdsTabs: ReadonlyMap<string, 'read' | 'read-with-warnings' | 'carried'>;           // steps/sds-sheet.ts
-  cifss: 'complete' | 'carried' | 'none';                                             // steps/cifss.ts
-  box: boolean;                                                                       // run.ts box !== undefined
-}
-
+/** The run-level facts resolve reads: the divisions the official step degraded, which classification falls back on. */
 export interface RunFacts {
-  fetchedAt: string;
-  today: string;
-  leaguesInRun: readonly LeagueId[];
-  reads: SourceReads;
-  degradedDivisions: ReadonlySet<DivisionId>;          // OfficialStepResult.degradedDivisions
+  degradedDivisions: ReadonlySet<DivisionId>;
 }
 
-/** Cross-game decisions for one fixture, produced by MATCH stage by stage, consumed by resolveFixture. */
+/**
+ * One fixture's cross-game decisions, each taken by its stage over the view the stage before resolved, and read by
+ * resolveFixture. Every stage's decision is the one its rule module applies to a game (`applyX`); a fixture with no
+ * entry is a MaxPreps contest resolved from its claim alone.
+ */
 export interface FixtureDecisions {
-  /** The published contest id (§7.13), or null when the fixture publishes no game (official-only, superseded). */
-  contestId: ContestId | null;
-  /** The first stage at which the fixture appears in the view (rule-2: 'sblive'; cifsds: 'sdsSheet'; listing: 'results'). */
+  /** The first stage at which the fixture is in the view: rule-2 games 'sblive', sheet games 'sdsSheet', a frozen league's passthrough 'guards', editor listings 'results'. */
   from: Stage;
-  official?: { stamp: OfficialStamp; leagueFlagNote?: string; hostNote?: string } | { classificationNote: string };
-  sblive?:
-    | { kind: 'override'; rule: Exclude<BackfillProvenance['rule'], 'absent-fixture'>; row: SbliveGame; score: { home: number; away: number }; note: string }
-    | { kind: 'carried'; published: PublishedScore }                  // rule 10, rules 3/4
-    | { kind: 'create'; game: Game };                                  // rule 2: fresh (absentFixtureGame) or carried (the stored game)
-  reconcile?: { scoreConflict: NonNullable<Game['provenance']['scoreConflict']> } | { carriedConflict: SbliveClaim['conflict'] };
-  vnn?: { venueName?: string; venueAddress?: StreetAddress; timeConfirmed?: true };
-  sheet?:
-    | { kind: 'score'; result: SdsSheetResult; rule: 'score-pending' | 'absent-game'; fetchedAt: string }
-    | { kind: 'time'; time: string }
-    | { kind: 'create'; game: Game };
   /**
-   * A fixture carried at stage `maxpreps` for a feed this run did not read: the game as the previous run published it,
-   * classification cleared (lib/claims/sources/maxpreps.ts asLastPublished). §11 R3's zero-deviation carry: it keeps
-   * the other sources' contributions until their claims hold what they published.
+   * The game the fixture enters the view with at `from`, when its MaxPreps claim does not give it: a contest carried
+   * at stage `maxpreps` for a feed this run did not read, as the previous run published it with its classification
+   * cleared (lib/claims/sources/maxpreps.ts asLastPublished, §11 R3's zero-deviation carry); an si.com rule-2 game; a
+   * game only the bracket sheet has; an editor listing.
    */
-  published?: Game;
-  /** Frozen league: the previous snapshot's game, classified with that league's previous degraded set (guards.ts). */
+  enters?: Game;
+  /** The official step's decisions, in the order it took them (lib/official/match.ts applyOfficialDecision). */
+  official?: readonly OfficialDecision[];
+  /** si.com's fill (lib/crosscheck/backfill.ts applyBackfillDecision) and disagreement (lib/crosscheck/crosscheck.ts applyReconcile). */
+  backfill?: BackfillDecision;
+  reconcile?: ReconcileDecision;
+  /** The school calendars' venue and start time, this run's or carried (lib/sources/vnn-ics.ts applyVnnStageDecision). */
+  vnn?: VnnStageDecision;
+  /** The bracket sheet's score or time (lib/postseason/sds-sheet-results.ts applySdsSheetDecision). */
+  sheet?: SdsSheetDecision;
+  /** A frozen league's game: the previous snapshot's, classified with that league's previous degraded set (lib/pipeline/steps/guards.ts). */
   frozen?: Game;
-  /** Results stage evidence. */
-  cifssRow?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>;
-  box?: ReadonlyMap<string, BoxSide>;                  // undefined: leave as the view has it (box not read)
+  /** The results stage's evidence: the published cifss report's row, and the box scores read (undefined: none read). */
+  cifss?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>;
+  box?: BoxEvidence;
 }
 
 /** One team feed's read this run, as step 05 records it (lib/pipeline/ledger.ts TeamFeedInfo). */
@@ -278,10 +274,12 @@ export interface FeedRead {
 }
 
 /**
- * One stage of the shadow harness (SCVAL_CLAIMS_SHADOW=1, tests/claims/shadow.test.ts): what a stage moved onto
- * claims read, and what it published. The harness runs the stage's legacy rule (the one that read the previous
- * snapshot's games) over the same input and checks the two agree; the legacy rules live in the test support only,
- * since the pipeline no longer runs them.
+ * One record of the shadow harness (SCVAL_CLAIMS_SHADOW=1, tests/claims/shadow.test.ts): what a stage read and what
+ * it published, and the view the run published after each stage. The harness runs the stage's legacy rule (the one
+ * that read the previous snapshot's games, or worked over the game list) over the same input and checks the two
+ * agree; the legacy rules live in the test support only (tests/claims/support/legacy.ts), since the pipeline no
+ * longer runs them. The records hold what only the step sees (the rows read, each source's read), so the steps keep
+ * recording them.
  */
 export type ShadowStage =
   | {
@@ -356,6 +354,18 @@ export type ShadowStage =
       /** Step 08's input, the games the step returned, and the input with the step's decisions applied (what the run publishes). */
       input: readonly Game[];
       stepGames: readonly Game[];
+      games: readonly Game[];
+    }
+  | {
+      stage: 'classify';
+      /** Step 10's input (the view through the bracket sheet) and the official step's degraded divisions. */
+      input: { games: readonly Game[]; degradedDivisions: ReadonlySet<DivisionId> };
+      games: readonly Game[];
+    }
+  | {
+      /** The view the run resolved through `through` (lib/pipeline/run.ts): what `state.games` is after that stage. */
+      stage: 'view';
+      through: Stage;
       games: readonly Game[];
     }
   | {

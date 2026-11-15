@@ -260,30 +260,65 @@ export function carryVnnPublished(
   games: readonly Game[],
   publishedOf: (contestId: string) => VnnPublished | undefined,
 ): { games: Game[]; carried: number } {
-  const wanted = new Set<string>(missing);
-  if (wanted.size === 0) return { games: [...games], carried: 0 };
-  let carried = 0;
+  const decisions = decideVnnCarry(missing, games, publishedOf);
+  if (missing.length === 0) return { games: [...games], carried: 0 };
   const out = games.map((game) => {
+    const carried = decisions.get(game.contestId);
+    return carried ? applyVnnCarry(game, carried) : game;
+  });
+  return { games: out, carried: out.filter((g, i) => g !== games[i]).length };
+}
+
+/**
+ * What the per-site carry puts back on each game, by contest id: the holes `publishedOf` can fill (a venue name with
+ * its address, a confirmed start time) on a game of a school in `missing`. A game with nothing to fill has no entry.
+ */
+export function decideVnnCarry(
+  missing: readonly TeamSlug[],
+  games: readonly Game[],
+  publishedOf: (contestId: string) => VnnPublished | undefined,
+): Map<string, VnnPublished> {
+  const wanted = new Set<string>(missing);
+  const out = new Map<string, VnnPublished>();
+  if (wanted.size === 0) return out;
+  for (const game of games) {
     const touches =
       (game.home.slug !== null && wanted.has(game.home.slug)) ||
       (game.away.slug !== null && wanted.has(game.away.slug));
-    if (!touches) return game;
+    if (!touches) continue;
     const prev = publishedOf(game.contestId);
-    if (!prev) return game;
-    const patch: Partial<Game> = {};
-    if (prev.venueName && !game.venue.name) {
-      patch.venue = {
-        ...game.venue,
-        name: prev.venueName,
-        ...(prev.venueAddress ? { address: prev.venueAddress } : {}),
-      };
-    }
-    if (prev.timeConfirmed && !game.timeConfirmed) patch.timeConfirmed = true;
-    if (Object.keys(patch).length === 0) return game;
-    carried += 1;
-    return { ...game, ...patch };
-  });
-  return { games: out, carried };
+    if (!prev) continue;
+    const fill: VnnPublished = {
+      ...(prev.venueName && !game.venue.name ? { venueName: prev.venueName, ...(prev.venueAddress ? { venueAddress: prev.venueAddress } : {}) } : {}),
+      ...(prev.timeConfirmed && !game.timeConfirmed ? { timeConfirmed: true as const } : {}),
+    };
+    if (Object.keys(fill).length > 0) out.set(game.contestId, fill);
+  }
+  return out;
+}
+
+/** One carry decision applied to its game: the venue name (and its address) and the confirmed start time put back. */
+export function applyVnnCarry(game: Game, carried: VnnPublished): Game {
+  return {
+    ...game,
+    ...(carried.venueName
+      ? { venue: { ...game.venue, name: carried.venueName, ...(carried.venueAddress ? { address: carried.venueAddress } : {}) } }
+      : {}),
+    ...(carried.timeConfirmed ? { timeConfirmed: true } : {}),
+  };
+}
+
+/** What the calendars' stage decided for one game: this run's events, then the per-site carry over them. */
+export interface VnnStageDecision {
+  events?: VnnDecision;
+  carried?: VnnPublished;
+}
+
+/** The stage's decision applied to its game: the events' first, then the carry's. */
+export function applyVnnStageDecision(game: Game, d: VnnStageDecision | undefined): Game {
+  if (!d) return game;
+  const withEvents = d.events ? applyVnnDecision(game, d.events) : game;
+  return d.carried ? applyVnnCarry(withEvents, d.carried) : withEvents;
 }
 
 /** carryVnnPublished with what each game showed in `previousGames`, the previous snapshot's list. */

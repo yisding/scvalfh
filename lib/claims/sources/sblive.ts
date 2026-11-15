@@ -46,12 +46,16 @@ export interface SbliveStageDecisions {
 }
 
 /** A disagreement a game published, and the scores it showed beside it. */
-export type StoredConflict = NonNullable<SbliveClaim['conflict']>;
+type StoredConflict = NonNullable<SbliveClaim['conflict']>;
 
 /** A conflict mark's claim ref: the game's contest (the disagreement is about the game, not one si.com row). */
-export const sbliveConflictRef = (contestId: ContestId): string => `contest:${contestId}`;
+const sbliveConflictRef = (contestId: ContestId): string => `contest:${contestId}`;
 
-/** The game list through the si.com stage: the stage's input with each game's decisions, then the rule-2 games. */
+/**
+ * The game list through the si.com stage: the stage's input with each game's decisions, then the rule-2 games. The
+ * run resolves the same per fixture over its view (lib/claims/resolve.ts), the rule-2 games entering it at the end;
+ * this is the stage over a plain list.
+ */
 export function resolveSbliveStage(games: readonly Game[], d: SbliveStageDecisions): Game[] {
   const decided = (g: Game) => applyReconcile(applyBackfillDecision(g, d.backfill.get(g.contestId)), d.reconcile.get(g.contestId));
   return [...games.map(decided), ...d.created.map(decided)];

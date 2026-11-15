@@ -26,7 +26,7 @@ import { snapshotOf, writeTempVariant, type RunCorpusOptions } from '../pipeline
 import { expectShadowAgrees, shadowStage } from './support/shadow';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
-const STAGES_MIGRATED: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'results'];
+const STAGES_MIGRATED: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'classify', 'results'];
 const CORPORA: readonly CorpusName[] = ['all-2026-10-02', 'eal-2026-10-04', 'socal-2026-10-06'];
 const VARIANTS = ['bval-meta-wrong-season', 'bval-revised', 'finals-regression', 'leland-feed-503', 'mcal-postseason', 'pcal-standings-empty'];
 

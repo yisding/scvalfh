@@ -32,17 +32,18 @@ export function exclusionsOf(view: EditorView): Exclusions {
   return { ghostTeamIds: DATA_QUALITY.ghostTeamIds, rejected: view.rejected };
 }
 
-/** This build's ledger as the editor's claims and their view, stamped `fetchedAt`. */
-export function ledgerEditor(fetchedAt: string): { claims: EditorClaim[]; view: EditorView } {
-  const claims = editorClaims(LEDGER, fetchedAt);
-  return { claims, view: editorView(claims, LEDGER.rejected) };
+/** A ledger (default: this build's) as the editor's claims and their view, stamped `fetchedAt`. */
+export function ledgerEditor(fetchedAt: string, ledger: FixtureLedger = LEDGER): { claims: EditorClaim[]; view: EditorView } {
+  const claims = editorClaims(ledger, fetchedAt);
+  return { claims, view: editorView(claims, ledger.rejected) };
 }
 
 /**
  * The editor's claims onto the store: a fixture linked to a MaxPreps contest goes to that contest's fixture, and a
  * fixture with a listing (a game no feed lists) to a fixture of its own, named by its fixtureKey; a fixture of that
  * name read from the claims file (holding what other sources said of the listed game) is that one. A fixture linked
- * only to a league fixture is not stored yet: the official claims it attaches to arrive in a later phase.
+ * only to a league fixture is stored on no fixture: its one fact, the day and host it moves that league fixture to,
+ * is the view's `moves`, which the official and si.com steps and assembly read.
  */
 export function attachEditorClaims(store: ClaimStore, claims: readonly EditorClaim[]): void {
   for (const c of claims) {

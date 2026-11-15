@@ -23,11 +23,11 @@ import { SDS_BRACKET_SHEET_URL } from '../../league-config/sections';
 import { LEAGUES } from '../../leagues';
 import { SDS_BRACKETS_FILE, sdsDivisionTeams } from '../../postseason/sds-brackets-file';
 import { sdsPlayoffWindow } from '../../postseason/sds-brackets-schema';
-import { applySdsSheetDecision, decideSdsSheet, isCifsdsContest } from '../../postseason/sds-sheet-results';
+import { applySdsSheetDecision, decideSdsSheet, isCifsdsContest, type SdsSheetDecision } from '../../postseason/sds-sheet-results';
 import { parseSdsBracketTab, type SdsSheetFixture, type SdsSheetRead, type SdsSheetResult } from '../../sources/sds-bracket-sheet';
 import { createSheetFixtures, storedSheetRows } from '../../claims/sources/sds-sheet';
 import type { SdsTabShadow } from '../../claims/types';
-import type { Game } from '../../types';
+import type { ContestId, Game } from '../../types';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
@@ -58,11 +58,24 @@ function label(division: string): string {
   return `sds bracket sheet ${division}`;
 }
 
-export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[]): Promise<Game[]> {
+/**
+ * The sheet's stage: each existing game's decision by contest id (the last one taken for it), and the games only the
+ * sheet has, in the order the stage took them; with the stage's input decided, the `cifsds:` games among it left out
+ * and the created games added, in the sheet's order (dateKey, then contest id).
+ */
+export interface SdsSheetStage {
+  games: Game[];
+  decisions: ReadonlyMap<ContestId, SdsSheetDecision>;
+  created: readonly Game[];
+  /** Whether the stage ran (the brackets file has divisions): only then are `cifsds:` games decided again and the list re-sorted. */
+  ran: boolean;
+}
+
+export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[]): Promise<SdsSheetStage> {
   const file = SDS_BRACKETS_FILE;
   if (file.divisions.length === 0) {
     ctx.shadow?.push({ stage: 'sdsSheet', input: { games: [...games], tabs: [] }, results: [], fixtures: [], disagreements: [], games: [...games] });
-    return [...games];
+    return { games: [...games], decisions: new Map(), created: [], ran: false };
   }
   const window = sdsPlayoffWindow();
   const sdsLeagues = LEAGUES.filter((l) => l.postseason.kind === 'section-playoffs').map((l) => l.id);
@@ -175,5 +188,5 @@ export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[])
       ` · ${fixtures.length} to play: listed ${decided.listed.length} · times filled ${timed}`,
   );
   ctx.shadow?.push({ stage: 'sdsSheet', input: { games: [...games], tabs }, results, fixtures, disagreements: decided.disagreements, games: [...out] });
-  return out;
+  return { games: out, decisions: decided.decisions, created: [...decided.added, ...decided.listed], ran: true };
 }

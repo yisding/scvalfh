@@ -35,7 +35,7 @@ import {
   type StoredOfficial,
 } from '../../claims/sources/official';
 import { postseasonTag } from '../../classify';
-import { LEDGER_VIEW } from '../../fixtures/ledger';
+import { unknownFixtureMoves } from '../../crosscheck/backfill';
 import type { DivisionConfig, LeagueConfig } from '../../league-config/shape';
 import { LEAGUES, divisionDisplay, divisionHeading } from '../../leagues';
 import { applyOfficialDecision, decideOfficialMatches, officialDecisionOf, type MatchResult, type OfficialDecision } from '../../official/match';
@@ -59,6 +59,9 @@ import {
 } from '../contract';
 import { carriedFromOf } from '../ledger';
 import { classifyFetchError, type FetchFailure } from '../read';
+
+/** The ledger check of the moves this step's fixtures cannot hold (lib/crosscheck/backfill.ts, beside playedFixture). */
+export { unknownFixtureMoves };
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
@@ -150,19 +153,6 @@ function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, di
     { league: leagueId, division },
   );
   return true;
-}
-
-/**
- * The league fixtures the ledger links (LEDGER_VIEW.moves), in the divisions these fixtures were read for, that are
- * none of them: a mistyped id (date or slug) passes assertLedger's shape check but would never move anything.
- */
-export function unknownFixtureMoves(
-  fixtures: readonly OfficialFixture[],
-  moves: Readonly<Record<string, unknown>> = LEDGER_VIEW.moves,
-): string[] {
-  const ids = new Set(fixtures.map((f) => f.id));
-  const divisions = new Set(fixtures.map((f) => f.division));
-  return Object.keys(moves).filter((id) => divisions.has(id.split(':')[0] as DivisionId) && !ids.has(id));
 }
 
 /**

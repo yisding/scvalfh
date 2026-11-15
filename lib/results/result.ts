@@ -651,12 +651,12 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
 }
 
 /**
- * `games` with every fixture of the ledger that no feed lists: one is left out while a feed game of the same two
- * schools on the same date exists (the feed has it after all) or its id is already there, and none is added to a
- * file stamped before its day (or, for a game reported before it was played, before `reportedOn`) or without both
- * schools' games. The same array when nothing is added.
+ * The fixtures of the ledger that no feed lists, as games to add to `games`: one is left out while a feed game of the
+ * same two schools on the same date exists (the feed has it after all) or its id is already there, and none is added
+ * to a file stamped before its day (or, for a game reported before it was played, before `reportedOn`) or without
+ * both schools' games. In the ledger's order.
  */
-export function withAddedGames(
+export function decideAddedGames(
   games: readonly Game[],
   fetchedAt: string,
   added: readonly AddedGame[] = LEDGER_VIEW.listed,
@@ -676,6 +676,16 @@ export function withAddedGames(
     ids.add(g.contestId);
     more.push(g);
   }
+  return more;
+}
+
+/** `games` with decideAddedGames' games, sorted by date then id; the same array when nothing is added. */
+export function withAddedGames(
+  games: readonly Game[],
+  fetchedAt: string,
+  added: readonly AddedGame[] = LEDGER_VIEW.listed,
+): Game[] {
+  const more = decideAddedGames(games, fetchedAt, added);
   return more.length > 0 ? [...games, ...more].sort(byDateThenId) : (games as Game[]);
 }
 

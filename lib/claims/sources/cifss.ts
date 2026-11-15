@@ -16,7 +16,7 @@ import { fixtureOfContest } from '../published';
 import type { ClaimStore } from '../store';
 import type { CifssClaim, FixtureId } from '../types';
 
-export type CifssEvidence = Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>;
+type CifssEvidence = Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>;
 
 /** A conflict row's claim ref: the game's contest (the rows carry no cifsshome.org id of their own). */
 export const cifssClaimRef = (contestId: ContestId): string => `contest:${contestId}`;

@@ -3,18 +3,32 @@
  * and the snapshot loader read it. This is the one module that knows the ledger's shape: every step that merges a
  * source into the record asks it for the slice that step works on, keyed the way the step meets the game.
  *
- *   LEDGER_VIEW.rejected   MaxPreps contests that are not games, or are a fixture's duplicate rows → dropped
- *                          (lib/pipeline/normalize.ts applyExclusions, lib/snapshot/snapshot-migrate.ts)
- *   LEDGER_VIEW.dates      the day of a fixture whose MaxPreps contest is dated otherwise, by contest
- *                          (lib/pipeline/normalize.ts applyDateCorrection)
- *   LEDGER_VIEW.hosts      the host of a fixture whose MaxPreps contest lists the other school, by contest
- *                          (lib/results/host-correction.ts applyHostCorrection)
- *   LEDGER_VIEW.results    the result of a fixture a better source records, by contest
- *                          (lib/results/result.ts applyResultCorrection)
- *   LEDGER_VIEW.listed     the fixtures no feed lists, as games to put on the schedule
- *                          (lib/results/result.ts withAddedGames, lib/jv/jv-added.ts)
- *   LEDGER_VIEW.moves      the day and host of a fixture linked to a league fixture, by league fixture id
- *                          (lib/crosscheck/backfill.ts playedFixture, lib/results/fixture-games.ts)
+ * The pipeline reads the ledger once, as the editor's claims (lib/claims/editor.ts), and passes their slices
+ * (`ledgerView` of those claims, the same as LEDGER_VIEW) to every rule it calls. LEDGER_VIEW itself is what the
+ * rule modules' parameters default to, for the snapshot loader, the site, the JV script and the tests.
+ *
+ *   rejected   MaxPreps contests that are not games, or are a fixture's duplicate rows → dropped
+ *              pipeline: lib/claims/sources/maxpreps.ts matchMaxpreps (applyExclusions, through exclusionsOf)
+ *              default:  EXCLUSIONS, lib/snapshot/snapshot-migrate.ts
+ *   dates      the day of a fixture whose MaxPreps contest is dated otherwise, by contest
+ *              pipeline: lib/claims/resolve.ts resolveMaxprepsClaim (applyDateCorrection)
+ *              default:  lib/pipeline/normalize.ts normalizeGames (scripts/fetch-jv.ts, tests)
+ *   hosts      the host of a fixture whose MaxPreps contest lists the other school, by contest
+ *              pipeline: lib/claims/resolve.ts resolveMaxprepsClaim (applyHostCorrection)
+ *              default:  lib/results/host-correction.ts applyHostCorrection (lib/snapshot/snapshot-migrate.ts)
+ *   results    the result of a fixture a better source records, by contest
+ *              pipeline: lib/claims/resolve.ts stage `results` (finalizeResult), lib/pipeline/steps/results.ts
+ *                        (correctionProblems), lib/pipeline/steps/guards.ts (the finals count)
+ *              default:  lib/results/result.ts applyResultCorrection (lib/snapshot/snapshot-migrate.ts)
+ *   listed     the fixtures no feed lists, as games to put on the schedule
+ *              pipeline: lib/pipeline/steps/results.ts decideResults (decideAddedGames), lib/pipeline/steps/guards.ts
+ *              default:  lib/results/result.ts withAddedGames (lib/snapshot/snapshot-migrate.ts), lib/jv/jv.ts
+ *   moves      the day and host of a fixture linked to a league fixture, by league fixture id
+ *              pipeline: lib/pipeline/steps/official.ts, sblive.ts (playedFixture), assemble.ts (fixtureGame)
+ *              default:  lib/crosscheck/backfill.ts playedFixture, lib/results/fixture-games.ts fixtureGame (lib/data.ts)
+ *   byContest  the fixture a MaxPreps contest is
+ *              pipeline: lib/pipeline/steps/results.ts (ledgerProblems), lib/claims/from-snapshot.ts maxprepsBaseId
+ *                        (a linked contest's fixture is named after the ledger's)
  *
  * `ledgerProblems` is the other direction: the ledger checked against the games the sources gave, so a fixture
  * whose linked contest is another pair, another day or another host than it states is reported, never applied.

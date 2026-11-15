@@ -23,18 +23,31 @@
  * Stage `sdsSheet` (P4): the bracket sheet with its unread tabs carried from the sheet's claims, against the tabs
  * carried from the rows read back from the previous snapshot's games: the same rows in the same order, the same
  * disagreements, and the same games.
+ *
+ * Stage `classify` (P7): the view resolved through classification, fixture by fixture, against classifyGames and
+ * settleLevelFinals over the stage's game list.
+ *
+ * And at every stage (P7): what the run published (the view, each fixture's claims folded with the decisions taken
+ * so far, in the view's order) is the game list the stage's own record holds, game for game and in order.
  */
 
 import { expect } from 'vitest';
 
 import type { PipelineContext } from '../../../lib/pipeline/ledger';
 import type { ShadowStage, Stage } from '../../../lib/claims/types';
-import { legacyMaxpreps, legacyOfficialCarry, legacyResults, legacySblive, legacySdsSheet, legacyVnn } from './legacy';
+import { legacyClassify, legacyMaxpreps, legacyOfficialCarry, legacyResults, legacySblive, legacySdsSheet, legacyVnn } from './legacy';
 
 export function shadowStage<S extends Stage>(ctx: PipelineContext, stage: S): Extract<ShadowStage, { stage: S }> {
   const found = ctx.shadow?.find((s) => s.stage === stage);
   if (!found) throw new Error(`no shadow record for stage ${stage}: is SCVAL_CLAIMS_SHADOW=1 set?`);
   return found as Extract<ShadowStage, { stage: S }>;
+}
+
+/** What the run published after `through` (the view resolved through that stage) is `games`, in order. */
+function expectViewIs(ctx: PipelineContext, through: Stage, games: readonly unknown[], label: string): void {
+  const views = (ctx.shadow ?? []).filter((r): r is Extract<ShadowStage, { stage: 'view' }> => r.stage === 'view' && r.through === through);
+  expect(views, `${label}: one view through ${through}`).toHaveLength(1);
+  expect(views[0].games, `${label}: the view through ${through}`).toEqual(games);
 }
 
 /** The maxpreps stage agrees with legacy step 06, game for game and in order. Returns the stage. */
@@ -45,6 +58,7 @@ function expectMaxprepsAgrees(ctx: PipelineContext, label: string): Extract<Shad
   expect(s.view, `${label}: one fixture per game`).toHaveLength(new Set(s.view).size);
   expect([...s.carried].sort(), `${label}: carried`).toEqual([...legacy.carried].sort());
   legacy.games.forEach((g, i) => expect(s.games[i], `${label}: ${g.contestId}`).toEqual(g));
+  expectViewIs(ctx, 'maxpreps', s.games, label);
   return s;
 }
 
@@ -54,6 +68,7 @@ export function expectShadowAgrees<S extends Stage>(ctx: PipelineContext, stage:
   if (stage === 'vnn') {
     const s = shadowStage(ctx, 'vnn');
     expect(s.games, `${label}: vnn`).toEqual(legacyVnn(s.input, ctx.previous));
+    expectViewIs(ctx, 'vnn', s.games, label);
     return s as Extract<ShadowStage, { stage: S }>;
   }
   if (stage === 'official') {
@@ -69,6 +84,7 @@ export function expectShadowAgrees<S extends Stage>(ctx: PipelineContext, stage:
     expect(resolved, `${label}: one official stage`).toHaveLength(1);
     const [s] = resolved as Array<Extract<ShadowStage, { stage: 'official'; kind: 'resolve' }>>;
     expect(s.games, `${label}: official`).toEqual(s.stepGames);
+    expectViewIs(ctx, 'official', s.games, label);
     return s as Extract<ShadowStage, { stage: S }>;
   }
   if (stage === 'sblive') {
@@ -82,6 +98,7 @@ export function expectShadowAgrees<S extends Stage>(ctx: PipelineContext, stage:
     const resolved = records.filter((r) => r.kind === 'resolve') as Array<Extract<ShadowStage, { stage: 'sblive'; kind: 'resolve' }>>;
     expect(resolved, `${label}: one si.com stage`).toHaveLength(1);
     expect(resolved[0].games, `${label}: sblive`).toEqual(resolved[0].stepGames);
+    expectViewIs(ctx, 'sblive', resolved[0].games, label);
     return resolved[0] as Extract<ShadowStage, { stage: S }>;
   }
   if (stage === 'sdsSheet') {
@@ -91,11 +108,19 @@ export function expectShadowAgrees<S extends Stage>(ctx: PipelineContext, stage:
     expect(s.fixtures, `${label}: sheet fixtures`).toEqual(legacy.fixtures);
     expect(s.disagreements, `${label}: sheet disagreements`).toEqual(legacy.disagreements);
     expect(s.games, `${label}: sdsSheet`).toEqual(legacy.games);
+    expectViewIs(ctx, 'sdsSheet', s.games, label);
+    return s as Extract<ShadowStage, { stage: S }>;
+  }
+  if (stage === 'classify') {
+    const s = shadowStage(ctx, 'classify');
+    expect(s.games, `${label}: classify`).toEqual(legacyClassify(s.input));
+    expectViewIs(ctx, 'classify', s.games, label);
     return s as Extract<ShadowStage, { stage: S }>;
   }
   if (stage === 'results') {
     const s = shadowStage(ctx, 'results');
     expect(s.games, `${label}: results`).toEqual(legacyResults(s.input, ctx.fetchedAt));
+    expectViewIs(ctx, 'results', s.games, label);
     return s as Extract<ShadowStage, { stage: S }>;
   }
   throw new Error(`the shadow harness has no check for stage ${stage}`);

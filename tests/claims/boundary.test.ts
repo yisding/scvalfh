@@ -10,7 +10,7 @@
  * And the ledger boundary (§3, §10 P8): the pipeline is to read the fixture ledger only as the editor's claims
  * (lib/claims/editor.ts), never LEDGER_VIEW, EXCLUSIONS or LEDGER themselves. The pipeline-side modules that still
  * import one of them are a frozen list, in tests/data-boundary.test.ts's style: a module may leave it (shrink the
- * list), never join it. lib/results' three keep the import as a default parameter for the loader and the site.
+ * list), never join it. All but lib/claims/editor.ts keep the import as a default parameter for their other callers.
  */
 
 import { readFileSync } from 'node:fs';
@@ -97,12 +97,16 @@ describe('lib/claims/ never loads lib/data.ts', () => {
 
 /** The pipeline-side folders: what the cron runs to build the snapshot. */
 const PIPELINE_DIRS = ['lib/pipeline', 'lib/claims', 'lib/crosscheck', 'lib/official', 'lib/results', 'lib/postseason', 'lib/sources'];
-/** The modules among them that import LEDGER_VIEW, EXCLUSIONS or LEDGER at runtime today (P2). Shrinks to lib/claims/editor.ts by P8. */
+/**
+ * The modules among them that import LEDGER_VIEW, EXCLUSIONS or LEDGER at runtime. lib/claims/editor.ts reads the
+ * ledger for the run; every other one imports LEDGER_VIEW only as a default parameter, which the pipeline never
+ * leaves to its default (it passes the editor's slices; tests/claims/empty-editor.test.ts checks a run with an empty
+ * ledger shows none of the ledger's facts), and which the loader, the site, the JV script and the tests rely on.
+ */
 const LEDGER_READERS = [
   'lib/claims/editor.ts',
   'lib/crosscheck/backfill.ts',
   'lib/pipeline/normalize.ts',
-  'lib/pipeline/steps/official.ts',
   'lib/results/fixture-games.ts',
   'lib/results/host-correction.ts',
   'lib/results/result.ts',

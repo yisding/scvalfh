@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import type { ClaimsFile } from '../../../lib/claims/types';
+import type { FixtureLedger } from '../../../lib/fixtures/shape';
 import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '../../../lib/pipeline/contract';
 import { loadCorpus } from '../../../lib/pipeline/corpus';
 import { SILENT_SINK, type PipelineContext } from '../../../lib/pipeline/ledger';
@@ -31,6 +32,8 @@ export interface RunCorpusOptions {
   steps?: PipelineSteps;
   /** Wrap the fixture transport (latency, failure injection). */
   wrap?: (t: Transport) => Transport;
+  /** The fixture ledger the run's editor reads (lib/claims/editor.ts); left out, the sport's own. */
+  ledger?: FixtureLedger;
 }
 
 export interface CorpusRun {
@@ -67,6 +70,7 @@ export async function runCorpus(opts: RunCorpusOptions = {}): Promise<CorpusRun>
     previous: opts.previous ?? null,
     sink: SILENT_SINK,
     claims: opts.claims,
+    ledger: opts.ledger,
   });
   const result = await runPipeline(ctx, opts.steps ?? NOOP_STEPS);
   return { result, ctx, args };

@@ -5,7 +5,8 @@
  *    whose team's league is in the run). PER SITE carry-forward: a school whose feed produced
  *    nothing this run keeps the venues and confirmed start times it published before (the VNN
  *    claims, lib/claims/sources/vnn.ts), and its source row is stamped with when that school's own
- *    calendar was last fresh.
+ *    calendar was last fresh. Each game's decision (this run's events, then the carry) is returned
+ *    by contest id, for the run's view.
  *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
  *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
  *    corpus, a failed request, or a tournament page `readTournamentPage` does not recognise: a 403
@@ -36,21 +37,27 @@ import { getLeague } from '../../leagues';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readTournamentPage } from '../../sources/ccs';
 import { isTournamentPageUrl, parseTournamentBrackets } from '../../sources/maxpreps-tournament';
 import { vnnPublishedFrom } from '../../claims/sources/vnn';
-import { VNN_SITE_IDS, applyVnnEvents, carryVnnPublished, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
+import { VNN_SITE_IDS, applyVnnStageDecision, decideVnn, decideVnnCarry, parseVnnIcs, type VnnEvent, type VnnStageDecision } from '../../sources/vnn-ics';
 import { getTeamBySlug } from '../../teams';
-import type { CcsDivisionName, Game, TournamentBracket } from '../../types';
+import type { CcsDivisionName, ContestId, Game, TournamentBracket } from '../../types';
 import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
 import { stepSdsSheet } from './sds-sheet';
 
-async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
-  let games = [...input];
+/** The calendars' stage: each game's decision by contest id, and the stage's input with them applied. */
+export interface VnnStage {
+  games: Game[];
+  decisions: Map<ContestId, VnnStageDecision>;
+}
+
+export async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<VnnStage> {
+  const decisions = new Map<ContestId, VnnStageDecision>();
   if (!ctx.args.vnn) {
     ctx.log('  vnn: skipped (--no-vnn)');
-    ctx.shadow?.push({ stage: 'vnn', input: { games: [...input], events: [], sites: new Map() }, games: [...games] });
-    return games;
+    ctx.shadow?.push({ stage: 'vnn', input: { games: [...input], events: [], sites: new Map() }, games: [...input] });
+    return { games: [...input], decisions };
   }
   const inRun = new Set(ctx.leaguesInRun());
   const sites = VNN_SITE_IDS.filter((s) => {
@@ -83,13 +90,14 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
       ctx.source({ ...base, ...failed });
     }
   }
+  const decided = (games: readonly Game[]) => games.map((g) => applyVnnStageDecision(g, decisions.get(g.contestId)));
   if (events.length) {
-    const applied = applyVnnEvents(games, events);
-    games = applied.games;
-    for (const w of applied.warnings) ctx.warn(`vnn: ${w}`);
+    const d = decideVnn(input, events);
+    for (const [id, events] of d.decisions) decisions.set(id, { events });
+    for (const w of d.warnings) ctx.warn(`vnn: ${w}`);
     ctx.log(
-      `  vnn: ${events.length} field-hockey events · venues added ${applied.venuesAdded} · ` +
-        `times confirmed ${applied.timesConfirmed} · unmatched varsity ${applied.unmatched}`,
+      `  vnn: ${events.length} field-hockey events · venues added ${d.venuesAdded} · ` +
+        `times confirmed ${d.timesConfirmed} · unmatched varsity ${d.unmatched}`,
     );
   }
 
@@ -97,9 +105,10 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
   // recorded what each game last showed (lib/claims/sources/vnn.ts).
   const missing = sites.filter((s) => !answered.has(s.slug)).map((s) => s.slug);
   if (missing.length && ctx.previous) {
-    const restored = carryVnnPublished(missing, games, vnnPublishedFrom(ctx.claims));
-    games = restored.games;
-    if (restored.carried) {
+    const carried = decideVnnCarry(missing, decided(input), vnnPublishedFrom(ctx.claims));
+    for (const [id, fill] of carried) decisions.set(id, { ...decisions.get(id), carried: fill });
+    const n = input.filter((g) => carried.has(g.contestId)).length;
+    if (n) {
       for (const slug of missing) {
         const label = `${slug} school calendar`;
         const carriedFrom = carriedFromOf(
@@ -113,16 +122,17 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
         );
       }
       ctx.warn(
-        `vnn: ${missing.join(', ')} produced no calendar events — carried ${restored.carried} ` +
-          `venue/start-time ${restored.carried === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
+        `vnn: ${missing.join(', ')} produced no calendar events — carried ${n} ` +
+          `venue/start-time ${n === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
       );
     }
   }
+  const games = decided(input);
   if (ctx.shadow) {
     const read = new Map(sites.map((site) => [site.slug, answered.has(site.slug) ? ('answered' as const) : ('not-answered' as const)]));
     ctx.shadow.push({ stage: 'vnn', input: { games: [...input], events, sites: read }, games: [...games] });
   }
-  return games;
+  return { games, decisions };
 }
 
 type CcsState = Omit<SecondaryStepResult, 'games' | 'brackets'>;
@@ -357,10 +367,21 @@ async function stepBrackets(
   return out.length > 0 ? out : undefined;
 }
 
-export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
-  const withVnn = await stepVnn(ctx, games);
+/** Step 09's CCS part: the calendar and bracket state, then the brackets read whole over `games` (the view through VNN). */
+export async function stepCcsBrackets(ctx: PipelineContext, games: readonly Game[]): Promise<Omit<SecondaryStepResult, 'games'>> {
   const ccs = await stepCcs(ctx);
-  const brackets = await stepBrackets(ctx, withVnn, ccs.polled, ccs.page);
-  const withSheet = await stepSdsSheet(ctx, withVnn);
-  return { games: withSheet, ...ccs.state, ...(brackets ? { brackets } : {}) };
+  const brackets = await stepBrackets(ctx, games, ccs.polled, ccs.page);
+  return { ...ccs.state, ...(brackets ? { brackets } : {}) };
+}
+
+/**
+ * Step 09 over a game list: the school calendars, CCS and the bracket sheet, each part over the games the part
+ * before it left. The run calls the parts itself (lib/pipeline/run.ts), each over the view the stage before
+ * resolved, in this order.
+ */
+export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
+  const withVnn = (await stepVnn(ctx, games)).games;
+  const ccs = await stepCcsBrackets(ctx, withVnn);
+  const withSheet = (await stepSdsSheet(ctx, withVnn)).games;
+  return { games: withSheet, ...ccs };
 }

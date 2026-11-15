@@ -5,8 +5,9 @@
  * COLLECT is normalize with no ledger fact: the contest exactly as toGame builds it. MATCH applies the editor's day
  * and host (resolve), drops the editor's rejected and duplicate rows and the ghost teams' contests, dedupes
  * phantom pairs, and carries a stored claim forward only while a side's feed was not read this run. A carried
- * contest is the one MaxPreps last listed, on today's editor day and host; what other sources added to it the last
- * time it was published is decided again by their own stages this run (§0.3).
+ * contest enters the view as the previous run published it, classification cleared (`published`, §11 R3's
+ * zero-deviation carry), so it keeps what the other sources added to it then; given no publication, it is the
+ * contest MaxPreps last listed, on today's editor day and host, and the other stages decide it again (§0.3).
  */
 
 import { byDateThenId } from '../../format';
@@ -35,7 +36,7 @@ function missingTeams(feeds: ReadonlyMap<TeamSlug, FeedRead>): Set<TeamId> {
 }
 
 /** Whether a stored claim's scope was read this run: neither side's team feed failed or went unfetched. */
-export function maxprepsReadScope(feeds: ReadonlyMap<TeamSlug, FeedRead>): (claim: MaxprepsClaim) => boolean {
+function maxprepsReadScope(feeds: ReadonlyMap<TeamSlug, FeedRead>): (claim: MaxprepsClaim) => boolean {
   const missing = missingTeams(feeds);
   return (claim) => {
     const { home, away } = claim.game;
@@ -66,7 +67,7 @@ export interface MaxprepsMatch {
   droppedByConfig: number;
   /** Contest ids carried forward this run (a side's feed not read): stored claims, and editor-listed games last published. */
   carried: ContestId[];
-  /** The carried fixtures' decisions: the game each publishes at this stage. Every other view fixture is its claim's. */
+  /** The carried fixtures' decisions: the game each enters the view with. Every other view fixture is its claim's. */
   decisions: Map<FixtureId, FixtureDecisions>;
   /** Each view fixture's game at this stage, in view order. */
   games: Game[];
@@ -87,8 +88,8 @@ export function matchMaxpreps(input: {
   normDropped: readonly DroppedContest[];
   /**
    * The previous publication's games by contest id (§11 R3's zero-deviation carry): a carried contest publishes as
-   * it was last published, classification cleared, so it keeps what the other sources added to it until their own
-   * claims record what they published. Absent: a carried contest is its MaxPreps claim alone.
+   * it was last published, classification cleared, so it keeps what the other sources added to it rather than
+   * having this run's reads decide it again. Absent: a carried contest is its MaxPreps claim alone.
    */
   published?: ReadonlyMap<ContestId, Game>;
 }): MaxprepsMatch {
@@ -145,9 +146,10 @@ export function matchMaxpreps(input: {
   const games = [...deduped.games, ...carried].sort(byDateThenId);
   const decisions = new Map<FixtureId, FixtureDecisions>();
   const view = games.map((g) => {
-    const id = store.fixtureOf('maxpreps', g.contestId) ?? store.create(`published:${g.contestId}`);
+    // An editor listing carried as published holds no claim of its own here: a passthrough fixture, never stored.
+    const id = store.fixtureOf('maxpreps', g.contestId) ?? `passthrough:${g.contestId}`;
     const last = carriedGames.get(g.contestId);
-    if (last && published.has(g.contestId)) decisions.set(id, { contestId: g.contestId, from: 'maxpreps', published: last });
+    if (last && published.has(g.contestId)) decisions.set(id, { from: 'maxpreps', enters: last });
     return id;
   });
   return { view, decisions, dropped, unusedExclusions: excluded.unused, droppedByConfig: excluded.dropped.length + deduped.dropped.length, carried: carried.map((g) => g.contestId), games };

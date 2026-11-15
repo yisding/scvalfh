@@ -30,7 +30,7 @@ const pairOf = (row: SheetRow): string => ('teams' in row ? [...row.teams] : [ro
 export const sheetClaimRef = (row: SheetRow): string => `${row.division}:${pairOf(row)}`;
 
 /** The claim `row` gives as published on `game`, stamped `seenAt`: the row without its host, and the host apart. */
-export function sheetClaimOf(row: SheetRow, game: Game, seenAt: string, ref: string = sheetClaimRef(row)): SdsSheetClaim {
+function sheetClaimOf(row: SheetRow, game: Game, seenAt: string, ref: string = sheetClaimRef(row)): SdsSheetClaim {
   const { host: _host, ...rest } = row;
   void _host;
   return {

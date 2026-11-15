@@ -19,7 +19,7 @@ import type { ClaimStore } from '../store';
 import type { FixtureId, VnnClaim } from '../types';
 
 /** A calendar's claim ref for a game: the school, then the game's contest. */
-export const vnnClaimRef = (school: TeamSlug, contestId: string): string => `${school}:contest:${contestId}`;
+const vnnClaimRef = (school: TeamSlug, contestId: string): string => `${school}:contest:${contestId}`;
 
 /** The school calendars whose school plays in `game`, in VNN_SITE_IDS order. */
 function schoolsOf(game: Pick<Game, 'home' | 'away'>): TeamSlug[] {

@@ -5,6 +5,7 @@
  * claims path against them run by run.
  */
 
+import { classifyGames } from '../../../lib/classify';
 import { applyBackfill } from '../../../lib/crosscheck/backfill';
 import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../../lib/crosscheck/crosscheck';
 import { byDateThenId } from '../../../lib/format';
@@ -12,6 +13,7 @@ import { EXCLUSIONS } from '../../../lib/fixtures/ledger';
 import { isSbliveContestId } from '../../../lib/game-id';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../../lib/pipeline/normalize';
 import { SDS_BRACKET_SHEET_URL } from '../../../lib/league-config/sections';
+import { settleLevelFinals } from '../../../lib/postseason/level-final';
 import { SDS_BRACKETS_FILE } from '../../../lib/postseason/sds-brackets-file';
 import { sdsPlayoffWindow } from '../../../lib/postseason/sds-brackets-schema';
 import { applySdsSheetResults, isCifsdsContest, sheetFixturesFromGames, sheetResultsFromGames } from '../../../lib/postseason/sds-sheet-results';
@@ -86,6 +88,11 @@ export function legacyVnn(input: Extract<ShadowStage, { stage: 'vnn' }>['input']
   const missing = [...input.sites].filter(([, read]) => read === 'not-answered').map(([slug]) => slug);
   if (missing.length && previous) games = carryVnnForward(missing, previous.games, games).games;
   return games;
+}
+
+/** Step 10 as it was before P7: classifyGames, then settleLevelFinals, over the stage's game list. */
+export function legacyClassify(input: Extract<ShadowStage, { stage: 'classify' }>['input']): Game[] {
+  return settleLevelFinals(classifyGames(input.games, { degradedDivisions: input.degradedDivisions }));
 }
 
 /** Step 11c as it was before P3: the cifss report's conflict rows and the box-score file, as given. */

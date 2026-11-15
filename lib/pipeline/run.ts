@@ -2,7 +2,7 @@
  * The pipeline (SPEC §7.4): `runPipeline(ctx, steps)` runs the thirteen steps in order, and the
  * small amount of CLI plumbing `scripts/fetch-data.ts` needs (§7.12): argument parsing, the
  * transport for the run, the previous snapshot (through loadSnapshot, so a v1 file is migrated),
- * and writing the two output files.
+ * the claims file beside it, and writing the three output files.
  *
  *   01 window      out of season → log, write nothing, exit 0 (unless --force)
  *   02 bootstrap   season ids ≠ config → RUN ABORT
@@ -12,23 +12,33 @@
  *   06 normalize   the MaxPreps claims: exclusions, phantom dedupe, carry-forward from stored claims
  *   07 official    the official step (steps/official.ts), injectable
  *   08 sblive      the si.com step (steps/sblive.ts), injectable
- *   09 secondary   VNN, CCS
- *   10 classify    classifyGames with the official step's degraded divisions
+ *   09 secondary   VNN, CCS and the brackets, the San Diego bracket sheet
+ *   10 classify    classifyGames with the official step's degraded divisions, then level finals that need a winner
  *   11 guards      finals regression (c), frozen-league substitution, systemic RUN ABORT
  *   11b cifss      the cifsshome.org score cross-check (report only; never changes a game)
- *   11c results    corrections, level finals that must have a winner, tallies, and every final's GameResult
+ *   11c results    the editor's listings, corrections, tallies, and every final's GameResult
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
  *
- * The run keeps every source's rows as claims (lib/claims/) and writes the claims file beside the snapshot. Step 06
- * publishes from the MaxPreps claims: a feed this run did not read is carried from the claims the previous run
- * wrote. The evidence-only sources read their claims too: a school calendar that does not answer is carried from
- * what its games showed when last published (step 09), and step 11c weighs the cifsshome.org and box-score evidence
- * the claims hold. A bracket sheet tab not read is carried from the sheet's claims, and a game only the sheet has is a
- * fixture created from its row's claim (step 09). The official and si.com steps carry what they did not read from
- * their claims and hand the run their decisions, which the run applies to the stage's input (steps 07 and 08); an
- * si.com rule-2 game is a fixture of its own. Classification, the guards and the results still work over the game
- * list.
+ * The stage driver (pipeline inversion §4.2). Every source's rows are claims, kept per fixture in the claim store
+ * (lib/claims/store.ts, read from the claims file the previous run wrote, else seeded from its snapshot). The run
+ * publishes a view (lib/claims/view.ts): the fixtures in order and the decisions each stage takes about them. At each
+ * game stage, in order (maxpreps, official, sblive, vnn, sdsSheet, classify, guards, results):
+ *
+ *   COLLECT  the step reads its source (a source not read this run is carried from its stored claims);
+ *   MATCH    the step decides over `state.games`, the view resolved through the stage before: decisions about
+ *            existing games by contest id, new games entering the view, and where the legacy list was re-sorted,
+ *            the same sort;
+ *   RESOLVE  the run records those decisions in the view and assigns `state.games` = the view resolved through this
+ *            stage (lib/claims/resolve.ts: each fixture's claims folded with its decisions, stage by stage).
+ *
+ * `publish` below is the one place `state.games` is assigned. The injectable official and si.com steps keep their
+ * game-list contract: their decisions come with their result, or are read off the games they return. A frozen
+ * league's games are its previous snapshot's (a `frozen` decision): a publication rule, not carry-forward, so it reads
+ * the previous snapshot, as do the other run-history reads (league health, carried-from stamps, the si.com and
+ * cifsshome.org reports, CCS and bracket state, slugs, aliases, superseded games, content dates). After assembly
+ * the si.com, sheet, official and school-calendar claims are rewritten from the published games, and the store is
+ * written as the claims file.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -37,16 +47,19 @@ import path from 'node:path';
 import { CLAIMS_WARN_BYTES, claimsFileText, claimsPathOf, readClaimsFile } from '../claims/file';
 import { boxEvidenceOf, recordBoxClaims } from '../claims/sources/box';
 import { cifssEvidenceFrom, recordCifssClaims } from '../claims/sources/cifss';
-import { decisionsFromOfficialStep, resolveOfficialStage, writeBackOfficialClaims } from '../claims/sources/official';
+import { decisionsFromOfficialStep, writeBackOfficialClaims } from '../claims/sources/official';
 import { writeBackSheetClaims } from '../claims/sources/sds-sheet';
-import { createSbliveFixtures, decisionsFromSbliveStep, resolveSbliveStage, writeBackSbliveClaims, type SbliveStageDecisions } from '../claims/sources/sblive';
+import { createSbliveFixtures, decisionsFromSbliveStep, writeBackSbliveClaims, type SbliveStageDecisions } from '../claims/sources/sblive';
 import { writeBackVnnClaims } from '../claims/sources/vnn';
-import type { ClaimsFile } from '../claims/types';
+import { fixtureOfContest } from '../claims/published';
+import type { ClaimsFile, Stage } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
+import type { FixtureLedger } from '../fixtures/shape';
 import { parseFetchedAtFlag, parseLeaguesFlag } from '../cli-flags';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
 import { SDS_BRACKETS_FILE } from '../postseason/sds-brackets-file';
+import { isCifsdsContest } from '../postseason/sds-sheet-results';
 import { loadSnapshot } from '../snapshot/snapshot-load';
 import { stableStringify } from '../stable-json';
 import type { Game, OfficialFixture, Snapshot } from '../types';
@@ -64,16 +77,17 @@ import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink } from './le
 import { stepAssemble } from './steps/assemble';
 import { stepBootstrap } from './steps/bootstrap';
 import { stepCifss } from './steps/cifss';
-import { stepClassify } from './steps/classify';
-import { markLeaguesNotInRun, stepGuards } from './steps/guards';
+import { logClassification } from './steps/classify';
+import { applyFrozenLeagues, checkFinalsRegression, checkSystemic, fillClassification, markLeaguesNotInRun } from './steps/guards';
 import { stepLeagueMeta } from './steps/league-meta';
 import { stepNormalize } from './steps/normalize';
 import { notAppliedReason } from './steps/official';
 import { stepReported } from './steps/reported';
-import { stepResults } from './steps/results';
+import { decideResults, logResults } from './steps/results';
 import { boxEvidenceFrom, type BoxEvidence } from '../results/box-evidence';
 import { stepSchedules } from './steps/schedules';
-import { stepSecondary } from './steps/secondary';
+import { stepCcsBrackets, stepVnn } from './steps/secondary';
+import { stepSdsSheet } from './steps/sds-sheet';
 import { stepStandings } from './steps/standings';
 import { stepWindow } from './steps/window';
 import {
@@ -97,13 +111,15 @@ export interface CreateContextInit {
   sink?: LogSink;
   /** The claims file beside the previous snapshot (prepareRun); undefined seeds the claims from `previous`. */
   claims?: ClaimsFile | null;
+  /** The fixture ledger the editor's claims are read from; left out, this build's sport's (a test passes its own). */
+  ledger?: FixtureLedger;
 }
 
 /** A PipelineContext whose transport is metered and logs through the context. */
 export function createPipelineContext(init: CreateContextInit): PipelineContext {
   let ctx: PipelineContext | null = null;
   const metered = new MeteredTransport(init.transport, (line) => ctx?.log(line));
-  ctx = new PipelineContext({ args: init.args, transport: metered, previous: init.previous, sink: init.sink, claims: init.claims });
+  ctx = new PipelineContext({ args: init.args, transport: metered, previous: init.previous, sink: init.sink, claims: init.claims, ledger: init.ledger });
   return ctx;
 }
 
@@ -187,56 +203,94 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   for (const d of ALL_DIVISIONS) state.divisions.set(d.id, { meta: 'skipped', reportedTable: 'skipped', reportedRows: null });
   markLeaguesNotInRun(ctx); // §7.5 trigger d
 
+  // The one place `state.games` is assigned: the view, every decision taken so far, resolved through `stage`.
+  const view = ctx.view;
+  const publish = (stage: Stage): Game[] => {
+    state.games = view.games(stage);
+    ctx.shadow?.push({ stage: 'view', through: stage, games: [...state.games] });
+    return state.games;
+  };
+
   await stepBootstrap(ctx); // 02
   await stepLeagueMeta(ctx, state); // 03
   await stepReported(ctx, state); // 04
   await stepSchedules(ctx, state); // 05
-  stepNormalize(ctx, state); // 06
+  stepNormalize(ctx, state); // 06: the view starts from the MaxPreps claims
+  publish('maxpreps');
 
-  // 07 official (the injectable official step): its decisions applied to the stage's input; the rows it read are
-  // kept for the official claims.
+  // 07 official (the injectable official step): its decisions, by contest, onto the view; the rows it read are kept
+  // for the official claims.
   const officialInput = state.games;
   const { games: officialGames, unmatched, decisions, fixtures: officialRows = [], readDivisions = new Set(), ...officialFlags } =
     await runOfficial(ctx, steps, officialInput);
-  state.games = resolveOfficialStage(officialInput, decisions);
+  view.decide('official', 'official', decisions);
+  publish('official');
   state.unmatched = unmatched;
   state.official = officialFlags;
   ctx.shadow?.push({ stage: 'official', kind: 'resolve', input: officialInput, stepGames: officialGames, games: [...state.games] });
 
-  // 08 sblive (the injectable si.com step): its decisions applied to the stage's input; each rule-2 game gets its
-  // fixture, and the rows it read are kept for the si.com claims.
+  // 08 sblive (the injectable si.com step): each rule-2 game enters the view on its fixture, then the fills and
+  // disagreements, by contest, onto the view; the rows it read are kept for the si.com claims.
   const sbliveInput = state.games;
   const { games: sbliveGames, decisions: sbliveDecisions, rows: sbliveRows = [], read: sbliveRead = false, ...sblive } =
     await runSblive(ctx, steps, sbliveInput, state.unmatched);
-  state.games = resolveSbliveStage(sbliveInput, sbliveDecisions);
-  state.unmatched = sblive.unmatched;
-  state.sbliveCrossCheck = sblive.sbliveCrossCheck;
   const sbliveRowsRead = new Map(sbliveRows.map((r) => [r.sbliveGameId, r]));
   createSbliveFixtures(ctx.claims, sbliveDecisions.created, sbliveRowsRead, ctx.fetchedAt);
+  view.enter('sblive', sbliveDecisions.created, (g) => fixtureOfContest(ctx.claims, g.contestId));
+  view.decide('sblive', 'backfill', sbliveDecisions.backfill);
+  view.decide('sblive', 'reconcile', sbliveDecisions.reconcile);
+  publish('sblive');
+  state.unmatched = sblive.unmatched;
+  state.sbliveCrossCheck = sblive.sbliveCrossCheck;
   ctx.shadow?.push({ stage: 'sblive', kind: 'resolve', input: sbliveInput, stepGames: sbliveGames, games: [...state.games] });
 
-  // 09 secondary
-  const { games: secondaryGames, ...ccs } = await stepSecondary(ctx, state.games);
-  state.games = secondaryGames;
-  state.secondary = ccs;
+  // 09 secondary: the school calendars' venues and start times, by contest; CCS and the brackets (run-level); the
+  // bracket sheet's scores and times by contest, its own games entering the view, which then takes the sheet's order.
+  const vnn = await stepVnn(ctx, state.games);
+  view.decide('vnn', 'vnn', vnn.decisions);
+  publish('vnn');
+  state.secondary = await stepCcsBrackets(ctx, state.games);
+  const sheet = await stepSdsSheet(ctx, state.games);
+  if (sheet.ran) {
+    view.remove('vnn', (g) => isCifsdsContest(g.contestId));
+    view.decide('sdsSheet', 'sheet', sheet.decisions);
+    view.enter('sdsSheet', sheet.created, (g) => fixtureOfContest(ctx.claims, g.contestId));
+    view.sortSheet('sdsSheet');
+  }
+  publish('sdsSheet');
 
-  // 10 classify
-  state.games = stepClassify(ctx, state.games, state.official.degradedDivisions);
+  // 10 classify: one rule per game, with the official step's degraded divisions.
+  const classifyInput = state.games;
+  view.setFacts({ degradedDivisions: state.official.degradedDivisions });
+  publish('classify');
+  logClassification(ctx, classifyInput, state.games, state.official.degradedDivisions);
+  ctx.shadow?.push({ stage: 'classify', input: { games: classifyInput, degradedDivisions: state.official.degradedDivisions }, games: [...state.games] });
 
-  // 11 guards (may throw RunAbort)
-  stepGuards(ctx, state);
+  // 11 guards (may throw RunAbort): the finals regression over the classified games, a frozen league's games as last
+  // published, then the systemic outage over what the run would publish.
+  checkFinalsRegression(ctx, state);
+  applyFrozenLeagues(ctx, state, view);
+  publish('guards');
+  fillClassification(state);
+  checkSystemic(ctx, state);
 
   // 11b cifsshome.org cross-check (over the games the snapshot will publish)
   state.cifssCrossCheck = await stepCifss(ctx, state);
   recordCifssClaims(ctx.claims, state.cifssCrossCheck);
 
-  // 11c results: every final's recorded result, from everything the run now knows about it (corrections, a
-  // level final that must have a winner, a tally read from a second source), before the standings count it.
+  // 11c results: the editor's listings enter the view (re-sorted when any does); each fixture gets its cifss and box
+  // evidence from the claims; every final's recorded result is resolved (corrections, a level final that must have a
+  // winner, a tally read from a second source), before the standings count it.
+  const resultsInput = state.games;
+  const listed = decideResults(ctx, resultsInput, ctx.editor);
+  view.enter('results', listed, (g) => fixtureOfContest(ctx.claims, g.contestId));
   const box = ctx.args.fixtures ? undefined : boxEvidenceOnDisk();
   recordBoxClaims(ctx.claims, box, ctx.fetchedAt);
-  const evidence = { cifss: cifssEvidenceFrom(ctx.claims, state.cifssCrossCheck), box: boxEvidenceOf(ctx.claims, box) };
-  const resultsInput = state.games;
-  state.games = stepResults(ctx, state.games, state.cifssCrossCheck, box, evidence);
+  view.decide('results', 'cifss', cifssEvidenceFrom(ctx.claims, state.cifssCrossCheck));
+  view.decide('results', 'box', boxEvidenceOf(ctx.claims, box));
+  if (listed.length > 0) view.sortByDateThenId('results');
+  publish('results');
+  logResults(ctx, resultsInput, state.games, new Set(listed.map((g) => g.contestId)));
   ctx.shadow?.push({
     stage: 'results',
     input: { games: resultsInput, cifssConflicts: state.cifssCrossCheck?.conflicts ?? [], box },

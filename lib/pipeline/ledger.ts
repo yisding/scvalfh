@@ -14,6 +14,8 @@ import { ledgerEditor, type EditorView } from '../claims/editor';
 import { claimsFromSnapshot } from '../claims/from-snapshot';
 import { ClaimStore } from '../claims/store';
 import type { ClaimsFile, EditorClaim, ShadowStage } from '../claims/types';
+import { RunView } from '../claims/view';
+import type { FixtureLedger } from '../fixtures/shape';
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
 import { LEAGUES, findDivision } from '../leagues';
 import { SDS_BRACKET_SHEET_TABS } from '../league-config/sections';
@@ -272,6 +274,8 @@ export interface RunContextInit {
    * store starts empty whatever is given: no previous run, nothing to carry.
    */
   claims?: ClaimsFile | null;
+  /** The fixture ledger the editor's claims are read from (lib/claims/editor.ts); left out, this build's sport's. */
+  ledger?: FixtureLedger;
 }
 
 /** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
@@ -294,6 +298,7 @@ export class PipelineContext implements RunContext {
   private readonly inRun: readonly LeagueId[];
   private readonly claimsInit: ClaimsFile | null | undefined;
   private store: ClaimStore | null = null;
+  private runView: RunView | null = null;
 
   constructor(init: RunContextInit) {
     this.args = init.args;
@@ -305,7 +310,7 @@ export class PipelineContext implements RunContext {
     const wanted = init.args.leagues;
     // Config order, whatever order the flag listed them in.
     this.inRun = LEAGUES.map((l) => l.id).filter((id) => wanted === null || wanted.includes(id));
-    const editor = ledgerEditor(init.args.fetchedAt);
+    const editor = ledgerEditor(init.args.fetchedAt, init.ledger);
     this.editorClaims = editor.claims;
     this.editor = editor.view;
     this.claimsInit = init.claims;
@@ -322,6 +327,15 @@ export class PipelineContext implements RunContext {
       this.store = ClaimStore.fromFile(file);
     }
     return this.store;
+  }
+
+  /**
+   * The run's view (lib/claims/view.ts): the fixtures it publishes in order and every decision its stages took, over
+   * the claim store and the editor's slices. lib/pipeline/run.ts publishes it stage by stage as `RunState.games`.
+   */
+  get view(): RunView {
+    if (this.runView === null) this.runView = new RunView(this.claims, this.editor);
+    return this.runView;
   }
 
   log(line: string): void {
@@ -437,17 +451,19 @@ export interface RunState {
   rows: ScheduleRow[];
   /** One per TBA row split off a feed. */
   tbaDropped: DroppedContest[];
+  /**
+   * The games the run publishes so far: the view (PipelineContext.view) resolved through the last stage, assigned only
+   * by lib/pipeline/run.ts. The guards, the cifsshome.org cross-check, the standings and assembly read it.
+   */
   games: Game[];
   unmatched: OfficialFixture[];
-  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`, its rows and decisions to the claims. */
+  /** The official step's flags and sets; its fixtures moved into `unmatched`, its decisions into the view and its rows into the claims. */
   official: Omit<OfficialStepResult, 'games' | 'unmatched' | 'fixtures' | 'readDivisions' | 'decisions'>;
   sbliveCrossCheck: SbliveCrossCheck | undefined;
   /** Step 11b's cifsshome.org report (undefined: none this run and none to carry). */
   cifssCrossCheck: CifssCrossCheck | undefined;
   /** The secondary step's CCS state; its games moved into `games`. */
   secondary: Omit<SecondaryStepResult, 'games'>;
-  /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
-  frozenFromPrevious: Set<LeagueId>;
   /** DivisionHealth.classification per division (a frozen league's is copied from the previous health). */
   classification: Map<DivisionId, DivisionHealth['classification']>;
 }
@@ -469,7 +485,6 @@ export function emptyRunState(): RunState {
     sbliveCrossCheck: undefined,
     cifssCrossCheck: undefined,
     secondary: { bracketPublished: false },
-    frozenFromPrevious: new Set(),
     classification: new Map(),
   };
 }

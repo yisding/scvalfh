@@ -12,7 +12,8 @@
  *
  * The stage's decisions (a stamp and its notes, or the classification note) are the official step's: the real step
  * records them as it takes them; an injected step (a test's stand-in) has them read off the games it returns, which
- * may differ from its input only in what a decision writes. A stamp on an si.com rule-2 game is kept on that game's
+ * may differ from its input only in what a decision writes. The run hands them, by contest, to the view's fixtures
+ * (lib/claims/view.ts). A stamp on an si.com rule-2 game is kept on that game's
  * fixture like any other (the row the game consumed stays in the claims); no carry stamps it, since the game is
  * appended after the official stage.
  */
@@ -29,14 +30,17 @@ import type { ClaimStore } from '../store';
 import type { FixtureId, OfficialClaim } from '../types';
 
 /** Each contest's official decisions, in the order the step took them (a classification note, then a carried stamp, at most). */
-export type OfficialDecisionMap = ReadonlyMap<ContestId, readonly OfficialDecision[]>;
+type OfficialDecisionMap = ReadonlyMap<ContestId, readonly OfficialDecision[]>;
 
 /** `game` with its decisions applied in order (lib/official/match.ts applyOfficialDecision). */
-export function applyOfficialDecisions(game: Game, decisions: readonly OfficialDecision[] | undefined): Game {
+function applyOfficialDecisions(game: Game, decisions: readonly OfficialDecision[] | undefined): Game {
   return (decisions ?? []).reduce((g, d) => applyOfficialDecision(g, d), game);
 }
 
-/** The game list through the official stage: the stage's input, each game with its contest's decisions. */
+/**
+ * The game list through the official stage: the stage's input, each game with its contest's decisions. The run
+ * resolves the same per fixture over its view (lib/claims/resolve.ts); this is the stage over a plain list.
+ */
 export function resolveOfficialStage(games: readonly Game[], decisions: OfficialDecisionMap): Game[] {
   return games.map((g) => applyOfficialDecisions(g, decisions.get(g.contestId)));
 }
