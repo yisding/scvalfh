@@ -26,7 +26,7 @@ import { sdsPlayoffWindow } from '../../postseason/sds-brackets-schema';
 import { applySdsSheetDecision, decideSdsSheet, isCifsdsContest, type SdsSheetDecision } from '../../postseason/sds-sheet-results';
 import { parseSdsBracketTab, type SdsSheetFixture, type SdsSheetRead, type SdsSheetResult } from '../../sources/sds-bracket-sheet';
 import { createSheetFixtures, storedSheetRows } from '../../claims/sources/sds-sheet';
-import type { SdsTabShadow } from '../../claims/types';
+import type { SdsTabTrace } from '../../claims/types';
 import type { ContestId, Game } from '../../types';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
@@ -74,7 +74,7 @@ export interface SdsSheetStage {
 export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[]): Promise<SdsSheetStage> {
   const file = SDS_BRACKETS_FILE;
   if (file.divisions.length === 0) {
-    ctx.shadow?.push({ stage: 'sdsSheet', input: { games: [...games], tabs: [] }, results: [], fixtures: [], disagreements: [], games: [...games] });
+    ctx.trace?.push({ stage: 'sdsSheet', input: { tabs: [] }, results: [], fixtures: [], games: [...games] });
     return { games: [...games], decisions: new Map(), created: [], ran: false };
   }
   const window = sdsPlayoffWindow();
@@ -93,7 +93,7 @@ export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[])
   const results: SdsSheetResult[] = [];
   const fixtures: SdsSheetFixture[] = [];
   const carried: string[] = [];
-  const tabs: SdsTabShadow[] = [];
+  const tabs: SdsTabTrace[] = [];
   for (const div of file.divisions) {
     const key = { kind: 'sds-bracket-sheet', division: div.id } as const;
     const base = {
@@ -187,6 +187,6 @@ export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[])
       `${decided.disagreements.length ? ` · MaxPreps differs ${decided.disagreements.length}` : ''}` +
       ` · ${fixtures.length} to play: listed ${decided.listed.length} · times filled ${timed}`,
   );
-  ctx.shadow?.push({ stage: 'sdsSheet', input: { games: [...games], tabs }, results, fixtures, disagreements: decided.disagreements, games: [...out] });
+  ctx.trace?.push({ stage: 'sdsSheet', input: { tabs }, results, fixtures, games: [...out] });
   return { games: out, decisions: decided.decisions, created: [...decided.added, ...decided.listed], ran: true };
 }

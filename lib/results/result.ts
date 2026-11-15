@@ -2,7 +2,7 @@
  * The recorded result of a final (lib/types.ts GameResult): the one place a game's winner, ending and certainty
  * are decided, from everything the game carries. Pure: no I/O, no clock, no bundled data.
  *
- * `finalizeResults` is the pipeline's last word on every game before the standings count it, and the snapshot
+ * `finalizeResult` is the pipeline's last word on every game before the standings count it, and the snapshot
  * loader runs the same function over a stored file (lib/snapshot/snapshot-migrate.ts), so a rule added here
  * reaches the committed data without a refetch. In order, per game:
  *
@@ -572,14 +572,6 @@ function sameResult(a: GameResult | undefined, b: GameResult | null): boolean {
   return a.winner === b.winner && a.ending === b.ending && a.certainty === b.certainty && a.basis === b.basis;
 }
 
-export interface FinalizeOptions {
-  /** The cifss cross-check's conflict rows of the run (or of the stored file). */
-  cifssConflicts?: readonly Pick<CifssConflictRow, 'contestId' | 'cifss' | 'cifssUrl'>[];
-  corrections?: ResultCorrections;
-  /** The box scores of the season (lib/results/box-evidence.ts); undefined leaves each game's box evidence as stored. */
-  box?: BoxEvidence;
-}
-
 /** Steps 1 to 5 on one game: the same object when nothing changes. */
 export function finalizeResult(
   game: Game,
@@ -689,9 +681,3 @@ export function withAddedGames(
   return more.length > 0 ? [...games, ...more].sort(byDateThenId) : (games as Game[]);
 }
 
-/** `finalizeResult` over a list: the same array when no game changes. */
-export function finalizeResults(games: readonly Game[], opts: FinalizeOptions = {}): Game[] {
-  const cifss = new Map((opts.cifssConflicts ?? []).map((r) => [r.contestId, r]));
-  const out = games.map((g) => finalizeResult(g, { cifss: cifss.get(g.contestId), corrections: opts.corrections, box: opts.box }));
-  return out.some((g, i) => g !== games[i]) ? out : (games as Game[]);
-}

@@ -1,12 +1,11 @@
 /**
- * RESOLVE (§4.2, §7): a fixture's published game, folded from its claims and the run's cross-game decisions, stage
+ * RESOLVE: a fixture's published game, folded from its claims and the run's cross-game decisions, stage
  * by stage. Each stage applies its rule module's per-game function (`applyX`) to the game the stage before left,
  * with that stage's decision and explicit editor slices (never the ledger's defaults):
  *
- *   maxpreps   the MaxPreps claim on the editor's day and at the editor's host; or the game the fixture enters
- *              with (FixtureDecisions.enters: a contest carried for a feed the run did not read, as last published);
- *              or, for a carried contest the previous publication lacks, that claim with every other source's
- *              stored claim folded in (resolveCarriedClaims)
+ *   maxpreps   the MaxPreps claim on the editor's day and at the editor's host; for a contest or an editor's
+ *              listing carried for a feed the run did not read, that game with every other source's stored claim
+ *              folded in (resolveCarriedClaims)
  *   official   the official step's stamps and notes             (lib/official/match.ts applyOfficialDecision)
  *   sblive     si.com's fill, then its disagreement             (lib/crosscheck/backfill.ts, crosscheck.ts)
  *   vnn        the school calendars' venue and start time       (lib/sources/vnn-ics.ts applyVnnStageDecision)
@@ -18,7 +17,7 @@
  * A fixture that first appears at a later stage (an si.com rule-2 game, a sheet game, a frozen league's passthrough,
  * an editor listing) starts from the game it enters with and is folded from that stage on. `resolveView` over the
  * view's order is what the run publishes after each stage (lib/pipeline/run.ts), and what the legacy step chain
- * published there (§4.3; tests/claims/shadow.test.ts checks it stage by stage). Pure.
+ * published there (tests/claims/shadow.test.ts checks it stage by stage). Pure.
  */
 
 import { classifyGames } from '../classify';
@@ -29,7 +28,8 @@ import { applyDateCorrection } from '../pipeline/normalize';
 import { settleLevelFinal } from '../postseason/level-final';
 import { applySdsSheetDecision } from '../postseason/sds-sheet-results';
 import { applyHostCorrection } from '../results/host-correction';
-import { finalizeResult } from '../results/result';
+import { addedGame, finalizeResult } from '../results/result';
+import { isOfficialContestId, officialContestId } from '../game-id';
 import { applyVnnStageDecision } from '../sources/vnn-ics';
 import type { Game } from '../types';
 import type { EditorView } from './editor';
@@ -66,20 +66,22 @@ export function withoutClassification(g: Game): Game {
 }
 
 /**
- * A MaxPreps contest carried for a feed the run did not read, folded from its fixture's stored claims: the contest
- * on the editor's day and host, then what the last publication showed from each other source, stage by stage, each
- * through the function its stage applies (the official step's league-flag note; si.com's fill or disagreement; the
- * school calendars' venue and confirmed start time; the bracket sheet's score or time; the level final settled;
- * the cifsshome.org and box-score evidence and the editor's result corrections), with the classification cleared.
- * Every other source's claim is the last publication's (written back at the end of every run), so the game is the one
- * the previous run published, and what those sources added stays while the feed is not read, even where a source
- * read this run would now decide otherwise. null for a fixture with no MaxPreps claim.
+ * A game carried for a feed the run did not read, folded from its fixture's stored claims: a MaxPreps contest on the
+ * editor's day and host, or an editor's listing as the run that built it built it (`PublishedUnder.builtAt`), then
+ * what the last publication showed from each other source, stage by stage, each through the function its stage
+ * applies (the official step's league-flag note; si.com's fill or disagreement; the school calendars' venue and
+ * confirmed start time; the bracket sheet's score or time; the level final settled; the cifsshome.org and box-score
+ * evidence and the editor's result corrections), with the classification cleared. Every other source's claim is the
+ * last publication's (written back at the end of every run), so the game is the one the previous run published, and
+ * what those sources added stays while the feed is not read, even where a source read this run would now decide
+ * otherwise; the later stages decide the classification again. null for a fixture that is neither (or a listing the
+ * editor no longer lists).
  */
 export function resolveCarriedClaims(f: Fixture, editor: EditorView): Game | null {
-  const claim = f.claims.maxpreps;
-  if (!claim) return null;
-  const id = claim.ref;
-  let g = resolveMaxprepsClaim(claim, editor);
+  const start = f.claims.maxpreps ? resolveMaxprepsClaim(f.claims.maxpreps, editor) : listedGameOf(f, editor);
+  if (!start) return null;
+  const id = start.contestId;
+  let g = start;
   const note = f.claims.official?.lastMatch?.contestId === id ? f.claims.official.leagueFlagNote : undefined;
   if (note !== undefined) g = { ...g, provenance: { ...g.provenance, leagueFlagConflict: note } };
   const sblive = f.claims.sblive ?? [];
@@ -105,6 +107,14 @@ export function resolveCarriedClaims(f: Fixture, editor: EditorView): Game | nul
       box: box ? new Map([[id, new Map(Object.entries(box))]]) : undefined,
     }),
   );
+}
+
+/** An editor's listing the fixture's game was last published as, rebuilt with the stamp of the run that built it. */
+function listedGameOf(f: Fixture, editor: Pick<EditorView, 'listed'>): Game | null {
+  const last = (f.published ?? []).findLast((p) => isOfficialContestId(p.contestId) && p.builtAt !== undefined);
+  if (!last?.builtAt) return null;
+  const listing = editor.listed.find((a) => officialContestId(a.dateKey, a.away, a.home) === last.contestId);
+  return listing ? addedGame(listing, last.builtAt) : null;
 }
 
 /** The decisions of a fixture no stage decided anything for: a MaxPreps contest from stage `maxpreps` on. */

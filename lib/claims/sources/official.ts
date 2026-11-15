@@ -1,5 +1,5 @@
 /**
- * League schedules (§7.2, stage `official`): one claim per official row, on the fixture of the game it stamped
+ * League schedules (stage `official`): one claim per official row, on the fixture of the game it stamped
  * (with `lastMatch`, the contest and the stamp the last publication showed) or, for a row no game matched, on an
  * official-only fixture of its own. The claims are rewritten from the published games and official fixtures at the
  * end of every run, so they always hold the last publication; a row read this run keeps the row as read, and one
@@ -29,20 +29,9 @@ import { publishedFixture } from '../published';
 import type { ClaimStore } from '../store';
 import type { FixtureId, OfficialClaim } from '../types';
 
-/** Each contest's official decisions, in the order the step took them (a classification note, then a carried stamp, at most). */
-type OfficialDecisionMap = ReadonlyMap<ContestId, readonly OfficialDecision[]>;
-
 /** `game` with its decisions applied in order (lib/official/match.ts applyOfficialDecision). */
 function applyOfficialDecisions(game: Game, decisions: readonly OfficialDecision[] | undefined): Game {
   return (decisions ?? []).reduce((g, d) => applyOfficialDecision(g, d), game);
-}
-
-/**
- * The game list through the official stage: the stage's input, each game with its contest's decisions. The run
- * resolves the same per fixture over its view (lib/claims/resolve.ts); this is the stage over a plain list.
- */
-export function resolveOfficialStage(games: readonly Game[], decisions: OfficialDecisionMap): Game[] {
-  return games.map((g) => applyOfficialDecisions(g, decisions.get(g.contestId)));
 }
 
 /** One decision into `map`, after the contest's earlier ones. */
@@ -53,7 +42,7 @@ export function recordOfficialDecision(map: Map<ContestId, OfficialDecision[]>, 
 }
 
 /**
- * The decisions an injected official step took, read off what it returned (§7.2): game by game against its input,
+ * The decisions an injected official step took, read off what it returned: game by game against its input,
  * the classification note it wrote and the stamp with the league-flag and host notes that came with it. A step that
  * returned other games, or changed a game beyond what a decision writes, broke the step contract: that throws.
  */
@@ -164,11 +153,11 @@ export function officialFlagNoteOf(g: Pick<Game, 'provenance'>): string | undefi
 const sameClaim = (a: OfficialClaim, b: OfficialClaim): boolean => stableStringify({ ...a, seenAt: '' }) === stableStringify({ ...b, seenAt: '' });
 
 /**
- * The official claims rewritten from what the run published: one claim per stamp a published game shows (on that
- * game's fixture, `lastMatch` recording the contest and stamp, with the step's league-flag and host notes) and one per
- * official fixture no game matched (on an official-only fixture). `read` holds the rows read this run and their divisions: a claim keeps the row read, else
- * the row it held; it is stamped `fetchedAt` unless its division was not read and it holds the same as before. Also
- * how claims are seeded from a snapshot (lib/claims/from-snapshot.ts).
+ * The official claims rewritten from what the run published: one claim per stamp a published game shows (on that game's
+ * fixture, `lastMatch` recording the contest and stamp, with the step's league-flag and host notes) and one per
+ * official fixture no game matched (on an official-only fixture). `read` holds the rows read this run and their
+ * divisions: a claim keeps the row read, else the row it held; it is stamped `fetchedAt` unless its division was not
+ * read and it holds the same as before. Also how claims are seeded from a snapshot (lib/claims/from-snapshot.ts).
  */
 export function writeBackOfficialClaims(
   store: ClaimStore,

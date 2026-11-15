@@ -1,22 +1,22 @@
 /**
- * Claims seeded from a snapshot (§9): what a run reads when the claims file beside the previous snapshot is
+ * Claims seeded from a snapshot: what a run reads when the claims file beside the previous snapshot is
  * missing, stale or for another sport, and what scripts/claims-seed.ts writes beside each committed snapshot.
  *
- * Input is the LOADED previous snapshot (lib/snapshot/snapshot-load.ts: migrated, and its results re-recorded
- * under the current ledger). Each MaxPreps game is taken back to the contest normalize built, undoing the later
- * steps in reverse pipeline order with the un-merge helpers that sit beside their writers. Where a step's input is
- * lost (§9's table), the seeded claim holds the merged value or a reconstruction and names the field in
- * `reconstructed`; every such field is one that resolve writes again while the fact that merged it stands, and the
- * next run that reads the team's feed replaces the claim with an exact one.
+ * Input is the LOADED previous snapshot (lib/snapshot/snapshot-load.ts: migrated, and its results re-recorded under the
+ * current ledger). Each MaxPreps game is taken back to the contest normalize built, undoing the later steps in reverse
+ * pipeline order with the un-merge helpers that sit beside their writers. Where a step's input is lost (the table in
+ * docs/DATA-SOURCES.md §4.2), the seeded claim holds the merged value or a reconstruction and names the field in
+ * `reconstructed`; every such field is one that resolve writes again while the fact that merged it stands, and the next
+ * run that reads the team's feed replaces the claim with an exact one.
  *
- * The MaxPreps claims are seeded; then si.com's fills and disagreements as the games show them (§7.3, the same
+ * The MaxPreps claims are seeded; then si.com's fills and disagreements as the games show them (the same
  * write-back a run makes, lib/claims/sources/sblive.ts), each `sblive:` game on a fixture of its own; then the bracket
- * sheet's rows as its games show them (§7.6, lib/claims/sources/sds-sheet.ts), each `cifsds:` game on a fixture of
- * its own; then the league schedules' (§7.2, lib/claims/sources/official.ts): each stamp a game shows, with the
+ * sheet's rows as its games show them (lib/claims/sources/sds-sheet.ts), each `cifsds:` game on a fixture of
+ * its own; then the league schedules' (lib/claims/sources/official.ts): each stamp a game shows, with the
  * contest it was matched to, and each official fixture no game matched, on an official-only fixture; then the
- * evidence-only sources' claims on their games: a school calendar's venue name and confirmed start time (§7.4; the
+ * evidence-only sources' claims on their games: a school calendar's venue name and confirmed start time (the
  * venue name also stays on the MaxPreps claim, since which source wrote it is not stored), the cifsshome.org score a
- * game shows (§7.9) and its box score (§7.10). The editor's claims are rebuilt every run (lib/claims/editor.ts).
+ * game shows and its box score. The editor's claims are rebuilt every run (lib/claims/editor.ts).
  */
 
 import { datesAtLocal, localDateKey } from '../format';
@@ -126,7 +126,7 @@ function projected(g: Game): MaxprepsGame {
 }
 
 /**
- * The MaxPreps claim of a stored GUID game (§9's MaxPreps rows, in that order): the contest as normalize built it,
+ * The MaxPreps claim of a stored GUID game (undone in reverse pipeline order): the contest as normalize built it,
  * before any ledger fact, as far as the stored game allows. `snapshotFetchedAt` is the stored snapshot's stamp.
  */
 export function maxprepsClaimFromGame(stored: Game, snapshotFetchedAt: string): MaxprepsClaim {
@@ -235,7 +235,7 @@ export function maxprepsClaimFromGame(stored: Game, snapshotFetchedAt: string): 
   return { ref: game.contestId, seenAt, game, ...(reconstructed.length > 0 ? { reconstructed } : {}) };
 }
 
-/** Where a new MaxPreps claim goes: the editor's fixture name when the ledger links the contest, else its own day and sides (§6.2). */
+/** Where a new MaxPreps claim goes: the editor's fixture name when the ledger links the contest, else its own day and sides. */
 export function maxprepsBaseId(claim: MaxprepsClaim, editor: Pick<EditorView, 'byContest'>): FixtureId {
   const linked = editor.byContest.get(claim.ref);
   if (linked) return fixtureKey(linked);
@@ -243,14 +243,14 @@ export function maxprepsBaseId(claim: MaxprepsClaim, editor: Pick<EditorView, 'b
   return baseFixtureId(g.dateKey, fixtureSideKey(g.away), fixtureSideKey(g.home));
 }
 
-/** Claims in the order ids are minted in (§6.2): by day, then by ref. */
+/** Claims in the order ids are minted in: by day, then by ref. */
 export function byDateKeyThenRef(a: MaxprepsClaim, b: MaxprepsClaim): number {
   if (a.game.dateKey !== b.game.dateKey) return a.game.dateKey < b.game.dateKey ? -1 : 1;
   return a.ref < b.ref ? -1 : a.ref > b.ref ? 1 : 0;
 }
 
 /**
- * The claims a previous snapshot implies (§9), stamped with its fetchedAt; null with no previous snapshot. Every
+ * The claims a previous snapshot implies, stamped with its fetchedAt; null with no previous snapshot. Every
  * MaxPreps (GUID) game of the snapshot gets a claim on a fixture of its own, and every fixture records the contest id
  * its game was published under. `editorClaims` (the run's editor claims) are attached as a run attaches them.
  */

@@ -1,5 +1,5 @@
 /**
- * The shadow harness (tests/claims/shadow.test.ts) on the volleyball corpus, in a volleyball build: the sport
+ * The per-stage trace check (tests/claims/shadow.test.ts) on the volleyball corpus, in a volleyball build: the sport
  * switch is read at import (lib/sports/current.ts), so this file sets it before importing anything that reads it.
  */
 
@@ -17,7 +17,7 @@ let previous: Snapshot;
 
 beforeAll(async () => {
   vi.stubEnv('SCVAL_SPORT', 'volleyball');
-  vi.stubEnv('SCVAL_CLAIMS_SHADOW', '1');
+  vi.stubEnv('SCVAL_STAGE_TRACE', '1');
   vi.resetModules();
   support = await import('../pipeline/support/run-corpus');
   shadow = await import('./support/shadow');
@@ -36,8 +36,8 @@ describe('volleyball-2026-11-14', () => {
     const steps = { official: stepOfficial, sblive: stepSblive };
     const fresh = await support.snapshotOf({ corpus: CORPUS, steps });
     expect(fresh.run.result?.claims.sport).toBe('volleyball');
-    for (const stage of ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'results'] as const) shadow.expectShadowAgrees(fresh.run.ctx, stage, 'volleyball fresh');
+    for (const stage of ['maxpreps', 'official', 'sblive', 'sdsSheet'] as const) shadow.expectTraceAgrees(fresh.run.ctx, stage, 'volleyball fresh');
     const seeded = await support.snapshotOf({ corpus: CORPUS, steps, previous });
-    for (const stage of ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'results'] as const) shadow.expectShadowAgrees(seeded.run.ctx, stage, 'volleyball seeded');
+    for (const stage of ['maxpreps', 'official', 'sblive', 'sdsSheet'] as const) shadow.expectTraceAgrees(seeded.run.ctx, stage, 'volleyball seeded');
   });
 });

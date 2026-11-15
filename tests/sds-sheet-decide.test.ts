@@ -9,15 +9,12 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';
-import {
-  applySdsSheetResults,
-  decideSdsSheet,
-  type SdsSheetApplyInput,
-} from '../lib/postseason/sds-sheet-results';
+import { decideSdsSheet, type SdsSheetApplyInput } from '../lib/postseason/sds-sheet-results';
 import { parseSdsBracketTab, type SdsSheetResult } from '../lib/sources/sds-bracket-sheet';
 import type { Game } from '../lib/types';
 import { SDS_2025_WINDOW, sdsGames2025, seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { REPO } from './helpers';
+import { applySdsSheetResults } from './support/list-steps';
 
 const file = seedsFromHistory('sds');
 const SHEET = 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit';

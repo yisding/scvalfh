@@ -1,11 +1,11 @@
 /**
- * The decide/apply split of lib/crosscheck/backfill.ts and lib/crosscheck/crosscheck.ts (the claims
- * re-architecture, P6). `applyBackfill` and `reconcile` are decide + apply, so this file does not compare one with
- * the other. Every scenario tests/backfill.test.ts and tests/crosscheck.test.ts build runs here again with both
- * functions wrapped, and each call checks properties of the decisions themselves (listed in `checkBackfill` and
- * `checkReconcile`): what a decision does to its game, that the rule-2 games are the fixtures they consume, in the
- * order the decision says, and that decide leaves its input alone. The direct cases at the end pin decisions to
- * known values. Those files are imported, not copied, so a scenario added there is checked here too.
+ * The decide/apply split of lib/crosscheck/backfill.ts and lib/crosscheck/crosscheck.ts. `applyBackfill` and
+ * `reconcile` (tests/support/list-steps.ts) are decide + apply, so this file does not compare one with the other. Every
+ * scenario tests/backfill.test.ts and tests/crosscheck.test.ts build runs here again with both functions wrapped, and
+ * each call checks properties of the decisions themselves (listed in `checkBackfill` and `checkReconcile`): what a
+ * decision does to its game, that the rule-2 games are the fixtures they consume, in the order the decision says, and
+ * that decide leaves its input alone. The direct cases at the end pin decisions to known values. Those files are
+ * imported, not copied, so a scenario added there is checked here too.
  */
 
 import { afterAll, describe, expect, it, vi } from 'vitest';
@@ -38,7 +38,7 @@ const realBackfill = await vi.importActual<typeof import('../lib/crosscheck/back
 const realCrosscheck = await vi.importActual<typeof import('../lib/crosscheck/crosscheck')>('../lib/crosscheck/crosscheck');
 
 /** Properties of a backfill decision that hold in every scenario; `result` is the composed result, checked only against these. */
-function checkBackfill(input: BackfillInput, decided: ReturnType<typeof realBackfill.decideBackfill>, result: ReturnType<typeof realBackfill.applyBackfill>) {
+function checkBackfill(input: BackfillInput, decided: ReturnType<typeof realBackfill.decideBackfill>, result: ReturnType<typeof import('./support/list-steps').applyBackfill>) {
   const ids = new Set(input.games.map((g) => g.contestId));
   // A decision names an existing game, and a game it names comes out final, with si.com's score, url and a backfill note.
   for (const [id, decision] of decided.byContestId) {
@@ -85,7 +85,7 @@ function checkBackfill(input: BackfillInput, decided: ReturnType<typeof realBack
 }
 
 /** Properties of a reconcile decision: a decided game gains exactly the conflict, nothing else; the rest are untouched. */
-function checkReconcile(games: readonly Game[], decided: ReturnType<typeof realCrosscheck.decideReconcile>, result: ReturnType<typeof realCrosscheck.reconcile>) {
+function checkReconcile(games: readonly Game[], decided: ReturnType<typeof realCrosscheck.decideReconcile>, result: ReturnType<typeof import('./support/list-steps').reconcile>) {
   expect(result.games).toHaveLength(games.length);
   for (const [id, decision] of decided.byContestId) {
     const i = games.findIndex((g) => g.contestId === id);
@@ -99,14 +99,14 @@ function checkReconcile(games: readonly Game[], decided: ReturnType<typeof realC
   }
 }
 
-vi.mock('../lib/crosscheck/backfill', async (importOriginal) => {
-  const real = await importOriginal<typeof import('../lib/crosscheck/backfill')>();
+vi.mock('./support/list-steps', async (importOriginal) => {
+  const real = await importOriginal<typeof import('./support/list-steps')>();
   const applyBackfill: typeof real.applyBackfill = (input) => {
     const result = real.applyBackfill(input);
     calls.backfill += 1;
 
     const before = backfillData(input);
-    const decided = real.decideBackfill(input);
+    const decided = realBackfill.decideBackfill(input);
     expect(backfillData(input)).toStrictEqual(before);
 
     checkBackfill(input, decided, result);
@@ -114,24 +114,19 @@ vi.mock('../lib/crosscheck/backfill', async (importOriginal) => {
     calls.backfillCreated += decided.created.length;
     return result;
   };
-  return { ...real, applyBackfill };
-});
-
-vi.mock('../lib/crosscheck/crosscheck', async (importOriginal) => {
-  const real = await importOriginal<typeof import('../lib/crosscheck/crosscheck')>();
   const reconcile = (games: readonly Game[], sbliveGames: readonly SbliveGame[], opts: ReconcileOptions) => {
     const result = real.reconcile(games, sbliveGames, opts);
     calls.reconcile += 1;
 
     const before = structuredClone({ games, sbliveGames, opts });
-    const decided = real.decideReconcile(games, sbliveGames, opts);
+    const decided = realCrosscheck.decideReconcile(games, sbliveGames, opts);
     expect(structuredClone({ games, sbliveGames, opts })).toStrictEqual(before);
 
     checkReconcile(games, decided, result);
     calls.reconcileDecided += decided.byContestId.size;
     return result;
   };
-  return { ...real, reconcile };
+  return { ...real, applyBackfill, reconcile };
 });
 
 // Every describe block of these files runs here, through the wrapped functions above.

@@ -51,7 +51,7 @@ export interface ReconcileOptions {
   /** The run's local date; a game dated today or later is never backfilled. */
   today?: string;
   /**
-   * The rows D2 (lib/crosscheck/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
+   * The rows D2 (lib/crosscheck/backfill.ts) explained instead of publishing (`decideBackfill().skipped`). A game
    * one is keyed on carries that row's note, so its own note and the si.com-only row withBackfill
    * publishes give the same reason.
    */
@@ -131,16 +131,10 @@ export function applyReconcile(game: Game, d: ReconcileDecision | undefined): Ga
   return { ...game, provenance: { ...game.provenance, scoreConflict: d.scoreConflict } };
 }
 
-export function reconcile(
-  games: readonly Game[],
-  sbliveGames: readonly SbliveGame[],
-  opts: ReconcileOptions,
-): ReconcileResult {
-  const d = decideReconcile(games, sbliveGames, opts);
-  return { games: games.map((g) => applyReconcile(g, d.byContestId.get(g.contestId))), unmatched: d.unmatched, report: d.report };
-}
-
-/** The join and the report of `reconcile`, with each game's change as a decision. Pure: the input is not mutated. */
+/**
+ * The join of this run's games with the si.com rows, and the report, with each game's change as a decision. Pure:
+ * the input is not mutated.
+ */
 export function decideReconcile(
   games: readonly Game[],
   sbliveGames: readonly SbliveGame[],
@@ -292,7 +286,7 @@ export function decideReconcile(
 }
 
 /**
- * Fold D2's outcome (lib/crosscheck/backfill.ts `applyBackfill`) into a reconcile report: every published si.com
+ * Fold D2's outcome (lib/crosscheck/backfill.ts `decideBackfill`) into a reconcile report: every published si.com
  * value becomes a `backfilled` row; D2's own "not published" rows (with their precise reasons) replace
  * reconcile's row for the same contest; nothing D2 published stays listed as unpublished.
  */

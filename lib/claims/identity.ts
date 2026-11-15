@@ -1,5 +1,5 @@
 /**
- * Fixture ids (§6.2): this site's own name for a game, minted once from the claim that created the fixture and
+ * Fixture ids: this site's own name for a game, minted once from the claim that created the fixture and
  * never changed afterwards, even when a later run corrects the date. The id reads like a game slug,
  * `${dateKey}-${away}-at-${home}`, with each side by its registry slug or, for a school outside the registry, by
  * the name key the cross-source joins use (lib/teams.ts sideJoinKey). Two games of one pair on one day (a

@@ -8,8 +8,8 @@
  * official claims, with the notes each stamp came with; the si.com step re-applies the stored fills; the guards keep
  * a league that is not read as the claims give it, with its si.com rule-2 games from the si.com claims, where a run
  * with a previous snapshot freezes it to that snapshot's games; the results step weighs the stored cifsshome.org and
- * box-score evidence and adds the editor's listings again (the run is stamped with the claims file's fetchedAt, as
- * the run that wrote it was).
+ * box-score evidence; an editor's listing is rebuilt with the stamp of the run that built it, recorded on its
+ * fixture (the run is stamped with the claims file's fetchedAt, as the run that wrote it was).
  *
  * Every field of every game is compared but two, `aliases` and `provenance.contentChangedAt`: run history, which
  * assembly derives from the previous snapshot, and a run given none has none to derive them from.
@@ -96,6 +96,18 @@ describe('a run given only the claims file publishes the games written with it',
 
   it('the committed field hockey snapshot and its seeded claims file', async () => {
     await expectReproduced(committed);
+  });
+
+  it('a run from the committed snapshot that carried contests and editor listings whose feeds it did not read', async () => {
+    const { snapshot, run } = await snapshotOf({
+      steps: STEPS,
+      variants: ['leland-feed-503'],
+      previous: committed.snapshot,
+      claims: committed.claims,
+      extraArgs: ['--leagues', 'scval,pcal', '--accept-regression', 'scval,pcal'],
+    });
+    expect(snapshot.games.some((g) => g.contestId.startsWith('official:'))).toBe(true);
+    await expectReproduced(asWritten(snapshot, run.result!.claims));
   });
 
   it('a later run that carried contests whose feeds it did not read', async () => {

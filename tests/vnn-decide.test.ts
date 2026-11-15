@@ -8,9 +8,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { applyVnnEvents, decideVnn, parseVnnIcs } from '../lib/sources/vnn-ics';
+import { decideVnn, parseVnnIcs } from '../lib/sources/vnn-ics';
 import type { Game } from '../lib/types';
 import { REPO, game } from './helpers';
+import { applyVnnEvents } from './support/list-steps';
 
 const events = parseVnnIcs(readFileSync(path.join(REPO, 'tests', 'fixtures', 'vnn', 'palo-alto-excerpt.ics'), 'utf8'), 'palo-alto');
 const varsity = events.filter((e) => e.level === 'Varsity');

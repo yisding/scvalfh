@@ -1,5 +1,5 @@
 /**
- * The zod form of a claims file AS WRITTEN (§6.5): `seenAt` may be left out (it is then the file's `fetchedAt`),
+ * The zod form of a claims file AS WRITTEN: `seenAt` may be left out (it is then the file's `fetchedAt`),
  * and a MaxPreps claim's game carries no `provenance.fetchedAt` (it is the claim's seenAt). lib/claims/file.ts
  * validates with it and restores both. A claim's game is checked against the snapshot's own GameSchema, so a
  * claim can hold nothing a published game could not.
@@ -198,7 +198,7 @@ const FixtureSchema = z
     id: z.string().min(1),
     aliases: z.array(z.string().min(1)).min(1).optional(),
     claims: FixtureClaimsSchema,
-    published: z.array(z.object({ contestId: z.string().min(1), seenAt }).strict()).min(1).optional(),
+    published: z.array(z.object({ contestId: z.string().min(1), seenAt, builtAt: isoUtc.optional() }).strict()).min(1).optional(),
   })
   .strict();
 

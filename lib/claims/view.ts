@@ -1,5 +1,5 @@
 /**
- * The view (§4.1, §4.2, risk R1): the ordered list of fixtures the run publishes, the decisions each stage took for
+ * The view: the ordered list of fixtures the run publishes, the decisions each stage took for
  * them, and the run-level facts resolve reads. The run (lib/pipeline/run.ts) publishes `games(stage)` after each
  * stage: every fixture of the order resolved through that stage (lib/claims/resolve.ts), in order.
  *
@@ -149,7 +149,7 @@ export class RunView {
   }
 
   /**
-   * Stage `guards` (§7.8): a frozen league's games, `previous` (its previous snapshot's, classified), appended in
+   * Stage `guards`: a frozen league's games, `previous` (its previous snapshot's, classified), appended in
    * order, each on the fixture that left the order with the same contest id (`removed`), else on a passthrough.
    */
   freeze(removed: ReadonlyArray<{ id: FixtureId; game: Game }>, previous: readonly Game[]): void {

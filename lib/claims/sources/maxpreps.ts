@@ -1,14 +1,14 @@
 /**
- * MaxPreps (§7.1, stage `maxpreps`): COLLECT the team feeds' rows as one claim per contest, and MATCH them against
+ * MaxPreps (stage `maxpreps`): COLLECT the team feeds' rows as one claim per contest, and MATCH them against
  * the stored claims. Step 06 (lib/pipeline/steps/normalize.ts) publishes the view this returns, resolved.
  *
  * COLLECT is normalize with no ledger fact: the contest exactly as toGame builds it. MATCH applies the editor's day
  * and host (resolve), drops the editor's rejected and duplicate rows and the ghost teams' contests, dedupes
  * phantom pairs, and carries a stored claim forward only while a side's feed was not read this run. A carried
- * contest enters the view as the previous run published it, classification cleared (`published`), so it keeps what
- * the other sources added to it then; a carried contest that publication does not show (or every one, in a run given
- * no previous snapshot) is folded from its stored claims (lib/claims/resolve.ts resolveCarriedClaims), which hold
- * what the last publication showed from each source, so it is the same game.
+ * contest, and an editor's listing the last run published that touches an unread feed, is folded from its fixture's
+ * stored claims (lib/claims/resolve.ts resolveCarriedClaims), which hold what the last publication showed from each
+ * source: it is the game the previous run published, classification cleared, and keeps what the other sources added
+ * to it then while its feed is not read.
  */
 
 import { byDateThenId } from '../../format';
@@ -18,7 +18,7 @@ import type { ScheduleRow } from '../../sources/maxpreps';
 import type { ContestId, DroppedContest, Game, TeamId, TeamSlug } from '../../types';
 import { exclusionsOf, type EditorView } from '../editor';
 import { byDateKeyThenRef, maxprepsBaseId, maxprepsClaimFromGame } from '../from-snapshot';
-import { resolveCarriedClaims, resolveMaxprepsClaim, withoutClassification } from '../resolve';
+import { resolveCarriedClaims, resolveMaxprepsClaim } from '../resolve';
 import type { ClaimStore } from '../store';
 import type { FeedRead, Fixture, FixtureDecisions, FixtureId, MaxprepsClaim, MaxprepsGame } from '../types';
 
@@ -45,15 +45,6 @@ function maxprepsReadScope(feeds: ReadonlyMap<TeamSlug, FeedRead>): (claim: Maxp
   };
 }
 
-/**
- * A game as the previous run published it, carried for a feed this run did not read: the earlier run's classification
- * is cleared (official stamp and its notes, countsFor, postseason), so the official and classify stages decide it
- * again exactly as they decide a fresh one.
- */
-export function asLastPublished(g: Game): Game {
-  return withoutClassification(g);
-}
-
 export interface MaxprepsMatch {
   /** byDateThenId order of the corrected games (the legacy order after step 06). */
   view: FixtureId[];
@@ -62,16 +53,16 @@ export interface MaxprepsMatch {
   unusedExclusions: ContestId[];
   /** How many of this run's contests the exclusions and the phantom dedupe dropped (step 06's log line). */
   droppedByConfig: number;
-  /** Contest ids carried forward this run (a side's feed not read): stored claims, and editor-listed games last published. */
+  /** Contest ids carried forward this run (a side's feed not read): stored contests, and editor listings last published. */
   carried: ContestId[];
-  /** The carried fixtures' decisions: the game each enters the view with. Every other view fixture is its claim's. */
+  /** The carried fixtures' decisions (each is folded from its claims). Every other view fixture is its claim's. */
   decisions: Map<FixtureId, FixtureDecisions>;
   /** Each view fixture's game at this stage, in view order. */
   games: Game[];
 }
 
 /**
- * MATCH for MaxPreps (§7.1): the store updated with this run's read (fresh claims attached by stored ref, else to a
+ * MATCH for MaxPreps: the store updated with this run's read (fresh claims attached by stored ref, else to a
  * new fixture; dropped and vanished contests detached; claims of unread feeds kept), and the view order of the
  * contests published at this stage.
  */
@@ -83,13 +74,8 @@ export function matchMaxpreps(input: {
   deletedThisRun: ReadonlySet<ContestId>;
   tbaDropped: readonly DroppedContest[];
   normDropped: readonly DroppedContest[];
-  /**
-   * The previous publication's games by contest id: a carried contest it shows enters as it was published there,
-   * classification cleared, so it keeps what the other sources added to it rather than having this run's reads
-   * decide it again. A carried contest it lacks (or every one, when absent) is folded from its stored claims
-   * (lib/claims/resolve.ts resolveCarriedClaims), which hold what the last publication showed from each source.
-   */
-  published?: ReadonlyMap<ContestId, Game>;
+  /** The fetchedAt of the run that wrote the claims read (null: none read): the run a listing was last published by. */
+  lastRun: string | null;
 }): MaxprepsMatch {
   const { store, fresh, editor } = input;
   const freshRefs = new Set(fresh.map((c) => c.ref));
@@ -112,24 +98,24 @@ export function matchMaxpreps(input: {
   const candidates = missing.size === 0
     ? []
     : stored.filter((c) => !readScope(c) && !kept.has(c.ref) && !droppedIds.has(c.ref) && !input.deletedThisRun.has(c.ref));
-  const published = input.published ?? new Map<ContestId, Game>();
-  const carriedGames = new Map<ContestId, Game>(
-    candidates.map((c) => {
-      const last = published.get(c.ref);
-      return [c.ref, last ? asLastPublished(last) : (resolveCarriedClaims(store.get(store.fixtureOf('maxpreps', c.ref) as FixtureId) as Fixture, editor) as Game)];
-    }),
-  );
-  // An editor-listed game published last run that touches an unread feed is carried as published (passthrough).
+  const fold = (id: FixtureId) => resolveCarriedClaims(store.get(id) as Fixture, editor);
+  const carriedGames = new Map<ContestId, { id: FixtureId; game: Game }>();
+  for (const c of candidates) {
+    const id = store.fixtureOf('maxpreps', c.ref) as FixtureId;
+    carriedGames.set(c.ref, { id, game: fold(id) as Game });
+  }
+  // An editor's listing the last run published (its fixture's history says so) that touches an unread feed is
+  // carried the same way, rebuilt from the editor's listing and folded from its fixture's claims.
   const touchesMissing = (g: Game) => (g.home.teamId !== null && missing.has(g.home.teamId)) || (g.away.teamId !== null && missing.has(g.away.teamId));
-  const listed = missing.size === 0
-    ? []
-    : [...published.values()].filter((g) => isOfficialContestId(g.contestId) && touchesMissing(g) && !droppedIds.has(g.contestId) && !input.deletedThisRun.has(g.contestId));
-  for (const g of listed) carriedGames.set(g.contestId, asLastPublished(g));
-  // In the previous publication's order, as the snapshot carry read it; a contest it lacks after them, by day.
-  const rank = new Map([...published.keys()].map((id, i) => [id, i]));
-  const candidateGames = [...carriedGames.values()].sort(
-    (x, y) => (rank.get(x.contestId) ?? Infinity) - (rank.get(y.contestId) ?? Infinity) || byDateThenId(x, y),
-  );
+  for (const id of missing.size === 0 || input.lastRun === null ? [] : store.ids()) {
+    const f = store.get(id) as Fixture;
+    if (f.claims.maxpreps || !(f.published ?? []).some((p) => isOfficialContestId(p.contestId) && p.seenAt === input.lastRun)) continue;
+    const g = fold(id);
+    if (!g || !touchesMissing(g) || droppedIds.has(g.contestId) || input.deletedThisRun.has(g.contestId)) continue;
+    carriedGames.set(g.contestId, { id, game: g });
+  }
+  // By day, then id: the previous publication's order (lib/pipeline/steps/assemble.ts), its games being these.
+  const candidateGames = [...carriedGames.values()].map(({ game }) => game).sort(byDateThenId);
   const merged = dedupePhantomPairs([...deduped.games, ...candidateGames], { preferred: (g) => freshRefs.has(g.contestId) });
   dropped.push(...merged.dropped);
   const losers = new Set(merged.dropped.map((d) => d.contestId));
@@ -144,11 +130,9 @@ export function matchMaxpreps(input: {
   const games = [...deduped.games, ...carried].sort(byDateThenId);
   const decisions = new Map<FixtureId, FixtureDecisions>();
   const view = games.map((g) => {
-    // An editor listing carried as published holds no claim of its own here: a passthrough fixture, never stored.
-    const id = store.fixtureOf('maxpreps', g.contestId) ?? `passthrough:${g.contestId}`;
-    const last = carriedGames.get(g.contestId);
-    if (last && published.has(g.contestId)) decisions.set(id, { from: 'maxpreps', enters: last });
-    else if (last) decisions.set(id, { from: 'maxpreps', carried: true });
+    const carry = carriedGames.get(g.contestId);
+    const id = carry?.id ?? (store.fixtureOf('maxpreps', g.contestId) as FixtureId);
+    if (carry) decisions.set(id, { from: 'maxpreps', carried: true });
     return id;
   });
   return { view, decisions, dropped, unusedExclusions: excluded.unused, droppedByConfig: excluded.dropped.length + deduped.dropped.length, carried: carried.map((g) => g.contestId), games };

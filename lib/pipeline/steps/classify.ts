@@ -10,8 +10,6 @@
  * same two rules to each fixture's game). This module logs what the stage did.
  */
 
-import { classifyGames } from '../../classify';
-import { settleLevelFinals } from '../../postseason/level-final';
 import type { DivisionId, Game } from '../../types';
 import type { RunContext } from '../contract';
 
@@ -36,9 +34,3 @@ export function logClassification(
   );
 }
 
-/** The stage over a game list: every game classified and settled, and the stage's log lines. */
-export function stepClassify(ctx: Pick<RunContext, 'log'>, games: readonly Game[], degradedDivisions: ReadonlySet<DivisionId>): Game[] {
-  const out = settleLevelFinals(classifyGames(games, { degradedDivisions }));
-  logClassification(ctx, games, out, degradedDivisions);
-  return out;
-}

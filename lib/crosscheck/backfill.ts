@@ -79,7 +79,7 @@ export interface BackfillInput {
   /** After the official step (classification runs later). */
   games: readonly Game[];
   unmatched: readonly OfficialFixture[];
-  /** Deduped, resolved si.com rows (applyBackfill re-applies the junk-row guards itself). */
+  /** Deduped, resolved si.com rows (decideBackfill re-applies the junk-row guards itself). */
   sblive: readonly SbliveGame[];
   today: string;
   /** The previous snapshot, read for rule 10 only when `earlier` is not given (earlierFillsOf). */
@@ -668,7 +668,7 @@ function notCountedReason(c: Game, f: OfficialFixture): string {
   return `it did not match the official ${monthDay(f.dateKey)} fixture`;
 }
 
-// ---------------------------------------------------------------- decideBackfill and applyBackfill
+// ---------------------------------------------------------------- decideBackfill and applyBackfillDecision
 
 const CONFLICT_NOTE = 'si.com has two different scores for this game.';
 const NAME_ONLY_NOTE = 'Resolved by name only.';
@@ -774,19 +774,6 @@ export function applyBackfillDecision(g: Game, d: BackfillDecision | undefined):
       backfill: p.backfill,
       ...(p.scoreConflict ? { scoreConflict: p.scoreConflict } : {}),
     },
-  };
-}
-
-/** D2 rules 2-5 and 10 over one run's games, unmatched fixtures and si.com rows. Pure. */
-export function applyBackfill(input: BackfillInput): BackfillResult {
-  const d = decideBackfill(input);
-  return {
-    games: [...input.games.map((g) => applyBackfillDecision(g, d.byContestId.get(g.contestId))), ...d.created.map((c) => c.game)],
-    unmatched: d.unmatched,
-    rows: d.rows,
-    skipped: d.skipped,
-    warnings: d.warnings,
-    carried: d.carried,
   };
 }
 

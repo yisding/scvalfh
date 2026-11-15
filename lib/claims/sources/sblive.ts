@@ -1,5 +1,5 @@
 /**
- * si.com (§7.3, stage `sblive`): one claim per si.com value a game published, on the fixture of that game. A fill
+ * si.com (stage `sblive`): one claim per si.com value a game published, on the fixture of that game. A fill
  * (D2 rules 2-4, lib/crosscheck/backfill.ts) is keyed by its si.com row and holds what the game published: the value
  * written onto a MaxPreps contest (rules 3 and 4), or the whole `sblive:` game (rule 2), with the row itself when the
  * run that wrote it read it. A si.com disagreement on a game with no fill (rule 5's conflict, or the note on a game
@@ -52,17 +52,7 @@ type StoredConflict = NonNullable<SbliveClaim['conflict']>;
 const sbliveConflictRef = (contestId: ContestId): string => `contest:${contestId}`;
 
 /**
- * The game list through the si.com stage: the stage's input with each game's decisions, then the rule-2 games. The
- * run resolves the same per fixture over its view (lib/claims/resolve.ts), the rule-2 games entering it at the end;
- * this is the stage over a plain list.
- */
-export function resolveSbliveStage(games: readonly Game[], d: SbliveStageDecisions): Game[] {
-  const decided = (g: Game) => applyReconcile(applyBackfillDecision(g, d.backfill.get(g.contestId)), d.reconcile.get(g.contestId));
-  return [...games.map(decided), ...d.created.map(decided)];
-}
-
-/**
- * The decisions an injected si.com step took, read off what it returned (§7.3): game by game against its input, a
+ * The decisions an injected si.com step took, read off what it returned: game by game against its input, a
  * changed fill as the value it now shows and a changed disagreement as the one it now carries; the games appended
  * after the input are its rule-2 games. A step that returned other games, or changed a game beyond what a decision
  * writes, broke the step contract: that throws.

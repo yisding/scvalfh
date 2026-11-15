@@ -80,22 +80,6 @@ export interface SdsSheetApplyInput {
   fetchedAt: string;
 }
 
-export interface SdsSheetApplyResult {
-  games: Game[];
-  /** `cifsds:` games published (rule 3). */
-  added: Game[];
-  /** MaxPreps contests the sheet's score was written onto (rule 2). */
-  filled: Game[];
-  /** Results MaxPreps already has as the sheet does. */
-  agreed: number;
-  /** Rule 1 disagreements, as log sentences. */
-  disagreements: string[];
-  /** MaxPreps contests the sheet's time was written onto (rule 4). */
-  timed: Game[];
-  /** Scheduled `cifsds:` games published (rule 5). */
-  listed: Game[];
-}
-
 function pairKey(a: TeamSlug | null, b: TeamSlug | null): string {
   return [a ?? '', b ?? ''].sort().join('~');
 }
@@ -392,29 +376,6 @@ export function decideSdsSheet(input: SdsSheetApplyInput): SdsSheetDecisions {
     }
   }
   return { decisions, steps, added, agreed, disagreements, listed };
-}
-
-/** The sheet's results and fixtures applied to this run's games (rules 1-5 above): decide, apply, then add. */
-export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyResult {
-  const d = decideSdsSheet(input);
-  const base = input.games.filter((g) => !isCifsdsContest(g.contestId));
-  // The game each step started from is the one its earlier step left, so `filled` and `timed` carry every step's game.
-  const current = new Map<string, Game>();
-  for (const g of base) if (!current.has(g.contestId)) current.set(g.contestId, g);
-  const filled: Game[] = [];
-  const timed: Game[] = [];
-  for (const s of d.steps) {
-    const next = applySdsSheetDecision(current.get(s.contestId)!, s.decision);
-    current.set(s.contestId, next);
-    (s.decision.kind === 'score' ? filled : timed).push(next);
-  }
-  const games = base.map((g) => {
-    const decision = d.decisions.get(g.contestId);
-    return decision ? applySdsSheetDecision(g, decision) : g;
-  });
-  games.push(...d.added, ...d.listed);
-  games.sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId));
-  return { games, added: d.added, filled, agreed: d.agreed, disagreements: d.disagreements, timed, listed: d.listed };
 }
 
 /**

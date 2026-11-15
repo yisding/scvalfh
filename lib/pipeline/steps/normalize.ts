@@ -1,5 +1,5 @@
 /**
- * Step 06 (SPEC §7.4, §7.6; pipeline inversion §7.1): schedule rows → games, from the MaxPreps claims.
+ * Step 06 (SPEC §7.4, §7.6): schedule rows → games, from the MaxPreps claims.
  *
  *  - COLLECT: `normalizeGames` with no ledger fact (TBA rows were already split off per feed in step 05), one claim
  *    per contest (lib/claims/sources/maxpreps.ts collectMaxprepsClaims).
@@ -15,16 +15,12 @@
  *  - The view (lib/claims/view.ts) starts from MATCH's order and decisions; the run publishes it resolved through
  *    this stage (lib/claims/resolve.ts).
  *
- * A carried contest enters the view as the previous run published it (FixtureDecisions.enters), with that run's
- * classification cleared, and an editor-listed game last published with it is carried the same way (§11 R3's
- * zero-deviation carry): what the other sources added to it then (an si.com fill, a sheet score, a box score, a
- * school calendar's venue) stays while its feed is not read, even where that source was read this run and would now
- * decide otherwise. The stored claims folded give the same game (lib/claims/resolve.ts resolveCarriedClaims,
- * tests/claims/carry-fold.test.ts), and are what a contest the previous publication lacks enters as; the previous
- * publication is still read for the others, because tests/claims/carry.test.ts pins a carried game to what the
- * previous snapshot shows even where the claims file says otherwise. The later steps decide classification again
- * exactly as they decide a fresh game's. Whether a feed counts as carried for its source row also reads the
- * previous snapshot: it describes what that publication covered.
+ * A carried contest, and an editor's listing the last run published that touches an unread feed, is folded from
+ * its fixture's stored claims (lib/claims/resolve.ts resolveCarriedClaims): it is the game the previous run published,
+ * its classification cleared, so what the other sources added to it then (an si.com fill, a sheet score, a box score,
+ * a school calendar's venue) stays while its feed is not read, even where that source was read this run and would
+ * now decide otherwise. The later steps decide classification again exactly as they decide a fresh game's. Whether a
+ * feed counts as carried for its source row reads the previous snapshot: it describes what that publication covered.
  */
 
 import { collectMaxprepsClaims, matchMaxpreps } from '../../claims/sources/maxpreps';
@@ -45,7 +41,7 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
     deletedThisRun,
     tbaDropped: state.tbaDropped,
     normDropped: norm.dropped,
-    published: new Map((ctx.previous?.games ?? []).map((g) => [g.contestId, g])),
+    lastRun: ctx.claimsAsRead.fetchedAt,
   });
   attachEditorClaims(ctx.claims, ctx.editorClaims);
   for (const id of m.unusedExclusions) ctx.log(`  exclusion no longer needed: ${id}`);
@@ -64,10 +60,10 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
 
   ctx.view.start(m.view, m.decisions);
   const games = ctx.view.games('maxpreps');
-  if (ctx.shadow) {
-    ctx.shadow.push({
+  if (ctx.trace) {
+    ctx.trace.push({
       stage: 'maxpreps',
-      input: { rows: [...state.rows], feeds: [...state.feeds.values()].map((f) => ({ teamId: f.teamId, status: f.status })), tbaDropped: [...state.tbaDropped] },
+      input: { rows: [...state.rows], feeds: [...state.feeds.values()].map((f) => ({ teamId: f.teamId, status: f.status })) },
       view: [...m.view],
       games,
       carried: [...m.carried],

@@ -7,9 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 import { describeGame, resultSentence, tiebreakRuleOf } from '../components/ui/describe-game';
 import { sideOutcome } from '../lib/format';
-import {
-  applyResultCorrection, correctionProblems, excessOver, finalizeResult, finalizeResults, readExcess, resolveResult, unfoldShootout,
-} from '../lib/results/result';
+import { applyResultCorrection, correctionProblems, excessOver, finalizeResult, readExcess, resolveResult, unfoldShootout } from '../lib/results/result';
 import { winningSide } from '../lib/postseason/game-winner';
 import { LEDGER_VIEW, type ResultCorrections } from '../lib/fixtures/ledger';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
@@ -17,6 +15,7 @@ import { boxEvidenceFrom, type BoxEvidence } from '../lib/results/box-evidence';
 import type { BoxSide, Game } from '../lib/types';
 import { game } from './game-builder';
 import { readFileSync } from 'node:fs';
+import { finalizeResults } from './support/list-steps';
 
 const CIFSS_URL = 'https://www.cifsshome.org/widget/schedule-score?section_id=3';
 const cifss = (home: number, away: number) => ({ cifss: { home, away }, cifssUrl: CIFSS_URL });

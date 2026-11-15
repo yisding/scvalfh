@@ -14,14 +14,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ledgerEditor } from '../../lib/claims/editor';
 import { claimsFromSnapshot } from '../../lib/claims/from-snapshot';
 import { fixtureOfContest } from '../../lib/claims/published';
-import {
-  carryOfficialFromClaims,
-  decisionsFromOfficialStep,
-  resolveOfficialStage,
-  storedOfficialFromSnapshot,
-  storedOfficialOf,
-  writeBackOfficialClaims,
-} from '../../lib/claims/sources/official';
+import { carryOfficialFromClaims, decisionsFromOfficialStep, storedOfficialFromSnapshot, storedOfficialOf, writeBackOfficialClaims } from '../../lib/claims/sources/official';
 import { ClaimStore } from '../../lib/claims/store';
 import { ALL_DIVISIONS } from '../../lib/leagues';
 import { stepOfficial } from '../../lib/pipeline/steps/official';
@@ -32,6 +25,7 @@ import type { Game, Snapshot } from '../../lib/types';
 import { REPO, corpusSnapshotPath } from '../helpers';
 import { naiveBvalOfficial } from '../pipeline/support/noop-steps';
 import { snapshotOf } from '../pipeline/support/run-corpus';
+import { resolveOfficialStage } from '../support/list-steps';
 
 const committed = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
 const own = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as unknown);
@@ -106,13 +100,13 @@ describe('the stage’s decisions', () => {
   });
 
   it('the real step records its own, carried stamps included, and they resolve to the games it returned', async () => {
-    vi.stubEnv('SCVAL_CLAIMS_SHADOW', '1');
+    vi.stubEnv('SCVAL_STAGE_TRACE', '1');
     try {
       const { run } = await snapshotOf({ steps: { official: stepOfficial, sblive: stepSblive }, previous: own, extraArgs: ['--no-official'] });
       expect(run.result?.logLines.some((l) => /official de-anza: carried forward/.test(l))).toBe(true);
-      const stage = run.ctx.shadow?.find((r) => r.stage === 'official' && r.kind === 'resolve');
+      const stage = run.ctx.trace?.find((r) => r.stage === 'official' && r.kind === 'resolve');
       expect(stage && 'stepGames' in stage ? stage.games : null).toEqual(stage && 'stepGames' in stage ? stage.stepGames : undefined);
-      expect(run.ctx.shadow?.filter((r) => r.stage === 'official' && r.kind === 'carry').map((r) => 'division' in r && r.division)).toEqual(['de-anza', 'el-camino']);
+      expect(run.ctx.trace?.filter((r) => r.stage === 'official' && r.kind === 'carry').map((r) => 'division' in r && r.division)).toEqual(['de-anza', 'el-camino']);
     } finally {
       vi.unstubAllEnvs();
     }

@@ -7,7 +7,7 @@
 import type { EditorView } from '../claims/editor';
 import type { SbliveStageDecisions } from '../claims/sources/sblive';
 import type { ClaimStore } from '../claims/store';
-import type { ClaimsFile, ShadowStage } from '../claims/types';
+import type { ClaimsFile, StageTrace } from '../claims/types';
 import type { OfficialDecision } from '../official/match';
 import type { CifssSectionKey } from '../sources/cifss';
 import type { RawResponse } from '../sources/http';
@@ -142,8 +142,8 @@ export interface RunContext extends RunLog {
    * from the claims rather than frozen to a previous snapshot's games. Absent: false.
    */
   readonly claimsAlone?: boolean;
-  /** The shadow harness's record (SCVAL_CLAIMS_SHADOW=1, tests only). */
-  readonly shadow?: ShadowStage[] | null;
+  /** The per-stage trace for tests (lib/claims/types.ts StageTrace); null or absent in every real run. */
+  readonly trace?: StageTrace[] | null;
   args: RunArgs;
   fetchedAt: string;
   /** localDateKey(fetchedAt) — never Date.now(). */

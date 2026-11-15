@@ -196,14 +196,7 @@ function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixtur
     `  sblive: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}` +
       ` and ${result.rows.length} earlier si.com ${result.rows.length === 1 ? 'score' : 'scores'} still eligible`,
   );
-  ctx.shadow?.push({
-    stage: 'sblive',
-    kind: 'decide',
-    input: { games, unmatched, sblive: null, relevant: [], today: ctx.today, fetchedAt: ctx.fetchedAt },
-    games: carriedGames,
-    unmatched: result.unmatched,
-    crossCheck,
-  });
+  ctx.trace?.push({ stage: 'sblive', kind: 'decide', input: { games, sblive: null }, games: carriedGames });
   return { games: carriedGames, unmatched: result.unmatched, sbliveCrossCheck: crossCheck, ...handover(null, decided, conflicts) };
 }
 
@@ -311,13 +304,6 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       `matched ${crossCheck.compared} · agree ${crossCheck.agreements} · conflicts ${crossCheck.conflicts.length} · ` +
       `backfilled ${crossCheck.backfilled.length} · si.com-only ${crossCheck.sbliveOnlyScored.length} · unmatched ${rec.unmatched}`,
   );
-  ctx.shadow?.push({
-    stage: 'sblive',
-    kind: 'decide',
-    input: { games, unmatched, sblive: cleaned.rows, consulted, relevant, today: ctx.today, fetchedAt: ctx.fetchedAt },
-    games: out,
-    unmatched: result.unmatched,
-    crossCheck,
-  });
+  ctx.trace?.push({ stage: 'sblive', kind: 'decide', input: { games, sblive: cleaned.rows }, games: out });
   return { games: out, unmatched: result.unmatched, sbliveCrossCheck: crossCheck, ...handover(cleaned.rows, decided, rec.byContestId) };
 };

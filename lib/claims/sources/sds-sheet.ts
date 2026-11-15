@@ -1,5 +1,5 @@
 /**
- * The San Diego Section's bracket sheet (§7.6, stage `sdsSheet`): one claim per sheet row and game, keyed by the
+ * The San Diego Section's bracket sheet (stage `sdsSheet`): one claim per sheet row and game, keyed by the
  * division and the pair (two teams meet once in the Section's playoffs), holding the row as the game last
  * published it, the host it published, and the game it was published on.
  *
@@ -41,7 +41,9 @@ function sheetClaimOf(row: SheetRow, game: Game, seenAt: string, ref: string = s
     published: {
       contestId: game.contestId,
       dateLocal: game.dateLocal,
-      ...('teams' in rest || game.provenance.scores !== 'cifsds-sheet' ? {} : { fetchedAt: game.provenance.fetchedAt }),
+      ...(isCifsdsContestId(game.contestId) || (!('teams' in rest) && game.provenance.scores === 'cifsds-sheet')
+        ? { fetchedAt: game.provenance.fetchedAt }
+        : {}),
     },
   };
 }
@@ -76,7 +78,12 @@ export function createSheetFixtures(store: ClaimStore, created: readonly Game[],
     const ref = sheetClaimRef(row);
     const holder = store.fixtureOf('sdsSheet', ref);
     const id = holder !== undefined && store.get(holder)?.claims.maxpreps === undefined ? holder : store.create(gameBaseId(game));
-    store.attach(id, 'sdsSheet', sheetClaimOf(row, game, fetchedAt, ref));
+    // Until the write-back, the claim keeps the stamp its game was last published with (a frozen league's game, with
+    // the claims file alone, publishes it: lib/pipeline/steps/guards.ts).
+    const was = id === holder ? store.get(id)?.claims.sdsSheet : undefined;
+    const claim = sheetClaimOf(row, game, fetchedAt, ref);
+    const builtAt = was?.published.contestId === game.contestId ? was.published.fetchedAt : undefined;
+    store.attach(id, 'sdsSheet', builtAt ? { ...claim, published: { ...claim.published, fetchedAt: builtAt } } : claim);
   }
 }
 

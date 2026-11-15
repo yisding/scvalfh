@@ -116,17 +116,6 @@ export function parseVnnIcs(text: string, schoolSlug: TeamSlug): VnnEvent[] {
 
 // ---------------------------------------------------------------- application
 
-export interface ApplyVnnResult {
-  games: Game[];
-  /** Games that gained a venue name. */
-  venuesAdded: number;
-  /** Games whose MaxPreps start time the school calendar corroborates. */
-  timesConfirmed: number;
-  /** Varsity events that matched no MaxPreps contest. */
-  unmatched: number;
-  warnings: string[];
-}
-
 /** What a school calendar adds to one game: the venue name MaxPreps lacks, and/or a confirmed start time. */
 export interface VnnDecision {
   venueName?: string;
@@ -211,19 +200,6 @@ export function decideVnn(games: readonly Game[], events: readonly VnnEvent[]): 
   return { decisions, venuesAdded, timesConfirmed, unmatched: Math.max(0, varsity - matched.size), warnings };
 }
 
-/** Attach `venue.name` and `timeConfirmed` where MaxPreps has neither: decide, then apply to each game. */
-export function applyVnnEvents(
-  games: readonly Game[],
-  events: readonly VnnEvent[],
-): ApplyVnnResult {
-  const d = decideVnn(games, events);
-  const out = games.map((game) => {
-    const decision = d.decisions.get(game.contestId);
-    return decision ? applyVnnDecision(game, decision) : game;
-  });
-  return { games: out, venuesAdded: d.venuesAdded, timesConfirmed: d.timesConfirmed, unmatched: d.unmatched, warnings: d.warnings };
-}
-
 // ---------------------------------------------------------------- carry-forward
 
 /** What a game showed from the school calendars the last time it was published: the per-site carry's input. */
@@ -240,33 +216,6 @@ export function vnnPublishedOf(game: Pick<Game, 'venue' | 'timeConfirmed'>): Vnn
     ...(game.timeConfirmed ? { timeConfirmed: true as const } : {}),
   };
   return Object.keys(out).length > 0 ? out : undefined;
-}
-
-/**
- * SPEC §5.3, PER SITE: put back the venue names and confirmed start times a school calendar
- * published before, for the schools whose feed produced nothing this run.
- *
- * There are only two verified feeds and the failure that happens is ONE of them, so a pooled
- * "did any calendar answer" flag is the wrong question: while Los Gatos answered, a failed Palo
- * Alto feed silently dropped nine venue names and five confirmed start times off published game
- * pages. Keyed on the school instead, a feed that DID answer is never second-guessed and a feed
- * that did not never takes its school's data down with it.
- *
- * Only ever FILLS A HOLE — a value this run produced always wins. `publishedOf` is what each game showed the last
- * time it was published (lib/claims/sources/vnn.ts reads it from the stored claims).
- */
-export function carryVnnPublished(
-  missing: readonly TeamSlug[],
-  games: readonly Game[],
-  publishedOf: (contestId: string) => VnnPublished | undefined,
-): { games: Game[]; carried: number } {
-  const decisions = decideVnnCarry(missing, games, publishedOf);
-  if (missing.length === 0) return { games: [...games], carried: 0 };
-  const out = games.map((game) => {
-    const carried = decisions.get(game.contestId);
-    return carried ? applyVnnCarry(game, carried) : game;
-  });
-  return { games: out, carried: out.filter((g, i) => g !== games[i]).length };
 }
 
 /**
@@ -321,16 +270,3 @@ export function applyVnnStageDecision(game: Game, d: VnnStageDecision | undefine
   return d.carried ? applyVnnCarry(withEvents, d.carried) : withEvents;
 }
 
-/** carryVnnPublished with what each game showed in `previousGames`, the previous snapshot's list. */
-export function carryVnnForward(
-  missing: readonly TeamSlug[],
-  previousGames: readonly Game[],
-  games: readonly Game[],
-): { games: Game[]; carried: number } {
-  if (missing.length === 0) return { games: [...games], carried: 0 };
-  const prevById = new Map(previousGames.map((g) => [g.contestId, g]));
-  return carryVnnPublished(missing, games, (id) => {
-    const prev = prevById.get(id);
-    return prev ? vnnPublishedOf(prev) : undefined;
-  });
-}

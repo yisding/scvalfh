@@ -20,7 +20,7 @@
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
  *
- * The stage driver (pipeline inversion §4.2). Every source's rows are claims, kept per fixture in the claim store
+ * The stage driver (docs/DATA-SOURCES.md §4.2). Every source's rows are claims, kept per fixture in the claim store
  * (lib/claims/store.ts, read from the claims file the previous run wrote, else seeded from its snapshot). The run
  * publishes a view (lib/claims/view.ts): the fixtures in order and the decisions each stage takes about them. At each
  * game stage, in order (maxpreps, official, sblive, vnn, sdsSheet, classify, guards, results):
@@ -46,7 +46,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import path from 'node:path';
 
 import { CLAIMS_WARN_BYTES, claimsFileText, claimsPathOf, readClaimsFile } from '../claims/file';
-import { boxEvidenceOf, recordBoxClaims } from '../claims/sources/box';
+import { boxEvidenceOf, recordBoxClaims, writeBackBoxClaims } from '../claims/sources/box';
 import { cifssEvidenceFrom, recordCifssClaims } from '../claims/sources/cifss';
 import { decisionsFromOfficialStep, writeBackOfficialClaims } from '../claims/sources/official';
 import { writeBackSheetClaims } from '../claims/sources/sds-sheet';
@@ -209,7 +209,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   const view = ctx.view;
   const publish = (stage: Stage): Game[] => {
     state.games = view.games(stage);
-    ctx.shadow?.push({ stage: 'view', through: stage, games: [...state.games] });
+    ctx.trace?.push({ stage: 'view', through: stage, games: [...state.games] });
     return state.games;
   };
 
@@ -229,7 +229,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   publish('official');
   state.unmatched = unmatched;
   state.official = officialFlags;
-  ctx.shadow?.push({ stage: 'official', kind: 'resolve', input: officialInput, stepGames: officialGames, games: [...state.games] });
+  ctx.trace?.push({ stage: 'official', kind: 'resolve', stepGames: officialGames, games: [...state.games] });
 
   // 08 sblive (the injectable si.com step): each rule-2 game enters the view on its fixture, then the fills and
   // disagreements, by contest, onto the view; the rows it read are kept for the si.com claims.
@@ -244,7 +244,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   publish('sblive');
   state.unmatched = sblive.unmatched;
   state.sbliveCrossCheck = sblive.sbliveCrossCheck;
-  ctx.shadow?.push({ stage: 'sblive', kind: 'resolve', input: sbliveInput, stepGames: sbliveGames, games: [...state.games] });
+  ctx.trace?.push({ stage: 'sblive', kind: 'resolve', stepGames: sbliveGames, games: [...state.games] });
 
   // 09 secondary: the school calendars' venues and start times, by contest; CCS and the brackets (run-level); the
   // bracket sheet's scores and times by contest, its own games entering the view, which then takes the sheet's order.
@@ -266,7 +266,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   view.setFacts({ degradedDivisions: state.official.degradedDivisions });
   publish('classify');
   logClassification(ctx, classifyInput, state.games, state.official.degradedDivisions);
-  ctx.shadow?.push({ stage: 'classify', input: { games: classifyInput, degradedDivisions: state.official.degradedDivisions }, games: [...state.games] });
+  ctx.trace?.push({ stage: 'classify', input: { games: classifyInput, degradedDivisions: state.official.degradedDivisions }, games: [...state.games] });
 
   // 11 guards (may throw RunAbort): the finals regression over the classified games, a frozen league's games as last
   // published, then the systemic outage over what the run would publish.
@@ -294,11 +294,6 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   if (listed.length > 0) view.sortByDateThenId('results');
   publish('results');
   logResults(ctx, resultsInput, state.games, new Set(listed.map((g) => g.contestId)));
-  ctx.shadow?.push({
-    stage: 'results',
-    input: { games: resultsInput, cifssConflicts: state.cifssCrossCheck?.conflicts ?? [], box },
-    games: [...state.games],
-  });
 
   // 12 standings + health
   const table = stepStandings(ctx, state);
@@ -319,6 +314,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   writeBackSheetClaims(ctx.claims, snapshot.games, SDS_BRACKETS_FILE, sheetTabsRead(ctx), ctx.fetchedAt);
   writeBackOfficialClaims(ctx.claims, snapshot.games, snapshot.officialFixtures ?? [], { rows: officialRows, divisions: readDivisions }, ctx.fetchedAt);
   writeBackVnnClaims(ctx.claims, snapshot.games, vnnAnswered(ctx), ctx.fetchedAt);
+  writeBackBoxClaims(ctx.claims, snapshot.games, ctx.fetchedAt);
   recordPublished(ctx.claims, snapshot.games, ctx.fetchedAt);
   ctx.claims.gc();
   const claims = ctx.claims.toFile(ctx.fetchedAt, SPORT_ID);

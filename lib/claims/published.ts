@@ -1,5 +1,5 @@
 /**
- * The fixture of a published game (§7.13 read the other way): the claims an evidence source or a write-back keeps
+ * The fixture of a published game: the claims an evidence source or a write-back keeps
  * about a game go to the fixture that game is. A MaxPreps contest is the fixture holding its MaxPreps claim; a
  * `cifsds:` game is the fixture the bracket sheet's stage created for it, found by the contest its sheet claim was
  * published on; an `official:` game (an editor's listing) is the editor's fixture, named by the listing's
@@ -37,7 +37,7 @@ export function fixtureOfContest(store: ClaimStore, contestId: ContestId): Fixtu
   return undefined;
 }
 
-/** The id a new fixture for `game` is minted from: its day and sides (§6.2). */
+/** The id a new fixture for `game` is minted from: its day and sides. */
 export function gameBaseId(game: Pick<Game, 'dateKey' | 'home' | 'away'>): FixtureId {
   return baseFixtureId(game.dateKey, fixtureSideKey(game.away), fixtureSideKey(game.home));
 }

@@ -1,16 +1,16 @@
 /**
- * Step 06's carry from claims (pipeline inversion P2, §7.1): a feed the run did not read is carried from the MaxPreps
+ * Step 06's carry from claims: a feed the run did not read is carried from the MaxPreps
  * claims the previous run wrote, not from the previous snapshot's game list. Over the all-2026-10-02 corpus with the
  * real official and si.com steps:
  *  - a run that reads the claims FILE publishes what a run that seeds its claims from the snapshot publishes;
  *  - a carried claim keeps the stamp of the run that last read it, and the game publishes that stamp;
  *  - a contest a fresh read no longer lists loses its claim; a contest dropped or deleted this run is never carried;
  *  - with no previous snapshot, a claims file left beside --out carries nothing;
- *  - a carried contest publishes as it was last published (§11 R3's zero-deviation carry), and one the previous
- *    publication lacks publishes from its claim alone.
+ *  - a carried contest publishes as it was last published, folded from its stored claims, and one the previous
+ *    publication lacks publishes from its claims.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -18,6 +18,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { claimsFileText, claimsPathOf, parseClaimsText } from '../../lib/claims/file';
 import type { ClaimsFile } from '../../lib/claims/types';
+import { GUID_RE } from '../../lib/game-id';
 import type { PipelineSteps } from '../../lib/pipeline/contract';
 import { SILENT_SINK } from '../../lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '../../lib/pipeline/run';
@@ -144,22 +145,30 @@ describe('what is never carried', () => {
   });
 });
 
-describe('what a carried contest publishes (§11 R3)', () => {
+describe('what a carried contest publishes', () => {
   /** Both teams' feeds fail, so their 9/21 game is carried. */
   const bothFail = () => writeTempVariant({ 'maxpreps/schedule/greenfield': 503, 'maxpreps/schedule/stevenson': 503 });
 
   it('the game as the previous run published it, with what other sources added and this run did not decide', async () => {
+    // A Los Gatos game against a team with a feed: Los Gatos's school calendar is one the run reads, so a confirmed
+    // start time is one a run can have published, and claims seeded from that publication hold it.
+    const feeds = new Set(readdirSync(path.join(CORPUS, 'maxpreps', 'schedule')).map((f) => f.replace(/\.json$/, '')));
+    const game = first.snapshot.games.find(
+      (x) => GUID_RE.test(x.contestId) && x.home.slug === 'los-gatos' && x.away.slug !== null && feeds.has(x.away.slug) && !x.timeConfirmed,
+    ) as Game;
+    expect(game).toBeDefined();
     const written = asWritten(first);
-    // A school calendar's confirmation, as a run that read one would have published it.
+    // A school calendar's confirmation, as a run that read one would have published it; the claims are seeded from it.
     const previous: Snapshot = {
       ...written.previous,
-      games: written.previous.games.map((g) => (g.contestId === STE_GRE_0921 ? { ...g, timeConfirmed: true } : g)),
+      games: written.previous.games.map((g) => (g.contestId === game.contestId ? { ...g, timeConfirmed: true } : g)),
     };
-    const { snapshot, run } = await snapshotOf({ steps: STEPS, variants: [bothFail()], previous, claims: written.claims });
+    const variant = writeTempVariant({ 'maxpreps/schedule/los-gatos': 503, [`maxpreps/schedule/${game.away.slug}`]: 503 });
+    const { snapshot, run } = await snapshotOf({ steps: STEPS, variants: [variant], previous });
     expect(carriedLine(run.ctx.logLines)).toBeDefined();
-    const g = snapshot.games.find((x) => x.contestId === STE_GRE_0921);
+    const g = snapshot.games.find((x) => x.contestId === game.contestId);
     expect(g?.timeConfirmed).toBe(true);
-    const was = first.snapshot.games.find((x) => x.contestId === STE_GRE_0921) as Game;
+    const was = first.snapshot.games.find((x) => x.contestId === game.contestId) as Game;
     expect({ ...g, timeConfirmed: undefined }).toEqual({ ...was, provenance: { ...was.provenance, contentChangedAt: g?.provenance.contentChangedAt } });
   });
 

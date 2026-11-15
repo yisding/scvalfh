@@ -44,7 +44,6 @@ import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
-import { stepSdsSheet } from './sds-sheet';
 
 /** The calendars' stage: each game's decision by contest id, and the stage's input with them applied. */
 export interface VnnStage {
@@ -56,7 +55,6 @@ export async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Pro
   const decisions = new Map<ContestId, VnnStageDecision>();
   if (!ctx.args.vnn) {
     ctx.log('  vnn: skipped (--no-vnn)');
-    ctx.shadow?.push({ stage: 'vnn', input: { games: [...input], events: [], sites: new Map() }, games: [...input] });
     return { games: [...input], decisions };
   }
   const inRun = new Set(ctx.leaguesInRun());
@@ -128,10 +126,6 @@ export async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Pro
     }
   }
   const games = decided(input);
-  if (ctx.shadow) {
-    const read = new Map(sites.map((site) => [site.slug, answered.has(site.slug) ? ('answered' as const) : ('not-answered' as const)]));
-    ctx.shadow.push({ stage: 'vnn', input: { games: [...input], events, sites: read }, games: [...games] });
-  }
   return { games, decisions };
 }
 
@@ -374,14 +368,3 @@ export async function stepCcsBrackets(ctx: PipelineContext, games: readonly Game
   return { ...ccs.state, ...(brackets ? { brackets } : {}) };
 }
 
-/**
- * Step 09 over a game list: the school calendars, CCS and the bracket sheet, each part over the games the part
- * before it left. The run calls the parts itself (lib/pipeline/run.ts), each over the view the stage before
- * resolved, in this order.
- */
-export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
-  const withVnn = (await stepVnn(ctx, games)).games;
-  const ccs = await stepCcsBrackets(ctx, withVnn);
-  const withSheet = (await stepSdsSheet(ctx, withVnn)).games;
-  return { games: withSheet, ...ccs };
-}

@@ -16,8 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ledgerEditor } from '../../lib/claims/editor';
 import { claimsFileText, parseClaimsText } from '../../lib/claims/file';
-import { asLastPublished } from '../../lib/claims/sources/maxpreps';
-import { resolveCarriedClaims } from '../../lib/claims/resolve';
+import { resolveCarriedClaims, withoutClassification } from '../../lib/claims/resolve';
 import { ClaimStore } from '../../lib/claims/store';
 import type { ClaimsFile } from '../../lib/claims/types';
 import { GUID_RE } from '../../lib/game-id';
@@ -47,7 +46,7 @@ function expectEveryContestFolds(snapshot: Snapshot, claims: ClaimsFile): number
     const id = store.fixtureOf('maxpreps', g.contestId);
     expect(id, g.contestId).toBeDefined();
     const folded = resolveCarriedClaims(store.get(id as string)!, view);
-    expect(folded && sansHistory(folded), g.contestId).toEqual(sansHistory(asLastPublished(g)));
+    expect(folded && sansHistory(folded), g.contestId).toEqual(sansHistory(withoutClassification(g)));
     compared += 1;
   }
   return compared;

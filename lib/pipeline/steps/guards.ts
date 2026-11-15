@@ -24,7 +24,9 @@
  */
 
 import { keepFrozenClaims } from '../../claims/sources/maxpreps';
+import { fixtureOfContest } from '../../claims/published';
 import { storedFillsOf } from '../../claims/sources/sblive';
+import { isCifsdsContest } from '../../postseason/sds-sheet-results';
 import type { RunView } from '../../claims/view';
 import { classifyGames } from '../../classify';
 import type { LeagueConfig } from '../../league-config/shape';
@@ -159,7 +161,7 @@ function previousClassification(ctx: PipelineContext, division: DivisionId): Div
 
 /**
  * Replace (or, with no previous data, remove) every frozen league's intra-league games and fixtures. The games are
- * the view's (§7.8): a frozen league's intra-league fixtures leave the view, and with previous data each of its
+ * the view's: a frozen league's intra-league fixtures leave the view, and with previous data each of its
  * previous games comes back as a `frozen` decision, on the fixture that left with its contest id or on a passthrough,
  * after which the view is re-sorted by date then id; the run then publishes the view through stage `guards`.
  */
@@ -175,8 +177,15 @@ export function applyFrozenLeagues(ctx: PipelineContext, state: RunState, view: 
     if (ctx.claimsAlone) {
       const have = new Set(state.games.map((g) => g.contestId));
       const filled = storedFillsOf(ctx.claims).games.filter((g) => intra(g) && !have.has(g.contestId));
-      if (filled.length > 0) {
-        view.freeze([], classifyGames(filled, { degradedDivisions: state.official.degradedDivisions }));
+      // A game only the bracket sheet has shows the stamp of the run that built it, which its sheet claim keeps.
+      const builtAt = (g: Game) => {
+        const id = isCifsdsContest(g.contestId) ? fixtureOfContest(ctx.claims, g.contestId) : undefined;
+        return id === undefined ? undefined : ctx.claims.get(id)?.claims.sdsSheet?.published.fetchedAt;
+      };
+      const restamped = view.remove('guards', (g) => intra(g) && builtAt(g) !== undefined && builtAt(g) !== g.provenance.fetchedAt);
+      const games = restamped.map(({ game }) => ({ ...game, provenance: { ...game.provenance, fetchedAt: builtAt(game) as string } }));
+      if (filled.length > 0 || games.length > 0) {
+        view.freeze(restamped, [...games, ...classifyGames(filled, { degradedDivisions: state.official.degradedDivisions })]);
         view.sortByDateThenId('guards');
       }
       ctx.log(`  ${league.shortName} frozen: its league games carried from the claims`);

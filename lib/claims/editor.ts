@@ -1,6 +1,6 @@
 /**
  * The editor's claims: the fixture ledger (lib/fixtures) read as one claim per fixture, and the slices each step
- * reads from them (§7.11). Rebuilt from the ledger every run with `seenAt` the run's stamp, never carried: in the
+ * reads from them. Rebuilt from the ledger every run with `seenAt` the run's stamp, never carried: in the
  * claims file they are informational, and lib/claims/store.ts fromFile discards them.
  *
  * This is the one module under lib/claims that reads the ledger itself (tests/claims/boundary.test.ts); the rest

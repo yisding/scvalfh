@@ -138,7 +138,7 @@ interface StepState {
 /** Put back the previous run's annotations for one division, from the official claims; true when anything came back. */
 function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, division: DivisionId, withNotes = false): boolean {
   const restored = carryOfficialFromClaims([division], state.stored, state.games);
-  ctx.shadow?.push({ stage: 'official', kind: 'carry', division, games: state.games, fixtures: restored.fixtures, out: restored.games, carried: restored.carried });
+  ctx.trace?.push({ stage: 'official', kind: 'carry', division, games: state.games, fixtures: restored.fixtures, out: restored.games, carried: restored.carried });
   if (restored.fixtures.length === 0 && restored.carried === 0) return false;
   state.games = restored.games;
   for (const id of new Set(restored.stamped)) {

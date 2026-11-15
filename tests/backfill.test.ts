@@ -11,16 +11,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  BACKFILL_TEAM_PAGE_CAP,
-  applyBackfill,
-  cleanSbliveRows,
-  eligibleItems,
-  isIdResolved,
-  planBackfill,
-  scoreboardCoverage,
-  type BackfillInput,
-} from '../lib/crosscheck/backfill';
+import { BACKFILL_TEAM_PAGE_CAP, cleanSbliveRows, eligibleItems, isIdResolved, planBackfill, scoreboardCoverage, type BackfillInput } from '../lib/crosscheck/backfill';
 import { dayDiff, scoreSentence, shiftDateKey } from '../lib/format';
 import { LEDGER_VIEW } from '../lib/fixtures/ledger';
 import { getDivision } from '../lib/leagues';
@@ -34,6 +25,7 @@ import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '
 import { game } from './game-builder';
 import { REPO, corpusDir } from './helpers';
 import { testRunArgs } from './pipeline/support/run-args';
+import { applyBackfill } from './support/list-steps';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';

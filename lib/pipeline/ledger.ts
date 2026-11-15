@@ -13,7 +13,7 @@
 import { ledgerEditor, type EditorView } from '../claims/editor';
 import { claimsFromSnapshot } from '../claims/from-snapshot';
 import { ClaimStore } from '../claims/store';
-import type { ClaimsFile, EditorClaim, FixtureId, MaxprepsClaim, ShadowStage } from '../claims/types';
+import type { ClaimsFile, EditorClaim, FixtureId, MaxprepsClaim, StageTrace } from '../claims/types';
 import { RunView } from '../claims/view';
 import type { FixtureLedger } from '../fixtures/shape';
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
@@ -292,8 +292,8 @@ export class PipelineContext implements RunContext {
   /** The fixture ledger as the editor's claims (lib/claims/editor.ts), and the slices the steps read from them. */
   readonly editorClaims: readonly EditorClaim[];
   readonly editor: EditorView;
-  /** The shadow harness's record, stage by stage (SCVAL_CLAIMS_SHADOW=1, tests only); null otherwise. */
-  readonly shadow: ShadowStage[] | null;
+  /** The per-stage trace for tests (lib/claims/types.ts StageTrace), with SCVAL_STAGE_TRACE=1; null otherwise. */
+  readonly trace: StageTrace[] | null;
   /**
    * Whether the run was given a claims file and no previous snapshot: the claims are then its only record of the last
    * publication, and a league it does not read is carried from them (the official step, the guards, the cifsshome.org
@@ -324,7 +324,7 @@ export class PipelineContext implements RunContext {
     this.editor = editor.view;
     this.claimsInit = init.claims;
     this.claimsAlone = init.previous === null && (init.claims?.fixtures.length ?? 0) > 0;
-    this.shadow = process.env.SCVAL_CLAIMS_SHADOW === '1' ? [] : null;
+    this.trace = process.env.SCVAL_STAGE_TRACE === '1' ? [] : null;
   }
 
   /**

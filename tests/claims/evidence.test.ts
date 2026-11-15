@@ -15,10 +15,10 @@ import { storedVnnPublished, vnnPublishedFrom, writeBackVnnClaims } from '../../
 import { ClaimStore } from '../../lib/claims/store';
 import { TransportError, resourcePath, type ResourceKey, type Transport } from '../../lib/pipeline/contract';
 import { PipelineContext, SILENT_SINK } from '../../lib/pipeline/ledger';
-import { stepSecondary } from '../../lib/pipeline/steps/secondary';
 import type { CifssCrossCheck, Game, Snapshot } from '../../lib/types';
 import { game } from '../helpers';
 import { testRunArgs } from '../pipeline/support/run-args';
+import { stepSecondary } from '../support/list-steps';
 
 const AT = '2026-10-01T14:00:00.000Z';
 const NOW = '2026-10-02T15:00:00.000Z';

@@ -1,14 +1,16 @@
 #!/usr/bin/env tsx
 /**
- * The byte-diff check of the pipeline inversion (dev only, not in CI): every offline corpus, each variant over
- * all-2026-10-02, each base corpus again with its own output (and claims file) as the previous run, and the si.com
- * cases (not read, down and read whole after a run with fills, from that run and from the committed snapshot and
- * claims file; a rule-2 game MaxPreps lists later), through scripts/fetch-data.ts on a revision (default HEAD,
- * checked out as a temporary git worktree) and on the working tree. Prints one line per run and file, and exits 1
- * when any snapshot.json or snapshot.meta.json differs.
+ * A byte-diff of the published output of two versions of the pipeline (dev only, not in CI). By default it compares
+ * the working tree with the last commit (HEAD); to compare with older code, pass `--rev <commit>` (cf443cd is the code
+ * before the claims existed). Each run goes through scripts/fetch-data.ts in a temporary git worktree of the revision
+ * and in the working tree: every offline corpus, each variant over all-2026-10-02, each base corpus again with its own
+ * output (and claims file) as the previous run, and the si.com cases (not read, down and read whole after a run with
+ * fills, from that run and from the committed snapshot and claims file; a rule-2 game MaxPreps lists later). Prints
+ * one line per run and file, and exits 1 when any snapshot.json or snapshot.meta.json differs; the claims file is
+ * not compared.
  *
- *   pnpm tsx scripts/claims-diff.ts              HEAD against the working tree
- *   pnpm tsx scripts/claims-diff.ts --rev <rev>  another revision against the working tree
+ *   pnpm tsx scripts/claims-diff.ts                 the working tree against HEAD
+ *   pnpm tsx scripts/claims-diff.ts --rev <commit>  the working tree against that commit
  *
  * Reads only the committed corpora: no network.
  */

@@ -1,12 +1,11 @@
 /**
- * VNN school calendars (§7.4, stage `vnn`, evidence only): what each school calendar showed on a game the last time
+ * VNN school calendars (stage `vnn`, evidence only): what each school calendar showed on a game the last time
  * it was published, kept as one claim per calendar and game, and read back for the per-site carry when that school's
  * calendar does not answer.
  *
  * A claim is written for every published game a calendar's school plays in that shows a venue name or a confirmed
- * start time (`applied`), whatever put it there: the carry fills a hole with the value the game last showed, as
- * lib/sources/vnn-ics.ts carryVnnForward did with the previous snapshot's game. The claims are rewritten from the
- * published games at the end of every run, so they always hold the last publication. A VNN claim never creates a
+ * start time (`applied`), whatever put it there: the carry fills a hole with the value the game last showed. The
+ * claims are rewritten from the published games at the end of every run, so they always hold the last publication. A VNN claim never creates a
  * fixture: it goes to the fixture the game is (lib/claims/published.ts: a MaxPreps contest's, an si.com rule-2 game's,
  * a sheet game's, an editor listing's).
  */

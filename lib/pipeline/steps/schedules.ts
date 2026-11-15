@@ -8,7 +8,7 @@
  *  - a feed must contain its own teamId (the Presentation/Los Gatos routing bug);
  *  - an EMPTY feed for a team the previous snapshot holds games for is treated as a failure, so the
  *    carry-forward restores its rows instead of silently deleting its non-league games;
- *  - a failed feed carries that team's games from the previous snapshot (step 06 does the carry).
+ *  - a failed feed carries that team's games from the stored MaxPreps claims (step 06 does the carry).
  * New: TBA rows are split off per feed first (§7.6), so one TBA row never rejects a whole feed;
  * ≥50% of a league's feeds failing is §7.5 trigger b (frozen with previous data, else degraded).
  */

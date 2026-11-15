@@ -112,8 +112,3 @@ export function unsettleLevelFinal(game: Game): Game {
   return { ...game, decider, provenance: { ...game.provenance, resultConflict } };
 }
 
-/** `settleLevelFinal` over a list: the same array when no game changes. */
-export function settleLevelFinals(games: readonly Game[]): Game[] {
-  const out = games.map(settleLevelFinal);
-  return out.some((g, i) => g !== games[i]) ? out : (games as Game[]);
-}

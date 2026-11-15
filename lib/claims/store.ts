@@ -1,5 +1,5 @@
 /**
- * The claim store (§6): every fixture and its claims, indexed by fixture id and by each claim's (source, ref), so
+ * The claim store: every fixture and its claims, indexed by fixture id and by each claim's (source, ref), so
  * the same source row always lands on the same fixture (identity by stored ref). A run starts from the claims file
  * written beside the previous snapshot (or the claims seeded from that snapshot), replaces what each source read
  * this run with the fresh rows (`mergeRead`), and ends with `toFile`.
@@ -177,20 +177,24 @@ export class ClaimStore {
       }
     }
     b.aliases = [...new Set([...(b.aliases ?? []), from, ...(a.aliases ?? [])])].sort(byCodeUnit);
-    for (const p of a.published ?? []) this.markPublished(into, p.contestId, p.seenAt);
+    for (const p of a.published ?? []) this.markPublished(into, p.contestId, p.seenAt, p.builtAt);
     this.fixtures.delete(from);
   }
 
-  /** Fixture `id`'s game was published under `contestId` by the run stamped `at`: appended, or its stamp moved on. */
-  markPublished(id: FixtureId, contestId: string, at: string): void {
+  /**
+   * Fixture `id`'s game was published under `contestId` by the run stamped `at` (an editor's listing built with the
+   * stamp `builtAt`): appended, or its stamps set to this run's.
+   */
+  markPublished(id: FixtureId, contestId: string, at: string, builtAt?: string): void {
     const f = this.fixtures.get(id);
     if (!f) throw new Error(`lib/claims/store.ts: no fixture ${id}`);
     const list = f.published ?? [];
     const held = list.find((p) => p.contestId === contestId);
     if (held) {
-      if (held.seenAt < at) held.seenAt = at;
+      held.seenAt = at;
+      if (builtAt !== undefined) held.builtAt = builtAt;
     } else {
-      f.published = [...list, { contestId, seenAt: at }];
+      f.published = [...list, { contestId, seenAt: at, ...(builtAt !== undefined ? { builtAt } : {}) }];
     }
   }
 

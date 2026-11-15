@@ -20,11 +20,11 @@ import { fixtureOfContest } from './published';
 import type { ClaimStore } from './store';
 import { MULTI_CLAIM_SOURCES, type ClaimSource, type Fixture, type FixtureId } from './types';
 
-/** Every published game onto its fixture's history, stamped `at` (the run that published it). */
+/** Every published game onto its fixture's history, stamped `at` (the run that published it); a listing with the stamp it was built with. */
 export function recordPublished(store: ClaimStore, games: readonly Game[], at: string): void {
   for (const g of games) {
     const id = fixtureOfContest(store, g.contestId);
-    if (id !== undefined) store.markPublished(id, g.contestId, at);
+    if (id !== undefined) store.markPublished(id, g.contestId, at, isOfficialContestId(g.contestId) ? g.provenance.fetchedAt : undefined);
   }
 }
 
@@ -87,11 +87,12 @@ export function supersededFromHistory(store: ClaimStore, games: readonly Game[],
 const ONE_CLAIM_SOURCES: readonly ClaimSource[] = (['maxpreps', 'editor', 'official', 'sdsSheet', 'box'] as const).filter((s) => !MULTI_CLAIM_SOURCES.has(s));
 
 /**
- * Each contest that took over a game this run (`superseded`, from the game's old id to the contest) joins the
- * fixture of the game it took over, when the contest's fixture was created this run (it is not among `existing`, the
- * fixtures the run read): its claims move there (ClaimStore.merge, the new fixture's id becoming an alias), so the
- * game keeps its fixture id; `joined` hears of each merge (the run's view renames the fixture). A one-claim source both fixtures hold keeps the contest's claim, the claim about the game
- * as it is now; the old one was about the game the contest replaced.
+ * Each contest that took over a game this run (`superseded`, from the game's old id to the contest) joins the fixture
+ * of the game it took over, when the contest's fixture was created this run (it is not among `existing`, the fixtures
+ * the run read): its claims move there (ClaimStore.merge, the new fixture's id becoming an alias), so the game keeps
+ * its fixture id; `joined` hears of each merge (the run's view renames the fixture). A one-claim source both fixtures
+ * hold keeps the contest's claim, the claim about the game as it is now; the old one was about the game the contest
+ * replaced.
  */
 export function joinSupersededFixtures(
   store: ClaimStore,

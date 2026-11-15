@@ -1,5 +1,5 @@
 /**
- * cifsshome.org (§7.9, evidence only): the score cross-check's conflict rows, kept as claims on the fixtures of the
+ * cifsshome.org (evidence only): the score cross-check's conflict rows, kept as claims on the fixtures of the
  * games they are about, and read back as the evidence the results step weighs (lib/results/result.ts
  * withCifssScore).
  *

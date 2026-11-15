@@ -14,14 +14,7 @@ import { describe, expect, it } from 'vitest';
 import { ledgerEditor } from '../../lib/claims/editor';
 import { claimsFromSnapshot } from '../../lib/claims/from-snapshot';
 import { fixtureOfContest } from '../../lib/claims/published';
-import {
-  conflictsFromSnapshot,
-  decisionsFromSbliveStep,
-  resolveSbliveStage,
-  storedConflictsOf,
-  storedFillsOf,
-  writeBackSbliveClaims,
-} from '../../lib/claims/sources/sblive';
+import { conflictsFromSnapshot, decisionsFromSbliveStep, storedConflictsOf, storedFillsOf, writeBackSbliveClaims } from '../../lib/claims/sources/sblive';
 import { ClaimStore } from '../../lib/claims/store';
 import type { ClaimsFile } from '../../lib/claims/types';
 import { earlierFillsOf } from '../../lib/crosscheck/backfill';
@@ -31,6 +24,7 @@ import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Game, Snapshot } from '../../lib/types';
 import { REPO, corpusDir, corpusSnapshotPath } from '../helpers';
 import { snapshotOf, writeTempVariant } from '../pipeline/support/run-corpus';
+import { resolveSbliveStage } from '../support/list-steps';
 
 const committed = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
 const own = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as unknown);
