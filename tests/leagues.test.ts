@@ -269,13 +269,13 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     const mcal = getLeague('mcal');
     if (mcal.postseason.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
     expect(mcal.postseason.finalSite).toEqual({
-      slug: 'tamalpais', label: 'Tamalpais', venue: 'Tamalpais High School',
+      slug: 'redwood', label: 'Redwood', venue: 'Redwood High School',
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     });
     // The address is the site school's own record (data/schools.json), as the HomeCampus calendars give it.
     expect(schoolAddress(mcal.postseason.finalSite.slug)).toEqual({
-      street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941',
+      street: '395 Doherty Dr', city: 'Larkspur', region: 'CA', postalCode: '94939',
     });
     expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
     // The final was a one-goal regulation result, and a report of the game times its winner in the fourth quarter.

@@ -27,6 +27,7 @@ import { DATA_QUALITY } from '../league-config/data-quality';
 import { GUID_RE } from '../game-id';
 import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
 import { getLeague, getSection } from '../leagues';
+import { applyHostOverride } from '../results/host-override';
 import { flagConflictSentence, isLevelWithWinner } from '../postseason/level-final';
 import { SPORT } from '../sports/current';
 import { getTeamById, resolveTeam } from '../teams';
@@ -66,6 +67,8 @@ export interface NormalizeOptions {
   level?: 'varsity' | 'jv';
   /** Per-contest date corrections (default DATA_QUALITY.contestDateOverrides); tests pass their own. */
   dateOverrides?: DataQualityConfig['contestDateOverrides'];
+  /** Per-contest host corrections (default DATA_QUALITY.contestHostOverrides); tests pass their own. */
+  hostOverrides?: DataQualityConfig['contestHostOverrides'];
 }
 
 export interface NormalizeResult {
@@ -360,14 +363,16 @@ export function normalizeGames(
 
   const games: Game[] = [];
   const dateOverrides = opts.dateOverrides ?? DATA_QUALITY.contestDateOverrides;
+  const hostOverrides = opts.hostOverrides ?? DATA_QUALITY.contestHostOverrides;
   for (const [id, row] of best) {
     const game = toGame(row, copies.get(id) ?? [row], opts, warnings);
     if (!game) {
       stats.dropped.malformed += 1;
       continue;
     }
-    // Before the sort, so the corrected date orders schedules, last-5 and streaks.
-    games.push(applyDateOverride(game, dateOverrides[id]));
+    // Before the sort, so the corrected date orders schedules, last-5 and streaks; and the host a better source
+    // names, before anything reads a side.
+    games.push(applyHostOverride(applyDateOverride(game, dateOverrides[id]), hostOverrides));
   }
 
   // Stable order: by local date, then by contestId so the JSON diff is small.

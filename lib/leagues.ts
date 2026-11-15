@@ -900,6 +900,13 @@ export function assertLeagues(): void {
     if (!o.source.trim()) fail(`contestDateOverrides ${id}: needs a source`);
     if (id in DATA_QUALITY.excludedContestIds) fail(`contestDateOverrides ${id}: the contest is excluded`);
   }
+  // A host correction names its contest by GUID and cites its source in one sentence without a final period; a
+  // contest is never both corrected and excluded. That `home` is a side of the stored contest is tests/host-override.test.ts's check.
+  for (const [id, o] of Object.entries(DATA_QUALITY.contestHostOverrides)) {
+    if (!LOWERCASE_GUID_RE.test(id)) fail(`contestHostOverrides: ${id} is not a contest GUID`);
+    if (!o.source.trim() || /\.$/.test(o.source.trim())) fail(`contestHostOverrides ${id}: needs a source, one sentence without a final period`);
+    if (id in DATA_QUALITY.excludedContestIds) fail(`contestHostOverrides ${id}: the contest is excluded`);
+  }
   // A moved fixture names an official fixture (`division:date:away@home`), a real date inside its section's
   // season window and other than the official one, one of its two teams as host, and its source.
   for (const [id, m] of Object.entries(DATA_QUALITY.fixtureMoves)) {

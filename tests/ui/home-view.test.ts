@@ -109,7 +109,7 @@ describe('home panels (components/home/home-view.ts)', () => {
     expect(mcal.postseason.kind, `${HV}: MCAL postseason`).toBe('league-tournament');
     if (mcal.postseason.kind === 'league-tournament') {
       expect(mcal.postseason.line, `${HV}: MCAL postseason line`).toBe(
-        'MCAL tournament · Quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed) · Semifinals Wed Oct 28 · Final Fri Oct 30 at Tamalpais',
+        'MCAL tournament · Quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed) · Semifinals Wed Oct 28 · Final Fri Oct 30 at Redwood',
       );
       expect(mcal.postseason.link.href).toBe('/playoffs/mcal');
     }
@@ -298,7 +298,7 @@ describe('home panels (components/home/home-view.ts)', () => {
     });
     expect(lead('mcal', 'tournament', '2026-10-24'), `${HV}: MCAL tournament`).toEqual({
       lead: 'MCAL league play is over.',
-      body: 'Quarterfinals are Mon Oct 26 (a play-in Fri Oct 23 only if needed); the final is Fri Oct 30 at Tamalpais.',
+      body: 'Quarterfinals are Mon Oct 26 (a play-in Fri Oct 23 only if needed); the final is Fri Oct 30 at Redwood.',
       link: { href: '/playoffs/mcal', label: 'Bracket' },
     });
     const bval = lead('bval', 'play-in', '2026-10-31');

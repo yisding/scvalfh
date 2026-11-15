@@ -63,6 +63,17 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
     },
   },
+  contestHostOverrides: {
+    // MCAL tournament final, Fri Oct 30: MaxPreps lists it as Redwood @ Tamalpais, the site on the 2026 play-off sheet
+    // and on both schools' HomeCampus calendars (read Oct 29). The MCAL's own playoffs page, read Nov 15, 2026, has
+    // "Championship Game at Redwood: Redwood W vs Tamalpais L" and "Moved to Redwood High School"; the Redwood Bark
+    // (Nov 1, 2026) has the win "on their home field".
+    '8f8d3fe5-f112-4d22-a5a6-44e027ada681': {
+      home: 'redwood',
+      source: 'Moved to Redwood High School, per the MCAL’s playoffs page; MaxPreps lists Tamalpais as the host',
+      url: 'https://www.mcalsports.org/FieldHockey.htm',
+    },
+  },
   resultCorrections: {
     // The data audit of 2026-11-13. MaxPreps' game PAGE prints a box with an SO column that its schedule feed, which
     // the pipeline reads, does not carry; both pages were read that day.
@@ -471,6 +482,7 @@ const SOCCER_DATA_QUALITY: DataQualityConfig = {
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
+  contestHostOverrides: {},
   resultCorrections: {},
   addedGames: [],
   fixtureMoves: {},
@@ -496,6 +508,7 @@ const BASKETBALL_DATA_QUALITY: DataQualityConfig = {
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
+  contestHostOverrides: {},
   resultCorrections: {},
   addedGames: [
     // A non-league game on neither school's MaxPreps schedule (read 2026-11-14), given by the owner on 2026-11-14 with
@@ -532,6 +545,7 @@ const VOLLEYBALL_DATA_QUALITY: DataQualityConfig = {
   sbliveIgnoredTeamIds: {},
   ignoredMaxprepsLeagueIds: {},
   contestDateOverrides: {},
+  contestHostOverrides: {},
   resultCorrections: {},
   addedGames: [],
   fixtureMoves: {},

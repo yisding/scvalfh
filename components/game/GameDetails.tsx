@@ -115,13 +115,18 @@ export function GameDetails({ model, className }: GameDetailsProps) {
     <section className={className} aria-labelledby="game-details-kicker">
       <SectionHeader kicker="Details" as="h2" id="game-details-kicker" />
       <dl className="m-0 flex flex-col gap-3 text-body text-ink">
-        {address || game.provenance.hostConflict ? (
+        {address || game.provenance.hostConflict || game.provenance.hostCorrection ? (
           <div>
             <dt className="sr-only">Address</dt>
             <dd className="m-0">
               {address ? <span className="block">{addressLine(address)}</span> : null}
               {game.provenance.hostConflict ? (
                 <span className="block text-cell text-ink-2">Hosts disagree — {game.provenance.hostConflict}</span>
+              ) : null}
+              {/* DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts): the host shown is a better source's,
+                  not MaxPreps'; say so, on whose word (the override's source sentence). */}
+              {game.provenance.hostCorrection ? (
+                <span className="block text-cell text-ink-2">{game.provenance.hostCorrection.source}.</span>
               ) : null}
             </dd>
           </div>

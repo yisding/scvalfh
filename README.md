@@ -1969,7 +1969,7 @@ against the teams above the tie; (3) the spring draw numbers, lowest first. The 
 place (6th) is decided on the field instead: a play-in on Fri Oct 23 unless one team swept the
 head-to-head 2-0, so the site leaves it shared until then. MCAL has no regular-season overtime. The
 top six make the MCAL tournament (seeds 1-2 get a bye to the Oct 28 semifinals, quarterfinals Mon
-Oct 26, final Fri Oct 30, 4 PM, at Tamalpais High School, 700 Miller Ave, Mill Valley; adults $10,
+Oct 26, final Fri Oct 30, 4 PM, moved from Tamalpais to Redwood High School, 395 Doherty Dr, Larkspur; adults $10,
 students $5, pre-sale on GoFan, from the league's play-off sheet). Once it is under way the site reads the
 results: who is in the final, who lost where (a team "lost", never "was eliminated"), and the champion, with the
 regular-season points leader named MCAL Champion and a different tournament winner also receiving a pennant; a
