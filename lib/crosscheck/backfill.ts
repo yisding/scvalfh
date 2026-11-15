@@ -32,7 +32,7 @@
 
 import { byDateKey, datesOf, dayDiff, monthDay, shootoutPhrases } from '../format';
 import { isSbliveContestId, sbliveContestId } from '../game-id';
-import { LEDGER_VIEW } from '../fixtures/ledger';
+import { LEDGER_VIEW, type FixtureMoves } from '../fixtures/ledger';
 import type { SectionConfig } from '../league-config/shape';
 import { LEAGUES, getLeague, getSection, leagueOfDivision } from '../leagues';
 import {
@@ -95,6 +95,8 @@ export interface BackfillInput {
   consulted?: (pairKey: string, date: string) => boolean;
   /** The run's fetchedAt, stamped on a rule-2 game's provenance. Defaults to the input games' stamp. */
   fetchedAt?: string;
+  /** Where the ledger moves a league fixture (playedFixture). Defaults to LEDGER_VIEW.moves. */
+  moves?: FixtureMoves;
 }
 
 export interface EligibleItem {
@@ -146,8 +148,11 @@ function fixturePair(f: OfficialFixture): string | null {
  * When and where a fixture was played: the official date and sides, unless the ledger has a fixture linked to it
  * (lib/fixtures/ledger.ts LEDGER_VIEW.moves: a league game played on another date, maybe at the other school). Rule 2 searches MaxPreps and si.com on this date.
  */
-export function playedFixture(f: OfficialFixture): { dateKey: string; homeSlug: TeamSlug | null; awaySlug: TeamSlug | null; source: string | null } {
-  const move = LEDGER_VIEW.moves[f.id];
+export function playedFixture(
+  f: OfficialFixture,
+  moves: FixtureMoves = LEDGER_VIEW.moves,
+): { dateKey: string; homeSlug: TeamSlug | null; awaySlug: TeamSlug | null; source: string | null } {
+  const move = moves[f.id];
   if (!move) return { dateKey: f.dateKey, homeSlug: f.homeSlug, awaySlug: f.awaySlug, source: null };
   const swapped = move.home === f.awaySlug;
   return {
@@ -418,6 +423,7 @@ export function eligibleItems(
   games: readonly Game[],
   unmatched: readonly OfficialFixture[],
   today: string,
+  moves: FixtureMoves = LEDGER_VIEW.moves,
 ): EligibleItem[] {
   const out: EligibleItem[] = [];
   for (const g of games) {
@@ -438,7 +444,7 @@ export function eligibleItems(
   }
   for (const f of unmatched) {
     const pairKey = fixturePair(f);
-    const date = playedFixture(f).dateKey;
+    const date = playedFixture(f, moves).dateKey;
     if (!pairKey || date >= today) continue;
     if (hasPairContestNear(games, pairKey, date, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
     out.push({ kind: 'absent-fixture', pairKey, date, fixture: f, contestId: null });
@@ -456,7 +462,7 @@ export function planBackfill(
   scoreboardCovers: (pairKey: string, date: string) => boolean,
   cap: number = BACKFILL_TEAM_PAGE_CAP,
 ): BackfillPlan {
-  const eligible = eligibleItems(input.games, input.unmatched, input.today);
+  const eligible = eligibleItems(input.games, input.unmatched, input.today, input.moves);
   const uncovered = eligible.filter((i) => !scoreboardCovers(i.pairKey, i.date));
   const remaining = new Map<string, EligibleItem[]>();
   for (const i of uncovered) {
@@ -526,10 +532,11 @@ function absentFixtureGame(
   row: SbliveGame,
   score: { home: number; away: number },
   fetchedAt: string,
+  moves: FixtureMoves,
 ): Game {
   const dates = datesOf(row);
   const short = leagueOfDivision(f.division).shortName;
-  const moved = playedFixture(f).source;
+  const moved = playedFixture(f, moves).source;
   const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.${moved ? ` ${moved}` : ''}`;
   const backfill: BackfillProvenance = { rule: 'absent-fixture', sbliveGameId: row.sbliveGameId, maxpreps: null, note };
   return {
@@ -634,17 +641,105 @@ function notCountedReason(c: Game, f: OfficialFixture): string {
   return `it did not match the official ${monthDay(f.dateKey)} fixture`;
 }
 
-// ---------------------------------------------------------------- applyBackfill
+// ---------------------------------------------------------------- decideBackfill and applyBackfill
 
 const CONFLICT_NOTE = 'si.com has two different scores for this game.';
 const NAME_ONLY_NOTE = 'Resolved by name only.';
 const OUTSIDE_NOTE = 'Outside ±1 day of the official date.';
 
+/** What a rule-10 carry re-applies to a MaxPreps contest: the previous snapshot's published si.com value. */
+export interface BackfillPublished extends Pick<Game, 'home' | 'away' | 'decider' | 'otPeriods' | 'isOt' | 'isForfeit' | 'forfeitBy'> {
+  sbliveUrl: Game['urls']['sblive'];
+  backfill: BackfillProvenance;
+  scoreConflict: Game['provenance']['scoreConflict'];
+}
+
+/**
+ * D2's decision for one existing game: si.com's score written by rule 3 or 4 (`override`), or an earlier
+ * fill re-applied by rule 10 (`carried`). A game has at most one, because a carry never touches a game that
+ * already has a fill.
+ */
+export type BackfillDecision =
+  | {
+      kind: 'override';
+      rule: Exclude<BackfillProvenance['rule'], 'absent-fixture'>;
+      row: SbliveGame;
+      score: { home: number; away: number };
+      note: string;
+    }
+  | { kind: 'carried'; published: BackfillPublished };
+
+/** A rule-2 game appended after the existing games: a fresh si.com fill, or the previous snapshot's game carried. */
+export interface BackfillCreate {
+  kind: 'create';
+  game: Game;
+  /** The official fixture the game publishes, removed from `unmatched`. */
+  fixture: OfficialFixture;
+  carried: boolean;
+}
+
+export interface BackfillDecisions extends Omit<BackfillResult, 'games'> {
+  /**
+   * The decision for each existing game that D2 changes, by contestId. Contest ids are unique in the input
+   * (normalize dedupes on contestId), so one key names one game.
+   */
+  byContestId: ReadonlyMap<ContestId, BackfillDecision>;
+  /** The rule-2 games, in the order they are appended: this run's fills first, then the carried ones. */
+  created: BackfillCreate[];
+  /** The fixtures the rule-2 games consumed, in `created` order. */
+  consumed: OfficialFixture[];
+}
+
+/** A per-game decision applied: a new game for a decision, the same object for none. */
+export function applyBackfillDecision(g: Game, d: BackfillDecision | undefined): Game {
+  if (!d) return g;
+  if (d.kind === 'override') return overrideGame(g, d.row, d.score, d.rule, d.note);
+  const p = d.published;
+  const { scoreConflict: _dropped, ...provenance } = g.provenance;
+  void _dropped;
+  return {
+    ...g,
+    home: { ...g.home, score: p.home.score, result: p.home.result },
+    away: { ...g.away, score: p.away.score, result: p.away.result },
+    status: 'final' as const,
+    decider: p.decider,
+    otPeriods: p.otPeriods,
+    isOt: p.isOt,
+    isForfeit: p.isForfeit,
+    forfeitBy: p.forfeitBy,
+    urls: { ...g.urls, sblive: p.sbliveUrl },
+    provenance: {
+      ...provenance,
+      scores: 'sblive' as const,
+      backfill: p.backfill,
+      ...(p.scoreConflict ? { scoreConflict: p.scoreConflict } : {}),
+    },
+  };
+}
+
 /** D2 rules 2-5 and 10 over one run's games, unmatched fixtures and si.com rows. Pure. */
 export function applyBackfill(input: BackfillInput): BackfillResult {
+  const d = decideBackfill(input);
+  return {
+    games: [...input.games.map((g) => applyBackfillDecision(g, d.byContestId.get(g.contestId))), ...d.created.map((c) => c.game)],
+    unmatched: d.unmatched,
+    rows: d.rows,
+    skipped: d.skipped,
+    warnings: d.warnings,
+    carried: d.carried,
+  };
+}
+
+/**
+ * D2 rules 2-5 and 10 as decisions: what applyBackfill does to each existing game, the games it appends,
+ * and its report. The cross-game state (the `used` set of si.com rows, rule 2's view of the input games)
+ * lives here, so applyBackfillDecision needs only the game. Pure: the input is not mutated.
+ */
+export function decideBackfill(input: BackfillInput): BackfillDecisions {
   const warnings: string[] = [];
   const skipped: SbliveOnlyRow[] = [];
   const used = new Set<string>();
+  const moves = input.moves ?? LEDGER_VIEW.moves;
   const fetchedAt =
     input.fetchedAt ?? input.games.find((g) => g.provenance.fetchedAt)?.provenance.fetchedAt ?? `${input.today}T00:00:00.000Z`;
 
@@ -655,48 +750,65 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   const nameOnlyNear = (pairKey: string, date: string) =>
     nameOnly.find((g) => sblivePairKey(g.sides) === pairKey && within(g.dateKey, date, SBLIVE_DATE_TOLERANCE_DAYS));
 
+  const decisions = new Map<ContestId, BackfillDecision>();
+  const created: BackfillCreate[] = [];
+  // The view each rule reads: the input games with the decisions so far applied, plus the games appended so far.
   let games: Game[] = input.games.map((g) => g);
   let unmatched: OfficialFixture[] = [...input.unmatched];
   const touched = new Set<string>();
   const carriedIds: ContestId[] = [];
 
-  if (input.sbliveFailed) {
-    const carried = carryForward(games, unmatched, input.previous, input.today, () => true);
-    games = carried.games;
+  /** Rule 10's decisions joined to the others; a carried rule-2 game is appended after every fresh one. */
+  const takeCarry = (carried: CarryDecisions) => {
+    for (const [id, d] of carried.decisions) decisions.set(id, d);
+    games = [...games.map((g) => applyBackfillDecision(g, carried.decisions.get(g.contestId))), ...carried.created.map((c) => c.game)];
+    created.push(...carried.created);
     unmatched = carried.unmatched;
-    for (const id of carried.touched) touched.add(id);
     carriedIds.push(...carried.touched);
+  };
+
+  if (input.sbliveFailed) {
+    const carried = decideCarry(games, unmatched, input.previous, input.today, () => true, moves);
+    takeCarry(carried);
+    for (const id of carried.touched) touched.add(id);
     if (carried.touched.length) {
       warnings.push(
         `si.com was not read this run; re-applied ${carried.touched.length} earlier si.com ${carried.touched.length === 1 ? 'score' : 'scores'} still eligible`,
       );
     }
   } else {
+    const override = (
+      row: SbliveGame,
+      score: { home: number; away: number },
+      rule: Exclude<BackfillProvenance['rule'], 'absent-fixture'>,
+      note: string,
+    ): BackfillDecision => ({ kind: 'override', rule, row, score, note });
+
     // ---- rules 3 and 4: MaxPreps contests
-    games = games.map((g) => {
-      if (isSbliveContestId(g.contestId)) return g;
+    const decideContest = (g: Game): BackfillDecision | null => {
+      if (isSbliveContestId(g.contestId)) return null;
       const pairKey = gamePair(g);
-      if (!pairKey || !g.home.slug || !g.away.slug) return g;
+      if (!pairKey || !g.home.slug || !g.away.slug) return null;
       const label = labelOf(g);
 
       // rule 3: score pending
       if (g.status === 'score-pending') {
-        if (g.dateKey >= input.today) return g;
+        if (g.dateKey >= input.today) return null;
         const pick = pickCandidate(finals, pairKey, g.dateKey, used);
         if (pick.kind === 'none') {
           const loose = nameOnlyNear(pairKey, g.dateKey);
           const s = loose ? scoreFor(loose, g.home.slug, g.away.slug) : null;
           if (loose && s) skipped.push(skippedRow(g.contestId, g.dateKey, label, s, loose.url, g.urls.maxpreps, g.status, NAME_ONLY_NOTE));
-          return g;
+          return null;
         }
         if (pick.kind === 'conflict') {
           warnings.push(`si.com has ${pick.rows.length} different scores for ${label} near ${g.dateKey}; not filled`);
           const s = scoreFor(pick.rows[0], g.home.slug, g.away.slug);
           if (s) skipped.push(skippedRow(g.contestId, g.dateKey, label, s, pick.rows[0].url, g.urls.maxpreps, g.status, CONFLICT_NOTE));
-          return g;
+          return null;
         }
         const s = scoreFor(pick.row, g.home.slug, g.away.slug);
-        if (!s || !pick.row.url) return g;
+        if (!s || !pick.row.url) return null;
         const shootout = shootoutSectionOf(g);
         if (shootout?.shootout && s.home === s.away) {
           // '…a varsity EAL game is decided on 1 v 1s and si.com does not say who won them…' (unchanged for the
@@ -710,7 +822,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
           skipped.push(
             skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `si.com has a level score, but a varsity ${shootoutGroupName(shootout)} game${scope} is ${decidedOn} and si.com does not say who won ${pronoun}, so it is not used.`),
           );
-          return g;
+          return null;
         }
         const otherFinal = input.games.find(
           (o) => o !== g && o.contestId !== g.contestId && o.status === 'final' && bothScored(o) && gamePair(o) === pairKey && within(o.dateKey, g.dateKey, SBLIVE_DATE_TOLERANCE_DAYS),
@@ -719,15 +831,15 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
           skipped.push(
             skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `MaxPreps already has a final score for this pair within a day (${otherFinal.contestId}).`),
           );
-          return g;
+          return null;
         }
         used.add(pick.row.sbliveGameId);
         touched.add(g.contestId);
-        return overrideGame(g, pick.row, s, 'score-pending', 'MaxPreps lists this game without a score, so the score is si.com’s.');
+        return override(pick.row, s, 'score-pending', 'MaxPreps lists this game without a score, so the score is si.com’s.');
       }
 
       // rule 4: clearly wrong MaxPreps final
-      if (g.status !== 'final' || !bothScored(g)) return g;
+      if (g.status !== 'final' || !bothScored(g)) return null;
       const mp = { home: g.home.score, away: g.away.score };
       const differs = (s: { home: number; away: number }) => s.home !== mp.home || s.away !== mp.away;
 
@@ -739,7 +851,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
           if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s) && !readsAsSettledLevelScore(g, s)) {
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
-            return overrideGame(g, pick.row, s, 'contradictory-result', 'MaxPreps’ score contradicts its own result flags, so si.com’s score is published.');
+            return override(pick.row, s, 'contradictory-result', 'MaxPreps’ score contradicts its own result flags, so si.com’s score is published.');
           }
         }
       }
@@ -752,8 +864,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
           if (s && pick.row.url && differs(s) && !isUnusableLevelScore(g, s)) {
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
-            return overrideGame(
-              g,
+            return override(
               pick.row,
               s,
               'off-schedule-date',
@@ -771,26 +882,27 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
             const league = getLeague(sameLeagueOf(g)!);
             used.add(pick.row.sbliveGameId);
             touched.add(g.contestId);
-            return overrideGame(
-              g,
-              pick.row,
-              s,
-              'phantom-tie',
-              phantomTieNote(league.shortName, league.rules.orderScope === 'site'),
-            );
+            return override(pick.row, s, 'phantom-tie', phantomTieNote(league.shortName, league.rules.orderScope === 'site'));
           }
         }
       }
-      return g;
+      return null;
+    };
+    // The games are decided in input order, because the `used` set gives a si.com row to the first game that takes it.
+    games = games.map((g) => {
+      const d = decideContest(g);
+      if (!d) return g;
+      decisions.set(g.contestId, d);
+      return applyBackfillDecision(g, d);
     });
 
     // ---- rule 2: absent fixtures
     const rule2Finals = finals.filter((row) => !isMaxprepsGame(input.games, row));
     const stillUnmatched: OfficialFixture[] = [];
-    const added: Game[] = [];
+    const added: BackfillCreate[] = [];
     for (const f of unmatched) {
       const pairKey = fixturePair(f);
-      const played = playedFixture(f);
+      const played = playedFixture(f, moves);
       const date = played.dateKey;
       if (!pairKey || date >= input.today || !played.homeSlug || !played.awaySlug) {
         stillUnmatched.push(f);
@@ -849,25 +961,25 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         continue;
       }
       used.add(pick.row.sbliveGameId);
-      added.push(absentFixtureGame(f, home, away, pick.row, s, fetchedAt));
+      added.push({ kind: 'create', game: absentFixtureGame(f, home, away, pick.row, s, fetchedAt, moves), fixture: f, carried: false });
     }
     unmatched = stillUnmatched;
-    games = [...games, ...added];
+    games = [...games, ...added.map((c) => c.game)];
+    created.push(...added);
 
     // ---- rule 10: an earlier fill whose item this run did not consult (its page failed, was past the
     // team-page cap, or was not read) is carried while still eligible, never silently dropped.
     const consulted = input.consulted ?? (() => true);
-    const freshlyFilled = new Set([...touched, ...added.map((g) => g.contestId)]);
-    const carried = carryForward(
+    const freshlyFilled = new Set([...touched, ...added.map((c) => c.game.contestId)]);
+    const carried = decideCarry(
       games,
       unmatched,
       input.previous,
       input.today,
       (pairKey, date, contestId) => !freshlyFilled.has(contestId) && !consulted(pairKey, date),
+      moves,
     );
-    games = carried.games;
-    unmatched = carried.unmatched;
-    carriedIds.push(...carried.touched);
+    takeCarry(carried);
     if (carried.touched.length) {
       warnings.push(
         `re-applied ${carried.touched.length} earlier si.com ${carried.touched.length === 1 ? 'score' : 'scores'} still eligible that si.com was not read for this run`,
@@ -885,7 +997,9 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   const skippedOut = dedupeSkipped(skipped.filter((r) => !published.has(r.contestId)));
 
   return {
-    games,
+    byContestId: decisions,
+    created,
+    consumed: created.map((c) => c.fixture),
     unmatched,
     rows,
     skipped: skippedOut,
@@ -902,76 +1016,82 @@ function dedupeSkipped(rows: readonly SbliveOnlyRow[]): SbliveOnlyRow[] {
 
 // ---------------------------------------------------------------- carry-forward (every si.com request failed)
 
+interface CarryDecisions {
+  /** Rules 3 and 4 carried: a `carried` decision per MaxPreps contest. */
+  decisions: Map<ContestId, BackfillDecision>;
+  /** Rule 2 carried: the previous snapshot's games, in its order. */
+  created: BackfillCreate[];
+  unmatched: OfficialFixture[];
+  touched: string[];
+}
+
 /**
  * Rule 10 carry-forward: the previous snapshot's si.com fills that are still eligible and that `carry`
  * accepts (by the item's pair, date and contest id) are re-applied: rules 3/4 onto the same MaxPreps
  * contest, rule 2 as the same `sblive:<id>` game.
  */
-function carryForward(
+function decideCarry(
   games: readonly Game[],
   unmatched: readonly OfficialFixture[],
   previous: Snapshot | null,
   today: string,
   carry: (pairKey: string, date: string, contestId: string) => boolean,
-): { games: Game[]; unmatched: OfficialFixture[]; touched: string[] } {
-  if (!previous) return { games: [...games], unmatched: [...unmatched], touched: [] };
+  moves: FixtureMoves,
+): CarryDecisions {
+  const decisions = new Map<ContestId, BackfillDecision>();
+  if (!previous) return { decisions, created: [], unmatched: [...unmatched], touched: [] };
   const touched: string[] = [];
   const prevById = new Map(previous.games.filter((g) => g.provenance.backfill).map((g) => [g.contestId, g]));
 
   // Rules 3 and 4: the same contest, still in the state the earlier override answered.
-  const out = games.map((g) => {
+  for (const g of games) {
     const prev = prevById.get(g.contestId);
     const b = prev?.provenance.backfill;
-    if (!prev || !b || isSbliveContestId(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
-    if (g.provenance.backfill) return g;
+    if (!prev || !b || isSbliveContestId(g.contestId) || prev.home.score === null || prev.away.score === null) continue;
+    if (g.provenance.backfill) continue;
     const pairKey = gamePair(g);
     const itemDate = b.rule === 'off-schedule-date' ? (offScheduleDate(g) ?? g.dateKey) : g.dateKey;
-    if (!pairKey || !carry(pairKey, itemDate, g.contestId)) return g;
+    if (!pairKey || !carry(pairKey, itemDate, g.contestId)) continue;
     const stillEligible =
       b.rule === 'score-pending'
         ? g.status === 'score-pending' && g.dateKey < today
         : g.status === 'final' && b.maxpreps !== null && g.home.score === b.maxpreps.home && g.away.score === b.maxpreps.away;
-    if (!stillEligible) return g;
+    if (!stillEligible) continue;
     touched.push(g.contestId);
-    const { scoreConflict: _dropped, ...provenance } = g.provenance;
-    void _dropped;
-    return {
-      ...g,
-      home: { ...g.home, score: prev.home.score, result: prev.home.result },
-      away: { ...g.away, score: prev.away.score, result: prev.away.result },
-      status: 'final' as const,
-      decider: prev.decider,
-      otPeriods: prev.otPeriods,
-      isOt: prev.isOt,
-      isForfeit: prev.isForfeit,
-      forfeitBy: prev.forfeitBy,
-      urls: { ...g.urls, sblive: prev.urls.sblive },
-      provenance: {
-        ...provenance,
-        scores: 'sblive' as const,
+    decisions.set(g.contestId, {
+      kind: 'carried',
+      published: {
+        home: prev.home,
+        away: prev.away,
+        decider: prev.decider,
+        otPeriods: prev.otPeriods,
+        isOt: prev.isOt,
+        isForfeit: prev.isForfeit,
+        forfeitBy: prev.forfeitBy,
+        sbliveUrl: prev.urls.sblive,
         backfill: b,
-        ...(prev.provenance.scoreConflict ? { scoreConflict: prev.provenance.scoreConflict } : {}),
+        scoreConflict: prev.provenance.scoreConflict,
       },
-    };
-  });
+    });
+  }
 
   // Rule 2: the fixture is still unmatched, past-dated and absent from MaxPreps.
   const byFixtureId = new Map(unmatched.map((f) => [f.id, f]));
   const have = new Set(games.map((g) => g.contestId));
-  const added: Game[] = [];
+  const created: BackfillCreate[] = [];
   const filled = new Set<string>();
   for (const prev of previous.games) {
     if (!isSbliveContestId(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
     if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;
-    const date = f ? playedFixture(f).dateKey : null;
+    const date = f ? playedFixture(f, moves).dateKey : null;
     if (!f || !pairKey || !date || date >= today || filled.has(f.id)) continue;
     if (!carry(pairKey, date, prev.contestId)) continue;
     if (hasPairContestNear(games, pairKey, date, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
     filled.add(f.id);
     touched.push(prev.contestId);
-    added.push(prev);
+    created.push({ kind: 'create', game: prev, fixture: f, carried: true });
   }
-  return { games: [...out, ...added], unmatched: unmatched.filter((f) => !filled.has(f.id)), touched };
+  return { decisions, created, unmatched: unmatched.filter((f) => !filled.has(f.id)), touched };
 }
