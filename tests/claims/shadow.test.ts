@@ -5,6 +5,8 @@
  * file (merged games with si.com fills, box scores, school-calendar venues and sheet scores), run with
  * SCVAL_CLAIMS_SHADOW=1. At each stage moved onto claims, what the claims publish equals what the stage's legacy rule
  * publishes over the same input (tests/claims/support/shadow.ts). Each phase adds its stages to `STAGES_MIGRATED`.
+ * No corpus reads the San Diego bracket sheet, so the SoCal corpus is also run on a playoff day with the sheet's tabs
+ * of 2026-11-06 (tests/fixtures/sds/sheet-2026/), whole, failed and partly unreadable.
  */
 
 import { readFileSync } from 'node:fs';
@@ -24,7 +26,7 @@ import { snapshotOf, writeTempVariant, type RunCorpusOptions } from '../pipeline
 import { expectShadowAgrees, shadowStage } from './support/shadow';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
-const STAGES_MIGRATED: readonly Stage[] = ['maxpreps', 'vnn', 'results'];
+const STAGES_MIGRATED: readonly Stage[] = ['maxpreps', 'official', 'vnn', 'sdsSheet', 'results'];
 const CORPORA: readonly CorpusName[] = ['all-2026-10-02', 'eal-2026-10-04', 'socal-2026-10-06'];
 const VARIANTS = ['bval-meta-wrong-season', 'bval-revised', 'finals-regression', 'leland-feed-503', 'mcal-postseason', 'pcal-standings-empty'];
 
@@ -77,6 +79,15 @@ describe('all-2026-10-02 variants', () => {
     await shadowRun('leland-feed-503 from file', { variants: ['leland-feed-503'], ...asWritten(first) });
   });
 
+  it('without the official schedules: the live divisions are carried from the official claims', async () => {
+    const extraArgs = ['--no-official'];
+    await shadowRun('--no-official seeded', { previous: ownOutput('all-2026-10-02'), extraArgs });
+    const first = await shadowRun('fresh', {});
+    const fromFile = await snapshotOf({ steps: STEPS, ...asWritten(first), extraArgs });
+    expectShadowAgrees(fromFile.run.ctx, 'official', '--no-official from file');
+    expect(fromFile.run.ctx.shadow?.filter((r) => r.stage === 'official' && r.kind === 'carry')).toHaveLength(2);
+  });
+
   it('a run of one league: the other leagues’ feeds are not fetched, and their games are carried from the claims', async () => {
     const extraArgs = ['--leagues', 'scval'];
     const seeded = await shadowRun('--leagues scval seeded', { previous: ownOutput('all-2026-10-02'), extraArgs });
@@ -99,6 +110,7 @@ describe('from the committed snapshot and claims file', () => {
     ['a run of one league', { extraArgs: ['--leagues', 'mcal'] }],
     ['a run of two leagues without si.com or school calendars', { extraArgs: ['--leagues', 'pcal,bval', '--no-sblive', '--no-vnn'] }],
     ['the SoCal corpus', { corpus: 'socal-2026-10-06' as CorpusName }],
+    ['a run without the official schedules', { extraArgs: ['--leagues', 'scval,bval', '--no-official'] }],
   ])('%s', async (label, opts: RunCorpusOptions) => {
     const extraArgs = [...(opts.extraArgs ?? []), '--accept-regression', ALL_LEAGUES];
     const read = committed();
@@ -129,5 +141,59 @@ describe('the carry cases of tests/pipeline/carry.test.ts', () => {
       'maxpreps/schedule/santa-catalina': { rel: 'santa-catalina.json', body: JSON.stringify({ ...cat, data: [...cat.data, row] }) },
     });
     await shadowRun('fill replaced', { variants: [variant], previous: ownOutput('all-2026-10-02') });
+  });
+});
+
+describe('the San Diego bracket sheet, read on a playoff day', () => {
+  const PLAYOFF_DAY = '2026-11-07T15:00:00.000Z';
+  const tab = (division: string, edit: (csv: string) => string = (csv) => csv) => ({
+    rel: `${division}.csv`,
+    body: edit(readFileSync(path.join(REPO, 'tests', 'fixtures', 'sds', 'sheet-2026', `${division}.csv`), 'utf8')),
+  });
+  const read = () => writeTempVariant({
+    'sds/bracket-sheet/open': tab('open'),
+    'sds/bracket-sheet/division-1': tab('division-1'),
+    'sds/bracket-sheet/division-2': tab('division-2'),
+  });
+  // Division I fails; Division II's Mission Bay score cannot be read (a warning), so that pair keeps the previous result.
+  const partly = () => writeTempVariant({
+    'sds/bracket-sheet/open': tab('open'),
+    'sds/bracket-sheet/division-1': 503,
+    'sds/bracket-sheet/division-2': tab('division-2', (csv) => csv.replace(/\b(\d)-(\d)\b/, '$1-x')),
+  });
+  const socal = { corpus: 'socal-2026-10-06' as CorpusName, fetchedAt: PLAYOFF_DAY };
+  const sheetOf = (run: { run: { ctx: Parameters<typeof shadowStage>[0] } }) => shadowStage(run.run.ctx, 'sdsSheet');
+
+  it('every tab read: the sheet’s games are created on fixtures of their own, and a later run carries them from the claims', async () => {
+    const first = await snapshotOf({ steps: STEPS, ...socal, variants: [read()] });
+    for (const stage of STAGES_MIGRATED) expectShadowAgrees(first.run.ctx, stage, 'sheet read');
+    const sheet = first.snapshot.games.filter((g) => g.contestId.startsWith('cifsds:'));
+    expect(sheet.length).toBeGreaterThan(0);
+    const claims = first.run.result!.claims;
+    for (const g of sheet) {
+      const held = claims.fixtures.find((f) => f.claims.sdsSheet?.published.contestId === g.contestId);
+      expect(held?.claims.maxpreps, g.contestId).toBeUndefined();
+      expect(held?.claims.sdsSheet?.host, g.contestId).toBe(g.home.slug);
+    }
+
+    await shadowRun('sheet partly read, from file', { ...socal, variants: [partly()], ...asWritten({ snapshot: first.snapshot, claims }) });
+    await shadowRun('sheet partly read, seeded', { ...socal, variants: [partly()], previous: asWritten({ snapshot: first.snapshot, claims }).previous });
+    const nothing = writeTempVariant({ 'sds/bracket-sheet/open': 503, 'sds/bracket-sheet/division-1': 503, 'sds/bracket-sheet/division-2': 503 });
+    const carried = await snapshotOf({ steps: STEPS, ...socal, variants: [nothing], ...asWritten({ snapshot: first.snapshot, claims }) });
+    for (const stage of STAGES_MIGRATED) expectShadowAgrees(carried.run.ctx, stage, 'sheet carried');
+    expect(sheetOf(carried).input.tabs.map((t) => t.read)).toEqual(['carried', 'carried', 'carried']);
+    // Every sheet game comes back, each on its fixture and with the host the first run published.
+    const ids = (snap: Snapshot) => snap.games.filter((g) => g.contestId.startsWith('cifsds:')).map((g) => `${g.contestId} ${g.home.slug}`);
+    expect(ids(carried.snapshot)).toEqual(ids(first.snapshot));
+    const fixtureIds = (c: ClaimsFile) => c.fixtures.filter((f) => f.claims.sdsSheet?.published.contestId.startsWith('cifsds:')).map((f) => f.id);
+    expect(fixtureIds(carried.run.result!.claims)).toEqual(fixtureIds(claims));
+  });
+
+  it('from the committed snapshot and claims file', async () => {
+    const extraArgs = ['--accept-regression', 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents'];
+    const previous = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
+    const claims = readClaimsFile(path.join(REPO, 'data', 'claims.json'));
+    await shadowRun('committed, sheet partly read', { ...socal, variants: [partly()], extraArgs, previous, claims });
+    await shadowRun('committed seeded, sheet partly read', { ...socal, variants: [partly()], extraArgs, previous });
   });
 });

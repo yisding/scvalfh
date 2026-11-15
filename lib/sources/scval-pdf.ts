@@ -336,7 +336,7 @@ export interface CarryOfficialResult {
  */
 export function carryOfficialForward(
   missing: readonly DivisionId[],
-  previous: { officialFixtures?: readonly OfficialFixture[]; games: readonly Game[] },
+  previous: { officialFixtures?: readonly OfficialFixture[]; games: readonly Pick<Game, 'contestId' | 'official'>[] },
   games: readonly Game[],
 ): CarryOfficialResult {
   const wanted = new Set(missing);

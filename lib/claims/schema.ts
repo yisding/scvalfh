@@ -4,9 +4,9 @@
  * validates with it and restores both. A claim's game is checked against the snapshot's own GameSchema, so a
  * claim can hold nothing a published game could not.
  *
- * The rows of the sources no phase reads yet (si.com, the bracket sheet) are checked for their keys only; the phase
- * that starts reading each tightens its schema. What the pipeline reads of the cifsshome.org, box-score and school
- * calendar claims (a conflict row, a box score's sides, what a calendar put on a game) is checked whole.
+ * The rows of the source no phase reads yet (si.com) are checked for their keys only; the phase that starts reading
+ * it tightens its schema. What the pipeline reads of the other claims (an official row or stamp, a bracket sheet row,
+ * a cifsshome.org conflict row, a box score's sides, what a calendar put on a game) is checked whole.
  */
 
 import { z } from 'zod';
@@ -99,8 +99,36 @@ const CifssClaimSchema = z
   })
   .strict();
 
+const dateKey = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const clock = z.string().regex(/^\d{2}:\d{2}$/).nullable();
+const SdsSheetResultSchema = z
+  .object({
+    division: z.string().min(1),
+    dateKey,
+    time: clock,
+    venue: z.string().nullable(),
+    winner: z.string().min(1),
+    loser: z.string().min(1),
+    winnerGoals: z.number().int().min(0),
+    loserGoals: z.number().int().min(0),
+    otPeriods: z.number().int().min(0),
+    shootout: z.boolean(),
+    shootoutTally: z.tuple([z.number().int().min(0), z.number().int().min(0)]).optional(),
+    scoreText: z.string(),
+  })
+  .strict();
+const SdsSheetFixtureSchema = z
+  .object({ division: z.string().min(1), dateKey, time: clock, venue: z.string().nullable(), teams: z.tuple([z.string().min(1), z.string().min(1)]) })
+  .strict();
 const SdsSheetClaimSchema = z
-  .object({ ref, seenAt, result: row.optional(), fixture: row.optional(), host: z.string().min(1).optional() })
+  .object({
+    ref,
+    seenAt,
+    result: SdsSheetResultSchema.optional(),
+    fixture: SdsSheetFixtureSchema.optional(),
+    host: z.string().min(1).optional(),
+    published: z.object({ contestId: z.string().min(1), dateLocal: z.string().min(1) }).strict(),
+  })
   .strict();
 
 const VnnClaimSchema = z
@@ -203,6 +231,10 @@ export const ClaimsFileSchema = z
 
       const off = f.claims.official;
       if (off && !off.fixture && !off.stamp) issue([...at, 'claims', 'official'], `${f.id}: an official claim has a fixture or a stamp`);
+      const sheet = f.claims.sdsSheet;
+      if (sheet && (sheet.result === undefined) === (sheet.fixture === undefined)) {
+        issue([...at, 'claims', 'sdsSheet'], `${f.id}: a sheet claim holds a result or a fixture, not both`);
+      }
 
       for (const [j, s] of (f.claims.sblive ?? []).entries()) {
         if (s.fill?.rule !== 'absent-fixture') continue;

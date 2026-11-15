@@ -439,8 +439,8 @@ export interface RunState {
   tbaDropped: DroppedContest[];
   games: Game[];
   unmatched: OfficialFixture[];
-  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
-  official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
+  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`, its rows and decisions to the claims. */
+  official: Omit<OfficialStepResult, 'games' | 'unmatched' | 'fixtures' | 'readDivisions' | 'decisions'>;
   sbliveCrossCheck: SbliveCrossCheck | undefined;
   /** Step 11b's cifsshome.org report (undefined: none this run and none to carry). */
   cifssCrossCheck: CifssCrossCheck | undefined;

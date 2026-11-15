@@ -9,11 +9,17 @@ import { byDateThenId } from '../../../lib/format';
 import { EXCLUSIONS } from '../../../lib/fixtures/ledger';
 import { isSbliveContestId } from '../../../lib/game-id';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../../lib/pipeline/normalize';
-import { isCifsdsContest } from '../../../lib/postseason/sds-sheet-results';
+import { SDS_BRACKET_SHEET_URL } from '../../../lib/league-config/sections';
+import { SDS_BRACKETS_FILE } from '../../../lib/postseason/sds-brackets-file';
+import { sdsPlayoffWindow } from '../../../lib/postseason/sds-brackets-schema';
+import { applySdsSheetResults, isCifsdsContest, sheetFixturesFromGames, sheetResultsFromGames } from '../../../lib/postseason/sds-sheet-results';
+import { keepUnread } from '../../../lib/pipeline/steps/sds-sheet';
+import type { SdsSheetFixture, SdsSheetResult } from '../../../lib/sources/sds-bracket-sheet';
 import type { ShadowStage } from '../../../lib/claims/types';
 import { finalizeResults, withAddedGames } from '../../../lib/results/result';
+import { carryOfficialForward } from '../../../lib/sources/scval-pdf';
 import { applyVnnEvents, carryVnnForward } from '../../../lib/sources/vnn-ics';
-import type { ContestId, Game, Snapshot } from '../../../lib/types';
+import type { ContestId, Game, OfficialFixture, Snapshot } from '../../../lib/types';
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
 function unclassified(g: Game): Game {
@@ -59,6 +65,18 @@ export function legacyMaxpreps(
   return { games, carried: carried.map((g) => g.contestId) };
 }
 
+/**
+ * Step 07's carry of one division not read, as it was before P5: the previous snapshot's stamps by contest and its
+ * unmatched official fixtures (nothing with no previous snapshot).
+ */
+export function legacyOfficialCarry(
+  record: Extract<ShadowStage, { stage: 'official'; kind: 'carry' }>,
+  previous: Snapshot | null,
+): { fixtures: OfficialFixture[]; games: Game[]; carried: number } {
+  if (!previous) return { fixtures: [], games: [...record.games], carried: 0 };
+  return carryOfficialForward([record.division], previous, record.games);
+}
+
 /** Step 09's school calendars as they were before P3: the per-site carry read the previous snapshot's games. */
 export function legacyVnn(input: Extract<ShadowStage, { stage: 'vnn' }>['input'], previous: Snapshot | null): Game[] {
   let games = [...input.games];
@@ -71,4 +89,47 @@ export function legacyVnn(input: Extract<ShadowStage, { stage: 'vnn' }>['input']
 /** Step 11c as it was before P3: the cifss report's conflict rows and the box-score file, as given. */
 export function legacyResults(input: Extract<ShadowStage, { stage: 'results' }>['input'], fetchedAt: string): Game[] {
   return finalizeResults(withAddedGames(input.games, fetchedAt), { cifssConflicts: input.cifssConflicts, box: input.box });
+}
+
+/**
+ * Step 09's bracket sheet as it was before P4: a tab not read carried the rows read back from the previous snapshot's
+ * games, and a tab read with warnings kept them for the pairs it did not read.
+ */
+export function legacySdsSheet(
+  input: Extract<ShadowStage, { stage: 'sdsSheet' }>['input'],
+  previous: Snapshot | null,
+  run: { today: string; fetchedAt: string },
+): { results: SdsSheetResult[]; fixtures: SdsSheetFixture[]; games: Game[]; disagreements: string[] } {
+  const file = SDS_BRACKETS_FILE;
+  if (file.divisions.length === 0) return { results: [], fixtures: [], games: [...input.games], disagreements: [] };
+  const prevResults = previous ? sheetResultsFromGames(previous.games, file) : [];
+  const prevFixtures = previous ? sheetFixturesFromGames(previous.games, file) : [];
+  const results: SdsSheetResult[] = [];
+  const fixtures: SdsSheetFixture[] = [];
+  for (const tab of input.tabs) {
+    const mine = <T extends { division: string }>(rows: readonly T[]) => rows.filter((r) => r.division === tab.division);
+    if (tab.read === 'carried') {
+      results.push(...mine(prevResults));
+      fixtures.push(...mine(prevFixtures));
+      continue;
+    }
+    results.push(...tab.results);
+    fixtures.push(...tab.fixtures);
+    if (tab.read === 'read-with-warnings') {
+      const fresh = [...tab.results, ...tab.fixtures];
+      results.push(...keepUnread(mine(prevResults), fresh));
+      fixtures.push(...keepUnread(mine(prevFixtures), fresh));
+    }
+  }
+  const applied = applySdsSheetResults({
+    games: input.games,
+    results,
+    fixtures,
+    today: run.today,
+    file,
+    windowFirst: sdsPlayoffWindow().first,
+    sheetUrl: SDS_BRACKET_SHEET_URL,
+    fetchedAt: run.fetchedAt,
+  });
+  return { results, fixtures, games: applied.games, disagreements: applied.disagreements };
 }

@@ -4,11 +4,14 @@
  * error classes; no I/O.
  */
 
-import type { ClaimsFile } from '../claims/types';
+import type { EditorView } from '../claims/editor';
+import type { ClaimStore } from '../claims/store';
+import type { ClaimsFile, ShadowStage } from '../claims/types';
+import type { OfficialDecision } from '../official/match';
 import type { CifssSectionKey } from '../sources/cifss';
 import type { RawResponse } from '../sources/http';
 import type {
-  CcsCalendarEvent, CcsDivisionName, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
+  CcsCalendarEvent, CcsDivisionName, ContestId, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug, TournamentBracket,
 } from '../types';
 
@@ -125,6 +128,15 @@ export interface RunLog {
 
 /** What steps may read and record. The pipeline core implements it in lib/pipeline/ledger.ts (PipelineContext). */
 export interface RunContext extends RunLog {
+  /**
+   * The run's claim store (lib/claims/store.ts). Absent in a context built by hand (a test's), where the official
+   * step reads what the previous snapshot shows instead, as the claims seeded from it would hold.
+   */
+  readonly claims?: ClaimStore;
+  /** The editor's view of the fixture ledger (lib/claims/editor.ts). Absent: the ledger's own. */
+  readonly editor?: Pick<EditorView, 'moves'>;
+  /** The shadow harness's record (SCVAL_CLAIMS_SHADOW=1, tests only). */
+  readonly shadow?: ShadowStage[] | null;
   args: RunArgs;
   fetchedAt: string;
   /** localDateKey(fetchedAt) — never Date.now(). */
@@ -159,6 +171,15 @@ export interface OfficialStepResult {
    * run did not poll (assemble carries the previous value).
    */
   officialStandingsPdfUrl?: string | null;
+  /** Every official row the step read this run (the grids read, the bundled files that validated), kept as claims. A stand-in step reads none. */
+  fixtures?: OfficialFixture[];
+  /** The divisions whose rows were read this run. */
+  readDivisions?: Set<DivisionId>;
+  /**
+   * Every decision the step took, per contest and in order (lib/official/match.ts OfficialDecision; a carried stamp
+   * is a stamp with no notes). Absent (a stand-in step): run.ts reads them off the games the step returned.
+   */
+  decisions?: ReadonlyMap<ContestId, readonly OfficialDecision[]>;
 }
 export type OfficialStep = (ctx: RunContext, games: Game[]) => Promise<OfficialStepResult>;
 

@@ -24,7 +24,8 @@
  * publishes from the MaxPreps claims: a feed this run did not read is carried from the claims the previous run
  * wrote. The evidence-only sources read their claims too: a school calendar that does not answer is carried from
  * what its games showed when last published (step 09), and step 11c weighs the cifsshome.org and box-score evidence
- * the claims hold. The other steps still work over the game list.
+ * the claims hold. A bracket sheet tab not read is carried from the sheet's claims, and a game only the sheet has is a
+ * fixture created from its row's claim (step 09). The other steps still work over the game list.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -33,12 +34,15 @@ import path from 'node:path';
 import { CLAIMS_WARN_BYTES, claimsFileText, claimsPathOf, readClaimsFile } from '../claims/file';
 import { boxEvidenceOf, recordBoxClaims } from '../claims/sources/box';
 import { cifssEvidenceFrom, recordCifssClaims } from '../claims/sources/cifss';
+import { decisionsFromOfficialStep, resolveOfficialStage, writeBackOfficialClaims } from '../claims/sources/official';
+import { writeBackSheetClaims } from '../claims/sources/sds-sheet';
 import { writeBackVnnClaims } from '../claims/sources/vnn';
 import type { ClaimsFile } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
 import { parseFetchedAtFlag, parseLeaguesFlag } from '../cli-flags';
 import { localDateKey } from '../format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
+import { SDS_BRACKETS_FILE } from '../postseason/sds-brackets-file';
 import { loadSnapshot } from '../snapshot/snapshot-load';
 import { stableStringify } from '../stable-json';
 import type { Game, OfficialFixture, Snapshot } from '../types';
@@ -112,10 +116,19 @@ function requestCounts(transport: Transport): RequestCounts {
  * the steps record those themselves) is logged, and the run goes on without its contribution:
  * every official-fixtures division falls back to contest-type classification (never membership
  * alone) and its league is degraded with a reason; si.com contributes nothing this run.
+ *
+ * The official step's decisions come with its result: the ones it recorded, else the ones read off the games it
+ * returned (lib/claims/sources/official.ts decisionsFromOfficialStep). A step whose games cannot be read as
+ * decisions broke the step contract, and is treated as one that threw.
  */
-async function runOfficial(ctx: PipelineContext, steps: PipelineSteps, games: Game[]): Promise<OfficialStepResult> {
+async function runOfficial(
+  ctx: PipelineContext,
+  steps: PipelineSteps,
+  games: Game[],
+): Promise<OfficialStepResult & { decisions: NonNullable<OfficialStepResult['decisions']> }> {
   try {
-    return await steps.official(ctx, games);
+    const result = await steps.official(ctx, games);
+    return { ...result, decisions: result.decisions ?? decisionsFromOfficialStep(games, result.games) };
   } catch (err) {
     if (err instanceof RunAbort) throw err;
     ctx.warn(`official step failed: ${(err as Error).message}`);
@@ -125,7 +138,7 @@ async function runOfficial(ctx: PipelineContext, steps: PipelineSteps, games: Ga
       for (const d of league.divisions) degraded.add(d.id);
       ctx.leagues.degrade(league.id, 'degraded', notAppliedReason(league), 'official schedule not applied');
     }
-    return { games, unmatched: [], degradedDivisions: degraded, revisedUpstream: new Set(), carriedDivisions: new Set() };
+    return { games, unmatched: [], degradedDivisions: degraded, revisedUpstream: new Set(), carriedDivisions: new Set(), decisions: new Map() };
   }
 }
 
@@ -165,11 +178,15 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   await stepSchedules(ctx, state); // 05
   stepNormalize(ctx, state); // 06
 
-  // 07 official (the injectable official step)
-  const { games: officialGames, unmatched, ...officialFlags } = await runOfficial(ctx, steps, state.games);
-  state.games = officialGames;
+  // 07 official (the injectable official step): its decisions applied to the stage's input; the rows it read are
+  // kept for the official claims.
+  const officialInput = state.games;
+  const { games: officialGames, unmatched, decisions, fixtures: officialRows = [], readDivisions = new Set(), ...officialFlags } =
+    await runOfficial(ctx, steps, officialInput);
+  state.games = resolveOfficialStage(officialInput, decisions);
   state.unmatched = unmatched;
   state.official = officialFlags;
+  ctx.shadow?.push({ stage: 'official', kind: 'resolve', input: officialInput, stepGames: officialGames, games: [...state.games] });
 
   // 08 sblive (the injectable si.com step)
   const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
@@ -212,13 +229,22 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport) });
 
   // The claims file beside the snapshot. Checked after the meta is built, so a size warning never moves meta.warnings.
-  // What each school calendar's games showed as published, for the next run's per-site carry.
+  // What the bracket sheet's rows, the league schedules and each school calendar's games showed as published, for the
+  // next run's carry. The sheet's go first: a `cifsds:` game's fixture is found by its sheet claim.
+  writeBackSheetClaims(ctx.claims, snapshot.games, SDS_BRACKETS_FILE, sheetTabsRead(ctx), ctx.fetchedAt);
+  writeBackOfficialClaims(ctx.claims, snapshot.games, snapshot.officialFixtures ?? [], { rows: officialRows, divisions: readDivisions }, ctx.fetchedAt);
   writeBackVnnClaims(ctx.claims, snapshot.games, vnnAnswered(ctx), ctx.fetchedAt);
   ctx.claims.gc();
   const claims = ctx.claims.toFile(ctx.fetchedAt, SPORT_ID);
   const bytes = Buffer.byteLength(claimsFileText(claims), 'utf8');
   if (bytes > CLAIMS_WARN_BYTES) ctx.warn(`claims file is ${bytes} bytes, over the ${CLAIMS_WARN_BYTES}-byte budget`);
   return { snapshot, meta, claims, logLines: [...ctx.logLines] };
+}
+
+/** Whether the bracket sheet's tab of a division was read this run (its source row is ok). */
+function sheetTabsRead(ctx: PipelineContext): (division: string) => boolean {
+  const read = new Set(ctx.sources.all().filter((r) => r.id === 'cifsds-sheet' && r.status === 'ok').map((r) => r.label));
+  return (division) => read.has(`sds bracket sheet ${division}`);
 }
 
 /** The school calendars that answered with events this run (their source row is ok with rows). */

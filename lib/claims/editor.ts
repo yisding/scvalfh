@@ -40,7 +40,8 @@ export function ledgerEditor(fetchedAt: string): { claims: EditorClaim[]; view: 
 
 /**
  * The editor's claims onto the store: a fixture linked to a MaxPreps contest goes to that contest's fixture, and a
- * fixture with a listing (a game no feed lists) to a fixture of its own, named by its fixtureKey. A fixture linked
+ * fixture with a listing (a game no feed lists) to a fixture of its own, named by its fixtureKey; a fixture of that
+ * name read from the claims file (holding what other sources said of the listed game) is that one. A fixture linked
  * only to a league fixture is not stored yet: the official claims it attaches to arrive in a later phase.
  */
 export function attachEditorClaims(store: ClaimStore, claims: readonly EditorClaim[]): void {
@@ -48,6 +49,9 @@ export function attachEditorClaims(store: ClaimStore, claims: readonly EditorCla
     const contest = c.fixture.sources.maxpreps;
     const linked = contest !== undefined ? store.fixtureOf('maxpreps', contest) : undefined;
     if (linked !== undefined) store.attach(linked, 'editor', c);
-    else if (c.fixture.listing) store.attach(store.fixtureOf('editor', c.ref) ?? store.create(c.ref), 'editor', c);
+    else if (c.fixture.listing) {
+      const named = store.get(c.ref) !== undefined && store.get(c.ref)?.claims.maxpreps === undefined ? c.ref : undefined;
+      store.attach(store.fixtureOf('editor', c.ref) ?? named ?? store.create(c.ref), 'editor', c);
+    }
   }
 }
