@@ -344,6 +344,33 @@ describe('legacy matcher: the Stage-0 SCVAL golden', () => {
   });
 });
 
+describe('legacy matcher: a moved leg MaxPreps also hosts the other way round', () => {
+  // SCVAL's Sep 9 Homestead @ Cupertino: MaxPreps has the 5-5 at Homestead, and contestDateOverrides dates it Sep 11,
+  // so neither same-date pass nor the same-host rescheduled pass finds it (update-data, 2026-11-15).
+  it('matches it last, as rescheduled, with the host conflict published', () => {
+    const f = fx('de-anza', '2026-09-09', 'homestead', 'cupertino');
+    const moved = game({ home: 'homestead', away: 'cupertino', hs: 5, as: 5, date: '2026-09-11', official: null });
+    const res = matchOfficialFixtures([moved], [f], optionsFor('scval', undefined));
+    expect(res.matched).toBe(1);
+    expect(res.unmatched).toEqual([]);
+    expect(res.games[0].official).toMatchObject({ fixtureId: f.id, pass: 'rescheduled', scheduledDate: '2026-09-09' });
+    expect(res.games[0].provenance.hostConflict).toBe(
+      'the official De Anza grid has Cupertino hosting; MaxPreps has Homestead, and MaxPreps is the only source of the two that states home and away.',
+    );
+    expect(res.warnings).toContain('2026-09-09 homestead @ cupertino: MaxPreps has the host the other way round');
+  });
+
+  it('never takes the other leg’s contest from its own fixture', () => {
+    const first = fx('de-anza', '2026-09-09', 'homestead', 'cupertino');
+    const second = fx('de-anza', '2026-10-05', 'cupertino', 'homestead');
+    // Only the second leg was played (at Homestead, as the grid has it): the first stays unmatched.
+    const played = game({ home: 'homestead', away: 'cupertino', hs: 1, as: 1, date: '2026-10-05', official: null });
+    const res = matchOfficialFixtures([played], [first, second], optionsFor('scval', undefined));
+    expect(res.games[0].official).toMatchObject({ fixtureId: second.id, pass: 'same-date' });
+    expect(res.unmatched.map((x) => x.id)).toEqual([first.id]);
+  });
+});
+
 // ---------------------------------------------------------------- MCAL changes page
 
 describe('MCAL officialChanges', () => {
