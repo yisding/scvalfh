@@ -306,12 +306,9 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     //  - Division I: San Marcos 4, Poway 2 (owner, 2026-11-15, with an Instagram post of the game); San Marcos'
     //    goals were three by Arden Pantel (#14) and one by Brenna Kirsch (#5). A two-goal margin was settled in
     //    regulation (overtime is sudden victory).
-    //  - Open: Bishop's beat Canyon Hills (owner, 2026-11-15). Canyon Hills field hockey's own post that night
-    //    (chhsfhock, Nov 14): "It's a wrap for our 2026 season. While it wasn't the outcome we'd hoped for ...
-    //    For 60 minutes, you played with heart" (sixty minutes is regulation: no overtime is recorded, and it gives
-    //    no score). No score had been published. The winner alone is
-    //    recorded (`goals` null): the game stays score pending until MaxPreps or the Section's sheet scores it,
-    //    and that score then stands on its own.
+    //  - Open: Bishop's 1, Canyon Hills 0 (owner, 2026-11-15); the goal was Cece Jeffery's (#5). The owner first
+    //    gave the winner alone, recorded with `goals` null; the score followed the same day. A one-goal margin was
+    //    settled in regulation (overtime is sudden victory).
     '607baf70-0136-4bf7-bc72-a3def7973c55': {
       goals: { 'san-marcos': 4, poway: 2 },
       otPeriods: 0,
@@ -321,12 +318,11 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       certainty: 'reported',
     },
     '10a472ed-c57c-4874-ae7b-295d7f032db6': {
-      goals: null,
-      winner: 'bishops',
+      goals: { bishops: 1, 'canyon-hills': 0 },
       otPeriods: 0,
       shootout: null,
-      source: 'the owner’s report, Nov 15, 2026, and Canyon Hills field hockey’s own post that night: “It’s a wrap for our 2026 season. While it wasn’t the outcome we’d hoped for …”',
-      url: 'https://www.instagram.com/chhsfhock/p/DfwDs9VM4Kt/',
+      source: 'the owner’s report, Nov 15, 2026: Bishop’s 1, Canyon Hills 0, the goal by Cece Jeffery; MaxPreps lists the game with no score',
+      url: null,
       certainty: 'reported',
     },
   },
