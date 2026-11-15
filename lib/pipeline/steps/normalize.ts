@@ -1,7 +1,8 @@
 /**
  * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/pipeline/normalize.ts's pure functions in
  * order: `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
- * (DATA_QUALITY ghosts and excluded contests; an exclusion that no longer matches is logged once),
+ * (DATA_QUALITY ghost teams and the fixture ledger's rejected and duplicate rows; one that no longer matches is
+ * logged once),
  * `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to the published
  * `dropped` list.
  *
@@ -19,7 +20,7 @@
 
 import { byDateThenId } from '../../format';
 import { isSbliveContestId } from '../../game-id';
-import { DATA_QUALITY } from '../../league-config/data-quality';
+import { EXCLUSIONS } from '../../fixtures/ledger';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../normalize';
 import { isCifsdsContest } from '../../postseason/sds-sheet-results';
 import type { Game } from '../../types';
@@ -40,7 +41,7 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
   const norm = normalizeGames(state.rows, { fetchedAt: ctx.fetchedAt });
   for (const w of norm.warnings) ctx.warn(w);
 
-  const excluded = applyExclusions(norm.games, DATA_QUALITY);
+  const excluded = applyExclusions(norm.games, EXCLUSIONS);
   for (const id of excluded.unused) ctx.log(`  exclusion no longer needed: ${id}`);
   const deduped = dedupePhantomPairs(excluded.games);
   let games = deduped.games;

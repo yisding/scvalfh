@@ -32,7 +32,7 @@
 
 import { byDateKey, datesOf, dayDiff, monthDay, shootoutPhrases } from '../format';
 import { isSbliveContestId, sbliveContestId } from '../game-id';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEDGER_VIEW } from '../fixtures/ledger';
 import type { SectionConfig } from '../league-config/shape';
 import { LEAGUES, getLeague, getSection, leagueOfDivision } from '../leagues';
 import {
@@ -143,11 +143,11 @@ function fixturePair(f: OfficialFixture): string | null {
 }
 
 /**
- * When and where a fixture was played: the official date and sides, unless DATA_QUALITY.fixtureMoves moves it (a
- * league game played on another date, maybe at the other school). Rule 2 searches MaxPreps and si.com on this date.
+ * When and where a fixture was played: the official date and sides, unless the ledger has a fixture linked to it
+ * (lib/fixtures/ledger.ts LEDGER_VIEW.moves: a league game played on another date, maybe at the other school). Rule 2 searches MaxPreps and si.com on this date.
  */
 export function playedFixture(f: OfficialFixture): { dateKey: string; homeSlug: TeamSlug | null; awaySlug: TeamSlug | null; source: string | null } {
-  const move = DATA_QUALITY.fixtureMoves[f.id];
+  const move = LEDGER_VIEW.moves[f.id];
   if (!move) return { dateKey: f.dateKey, homeSlug: f.homeSlug, awaySlug: f.awaySlug, source: null };
   const swapped = move.home === f.awaySlug;
   return {

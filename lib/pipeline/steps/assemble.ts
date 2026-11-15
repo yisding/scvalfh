@@ -69,7 +69,7 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
   }
   // A San Diego bracket sheet game (`cifsds:`) MaxPreps has posted since: the contest of the same two teams
   // the sheet's step matched it to (lib/postseason/sds-sheet-results.ts, within SDS_SHEET_DATE_TOLERANCE_DAYS).
-  // Likewise a game an earlier run listed from DATA_QUALITY.addedGames (`official:`) that a feed lists now, so a
+  // Likewise a game an earlier run listed from the fixture ledger’s listings (lib/fixtures/; `official:`) that a feed lists now, so a
   // link to a game reported before its day still leads to it.
   const prefixed = (id: ContestId): boolean => isCifsdsContest(id) || isOfficialContestId(id);
   for (const g of previous?.games ?? []) {

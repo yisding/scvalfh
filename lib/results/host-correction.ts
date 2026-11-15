@@ -1,17 +1,17 @@
 /**
- * A contest played at the other school than MaxPreps lists as host (DataQualityConfig.contestHostOverrides): the
- * game with its two sides swapped, so the school that hosted is `home` everywhere the site reads a host (the game
- * page's "at", the address, the bracket, the home edge in the ratings). MaxPreps' host and the override's citation
- * are kept in `provenance.hostCorrection`, which the game page prints.
+ * A contest played at the other school than MaxPreps lists as host: its fixture in the ledger names the school
+ * that hosted and cites a source for it (lib/fixtures/ledger.ts LEDGER_VIEW.hosts). The game with its two sides
+ * swapped, so the school that hosted is `home` everywhere the site reads a host (the game page's "at", the
+ * address, the bracket, the home edge in the ratings). MaxPreps' host and the fixture's citation are kept in
+ * `provenance.hostCorrection`, which the game page prints.
  *
  * Applied twice, to the same effect: by the pipeline's normalize step (lib/pipeline/normalize.ts), before anything
- * reads the game, and by the snapshot loader to a stored file (lib/snapshot/snapshot-migrate.ts), so a correction
- * reaches the committed data without a refetch. A game whose home is already the override's school is returned
+ * reads the game, and by the snapshot loader to a stored file (lib/snapshot/snapshot-migrate.ts), so an edit to
+ * the ledger reaches the committed data without a refetch. A game whose home is already the override's school is returned
  * as it is, so a second pass changes nothing. Pure.
  */
 
-import { DATA_QUALITY } from '../league-config/data-quality';
-import type { DataQualityConfig } from '../league-config/shape';
+import { LEDGER_VIEW, type HostCorrections } from '../fixtures/ledger';
 import type { Game } from '../types';
 
 type Pair<T> = { home: T; away: T };
@@ -69,15 +69,12 @@ export function swapSides(game: Game): Game {
 }
 
 /**
- * `game` hosted by the school its override names: the sides swapped when MaxPreps lists the other school as host,
- * with MaxPreps' host and the citation recorded. The same object when there is no override, when the named school
- * is already home, or when it is neither side (lib/leagues.ts cannot check a contest's sides; tests/host-override.test.ts
- * checks each override against the committed snapshot).
+ * `game` hosted by the school its fixture names: the sides swapped when MaxPreps lists the other school as host,
+ * with MaxPreps' host and the citation recorded. The same object when the ledger cites no host for the contest,
+ * when the named school is already home, or when it is neither side (lib/fixtures/ledger.ts `ledgerProblems`
+ * reports that; tests/host-correction.test.ts checks each against the committed snapshot).
  */
-export function applyHostOverride(
-  game: Game,
-  overrides: DataQualityConfig['contestHostOverrides'] = DATA_QUALITY.contestHostOverrides,
-): Game {
+export function applyHostCorrection(game: Game, overrides: HostCorrections = LEDGER_VIEW.hosts): Game {
   const o = overrides[game.contestId];
   if (!o || game.home.slug === o.home || game.away.slug !== o.home || !game.home.slug) return game;
   const swapped = swapSides(game);

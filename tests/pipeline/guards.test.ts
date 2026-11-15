@@ -256,7 +256,7 @@ describe('trigger c: finals regression', () => {
 
 describe('trigger c against a game a configured correction scores (PR #127 review)', () => {
   // Helix 2, Bonita Vista 1 (Oct 7, Metro Mesa): MaxPreps lists the game with no score and
-  // DATA_QUALITY.resultCorrections scores it, so the published snapshot counts one more final than the feed has.
+  // The fixture ledger’s result (lib/fixtures/) scores it, so the published snapshot counts one more final than the feed has.
   // The next run's feed is unchanged: that game has not vanished, and Metro is not partial for it.
   // The bundled file may hold the game either way: as the feed had it (written before the correction existed) or
   // corrected (every refresh since writes it so, `provenance.resultCorrection.maxpreps` null for "no score"). The

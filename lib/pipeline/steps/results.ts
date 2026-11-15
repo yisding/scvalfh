@@ -7,14 +7,16 @@
  * current one when it loads the snapshot (lib/data.ts).
  */
 
+import { ledgerProblems } from '../../fixtures/ledger';
 import type { BoxEvidence } from '../../results/box-evidence';
 import { correctionProblems, finalizeResults, withAddedGames } from '../../results/result';
 import type { CifssCrossCheck, Game } from '../../types';
 import type { RunContext } from '../contract';
 
 export function stepResults(ctx: RunContext, games: readonly Game[], cifss: CifssCrossCheck | null | undefined, box?: BoxEvidence): Game[] {
-  for (const problem of correctionProblems(games)) ctx.warn(problem);
-  // Games an official source has and no feed lists (DATA_QUALITY.addedGames) join the list first.
+  // A fixture of the ledger whose linked contest is not the game it states is reported, never applied.
+  for (const problem of [...ledgerProblems(games), ...correctionProblems(games)]) ctx.warn(problem);
+  // The ledger's fixtures no feed lists join the list first.
   const listed = withAddedGames(games, ctx.fetchedAt);
   for (const g of listed) if (!games.includes(g)) ctx.log(`  results: added ${g.contestId} (${g.away.name} at ${g.home.name}, ${g.dateKey}) from an official source`);
   const before = new Map(games.map((g) => [g.contestId, g]));

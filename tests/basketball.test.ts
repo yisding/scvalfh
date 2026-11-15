@@ -262,7 +262,7 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
   });
 });
 
-describe('a game the owner reported before its day (DATA_QUALITY.addedGames, reportedOn)', () => {
+describe('a game the owner reported before its day (the fixture ledger’s listings, lib/fixtures/, reportedOn)', () => {
   it('lists Santa Teresa at Cupertino, Tue Nov 24: varsity at 7:00, non-league, with no score', () => {
     const [g, ...more] = m.data.getGames({ date: '2026-11-24' }).filter((x) => x.home.slug === 'cupertino');
     expect(more).toEqual([]);

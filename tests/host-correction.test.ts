@@ -1,5 +1,5 @@
 /**
- * DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts): a contest played at the school MaxPreps lists as
+ * The fixture ledger’s hosts (lib/results/host-correction.ts): a contest played at the school MaxPreps lists as
  * the visitor has its sides swapped, in the pipeline and in the snapshot loader, with MaxPreps' host kept.
  */
 
@@ -9,8 +9,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getSnapshot } from '../lib/data';
-import { DATA_QUALITY } from '../lib/league-config/data-quality';
-import { applyHostOverride, swapSides } from '../lib/results/host-override';
+import { LEDGER_VIEW } from '../lib/fixtures/ledger';
+import { applyHostCorrection, swapSides } from '../lib/results/host-correction';
 import { gameAddress } from '../lib/schools/venue';
 import type { Game } from '../lib/types';
 import { game } from './game-builder';
@@ -49,29 +49,29 @@ describe('swapSides', () => {
   });
 });
 
-describe('applyHostOverride', () => {
+describe('applyHostCorrection', () => {
   const listed = { ...game({ home: 'tamalpais', away: 'redwood', hs: 1, as: 2, date: '2026-10-30', status: 'final' }), contestId: FINAL };
   const overrides = { [FINAL]: { home: 'redwood', source: 'Moved to Redwood', url: null } };
 
   it('puts the game at the named school and records MaxPreps’ host and the citation', () => {
-    const g = applyHostOverride(listed, overrides);
+    const g = applyHostCorrection(listed, overrides);
     expect([g.home.slug, g.away.slug, g.home.score, g.away.score]).toEqual(['redwood', 'tamalpais', 2, 1]);
     expect(g.provenance.hostCorrection).toEqual({ maxprepsHome: 'tamalpais', source: 'Moved to Redwood', url: null });
   });
 
-  it('changes nothing a second time, without an override, or when the named school is neither side', () => {
-    const once = applyHostOverride(listed, overrides);
-    expect(applyHostOverride(once, overrides)).toBe(once);
-    expect(applyHostOverride(listed, {})).toBe(listed);
-    expect(applyHostOverride(listed, { [FINAL]: { home: 'marin-catholic', source: 'x', url: null } })).toBe(listed);
+  it('changes nothing a second time, without a cited host, or when the named school is neither side', () => {
+    const once = applyHostCorrection(listed, overrides);
+    expect(applyHostCorrection(once, overrides)).toBe(once);
+    expect(applyHostCorrection(listed, {})).toBe(listed);
+    expect(applyHostCorrection(listed, { [FINAL]: { home: 'marin-catholic', source: 'x', url: null } })).toBe(listed);
   });
 });
 
-describe('the configured overrides, against the committed snapshot', () => {
+describe('the ledger’s hosts, against the committed snapshot', () => {
   const raw = JSON.parse(readFileSync(path.join(__dirname, '..', 'data', 'snapshot.json'), 'utf8')) as { games: Game[] };
 
   it('each names a stored contest and one of its two schools', () => {
-    for (const [id, o] of Object.entries(DATA_QUALITY.contestHostOverrides)) {
+    for (const [id, o] of Object.entries(LEDGER_VIEW.hosts)) {
       const g = raw.games.find((x) => x.contestId === id);
       expect(g, id).toBeDefined();
       expect([g!.home.slug, g!.away.slug], id).toContain(o.home);

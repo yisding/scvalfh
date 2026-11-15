@@ -137,7 +137,7 @@ describeIfPresent('the committed snapshot: cifsshome.org score cross-check', () 
     for (const row of x.cifssOnlyScored) {
       const game = snapshot.games.find((g) => g.contestId === row.contestId);
       expect(game, row.contestId).toBeDefined();
-      // Unscored on MaxPreps: it stays unscored here unless a cited correction scores it (DATA_QUALITY.resultCorrections).
+      // Unscored on MaxPreps: it stays unscored here unless a cited correction scores it (the fixture ledger’s result, lib/fixtures/).
       if (!game?.provenance.resultCorrection) expect(game?.home.score ?? game?.away.score ?? null, row.contestId).toBeNull();
       else expect(game.provenance.resultCorrection.maxpreps, row.contestId).toBeNull();
     }

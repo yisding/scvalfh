@@ -24,7 +24,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEDGER_VIEW } from '../../lib/fixtures/ledger';
 import { LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
@@ -257,7 +257,7 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
       const nonLeague = getLeague(d.leagueId).rules.nonLeagueGames ?? {};
       const expected = membershipRows(d.id)
         .map((r) => r.contest.contestId)
-        .filter((id) => !Object.hasOwn(DATA_QUALITY.excludedContestIds, id) && !dropped.has(id) && !Object.hasOwn(nonLeague, id))
+        .filter((id) => !Object.hasOwn(LEDGER_VIEW.rejected, id) && !dropped.has(id) && !Object.hasOwn(nonLeague, id))
         .sort();
       const counted = snapshot.games
         .filter((g) => g.countsFor === d.id)
@@ -339,7 +339,7 @@ describeIfCaptured('the section shootout and level games', () => {
   it('decides a level San Diego final MaxPreps marks W and L as a shootout win, across conferences too', () => {
     expect(getSection('sds').shootout, 'lib/league-config/sections.ts').not.toBeNull();
     // MaxPreps' own level finals marked W and L; a game a cited correction made level (59b0f6a5, ad3d21f9: a credited
-    // one-goal win read as a shootout, DATA_QUALITY.resultCorrections) is a different record.
+    // one-goal win read as a shootout, the fixture ledger's result) is a different record.
     const games = levelWithResult().filter((g) => !g.provenance.resultCorrection?.maxpreps || g.provenance.resultCorrection.maxpreps.home === g.provenance.resultCorrection.maxpreps.away);
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
     expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/pipeline/normalize.ts').toEqual(

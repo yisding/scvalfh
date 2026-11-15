@@ -1,5 +1,5 @@
 /**
- * JV games that come with a varsity game no feed lists (DataQualityConfig.addedGames, `AddedGame.jv`): the fifth
+ * JV games that come with a varsity game no feed lists (the fixture ledger’s listings, lib/fixtures/, `AddedGame.jv`): the fifth
  * JV layer, after the league's own schedule (lib/jv/jv-official.ts).
  *
  * A game the owner reports before its day often names the JV game too (Cupertino hosts Santa Teresa on Tue Nov 24,

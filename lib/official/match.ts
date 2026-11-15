@@ -222,7 +222,7 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
   }
 
   // Last, for the fixtures still open: a rescheduled leg MaxPreps also hosts the other way round (SCVAL's Sep 9
-  // Homestead @ Cupertino, the 5-5 MaxPreps has at Homestead and contestDateOverrides dates Sep 11). Same order as
+  // Homestead @ Cupertino, the 5-5 MaxPreps has at Homestead and its fixture in the ledger dates Sep 11). Same order as
   // the rescheduled pass, among the contests no fixture took, after every fixture has had its own passes, so it
   // can only fill a fixture that would otherwise be unmatched and never take another fixture's leg.
   for (const fixture of [...unmatched]) {

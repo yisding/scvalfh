@@ -105,7 +105,7 @@ when a stored snapshot is loaded):
 
 | A final that is… | Recorded as | Shown as |
 |---|---|---|
-| named in `DATA_QUALITY.resultCorrections` (a cited report) | the goals in play, overtime and tally the source gives; MaxPreps' version kept in `provenance.resultCorrection`; `confirmed` | 0–0 `(3–1 SO)`, with the citation |
+| named in the fixture ledger’s result (lib/fixtures/) (a cited report) | the goals in play, overtime and tally the source gives; MaxPreps' version kept in `provenance.resultCorrection`; `confirmed` | 0–0 `(3–1 SO)`, with the citation |
 | a forfeit | the win and the loss; no goals for or against | `F` |
 | decided on goals | `regulation` or `overtime`; an overtime win is a full win | `OT`, `2 OT`; basketball `3 OT` and up; soccer always `OT` |
 | level, between two teams of a section whose rule ends every level varsity game with a shootout (the EAL; the San Diego Section outside a tournament), marked W and L | the marked side's win | EAL: `SO` (`inferred` from the rule and its box scores). San Diego: see the next three rows |
@@ -132,7 +132,7 @@ Academy–Rancho Bernardo are confirmed shootouts. Each team's record now equals
 on these games. The CCS's own tie procedure for a playoff game was not read (cifccs.org refused the request for
 its bylaws) [U]; the Saint Francis game's shootout and its 5–2 tally are from MaxPreps' own page for the game.
 
-**Recorded from a better source on 2026-11-13** (`DATA_QUALITY.resultCorrections`): the shootout tallies MaxPreps'
+**Recorded from a better source on 2026-11-13** (the fixture ledger’s result, lib/fixtures/): the shootout tallies MaxPreps'
 game pages print and its schedule feed does not carry (Saint Francis 5–2 over Archbishop Mitty in the CCS
 semifinal; Pleasant Valley 3–2 over Chico in the EAL Super Regional final); from the San Diego Section's bracket
 sheet, Olympian 6–0 over Sage Creek (a quarterfinal MaxPreps still lists with no score) and the overtime in
@@ -165,7 +165,7 @@ on the schedule whether or not MaxPreps lists it).
   `supersededGames` and the game's `aliases`; `lib/game-urls.ts`). On 2026-11-13 that is one PCAL fixture (Santa Catalina at
   Greenfield, Oct 6), 88 girls soccer fixtures and 26 boys basketball fixtures. The site adds them when it reads
   the snapshot; the stored file keeps them as fixtures for the pipeline's matcher.
-- *A game from another official source* (`DATA_QUALITY.addedGames`, each with its citation). Poway's forfeit to
+- *A game from another official source* (the fixture ledger’s listings, lib/fixtures/, each with its citation). Poway's forfeit to
   Valley Center on Oct 30 is on the San Diego Section's score listing (cifsshome.org) and on no MaxPreps schedule;
   it counts in the Palomar table, as the pair's second meeting. The Tournament of Champions third-place game,
   Edison 3–2 Newport Harbor in sudden-death overtime (Daily Pilot, Oct 30). And the EAL Super Regional of Oct 31,
@@ -180,7 +180,7 @@ on the schedule whether or not MaxPreps lists it).
   drawn as a bracket on /playoffs (`#eal-bracket`, `components/playoffs/tournament-bracket-view.ts`): the first
   round, the semifinals and the final, the top two on byes, then the third- and fifth-place games; no seed is
   printed.
-- *A game reported before its day* (`DATA_QUALITY.addedGames` with `reportedOn`). An added game normally joins
+- *A game reported before its day* (the fixture ledger’s listings, lib/fixtures/, with `reportedOn`). An added game normally joins
   only a snapshot stamped on or after its own day; one with `reportedOn` joins every snapshot stamped on or after
   the day it was reported, so it is on the schedule before it is played: scheduled, then "score not reported"
   after its day, until a feed lists the pair that day (an earlier run's `official:` id then maps to the feed's
@@ -198,12 +198,13 @@ on the schedule whether or not MaxPreps lists it).
 - *Where a playoff game is filed.* A San Diego Section playoff game is listed under the Section's playoffs on a
   day page, never under a conference, even when both teams are in one (Canyon Hills v Bishop's, the Open final).
 
-To record a result from a better source, add the contest to `resultCorrections` in
-`lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)
-and the citation; the next load applies it and recomputes the two teams' records.
+To record a result from a better source, give the game's fixture in the ledger (`lib/fixtures/<sport>.ts`,
+docs/DATA-SOURCES.md §4.1) a `result`: both teams' goals in play, the overtime periods, the tally (or null) and the
+citation. A game with no fixture yet gets one: its day, host and visitor, and `sources.maxpreps`, its MaxPreps
+contest. The next load applies it and recomputes the two teams' records.
 
 **A winner with no score.** Where a source names the winner of a game MaxPreps lists with no score and gives no
-score, the correction has `goals: null` and `winner`. The sides are marked W and L, the game stays "score not
+score, the fixture's result has `goals: null` and `winner`. The sides are marked W and L, the game stays "score not
 reported", and its page says who won and from where (`provenance.reportedWinner`). The bracket advances the
 winner and names a final's winner as champion; no record counts the game. When MaxPreps or the Section's sheet
 scores the game, that score stands and the correction does nothing. San Diego finals, Sat Nov 14, 2026 (owner,
@@ -454,7 +455,7 @@ lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at
 Miller Ave, Mill Valley (the play-off sheet; the schools' HomeCampus calendars name the turf "Tam Turf at
 Bruce Grant Field/Sam Chapman Stadium") and moved to Redwood High School, 395 Doherty Dr, Larkspur, CA
 94939: the MCAL's playoffs page has "Championship Game at Redwood" and "Moved to Redwood High School" (read
-Nov 15, 2026), and MaxPreps still lists Tamalpais as host, so DATA_QUALITY.contestHostOverrides puts the game at
+Nov 15, 2026), and MaxPreps still lists Tamalpais as host, so the fixture ledger’s host (lib/fixtures/) puts the game at
 Redwood and `finalSite` is Redwood; admission is adults $10, students, children and
 seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
 passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
@@ -647,7 +648,7 @@ own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citin
 between Sunset teams has ended level (Fountain Valley 1-1 Marina, Sep 11 [V], the pair's non-league meeting),
 and two Sunset league games have been decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2, one overtime
 period [V]; Huntington Beach 1-0 Edison, Oct 8: cifsshome.org's note on one of its two entries says "Overtime"
-[V: read 2026-11-14], MaxPreps records none, so `resultCorrections` records one period), so each game is
+[V: read 2026-11-14], MaxPreps records none, so the game's fixture in the ledger records one period), so each game is
 recorded as it is reported: `leagueOvertime: 'none'` (D2 rule 4c, a phantom si.com 0-0, applies). The
 Southern Section has no shootout rule (`SectionConfig.shootout` null).
 
@@ -729,7 +730,7 @@ classification `membership`: a game counts for a division when both sides are it
 contestType 2 or 4, and it is dated inside league play, whatever MaxPreps' flag says. A game MaxPreps flags
 between two divisions of one conference (Mission Bay's five against City Eastern teams [V]) counts in
 neither table. Two stray Palomar rows are excluded in
-`DATA_QUALITY.excludedContestIds`: Poway v Fallbrook on Oct 9 with no time, a third MaxPreps row for a
+The fixture ledger’s rejected and duplicate rows (lib/fixtures/): Poway v Fallbrook on Oct 9 with no time, a third MaxPreps row for a
 pair that already has both of its Palomar meetings on the schedule (Sep 15, `67865f1e`; Oct 13,
 `0b3cfb7d`), and Mission Vista v Fallbrook on Oct 30 with no time, duplicating Oct 29 (the same home
 side). League play starts at each division's first game between two members

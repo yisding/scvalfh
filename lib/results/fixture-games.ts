@@ -20,7 +20,7 @@
 import { byDateThenId, datesAtLocal } from '../format';
 import { officialContestId } from '../game-id';
 import { assignGameSlugs } from '../game-urls';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEDGER_VIEW } from '../fixtures/ledger';
 import { getTeamBySlug } from '../teams';
 import type { Game, GameSide, OfficialFixture, Team } from '../types';
 
@@ -31,9 +31,9 @@ export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: 
   const listedHome = fixture.homeSlug ? getTeamBySlug(fixture.homeSlug) : undefined;
   const listedAway = fixture.awaySlug ? getTeamBySlug(fixture.awaySlug) : undefined;
   if (!listedHome || !listedAway || listedHome.division !== fixture.division || listedAway.division !== fixture.division) return null;
-  // A fixture a source moved (DATA_QUALITY.fixtureMoves) is listed on the day and at the school it was moved to;
-  // its official stamp keeps the league's date and fixture id.
-  const move = DATA_QUALITY.fixtureMoves[fixture.id];
+  // A league fixture the ledger links to a fixture of its own (LEDGER_VIEW.moves) is listed on the ledger's day and
+  // at its host; its official stamp keeps the league's date and fixture id.
+  const move = LEDGER_VIEW.moves[fixture.id];
   const dateKey = move?.dateKey ?? fixture.dateKey;
   const [home, away] = move && move.home === listedAway.slug ? [listedAway, listedHome] : [listedHome, listedAway];
   return {

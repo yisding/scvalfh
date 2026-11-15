@@ -24,7 +24,7 @@ import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEDGER_VIEW } from '../fixtures/ledger';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
@@ -71,7 +71,7 @@ const official: JvOfficialMergeResult = mergeJvOfficial({
 // The JV game of a varsity game no feed lists, where the source gives one (lib/jv/jv-added.ts).
 const reported: JvAddedMergeResult = mergeJvAdded({
   games: official.games,
-  added: DATA_QUALITY.addedGames,
+  added: LEDGER_VIEW.listed,
   today: localDateKey(file.fetchedAt),
   fetchedAt: file.fetchedAt,
 });

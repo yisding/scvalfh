@@ -21,7 +21,7 @@
  */
 
 import { postseasonTag } from '../../classify';
-import { DATA_QUALITY } from '../../league-config/data-quality';
+import { LEDGER_VIEW } from '../../fixtures/ledger';
 import type { DivisionConfig, LeagueConfig } from '../../league-config/shape';
 import { LEAGUES, divisionDisplay, divisionHeading } from '../../leagues';
 import { matchOfficialFixtures } from '../../official/match';
@@ -129,12 +129,12 @@ function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, di
 }
 
 /**
- * The DATA_QUALITY.fixtureMoves keys, in the divisions these fixtures were read for, that name none of them: a
- * mistyped key (date or slug) passes assertLeagues' shape check but would never move anything.
+ * The league fixtures the ledger links (LEDGER_VIEW.moves), in the divisions these fixtures were read for, that are
+ * none of them: a mistyped id (date or slug) passes assertLedger's shape check but would never move anything.
  */
 export function unknownFixtureMoves(
   fixtures: readonly OfficialFixture[],
-  moves: Readonly<Record<string, unknown>> = DATA_QUALITY.fixtureMoves,
+  moves: Readonly<Record<string, unknown>> = LEDGER_VIEW.moves,
 ): string[] {
   const ids = new Set(fixtures.map((f) => f.id));
   const divisions = new Set(fixtures.map((f) => f.division));
@@ -145,7 +145,7 @@ function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<type
   const scope = { league: league.id };
   const tag = league.shortName.toLowerCase();
   const total = fixtures.length;
-  for (const id of unknownFixtureMoves(fixtures)) ctx.warn(`${tag} fixtureMoves: ${id} names no official fixture, so it moves nothing`, scope);
+  for (const id of unknownFixtureMoves(fixtures)) ctx.warn(`${tag} ledger: ${id} names no official fixture, so it moves nothing`, scope);
   for (const w of result.warnings) ctx.warn(`${tag} fixture: ${w}`, scope);
   for (const d of result.leagueDisagreements) ctx.warn(`${tag} league flag: ${d}`, scope);
   for (const r of result.reasons) ctx.degrade(league.id, 'partial', r, 'official fixture not counted');

@@ -110,7 +110,7 @@ byte-identical to the build before the seam.
     in both. docs/LEAGUE-RULES.md, "How a game's result is read", has the table.
   - Done (2026-11-13): `Game.result` and `lib/results/result.ts` are every sport's: the recorded winner, ending
     and certainty of each final, the reading of a second source's score, and cited corrections
-    (`DATA_QUALITY.resultCorrections`, one list per sport).
+    (the fixture ledger’s result, lib/fixtures/, one list per sport).
 - **Goal vocabulary.**
   - The `h2h-goal-diff`, `h2h-goals-against` and `division-goals-against` tiebreak stages.
   - The GF/GA/GD columns, legend and "no goal differential" in `components/standings/standings-table/`.

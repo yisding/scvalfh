@@ -77,7 +77,9 @@ Section's 2026-27 League Alignment; the division names are ours). Every league f
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
 data-quality lists) lives in `lib/league-config/`: one file per league, named as its registry file, beside
 `sections.ts` (the regions, the sections and the CCS block), `sds.ts` (what the San Diego leagues share),
-`data-quality.ts` and `shape.ts` (the types). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
+`data-quality.ts` and `shape.ts` (the types). What this site records of a single game (a row that is no game,
+another day or host than MaxPreps has, a result from a better source, a game no feed lists) is one fixture in
+`lib/fixtures/`, the fixture ledger, with the sources' rows that are that game (docs/DATA-SOURCES.md §4.1). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
 lookups (`getLeague`, `regionOf`, …) and `assertLeagues()`; the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
 by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
@@ -672,7 +674,7 @@ no field hockey document schedules a JV round, so neither has slots; a league ge
 its bundle's fixtures.
 
 A fifth JV layer, `lib/jv/jv-added.ts` (`mergeJvAdded`), lists the JV game of a varsity game no feed lists
-(`DATA_QUALITY.addedGames` with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
+(the fixture ledger’s listings, lib/fixtures/, with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
 it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, from Cupertino's own schedule, given by the owner on 2026-11-14 (see
 docs/LEAGUE-RULES.md, "A game reported before its day").
 
@@ -1233,6 +1235,7 @@ sport definition). The rest is grouped by domain:
 |---|---|
 | `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
 | `registry/` | each league's teams, assembled by `lib/teams.ts` |
+| `fixtures/` | the fixture ledger: this site's own record of the games it has had to say something about, one file per sport, and the views the pipeline merges the sources through |
 | `snapshot/` | the snapshot's Zod schema, its config invariants, the load path and its migrations, the content hash, the season build and the content dates |
 | `standings/` | the tiebreak engine, the playoff-ladder copy, the MaxPreps cross-check, missing official results and postseason pairings |
 | `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
@@ -1911,11 +1914,11 @@ can end a league game in a tie; the EAL and the San Diego Section decide a level
 1 v 1s or a shootout. Every final carries a recorded result (`Game.result`: the winner, how the game
 ended, how certain the record is and what it rests on), decided in `lib/results/result.ts` from MaxPreps'
 score and flags, the differing scores si.com and cifsshome.org carry, the San Diego Section's bracket sheet
-each team's own box score, and the cited corrections in `DATA_QUALITY.resultCorrections`. Every source is
+each team's own box score, and the cited corrections in the fixture ledger’s result (lib/fixtures/). Every source is
 wrong now and then, so they are weighed: where two agree on a score that is not MaxPreps' and nothing
 defends MaxPreps', theirs is published. A game an official source has and no feed lists is still on
 the schedule: a league fixture no source has (`lib/results/fixture-games.ts`), and games recorded from a
-section's listing or the owner's report (`DATA_QUALITY.addedGames`), each without a score where none is
+section's listing or the owner's report (the fixture ledger’s listings, lib/fixtures/), each without a score where none is
 published. The score shown is always the score in play,
 with a shootout tally kept apart: a postseason or tournament game MaxPreps lists as level with one side
 marked the winner counts as that side's win, and a second source's score that is the level score with a

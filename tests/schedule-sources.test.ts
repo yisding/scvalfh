@@ -1,7 +1,7 @@
 /**
  * Games the feeds do not carry (owner decisions of 2026-11-14): a league's official fixture no source lists is on
  * the schedule as a game (lib/results/fixture-games.ts), a game an official source has is added from config
- * (DATA_QUALITY.addedGames), a Section final is at the Section's site, and a playoff game is filed under its event.
+ * (the fixture ledger’s listings), a Section final is at the Section's site, and a playoff game is filed under its event.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -12,7 +12,7 @@ import { classifyGame } from '../lib/classify';
 import * as data from '../lib/data';
 import { gameHref, gameIdToParam, isOfficialContestId, officialContestId, paramToGameId } from '../lib/game-id';
 import { tournamentBracketView } from '../components/playoffs/tournament-bracket-view';
-import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { LEDGER_VIEW } from '../lib/fixtures/ledger';
 import { getLeague } from '../lib/leagues';
 import { roundSiteOf, withRoundSite } from '../lib/postseason/round-site';
 import { mergeJvAdded } from '../lib/jv/jv-added';
@@ -68,7 +68,7 @@ describe('an official fixture no source lists is a game on the schedule', () => 
   });
 });
 
-describe('a game an official source has and no feed lists (DATA_QUALITY.addedGames)', () => {
+describe('a game an official source has and no feed lists (the fixture ledger’s listings)', () => {
   const forfeit: AddedGame = {
     dateKey: '2026-10-30', time: '18:00', home: 'poway', away: 'valley-center', goals: { poway: 0, 'valley-center': 1 },
     forfeitBy: 'poway', otPeriods: 0, from: 'cifss', certainty: 'reported', source: 'the Section’s listing', url: null,
@@ -144,7 +144,7 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
       'bella-vista v davis', 'bella-vista v lassen', 'bella-vista v pleasant-valley', 'chico v davis', 'chico v pleasant-valley', 'corning v chico', 'lassen v corning',
     ]);
     for (const g of day.filter((x) => isOfficialContestId(x.contestId))) expect([g.status, g.home.score], g.contestId).toEqual(['score-pending', null]);
-    expect(DATA_QUALITY.addedGames.every((a) => a.source.trim() !== '')).toBe(true);
+    expect(LEDGER_VIEW.listed.every((a) => a.source.trim() !== '')).toBe(true);
   });
 });
 

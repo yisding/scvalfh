@@ -2212,8 +2212,8 @@ redirects.
     &ajax=1&start=…&end=…`, a JSON feed with facility, address, game type, ticket and streaming links; Tam
     1550, Redwood 1517; the NCS counterpart of the cifsshome.org widget of §1.2a, read 2026-10-29, not polled);
     `FieldHockey.htm`, read 2026-11-15, has the final "Moved to Redwood High School", which MaxPreps never
-    reflected (it lists Tamalpais as host), so `finalSite` is Redwood and DATA_QUALITY.contestHostOverrides swaps
-    the contest's sides (lib/results/host-override.ts);
+    reflected (it lists Tamalpais as host), so `finalSite` is Redwood and the fixture ledger’s host (lib/fixtures/) swaps
+    the contest's sides (lib/results/host-correction.ts);
     the Field Hockey Handbook §9 is the source of the
     no-regular-season-overtime rule and the tournament's two-overtimes-then-shootout format. MaxPreps
     records a tournament shootout as a regulation score with the tally as goals (Tamalpais 3-1 Marin
@@ -2800,7 +2800,7 @@ listed on `/playoffs#toc`, the tournament's own section, which holds the Sunset 
   Beach's rows are contestType 4, the rest 1. si.com labels every TOC game "Playoffs" (`gameTypeLabel`), as does
   the CIF-SS widget's Game Type column (§1.2a); both stay cross-check only.
 - No LAFHA website, bracket or seeding was found; the pairings are never inferred into seed copy (copy rule 5).
-Data consequences: the two duplicate rows the event exposed are in `DATA_QUALITY.excludedContestIds` (a second
+Data consequences: the two duplicate rows the event exposed are duplicate rows of their games’ fixtures in the ledger (`lib/fixtures/`; a second
 Harvard-Westlake 6-0 Temecula Valley on Oct 23; a scoreless Newport Harbor at Glendora on Oct 22, the game having
 moved to Oct 24). The third-place game (Newport Harbor v Edison, Oct 29) is not on MaxPreps. A Nov 7 all-star
 game at Chaparral (hbfieldhockey.com) may surface as team rows inside the Southern Section's season window.
@@ -3226,7 +3226,7 @@ of an alarm.
   league flag misses many North County league games (Mt. Carmel 4 of 10 flagged; in Valley, San
   Pasqual 3, Vista 4, Escondido 5). Valley has no MaxPreps table. The alignment sheet also lists Rancho
   Buena Vista under Valley; its league games are against Palomar teams. Two duplicate Palomar rows
-  are excluded (`DATA_QUALITY.excludedContestIds`: Poway–Fallbrook `c7dbdbcc…`, Mission Vista–Fallbrook
+  are excluded (the fixture ledger’s rejected and duplicate rows, `lib/fixtures/`: Poway–Fallbrook `c7dbdbcc…`, Mission Vista–Fallbrook
   `9c027452…`).
 - **Metro:** MaxPreps files the five Metro Mesa teams under "Metro- South Bay", and El Capitan and
   Granite Hills under "Grossmont" with Santana; it lists no league for Hilltop or Southwest (Southwest:
@@ -3589,6 +3589,36 @@ Load-bearing rules baked into it:
 - `leagueHealth` (one row per league: `fresh`, `partial`, `degraded` or `frozen`, with reasons),
   `dropped` (contests removed on purpose, with the reason) and `supersededGames` (a game no feed
   listed, later replaced by MaxPreps' own, which inherits its slug and aliases, so its old page redirects there: `lib/game-urls.ts`) are part of the snapshot and shown on `/about`.
+### 4.1 The fixture ledger: this site's own record of a game
+
+Every source is wrong now and then, so no source is the record of a game. Where a person has had to say what a
+game was, it is said once, in the fixture ledger (`lib/fixtures/`: `shape.ts` the types, one file per sport,
+`ledger.ts` the checks and the merge): one `CanonicalFixture` per game, stating its day, host and visitor, and under
+`sources` which row of which source is that game. A game with no fixture is published as the sources have it.
+
+| In the fixture | Means | The pipeline then |
+|---|---|---|
+| `sources.maxpreps` | the MaxPreps contest that is this game | takes from it whatever the fixture does not state: start time, score, links |
+| `sources.maxprepsDuplicates` | other MaxPreps rows for the same game, each with why | drops them (`dropped`, 'excluded-by-config') |
+| `sources.official` | the league fixture that is this game, played on another day or at the other school | looks for si.com's score and lists the game on the ledger's day, at its host |
+| `date` (a citation) | the fixture's day is not the one MaxPreps gives | publishes the fixture's day, time TBA; MaxPreps' date is kept in `provenance.dateCorrection` |
+| `host` (a citation) | the fixture's host is the school MaxPreps lists as visitor | swaps the sides; MaxPreps' host is kept in `provenance.hostCorrection` |
+| `result` (cited) | the goals in play, overtime and tally a better source records, or the winner alone | publishes it; MaxPreps' result is kept in `provenance.resultCorrection` (or `reportedWinner`) |
+| `listing` (cited) | the game is on no feed: the source's own account of it | puts it on the schedule (`official:<date>-<away>-at-<home>`) until a feed lists the pair that day |
+
+The ledger's `rejected` list holds MaxPreps rows that are no game at all (a scrimmage, a row for a game never
+played); they are dropped and are no fixture's.
+
+`assertLedger` runs at import: a fixture is two registry teams on a day of a season; a contest, a league fixture
+and a (day, pair) are each in the ledger once; every fact is cited; a result names the fixture's own two teams.
+`ledgerProblems` checks the other way, against the games a run (or the committed snapshot,
+`tests/ledger.test.ts`) holds: a fixture whose linked contest is another pair, another day or another host than
+it states is reported in the run log and not applied.
+
+The lists that are about a team or a league rather than one game stay in `DATA_QUALITY`
+(`lib/league-config/data-quality.ts`): ghost teams, ignored si.com team ids, ignored MaxPreps leagues and the
+schools search reports as not covered. JV games have their own corrections (`lib/jv/jv-corrections.ts`).
+
 ## 5. Cron fetch plan
 
 **Core sweep — 131 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
@@ -3699,16 +3729,16 @@ scores, and a si.com game that is not a junk row (rule 7).**
    fixture date: **publish si.com's score** as a
    new game with `contestId: 'sblive:<si.com game id>'`, `provenance.scores: 'sblive'`, no MaxPreps
    URL, the si.com URL, counted in the league table exactly like a MaxPreps final, with home/away
-   and `official` taken from the fixture. A fixture listed in `DATA_QUALITY.fixtureMoves`
-   (`lib/league-config/data-quality.ts`: a league game that another source, named in the entry, shows was played on another date
-   and maybe at the other school) is searched on its played date instead, for both windows, and published with
-   the entry's host; `official.scheduledDate` keeps the league's date and the entry's source sentence is added to
-   the backfill note. The list is empty since 2026-11-15. Its one entry, from 2026-10-22, moved SCVAL's Sep 9
+   and `official` taken from the fixture. A league fixture that the fixture ledger links to a fixture of its own
+   (`sources.official` in `lib/fixtures/`: a league game that another source, cited in the entry, shows was played on
+   another date and maybe at the other school) is searched on the ledger's date instead, for both windows, and
+   published with the ledger's host; `official.scheduledDate` keeps the league's date and the entry's source sentence
+   is added to the backfill note. The ledger has had no such link since 2026-11-15. Its one, from 2026-10-22, moved SCVAL's Sep 9
    Homestead at Cupertino to Oct 13 at Homestead (si.com's Homestead 3-0 and an NFHS Network stream); MaxPreps then
    listed the pair's first meeting on Oct 29, a 5-5 tie, and Homestead's athletic director's weekly update has it
    on Fri Sep 11 "(OT)" and Oct 13 as a third meeting, "Played" with no varsity score and a 1-0 JV win MaxPreps
-   files as non-league. The tie is dated Sep 11 (`contestDateOverrides`) and recorded as one period of overtime
-   (`resultCorrections`). Oct 13 is listed as a non-league game (`addedGames`, `nonLeague: true`), Homestead 3-0,
+   files as non-league. The tie is one fixture in the ledger, dated Sep 11 (its `date` citation) and recorded as one
+   period of overtime (its `result`). Oct 13 is another, listed as a non-league game (a `listing`, `nonLeague: true`), Homestead 3-0,
    from Homestead varsity's Instagram post of Oct 14 ("3-0 W v Cupertino!!", goals to Hailey and Gabby; the owner
    has two to #7, Gabrielle Moll, and one to #8, Hailey Cutler) and si.com's same 3-0. A si.com row that is the same game as an existing
    MaxPreps contest (same date, same pair: the cross-check's join) is never used to fill. If two
@@ -3815,13 +3845,14 @@ team/{id}-v…/` image path. League slugs used to harvest team pages are never u
 
 ### 5.4 What is dropped on purpose
 
-All three lists are config (`DATA_QUALITY` in `lib/league-config/data-quality.ts` and each league's `withdrawnNames`)
-and everything dropped is published in the snapshot's `dropped` list and on `/about#dropped`.
+All three lists are config (`DATA_QUALITY` in `lib/league-config/data-quality.ts`, the fixture ledger in `lib/fixtures/`
+and each league's `withdrawnNames`) and everything dropped is published in the snapshot's `dropped` list and on `/about#dropped`.
 
 - **Ghost teams** (`ghostTeamIds`): a MaxPreps team that is not a real team. Del Norte (Crescent
   City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` has no league and team size 0; every contest with
   it is dropped.
-- **Excluded contests** (`excludedContestIds`): six contests named by id with the reason. Two MCAL —
+- **Excluded contests** (the fixture ledger, §4.1: a fixture's `sources.maxprepsDuplicates`, a second MaxPreps row
+  for a game that has one, and the ledger's `rejected` rows, which are no game): contests named by id with the reason. Two MCAL —
   `5b9ff911-a640-4947-b9fd-8a629e775b33` (Tamalpais vs the Crescent City ghost; duplicates
   Tamalpais vs Del Norte of San Diego) and `5cf5e3df-6e72-4f44-9b8d-e69da30b85c5` (Archie Williams
   at Marin Academy, Aug 18: not on the official schedule; a spurious unscored row); two Palomar
@@ -3890,8 +3921,8 @@ never touches the network.
 
 Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
 the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
-Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
-(`lib/league-config/data-quality.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` (`lib/league-config/data-quality.ts`) and among the fixture ledger's duplicate
+rows (`lib/fixtures/field-hockey.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
 Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
 fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
 fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each

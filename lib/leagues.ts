@@ -43,7 +43,7 @@ import type {
 } from './types';
 // Besides lib/league-config/, the runtime imports are two leaves: lib/season.ts (dependency-free constants)
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
-import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate } from './schema-primitives';
+import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
 import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
@@ -869,69 +869,6 @@ export function assertLeagues(): void {
   // 8. ignored MaxPreps leagues are never configured
   for (const id of Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)) {
     if (ALL_DIVISIONS.some((d) => d.maxprepsLeagueId === id)) fail(`ignored MaxPreps league ${id} is configured`);
-  }
-  // A result correction names its contest by GUID, both teams' goals, the overtime played, a tally with a winner
-  // after a level score, and its source; or, with no goals, the winner alone and its source.
-  for (const [id, c] of Object.entries(DATA_QUALITY.resultCorrections)) {
-    if (!LOWERCASE_GUID_RE.test(id)) fail(`resultCorrections: ${id} is not a contest GUID`);
-    if (c.goals === null) {
-      if (!c.winner) fail(`resultCorrections ${id}: with no goals, names the winner`);
-      if (c.shootout !== null || c.shootoutWinner || c.otPeriods !== 0) fail(`resultCorrections ${id}: with no goals, records no overtime or tiebreak`);
-      if (!c.source.trim() || /\.$/.test(c.source.trim())) fail(`resultCorrections ${id}: needs a source, one sentence without a final period`);
-      if (id in DATA_QUALITY.excludedContestIds) fail(`resultCorrections ${id}: the contest is excluded`);
-      continue;
-    }
-    if (c.winner) fail(`resultCorrections ${id}: a winner is named only where no goals are given`);
-    const slugs = Object.keys(c.goals);
-    // Shape only: this module never reads the registry; lib/results/result.ts checks the slugs against the game's sides.
-    if (slugs.length !== 2) fail(`resultCorrections ${id}: goals names the two teams by slug`);
-    if (Object.values(c.goals).some((n) => !Number.isInteger(n) || n < 0)) fail(`resultCorrections ${id}: goals are whole numbers`);
-    if (!Number.isInteger(c.otPeriods) || c.otPeriods < 0) fail(`resultCorrections ${id}: otPeriods is a whole number`);
-    if (c.shootout) {
-      const tally = slugs.map((s) => c.shootout?.[s]);
-      if (Object.keys(c.shootout).length !== 2 || tally.some((n) => n === undefined || !Number.isInteger(n) || n < 0)) fail(`resultCorrections ${id}: shootout names the same two teams`);
-      if (tally[0] === tally[1]) fail(`resultCorrections ${id}: a shootout tally has a winner`);
-      if (c.goals[slugs[0]] !== c.goals[slugs[1]]) fail(`resultCorrections ${id}: a shootout follows a level score`);
-    }
-    if (!c.source.trim() || /\.$/.test(c.source.trim())) fail(`resultCorrections ${id}: needs a source, one sentence without a final period`);
-    if (id in DATA_QUALITY.excludedContestIds) fail(`resultCorrections ${id}: the contest is excluded`);
-  }
-  // A date correction names its contest by GUID, a real date inside a season window, and its source; a
-  // contest is never both corrected and excluded (the correction would be for nothing).
-  for (const [id, o] of Object.entries(DATA_QUALITY.contestDateOverrides)) {
-    if (!LOWERCASE_GUID_RE.test(id)) fail(`contestDateOverrides: ${id} is not a contest GUID`);
-    if (!isCalendarDate(o.dateKey)) fail(`contestDateOverrides ${id}: dateKey ${o.dateKey} is not a valid YYYY-MM-DD date`);
-    else if (!SECTIONS.some((s) => o.dateKey >= s.seasonWindow.start && o.dateKey <= s.seasonWindow.end)) {
-      fail(`contestDateOverrides ${id}: ${o.dateKey} is outside every section's season window`);
-    }
-    if (o.timeTba !== true) fail(`contestDateOverrides ${id}: timeTba must be true (no source gives a time)`);
-    if (!o.source.trim()) fail(`contestDateOverrides ${id}: needs a source`);
-    if (id in DATA_QUALITY.excludedContestIds) fail(`contestDateOverrides ${id}: the contest is excluded`);
-  }
-  // A host correction names its contest by GUID and cites its source in one sentence without a final period; a
-  // contest is never both corrected and excluded. That `home` is a side of the stored contest is tests/host-override.test.ts's check.
-  for (const [id, o] of Object.entries(DATA_QUALITY.contestHostOverrides)) {
-    if (!LOWERCASE_GUID_RE.test(id)) fail(`contestHostOverrides: ${id} is not a contest GUID`);
-    if (!o.source.trim() || /\.$/.test(o.source.trim())) fail(`contestHostOverrides ${id}: needs a source, one sentence without a final period`);
-    if (id in DATA_QUALITY.excludedContestIds) fail(`contestHostOverrides ${id}: the contest is excluded`);
-  }
-  // A moved fixture names an official fixture (`division:date:away@home`), a real date inside its section's
-  // season window and other than the official one, one of its two teams as host, and its source.
-  for (const [id, m] of Object.entries(DATA_QUALITY.fixtureMoves)) {
-    const parts = /^([a-z0-9-]+):(\d{4}-\d{2}-\d{2}):([a-z0-9-]+)@([a-z0-9-]+)$/.exec(id);
-    const division = parts ? DIVISION_BY_ID.get(parts[1]) : undefined;
-    if (!parts || !division) {
-      fail(`fixtureMoves: ${id} is not an official fixture id of a configured division`);
-      continue;
-    }
-    if (!isCalendarDate(m.dateKey)) fail(`fixtureMoves ${id}: dateKey ${m.dateKey} is not a valid YYYY-MM-DD date`);
-    else {
-      const window = SECTION_BY_ID.get(leagueOfDivision(division.id).sectionId)?.seasonWindow;
-      if (window && (m.dateKey < window.start || m.dateKey > window.end)) fail(`fixtureMoves ${id}: ${m.dateKey} is outside its section's season window`);
-    }
-    if (m.dateKey === parts[2]) fail(`fixtureMoves ${id}: dateKey is the official date`);
-    if (m.home !== parts[3] && m.home !== parts[4]) fail(`fixtureMoves ${id}: home ${m.home} is neither side of the fixture`);
-    if (!m.source.trim()) fail(`fixtureMoves ${id}: needs a source`);
   }
 }
 

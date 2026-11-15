@@ -1,6 +1,6 @@
 /**
  * Corrections to MaxPreps' JV rows, applied at load (lib/jv/jv.ts) before the si.com merge, the JV
- * counterpart of DATA_QUALITY.excludedContestIds for varsity (lib/league-config/data-quality.ts).
+ * counterpart of the fixture ledger for varsity (lib/fixtures/).
  *
  * data/jv.json keeps what each source said; this list says which of MaxPreps' JV rows the site does
  * not take as said, and why. Every entry is a contest id, read and checked by hand (2026-11-03), never
@@ -108,7 +108,7 @@ const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
       source: 'St. Ignatius’ JV schedule has this game on Oct 8, “Rescheduled from 9/9/26”; MaxPreps still dates it Sep 9.',
     },
     // Homestead's athletic director's weekly update (owner, 2026-11-15): JV "Lost 2 - 1 vs Cupertino (Friday 9/11)",
-    // the day of the pair's 5-5 varsity tie (DATA_QUALITY.contestDateOverrides moves that game to Sep 11 too).
+    // the day of the pair's 5-5 varsity tie (its fixture in the ledger, lib/fixtures/field-hockey.ts, dates that game Sep 11 too).
     'e8207b3a-c887-40c6-94ec-0976eb224c33': {
       fromDateKey: '2026-09-09',
       dateKey: '2026-09-11',

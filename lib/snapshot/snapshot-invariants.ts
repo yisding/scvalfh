@@ -300,7 +300,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (!getTeamBySlug(r.slug)) issue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
   });
 
-  // 10. superseded si.com games, San Diego bracket sheet games and added games (DATA_QUALITY.addedGames, `official:`).
+  // 10. superseded si.com games, San Diego bracket sheet games and added games (the fixture ledger’s listings, lib/fixtures/, `official:`).
   for (const [from, to] of Object.entries(s.supersededGames)) {
     if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from) && !OFFICIAL_ID_RE.test(from)) {
       issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>');

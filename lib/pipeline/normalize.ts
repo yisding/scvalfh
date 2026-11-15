@@ -9,8 +9,8 @@
  *   3. a missing score is pending, NEVER 0-0
  *   4. home/away from teams[].homeAwayType (0/1/2), never from contestType and never from row order
  *   5. league flag from teams[].contestType === 0
- *   6. store both date forms (naive local + UTC); a contest in DATA_QUALITY.contestDateOverrides takes
- *      the override's date, with no time, before the date key is taken and the games are sorted
+ *   6. store both date forms (naive local + UTC); a contest whose fixture in the ledger (lib/fixtures/) cites
+ *      another day takes that day, with no time, before the date key is taken and the games are sorted
  *   7. opponent identity by GUID; a non-member is a name only
  *
  * SPEC §7.6 adds, in pipeline order (all pure):
@@ -18,16 +18,16 @@
  *      `normalizeGames` applies it too, so raw feed rows can be passed straight in
  *   2. `normalizeGames` — plus `contestTypes`, `provenance.resultConflict`, and the `countsFor` /
  *      `postseason` placeholders that lib/classify.ts fills
- *   3. `applyExclusions` — DATA_QUALITY ghosts and excluded contests
+ *   3. `applyExclusions` — DATA_QUALITY ghost teams and the ledger's rejected and duplicate contests
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
 import { byDateThenId, shootoutPhrases, toLocalTimestamp } from '../format';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEDGER_VIEW, type DateCorrection, type DateCorrections, type HostCorrections } from '../fixtures/ledger';
 import { GUID_RE } from '../game-id';
 import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
 import { getLeague, getSection } from '../leagues';
-import { applyHostOverride } from '../results/host-override';
+import { applyHostCorrection } from '../results/host-correction';
 import { flagConflictSentence, isLevelWithWinner } from '../postseason/level-final';
 import { SPORT } from '../sports/current';
 import { getTeamById, resolveTeam } from '../teams';
@@ -65,10 +65,10 @@ export interface NormalizeOptions {
    * winner flagged is not worth a warning.
    */
   level?: 'varsity' | 'jv';
-  /** Per-contest date corrections (default DATA_QUALITY.contestDateOverrides); tests pass their own. */
-  dateOverrides?: DataQualityConfig['contestDateOverrides'];
-  /** Per-contest host corrections (default DATA_QUALITY.contestHostOverrides); tests pass their own. */
-  hostOverrides?: DataQualityConfig['contestHostOverrides'];
+  /** The ledger's days for contests MaxPreps dates otherwise (default LEDGER_VIEW.dates); tests pass their own. */
+  dates?: DateCorrections;
+  /** The ledger's hosts for contests MaxPreps places at the other school (default LEDGER_VIEW.hosts); tests pass their own. */
+  hosts?: HostCorrections;
 }
 
 export interface NormalizeResult {
@@ -132,15 +132,11 @@ export function pacificMidnightUtc(dateKey: string): string {
 }
 
 /**
- * A contest's date moved to a better source's (DataQualityConfig.contestDateOverrides): the date key, a
- * time-TBA local midnight and its UTC instant, consistent with every other time-TBA row, and the
- * provenance the game page prints (MaxPreps' own date and the override's source). The result, sides and
- * flags are untouched.
+ * A contest on the day its fixture in the ledger cites (lib/fixtures/ledger.ts LEDGER_VIEW.dates): the date key,
+ * a time-TBA local midnight and its UTC instant, consistent with every other time-TBA row, and the provenance
+ * the game page prints (MaxPreps' own date and the fixture's source). The result, sides and flags are untouched.
  */
-export function applyDateOverride(
-  game: Game,
-  override: DataQualityConfig['contestDateOverrides'][ContestId] | undefined,
-): Game {
+export function applyDateCorrection(game: Game, override: DateCorrection | undefined): Game {
   if (!override) return game;
   return {
     ...game,
@@ -362,17 +358,17 @@ export function normalizeGames(
   }
 
   const games: Game[] = [];
-  const dateOverrides = opts.dateOverrides ?? DATA_QUALITY.contestDateOverrides;
-  const hostOverrides = opts.hostOverrides ?? DATA_QUALITY.contestHostOverrides;
+  const dates = opts.dates ?? LEDGER_VIEW.dates;
+  const hosts = opts.hosts ?? LEDGER_VIEW.hosts;
   for (const [id, row] of best) {
     const game = toGame(row, copies.get(id) ?? [row], opts, warnings);
     if (!game) {
       stats.dropped.malformed += 1;
       continue;
     }
-    // Before the sort, so the corrected date orders schedules, last-5 and streaks; and the host a better source
-    // names, before anything reads a side.
-    games.push(applyHostOverride(applyDateOverride(game, dateOverrides[id]), hostOverrides));
+    // The fixture's day before the sort, so it orders schedules, last-5 and streaks; and the fixture's host
+    // before anything reads a side.
+    games.push(applyHostCorrection(applyDateCorrection(game, dates[id]), hosts));
   }
 
   // Stable order: by local date, then by contestId so the JSON diff is small.
@@ -695,18 +691,25 @@ function droppedRow(
   };
 }
 
+/** What `applyExclusions` drops: the ghost teams' contests and the ledger's rejected and duplicate rows. */
+export interface Exclusions {
+  ghostTeamIds: DataQualityConfig['ghostTeamIds'];
+  rejected: Readonly<Record<ContestId, string>>;
+}
+
 /**
- * SPEC §7.6 step 3: drop every contest with a side in `dq.ghostTeamIds` ('ghost-team') and every
- * contest in `dq.excludedContestIds` ('excluded-by-config'); a contest that is both is recorded once,
- * as 'ghost-team'. `unused` lists the excluded ids that no longer appear among `games`, in config
- * order; the caller logs each once as `exclusion no longer needed: <id>`. Order is kept.
+ * SPEC §7.6 step 3: drop every contest with a side in `ex.ghostTeamIds` ('ghost-team') and every contest in
+ * `ex.rejected` ('excluded-by-config': the ledger's rows that are no game, and its fixtures' duplicate rows,
+ * lib/fixtures/ledger.ts LEDGER_VIEW.rejected); a contest that is both is recorded once, as 'ghost-team'.
+ * `unused` lists the rejected ids that no longer appear among `games`, in the ledger's order; the caller logs
+ * each once as `exclusion no longer needed: <id>`. Order is kept.
  */
 export function applyExclusions(
   games: readonly Game[],
-  dq: DataQualityConfig,
+  ex: Exclusions,
 ): { games: Game[]; dropped: DroppedContest[]; unused: ContestId[] } {
-  const ghosts = new Map(Object.entries(dq.ghostTeamIds));
-  const excluded = new Map(Object.entries(dq.excludedContestIds));
+  const ghosts = new Map(Object.entries(ex.ghostTeamIds));
+  const excluded = new Map(Object.entries(ex.rejected));
   const kept: Game[] = [];
   const dropped: DroppedContest[] = [];
   const seen = new Set<ContestId>();

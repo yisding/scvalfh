@@ -511,8 +511,8 @@ export function describeGame(game: Game, perspective?: Perspective | null): Game
         statusLabel: 'SCORE NOT REPORTED',
         statusTone: 'ink-3',
         // A game only the league's schedule has (lib/results/fixture-games.ts): no source has listed it at all.
-        // or one recorded from another official source with no score (DATA_QUALITY.addedGames), whose own note says what is known.
-        // A winner a source names with no score (DATA_QUALITY.resultCorrections, `goals` null): who won, and from where.
+        // or one recorded from another official source with no score (the fixture ledger’s listings, lib/fixtures/), whose own note says what is known.
+        // A winner a source names with no score (the fixture ledger’s result, lib/fixtures/, `goals` null): who won, and from where.
         note: game.provenance.reportedWinner
           ? reportedWinnerNote(game, game.provenance.reportedWinner.source)
           : !isOfficialContestId(game.contestId) ? UNREPORTED_NOTE : game.official ? OFFICIAL_ONLY_NOTE : 'No source has published the score.',

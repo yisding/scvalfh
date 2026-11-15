@@ -51,7 +51,7 @@ describe('supersededGamesOf (backfill rule 10: supersede and carry-forward)', ()
   });
 });
 
-describe('supersededGamesOf: a game added from DATA_QUALITY.addedGames that a feed lists now', () => {
+describe('supersededGamesOf: a game added from the fixture ledger’s listings (lib/fixtures/) that a feed lists now', () => {
   it('maps the earlier run’s official: id to the feed’s contest of the same pair', () => {
     const added = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', contestId: 'official:2026-11-24-greenfield-at-santa-catalina', official: null });
     const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: null });
