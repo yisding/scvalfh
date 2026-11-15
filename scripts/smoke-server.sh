@@ -152,9 +152,9 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 # league-tournament leagues, the clubs of data/clubs.json (every club has a page, one with no tied player
 # included), and each old URL segment of a game as `<segment> <the game's slug>`: every alias (`Game.aliases`,
 # lib/game-urls.ts: a slug it had, and the id it was published at before slugs, a MaxPreps GUID or sblive-N,
-# cifsds-A-at-B, official-D-A-at-B), and for an `official:` game that id segment whether listed or not (proxy.ts
-# answers every one: a schedule-only game is not stored, so nothing lists it). A game first listed since slugs
-# has no alias, and its id was never a URL.
+# cifsds-A-at-B, official-D-A-at-B), and for a schedule-only game (not stored, so nothing lists an alias for it)
+# its `official-` id segment where its slug is that id without the prefix, which is where proxy.ts sends it. A
+# game first listed since slugs has no alias, and its id was never a URL.
 facts=$(node_modules/.bin/tsx -e '
   import fs from "node:fs";
   import { getSnapshot } from "./lib/data";
@@ -168,7 +168,7 @@ facts=$(node_modules/.bin/tsx -e '
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
   const old = new Map<string, string>();
   for (const g of s.games) {
-    const official = g.contestId.startsWith("official:") ? [param(g.contestId)] : [];
+    const official = g.contestId === "official:" + g.slug ? [param(g.contestId)] : [];
     for (const segment of [...official, ...(g.aliases ?? [])]) old.set(segment, g.slug!);
   }
   for (const g of s.games) old.delete(g.slug!);

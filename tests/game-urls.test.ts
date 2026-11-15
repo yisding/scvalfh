@@ -108,6 +108,17 @@ describe('rule 1: slugs are unique, and a number stays with its game', () => {
     });
   });
 
+  it('a slug left free for a page outside the games is not newly taken, but a game that has it keeps it', () => {
+    // A schedule-only game is called by the plain slug: a feed game of the same day and pair that turns up gets -2…
+    const leaveFree = ['2026-09-12-pinewood-at-waldorf'];
+    expect(withGameSlugs([first], { leaveFree })[0].slug).toBe('2026-09-12-pinewood-at-waldorf-2');
+    // …unless it had the slug already (the schedule-only game then takes the next one: lib/results/fixture-games.ts).
+    const previous = withGameSlugs([first]);
+    expect(withGameSlugs([first], { previous, leaveFree })[0].slug).toBe('2026-09-12-pinewood-at-waldorf');
+    // Another day's games are untouched.
+    expect(withGameSlugs([g(GUID_C, '2026-09-13', 'pinewood', 'waldorf')], { leaveFree })[0].slug).toBe('2026-09-13-pinewood-at-waldorf');
+  });
+
   it('a game that supersedes another takes over its slug, number included', () => {
     const fill = { ...second, contestId: 'sblive:7000001' };
     const previous = withGameSlugs([first, fill]);
@@ -227,6 +238,12 @@ describe('the load upgrade: a file written before slugs', () => {
     // The added game cannot take a slug in use, and an alias in use is not claimed twice.
     expect(urls([out[1]])).toEqual({ 'official:2026-10-06-a-at-b': ['2026-10-06-a-at-b-2', 'official-2026-10-06-a-at-b'] });
     expect(withLegacyGameUrls([named])).toEqual([named]);
+    // Nor a segment that is a named game's ALIAS: that game is left as it is, so the alias cannot be given up.
+    const moved = { ...g(GUID_B, '2026-10-13', 'a', 'b'), slug: '2026-10-13-a-at-b', aliases: ['2026-10-06-a-at-b'] };
+    const late = withLegacyGameUrls([moved, added]);
+    expect(late[0]).toBe(moved);
+    expect(late[1].slug).toBe('2026-10-06-a-at-b-2');
+    expect(gameAliasTable(late).get('2026-10-06-a-at-b')).toBe('2026-10-13-a-at-b');
   });
 });
 

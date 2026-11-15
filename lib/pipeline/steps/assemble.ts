@@ -9,6 +9,7 @@ import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
 import { byDateThenId, dayDiff, localDateKey } from '../../format';
 import { isOfficialContestId, isSbliveContestId } from '../../game-id';
+import { baseGameSlug } from '../../game-slug';
 import { withGameAliases, withGameSlugs } from '../../game-urls';
 import { withFixtureGames } from '../../results/fixture-games';
 import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
@@ -117,8 +118,14 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
  * `games` with their URLs (lib/game-urls.ts): each game's slug, and as aliases every segment it was published at
  * before. The previous snapshot is read as the site listed it, schedule-only games included
  * (lib/results/fixture-games.ts gives those their slugs without storing them), so a game that takes one over
- * inherits its slug and aliases; and this run's schedule-only games are pages too, so no alias may be one of
- * their slugs.
+ * inherits its slug and aliases. This run's schedule-only games are pages too: no stored game newly takes the
+ * slug one of them is called by (its id without the prefix, which is also where proxy.ts sends its old
+ * `official-` URL), and no alias may be one of their slugs.
+ *
+ * A game is given its id, the URL before slugs, as an alias only where it may have been published at it and
+ * nothing here can say otherwise: with no previous snapshot (a first run, or a file that would not load), and for
+ * a contest the previous snapshot records as gone that is back (`contentRemovals`). Anything else new was first
+ * seen now, and its id was never a URL.
  */
 export function gameUrlsOf(
   games: readonly Game[],
@@ -130,9 +137,18 @@ export function gameUrlsOf(
   const before = previous
     ? withFixtureGames(previous.games, previous.officialFixtures ?? [], localDateKey(previous.fetchedAt), previous.fetchedAt).games
     : [];
-  const slugged = withGameSlugs(games, { previous: before, superseded });
-  const reserved = withFixtureGames(slugged, unmatched, localDateKey(fetchedAt), fetchedAt).listed.map((g) => g.slug!);
-  return withGameAliases(slugged, { previous: before, superseded, reserved });
+  const today = localDateKey(fetchedAt);
+  const leaveFree = withFixtureGames(games, unmatched, today, fetchedAt).listed.map(baseGameSlug);
+  const slugged = withGameSlugs(games, { previous: before, superseded, leaveFree });
+  const reserved = withFixtureGames(slugged, unmatched, today, fetchedAt).listed.map((g) => g.slug!);
+  const known = new Set(before.map((g) => g.contestId));
+  const returned = new Set((previous?.contentRemovals ?? []).map((r) => r.contestId).filter((id) => !known.has(id)));
+  return withGameAliases(slugged, {
+    previous: before,
+    superseded,
+    reserved,
+    publishedAtLegacyParam: (g) => previous === null || returned.has(g.contestId),
+  });
 }
 
 function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {

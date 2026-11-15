@@ -76,7 +76,9 @@ export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: 
  * Each listed game gets its slug here (lib/game-slug.ts: its date and sides, which is its contest id without the
  * `official:` prefix), clear of the slugs `games` hold, so the site and the pipeline (lib/pipeline/steps/assemble.ts
  * gameUrlsOf) name it alike without storing it. `/game/official-<date>-<away>-at-<home>`, its URL before slugs,
- * is redirected by proxy.ts.
+ * is redirected to that slug by proxy.ts. The pipeline keeps new stored games off it; only where a stored game
+ * of the same day and pair already had the slug does the listed game take `-2`, and it was never at an
+ * `official-` URL then.
  */
 export function withFixtureGames(
   games: readonly Game[],

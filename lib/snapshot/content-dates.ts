@@ -47,10 +47,19 @@ export function gameContentStamp(game: Game): number {
  * when it was read (`fetchedAt`), MaxPreps' own edit stamp (a re-save that changes nothing a page
  * prints), and `contentChangedAt` itself. `Game.bracket` (added 2026-10-29) is content: a CCS game
  * whose `bracket.published` flips, or whose `bracket.name` moves it between divisions, restamps the
- * game and so the bracket page's `lastmod`. `slug` and `aliases` (lib/game-urls.ts) are where the page is, not
- * what it says: a slug only changes with a date or a side, which is content already, and a new alias changes nothing.
+ * game and so the bracket page's `lastmod`. The game's own `slug` and `aliases` (lib/game-urls.ts) are where the
+ * page is, not what it says, and are set aside too (withoutUrls): a slug only changes with a date, a host or a
+ * side's name, which is content already, and a new alias changes nothing.
  */
-const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt', 'slug', 'aliases'] as const;
+const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt'] as const;
+
+/** The game without its own `slug` and `aliases` (a side's `slug` is content and stays). */
+function withoutUrls(game: Game): Game {
+  const seen = { ...game };
+  delete seen.slug;
+  delete seen.aliases;
+  return seen;
+}
 
 /**
  * `games` with `provenance.contentChangedAt` set against the previous snapshot (SPEC §7.4 step 13):
@@ -65,7 +74,7 @@ export function stampContentChanges(games: readonly Game[], previous: readonly G
   const before = new Map(previous.map((g) => [g.contestId, g]));
   return games.map((game) => {
     const prior = before.get(game.contestId);
-    const same = prior !== undefined && contentKey(prior, UNSEEN) === contentKey(game, UNSEEN);
+    const same = prior !== undefined && contentKey(withoutUrls(prior), UNSEEN) === contentKey(withoutUrls(game), UNSEEN);
     const stamp = same ? prior.provenance.contentChangedAt : fetchedAt;
     // A stamp of `undefined` leaves no key in the written file (lib/stable-json.ts normalizeKeys).
     return { ...game, provenance: { ...game.provenance, contentChangedAt: stamp } };

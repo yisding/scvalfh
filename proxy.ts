@@ -6,8 +6,10 @@ import { legacyGameTarget } from './lib/game-aliases';
  * Old game URLs. Before slugs a game's page was `/game/<its contest id>`: a MaxPreps GUID, or `sblive-<n>`,
  * `cifsds-<away>-at-<home>`, `official-<date>-<away>-at-<home>` for a game MaxPreps did not list. Each is a
  * permanent (308) redirect to the game's page now, `/game/<slug>` (lib/game-slug.ts), and its OG image to that
- * page's; the table is the snapshot's aliases (lib/game-aliases.ts legacyGameTarget). An id that was never a game
- * here falls through to the 404 it always got.
+ * page's; the table is the snapshot's aliases (lib/game-aliases.ts legacyGameTarget). A GUID, `sblive-` or
+ * `cifsds-` id that was never a game here falls through to the 404 it always got. An `official-` id the table
+ * does not have is sent to the same segment without its prefix, where a schedule-only game's page is (those are
+ * not stored, so no table can list them); if nothing is there, that is the 404.
  *
  * This is the site's only request-time code, and the matcher keeps it to those URL shapes: a slug starts with a
  * date, which none of the four patterns match, so no page the site links to ever runs it. They are here and not in

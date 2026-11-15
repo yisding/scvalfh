@@ -98,10 +98,14 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
       expect(game.slug, `lib/data.ts ${game.contestId} has a slug`).toMatch(GAME_SLUG_RE);
       expect(params.has(game.slug!), `components/game/game-view.ts ${game.slug}`).toBe(true);
       expect(L.d.getGameBySlug(game.slug!)?.contestId, `lib/data.ts getGameBySlug ${game.slug}`).toBe(game.contestId);
-      // The id, the URL before slugs, is no page. (The corpus is a pipeline run with no previous snapshot, so its
-      // games were never published at their ids and have no alias; tests/game-aliases.test.ts has the committed files.)
+      // The id, the URL before slugs, is no page: it is the game's alias. (The corpus is a pipeline run with no
+      // previous snapshot, where nothing says a game was NOT published at its id, so each keeps it reachable:
+      // lib/pipeline/steps/assemble.ts gameUrlsOf. tests/game-aliases.test.ts follows the committed files' aliases.)
       expect(params.has(L.ids.gameIdToParam(game.contestId)), `components/game/game-view.ts ${game.contestId}`).toBe(false);
-      expect(game.aliases, `lib/game-urls.ts ${game.contestId}: a first run gives no alias`).toBeUndefined();
+      // (A schedule-only game is not stored, so it has none: proxy.ts sends its old official- URL to its slug.)
+      if (game.contestId !== `official:${game.slug}`) {
+        expect(game.aliases, `lib/game-urls.ts ${game.contestId}`).toContain(L.ids.gameIdToParam(game.contestId));
+      }
     }
     const sblive = games.filter((g) => g.contestId.startsWith('sblive:'));
     expect(sblive.length, 'lib/data.ts: the corpus has si.com-only games').toBeGreaterThan(0);

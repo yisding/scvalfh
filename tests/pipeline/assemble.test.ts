@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { gameUrlsOf, supersededGamesOf } from '../../lib/pipeline/steps/assemble';
 import { withLegacyGameUrls } from '../../lib/game-urls';
+import { withFixtureGames } from '../../lib/results/fixture-games';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, OfficialFixture, Snapshot } from '../../lib/types';
 import { game } from '../game-builder';
@@ -110,13 +111,44 @@ describe('gameUrlsOf: each game’s slug and aliases, against the previous snaps
       [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina', old.contestId],
       [fresh.contestId]: ['2026-10-06-santa-catalina-at-greenfield'],
     });
-    // …and with no previous snapshot at all, nothing was ever published.
-    expect(urls(gameUrlsOf([old], null, [], {}, AT))).toEqual({ [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina'] });
+  });
+
+  it('with nothing to vouch for a game, its id stays reachable: no previous snapshot, or a contest that left and is back', () => {
+    const old = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0 });
+    const other = game({ home: 'greenfield', away: 'santa-catalina', date: '2026-10-06' });
+    // No previous snapshot (a first run, or a file that would not load): one bad run must not drop every old URL.
+    expect(urls(gameUrlsOf([old], null, [], {}, AT))).toEqual({ [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina', old.contestId] });
+    // Gone for a run (the previous snapshot records the removal), then back: its id URL answers again.
+    const gone = { ...loaded([other]), contentRemovals: [{ contestId: old.contestId, dateKey: '2026-09-04', slugs: [], removedAt: AT }] } as Snapshot;
+    expect(urls(gameUrlsOf([old, other], gone, [], {}, AT))).toEqual({
+      [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina', old.contestId],
+      [other.contestId]: ['2026-10-06-santa-catalina-at-greenfield', other.contestId],
+    });
+    // A removal of a game that is still there (it only changed its date) vouches for nothing new.
+    const moved = { ...loaded([old]), contentRemovals: [{ contestId: old.contestId, dateKey: '2026-08-28', slugs: [], removedAt: AT }] } as Snapshot;
+    expect(urls(gameUrlsOf([old, other], moved, [], {}, AT))[other.contestId]).toEqual(['2026-10-06-santa-catalina-at-greenfield']);
+  });
+
+  it('a schedule-only game keeps its page: a feed game of the same day and pair that turns up beside it is -2', () => {
+    // The league lists Greenfield at Santa Catalina on Nov 24; a feed game of that day is not matched to the fixture.
+    const fixture = pcalFixture('2026-11-24', 'greenfield', 'santa-catalina');
+    const unmatched = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: null });
+    const previous = loaded([], [fixture]);
+    const out = gameUrlsOf([unmatched], previous, [fixture], {}, AT);
+    expect(urls(out)).toEqual({ [unmatched.contestId]: ['2026-11-24-greenfield-at-santa-catalina-2'] });
+    // The site then lists the fixture at the plain slug, where proxy.ts sends its old official- URL.
+    const site = withFixtureGames(out, [fixture], '2026-11-15', AT).listed;
+    expect(site.map((g) => g.slug)).toEqual(['2026-11-24-greenfield-at-santa-catalina']);
+    // A feed game that had the slug before the league listed the fixture keeps it; the fixture is the -2.
+    const first = previousWith(gameUrlsOf([unmatched], loaded([]), [], {}, AT));
+    const kept = gameUrlsOf([unmatched], first, [fixture], {}, AT);
+    expect(kept[0].slug).toBe('2026-11-24-greenfield-at-santa-catalina');
+    expect(withFixtureGames(kept, [fixture], '2026-11-15', AT).listed.map((g) => g.slug)).toEqual(['2026-11-24-greenfield-at-santa-catalina-2']);
   });
 
   it('a rescheduled game is at its new date, and the old slug stays an alias run after run', () => {
     const before = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-10-06' });
-    const first = previousWith(gameUrlsOf([before], null, [], {}, AT));
+    const first = previousWith(gameUrlsOf([before], loaded([]), [], {}, AT));
     const moved = { ...before, ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-10-13', official: null }), contestId: before.contestId };
     const second = gameUrlsOf([moved], first, [], {}, AT);
     expect(urls(second)).toEqual({ [before.contestId]: ['2026-10-13-greenfield-at-santa-catalina', '2026-10-06-greenfield-at-santa-catalina'] });
@@ -143,7 +175,7 @@ describe('gameUrlsOf: each game’s slug and aliases, against the previous snaps
     // The MaxPreps game moved off Nov 24 (and is not matched to the fixture), which the league still lists that day.
     const fixture = pcalFixture('2026-11-24', 'greenfield', 'santa-catalina');
     const before = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: null });
-    const first = previousWith(gameUrlsOf([before], null, [], {}, AT));
+    const first = previousWith(gameUrlsOf([before], loaded([]), [], {}, AT));
     const moved = { ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-12-01', official: null }), contestId: before.contestId };
     expect(urls(gameUrlsOf([moved], first, [fixture], {}, AT))).toEqual({ [before.contestId]: ['2026-12-01-greenfield-at-santa-catalina'] });
     expect(urls(gameUrlsOf([moved], first, [], {}, AT))).toEqual({

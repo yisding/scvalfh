@@ -83,6 +83,17 @@ describe('stampContentChanges (lib/pipeline/steps/assemble.ts)', () => {
     const out = stampContentChanges([moved, noted, fresh], [a, b], RUN);
     expect(out.map((g) => g.provenance.contentChangedAt)).toEqual([RUN, RUN, RUN]);
   });
+
+  it('a game’s own slug and aliases are where the page is, not content; a side’s slug is content', () => {
+    // lib/game-urls.ts: a new alias, or the slug itself, restamps nothing (what changed the slug already did).
+    const located = { ...a, slug: '2026-09-09-fremont-at-cupertino', aliases: [a.contestId] };
+    expect(stampContentChanges([located], [a], RUN)[0].provenance.contentChangedAt, 'slug and aliases added').toBeUndefined();
+    const renamed = { ...located, slug: '2026-09-09-fremont-at-cupertino-2', aliases: [a.contestId, '2026-09-09-fremont-at-cupertino'] };
+    expect(stampContentChanges([renamed], [located], RUN)[0].provenance.contentChangedAt, 'slug changed alone').toBeUndefined();
+    // A side that gained its registry slug is a change the page shows (its name becomes a link).
+    const linked = { ...located, away: { ...located.away, slug: null } };
+    expect(stampContentChanges([located], [linked], RUN)[0].provenance.contentChangedAt, 'a side’s slug').toBe(RUN);
+  });
 });
 
 describe('contentRemovalsOf (lib/pipeline/steps/assemble.ts) and the pages a removal touched', () => {

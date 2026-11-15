@@ -61,14 +61,17 @@ function isNumberedFrom(slug: string, base: string): boolean {
 /**
  * Rule 1: each game with its slug. `previousSlug` is the slug the game had (or the game it superseded had); it is
  * kept while it still names the game. `taken` are slugs already in use elsewhere (the stored games', when
- * lib/results/fixture-games.ts names its own).
+ * lib/results/fixture-games.ts names its own): nobody here gets one. `leaveFree` are slugs a game here may keep
+ * but none may newly take (GameUrlHistory.leaveFree).
  */
 export function assignGameSlugs(
   games: readonly UrlGame[],
   previousSlug: (game: UrlGame) => string | undefined,
   taken: Iterable<string> = [],
+  leaveFree: Iterable<string> = [],
 ): Map<string, string> {
   const used = new Set(taken);
+  const spoken = new Set(leaveFree);
   const out = new Map<string, string>();
   const waiting: Array<{ game: UrlGame; base: string }> = [];
   for (const game of [...games].sort(byStartThenId)) {
@@ -83,7 +86,7 @@ export function assignGameSlugs(
   }
   for (const { game, base } of waiting) {
     let slug = base;
-    for (let n = 2; used.has(slug); n++) slug = `${base}-${n}`;
+    for (let n = 2; used.has(slug) || spoken.has(slug); n++) slug = `${base}-${n}`;
     used.add(slug);
     out.set(game.contestId, slug);
   }
@@ -95,9 +98,20 @@ export interface GameUrlHistory {
   previous?: readonly UrlGame[];
   /** Superseded contest id → the contest that replaced it (Snapshot.supersededGames, this run's). */
   superseded?: Readonly<Record<string, string>>;
-  /** Slugs of pages that are not among `games` (the schedule-only games lib/data.ts adds): rule 3 covers them too. */
+  /**
+   * Slugs no game may newly take, though one that has such a slug keeps it: what this run's schedule-only games
+   * (lib/results/fixture-games.ts, not among `games`) are called. Such a game takes the first free slug after the
+   * stored games, so a feed game of the same day and pair that turns up beside one gets the `-2`, and the page
+   * already at the plain slug stays where it is.
+   */
+  leaveFree?: Iterable<string>;
+  /** Slugs of pages that are not among `games` (those schedule-only games, as named): rule 3 covers them too. */
   reserved?: Iterable<string>;
-  /** True for a game that was published at its legacy param: a file written before slugs existed (the load upgrade). */
+  /**
+   * True for a game that may have been published at its legacy param: every game of a file written before slugs
+   * (the load upgrade), and in the pipeline a game nothing vouches for (no previous snapshot, or one that left and
+   * is back). An alias nobody ever used costs nothing; a URL that was live and stops answering does.
+   */
   publishedAtLegacyParam?: (game: UrlGame) => boolean;
 }
 
@@ -137,7 +151,7 @@ function previousSlugs(history: GameUrlHistory): (game: UrlGame) => string | und
 
 /** `games`, each with its slug (rule 1). A game that carries one already is its own history. */
 export function withGameSlugs<T extends UrlGame>(games: readonly T[], history: GameUrlHistory = {}): T[] {
-  const slugs = assignGameSlugs(games, previousSlugs(history), history.reserved);
+  const slugs = assignGameSlugs(games, previousSlugs(history), [], history.leaveFree);
   return games.map((game) => ({ ...game, slug: slugs.get(game.contestId)! }));
 }
 
@@ -203,7 +217,8 @@ export function withLegacyGameUrls<T extends UrlGame>(games: readonly T[], super
   const named = games.filter((g) => g.slug !== undefined);
   const taken = new Set<string>();
   for (const g of named) for (const segment of [g.slug!, ...(g.aliases ?? [])]) taken.add(segment);
-  const slugs = assignGameSlugs(unnamed, () => undefined, named.map((g) => g.slug!));
+  // Clear of the named games' slugs AND aliases: an alias of theirs cannot be taken back here (they are left as they are).
+  const slugs = assignGameSlugs(unnamed, () => undefined, taken);
   const located = withGameAliases(
     unnamed.map((g) => ({ ...g, slug: slugs.get(g.contestId)! })),
     { superseded, reserved: taken, publishedAtLegacyParam: () => true },

@@ -428,7 +428,8 @@ describe('the volleyball refresh', () => {
   it('tests the volleyball data files it just wrote, with test files that exist', () => {
     const body = stepBody(updateVolleyball, 'Test');
     const files = [...body.matchAll(/tests\/[\w.-]+\.test\.ts/g)].map((m) => m[0]);
-    expect(files).toEqual(['tests/volleyball.test.ts']);
+    // …and the file that follows every old game URL of the snapshot to its page (lib/game-urls.ts aliases).
+    expect(files).toEqual(['tests/volleyball.test.ts', 'tests/game-aliases.test.ts']);
     for (const f of files) expect(existsSync(path.join(REPO, f)), f).toBe(true);
   });
 

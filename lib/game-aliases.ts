@@ -17,8 +17,9 @@
  * runs on a request. What lib/data.ts adds to the file on reading it is therefore not in the table: a schedule-only
  * game, or an added game the file predates. Both were published at `official-<date>-<away>-at-<home>`, which
  * `legacyGameTarget` sends to that segment without its prefix: the game's slug, or (for one at a neutral site, whose
- * slug says `vs`) an alias next.config.ts redirects. tests/game-aliases.test.ts holds every answer to a page
- * lib/data.ts has.
+ * slug says `vs`) an alias next.config.ts redirects. (A schedule-only game called `…-2`, because a stored game of
+ * its day and pair had the slug first, was never at an `official-` URL: lib/results/fixture-games.ts.)
+ * tests/game-aliases.test.ts holds every answer to a page lib/data.ts has.
  */
 
 import bundledSnapshotFieldHockey from '../data/snapshot.json';

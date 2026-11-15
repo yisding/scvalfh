@@ -8,7 +8,7 @@
  * The proxy reads the file as stored and the pages read it through lib/data.ts, so this is also the check that
  * the two agree on every game: each of a game's aliases must end at that game's slug. In a snapshot written before
  * slugs that includes every game's id, the URL it was published at; a game first listed since has no alias, and
- * its id was never a URL. (update-data*.yml runs this file on each snapshot it fetches.)
+ * its id was never a URL. Every update-data*.yml runs this file on the snapshot it fetched, before committing it.
  */
 
 import { NextRequest } from 'next/server';
@@ -75,9 +75,10 @@ describe.each(SPORTS)('%s: every old game URL leads to its game', (sport) => {
     const wrong: string[] = [];
     let twoHops = 0;
     for (const game of m.games) {
-      // Its aliases; and for an `official:` game its id as a URL segment, alias or not: proxy.ts answers every
-      // `official-…` (a schedule-only game is not stored, so nothing can list that segment for it).
-      const official = game.contestId.startsWith('official:') ? [gameIdToParam(game.contestId)] : [];
+      // Its aliases; and for a schedule-only game (not stored, so nothing can list an alias for it) its id as a
+      // URL segment, which proxy.ts sends to the same segment without the prefix: the game's slug, unless a
+      // stored game had that slug first (lib/results/fixture-games.ts), in which case it never was at that URL.
+      const official = game.contestId === `official:${game.slug}` ? [gameIdToParam(game.contestId)] : [];
       for (const segment of new Set([...official, ...(game.aliases ?? [])])) {
         if (segment === game.slug) continue;
         for (const suffix of ['', '/opengraph-image']) {
