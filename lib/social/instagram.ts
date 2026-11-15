@@ -22,8 +22,9 @@
  *   3. a handle is an Instagram username: lower case, letters, digits, `.` and `_`, at most 30
  *   4. `foundAt`, when set, is https and not social media
  *
- * One file per sport, as data/clubs.json: data/soccer/ and data/basketball/ hold empty ones until their
- * programs' accounts are researched.
+ * One file per sport, as data/clubs.json: data/soccer/, data/basketball/ and data/volleyball/ hold that
+ * build's programs' accounts (girls soccer, boys basketball, girls volleyball; an account the school's
+ * boys and girls teams share counts, the other gender's alone does not).
  */
 
 import { z } from 'zod';

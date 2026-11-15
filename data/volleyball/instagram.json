@@ -1,7 +1,93 @@
 {
-  "builtBy": "Nothing yet: the volleyball programs' Instagram accounts are not researched for the volleyball build.",
+  "builtBy": "Research by hand on 2026-11-14 for the 41 girls volleyball teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found.",
   "capturedAt": "2026-11-14",
-  "notes": [],
-  "teams": [],
+  "notes": [
+    "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
+    "A team’s account is its girls volleyball program’s own, or one the school’s girls and boys teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
+    "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
+    "No record means no account we could find and check on the day, not that there is none: 10 of the 41 teams have one. The search allowance gave most schools one search for all their sports."
+  ],
+  "teams": [
+    {
+      "slug": "cupertino",
+      "level": "varsity",
+      "handle": "tinogirlsvball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"CUPERTINO GIRLS VOLLEYBALL\", bio \"we ball!\", linking homecampus.com clearances. The school rests on the name and \"tino\", Cupertino High’s nickname; the profile names no city.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "homestead",
+      "level": "varsity",
+      "handle": "homesteadvolleyball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Homestead Volleyball\", bio \"HHS Volleyball | 1x CCS Girls Finalist | 1x CCS Boys Finalist | 1x Boys Nor-Cal Champions\". One account for the girls and the boys; the CCS and Nor-Cal lines place it at Homestead, Cupertino. Not homestead.vb, which is Homestead High School’s in Fort Wayne, Indiana.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "los-gatos",
+      "level": "varsity",
+      "handle": "losgatosvolleyball",
+      "foundAt": "https://www.losgatosathletics.org/socialmedia",
+      "note": "Linked as \"Volleyball- Girls\" on the social media page of the school’s athletics site (the boys have their own). Profile opened: \"Los Gatos High School Girls Volleyball\", bio \"Los Gatos High School Official Women’s Volleyball Account\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "milpitas",
+      "level": "varsity",
+      "handle": "milpitasgirlsvb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"MHS Girls Volleyball\", bio \"Official MHS GIRLS VB … 2025 CCS Division 1 Champs\". The school rests on the handle and the CCS title.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "monta-vista",
+      "level": "varsity",
+      "handle": "matadorvb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Monta Vista Girl’s Volleyball\", bio \"2024 DII CCS CHAMPS & DIII NORCAL CHAMPS\".",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "varsity",
+      "handle": "palyvolleyball",
+      "foundAt": "https://vikingsportsmag.com/beats/fall-sports/2023/08/31/girls-volleyball-season-preview-3/",
+      "note": "Credited by the school’s student sports magazine, Viking Magazine (\"Photo courtesy of @palyvolleyball on instagram\", girls volleyball season preview, 2023-08-31). Profile opened: \"Paly Girls Varsity Volleyball\", linking palyathletics.com’s girls volleyball schedule. A later Viking article credits @palygirlsvolleyball, a profile Instagram says is not available.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "gunn",
+      "level": "varsity",
+      "handle": "gunngirlsvolleyball",
+      "foundAt": "https://www.gunnathletics.com/",
+      "note": "Linked from the \"Volleyball, Girls\" entry of the sports menu on the school’s athletics site. Profile opened: \"GUNN GIRLS VOLLEYBALL\", bio \"Gunn High School Girl’s Volleyball Team\", linking the Gunn Titans’ MaxPreps schedule",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "branham",
+      "level": "varsity",
+      "handle": "branham.high.volleyball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Branham.High.Volleyball\", bio \"The Official page of Branham High School Volleyball\". One account for the school’s volleyball; it does not say girls only.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "evergreen-valley",
+      "level": "varsity",
+      "handle": "evhsgvb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"EVHS Girls Volleyball\", bio \"follow for games, news, and events!! #evhspride\", linking the school’s own girls volleyball page (evergreenvalleyhigh.esuhsd.org/sports/volleyball-girls).",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "independence",
+      "level": "varsity",
+      "handle": "indygirlsvolleyball",
+      "foundAt": "https://sites.google.com/esuhsd.org/sixerathletics/athletics-general-info/sixers-social-media",
+      "note": "Linked on the \"Sixers Social Media\" page of the school’s athletics site as \"Girls Volleyball: @indygirlsvolleyball\" (the boys have their own). Profile opened: \"ihsgirlsvball\", bio \"The official account for the Independence Highschool Girls Volleyball 2026-2027 team!\"",
+      "checkedOn": "2026-11-14"
+    }
+  ],
   "clubs": []
 }

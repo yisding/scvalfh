@@ -1,7 +1,69 @@
 {
-  "builtBy": "Nothing yet: the soccer programs' Instagram accounts are not researched for the soccer build.",
-  "capturedAt": "2026-11-13",
-  "notes": [],
-  "teams": [],
+  "builtBy": "Research by hand on 2026-11-14 for the 60 girls soccer teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found.",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
+    "A team’s account is its girls soccer program’s own, or one the school’s boys and girls soccer teams share (its note says so); never a boys-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
+    "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
+    "No record means no account we could find and check on the day, not that there is none: 7 of the 60 teams have one. The search allowance gave most schools one search for all their sports."
+  ],
+  "teams": [
+    {
+      "slug": "gunn",
+      "level": "varsity",
+      "handle": "gunngirlsvarsitysoccer",
+      "foundAt": "https://www.gunnathletics.com/",
+      "note": "Linked from the \"Soccer, Girls\" entry of the sports menu on the school’s athletics site (the boys have their own). Profile opened: \"Gunn Girls Varsity Soccer\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "los-gatos",
+      "level": "varsity",
+      "handle": "lghsvarsitygirlssoccer",
+      "foundAt": "https://www.losgatosathletics.org/socialmedia",
+      "note": "Linked as \"Soccer- Girls\" on the social media page of the school’s athletics site (the boys have their own). Profile opened: \"lghs girls varsity soccer\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "independence",
+      "level": "varsity",
+      "handle": "ihs.soccer",
+      "foundAt": "https://sites.google.com/esuhsd.org/sixerathletics/athletics-general-info/sixers-social-media",
+      "note": "Linked on the \"Sixers Social Media\" page of the school’s athletics site as \"Boys & Girls Soccer: @ihs.soccer\". One account for the boys and the girls. Profile opened: \"IHS Soccer\", bio \"Independence High School, San Jose … Boys and Girls Soccer\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "james-lick",
+      "level": "varsity",
+      "handle": "jlhs.soccer",
+      "foundAt": "https://sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports",
+      "note": "Linked on the Winter Sports page of the school’s own site, as \"@JLHS.SOCCER\" under both \"Boys’ Soccer\" and \"Girls’ Soccer\". Profile opened: bio \"Official Girls Soccer Page - James Lick HS | San Jose, CA\", linking the James Lick Comets’ girls soccer schedule on MaxPreps",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "riordan",
+      "level": "varsity",
+      "handle": "riordangirlssoccer",
+      "foundAt": "https://riordanathletics.com/sports/womens-soccer",
+      "note": "Set as the Instagram of \"Varsity Girls’ Soccer\" in the settings of the school’s athletics site, not shown as a link. Profile opened: \"ARHS Girls’ Soccer\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "saint-francis",
+      "level": "varsity",
+      "handle": "sfhs_girlssoccer",
+      "foundAt": "https://sfhsathletics.com/sports/womens-soccer",
+      "note": "Linked as the girls soccer team’s Instagram in the teams menu of the school’s athletics site, beside a separate boys link. Profile opened: \"SFHS Girls Soccer\", bio \"Official Account for the Saint Francis High School Girls Soccer Program\", linking sfhsathletics.com",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "st-ignatius",
+      "level": "varsity",
+      "handle": "si_wsoccer",
+      "foundAt": "https://siwildcats.com/sports/womens-soccer",
+      "note": "Set as the women’s soccer page’s Instagram (\"@si_wsoccer\") in the settings of the school’s athletics site, not shown as a link. Profile opened: \"St. Ignatius Women’s Varsity Soccer\"",
+      "checkedOn": "2026-11-14"
+    }
+  ],
   "clubs": []
 }

@@ -1137,8 +1137,20 @@ that there is none.
 The file is research, written by hand on 2026-11-13 (its `builtBy` and `notes` say how); nothing
 rewrites it. `lib/social/instagram.ts` validates it at import (lower-case handles, registry team and
 club slugs, a team at most once per level, no handle twice, an https `foundAt` off social media), so a bad file fails `pnpm test` and the
-build (`tests/instagram-file.test.ts`). The soccer and basketball builds read empty files in
-`data/soccer/` and `data/basketball/` until their programs are researched.
+build (`tests/instagram-file.test.ts`). A second round on 2026-11-14 went back over the 64 teams and 9
+clubs without a record and added Tamalpais's and two clubs' (Lightning, the Huntington Beach Surfers); the
+owner then gave Los Altos's, Homestead's, Valley Christian's and Lynbrook's, and trying likely handles
+(`<school>fieldhockey`, `<school>fockey`, `<school>fh` and the like) found seven BVAL teams':
+53 records for 50 of the 102 teams, and 21 of the 28 clubs.
+
+The soccer, basketball and volleyball builds read their own files (`data/soccer/`, `data/basketball/`,
+`data/volleyball/`), researched on 2026-11-14 under the same rule for that build's program: the girls
+soccer, boys basketball or girls volleyball program's own account, or one the school's boys and girls
+teams share (its note says so), never the other gender's alone. Coverage is thin: **7 of the 60 soccer
+teams, 11 of the 41 basketball teams and 10 of the 41 volleyball teams**. Most of these schools' sites
+link only the school's or the athletics department's account, and a profile that does not say which
+school it is ("Fremont Girls Soccer", "MVHS Girls Volleyball") is left out unless a page of the school's
+links it or the profile links the school's own page. Every profile kept was opened in a browser.
 
 ## Code layout
 

@@ -1,6 +1,6 @@
 /**
  * data/instagram.json (lib/social/instagram.ts): the committed file loads and keeps every invariant, the
- * soccer and basketball placeholders parse, and a bad file — built in memory from the real one, never
+ * soccer, basketball and volleyball files parse, and a bad file — built in memory from the real one, never
  * written to disk — is refused at load with a message naming the list, the slug and what is wrong.
  */
 
@@ -64,8 +64,8 @@ describe('data/instagram.json', () => {
     expect(instagramUrl('flyfhc')).toBe('https://www.instagram.com/flyfhc/');
   });
 
-  it('parses the soccer and basketball placeholders', () => {
-    for (const sport of ['soccer', 'basketball']) {
+  it('parses the soccer, basketball and volleyball files', () => {
+    for (const sport of ['soccer', 'basketball', 'volleyball']) {
       const f = JSON.parse(readFileSync(path.join(REPO, 'data', sport, 'instagram.json'), 'utf8')) as unknown;
       expect(InstagramFileSchema.safeParse(f).success, sport).toBe(true);
     }

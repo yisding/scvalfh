@@ -2824,6 +2824,51 @@ school's elsewhere (`stevenson.fieldhockey` is Adlai Stevenson's, in Illinois). 
 (owner decision, 2026-11-13). Handles are stored lower case, as Instagram stores usernames. A school or
 club with no record had no account we could find and check on the day; it may still have one.
 
+A second round on 2026-11-14 went back over the 64 teams and 9 clubs without a record: their schools'
+athletics and team pages, program sites and student papers read by script, then web searches limited to
+`instagram.com` (the only searches that return a profile's name and bio; open searches return MaxPreps
+and school pages). It added Tamalpais (`tamfockey`: the program's Google Site embeds the feed through a
+widget that never names the account, and one embedded post, opened in a browser, is that account's) and
+two clubs, Lightning and the Huntington Beach Surfers, whose own sites link only Facebook. The 30
+Southern California teams still without a record include 13 whose field hockey page was read and names
+no account. Left out: `knights_fhc` (a club, not San Marcos High's team), `nighthawksfieldhockeyclub`
+and `pantherfieldhockeyclub` (no school named), `clashcoastal` (a CrossFit event, not Coastal Clash).
+
+The owner then gave four SCVAL accounts the round had missed (Los Altos `lahsfieldhockey`, Homestead
+`homesteadvfhock`, Valley Christian `vchs_fieldhockey`, Lynbrook `lynbrookfockey`). Why it missed them:
+no page of the school's or its paper's names them, and the web search tool's index does not hold these
+profiles at all (a search for the exact handle `lynbrookfockey` returns no Instagram result). Google,
+Bing and DuckDuckGo all answer a script or an automated browser with a robot check, and Instagram's own
+search needs a login. So a small team account that no web page links can only be found by someone
+signed in to Instagram, or by guessing handles. With the owner's leave, 361 likely handles for the 11
+BVAL teams without a record (each school's name, initials or name-and-mascot with `fieldhockey`,
+`fockey`, `fhockey`, `fh`, `vfhock` and the like) were then requested as public profile pages, and every
+profile that exists was opened and read. Seven are the teams': Branham `branhamfh`, Gilroy
+`gilroyfieldhockey`, Leigh `leighfieldhockey`, Leland `lelandfieldhockey`, Prospect
+`prospectfieldhockey`, Silver Creek `silvercreekfieldhockey`, Sobrato `sobrato_fieldhockey`. Nothing
+for Christopher, Willow Glen, Live Oak or Del Mar (`delmarfieldhockey` is Delmar, Delaware's). Initials
+only ever hit other schools (`chsfockey` is Columbia's, `ghsfockey` Greenfield, Massachusetts's). The
+same could be done for the other leagues and the other builds.
+
+**The other builds** (`data/soccer/`, `data/basketball/`, `data/volleyball/instagram.json`, 2026-11-14):
+the same method and rule for that build's program, the girls soccer, boys basketball or girls
+volleyball program's own account, or one the school's boys and girls teams share; a boys-only soccer
+or volleyball account, or a girls-only basketball one, is not the team's. Found: 7 of 60 soccer, 11 of
+41 basketball, 10 of 41 volleyball. Sources that worked: an athletics site's social media page (Los
+Gatos, Independence), its sports menu (Gunn), a school's own sports pages (James Lick), the per-sport
+Instagram setting embedded in a SIDEARM-style athletics site (St. Ignatius, Riordan, Saint Francis),
+Viking Magazine's photo credits (Palo Alto), and searches limited to `instagram.com`. Every profile kept
+was opened in a browser the same day; that check dropped James Lick's linked volleyball account
+(`comet_volleyball`: "Profile isn't available") and `homestead.vb` (Fort Wayne, Indiana) and
+`pioneergirlssoccer` (New York). Left out because the profile does not say which school it is and no
+school page links it: `fremont.girls.soccer`, `fremont.vb`, `mvhs.girlssoccer`, `mvhs_girlsvball`,
+`lahsboys_basketball`, `homesteadgsoccer`, `homesteadbasketball`, `schs.girlssoccer`,
+`santa.teresavolleyball`, `silvercreekvb`, `schsbasketball`, `schsboysbasketball`, `oghoops`,
+`oghs_basketball`; `wghs.bball` ("Willow Glen Varsity Boys Basketball") says "Not affiliated with
+WGHS"; `wilcoxvarsitysoccer` links the boys' schedule. The site's owner can confirm any of these, as
+for field hockey. The search allowance gave most schools one search for all their sports, so a school
+with no record was often barely searched.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
