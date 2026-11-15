@@ -161,11 +161,10 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
   });
 
   it('keeps the prop on the call sites a measurement named, by href', () => {
-    // A string matches as a substring of the tag; a RegExp with `.test()`. The two game links take
-    // either form because their owners switch them to `gameHref` only in Stage C (SPEC §10.2), and
-    // this test has to pass before that; tests/legacy-imports.test.ts then bans the raw
-    // `/game/${…}` template in app/ and components/, so the old form cannot come back.
-    const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
+    // A string matches as a substring of the tag; a RegExp with `.test()`. A game link is `gameHref(game)`
+    // (lib/game-id.ts: the game's slug); tests/legacy-imports.test.ts bans the raw `/game/${…}` template in
+    // app/ and components/, so no link is built another way.
+    const GAME_LINK = /gameHref\(game\)/;
     const WANT: [string, string | RegExp][] = [
       // StretchedRowLink: the stretched team-row link of the standings tables, the home mini
       // table, the playoff projection and the league-tournament seeds.

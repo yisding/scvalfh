@@ -309,6 +309,27 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }
 
+  // 11. game URLs (lib/game-urls.ts): each slug one game's, and an alias neither a slug in use (the redirect would
+  // hide that game's page) nor two games'. A game with no slug is not refused here: lib/snapshot/snapshot-load.ts
+  // names it (a file from before slugs, or a game a load step added), and the pipeline names every game it
+  // assembles (lib/pipeline/steps/assemble.ts gameUrlsOf); scripts/lib/prerender-expectations.ts fails a build
+  // whose site has one.
+  const slugs = new Map<string, number>();
+  s.games.forEach((g, i) => {
+    if (g.slug === undefined) return;
+    if (slugs.has(g.slug)) issue(ctx, ['games', i, 'slug'], `duplicate slug in games (${g.slug})`);
+    slugs.set(g.slug, i);
+  });
+  const aliasOwner = new Map<string, number>();
+  s.games.forEach((g, i) => {
+    for (const alias of g.aliases ?? []) {
+      if (g.slug === undefined) issue(ctx, ['games', i, 'aliases'], 'aliases on a game with no slug');
+      if (slugs.has(alias)) issue(ctx, ['games', i, 'aliases'], `alias ${alias} is the slug of a game`);
+      if (aliasOwner.has(alias)) issue(ctx, ['games', i, 'aliases'], `alias ${alias} is listed on two games`);
+      aliasOwner.set(alias, i);
+    }
+  });
+
   // counts in step with the arrays.
   if (s.counts.teams !== s.teams.length) issue(ctx, ['counts', 'teams'], 'counts.teams is stale');
   if (s.counts.games !== s.games.length) issue(ctx, ['counts', 'games'], 'counts.games is stale');

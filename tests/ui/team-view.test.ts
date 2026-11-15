@@ -481,7 +481,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const all = [...v.leagueLog, ...v.nonLeagueLog];
       const hrefs = [...section.matchAll(/<a [^>]*href="\/game\/([^"]+)"/g)].map((m) => m[1]);
       expect(hrefs.length, `app/teams/[slug]/page.tsx ${team.slug} schedule rows`).toBe(all.length);
-      const byId = new Map(all.map((g) => [g.contestId.replace(':', '-'), g]));
+      const byId = new Map(all.map((g) => [g.slug!, g]));
       const dates = hrefs.map((id) => byId.get(id)!.dateLocal);
       expect(dates, `app/teams/[slug]/page.tsx ${team.slug} date order`).toEqual([...dates].sort());
       const nonLeague = v.nonLeagueLog.filter((g) => g.postseason === null).length;
@@ -543,12 +543,13 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
     expect(rated, 'components/teams/team-view.ts: the corpus rates most teams').toBeGreaterThan(30);
   });
 
-  it('a si.com-only game links by its param, never the raw contest id', async () => {
+  it('a si.com-only game links by its slug, never its contest id', async () => {
     const game = data.getGames().find((g) => g.contestId.startsWith('sblive:'));
     expect(game, 'lib/data.ts: the corpus has a si.com backfill').toBeDefined();
     const slug = game!.home.slug ?? game!.away.slug!;
     const html = await renderTeam(slug);
-    expect(html, 'components/teams/TeamGameLog.tsx sblive link').toContain(`href="/game/${game!.contestId.replace(':', '-')}"`);
+    expect(html, 'components/teams/TeamGameLog.tsx sblive link').toContain(`href="/game/${game!.slug}"`);
+    expect(html, 'components/teams/TeamGameLog.tsx sblive link').not.toContain('href="/game/sblive');
   });
 });
 

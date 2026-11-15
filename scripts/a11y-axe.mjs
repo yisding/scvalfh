@@ -22,7 +22,7 @@
  *     per-league pages (/standings/bval, /standings/mcal, /standings/eal, /schedule/pcal,
  *     /schedule/eal, /playoffs/mcal), a BVAL, an MCAL and an EAL team page, and the first /game/,
  *     /scores/, /teams/ and /clubs/ page of the
- *     sitemap, plus its first /game/sblive-* page when it lists one (a si.com-only game) and its
+ *     sitemap, plus the first game /about#backfills links when it lists one (a si.com-sourced score) and the sitemap's
  *     first /clubs/ page whose club no tracked player is tied to (DESIGN §17). The sitemap lists the
  *     clubs with the most tied players first, so the first club page is the longest player list
  *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
@@ -219,7 +219,10 @@ async function sampleDynamicRoutes() {
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
   const first = (prefix) => locs.find((p) => p.startsWith(prefix));
   const firstEmptyClub = locs.find((p) => p.startsWith('/clubs/') && EMPTY_CLUBS.has(p.slice('/clubs/'.length)));
-  return [first('/game/'), first('/scores/'), first('/teams/'), first('/game/sblive-'), first('/clubs/'), firstEmptyClub]
+  // A si.com-only game's page (its source line is its own): /about#backfills links each one, at its slug.
+  const about = await fetch(`${BASE}/about`).then((r) => r.text());
+  const backfilled = /href="(\/game\/[^"#?]+)"/.exec(about.slice(Math.max(0, about.indexOf('id="backfills"'))))?.[1];
+  return [first('/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub]
     .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
 }
 

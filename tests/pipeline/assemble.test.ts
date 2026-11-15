@@ -6,7 +6,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { supersededGamesOf } from '../../lib/pipeline/steps/assemble';
+import { gameUrlsOf, supersededGamesOf } from '../../lib/pipeline/steps/assemble';
+import { withLegacyGameUrls } from '../../lib/game-urls';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, OfficialFixture, Snapshot } from '../../lib/types';
 import { game } from '../game-builder';
@@ -91,5 +92,72 @@ describe('supersededGamesOf: a game the previous build listed from a league’s 
     const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: { fixtureId: fixture.id } });
     const prev = previousWith([fill], { [pageId]: fill.contestId });
     expect(supersededGamesOf([contest], prev)).toEqual({ [pageId]: contest.contestId, 'sblive:7000001': contest.contestId });
+  });
+});
+
+describe('gameUrlsOf: each game’s slug and aliases, against the previous snapshot (lib/game-urls.ts)', () => {
+  const AT = '2026-11-15T15:00:00.000Z';
+  const urls = (games: Game[]) => Object.fromEntries(games.map((g) => [g.contestId, [g.slug, ...(g.aliases ?? [])]]));
+  /** The previous snapshot as readPrevious gives it: a file from before slugs, upgraded on load. */
+  const loaded = (games: Game[], fixtures: OfficialFixture[] = [], superseded: Record<string, string> = {}): Snapshot =>
+    previousWith(withLegacyGameUrls(games, superseded), superseded, fixtures);
+
+  it('the first run after slugs: a game published at its id keeps that URL as an alias; a new game has none', () => {
+    const old = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0 });
+    const fresh = game({ home: 'greenfield', away: 'santa-catalina', date: '2026-10-06' });
+    const out = gameUrlsOf([old, fresh], loaded([old]), [], {}, AT);
+    expect(urls(out)).toEqual({
+      [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina', old.contestId],
+      [fresh.contestId]: ['2026-10-06-santa-catalina-at-greenfield'],
+    });
+    // …and with no previous snapshot at all, nothing was ever published.
+    expect(urls(gameUrlsOf([old], null, [], {}, AT))).toEqual({ [old.contestId]: ['2026-09-04-greenfield-at-santa-catalina'] });
+  });
+
+  it('a rescheduled game is at its new date, and the old slug stays an alias run after run', () => {
+    const before = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-10-06' });
+    const first = previousWith(gameUrlsOf([before], null, [], {}, AT));
+    const moved = { ...before, ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-10-13', official: null }), contestId: before.contestId };
+    const second = gameUrlsOf([moved], first, [], {}, AT);
+    expect(urls(second)).toEqual({ [before.contestId]: ['2026-10-13-greenfield-at-santa-catalina', '2026-10-06-greenfield-at-santa-catalina'] });
+    expect(urls(gameUrlsOf([moved], previousWith(second), [], {}, AT))).toEqual(urls(second));
+  });
+
+  it('a schedule-only game a feed lists now: the MaxPreps game takes over its slug and its old official- URL', () => {
+    const fixture = pcalFixture('2026-11-24', 'greenfield', 'santa-catalina');
+    const previous = loaded([], [fixture]);
+    // Same day: the page does not move, and only the old id URL is an alias.
+    const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: { fixtureId: fixture.id } });
+    const superseded = supersededGamesOf([contest], previous);
+    expect(urls(gameUrlsOf([contest], previous, [], superseded, AT))).toEqual({
+      [contest.contestId]: ['2026-11-24-greenfield-at-santa-catalina', 'official-2026-11-24-greenfield-at-santa-catalina'],
+    });
+    // Played a day late: the fixture's slug redirects too.
+    const late = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-25', official: { fixtureId: fixture.id, scheduledDate: '2026-11-24', pass: 'rescheduled' } });
+    expect(urls(gameUrlsOf([late], previous, [], supersededGamesOf([late], previous), AT))).toEqual({
+      [late.contestId]: ['2026-11-25-greenfield-at-santa-catalina', '2026-11-24-greenfield-at-santa-catalina', 'official-2026-11-24-greenfield-at-santa-catalina'],
+    });
+  });
+
+  it('no alias is the slug of a schedule-only game this run lists: that page is not stored, and is still a page', () => {
+    // The MaxPreps game moved off Nov 24 (and is not matched to the fixture), which the league still lists that day.
+    const fixture = pcalFixture('2026-11-24', 'greenfield', 'santa-catalina');
+    const before = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-11-24', official: null });
+    const first = previousWith(gameUrlsOf([before], null, [], {}, AT));
+    const moved = { ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-12-01', official: null }), contestId: before.contestId };
+    expect(urls(gameUrlsOf([moved], first, [fixture], {}, AT))).toEqual({ [before.contestId]: ['2026-12-01-greenfield-at-santa-catalina'] });
+    expect(urls(gameUrlsOf([moved], first, [], {}, AT))).toEqual({
+      [before.contestId]: ['2026-12-01-greenfield-at-santa-catalina', '2026-11-24-greenfield-at-santa-catalina'],
+    });
+  });
+
+  it('an si.com fill MaxPreps supersedes hands over its slug and every alias', () => {
+    const fill = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0, contestId: 'sblive:6541425' });
+    const previous = loaded([fill]);
+    const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0, official: { fixtureId: fill.official!.fixtureId } });
+    const superseded = supersededGamesOf([contest], previous);
+    expect(urls(gameUrlsOf([contest], previous, [], superseded, AT))).toEqual({
+      [contest.contestId]: ['2026-09-04-greenfield-at-santa-catalina', 'sblive-6541425'],
+    });
   });
 });

@@ -73,7 +73,7 @@ function lastGameView(game: Game, slug: string): HomeLastGame {
     mineIsHome: game.home.slug === slug,
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
-    href: gameHref(game.contestId),
+    href: gameHref(game),
   };
 }
 
@@ -95,7 +95,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs.slug, theirs.name),
     kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
-    href: gameHref(game.contestId),
+    href: gameHref(game),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every
     // team (no layout shift).
     links: links.slice(0, 2),

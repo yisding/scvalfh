@@ -19,7 +19,6 @@ import { localDateKey } from '../lib/format';
 import { withFixtureGames } from '../lib/results/fixture-games';
 
 import { getClubSlugs } from '../lib/players/clubs';
-import { gameIdToParam } from '../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, seasonWindowBounds } from '../lib/leagues';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { REPO, runScript } from './helpers';
@@ -597,7 +596,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
       standings: [...LEAGUE_IDS],
       schedule: [...LEAGUE_IDS],
       playoffs: [...TOURNAMENT_LEAGUE_IDS],
-      game: snapshot.games.map((g) => gameIdToParam(g.contestId)),
+      game: snapshot.games.map((g) => g.slug!),
       scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
       teams: snapshot.teams.map((t) => t.slug),
     };

@@ -147,7 +147,7 @@ function cardView(card: LiveBracketCard, round: LiveBracketRound, today: string)
     time: status === 'scheduled' ? whenLine(card) : null,
     clock: status === 'scheduled' ? clockLine(card, round) : null,
     site: card.site,
-    href: card.game ? gameHref(card.game.contestId) : null,
+    href: card.game ? gameHref(card.game) : null,
     sentence: [sentence],
     note: notes.length > 0 ? notes.join(' · ') : null,
   };

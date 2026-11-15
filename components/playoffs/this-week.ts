@@ -148,7 +148,7 @@ function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: 
     time: game.isTimeTba ? null : timeOfDayPT(game.dateLocal),
     text,
     label: labels.get(game.contestId) ?? postseasonTagOf(game) ?? '',
-    href: gameHref(game.contestId),
+    href: gameHref(game),
     ...(bracket ? { bracket } : {}),
     final: view.kind === 'final',
     kind: 'game',

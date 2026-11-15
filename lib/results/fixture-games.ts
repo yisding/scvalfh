@@ -19,6 +19,7 @@
 
 import { byDateThenId, datesAtLocal } from '../format';
 import { officialContestId } from '../game-id';
+import { assignGameSlugs } from '../game-urls';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import { getTeamBySlug } from '../teams';
 import type { Game, GameSide, OfficialFixture, Team } from '../types';
@@ -71,6 +72,11 @@ export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: 
 /**
  * `games` with a game for every unmatched fixture that can be one (in `byDateThenId` order), and the fixtures that
  * cannot (`rest`). A fixture whose id a game already carries, or whose contest id is already taken, adds nothing.
+ *
+ * Each listed game gets its slug here (lib/game-slug.ts: its date and sides, which is its contest id without the
+ * `official:` prefix), clear of the slugs `games` hold, so the site and the pipeline (lib/pipeline/steps/assemble.ts
+ * gameUrlsOf) name it alike without storing it. `/game/official-<date>-<away>-at-<home>`, its URL before slugs,
+ * is redirected by proxy.ts.
  */
 export function withFixtureGames(
   games: readonly Game[],
@@ -92,5 +98,8 @@ export function withFixtureGames(
     ids.add(g.contestId);
     listed.push(g);
   }
+  const taken = games.map((g) => g.slug).filter((slug): slug is string => slug !== undefined);
+  const slugs = assignGameSlugs(listed, () => undefined, taken);
+  for (const g of listed) g.slug = slugs.get(g.contestId);
   return { games: listed.length > 0 ? [...games, ...listed].sort(byDateThenId) : [...games], listed, rest };
 }

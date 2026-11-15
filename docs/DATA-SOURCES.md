@@ -3504,14 +3504,15 @@ Load-bearing rules baked into it:
   fetched lazily, never in the sweep).
 - `Game.provenance.scores` is `'maxpreps'` or `'sblive'`; a backfilled game also carries a
   `backfill` record (rule, si.com game id, MaxPreps' value) and, where si.com overrode MaxPreps,
-  `scoreConflict`. A si.com-only game has the contest id `sblive:<si.com game id>` (URL
-  `/game/sblive-<id>`).
+  `scoreConflict`. A si.com-only game has the contest id `sblive:<si.com game id>`; its page, like every
+  game's, is at its slug (`Game.slug`: `/game/<date>-<away>-at-<home>`, `lib/game-slug.ts`), and
+  `Game.aliases` lists every other URL segment it was published at, each a redirect to the slug (README, "Game URLs").
 - `Standing.computed` (ours, from game rows) is the display source of truth; `Standing.reported`
   (MaxPreps' own numbers) is kept for cross-check and freshness display — see §2,
   `docs/LEAGUE-RULES.md` and `docs/BYLAWS-2026-27.md` for the ordering rules.
 - `leagueHealth` (one row per league: `fresh`, `partial`, `degraded` or `frozen`, with reasons),
   `dropped` (contests removed on purpose, with the reason) and `supersededGames` (a game no feed
-  listed, later replaced by MaxPreps' own; its old page redirects there, `lib/game-redirects.ts`) are part of the snapshot and shown on `/about`.
+  listed, later replaced by MaxPreps' own, which inherits its slug and aliases, so its old page redirects there: `lib/game-urls.ts`) are part of the snapshot and shown on `/about`.
 ## 5. Cron fetch plan
 
 **Core sweep — 131 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
@@ -3679,8 +3680,8 @@ scores, and a si.com game that is not a junk row (rule 7).**
    `SourceStatus` rows name each si.com page read.
 10. **Supersede and carry-forward:** a MaxPreps contest that later matches a filled fixture wins;
     no `sblive:` game is emitted for it, a score difference becomes an ordinary conflict, and the
-    old `sblive:<id>` page is a permanent (308) redirect to the MaxPreps game (`supersededGames`, carried for
-    the rest of the season). An earlier si.com fill is decided again only by the si.com data that
+    fill's page is the MaxPreps game's from then on: it takes over the fill's slug, and the fill's old id URL
+    is one of its aliases, a permanent (308) redirect (`supersededGames`, carried for the rest of the season). An earlier si.com fill is decided again only by the si.com data that
     covers it (a scoreboard row of the pair near the date, or a team page of either side). Whenever
     this run did not read that data — its page failed (a partial failure is enough), the item was
     past the team-page cap or not planned, `--no-sblive`, nothing was read, or every request failed —

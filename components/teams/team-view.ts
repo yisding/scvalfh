@@ -39,6 +39,7 @@ import {
   mapsSearchHref,
   noMoreGamesSentence,
 } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import { CCS } from '../../lib/league-config/sections';
 import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
@@ -830,7 +831,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     return {
       // A final always has an outcome; the fallback keeps the type honest rather than asserting.
       outcome: outcome ?? 'T',
-      contestId: game.contestId,
+      href: gameHref(game),
       opponent: theirs.slug ? (getTeamBySlug(theirs.slug)?.shortName ?? theirs.name) : theirs.name,
       score: scorePair(game, team.id),
       date: monthDay(game.dateLocal),

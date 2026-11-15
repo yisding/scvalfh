@@ -92,10 +92,9 @@ describe('the site\'s read of the snapshot carries the links', () => {
 
   it('the game page draws it as a Hudl TV button', async () => {
     const { GameDetails } = await import('../components/game/GameDetails');
-    const { buildGameView } = await import('../components/game/game-view');
-    const { gameIdToParam } = await import('../lib/game-id');
+    const { buildGameViewOf } = await import('../components/game/game-view');
     const g = getGames().find((x) => x.urls.hudl !== undefined)!;
-    const html = renderToStaticMarkup(createElement(GameDetails, { model: buildGameView(gameIdToParam(g.contestId))! }));
+    const html = renderToStaticMarkup(createElement(GameDetails, { model: buildGameViewOf(g.contestId)! }));
     expect(html).toContain(`href="${g.urls.hudl!.replace(/&/g, '&amp;')}"`);
     expect(html).toContain('Hudl TV');
   });

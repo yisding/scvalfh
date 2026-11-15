@@ -6,8 +6,8 @@
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
  * loads it), the league config (`lib/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
- * file (through lib/players/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
- * tests/game-id.test.ts holds and both gates' ':' check backs up.
+ * file (through lib/players/clubs.ts). Games take their slug (`Game.slug`, lib/game-slug.ts), which
+ * tests/game-urls.test.ts holds and both gates' ':' check backs up (a contest id never reaches a path).
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
  * gate checks, never its oracle; scripts/a11y-axe.mjs runs a curated one-page-per-family sample,
@@ -16,7 +16,8 @@
  */
 
 import { getClubSlugs } from '../../lib/players/clubs';
-import { gameIdToParam } from '../../lib/game-id';
+import { gameSlug } from '../../lib/game-slug';
+import { gameAliasTable } from '../../lib/game-urls';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
 import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
@@ -62,8 +63,9 @@ export interface ExpectedFamilies {
   tournament: readonly string[];
   gameParams: readonly string[];
   /**
-   * One per `supersededGames` key: never a page (next.config.ts redirects it to its MaxPreps game,
-   * lib/game-redirects.ts), so never a prerendered file and never in the sitemap.
+   * Every alias of a game (`Game.aliases`: a slug it had, or its id, the URL before slugs): never a page
+   * (next.config.ts and proxy.ts redirect it to the game's slug, lib/game-aliases.ts), so never a
+   * prerendered file and never in the sitemap.
    */
   redirectParams: readonly string[];
   /** The distinct game dates, sorted. */
@@ -86,7 +88,7 @@ export function sample(list: readonly string[]): string {
 /**
  * Each family's expected params, and the cross-checks that make them trustworthy: the snapshot's
  * leagues and tournament leagues are the config's, its teams are the registry's by name and in
- * order, and no redirected (superseded) id is also a live game, whose page the redirect would hide. Each disagreement goes to `fail`.
+ * order, and no alias is also a game's slug, whose page the redirect would hide. Each disagreement goes to `fail`.
  */
 export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void): ExpectedFamilies {
   const snapshotLeagues = snapshot.season.leagues.map((l) => l.id);
@@ -94,10 +96,16 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     fail(`snapshot season.leagues [${snapshotLeagues.join(', ')}] ≠ lib/leagues.ts LEAGUE_IDS [${LEAGUE_IDS.join(', ')}]`);
   }
 
-  const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-  const redirectParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
-  const overlap = redirectParams.filter((p) => gameParams.includes(p));
-  if (overlap.length) fail(`superseded (redirected) ids that are also live games: ${sample(overlap)}`);
+  const gameParams = snapshot.games.map((g) => gameSlug(g));
+  if (new Set(gameParams).size !== gameParams.length) fail('two games share a slug');
+  const unnamed = snapshot.games.filter((g) => g.slug === undefined).map((g) => g.contestId);
+  if (unnamed.length) fail(`games with no stored slug: ${sample(unnamed)}`);
+  // The table drops an alias that is a slug (lib/game-urls.ts rule 3), so a listed one that is missing from it
+  // is exactly an alias that would hide a page.
+  const redirectParams = [...gameAliasTable(snapshot.games).keys()];
+  const listed = snapshot.games.flatMap((g) => g.aliases ?? []);
+  const overlap = listed.filter((p) => gameParams.includes(p));
+  if (overlap.length) fail(`aliases that are also a game's slug: ${sample(overlap)}`);
 
   const slugs = snapshot.teams.map((t) => t.slug);
   const registry = TEAMS.map((t) => t.slug);

@@ -36,9 +36,9 @@ import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
  * one per game. The clubs come in lib/players/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
- * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
- * route (`/game/sblive-<id>`). A `supersededGames` key is NOT listed: it is not in `games`, and
- * next.config.ts redirects it to the MaxPreps game that replaced it (lib/game-redirects.ts).
+ * Game URLs go through `gameHref`, so each game is listed at its slug (`/game/<slug>`, lib/game-slug.ts),
+ * the one URL its page answers at. An alias (a slug the game had, or its id, the URL before slugs) is NOT
+ * listed: it redirects to the slug (lib/game-aliases.ts).
  *
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
@@ -162,7 +162,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const gameRoutes: MetadataRoute.Sitemap = games.map((game) => ({
-    url: url(gameHref(game.contestId)),
+    url: url(gameHref(game)),
     lastModified: latestContentDate(gamePageInputs(game, games), getFetchedAt(), removalsForGame(removals, game)),
     changeFrequency: 'weekly',
     priority: 0.4,

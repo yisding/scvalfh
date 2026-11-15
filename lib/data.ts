@@ -20,6 +20,7 @@ import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
 import { readOverride } from './data-file';
+import { gameSlug } from './game-slug';
 import {
   isoDateKey,
   localDateKey,
@@ -230,7 +231,7 @@ export function getContentRemovals(): readonly ContentRemoval[] {
   return snapshot.contentRemovals ?? [];
 }
 
-/** Retired game ids a MaxPreps contest has since superseded → that contest (D2 rule 10; next.config.ts redirects each). */
+/** Retired game ids a MaxPreps contest has since superseded → that contest (D2 rule 10); each is an alias of that contest's game (lib/game-urls.ts). */
 export function getSupersededGames(): Readonly<Record<ContestId, ContestId>> {
   return snapshot.supersededGames;
 }
@@ -473,6 +474,14 @@ export function getGames(filter: GameFilter = {}): Game[] {
 
 export function getGameById(contestId: ContestId): Game | undefined {
   return snapshot.games.find((g) => g.contestId === contestId);
+}
+
+/** slug → game, for `/game/<slug>` (lib/game-slug.ts): every game the site lists has one, and no two share it. */
+const gamesBySlug: ReadonlyMap<string, Game> = new Map(snapshot.games.map((g) => [gameSlug(g), g]));
+
+/** The game at `/game/<slug>`; undefined for anything else, an alias included (those are redirected before a page is looked for). */
+export function getGameBySlug(slug: string): Game | undefined {
+  return gamesBySlug.get(slug);
 }
 
 /** Every date with at least one contest, ascending — the /scores/[date] static params. */

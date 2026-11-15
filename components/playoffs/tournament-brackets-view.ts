@@ -271,7 +271,7 @@ function tie(
     time: upcoming ? (dateKey === m.roundDate ? clock : `${shortDate(dateKey).split(' ')[0]} ${clock}`) : null,
     note,
     links,
-    href: game ? gameHref(game.contestId) : null,
+    href: game ? gameHref(game) : null,
     contestId: game ? game.contestId : null,
     gameSeeds: game
       ? {

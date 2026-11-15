@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 import { shortDate } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
 import type { BackfillRow } from '../../lib/types';
+import type { BackfillRowView } from './about-view';
 import ExternalLink from '../ui/ExternalLink';
 
 /**
@@ -14,7 +14,7 @@ import ExternalLink from '../ui/ExternalLink';
  * Scores read away–home, matching the "Away at Home" label.
  */
 export interface BackfillTableProps {
-  rows: readonly BackfillRow[];
+  rows: readonly BackfillRowView[];
 }
 
 const BACKFILL_RULE_WORDS: Readonly<Record<BackfillRow['rule'], string>> = {
@@ -43,9 +43,13 @@ export function BackfillTable({ rows }: BackfillTableProps) {
       {rows.map((row) => (
         <li key={row.contestId} className="py-3 text-cell text-ink-2">
           <p className="m-0 flex flex-wrap items-baseline gap-x-3 text-body text-ink">
-            <Link href={gameHref(row.contestId)} prefetch={false} className="sx-teamlink font-semibold">
-              {row.label}
-            </Link>
+            {row.href ? (
+              <Link href={row.href} prefetch={false} className="sx-teamlink font-semibold">
+                {row.label}
+              </Link>
+            ) : (
+              <span className="font-semibold">{row.label}</span>
+            )}
             <time dateTime={row.dateKey} className="sx-num text-ink-2">
               {shortDate(row.dateKey)}
             </time>

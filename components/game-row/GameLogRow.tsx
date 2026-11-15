@@ -140,7 +140,7 @@ export function GameLogRowBody({
 export function GameLogRow({ game, className, ...rest }: GameBaseProps) {
   return (
     <Link
-      href={gameHref(game.contestId)}
+      href={gameHref(game)}
       prefetch={false}
       className={`sx-tap no-underline ${gameLogRowClass(game, className)}`}
     >

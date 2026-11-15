@@ -18,6 +18,7 @@ import {
   recordStoredResults,
   reclassify,
 } from './snapshot-migrate';
+import { addGameUrls, needsGameUrls } from '../game-urls';
 import type { BoxEvidence } from '../results/box-evidence';
 import type { Snapshot } from '../types';
 
@@ -36,15 +37,20 @@ export function parseSnapshot(raw: unknown): Snapshot {
 /**
  * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
  * addConfiguredLeagues; a v2 whose games no longer classify under the current rules or registry →
- * reclassify; one whose games the current rules record differently → recordStoredResults;
- * then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
+ * reclassify; one whose games the current rules record differently → recordStoredResults; one
+ * written before game slugs → addGameUrls (lib/game-urls.ts, straight after the v1 step); then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
  */
 export function loadSnapshot(raw: unknown, evidence: { box?: BoxEvidence } = {}): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
-  const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
+  // Slugs first, from the games as the file holds them: proxy.ts derives the same ones from the same file
+  // (lib/game-aliases.ts) without the upgrades below, and the two must agree on where each old URL leads.
+  const located = needsGameUrls(v2) ? addGameUrls(v2) : v2;
+  const complete = lacksConfiguredLeagues(located) ? addConfiguredLeagues(located) : located;
   const classified = needsReclassification(complete) ? reclassify(complete) : complete;
   // Then, with the tags current, every final as the current rules record it (lib/results/result.ts).
   const settled = needsRecordedResults(classified, evidence.box) ? recordStoredResults(classified, evidence.box) : classified;
   // Then `playoffs.games` from the (now current) tags: lib/postseason/ccs-bracket.ts is its one derivation.
-  return parseSnapshot(needsPlayoffGames(settled) ? rebuildPlayoffGames(settled) : settled);
+  const bracketed = needsPlayoffGames(settled) ? rebuildPlayoffGames(settled) : settled;
+  // A game the steps above added (recordStoredResults lists DATA_QUALITY.addedGames a file predates) has no slug yet.
+  return parseSnapshot(needsGameUrls(bracketed) ? addGameUrls(bracketed) : bracketed);
 }

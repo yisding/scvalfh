@@ -47,9 +47,10 @@ export function gameContentStamp(game: Game): number {
  * when it was read (`fetchedAt`), MaxPreps' own edit stamp (a re-save that changes nothing a page
  * prints), and `contentChangedAt` itself. `Game.bracket` (added 2026-10-29) is content: a CCS game
  * whose `bracket.published` flips, or whose `bracket.name` moves it between divisions, restamps the
- * game and so the bracket page's `lastmod`.
+ * game and so the bracket page's `lastmod`. `slug` and `aliases` (lib/game-urls.ts) are where the page is, not
+ * what it says: a slug only changes with a date or a side, which is content already, and a new alias changes nothing.
  */
-const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt'] as const;
+const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt', 'slug', 'aliases'] as const;
 
 /**
  * `games` with `provenance.contentChangedAt` set against the previous snapshot (SPEC §7.4 step 13):

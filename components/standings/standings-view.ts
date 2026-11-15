@@ -431,7 +431,7 @@ function missingRowView(row: MissingOfficialResult, teams: readonly Team[], inde
       row.kind === 'missing' && row.sblive
         ? `si.com reports ${away} ${row.sblive.away}-${row.sblive.home} ${home}; not counted: ${row.sblive.note}`
         : null,
-    href: row.game ? gameHref(row.game.contestId) : null,
+    href: row.game ? gameHref(row.game) : null,
   };
 }
 
