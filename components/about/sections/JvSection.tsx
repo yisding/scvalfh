@@ -15,7 +15,7 @@ import type { AboutJv } from '../about-view';
 const SCHOOL_SITES_WORD = numberWord(JV_SCHOOL_SITES.length).replace(/^./, (c) => c.toUpperCase());
 
 /**
- * /about#jv: where the JV games come from (MaxPreps, then si.com, then three schools' own pages), how a JV
+ * /about#jv: where the JV games come from (MaxPreps, then si.com, then four schools' own pages), how a JV
  * game counts for a JV table, when a table is shown, the PCAL's York / Santa Catalina pairing, and
  * the JV rosters on the team pages.
  */
@@ -77,7 +77,7 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           {shown.length > 0 ? listWords(shown.map((t) => jvTableTitle(t.division))) : 'none'}.
           The others say how many of their games have a score, and list their teams unranked until a game is played.
         </p>
-        {/* si.com, the two school sites, the hand corrections and the PCAL pairing are field hockey's sources and
+        {/* si.com, the school sites, the hand corrections and the PCAL pairing are field hockey's sources and
             facts: the soccer build reads MaxPreps alone (lib/sports/current.ts). */}
         {IS_FIELD_HOCKEY ? (<>
         <p>
