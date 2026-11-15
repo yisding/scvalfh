@@ -202,6 +202,14 @@ To record a result from a better source, add the contest to `resultCorrections` 
 `lib/league-config/data-quality.ts` with both teams' goals in play, the overtime periods, the tally (or null)
 and the citation; the next load applies it and recomputes the two teams' records.
 
+**A winner with no score.** Where a source names the winner of a game MaxPreps lists with no score and gives no
+score, the correction has `goals: null` and `winner`. The sides are marked W and L, the game stays "score not
+reported", and its page says who won and from where (`provenance.reportedWinner`). The bracket advances the
+winner and names a final's winner as champion; no record counts the game. When MaxPreps or the Section's sheet
+scores the game, that score stands and the correction does nothing. San Diego finals, Sat Nov 14, 2026 (owner,
+2026-11-15): Division I, San Marcos 4–2 Poway (three goals by Arden Pantel, one by Brenna Kirsch; an Instagram
+post of the game, `reported`), a score; the Open final, Bishop's over Canyon Hills, the winner alone.
+
 **Overtime.** An overtime record the rule cannot give is shown without its overtime tag and explained on the
 game page (`overtimeDoubtOf`, `components/ui/describe-game.ts`). That applies to a regular-season game between
 two teams of a section that plays one sudden-victory period and then a shootout: more than one period recorded

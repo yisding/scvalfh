@@ -144,6 +144,12 @@ export interface GameDisplay {
 const UNREPORTED_NOTE = 'We will update when MaxPreps posts it.';
 const OFFICIAL_ONLY_NOTE = 'On the league’s schedule for this day; no source has listed the game or a score.';
 
+/** 'Bishop’s won (the owner’s report, Nov 15, 2026); no source has published the score yet.' */
+function reportedWinnerNote(game: Game, source: string): string {
+  const side = game.home.result === 'W' ? game.home : game.away.result === 'W' ? game.away : null;
+  return side ? `${side.name} won (${source}); no source has published the score yet.` : UNREPORTED_NOTE;
+}
+
 /** The word after the league's short name in a postseason chip; `ccs` is the section's own chip. */
 const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = {
   'scval-crossover': 'crossover',
@@ -506,7 +512,10 @@ export function describeGame(game: Game, perspective?: Perspective | null): Game
         statusTone: 'ink-3',
         // A game only the league's schedule has (lib/results/fixture-games.ts): no source has listed it at all.
         // or one recorded from another official source with no score (DATA_QUALITY.addedGames), whose own note says what is known.
-        note: !isOfficialContestId(game.contestId) ? UNREPORTED_NOTE : game.official ? OFFICIAL_ONLY_NOTE : 'No source has published the score.',
+        // A winner a source names with no score (DATA_QUALITY.resultCorrections, `goals` null): who won, and from where.
+        note: game.provenance.reportedWinner
+          ? reportedWinnerNote(game, game.provenance.reportedWinner.source)
+          : !isOfficialContestId(game.contestId) ? UNREPORTED_NOTE : game.official ? OFFICIAL_ONLY_NOTE : 'No source has published the score.',
         showScores: true, // two en dashes, never two zeroes
         home: sideView(game.home.name, game.home.slug, null, 'level', 'pending'),
         away: sideView(game.away.name, game.away.slug, null, 'level', 'pending'),

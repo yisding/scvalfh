@@ -51,11 +51,7 @@ const ROUND_NAME: Readonly<Record<TournamentBracketGame['round'], string>> = {
 /** Who won a listed game: its result, or the side its source marks the winner of a game with no score. */
 function winnerSlugOf(game: Game): string | null {
   const side = winningSide(game);
-  if (side) return game[side].slug;
-  if (game.home.score !== null || game.away.score !== null) return null;
-  if (game.home.result === 'W' && game.away.result === 'L') return game.home.slug;
-  if (game.away.result === 'W' && game.home.result === 'L') return game.away.slug;
-  return null;
+  return side ? game[side].slug : null;
 }
 
 function resolve(specs: readonly TournamentBracketGame[], games: readonly Game[]): Map<string, Resolved> {

@@ -346,9 +346,16 @@ export interface BoxSide {
  * page prints. MaxPreps stores a shootout after overtime as the score (Tamalpais 3-1 Marin Catholic was 0-0);
  * a press report or an official sheet is the only source that says so. It also scores a game MaxPreps lists with
  * no score (status 'score-pending'), which becomes a final.
+ *
+ * `goals` null with `winner` set records who won a game MaxPreps lists with no score, where the source gives no
+ * score (owner, 2026-11-15: Bishop's won the San Diego Open final): the sides are marked W and L, the game stays
+ * score pending, and `provenance.reportedWinner` keeps the citation. The bracket advances the winner and no record
+ * counts the game. Once any source scores the game the marks are its, and the correction does nothing.
  */
 export interface ResultCorrection {
-  goals: Readonly<Record<TeamSlug, number>>;
+  goals: Readonly<Record<TeamSlug, number>> | null;
+  /** With `goals` null: the team the source says won. */
+  winner?: TeamSlug;
   otPeriods: number;
   shootout: Readonly<Record<TeamSlug, number>> | null;
   /** The team that won the tiebreak after a level score, where the source says who won it and gives no tally. */
@@ -609,6 +616,11 @@ export interface Game {
      * `cifsds:` game), 'score-pending' when MaxPreps has the contest without a score; the note says which.
      */
     sectionSheet?: SectionSheetProvenance;
+    /**
+     * Set on a game listed with no score whose winner a source names (a ResultCorrection with `goals` null): the
+     * citation. The sides carry W and L; the scores stay null.
+     */
+    reportedWinner?: { certainty?: 'reported'; source: string; url: string | null };
     fetchedAt: string;
     maxprepsModifiedOn?: string;
     /**

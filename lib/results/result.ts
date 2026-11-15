@@ -39,7 +39,7 @@ import { isLevelWithWinner, settleLevelFinal } from '../postseason/level-final';
 import { SPORT } from '../sports/current';
 import { withRoundSite } from '../postseason/round-site';
 import { getTeamBySlug } from '../teams';
-import type { AddedGame, CifssConflictRow, Decider, Game, GameResult, GameSide, Outcome, Team } from '../types';
+import type { AddedGame, CifssConflictRow, Decider, Game, GameResult, GameSide, Outcome, ResultCorrection, Team } from '../types';
 import { boxGoals, boxOvertimeMinutes, withBoxScore, type BoxEvidence } from './box-evidence';
 import { shootoutRuleSectionOf } from './section-rule';
 
@@ -115,7 +115,7 @@ export function applyResultCorrection(
   corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
 ): Game {
   const c = corrections[game.contestId];
-  if (!c) return game;
+  if (!c || c.goals === null) return withReportedWinner(game, c?.goals === null ? c : undefined);
   // A stored game already corrected: the correction as configured NOW is applied to what MaxPreps had, and the
   // stored game is returned when that changes nothing, so an edited correction reaches a file written before it.
   const stored = game.provenance.resultCorrection;
@@ -159,6 +159,40 @@ export function applyResultCorrection(
         ...(c.certainty ? { certainty: c.certainty } : {}),
       },
     },
+  };
+}
+
+/**
+ * A game listed with no score, with the winner a correction names (`goals` null) marked W and L and the citation in
+ * `provenance.reportedWinner`; the same object when it already is. A game that has a score, or whose correction is
+ * gone, loses the marks this put there (a score brings its own), so a later score always stands.
+ */
+function withReportedWinner(game: Game, c: ResultCorrection | undefined): Game {
+  const stored = game.provenance.reportedWinner;
+  const unscored = game.home.score === null && game.away.score === null;
+  const winner = c?.winner;
+  if (!c || !winner || !unscored || game.status !== 'score-pending' || (game.home.slug !== winner && game.away.slug !== winner)) {
+    if (!stored) return game;
+    const { reportedWinner: _gone, ...provenance } = game.provenance;
+    void _gone;
+    return unscored
+      ? { ...game, home: { ...game.home, result: null }, away: { ...game.away, result: null }, provenance }
+      : { ...game, provenance };
+  }
+  const home: Outcome = game.home.slug === winner ? 'W' : 'L';
+  const away: Outcome = home === 'W' ? 'L' : 'W';
+  const cite = { ...(c.certainty ? { certainty: c.certainty } : {}), source: c.source, url: c.url };
+  if (
+    game.home.result === home && game.away.result === away && stored &&
+    stored.source === cite.source && stored.url === cite.url && stored.certainty === cite.certainty
+  ) {
+    return game;
+  }
+  return {
+    ...game,
+    home: { ...game.home, result: home },
+    away: { ...game.away, result: away },
+    provenance: { ...game.provenance, reportedWinner: cite },
   };
 }
 
@@ -206,6 +240,12 @@ export function correctionProblems(
   for (const g of games) {
     const c = corrections[g.contestId];
     if (!c) continue;
+    if (c.goals === null) {
+      if (!c.winner || (g.home.slug !== c.winner && g.away.slug !== c.winner)) {
+        out.push(`resultCorrections ${g.contestId}: names ${c.winner ?? 'no'} winner, but the contest is ${g.away.name} at ${g.home.name}`);
+      }
+      continue;
+    }
     if (!g.home.slug || !g.away.slug || !(g.home.slug in c.goals) || !(g.away.slug in c.goals)) {
       out.push(`resultCorrections ${g.contestId}: names ${Object.keys(c.goals).join(' and ')}, but the contest is ${g.away.name} at ${g.home.name}`);
     }

@@ -282,6 +282,9 @@ export const GameSchema = z
         })
         .optional(),
       sectionSheet: z.object({ rule: z.enum(['absent-game', 'score-pending']), note: z.string().min(1) }).optional(),
+      reportedWinner: z
+        .object({ certainty: z.literal('reported').optional(), source: z.string().min(1), url: httpUrl.nullable() })
+        .optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
       contentChangedAt: z.string().min(20).optional(),

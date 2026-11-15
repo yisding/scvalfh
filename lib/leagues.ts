@@ -871,9 +871,17 @@ export function assertLeagues(): void {
     if (ALL_DIVISIONS.some((d) => d.maxprepsLeagueId === id)) fail(`ignored MaxPreps league ${id} is configured`);
   }
   // A result correction names its contest by GUID, both teams' goals, the overtime played, a tally with a winner
-  // after a level score, and its source.
+  // after a level score, and its source; or, with no goals, the winner alone and its source.
   for (const [id, c] of Object.entries(DATA_QUALITY.resultCorrections)) {
     if (!LOWERCASE_GUID_RE.test(id)) fail(`resultCorrections: ${id} is not a contest GUID`);
+    if (c.goals === null) {
+      if (!c.winner) fail(`resultCorrections ${id}: with no goals, names the winner`);
+      if (c.shootout !== null || c.shootoutWinner || c.otPeriods !== 0) fail(`resultCorrections ${id}: with no goals, records no overtime or tiebreak`);
+      if (!c.source.trim() || /\.$/.test(c.source.trim())) fail(`resultCorrections ${id}: needs a source, one sentence without a final period`);
+      if (id in DATA_QUALITY.excludedContestIds) fail(`resultCorrections ${id}: the contest is excluded`);
+      continue;
+    }
+    if (c.winner) fail(`resultCorrections ${id}: a winner is named only where no goals are given`);
     const slugs = Object.keys(c.goals);
     // Shape only: this module never reads the registry; lib/results/result.ts checks the slugs against the game's sides.
     if (slugs.length !== 2) fail(`resultCorrections ${id}: goals names the two teams by slug`);
