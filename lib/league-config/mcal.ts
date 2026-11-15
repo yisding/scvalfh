@@ -119,9 +119,15 @@ export const MCAL: LeagueConfig = {
     // one-goal caveat cannot catch. DATA_QUALITY.resultCorrections records the game as it was played (0-0, two
     // overtimes, a 3-1 shootout) wherever the site or the pipeline reads it; the file a run fetched before the correction
     // existed still holds 3-1 until the next refresh. This sentence says so on the bracket.
+    // The final, Fri Oct 30: a one-goal regulation result, so the generic caveat would say it may hide a shootout. The
+    // Redwood Bark (Nov 1, 2026, "Varsity field hockey defeats Tamalpais 2-1 to claim MCAL championship") times all three
+    // goals in play, the winner "with just four minutes remaining in the fourth quarter", so it was decided in regulation
+    // and MaxPreps' 2-1 stands.
     resultNotes: {
       '7bb048ba-9e33-4ad1-a743-2348c6637602':
         'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1 (Marin Independent Journal, Oct 28, 2026). MaxPreps records the shootout tally, 3–1, as the score.',
+      '8f8d3fe5-f112-4d22-a5a6-44e027ada681':
+        'Decided in regulation: Redwood’s winning goal came with four minutes left in the fourth quarter (Redwood Bark, Nov 1, 2026).',
     },
     sourceUrl: 'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf',
   },

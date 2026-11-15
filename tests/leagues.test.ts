@@ -278,6 +278,8 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941',
     });
     expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
+    // The final was a one-goal regulation result, and a report of the game times its winner in the fourth quarter.
+    expect(mcal.postseason.resultNotes['8f8d3fe5-f112-4d22-a5a6-44e027ada681']).toMatch(/^Decided in regulation: .*\(Redwood Bark, Nov 1, 2026\)\.$/);
     expect(mcal.postseason.citations.pennant).toMatch(/^MCAL General Rules, Pennants 1–3/);
     expect(mcal.rules.citations.overtime).toMatch(/^MCAL Field Hockey Handbook §9/);
   });

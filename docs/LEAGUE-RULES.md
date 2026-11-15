@@ -456,7 +456,9 @@ regulation game: a one-goal result MaxPreps does not mark as overtime carries th
 config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
 (Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
 Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
-University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
+University) were overtime goals [V: Marin IJ]; and the final, Redwood 2-1 Tamalpais (Fri Oct 30), was
+decided in regulation, its winner four minutes from the end of the fourth quarter (Redwood Bark, Nov 1, 2026), so
+its note says that instead of the caveat. The title rule's source is the MCAL General Rules,
 Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
 is different than the regular season winner, they will also be awarded a pennant."
 Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a
