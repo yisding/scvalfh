@@ -17,6 +17,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { claimsFileText, claimsPathOf, parseClaimsText } from '../../lib/claims/file';
 import type { ClaimsFile } from '../../lib/claims/types';
+import { LEDGER, LEDGER_VIEW } from '../../lib/fixtures/ledger';
 import { GUID_RE } from '../../lib/game-id';
 import type { PipelineSteps } from '../../lib/pipeline/contract';
 import { SILENT_SINK } from '../../lib/pipeline/ledger';
@@ -128,6 +129,29 @@ describe('what is never carried', () => {
     const refs = maxprepsRefs(run.result!.claims);
     expect(refs.has(STE_GRE_0921)).toBe(false);
     expect(refs.has(REKEYED)).toBe(true);
+  });
+
+  it('a stored contest the editor has rejected since the claims were written, though its feed failed', async () => {
+    // Greenfield's feed fails and Stevenson's no longer lists the contest, so only the stored claim has it.
+    const variant = writeTempVariant({
+      'maxpreps/schedule/greenfield': 503,
+      'maxpreps/schedule/stevenson': { rel: 'stevenson.json', body: withoutContest('stevenson', STE_GRE_0921, 'gone') },
+    });
+    const before = await snapshotOf({ steps: STEPS, variants: [variant], ...asWritten(first) });
+    expect(before.snapshot.games.some((g) => g.contestId === STE_GRE_0921), 'carried while the ledger does not reject it').toBe(true);
+    // The edit is made for this run alone, in both places a ledger edit reaches: the ledger the run's context reads,
+    // and the view the snapshot loader drops a stored game by.
+    const rejected = LEDGER.rejected as Record<string, string>;
+    const loaderRejected = LEDGER_VIEW.rejected as Record<string, string>;
+    rejected[STE_GRE_0921] = loaderRejected[STE_GRE_0921] = 'a row found to be no game after the last run';
+    try {
+      const run = await snapshotOf({ steps: STEPS, variants: [variant], ...asWritten(first) });
+      expect(run.snapshot.games.some((g) => g.contestId === STE_GRE_0921), 'not carried back into the games').toBe(false);
+      expect(maxprepsRefs(run.run.result!.claims).has(STE_GRE_0921), 'and its claim is gone').toBe(false);
+    } finally {
+      delete rejected[STE_GRE_0921];
+      delete loaderRejected[STE_GRE_0921];
+    }
   });
 
   it('with no previous snapshot, a claims file left beside --out carries nothing', async () => {

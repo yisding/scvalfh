@@ -374,7 +374,7 @@ describe('the claims file travels with the snapshot', () => {
     ['basketball', 'data/basketball', updateBasketball],
     ['volleyball', 'data/volleyball', updateVolleyball],
   ];
-  const esc = (v: string) => v.replace(/[./]/g, '\\$&');
+  const esc = (v: string) => v.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
   for (const [name, dir, text] of sports) {
     it(`${name}: staged behind a guard wherever the snapshot is, and reverted with it`, () => {
       const claims = `${dir}/claims.json`;

@@ -95,9 +95,12 @@ export function matchMaxpreps(input: {
   const kept = new Set(deduped.games.map((g) => g.contestId));
   const droppedIds = new Set([...excluded.dropped, ...deduped.dropped].map((d) => d.contestId));
   const stored = store.claimsOf('maxpreps').map(({ claim }) => claim);
+  // A stored contest the editor has since rejected (or whose side is a ghost team) is not in this run's feeds to be
+  // dropped above, so it is refused here: a feed that fails must not bring a rejected row back into the games.
+  const excludedNow = (c: MaxprepsClaim): boolean => isExcludedNow(c, editor);
   const candidates = missing.size === 0
     ? []
-    : stored.filter((c) => !readScope(c) && !kept.has(c.ref) && !droppedIds.has(c.ref) && !input.deletedThisRun.has(c.ref));
+    : stored.filter((c) => !readScope(c) && !kept.has(c.ref) && !droppedIds.has(c.ref) && !input.deletedThisRun.has(c.ref) && !excludedNow(c));
   const fold = (id: FixtureId) => resolveCarriedClaims(store.get(id) as Fixture, editor);
   const carriedGames = new Map<ContestId, { id: FixtureId; game: Game }>();
   for (const c of candidates) {
@@ -138,6 +141,15 @@ export function matchMaxpreps(input: {
   return { view, decisions, dropped, unusedExclusions: excluded.unused, droppedByConfig: excluded.dropped.length + deduped.dropped.length, carried: carried.map((g) => g.contestId), games };
 }
 
+/** Whether the editor's ledger rejects the claim's contest today, or a side of it is a ghost team (applyExclusions' rule). */
+function isExcludedNow(c: MaxprepsClaim, editor: EditorView): boolean {
+  const exclusions = exclusionsOf(editor);
+  return (
+    Object.hasOwn(exclusions.rejected, c.ref) ||
+    [c.game.home.teamId, c.game.away.teamId].some((id) => id !== null && Object.hasOwn(exclusions.ghostTeamIds, id))
+  );
+}
+
 /**
  * A frozen league's MaxPreps claims (lib/pipeline/steps/guards.ts): the league publishes its previous games, so the
  * claims of its contests (`inLeague`) are the ones the run read (`asRead`), whatever its feeds listed this run. A
@@ -158,7 +170,7 @@ export function keepFrozenClaims(input: {
     if (input.inLeague(claim.game) && !asRead.has(claim.ref)) store.detach('maxpreps', claim.ref);
   }
   for (const { id, claim } of asRead.values()) {
-    if (!input.inLeague(claim.game)) continue;
+    if (!input.inLeague(claim.game) || isExcludedNow(claim, editor)) continue;
     const home = store.get(id) !== undefined ? id : (store.fixtureOf('maxpreps', claim.ref) ?? store.create(maxprepsBaseId(claim, editor)));
     store.attach(home, 'maxpreps', structuredClone(claim));
   }
