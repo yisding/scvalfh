@@ -91,6 +91,16 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
     expect(resolveResult(g)).toBeNull();
   });
 
+  it('keeps a third meeting of two division mates out of the league table when it is marked nonLeague', () => {
+    const third: AddedGame = {
+      dateKey: '2026-10-13', time: '16:45', home: 'homestead', away: 'cupertino', goals: { homestead: 3, cupertino: 0 },
+      forfeitBy: null, otPeriods: 0, from: 'derived', nonLeague: true, source: 's', url: null,
+    };
+    const g = addedGame(third, FETCHED)!;
+    expect([g.status, g.isLeague, g.leagueDivision, g.countsFor, g.home.result]).toEqual(['final', false, 'de-anza', null, 'W']);
+    expect(addedGame({ ...third, nonLeague: undefined }, FETCHED)!.countsFor).toBe('de-anza');
+  });
+
   it('goes only into a file that could hold it, and steps aside when a feed lists the pair that day', () => {
     const poway = game({ home: 'poway', away: 'del-norte', hs: 1, as: 0, date: '2026-10-20' });
     const vc = game({ home: 'valley-center', away: 'del-norte', hs: 0, as: 1, date: '2026-10-21' });

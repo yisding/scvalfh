@@ -304,6 +304,27 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     },
   },
   addedGames: [
+    // SCVAL De Anza schools, Tue Oct 13 at Homestead: a third, non-league meeting of Cupertino and Homestead (their
+    // league games are Sep 11, 5-5, and Oct 5, 1-1). Homestead varsity field hockey's Instagram (posted Oct 14):
+    // "3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!"; the owner (2026-11-15) has two goals to #7
+    // and one to #8 (the roster carries no jersey numbers to say which of Hailey Cutler and Gabrielle Moll is which).
+    // si.com (6575658) has it Final, Homestead 3-0, at 4:45 PM at Homestead, the NFHS Network streamed it on
+    // Homestead's channel, and Homestead's athletic director's weekly update has "Played vs Cupertino" for varsity
+    // with no score. MaxPreps lists the JV game (1-0, non-league) and not this one.
+    {
+      dateKey: '2026-10-13',
+      time: '16:45',
+      home: 'homestead',
+      away: 'cupertino',
+      goals: { homestead: 3, cupertino: 0 },
+      forfeitBy: null,
+      otPeriods: 0,
+      from: 'derived',
+      nonLeague: true,
+      note: 'Non-league: the pair’s third meeting. Homestead’s goals: two by #7 and one by #8; the team’s post credits Hailey and Gabby',
+      source: 'Homestead varsity field hockey’s Instagram, posted Oct 14, 2026: “3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!”; si.com has the same 3-0 (game 6575658); MaxPreps does not list the game',
+      url: 'https://www.instagram.com/p/Defq2JemLgM/',
+    },
     // The LAFHA Tournament of Champions' third-place game, Thu Oct 29: on no MaxPreps schedule. Daily Pilot (Los
     // Angeles Times), Oct 30, 2026, in its report of the final: Edison beat Newport Harbor 3-2 in sudden-death
     // overtime in the third-place game (given by the owner, 2026-11-14). Miller Field is where Huntington Beach's
@@ -438,7 +459,7 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     // NFHS Network stream, read 2026-10-22) until MaxPreps listed the pair's first meeting on Oct 29: the 5-5 tie,
     // played Sep 11 (contestDateOverrides above). Homestead's athletic director's weekly update (owner, 2026-11-15)
     // has varsity "Played vs Cupertino (Tuesday 10/13)" with no score and the JV game as "Won 1 - 0", which MaxPreps
-    // lists as a non-league game: Oct 13 was a third, non-league meeting, so si.com's 3-0 row is not a league result.
+    // lists as a non-league game: Oct 13 was a third, non-league meeting, listed in addedGames below (Homestead 3-0).
   },
   notCovered: [
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
