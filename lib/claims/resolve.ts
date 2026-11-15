@@ -4,8 +4,9 @@
  * slices, never the ledger's defaults), so `resolveView(view, store, …, k)` equals the game list the legacy
  * steps leave after stage k (§4.3; tests/claims/shadow.test.ts checks it).
  *
- * Phase P1 covers the `maxpreps` stage only: the contest as normalize builds it, on the editor's day and at the
- * editor's host. Every later stage throws until its phase moves it here.
+ * The `maxpreps` stage is the one resolved here so far: the contest as normalize builds it, on the editor's day and
+ * at the editor's host, or, for a contest carried for a feed the run did not read, the game as the previous run
+ * published it (FixtureDecisions.published). Every later stage throws until it moves here.
  */
 
 import { applyDateCorrection } from '../pipeline/normalize';
@@ -28,6 +29,7 @@ export function resolveFixture(f: Fixture, d: FixtureDecisions, facts: RunFacts,
   void facts;
   if (through !== 'maxpreps') throw new Error(`lib/claims/resolve.ts: stage ${through} is not migrated to claims yet`);
   if (d.contestId === null || STAGES.indexOf(d.from) > STAGES.indexOf(through)) return null;
+  if (d.published) return d.published;
   const claim = f.claims.maxpreps;
   if (!claim || claim.ref !== d.contestId) return null;
   return resolveMaxprepsClaim(claim, editor);

@@ -4,8 +4,9 @@
  * validates with it and restores both. A claim's game is checked against the snapshot's own GameSchema, so a
  * claim can hold nothing a published game could not.
  *
- * The rows of the sources no phase reads yet (si.com, cifsshome.org, the bracket sheet, VNN) are checked for
- * their keys only; the phase that starts reading each tightens its schema.
+ * The rows of the sources no phase reads yet (si.com, the bracket sheet) are checked for their keys only; the phase
+ * that starts reading each tightens its schema. What the pipeline reads of the cifsshome.org, box-score and school
+ * calendar claims (a conflict row, a box score's sides, what a calendar put on a game) is checked whole.
  */
 
 import { z } from 'zod';
@@ -28,6 +29,7 @@ const ref = z.string().min(1);
 const seenAt = isoUtc.optional();
 const scorePair = z.object({ home: z.number().int(), away: z.number().int() }).strict();
 const row = z.looseObject({});
+const streetAddress = z.object({ street: z.string(), city: z.string(), region: z.string(), postalCode: z.string() }).strict();
 
 const MaxprepsClaimSchema = z
   .object({
@@ -107,7 +109,7 @@ const VnnClaimSchema = z
     seenAt,
     event: row.optional(),
     applied: z
-      .object({ venueName: z.string().optional(), venueAddress: row.optional(), timeConfirmed: z.literal(true).optional() })
+      .object({ venueName: z.string().min(1).optional(), venueAddress: streetAddress.optional(), timeConfirmed: z.literal(true).optional() })
       .strict()
       .optional(),
   })

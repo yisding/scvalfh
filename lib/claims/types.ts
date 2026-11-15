@@ -1,8 +1,9 @@
 /**
- * The claims model (pipeline inversion, phase P1): every source's rows about a game, kept per fixture with the run
- * that last saw them, and written beside the snapshot as `claims.json`. A fixture is this site's own record of one
- * game; a claim is what one source says about it. The pipeline still publishes from its legacy steps in this phase:
- * the claims are written, never read back to publish.
+ * The claims model (pipeline inversion): every source's rows about a game, kept per fixture with the run that last
+ * saw them, and written beside the snapshot as `claims.json`. A fixture is this site's own record of one game; a
+ * claim is what one source says about it. Step 06 publishes from the MaxPreps claims (a feed not read is carried
+ * from them), the school calendars' carry reads the VNN claims, and the results step weighs the cifsshome.org and
+ * box-score claims; the other steps still work over the game list, and each moves onto its source's claims in turn.
  *
  * Types only. lib/claims/schema.ts is the zod form of `ClaimsFile` as written on disk, where `seenAt` equal to the
  * file's `fetchedAt` and a MaxPreps game's `provenance.fetchedAt` are left out (lib/claims/store.ts toFile).
@@ -10,8 +11,10 @@
 
 import type {
   BackfillProvenance, BoxSide, CifssConflictRow, ContestId, DivisionId, Game, GameSide, LeagueId,
-  OfficialFixture, OfficialStamp, StreetAddress, TeamSlug,
+  OfficialFixture, OfficialStamp, StreetAddress, TeamId, TeamSlug, DroppedContest,
 } from '../types';
+import type { BoxEvidence } from '../results/box-evidence';
+import type { ScheduleRow } from '../sources/maxpreps';
 import type { CanonicalFixture } from '../fixtures/shape';
 import type { CifssRow } from '../sources/cifss';
 import type { SbliveGame } from '../sources/sblive';
@@ -128,7 +131,8 @@ export interface SbliveClaim extends ClaimBase<string /* sbliveGameId, or `conte
 
 // ---------------------------------------------------------------- cifsshome.org (evidence only)
 
-export interface CifssClaim extends ClaimBase<string /* `${section}:${cifssId}`, or `contest:<id>` when seeded */> {
+export interface CifssClaim extends ClaimBase<string /* `contest:<id>`: the conflict rows carry no cifsshome.org id */> {
+  /** Not written: the report's conflict row is what the results step reads. */
   row?: CifssRow;
   /** The report's conflict row for this fixture, the evidence finalize reads (result.ts withCifssScore). */
   conflict?: Pick<CifssConflictRow, 'contestId' | 'cifss' | 'cifssUrl'>;
@@ -145,9 +149,13 @@ export interface SdsSheetClaim extends ClaimBase<string /* `${division}:${slugA}
 
 // ---------------------------------------------------------------- VNN school calendars (evidence only)
 
-export interface VnnClaim extends ClaimBase<string /* `${schoolSlug}:${uid ?? `${dateKey}|${opponentKey}`}` */> {
+export interface VnnClaim extends ClaimBase<string /* `${school}:contest:<id>`: one per calendar school and game */> {
+  /** Not written: the per-site carry reads `applied` alone. */
   event?: VnnEvent;
-  /** What it put on the game last time (for per-site carry, vnn-ics.ts carryVnnForward, which copies `venue.address` whole). */
+  /**
+   * What the game showed when last published, for the per-site carry (lib/sources/vnn-ics.ts carryVnnPublished, which
+   * copies `venue.address` whole): the venue name whatever wrote it, and the confirmed start time.
+   */
   applied?: { venueName?: string; venueAddress?: StreetAddress; timeConfirmed?: true };
 }
 
@@ -244,6 +252,12 @@ export interface FixtureDecisions {
     | { kind: 'score'; result: SdsSheetResult; rule: 'score-pending' | 'absent-game'; fetchedAt: string }
     | { kind: 'time'; time: string }
     | { kind: 'create'; game: Game };
+  /**
+   * A fixture carried at stage `maxpreps` for a feed this run did not read: the game as the previous run published it,
+   * classification cleared (lib/claims/sources/maxpreps.ts asLastPublished). §11 R3's zero-deviation carry: it keeps
+   * the other sources' contributions until their claims hold what they published.
+   */
+  published?: Game;
   /** Frozen league: the previous snapshot's game, classified with that league's previous degraded set (guards.ts). */
   frozen?: Game;
   /** Results stage evidence. */
@@ -251,20 +265,41 @@ export interface FixtureDecisions {
   box?: ReadonlyMap<string, BoxSide>;                  // undefined: leave as the view has it (box not read)
 }
 
-/**
- * One stage of the shadow harness (SCVAL_CLAIMS_SHADOW=1, tests/claims/shadow.test.ts): the games and fixtures
- * the legacy step chain left after the stage, and the view the claims path resolves at the same stage.
- */
-export interface ShadowStage {
-  stage: Stage;
-  legacy: { games: readonly Game[]; unmatched: readonly OfficialFixture[] };
-  claims: {
-    /** The view's fixture ids, in order. */
-    view: readonly FixtureId[];
-    games: readonly Game[];
-    /** Contest ids of the legacy list that no fixture of the view publishes. */
-    unplaced: readonly ContestId[];
-  };
-  /** Contest ids the legacy step carried from the previous snapshot this stage (merged games, §0.3). */
-  carried: readonly ContestId[];
+/** One team feed's read this run, as step 05 records it (lib/pipeline/ledger.ts TeamFeedInfo). */
+export interface FeedRead {
+  teamId: TeamId;
+  status: 'ok' | 'failed' | 'skipped' | 'not-fetched';
 }
+
+/**
+ * One stage of the shadow harness (SCVAL_CLAIMS_SHADOW=1, tests/claims/shadow.test.ts): what a stage moved onto
+ * claims read, and what it published. The harness runs the stage's legacy rule (the one that read the previous
+ * snapshot's games) over the same input and checks the two agree; the legacy rules live in the test support only,
+ * since the pipeline no longer runs them.
+ */
+export type ShadowStage =
+  | {
+      stage: 'maxpreps';
+      /** Step 06's input: the rows read, each feed's read, the TBA rows split off. */
+      input: { rows: readonly ScheduleRow[]; feeds: readonly FeedRead[]; tbaDropped: readonly DroppedContest[] };
+      /** The view's fixture ids, in order. */
+      view: readonly FixtureId[];
+      games: readonly Game[];
+      /** Contest ids carried from stored claims this stage (a side's feed not read). */
+      carried: readonly ContestId[];
+    }
+  | {
+      stage: 'vnn';
+      /** The VNN part of step 09's input: the games, the events read, and each in-run site's read. */
+      input: { games: readonly Game[]; events: readonly VnnEvent[]; sites: ReadonlyMap<TeamSlug, VnnSiteRead> };
+      games: readonly Game[];
+    }
+  | {
+      stage: 'results';
+      /** Step 11c's input: the games, the published cifss report's conflict rows, and the box evidence read. */
+      input: { games: readonly Game[]; cifssConflicts: readonly Pick<CifssConflictRow, 'contestId' | 'cifss' | 'cifssUrl'>[]; box: BoxEvidence | undefined };
+      games: readonly Game[];
+    };
+
+/** How one school calendar of the run was read: answered with events, or asked and silent or failed. */
+export type VnnSiteRead = 'answered' | 'not-answered';

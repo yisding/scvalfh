@@ -2993,6 +2993,19 @@
     },
     {
       "claims": {
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 0,
+                "home": 1
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=08%2F22%2F2026&date_to=08%2F22%2F2026",
+              "contestId": "c84271e1-da5f-4256-b93d-c82aff046ee2"
+            },
+            "ref": "contest:c84271e1-da5f-4256-b93d-c82aff046ee2"
+          }
+        ],
         "maxpreps": {
           "game": {
             "away": {
@@ -7538,6 +7551,27 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "7551a71d-3c34-4efc-9b8c-d406ef4ba0f5",
+          "sides": {
+            "escondido": {
+              "overtimeMinutes": 10
+            }
+          }
+        },
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 0,
+                "home": 1
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=09%2F01%2F2026&date_to=09%2F01%2F2026",
+              "contestId": "7551a71d-3c34-4efc-9b8c-d406ef4ba0f5"
+            },
+            "ref": "contest:7551a71d-3c34-4efc-9b8c-d406ef4ba0f5"
+          }
+        ],
         "maxpreps": {
           "game": {
             "away": {
@@ -13240,6 +13274,16 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "60b5ab14-9b9c-48ca-a341-83b3057e74d6",
+          "sides": {
+            "patrick-henry": {
+              "goals": 1,
+              "goalsAgainst": 1,
+              "overtimeMinutes": 10
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -14189,6 +14233,19 @@
     },
     {
       "claims": {
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 2,
+                "home": 0
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=09%2F11%2F2026&date_to=09%2F11%2F2026",
+              "contestId": "d8aad805-99f8-4c64-8a1b-3c305465fd88"
+            },
+            "ref": "contest:d8aad805-99f8-4c64-8a1b-3c305465fd88"
+          }
+        ],
         "editor": {
           "fixture": {
             "away": "mt-carmel",
@@ -19346,6 +19403,18 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "0f69c9f3-660e-4f88-aa4a-9ede091bf61e",
+          "sides": {
+            "lassen": {
+              "goals": 1,
+              "goalsAgainst": 7
+            },
+            "pleasant-valley": {
+              "goals": 7
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -21786,6 +21855,16 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "5d715447-fc33-4d2a-a58f-5cc8f04a5778",
+          "sides": {
+            "stevenson": {
+              "goals": 2,
+              "goalsAgainst": 2,
+              "overtimeMinutes": 7
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -28438,6 +28517,19 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "c24b9f05-96a1-4cfd-8599-111f7a300638",
+          "sides": {
+            "bishops": {
+              "goals": 2,
+              "goalsAgainst": 3,
+              "overtimeMinutes": 5
+            },
+            "canyon-hills": {
+              "goals": 3
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -30559,6 +30651,19 @@
     },
     {
       "claims": {
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 0,
+                "home": 3
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=09%2F30%2F2026&date_to=09%2F30%2F2026",
+              "contestId": "df6d477d-1c00-4bd4-b481-f9c3c6112ed8"
+            },
+            "ref": "contest:df6d477d-1c00-4bd4-b481-f9c3c6112ed8"
+          }
+        ],
         "maxpreps": {
           "game": {
             "away": {
@@ -33460,6 +33565,19 @@
     },
     {
       "claims": {
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 2,
+                "home": 3
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F05%2F2026&date_to=10%2F05%2F2026",
+              "contestId": "096fffe7-ce79-4463-be5e-3b7f80131a10"
+            },
+            "ref": "contest:096fffe7-ce79-4463-be5e-3b7f80131a10"
+          }
+        ],
         "editor": {
           "fixture": {
             "away": "escondido",
@@ -33797,6 +33915,17 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "91ec6093-5c71-48b5-98e9-0e34f871faf2",
+          "sides": {
+            "mission-hills": {
+              "goals": 1
+            },
+            "westview": {
+              "goals": 1
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -35322,6 +35451,19 @@
     },
     {
       "claims": {
+        "cifss": [
+          {
+            "conflict": {
+              "cifss": {
+                "away": 1,
+                "home": 2
+              },
+              "cifssUrl": "https://www.cifsshome.org/widget/schedule-score?section_id=3&year=2026&sport_id=30&date_from=10%2F06%2F2026&date_to=10%2F06%2F2026",
+              "contestId": "e73eb917-8a7b-4471-9b89-1a7cb923675a"
+            },
+            "ref": "contest:e73eb917-8a7b-4471-9b89-1a7cb923675a"
+          }
+        ],
         "editor": {
           "fixture": {
             "away": "rancho-bernardo",
@@ -38292,6 +38434,14 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "38dab965-b167-4129-8f95-a8c9e59957f3",
+          "sides": {
+            "carmel": {
+              "goals": 4
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -47759,6 +47909,15 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "38c8a346-bcb6-4f77-93b3-d1f79596474b",
+          "sides": {
+            "mt-carmel": {
+              "goalsAgainst": 1,
+              "overtimeMinutes": 10
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -53153,7 +53312,15 @@
             "venue"
           ],
           "ref": "c473d9e7-520a-4afd-baee-0d7363cac7dc"
-        }
+        },
+        "vnn": [
+          {
+            "applied": {
+              "venueName": "Monta Vista High School"
+            },
+            "ref": "palo-alto:contest:c473d9e7-520a-4afd-baee-0d7363cac7dc"
+          }
+        ]
       },
       "id": "2026-10-27-palo-alto-at-monta-vista"
     },
@@ -56404,6 +56571,14 @@
     },
     {
       "claims": {
+        "box": {
+          "ref": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c",
+          "sides": {
+            "mission-hills": {
+              "goals": 2
+            }
+          }
+        },
         "maxpreps": {
           "game": {
             "away": {
@@ -58582,7 +58757,16 @@
             "venue"
           ],
           "ref": "989b1663-6410-4384-a081-1aed3fb57fad"
-        }
+        },
+        "vnn": [
+          {
+            "applied": {
+              "timeConfirmed": true,
+              "venueName": "Christopher High School"
+            },
+            "ref": "los-gatos:contest:989b1663-6410-4384-a081-1aed3fb57fad"
+          }
+        ]
       },
       "id": "2026-11-07-los-gatos-at-christopher"
     },

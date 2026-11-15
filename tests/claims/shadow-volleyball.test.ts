@@ -36,8 +36,8 @@ describe('volleyball-2026-11-14', () => {
     const steps = { official: stepOfficial, sblive: stepSblive };
     const fresh = await support.snapshotOf({ corpus: CORPUS, steps });
     expect(fresh.run.result?.claims.sport).toBe('volleyball');
-    shadow.expectShadowAgrees(fresh.run.ctx, 'maxpreps', 'volleyball fresh');
+    for (const stage of ['maxpreps', 'vnn', 'results'] as const) shadow.expectShadowAgrees(fresh.run.ctx, stage, 'volleyball fresh');
     const seeded = await support.snapshotOf({ corpus: CORPUS, steps, previous });
-    shadow.expectShadowAgrees(seeded.run.ctx, 'maxpreps', 'volleyball seeded');
+    for (const stage of ['maxpreps', 'vnn', 'results'] as const) shadow.expectShadowAgrees(seeded.run.ctx, stage, 'volleyball seeded');
   });
 });

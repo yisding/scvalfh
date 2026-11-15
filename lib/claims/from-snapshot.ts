@@ -9,8 +9,11 @@
  * `reconstructed`; every such field is one that resolve writes again while the fact that merged it stands, and the
  * next run that reads the team's feed replaces the claim with an exact one.
  *
- * Phase P1 seeds the MaxPreps claims only. The editor's claims are rebuilt every run (lib/claims/editor.ts); the
- * other sources' rows of §9 are seeded by the phases that start reading them.
+ * The MaxPreps claims are seeded, and the evidence-only sources' claims on their games: a school calendar's venue
+ * name and confirmed start time (§7.4; the venue name also stays on the MaxPreps claim, since which source wrote it
+ * is not stored), the cifsshome.org score a game shows (§7.9) and its box score (§7.10). The editor's claims are
+ * rebuilt every run (lib/claims/editor.ts); the other sources' rows of §9 are seeded by the phases that start reading
+ * them.
  */
 
 import { datesAtLocal, localDateKey } from '../format';
@@ -27,6 +30,9 @@ import { resolveTeam } from '../teams';
 import type { Game, GameSide, Outcome, Snapshot } from '../types';
 import type { EditorView } from './editor';
 import { baseFixtureId, fixtureSideKey } from './identity';
+import { boxClaimOfScore } from './sources/box';
+import { cifssClaimRef } from './sources/cifss';
+import { vnnClaimsOf } from './sources/vnn';
 import { ClaimStore } from './store';
 import {
   MAXPREPS_PROVENANCE_KEYS,
@@ -242,5 +248,19 @@ export function claimsFromSnapshot(previous: Snapshot | null, editor: EditorView
   const claims = previous.games.filter((g) => GUID_RE.test(g.contestId)).map((g) => maxprepsClaimFromGame(g, previous.fetchedAt));
   const store = new ClaimStore();
   store.mergeRead('maxpreps', () => false, [...claims].sort(byDateKeyThenRef), (c) => store.create(maxprepsBaseId(c, editor)));
+  // The evidence-only sources' claims, on the fixtures of the games they are about.
+  const cifssAt = previous.cifssCrossCheck?.cifssFetchedAt ?? previous.fetchedAt;
+  for (const g of previous.games) {
+    const id = store.fixtureOf('maxpreps', g.contestId);
+    if (id === undefined) continue;
+    for (const c of vnnClaimsOf(g, () => previous.fetchedAt)) store.attach(id, 'vnn', c);
+    const cifss = g.provenance.cifssScore;
+    if (cifss) {
+      const conflict = { contestId: g.contestId, cifss: { home: cifss.home, away: cifss.away }, cifssUrl: cifss.url };
+      store.attach(id, 'cifss', { ref: cifssClaimRef(g.contestId), seenAt: cifssAt, conflict });
+    }
+    const box = boxClaimOfScore(g, previous.fetchedAt);
+    if (box) store.attach(id, 'box', box);
+  }
   return store.toFile(previous.fetchedAt, SPORT_ID);
 }

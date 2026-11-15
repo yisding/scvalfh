@@ -9,7 +9,7 @@
  *   03 metas       wrong season/year/section → LEAGUE FREEZE (a)
  *   04 reported    unreadable table → SOURCE STALE (carried)
  *   05 schedules   failed feed → carried; ≥50% of a league's feeds → LEAGUE FREEZE (b)
- *   06 normalize   + exclusions, phantom dedupe, carry-forward
+ *   06 normalize   the MaxPreps claims: exclusions, phantom dedupe, carry-forward from stored claims
  *   07 official    the official step (steps/official.ts), injectable
  *   08 sblive      the si.com step (steps/sblive.ts), injectable
  *   09 secondary   VNN, CCS
@@ -20,18 +20,21 @@
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
  *
- * Beside step 06 the run records its MaxPreps and editor claims (lib/claims/), and the claims file is written beside
- * the snapshot. Nothing reads the claims to publish yet: the steps above still produce the snapshot.
+ * The run keeps every source's rows as claims (lib/claims/) and writes the claims file beside the snapshot. Step 06
+ * publishes from the MaxPreps claims: a feed this run did not read is carried from the claims the previous run
+ * wrote. The evidence-only sources read their claims too: a school calendar that does not answer is carried from
+ * what its games showed when last published (step 09), and step 11c weighs the cifsshome.org and box-score evidence
+ * the claims hold. The other steps still work over the game list.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { attachEditorClaims } from '../claims/editor';
 import { CLAIMS_WARN_BYTES, claimsFileText, claimsPathOf, readClaimsFile } from '../claims/file';
-import { resolveView } from '../claims/resolve';
-import { collectMaxprepsClaims, matchMaxpreps } from '../claims/sources/maxpreps';
-import type { ClaimsFile, RunFacts } from '../claims/types';
+import { boxEvidenceOf, recordBoxClaims } from '../claims/sources/box';
+import { cifssEvidenceFrom, recordCifssClaims } from '../claims/sources/cifss';
+import { writeBackVnnClaims } from '../claims/sources/vnn';
+import type { ClaimsFile } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
 import { parseFetchedAtFlag, parseLeaguesFlag } from '../cli-flags';
 import { localDateKey } from '../format';
@@ -49,7 +52,7 @@ import {
   type Transport,
 } from './contract';
 import { loadCorpus, type Corpus } from './corpus';
-import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink, type RunState } from './ledger';
+import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink } from './ledger';
 import { stepAssemble } from './steps/assemble';
 import { stepBootstrap } from './steps/bootstrap';
 import { stepCifss } from './steps/cifss';
@@ -143,56 +146,6 @@ async function runSblive(
   }
 }
 
-/** What resolve reads of the run at the `maxpreps` stage: the feeds read; every later source not migrated yet. */
-function maxprepsFacts(ctx: PipelineContext, state: RunState): RunFacts {
-  return {
-    fetchedAt: ctx.fetchedAt,
-    today: ctx.today,
-    leaguesInRun: ctx.leaguesInRun(),
-    reads: {
-      maxprepsFeeds: new Map([...state.feeds].map(([slug, f]) => [slug, f.status])),
-      officialDivisions: new Map(),
-      sblive: { read: false, consulted: () => false },
-      vnnSites: new Map(),
-      sdsTabs: new Map(),
-      cifss: 'none',
-      box: false,
-    },
-    degradedDivisions: new Set(),
-  };
-}
-
-/**
- * The run's MaxPreps and editor claims into the store (lib/claims/sources/maxpreps.ts), beside step 06, which
- * still publishes. Nothing is logged and nothing is dropped here: step 06 does both. With the shadow harness on,
- * the step's games and the claims' view at this stage are recorded side by side.
- */
-function recordMaxprepsClaims(ctx: PipelineContext, state: RunState): void {
-  const { claims: fresh, norm } = collectMaxprepsClaims(state.rows, ctx.fetchedAt);
-  const deletedThisRun = new Set(state.rows.filter((r) => r.calculatedFields.contestState === 1).map((r) => r.contest.contestId));
-  const m = matchMaxpreps({
-    store: ctx.claims,
-    fresh,
-    editor: ctx.editor,
-    feeds: state.feeds,
-    deletedThisRun,
-    tbaDropped: state.tbaDropped,
-    normDropped: norm.dropped,
-  });
-  attachEditorClaims(ctx.claims, ctx.editorClaims);
-  if (ctx.shadow) {
-    const games = resolveView(m.view, ctx.claims, new Map(), maxprepsFacts(ctx, state), ctx.editor, 'maxpreps');
-    const published = new Set(games.map((g) => g.contestId));
-    const freshRefs = new Set(fresh.map((c) => c.ref));
-    ctx.shadow.push({
-      stage: 'maxpreps',
-      legacy: { games: [...state.games], unmatched: [...state.unmatched] },
-      claims: { view: [...m.view], games, unplaced: state.games.map((g) => g.contestId).filter((id) => !published.has(id)) },
-      carried: state.games.map((g) => g.contestId).filter((id) => !freshRefs.has(id)),
-    });
-  }
-}
-
 /** Runs §7.4 steps 01-13. Returns null when the season-window guard stops the run (nothing to write). */
 export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): Promise<PipelineResult | null> {
   // 01
@@ -211,7 +164,6 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   await stepReported(ctx, state); // 04
   await stepSchedules(ctx, state); // 05
   stepNormalize(ctx, state); // 06
-  recordMaxprepsClaims(ctx, state);
 
   // 07 official (the injectable official step)
   const { games: officialGames, unmatched, ...officialFlags } = await runOfficial(ctx, steps, state.games);
@@ -238,10 +190,20 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
 
   // 11b cifsshome.org cross-check (over the games the snapshot will publish)
   state.cifssCrossCheck = await stepCifss(ctx, state);
+  recordCifssClaims(ctx.claims, state.cifssCrossCheck);
 
   // 11c results: every final's recorded result, from everything the run now knows about it (corrections, a
   // level final that must have a winner, a tally read from a second source), before the standings count it.
-  state.games = stepResults(ctx, state.games, state.cifssCrossCheck, ctx.args.fixtures ? undefined : boxEvidenceOnDisk());
+  const box = ctx.args.fixtures ? undefined : boxEvidenceOnDisk();
+  recordBoxClaims(ctx.claims, box, ctx.fetchedAt);
+  const evidence = { cifss: cifssEvidenceFrom(ctx.claims, state.cifssCrossCheck), box: boxEvidenceOf(ctx.claims, box) };
+  const resultsInput = state.games;
+  state.games = stepResults(ctx, state.games, state.cifssCrossCheck, box, evidence);
+  ctx.shadow?.push({
+    stage: 'results',
+    input: { games: resultsInput, cifssConflicts: state.cifssCrossCheck?.conflicts ?? [], box },
+    games: [...state.games],
+  });
 
   // 12 standings + health
   const table = stepStandings(ctx, state);
@@ -250,11 +212,19 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport) });
 
   // The claims file beside the snapshot. Checked after the meta is built, so a size warning never moves meta.warnings.
+  // What each school calendar's games showed as published, for the next run's per-site carry.
+  writeBackVnnClaims(ctx.claims, snapshot.games, vnnAnswered(ctx), ctx.fetchedAt);
   ctx.claims.gc();
   const claims = ctx.claims.toFile(ctx.fetchedAt, SPORT_ID);
   const bytes = Buffer.byteLength(claimsFileText(claims), 'utf8');
   if (bytes > CLAIMS_WARN_BYTES) ctx.warn(`claims file is ${bytes} bytes, over the ${CLAIMS_WARN_BYTES}-byte budget`);
   return { snapshot, meta, claims, logLines: [...ctx.logLines] };
+}
+
+/** The school calendars that answered with events this run (their source row is ok with rows). */
+function vnnAnswered(ctx: PipelineContext): Set<string> {
+  const rows = ctx.sources.all().filter((r) => r.id === 'vnn-ics' && r.status === 'ok' && (r.rowCount ?? 0) > 0);
+  return new Set(rows.flatMap((r) => (r.scope?.team ? [r.scope.team] : [])));
 }
 
 // ---------------------------------------------------------------- CLI plumbing (§7.12)

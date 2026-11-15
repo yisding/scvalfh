@@ -20,7 +20,7 @@
 import { localDateKey, toLocalTimestamp } from '../format';
 import { GENDER_NAME, SPORT } from '../sports/current';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
-import type { Game, TeamSlug } from '../types';
+import type { Game, StreetAddress, TeamSlug } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */
@@ -226,6 +226,22 @@ export function applyVnnEvents(
 
 // ---------------------------------------------------------------- carry-forward
 
+/** What a game showed from the school calendars the last time it was published: the per-site carry's input. */
+export interface VnnPublished {
+  venueName?: string;
+  venueAddress?: StreetAddress;
+  timeConfirmed?: true;
+}
+
+/** The venue name, its address and the confirmed start time a published game shows; undefined when it shows none. */
+export function vnnPublishedOf(game: Pick<Game, 'venue' | 'timeConfirmed'>): VnnPublished | undefined {
+  const out: VnnPublished = {
+    ...(game.venue.name ? { venueName: game.venue.name, ...(game.venue.address ? { venueAddress: game.venue.address } : {}) } : {}),
+    ...(game.timeConfirmed ? { timeConfirmed: true as const } : {}),
+  };
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 /**
  * SPEC §5.3, PER SITE: put back the venue names and confirmed start times a school calendar
  * published before, for the schools whose feed produced nothing this run.
@@ -236,30 +252,30 @@ export function applyVnnEvents(
  * pages. Keyed on the school instead, a feed that DID answer is never second-guessed and a feed
  * that did not never takes its school's data down with it.
  *
- * Only ever FILLS A HOLE — a value this run produced always wins.
+ * Only ever FILLS A HOLE — a value this run produced always wins. `publishedOf` is what each game showed the last
+ * time it was published (lib/claims/sources/vnn.ts reads it from the stored claims).
  */
-export function carryVnnForward(
+export function carryVnnPublished(
   missing: readonly TeamSlug[],
-  previousGames: readonly Game[],
   games: readonly Game[],
+  publishedOf: (contestId: string) => VnnPublished | undefined,
 ): { games: Game[]; carried: number } {
   const wanted = new Set<string>(missing);
   if (wanted.size === 0) return { games: [...games], carried: 0 };
-  const prevById = new Map(previousGames.map((g) => [g.contestId, g]));
   let carried = 0;
   const out = games.map((game) => {
     const touches =
       (game.home.slug !== null && wanted.has(game.home.slug)) ||
       (game.away.slug !== null && wanted.has(game.away.slug));
     if (!touches) return game;
-    const prev = prevById.get(game.contestId);
+    const prev = publishedOf(game.contestId);
     if (!prev) return game;
     const patch: Partial<Game> = {};
-    if (prev.venue.name && !game.venue.name) {
+    if (prev.venueName && !game.venue.name) {
       patch.venue = {
         ...game.venue,
-        name: prev.venue.name,
-        ...(prev.venue.address ? { address: prev.venue.address } : {}),
+        name: prev.venueName,
+        ...(prev.venueAddress ? { address: prev.venueAddress } : {}),
       };
     }
     if (prev.timeConfirmed && !game.timeConfirmed) patch.timeConfirmed = true;
@@ -268,4 +284,18 @@ export function carryVnnForward(
     return { ...game, ...patch };
   });
   return { games: out, carried };
+}
+
+/** carryVnnPublished with what each game showed in `previousGames`, the previous snapshot's list. */
+export function carryVnnForward(
+  missing: readonly TeamSlug[],
+  previousGames: readonly Game[],
+  games: readonly Game[],
+): { games: Game[]; carried: number } {
+  if (missing.length === 0) return { games: [...games], carried: 0 };
+  const prevById = new Map(previousGames.map((g) => [g.contestId, g]));
+  return carryVnnPublished(missing, games, (id) => {
+    const prev = prevById.get(id);
+    return prev ? vnnPublishedOf(prev) : undefined;
+  });
 }

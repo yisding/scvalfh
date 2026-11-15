@@ -1,9 +1,10 @@
 /**
  * The shadow harness (pipeline inversion §10.0): every corpus, with no previous run and with its own output as the
  * previous run (claims seeded from that snapshot, and claims read from the file the earlier run wrote), every
- * variant, and the carry cases of tests/pipeline/carry.test.ts, run with SCVAL_CLAIMS_SHADOW=1. At each stage
- * migrated so far, the view the claims resolve equals the legacy step chain's games (tests/claims/support/shadow.ts).
- * Later phases add their stage to `STAGES_MIGRATED` and the check runs for it too.
+ * variant, the carry cases of tests/pipeline/carry.test.ts, and runs that start from the committed snapshot and claims
+ * file (merged games with si.com fills, box scores, school-calendar venues and sheet scores), run with
+ * SCVAL_CLAIMS_SHADOW=1. At each stage moved onto claims, what the claims publish equals what the stage's legacy rule
+ * publishes over the same input (tests/claims/support/shadow.ts). Each phase adds its stages to `STAGES_MIGRATED`.
  */
 
 import { readFileSync } from 'node:fs';
@@ -11,7 +12,7 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { claimsFileText, parseClaimsText } from '../../lib/claims/file';
+import { claimsFileText, parseClaimsText, readClaimsFile } from '../../lib/claims/file';
 import type { ClaimsFile, Stage } from '../../lib/claims/types';
 import { stepOfficial } from '../../lib/pipeline/steps/official';
 import { stepSblive } from '../../lib/pipeline/steps/sblive';
@@ -20,10 +21,10 @@ import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Snapshot } from '../../lib/types';
 import { REPO, corpusDir, corpusSnapshotPath, type CorpusName } from '../helpers';
 import { snapshotOf, writeTempVariant, type RunCorpusOptions } from '../pipeline/support/run-corpus';
-import { expectShadowAgrees } from './support/shadow';
+import { expectShadowAgrees, shadowStage } from './support/shadow';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
-const STAGES_MIGRATED: readonly Stage[] = ['maxpreps'];
+const STAGES_MIGRATED: readonly Stage[] = ['maxpreps', 'vnn', 'results'];
 const CORPORA: readonly CorpusName[] = ['all-2026-10-02', 'eal-2026-10-04', 'socal-2026-10-06'];
 const VARIANTS = ['bval-meta-wrong-season', 'bval-revised', 'finals-regression', 'leland-feed-503', 'mcal-postseason', 'pcal-standings-empty'];
 
@@ -38,7 +39,8 @@ afterAll(() => {
 async function shadowRun(label: string, opts: RunCorpusOptions): Promise<{ snapshot: Snapshot; claims: ClaimsFile; carried: number }> {
   const { snapshot, run } = await snapshotOf({ steps: STEPS, ...opts });
   let carried = 0;
-  for (const stage of STAGES_MIGRATED) carried += expectShadowAgrees(run.ctx, stage, label).carried.length;
+  for (const stage of STAGES_MIGRATED) expectShadowAgrees(run.ctx, stage, label);
+  carried += shadowStage(run.ctx, 'maxpreps').carried.length;
   return { snapshot, claims: run.result!.claims, carried };
 }
 
@@ -82,6 +84,26 @@ describe('all-2026-10-02 variants', () => {
     const first = await shadowRun('fresh', {});
     const fromFile = await shadowRun('--leagues scval from file', { ...asWritten(first), extraArgs });
     expect(fromFile.carried).toBeGreaterThan(0);
+  });
+});
+
+describe('from the committed snapshot and claims file', () => {
+  const ALL_LEAGUES = 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents';
+  const committed = () => ({
+    previous: loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown),
+    claims: readClaimsFile(path.join(REPO, 'data', 'claims.json')),
+  });
+
+  it.each([
+    ['a failed feed', { variants: ['leland-feed-503'] }],
+    ['a run of one league', { extraArgs: ['--leagues', 'mcal'] }],
+    ['a run of two leagues without si.com or school calendars', { extraArgs: ['--leagues', 'pcal,bval', '--no-sblive', '--no-vnn'] }],
+    ['the SoCal corpus', { corpus: 'socal-2026-10-06' as CorpusName }],
+  ])('%s', async (label, opts: RunCorpusOptions) => {
+    const extraArgs = [...(opts.extraArgs ?? []), '--accept-regression', ALL_LEAGUES];
+    const read = committed();
+    await shadowRun(`committed, ${label}`, { ...opts, extraArgs, previous: read.previous, claims: read.claims });
+    await shadowRun(`committed seeded, ${label}`, { ...opts, extraArgs, previous: read.previous });
   });
 });
 

@@ -97,12 +97,11 @@ describe('lib/claims/ never loads lib/data.ts', () => {
 
 /** The pipeline-side folders: what the cron runs to build the snapshot. */
 const PIPELINE_DIRS = ['lib/pipeline', 'lib/claims', 'lib/crosscheck', 'lib/official', 'lib/results', 'lib/postseason', 'lib/sources'];
-/** The modules among them that import LEDGER_VIEW, EXCLUSIONS or LEDGER at runtime today (P1). Shrinks to lib/claims/editor.ts by P8. */
+/** The modules among them that import LEDGER_VIEW, EXCLUSIONS or LEDGER at runtime today (P2). Shrinks to lib/claims/editor.ts by P8. */
 const LEDGER_READERS = [
   'lib/claims/editor.ts',
   'lib/crosscheck/backfill.ts',
   'lib/pipeline/normalize.ts',
-  'lib/pipeline/steps/normalize.ts',
   'lib/pipeline/steps/official.ts',
   'lib/results/fixture-games.ts',
   'lib/results/host-correction.ts',

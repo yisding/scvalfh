@@ -1,99 +1,76 @@
 /**
- * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/pipeline/normalize.ts's pure functions in
- * order: `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
- * (DATA_QUALITY ghost teams and the fixture ledger's rejected and duplicate rows; one that no longer matches is
- * logged once),
- * `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to the published
- * `dropped` list.
+ * Step 06 (SPEC §7.4, §7.6; pipeline inversion §7.1): schedule rows → games, from the MaxPreps claims.
  *
- * Then the kept carry-forward: for every team whose feed failed this run — or was not fetched
- * because its league is not in the run — the previous snapshot's games involving that team that
- * this run does not have are carried forward, with three guards against counting one fixture twice:
- *  - never a si.com `sblive:` game (step 08 decides those again, carrying them only while still
- *    eligible), a San Diego bracket sheet `cifsds:` game (step 09 decides those again) nor a contest another
- *    feed reported Deleted this run;
- *  - the earlier run's classification is cleared (official stamp, countsFor, postseason), so step 07
- *    and step 10 decide the carried game exactly as they decide a fresh one;
- *  - the same-division phantom dedupe runs again over this run's games plus the carried ones, always
- *    keeping this run's row (a contest MaxPreps re-keyed since the last run).
+ *  - COLLECT: `normalizeGames` with no ledger fact (TBA rows were already split off per feed in step 05), one claim
+ *    per contest (lib/claims/sources/maxpreps.ts collectMaxprepsClaims).
+ *  - MATCH (matchMaxpreps): the claims onto the store by stored ref; the editor's day and host; `applyExclusions`
+ *    (DATA_QUALITY ghost teams and the ledger's rejected and duplicate rows, through the editor's claims; one that no
+ *    longer matches is logged once); `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to
+ *    the published `dropped` list.
+ *  - The carry: for every team whose feed failed this run, or was not fetched because its league is not in the run,
+ *    its stored MaxPreps claims that this run does not have are carried forward, with two guards against counting
+ *    one fixture twice: never a contest another feed reported Deleted this run, and the same-division phantom
+ *    dedupe runs again over this run's games plus the carried ones, always keeping this run's row (a contest
+ *    MaxPreps re-keyed since the last run).
+ *  - RESOLVE: `state.games` is the view resolved through this stage (lib/claims/resolve.ts).
+ *
+ * A carried contest publishes as the previous run published it, with that run's classification cleared, and an
+ * editor-listed game last published with it is carried the same way (§11 R3's zero-deviation carry). The other
+ * sources' claims do not yet hold what they published (an si.com fill, a sheet score, a box score, a school
+ * calendar's venue), so the previous publication is where those contributions are read until they do; the later
+ * steps decide classification again exactly as they decide a fresh game's. Whether a feed counts as carried for its
+ * source row also reads the previous snapshot: it describes what that publication covered.
  */
 
-import { byDateThenId } from '../../format';
-import { isSbliveContestId } from '../../game-id';
-import { EXCLUSIONS } from '../../fixtures/ledger';
-import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../normalize';
-import { isCifsdsContest } from '../../postseason/sds-sheet-results';
-import type { Game } from '../../types';
+import { resolveView } from '../../claims/resolve';
+import { collectMaxprepsClaims, matchMaxpreps } from '../../claims/sources/maxpreps';
+import { attachEditorClaims } from '../../claims/editor';
+import { runFactsOf } from '../facts';
 import type { PipelineContext, RunState } from '../ledger';
 
-/** A carried game with the earlier run's classification cleared, so this run decides it again. */
-function unclassified(g: Game): Game {
-  const { official: _official, ...rest } = g;
-  void _official;
-  // The notes step 07 writes from its own match are written again by this run's match.
-  const { classificationNote: _note, hostConflict: _host, ...provenance } = g.provenance;
-  void _note;
-  void _host;
-  return { ...rest, countsFor: null, postseason: null, provenance };
-}
-
 export function stepNormalize(ctx: PipelineContext, state: RunState): void {
-  const norm = normalizeGames(state.rows, { fetchedAt: ctx.fetchedAt });
+  const { claims: fresh, norm } = collectMaxprepsClaims(state.rows, ctx.fetchedAt);
   for (const w of norm.warnings) ctx.warn(w);
 
-  const excluded = applyExclusions(norm.games, EXCLUSIONS);
-  for (const id of excluded.unused) ctx.log(`  exclusion no longer needed: ${id}`);
-  const deduped = dedupePhantomPairs(excluded.games);
-  let games = deduped.games;
+  // Contests another feed reported Deleted this run (contestState 1) are gone, not missing.
+  const deletedThisRun = new Set(state.rows.filter((r) => r.calculatedFields.contestState === 1).map((r) => r.contest.contestId));
+  const m = matchMaxpreps({
+    store: ctx.claims,
+    fresh,
+    editor: ctx.editor,
+    feeds: state.feeds,
+    deletedThisRun,
+    tbaDropped: state.tbaDropped,
+    normDropped: norm.dropped,
+    published: new Map((ctx.previous?.games ?? []).map((g) => [g.contestId, g])),
+  });
+  attachEditorClaims(ctx.claims, ctx.editorClaims);
+  for (const id of m.unusedExclusions) ctx.log(`  exclusion no longer needed: ${id}`);
+  for (const row of m.dropped) ctx.drop(row);
 
-  // A TBA row whose contest another feed published with both sides named is not a dropped contest.
-  const published = new Set(norm.games.map((g) => g.contestId));
-  for (const row of [...state.tbaDropped, ...norm.dropped]) {
-    if (!published.has(row.contestId)) ctx.drop(row);
-  }
-  for (const row of [...excluded.dropped, ...deduped.dropped]) ctx.drop(row);
-
-  // Carry forward last-good data for every team whose feed this run did not read.
   const missing = [...state.feeds.values()].filter((f) => f.status === 'failed' || f.status === 'not-fetched');
   if (missing.length > 0 && ctx.previous) {
-    const ids = new Set(missing.map((f) => f.teamId));
-    const have = new Set(games.map((g) => g.contestId));
-    const droppedIds = new Set([...excluded.dropped, ...deduped.dropped].map((d) => d.contestId));
-    // Contests another feed reported Deleted this run (contestState 1) are gone, not missing.
-    const deleted = new Set(
-      state.rows.filter((r) => r.calculatedFields.contestState === 1).map((r) => r.contest.contestId),
-    );
-    const candidates = ctx.previous.games
-      .filter(
-        (g) =>
-          !isSbliveContestId(g.contestId) &&
-          !isCifsdsContest(g.contestId) &&
-          !have.has(g.contestId) &&
-          !droppedIds.has(g.contestId) &&
-          !deleted.has(g.contestId) &&
-          ((g.home.teamId !== null && ids.has(g.home.teamId)) || (g.away.teamId !== null && ids.has(g.away.teamId))),
-      )
-      .map(unclassified);
-    // A carried game the same as one of this run's (same date, same division pair) is the stale copy.
-    const fresh = new Set(games.map((g) => g.contestId));
-    const merged = dedupePhantomPairs([...games, ...candidates], { preferred: (g) => fresh.has(g.contestId) });
-    const losers = new Set(merged.dropped.map((d) => d.contestId));
-    for (const row of merged.dropped) ctx.drop(row);
-    const carried = candidates.filter((g) => !losers.has(g.contestId));
     // A feed counts as carried when the previous snapshot covered its team, whether its games came
     // back from the carry or from an opponent's feed this run.
     for (const f of missing) {
       if (ctx.previous.games.some((g) => g.home.teamId === f.teamId || g.away.teamId === f.teamId)) f.carried = true;
     }
-    if (carried.length > 0) {
-      games = [...games, ...carried].sort(byDateThenId);
-      ctx.log(`  carried forward ${carried.length} ${carried.length === 1 ? 'game' : 'games'} from the previous snapshot`);
-    }
+    const n = m.carried.length;
+    if (n > 0) ctx.log(`  carried forward ${n} ${n === 1 ? 'game' : 'games'} from the previous run's claims`);
   }
 
-  state.games = games;
+  state.games = resolveView(m.view, ctx.claims, m.decisions, runFactsOf(ctx, state), ctx.editor, 'maxpreps');
+  if (ctx.shadow) {
+    ctx.shadow.push({
+      stage: 'maxpreps',
+      input: { rows: [...state.rows], feeds: [...state.feeds.values()].map((f) => ({ teamId: f.teamId, status: f.status })), tbaDropped: [...state.tbaDropped] },
+      view: [...m.view],
+      games: [...state.games],
+      carried: [...m.carried],
+    });
+  }
   ctx.log(
     `  normalized: ${norm.stats.rows} rows → ${norm.games.length} contests · ` +
-      `dropped ${excluded.dropped.length + deduped.dropped.length} by config/dedupe · ${games.length} games`,
+      `dropped ${m.droppedByConfig} by config/dedupe · ${state.games.length} games`,
   );
 }
