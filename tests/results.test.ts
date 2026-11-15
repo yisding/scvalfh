@@ -364,6 +364,12 @@ describe('a winner a source names with no score (resultCorrections, goals null)'
     expect(g.provenance.reportedWinner, 'the score stands on its own').toBeUndefined();
     const gone = applyResultCorrection(marked, {});
     expect([gone.home.result, gone.away.result, gone.provenance.reportedWinner]).toEqual([null, null, undefined]);
+    // A game stored with an earlier, scored correction: the winner-only correction undoes it first (PR #152 review).
+    const scoredBefore = applyResultCorrection(pending, { [id]: { goals: { bishops: 3, 'canyon-hills': 1 }, otPeriods: 0, shootout: null, source: 'a report', url: null } });
+    expect([scoredBefore.status, scoredBefore.home.score]).toEqual(['final', 3]);
+    const reworked = applyResultCorrection(scoredBefore, corrections);
+    expect([reworked.status, reworked.home.score, reworked.away.score, reworked.home.result, reworked.provenance.resultCorrection]).toEqual(['score-pending', null, null, 'W', undefined]);
+    expect(reworked.provenance.reportedWinner?.source).toBe('the owner’s report');
     const wrong = game({ home: 'la-jolla', away: 'canyon-hills', status: 'score-pending', contestId: id });
     expect(applyResultCorrection(wrong, corrections)).toBe(wrong);
     expect(correctionProblems([wrong], corrections)).toHaveLength(1);

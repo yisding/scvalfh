@@ -115,7 +115,12 @@ export function applyResultCorrection(
   corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
 ): Game {
   const c = corrections[game.contestId];
-  if (!c || c.goals === null) return withReportedWinner(game, c?.goals === null ? c : undefined);
+  if (!c || c.goals === null) {
+    // A game stored with an earlier, scored correction now configured as a winner alone: back to what MaxPreps
+    // had first (its own score stands; no score is marked with the winner).
+    const was = c && game.provenance.resultCorrection;
+    return withReportedWinner(was ? uncorrected(game, was) : game, c ?? undefined);
+  }
   // A stored game already corrected: the correction as configured NOW is applied to what MaxPreps had, and the
   // stored game is returned when that changes nothing, so an edited correction reaches a file written before it.
   const stored = game.provenance.resultCorrection;
