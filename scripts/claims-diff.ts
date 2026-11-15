@@ -1,9 +1,11 @@
 #!/usr/bin/env tsx
 /**
  * The byte-diff check of the pipeline inversion (dev only, not in CI): every offline corpus, each variant over
- * all-2026-10-02, and each base corpus again with its own output (and claims file) as the previous run, through
- * scripts/fetch-data.ts on a revision (default HEAD, checked out as a temporary git worktree) and on the working
- * tree. Prints one line per run and file, and exits 1 when any snapshot.json or snapshot.meta.json differs.
+ * all-2026-10-02, each base corpus again with its own output (and claims file) as the previous run, and the si.com
+ * cases (not read, down and read whole after a run with fills, from that run and from the committed snapshot and
+ * claims file; a rule-2 game MaxPreps lists later), through scripts/fetch-data.ts on a revision (default HEAD,
+ * checked out as a temporary git worktree) and on the working tree. Prints one line per run and file, and exits 1
+ * when any snapshot.json or snapshot.meta.json differs.
  *
  *   pnpm tsx scripts/claims-diff.ts              HEAD against the working tree
  *   pnpm tsx scripts/claims-diff.ts --rev <rev>  another revision against the working tree
@@ -12,7 +14,7 @@
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -22,8 +24,26 @@ interface Case {
   name: string;
   sport: string;
   args: string[];
-  /** Start from this earlier case's output (snapshot and claims file). */
+  /** Start from this earlier case's output (snapshot and claims file), or from the tree's committed `data/` ('data'). */
   after?: string;
+}
+
+/** The variants the si.com cases read, written into the run's temporary directory (`$V` in a case's args). */
+function writeVariants(dir: string): void {
+  const write = (name: string, files: Record<string, string | number>, extra: Record<string, string> = {}) => {
+    mkdirSync(path.join(dir, name), { recursive: true });
+    for (const [rel, body] of Object.entries(extra)) writeFileSync(path.join(dir, name, rel), body, 'utf8');
+    writeFileSync(path.join(dir, name, 'manifest.json'), JSON.stringify({ id: name, files }), 'utf8');
+  };
+  // Every si.com request of the all corpus's run answers 503: si.com is down.
+  const down: Record<string, number> = {};
+  for (let d = Date.UTC(2026, 8, 16); d <= Date.UTC(2026, 9, 6); d += 86_400_000) down[`sblive/scores/${new Date(d).toISOString().slice(0, 10)}`] = 503;
+  for (const team of ['carmel', 'greenfield', 'hollister', 'salinas', 'santa-catalina', 'stevenson']) down[`sblive/team-games/${team}`] = 503;
+  write('sblive-down', down);
+  // Santa Catalina's feed lists the 9/4 Greenfield game si.com's rule 2 published as sblive:6541425.
+  const cat = JSON.parse(readFileSync(`${C}/all-2026-10-02/maxpreps/schedule/santa-catalina.json`, 'utf8')) as { data: unknown[] };
+  const row = JSON.parse(readFileSync('tests/fixtures/pipeline/santa-catalina-gre-0904-row.json', 'utf8')) as unknown;
+  write('gre-listed', { 'maxpreps/schedule/santa-catalina': 'santa-catalina.json' }, { 'santa-catalina.json': JSON.stringify({ ...cat, data: [...cat.data, row] }) });
 }
 
 const C = 'tests/fixtures/corpus';
@@ -40,19 +60,38 @@ const CASES: Case[] = [
   ...VARIANTS.map((v): Case => ({ name: `all+${v}`, sport: 'field-hockey', args: ['--fixtures', `${C}/all-2026-10-02`, '--variant', `${C}/variants/${v}`] })),
   ...BASES.map(([name, corpus, sport]): Case => ({ name: `${name}-again`, sport, args: ['--fixtures', `${C}/${corpus}`], after: name })),
   { name: 'all-leland-again', sport: 'field-hockey', args: ['--fixtures', `${C}/all-2026-10-02`, '--variant', `${C}/variants/leland-feed-503`], after: 'all' },
+  ...sbliveCases(),
 ];
 
-function runAll(tree: string, out: string): void {
+function sbliveCases(): Case[] {
+  const all = ['--fixtures', `${C}/all-2026-10-02`];
+  const accept = ['--accept-regression', 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents'];
+  const fh = (name: string, args: string[], after: string): Case => ({ name, sport: 'field-hockey', args: [...all, ...args, ...accept], after });
+  return [
+    fh('all-nosblive', ['--no-sblive'], 'all'),
+    fh('all-sblive-down', ['--variant', '$V/sblive-down'], 'all'),
+    fh('all-nosblive-again', ['--no-sblive', '--leagues', 'pcal,scval'], 'all-nosblive'),
+    fh('all-sblive-full', ['--sblive-full'], 'all'),
+    fh('all-gre-listed', ['--variant', '$V/gre-listed'], 'all'),
+    fh('data-all', [], 'data'),
+    fh('data-all-nosblive', ['--no-sblive'], 'data'),
+    fh('data-all-sblive-down', ['--variant', '$V/sblive-down'], 'data'),
+  ];
+}
+
+function runAll(tree: string, out: string, variants: string): void {
   for (const c of CASES) {
     const dir = path.join(out, c.name);
     mkdirSync(dir, { recursive: true });
     const snapshot = path.join(dir, 'snapshot.json');
     if (c.after) {
-      copyFileSync(path.join(out, c.after, 'snapshot.json'), snapshot);
-      const claims = path.join(out, c.after, 'claims.json');
+      const from = c.after === 'data' ? path.join(tree, 'data') : path.join(out, c.after);
+      copyFileSync(path.join(from, 'snapshot.json'), snapshot);
+      const claims = path.join(from, 'claims.json');
       if (existsSync(claims)) copyFileSync(claims, path.join(dir, 'claims.json'));
     }
-    const res = spawnSync(path.join(tree, 'node_modules', '.bin', 'tsx'), ['scripts/fetch-data.ts', ...c.args, '--out', snapshot], {
+    const args = c.args.map((a) => a.replace('$V', variants));
+    const res = spawnSync(path.join(tree, 'node_modules', '.bin', 'tsx'), ['scripts/fetch-data.ts', ...args, '--out', snapshot], {
       cwd: tree,
       encoding: 'utf8',
       env: { ...process.env, SCVAL_SPORT: c.sport },
@@ -74,8 +113,10 @@ export async function main(argv: readonly string[]): Promise<number> {
   let differ = -1;
   try {
     symlinkSync(path.join(repo, 'node_modules'), path.join(base, 'node_modules'), 'dir');
-    runAll(base, path.join(work, 'out-base'));
-    runAll(repo, path.join(work, 'out-tree'));
+    const variants = path.join(work, 'variants');
+    writeVariants(variants);
+    runAll(base, path.join(work, 'out-base'), variants);
+    runAll(repo, path.join(work, 'out-tree'), variants);
     differ = 0;
     for (const c of CASES) {
       for (const f of ['snapshot.json', 'snapshot.meta.json']) {

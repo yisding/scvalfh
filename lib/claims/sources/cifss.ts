@@ -6,9 +6,9 @@
  * The report the snapshot publishes is the scope: read fresh when every Section listing was read, else the previous
  * report carried over this run's games (lib/pipeline/steps/cifss.ts). Each run its conflict rows replace every stored
  * cifss claim, so the claims hold exactly the evidence the published report holds. A row goes to the fixture its game
- * is (lib/claims/published.ts: a MaxPreps contest's, a sheet game's, an editor listing's); a row about a game with
- * none (an si.com rule-2 game) is not stored, and its evidence is read off the report itself until the stage that
- * creates that game keeps claims.
+ * is (lib/claims/published.ts: a MaxPreps contest's, an si.com rule-2 game's, a sheet game's, an editor listing's);
+ * a row about a game with none (a frozen league's game as last published, whose contest MaxPreps no longer lists) is
+ * not stored, and its evidence is read off the report itself.
  */
 
 import type { CifssConflictRow, CifssCrossCheck, ContestId } from '../../types';

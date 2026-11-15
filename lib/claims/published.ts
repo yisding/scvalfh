@@ -3,11 +3,12 @@
  * about a game go to the fixture that game is. A MaxPreps contest is the fixture holding its MaxPreps claim; a
  * `cifsds:` game is the fixture the bracket sheet's stage created for it, found by the contest its sheet claim was
  * published on; an `official:` game (an editor's listing) is the editor's fixture, named by the listing's
- * fixtureKey, which is the contest id without its prefix. An si.com rule-2 game (`sblive:`) has no fixture until
- * the si.com stage keeps claims. Pure apart from `publishedFixture`, which may create a fixture in the store.
+ * fixtureKey, which is the contest id without its prefix; an si.com rule-2 game (`sblive:`) is the fixture the si.com
+ * stage keeps its fill on (lib/claims/sources/sblive.ts). Pure apart from `publishedFixture`, which may create a
+ * fixture in the store.
  */
 
-import { GUID_RE, OFFICIAL_PREFIX, isCifsdsContestId, isOfficialContestId } from '../game-id';
+import { GUID_RE, OFFICIAL_PREFIX, isCifsdsContestId, isOfficialContestId, isSbliveContestId } from '../game-id';
 import type { ContestId, Game } from '../types';
 import { baseFixtureId, fixtureSideKey } from './identity';
 import type { ClaimStore } from './store';
@@ -24,6 +25,11 @@ export function fixtureOfContest(store: ClaimStore, contestId: ContestId): Fixtu
   if (isCifsdsContestId(contestId)) {
     return store.claimsOf('sdsSheet').find(({ id, claim }) => claim.published.contestId === contestId && holdsNoContest(store, id))?.id;
   }
+  if (isSbliveContestId(contestId)) {
+    return store
+      .claimsOf('sblive')
+      .find(({ id, claim }) => claim.fill?.rule === 'absent-fixture' && claim.fill.contestId === contestId && holdsNoContest(store, id))?.id;
+  }
   if (isOfficialContestId(contestId)) {
     const id = contestId.slice(OFFICIAL_PREFIX.length);
     return holdsNoContest(store, id) ? id : undefined;
@@ -38,11 +44,9 @@ export function gameBaseId(game: Pick<Game, 'dateKey' | 'home' | 'away'>): Fixtu
 
 /**
  * The fixture a write-back keeps `game`'s claims on: the one it is, else `holder` (the fixture that held the same row
- * before, when it is not a MaxPreps contest's), else a new one minted from the game. None for an si.com rule-2
- * game: that stage does not keep claims yet.
+ * before, when it is not a MaxPreps contest's), else a new one minted from the game.
  */
-export function publishedFixture(store: ClaimStore, game: Game, holder?: FixtureId): FixtureId | undefined {
-  if (game.contestId.startsWith('sblive:')) return undefined;
+export function publishedFixture(store: ClaimStore, game: Game, holder?: FixtureId): FixtureId {
   const own = fixtureOfContest(store, game.contestId);
   if (own !== undefined) return own;
   if (holdsNoContest(store, holder)) return holder;

@@ -7,9 +7,8 @@
  * start time (`applied`), whatever put it there: the carry fills a hole with the value the game last showed, as
  * lib/sources/vnn-ics.ts carryVnnForward did with the previous snapshot's game. The claims are rewritten from the
  * published games at the end of every run, so they always hold the last publication. A VNN claim never creates a
- * fixture: it goes to the fixture the game is (lib/claims/published.ts: a MaxPreps contest's, a sheet game's, an
- * editor listing's); a game with none (an si.com rule-2 game) is not stored, and its carry reads the previous
- * snapshot until the stage that creates it keeps claims.
+ * fixture: it goes to the fixture the game is (lib/claims/published.ts: a MaxPreps contest's, an si.com rule-2 game's,
+ * a sheet game's, an editor listing's).
  */
 
 import { stableStringify } from '../../stable-json';
@@ -44,10 +43,11 @@ export function storedVnnPublished(store: ClaimStore, contestId: string): VnnPub
 
 /**
  * What each game showed from the calendars when last published: a game with a fixture reads its stored claims; any
- * other game (an si.com rule-2 game, an editor-listed game whose fixture the ledger no longer has) reads
- * `previousGames`, the previous snapshot, until its own stage keeps claims.
+ * other game reads `previousGames` (a previous snapshot's), when given. The pipeline gives none: every game the
+ * calendars' stage sees has a fixture, a MaxPreps contest's or an si.com rule-2 game's (the sheet's games and the
+ * editor's listings come later in the run).
  */
-export function vnnPublishedFrom(store: ClaimStore, previousGames: readonly Game[]): (contestId: string) => VnnPublished | undefined {
+export function vnnPublishedFrom(store: ClaimStore, previousGames: readonly Game[] = []): (contestId: string) => VnnPublished | undefined {
   const prevById = new Map(previousGames.map((g) => [g.contestId, g]));
   return (contestId) => {
     if (fixtureOfContest(store, contestId) !== undefined) return storedVnnPublished(store, contestId);

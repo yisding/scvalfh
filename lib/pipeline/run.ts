@@ -25,7 +25,10 @@
  * wrote. The evidence-only sources read their claims too: a school calendar that does not answer is carried from
  * what its games showed when last published (step 09), and step 11c weighs the cifsshome.org and box-score evidence
  * the claims hold. A bracket sheet tab not read is carried from the sheet's claims, and a game only the sheet has is a
- * fixture created from its row's claim (step 09). The other steps still work over the game list.
+ * fixture created from its row's claim (step 09). The official and si.com steps carry what they did not read from
+ * their claims and hand the run their decisions, which the run applies to the stage's input (steps 07 and 08); an
+ * si.com rule-2 game is a fixture of its own. Classification, the guards and the results still work over the game
+ * list.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -36,6 +39,7 @@ import { boxEvidenceOf, recordBoxClaims } from '../claims/sources/box';
 import { cifssEvidenceFrom, recordCifssClaims } from '../claims/sources/cifss';
 import { decisionsFromOfficialStep, resolveOfficialStage, writeBackOfficialClaims } from '../claims/sources/official';
 import { writeBackSheetClaims } from '../claims/sources/sds-sheet';
+import { createSbliveFixtures, decisionsFromSbliveStep, resolveSbliveStage, writeBackSbliveClaims, type SbliveStageDecisions } from '../claims/sources/sblive';
 import { writeBackVnnClaims } from '../claims/sources/vnn';
 import type { ClaimsFile } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
@@ -142,20 +146,31 @@ async function runOfficial(
   }
 }
 
+/**
+ * The si.com step's decisions come with its result likewise: the ones it recorded, else the ones read off the games
+ * it returned (lib/claims/sources/sblive.ts decisionsFromSbliveStep); a step whose games cannot be read as decisions
+ * is treated as one that threw.
+ */
 async function runSblive(
   ctx: PipelineContext,
   steps: PipelineSteps,
   games: Game[],
   unmatched: OfficialFixture[],
-): Promise<SbliveStepResult> {
+): Promise<SbliveStepResult & { decisions: SbliveStageDecisions }> {
   try {
-    return await steps.sblive(ctx, { games, unmatched });
+    const result = await steps.sblive(ctx, { games, unmatched });
+    return { ...result, decisions: result.decisions ?? decisionsFromSbliveStep(games, result.games) };
   } catch (err) {
     if (err instanceof RunAbort) throw err;
     ctx.warn(`si.com step failed: ${(err as Error).message}`);
     // The previous report, keeping only rows still true of these games (no stale conflict rows).
     const prior = ctx.previous?.sbliveCrossCheck;
-    return { games, unmatched, sbliveCrossCheck: prior ? carryCrossCheck(prior, games, []) : undefined };
+    return {
+      games,
+      unmatched,
+      sbliveCrossCheck: prior ? carryCrossCheck(prior, games, []) : undefined,
+      decisions: { backfill: new Map(), reconcile: new Map(), created: [] },
+    };
   }
 }
 
@@ -188,11 +203,17 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   state.official = officialFlags;
   ctx.shadow?.push({ stage: 'official', kind: 'resolve', input: officialInput, stepGames: officialGames, games: [...state.games] });
 
-  // 08 sblive (the injectable si.com step)
-  const sblive = await runSblive(ctx, steps, state.games, state.unmatched);
-  state.games = sblive.games;
+  // 08 sblive (the injectable si.com step): its decisions applied to the stage's input; each rule-2 game gets its
+  // fixture, and the rows it read are kept for the si.com claims.
+  const sbliveInput = state.games;
+  const { games: sbliveGames, decisions: sbliveDecisions, rows: sbliveRows = [], read: sbliveRead = false, ...sblive } =
+    await runSblive(ctx, steps, sbliveInput, state.unmatched);
+  state.games = resolveSbliveStage(sbliveInput, sbliveDecisions);
   state.unmatched = sblive.unmatched;
   state.sbliveCrossCheck = sblive.sbliveCrossCheck;
+  const sbliveRowsRead = new Map(sbliveRows.map((r) => [r.sbliveGameId, r]));
+  createSbliveFixtures(ctx.claims, sbliveDecisions.created, sbliveRowsRead, ctx.fetchedAt);
+  ctx.shadow?.push({ stage: 'sblive', kind: 'resolve', input: sbliveInput, stepGames: sbliveGames, games: [...state.games] });
 
   // 09 secondary
   const { games: secondaryGames, ...ccs } = await stepSecondary(ctx, state.games);
@@ -229,8 +250,10 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport) });
 
   // The claims file beside the snapshot. Checked after the meta is built, so a size warning never moves meta.warnings.
-  // What the bracket sheet's rows, the league schedules and each school calendar's games showed as published, for the
-  // next run's carry. The sheet's go first: a `cifsds:` game's fixture is found by its sheet claim.
+  // What si.com, the bracket sheet's rows, the league schedules and each school calendar's games showed as published,
+  // for the next run's carry. si.com's and the sheet's go first: an `sblive:` game's fixture is found by its fill, a
+  // `cifsds:` game's by its sheet claim.
+  writeBackSbliveClaims(ctx.claims, snapshot.games, { rows: sbliveRowsRead, sblive: sbliveRead }, ctx.fetchedAt);
   writeBackSheetClaims(ctx.claims, snapshot.games, SDS_BRACKETS_FILE, sheetTabsRead(ctx), ctx.fetchedAt);
   writeBackOfficialClaims(ctx.claims, snapshot.games, snapshot.officialFixtures ?? [], { rows: officialRows, divisions: readDivisions }, ctx.fetchedAt);
   writeBackVnnClaims(ctx.claims, snapshot.games, vnnAnswered(ctx), ctx.fetchedAt);

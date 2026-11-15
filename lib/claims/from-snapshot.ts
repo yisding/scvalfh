@@ -9,14 +9,14 @@
  * `reconstructed`; every such field is one that resolve writes again while the fact that merged it stands, and the
  * next run that reads the team's feed replaces the claim with an exact one.
  *
- * The MaxPreps claims are seeded; then the bracket sheet's rows as its games show them (§7.6, the same read-back a
- * run writes, lib/claims/sources/sds-sheet.ts), each `cifsds:` game on a fixture of its own; then the league
- * schedules' (§7.2, lib/claims/sources/official.ts): each stamp a game shows, with the contest it was matched to, and
- * each official fixture no game matched, on an official-only fixture; then the evidence-only sources' claims on their
- * games: a school calendar's venue name and confirmed start time (§7.4; the venue name also stays on the MaxPreps
- * claim, since which source wrote it is not stored), the cifsshome.org score a game shows (§7.9) and its box score
- * (§7.10). The editor's claims are rebuilt every run (lib/claims/editor.ts); the other sources' rows of §9 are seeded
- * by the phases that start reading them.
+ * The MaxPreps claims are seeded; then si.com's fills and disagreements as the games show them (§7.3, the same
+ * write-back a run makes, lib/claims/sources/sblive.ts), each `sblive:` game on a fixture of its own; then the bracket
+ * sheet's rows as its games show them (§7.6, lib/claims/sources/sds-sheet.ts), each `cifsds:` game on a fixture of
+ * its own; then the league schedules' (§7.2, lib/claims/sources/official.ts): each stamp a game shows, with the
+ * contest it was matched to, and each official fixture no game matched, on an official-only fixture; then the
+ * evidence-only sources' claims on their games: a school calendar's venue name and confirmed start time (§7.4; the
+ * venue name also stays on the MaxPreps claim, since which source wrote it is not stored), the cifsshome.org score a
+ * game shows (§7.9) and its box score (§7.10). The editor's claims are rebuilt every run (lib/claims/editor.ts).
  */
 
 import { datesAtLocal, localDateKey } from '../format';
@@ -37,6 +37,7 @@ import { SDS_BRACKETS_FILE } from '../postseason/sds-brackets-file';
 import { publishedFixture } from './published';
 import { boxClaimOfScore } from './sources/box';
 import { cifssClaimRef } from './sources/cifss';
+import { writeBackSbliveClaims } from './sources/sblive';
 import { writeBackOfficialClaims } from './sources/official';
 import { writeBackSheetClaims } from './sources/sds-sheet';
 import { vnnClaimsOf } from './sources/vnn';
@@ -255,14 +256,14 @@ export function claimsFromSnapshot(previous: Snapshot | null, editor: EditorView
   const claims = previous.games.filter((g) => GUID_RE.test(g.contestId)).map((g) => maxprepsClaimFromGame(g, previous.fetchedAt));
   const store = new ClaimStore();
   store.mergeRead('maxpreps', () => false, [...claims].sort(byDateKeyThenRef), (c) => store.create(maxprepsBaseId(c, editor)));
-  // The sheet's rows as the games show them, then the evidence-only sources' claims on the fixtures of their games.
+  // si.com's values and the sheet's rows as the games show them, then the evidence-only sources' claims on the fixtures of their games.
+  writeBackSbliveClaims(store, previous.games, { rows: new Map(), sblive: false }, previous.fetchedAt);
   writeBackSheetClaims(store, previous.games, SDS_BRACKETS_FILE, () => false, previous.fetchedAt);
   writeBackOfficialClaims(store, previous.games, previous.officialFixtures ?? [], { rows: [], divisions: new Set() }, previous.fetchedAt);
   const cifssAt = previous.cifssCrossCheck?.cifssFetchedAt ?? previous.fetchedAt;
   for (const g of previous.games) {
     // An editor's listing gets the fixture its fixtureKey names, which the run's editor claim then joins.
     const id = publishedFixture(store, g);
-    if (id === undefined) continue;
     for (const c of vnnClaimsOf(g, () => previous.fetchedAt)) store.attach(id, 'vnn', c);
     const cifss = g.provenance.cifssScore;
     if (cifss) {

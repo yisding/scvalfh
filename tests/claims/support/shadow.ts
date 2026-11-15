@@ -16,6 +16,10 @@
  * the previous snapshot's games and official fixtures; and the stage's games resolved from the step's decisions
  * against the games the step returned.
  *
+ * Stage `sblive` (P6): the si.com step with rule 10's earlier fills and the kept disagreements from the si.com
+ * claims, against D2 and the carry over the previous snapshot's games: the same games, fixtures and report; and the
+ * stage's games resolved from the step's decisions against the games the step returned.
+ *
  * Stage `sdsSheet` (P4): the bracket sheet with its unread tabs carried from the sheet's claims, against the tabs
  * carried from the rows read back from the previous snapshot's games: the same rows in the same order, the same
  * disagreements, and the same games.
@@ -25,7 +29,7 @@ import { expect } from 'vitest';
 
 import type { PipelineContext } from '../../../lib/pipeline/ledger';
 import type { ShadowStage, Stage } from '../../../lib/claims/types';
-import { legacyMaxpreps, legacyOfficialCarry, legacyResults, legacySdsSheet, legacyVnn } from './legacy';
+import { legacyMaxpreps, legacyOfficialCarry, legacyResults, legacySblive, legacySdsSheet, legacyVnn } from './legacy';
 
 export function shadowStage<S extends Stage>(ctx: PipelineContext, stage: S): Extract<ShadowStage, { stage: S }> {
   const found = ctx.shadow?.find((s) => s.stage === stage);
@@ -66,6 +70,19 @@ export function expectShadowAgrees<S extends Stage>(ctx: PipelineContext, stage:
     const [s] = resolved as Array<Extract<ShadowStage, { stage: 'official'; kind: 'resolve' }>>;
     expect(s.games, `${label}: official`).toEqual(s.stepGames);
     return s as Extract<ShadowStage, { stage: S }>;
+  }
+  if (stage === 'sblive') {
+    const records = (ctx.shadow ?? []).filter((r): r is Extract<ShadowStage, { stage: 'sblive' }> => r.stage === 'sblive');
+    const decided = records.filter((r) => r.kind === 'decide') as Array<Extract<ShadowStage, { stage: 'sblive'; kind: 'decide' }>>;
+    expect(decided, `${label}: one si.com step`).toHaveLength(1);
+    const legacy = legacySblive(decided[0].input, ctx.previous);
+    expect(decided[0].games, `${label}: sblive games`).toEqual(legacy.games);
+    expect(decided[0].unmatched, `${label}: sblive unmatched`).toEqual(legacy.unmatched);
+    expect(decided[0].crossCheck, `${label}: sblive cross-check`).toEqual(legacy.crossCheck);
+    const resolved = records.filter((r) => r.kind === 'resolve') as Array<Extract<ShadowStage, { stage: 'sblive'; kind: 'resolve' }>>;
+    expect(resolved, `${label}: one si.com stage`).toHaveLength(1);
+    expect(resolved[0].games, `${label}: sblive`).toEqual(resolved[0].stepGames);
+    return resolved[0] as Extract<ShadowStage, { stage: S }>;
   }
   if (stage === 'sdsSheet') {
     const s = shadowStage(ctx, 'sdsSheet');

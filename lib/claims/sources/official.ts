@@ -12,8 +12,9 @@
  *
  * The stage's decisions (a stamp and its notes, or the classification note) are the official step's: the real step
  * records them as it takes them; an injected step (a test's stand-in) has them read off the games it returns, which
- * may differ from its input only in what a decision writes. A stamp on an si.com rule-2 game is not stored: that
- * stage keeps no claims yet, and the game never reaches the official stage of a later run.
+ * may differ from its input only in what a decision writes. A stamp on an si.com rule-2 game is kept on that game's
+ * fixture like any other (the row the game consumed stays in the claims); no carry stamps it, since the game is
+ * appended after the official stage.
  */
 
 import { isDeepStrictEqual } from 'node:util';
@@ -109,7 +110,7 @@ export function storedOfficialOf(store: ClaimStore): StoredOfficial {
  */
 export function storedOfficialFromSnapshot(previous: Pick<Snapshot, 'games' | 'officialFixtures'> | null): StoredOfficial {
   const stamps = new Map<ContestId, OfficialStamp>();
-  for (const g of previous?.games ?? []) if (g.official && !g.contestId.startsWith('sblive:')) stamps.set(g.contestId, g.official);
+  for (const g of previous?.games ?? []) if (g.official) stamps.set(g.contestId, g.official);
   return { stamps, unmatched: [...(previous?.officialFixtures ?? [])].sort(byDateThenFixtureId) };
 }
 
@@ -167,8 +168,7 @@ export function writeBackOfficialClaims(
     const ref = refOf(stamp.fixtureId);
     const row = rows.get(stamp.fixtureId) ?? stored.get(ref)?.claim.fixture;
     const claim: OfficialClaim = { ref, seenAt: fetchedAt, ...(row ? { fixture: row } : { stamp }), lastMatch: { contestId: game.contestId, stamp } };
-    const id = publishedFixture(store, game, stored.get(ref)?.id);
-    if (id !== undefined) store.attach(id, 'official', kept(claim, stamp.division));
+    store.attach(publishedFixture(store, game, stored.get(ref)?.id), 'official', kept(claim, stamp.division));
   }
   for (const fixture of unmatched) {
     const ref = refOf(fixture.id);

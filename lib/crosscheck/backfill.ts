@@ -81,8 +81,13 @@ export interface BackfillInput {
   /** Deduped, resolved si.com rows (applyBackfill re-applies the junk-row guards itself). */
   sblive: readonly SbliveGame[];
   today: string;
-  /** For carry-forward and supersede. */
+  /** The previous snapshot, read for rule 10 only when `earlier` is not given (earlierFillsOf). */
   previous: Snapshot | null;
+  /**
+   * The si.com fills the last publication showed, which rule 10 carries (the pipeline reads them from the claims,
+   * lib/claims/sources/sblive.ts). Undefined: read off `previous`. Null: none.
+   */
+  earlier?: EarlierFills | null;
   /** Every si.com request failed this run (or si.com was not read at all): every earlier fill is carried. */
   sbliveFailed: boolean;
   /**
@@ -95,8 +100,16 @@ export interface BackfillInput {
   consulted?: (pairKey: string, date: string) => boolean;
   /** The run's fetchedAt, stamped on a rule-2 game's provenance. Defaults to the input games' stamp. */
   fetchedAt?: string;
-  /** Where the ledger moves a league fixture (playedFixture). Defaults to LEDGER_VIEW.moves. */
+  /** Where the editor moves a league fixture (playedFixture). Undefined: playedFixture's default, the ledger's own. */
   moves?: FixtureMoves;
+}
+
+/** What rule 10 carries: each published game's si.com value (rules 3 and 4) by contest, and the rule-2 games. */
+export interface EarlierFills {
+  /** Every published game with a si.com fill, by contestId: what the fill published. */
+  contests: ReadonlyMap<ContestId, BackfillPublished>;
+  /** The published rule-2 games (an `sblive:` id, the absent-fixture rule and an official stamp), in the publication's order. */
+  games: readonly Game[];
 }
 
 export interface EligibleItem {
@@ -126,7 +139,7 @@ export interface BackfillResult {
   /** si.com Finals D2 looked at and did NOT publish, with the reason. */
   skipped: SbliveOnlyRow[];
   warnings: string[];
-  /** Rule 10: the games whose si.com value was carried from the previous snapshot rather than read this run. */
+  /** Rule 10: the games whose si.com value was carried from the last publication rather than read this run. */
   carried: ContestId[];
 }
 
@@ -458,7 +471,7 @@ export function eligibleItems(
  * Only teams with a recorded si.com page are candidates.
  */
 export function planBackfill(
-  input: Omit<BackfillInput, 'sblive' | 'previous' | 'sbliveFailed'>,
+  input: Omit<BackfillInput, 'sblive' | 'previous' | 'earlier' | 'sbliveFailed'>,
   scoreboardCovers: (pairKey: string, date: string) => boolean,
   cap: number = BACKFILL_TEAM_PAGE_CAP,
 ): BackfillPlan {
@@ -532,7 +545,7 @@ function absentFixtureGame(
   row: SbliveGame,
   score: { home: number; away: number },
   fetchedAt: string,
-  moves: FixtureMoves,
+  moves: FixtureMoves | undefined,
 ): Game {
   const dates = datesOf(row);
   const short = leagueOfDivision(f.division).shortName;
@@ -647,11 +660,44 @@ const CONFLICT_NOTE = 'si.com has two different scores for this game.';
 const NAME_ONLY_NOTE = 'Resolved by name only.';
 const OUTSIDE_NOTE = 'Outside ±1 day of the official date.';
 
-/** What a rule-10 carry re-applies to a MaxPreps contest: the previous snapshot's published si.com value. */
-export interface BackfillPublished extends Pick<Game, 'home' | 'away' | 'decider' | 'otPeriods' | 'isOt' | 'isForfeit' | 'forfeitBy'> {
+/** What a rule-10 carry re-applies to a MaxPreps contest: the si.com value the last publication showed. */
+export interface BackfillPublished extends Pick<Game, 'decider' | 'otPeriods' | 'isOt' | 'isForfeit' | 'forfeitBy'> {
+  home: Pick<GameSide, 'score' | 'result'>;
+  away: Pick<GameSide, 'score' | 'result'>;
   sbliveUrl: Game['urls']['sblive'];
   backfill: BackfillProvenance;
-  scoreConflict: Game['provenance']['scoreConflict'];
+  scoreConflict?: Game['provenance']['scoreConflict'];
+}
+
+/** What a published game with a si.com fill shows of it: the value rule 10 carries. */
+export function backfillPublishedOf(g: Game & { provenance: { backfill: BackfillProvenance } }): BackfillPublished {
+  return {
+    home: { score: g.home.score, result: g.home.result },
+    away: { score: g.away.score, result: g.away.result },
+    decider: g.decider,
+    otPeriods: g.otPeriods,
+    isOt: g.isOt,
+    isForfeit: g.isForfeit,
+    forfeitBy: g.forfeitBy,
+    sbliveUrl: g.urls.sblive,
+    backfill: g.provenance.backfill,
+    scoreConflict: g.provenance.scoreConflict,
+  };
+}
+
+/** Whether `g` is a rule-2 game rule 10 can carry: an `sblive:` id, the absent-fixture rule and an official stamp. */
+export function isCarriableRule2Game(g: Game): boolean {
+  return isSbliveContestId(g.contestId) && g.provenance.backfill?.rule === 'absent-fixture' && g.official !== undefined;
+}
+
+/** The fills a previous snapshot shows (rule 10's input when no claims are at hand); null with no previous snapshot. */
+export function earlierFillsOf(previous: Pick<Snapshot, 'games'> | null): EarlierFills | null {
+  if (!previous) return null;
+  const contests = new Map<ContestId, BackfillPublished>();
+  for (const g of previous.games) {
+    if (g.provenance.backfill) contests.set(g.contestId, backfillPublishedOf(g as Game & { provenance: { backfill: BackfillProvenance } }));
+  }
+  return { contests, games: previous.games.filter(isCarriableRule2Game) };
 }
 
 /**
@@ -669,7 +715,7 @@ export type BackfillDecision =
     }
   | { kind: 'carried'; published: BackfillPublished };
 
-/** A rule-2 game appended after the existing games: a fresh si.com fill, or the previous snapshot's game carried. */
+/** A rule-2 game appended after the existing games: a fresh si.com fill, or the game as last published, carried. */
 export interface BackfillCreate {
   kind: 'create';
   game: Game;
@@ -739,7 +785,8 @@ export function decideBackfill(input: BackfillInput): BackfillDecisions {
   const warnings: string[] = [];
   const skipped: SbliveOnlyRow[] = [];
   const used = new Set<string>();
-  const moves = input.moves ?? LEDGER_VIEW.moves;
+  const moves = input.moves;
+  const earlier = input.earlier !== undefined ? input.earlier : earlierFillsOf(input.previous);
   const fetchedAt =
     input.fetchedAt ?? input.games.find((g) => g.provenance.fetchedAt)?.provenance.fetchedAt ?? `${input.today}T00:00:00.000Z`;
 
@@ -768,7 +815,7 @@ export function decideBackfill(input: BackfillInput): BackfillDecisions {
   };
 
   if (input.sbliveFailed) {
-    const carried = decideCarry(games, unmatched, input.previous, input.today, () => true, moves);
+    const carried = decideCarry(games, unmatched, earlier, input.today, () => true, moves);
     takeCarry(carried);
     for (const id of carried.touched) touched.add(id);
     if (carried.touched.length) {
@@ -974,7 +1021,7 @@ export function decideBackfill(input: BackfillInput): BackfillDecisions {
     const carried = decideCarry(
       games,
       unmatched,
-      input.previous,
+      earlier,
       input.today,
       (pairKey, date, contestId) => !freshlyFilled.has(contestId) && !consulted(pairKey, date),
       moves,
@@ -1019,34 +1066,33 @@ function dedupeSkipped(rows: readonly SbliveOnlyRow[]): SbliveOnlyRow[] {
 interface CarryDecisions {
   /** Rules 3 and 4 carried: a `carried` decision per MaxPreps contest. */
   decisions: Map<ContestId, BackfillDecision>;
-  /** Rule 2 carried: the previous snapshot's games, in its order. */
+  /** Rule 2 carried: the published games, in the publication's order. */
   created: BackfillCreate[];
   unmatched: OfficialFixture[];
   touched: string[];
 }
 
 /**
- * Rule 10 carry-forward: the previous snapshot's si.com fills that are still eligible and that `carry`
- * accepts (by the item's pair, date and contest id) are re-applied: rules 3/4 onto the same MaxPreps
- * contest, rule 2 as the same `sblive:<id>` game.
+ * Rule 10 carry-forward: the earlier si.com fills that are still eligible and that `carry` accepts (by the
+ * item's pair, date and contest id) are re-applied: rules 3/4 onto the same MaxPreps contest, rule 2 as the
+ * same `sblive:<id>` game.
  */
 function decideCarry(
   games: readonly Game[],
   unmatched: readonly OfficialFixture[],
-  previous: Snapshot | null,
+  earlier: EarlierFills | null,
   today: string,
   carry: (pairKey: string, date: string, contestId: string) => boolean,
-  moves: FixtureMoves,
+  moves: FixtureMoves | undefined,
 ): CarryDecisions {
   const decisions = new Map<ContestId, BackfillDecision>();
-  if (!previous) return { decisions, created: [], unmatched: [...unmatched], touched: [] };
+  if (!earlier) return { decisions, created: [], unmatched: [...unmatched], touched: [] };
   const touched: string[] = [];
-  const prevById = new Map(previous.games.filter((g) => g.provenance.backfill).map((g) => [g.contestId, g]));
 
   // Rules 3 and 4: the same contest, still in the state the earlier override answered.
   for (const g of games) {
-    const prev = prevById.get(g.contestId);
-    const b = prev?.provenance.backfill;
+    const prev = earlier.contests.get(g.contestId);
+    const b = prev?.backfill;
     if (!prev || !b || isSbliveContestId(g.contestId) || prev.home.score === null || prev.away.score === null) continue;
     if (g.provenance.backfill) continue;
     const pairKey = gamePair(g);
@@ -1058,21 +1104,7 @@ function decideCarry(
         : g.status === 'final' && b.maxpreps !== null && g.home.score === b.maxpreps.home && g.away.score === b.maxpreps.away;
     if (!stillEligible) continue;
     touched.push(g.contestId);
-    decisions.set(g.contestId, {
-      kind: 'carried',
-      published: {
-        home: prev.home,
-        away: prev.away,
-        decider: prev.decider,
-        otPeriods: prev.otPeriods,
-        isOt: prev.isOt,
-        isForfeit: prev.isForfeit,
-        forfeitBy: prev.forfeitBy,
-        sbliveUrl: prev.urls.sblive,
-        backfill: b,
-        scoreConflict: prev.provenance.scoreConflict,
-      },
-    });
+    decisions.set(g.contestId, { kind: 'carried', published: prev });
   }
 
   // Rule 2: the fixture is still unmatched, past-dated and absent from MaxPreps.
@@ -1080,8 +1112,8 @@ function decideCarry(
   const have = new Set(games.map((g) => g.contestId));
   const created: BackfillCreate[] = [];
   const filled = new Set<string>();
-  for (const prev of previous.games) {
-    if (!isSbliveContestId(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
+  for (const prev of earlier.games) {
+    if (!isCarriableRule2Game(prev) || !prev.official) continue;
     if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;

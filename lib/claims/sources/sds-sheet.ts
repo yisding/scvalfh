@@ -20,7 +20,7 @@ import { stableStringify } from '../../stable-json';
 import type { Game } from '../../types';
 import { gameBaseId, publishedFixture } from '../published';
 import type { ClaimStore } from '../store';
-import type { FixtureId, SdsSheetClaim } from '../types';
+import type { SdsSheetClaim } from '../types';
 
 type SheetRow = SdsSheetResult | SdsSheetFixture;
 
@@ -101,8 +101,7 @@ export function writeBackSheetClaims(
       const fresh = sheetClaimOf(row, game, fetchedAt, ref);
       const same = was !== undefined && stableStringify({ ...was.claim, seenAt: '' }) === stableStringify({ ...fresh, seenAt: '' });
       const claim = same && !tabRead(row.division) ? { ...fresh, seenAt: was.claim.seenAt } : fresh;
-      const id: FixtureId | undefined = publishedFixture(store, game, was?.id);
-      if (id !== undefined) store.attach(id, 'sdsSheet', claim);
+      store.attach(publishedFixture(store, game, was?.id), 'sdsSheet', claim);
     }
   }
 }

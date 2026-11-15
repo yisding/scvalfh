@@ -97,7 +97,7 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
   // recorded what each game last showed (lib/claims/sources/vnn.ts).
   const missing = sites.filter((s) => !answered.has(s.slug)).map((s) => s.slug);
   if (missing.length && ctx.previous) {
-    const restored = carryVnnPublished(missing, games, vnnPublishedFrom(ctx.claims, ctx.previous.games));
+    const restored = carryVnnPublished(missing, games, vnnPublishedFrom(ctx.claims));
     games = restored.games;
     if (restored.carried) {
       for (const slug of missing) {

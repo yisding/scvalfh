@@ -5,6 +5,8 @@
  * claims path against them run by run.
  */
 
+import { applyBackfill } from '../../../lib/crosscheck/backfill';
+import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../../lib/crosscheck/crosscheck';
 import { byDateThenId } from '../../../lib/format';
 import { EXCLUSIONS } from '../../../lib/fixtures/ledger';
 import { isSbliveContestId } from '../../../lib/game-id';
@@ -19,7 +21,7 @@ import type { ShadowStage } from '../../../lib/claims/types';
 import { finalizeResults, withAddedGames } from '../../../lib/results/result';
 import { carryOfficialForward } from '../../../lib/sources/scval-pdf';
 import { applyVnnEvents, carryVnnForward } from '../../../lib/sources/vnn-ics';
-import type { ContestId, Game, OfficialFixture, Snapshot } from '../../../lib/types';
+import type { ContestId, Game, OfficialFixture, SbliveCrossCheck, Snapshot } from '../../../lib/types';
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
 function unclassified(g: Game): Game {
@@ -132,4 +134,41 @@ export function legacySdsSheet(
     fetchedAt: run.fetchedAt,
   });
   return { results, fixtures, games: applied.games, disagreements: applied.disagreements };
+}
+
+/** Step 08's carry of the disagreements as it was before P6: a run without si.com data kept the previous snapshot's. */
+function legacyCarryConflicts(games: readonly Game[], previous: Snapshot | null): Game[] {
+  const prev = new Map((previous?.games ?? []).map((g) => [g.contestId, g]));
+  return games.map((g) => {
+    const p = prev.get(g.contestId);
+    if (!p?.provenance.scoreConflict || g.provenance.scoreConflict || g.provenance.backfill) return g;
+    if (p.provenance.backfill) return g;
+    if (p.home.score !== g.home.score || p.away.score !== g.away.score) return g;
+    return { ...g, provenance: { ...g.provenance, scoreConflict: p.provenance.scoreConflict } };
+  });
+}
+
+/**
+ * Step 08 as it was before P6: D2's rule 10 carried the previous snapshot's fills, and a run without si.com data
+ * kept the previous snapshot's disagreements; the ledger's own moves.
+ */
+export function legacySblive(
+  input: Extract<ShadowStage, { stage: 'sblive'; kind: 'decide' }>['input'],
+  previous: Snapshot | null,
+): { games: Game[]; unmatched: OfficialFixture[]; crossCheck: SbliveCrossCheck | undefined } {
+  const base = { games: input.games, unmatched: input.unmatched, today: input.today, previous, fetchedAt: input.fetchedAt };
+  if (input.sblive === null) {
+    const result = applyBackfill({ ...base, sblive: [], sbliveFailed: true });
+    const games = legacyCarryConflicts(result.games, previous);
+    const prior = previous?.sbliveCrossCheck;
+    const crossCheck = prior
+      ? carryCrossCheck(prior, games, result.rows)
+      : result.rows.length
+        ? { ...emptyCrossCheck(input.fetchedAt), backfilled: result.rows }
+        : undefined;
+    return { games, unmatched: result.unmatched, crossCheck };
+  }
+  const result = applyBackfill({ ...base, sblive: input.sblive, sbliveFailed: false, consulted: input.consulted });
+  const rec = reconcile(result.games, input.relevant, { sbliveFetchedAt: input.fetchedAt, today: input.today, skipped: result.skipped });
+  return { games: rec.games, unmatched: result.unmatched, crossCheck: withBackfill(rec.report, result) };
 }

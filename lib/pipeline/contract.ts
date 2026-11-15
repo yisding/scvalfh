@@ -5,11 +5,13 @@
  */
 
 import type { EditorView } from '../claims/editor';
+import type { SbliveStageDecisions } from '../claims/sources/sblive';
 import type { ClaimStore } from '../claims/store';
 import type { ClaimsFile, ShadowStage } from '../claims/types';
 import type { OfficialDecision } from '../official/match';
 import type { CifssSectionKey } from '../sources/cifss';
 import type { RawResponse } from '../sources/http';
+import type { SbliveGame } from '../sources/sblive';
 import type {
   CcsCalendarEvent, CcsDivisionName, ContestId, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug, TournamentBracket,
@@ -129,8 +131,8 @@ export interface RunLog {
 /** What steps may read and record. The pipeline core implements it in lib/pipeline/ledger.ts (PipelineContext). */
 export interface RunContext extends RunLog {
   /**
-   * The run's claim store (lib/claims/store.ts). Absent in a context built by hand (a test's), where the official
-   * step reads what the previous snapshot shows instead, as the claims seeded from it would hold.
+   * The run's claim store (lib/claims/store.ts). Absent in a context built by hand (a test's), where the official and
+   * si.com steps read what the previous snapshot shows instead, as the claims seeded from it would hold.
    */
   readonly claims?: ClaimStore;
   /** The editor's view of the fixture ledger (lib/claims/editor.ts). Absent: the ledger's own. */
@@ -188,6 +190,16 @@ export interface SbliveStepResult {
   /** Fixtures still unmatched after rule-2 fills. */
   unmatched: OfficialFixture[];
   sbliveCrossCheck: SbliveCrossCheck | undefined;
+  /** The si.com rows read and cleaned this run, kept on the claims of the fills they decide. A stand-in step reads none. */
+  rows?: SbliveGame[];
+  /** Whether si.com was read this run (some page answered). */
+  read?: boolean;
+  /**
+   * Every decision the step took (lib/claims/sources/sblive.ts SbliveStageDecisions: each game's fill and
+   * disagreement, and the rule-2 games in order). Absent (a stand-in step): run.ts reads them off the games the step
+   * returned.
+   */
+  decisions?: SbliveStageDecisions;
 }
 export type SbliveStep = (ctx: RunContext, input: { games: Game[]; unmatched: OfficialFixture[] }) => Promise<SbliveStepResult>;
 

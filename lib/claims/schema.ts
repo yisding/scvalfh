@@ -4,9 +4,9 @@
  * validates with it and restores both. A claim's game is checked against the snapshot's own GameSchema, so a
  * claim can hold nothing a published game could not.
  *
- * The rows of the source no phase reads yet (si.com) are checked for their keys only; the phase that starts reading
- * it tightens its schema. What the pipeline reads of the other claims (an official row or stamp, a bracket sheet row,
- * a cifsshome.org conflict row, a box score's sides, what a calendar put on a game) is checked whole.
+ * An si.com row is checked for its keys only: nothing reads it back, it is kept beside the fill it decided. What the
+ * pipeline reads of the claims (an si.com fill or disagreement, an official row or stamp, a bracket sheet row, a
+ * cifsshome.org conflict row, a box score's sides, what a calendar put on a game) is checked whole.
  */
 
 import { z } from 'zod';
@@ -28,6 +28,7 @@ const isoUtc = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/
 const ref = z.string().min(1);
 const seenAt = isoUtc.optional();
 const scorePair = z.object({ home: z.number().int(), away: z.number().int() }).strict();
+const maybeScorePair = z.object({ home: z.number().int().nullable(), away: z.number().int().nullable() }).strict();
 const row = z.looseObject({});
 const streetAddress = z.object({ street: z.string(), city: z.string(), region: z.string(), postalCode: z.string() }).strict();
 
@@ -59,6 +60,31 @@ const OfficialClaimSchema = z
   })
   .strict();
 
+const publishedSide = z.object({ score: z.number().int().nullable(), result: z.enum(['W', 'L', 'T']).nullable() }).strict();
+const scoreConflict = z.object({ sblive: scorePair, note: z.string() }).strict();
+/** What a rule-3 or rule-4 fill published (lib/crosscheck/backfill.ts BackfillPublished). */
+const backfillPublished = z
+  .object({
+    home: publishedSide,
+    away: publishedSide,
+    decider: z.enum(['REG', 'OT', '2OT', 'SO', 'FORFEIT']).nullable(),
+    otPeriods: z.number().int().min(0),
+    isOt: z.boolean(),
+    isForfeit: z.boolean(),
+    forfeitBy: z.string().nullable(),
+    sbliveUrl: z.string().min(1).optional(),
+    backfill: z
+      .object({
+        rule: z.enum(['score-pending', 'contradictory-result', 'off-schedule-date', 'phantom-tie']),
+        sbliveGameId: z.string().min(1),
+        maxpreps: scorePair.nullable(),
+        note: z.string().min(1),
+      })
+      .strict(),
+    scoreConflict: scoreConflict.optional(),
+  })
+  .strict();
+
 const SbliveClaimSchema = z
   .object({
     ref,
@@ -70,7 +96,7 @@ const SbliveClaimSchema = z
           .object({
             rule: z.enum(['score-pending', 'contradictory-result', 'off-schedule-date', 'phantom-tie']),
             contestId: z.string().min(1),
-            published: row,
+            published: backfillPublished,
           })
           .strict(),
         z
@@ -84,7 +110,7 @@ const SbliveClaimSchema = z
       ])
       .optional(),
     conflict: z
-      .object({ contestId: z.string().min(1), scoreConflict: z.object({ sblive: scorePair, note: z.string() }).strict(), published: scorePair })
+      .object({ contestId: z.string().min(1), scoreConflict, published: maybeScorePair })
       .strict()
       .optional(),
   })
@@ -237,9 +263,12 @@ export const ClaimsFileSchema = z
       }
 
       for (const [j, s] of (f.claims.sblive ?? []).entries()) {
+        const where = [...at, 'claims', 'sblive', j];
+        if (s.fill && s.fill.rule !== 'absent-fixture' && s.fill.published.backfill.rule !== s.fill.rule) {
+          issue(where, `${f.id}: a fill's published value is of its own rule`);
+        }
         if (s.fill?.rule !== 'absent-fixture') continue;
         const parsed = GameSchema.safeParse(s.fill.game);
-        const where = [...at, 'claims', 'sblive', j];
         if (!parsed.success) issue(where, `${f.id}: ${formatIssues(parsed.error.issues)}`);
         else if (!SBLIVE_ID_RE.test(parsed.data.contestId)) issue(where, `${f.id}: an absent-fixture fill's game has an sblive: id`);
       }

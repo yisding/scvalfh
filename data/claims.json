@@ -10787,6 +10787,116 @@
     },
     {
       "claims": {
+        "official": {
+          "lastMatch": {
+            "contestId": "sblive:6541425",
+            "stamp": {
+              "division": "pcal",
+              "fixtureId": "pcal:2026-09-04:greenfield@santa-catalina",
+              "pass": "same-date",
+              "scheduledDate": "2026-09-04",
+              "source": "pcal-pdf"
+            }
+          },
+          "ref": "pcal:2026-09-04:greenfield@santa-catalina",
+          "stamp": {
+            "division": "pcal",
+            "fixtureId": "pcal:2026-09-04:greenfield@santa-catalina",
+            "pass": "same-date",
+            "scheduledDate": "2026-09-04",
+            "source": "pcal-pdf"
+          }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "sblive:6541425",
+              "game": {
+                "aliases": [
+                  "sblive-6541425"
+                ],
+                "away": {
+                  "name": "Greenfield",
+                  "result": "L",
+                  "score": 0,
+                  "slug": "greenfield",
+                  "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+                },
+                "contestId": "sblive:6541425",
+                "contestTypes": {
+                  "away": null,
+                  "home": null
+                },
+                "countsFor": "pcal",
+                "dateKey": "2026-09-04",
+                "dateLocal": "2026-09-04T16:45:00",
+                "dateUtc": "2026-09-04T23:45:00Z",
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "name": "Santa Catalina",
+                  "result": "W",
+                  "score": 1,
+                  "slug": "santa-catalina",
+                  "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+                },
+                "isDateTba": false,
+                "isForfeit": false,
+                "isLeague": true,
+                "isOt": false,
+                "isTimeTba": false,
+                "leagueDivision": "pcal",
+                "official": {
+                  "division": "pcal",
+                  "fixtureId": "pcal:2026-09-04:greenfield@santa-catalina",
+                  "pass": "same-date",
+                  "scheduledDate": "2026-09-04",
+                  "source": "pcal-pdf"
+                },
+                "otPeriods": 0,
+                "postseason": null,
+                "provenance": {
+                  "backfill": {
+                    "maxpreps": null,
+                    "note": "MaxPreps has no contest for this PCAL fixture (official date Sep 4), so the score is si.com’s.",
+                    "rule": "absent-fixture",
+                    "sbliveGameId": "6541425"
+                  },
+                  "fetchedAt": "2026-11-15T12:28:58.170Z",
+                  "schedule": "sblive",
+                  "scores": "sblive"
+                },
+                "result": {
+                  "basis": "the score is si.com’s",
+                  "certainty": "reported",
+                  "ending": "regulation",
+                  "winner": "home"
+                },
+                "shootout": null,
+                "site": "home",
+                "slug": "2026-09-04-greenfield-at-santa-catalina",
+                "status": "final",
+                "urls": {
+                  "goFan": null,
+                  "maxpreps": null,
+                  "nfhsStream": null,
+                  "sblive": "https://www.si.com/high-school/stats/california/field-hockey/games/6541425-greenfield-vs-santa-catalina"
+                },
+                "venue": {
+                  "text": null
+                }
+              },
+              "officialFixtureId": "pcal:2026-09-04:greenfield@santa-catalina",
+              "rule": "absent-fixture"
+            },
+            "ref": "6541425"
+          }
+        ]
+      },
+      "id": "2026-09-04-greenfield-at-santa-catalina"
+    },
+    {
+      "claims": {
         "maxpreps": {
           "game": {
             "away": {
@@ -33045,7 +33155,26 @@
             "scheduledDate": "2026-10-01",
             "source": "pcal-pdf"
           }
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "1b7ee7fb-a566-4e17-ac6d-543e08869c65",
+              "published": {
+                "away": 0,
+                "home": 1
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 0-1 (Santa Catalina–Salinas); si.com reports 1-1. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 1,
+                  "home": 1
+                }
+              }
+            },
+            "ref": "contest:1b7ee7fb-a566-4e17-ac6d-543e08869c65"
+          }
+        ]
       },
       "id": "2026-09-30-santa-catalina-at-salinas"
     },
@@ -41897,7 +42026,26 @@
             "scheduledDate": "2026-10-09",
             "source": "pcal-pdf"
           }
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "38dab965-b167-4129-8f95-a8c9e59957f3",
+              "published": {
+                "away": 4,
+                "home": 0
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 4-0 (Carmel–Santa Catalina); si.com reports 3-0. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 3,
+                  "home": 0
+                }
+              }
+            },
+            "ref": "contest:38dab965-b167-4129-8f95-a8c9e59957f3"
+          }
+        ]
       },
       "id": "2026-10-09-carmel-at-santa-catalina"
     },
@@ -45683,6 +45831,116 @@
         }
       },
       "id": "2026-10-14-homestead-at-st-ignatius"
+    },
+    {
+      "claims": {
+        "official": {
+          "lastMatch": {
+            "contestId": "sblive:6543418",
+            "stamp": {
+              "division": "pcal",
+              "fixtureId": "pcal:2026-10-14:monterey@greenfield",
+              "pass": "same-date",
+              "scheduledDate": "2026-10-14",
+              "source": "pcal-pdf"
+            }
+          },
+          "ref": "pcal:2026-10-14:monterey@greenfield",
+          "stamp": {
+            "division": "pcal",
+            "fixtureId": "pcal:2026-10-14:monterey@greenfield",
+            "pass": "same-date",
+            "scheduledDate": "2026-10-14",
+            "source": "pcal-pdf"
+          }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "sblive:6543418",
+              "game": {
+                "aliases": [
+                  "sblive-6543418"
+                ],
+                "away": {
+                  "name": "Monterey",
+                  "result": "W",
+                  "score": 9,
+                  "slug": "monterey",
+                  "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+                },
+                "contestId": "sblive:6543418",
+                "contestTypes": {
+                  "away": null,
+                  "home": null
+                },
+                "countsFor": "pcal",
+                "dateKey": "2026-10-14",
+                "dateLocal": "2026-10-14T16:00:00",
+                "dateUtc": "2026-10-14T23:00:00Z",
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "name": "Greenfield",
+                  "result": "L",
+                  "score": 0,
+                  "slug": "greenfield",
+                  "teamId": "0bb5dbd8-6792-415b-8118-196ee0132b56"
+                },
+                "isDateTba": false,
+                "isForfeit": false,
+                "isLeague": true,
+                "isOt": false,
+                "isTimeTba": false,
+                "leagueDivision": "pcal",
+                "official": {
+                  "division": "pcal",
+                  "fixtureId": "pcal:2026-10-14:monterey@greenfield",
+                  "pass": "same-date",
+                  "scheduledDate": "2026-10-14",
+                  "source": "pcal-pdf"
+                },
+                "otPeriods": 0,
+                "postseason": null,
+                "provenance": {
+                  "backfill": {
+                    "maxpreps": null,
+                    "note": "MaxPreps has no contest for this PCAL fixture (official date Oct 14), so the score is si.com’s.",
+                    "rule": "absent-fixture",
+                    "sbliveGameId": "6543418"
+                  },
+                  "fetchedAt": "2026-11-15T12:28:58.170Z",
+                  "schedule": "sblive",
+                  "scores": "sblive"
+                },
+                "result": {
+                  "basis": "the score is si.com’s",
+                  "certainty": "reported",
+                  "ending": "regulation",
+                  "winner": "away"
+                },
+                "shootout": null,
+                "site": "home",
+                "slug": "2026-10-14-monterey-at-greenfield",
+                "status": "final",
+                "urls": {
+                  "goFan": null,
+                  "maxpreps": null,
+                  "nfhsStream": null,
+                  "sblive": "https://www.si.com/high-school/stats/california/field-hockey/games/6543418-monterey-vs-greenfield"
+                },
+                "venue": {
+                  "text": null
+                }
+              },
+              "officialFixtureId": "pcal:2026-10-14:monterey@greenfield",
+              "rule": "absent-fixture"
+            },
+            "ref": "6543418"
+          }
+        ]
+      },
+      "id": "2026-10-14-monterey-at-greenfield"
     },
     {
       "claims": {
@@ -56994,6 +57252,117 @@
     },
     {
       "claims": {
+        "official": {
+          "lastMatch": {
+            "contestId": "sblive:6906776",
+            "stamp": {
+              "division": "pcal",
+              "fixtureId": "pcal:2026-10-26:santa-catalina@monterey",
+              "pass": "same-date",
+              "scheduledDate": "2026-10-26",
+              "source": "pcal-pdf"
+            }
+          },
+          "ref": "pcal:2026-10-26:santa-catalina@monterey",
+          "stamp": {
+            "division": "pcal",
+            "fixtureId": "pcal:2026-10-26:santa-catalina@monterey",
+            "pass": "same-date",
+            "scheduledDate": "2026-10-26",
+            "source": "pcal-pdf"
+          }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "sblive:6906776",
+              "game": {
+                "aliases": [
+                  "sblive-6906776"
+                ],
+                "away": {
+                  "name": "Santa Catalina",
+                  "result": "L",
+                  "score": 0,
+                  "slug": "santa-catalina",
+                  "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8"
+                },
+                "contestId": "sblive:6906776",
+                "contestTypes": {
+                  "away": null,
+                  "home": null
+                },
+                "countsFor": "pcal",
+                "dateKey": "2026-10-26",
+                "dateLocal": "2026-10-26T18:00:00",
+                "dateUtc": "2026-10-27T01:00:00Z",
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "name": "Monterey",
+                  "result": "W",
+                  "score": 3,
+                  "slug": "monterey",
+                  "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
+                },
+                "isDateTba": false,
+                "isForfeit": false,
+                "isLeague": true,
+                "isOt": false,
+                "isTimeTba": false,
+                "leagueDivision": "pcal",
+                "official": {
+                  "division": "pcal",
+                  "fixtureId": "pcal:2026-10-26:santa-catalina@monterey",
+                  "pass": "same-date",
+                  "scheduledDate": "2026-10-26",
+                  "source": "pcal-pdf"
+                },
+                "otPeriods": 0,
+                "postseason": null,
+                "provenance": {
+                  "backfill": {
+                    "maxpreps": null,
+                    "note": "MaxPreps has no contest for this PCAL fixture (official date Oct 26), so the score is si.com’s.",
+                    "rule": "absent-fixture",
+                    "sbliveGameId": "6906776"
+                  },
+                  "contentChangedAt": "2026-10-27T10:08:16.816Z",
+                  "fetchedAt": "2026-11-15T12:28:58.170Z",
+                  "schedule": "sblive",
+                  "scores": "sblive"
+                },
+                "result": {
+                  "basis": "the score is si.com’s",
+                  "certainty": "reported",
+                  "ending": "regulation",
+                  "winner": "home"
+                },
+                "shootout": null,
+                "site": "home",
+                "slug": "2026-10-26-santa-catalina-at-monterey",
+                "status": "final",
+                "urls": {
+                  "goFan": null,
+                  "maxpreps": null,
+                  "nfhsStream": null,
+                  "sblive": "https://www.si.com/high-school/stats/california/field-hockey/games/6906776-santa-catalina-vs-monterey"
+                },
+                "venue": {
+                  "text": null
+                }
+              },
+              "officialFixtureId": "pcal:2026-10-26:santa-catalina@monterey",
+              "rule": "absent-fixture"
+            },
+            "ref": "6906776"
+          }
+        ]
+      },
+      "id": "2026-10-26-santa-catalina-at-monterey"
+    },
+    {
+      "claims": {
         "maxpreps": {
           "game": {
             "away": {
@@ -61925,7 +62294,26 @@
             "shootout"
           ],
           "ref": "dbac5f77-1d98-4463-9b49-739a7943446b"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "dbac5f77-1d98-4463-9b49-739a7943446b",
+              "published": {
+                "away": 0,
+                "home": 0
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 0-1 (Hilltop–Granite Hills); si.com reports 1-2. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 1,
+                  "home": 2
+                }
+              }
+            },
+            "ref": "contest:dbac5f77-1d98-4463-9b49-739a7943446b"
+          }
+        ]
       },
       "id": "2026-10-30-hilltop-at-granite-hills"
     },
@@ -61994,7 +62382,26 @@
             }
           },
           "ref": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c",
+              "published": {
+                "away": 2,
+                "home": 1
+              },
+              "scoreConflict": {
+                "note": "Sources disagree: we show MaxPreps’ 1-0 (Mission Hills–San Pasqual); si.com reports 2-1. MaxPreps’ score stands.",
+                "sblive": {
+                  "away": 2,
+                  "home": 1
+                }
+              }
+            },
+            "ref": "contest:f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c"
+          }
+        ]
       },
       "id": "2026-10-30-mission-hills-at-san-pasqual"
     },

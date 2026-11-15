@@ -3,18 +3,20 @@
  * saw them, and written beside the snapshot as `claims.json`. A fixture is this site's own record of one game; a
  * claim is what one source says about it. Step 06 publishes from the MaxPreps claims (a feed not read is carried
  * from them), the official step carries a division it does not read from the official claims, the school calendars'
- * carry reads the VNN claims, the bracket sheet carries a tab it does not read from the sheet's claims and publishes
- * its own games on fixtures created from them, and the results step weighs the cifsshome.org and box-score claims;
- * the other steps still work over the game list, and each moves onto its source's claims in turn.
+ * carry reads the VNN claims, the si.com step carries the fills and disagreements it did not read again from the si.com
+ * claims and publishes its rule-2 games on fixtures of their own, the bracket sheet carries a tab it does not read
+ * from the sheet's claims and publishes its own games on fixtures created from them, and the results step weighs the
+ * cifsshome.org and box-score claims; classification, the guards and the results still work over the game list.
  *
  * Types only. lib/claims/schema.ts is the zod form of `ClaimsFile` as written on disk, where `seenAt` equal to the
  * file's `fetchedAt` and a MaxPreps game's `provenance.fetchedAt` are left out (lib/claims/store.ts toFile).
  */
 
 import type {
-  BackfillProvenance, BoxSide, CifssConflictRow, ContestId, DivisionId, Game, GameSide, LeagueId,
-  OfficialFixture, OfficialStamp, StreetAddress, TeamId, TeamSlug, DroppedContest,
+  BackfillProvenance, BoxSide, CifssConflictRow, ContestId, DivisionId, Game, LeagueId,
+  OfficialFixture, OfficialStamp, SbliveCrossCheck, StreetAddress, TeamId, TeamSlug, DroppedContest,
 } from '../types';
+import type { BackfillPublished } from '../crosscheck/backfill';
 import type { BoxEvidence } from '../results/box-evidence';
 import type { ScheduleRow } from '../sources/maxpreps';
 import type { CanonicalFixture } from '../fixtures/shape';
@@ -103,32 +105,24 @@ export interface OfficialClaim extends ClaimBase<string /* OfficialFixture.id, `
 
 // ---------------------------------------------------------------- si.com
 
-/** What carryForward (lib/crosscheck/backfill.ts) reads off a previous game for rule 10, rules 3 and 4. */
-export interface PublishedScore {
-  home: Pick<GameSide, 'score' | 'result'>;
-  away: Pick<GameSide, 'score' | 'result'>;
-  decider: Game['decider'];
-  otPeriods: number;
-  isOt: boolean;
-  isForfeit: boolean;
-  forfeitBy: Game['forfeitBy'];
-  sbliveUrl: string | undefined;
-  backfill: BackfillProvenance;
-  scoreConflict?: NonNullable<Game['provenance']['scoreConflict']>;
-}
+/** What rule 10 (lib/crosscheck/backfill.ts) re-applies for rules 3 and 4: the si.com value the game last published. */
+export type PublishedScore = BackfillPublished;
 
 export type SbliveFill =
   | { rule: 'score-pending' | 'contradictory-result' | 'off-schedule-date' | 'phantom-tie'; contestId: ContestId; published: PublishedScore }
-  /** Rule 2: the whole game as last published (today's carry pushes `prev` as is). */
+  /** Rule 2: the whole game as last published, verbatim (the carry publishes it as it was, as the snapshot's game was). */
   | { rule: 'absent-fixture'; contestId: ContestId; officialFixtureId: string; game: Game };
 
-export interface SbliveClaim extends ClaimBase<string /* sbliveGameId, or `contest:<id>` when seeded from a conflict mark */> {
-  /** The si.com row as parsed and cleaned. Absent on a claim seeded from a snapshot. */
+export interface SbliveClaim extends ClaimBase<string /* a fill's sbliveGameId (`#2` … for a second game of one row), or `contest:<id>` for a conflict mark */> {
+  /** The si.com row as cleaned, when the run that wrote the fill read it. Absent on a carried or seeded fill and on a conflict mark. */
   row?: SbliveGame;
   /** What this row published last time it was used (D2 rules 2-4). Read by rule 10. */
   fill?: SbliveFill;
-  /** A rule-5 plain disagreement published last time, for carryConflicts (steps/sblive.ts). */
-  conflict?: { contestId: ContestId; scoreConflict: NonNullable<Game['provenance']['scoreConflict']>; published: { home: number; away: number } };
+  /**
+   * A si.com disagreement a game with no fill published last time (rule 5's conflict, or the note on a game MaxPreps
+   * has not scored), with the game's scores then, for the carry of a run that reads no si.com data (steps/sblive.ts).
+   */
+  conflict?: { contestId: ContestId; scoreConflict: NonNullable<Game['provenance']['scoreConflict']>; published: { home: number | null; away: number | null } };
 }
 
 // ---------------------------------------------------------------- cifsshome.org (evidence only)
@@ -334,6 +328,34 @@ export type ShadowStage =
       fixtures: readonly SdsSheetFixture[];
       /** Rule 1's disagreements, as logged. */
       disagreements: readonly string[];
+      games: readonly Game[];
+    }
+  | {
+      stage: 'sblive';
+      kind: 'decide';
+      /**
+       * Step 08's input as the real step decided it: the games and fixtures, the si.com rows read (null: si.com was
+       * not read), what the run consulted, and the rows the score cross-check joined.
+       */
+      input: {
+        games: readonly Game[];
+        unmatched: readonly OfficialFixture[];
+        sblive: readonly SbliveGame[] | null;
+        consulted?: (pairKey: string, date: string) => boolean;
+        relevant: readonly SbliveGame[];
+        today: string;
+        fetchedAt: string;
+      };
+      games: readonly Game[];
+      unmatched: readonly OfficialFixture[];
+      crossCheck: SbliveCrossCheck | undefined;
+    }
+  | {
+      stage: 'sblive';
+      kind: 'resolve';
+      /** Step 08's input, the games the step returned, and the input with the step's decisions applied (what the run publishes). */
+      input: readonly Game[];
+      stepGames: readonly Game[];
       games: readonly Game[];
     }
   | {

@@ -7,8 +7,8 @@
  * (a corpus run, or the file unreadable), the stored claims stay and the results step leaves each game's box
  * evidence as the game holds it, as finalizeResult does with no evidence. A carried contest publishes as it was last
  * published (lib/claims/sources/maxpreps.ts), box score included, so no stored box claim is applied to it. An entry
- * goes to the fixture its game is (lib/claims/published.ts); one for a game with none (an si.com rule-2 game) is not
- * stored, and its evidence is read off the file itself.
+ * goes to the fixture its game is (lib/claims/published.ts); one for a game with none (a frozen league's game as last
+ * published, whose contest MaxPreps no longer lists) is not stored, and its evidence is read off the file itself.
  */
 
 import type { BoxEvidence } from '../../results/box-evidence';
