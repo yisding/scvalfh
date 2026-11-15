@@ -1,7 +1,101 @@
 {
-  "builtBy": "Nothing yet: the basketball programs' Instagram accounts are not researched for the basketball build.",
-  "capturedAt": "2026-11-13",
-  "notes": [],
-  "teams": [],
+  "builtBy": "Research by hand on 2026-11-14 for the 41 boys basketball teams: the schools’ athletics sites and their own pages, read by script (a handle a page links, names or holds in its settings), student papers, and web searches limited to Instagram; every profile kept was then opened in a browser. Each record’s note says where its handle was found.",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
+    "A team’s account is its boys basketball program’s own, or one the school’s boys and girls teams share (its note says so); never a girls-only account, the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
+    "A profile whose name and bio do not say which school it is (several schools here share a name with one elsewhere) is left out unless a page of the school’s links it or the profile links the school’s own page.",
+    "No record means no account we could find and check on the day, not that there is none: 11 of the 41 teams have one. The search allowance gave most schools one search for all their sports."
+  ],
+  "teams": [
+    {
+      "slug": "los-gatos",
+      "level": "varsity",
+      "handle": "losgatosboysbasketball",
+      "foundAt": "https://www.losgatosathletics.org/socialmedia",
+      "note": "Linked as \"Basketball- Boys\" on the social media page of the school’s athletics site. Profile opened: \"LGHS Boys Basketball\", bio \"11X SCVAL League Champions\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "lynbrook",
+      "level": "varsity",
+      "handle": "lynbrookhoops",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Lynbrook Boys Basketball\", bio \"2022 CCS CHAMPS\", linking the Lynbrook Vikings’ (San Jose) MaxPreps schedule.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "milpitas",
+      "level": "varsity",
+      "handle": "milpitasboysbasketball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"MHS Boys Basketball\", bio \"Milpitas Trojans Boys Basketball … CCS DIVISION 1 CHAMPIONS 25-26\", linking mhstrojanathletics.com.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "palo-alto",
+      "level": "varsity",
+      "handle": "palo_alto_hoops",
+      "foundAt": "https://vikingsportsmag.com/uncategorized/2026/02/11/palo-alto-mens-basketball-falls-to-los-gatos-43-28/",
+      "note": "Credited by the school’s student sports magazine, Viking Magazine (\"Photo courtesy of Palo_Alto_hoops\", on its men’s basketball game story of 2026-02-11). Profile opened: \"Palo Alto High School 🏀\", bio \"#SkoVikes … 2x CIF State Champs … 8 CCS Titles\", linking palyathletics.com. The name does not say boys; the Viking story and the two state titles do.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "saratoga",
+      "level": "varsity",
+      "handle": "togambb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Saratoga High Mens Basketball Team\", linking the Saratoga Falcons’ (Saratoga, CA) MaxPreps schedule.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "christopher",
+      "level": "varsity",
+      "handle": "chscougarsmbb",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Christopher High Basketball\", bio \"2x UNDEFEATED BVAL LEAGUE CHAMPS … ‘25 CCS DII CHAMPIONS\". The boys’ account: the girls keep their own (chscougarswbb).",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "santa-teresa",
+      "level": "varsity",
+      "handle": "sths_mbball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Santa Teresa Varsity Basketball\", bio \"Go Saints!\". No page of the school’s names it and the profile names no city: it rests on the Saints (the Santa Teresa in New Mexico is the Desert Warriors) and on \"mbball\", men’s basketball.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "branham",
+      "level": "varsity",
+      "handle": "branham_hoops",
+      "foundAt": null,
+      "note": "Found by search, whose result gave the bio \"Providing you with all of the latest info for the Branham Bruins Basketball team\". Profile opened: \"Branham Varsity Basketball\", bio \"#brotherhood\". The name does not say boys; the bio is taken to.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "independence",
+      "level": "varsity",
+      "handle": "ihsboysbball",
+      "foundAt": "https://sites.google.com/esuhsd.org/sixerathletics/athletics-general-info/sixers-social-media",
+      "note": "Linked on the \"Sixers Social Media\" page of the school’s athletics site as \"Boys Basketball: @ihsboysbball\" (the girls have their own). Profile opened: \"IHS Boys Basketball\", bio \"Official Instagram for Independence High School’s Boys Basketball in San Jose, CA\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "piedmont-hills",
+      "level": "varsity",
+      "handle": "phhsbball",
+      "foundAt": null,
+      "note": "Found by search. Profile opened: \"Piedmont Hills Boys Basketball\", linking the Piedmont Hills Pirates’ (San Jose) MaxPreps page.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "james-lick",
+      "level": "varsity",
+      "handle": "jlhs.boysbasketball",
+      "foundAt": "https://sites.google.com/esuhsd.org/james-lick-high-school/athletics/winter-sports",
+      "note": "Linked on the Winter Sports page of the school’s own site, as \"@JLHS.BOYSBASKETBALL\" under \"Boys’ Basketball\" (the girls have their own). Profile opened: \"James Lick Boys Basketball\"",
+      "checkedOn": "2026-11-14"
+    }
+  ],
   "clubs": []
 }

@@ -1,6 +1,6 @@
 {
-  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, search results and the owner’s own reports and confirmations. Each record’s note says where its handle was found.",
-  "capturedAt": "2026-11-13",
+  "builtBy": "Research by hand on 2026-11-13: the clubs’ own websites (read by script, in Chromium where the links are rendered by script); for the teams, the schools’, districts’ and athletics departments’ sites and the programs’ own sites, student papers, search results and the owner’s own reports and confirmations. Each record’s note says where its handle was found. A second round on 2026-11-14 went back over the 64 teams and 9 clubs then without a record (their schools’ athletics and team pages, program sites and student papers read by script, and searches limited to Instagram), opening each profile it kept in a browser: it added one team (Tamalpais) and two clubs; the owner then gave four SCVAL teams’ accounts, and trying likely handles found seven BVAL teams’.",
+  "capturedAt": "2026-11-14",
   "notes": [
     "Links, not sources: no fact on the site is read from an account (README \"Instagram accounts\", DATA-SOURCES §1.10).",
     "A team’s account is its field hockey program’s own (level varsity), or its JV team’s own (level jv); never the school’s or the athletics department’s account for every sport, a booster club’s, a club team’s or a player’s.",
@@ -56,6 +56,38 @@
       "checkedOn": "2026-11-13"
     },
     {
+      "slug": "los-altos",
+      "level": "varsity",
+      "handle": "lahsfieldhockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-14) as Los Altos High School field hockey’s account. Profile opened: \"Los Altos Field Hockey\", bio \"Instagram for Los Altos High School Field Hockey\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "homestead",
+      "level": "varsity",
+      "handle": "homesteadvfhock",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-14) as Homestead (Cupertino) field hockey’s account. Profile opened: \"Homestead Varsity Field Hockey\"; it names no city",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "valley-christian",
+      "level": "varsity",
+      "handle": "vchs_fieldhockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-14) as Valley Christian (San Jose) field hockey’s account. Profile opened: \"VCHS FIELD HOCKEY\", bio \"San Jose, California\", linking a valleychristian page",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "lynbrook",
+      "level": "varsity",
+      "handle": "lynbrookfockey",
+      "foundAt": null,
+      "note": "Given by the owner (2026-11-14) as Lynbrook (San Jose) field hockey’s account. Profile opened: \"Lynbrook Field Hockey\"; it names no city",
+      "checkedOn": "2026-11-14"
+    },
+    {
       "slug": "los-gatos",
       "level": "varsity",
       "handle": "losgatosgirlsfieldhockey",
@@ -102,6 +134,62 @@
       "foundAt": "https://whstheshield.com/2025/09/15/field-hockey/",
       "note": "Named by the school’s student paper, The Shield (2024 and 2025 season previews: follow @westmontfockey). Profile opened: \"Westmont Field Hockey\"",
       "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "branham",
+      "level": "varsity",
+      "handle": "branhamfh",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"Branham Bruins Field Hockey\", bio \"Official account for the Branham Field Hockey team.\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "gilroy",
+      "level": "varsity",
+      "handle": "gilroyfieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"Gilroy High Field Hockey\", bio \"GHS FIELD HOCKEY | Follow us for updates on this upcoming season!\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "leigh",
+      "level": "varsity",
+      "handle": "leighfieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"LEIGH FIELD HOCKEY\", bio \"LEIGH FH | 2025 BVAL LEAGUE CHAMPS\"",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "leland",
+      "level": "varsity",
+      "handle": "lelandfieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"Leland Field Hockey\", linking homecampus.com for clearance, with varsity and JV highlights to 2026; it names no city, and rests on the name and the Bay Area clearance site. A second, near-empty account, leland_fieldhockey, calls this one its alumna group",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "prospect",
+      "level": "varsity",
+      "handle": "prospectfieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"prospect field hockey team\", bio \"2026 league champs … go panthers!\"; it names no city, and rests on the Panthers (the Prospect in Illinois is the Knights)",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "silver-creek",
+      "level": "varsity",
+      "handle": "silvercreekfieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"schs field hockey\", bio \"hey silver creek raiders!\"; the Raiders are the San Jose school (the Silver Creek in Colorado is the Raptors)",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "sobrato",
+      "level": "varsity",
+      "handle": "sobrato_fieldhockey",
+      "foundAt": null,
+      "note": "Found on 2026-11-14 by trying likely handles, no page or search naming it. Profile opened: \"Sobrato Girls Field Hockey\", posting through October 2026. An older account, sobratofieldhockey (\"Go Bulldogs\", linking the school’s athletics site), last posted in 2021",
+      "checkedOn": "2026-11-14"
     },
     {
       "slug": "university-sf",
@@ -334,6 +422,14 @@
       "foundAt": null,
       "note": "Found by search: the bio reads \"4-peat LAFHA Champs\", the Los Angeles Field Hockey Association’s title Harvard-Westlake holds (hw.com refuses automated reads, so its field hockey page could not be checked).",
       "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "tamalpais",
+      "level": "varsity",
+      "handle": "tamfockey",
+      "foundAt": "https://sites.google.com/view/tam-field-hockey/instagram",
+      "note": "The program’s own site, linked from the school’s team page, embeds the account’s feed without naming it; one of the embedded posts, opened in a browser, is tamfockey’s. Profile opened: \"THS Hawks Field Hockey\", bio \"2025 MCAL CHAMPS\", linking the program’s site",
+      "checkedOn": "2026-11-14"
     }
   ],
   "clubs": [
@@ -469,6 +565,20 @@
       "foundAt": "https://royalsfieldhockey.com/",
       "note": "Club website, home page social links and Instagram feed",
       "checkedOn": "2026-11-13"
+    },
+    {
+      "slug": "lightning",
+      "handle": "lightningfieldhockey",
+      "foundAt": null,
+      "note": "Not on the club’s site, which links only Facebook. Found by search. Profile opened: \"Lightning Field Hockey\", bio \"Field Hockey Club in California Bay Area for ages 5-18\", linking lightningyouthfieldhockey.com; one post. It rests on the name, the Bay Area and the youth ages.",
+      "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "hb-surfers",
+      "handle": "thesurfersfieldhockeyclub",
+      "foundAt": null,
+      "note": "Not on the club’s site, which says only \"Find us on FaceBook\". Found by search. Profile opened: \"OC\", bio \"Est. 1987 Orange County’s Premier Field Hockey Club\", linking surfersfieldhockey.org; the club’s own site says it has existed since 1987 and is \"fondly known as Surfers\".",
+      "checkedOn": "2026-11-14"
     }
   ]
 }

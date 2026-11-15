@@ -588,9 +588,10 @@ describe('the volleyball recruiting research (data/volleyball/{clubs,commits,ros
     expect(jv.teams.flatMap((t) => t.players).every((p) => p.profiles.every((x) => x.platform !== 'maxpreps'))).toBe(true);
   });
 
-  it('links the clubs’ own Instagram accounts and no team account', () => {
+  it('links the clubs’ own Instagram accounts and the teams’ where one was found', () => {
     const file = m.instagram.getInstagramFile();
-    expect(file.teams).toEqual([]);
+    expect(file.teams.length).toBeGreaterThanOrEqual(10);
+    expect(m.instagram.getTeamInstagram('los-gatos')?.handle).toBe('losgatosvolleyball');
     expect(file.clubs.length).toBeGreaterThanOrEqual(20);
     expect(m.instagram.getClubInstagram('mountain-view-volleyball-club')?.handle).toBe('mvvcvolley');
   });
