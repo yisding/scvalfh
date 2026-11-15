@@ -77,7 +77,9 @@ Section's 2026-27 League Alignment; the division names are ours). Every league f
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
 data-quality lists) lives in `lib/league-config/`: one file per league, named as its registry file, beside
 `sections.ts` (the regions, the sections and the CCS block), `sds.ts` (what the San Diego leagues share),
-`data-quality.ts` and `shape.ts` (the types). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
+`data-quality.ts` and `shape.ts` (the types). What this site records of a single game (a row that is no game,
+another day or host than MaxPreps has, a result from a better source, a game no feed lists) is one fixture in
+`lib/fixtures/`, the fixture ledger, with the sources' rows that are that game (docs/DATA-SOURCES.md §4.1). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
 lookups (`getLeague`, `regionOf`, …) and `assertLeagues()`; the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
 by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
@@ -193,7 +195,7 @@ MaxPreps ghost API    ──┐
 si.com (SBLive)       ──┤
 scval.com PDFs (live) ──┼──► scripts/fetch-data.ts ──► data/snapshot.json ──► next build ──► static site
 data/official/*.json  ──┤     (lib/pipeline/*)         data/snapshot.meta.json   or vite build (vinext)
-cifccs.org / VNN .ics ──┤
+cifccs.org / VNN .ics ──┤                              data/claims.json (read by the next run only)
 cifsshome.org         ──┘  (cross-check only)
 ```
 
@@ -205,7 +207,7 @@ cifsshome.org         ──┘  (cross-check only)
    (never a `/leagues/null/v1` URL) and its cross-check is reported as skipped; the Southern Section
    independents have no MaxPreps table either, so only their five schedules are read. Failures are scoped, so one league
    never blocks the others:
-   - **Run abort** (exit 1, nothing written, the previous snapshot stays): the season ids changed,
+   - **Run abort** (exit 1, nothing written, the previous snapshot and claims file stay): the season ids changed,
      the league or team registry is inconsistent, the assembled snapshot fails validation, or
      there is a systemic outage (under 80% of the previous game count, 60% or more of the feeds
      failed, or every league frozen).
@@ -235,9 +237,16 @@ cifsshome.org         ──┘  (cross-check only)
    score MaxPreps lacks and every scored game MaxPreps has no contest for on `/about#cross-check`
    (`docs/DATA-SOURCES.md` §1.2a; `--no-cifss` skips it).
 2. It writes **`data/snapshot.json`** (the full normalized `Team[]`/`Game[]`/`Standing[]`/
-   per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
-   (counts, timestamps, a per-league summary: what the update-data workflow uses for its commit
-   message and job summary).
+   per-league health/dropped contests/`SourceStatus[]`), **`data/snapshot.meta.json`** (counts,
+   timestamps, a per-league summary: what the update-data workflow uses for its commit message and
+   job summary) and **`data/claims.json`**, the claims file beside them. The pipeline keeps what
+   each source says about a game as claims, one per source row, on fixtures of its own
+   (`lib/claims/`), and the snapshot's games are folded from them, stage by stage. The claims file
+   is the next run's starting point: a MaxPreps feed or another source that is not read is carried
+   from it, while what is about the previous run itself (a frozen league, league health, the carried
+   reports, slugs and content dates) is still read from the previous snapshot. The site, the
+   snapshot loader and `next build` never read it (`docs/DATA-SOURCES.md` §4.2). With no claims file
+   that matches the previous snapshot, a run seeds the claims from the snapshot.
 3. **`next build`** (or `vite build` under vinext) reads the `data/` JSON files the read APIs
    import (`data/snapshot.json` via `lib/data.ts`, plus the files listed under "Local
    development") and prerenders every route — there is no request-time fetch, no database and no
@@ -268,7 +277,8 @@ again without this run's `data/jv.json`, then (keeping the new JV file) without 
 blocks the snapshot commit and never costs the other file's refresh (the job Summary says when a file
 was restored). It then commits `data/snapshot.json` +
 `data/snapshot.meta.json`, `data/player-stats.json` and `data/jv.json` **only where they changed**,
-in one commit. The commit is what triggers
+in one commit; `data/claims.json` goes with the snapshot, and when only the run's timestamp moved it is
+reverted with it. The commit is what triggers
 your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
 carry `[skip ci]`. The job fails, and commits nothing, only on a run abort or when the test suite still
 fails after this run's JV and stats files are restored; a frozen or partial
@@ -303,7 +313,7 @@ during the season:
 Or by hand, any time:
 
 ```bash
-pnpm fetch-data   # refresh data/snapshot.json + data/snapshot.meta.json
+pnpm fetch-data   # refresh data/snapshot.json, data/snapshot.meta.json and data/claims.json
 pnpm build        # rebuild the static site from the new snapshot
 pnpm start         # or redeploy the .next output to your host
                    # (vinext: pnpm build:vinext && pnpm start:vinext, or pnpm deploy:cloudflare
@@ -320,7 +330,7 @@ Flags on `fetch-data` (`pnpm fetch-data --help` prints them, as does the header 
 | `--capture <dir>` | live run that also records every response into a new corpus at `<dir>` |
 | `--leagues scval,bval` | fetch only these leagues; the others are carried from the previous snapshot, frozen |
 | `--accept-regression bval` | skip the finals-regression guard for these leagues, this run only |
-| `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere; validate and report without writing (captures included); pin the run's stamp |
+| `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere (the meta file and the claims file go beside it: `<name>.meta.json`, `<name>.claims.json`, or `claims.json` for a `snapshot.json`); validate and report without writing (captures included); pin the run's stamp |
 | `--force` | bypass the Aug 1 - Nov 21 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn`, `--no-cifss` | skip individual secondary sources (`--no-cifss`: the cifsshome.org cross-check) |
@@ -672,7 +682,7 @@ no field hockey document schedules a JV round, so neither has slots; a league ge
 its bundle's fixtures.
 
 A fifth JV layer, `lib/jv/jv-added.ts` (`mergeJvAdded`), lists the JV game of a varsity game no feed lists
-(`DATA_QUALITY.addedGames` with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
+(the fixture ledger’s listings, lib/fixtures/, with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
 it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, from Cupertino's own schedule, given by the owner on 2026-11-14 (see
 docs/LEAGUE-RULES.md, "A game reported before its day").
 
@@ -1233,6 +1243,8 @@ sport definition). The rest is grouped by domain:
 |---|---|
 | `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
 | `registry/` | each league's teams, assembled by `lib/teams.ts` |
+| `fixtures/` | the fixture ledger: this site's own record of the games it has had to say something about, one file per sport, and the views the pipeline reads it through (as the editor's claims) |
+| `claims/` | what each source says about a game: the claims file, the claim store, fixture identity, the per-stage view and resolve, one module per source's claims, and the seeding from a snapshot (build-time only; `tests/claims/boundary.test.ts` keeps the site and the snapshot loader from reaching it; `docs/DATA-SOURCES.md` §4.2) |
 | `snapshot/` | the snapshot's Zod schema, its config invariants, the load path and its migrations, the content hash, the season build and the content dates |
 | `standings/` | the tiebreak engine, the playoff-ladder copy, the MaxPreps cross-check, missing official results and postseason pairings |
 | `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
@@ -1313,6 +1325,19 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/sds-brackets-2026.json` | `lib/postseason/sds-bracket.ts` |
 | `data/schools.json` (each registry school's campus address, by slug) | `lib/schools/schools.ts` |
 | `data/instagram.json` (teams' and clubs' official Instagram accounts) | `lib/social/instagram.ts` |
+
+`data/claims.json` is not one of the seventeen, and neither is `data/<sport>/claims.json`. It is the
+pipeline's working state, written beside each snapshot by `pnpm fetch-data` and read only by the
+next `fetch-data` run (with `node:fs`, in `lib/claims/file.ts`); no build imports it and the site
+never reads it, so it has no `.d.json.ts` sidecar and no override variable. Two dev scripts belong
+to it (`docs/DATA-SOURCES.md` §4.2):
+
+```bash
+pnpm claims-seed                  # rewrite the claims file beside the committed snapshot, seeded from it
+pnpm claims-diff                  # dev only, not in CI: every offline run on HEAD and on the working tree
+                                  # must write the same snapshot.json and snapshot.meta.json
+pnpm claims-diff --rev <commit>   # the same, with the code at <commit> in place of HEAD
+```
 
 The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
@@ -1911,11 +1936,11 @@ can end a league game in a tie; the EAL and the San Diego Section decide a level
 1 v 1s or a shootout. Every final carries a recorded result (`Game.result`: the winner, how the game
 ended, how certain the record is and what it rests on), decided in `lib/results/result.ts` from MaxPreps'
 score and flags, the differing scores si.com and cifsshome.org carry, the San Diego Section's bracket sheet
-each team's own box score, and the cited corrections in `DATA_QUALITY.resultCorrections`. Every source is
+each team's own box score, and the cited corrections in the fixture ledger’s result (lib/fixtures/). Every source is
 wrong now and then, so they are weighed: where two agree on a score that is not MaxPreps' and nothing
 defends MaxPreps', theirs is published. A game an official source has and no feed lists is still on
 the schedule: a league fixture no source has (`lib/results/fixture-games.ts`), and games recorded from a
-section's listing or the owner's report (`DATA_QUALITY.addedGames`), each without a score where none is
+section's listing or the owner's report (the fixture ledger’s listings, lib/fixtures/), each without a score where none is
 published. The score shown is always the score in play,
 with a shootout tally kept apart: a postseason or tournament game MaxPreps lists as level with one side
 marked the winner counts as that side's win, and a second source's score that is the level score with a

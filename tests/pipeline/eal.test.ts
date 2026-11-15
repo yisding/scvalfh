@@ -175,7 +175,7 @@ describe('the EAL games', () => {
     expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
     expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('SO');
     // MaxPreps' feed stores no tally; the game's page has one (Chico 2, Davis 1), recorded as a cited correction.
-    expect(g!.shootout, 'DATA_QUALITY.resultCorrections: the tally from MaxPreps’ game page').toEqual({ home: 2, away: 1 });
+    expect(g!.shootout, 'the fixture ledger’s result (lib/fixtures/): the tally from MaxPreps’ game page').toEqual({ home: 2, away: 1 });
     expect(g!.result, 'lib/results/result.ts').toMatchObject({ ending: 'shootout', certainty: 'confirmed' });
     expect(g!.provenance.resultConflict, 'lib/pipeline/normalize.ts: resultConflict').toBeUndefined();
     expect(g!.countsFor, 'lib/classify.ts').toBe(DIVISION);
@@ -191,9 +191,9 @@ describe('the EAL games', () => {
     const g = gameOf('8a4d7c70');
     expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
     // Chico's own account: the Oct 31 final was "the second time this season" it took Pleasant Valley to "double
-    // overtime and shootouts" (DATA_QUALITY.resultCorrections); MaxPreps' fifth column holds the 1 v 1 win.
+    // overtime and shootouts" (the fixture ledger’s result, lib/fixtures/); MaxPreps' fifth column holds the 1 v 1 win.
     expect([g!.home.score, g!.away.score], 'goals in play').toEqual([0, 0]);
-    expect(g!.otPeriods, 'DATA_QUALITY.resultCorrections: otPeriods').toBe(2);
+    expect(g!.otPeriods, 'the fixture ledger’s result (lib/fixtures/): otPeriods').toBe(2);
     expect(g!.decider, 'lib/results/result.ts: decider').toBe('SO');
     expect(g!.provenance.resultCorrection?.maxpreps, 'MaxPreps’ version is kept').toEqual({ home: 0, away: 1, otPeriods: 3 });
     expect(sideOutcome(g!, g!.home.slug === 'pleasant-valley' ? 'home' : 'away')).toBe('W');

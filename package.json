@@ -18,6 +18,8 @@
     "fetch-prior-players": "tsx scripts/fetch-prior-players.ts",
     "build-players": "tsx scripts/build-players.ts",
     "fetch-mascots": "tsx scripts/fetch-mascots.ts",
+    "claims-seed": "tsx scripts/claims-seed.ts",
+    "claims-diff": "tsx scripts/claims-diff.ts",
     "discover-season": "tsx scripts/discover-season.ts",
     "build-history": "tsx scripts/build-history.ts",
     "build-official-fixtures": "tsx scripts/build-official-fixtures.ts",

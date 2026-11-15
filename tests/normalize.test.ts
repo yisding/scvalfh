@@ -5,9 +5,9 @@ import { describe, expect, it } from 'vitest';
 
 import { sideOutcome } from '../lib/format';
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
-import type { DataQualityConfig } from '../lib/league-config/shape';
+import { EXCLUSIONS, LEDGER_VIEW } from '../lib/fixtures/ledger';
 import {
-  applyDateOverride,
+  applyDateCorrection,
   applyExclusions,
   dateKeyOf,
   dedupePhantomPairs,
@@ -16,6 +16,7 @@ import {
   overtimeFromNote,
   splitLocation,
   toUtcIso,
+  type Exclusions,
 } from '../lib/pipeline/normalize';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { seasonWindowOf } from '../lib/snapshot/season-build';
@@ -284,16 +285,14 @@ const corpus = normalizeGames(corpusRows, { fetchedAt: FETCHED_AT });
 const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
 /**
- * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
- * Fallbrook Oct 30: lib/league-config/data-quality.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
- * applyExclusions reports both as unused there.
+ * The ledger's rejected and duplicate rows this 2026-10-02 NorCal corpus never holds (lib/fixtures/field-hockey.ts),
+ * in the ledger's order, the rejected rows first and then each fixture's duplicates: the stray Palomar and Metro
+ * rows (San Diego), a scrimmage found later, and the Tournament of Champions duplicates (Southern Section).
+ * applyExclusions reports each as unused there.
  */
-/** Exclusions for Southern California rows, which this NorCal corpus never holds: the two duplicate Palomar rows
- * (San Diego, inventory 2026-10-06) and the two Tournament of Champions duplicates (Southern Section, 2026-10-29). */
 const SOCAL_EXCLUDED_ROWS = [
-  'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c',
-  '5c14da41-b4c8-412f-aff3-34c8b454af35',
-  '8c6b3f6a-4a53-4e4e-87c2-690b6b45d182', 'e767ad95-30ad-4777-b1bb-0dac58d9db3f',
+  'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '5c14da41-b4c8-412f-aff3-34c8b454af35', 'e767ad95-30ad-4777-b1bb-0dac58d9db3f',
+  '9c027452-e21e-4e47-9eac-d2e800bfb42c', '8c6b3f6a-4a53-4e4e-87c2-690b6b45d182',
   '0017b5bb-5319-4742-84df-e6585dcb7056', '3702e126-9414-4c0b-a13c-61e78ead2ed9',
 ];
 
@@ -472,7 +471,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
 });
 
 describe('applyExclusions (SPEC §7.6 step 3)', () => {
-  const res = applyExclusions(corpus.games, DATA_QUALITY);
+  const res = applyExclusions(corpus.games, EXCLUSIONS);
 
   it('drops the Del Norte (Crescent City) ghost contest as ghost-team', () => {
     const ghost = res.dropped.find((d) => d.reason === 'ghost-team');
@@ -490,7 +489,7 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
       {
         contestId: '5cf5e3df-6e72-4f44-9b8d-e69da30b85c5',
         reason: 'excluded-by-config',
-        note: DATA_QUALITY.excludedContestIds['5cf5e3df-6e72-4f44-9b8d-e69da30b85c5'],
+        note: LEDGER_VIEW.rejected['5cf5e3df-6e72-4f44-9b8d-e69da30b85c5'],
         dateKey: '2026-08-18',
         teams: ['Marin Academy', 'Archie Williams'],
       },
@@ -507,16 +506,15 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
   });
 
   it('reports an excluded id that no longer appears, and leaves the input alone', () => {
-    const dq: DataQualityConfig = {
-      ...DATA_QUALITY,
+    const dq: Exclusions = {
       ghostTeamIds: {},
-      excludedContestIds: { ...DATA_QUALITY.excludedContestIds, 'gone-0000': 'a contest MaxPreps deleted' },
+      rejected: { ...LEDGER_VIEW.rejected, 'gone-0000': 'a contest MaxPreps deleted' },
     };
     const before = corpus.games.length;
     const r = applyExclusions(corpus.games, dq);
-    // Config order: the Southern California exclusions (absent from this NorCal corpus), then the added id.
+    // The ledger's order: the Southern California rows (absent from this NorCal corpus), then the added id.
     expect(r.unused).toEqual([...SOCAL_EXCLUDED_ROWS, 'gone-0000']);
-    // Without the ghost list, 5b9ff911 is caught by its own exclusion entry.
+    // Without the ghost list, 5b9ff911 is caught as a duplicate row of its fixture (Tamalpais v Del Norte, San Diego).
     expect(r.dropped.map((d) => [d.contestId.slice(0, 8), d.reason])).toEqual([
       ['5cf5e3df', 'excluded-by-config'],
       ['5b9ff911', 'excluded-by-config'],
@@ -526,7 +524,7 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
 });
 
 describe('dedupePhantomPairs (SPEC §7.6 step 4)', () => {
-  const clean = applyExclusions(corpus.games, DATA_QUALITY).games;
+  const clean = applyExclusions(corpus.games, EXCLUSIONS).games;
   // A Mt. Hamilton league game and a non-league game, both from the corpus.
   const league = clean.find((g) => g.leagueDivision === 'mt-hamilton' && g.status === 'final')!;
   const crossDivision = clean.find(
@@ -848,7 +846,7 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
   });
 });
 
-describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contestDateOverrides)', () => {
+describe('normalize: a fixture of the ledger that cites another day than MaxPreps has', () => {
   // Valley Center 0 @ Fallbrook 11: MaxPreps dates it Sep 25 at 4:00 PM, Fallbrook's slot against Rancho
   // Buena Vista; the Section's power-rankings details for both schools list it on 09/29 with no time.
   const id = 'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0';
@@ -858,18 +856,18 @@ describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contest
   const rows = [...rowsOf('fallbrook'), ...rowsOf('valley-center')];
   const at = '2026-10-06T03:19:11.008Z';
 
-  it('is configured for the contest, with its source', () => {
+  it('is in the ledger for the contest, with its source', () => {
     // And Cupertino v Homestead (9ecb5378), moved from Sep 9 to Sep 11 on Homestead's athletic director's word.
-    expect(Object.keys(DATA_QUALITY.contestDateOverrides)).toEqual([id, '9ecb5378-55b3-4163-a0cc-7c8fc039ff47']);
-    expect(DATA_QUALITY.contestDateOverrides[id]).toEqual({
+    expect(Object.keys(LEDGER_VIEW.dates)).toEqual([id, '9ecb5378-55b3-4163-a0cc-7c8fc039ff47']);
+    expect(LEDGER_VIEW.byContest.get(id)).toMatchObject({ dateKey: '2026-09-29', home: 'fallbrook', away: 'valley-center' });
+    expect(LEDGER_VIEW.dates[id]).toEqual({
       dateKey: '2026-09-29',
-      timeTba: true,
       source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
     });
   });
 
   it('moves the game to Sep 29 with no time, before the sort, and records what MaxPreps had', () => {
-    const raw = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games.find((g) => g.contestId === id)!;
+    const raw = normalizeGames(rows, { fetchedAt: at, dates: {} }).games.find((g) => g.contestId === id)!;
     expect([raw.dateLocal, raw.dateKey, raw.isTimeTba]).toEqual(['2026-09-25T16:00:00', '2026-09-25', false]);
     const { games } = normalizeGames(rows, { fetchedAt: at });
     const g = games.find((x) => x.contestId === id)!;
@@ -880,7 +878,7 @@ describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contest
     expect(g.provenance.dateCorrection).toEqual({
       maxprepsDateLocal: '2026-09-25T16:00:00',
       maxprepsTimeTba: false,
-      source: DATA_QUALITY.contestDateOverrides[id].source,
+      source: LEDGER_VIEW.dates[id].source,
     });
     // Everything but the date is MaxPreps' as before.
     expect({ ...g, dateLocal: raw.dateLocal, dateUtc: raw.dateUtc, dateKey: raw.dateKey, isTimeTba: raw.isTimeTba, provenance: raw.provenance }).toEqual(raw);
@@ -893,11 +891,11 @@ describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contest
     expect(games.filter((x) => x.dateLocal === '2026-09-25T16:00:00' && x.home.name === 'Fallbrook')).toHaveLength(1);
   });
 
-  it('leaves every other contest alone, and applies nothing to a game with no override', () => {
-    const plain = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games;
+  it('leaves every other contest alone, and applies nothing to a game the ledger cites no day for', () => {
+    const plain = normalizeGames(rows, { fetchedAt: at, dates: {} }).games;
     const fixed = normalizeGames(rows, { fetchedAt: at }).games;
     expect(fixed.filter((g) => g.contestId !== id)).toEqual(plain.filter((g) => g.contestId !== id));
-    expect(applyDateOverride(plain[0], undefined)).toBe(plain[0]);
+    expect(applyDateCorrection(plain[0], undefined)).toBe(plain[0]);
   });
 
   it('puts a time-TBA date at Pacific midnight, in daylight and in standard time', () => {

@@ -223,7 +223,7 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
   it('names Chico first, tags it (SO), and says MaxPreps marks Chico the winner and the tally is not shown', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.decider, 'lib/pipeline/normalize.ts decider').toBe('SO');
-    expect(game.shootout, 'DATA_QUALITY.resultCorrections: the tally on MaxPreps’ game page').toEqual({ home: 2, away: 1 });
+    expect(game.shootout, 'the fixture ledger’s result (lib/fixtures/): the tally on MaxPreps’ game page').toEqual({ home: 2, away: 1 });
     const model = eal.gm.buildGameViewOf(game.contestId)!;
     const title = eal.gm.gameTitle(model);
     expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);

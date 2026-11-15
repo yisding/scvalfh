@@ -3,8 +3,10 @@
  *
  *  - VNN / PlayOn school calendars: venue + start-time corroboration (only for the verified sites
  *    whose team's league is in the run). PER SITE carry-forward: a school whose feed produced
- *    nothing this run keeps the venues and confirmed start times it published before, and its
- *    source row is stamped with when that school's own calendar was last fresh.
+ *    nothing this run keeps the venues and confirmed start times it published before (the VNN
+ *    claims, lib/claims/sources/vnn.ts), and its source row is stamped with when that school's own
+ *    calendar was last fresh. Each game's decision (this run's events, then the carry) is returned
+ *    by contest id, for the run's view.
  *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
  *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
  *    corpus, a failed request, or a tournament page `readTournamentPage` does not recognise: a 403
@@ -34,20 +36,26 @@ import { CCS } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readTournamentPage } from '../../sources/ccs';
 import { isTournamentPageUrl, parseTournamentBrackets } from '../../sources/maxpreps-tournament';
-import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
+import { vnnPublishedFrom } from '../../claims/sources/vnn';
+import { VNN_SITE_IDS, applyVnnStageDecision, decideVnn, decideVnnCarry, parseVnnIcs, type VnnEvent, type VnnStageDecision } from '../../sources/vnn-ics';
 import { getTeamBySlug } from '../../teams';
-import type { CcsDivisionName, Game, TournamentBracket } from '../../types';
+import type { CcsDivisionName, ContestId, Game, TournamentBracket } from '../../types';
 import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
-import { stepSdsSheet } from './sds-sheet';
 
-async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
-  let games = [...input];
+/** The calendars' stage: each game's decision by contest id, and the stage's input with them applied. */
+export interface VnnStage {
+  games: Game[];
+  decisions: Map<ContestId, VnnStageDecision>;
+}
+
+export async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<VnnStage> {
+  const decisions = new Map<ContestId, VnnStageDecision>();
   if (!ctx.args.vnn) {
     ctx.log('  vnn: skipped (--no-vnn)');
-    return games;
+    return { games: [...input], decisions };
   }
   const inRun = new Set(ctx.leaguesInRun());
   const sites = VNN_SITE_IDS.filter((s) => {
@@ -80,22 +88,25 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
       ctx.source({ ...base, ...failed });
     }
   }
+  const decided = (games: readonly Game[]) => games.map((g) => applyVnnStageDecision(g, decisions.get(g.contestId)));
   if (events.length) {
-    const applied = applyVnnEvents(games, events);
-    games = applied.games;
-    for (const w of applied.warnings) ctx.warn(`vnn: ${w}`);
+    const d = decideVnn(input, events);
+    for (const [id, events] of d.decisions) decisions.set(id, { events });
+    for (const w of d.warnings) ctx.warn(`vnn: ${w}`);
     ctx.log(
-      `  vnn: ${events.length} field-hockey events · venues added ${applied.venuesAdded} · ` +
-        `times confirmed ${applied.timesConfirmed} · unmatched varsity ${applied.unmatched}`,
+      `  vnn: ${events.length} field-hockey events · venues added ${d.venuesAdded} · ` +
+        `times confirmed ${d.timesConfirmed} · unmatched varsity ${d.unmatched}`,
     );
   }
 
-  // PER SITE: the venues and confirmed start times already published stay published.
+  // PER SITE: the venues and confirmed start times already published stay published, read from the claims that
+  // recorded what each game last showed (lib/claims/sources/vnn.ts).
   const missing = sites.filter((s) => !answered.has(s.slug)).map((s) => s.slug);
   if (missing.length && ctx.previous) {
-    const restored = carryVnnForward(missing, ctx.previous.games, games);
-    games = restored.games;
-    if (restored.carried) {
+    const carried = decideVnnCarry(missing, decided(input), vnnPublishedFrom(ctx.claims));
+    for (const [id, fill] of carried) decisions.set(id, { ...decisions.get(id), carried: fill });
+    const n = input.filter((g) => carried.has(g.contestId)).length;
+    if (n) {
       for (const slug of missing) {
         const label = `${slug} school calendar`;
         const carriedFrom = carriedFromOf(
@@ -109,12 +120,13 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
         );
       }
       ctx.warn(
-        `vnn: ${missing.join(', ')} produced no calendar events — carried ${restored.carried} ` +
-          `venue/start-time ${restored.carried === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
+        `vnn: ${missing.join(', ')} produced no calendar events — carried ${n} ` +
+          `venue/start-time ${n === 1 ? 'annotation' : 'annotations'} forward from the previous snapshot`,
       );
     }
   }
-  return games;
+  const games = decided(input);
+  return { games, decisions };
 }
 
 type CcsState = Omit<SecondaryStepResult, 'games' | 'brackets'>;
@@ -349,10 +361,10 @@ async function stepBrackets(
   return out.length > 0 ? out : undefined;
 }
 
-export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
-  const withVnn = await stepVnn(ctx, games);
+/** Step 09's CCS part: the calendar and bracket state, then the brackets read whole over `games` (the view through VNN). */
+export async function stepCcsBrackets(ctx: PipelineContext, games: readonly Game[]): Promise<Omit<SecondaryStepResult, 'games'>> {
   const ccs = await stepCcs(ctx);
-  const brackets = await stepBrackets(ctx, withVnn, ccs.polled, ccs.page);
-  const withSheet = await stepSdsSheet(ctx, withVnn);
-  return { games: withSheet, ...ccs.state, ...(brackets ? { brackets } : {}) };
+  const brackets = await stepBrackets(ctx, games, ccs.polled, ccs.page);
+  return { ...ccs.state, ...(brackets ? { brackets } : {}) };
 }
+

@@ -102,7 +102,7 @@ export const MCAL: LeagueConfig = {
       // at Tamalpais, and MaxPreps still lists it there. The MCAL's playoffs page (mcalsports.org/FieldHockey.htm, read
       // Nov 15, 2026): "Championship Game at Redwood: Redwood W vs Tamalpais L", "Moved to Redwood High School"; the
       // Redwood Bark (Nov 1) has the win "on their home field". The game itself is put at Redwood by
-      // DATA_QUALITY.contestHostOverrides. The admission line is unchanged on the playoffs page.
+      // the fixture ledger’s host (lib/fixtures/). The admission line is unchanged on the playoffs page.
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     },
@@ -118,7 +118,7 @@ export const MCAL: LeagueConfig = {
     titleNote: 'The regular-season points leader is MCAL Champion. If a different team wins the tournament, it also receives a pennant.',
     // Marin Independent Journal, Oct 28, 2026 ("The game was scoreless after regulation and two overtimes"; Tam "won 3-1 in
     // the shootout"): MaxPreps records the shootout tally as the score and the game as a regulation result, which the
-    // one-goal caveat cannot catch. DATA_QUALITY.resultCorrections records the game as it was played (0-0, two
+    // one-goal caveat cannot catch. The fixture ledger’s result (lib/fixtures/) records the game as it was played (0-0, two
     // overtimes, a 3-1 shootout) wherever the site or the pipeline reads it; the file a run fetched before the correction
     // existed still holds 3-1 until the next refresh. This sentence says so on the bracket.
     // The final, Fri Oct 30: a one-goal regulation result, so the generic caveat would say it may hide a shootout. The

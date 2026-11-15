@@ -22,7 +22,8 @@
  * buildCrossCheck, which skips a division MaxPreps publishes no table for (the San Diego Section's Valley:
  * crossCheckSkipReason); nothing here reads a MaxPreps league table, so nothing here changes for it.
  *
- * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
+ * Nothing here mutates its input: `reconcile()` returns a new `Game[]`. It is `decideReconcile` (the join and
+ * the report) followed by `applyReconcile` (each game's `scoreConflict`).
  */
 
 import { byDateKey, dayNumber } from '../format';
@@ -50,7 +51,7 @@ export interface ReconcileOptions {
   /** The run's local date; a game dated today or later is never backfilled. */
   today?: string;
   /**
-   * The rows D2 (lib/crosscheck/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
+   * The rows D2 (lib/crosscheck/backfill.ts) explained instead of publishing (`decideBackfill().skipped`). A game
    * one is keyed on carries that row's note, so its own note and the si.com-only row withBackfill
    * publishes give the same reason.
    */
@@ -111,11 +112,34 @@ function scorePair(a: number | null, b: number | null): string {
   return `${a ?? '—'}-${b ?? '—'}`;
 }
 
-export function reconcile(
+/** Rule 5's per-game decision: the si.com value the game carries as its `provenance.scoreConflict`. */
+export interface ReconcileDecision {
+  scoreConflict: NonNullable<Game['provenance']['scoreConflict']>;
+}
+
+export interface ReconcileDecisions extends Omit<ReconcileResult, 'games'> {
+  /**
+   * The games that carry a si.com value, by contestId. Contest ids are unique in the input (normalize dedupes on
+   * contestId), so one key names one game.
+   */
+  byContestId: ReadonlyMap<string, ReconcileDecision>;
+}
+
+/** A per-game decision applied: a new game for a decision, the same object for none. */
+export function applyReconcile(game: Game, d: ReconcileDecision | undefined): Game {
+  if (!d) return game;
+  return { ...game, provenance: { ...game.provenance, scoreConflict: d.scoreConflict } };
+}
+
+/**
+ * The join of this run's games with the si.com rows, and the report, with each game's change as a decision. Pure:
+ * the input is not mutated.
+ */
+export function decideReconcile(
   games: readonly Game[],
   sbliveGames: readonly SbliveGame[],
   opts: ReconcileOptions,
-): ReconcileResult {
+): ReconcileDecisions {
   const skipNote = new Map((opts.skipped ?? []).map((r) => [r.contestId, r.note]));
   const bySbliveKey = new Map<string, SbliveGame>();
   for (const g of sbliveGames) {
@@ -131,25 +155,26 @@ export function reconcile(
   let compared = 0;
   let agreements = 0;
 
-  const out: Game[] = games.map((game) => {
+  const decisions = new Map<string, ReconcileDecision>();
+  for (const game of games) {
     const key = gameJoinKey(game);
     const match = bySbliveKey.get(key);
-    if (!match) return game;
+    if (!match) continue;
     matchedKeys.add(key);
     // D2 already published si.com's value here (lib/crosscheck/backfill.ts): it is reported in `backfilled`.
-    if (game.provenance.backfill) return game;
+    if (game.provenance.backfill) continue;
     // The JOIN, not the comparison: a si.com row can match on date and teams and still carry no
     // numbers. Those rows fall out below and land in neither `agreements` nor `conflicts`, so
     // `compared` is always ≥ `agreements + conflicts.length` and copy that prints them has to name
     // both figures (components/about/SbliveCrossCheckSummary.tsx).
     compared += 1;
 
-    if (!match.isScored) return game;
+    if (!match.isScored) continue;
 
     const aligned = alignToHomeAway(game, match.sides);
     const sbHome = aligned ? aligned.home.score : match.sides[0].score;
     const sbAway = aligned ? aligned.away.score : match.sides[1].score;
-    if (sbHome === null || sbAway === null) return game;
+    if (sbHome === null || sbAway === null) continue;
 
     const ourHome = game.home.score;
     const ourAway = game.away.score;
@@ -173,10 +198,8 @@ export function reconcile(
         status: game.status,
         note: reason,
       });
-      return {
-        ...game,
-        provenance: { ...game.provenance, scoreConflict: { sblive: { home: sbHome, away: sbAway }, note } },
-      };
+      decisions.set(game.contestId, { scoreConflict: { sblive: { home: sbHome, away: sbAway }, note } });
+      continue;
     }
 
     // --- Both scored: compare. When the sides could not be aligned, compare the sorted pair so a
@@ -186,7 +209,7 @@ export function reconcile(
       : [ourHome, ourAway].sort().join(',') === [sbHome, sbAway].sort().join(',');
     if (agree) {
       agreements += 1;
-      return game;
+      continue;
     }
 
     // AWAY first, in both the note and the table cells that render beside it: the row is labelled
@@ -207,11 +230,8 @@ export function reconcile(
       sbliveUrl: match.url,
       note,
     });
-    return {
-      ...game,
-      provenance: { ...game.provenance, scoreConflict: { sblive: { home: sbHome, away: sbAway }, note } },
-    };
-  });
+    decisions.set(game.contestId, { scoreConflict: { sblive: { home: sbHome, away: sbAway }, note } });
+  }
 
   const unmatchedKeys = [...bySbliveKey.keys()].filter((k) => !matchedKeys.has(k));
 
@@ -252,7 +272,7 @@ export function reconcile(
   const unmatched = unmatchedKeys.length;
 
   return {
-    games: out,
+    byContestId: decisions,
     unmatched,
     report: {
       sbliveFetchedAt: opts.sbliveFetchedAt,
@@ -266,7 +286,7 @@ export function reconcile(
 }
 
 /**
- * Fold D2's outcome (lib/crosscheck/backfill.ts `applyBackfill`) into a reconcile report: every published si.com
+ * Fold D2's outcome (lib/crosscheck/backfill.ts `decideBackfill`) into a reconcile report: every published si.com
  * value becomes a `backfilled` row; D2's own "not published" rows (with their precise reasons) replace
  * reconcile's row for the same contest; nothing D2 published stays listed as unpublished.
  */

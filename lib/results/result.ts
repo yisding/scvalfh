@@ -2,12 +2,12 @@
  * The recorded result of a final (lib/types.ts GameResult): the one place a game's winner, ending and certainty
  * are decided, from everything the game carries. Pure: no I/O, no clock, no bundled data.
  *
- * `finalizeResults` is the pipeline's last word on every game before the standings count it, and the snapshot
+ * `finalizeResult` is the pipeline's last word on every game before the standings count it, and the snapshot
  * loader runs the same function over a stored file (lib/snapshot/snapshot-migrate.ts), so a rule added here
  * reaches the committed data without a refetch. In order, per game:
  *
- *  1. `applyResultCorrection`: a result recorded from a better source (DataQualityConfig.resultCorrections)
- *     replaces the feed's: goals in play, overtime periods, the shootout tally, with MaxPreps' version kept.
+ *  1. `applyResultCorrection`: the result the game's fixture in the ledger records from a better source
+ *     (lib/fixtures/ledger.ts LEDGER_VIEW.results) replaces the feed's: goals in play, overtime periods, the shootout tally, with MaxPreps' version kept.
  *  2. `withCifssScore`, `withBoxScore`: the evidence onto the game: cifsshome.org's differing score (the
  *     cross-check's conflict row) and the two teams' box scores where they bear on the record.
  *  3. `adjudicateScore`: where two sources agree on another score and nothing defends MaxPreps', that score is
@@ -33,8 +33,7 @@
 import { classifyGames } from '../classify';
 import { SPORT_OVERTIME_IS_SUDDEN_VICTORY, byDateThenId, datesAtLocal, localDateKey, numberWord, sideOutcome } from '../format';
 import { officialContestId } from '../game-id';
-import { DATA_QUALITY } from '../league-config/data-quality';
-import type { DataQualityConfig } from '../league-config/shape';
+import { LEDGER_VIEW, type ResultCorrections } from '../fixtures/ledger';
 import { isLevelWithWinner, settleLevelFinal } from '../postseason/level-final';
 import { SPORT } from '../sports/current';
 import { withRoundSite } from '../postseason/round-site';
@@ -100,19 +99,19 @@ export function withCifssScore(game: Game, row: Pick<CifssConflictRow, 'cifss' |
   return { ...game, provenance: { ...game.provenance, cifssScore: { home: row.cifss.home, away: row.cifss.away, url: row.cifssUrl } } };
 }
 
-function overtimeDecider(otPeriods: number): Decider {
+export function overtimeDecider(otPeriods: number): Decider {
   return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
 }
 
 /**
- * The correction for this contest, applied to a final, or to a game listed with no score, between the two teams it
+ * The result this contest's fixture records, applied to a final, or to a game listed with no score, between the two teams it
  * names; the same object otherwise (no correction, another status, already applied, or the slugs are not this game's sides, which
  * `correctionProblems` reports). The published score becomes the goals in play, the flags follow the winner
  * (the tally's, else the goals'), and `provenance.resultCorrection` keeps what MaxPreps had.
  */
 export function applyResultCorrection(
   game: Game,
-  corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
+  corrections: ResultCorrections = LEDGER_VIEW.results,
 ): Game {
   const c = corrections[game.contestId];
   if (!c || c.goals === null) {
@@ -202,7 +201,7 @@ function withReportedWinner(game: Game, c: ResultCorrection | undefined): Game {
 }
 
 /** A corrected game as MaxPreps had it (`resultCorrection.maxpreps`; no score when it listed none), uncorrected. */
-function uncorrected(game: Game, was: NonNullable<Game['provenance']['resultCorrection']>): Game {
+export function uncorrected(game: Game, was: NonNullable<Game['provenance']['resultCorrection']>): Game {
   const { resultCorrection: _applied, ...provenance } = game.provenance;
   void _applied;
   const mp = was.maxpreps;
@@ -236,10 +235,10 @@ function sameCorrected(a: Game, b: Game): boolean {
   return key(a) === key(b);
 }
 
-/** Corrections that name a contest among `games` but not its two sides: one line each, for the run log and a test. */
+/** Results that name a contest among `games` but not its two sides: one line each, for the run log and a test. */
 export function correctionProblems(
   games: readonly Game[],
-  corrections: DataQualityConfig['resultCorrections'] = DATA_QUALITY.resultCorrections,
+  corrections: ResultCorrections = LEDGER_VIEW.results,
 ): string[] {
   const out: string[] = [];
   for (const g of games) {
@@ -247,12 +246,12 @@ export function correctionProblems(
     if (!c) continue;
     if (c.goals === null) {
       if (!c.winner || (g.home.slug !== c.winner && g.away.slug !== c.winner)) {
-        out.push(`resultCorrections ${g.contestId}: names ${c.winner ?? 'no'} winner, but the contest is ${g.away.name} at ${g.home.name}`);
+        out.push(`ledger result ${g.contestId}: names ${c.winner ?? 'no'} winner, but the contest is ${g.away.name} at ${g.home.name}`);
       }
       continue;
     }
     if (!g.home.slug || !g.away.slug || !(g.home.slug in c.goals) || !(g.away.slug in c.goals)) {
-      out.push(`resultCorrections ${g.contestId}: names ${Object.keys(c.goals).join(' and ')}, but the contest is ${g.away.name} at ${g.home.name}`);
+      out.push(`ledger result ${g.contestId}: names ${Object.keys(c.goals).join(' and ')}, but the contest is ${g.away.name} at ${g.home.name}`);
     }
   }
   return out;
@@ -261,7 +260,7 @@ export function correctionProblems(
 const outcomeOf = (own: number, other: number): Outcome => (own > other ? 'W' : own < other ? 'L' : 'T');
 
 /** The game as MaxPreps had it, where `adjudicateScore` published another score; the same object otherwise. */
-function unadjudicated(game: Game): Game {
+export function unadjudicated(game: Game): Game {
   const was = game.provenance.adjudicated;
   if (!was) return game;
   const { adjudicated: _gone, ...provenance } = game.provenance;
@@ -391,7 +390,7 @@ export function withBoxOvertime(game: Game): Game {
 }
 
 /** The game without a tally `unfoldShootout` read into it; the same object when its tally is recorded or absent. */
-function withoutReadTally(game: Game): Game {
+export function withoutReadTally(game: Game): Game {
   if (!game.provenance.shootoutSource) return game;
   const { shootoutSource: _read, ...provenance } = game.provenance;
   void _read;
@@ -573,18 +572,10 @@ function sameResult(a: GameResult | undefined, b: GameResult | null): boolean {
   return a.winner === b.winner && a.ending === b.ending && a.certainty === b.certainty && a.basis === b.basis;
 }
 
-export interface FinalizeOptions {
-  /** The cifss cross-check's conflict rows of the run (or of the stored file). */
-  cifssConflicts?: readonly Pick<CifssConflictRow, 'contestId' | 'cifss' | 'cifssUrl'>[];
-  corrections?: DataQualityConfig['resultCorrections'];
-  /** The box scores of the season (lib/results/box-evidence.ts); undefined leaves each game's box evidence as stored. */
-  box?: BoxEvidence;
-}
-
 /** Steps 1 to 5 on one game: the same object when nothing changes. */
 export function finalizeResult(
   game: Game,
-  opts: { cifss?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>; corrections?: DataQualityConfig['resultCorrections']; box?: BoxEvidence } = {},
+  opts: { cifss?: Pick<CifssConflictRow, 'cifss' | 'cifssUrl'>; corrections?: ResultCorrections; box?: BoxEvidence } = {},
 ): Game {
   // The correction first: a corrected game is settled by its citation and carries no box evidence.
   const evidenced = withBoxScore(withCifssScore(applyResultCorrection(game, opts.corrections), opts.cifss), opts.box);
@@ -601,7 +592,7 @@ export function finalizeResult(
 }
 
 /**
- * The game an AddedGame lists (DataQualityConfig.addedGames): contest id `official:<date>-<away>-at-<home>`, the
+ * The game a fixture no feed lists is (lib/fixtures/ledger.ts LEDGER_VIEW.listed): contest id `official:<date>-<away>-at-<home>`, the
  * source's date, start, host and result, classified like any other game (lib/classify.ts), with the citation in
  * `provenance.resultCorrection` so the game page prints it. null when a school is outside the registry.
  */
@@ -652,15 +643,15 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
 }
 
 /**
- * `games` with every configured added game no feed lists: one is left out while a feed game of the same two
- * schools on the same date exists (the feed has it after all) or its id is already there, and none is added to a
- * file stamped before its day (or, for a game reported before it was played, before `reportedOn`) or without both
- * schools' games. The same array when nothing is added.
+ * The fixtures of the ledger that no feed lists, as games to add to `games`: one is left out while a feed game of the
+ * same two schools on the same date exists (the feed has it after all) or its id is already there, and none is added
+ * to a file stamped before its day (or, for a game reported before it was played, before `reportedOn`) or without
+ * both schools' games. In the ledger's order.
  */
-export function withAddedGames(
+export function decideAddedGames(
   games: readonly Game[],
   fetchedAt: string,
-  added: DataQualityConfig['addedGames'] = DATA_QUALITY.addedGames,
+  added: readonly AddedGame[] = LEDGER_VIEW.listed,
 ): Game[] {
   const ids = new Set(games.map((g) => g.contestId));
   const pairOn = new Set(games.map((g) => `${g.dateKey}|${[g.home.slug, g.away.slug].sort().join('~')}`));
@@ -677,12 +668,16 @@ export function withAddedGames(
     ids.add(g.contestId);
     more.push(g);
   }
+  return more;
+}
+
+/** `games` with decideAddedGames' games, sorted by date then id; the same array when nothing is added. */
+export function withAddedGames(
+  games: readonly Game[],
+  fetchedAt: string,
+  added: readonly AddedGame[] = LEDGER_VIEW.listed,
+): Game[] {
+  const more = decideAddedGames(games, fetchedAt, added);
   return more.length > 0 ? [...games, ...more].sort(byDateThenId) : (games as Game[]);
 }
 
-/** `finalizeResult` over a list: the same array when no game changes. */
-export function finalizeResults(games: readonly Game[], opts: FinalizeOptions = {}): Game[] {
-  const cifss = new Map((opts.cifssConflicts ?? []).map((r) => [r.contestId, r]));
-  const out = games.map((g) => finalizeResult(g, { cifss: cifss.get(g.contestId), corrections: opts.corrections, box: opts.box }));
-  return out.some((g, i) => g !== games[i]) ? out : (games as Game[]);
-}

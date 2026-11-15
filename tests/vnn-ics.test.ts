@@ -11,16 +11,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  VNN_SITE_IDS,
-  VNN_SUMMARY_RE,
-  applyVnnEvents,
-  carryVnnForward,
-  icsInstant,
-  parseVnnIcs,
-  vnnIcsUrl,
-} from '../lib/sources/vnn-ics';
+import { VNN_SITE_IDS, VNN_SUMMARY_RE, icsInstant, parseVnnIcs, vnnIcsUrl } from '../lib/sources/vnn-ics';
 import { REPO, game } from './helpers';
+import { applyVnnEvents, carryVnnForward } from './support/list-steps';
 
 const paly = readFileSync(path.join(REPO, 'tests', 'fixtures', 'vnn', 'palo-alto-excerpt.ics'), 'utf8');
 const events = parseVnnIcs(paly, 'palo-alto');

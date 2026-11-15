@@ -4,7 +4,8 @@
  *  - SCVAL (live-PDF divisions): the grid text through the transport ('scval-pdf-text'), parsed,
  *    membership-diffed (warnings only), matched with the 'legacy' matcher; the standings-index
  *    poll ('scval-standings-index'). A division whose grid fails or parses empty gets the previous
- *    snapshot's annotations back (carryOfficialForward, per division → `carriedDivisions`).
+ *    run's annotations back from the official claims (lib/claims/sources/official.ts: each contest's
+ *    last published stamp and the division's unmatched rows; per division → `carriedDivisions`).
  *  - BVAL, PCAL, MCAL (bundled divisions): data/official/<league>-2026.json loaded and validated
  *    (schema + config + assertDoubleRoundRobin). A file that fails puts its divisions in
  *    `degradedDivisions` (classified by MaxPreps' league flag this run, league `degraded`) and
@@ -18,26 +19,38 @@
  * Only leagues in `ctx.leaguesInRun()` are touched (the others are carried by the guards step).
  * `args.official === false` (--no-official) skips every request; bundled files are still loaded
  * (they are local and classification depends on them), SCVAL is carried from the previous run.
+ *
+ * Each match is decided (lib/official/match.ts decideOfficialMatches) and applied game by game, and every decision,
+ * a carried stamp included, is returned with the rows read and the divisions read, so the run resolves the stage
+ * from the decisions and keeps the rows as claims. A context with no claim store (a test's own) carries what its
+ * previous snapshot shows, which is what the claims seeded from that snapshot hold. The ledger's moves are the
+ * editor's, passed in (the ledger itself only when the context has no editor view).
  */
 
+import {
+  carryOfficialFromClaims,
+  recordOfficialDecision,
+  storedOfficialFromSnapshot,
+  storedOfficialOf,
+  type StoredOfficial,
+} from '../../claims/sources/official';
 import { postseasonTag } from '../../classify';
-import { DATA_QUALITY } from '../../league-config/data-quality';
+import { unknownFixtureMoves } from '../../crosscheck/backfill';
 import type { DivisionConfig, LeagueConfig } from '../../league-config/shape';
 import { LEAGUES, divisionDisplay, divisionHeading } from '../../leagues';
-import { matchOfficialFixtures } from '../../official/match';
+import { applyOfficialDecision, decideOfficialMatches, officialDecisionOf, type MatchResult, type OfficialDecision } from '../../official/match';
 import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '../../official/schema';
 import { assertDoubleRoundRobin } from '../../official/validate';
 import {
   PdftotextMissingError,
   SCVAL_STANDINGS_INDEX,
-  carryOfficialForward,
   diffMembership,
   findStandingsPdfLink,
   listFieldHockeyLinks,
   parseSchedulePdfText,
 } from '../../sources/scval-pdf';
 import type { RawResponse } from '../../sources/http';
-import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
+import type { ContestId, DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
 import {
   type OfficialStep,
   type OfficialStepResult,
@@ -46,6 +59,9 @@ import {
 } from '../contract';
 import { carriedFromOf } from '../ledger';
 import { classifyFetchError, type FetchFailure } from '../read';
+
+/** The ledger check of the moves this step's fixtures cannot hold (lib/crosscheck/backfill.ts, beside playedFixture). */
+export { unknownFixtureMoves };
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
@@ -110,14 +126,25 @@ interface StepState {
   revisedUpstream: Set<DivisionId>;
   carriedDivisions: Set<DivisionId>;
   officialStandingsPdfUrl: string | null | undefined;
+  /** What the last publication showed, for the divisions not read: the official claims. */
+  stored: StoredOfficial;
+  /** Every decision taken, per contest, in order. */
+  decisions: Map<ContestId, OfficialDecision[]>;
+  /** The rows read this run, and their divisions. */
+  fixtures: OfficialFixture[];
+  readDivisions: Set<DivisionId>;
 }
 
-/** Put back the previous snapshot's annotations for one division; true when anything came back. */
-function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, division: DivisionId): boolean {
-  if (!ctx.previous) return false;
-  const restored = carryOfficialForward([division], ctx.previous, state.games);
+/** Put back the previous run's annotations for one division, from the official claims; true when anything came back. */
+function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, division: DivisionId, withNotes = false): boolean {
+  const restored = carryOfficialFromClaims([division], state.stored, state.games);
+  ctx.trace?.push({ stage: 'official', kind: 'carry', division, games: state.games, fixtures: restored.fixtures, out: restored.games, carried: restored.carried });
   if (restored.fixtures.length === 0 && restored.carried === 0) return false;
   state.games = restored.games;
+  for (const id of new Set(restored.stamped)) {
+    const stamp = state.stored.stamps.get(id);
+    if (stamp) recordOfficialDecision(state.decisions, id, { stamp, ...(withNotes ? state.stored.notes.get(id) : {}) });
+  }
   state.unmatched.push(...restored.fixtures);
   state.carriedDivisions.add(division);
   ctx.warn(
@@ -129,23 +156,34 @@ function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, di
 }
 
 /**
- * The DATA_QUALITY.fixtureMoves keys, in the divisions these fixtures were read for, that name none of them: a
- * mistyped key (date or slug) passes assertLeagues' shape check but would never move anything.
+ * One league's fixtures matched against the step's games (decideOfficialMatches), each decision applied to its game
+ * and recorded, as matchOfficialFixtures applies them.
  */
-export function unknownFixtureMoves(
-  fixtures: readonly OfficialFixture[],
-  moves: Readonly<Record<string, unknown>> = DATA_QUALITY.fixtureMoves,
-): string[] {
-  const ids = new Set(fixtures.map((f) => f.id));
-  const divisions = new Set(fixtures.map((f) => f.division));
-  return Object.keys(moves).filter((id) => divisions.has(id.split(':')[0] as DivisionId) && !ids.has(id));
+function matchLeague(ctx: RunContext, league: LeagueConfig, fixtures: readonly OfficialFixture[], state: StepState): void {
+  const decided = decideOfficialMatches(state.games, fixtures, {
+    matcher: league.rules.matcher,
+    isExcluded: isExcludedFor(league),
+    rescheduleWindowDays: RESCHEDULE_WINDOW_DAYS,
+    today: ctx.today,
+  });
+  const recorded = new Set<ContestId>();
+  state.games = state.games.map((g) => {
+    const decision = officialDecisionOf(decided, g.contestId);
+    if (decision && !recorded.has(g.contestId)) {
+      recorded.add(g.contestId);
+      recordOfficialDecision(state.decisions, g.contestId, decision);
+    }
+    return applyOfficialDecision(g, decision);
+  });
+  state.unmatched.push(...decided.unmatched);
+  logMatch(ctx, league, decided, fixtures);
 }
 
-function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<typeof matchOfficialFixtures>, fixtures: readonly OfficialFixture[]): void {
+function logMatch(ctx: RunContext, league: LeagueConfig, result: Omit<MatchResult, 'games'>, fixtures: readonly OfficialFixture[]): void {
   const scope = { league: league.id };
   const tag = league.shortName.toLowerCase();
   const total = fixtures.length;
-  for (const id of unknownFixtureMoves(fixtures)) ctx.warn(`${tag} fixtureMoves: ${id} names no official fixture, so it moves nothing`, scope);
+  for (const id of unknownFixtureMoves(fixtures, ctx.editor?.moves)) ctx.warn(`${tag} ledger: ${id} names no official fixture, so it moves nothing`, scope);
   for (const w of result.warnings) ctx.warn(`${tag} fixture: ${w}`, scope);
   for (const d of result.leagueDisagreements) ctx.warn(`${tag} league flag: ${d}`, scope);
   for (const r of result.reasons) ctx.degrade(league.id, 'partial', r, 'official fixture not counted');
@@ -198,17 +236,9 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
     ctx.log(`  ${d.id}: ${schedule.fixtures.length} official fixtures, crossover ${schedule.crossoverDate ?? 'n/a'}`);
   }
 
-  if (fixtures.length > 0) {
-    const result = matchOfficialFixtures(state.games, fixtures, {
-      matcher: league.rules.matcher,
-      isExcluded: isExcludedFor(league),
-      rescheduleWindowDays: RESCHEDULE_WINDOW_DAYS,
-      today: ctx.today,
-    });
-    state.games = result.games;
-    state.unmatched.push(...result.unmatched);
-    logMatch(ctx, league, result, fixtures);
-  }
+  for (const d of read) state.readDivisions.add(d);
+  state.fixtures.push(...fixtures);
+  if (fixtures.length > 0) matchLeague(ctx, league, fixtures, state);
 
   // Per division: a grid that was not read gets its previous annotations back, stamped with when
   // that grid was last read (carriedFromOf follows a row that was itself carried).
@@ -355,15 +385,9 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
 
   // 4. Match.
   if (failure !== null) return;
-  const result = matchOfficialFixtures(state.games, fixtures, {
-    matcher: league.rules.matcher,
-    isExcluded: isExcludedFor(league),
-    rescheduleWindowDays: RESCHEDULE_WINDOW_DAYS,
-    today: ctx.today,
-  });
-  state.games = result.games;
-  state.unmatched.push(...result.unmatched);
-  logMatch(ctx, league, result, fixtures);
+  for (const d of divisions) state.readDivisions.add(d.id);
+  state.fixtures.push(...fixtures);
+  matchLeague(ctx, league, fixtures, state);
 }
 
 /** Step 07 (SPEC §7.4, §7.8). */
@@ -376,10 +400,21 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
     revisedUpstream: new Set(),
     carriedDivisions: new Set(),
     officialStandingsPdfUrl: undefined,
+    stored: ctx.claims ? storedOfficialOf(ctx.claims) : storedOfficialFromSnapshot(ctx.previous),
+    decisions: new Map(),
+    fixtures: [],
+    readDivisions: new Set(),
   };
 
+  const alone = ctx.claimsAlone === true;
   for (const league of LEAGUES) {
-    if (!inRun.has(league.id)) continue;
+    // A league the run does not read is the guards' (frozen to the previous snapshot's games); with the claims file
+    // alone, its divisions are carried from the official claims as a division not read is, with the notes each stamp
+    // came with, since a frozen league publishes its games as last published.
+    if (!inRun.has(league.id)) {
+      if (alone) for (const d of league.divisions.filter(hasOfficialDocument)) carryDivision(ctx, state, league.id, d.id, true);
+      continue;
+    }
     // A mode-'none' division (EAL) has no document: it is in neither list and is classified by
     // MaxPreps' league flag (classify step), with no fixtures and no revision check.
     const documented = league.divisions.filter(hasOfficialDocument);
@@ -395,6 +430,9 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
     degradedDivisions: state.degradedDivisions,
     revisedUpstream: state.revisedUpstream,
     carriedDivisions: state.carriedDivisions,
+    fixtures: state.fixtures,
+    readDivisions: state.readDivisions,
+    decisions: state.decisions,
     ...(state.officialStandingsPdfUrl !== undefined ? { officialStandingsPdfUrl: state.officialStandingsPdfUrl } : {}),
   };
   return result;

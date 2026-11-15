@@ -93,8 +93,22 @@ export function settleLevelFinal(game: Game): Game {
   return { ...game, decider: 'SO', provenance: { ...provenance, ...(rest ? { resultConflict: rest } : {}) } };
 }
 
-/** `settleLevelFinal` over a list: the same array when no game changes. */
-export function settleLevelFinals(games: readonly Game[]): Game[] {
-  const out = games.map(settleLevelFinal);
-  return out.some((g, i) => g !== games[i]) ? out : (games as Game[]);
+/**
+ * A settled level final as it was before `settleLevelFinal`: the decider is the overtime count again and the flag
+ * sentence is back at the head of the result conflict, before any feed-disagreement sentence (the order
+ * lib/pipeline/normalize.ts writes them in). The same object when the game cannot be one `settleLevelFinal`
+ * settled: not a final, a forfeit, not 'SO', a tally stored, not level with W and L marked, or a game that need not
+ * have a winner. The caller rules out the other ways a final becomes 'SO' (a shootout section's rule at
+ * normalize, a ledger result, the bracket sheet's score): this module cannot tell them apart. Used to seed the
+ * claims of a stored game (lib/claims/from-snapshot.ts).
+ */
+export function unsettleLevelFinal(game: Game): Game {
+  if (game.status !== 'final' || game.isForfeit || game.decider !== 'SO' || game.shootout !== null) return game;
+  if (!mustHaveWinner(game) || !isLevelWithWinner(game.home, game.away)) return game;
+  const sentence = flagConflictSentence(game.home, game.away);
+  const had = game.provenance.resultConflict;
+  const resultConflict = had === undefined ? sentence : had.includes(sentence) ? had : `${sentence} ${had}`;
+  const decider = game.otPeriods >= 2 ? '2OT' : game.otPeriods === 1 ? 'OT' : 'REG';
+  return { ...game, decider, provenance: { ...game.provenance, resultConflict } };
 }
+

@@ -5,19 +5,44 @@
  *   1. scoreboards for every date in the trailing 14 days that has a game (`sblive-scoreboard` rows);
  *   2. planBackfill → team-games pages only for eligible items the scoreboards did not cover (cap 8;
  *      `--sblive-full` reads every team page of the run's leagues instead);
- *   3. applyBackfill (rules 2-4, 10), then reconcile (rule 5 conflicts, agreements, si.com-only rows)
+ *   3. decideBackfill (rules 2-4, 10), then decideReconcile (rule 5 conflicts, agreements, si.com-only rows)
  *      over what D2 left, folded together by withBackfill.
  *
  * Failure scope is "source stale" (§7.5), never an abort. An earlier si.com fill is decided again only
  * by the si.com data that covers it; when this run did not read that data (its page failed, was past the
  * team-page cap, or si.com was not read at all: every request failed, `--no-sblive`, nothing to read),
- * the fill is re-applied while still eligible (rule 10) and the failed pages' rows are marked stale.
- * When no si.com page was read, the previous cross-check is carried, keeping only the rows that are
- * still true of this run's games (lib/crosscheck/crosscheck.ts `carryCrossCheck`).
+ * the fill is re-applied while still eligible (rule 10) and the failed pages' rows are marked stale. The
+ * earlier fills, and the disagreements a run with no si.com data keeps, are the si.com claims (what the last
+ * publication showed, lib/claims/sources/sblive.ts); a context with no claim store (a test's own) reads them off
+ * its previous snapshot, which is what the claims seeded from that snapshot hold. When no si.com page was read,
+ * the previous cross-check is carried, keeping only the rows that are still true of this run's games
+ * (lib/crosscheck/crosscheck.ts `carryCrossCheck`): the report is run history, not a game's data.
+ *
+ * Every decision is returned with the rows read, so the run resolves the stage from the decisions and keeps the
+ * fills as claims. The ledger's moves are the editor's, passed in (the ledger itself only when the context has no
+ * editor view).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage } from '../../crosscheck/backfill';
-import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck/crosscheck';
+import {
+  carriedConflicts,
+  conflictsFromSnapshot,
+  storedConflictsOf,
+  storedFillsOf,
+  type SbliveStageDecisions,
+} from '../../claims/sources/sblive';
+import {
+  applyBackfillDecision,
+  cleanSbliveRows,
+  decideBackfill,
+  earlierFillsOf,
+  planBackfill,
+  playedFixture,
+  scoreboardCoverage,
+  type BackfillDecisions,
+  type BackfillInput,
+  type BackfillResult,
+} from '../../crosscheck/backfill';
+import { applyReconcile, carryCrossCheck, decideReconcile, emptyCrossCheck, withBackfill } from '../../crosscheck/crosscheck';
 import { shiftDateKey } from '../../format';
 import {
   dedupeSbliveGames,
@@ -123,22 +148,46 @@ function teamPageBase(ctx: RunContext, slug: TeamSlug): Omit<SourceStatus, 'stat
   };
 }
 
+/** D2 over the stage's input (rules 2-4 and 10), with the earlier fills from the claims, and the games it leaves. */
+function backfillOf(
+  ctx: RunContext,
+  input: Omit<BackfillInput, 'previous' | 'earlier' | 'today' | 'fetchedAt' | 'moves'>,
+): { decided: BackfillDecisions; result: BackfillResult } {
+  const decided = decideBackfill({
+    ...input,
+    today: ctx.today,
+    previous: null,
+    earlier: ctx.claims ? storedFillsOf(ctx.claims) : earlierFillsOf(ctx.previous),
+    fetchedAt: ctx.fetchedAt,
+    moves: ctx.editor?.moves,
+  });
+  const games = [...input.games.map((g) => applyBackfillDecision(g, decided.byContestId.get(g.contestId))), ...decided.created.map((c) => c.game)];
+  const { byContestId: _byContestId, created: _created, consumed: _consumed, ...report } = decided;
+  void [_byContestId, _created, _consumed];
+  return { decided, result: { games, ...report } };
+}
+
 /**
- * A run that read no si.com data: the previous snapshot's fills are re-applied where still eligible, and
- * its cross-check is carried with only the rows still true of this run's games.
+ * What the step hands the run beside its games: whether si.com was read and the rows read (`rows` null: not read),
+ * and the stage's decisions (D2's, and the disagreement each game carries). Each is left out when it holds nothing, so a step that read and
+ * decided nothing returns only its games, fixtures and report.
+ */
+function handover(rows: SbliveGame[] | null, decided: BackfillDecisions, reconcile: SbliveStageDecisions['reconcile']): Partial<SbliveStepResult> {
+  const decisions: SbliveStageDecisions = { backfill: decided.byContestId, reconcile, created: decided.created.map((c) => c.game) };
+  const any = decisions.backfill.size > 0 || decisions.reconcile.size > 0 || decisions.created.length > 0;
+  return { ...(rows ? { read: true } : {}), ...(rows?.length ? { rows } : {}), ...(any ? { decisions } : {}) };
+}
+
+/**
+ * A run that read no si.com data: the earlier fills are re-applied where still eligible, each game keeps the
+ * disagreement it published while it still shows the same scores, and the previous cross-check is carried with
+ * only the rows still true of this run's games.
  */
 function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixture[], why: string): SbliveStepResult {
-  const result = applyBackfill({
-    games,
-    unmatched,
-    sblive: [],
-    today: ctx.today,
-    previous: ctx.previous,
-    sbliveFailed: true,
-    fetchedAt: ctx.fetchedAt,
-  });
+  const { decided, result } = backfillOf(ctx, { games, unmatched, sblive: [], sbliveFailed: true });
   for (const w of result.warnings) ctx.warn(`sblive: ${w}`);
-  const carriedGames = carryConflicts(result.games, ctx);
+  const conflicts = carriedConflicts(result.games, ctx.claims ? storedConflictsOf(ctx.claims) : conflictsFromSnapshot(ctx.previous));
+  const carriedGames = result.games.map((g) => applyReconcile(g, conflicts.get(g.contestId)));
   const prior = ctx.previous?.sbliveCrossCheck;
   let crossCheck: SbliveCrossCheck | undefined;
   if (prior) crossCheck = carryCrossCheck(prior, carriedGames, result.rows);
@@ -147,7 +196,8 @@ function withoutSblive(ctx: RunContext, games: Game[], unmatched: OfficialFixtur
     `  sblive: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}` +
       ` and ${result.rows.length} earlier si.com ${result.rows.length === 1 ? 'score' : 'scores'} still eligible`,
   );
-  return { games: carriedGames, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
+  ctx.trace?.push({ stage: 'sblive', kind: 'decide', input: { games, sblive: null }, games: carriedGames });
+  return { games: carriedGames, unmatched: result.unmatched, sbliveCrossCheck: crossCheck, ...handover(null, decided, conflicts) };
 }
 
 export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResult> => {
@@ -163,7 +213,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   const teamRows: SbliveGame[] = [];
 
   // 1. statewide scoreboards
-  for (const date of scoreboardDates(games, unmatched.map((f) => playedFixture(f).dateKey), ctx.today)) {
+  for (const date of scoreboardDates(games, unmatched.map((f) => playedFixture(f, ctx.editor?.moves).dateKey), ctx.today)) {
     const base: Omit<SourceStatus, 'status'> = {
       id: 'sblive',
       kind: 'sblive-scoreboard',
@@ -179,7 +229,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   }
 
   // 2. targeted team pages (D2 rule 8)
-  const plan = planBackfill({ games, unmatched, today: ctx.today }, scoreboardCoverage(scoreboardRows));
+  const plan = planBackfill({ games, unmatched, today: ctx.today, moves: ctx.editor?.moves }, scoreboardCoverage(scoreboardRows));
   let pages: TeamSlug[] = plan.teamPagesNeeded;
   if (ctx.args.sbliveFull) {
     pages = ctx
@@ -236,16 +286,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   if (cleaned.ignored.length) {
     ctx.log(`  sblive: dropped ${cleaned.ignored.length} JV-only/withdrawn rows (${cleaned.ignored.map((g) => g.sbliveGameId).join(', ')})`);
   }
-  const result = applyBackfill({
-    games,
-    unmatched,
-    sblive: cleaned.rows,
-    today: ctx.today,
-    previous: ctx.previous,
-    sbliveFailed: false,
-    consulted,
-    fetchedAt: ctx.fetchedAt,
-  });
+  const { decided, result } = backfillOf(ctx, { games, unmatched, sblive: cleaned.rows, sbliveFailed: false, consulted });
   for (const w of result.warnings) ctx.warn(`sblive: ${w}`);
   // Failed pages are stale (not merely errors) when an earlier si.com score was carried in their place.
   record(ctx, attempts, result.carried.length > 0);
@@ -254,7 +295,8 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   // The statewide scoreboard is STATEWIDE: rows with no registry side can never join.
   const deduped = dedupeSbliveGames(cleaned.rows);
   const relevant = deduped.filter((g) => g.sides.some((s) => s.slug !== null));
-  const rec = reconcile(result.games, relevant, { sbliveFetchedAt: ctx.fetchedAt, today: ctx.today, skipped: result.skipped });
+  const rec = decideReconcile(result.games, relevant, { sbliveFetchedAt: ctx.fetchedAt, today: ctx.today, skipped: result.skipped });
+  const out = result.games.map((g) => applyReconcile(g, rec.byContestId.get(g.contestId)));
   const crossCheck = withBackfill(rec.report, result);
   for (const c of crossCheck.conflicts) ctx.warn(`score conflict ${c.dateKey} ${c.label}: ${c.note}`);
   ctx.log(
@@ -262,17 +304,6 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       `matched ${crossCheck.compared} · agree ${crossCheck.agreements} · conflicts ${crossCheck.conflicts.length} · ` +
       `backfilled ${crossCheck.backfilled.length} · si.com-only ${crossCheck.sbliveOnlyScored.length} · unmatched ${rec.unmatched}`,
   );
-  return { games: rec.games, unmatched: result.unmatched, sbliveCrossCheck: crossCheck };
+  ctx.trace?.push({ stage: 'sblive', kind: 'decide', input: { games, sblive: cleaned.rows }, games: out });
+  return { games: out, unmatched: result.unmatched, sbliveCrossCheck: crossCheck, ...handover(cleaned.rows, decided, rec.byContestId) };
 };
-
-/** A run without si.com data keeps the plain-disagreement markers it published before (rule 5). */
-function carryConflicts(games: readonly Game[], ctx: RunContext): Game[] {
-  const prev = new Map((ctx.previous?.games ?? []).map((g) => [g.contestId, g]));
-  return games.map((g) => {
-    const p = prev.get(g.contestId);
-    if (!p?.provenance.scoreConflict || g.provenance.scoreConflict || g.provenance.backfill) return g;
-    if (p.provenance.backfill) return g;
-    if (p.home.score !== g.home.score || p.away.score !== g.away.score) return g;
-    return { ...g, provenance: { ...g.provenance, scoreConflict: p.provenance.scoreConflict } };
-  });
-}

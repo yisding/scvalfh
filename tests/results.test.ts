@@ -7,17 +7,15 @@ import { describe, expect, it } from 'vitest';
 
 import { describeGame, resultSentence, tiebreakRuleOf } from '../components/ui/describe-game';
 import { sideOutcome } from '../lib/format';
-import {
-  applyResultCorrection, correctionProblems, excessOver, finalizeResult, finalizeResults, readExcess, resolveResult, unfoldShootout,
-} from '../lib/results/result';
-import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { applyResultCorrection, correctionProblems, excessOver, finalizeResult, readExcess, resolveResult, unfoldShootout } from '../lib/results/result';
 import { winningSide } from '../lib/postseason/game-winner';
-import type { DataQualityConfig } from '../lib/league-config/shape';
+import { LEDGER_VIEW, type ResultCorrections } from '../lib/fixtures/ledger';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { boxEvidenceFrom, type BoxEvidence } from '../lib/results/box-evidence';
 import type { BoxSide, Game } from '../lib/types';
 import { game } from './game-builder';
 import { readFileSync } from 'node:fs';
+import { finalizeResults } from './support/list-steps';
 
 const CIFSS_URL = 'https://www.cifsshome.org/widget/schedule-score?section_id=3';
 const cifss = (home: number, away: number) => ({ cifss: { home, away }, cifssUrl: CIFSS_URL });
@@ -302,13 +300,13 @@ describe('a tournament game settled after a level score', () => {
   });
 });
 
-describe('a result recorded from a better source (DATA_QUALITY.resultCorrections)', () => {
+describe('a result recorded from a better source (the fixture ledger’s results)', () => {
   // Tamalpais 3, Marin Catholic 1 on MaxPreps (Oct 28, MCAL semifinal): 0-0 after two overtimes, 3-1 in the shootout.
   const id = '7bb048ba-9e33-4ad1-a743-2348c6637602';
   const maxpreps = game({ home: 'tamalpais', away: 'marin-catholic', hs: 3, as: 1, league: false, date: '2026-10-28', contestId: id });
 
   it('replaces the feed’s score with the goals in play, the overtime and the tally, and keeps what MaxPreps had', () => {
-    expect(DATA_QUALITY.resultCorrections[id]).toBeDefined();
+    expect(LEDGER_VIEW.results[id]).toBeDefined();
     const g = finalizeResult(maxpreps);
     expect([g.home.score, g.away.score, g.otPeriods, g.isOt, g.decider]).toEqual([0, 0, 2, true, 'SO']);
     expect(g.shootout).toEqual({ home: 3, away: 1 });
@@ -321,7 +319,7 @@ describe('a result recorded from a better source (DATA_QUALITY.resultCorrections
   });
 
   it('can record a plain corrected score, and never touches a game that is not the one named', () => {
-    const corrections: DataQualityConfig['resultCorrections'] = {
+    const corrections: ResultCorrections = {
       [id]: { goals: { tamalpais: 2, 'marin-catholic': 1 }, otPeriods: 1, shootout: null, source: 'a report', url: null },
     };
     const g = applyResultCorrection(maxpreps, corrections);
@@ -334,17 +332,17 @@ describe('a result recorded from a better source (DATA_QUALITY.resultCorrections
   });
 });
 
-describe('a winner a source names with no score (resultCorrections, goals null)', () => {
+describe('a winner a source names with no score (a fixture’s result with no goals)', () => {
   // The San Diego Open final, Sat Nov 14: Canyon Hills v Bishop's, which MaxPreps lists with no score; the owner first
-  // gave Bishop's the winner alone (2026-11-15), then the score, 1-0, which the live config now carries.
+  // gave Bishop's the winner alone (2026-11-15), then the score, 1-0, which the ledger now carries.
   const id = '10a472ed-c57c-4874-ae7b-295d7f032db6';
   const pending = game({ home: 'bishops', away: 'canyon-hills', league: false, date: '2026-11-14', status: 'score-pending', contestId: id });
-  const corrections: DataQualityConfig['resultCorrections'] = {
+  const corrections: ResultCorrections = {
     [id]: { goals: null, winner: 'bishops', otPeriods: 0, shootout: null, source: 'the owner’s report', url: null, certainty: 'reported' },
   };
 
   it('marks the winner, leaves the game unscored and unrecorded, and the bracket advances it', () => {
-    expect(DATA_QUALITY.resultCorrections[id]?.goals, 'the live config has the score').toEqual({ bishops: 1, 'canyon-hills': 0 });
+    expect(LEDGER_VIEW.results[id]?.goals, 'the ledger has the score').toEqual({ bishops: 1, 'canyon-hills': 0 });
     expect(finalizeResult(pending), 'and scores the game from it').toMatchObject({ status: 'final', home: { score: 1, result: 'W' }, away: { score: 0, result: 'L' } });
     const g = finalizeResult(pending, { corrections });
     expect([g.status, g.home.score, g.away.score, g.home.result, g.away.result, g.decider]).toEqual(['score-pending', null, null, 'W', 'L', null]);
@@ -401,7 +399,7 @@ describe('what the data audit of 2026-11-13 found', () => {
     expect(g.shootout).toEqual({ home: 5, away: 2 });
     expect(g.result).toMatchObject({ winner: 'home', ending: 'shootout', certainty: 'confirmed' });
     expect(describeGame(g).sentence).toBe('Saint Francis 1, Archbishop Mitty 1, final; Saint Francis won in a shootout, 5–2.');
-    expect(DATA_QUALITY.resultCorrections['ca27178a-9f11-46c0-9397-8289585bdb76'].shootout).toEqual({ 'pleasant-valley': 3, chico: 2 });
+    expect(LEDGER_VIEW.results['ca27178a-9f11-46c0-9397-8289585bdb76'].shootout).toEqual({ 'pleasant-valley': 3, chico: 2 });
   });
 
   // Pleasant Valley 6, Lassen 1 on MaxPreps (Sep 16): Pleasant Valley's scorers total 7, Lassen's goalkeeper conceded 7.
@@ -433,7 +431,7 @@ describe('the committed snapshot, as the loader records it', () => {
   it('drops a row the config has since excluded, lists it as dropped, and recounts the table', () => {
     const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as { games: Array<{ contestId: string }> };
     const loaded = loadSnapshot(raw);
-    for (const id of Object.keys(DATA_QUALITY.excludedContestIds)) {
+    for (const id of Object.keys(LEDGER_VIEW.rejected)) {
       expect(loaded.games.some((g) => g.contestId === id), id).toBe(false);
       if (raw.games.some((g) => g.contestId === id)) expect(loaded.dropped.some((d) => d.contestId === id), id).toBe(true);
     }
@@ -471,7 +469,7 @@ describe('the committed snapshot, as the loader records it', () => {
 
   it('applies every configured correction to its game', () => {
     expect(correctionProblems(snapshot.games)).toEqual([]);
-    for (const id of Object.keys(DATA_QUALITY.resultCorrections)) {
+    for (const id of Object.keys(LEDGER_VIEW.results)) {
       const g = snapshot.games.find((x) => x.contestId === id);
       if (g?.status === 'final') expect(g.provenance.resultCorrection, id).toBeDefined();
     }
@@ -490,7 +488,7 @@ describe('a corrected score that is not a shootout says where it is from (PR #12
 describe('a correction against a stored game (PR #127 review)', () => {
   const ID = 'stored-correction-test';
   const base = { ...game({ home: 'homestead', away: 'cupertino', hs: 1, as: 1 }), contestId: ID };
-  const correction = (homestead: number, source: string): DataQualityConfig['resultCorrections'] => ({
+  const correction = (homestead: number, source: string): ResultCorrections => ({
     [ID]: { goals: { homestead, cupertino: 1 }, otPeriods: 0, shootout: null, source, url: 'https://example.org/box' },
   });
 

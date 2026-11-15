@@ -175,6 +175,8 @@ jobs:
           if [ "$SNAPSHOT" != "true" ]; then
             echo "no snapshot change — only the run timestamp moved"
             git checkout -- data/basketball/snapshot.json data/basketball/snapshot.meta.json
+            # The claims file rides with the snapshot; it may be new and untracked, so remove it then.
+            git checkout -- data/basketball/claims.json 2>/dev/null || rm -f data/basketball/claims.json
           fi
           if git diff --quiet -- data/basketball/player-stats.json; then STATS=false; else STATS=true; fi
           if git diff --quiet -- data/basketball/jv.json; then JV=false; else JV=true; fi
@@ -198,11 +200,15 @@ jobs:
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh basketball", nothing but
-          # the six files below (tests/workflows.test.ts).
+          # the seven files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
+          # player-stats.json, jv.json, rosters.json and jv-rosters.json (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then
             git add data/basketball/snapshot.json data/basketball/snapshot.meta.json
+            if [ -e data/basketball/claims.json ]; then
+              git add data/basketball/claims.json
+            fi
           fi
           if [ "$STATS" = "true" ]; then
             git add data/basketball/player-stats.json

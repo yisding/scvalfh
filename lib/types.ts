@@ -282,7 +282,7 @@ export interface GameResult {
 }
 
 /**
- * A game no feed lists, recorded from an official source (DataQualityConfig.addedGames; owner decision,
+ * A game no feed lists, recorded from an official source (the fixture ledger’s listings, lib/fixtures/; owner decision,
  * 2026-11-14: a game an official league or section source has is on the schedule whether or not MaxPreps lists
  * it). Poway's forfeit to Valley Center on Oct 30 is on the San Diego Section's own score listing and on no
  * MaxPreps schedule. `goals` null lists the game without a score.
@@ -341,7 +341,7 @@ export interface BoxSide {
 }
 
 /**
- * A result recorded from a better source than the feed (DataQualityConfig.resultCorrections), by contest: the
+ * A result recorded from a better source than the feed (the fixture ledger’s result, lib/fixtures/), by contest: the
  * goals in play and the tiebreak tally per team slug, the overtime periods played, and the citation the game
  * page prints. MaxPreps stores a shootout after overtime as the score (Tamalpais 3-1 Marin Catholic was 0-0);
  * a press report or an official sheet is the only source that says so. It also scores a game MaxPreps lists with
@@ -602,7 +602,7 @@ export interface Game {
       maxpreps: { home: number; away: number; homeResult: Outcome | null; awayResult: Outcome | null };
       by: string[];
     };
-    /** Set when DataQualityConfig.resultCorrections replaced the feed's result: what MaxPreps had, and the citation. */
+    /** Set when the fixture ledger’s result (lib/fixtures/) replaced the feed's result: what MaxPreps had, and the citation. */
     resultCorrection?: {
       /** What MaxPreps had; null when it listed the game with no score. */
       maxpreps: { home: number; away: number; otPeriods: number } | null;
@@ -634,7 +634,7 @@ export interface Game {
     leagueFlagConflict?: string;
     hostConflict?: string;
     /**
-     * Set when DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts) swapped the sides because the game was
+     * Set when the fixture ledger’s host (lib/fixtures/, lib/results/host-correction.ts) swapped the sides because the game was
      * played at the school MaxPreps lists as the visitor: MaxPreps' host's slug and the override's citation, which the
      * game page prints.
      */
@@ -644,7 +644,7 @@ export interface Game {
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
     classificationNote?: string;
     /**
-     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/league-config/data-quality.ts) moved this contest off MaxPreps' date:
+     * NEW. Set when the fixture ledger’s date (lib/fixtures/) moved this contest off MaxPreps' date:
      * MaxPreps' own `dateLocal` and the override's source sentence, so the game page can say the date was
      * corrected, from what, and on whose word.
      */

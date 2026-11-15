@@ -20,20 +20,23 @@
 import { byDateThenId, datesAtLocal } from '../format';
 import { officialContestId } from '../game-id';
 import { assignGameSlugs } from '../game-urls';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEDGER_VIEW, type FixtureMoves } from '../fixtures/ledger';
 import { getTeamBySlug } from '../teams';
 import type { Game, GameSide, OfficialFixture, Team } from '../types';
 
 const sideOf = (team: Team): GameSide => ({ teamId: team.id, slug: team.slug, name: team.name, score: null, result: null });
 
-/** The game an unmatched fixture lists, or null when a school is outside the registry or the division. */
-export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: string): Game | null {
+/**
+ * The game an unmatched fixture lists, or null when a school is outside the registry or the division. `moves` are the
+ * ledger's (the site's default); the pipeline passes the editor's (lib/pipeline/steps/assemble.ts).
+ */
+export function fixtureGame(fixture: OfficialFixture, today: string, fetchedAt: string, moves: FixtureMoves = LEDGER_VIEW.moves): Game | null {
   const listedHome = fixture.homeSlug ? getTeamBySlug(fixture.homeSlug) : undefined;
   const listedAway = fixture.awaySlug ? getTeamBySlug(fixture.awaySlug) : undefined;
   if (!listedHome || !listedAway || listedHome.division !== fixture.division || listedAway.division !== fixture.division) return null;
-  // A fixture a source moved (DATA_QUALITY.fixtureMoves) is listed on the day and at the school it was moved to;
-  // its official stamp keeps the league's date and fixture id.
-  const move = DATA_QUALITY.fixtureMoves[fixture.id];
+  // A league fixture the ledger links to a fixture of its own (`moves`) is listed on the ledger's day and at its
+  // host; its official stamp keeps the league's date and fixture id.
+  const move = moves[fixture.id];
   const dateKey = move?.dateKey ?? fixture.dateKey;
   const [home, away] = move && move.home === listedAway.slug ? [listedAway, listedHome] : [listedHome, listedAway];
   return {
@@ -85,6 +88,7 @@ export function withFixtureGames(
   unmatched: readonly OfficialFixture[],
   today: string,
   fetchedAt: string,
+  moves?: FixtureMoves,
 ): { games: Game[]; listed: Game[]; rest: OfficialFixture[] } {
   const stamped = new Set(games.map((g) => g.official?.fixtureId).filter((id): id is string => id !== undefined));
   const ids = new Set(games.map((g) => g.contestId));
@@ -92,7 +96,7 @@ export function withFixtureGames(
   const rest: OfficialFixture[] = [];
   for (const f of unmatched) {
     if (stamped.has(f.id)) continue;
-    const g = fixtureGame(f, today, fetchedAt);
+    const g = fixtureGame(f, today, fetchedAt, moves);
     if (!g || ids.has(g.contestId)) {
       rest.push(f);
       continue;

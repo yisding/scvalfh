@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { LEDGER_VIEW } from '../lib/fixtures/ledger';
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
 import { CCS, DEFAULT_REGION, REGIONS, SECTIONS } from '../lib/league-config/sections';
 import type { LeagueConfig, SectionConfig } from '../lib/league-config/shape';
@@ -1156,10 +1157,10 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
 
   it('excludes the two stray Palomar rows', () => {
     // c7dbdbcc has Poway at home, as in the Sep 15 meeting, while Fallbrook hosts Oct 13: the note ties it to neither.
-    expect(DATA_QUALITY.excludedContestIds['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a']).toBe(
+    expect(LEDGER_VIEW.rejected['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a']).toBe(
       'Poway vs Fallbrook, Oct 9 with no time: a third MaxPreps row for the pair, which already has both of its Palomar meetings on the schedule (Sep 15, 67865f1e; Oct 13, 0b3cfb7d)',
     );
-    expect(DATA_QUALITY.excludedContestIds['9c027452-e21e-4e47-9eac-d2e800bfb42c']).toMatch(/^Mission Vista vs Fallbrook, Oct 30 .*Oct 29 \(5067646d\)/);
+    expect(LEDGER_VIEW.rejected['9c027452-e21e-4e47-9eac-d2e800bfb42c']).toMatch(/^Mission Vista vs Fallbrook, Oct 30 .*Oct 29 \(5067646d\)/);
   });
 });
 
@@ -1190,7 +1191,7 @@ describe('leagues: not covered (search)', () => {
 
   it('never calls a school with no games inactive, withdrawn, dropped or cancelled', () => {
     const strings = [
-      ...DATA_QUALITY.notCovered.map((n) => n.reason), ...Object.values(DATA_QUALITY.excludedContestIds),
+      ...DATA_QUALITY.notCovered.map((n) => n.reason), ...Object.values(LEDGER_VIEW.rejected),
       ...ALL_DIVISIONS.flatMap((d) => Object.values(d.maxprepsExtraRows)), ...socal().flatMap(renderedStrings),
     ];
     for (const s of strings) expect(s, s).not.toMatch(/\b(inactive|withdr\w*|dropped|cancel\w*|no (field hockey )?program)\b/i);
@@ -1273,22 +1274,6 @@ describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
       s.shootout = { ...before!, disagreement: null };
       return () => { s.shootout = before; };
     }, /sds: shootout\.disagreement is set exactly when the inference is 'unverified'/);
-  });
-
-  it('a date correction names a contest GUID, a real date in a season window, and a source', () => {
-    const overrides = DATA_QUALITY.contestDateOverrides as Record<string, { dateKey: string; timeTba: true; source: string }>;
-    const id = 'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0';
-    const set = (key: string, value: { dateKey: string; timeTba: true; source: string }) => () => {
-      const before = overrides[key];
-      overrides[key] = value;
-      return () => { if (before) overrides[key] = before; else delete overrides[key]; };
-    };
-    const ok = overrides[id];
-    expectViolation(set('fc8be1f8', ok), /contestDateOverrides: fc8be1f8 is not a contest GUID/);
-    expectViolation(set(id, { ...ok, dateKey: '2026-09-31' }), /dateKey 2026-09-31 is not a valid YYYY-MM-DD date/);
-    expectViolation(set(id, { ...ok, dateKey: '2027-03-01' }), /2027-03-01 is outside every section's season window/);
-    expectViolation(set(id, { ...ok, source: ' ' }), /contestDateOverrides fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0: needs a source/);
-    expectViolation(set('c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', ok), /c7dbdbcc-5f41-4192-b8b2-eb79cca2523a: the contest is excluded/);
   });
 
   it('a section’s shootout rule and its leagues’ leagueOvertime agree both ways', () => {

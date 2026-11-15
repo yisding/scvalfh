@@ -123,7 +123,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
               {game.provenance.hostConflict ? (
                 <span className="block text-cell text-ink-2">Hosts disagree — {game.provenance.hostConflict}</span>
               ) : null}
-              {/* DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts): the host shown is a better source's,
+              {/* The fixture ledger’s host (lib/fixtures/, lib/results/host-correction.ts): the host shown is a better source's,
                   not MaxPreps'; say so, on whose word (the override's source sentence). */}
               {game.provenance.hostCorrection ? (
                 <span className="block text-cell text-ink-2">{game.provenance.hostCorrection.source}.</span>
@@ -144,7 +144,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
                   Moved — the official {officialLeague ?? 'league'} schedule has this game on {monthDay(movedFrom)}.
                 </span>
               ) : null}
-              {/* DATA_QUALITY.contestDateOverrides (lib/pipeline/normalize.ts): the date shown is a better source's,
+              {/* The fixture ledger’s date (lib/fixtures/, lib/pipeline/normalize.ts): the date shown is a better source's,
                   not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
               {game.provenance.dateCorrection ? (
                 <span className="block">

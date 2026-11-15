@@ -20,7 +20,7 @@
 import { localDateKey, toLocalTimestamp } from '../format';
 import { GENDER_NAME, SPORT } from '../sports/current';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
-import type { Game, TeamSlug } from '../types';
+import type { Game, StreetAddress, TeamSlug } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */
@@ -116,29 +116,39 @@ export function parseVnnIcs(text: string, schoolSlug: TeamSlug): VnnEvent[] {
 
 // ---------------------------------------------------------------- application
 
-export interface ApplyVnnResult {
-  games: Game[];
-  /** Games that gained a venue name. */
+/** What a school calendar adds to one game: the venue name MaxPreps lacks, and/or a confirmed start time. */
+export interface VnnDecision {
+  venueName?: string;
+  timeConfirmed?: true;
+}
+
+export interface VnnDecisions {
+  /** By contest id; a game the calendars add nothing to has no entry and is left as it is. */
+  decisions: Map<string, VnnDecision>;
   venuesAdded: number;
-  /** Games whose MaxPreps start time the school calendar corroborates. */
   timesConfirmed: number;
-  /** Varsity events that matched no MaxPreps contest. */
   unmatched: number;
   warnings: string[];
 }
 
+/** One decision applied to the game it is for; the start time is only ever confirmed, never rewritten. */
+export function applyVnnDecision(game: Game, decision: VnnDecision): Game {
+  return {
+    ...game,
+    ...(decision.timeConfirmed ? { timeConfirmed: true } : {}),
+    ...(decision.venueName !== undefined ? { venue: { ...game.venue, name: decision.venueName } } : {}),
+  };
+}
+
 /**
- * Attach `venue.name` and `timeConfirmed` where MaxPreps has neither.
+ * Decide which games gain `venue.name` and `timeConfirmed`, and what the calendars and MaxPreps disagree on.
  *
  * Varsity only (the snapshot is a varsity season). The start time is CONFIRMED, never rewritten:
  * `dateLocal` stays MaxPreps'. When MaxPreps says the time is TBA the calendar's time is reported as
  * a warning rather than written in, because filling it would put an unsourced timestamp in the field
  * the whole site formats from.
  */
-export function applyVnnEvents(
-  games: readonly Game[],
-  events: readonly VnnEvent[],
-): ApplyVnnResult {
+export function decideVnn(games: readonly Game[], events: readonly VnnEvent[]): VnnDecisions {
   const warnings: string[] = [];
   const byKey = new Map<string, VnnEvent>();
   for (const e of events) {
@@ -154,11 +164,12 @@ export function applyVnnEvents(
   let venuesAdded = 0;
   let timesConfirmed = 0;
   const matched = new Set<string>();
+  const decisions = new Map<string, VnnDecision>();
 
-  const out = games.map((game) => {
+  for (const game of games) {
     const key = `${game.dateKey}|${unorderedPairKey(sideJoinKey(game.home), sideJoinKey(game.away))}`;
     const event = byKey.get(key);
-    if (!event) return game;
+    if (!event) continue;
     matched.add(key);
 
     const wantVenue = !game.venue.name && !!event.venue;
@@ -176,68 +187,86 @@ export function applyVnnEvents(
           `${event.schoolSlug}'s calendar ${icsTime} PT`,
       );
     }
-    if (!wantVenue && !timeAgrees) return game;
+    if (!wantVenue && !timeAgrees) continue;
     if (wantVenue) venuesAdded += 1;
     if (timeAgrees) timesConfirmed += 1;
-    return {
-      ...game,
-      ...(timeAgrees ? { timeConfirmed: true } : {}),
-      ...(wantVenue ? { venue: { ...game.venue, name: event.venue as string } } : {}),
-    };
-  });
+    decisions.set(game.contestId, {
+      ...(wantVenue ? { venueName: event.venue as string } : {}),
+      ...(timeAgrees ? { timeConfirmed: true as const } : {}),
+    });
+  }
 
   const varsity = events.filter((e) => e.level === 'Varsity').length;
-  return {
-    games: out,
-    venuesAdded,
-    timesConfirmed,
-    unmatched: Math.max(0, varsity - matched.size),
-    warnings,
-  };
+  return { decisions, venuesAdded, timesConfirmed, unmatched: Math.max(0, varsity - matched.size), warnings };
 }
 
 // ---------------------------------------------------------------- carry-forward
 
+/** What a game showed from the school calendars the last time it was published: the per-site carry's input. */
+export interface VnnPublished {
+  venueName?: string;
+  venueAddress?: StreetAddress;
+  timeConfirmed?: true;
+}
+
+/** The venue name, its address and the confirmed start time a published game shows; undefined when it shows none. */
+export function vnnPublishedOf(game: Pick<Game, 'venue' | 'timeConfirmed'>): VnnPublished | undefined {
+  const out: VnnPublished = {
+    ...(game.venue.name ? { venueName: game.venue.name, ...(game.venue.address ? { venueAddress: game.venue.address } : {}) } : {}),
+    ...(game.timeConfirmed ? { timeConfirmed: true as const } : {}),
+  };
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 /**
- * SPEC §5.3, PER SITE: put back the venue names and confirmed start times a school calendar
- * published before, for the schools whose feed produced nothing this run.
- *
- * There are only two verified feeds and the failure that happens is ONE of them, so a pooled
- * "did any calendar answer" flag is the wrong question: while Los Gatos answered, a failed Palo
- * Alto feed silently dropped nine venue names and five confirmed start times off published game
- * pages. Keyed on the school instead, a feed that DID answer is never second-guessed and a feed
- * that did not never takes its school's data down with it.
- *
- * Only ever FILLS A HOLE — a value this run produced always wins.
+ * What the per-site carry puts back on each game, by contest id: the holes `publishedOf` can fill (a venue name with
+ * its address, a confirmed start time) on a game of a school in `missing`. A game with nothing to fill has no entry.
  */
-export function carryVnnForward(
+export function decideVnnCarry(
   missing: readonly TeamSlug[],
-  previousGames: readonly Game[],
   games: readonly Game[],
-): { games: Game[]; carried: number } {
+  publishedOf: (contestId: string) => VnnPublished | undefined,
+): Map<string, VnnPublished> {
   const wanted = new Set<string>(missing);
-  if (wanted.size === 0) return { games: [...games], carried: 0 };
-  const prevById = new Map(previousGames.map((g) => [g.contestId, g]));
-  let carried = 0;
-  const out = games.map((game) => {
+  const out = new Map<string, VnnPublished>();
+  if (wanted.size === 0) return out;
+  for (const game of games) {
     const touches =
       (game.home.slug !== null && wanted.has(game.home.slug)) ||
       (game.away.slug !== null && wanted.has(game.away.slug));
-    if (!touches) return game;
-    const prev = prevById.get(game.contestId);
-    if (!prev) return game;
-    const patch: Partial<Game> = {};
-    if (prev.venue.name && !game.venue.name) {
-      patch.venue = {
-        ...game.venue,
-        name: prev.venue.name,
-        ...(prev.venue.address ? { address: prev.venue.address } : {}),
-      };
-    }
-    if (prev.timeConfirmed && !game.timeConfirmed) patch.timeConfirmed = true;
-    if (Object.keys(patch).length === 0) return game;
-    carried += 1;
-    return { ...game, ...patch };
-  });
-  return { games: out, carried };
+    if (!touches) continue;
+    const prev = publishedOf(game.contestId);
+    if (!prev) continue;
+    const fill: VnnPublished = {
+      ...(prev.venueName && !game.venue.name ? { venueName: prev.venueName, ...(prev.venueAddress ? { venueAddress: prev.venueAddress } : {}) } : {}),
+      ...(prev.timeConfirmed && !game.timeConfirmed ? { timeConfirmed: true as const } : {}),
+    };
+    if (Object.keys(fill).length > 0) out.set(game.contestId, fill);
+  }
+  return out;
 }
+
+/** One carry decision applied to its game: the venue name (and its address) and the confirmed start time put back. */
+export function applyVnnCarry(game: Game, carried: VnnPublished): Game {
+  return {
+    ...game,
+    ...(carried.venueName
+      ? { venue: { ...game.venue, name: carried.venueName, ...(carried.venueAddress ? { address: carried.venueAddress } : {}) } }
+      : {}),
+    ...(carried.timeConfirmed ? { timeConfirmed: true } : {}),
+  };
+}
+
+/** What the calendars' stage decided for one game: this run's events, then the per-site carry over them. */
+export interface VnnStageDecision {
+  events?: VnnDecision;
+  carried?: VnnPublished;
+}
+
+/** The stage's decision applied to its game: the events' first, then the carry's. */
+export function applyVnnStageDecision(game: Game, d: VnnStageDecision | undefined): Game {
+  if (!d) return game;
+  const withEvents = d.events ? applyVnnDecision(game, d.events) : game;
+  return d.carried ? applyVnnCarry(withEvents, d.carried) : withEvents;
+}
+

@@ -18,12 +18,13 @@ import { SnapshotSchema } from '../lib/snapshot/snapshot-invariants';
 import { getSnapshot } from '../lib/data';
 import { buildSdsBrackets } from '../lib/postseason/sds-bracket';
 import { sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';
-import { applySdsSheetResults, sheetResultsFromGames } from '../lib/postseason/sds-sheet-results';
+import { sheetResultsFromGames } from '../lib/postseason/sds-sheet-results';
 import { GameSchema } from '../lib/snapshot/snapshot-schema';
 import { parseSdsBracketTab, type SdsSheetResult } from '../lib/sources/sds-bracket-sheet';
 import type { Game, Snapshot } from '../lib/types';
 import { SDS_2025_WINDOW, sdsGames2025, seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { REPO } from './helpers';
+import { applySdsSheetResults } from './support/list-steps';
 
 const file = seedsFromHistory('sds');
 const SHEET = 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit';

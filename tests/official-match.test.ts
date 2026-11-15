@@ -18,7 +18,7 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { classifyGames, postseasonTag } from '../lib/classify';
-import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { EXCLUSIONS } from '../lib/fixtures/ledger';
 import { LEAGUES, getLeague } from '../lib/leagues';
 import { applyExclusions, normalizeGames } from '../lib/pipeline/normalize';
 import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '../lib/official/match';
@@ -62,7 +62,7 @@ function corpusGames(): Game[] {
     .filter((f) => f.endsWith('.json'))
     .sort()
     .flatMap((f) => ScheduleResponseSchema.parse(JSON.parse(readFileSync(path.join(dir, f), 'utf8')) as unknown).data);
-  return applyExclusions(normalizeGames(rows, { fetchedAt: FETCHED_AT }).games, DATA_QUALITY).games;
+  return applyExclusions(normalizeGames(rows, { fetchedAt: FETCHED_AT }).games, EXCLUSIONS).games;
 }
 
 const optionsFor = (league: LeagueId, today: string | undefined = TODAY): MatchOptions => ({
@@ -345,7 +345,7 @@ describe('legacy matcher: the Stage-0 SCVAL golden', () => {
 });
 
 describe('legacy matcher: a moved leg MaxPreps also hosts the other way round', () => {
-  // SCVAL's Sep 9 Homestead @ Cupertino: MaxPreps has the 5-5 at Homestead, and contestDateOverrides dates it Sep 11,
+  // SCVAL's Sep 9 Homestead @ Cupertino: MaxPreps has the 5-5 at Homestead, and its fixture in the ledger dates it Sep 11,
   // so neither same-date pass nor the same-host rescheduled pass finds it (update-data, 2026-11-15).
   it('matches it last, as rescheduled, with the host conflict published', () => {
     const f = fx('de-anza', '2026-09-09', 'homestead', 'cupertino');

@@ -604,7 +604,7 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
     const byId = new Map(COMMITTED.games.map((g) => [g.contestId, g]));
     for (const g of loaded.games) {
       const was = byId.get(g.contestId);
-      // A game an official source has and no feed lists (DATA_QUALITY.addedGames) is not in the stored file.
+      // A game an official source has and no feed lists (the fixture ledger’s listings, lib/fixtures/) is not in the stored file.
       if (!was) {
         expect(g.contestId, g.contestId).toMatch(/^official:/);
         continue;

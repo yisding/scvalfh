@@ -80,22 +80,6 @@ export interface SdsSheetApplyInput {
   fetchedAt: string;
 }
 
-export interface SdsSheetApplyResult {
-  games: Game[];
-  /** `cifsds:` games published (rule 3). */
-  added: Game[];
-  /** MaxPreps contests the sheet's score was written onto (rule 2). */
-  filled: Game[];
-  /** Results MaxPreps already has as the sheet does. */
-  agreed: number;
-  /** Rule 1 disagreements, as log sentences. */
-  disagreements: string[];
-  /** MaxPreps contests the sheet's time was written onto (rule 4). */
-  timed: Game[];
-  /** Scheduled `cifsds:` games published (rule 5). */
-  listed: Game[];
-}
-
 function pairKey(a: TeamSlug | null, b: TeamSlug | null): string {
   return [a ?? '', b ?? ''].sort().join('~');
 }
@@ -269,15 +253,61 @@ function playoffContestOf(games: readonly Game[], key: string, windowFirst: stri
   );
 }
 
-/** The sheet's results and fixtures applied to this run's games (rules 1-5 above). */
-export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyResult {
+/** What the sheet decided for one MaxPreps contest already in the run: a score (rule 2) or a time (rule 4). */
+export type SdsSheetDecision =
+  | { kind: 'score'; result: SdsSheetResult; rule: 'score-pending'; sheetUrl: string; fetchedAt: string }
+  | { kind: 'time'; time: string; sheetUrl: string };
+
+export interface SdsSheetDecisions {
+  /** The last decision per existing contest id; a contest with none is left as it is. */
+  decisions: Map<string, SdsSheetDecision>;
+  /**
+   * Every decision in the order it was taken. A contest is decided twice only when the sheet repeats a pair, and the
+   * `filled` and `timed` lists of the composed result carry each step's game, so the order is kept.
+   */
+  steps: Array<{ contestId: string; decision: SdsSheetDecision }>;
+  /** `cifsds:` games published (rule 3). */
+  added: Game[];
+  /** Results MaxPreps already has as the sheet does. */
+  agreed: number;
+  /** Rule 1 disagreements, as log sentences. */
+  disagreements: string[];
+  /** Scheduled `cifsds:` games published (rule 5). */
+  listed: Game[];
+}
+
+/** One decision applied to the game it is for: rule 2 writes the sheet's score, rule 4 its time. */
+export function applySdsSheetDecision(game: Game, decision: SdsSheetDecision): Game {
+  if (decision.kind === 'score') {
+    return withSheetScore(game, decision.result, { rule: decision.rule, note: PENDING_NOTE }, decision.sheetUrl, decision.fetchedAt);
+  }
+  return {
+    ...game,
+    ...datesAtLocal(game.dateKey, decision.time),
+    urls: { ...game.urls, cifsds: decision.sheetUrl },
+    provenance: { ...game.provenance, schedule: 'cifsds-sheet' },
+  };
+}
+
+/**
+ * The sheet's results and fixtures decided against this run's games (rules 1-5 above), without changing any game.
+ * A later pair can depend on an earlier decision (a filled contest stops being MaxPreps' own score, a published
+ * game is not published twice), so the decisions are applied to a working copy as they are taken.
+ */
+export function decideSdsSheet(input: SdsSheetApplyInput): SdsSheetDecisions {
   let games = input.games.filter((g) => !isCifsdsContest(g.contestId));
+  const decisions = new Map<string, SdsSheetDecision>();
+  const steps: SdsSheetDecisions['steps'] = [];
   const added: Game[] = [];
-  const filled: Game[] = [];
-  const timed: Game[] = [];
   const listed: Game[] = [];
   const disagreements: string[] = [];
   let agreed = 0;
+  const decide = (target: Game, decision: SdsSheetDecision): void => {
+    const next = applySdsSheetDecision(target, decision);
+    games = games.map((g) => (g.contestId === target.contestId ? next : g));
+    decisions.set(target.contestId, decision);
+    steps.push({ contestId: target.contestId, decision });
+  };
 
   for (const r of input.results) {
     const div = divisionOf(input.file, r.division);
@@ -307,9 +337,7 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
     const pending = candidates[0];
     if (pending) {
       // Rule 2: the sheet's score onto MaxPreps' contest.
-      const next = withSheetScore(pending, r, { rule: 'score-pending', note: PENDING_NOTE }, input.sheetUrl, input.fetchedAt);
-      games = games.map((g) => (g.contestId === pending.contestId ? next : g));
-      filled.push(next);
+      decide(pending, { kind: 'score', result: r, rule: 'score-pending', sheetUrl: input.sheetUrl, fetchedAt: input.fetchedAt });
       continue;
     }
     // Rule 3: a game only the sheet has.
@@ -334,14 +362,7 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
     if (contest) {
       // Rule 4: MaxPreps' contest keeps its own time; one with none, on the sheet's date, takes the sheet's.
       if (contest.isTimeTba && f.time !== null && contest.dateKey === f.dateKey && contest.status !== 'final') {
-        const next: Game = {
-          ...contest,
-          ...datesAtLocal(contest.dateKey, f.time),
-          urls: { ...contest.urls, cifsds: input.sheetUrl },
-          provenance: { ...contest.provenance, schedule: 'cifsds-sheet' },
-        };
-        games = games.map((g) => (g.contestId === contest.contestId ? next : g));
-        timed.push(next);
+        decide(contest, { kind: 'time', time: f.time, sheetUrl: input.sheetUrl });
       }
       continue;
     }
@@ -354,8 +375,7 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
       listed.push(next);
     }
   }
-  games.sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId));
-  return { games, added, filled, agreed, disagreements, timed, listed };
+  return { decisions, steps, added, agreed, disagreements, listed };
 }
 
 /**

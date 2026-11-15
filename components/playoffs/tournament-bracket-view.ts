@@ -7,7 +7,7 @@
  * Each bracket game's sides are resolved in playing order (a team, or the winner or loser of an earlier game),
  * then joined to the one listed game between those two teams on its day. The winner is the game's (the higher
  * score, or the marked side of a level final), or, for a game listed with no score, the side its source says won
- * (the W and L a DATA_QUALITY.addedGames entry carries). So a card can show who went through with no score, and
+ * (the W and L a listing in the fixture ledger, lib/fixtures/, carries). So a card can show who went through with no score, and
  * the next round still fills in; a card whose winner no source names stays open, and what depends on it reads
  * "Winner of …". The tree is the first round, the semifinals and the final; the third- and fifth-place games are
  * returned apart (`placement`), since they hang off no line of it. No seed is printed.

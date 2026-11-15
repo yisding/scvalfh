@@ -9,12 +9,12 @@ import { describe, expect, it } from 'vitest';
 
 import { describeGame, overtimeDoubtOf, resultSentence, tiebreakRuleOf } from '../components/ui/describe-game';
 import { sideOutcome } from '../lib/format';
-import { stepClassify } from '../lib/pipeline/steps/classify';
 import { winningSide } from '../lib/postseason/game-winner';
-import { flagConflictSentence, isUnsettledLevelFinal, settleLevelFinal, settleLevelFinals } from '../lib/postseason/level-final';
+import { flagConflictSentence, isUnsettledLevelFinal, settleLevelFinal } from '../lib/postseason/level-final';
 import { computeStandings } from '../lib/standings/engine';
 import type { Game, PostseasonTag } from '../lib/types';
 import { game } from './game-builder';
+import { settleLevelFinals, stepClassify } from './support/list-steps';
 
 const CCS_TAG: PostseasonTag = { kind: 'ccs', leagueId: 'scval', via: 'maxpreps-bracket' };
 const MARKED = { home: 'W', away: 'L' } as const;

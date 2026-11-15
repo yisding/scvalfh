@@ -11,6 +11,7 @@ import { byDateThenId, dayDiff, localDateKey } from '../../format';
 import { isOfficialContestId, isSbliveContestId } from '../../game-id';
 import { baseGameSlug } from '../../game-slug';
 import { withGameAliases, withGameSlugs } from '../../game-urls';
+import type { FixtureMoves } from '../../fixtures/ledger';
 import { withFixtureGames } from '../../results/fixture-games';
 import { SDS_SHEET_DATE_TOLERANCE_DAYS, isCifsdsContest } from '../../postseason/sds-sheet-results';
 import { CCS } from '../../league-config/sections';
@@ -55,24 +56,32 @@ export function budgetLabel(bytes: number): string {
  * (gameUrlsOf below), so every URL it was published at still arrives. Only keys that are no longer games and values that are games survive
  * (snapshot refinement 10); a carried target that is itself superseded now is followed to its own.
  */
-export function supersededGamesOf(games: readonly Game[], previous: Snapshot | null): Record<ContestId, ContestId> {
+export function supersededGamesOf(
+  games: readonly Game[],
+  previous: Snapshot | null,
+  moves?: FixtureMoves,
+  fromClaims?: ReadonlyMap<ContestId, ContestId>,
+): Record<ContestId, ContestId> {
   const ids = new Set(games.map((g) => g.contestId));
   const out: Record<ContestId, ContestId> = {};
+  // The run reads which contest took over an si.com, sheet or listing game off the claims (lib/claims/supersede.ts:
+  // the same two rules over the fixtures' histories); a caller with no claims reads the previous snapshot's games.
+  if (fromClaims) for (const [from, to] of fromClaims) out[from] = to;
   const byFixture = new Map<string, ContestId>();
   for (const g of games) {
     if (g.official && !isSbliveContestId(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
   }
-  for (const g of previous?.games ?? []) {
+  for (const g of fromClaims ? [] : (previous?.games ?? [])) {
     if (!isSbliveContestId(g.contestId) || ids.has(g.contestId) || !g.official) continue;
     const winner = byFixture.get(g.official.fixtureId);
     if (winner) out[g.contestId] = winner;
   }
   // A San Diego bracket sheet game (`cifsds:`) MaxPreps has posted since: the contest of the same two teams
   // the sheet's step matched it to (lib/postseason/sds-sheet-results.ts, within SDS_SHEET_DATE_TOLERANCE_DAYS).
-  // Likewise a game an earlier run listed from DATA_QUALITY.addedGames (`official:`) that a feed lists now, so a
+  // Likewise a game an earlier run listed from the fixture ledger’s listings (lib/fixtures/; `official:`) that a feed lists now, so a
   // link to a game reported before its day still leads to it.
   const prefixed = (id: ContestId): boolean => isCifsdsContest(id) || isOfficialContestId(id);
-  for (const g of previous?.games ?? []) {
+  for (const g of fromClaims ? [] : (previous?.games ?? [])) {
     if (!prefixed(g.contestId) || ids.has(g.contestId)) continue;
     const pair = [g.home.slug, g.away.slug].sort().join('~');
     const now = games
@@ -97,7 +106,7 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
       const held = stamped.get(g.official.fixtureId);
       if (!held || (isSbliveContestId(held) && !isSbliveContestId(g.contestId))) stamped.set(g.official.fixtureId, g.contestId);
     }
-    const { listed } = withFixtureGames(previous.games, previous.officialFixtures, localDateKey(previous.fetchedAt), previous.fetchedAt);
+    const { listed } = withFixtureGames(previous.games, previous.officialFixtures, localDateKey(previous.fetchedAt), previous.fetchedAt, moves);
     for (const g of listed) {
       const winner = g.official ? stamped.get(g.official.fixtureId) : undefined;
       if (winner && !ids.has(g.contestId) && !(g.contestId in out)) out[g.contestId] = winner;
@@ -135,14 +144,15 @@ export function gameUrlsOf(
   unmatched: readonly OfficialFixture[],
   superseded: Readonly<Record<ContestId, ContestId>>,
   fetchedAt: string,
+  moves?: FixtureMoves,
 ): Game[] {
   const before = previous
-    ? withFixtureGames(previous.games, previous.officialFixtures ?? [], localDateKey(previous.fetchedAt), previous.fetchedAt).games
+    ? withFixtureGames(previous.games, previous.officialFixtures ?? [], localDateKey(previous.fetchedAt), previous.fetchedAt, moves).games
     : [];
   const today = localDateKey(fetchedAt);
-  const leaveFree = withFixtureGames(games, unmatched, today, fetchedAt).listed.map(baseGameSlug);
+  const leaveFree = withFixtureGames(games, unmatched, today, fetchedAt, moves).listed.map(baseGameSlug);
   const slugged = withGameSlugs(games, { previous: before, superseded, leaveFree });
-  const reserved = withFixtureGames(slugged, unmatched, today, fetchedAt).listed.map((g) => g.slug!);
+  const reserved = withFixtureGames(slugged, unmatched, today, fetchedAt, moves).listed.map((g) => g.slug!);
   // Contests the previous snapshot records as gone, each with the URLs its latest such record kept.
   const known = new Set(before.map((g) => g.contestId));
   const returned = new Map<ContestId, string[]>();
@@ -197,17 +207,19 @@ export interface AssembleInput {
   state: RunState;
   table: StandingsStepResult;
   requests: RequestCounts;
+  /** The games other sources published that a contest took over this run, read off the claims (lib/claims/supersede.ts). */
+  superseded?: ReadonlyMap<ContestId, ContestId>;
 }
 
 export function stepAssemble(
   ctx: PipelineContext,
-  { state, table, requests }: AssembleInput,
+  { state, table, requests, superseded }: AssembleInput,
 ): { snapshot: Snapshot; meta: SnapshotMeta } {
   const fixtures = sortFixtures(state.unmatched);
-  const supersededGames = supersededGamesOf(state.games, ctx.previous);
+  const supersededGames = supersededGamesOf(state.games, ctx.previous, ctx.editor.moves, superseded);
   // Each game's slug and aliases (lib/game-urls.ts), then its contentChangedAt, against the previous snapshot's copy
   // (lib/snapshot/content-dates.ts).
-  const located = gameUrlsOf([...state.games].sort(byDateThenId), ctx.previous, fixtures, supersededGames, ctx.fetchedAt);
+  const located = gameUrlsOf([...state.games].sort(byDateThenId), ctx.previous, fixtures, supersededGames, ctx.fetchedAt, ctx.editor.moves);
   const games = stampContentChanges(located, ctx.previous?.games ?? null, ctx.fetchedAt);
   // …and the contests that left a date since, which no game left on it records (lib/snapshot/content-dates.ts).
   const contentRemovals = contentRemovalsOf(games, ctx.previous, ctx.fetchedAt);

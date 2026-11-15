@@ -25,6 +25,8 @@ export const ManifestSchema = z.object({
   capturedAt: z.record(z.string().min(1), z.string()).optional(),
   /** A snapshot file (relative path) that the caller copies to `--out` before the run. */
   previous: z.string().min(1).optional(),
+  /** The claims file written beside `previous` (relative path), copied beside `--out` with it; without one the run seeds its claims from `previous`. */
+  previousClaims: z.string().min(1).optional(),
 });
 export type Manifest = z.infer<typeof ManifestSchema>;
 
@@ -37,6 +39,7 @@ export const VariantManifestSchema = z.object({
   files: z.record(z.string().min(1), z.union([entry, z.null()])).optional(),
   capturedAt: z.record(z.string().min(1), z.string()).optional(),
   previous: z.string().min(1).optional(),
+  previousClaims: z.string().min(1).optional(),
 });
 export type VariantManifest = z.infer<typeof VariantManifestSchema>;
 
@@ -56,6 +59,8 @@ export interface Corpus {
   entries: ReadonlyMap<string, CorpusEntry>;
   /** Absolute path of the previous snapshot to start from (a variant's overrides the corpus's), or null. */
   previous: string | null;
+  /** Absolute path of the claims file written beside `previous`, or null (the run seeds its claims from `previous`). */
+  previousClaims: string | null;
   /** Absolute variant directories, in application order. */
   variants: string[];
 }
@@ -111,6 +116,7 @@ export function loadCorpus(corpusDir: string, variants: readonly string[] = []):
   let leagues = [...manifest.leagues];
   let note = manifest.note ?? null;
   let previous = manifest.previous ? path.resolve(dir, manifest.previous) : null;
+  let previousClaims = manifest.previousClaims ? path.resolve(dir, manifest.previousClaims) : null;
   const applied: string[] = [];
 
   for (const variant of variants) {
@@ -124,7 +130,13 @@ export function loadCorpus(corpusDir: string, variants: readonly string[] = []):
     if (v.fetchedAt) fetchedAt = v.fetchedAt;
     if (v.leagues) leagues = [...v.leagues];
     if (v.note) note = note ? `${note} ${v.note}` : v.note;
-    if (v.previous) previous = path.resolve(vdir, v.previous);
+    // A variant's own previous snapshot never goes with the corpus's claims file: that one was written beside another.
+    if (v.previous) {
+      previous = path.resolve(vdir, v.previous);
+      previousClaims = v.previousClaims ? path.resolve(vdir, v.previousClaims) : null;
+    } else if (v.previousClaims) {
+      previousClaims = path.resolve(vdir, v.previousClaims);
+    }
     applied.push(vdir);
   }
 
@@ -136,6 +148,12 @@ export function loadCorpus(corpusDir: string, variants: readonly string[] = []):
   if (previous !== null && !existsSync(previous)) {
     throw new Error(`lib/pipeline/corpus.ts: previous snapshot not found: ${previous}`);
   }
+  if (previousClaims !== null && previous === null) {
+    throw new Error(`lib/pipeline/corpus.ts: previousClaims ${previousClaims} names no previous snapshot to go with`);
+  }
+  if (previousClaims !== null && !existsSync(previousClaims)) {
+    throw new Error(`lib/pipeline/corpus.ts: previous claims file not found: ${previousClaims}`);
+  }
 
-  return { id, dir, fetchedAt, leagues, note, entries, previous, variants: applied };
+  return { id, dir, fetchedAt, leagues, note, entries, previous, previousClaims, variants: applied };
 }

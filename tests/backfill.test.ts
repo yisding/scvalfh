@@ -11,18 +11,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  BACKFILL_TEAM_PAGE_CAP,
-  applyBackfill,
-  cleanSbliveRows,
-  eligibleItems,
-  isIdResolved,
-  planBackfill,
-  scoreboardCoverage,
-  type BackfillInput,
-} from '../lib/crosscheck/backfill';
+import { BACKFILL_TEAM_PAGE_CAP, cleanSbliveRows, eligibleItems, isIdResolved, planBackfill, scoreboardCoverage, type BackfillInput } from '../lib/crosscheck/backfill';
 import { dayDiff, scoreSentence, shiftDateKey } from '../lib/format';
-import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { LEDGER_VIEW } from '../lib/fixtures/ledger';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
 import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
@@ -34,6 +25,7 @@ import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '
 import { game } from './game-builder';
 import { REPO, corpusDir } from './helpers';
 import { testRunArgs } from './pipeline/support/run-args';
+import { applyBackfill } from './support/list-steps';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';
@@ -344,11 +336,11 @@ describe('backfill rule 2: an official fixture MaxPreps has no contest for', () 
     expect(res.unmatched).toEqual([twin]);
   });
 
-  it('looks for a moved fixture (DATA_QUALITY.fixtureMoves) on its played date, with its played host', () => {
-    // The move the config held from 2026-10-22 to 2026-11-15: Homestead at Cupertino, officially Sep 9, taken as
-    // played Oct 13 at Homestead until MaxPreps listed the Sep 11 tie. The config has no move now, so the test
-    // puts that one back for its own run.
-    const moves = DATA_QUALITY.fixtureMoves as Record<string, { dateKey: string; home: string; source: string }>;
+  it('looks for a league fixture the ledger links to its own fixture on that fixture’s day, with its host', () => {
+    // The link the ledger held from 2026-10-22 to 2026-11-15: Homestead at Cupertino, officially Sep 9, taken as
+    // played Oct 13 at Homestead until MaxPreps listed the Sep 11 tie. The ledger has no such fixture now, so the
+    // test puts that one back for its own run.
+    const moves = LEDGER_VIEW.moves as Record<string, { dateKey: string; home: string; source: string }>;
     moves['de-anza:2026-09-09:homestead@cupertino'] = {
       dateKey: '2026-10-13',
       home: 'homestead',
@@ -386,7 +378,7 @@ describe('backfill rule 2: an official fixture MaxPreps has no contest for', () 
     }
   });
 
-  it('flags a fixtureMoves key that names no fixture of a division that was read (a typo moves nothing)', () => {
+  it('flags a linked league fixture id that names no fixture of a division that was read (a typo moves nothing)', () => {
     const moved = fixture('de-anza', '2026-09-09', 'homestead', 'cupertino');
     const other = fixture('de-anza', '2026-09-14', 'los-altos', 'homestead');
     const moves = { [moved.id]: {} };
@@ -394,7 +386,7 @@ describe('backfill rule 2: an official fixture MaxPreps has no contest for', () 
     expect(unknownFixtureMoves([other], moves)).toEqual([moved.id]);
     // A division not read this run (its PDF failed) is not judged.
     expect(unknownFixtureMoves([fixture('el-camino', '2026-09-10', 'saratoga', 'mitty')], moves)).toEqual([]);
-    // The config's own list (empty since 2026-11-15) flags nothing.
+    // The ledger's own links (none since 2026-11-15) flag nothing.
     expect(unknownFixtureMoves([other])).toEqual([]);
     expect(unknownFixtureMoves([other], { 'de-anza:2026-09-09:homestead@cupertin': {} })).toEqual(['de-anza:2026-09-09:homestead@cupertin']);
   });

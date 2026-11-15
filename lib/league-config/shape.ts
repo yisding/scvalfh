@@ -5,8 +5,8 @@
  */
 
 import type {
-  AddedGame, CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
-  PlayoffStatus, RegionId, ResultCorrection, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
+  CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
+  PlayoffStatus, RegionId, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from '../types';
 
 /**
@@ -603,51 +603,14 @@ export interface LeagueConfig {
   officialChanges: { url: string; cellMarker: string; sha256: string } | null;
 }
 
+/** The lists about a team, a league or a school. What is recorded of one game is the fixture ledger's (lib/fixtures/shape.ts). */
 export interface DataQualityConfig {
   /** Drop every contest with this side. */
   ghostTeamIds: Readonly<Record<TeamId, string>>;
-  /** Drop these contests. */
-  excludedContestIds: Readonly<Record<ContestId, string>>;
   /** si.com team ids that never resolve and never backfill (JV / withdrawn). */
   sbliveIgnoredTeamIds: Readonly<Record<string, string>>;
   /** Documented and asserted never requested. */
   ignoredMaxprepsLeagueIds: Readonly<Record<string, string>>;
-  /**
-   * A contest whose MaxPreps date a better source contradicts, moved to that source's date in lib/pipeline/normalize.ts
-   * (before the date key is taken and the games are sorted, so schedules, last-5 and streaks read the corrected
-   * order). `timeTba` true: the source gives no start time, so none is invented and the game reads "time TBA".
-   * `source` is one sentence naming the source, what it says, and what MaxPreps says; the game page prints it
-   * (Game.provenance.dateCorrection). Keys are contest GUIDs, `dateKey` a YYYY-MM-DD (assertLeagues).
-   */
-  contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
-  /**
-   * A contest played at the school MaxPreps lists as the visitor, by contest GUID: `home` is the slug of the school
-   * that hosted (lib/results/host-override.ts swaps the sides, in the pipeline's normalize step and in the snapshot
-   * loader, and keeps MaxPreps' host in Game.provenance.hostCorrection). `source` is one sentence naming the source
-   * and what it says, without a final period; the game page prints it. Keys are contest GUIDs (assertLeagues).
-   */
-  contestHostOverrides: Readonly<Record<ContestId, { home: TeamSlug; source: string; url: string | null }>>;
-  /**
-   * A final's result recorded from a better source than the feed, by contest GUID (lib/types.ts ResultCorrection;
-   * lib/results/result.ts applies it before anything counts the game). For a result the feed cannot state: a
-   * shootout MaxPreps stores as the score. `goals` and `shootout` name both sides by slug (assertLeagues), and
-   * `source` is the citation the game page prints.
-   */
-  resultCorrections: Readonly<Record<ContestId, ResultCorrection>>;
-  /**
-   * Games no feed lists, recorded from an official source (lib/types.ts AddedGame; lib/results/result.ts
-   * `withAddedGames` puts each on the schedule, classified like any other game, until a feed lists the pair on
-   * that date). In date order.
-   */
-  addedGames: readonly AddedGame[];
-  /**
-   * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
-   * other school, than its league's document says. D2 rule 2 (lib/crosscheck/backfill.ts) looks for si.com's Final of the pair
-   * on `dateKey` (±1 day) instead of the official date and publishes it with `home` as the host; the game keeps the
-   * official date as `official.scheduledDate`. `source` is one sentence naming the sources and what they say; the
-   * game page and /about print it in the backfill note. Keys are OfficialFixture ids (assertLeagues).
-   */
-  fixtureMoves: Readonly<Record<string, { dateKey: string; home: TeamSlug; source: string }>>;
   /**
    * Search "not covered" entries (exact-key matches only). `reason` is printed verbatim as a whole sentence
    * (components/search/TeamFinder.tsx), so each is one: never 'inactive', 'withdrew', 'dropped' or

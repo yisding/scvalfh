@@ -44,10 +44,10 @@ import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
 import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final';
 import type { BoxEvidence } from '../results/box-evidence';
-import { applyHostOverride } from '../results/host-override';
+import { applyHostCorrection } from '../results/host-correction';
 import { excessOver, finalizeResult, withAddedGames } from '../results/result';
 import { stableStringify } from '../stable-json';
-import { DATA_QUALITY } from '../league-config/data-quality';
+import { EXCLUSIONS } from '../fixtures/ledger';
 import { CCS } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
@@ -590,16 +590,16 @@ function unfillSettledLevelScore(g: Game): Game {
 /** Why the config now drops a stored game (the pipeline's applyExclusions rule: a ghost side first), or null. */
 function exclusionOf(g: Game): { reason: 'ghost-team' | 'excluded-by-config'; note: string } | null {
   for (const id of [g.home.teamId, g.away.teamId]) {
-    if (id !== null && id in DATA_QUALITY.ghostTeamIds) return { reason: 'ghost-team', note: DATA_QUALITY.ghostTeamIds[id] };
+    if (id !== null && id in EXCLUSIONS.ghostTeamIds) return { reason: 'ghost-team', note: EXCLUSIONS.ghostTeamIds[id] };
   }
-  const why = DATA_QUALITY.excludedContestIds[g.contestId];
+  const why = EXCLUSIONS.rejected[g.contestId];
   return why === undefined ? null : { reason: 'excluded-by-config', note: why };
 }
 
 /** One stored game as the current rules record it (lib/results/result.ts), given the file's cifss conflict rows. */
 function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>, box: BoxEvidence | undefined): Game {
-  // The host a better source names first (DATA_QUALITY.contestHostOverrides), as the pipeline's normalize step does.
-  return finalizeResult(unfillSettledLevelScore(applyHostOverride(g)), { cifss: cifss.get(g.contestId), box });
+  // The host its fixture in the ledger names first, as the pipeline's normalize step does.
+  return finalizeResult(unfillSettledLevelScore(applyHostCorrection(g)), { cifss: cifss.get(g.contestId), box });
 }
 
 function cifssRowsOf(raw: Json): Map<string, CifssConflictRow> {
@@ -640,7 +640,7 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
   const v2 = raw as unknown as Snapshot;
   const cifss = cifssRowsOf(raw as Json);
   const changed = new Set<DivisionId>();
-  // (0) rows the config has since excluded (DATA_QUALITY.excludedContestIds, ghostTeamIds: a duplicate found after
+  // (0) rows since excluded (the ledger's rejected and duplicate rows, DATA_QUALITY.ghostTeamIds: a duplicate found after
   //     the file was written) leave the games, as the pipeline's normalize step would drop them, and are recorded.
   const excluded = v2.games.filter((g) => exclusionOf(g) !== null);
   for (const g of excluded) {
@@ -649,7 +649,7 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
       if (team) changed.add(team.division);
     }
   }
-  // and games an official source has and no feed lists (DATA_QUALITY.addedGames) join them.
+  // and the ledger's fixtures no feed lists join them.
   const kept = withAddedGames(v2.games.filter((g) => exclusionOf(g) === null), v2.fetchedAt);
   const stored = new Map(v2.games.map((g) => [g.contestId, g]));
   const games = kept.map((g) => recorded(g, cifss, box));

@@ -8,6 +8,8 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
+import type { ClaimsFile } from '../../../lib/claims/types';
+import type { FixtureLedger } from '../../../lib/fixtures/shape';
 import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '../../../lib/pipeline/contract';
 import { loadCorpus } from '../../../lib/pipeline/corpus';
 import { SILENT_SINK, type PipelineContext } from '../../../lib/pipeline/ledger';
@@ -22,12 +24,16 @@ export interface RunCorpusOptions {
   /** Variant names (tests/fixtures/corpus/variants/) or directories. */
   variants?: readonly string[];
   previous?: Snapshot | null;
+  /** The claims file beside `previous`; left out, the run seeds its claims from `previous` (lib/claims/from-snapshot.ts). */
+  claims?: ClaimsFile | null;
   fetchedAt?: string;
   /** More CLI flags (`--leagues`, `--accept-regression`, `--force` …). */
   extraArgs?: readonly string[];
   steps?: PipelineSteps;
   /** Wrap the fixture transport (latency, failure injection). */
   wrap?: (t: Transport) => Transport;
+  /** The fixture ledger the run's editor reads (lib/claims/editor.ts); left out, the sport's own. */
+  ledger?: FixtureLedger;
 }
 
 export interface CorpusRun {
@@ -63,6 +69,8 @@ export async function runCorpus(opts: RunCorpusOptions = {}): Promise<CorpusRun>
     transport: opts.wrap ? opts.wrap(fixture) : fixture,
     previous: opts.previous ?? null,
     sink: SILENT_SINK,
+    claims: opts.claims,
+    ledger: opts.ledger,
   });
   const result = await runPipeline(ctx, opts.steps ?? NOOP_STEPS);
   return { result, ctx, args };

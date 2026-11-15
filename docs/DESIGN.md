@@ -4922,7 +4922,7 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   sentence instead (the Oct 28 Tamalpais 3–1 Marin Catholic semifinal: 0–0 after two overtimes, a 3–1 shootout,
   Marin IJ; and the Oct 30 final, Redwood 2–1, decided in regulation, Redwood Bark). The overtime citation is the Handbook §9; the title rule's is the General Rules, Pennants 1–3.
 - **The final's venue.** `finalSite` holds Redwood High School, 395 Doherty Dr, Larkspur, CA 94939 (the final was
-  moved there from Tamalpais, per the MCAL's playoffs page; DATA_QUALITY.contestHostOverrides makes the game itself
+  moved there from Tamalpais, per the MCAL's playoffs page; the fixture ledger’s host (lib/fixtures/) makes the game itself
   Tamalpais at Redwood, since MaxPreps still lists Tamalpais as host), and the
   admission line (adults $10; students, children and seniors $5; pre-sale on GoFan; no booster passes or student
   body cards; lifetime MCAL, NCS and CIF passes honored); the bracket prints the venue sentence, a Directions link

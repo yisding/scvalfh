@@ -51,6 +51,6 @@ export function loadSnapshot(raw: unknown, evidence: { box?: BoxEvidence } = {})
   const settled = needsRecordedResults(classified, evidence.box) ? recordStoredResults(classified, evidence.box) : classified;
   // Then `playoffs.games` from the (now current) tags: lib/postseason/ccs-bracket.ts is its one derivation.
   const bracketed = needsPlayoffGames(settled) ? rebuildPlayoffGames(settled) : settled;
-  // A game the steps above added (recordStoredResults lists DATA_QUALITY.addedGames a file predates) has no slug yet.
+  // A game the steps above added (recordStoredResults lists the ledger's fixtures no feed lists that a file predates) has no slug yet.
   return parseSnapshot(needsGameUrls(bracketed) ? addGameUrls(bracketed) : bracketed);
 }

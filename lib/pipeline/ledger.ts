@@ -10,6 +10,12 @@
  * No clock: `today` is localDateKey(fetchedAt), never Date.now().
  */
 
+import { ledgerEditor, type EditorView } from '../claims/editor';
+import { claimsFromSnapshot } from '../claims/from-snapshot';
+import { ClaimStore } from '../claims/store';
+import type { ClaimsFile, EditorClaim, FixtureId, MaxprepsClaim, StageTrace } from '../claims/types';
+import { RunView } from '../claims/view';
+import type { FixtureLedger } from '../fixtures/shape';
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
 import { LEAGUES, findDivision } from '../leagues';
 import { SDS_BRACKET_SHEET_TABS } from '../league-config/sections';
@@ -262,6 +268,14 @@ export interface RunContextInit {
   transport: Transport;
   previous: Snapshot | null;
   sink?: LogSink;
+  /**
+   * The claims file beside the previous snapshot, already checked against it (lib/pipeline/run.ts prepareRun). When
+   * undefined, the claims are seeded from `previous` (lib/claims/from-snapshot.ts). With no previous snapshot, a
+   * claims file given here is the run's only record of the last publication (claimsAlone); prepareRun gives none.
+   */
+  claims?: ClaimsFile | null;
+  /** The fixture ledger the editor's claims are read from (lib/claims/editor.ts); left out, this build's sport's. */
+  ledger?: FixtureLedger;
 }
 
 /** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
@@ -275,8 +289,25 @@ export class PipelineContext implements RunContext {
   readonly leagues = new LeagueLedger();
   readonly dropped = new DroppedLedger();
   readonly logLines: string[] = [];
+  /** The fixture ledger as the editor's claims (lib/claims/editor.ts), and the slices the steps read from them. */
+  readonly editorClaims: readonly EditorClaim[];
+  readonly editor: EditorView;
+  /** The per-stage trace for tests (lib/claims/types.ts StageTrace), with SCVAL_STAGE_TRACE=1; null otherwise. */
+  readonly trace: StageTrace[] | null;
+  /**
+   * Whether the run was given a claims file and no previous snapshot: the claims are then its only record of the last
+   * publication, and a league it does not read is carried from them (the official step, the guards, the cifsshome.org
+   * evidence) where a run with a previous snapshot freezes it to that snapshot's games.
+   */
+  readonly claimsAlone: boolean;
   private readonly sink: LogSink;
   private readonly inRun: readonly LeagueId[];
+  private readonly claimsInit: ClaimsFile | null | undefined;
+  private store: ClaimStore | null = null;
+  private storedMaxpreps: ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }> | null = null;
+  private storedFixtures: ReadonlySet<FixtureId> = new Set();
+  private storedAt: string | null = null;
+  private runView: RunView | null = null;
 
   constructor(init: RunContextInit) {
     this.args = init.args;
@@ -288,6 +319,52 @@ export class PipelineContext implements RunContext {
     const wanted = init.args.leagues;
     // Config order, whatever order the flag listed them in.
     this.inRun = LEAGUES.map((l) => l.id).filter((id) => wanted === null || wanted.includes(id));
+    const editor = ledgerEditor(init.args.fetchedAt, init.ledger);
+    this.editorClaims = editor.claims;
+    this.editor = editor.view;
+    this.claimsInit = init.claims;
+    this.claimsAlone = init.previous === null && (init.claims?.fixtures.length ?? 0) > 0;
+    this.trace = process.env.SCVAL_STAGE_TRACE === '1' ? [] : null;
+  }
+
+  /**
+   * The run's claim store (lib/claims/store.ts), built on first use: the claims file beside the previous snapshot,
+   * else the claims seeded from that snapshot; with no previous snapshot, the claims file given, else empty.
+   */
+  get claims(): ClaimStore {
+    if (this.store === null) {
+      const file = this.previous === null ? (this.claimsInit ?? null) : this.claimsInit === undefined ? claimsFromSnapshot(this.previous, this.editor, this.editorClaims) : this.claimsInit;
+      this.store = ClaimStore.fromFile(file);
+      this.storedMaxpreps = new Map(this.store.claimsOf('maxpreps').map(({ id, claim }) => [claim.ref, { id, claim: structuredClone(claim) }]));
+      this.storedFixtures = new Set(this.store.ids());
+      this.storedAt = file?.fetchedAt ?? null;
+    }
+    return this.store;
+  }
+
+  /**
+   * The MaxPreps claims as the run read them, before step 06 replaced any with this run's rows, by contest id with
+   * the fixture holding each. A frozen league publishes its previous games, so its contests keep these claims
+   * (lib/pipeline/steps/guards.ts).
+   */
+  get maxprepsAsRead(): ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }> {
+    void this.claims;
+    return this.storedMaxpreps as ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }>;
+  }
+
+  /** The fixtures the run read, and the fetchedAt of the run that wrote them (null: none read). */
+  get claimsAsRead(): { fixtures: ReadonlySet<FixtureId>; fetchedAt: string | null } {
+    void this.claims;
+    return { fixtures: this.storedFixtures, fetchedAt: this.storedAt };
+  }
+
+  /**
+   * The run's view (lib/claims/view.ts): the fixtures it publishes in order and every decision its stages took, over
+   * the claim store and the editor's slices. lib/pipeline/run.ts publishes it stage by stage as `RunState.games`.
+   */
+  get view(): RunView {
+    if (this.runView === null) this.runView = new RunView(this.claims, this.editor);
+    return this.runView;
   }
 
   log(line: string): void {
@@ -403,17 +480,19 @@ export interface RunState {
   rows: ScheduleRow[];
   /** One per TBA row split off a feed. */
   tbaDropped: DroppedContest[];
+  /**
+   * The games the run publishes so far: the view (PipelineContext.view) resolved through the last stage, assigned only
+   * by lib/pipeline/run.ts. The guards, the cifsshome.org cross-check, the standings and assembly read it.
+   */
   games: Game[];
   unmatched: OfficialFixture[];
-  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
-  official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
+  /** The official step's flags and sets; its fixtures moved into `unmatched`, its decisions into the view and its rows into the claims. */
+  official: Omit<OfficialStepResult, 'games' | 'unmatched' | 'fixtures' | 'readDivisions' | 'decisions'>;
   sbliveCrossCheck: SbliveCrossCheck | undefined;
   /** Step 11b's cifsshome.org report (undefined: none this run and none to carry). */
   cifssCrossCheck: CifssCrossCheck | undefined;
   /** The secondary step's CCS state; its games moved into `games`. */
   secondary: Omit<SecondaryStepResult, 'games'>;
-  /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
-  frozenFromPrevious: Set<LeagueId>;
   /** DivisionHealth.classification per division (a frozen league's is copied from the previous health). */
   classification: Map<DivisionId, DivisionHealth['classification']>;
 }
@@ -435,7 +514,6 @@ export function emptyRunState(): RunState {
     sbliveCrossCheck: undefined,
     cifssCrossCheck: undefined,
     secondary: { bracketPublished: false },
-    frozenFromPrevious: new Set(),
     classification: new Map(),
   };
 }
