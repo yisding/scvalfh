@@ -307,7 +307,7 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
     // SCVAL De Anza schools, Tue Oct 13 at Homestead: a third, non-league meeting of Cupertino and Homestead (their
     // league games are Sep 11, 5-5, and Oct 5, 1-1). Homestead varsity field hockey's Instagram (posted Oct 14):
     // "3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!"; the owner (2026-11-15) has two goals to #7
-    // and one to #8 (the roster carries no jersey numbers to say which of Hailey Cutler and Gabrielle Moll is which).
+    // and one to #8, and that Gabrielle Moll scored the two (so Hailey Cutler the one).
     // si.com (6575658) has it Final, Homestead 3-0, at 4:45 PM at Homestead, the NFHS Network streamed it on
     // Homestead's channel, and Homestead's athletic director's weekly update has "Played vs Cupertino" for varsity
     // with no score. MaxPreps lists the JV game (1-0, non-league) and not this one.
@@ -321,7 +321,7 @@ const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
       otPeriods: 0,
       from: 'derived',
       nonLeague: true,
-      note: 'Non-league: the pair’s third meeting. Homestead’s goals: two by #7 and one by #8; the team’s post credits Hailey and Gabby',
+      note: 'Non-league: the pair’s third meeting. Homestead’s goals: two by Gabrielle Moll and one by Hailey Cutler',
       source: 'Homestead varsity field hockey’s Instagram, posted Oct 14, 2026: “3-0 W v Cupertino!! Great job to Hailey and Gabby for the goals!!”; si.com has the same 3-0 (game 6575658); MaxPreps does not list the game',
       url: 'https://www.instagram.com/p/Defq2JemLgM/',
     },

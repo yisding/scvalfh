@@ -3648,7 +3648,7 @@ scores, and a si.com game that is not a junk row (rule 7).**
    files as non-league. The tie is dated Sep 11 (`contestDateOverrides`) and recorded as one period of overtime
    (`resultCorrections`). Oct 13 is listed as a non-league game (`addedGames`, `nonLeague: true`), Homestead 3-0,
    from Homestead varsity's Instagram post of Oct 14 ("3-0 W v Cupertino!!", goals to Hailey and Gabby; the owner
-   has two to #7 and one to #8) and si.com's same 3-0. A si.com row that is the same game as an existing
+   has two to #7, Gabrielle Moll, and one to #8, Hailey Cutler) and si.com's same 3-0. A si.com row that is the same game as an existing
    MaxPreps contest (same date, same pair: the cross-check's join) is never used to fill. If two
    or more candidates remain with different scores, nothing is filled and a warning is logged. (If MaxPreps *does* have the game but it is not
    counted, for example an MCAL league game it moved to Oct 23 or typed as a tournament game, the
