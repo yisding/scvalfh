@@ -464,6 +464,34 @@ describe('mergeJvSchoolSites: a school’s own athletics site, after MaxPreps an
     expect(m.unused.map((u) => u.reason).sort()).toEqual(['not-needed', 'pair-nearby']);
   });
 
+  it('adds a game a page lists as played with no score, and never fills or contradicts a score with it', () => {
+    const final = jvGame({ home: 'homestead', away: 'cupertino', date: '2026-10-13', hs: 1, as: 0 });
+    const m = mergeJvSchoolSites({
+      games: [final],
+      sites: [
+        site('homestead', [
+          { dateKey: '2026-10-13', time: '15:30', opponent: 'cupertino', home: true, score: null },
+          { dateKey: '2026-09-15', time: '17:00', opponent: 'leigh', home: false, score: null },
+        ]),
+      ],
+      today,
+      fetchedAt,
+    });
+    expect(m.games.find((g) => g.contestId === final.contestId)).toEqual(final);
+    expect(m.filled).toEqual([]);
+    expect(m.differs).toEqual([]);
+    expect(m.added).toEqual(['school:homestead:2026-09-15:leigh']);
+    expect(m.games.find((g) => g.contestId === m.added[0])).toMatchObject({
+      dateLocal: '2026-09-15T17:00:00',
+      status: 'score-pending',
+      decider: null,
+      home: { slug: 'leigh', score: null, result: null },
+      away: { slug: 'homestead', score: null, result: null },
+      provenance: { scores: 'school-site', schedule: 'school-site' },
+    });
+    expect(m.unused).toEqual([{ key: '2026-10-13:cupertino@homestead', reason: 'not-needed' }]);
+  });
+
   it('uses a game two pages list only when they agree', () => {
     const sf = site('saint-francis', [{ dateKey: '2026-09-23', time: '17:15', opponent: 'st-ignatius', home: false, score: [1, 0] }]);
     const si = (mine: number, theirs: number) =>
@@ -475,7 +503,7 @@ describe('mergeJvSchoolSites: a school’s own athletics site, after MaxPreps an
     expect(schoolSiteResults([sf, si(1, 1)])).toEqual({ results: [], disagree: ['2026-09-23:saint-francis@st-ignatius'] });
   });
 
-  it('transcribes only registry schools, and the two committed pages agree with each other', () => {
+  it('transcribes only registry schools, and the committed pages agree with each other', () => {
     for (const s of JV_SCHOOL_SITES) {
       expect(getTeamBySlug(s.school), s.school).toBeDefined();
       for (const g of s.games) expect(getTeamBySlug(g.opponent), g.opponent).toBeDefined();

@@ -858,8 +858,9 @@ describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contest
   const rows = [...rowsOf('fallbrook'), ...rowsOf('valley-center')];
   const at = '2026-10-06T03:19:11.008Z';
 
-  it('is configured for the one contest, with its source', () => {
-    expect(Object.keys(DATA_QUALITY.contestDateOverrides)).toEqual([id]);
+  it('is configured for the contest, with its source', () => {
+    // And Cupertino v Homestead (9ecb5378), moved from Sep 9 to Sep 11 on Homestead's athletic director's word.
+    expect(Object.keys(DATA_QUALITY.contestDateOverrides)).toEqual([id, '9ecb5378-55b3-4163-a0cc-7c8fc039ff47']);
     expect(DATA_QUALITY.contestDateOverrides[id]).toEqual({
       dateKey: '2026-09-29',
       timeTba: true,

@@ -2696,6 +2696,17 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   found for BVAL, PCAL, the EAL or the San Diego and Southern Section schools (public-school
   Edlio/Finalsite calendars post schedules, not results); Valley Christian's Sidearm site
   (gowarriors.net) is the next one to try.
+  Homestead's athletic director's weekly update (a Google Doc of the weekly emails, given by the owner on
+  2026-11-15) is the third, read the same day: each issue lists the past week's varsity and JV results and the
+  coming week's games with JV start times. Its JV scores agree with MaxPreps' on every game both score but Los
+  Gatos at Homestead, Sep 2 (3-1 there, 3-2 on MaxPreps), and it adds two JV games no other source lists, at
+  Leigh on Sep 15 and at Los Altos on Oct 7, both "Played" with no score: rows with `score: null`, listed as
+  past games with no score and never used to fill or contradict one. Its "vs"/"@" on a JV result line is not
+  reliable (the Oct 14 game at St. Ignatius reads "vs"), so each row's host and start are the issue's own
+  schedule for that week. Left out: Aug 31 against "Saint Francis (Freshman)" (2-0; MaxPreps has a 1-0 against
+  Saint Francis' JV), and results with no score (the Sep 21 loss to St. Ignatius, the Sep 25 win over Monta
+  Vista). Its 2-1 JV loss to Cupertino on Fri Sep 11 moves MaxPreps' Sep 9 row there
+  (`lib/jv/jv-corrections.ts` dateMoves).
 - **Rosters** (shown since 2026-11-06, `lib/jv/jv-rosters.ts`): MaxPreps' `/jv/roster/` pages, read for
   all 102 schools by `pnpm fetch-rosters --level jv` into `data/jv-rosters.json` (the varsity parser,
   with the JV sport season id), list 508 players for 34 schools on 2026-11-06 (11 on 2026-10-05). Several
@@ -3630,8 +3641,12 @@ scores, and a si.com game that is not a junk row (rule 7).**
    (`lib/league-config/data-quality.ts`: a league game that another source, named in the entry, shows was played on another date
    and maybe at the other school) is searched on its played date instead, for both windows, and published with
    the entry's host; `official.scheduledDate` keeps the league's date and the entry's source sentence is added to
-   the backfill note (2026-10-22: SCVAL's Sep 9 Homestead at Cupertino, played Oct 13 at Homestead, 3-0,
-   per si.com and the NFHS Network). A si.com row that is the same game as an existing
+   the backfill note. The list is empty since 2026-11-15. Its one entry, from 2026-10-22, moved SCVAL's Sep 9
+   Homestead at Cupertino to Oct 13 at Homestead (si.com's Homestead 3-0 and an NFHS Network stream); MaxPreps then
+   listed the pair's first meeting on Oct 29, a 5-5 tie, and Homestead's athletic director's weekly update has it
+   on Fri Sep 11 "(OT)" and Oct 13 as a third meeting, "Played" with no varsity score and a 1-0 JV win MaxPreps
+   files as non-league. The tie is dated Sep 11 (`contestDateOverrides`) and recorded as one period of overtime
+   (`resultCorrections`). A si.com row that is the same game as an existing
    MaxPreps contest (same date, same pair: the cross-check's join) is never used to fill. If two
    or more candidates remain with different scores, nothing is filled and a warning is logged. (If MaxPreps *does* have the game but it is not
    counted, for example an MCAL league game it moved to Oct 23 or typed as a tournament game, the

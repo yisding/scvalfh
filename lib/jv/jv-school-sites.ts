@@ -1,6 +1,6 @@
 /**
- * JV results published on a school's own athletics site: a third JV source after MaxPreps and si.com,
- * applied by lib/jv/jv.ts after the si.com merge (lib/jv/jv-merge.ts) and on the same terms.
+ * JV results published by a school itself: a third JV source after MaxPreps and si.com, applied by lib/jv/jv.ts
+ * after the si.com merge (lib/jv/jv-merge.ts) and on the same terms.
  *
  * Few schools publish JV results at all. A sweep of 2026-11-03 for every past JV league game neither
  * MaxPreps nor si.com had a score for found two that do, both Sidearm sites listing each JV game with its
@@ -10,16 +10,26 @@
  * both of their games against each other. Cupertino's and Mitty's schedules, Huntington Beach's program
  * site and the MCAL's schedule page give dates only, and no other school's site was found with JV results.
  *
- * The rows below were read from those pages on 2026-11-03 and are transcribed, not fetched on each run: the
- * JV league season was over by then, and a re-read would add a scraper for two pages. Each row is one game
- * from the page's school's side.
+ * Homestead's athletic director's weekly update (a Google Doc, given by the owner on 2026-11-15) is the third: each
+ * week's issue lists the varsity and JV results of the week before, a JV game as "Won 1 - 0 vs Cupertino" or, when
+ * no score was reported, "Played @ Leigh". Its "vs" and "@" are not reliable for the JV lines (the JV game at Saint
+ * Ignatius on Oct 14 reads "vs Saint Ignatius"), so the host and start time of each row are the issue's own
+ * schedule of the week ("Field Hockey @ Los Altos ... JV - 5:15 pm"). Its scores agree with MaxPreps' on every game
+ * but one (Los Gatos at Homestead, Sep 2: 3-1 there, 3-2 on MaxPreps); its Aug 31 game against "Saint Francis
+ * (Freshman)", which MaxPreps files as Saint Francis' JV, is left out.
+ *
+ * The rows below were read from those pages on 2026-11-03 (2026-11-15 for Homestead) and are transcribed, not
+ * fetched on each run: the JV league season was over by then, and a re-read would add a scraper for three pages.
+ * Each row is one game from the page's school's side.
  *
  * The rules, the si.com merge's (MaxPreps first):
  *   1. a game the two schools' pages both list is used only when they agree;
  *   2. matched to a JV game of the same registry pair within ±1 day, used at most once: a final with
  *      another score keeps its score and the school's is noted beside it; a past game with no score (not
  *      postponed) takes the school's, marked `provenance.scores: 'school-site'` (the †);
- *   3. a game with no JV game of the pair within ±14 days is added (`school:<slug>:<date>:<opponent>`).
+ *   3. a game with no JV game of the pair within ±14 days is added (`school:<slug>:<date>:<opponent>`): a final,
+ *      or, for a game the page lists as played with no score, a past game with no score (status 'score-pending').
+ *      A game with no score never fills or contradicts one (rule 2 leaves the matched game as it is).
  *
  * Pure: no I/O, no clock.
  */
@@ -36,8 +46,8 @@ export interface JvSchoolSiteGame {
   opponent: TeamSlug;
   /** The page's school hosted. */
   home: boolean;
-  /** The page's school's goals, then the opponent's. */
-  score: [number, number];
+  /** The page's school's goals, then the opponent's; null for a game the page lists as played with no score. */
+  score: [number, number] | null;
   /** The opponent forfeited ("Los Altos Forfeit"). */
   opponentForfeit?: true;
 }
@@ -95,6 +105,26 @@ const FIELD_HOCKEY_JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
       { dateKey: '2026-10-26', time: '16:45', opponent: 'cupertino', home: false, score: [8, 0] },
     ],
   },
+  {
+    school: 'homestead',
+    url: 'https://docs.google.com/document/d/1t2Gq_2HQvs8_9pm8yEnIqZzV9UkPv9H9NYCTSIaeKK8/edit',
+    readOn: '2026-11-15',
+    label: 'Homestead’s athletic director’s weekly update',
+    games: [
+      { dateKey: '2026-09-02', time: '16:00', opponent: 'los-gatos', home: true, score: [1, 3] },
+      { dateKey: '2026-09-04', time: '16:00', opponent: 'lynbrook', home: true, score: [2, 1] },
+      // Scheduled Wed Sep 9 at Cupertino, 5:15 PM; played Fri Sep 11 (lib/jv/jv-corrections.ts dateMoves).
+      { dateKey: '2026-09-11', time: '17:15', opponent: 'cupertino', home: false, score: [1, 2] },
+      { dateKey: '2026-09-14', time: '17:30', opponent: 'los-altos', home: true, score: [0, 3] },
+      { dateKey: '2026-09-15', time: '17:00', opponent: 'leigh', home: false, score: null },
+      { dateKey: '2026-09-28', time: '17:15', opponent: 'saint-francis', home: false, score: [0, 10] },
+      // The issue dates it "Monday 10/7"; the Monday of that week is Oct 5, the day of the varsity game.
+      { dateKey: '2026-10-05', time: '17:15', opponent: 'cupertino', home: true, score: [1, 0] },
+      { dateKey: '2026-10-07', time: '17:15', opponent: 'los-altos', home: false, score: null },
+      { dateKey: '2026-10-13', time: '15:30', opponent: 'cupertino', home: true, score: [1, 0] },
+      { dateKey: '2026-10-14', time: '16:45', opponent: 'st-ignatius', home: false, score: [0, 8] },
+    ],
+  },
 ];
 
 /** This build's school JV sites: field hockey's; none yet for soccer. */
@@ -112,8 +142,9 @@ export interface JvSchoolSiteResult {
   dateLocal: string;
   home: TeamSlug;
   away: TeamSlug;
-  homeScore: number;
-  awayScore: number;
+  /** Both null for a game the page lists with no score. */
+  homeScore: number | null;
+  awayScore: number | null;
   forfeitBy: 'home' | 'away' | null;
   sites: JvSchoolSite[];
 }
@@ -156,7 +187,7 @@ export function schoolSiteResults(sites: readonly JvSchoolSite[] = JV_SCHOOL_SIT
     for (const g of site.games) {
       const home = g.home ? site.school : g.opponent;
       const away = g.home ? g.opponent : site.school;
-      const [mine, theirs] = g.score;
+      const [mine, theirs] = g.score ?? [null, null];
       const r: JvSchoolSiteResult = {
         key: `${g.dateKey}:${away}@${home}`,
         dateKey: g.dateKey,
@@ -189,7 +220,7 @@ function differsNote(_g: Game, r: JvSchoolSiteResult): string {
   return `${cap.toUpperCase()}${rest.join('')} has ${name(r.away)} ${r.awayScore}, ${name(r.home)} ${r.homeScore}; MaxPreps’ score is shown.`;
 }
 
-function scored(g: Game, r: JvSchoolSiteResult, url: string): Game {
+function scored(g: Game, r: JvSchoolSiteResult & { homeScore: number; awayScore: number }, url: string): Game {
   const flip = g.home.slug !== r.home;
   const homeScore = flip ? r.awayScore : r.homeScore;
   const awayScore = flip ? r.homeScore : r.awayScore;
@@ -210,15 +241,16 @@ function scored(g: Game, r: JvSchoolSiteResult, url: string): Game {
   };
 }
 
-function sideOf(slug: TeamSlug, score: number, other: number): GameSide {
+function sideOf(slug: TeamSlug, score: number | null, other: number | null): GameSide {
   const team = getTeamBySlug(slug);
   if (!team) throw new Error(`jv-school-sites: ${slug} is not a registry team`);
-  return { teamId: team.id, slug, name: team.name, score, result: outcome(score, other) };
+  return { teamId: team.id, slug, name: team.name, score, result: score === null || other === null ? null : outcome(score, other) };
 }
 
 function addedGame(r: JvSchoolSiteResult, fetchedAt: string): Game {
   const home = getTeamBySlug(r.home)!;
   const away = getTeamBySlug(r.away)!;
+  const hasScore = r.homeScore !== null && r.awayScore !== null;
   return {
     contestId: `school:${r.sites[0].school}:${r.dateKey}:${r.home === r.sites[0].school ? r.away : r.home}`,
     dateLocal: r.dateLocal,
@@ -229,7 +261,8 @@ function addedGame(r: JvSchoolSiteResult, fetchedAt: string): Game {
     home: sideOf(r.home, r.homeScore, r.awayScore),
     away: sideOf(r.away, r.awayScore, r.homeScore),
     site: 'home',
-    status: 'final',
+    // Only past games are added (mergeJvSchoolSites), so one with no score is a played game awaiting it.
+    status: hasScore ? 'final' : 'score-pending',
     isLeague: false,
     leagueDivision: home.division === away.division ? home.division : null,
     contestTypes: { home: null, away: null },
@@ -239,7 +272,7 @@ function addedGame(r: JvSchoolSiteResult, fetchedAt: string): Game {
     isOt: false,
     isForfeit: r.forfeitBy !== null,
     forfeitBy: r.forfeitBy,
-    decider: r.forfeitBy !== null ? 'FORFEIT' : 'REG',
+    decider: !hasScore ? null : r.forfeitBy !== null ? 'FORFEIT' : 'REG',
     shootout: null,
     venue: { text: null },
     urls: { maxpreps: null, school: r.sites[0].url, nfhsStream: null, goFan: null },
@@ -279,6 +312,10 @@ export function mergeJvSchoolSites(input: {
     }
     const r = near[0].r;
     used.add(r.key);
+    if (r.homeScore === null || r.awayScore === null) {
+      unused.push({ key: r.key, reason: 'not-needed' });
+      return g;
+    }
     const flip = g.home.slug !== r.home;
     const homeScore = flip ? r.awayScore : r.homeScore;
     const awayScore = flip ? r.homeScore : r.awayScore;
@@ -292,7 +329,7 @@ export function mergeJvSchoolSites(input: {
       return g;
     }
     filled.push(g.contestId);
-    return scored(g, r, r.sites[0].url);
+    return scored(g, { ...r, homeScore: r.homeScore, awayScore: r.awayScore }, r.sites[0].url);
   });
 
   const added: Game[] = [];
