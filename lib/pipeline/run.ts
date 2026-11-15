@@ -36,9 +36,10 @@
  * game-list contract: their decisions come with their result, or are read off the games they return. A frozen
  * league's games are its previous snapshot's (a `frozen` decision): a publication rule, not carry-forward, so it reads
  * the previous snapshot, as do the other run-history reads (league health, carried-from stamps, the si.com and
- * cifsshome.org reports, CCS and bracket state, slugs, aliases, superseded games, content dates). After assembly
- * the si.com, sheet, official and school-calendar claims are rewritten from the published games, and the store is
- * written as the claims file.
+ * cifsshome.org reports, CCS and bracket state, slugs, aliases, the superseded games carried from earlier runs,
+ * content dates); which contest took over an si.com, sheet or listing game this run is read off the fixtures'
+ * histories. After assembly the si.com, sheet, official and school-calendar claims are rewritten from the published
+ * games, and the store is written as the claims file.
  */
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -52,6 +53,7 @@ import { writeBackSheetClaims } from '../claims/sources/sds-sheet';
 import { createSbliveFixtures, decisionsFromSbliveStep, writeBackSbliveClaims, type SbliveStageDecisions } from '../claims/sources/sblive';
 import { writeBackVnnClaims } from '../claims/sources/vnn';
 import { fixtureOfContest } from '../claims/published';
+import { joinSupersededFixtures, recordPublished, supersededFromHistory } from '../claims/supersede';
 import type { ClaimsFile, Stage } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
 import type { FixtureLedger } from '../fixtures/shape';
@@ -276,7 +278,8 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
 
   // 11b cifsshome.org cross-check (over the games the snapshot will publish)
   state.cifssCrossCheck = await stepCifss(ctx, state);
-  recordCifssClaims(ctx.claims, state.cifssCrossCheck);
+  // With the claims file alone and no report to carry, the stored cifss claims are the last publication's evidence.
+  if (state.cifssCrossCheck || !ctx.claimsAlone) recordCifssClaims(ctx.claims, state.cifssCrossCheck);
 
   // 11c results: the editor's listings enter the view (re-sorted when any does); each fixture gets its cifss and box
   // evidence from the claims; every final's recorded result is resolved (corrections, a level final that must have a
@@ -300,8 +303,13 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   // 12 standings + health
   const table = stepStandings(ctx, state);
 
+  // A contest that took over a game another source published joins that game's fixture; which contest took over
+  // which game is read off the fixtures' histories, and assembly publishes it as supersededGames.
+  const superseded = supersededFromHistory(ctx.claims, state.games, ctx.claimsAsRead.fetchedAt);
+  joinSupersededFixtures(ctx.claims, superseded, ctx.claimsAsRead.fixtures, (from, into) => view.rename(from, into));
+
   // 13 assemble (may throw RunAbort)
-  const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport) });
+  const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport), superseded });
 
   // The claims file beside the snapshot. Checked after the meta is built, so a size warning never moves meta.warnings.
   // What si.com, the bracket sheet's rows, the league schedules and each school calendar's games showed as published,
@@ -311,6 +319,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   writeBackSheetClaims(ctx.claims, snapshot.games, SDS_BRACKETS_FILE, sheetTabsRead(ctx), ctx.fetchedAt);
   writeBackOfficialClaims(ctx.claims, snapshot.games, snapshot.officialFixtures ?? [], { rows: officialRows, divisions: readDivisions }, ctx.fetchedAt);
   writeBackVnnClaims(ctx.claims, snapshot.games, vnnAnswered(ctx), ctx.fetchedAt);
+  recordPublished(ctx.claims, snapshot.games, ctx.fetchedAt);
   ctx.claims.gc();
   const claims = ctx.claims.toFile(ctx.fetchedAt, SPORT_ID);
   const bytes = Buffer.byteLength(claimsFileText(claims), 'utf8');

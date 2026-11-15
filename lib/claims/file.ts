@@ -1,8 +1,8 @@
 /**
  * The claims file on disk (§6.1, §6.4): where it sits beside a snapshot, and how it is written and read back.
  *
- * Written in the repo's stable JSON (lib/stable-json.ts). A claim's `seenAt` is left out when it equals the file's
- * `fetchedAt`, and a MaxPreps claim's `game.provenance.fetchedAt` is always left out (it equals the claim's seenAt),
+ * Written in the repo's stable JSON (lib/stable-json.ts). A claim's `seenAt`, and a fixture's published contest's, is
+ * left out when it equals the file's `fetchedAt`, and a MaxPreps claim's `game.provenance.fetchedAt` is always left out (it equals the claim's seenAt),
  * so a run over unchanged upstream changes the file's stamp and nothing else. Reading restores both. Node-only.
  */
 
@@ -42,6 +42,7 @@ function mapClaims(claims: FixtureClaims, map: (source: ClaimSource, claim: AnyC
 export function claimsFileOnDisk(file: ClaimsFile): unknown {
   const fixtures = file.fixtures.map((f): Fixture => ({
     ...f,
+    ...(f.published ? { published: f.published.map(({ seenAt, ...p }) => (seenAt === file.fetchedAt ? p : { ...p, seenAt })) as Fixture['published'] } : {}),
     claims: mapClaims(f.claims, (source, claim) => {
       const { seenAt, ...rest } = claim;
       const out: AnyClaim = seenAt === file.fetchedAt ? rest : { ...rest, seenAt };
@@ -60,6 +61,7 @@ export function claimsFileOnDisk(file: ClaimsFile): unknown {
 function claimsFileInMemory(disk: ClaimsFile): ClaimsFile {
   const fixtures = disk.fixtures.map((f): Fixture => ({
     ...f,
+    ...(f.published ? { published: f.published.map((p) => ({ ...p, seenAt: p.seenAt ?? disk.fetchedAt })) } : {}),
     claims: mapClaims(f.claims, (source, claim) => {
       const seenAt = claim.seenAt ?? disk.fetchedAt;
       const out: AnyClaim = { ...claim, seenAt };

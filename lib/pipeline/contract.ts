@@ -137,6 +137,11 @@ export interface RunContext extends RunLog {
   readonly claims?: ClaimStore;
   /** The editor's view of the fixture ledger (lib/claims/editor.ts). Absent: the ledger's own. */
   readonly editor?: Pick<EditorView, 'moves'>;
+  /**
+   * Whether the run was given the claims file alone (no previous snapshot): a league it does not read is then carried
+   * from the claims rather than frozen to a previous snapshot's games. Absent: false.
+   */
+  readonly claimsAlone?: boolean;
   /** The shadow harness's record (SCVAL_CLAIMS_SHADOW=1, tests only). */
   readonly shadow?: ShadowStage[] | null;
   args: RunArgs;

@@ -367,8 +367,8 @@ jobs:
           # deploy-cloudflare.yml ships this commit without a ci run of its own only because it is
           # recognisably this one: author github-actions[bot], one parent, a message starting
           # "data: refresh snapshot", "data: refresh player stats" or "data: refresh JV games",
-          # nothing but data/snapshot.json, data/snapshot.meta.json, data/player-stats.json and
-          # data/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
+          # nothing but data/snapshot.json, data/snapshot.meta.json, data/claims.json (which rides with
+          # the snapshot), data/player-stats.json and data/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
           # against the gate).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

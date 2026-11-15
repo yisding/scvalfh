@@ -200,7 +200,8 @@ jobs:
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh basketball", nothing but
-          # the six files below (tests/workflows.test.ts).
+          # the seven files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
+          # player-stats.json, jv.json, rosters.json and jv-rosters.json (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then

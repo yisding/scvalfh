@@ -12,13 +12,19 @@
  * with THAT league's previous degraded set, and its DivisionHealth.classification copied from the
  * previous health, so the snapshot's countsFor refinement holds per league. Those games are the
  * view's `frozen` decisions (lib/claims/view.ts): a publication rule that reads the previous
- * snapshot, not claims. With NO previous data: (a)/(d) publish no intra-league games for it;
- * (b)/(c) were recorded as 'degraded' instead and publish the fresh rows.
+ * snapshot, not claims. Its contests keep the MaxPreps claims the run read, not this run's rows,
+ * so the claims file holds a MaxPreps claim for every contest the league publishes. With NO
+ * previous data: (a)/(d) publish no intra-league games for it; (b)/(c) were recorded as
+ * 'degraded' instead and publish the fresh rows. A run given the claims file alone (no previous
+ * snapshot) keeps a frozen league's games as carried from the claims, which are the last
+ * publication's.
  *
  * Systemic outage (run abort, nothing written): published games < 80% of the previous snapshot's,
  * OR ≥60% of the feeds attempted this run failed, OR every league in the run ended frozen.
  */
 
+import { keepFrozenClaims } from '../../claims/sources/maxpreps';
+import { storedFillsOf } from '../../claims/sources/sblive';
 import type { RunView } from '../../claims/view';
 import { classifyGames } from '../../classify';
 import type { LeagueConfig } from '../../league-config/shape';
@@ -161,8 +167,21 @@ export function applyFrozenLeagues(ctx: PipelineContext, state: RunState, view: 
   for (const league of LEAGUES) {
     if (ctx.leagues.state(league.id) !== 'frozen') continue;
     const members = new Set(teamsInLeague(league.id).map((t) => t.id));
-    const intra = (g: Game) =>
+    const intra = (g: Pick<Game, 'home' | 'away'>) =>
       g.home.teamId !== null && g.away.teamId !== null && members.has(g.home.teamId) && members.has(g.away.teamId);
+    // With the claims file alone, the league's games are the ones carried from the claims, its si.com rule-2 games
+    // the ones the si.com claims hold, and its unmatched official fixtures the ones the official step carried from
+    // them: the last publication, as a frozen league's previous games are.
+    if (ctx.claimsAlone) {
+      const have = new Set(state.games.map((g) => g.contestId));
+      const filled = storedFillsOf(ctx.claims).games.filter((g) => intra(g) && !have.has(g.contestId));
+      if (filled.length > 0) {
+        view.freeze([], classifyGames(filled, { degradedDivisions: state.official.degradedDivisions }));
+        view.sortByDateThenId('guards');
+      }
+      ctx.log(`  ${league.shortName} frozen: its league games carried from the claims`);
+      continue;
+    }
     const removed = view.remove('guards', intra);
     const keptFixtures = state.unmatched.filter((f) => f.league !== league.id);
     // Reported rows from this run are not published for a frozen league.
@@ -173,6 +192,14 @@ export function applyFrozenLeagues(ctx: PipelineContext, state: RunState, view: 
         league.divisions.filter((d) => previousClassification(ctx, d.id) === 'fallback-contest-type').map((d) => d.id),
       );
       const previousGames = classifyGames(ctx.previous.games.filter(intra), { degradedDivisions: degraded });
+      keepFrozenClaims({
+        store: ctx.claims,
+        asRead: ctx.maxprepsAsRead,
+        inLeague: intra,
+        published: ctx.previous.games.filter(intra),
+        previousFetchedAt: ctx.previous.fetchedAt,
+        editor: ctx.editor,
+      });
       view.freeze(removed, previousGames);
       view.sortByDateThenId('guards');
       state.unmatched = [...keptFixtures, ...(ctx.previous.officialFixtures ?? []).filter((f) => f.league === league.id)];

@@ -60,7 +60,12 @@
           "ref": "089966ba-455b-4c1d-81a8-d595e27aa4aa"
         }
       },
-      "id": "2026-11-19-san-jose-at-name:hayward"
+      "id": "2026-11-19-san-jose-at-name:hayward",
+      "published": [
+        {
+          "contestId": "089966ba-455b-4c1d-81a8-d595e27aa4aa"
+        }
+      ]
     },
     {
       "claims": {
@@ -121,7 +126,12 @@
           "ref": "2ae249ec-7c76-45da-bfab-09a182150236"
         }
       },
-      "id": "2026-11-19-yerba-buena-at-sobrato"
+      "id": "2026-11-19-yerba-buena-at-sobrato",
+      "published": [
+        {
+          "contestId": "2ae249ec-7c76-45da-bfab-09a182150236"
+        }
+      ]
     },
     {
       "claims": {
@@ -182,7 +192,12 @@
           "ref": "a316e0a7-10bd-43e1-92c6-29df9fa87fc3"
         }
       },
-      "id": "2026-11-20-james-lick-at-macdonald"
+      "id": "2026-11-20-james-lick-at-macdonald",
+      "published": [
+        {
+          "contestId": "a316e0a7-10bd-43e1-92c6-29df9fa87fc3"
+        }
+      ]
     },
     {
       "claims": {
@@ -243,7 +258,12 @@
           "ref": "18929658-dabf-4e03-83af-70fb459782ba"
         }
       },
-      "id": "2026-11-23-name:tamalpais-at-st-ignatius"
+      "id": "2026-11-23-name:tamalpais-at-st-ignatius",
+      "published": [
+        {
+          "contestId": "18929658-dabf-4e03-83af-70fb459782ba"
+        }
+      ]
     },
     {
       "claims": {
@@ -304,7 +324,12 @@
           "ref": "0fddcbaf-8f4b-4f51-b1b5-773ccc2c8bd0"
         }
       },
-      "id": "2026-11-23-notre-dame-san-jose-at-santa-teresa"
+      "id": "2026-11-23-notre-dame-san-jose-at-santa-teresa",
+      "published": [
+        {
+          "contestId": "0fddcbaf-8f4b-4f51-b1b5-773ccc2c8bd0"
+        }
+      ]
     },
     {
       "claims": {
@@ -365,7 +390,12 @@
           "ref": "38c2fa57-9288-4236-ac81-d700e6688ecb"
         }
       },
-      "id": "2026-11-24-name:northmontereycounty-at-yerba-buena"
+      "id": "2026-11-24-name:northmontereycounty-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "38c2fa57-9288-4236-ac81-d700e6688ecb"
+        }
+      ]
     },
     {
       "claims": {
@@ -426,7 +456,12 @@
           "ref": "d182ccf5-3868-4567-bc41-b8cf2c4d3939"
         }
       },
-      "id": "2026-11-25-branham-at-cupertino"
+      "id": "2026-11-25-branham-at-cupertino",
+      "published": [
+        {
+          "contestId": "d182ccf5-3868-4567-bc41-b8cf2c4d3939"
+        }
+      ]
     },
     {
       "claims": {
@@ -487,7 +522,12 @@
           "ref": "99773bdc-dae5-4010-bfc9-85c97c4e76b1"
         }
       },
-      "id": "2026-11-30-homestead-at-name:woodside"
+      "id": "2026-11-30-homestead-at-name:woodside",
+      "published": [
+        {
+          "contestId": "99773bdc-dae5-4010-bfc9-85c97c4e76b1"
+        }
+      ]
     },
     {
       "claims": {
@@ -548,7 +588,12 @@
           "ref": "6c4ac1d8-a3e2-4459-a6c7-d1530a06f46c"
         }
       },
-      "id": "2026-11-30-name:capuchino-at-mercy-burlingame"
+      "id": "2026-11-30-name:capuchino-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "6c4ac1d8-a3e2-4459-a6c7-d1530a06f46c"
+        }
+      ]
     },
     {
       "claims": {
@@ -609,7 +654,12 @@
           "ref": "1cdf4f19-af84-4faf-a69e-251271b4a7c4"
         }
       },
-      "id": "2026-11-30-wilcox-at-name:ranchosanjuan"
+      "id": "2026-11-30-wilcox-at-name:ranchosanjuan",
+      "published": [
+        {
+          "contestId": "1cdf4f19-af84-4faf-a69e-251271b4a7c4"
+        }
+      ]
     },
     {
       "claims": {
@@ -670,7 +720,12 @@
           "ref": "23846b2d-1cf1-4ee4-8f0d-d33a9fc8b811"
         }
       },
-      "id": "2026-12-01-castilleja-at-monta-vista"
+      "id": "2026-12-01-castilleja-at-monta-vista",
+      "published": [
+        {
+          "contestId": "23846b2d-1cf1-4ee4-8f0d-d33a9fc8b811"
+        }
+      ]
     },
     {
       "claims": {
@@ -731,7 +786,12 @@
           "ref": "63570790-9861-41dd-920c-f2f732a50014"
         }
       },
-      "id": "2026-12-01-eastside-at-name:oceana"
+      "id": "2026-12-01-eastside-at-name:oceana",
+      "published": [
+        {
+          "contestId": "63570790-9861-41dd-920c-f2f732a50014"
+        }
+      ]
     },
     {
       "claims": {
@@ -792,7 +852,12 @@
           "ref": "8abd428e-cb77-412d-8e8d-129fe78cea74"
         }
       },
-      "id": "2026-12-01-evergreen-valley-at-valley-christian"
+      "id": "2026-12-01-evergreen-valley-at-valley-christian",
+      "published": [
+        {
+          "contestId": "8abd428e-cb77-412d-8e8d-129fe78cea74"
+        }
+      ]
     },
     {
       "claims": {
@@ -853,7 +918,12 @@
           "ref": "093a25a6-9b02-40e4-9de8-115d8a7ffbd8"
         }
       },
-      "id": "2026-12-01-fremont-at-andrew-hill"
+      "id": "2026-12-01-fremont-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "093a25a6-9b02-40e4-9de8-115d8a7ffbd8"
+        }
+      ]
     },
     {
       "claims": {
@@ -914,7 +984,12 @@
           "ref": "bcaea778-868b-48f6-b913-5b664d30a6e7"
         }
       },
-      "id": "2026-12-01-james-lick-at-gunderson"
+      "id": "2026-12-01-james-lick-at-gunderson",
+      "published": [
+        {
+          "contestId": "bcaea778-868b-48f6-b913-5b664d30a6e7"
+        }
+      ]
     },
     {
       "claims": {
@@ -975,7 +1050,12 @@
           "ref": "a2d5a94c-08cd-4f0e-b701-c3f71e6187d8"
         }
       },
-      "id": "2026-12-01-lincoln-at-branham"
+      "id": "2026-12-01-lincoln-at-branham",
+      "published": [
+        {
+          "contestId": "a2d5a94c-08cd-4f0e-b701-c3f71e6187d8"
+        }
+      ]
     },
     {
       "claims": {
@@ -1036,7 +1116,12 @@
           "ref": "f2abd70a-5c23-4ad2-a10a-09e19733ba91"
         }
       },
-      "id": "2026-12-01-live-oak-at-piedmont-hills"
+      "id": "2026-12-01-live-oak-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "f2abd70a-5c23-4ad2-a10a-09e19733ba91"
+        }
+      ]
     },
     {
       "claims": {
@@ -1097,7 +1182,12 @@
           "ref": "9d35d83e-5109-4b3a-bc66-682fbe3323e6"
         }
       },
-      "id": "2026-12-01-menlo-at-pioneer"
+      "id": "2026-12-01-menlo-at-pioneer",
+      "published": [
+        {
+          "contestId": "9d35d83e-5109-4b3a-bc66-682fbe3323e6"
+        }
+      ]
     },
     {
       "claims": {
@@ -1158,7 +1248,12 @@
           "ref": "9239be9e-afa9-46ec-baa1-42d1b63726cf"
         }
       },
-      "id": "2026-12-01-mitty-at-leigh"
+      "id": "2026-12-01-mitty-at-leigh",
+      "published": [
+        {
+          "contestId": "9239be9e-afa9-46ec-baa1-42d1b63726cf"
+        }
+      ]
     },
     {
       "claims": {
@@ -1219,7 +1314,12 @@
           "ref": "13f62ce3-1684-4fb7-a674-29f11a543159"
         }
       },
-      "id": "2026-12-01-name:capuchino-at-priory"
+      "id": "2026-12-01-name:capuchino-at-priory",
+      "published": [
+        {
+          "contestId": "13f62ce3-1684-4fb7-a674-29f11a543159"
+        }
+      ]
     },
     {
       "claims": {
@@ -1280,7 +1380,12 @@
           "ref": "0c7e31fe-6df9-4ebd-a4e3-c1aa27ddca9c"
         }
       },
-      "id": "2026-12-01-name:carlmont-at-los-altos"
+      "id": "2026-12-01-name:carlmont-at-los-altos",
+      "published": [
+        {
+          "contestId": "0c7e31fe-6df9-4ebd-a4e3-c1aa27ddca9c"
+        }
+      ]
     },
     {
       "claims": {
@@ -1341,7 +1446,12 @@
           "ref": "eab6b107-318a-48f4-ada3-561b0825dcee"
         }
       },
-      "id": "2026-12-01-name:cristoreysanjosejesuit-at-san-jose"
+      "id": "2026-12-01-name:cristoreysanjosejesuit-at-san-jose",
+      "published": [
+        {
+          "contestId": "eab6b107-318a-48f4-ada3-561b0825dcee"
+        }
+      ]
     },
     {
       "claims": {
@@ -1402,7 +1512,12 @@
           "ref": "36f62164-b782-40a9-b6c2-d29585e40901"
         }
       },
-      "id": "2026-12-01-name:latinocollegepreparatoryacademy-at-macdonald"
+      "id": "2026-12-01-name:latinocollegepreparatoryacademy-at-macdonald",
+      "published": [
+        {
+          "contestId": "36f62164-b782-40a9-b6c2-d29585e40901"
+        }
+      ]
     },
     {
       "claims": {
@@ -1463,7 +1578,12 @@
           "ref": "8032d4dc-fdce-49c2-adfb-4ca2eb7d65ae"
         }
       },
-      "id": "2026-12-01-name:oakwood-at-del-mar"
+      "id": "2026-12-01-name:oakwood-at-del-mar",
+      "published": [
+        {
+          "contestId": "8032d4dc-fdce-49c2-adfb-4ca2eb7d65ae"
+        }
+      ]
     },
     {
       "claims": {
@@ -1524,7 +1644,12 @@
           "ref": "bec68641-37db-4556-9788-675b6bf9841e"
         }
       },
-      "id": "2026-12-01-name:pacificcollegiate-at-gunn"
+      "id": "2026-12-01-name:pacificcollegiate-at-gunn",
+      "published": [
+        {
+          "contestId": "bec68641-37db-4556-9788-675b6bf9841e"
+        }
+      ]
     },
     {
       "claims": {
@@ -1585,7 +1710,12 @@
           "ref": "91b56ecb-8fde-4930-9b53-d6554b5936c0"
         }
       },
-      "id": "2026-12-01-name:scottsvalley-at-kings-academy"
+      "id": "2026-12-01-name:scottsvalley-at-kings-academy",
+      "published": [
+        {
+          "contestId": "91b56ecb-8fde-4930-9b53-d6554b5936c0"
+        }
+      ]
     },
     {
       "claims": {
@@ -1646,7 +1776,12 @@
           "ref": "7eace669-5f81-4356-8fcc-1f1a3996d994"
         }
       },
-      "id": "2026-12-01-name:thenuevaschool-at-notre-dame-belmont"
+      "id": "2026-12-01-name:thenuevaschool-at-notre-dame-belmont",
+      "published": [
+        {
+          "contestId": "7eace669-5f81-4356-8fcc-1f1a3996d994"
+        }
+      ]
     },
     {
       "claims": {
@@ -1707,7 +1842,12 @@
           "ref": "69be74bb-f7e5-4dc8-8f00-dc0d07a5d194"
         }
       },
-      "id": "2026-12-01-name:woodside-at-mountain-view"
+      "id": "2026-12-01-name:woodside-at-mountain-view",
+      "published": [
+        {
+          "contestId": "69be74bb-f7e5-4dc8-8f00-dc0d07a5d194"
+        }
+      ]
     },
     {
       "claims": {
@@ -1768,7 +1908,12 @@
           "ref": "074b05b7-582d-4929-9b07-0dbda6bb945e"
         }
       },
-      "id": "2026-12-01-notre-dame-san-jose-at-silver-creek"
+      "id": "2026-12-01-notre-dame-san-jose-at-silver-creek",
+      "published": [
+        {
+          "contestId": "074b05b7-582d-4929-9b07-0dbda6bb945e"
+        }
+      ]
     },
     {
       "claims": {
@@ -1829,7 +1974,12 @@
           "ref": "f1bb5b92-2733-45c2-979d-fba25a73ed2c"
         }
       },
-      "id": "2026-12-01-oak-grove-at-lynbrook"
+      "id": "2026-12-01-oak-grove-at-lynbrook",
+      "published": [
+        {
+          "contestId": "f1bb5b92-2733-45c2-979d-fba25a73ed2c"
+        }
+      ]
     },
     {
       "claims": {
@@ -1890,7 +2040,12 @@
           "ref": "d106cc0f-3796-4643-a803-0e64fe8bcdbe"
         }
       },
-      "id": "2026-12-01-palo-alto-at-name:menloatherton"
+      "id": "2026-12-01-palo-alto-at-name:menloatherton",
+      "published": [
+        {
+          "contestId": "d106cc0f-3796-4643-a803-0e64fe8bcdbe"
+        }
+      ]
     },
     {
       "claims": {
@@ -1951,7 +2106,12 @@
           "ref": "84bef7f7-50cf-4282-a61e-ded5a085fbd6"
         }
       },
-      "id": "2026-12-01-sobrato-at-milpitas"
+      "id": "2026-12-01-sobrato-at-milpitas",
+      "published": [
+        {
+          "contestId": "84bef7f7-50cf-4282-a61e-ded5a085fbd6"
+        }
+      ]
     },
     {
       "claims": {
@@ -2012,7 +2172,12 @@
           "ref": "df2f5c21-6580-4b36-bfc7-837aca6ad20e"
         }
       },
-      "id": "2026-12-01-st-ignatius-at-los-gatos"
+      "id": "2026-12-01-st-ignatius-at-los-gatos",
+      "published": [
+        {
+          "contestId": "df2f5c21-6580-4b36-bfc7-837aca6ad20e"
+        }
+      ]
     },
     {
       "claims": {
@@ -2073,7 +2238,12 @@
           "ref": "9556c017-de53-4c65-9207-86749c8f777d"
         }
       },
-      "id": "2026-12-02-gilroy-at-name:northmontereycounty"
+      "id": "2026-12-02-gilroy-at-name:northmontereycounty",
+      "published": [
+        {
+          "contestId": "9556c017-de53-4c65-9207-86749c8f777d"
+        }
+      ]
     },
     {
       "claims": {
@@ -2134,7 +2304,12 @@
           "ref": "12aee138-170d-4de2-bd7e-3ae67d82dfeb"
         }
       },
-      "id": "2026-12-02-harker-at-saratoga"
+      "id": "2026-12-02-harker-at-saratoga",
+      "published": [
+        {
+          "contestId": "12aee138-170d-4de2-bd7e-3ae67d82dfeb"
+        }
+      ]
     },
     {
       "claims": {
@@ -2195,7 +2370,12 @@
           "ref": "80b342bc-18a9-4669-98ad-6207f56c45e6"
         }
       },
-      "id": "2026-12-02-name:cristoreysanjosejesuit-at-presentation"
+      "id": "2026-12-02-name:cristoreysanjosejesuit-at-presentation",
+      "published": [
+        {
+          "contestId": "80b342bc-18a9-4669-98ad-6207f56c45e6"
+        }
+      ]
     },
     {
       "claims": {
@@ -2256,7 +2436,12 @@
           "ref": "05ad1c57-d5ad-4ddb-93d3-088c4e36f9a9"
         }
       },
-      "id": "2026-12-02-name:salinas-at-leland"
+      "id": "2026-12-02-name:salinas-at-leland",
+      "published": [
+        {
+          "contestId": "05ad1c57-d5ad-4ddb-93d3-088c4e36f9a9"
+        }
+      ]
     },
     {
       "claims": {
@@ -2317,7 +2502,12 @@
           "ref": "d67d7799-7be2-4925-8a59-e31f97291d3e"
         }
       },
-      "id": "2026-12-02-riordan-at-santa-clara"
+      "id": "2026-12-02-riordan-at-santa-clara",
+      "published": [
+        {
+          "contestId": "d67d7799-7be2-4925-8a59-e31f97291d3e"
+        }
+      ]
     },
     {
       "claims": {
@@ -2378,7 +2568,12 @@
           "ref": "ee35dd2a-83ed-4e72-8a73-4e29fdeab3e8"
         }
       },
-      "id": "2026-12-02-saint-francis-at-los-altos"
+      "id": "2026-12-02-saint-francis-at-los-altos",
+      "published": [
+        {
+          "contestId": "ee35dd2a-83ed-4e72-8a73-4e29fdeab3e8"
+        }
+      ]
     },
     {
       "claims": {
@@ -2467,7 +2662,12 @@
           }
         }
       },
-      "id": "2026-12-03-andrew-hill-at-james-lick"
+      "id": "2026-12-03-andrew-hill-at-james-lick",
+      "published": [
+        {
+          "contestId": "be3621f7-9552-46fc-b79f-5f57056697b3"
+        }
+      ]
     },
     {
       "claims": {
@@ -2528,7 +2728,12 @@
           "ref": "3cfad5c3-848a-4863-8a28-cef2f01ef0fe"
         }
       },
-      "id": "2026-12-03-castilleja-at-lynbrook"
+      "id": "2026-12-03-castilleja-at-lynbrook",
+      "published": [
+        {
+          "contestId": "3cfad5c3-848a-4863-8a28-cef2f01ef0fe"
+        }
+      ]
     },
     {
       "claims": {
@@ -2589,7 +2794,12 @@
           "ref": "0fe98d22-03f6-43f8-8c97-031ed3f1d3dd"
         }
       },
-      "id": "2026-12-03-eastside-at-name:thenuevaschool"
+      "id": "2026-12-03-eastside-at-name:thenuevaschool",
+      "published": [
+        {
+          "contestId": "0fe98d22-03f6-43f8-8c97-031ed3f1d3dd"
+        }
+      ]
     },
     {
       "claims": {
@@ -2678,7 +2888,12 @@
           }
         }
       },
-      "id": "2026-12-03-independence-at-del-mar"
+      "id": "2026-12-03-independence-at-del-mar",
+      "published": [
+        {
+          "contestId": "cc0ff3fc-6740-4c9e-92bd-88b2387ef7a0"
+        }
+      ]
     },
     {
       "claims": {
@@ -2739,7 +2954,12 @@
           "ref": "cd7b6ada-cf86-47f6-98ff-ae13e34fc7c0"
         }
       },
-      "id": "2026-12-03-lincoln-at-pioneer"
+      "id": "2026-12-03-lincoln-at-pioneer",
+      "published": [
+        {
+          "contestId": "cd7b6ada-cf86-47f6-98ff-ae13e34fc7c0"
+        }
+      ]
     },
     {
       "claims": {
@@ -2800,7 +3020,12 @@
           "ref": "4f3f7ee5-a7b7-40ac-b08e-6ffadcc9491b"
         }
       },
-      "id": "2026-12-03-mitty-at-name:soquel"
+      "id": "2026-12-03-mitty-at-name:soquel",
+      "published": [
+        {
+          "contestId": "4f3f7ee5-a7b7-40ac-b08e-6ffadcc9491b"
+        }
+      ]
     },
     {
       "claims": {
@@ -2885,7 +3110,12 @@
           "ref": "1fbe99b3-77a6-42a3-8376-5432ae6eb13a"
         }
       },
-      "id": "2026-12-03-name:menloatherton-at-gunn"
+      "id": "2026-12-03-name:menloatherton-at-gunn",
+      "published": [
+        {
+          "contestId": "1fbe99b3-77a6-42a3-8376-5432ae6eb13a"
+        }
+      ]
     },
     {
       "claims": {
@@ -2946,7 +3176,12 @@
           "ref": "c8de7f52-432f-47f9-8f35-ad84707bc67b"
         }
       },
-      "id": "2026-12-03-name:scottsvalley-at-wilcox"
+      "id": "2026-12-03-name:scottsvalley-at-wilcox",
+      "published": [
+        {
+          "contestId": "c8de7f52-432f-47f9-8f35-ad84707bc67b"
+        }
+      ]
     },
     {
       "claims": {
@@ -3007,7 +3242,12 @@
           "ref": "7d97784f-6ea9-4325-8819-7ba44b67dad3"
         }
       },
-      "id": "2026-12-03-notre-dame-san-jose-at-willow-glen"
+      "id": "2026-12-03-notre-dame-san-jose-at-willow-glen",
+      "published": [
+        {
+          "contestId": "7d97784f-6ea9-4325-8819-7ba44b67dad3"
+        }
+      ]
     },
     {
       "claims": {
@@ -3096,7 +3336,12 @@
           }
         }
       },
-      "id": "2026-12-03-overfelt-at-san-jose"
+      "id": "2026-12-03-overfelt-at-san-jose",
+      "published": [
+        {
+          "contestId": "0b17ff04-9ed6-40b5-b645-94877c9f9d2f"
+        }
+      ]
     },
     {
       "claims": {
@@ -3157,7 +3402,12 @@
           "ref": "d24ab8bd-93cf-40f6-bc2f-0d234122fdcb"
         }
       },
-      "id": "2026-12-03-saint-francis-at-name:burlingame"
+      "id": "2026-12-03-saint-francis-at-name:burlingame",
+      "published": [
+        {
+          "contestId": "d24ab8bd-93cf-40f6-bc2f-0d234122fdcb"
+        }
+      ]
     },
     {
       "claims": {
@@ -3218,7 +3468,12 @@
           "ref": "ed484e53-a3bb-4484-871d-9476d89fa7d5"
         }
       },
-      "id": "2026-12-03-sobrato-at-valley-christian"
+      "id": "2026-12-03-sobrato-at-valley-christian",
+      "published": [
+        {
+          "contestId": "ed484e53-a3bb-4484-871d-9476d89fa7d5"
+        }
+      ]
     },
     {
       "claims": {
@@ -3299,7 +3554,12 @@
           }
         }
       },
-      "id": "2026-12-03-yerba-buena-at-gunderson"
+      "id": "2026-12-03-yerba-buena-at-gunderson",
+      "published": [
+        {
+          "contestId": "5eb2ef69-5d2d-472e-984c-6a3f586b064e"
+        }
+      ]
     },
     {
       "claims": {
@@ -3360,7 +3620,12 @@
           "ref": "d014d382-5fea-4ca0-820b-ecb457056434"
         }
       },
-      "id": "2026-12-04-gilroy-at-name:alisal"
+      "id": "2026-12-04-gilroy-at-name:alisal",
+      "published": [
+        {
+          "contestId": "d014d382-5fea-4ca0-820b-ecb457056434"
+        }
+      ]
     },
     {
       "claims": {
@@ -3421,7 +3686,12 @@
           "ref": "b3f621e3-1fee-400e-bb9f-5d8005c6096b"
         }
       },
-      "id": "2026-12-04-homestead-at-name:hamilton"
+      "id": "2026-12-04-homestead-at-name:hamilton",
+      "published": [
+        {
+          "contestId": "b3f621e3-1fee-400e-bb9f-5d8005c6096b"
+        }
+      ]
     },
     {
       "claims": {
@@ -3482,7 +3752,12 @@
           "ref": "e41559a4-5304-4d66-b056-3041f3a1d855"
         }
       },
-      "id": "2026-12-04-name:cristoreysanjosejesuit-at-pinewood"
+      "id": "2026-12-04-name:cristoreysanjosejesuit-at-pinewood",
+      "published": [
+        {
+          "contestId": "e41559a4-5304-4d66-b056-3041f3a1d855"
+        }
+      ]
     },
     {
       "claims": {
@@ -3543,7 +3818,12 @@
           "ref": "cd4f9475-6b27-44ca-9b49-09830afb7623"
         }
       },
-      "id": "2026-12-04-name:northmontereycounty-at-evergreen-valley"
+      "id": "2026-12-04-name:northmontereycounty-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "cd4f9475-6b27-44ca-9b49-09830afb7623"
+        }
+      ]
     },
     {
       "claims": {
@@ -3604,7 +3884,12 @@
           "ref": "39214eef-7fba-4535-b69f-7818125524fe"
         }
       },
-      "id": "2026-12-04-name:stfrancis-at-live-oak"
+      "id": "2026-12-04-name:stfrancis-at-live-oak",
+      "published": [
+        {
+          "contestId": "39214eef-7fba-4535-b69f-7818125524fe"
+        }
+      ]
     },
     {
       "claims": {
@@ -3665,7 +3950,12 @@
           "ref": "2cb4faa8-4501-43ce-a8ff-b404cd3c9f63"
         }
       },
-      "id": "2026-12-04-palo-alto-at-wilcox"
+      "id": "2026-12-04-palo-alto-at-wilcox",
+      "published": [
+        {
+          "contestId": "2cb4faa8-4501-43ce-a8ff-b404cd3c9f63"
+        }
+      ]
     },
     {
       "claims": {
@@ -3726,7 +4016,12 @@
           "ref": "b9778ca6-ebe1-467f-8ac7-707d9b02bdc9"
         }
       },
-      "id": "2026-12-04-sacred-heart-cathedral-at-name:lowell"
+      "id": "2026-12-04-sacred-heart-cathedral-at-name:lowell",
+      "published": [
+        {
+          "contestId": "b9778ca6-ebe1-467f-8ac7-707d9b02bdc9"
+        }
+      ]
     },
     {
       "claims": {
@@ -3787,7 +4082,12 @@
           "ref": "5d8a7d62-e379-4612-995b-f9e6f283f787"
         }
       },
-      "id": "2026-12-04-santa-clara-at-name:sequoia"
+      "id": "2026-12-04-santa-clara-at-name:sequoia",
+      "published": [
+        {
+          "contestId": "5d8a7d62-e379-4612-995b-f9e6f283f787"
+        }
+      ]
     },
     {
       "claims": {
@@ -3852,7 +4152,12 @@
           "ref": "f65d88cb-fbe3-43e3-91c1-c451cef1662e"
         }
       },
-      "id": "2026-12-05-castilleja-at-name:everettalvarez"
+      "id": "2026-12-05-castilleja-at-name:everettalvarez",
+      "published": [
+        {
+          "contestId": "f65d88cb-fbe3-43e3-91c1-c451cef1662e"
+        }
+      ]
     },
     {
       "claims": {
@@ -3913,7 +4218,12 @@
           "ref": "b67324ea-ae7b-451c-bef6-14197b70af24"
         }
       },
-      "id": "2026-12-05-homestead-at-name:kamehamehakapalama"
+      "id": "2026-12-05-homestead-at-name:kamehamehakapalama",
+      "published": [
+        {
+          "contestId": "b67324ea-ae7b-451c-bef6-14197b70af24"
+        }
+      ]
     },
     {
       "claims": {
@@ -3974,7 +4284,12 @@
           "ref": "b0d58caf-def3-400b-a8fc-91236a437b2d"
         }
       },
-      "id": "2026-12-05-leland-at-los-gatos"
+      "id": "2026-12-05-leland-at-los-gatos",
+      "published": [
+        {
+          "contestId": "b0d58caf-def3-400b-a8fc-91236a437b2d"
+        }
+      ]
     },
     {
       "claims": {
@@ -4035,7 +4350,12 @@
           "ref": "553eee13-d828-4436-9c14-960e49b25bc2"
         }
       },
-      "id": "2026-12-05-los-altos-at-name:woodside"
+      "id": "2026-12-05-los-altos-at-name:woodside",
+      "published": [
+        {
+          "contestId": "553eee13-d828-4436-9c14-960e49b25bc2"
+        }
+      ]
     },
     {
       "claims": {
@@ -4096,7 +4416,12 @@
           "ref": "d353983e-01c4-46a3-901c-ef8a91d55090"
         }
       },
-      "id": "2026-12-05-lynbrook-at-notre-dame-san-jose"
+      "id": "2026-12-05-lynbrook-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "d353983e-01c4-46a3-901c-ef8a91d55090"
+        }
+      ]
     },
     {
       "claims": {
@@ -4157,7 +4482,12 @@
           "ref": "a9d7c2eb-fe59-45d9-bb1a-95bc2595e90c"
         }
       },
-      "id": "2026-12-05-mercy-burlingame-at-name:elcamino"
+      "id": "2026-12-05-mercy-burlingame-at-name:elcamino",
+      "published": [
+        {
+          "contestId": "a9d7c2eb-fe59-45d9-bb1a-95bc2595e90c"
+        }
+      ]
     },
     {
       "claims": {
@@ -4218,7 +4548,12 @@
           "ref": "0d847aa4-abc0-48e8-b21a-3fc708feb64c"
         }
       },
-      "id": "2026-12-05-name:burlingame-at-santa-clara"
+      "id": "2026-12-05-name:burlingame-at-santa-clara",
+      "published": [
+        {
+          "contestId": "0d847aa4-abc0-48e8-b21a-3fc708feb64c"
+        }
+      ]
     },
     {
       "claims": {
@@ -4279,7 +4614,12 @@
           "ref": "69ff2132-d234-4c37-81ab-12e5aba2f54d"
         }
       },
-      "id": "2026-12-05-name:harbor-at-macdonald"
+      "id": "2026-12-05-name:harbor-at-macdonald",
+      "published": [
+        {
+          "contestId": "69ff2132-d234-4c37-81ab-12e5aba2f54d"
+        }
+      ]
     },
     {
       "claims": {
@@ -4340,7 +4680,12 @@
           "ref": "1165d08b-b8da-4565-962b-fd78e5399850"
         }
       },
-      "id": "2026-12-05-name:menloatherton-at-branham"
+      "id": "2026-12-05-name:menloatherton-at-branham",
+      "published": [
+        {
+          "contestId": "1165d08b-b8da-4565-962b-fd78e5399850"
+        }
+      ]
     },
     {
       "claims": {
@@ -4401,7 +4746,12 @@
           "ref": "ee2eb6c7-270f-4211-8e60-ce82d1068f73"
         }
       },
-      "id": "2026-12-05-name:salinas-at-mitty"
+      "id": "2026-12-05-name:salinas-at-mitty",
+      "published": [
+        {
+          "contestId": "ee2eb6c7-270f-4211-8e60-ce82d1068f73"
+        }
+      ]
     },
     {
       "claims": {
@@ -4462,7 +4812,12 @@
           "ref": "4c1b11c4-01d6-488c-bfb9-3a164e1e2205"
         }
       },
-      "id": "2026-12-05-name:soquel-at-sacred-heart-prep"
+      "id": "2026-12-05-name:soquel-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "4c1b11c4-01d6-488c-bfb9-3a164e1e2205"
+        }
+      ]
     },
     {
       "claims": {
@@ -4523,7 +4878,12 @@
           "ref": "9adcea12-fe77-4577-b7f0-3e03e01791f7"
         }
       },
-      "id": "2026-12-05-name:southsanfrancisco-at-gunn"
+      "id": "2026-12-05-name:southsanfrancisco-at-gunn",
+      "published": [
+        {
+          "contestId": "9adcea12-fe77-4577-b7f0-3e03e01791f7"
+        }
+      ]
     },
     {
       "claims": {
@@ -4584,7 +4944,12 @@
           "ref": "6274ad69-cb50-46d5-8d6a-b896ca666bf5"
         }
       },
-      "id": "2026-12-05-name:woodbridge-at-homestead"
+      "id": "2026-12-05-name:woodbridge-at-homestead",
+      "published": [
+        {
+          "contestId": "6274ad69-cb50-46d5-8d6a-b896ca666bf5"
+        }
+      ]
     },
     {
       "claims": {
@@ -4645,7 +5010,12 @@
           "ref": "9f62a4ff-9004-4aaf-a631-f8f67e900920"
         }
       },
-      "id": "2026-12-05-notre-dame-belmont-at-monta-vista"
+      "id": "2026-12-05-notre-dame-belmont-at-monta-vista",
+      "published": [
+        {
+          "contestId": "9f62a4ff-9004-4aaf-a631-f8f67e900920"
+        }
+      ]
     },
     {
       "claims": {
@@ -4706,7 +5076,12 @@
           "ref": "e111c1a4-45d4-4106-ba81-7b6e17f19f0d"
         }
       },
-      "id": "2026-12-05-oak-grove-at-saratoga"
+      "id": "2026-12-05-oak-grove-at-saratoga",
+      "published": [
+        {
+          "contestId": "e111c1a4-45d4-4106-ba81-7b6e17f19f0d"
+        }
+      ]
     },
     {
       "claims": {
@@ -4767,7 +5142,12 @@
           "ref": "c55eab11-8bc4-4d33-a2f1-3d06d40864ff"
         }
       },
-      "id": "2026-12-05-pioneer-at-mountain-view"
+      "id": "2026-12-05-pioneer-at-mountain-view",
+      "published": [
+        {
+          "contestId": "c55eab11-8bc4-4d33-a2f1-3d06d40864ff"
+        }
+      ]
     },
     {
       "claims": {
@@ -4828,7 +5208,12 @@
           "ref": "d9c0c114-495b-4dec-8e12-338e878ed48e"
         }
       },
-      "id": "2026-12-05-presentation-at-valley-christian"
+      "id": "2026-12-05-presentation-at-valley-christian",
+      "published": [
+        {
+          "contestId": "d9c0c114-495b-4dec-8e12-338e878ed48e"
+        }
+      ]
     },
     {
       "claims": {
@@ -4889,7 +5274,12 @@
           "ref": "0ae0a9e1-461f-4f83-876f-dcf3468c74de"
         }
       },
-      "id": "2026-12-05-sobrato-at-name:thenuevaschool"
+      "id": "2026-12-05-sobrato-at-name:thenuevaschool",
+      "published": [
+        {
+          "contestId": "0ae0a9e1-461f-4f83-876f-dcf3468c74de"
+        }
+      ]
     },
     {
       "claims": {
@@ -4950,7 +5340,12 @@
           "ref": "0402e048-af85-4479-b038-2366c395f63b"
         }
       },
-      "id": "2026-12-05-westmont-at-name:carlmont"
+      "id": "2026-12-05-westmont-at-name:carlmont",
+      "published": [
+        {
+          "contestId": "0402e048-af85-4479-b038-2366c395f63b"
+        }
+      ]
     },
     {
       "claims": {
@@ -5011,7 +5406,12 @@
           "ref": "2a661bde-2981-4ec0-9148-f8f425c147a3"
         }
       },
-      "id": "2026-12-07-eastside-at-name:more"
+      "id": "2026-12-07-eastside-at-name:more",
+      "published": [
+        {
+          "contestId": "2a661bde-2981-4ec0-9148-f8f425c147a3"
+        }
+      ]
     },
     {
       "claims": {
@@ -5072,7 +5472,12 @@
           "ref": "e6fb4d97-ddf4-47e6-a105-05bca9373fb5"
         }
       },
-      "id": "2026-12-07-name:latinocollegepreparatoryacademy-at-priory"
+      "id": "2026-12-07-name:latinocollegepreparatoryacademy-at-priory",
+      "published": [
+        {
+          "contestId": "e6fb4d97-ddf4-47e6-a105-05bca9373fb5"
+        }
+      ]
     },
     {
       "claims": {
@@ -5133,7 +5538,12 @@
           "ref": "fd65d6dc-2039-4a02-89a1-2fa1ed7742a9"
         }
       },
-      "id": "2026-12-07-name:scottsvalley-at-cupertino"
+      "id": "2026-12-07-name:scottsvalley-at-cupertino",
+      "published": [
+        {
+          "contestId": "fd65d6dc-2039-4a02-89a1-2fa1ed7742a9"
+        }
+      ]
     },
     {
       "claims": {
@@ -5194,7 +5604,12 @@
           "ref": "b2806191-de17-4619-997f-16850544ce7e"
         }
       },
-      "id": "2026-12-07-name:woodside-at-pioneer"
+      "id": "2026-12-07-name:woodside-at-pioneer",
+      "published": [
+        {
+          "contestId": "b2806191-de17-4619-997f-16850544ce7e"
+        }
+      ]
     },
     {
       "claims": {
@@ -5283,7 +5698,12 @@
           }
         }
       },
-      "id": "2026-12-08-andrew-hill-at-del-mar"
+      "id": "2026-12-08-andrew-hill-at-del-mar",
+      "published": [
+        {
+          "contestId": "9d753523-dc18-473e-8f33-fae048a50d55"
+        }
+      ]
     },
     {
       "claims": {
@@ -5344,7 +5764,12 @@
           "ref": "c75473ef-dfec-4429-b1e2-cb708cfb236a"
         }
       },
-      "id": "2026-12-08-branham-at-christopher"
+      "id": "2026-12-08-branham-at-christopher",
+      "published": [
+        {
+          "contestId": "c75473ef-dfec-4429-b1e2-cb708cfb236a"
+        }
+      ]
     },
     {
       "claims": {
@@ -5405,7 +5830,12 @@
           "ref": "5e3e3b58-344d-4f29-b2e4-45b1f64e9f88"
         }
       },
-      "id": "2026-12-08-evergreen-valley-at-wilcox"
+      "id": "2026-12-08-evergreen-valley-at-wilcox",
+      "published": [
+        {
+          "contestId": "5e3e3b58-344d-4f29-b2e4-45b1f64e9f88"
+        }
+      ]
     },
     {
       "claims": {
@@ -5486,7 +5916,12 @@
           "ref": "991b9637-2d58-4256-a2bc-65fca5cb06ba"
         }
       },
-      "id": "2026-12-08-homestead-at-name:aptos"
+      "id": "2026-12-08-homestead-at-name:aptos",
+      "published": [
+        {
+          "contestId": "991b9637-2d58-4256-a2bc-65fca5cb06ba"
+        }
+      ]
     },
     {
       "claims": {
@@ -5575,7 +6010,12 @@
           }
         }
       },
-      "id": "2026-12-08-james-lick-at-yerba-buena"
+      "id": "2026-12-08-james-lick-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "57bf3fb7-12f3-4bb4-85b5-ada66e51938b"
+        }
+      ]
     },
     {
       "claims": {
@@ -5636,7 +6076,12 @@
           "ref": "ec35c786-7171-4a92-af60-1d1606290d61"
         }
       },
-      "id": "2026-12-08-live-oak-at-gilroy"
+      "id": "2026-12-08-live-oak-at-gilroy",
+      "published": [
+        {
+          "contestId": "ec35c786-7171-4a92-af60-1d1606290d61"
+        }
+      ]
     },
     {
       "claims": {
@@ -5697,7 +6142,12 @@
           "ref": "ee1325b1-a2e4-409c-84d3-4cc2fe18f2bb"
         }
       },
-      "id": "2026-12-08-lynbrook-at-silver-creek"
+      "id": "2026-12-08-lynbrook-at-silver-creek",
+      "published": [
+        {
+          "contestId": "ee1325b1-a2e4-409c-84d3-4cc2fe18f2bb"
+        }
+      ]
     },
     {
       "claims": {
@@ -5762,7 +6212,12 @@
           "ref": "bd3ebcb7-fd07-40c4-901f-28921c939bdd"
         }
       },
-      "id": "2026-12-08-milpitas-at-name:everettalvarez"
+      "id": "2026-12-08-milpitas-at-name:everettalvarez",
+      "published": [
+        {
+          "contestId": "bd3ebcb7-fd07-40c4-901f-28921c939bdd"
+        }
+      ]
     },
     {
       "claims": {
@@ -5823,7 +6278,12 @@
           "ref": "97d7da71-81f5-4fe0-a0be-63204c97c7bf"
         }
       },
-      "id": "2026-12-08-mitty-at-los-gatos"
+      "id": "2026-12-08-mitty-at-los-gatos",
+      "published": [
+        {
+          "contestId": "97d7da71-81f5-4fe0-a0be-63204c97c7bf"
+        }
+      ]
     },
     {
       "claims": {
@@ -5884,7 +6344,12 @@
           "ref": "faa31d50-8b02-4dd6-9df8-5630d96e6f92"
         }
       },
-      "id": "2026-12-08-mountain-view-at-name:carlmont"
+      "id": "2026-12-08-mountain-view-at-name:carlmont",
+      "published": [
+        {
+          "contestId": "faa31d50-8b02-4dd6-9df8-5630d96e6f92"
+        }
+      ]
     },
     {
       "claims": {
@@ -5945,7 +6410,12 @@
           "ref": "62cefe1d-2173-4796-9069-19d1df665029"
         }
       },
-      "id": "2026-12-08-name:cindyavitia-at-priory"
+      "id": "2026-12-08-name:cindyavitia-at-priory",
+      "published": [
+        {
+          "contestId": "62cefe1d-2173-4796-9069-19d1df665029"
+        }
+      ]
     },
     {
       "claims": {
@@ -6006,7 +6476,12 @@
           "ref": "daad7b8b-0100-4c29-884a-a763e5346a03"
         }
       },
-      "id": "2026-12-08-name:pacificcollegiate-at-santa-clara"
+      "id": "2026-12-08-name:pacificcollegiate-at-santa-clara",
+      "published": [
+        {
+          "contestId": "daad7b8b-0100-4c29-884a-a763e5346a03"
+        }
+      ]
     },
     {
       "claims": {
@@ -6067,7 +6542,12 @@
           "ref": "c5dbffdc-bcdf-484b-a34d-2e16e974d9ec"
         }
       },
-      "id": "2026-12-08-name:salinas-at-leigh"
+      "id": "2026-12-08-name:salinas-at-leigh",
+      "published": [
+        {
+          "contestId": "c5dbffdc-bcdf-484b-a34d-2e16e974d9ec"
+        }
+      ]
     },
     {
       "claims": {
@@ -6128,7 +6608,12 @@
           "ref": "3ee43f59-96b5-428d-88b6-8a219c460955"
         }
       },
-      "id": "2026-12-08-name:thenuevaschool-at-monta-vista"
+      "id": "2026-12-08-name:thenuevaschool-at-monta-vista",
+      "published": [
+        {
+          "contestId": "3ee43f59-96b5-428d-88b6-8a219c460955"
+        }
+      ]
     },
     {
       "claims": {
@@ -6189,7 +6674,12 @@
           "ref": "0ab0e8cc-c822-4762-849a-c5e614ca980f"
         }
       },
-      "id": "2026-12-08-notre-dame-belmont-at-sobrato"
+      "id": "2026-12-08-notre-dame-belmont-at-sobrato",
+      "published": [
+        {
+          "contestId": "0ab0e8cc-c822-4762-849a-c5e614ca980f"
+        }
+      ]
     },
     {
       "claims": {
@@ -6250,7 +6740,12 @@
           "ref": "97640661-b992-4f42-9c84-ad3bda2a4a16"
         }
       },
-      "id": "2026-12-08-piedmont-hills-at-macdonald"
+      "id": "2026-12-08-piedmont-hills-at-macdonald",
+      "published": [
+        {
+          "contestId": "97640661-b992-4f42-9c84-ad3bda2a4a16"
+        }
+      ]
     },
     {
       "claims": {
@@ -6325,6 +6820,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2026-12-08; MaxPreps flags it non-league",
           "ref": "west-valley:2026-12-08:prospect@overfelt",
           "stamp": {
             "division": "west-valley",
@@ -6339,7 +6835,12 @@
           }
         }
       },
-      "id": "2026-12-08-prospect-at-overfelt"
+      "id": "2026-12-08-prospect-at-overfelt",
+      "published": [
+        {
+          "contestId": "80bd6de3-036f-4d46-a155-355fd719f2aa"
+        }
+      ]
     },
     {
       "claims": {
@@ -6428,7 +6929,12 @@
           }
         }
       },
-      "id": "2026-12-08-san-jose-at-independence"
+      "id": "2026-12-08-san-jose-at-independence",
+      "published": [
+        {
+          "contestId": "0b0e496a-d4d7-46d2-8b51-c03196f900cb"
+        }
+      ]
     },
     {
       "claims": {
@@ -6489,7 +6995,12 @@
           "ref": "b65a01ef-8964-4442-854b-69571eeaf2b6"
         }
       },
-      "id": "2026-12-09-name:designtech-at-pinewood"
+      "id": "2026-12-09-name:designtech-at-pinewood",
+      "published": [
+        {
+          "contestId": "b65a01ef-8964-4442-854b-69571eeaf2b6"
+        }
+      ]
     },
     {
       "claims": {
@@ -6550,7 +7061,12 @@
           "ref": "3f58d3e0-46a6-41aa-8296-bc2f4040e37e"
         }
       },
-      "id": "2026-12-09-notre-dame-san-jose-at-saratoga"
+      "id": "2026-12-09-notre-dame-san-jose-at-saratoga",
+      "published": [
+        {
+          "contestId": "3f58d3e0-46a6-41aa-8296-bc2f4040e37e"
+        }
+      ]
     },
     {
       "claims": {
@@ -6611,7 +7127,12 @@
           "ref": "5fea41fe-333e-4eae-b851-503cd9d025ba"
         }
       },
-      "id": "2026-12-09-st-ignatius-at-leland"
+      "id": "2026-12-09-st-ignatius-at-leland",
+      "published": [
+        {
+          "contestId": "5fea41fe-333e-4eae-b851-503cd9d025ba"
+        }
+      ]
     },
     {
       "claims": {
@@ -6672,7 +7193,12 @@
           "ref": "6b51b5e4-e8f7-4ae4-9a40-8a98887ed11f"
         }
       },
-      "id": "2026-12-09-valley-christian-at-kings-academy"
+      "id": "2026-12-09-valley-christian-at-kings-academy",
+      "published": [
+        {
+          "contestId": "6b51b5e4-e8f7-4ae4-9a40-8a98887ed11f"
+        }
+      ]
     },
     {
       "claims": {
@@ -6733,7 +7259,12 @@
           "ref": "47b0bef4-a25e-43b1-a1bf-7649c11736bc"
         }
       },
-      "id": "2026-12-10-branham-at-live-oak"
+      "id": "2026-12-10-branham-at-live-oak",
+      "published": [
+        {
+          "contestId": "47b0bef4-a25e-43b1-a1bf-7649c11736bc"
+        }
+      ]
     },
     {
       "claims": {
@@ -6794,7 +7325,12 @@
           "ref": "c464d7ed-5fd7-44ae-bc14-48e2c858c041"
         }
       },
-      "id": "2026-12-10-castilleja-at-macdonald"
+      "id": "2026-12-10-castilleja-at-macdonald",
+      "published": [
+        {
+          "contestId": "c464d7ed-5fd7-44ae-bc14-48e2c858c041"
+        }
+      ]
     },
     {
       "claims": {
@@ -6883,7 +7419,12 @@
           }
         }
       },
-      "id": "2026-12-10-del-mar-at-james-lick"
+      "id": "2026-12-10-del-mar-at-james-lick",
+      "published": [
+        {
+          "contestId": "75439247-0b2b-42d9-9d2c-f8be4713279c"
+        }
+      ]
     },
     {
       "claims": {
@@ -6944,7 +7485,12 @@
           "ref": "89dd7c7b-50c1-4fd1-83bf-130dd83af9dc"
         }
       },
-      "id": "2026-12-10-evergreen-valley-at-mountain-view"
+      "id": "2026-12-10-evergreen-valley-at-mountain-view",
+      "published": [
+        {
+          "contestId": "89dd7c7b-50c1-4fd1-83bf-130dd83af9dc"
+        }
+      ]
     },
     {
       "claims": {
@@ -7029,7 +7575,12 @@
           "ref": "19c1d475-d232-4d36-a0bd-e8a61d219902"
         }
       },
-      "id": "2026-12-10-los-altos-at-piedmont-hills"
+      "id": "2026-12-10-los-altos-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "19c1d475-d232-4d36-a0bd-e8a61d219902"
+        }
+      ]
     },
     {
       "claims": {
@@ -7090,7 +7641,12 @@
           "ref": "fc71ce6b-f74a-46b9-8cec-47c580ca076c"
         }
       },
-      "id": "2026-12-10-los-gatos-at-name:sequoia"
+      "id": "2026-12-10-los-gatos-at-name:sequoia",
+      "published": [
+        {
+          "contestId": "fc71ce6b-f74a-46b9-8cec-47c580ca076c"
+        }
+      ]
     },
     {
       "claims": {
@@ -7179,7 +7735,12 @@
           }
         }
       },
-      "id": "2026-12-10-mt-pleasant-at-san-jose"
+      "id": "2026-12-10-mt-pleasant-at-san-jose",
+      "published": [
+        {
+          "contestId": "9f0a294a-293c-4e31-b5c1-b78294c27f38"
+        }
+      ]
     },
     {
       "claims": {
@@ -7240,7 +7801,12 @@
           "ref": "a24c7a04-bfdc-4918-9b39-5fff1ad144cc"
         }
       },
-      "id": "2026-12-10-name:carlmont-at-saint-francis"
+      "id": "2026-12-10-name:carlmont-at-saint-francis",
+      "published": [
+        {
+          "contestId": "a24c7a04-bfdc-4918-9b39-5fff1ad144cc"
+        }
+      ]
     },
     {
       "claims": {
@@ -7301,7 +7867,12 @@
           "ref": "3382f288-c073-4e96-9ae5-22bdef20fb13"
         }
       },
-      "id": "2026-12-10-name:hillsdale-at-gunn"
+      "id": "2026-12-10-name:hillsdale-at-gunn",
+      "published": [
+        {
+          "contestId": "3382f288-c073-4e96-9ae5-22bdef20fb13"
+        }
+      ]
     },
     {
       "claims": {
@@ -7362,7 +7933,12 @@
           "ref": "004487cc-76a1-4f1f-aa15-3ea7b321bf89"
         }
       },
-      "id": "2026-12-10-name:thenuevaschool-at-sacred-heart-prep"
+      "id": "2026-12-10-name:thenuevaschool-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "004487cc-76a1-4f1f-aa15-3ea7b321bf89"
+        }
+      ]
     },
     {
       "claims": {
@@ -7451,7 +8027,12 @@
           }
         }
       },
-      "id": "2026-12-10-overfelt-at-yerba-buena"
+      "id": "2026-12-10-overfelt-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "d4caa7ea-788d-4485-9762-2e27bc706dc6"
+        }
+      ]
     },
     {
       "claims": {
@@ -7512,7 +8093,12 @@
           "ref": "73a998a0-447e-4f70-a4d3-ea82f42ffa6c"
         }
       },
-      "id": "2026-12-10-pioneer-at-homestead"
+      "id": "2026-12-10-pioneer-at-homestead",
+      "published": [
+        {
+          "contestId": "73a998a0-447e-4f70-a4d3-ea82f42ffa6c"
+        }
+      ]
     },
     {
       "claims": {
@@ -7593,7 +8179,12 @@
           "ref": "de36f1a3-c515-4eb9-b994-28c8617e2223"
         }
       },
-      "id": "2026-12-10-santa-clara-at-name:menloatherton"
+      "id": "2026-12-10-santa-clara-at-name:menloatherton",
+      "published": [
+        {
+          "contestId": "de36f1a3-c515-4eb9-b994-28c8617e2223"
+        }
+      ]
     },
     {
       "claims": {
@@ -7654,7 +8245,12 @@
           "ref": "3499767f-49f0-4884-8f5a-5f1176145713"
         }
       },
-      "id": "2026-12-10-santa-teresa-at-name:aragon"
+      "id": "2026-12-10-santa-teresa-at-name:aragon",
+      "published": [
+        {
+          "contestId": "3499767f-49f0-4884-8f5a-5f1176145713"
+        }
+      ]
     },
     {
       "claims": {
@@ -7715,7 +8311,12 @@
           "ref": "6fbce2df-6521-4d8b-b020-08db2e1c8e42"
         }
       },
-      "id": "2026-12-10-willow-glen-at-harker"
+      "id": "2026-12-10-willow-glen-at-harker",
+      "published": [
+        {
+          "contestId": "6fbce2df-6521-4d8b-b020-08db2e1c8e42"
+        }
+      ]
     },
     {
       "claims": {
@@ -7776,7 +8377,12 @@
           "ref": "4b80e138-2c99-48bf-8ea1-12746e331e11"
         }
       },
-      "id": "2026-12-11-cupertino-at-notre-dame-san-jose"
+      "id": "2026-12-11-cupertino-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "4b80e138-2c99-48bf-8ea1-12746e331e11"
+        }
+      ]
     },
     {
       "claims": {
@@ -7837,7 +8443,12 @@
           "ref": "9e105cac-706f-4bdf-b5e8-6490de3aff00"
         }
       },
-      "id": "2026-12-11-notre-dame-san-jose-at-name:alisal"
+      "id": "2026-12-11-notre-dame-san-jose-at-name:alisal",
+      "published": [
+        {
+          "contestId": "9e105cac-706f-4bdf-b5e8-6490de3aff00"
+        }
+      ]
     },
     {
       "claims": {
@@ -7898,7 +8509,12 @@
           "ref": "6ed1d601-a601-4a66-91c1-a2d5d294bf0d"
         }
       },
-      "id": "2026-12-11-willow-glen-at-kings-academy"
+      "id": "2026-12-11-willow-glen-at-kings-academy",
+      "published": [
+        {
+          "contestId": "6ed1d601-a601-4a66-91c1-a2d5d294bf0d"
+        }
+      ]
     },
     {
       "claims": {
@@ -7959,7 +8575,12 @@
           "ref": "c86fde7a-3527-49c0-9702-6f0f00e38cc6"
         }
       },
-      "id": "2026-12-12-name:ranchosanjuan-at-homestead"
+      "id": "2026-12-12-name:ranchosanjuan-at-homestead",
+      "published": [
+        {
+          "contestId": "c86fde7a-3527-49c0-9702-6f0f00e38cc6"
+        }
+      ]
     },
     {
       "claims": {
@@ -8020,7 +8641,12 @@
           "ref": "fc0e8972-56e6-479c-b0e2-1d480c6b6921"
         }
       },
-      "id": "2026-12-12-name:scottsvalley-at-sacred-heart-prep"
+      "id": "2026-12-12-name:scottsvalley-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "fc0e8972-56e6-479c-b0e2-1d480c6b6921"
+        }
+      ]
     },
     {
       "claims": {
@@ -8081,7 +8707,12 @@
           "ref": "be6461ff-fda6-48e3-ad23-b105cba38017"
         }
       },
-      "id": "2026-12-12-wilcox-at-valley-christian"
+      "id": "2026-12-12-wilcox-at-valley-christian",
+      "published": [
+        {
+          "contestId": "be6461ff-fda6-48e3-ad23-b105cba38017"
+        }
+      ]
     },
     {
       "claims": {
@@ -8142,7 +8773,12 @@
           "ref": "6ef30944-594b-4a3f-948e-bd09b12612d8"
         }
       },
-      "id": "2026-12-14-mountain-view-at-name:aptos"
+      "id": "2026-12-14-mountain-view-at-name:aptos",
+      "published": [
+        {
+          "contestId": "6ef30944-594b-4a3f-948e-bd09b12612d8"
+        }
+      ]
     },
     {
       "claims": {
@@ -8203,7 +8839,12 @@
           "ref": "fc60912f-210a-4972-8f1e-99b1f6229e62"
         }
       },
-      "id": "2026-12-14-name:aragon-at-crystal-springs"
+      "id": "2026-12-14-name:aragon-at-crystal-springs",
+      "published": [
+        {
+          "contestId": "fc60912f-210a-4972-8f1e-99b1f6229e62"
+        }
+      ]
     },
     {
       "claims": {
@@ -8264,7 +8905,12 @@
           "ref": "ea7396fb-8b5b-4f30-974f-9678dd4682f0"
         }
       },
-      "id": "2026-12-14-name:pleasantgrove-at-piedmont-hills"
+      "id": "2026-12-14-name:pleasantgrove-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "ea7396fb-8b5b-4f30-974f-9678dd4682f0"
+        }
+      ]
     },
     {
       "claims": {
@@ -8325,7 +8971,12 @@
           "ref": "cb176d86-ecad-4fbc-a7c1-7dfb72e33458"
         }
       },
-      "id": "2026-12-14-notre-dame-san-jose-at-evergreen-valley"
+      "id": "2026-12-14-notre-dame-san-jose-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "cb176d86-ecad-4fbc-a7c1-7dfb72e33458"
+        }
+      ]
     },
     {
       "claims": {
@@ -8386,7 +9037,12 @@
           "ref": "c551105c-eba6-4f83-acc1-1fb6c150a407"
         }
       },
-      "id": "2026-12-14-santa-clara-at-presentation"
+      "id": "2026-12-14-santa-clara-at-presentation",
+      "published": [
+        {
+          "contestId": "c551105c-eba6-4f83-acc1-1fb6c150a407"
+        }
+      ]
     },
     {
       "claims": {
@@ -8447,7 +9103,12 @@
           "ref": "135edc8a-96a7-40e6-b829-a1e4b1e0e132"
         }
       },
-      "id": "2026-12-15-christopher-at-gilroy"
+      "id": "2026-12-15-christopher-at-gilroy",
+      "published": [
+        {
+          "contestId": "135edc8a-96a7-40e6-b829-a1e4b1e0e132"
+        }
+      ]
     },
     {
       "claims": {
@@ -8536,7 +9197,12 @@
           }
         }
       },
-      "id": "2026-12-15-del-mar-at-san-jose"
+      "id": "2026-12-15-del-mar-at-san-jose",
+      "published": [
+        {
+          "contestId": "8f559b6f-3f9d-49c6-88e2-c2012827052f"
+        }
+      ]
     },
     {
       "claims": {
@@ -8645,7 +9311,12 @@
           }
         }
       },
-      "id": "2026-12-15-james-lick-at-mt-pleasant"
+      "id": "2026-12-15-james-lick-at-mt-pleasant",
+      "published": [
+        {
+          "contestId": "55953e4d-a7c7-4bad-bb48-70a121238074"
+        }
+      ]
     },
     {
       "claims": {
@@ -8706,7 +9377,12 @@
           "ref": "e6f4965f-02a4-4a83-baa8-cce6ff9c34a4"
         }
       },
-      "id": "2026-12-15-name:hollister-at-lincoln"
+      "id": "2026-12-15-name:hollister-at-lincoln",
+      "published": [
+        {
+          "contestId": "e6f4965f-02a4-4a83-baa8-cce6ff9c34a4"
+        }
+      ]
     },
     {
       "claims": {
@@ -8767,7 +9443,12 @@
           "ref": "b23eb252-0b36-4a44-8843-2f02917a6f94"
         }
       },
-      "id": "2026-12-15-name:soquel-at-kings-academy"
+      "id": "2026-12-15-name:soquel-at-kings-academy",
+      "published": [
+        {
+          "contestId": "b23eb252-0b36-4a44-8843-2f02917a6f94"
+        }
+      ]
     },
     {
       "claims": {
@@ -8828,7 +9509,12 @@
           "ref": "67cf6445-2614-43b5-a207-b129bcf3b1b6"
         }
       },
-      "id": "2026-12-15-name:woodside-at-saint-francis"
+      "id": "2026-12-15-name:woodside-at-saint-francis",
+      "published": [
+        {
+          "contestId": "67cf6445-2614-43b5-a207-b129bcf3b1b6"
+        }
+      ]
     },
     {
       "claims": {
@@ -8917,7 +9603,12 @@
           }
         }
       },
-      "id": "2026-12-15-overfelt-at-andrew-hill"
+      "id": "2026-12-15-overfelt-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "07199c2f-7c88-4473-893c-e1c985c0dba5"
+        }
+      ]
     },
     {
       "claims": {
@@ -8978,7 +9669,12 @@
           "ref": "9fd3d6c4-8b83-4944-9b76-208dd7eb4049"
         }
       },
-      "id": "2026-12-15-valley-christian-at-name:montevistachristian"
+      "id": "2026-12-15-valley-christian-at-name:montevistachristian",
+      "published": [
+        {
+          "contestId": "9fd3d6c4-8b83-4944-9b76-208dd7eb4049"
+        }
+      ]
     },
     {
       "claims": {
@@ -9039,7 +9735,12 @@
           "ref": "da46ad22-585a-4dc2-a554-fb4a3d1b9135"
         }
       },
-      "id": "2026-12-15-willow-glen-at-sobrato"
+      "id": "2026-12-15-willow-glen-at-sobrato",
+      "published": [
+        {
+          "contestId": "da46ad22-585a-4dc2-a554-fb4a3d1b9135"
+        }
+      ]
     },
     {
       "claims": {
@@ -9128,7 +9829,12 @@
           }
         }
       },
-      "id": "2026-12-15-yerba-buena-at-prospect"
+      "id": "2026-12-15-yerba-buena-at-prospect",
+      "published": [
+        {
+          "contestId": "dda984d0-2241-4794-b90d-f10ef25c39f0"
+        }
+      ]
     },
     {
       "claims": {
@@ -9189,7 +9895,12 @@
           "ref": "a40f24eb-3620-4652-9356-2924bdabc1f7"
         }
       },
-      "id": "2026-12-16-notre-dame-san-jose-at-wilcox"
+      "id": "2026-12-16-notre-dame-san-jose-at-wilcox",
+      "published": [
+        {
+          "contestId": "a40f24eb-3620-4652-9356-2924bdabc1f7"
+        }
+      ]
     },
     {
       "claims": {
@@ -9250,7 +9961,12 @@
           "ref": "e05c1bfd-2b38-4244-9f10-779acb27b9b0"
         }
       },
-      "id": "2026-12-17-christopher-at-name:salinas"
+      "id": "2026-12-17-christopher-at-name:salinas",
+      "published": [
+        {
+          "contestId": "e05c1bfd-2b38-4244-9f10-779acb27b9b0"
+        }
+      ]
     },
     {
       "claims": {
@@ -9339,7 +10055,12 @@
           }
         }
       },
-      "id": "2026-12-17-del-mar-at-overfelt"
+      "id": "2026-12-17-del-mar-at-overfelt",
+      "published": [
+        {
+          "contestId": "13232c0e-e9dd-41fd-a32b-e5fa01f0a55c"
+        }
+      ]
     },
     {
       "claims": {
@@ -9400,7 +10121,12 @@
           "ref": "aee20ce1-8cfe-4383-8aca-0bc1d37d2b40"
         }
       },
-      "id": "2026-12-17-fremont-at-live-oak"
+      "id": "2026-12-17-fremont-at-live-oak",
+      "published": [
+        {
+          "contestId": "aee20ce1-8cfe-4383-8aca-0bc1d37d2b40"
+        }
+      ]
     },
     {
       "claims": {
@@ -9505,7 +10231,12 @@
           }
         }
       },
-      "id": "2026-12-17-james-lick-at-gunderson"
+      "id": "2026-12-17-james-lick-at-gunderson",
+      "published": [
+        {
+          "contestId": "a620d525-a3bf-46d2-8047-b9ce0e48f4cd"
+        }
+      ]
     },
     {
       "claims": {
@@ -9566,7 +10297,12 @@
           "ref": "4feba784-5987-407b-9624-9ae1bebcc026"
         }
       },
-      "id": "2026-12-17-name:drew-at-riordan"
+      "id": "2026-12-17-name:drew-at-riordan",
+      "published": [
+        {
+          "contestId": "4feba784-5987-407b-9624-9ae1bebcc026"
+        }
+      ]
     },
     {
       "claims": {
@@ -9655,7 +10391,12 @@
           }
         }
       },
-      "id": "2026-12-17-prospect-at-san-jose"
+      "id": "2026-12-17-prospect-at-san-jose",
+      "published": [
+        {
+          "contestId": "60f65627-2446-40df-8061-64a6bca640a9"
+        }
+      ]
     },
     {
       "claims": {
@@ -9716,7 +10457,12 @@
           "ref": "f0ed2711-b402-400f-afb9-583a06769cc7"
         }
       },
-      "id": "2026-12-17-sobrato-at-piedmont-hills"
+      "id": "2026-12-17-sobrato-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "f0ed2711-b402-400f-afb9-583a06769cc7"
+        }
+      ]
     },
     {
       "claims": {
@@ -9805,7 +10551,12 @@
           }
         }
       },
-      "id": "2026-12-17-yerba-buena-at-andrew-hill"
+      "id": "2026-12-17-yerba-buena-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "61ee971b-bde4-4cae-aab2-5814912b8610"
+        }
+      ]
     },
     {
       "claims": {
@@ -9866,7 +10617,12 @@
           "ref": "4b8cb5e8-9259-4d6c-8acf-9259c54783d3"
         }
       },
-      "id": "2026-12-18-del-mar-at-milpitas"
+      "id": "2026-12-18-del-mar-at-milpitas",
+      "published": [
+        {
+          "contestId": "4b8cb5e8-9259-4d6c-8acf-9259c54783d3"
+        }
+      ]
     },
     {
       "claims": {
@@ -9927,7 +10683,12 @@
           "ref": "37e2c9e2-08d5-4428-9ac3-056f40d8552f"
         }
       },
-      "id": "2026-12-18-los-gatos-at-saint-francis"
+      "id": "2026-12-18-los-gatos-at-saint-francis",
+      "published": [
+        {
+          "contestId": "37e2c9e2-08d5-4428-9ac3-056f40d8552f"
+        }
+      ]
     },
     {
       "claims": {
@@ -9988,7 +10749,12 @@
           "ref": "e5c9e0e8-e8cf-47a8-87ee-5fcb2db9cd31"
         }
       },
-      "id": "2026-12-18-monta-vista-at-harker"
+      "id": "2026-12-18-monta-vista-at-harker",
+      "published": [
+        {
+          "contestId": "e5c9e0e8-e8cf-47a8-87ee-5fcb2db9cd31"
+        }
+      ]
     },
     {
       "claims": {
@@ -10049,7 +10815,12 @@
           "ref": "913ec914-e2ac-4670-9d10-1f25ce159855"
         }
       },
-      "id": "2026-12-18-name:scottsvalley-at-santa-teresa"
+      "id": "2026-12-18-name:scottsvalley-at-santa-teresa",
+      "published": [
+        {
+          "contestId": "913ec914-e2ac-4670-9d10-1f25ce159855"
+        }
+      ]
     },
     {
       "claims": {
@@ -10110,7 +10881,12 @@
           "ref": "1000588b-17e5-4b04-9cf7-5a14ada1bf2c"
         }
       },
-      "id": "2026-12-18-sacred-heart-cathedral-at-name:university"
+      "id": "2026-12-18-sacred-heart-cathedral-at-name:university",
+      "published": [
+        {
+          "contestId": "1000588b-17e5-4b04-9cf7-5a14ada1bf2c"
+        }
+      ]
     },
     {
       "claims": {
@@ -10171,7 +10947,12 @@
           "ref": "702705c8-02df-4159-a3a3-5bf3d7caa408"
         }
       },
-      "id": "2026-12-18-valley-christian-at-notre-dame-san-jose"
+      "id": "2026-12-18-valley-christian-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "702705c8-02df-4159-a3a3-5bf3d7caa408"
+        }
+      ]
     },
     {
       "claims": {
@@ -10232,7 +11013,12 @@
           "ref": "ab2ced74-c971-4bed-8a0c-fa619e0a7f8a"
         }
       },
-      "id": "2026-12-18-wilcox-at-santa-clara"
+      "id": "2026-12-18-wilcox-at-santa-clara",
+      "published": [
+        {
+          "contestId": "ab2ced74-c971-4bed-8a0c-fa619e0a7f8a"
+        }
+      ]
     },
     {
       "claims": {
@@ -10293,7 +11079,12 @@
           "ref": "747e338a-de16-4214-a981-ce89b1977eaf"
         }
       },
-      "id": "2026-12-18-willow-glen-at-evergreen-valley"
+      "id": "2026-12-18-willow-glen-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "747e338a-de16-4214-a981-ce89b1977eaf"
+        }
+      ]
     },
     {
       "claims": {
@@ -10354,7 +11145,12 @@
           "ref": "66321947-9fb8-4272-adbb-babca25bef15"
         }
       },
-      "id": "2026-12-19-branham-at-presentation"
+      "id": "2026-12-19-branham-at-presentation",
+      "published": [
+        {
+          "contestId": "66321947-9fb8-4272-adbb-babca25bef15"
+        }
+      ]
     },
     {
       "claims": {
@@ -10415,7 +11211,12 @@
           "ref": "8fd81a08-2a08-45da-9ef4-0cc2d191d653"
         }
       },
-      "id": "2026-12-19-sacred-heart-prep-at-live-oak"
+      "id": "2026-12-19-sacred-heart-prep-at-live-oak",
+      "published": [
+        {
+          "contestId": "8fd81a08-2a08-45da-9ef4-0cc2d191d653"
+        }
+      ]
     },
     {
       "claims": {
@@ -10476,7 +11277,12 @@
           "ref": "58d7e387-8e9d-40bb-b1ac-4a2c09b29e51"
         }
       },
-      "id": "2026-12-21-name:aptos-at-los-gatos"
+      "id": "2026-12-21-name:aptos-at-los-gatos",
+      "published": [
+        {
+          "contestId": "58d7e387-8e9d-40bb-b1ac-4a2c09b29e51"
+        }
+      ]
     },
     {
       "claims": {
@@ -10537,7 +11343,12 @@
           "ref": "e5025fb8-0d05-47c1-bb99-d1d1498e8550"
         }
       },
-      "id": "2026-12-21-name:woodside-at-sacred-heart-cathedral"
+      "id": "2026-12-21-name:woodside-at-sacred-heart-cathedral",
+      "published": [
+        {
+          "contestId": "e5025fb8-0d05-47c1-bb99-d1d1498e8550"
+        }
+      ]
     },
     {
       "claims": {
@@ -10598,7 +11409,12 @@
           "ref": "f35c2c10-b7a4-4afc-8ebc-19e22730653e"
         }
       },
-      "id": "2026-12-22-willow-glen-at-presentation"
+      "id": "2026-12-22-willow-glen-at-presentation",
+      "published": [
+        {
+          "contestId": "f35c2c10-b7a4-4afc-8ebc-19e22730653e"
+        }
+      ]
     },
     {
       "claims": {
@@ -10659,7 +11475,12 @@
           "ref": "38d59cfd-ad64-43a7-b8a6-5740c4249dca"
         }
       },
-      "id": "2026-12-31-mountain-view-at-name:sequoia"
+      "id": "2026-12-31-mountain-view-at-name:sequoia",
+      "published": [
+        {
+          "contestId": "38d59cfd-ad64-43a7-b8a6-5740c4249dca"
+        }
+      ]
     },
     {
       "claims": {
@@ -10740,7 +11561,12 @@
           }
         }
       },
-      "id": "2027-01-04-los-altos-at-mountain-view"
+      "id": "2027-01-04-los-altos-at-mountain-view",
+      "published": [
+        {
+          "contestId": "298e0baa-fc23-4092-aba1-8182dc472009"
+        }
+      ]
     },
     {
       "claims": {
@@ -10853,7 +11679,12 @@
           }
         }
       },
-      "id": "2027-01-05-del-mar-at-mt-pleasant"
+      "id": "2027-01-05-del-mar-at-mt-pleasant",
+      "published": [
+        {
+          "contestId": "39c3ffab-83a4-412a-89be-86656838b3c8"
+        }
+      ]
     },
     {
       "claims": {
@@ -10942,7 +11773,12 @@
           }
         }
       },
-      "id": "2027-01-05-evergreen-valley-at-christopher"
+      "id": "2027-01-05-evergreen-valley-at-christopher",
+      "published": [
+        {
+          "contestId": "0ee1e6e1-0561-4a04-8f89-b6c01c4487f5"
+        }
+      ]
     },
     {
       "claims": {
@@ -11031,7 +11867,12 @@
           }
         }
       },
-      "id": "2027-01-05-independence-at-yerba-buena"
+      "id": "2027-01-05-independence-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "d7076224-ddd0-45ad-82ae-29ffe351ff0f"
+        }
+      ]
     },
     {
       "claims": {
@@ -11106,6 +11947,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-05; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-05:leland@willow-glen",
           "stamp": {
             "division": "mt-hamilton",
@@ -11120,7 +11962,12 @@
           }
         }
       },
-      "id": "2027-01-05-leland-at-willow-glen"
+      "id": "2027-01-05-leland-at-willow-glen",
+      "published": [
+        {
+          "contestId": "c1a4fd48-bd63-4f62-94d7-836ab407578e"
+        }
+      ]
     },
     {
       "claims": {
@@ -11201,7 +12048,12 @@
           }
         }
       },
-      "id": "2027-01-05-macdonald-at-cupertino"
+      "id": "2027-01-05-macdonald-at-cupertino",
+      "published": [
+        {
+          "contestId": "d127f079-428f-4d8a-80d6-46b995568e12"
+        }
+      ]
     },
     {
       "claims": {
@@ -11282,7 +12134,12 @@
           "ref": "5a04acc4-dcd2-42b5-813b-5ba49bfff670"
         }
       },
-      "id": "2027-01-05-name:scottsvalley-at-harker"
+      "id": "2027-01-05-name:scottsvalley-at-harker",
+      "published": [
+        {
+          "contestId": "5a04acc4-dcd2-42b5-813b-5ba49bfff670"
+        }
+      ]
     },
     {
       "claims": {
@@ -11371,7 +12228,12 @@
           }
         }
       },
-      "id": "2027-01-05-overfelt-at-james-lick"
+      "id": "2027-01-05-overfelt-at-james-lick",
+      "published": [
+        {
+          "contestId": "26d63d46-6044-41a4-8f12-b6ddf48bc87b"
+        }
+      ]
     },
     {
       "claims": {
@@ -11484,7 +12346,12 @@
           }
         }
       },
-      "id": "2027-01-05-pioneer-at-gilroy"
+      "id": "2027-01-05-pioneer-at-gilroy",
+      "published": [
+        {
+          "contestId": "31455d86-e256-4761-a0aa-a3cc5ac58fa7"
+        }
+      ]
     },
     {
       "claims": {
@@ -11565,7 +12432,12 @@
           }
         }
       },
-      "id": "2027-01-05-san-jose-at-gunderson"
+      "id": "2027-01-05-san-jose-at-gunderson",
+      "published": [
+        {
+          "contestId": "346c8224-5ea1-4356-be0f-d021c8f3fbab"
+        }
+      ]
     },
     {
       "claims": {
@@ -11670,7 +12542,12 @@
           }
         }
       },
-      "id": "2027-01-05-saratoga-at-monta-vista"
+      "id": "2027-01-05-saratoga-at-monta-vista",
+      "published": [
+        {
+          "contestId": "74018ff4-482c-4c24-b959-6f7ee92c60dc"
+        }
+      ]
     },
     {
       "claims": {
@@ -11783,7 +12660,12 @@
           }
         }
       },
-      "id": "2027-01-05-sobrato-at-live-oak"
+      "id": "2027-01-05-sobrato-at-live-oak",
+      "published": [
+        {
+          "contestId": "8af16514-036d-4a6f-af38-a4abd92364f7"
+        }
+      ]
     },
     {
       "claims": {
@@ -11872,7 +12754,12 @@
           }
         }
       },
-      "id": "2027-01-05-westmont-at-branham"
+      "id": "2027-01-05-westmont-at-branham",
+      "published": [
+        {
+          "contestId": "83022129-2a41-44cd-9b88-19f9dba83030"
+        }
+      ]
     },
     {
       "claims": {
@@ -11953,7 +12840,12 @@
           }
         }
       },
-      "id": "2027-01-05-wilcox-at-lynbrook"
+      "id": "2027-01-05-wilcox-at-lynbrook",
+      "published": [
+        {
+          "contestId": "a258e0b3-1309-45d9-9890-9dd67c2f467f"
+        }
+      ]
     },
     {
       "claims": {
@@ -12034,7 +12926,12 @@
           }
         }
       },
-      "id": "2027-01-06-gunn-at-palo-alto"
+      "id": "2027-01-06-gunn-at-palo-alto",
+      "published": [
+        {
+          "contestId": "132b318d-13f0-4ae0-bdb1-2d07d2405eed"
+        }
+      ]
     },
     {
       "claims": {
@@ -12115,7 +13012,12 @@
           }
         }
       },
-      "id": "2027-01-06-los-gatos-at-los-altos"
+      "id": "2027-01-06-los-gatos-at-los-altos",
+      "published": [
+        {
+          "contestId": "9dfd8ab5-d9cf-4cdf-a7d8-ef4480188094"
+        }
+      ]
     },
     {
       "claims": {
@@ -12196,7 +13098,12 @@
           }
         }
       },
-      "id": "2027-01-06-mountain-view-at-homestead"
+      "id": "2027-01-06-mountain-view-at-homestead",
+      "published": [
+        {
+          "contestId": "1766837f-b4fa-410b-a4a0-6953fa8f7330"
+        }
+      ]
     },
     {
       "claims": {
@@ -12257,7 +13164,12 @@
           "ref": "9c5d1e3c-bdbd-488a-8ac3-882b4e27305a"
         }
       },
-      "id": "2027-01-06-name:santacruz-at-valley-christian"
+      "id": "2027-01-06-name:santacruz-at-valley-christian",
+      "published": [
+        {
+          "contestId": "9c5d1e3c-bdbd-488a-8ac3-882b4e27305a"
+        }
+      ]
     },
     {
       "claims": {
@@ -12318,7 +13230,12 @@
           "ref": "ef8ffbe2-a37d-4c87-a17f-cbb3a788649a"
         }
       },
-      "id": "2027-01-06-riordan-at-mitty"
+      "id": "2027-01-06-riordan-at-mitty",
+      "published": [
+        {
+          "contestId": "ef8ffbe2-a37d-4c87-a17f-cbb3a788649a"
+        }
+      ]
     },
     {
       "claims": {
@@ -12427,7 +13344,12 @@
           }
         }
       },
-      "id": "2027-01-07-branham-at-pioneer"
+      "id": "2027-01-07-branham-at-pioneer",
+      "published": [
+        {
+          "contestId": "f8e82b44-ad56-45a7-8db9-98c692922a56"
+        }
+      ]
     },
     {
       "claims": {
@@ -12532,7 +13454,12 @@
           }
         }
       },
-      "id": "2027-01-07-cupertino-at-saratoga"
+      "id": "2027-01-07-cupertino-at-saratoga",
+      "published": [
+        {
+          "contestId": "34d221a8-8f9f-4ddc-9be9-801b44894e8c"
+        }
+      ]
     },
     {
       "claims": {
@@ -12621,7 +13548,12 @@
           }
         }
       },
-      "id": "2027-01-07-del-mar-at-yerba-buena"
+      "id": "2027-01-07-del-mar-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "42c33be2-3447-43e1-94e4-d1a804b19697"
+        }
+      ]
     },
     {
       "claims": {
@@ -12702,7 +13634,12 @@
           }
         }
       },
-      "id": "2027-01-07-fremont-at-monta-vista"
+      "id": "2027-01-07-fremont-at-monta-vista",
+      "published": [
+        {
+          "contestId": "88c06f98-5617-4ea8-878c-57de1353ee4c"
+        }
+      ]
     },
     {
       "claims": {
@@ -12839,7 +13776,12 @@
           }
         }
       },
-      "id": "2027-01-07-james-lick-at-san-jose"
+      "id": "2027-01-07-james-lick-at-san-jose",
+      "published": [
+        {
+          "contestId": "47968294-206f-4250-ab16-0ebc8d90cece"
+        }
+      ]
     },
     {
       "claims": {
@@ -12952,7 +13894,12 @@
           }
         }
       },
-      "id": "2027-01-07-live-oak-at-evergreen-valley"
+      "id": "2027-01-07-live-oak-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "45b6e2a1-8e98-4e98-a655-8204cdd35dcf"
+        }
+      ]
     },
     {
       "claims": {
@@ -13033,7 +13980,12 @@
           }
         }
       },
-      "id": "2027-01-07-lynbrook-at-macdonald"
+      "id": "2027-01-07-lynbrook-at-macdonald",
+      "published": [
+        {
+          "contestId": "833e34b2-3471-4cab-9db8-a52149e7ecac"
+        }
+      ]
     },
     {
       "claims": {
@@ -13094,7 +14046,12 @@
           "ref": "09e9468c-eb75-4f1c-991d-202a02f7c231"
         }
       },
-      "id": "2027-01-07-mercy-burlingame-at-pinewood"
+      "id": "2027-01-07-mercy-burlingame-at-pinewood",
+      "published": [
+        {
+          "contestId": "09e9468c-eb75-4f1c-991d-202a02f7c231"
+        }
+      ]
     },
     {
       "claims": {
@@ -13227,7 +14184,12 @@
           }
         }
       },
-      "id": "2027-01-07-piedmont-hills-at-leland"
+      "id": "2027-01-07-piedmont-hills-at-leland",
+      "published": [
+        {
+          "contestId": "0679a09a-bdfe-4e72-8c89-5410bebd545f"
+        }
+      ]
     },
     {
       "claims": {
@@ -13340,7 +14302,12 @@
           }
         }
       },
-      "id": "2027-01-07-willow-glen-at-leigh"
+      "id": "2027-01-07-willow-glen-at-leigh",
+      "published": [
+        {
+          "contestId": "8721099d-2165-4cd6-b663-9f58e09bef66"
+        }
+      ]
     },
     {
       "claims": {
@@ -13421,7 +14388,12 @@
           }
         }
       },
-      "id": "2027-01-08-homestead-at-los-gatos"
+      "id": "2027-01-08-homestead-at-los-gatos",
+      "published": [
+        {
+          "contestId": "53146b2d-1752-483e-9a05-a96a8f33d8b6"
+        }
+      ]
     },
     {
       "claims": {
@@ -13482,7 +14454,12 @@
           "ref": "a396bfda-22db-44e4-a1c8-b863e6a2386d"
         }
       },
-      "id": "2027-01-08-mitty-at-los-altos"
+      "id": "2027-01-08-mitty-at-los-altos",
+      "published": [
+        {
+          "contestId": "a396bfda-22db-44e4-a1c8-b863e6a2386d"
+        }
+      ]
     },
     {
       "claims": {
@@ -13563,7 +14540,12 @@
           }
         }
       },
-      "id": "2027-01-08-palo-alto-at-mountain-view"
+      "id": "2027-01-08-palo-alto-at-mountain-view",
+      "published": [
+        {
+          "contestId": "840a71ca-01a7-45b3-800c-d47d3e0d6b45"
+        }
+      ]
     },
     {
       "claims": {
@@ -13624,7 +14606,12 @@
           "ref": "7dc22cb7-5334-48ea-aa2c-2af5381400e3"
         }
       },
-      "id": "2027-01-08-priory-at-notre-dame-san-jose"
+      "id": "2027-01-08-priory-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "7dc22cb7-5334-48ea-aa2c-2af5381400e3"
+        }
+      ]
     },
     {
       "claims": {
@@ -13705,7 +14692,12 @@
           }
         }
       },
-      "id": "2027-01-08-santa-clara-at-gunn"
+      "id": "2027-01-08-santa-clara-at-gunn",
+      "published": [
+        {
+          "contestId": "47e49fa9-bf51-4680-883b-5397bcbe9c3a"
+        }
+      ]
     },
     {
       "claims": {
@@ -13766,7 +14758,12 @@
           "ref": "d257fab1-8016-4bc7-b62a-e78c9ea0d03c"
         }
       },
-      "id": "2027-01-09-valley-christian-at-riordan"
+      "id": "2027-01-09-valley-christian-at-riordan",
+      "published": [
+        {
+          "contestId": "d257fab1-8016-4bc7-b62a-e78c9ea0d03c"
+        }
+      ]
     },
     {
       "claims": {
@@ -13847,7 +14844,12 @@
           }
         }
       },
-      "id": "2027-01-12-del-mar-at-gunderson"
+      "id": "2027-01-12-del-mar-at-gunderson",
+      "published": [
+        {
+          "contestId": "3d311e3c-08d5-4170-a3df-f85d1a193825"
+        }
+      ]
     },
     {
       "claims": {
@@ -13960,7 +14962,12 @@
           }
         }
       },
-      "id": "2027-01-12-leigh-at-pioneer"
+      "id": "2027-01-12-leigh-at-pioneer",
+      "published": [
+        {
+          "contestId": "f6658b06-ea08-49dc-aa9e-d94c6a9de09b"
+        }
+      ]
     },
     {
       "claims": {
@@ -14049,7 +15056,12 @@
           }
         }
       },
-      "id": "2027-01-12-leland-at-gilroy"
+      "id": "2027-01-12-leland-at-gilroy",
+      "published": [
+        {
+          "contestId": "986d6eb6-fe68-4934-864c-179a73051c15"
+        }
+      ]
     },
     {
       "claims": {
@@ -14138,7 +15150,12 @@
           }
         }
       },
-      "id": "2027-01-12-lincoln-at-live-oak"
+      "id": "2027-01-12-lincoln-at-live-oak",
+      "published": [
+        {
+          "contestId": "4f4e2cdf-c99b-46f1-83d2-c65d90b7d90f"
+        }
+      ]
     },
     {
       "claims": {
@@ -14219,7 +15236,12 @@
           }
         }
       },
-      "id": "2027-01-12-macdonald-at-milpitas"
+      "id": "2027-01-12-macdonald-at-milpitas",
+      "published": [
+        {
+          "contestId": "bde9ae22-e7bd-4e1e-a5a7-6b93013b577d"
+        }
+      ]
     },
     {
       "claims": {
@@ -14280,7 +15302,12 @@
           "ref": "0b10523a-0c97-421a-baca-316ec5d50c0f"
         }
       },
-      "id": "2027-01-12-mercy-burlingame-at-notre-dame-san-jose"
+      "id": "2027-01-12-mercy-burlingame-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "0b10523a-0c97-421a-baca-316ec5d50c0f"
+        }
+      ]
     },
     {
       "claims": {
@@ -14361,7 +15388,12 @@
           }
         }
       },
-      "id": "2027-01-12-monta-vista-at-cupertino"
+      "id": "2027-01-12-monta-vista-at-cupertino",
+      "published": [
+        {
+          "contestId": "d0b48733-3416-4020-ba17-940e551a29e1"
+        }
+      ]
     },
     {
       "claims": {
@@ -14450,7 +15482,12 @@
           }
         }
       },
-      "id": "2027-01-12-mt-pleasant-at-yerba-buena"
+      "id": "2027-01-12-mt-pleasant-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "15600cbf-4d6f-4845-a084-86e2381e14e9"
+        }
+      ]
     },
     {
       "claims": {
@@ -14539,7 +15576,12 @@
           }
         }
       },
-      "id": "2027-01-12-oak-grove-at-evergreen-valley"
+      "id": "2027-01-12-oak-grove-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "cd955865-2bef-42d1-ae05-15d1a083ca05"
+        }
+      ]
     },
     {
       "claims": {
@@ -14628,7 +15670,12 @@
           }
         }
       },
-      "id": "2027-01-12-prospect-at-james-lick"
+      "id": "2027-01-12-prospect-at-james-lick",
+      "published": [
+        {
+          "contestId": "30ce5494-2fa5-4b1b-b92b-b038549a3d59"
+        }
+      ]
     },
     {
       "claims": {
@@ -14717,7 +15764,12 @@
           }
         }
       },
-      "id": "2027-01-12-san-jose-at-andrew-hill"
+      "id": "2027-01-12-san-jose-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "e64644a8-fa73-485d-8885-6d04d2afdfaa"
+        }
+      ]
     },
     {
       "claims": {
@@ -14798,7 +15850,12 @@
           }
         }
       },
-      "id": "2027-01-12-saratoga-at-lynbrook"
+      "id": "2027-01-12-saratoga-at-lynbrook",
+      "published": [
+        {
+          "contestId": "9aa08e6c-7597-4d4e-bebb-6f508402c876"
+        }
+      ]
     },
     {
       "claims": {
@@ -14907,7 +15964,12 @@
           "ref": "39b8471d-160c-472a-95ef-64fa6b7c5ac4"
         }
       },
-      "id": "2027-01-12-valley-christian-at-mitty"
+      "id": "2027-01-12-valley-christian-at-mitty",
+      "published": [
+        {
+          "contestId": "39b8471d-160c-472a-95ef-64fa6b7c5ac4"
+        }
+      ]
     },
     {
       "claims": {
@@ -15040,7 +16102,12 @@
           }
         }
       },
-      "id": "2027-01-12-willow-glen-at-branham"
+      "id": "2027-01-12-willow-glen-at-branham",
+      "published": [
+        {
+          "contestId": "b165c148-a307-4bb9-aff0-27ea96ec7555"
+        }
+      ]
     },
     {
       "claims": {
@@ -15121,7 +16188,12 @@
           }
         }
       },
-      "id": "2027-01-13-los-altos-at-homestead"
+      "id": "2027-01-13-los-altos-at-homestead",
+      "published": [
+        {
+          "contestId": "e2fc2324-5ec9-4ab4-b4fe-6b1fcb73520f"
+        }
+      ]
     },
     {
       "claims": {
@@ -15202,7 +16274,12 @@
           }
         }
       },
-      "id": "2027-01-13-los-gatos-at-palo-alto"
+      "id": "2027-01-13-los-gatos-at-palo-alto",
+      "published": [
+        {
+          "contestId": "fc8c563a-5fb7-47d8-a60c-07b5ff218c19"
+        }
+      ]
     },
     {
       "claims": {
@@ -15283,7 +16360,12 @@
           }
         }
       },
-      "id": "2027-01-13-mountain-view-at-santa-clara"
+      "id": "2027-01-13-mountain-view-at-santa-clara",
+      "published": [
+        {
+          "contestId": "461526f3-59a3-49fc-9c5f-3535d289541d"
+        }
+      ]
     },
     {
       "claims": {
@@ -15396,7 +16478,12 @@
           }
         }
       },
-      "id": "2027-01-14-evergreen-valley-at-santa-teresa"
+      "id": "2027-01-14-evergreen-valley-at-santa-teresa",
+      "published": [
+        {
+          "contestId": "ed7875dd-e931-4b70-b087-2e73c2f57933"
+        }
+      ]
     },
     {
       "claims": {
@@ -15505,7 +16592,12 @@
           }
         }
       },
-      "id": "2027-01-14-gilroy-at-branham"
+      "id": "2027-01-14-gilroy-at-branham",
+      "published": [
+        {
+          "contestId": "5e48586c-4dfa-4077-bcc0-60aace5de1f7"
+        }
+      ]
     },
     {
       "claims": {
@@ -15594,7 +16686,12 @@
           }
         }
       },
-      "id": "2027-01-14-james-lick-at-independence"
+      "id": "2027-01-14-james-lick-at-independence",
+      "published": [
+        {
+          "contestId": "933099bf-16fa-4ba6-8888-fe9a2d5e41db"
+        }
+      ]
     },
     {
       "claims": {
@@ -15683,7 +16780,12 @@
           }
         }
       },
-      "id": "2027-01-14-leland-at-leigh"
+      "id": "2027-01-14-leland-at-leigh",
+      "published": [
+        {
+          "contestId": "77926d5f-076b-4ae3-91e8-ba49ac3ec891"
+        }
+      ]
     },
     {
       "claims": {
@@ -15782,6 +16884,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-14; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-01-14:live-oak@christopher",
           "stamp": {
             "division": "santa-teresa",
@@ -15796,7 +16899,12 @@
           }
         }
       },
-      "id": "2027-01-14-live-oak-at-christopher"
+      "id": "2027-01-14-live-oak-at-christopher",
+      "published": [
+        {
+          "contestId": "ef32a9e5-fa3f-42bb-919c-0d2712bf44cb"
+        }
+      ]
     },
     {
       "claims": {
@@ -15877,7 +16985,12 @@
           }
         }
       },
-      "id": "2027-01-14-lynbrook-at-monta-vista"
+      "id": "2027-01-14-lynbrook-at-monta-vista",
+      "published": [
+        {
+          "contestId": "d15e8bc3-5d27-46f2-8244-963076dc4f49"
+        }
+      ]
     },
     {
       "claims": {
@@ -15958,7 +17071,12 @@
           }
         }
       },
-      "id": "2027-01-14-milpitas-at-saratoga"
+      "id": "2027-01-14-milpitas-at-saratoga",
+      "published": [
+        {
+          "contestId": "839c252c-7c1b-45c3-82a6-eeaeca21b995"
+        }
+      ]
     },
     {
       "claims": {
@@ -16019,7 +17137,12 @@
           "ref": "aa4bad85-0d3c-4287-bee7-3bb20934acaf"
         }
       },
-      "id": "2027-01-14-mitty-at-st-ignatius"
+      "id": "2027-01-14-mitty-at-st-ignatius",
+      "published": [
+        {
+          "contestId": "aa4bad85-0d3c-4287-bee7-3bb20934acaf"
+        }
+      ]
     },
     {
       "claims": {
@@ -16152,7 +17275,12 @@
           }
         }
       },
-      "id": "2027-01-14-piedmont-hills-at-pioneer"
+      "id": "2027-01-14-piedmont-hills-at-pioneer",
+      "published": [
+        {
+          "contestId": "e1501e7d-d8da-45d9-bd65-ebfdcf9abf04"
+        }
+      ]
     },
     {
       "claims": {
@@ -16241,7 +17369,12 @@
           }
         }
       },
-      "id": "2027-01-14-prospect-at-del-mar"
+      "id": "2027-01-14-prospect-at-del-mar",
+      "published": [
+        {
+          "contestId": "1f837f5a-d731-4d9c-b16b-63c56c79cd08"
+        }
+      ]
     },
     {
       "claims": {
@@ -16302,7 +17435,12 @@
           "ref": "a7be2f8c-2f3d-4399-8ef4-ee8584274516"
         }
       },
-      "id": "2027-01-14-sacred-heart-cathedral-at-valley-christian"
+      "id": "2027-01-14-sacred-heart-cathedral-at-valley-christian",
+      "published": [
+        {
+          "contestId": "a7be2f8c-2f3d-4399-8ef4-ee8584274516"
+        }
+      ]
     },
     {
       "claims": {
@@ -16391,7 +17529,12 @@
           }
         }
       },
-      "id": "2027-01-14-san-jose-at-yerba-buena"
+      "id": "2027-01-14-san-jose-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "87bb5aa7-76d4-43a9-834d-8fb04b78d398"
+        }
+      ]
     },
     {
       "claims": {
@@ -16466,6 +17609,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-14; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-14:westmont@willow-glen",
           "stamp": {
             "division": "mt-hamilton",
@@ -16480,7 +17624,12 @@
           }
         }
       },
-      "id": "2027-01-14-westmont-at-willow-glen"
+      "id": "2027-01-14-westmont-at-willow-glen",
+      "published": [
+        {
+          "contestId": "a293cf26-eee3-412d-8a2b-2bf63082c809"
+        }
+      ]
     },
     {
       "claims": {
@@ -16561,7 +17710,12 @@
           }
         }
       },
-      "id": "2027-01-14-wilcox-at-macdonald"
+      "id": "2027-01-14-wilcox-at-macdonald",
+      "published": [
+        {
+          "contestId": "7bfa8c03-25f4-4ba8-9cff-1ceb4edb5181"
+        }
+      ]
     },
     {
       "claims": {
@@ -16642,7 +17796,12 @@
           }
         }
       },
-      "id": "2027-01-15-gunn-at-mountain-view"
+      "id": "2027-01-15-gunn-at-mountain-view",
+      "published": [
+        {
+          "contestId": "c8051036-4ca1-41c1-b119-9cf1058e793e"
+        }
+      ]
     },
     {
       "claims": {
@@ -16723,7 +17882,12 @@
           }
         }
       },
-      "id": "2027-01-15-monta-vista-at-macdonald"
+      "id": "2027-01-15-monta-vista-at-macdonald",
+      "published": [
+        {
+          "contestId": "8dd16ef5-3749-4497-9970-b39d48ef8819"
+        }
+      ]
     },
     {
       "claims": {
@@ -16784,7 +17948,12 @@
           "ref": "5e5f17ca-f077-4f9a-bb22-96d6652a3f3a"
         }
       },
-      "id": "2027-01-15-notre-dame-san-jose-at-eastside"
+      "id": "2027-01-15-notre-dame-san-jose-at-eastside",
+      "published": [
+        {
+          "contestId": "5e5f17ca-f077-4f9a-bb22-96d6652a3f3a"
+        }
+      ]
     },
     {
       "claims": {
@@ -16865,7 +18034,12 @@
           }
         }
       },
-      "id": "2027-01-15-palo-alto-at-los-altos"
+      "id": "2027-01-15-palo-alto-at-los-altos",
+      "published": [
+        {
+          "contestId": "586684af-887d-4542-b0b7-9e8e67e91154"
+        }
+      ]
     },
     {
       "claims": {
@@ -16926,7 +18100,12 @@
           "ref": "296b3f35-0788-4534-a895-e3627d884446"
         }
       },
-      "id": "2027-01-15-priory-at-mercy-burlingame"
+      "id": "2027-01-15-priory-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "296b3f35-0788-4534-a895-e3627d884446"
+        }
+      ]
     },
     {
       "claims": {
@@ -17007,7 +18186,12 @@
           }
         }
       },
-      "id": "2027-01-15-santa-clara-at-los-gatos"
+      "id": "2027-01-15-santa-clara-at-los-gatos",
+      "published": [
+        {
+          "contestId": "693f916d-5406-4421-9c65-4566c599fde5"
+        }
+      ]
     },
     {
       "claims": {
@@ -17068,7 +18252,12 @@
           "ref": "cfc54b9f-bc3c-48db-83f8-efce6471b7d2"
         }
       },
-      "id": "2027-01-16-mitty-at-saint-francis"
+      "id": "2027-01-16-mitty-at-saint-francis",
+      "published": [
+        {
+          "contestId": "cfc54b9f-bc3c-48db-83f8-efce6471b7d2"
+        }
+      ]
     },
     {
       "claims": {
@@ -17129,7 +18318,12 @@
           "ref": "a30e2d1e-0905-4f31-a383-8a5cfc4c60d1"
         }
       },
-      "id": "2027-01-16-st-ignatius-at-valley-christian"
+      "id": "2027-01-16-st-ignatius-at-valley-christian",
+      "published": [
+        {
+          "contestId": "a30e2d1e-0905-4f31-a383-8a5cfc4c60d1"
+        }
+      ]
     },
     {
       "claims": {
@@ -17218,7 +18412,12 @@
           }
         }
       },
-      "id": "2027-01-19-branham-at-leland"
+      "id": "2027-01-19-branham-at-leland",
+      "published": [
+        {
+          "contestId": "41e03f54-16d7-4e21-a683-baeef6df23c4"
+        }
+      ]
     },
     {
       "claims": {
@@ -17299,7 +18498,12 @@
           }
         }
       },
-      "id": "2027-01-19-cupertino-at-lynbrook"
+      "id": "2027-01-19-cupertino-at-lynbrook",
+      "published": [
+        {
+          "contestId": "f8eb31d7-7e55-431e-bf0b-a98c74720296"
+        }
+      ]
     },
     {
       "claims": {
@@ -17388,7 +18592,12 @@
           }
         }
       },
-      "id": "2027-01-19-del-mar-at-independence"
+      "id": "2027-01-19-del-mar-at-independence",
+      "published": [
+        {
+          "contestId": "91586981-2540-4101-ad9f-868084992b55"
+        }
+      ]
     },
     {
       "claims": {
@@ -17477,7 +18686,12 @@
           }
         }
       },
-      "id": "2027-01-19-evergreen-valley-at-sobrato"
+      "id": "2027-01-19-evergreen-valley-at-sobrato",
+      "published": [
+        {
+          "contestId": "534f6c1f-9849-4689-84ac-640b3e757e2c"
+        }
+      ]
     },
     {
       "claims": {
@@ -17558,7 +18772,12 @@
           }
         }
       },
-      "id": "2027-01-19-gunderson-at-yerba-buena"
+      "id": "2027-01-19-gunderson-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "85cab77d-4575-40af-87a0-96121bb4d10e"
+        }
+      ]
     },
     {
       "claims": {
@@ -17647,7 +18866,12 @@
           }
         }
       },
-      "id": "2027-01-19-james-lick-at-andrew-hill"
+      "id": "2027-01-19-james-lick-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "01f151b0-4c56-4f4e-a50f-4e3e2ff3586a"
+        }
+      ]
     },
     {
       "claims": {
@@ -17784,7 +19008,12 @@
           }
         }
       },
-      "id": "2027-01-19-live-oak-at-silver-creek"
+      "id": "2027-01-19-live-oak-at-silver-creek",
+      "published": [
+        {
+          "contestId": "2e4d0b8f-ec3d-4dbf-9081-6ce7c1c5c134"
+        }
+      ]
     },
     {
       "claims": {
@@ -17865,7 +19094,12 @@
           "ref": "b7097db9-3138-4ef3-991a-4e7a691ebf72"
         }
       },
-      "id": "2027-01-19-mercy-burlingame-at-harker"
+      "id": "2027-01-19-mercy-burlingame-at-harker",
+      "published": [
+        {
+          "contestId": "b7097db9-3138-4ef3-991a-4e7a691ebf72"
+        }
+      ]
     },
     {
       "claims": {
@@ -17946,7 +19180,12 @@
           }
         }
       },
-      "id": "2027-01-19-monta-vista-at-milpitas"
+      "id": "2027-01-19-monta-vista-at-milpitas",
+      "published": [
+        {
+          "contestId": "9e772254-d2e6-41fc-859d-27c6196beed7"
+        }
+      ]
     },
     {
       "claims": {
@@ -18007,7 +19246,12 @@
           "ref": "4022f41e-619e-468e-9c0d-5ee022361593"
         }
       },
-      "id": "2027-01-19-notre-dame-san-jose-at-pinewood"
+      "id": "2027-01-19-notre-dame-san-jose-at-pinewood",
+      "published": [
+        {
+          "contestId": "4022f41e-619e-468e-9c0d-5ee022361593"
+        }
+      ]
     },
     {
       "claims": {
@@ -18120,7 +19364,12 @@
           }
         }
       },
-      "id": "2027-01-19-pioneer-at-westmont"
+      "id": "2027-01-19-pioneer-at-westmont",
+      "published": [
+        {
+          "contestId": "edf82d05-2a76-4ed3-9662-d9d6681d6f10"
+        }
+      ]
     },
     {
       "claims": {
@@ -18233,7 +19482,12 @@
           }
         }
       },
-      "id": "2027-01-19-san-jose-at-overfelt"
+      "id": "2027-01-19-san-jose-at-overfelt",
+      "published": [
+        {
+          "contestId": "2811f2f0-d0da-4d2e-be39-1630cb107d03"
+        }
+      ]
     },
     {
       "claims": {
@@ -18314,7 +19568,12 @@
           }
         }
       },
-      "id": "2027-01-19-saratoga-at-wilcox"
+      "id": "2027-01-19-saratoga-at-wilcox",
+      "published": [
+        {
+          "contestId": "7c88a1d8-493d-4aa1-8664-74ebd562a37e"
+        }
+      ]
     },
     {
       "claims": {
@@ -18389,6 +19648,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-19; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-19:willow-glen@piedmont-hills",
           "stamp": {
             "division": "mt-hamilton",
@@ -18403,7 +19663,12 @@
           }
         }
       },
-      "id": "2027-01-19-willow-glen-at-piedmont-hills"
+      "id": "2027-01-19-willow-glen-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "96b48ada-17c7-4016-a02b-fe2c54ad6692"
+        }
+      ]
     },
     {
       "claims": {
@@ -18484,7 +19749,12 @@
           }
         }
       },
-      "id": "2027-01-20-homestead-at-palo-alto"
+      "id": "2027-01-20-homestead-at-palo-alto",
+      "published": [
+        {
+          "contestId": "1ce80e42-5022-4b5b-a343-4cf58e3b2d97"
+        }
+      ]
     },
     {
       "claims": {
@@ -18565,7 +19835,12 @@
           }
         }
       },
-      "id": "2027-01-20-los-altos-at-santa-clara"
+      "id": "2027-01-20-los-altos-at-santa-clara",
+      "published": [
+        {
+          "contestId": "68390b9b-0f28-49bf-bc6a-efe2b6d084e6"
+        }
+      ]
     },
     {
       "claims": {
@@ -18646,7 +19921,12 @@
           }
         }
       },
-      "id": "2027-01-20-los-gatos-at-gunn"
+      "id": "2027-01-20-los-gatos-at-gunn",
+      "published": [
+        {
+          "contestId": "3415fe28-9a0d-4008-a347-7ec5b6fb9c24"
+        }
+      ]
     },
     {
       "claims": {
@@ -18707,7 +19987,12 @@
           "ref": "efb955af-5ab4-4389-b7a6-a6868a84ac34"
         }
       },
-      "id": "2027-01-20-sacred-heart-cathedral-at-mitty"
+      "id": "2027-01-20-sacred-heart-cathedral-at-mitty",
+      "published": [
+        {
+          "contestId": "efb955af-5ab4-4389-b7a6-a6868a84ac34"
+        }
+      ]
     },
     {
       "claims": {
@@ -18796,7 +20081,12 @@
           }
         }
       },
-      "id": "2027-01-21-branham-at-leigh"
+      "id": "2027-01-21-branham-at-leigh",
+      "published": [
+        {
+          "contestId": "df37c9b4-692e-41c4-a2c0-c5f1f25a5018"
+        }
+      ]
     },
     {
       "claims": {
@@ -18885,7 +20175,12 @@
           }
         }
       },
-      "id": "2027-01-21-del-mar-at-andrew-hill"
+      "id": "2027-01-21-del-mar-at-andrew-hill",
+      "published": [
+        {
+          "contestId": "ec371d77-5d48-4734-b804-a00dd50a2ac5"
+        }
+      ]
     },
     {
       "claims": {
@@ -18974,7 +20269,12 @@
           }
         }
       },
-      "id": "2027-01-21-evergreen-valley-at-lincoln"
+      "id": "2027-01-21-evergreen-valley-at-lincoln",
+      "published": [
+        {
+          "contestId": "2331baed-894a-4a79-8ee4-26c49860bae0"
+        }
+      ]
     },
     {
       "claims": {
@@ -19055,7 +20355,12 @@
           }
         }
       },
-      "id": "2027-01-21-fremont-at-lynbrook"
+      "id": "2027-01-21-fremont-at-lynbrook",
+      "published": [
+        {
+          "contestId": "9c51f7d9-fe2e-495a-8a6e-d053e6f67218"
+        }
+      ]
     },
     {
       "claims": {
@@ -19144,7 +20449,12 @@
           }
         }
       },
-      "id": "2027-01-21-independence-at-san-jose"
+      "id": "2027-01-21-independence-at-san-jose",
+      "published": [
+        {
+          "contestId": "f41e5fab-3386-43f7-ba0c-73ce45065142"
+        }
+      ]
     },
     {
       "claims": {
@@ -19233,7 +20543,12 @@
           }
         }
       },
-      "id": "2027-01-21-leland-at-westmont"
+      "id": "2027-01-21-leland-at-westmont",
+      "published": [
+        {
+          "contestId": "6f441037-4807-44cd-836a-1e449e2e25d2"
+        }
+      ]
     },
     {
       "claims": {
@@ -19308,6 +20623,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-21; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-01-21:live-oak@oak-grove",
           "stamp": {
             "division": "santa-teresa",
@@ -19322,7 +20638,12 @@
           }
         }
       },
-      "id": "2027-01-21-live-oak-at-oak-grove"
+      "id": "2027-01-21-live-oak-at-oak-grove",
+      "published": [
+        {
+          "contestId": "9732c902-73d5-43dc-8c96-976e44b667aa"
+        }
+      ]
     },
     {
       "claims": {
@@ -19403,7 +20724,12 @@
           }
         }
       },
-      "id": "2027-01-21-macdonald-at-saratoga"
+      "id": "2027-01-21-macdonald-at-saratoga",
+      "published": [
+        {
+          "contestId": "d1d8e336-cca6-4255-9f46-f135c98b9208"
+        }
+      ]
     },
     {
       "claims": {
@@ -19580,7 +20906,12 @@
           }
         }
       },
-      "id": "2027-01-21-pioneer-at-willow-glen"
+      "id": "2027-01-21-pioneer-at-willow-glen",
+      "published": [
+        {
+          "contestId": "c8d9b657-aee3-42f6-9681-39c3b2ab2ba5"
+        }
+      ]
     },
     {
       "claims": {
@@ -19709,7 +21040,12 @@
           }
         }
       },
-      "id": "2027-01-21-wilcox-at-monta-vista"
+      "id": "2027-01-21-wilcox-at-monta-vista",
+      "published": [
+        {
+          "contestId": "c8f863cc-feaf-48af-8496-cf09742fc959"
+        }
+      ]
     },
     {
       "claims": {
@@ -19798,7 +21134,12 @@
           }
         }
       },
-      "id": "2027-01-21-yerba-buena-at-james-lick"
+      "id": "2027-01-21-yerba-buena-at-james-lick",
+      "published": [
+        {
+          "contestId": "93755742-82a7-4e73-8f3d-256556407134"
+        }
+      ]
     },
     {
       "claims": {
@@ -19859,7 +21200,12 @@
           "ref": "c40b1fd8-6d86-4542-9ed0-24853c08726d"
         }
       },
-      "id": "2027-01-22-eastside-at-mercy-burlingame"
+      "id": "2027-01-22-eastside-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "c40b1fd8-6d86-4542-9ed0-24853c08726d"
+        }
+      ]
     },
     {
       "claims": {
@@ -19940,7 +21286,12 @@
           }
         }
       },
-      "id": "2027-01-22-gunn-at-los-altos"
+      "id": "2027-01-22-gunn-at-los-altos",
+      "published": [
+        {
+          "contestId": "2eaa8c24-19c6-473f-b296-5cde78f7b98d"
+        }
+      ]
     },
     {
       "claims": {
@@ -20001,7 +21352,12 @@
           "ref": "6e156001-457a-4474-b4c3-bb49813ddb0b"
         }
       },
-      "id": "2027-01-22-harker-at-notre-dame-san-jose"
+      "id": "2027-01-22-harker-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "6e156001-457a-4474-b4c3-bb49813ddb0b"
+        }
+      ]
     },
     {
       "claims": {
@@ -20082,7 +21438,12 @@
           }
         }
       },
-      "id": "2027-01-22-mountain-view-at-los-gatos"
+      "id": "2027-01-22-mountain-view-at-los-gatos",
+      "published": [
+        {
+          "contestId": "543df7b8-0723-4300-adc2-69998109921c"
+        }
+      ]
     },
     {
       "claims": {
@@ -20163,7 +21524,12 @@
           }
         }
       },
-      "id": "2027-01-22-santa-clara-at-homestead"
+      "id": "2027-01-22-santa-clara-at-homestead",
+      "published": [
+        {
+          "contestId": "e7df3163-f41f-479e-8d4f-8a3c5b92c2e1"
+        }
+      ]
     },
     {
       "claims": {
@@ -20264,7 +21630,12 @@
           }
         }
       },
-      "id": "2027-01-23-lynbrook-at-milpitas"
+      "id": "2027-01-23-lynbrook-at-milpitas",
+      "published": [
+        {
+          "contestId": "3734df21-8190-4825-a7a7-e34203fc6df9"
+        }
+      ]
     },
     {
       "claims": {
@@ -20325,7 +21696,12 @@
           "ref": "b517228a-14e9-4c93-a548-00561af05a50"
         }
       },
-      "id": "2027-01-23-mitty-at-name:marinacademy"
+      "id": "2027-01-23-mitty-at-name:marinacademy",
+      "published": [
+        {
+          "contestId": "b517228a-14e9-4c93-a548-00561af05a50"
+        }
+      ]
     },
     {
       "claims": {
@@ -20386,7 +21762,12 @@
           "ref": "7dc91761-72fa-4135-a1f3-2e4d1051a977"
         }
       },
-      "id": "2027-01-23-saint-francis-at-valley-christian"
+      "id": "2027-01-23-saint-francis-at-valley-christian",
+      "published": [
+        {
+          "contestId": "7dc91761-72fa-4135-a1f3-2e4d1051a977"
+        }
+      ]
     },
     {
       "claims": {
@@ -20457,6 +21838,7 @@
               "source": "scval-pdf"
             }
           },
+          "leagueFlagNote": "the official SCVAL schedule has this as a league game on 2027-01-23; MaxPreps flags it non-league",
           "ref": "el-camino:2027-01-23:saratoga@fremont",
           "stamp": {
             "division": "el-camino",
@@ -20467,7 +21849,12 @@
           }
         }
       },
-      "id": "2027-01-23-saratoga-at-fremont"
+      "id": "2027-01-23-saratoga-at-fremont",
+      "published": [
+        {
+          "contestId": "826773bf-ce57-45ea-a434-89c65c5b72a1"
+        }
+      ]
     },
     {
       "claims": {
@@ -20528,7 +21915,12 @@
           "ref": "69b3693b-a225-4e56-8ba3-f4267f599c17"
         }
       },
-      "id": "2027-01-25-crystal-springs-at-name:thenuevaschool"
+      "id": "2027-01-25-crystal-springs-at-name:thenuevaschool",
+      "published": [
+        {
+          "contestId": "69b3693b-a225-4e56-8ba3-f4267f599c17"
+        }
+      ]
     },
     {
       "claims": {
@@ -20589,7 +21981,12 @@
           "ref": "cd26a104-9a37-47d9-83f4-17318227ef1e"
         }
       },
-      "id": "2027-01-25-eastside-at-name:designtech"
+      "id": "2027-01-25-eastside-at-name:designtech",
+      "published": [
+        {
+          "contestId": "cd26a104-9a37-47d9-83f4-17318227ef1e"
+        }
+      ]
     },
     {
       "claims": {
@@ -20670,7 +22067,12 @@
           }
         }
       },
-      "id": "2027-01-25-homestead-at-gunn"
+      "id": "2027-01-25-homestead-at-gunn",
+      "published": [
+        {
+          "contestId": "8adbb9f2-61a8-40dc-bc41-f877c32ca9ad"
+        }
+      ]
     },
     {
       "claims": {
@@ -20751,7 +22153,12 @@
           }
         }
       },
-      "id": "2027-01-25-palo-alto-at-santa-clara"
+      "id": "2027-01-25-palo-alto-at-santa-clara",
+      "published": [
+        {
+          "contestId": "37d2b5aa-8f35-4990-aada-22ee363c9360"
+        }
+      ]
     },
     {
       "claims": {
@@ -20856,7 +22263,12 @@
           }
         }
       },
-      "id": "2027-01-26-cupertino-at-macdonald"
+      "id": "2027-01-26-cupertino-at-macdonald",
+      "published": [
+        {
+          "contestId": "e77bf50c-2c51-49de-9fa8-ed4bc89fe59d"
+        }
+      ]
     },
     {
       "claims": {
@@ -20985,7 +22397,12 @@
           }
         }
       },
-      "id": "2027-01-26-james-lick-at-del-mar"
+      "id": "2027-01-26-james-lick-at-del-mar",
+      "published": [
+        {
+          "contestId": "0a485418-8cbc-4b5b-8c78-a8e4044aaf19"
+        }
+      ]
     },
     {
       "claims": {
@@ -21074,7 +22491,12 @@
           }
         }
       },
-      "id": "2027-01-26-leland-at-pioneer"
+      "id": "2027-01-26-leland-at-pioneer",
+      "published": [
+        {
+          "contestId": "51986528-1c40-4daa-adc6-f6b3f054ec77"
+        }
+      ]
     },
     {
       "claims": {
@@ -21179,7 +22601,12 @@
           }
         }
       },
-      "id": "2027-01-26-lynbrook-at-wilcox"
+      "id": "2027-01-26-lynbrook-at-wilcox",
+      "published": [
+        {
+          "contestId": "dcd9a916-650d-454e-8755-4fa10f137086"
+        }
+      ]
     },
     {
       "claims": {
@@ -21260,7 +22687,12 @@
           }
         }
       },
-      "id": "2027-01-26-monta-vista-at-saratoga"
+      "id": "2027-01-26-monta-vista-at-saratoga",
+      "published": [
+        {
+          "contestId": "81a5fa77-5057-4c25-8685-53c6eb5457e3"
+        }
+      ]
     },
     {
       "claims": {
@@ -21349,7 +22781,12 @@
           }
         }
       },
-      "id": "2027-01-26-piedmont-hills-at-branham"
+      "id": "2027-01-26-piedmont-hills-at-branham",
+      "published": [
+        {
+          "contestId": "c98a1da6-8e20-4175-a406-438d65c79ad3"
+        }
+      ]
     },
     {
       "claims": {
@@ -21438,7 +22875,12 @@
           }
         }
       },
-      "id": "2027-01-26-san-jose-at-mt-pleasant"
+      "id": "2027-01-26-san-jose-at-mt-pleasant",
+      "published": [
+        {
+          "contestId": "ebc72f61-ad87-4332-857f-40a9b0f0184f"
+        }
+      ]
     },
     {
       "claims": {
@@ -21527,7 +22969,12 @@
           }
         }
       },
-      "id": "2027-01-26-santa-teresa-at-live-oak"
+      "id": "2027-01-26-santa-teresa-at-live-oak",
+      "published": [
+        {
+          "contestId": "bc97e33e-f378-4ad4-a29c-277d0a106f42"
+        }
+      ]
     },
     {
       "claims": {
@@ -21616,7 +23063,12 @@
           }
         }
       },
-      "id": "2027-01-26-silver-creek-at-evergreen-valley"
+      "id": "2027-01-26-silver-creek-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "a9f114c8-b71e-4647-aad6-c7e3deebb271"
+        }
+      ]
     },
     {
       "claims": {
@@ -21753,7 +23205,12 @@
           }
         }
       },
-      "id": "2027-01-26-willow-glen-at-gilroy"
+      "id": "2027-01-26-willow-glen-at-gilroy",
+      "published": [
+        {
+          "contestId": "9e685ccc-1a9e-415e-82a7-f0c703d41954"
+        }
+      ]
     },
     {
       "claims": {
@@ -21842,7 +23299,12 @@
           }
         }
       },
-      "id": "2027-01-26-yerba-buena-at-overfelt"
+      "id": "2027-01-26-yerba-buena-at-overfelt",
+      "published": [
+        {
+          "contestId": "e00f29fc-7b67-4546-95aa-2263b638a76d"
+        }
+      ]
     },
     {
       "claims": {
@@ -21923,7 +23385,12 @@
           }
         }
       },
-      "id": "2027-01-27-homestead-at-mountain-view"
+      "id": "2027-01-27-homestead-at-mountain-view",
+      "published": [
+        {
+          "contestId": "c0fd25cc-13ca-4aaf-a5e6-ff8f9df14c1d"
+        }
+      ]
     },
     {
       "claims": {
@@ -22004,7 +23471,12 @@
           }
         }
       },
-      "id": "2027-01-27-los-altos-at-los-gatos"
+      "id": "2027-01-27-los-altos-at-los-gatos",
+      "published": [
+        {
+          "contestId": "31f31dfa-ef48-44a8-b60c-607b62766f2c"
+        }
+      ]
     },
     {
       "claims": {
@@ -22065,7 +23537,12 @@
           "ref": "4bf635fd-8d08-4a81-9a74-1e2b3f2086aa"
         }
       },
-      "id": "2027-01-27-mitty-at-riordan"
+      "id": "2027-01-27-mitty-at-riordan",
+      "published": [
+        {
+          "contestId": "4bf635fd-8d08-4a81-9a74-1e2b3f2086aa"
+        }
+      ]
     },
     {
       "claims": {
@@ -22146,7 +23623,12 @@
           }
         }
       },
-      "id": "2027-01-27-palo-alto-at-gunn"
+      "id": "2027-01-27-palo-alto-at-gunn",
+      "published": [
+        {
+          "contestId": "1264086e-0507-47c7-ae6a-0c80a871cbd1"
+        }
+      ]
     },
     {
       "claims": {
@@ -22259,7 +23741,12 @@
           }
         }
       },
-      "id": "2027-01-28-branham-at-westmont"
+      "id": "2027-01-28-branham-at-westmont",
+      "published": [
+        {
+          "contestId": "06fed479-74ff-4725-8cd8-ca401a6cfc31"
+        }
+      ]
     },
     {
       "claims": {
@@ -22348,7 +23835,12 @@
           }
         }
       },
-      "id": "2027-01-28-christopher-at-evergreen-valley"
+      "id": "2027-01-28-christopher-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "7282f2dc-c9c2-4d25-93ab-072d025e7802"
+        }
+      ]
     },
     {
       "claims": {
@@ -22437,7 +23929,12 @@
           }
         }
       },
-      "id": "2027-01-28-gilroy-at-pioneer"
+      "id": "2027-01-28-gilroy-at-pioneer",
+      "published": [
+        {
+          "contestId": "c4ff6fe8-2dba-4b4a-98ba-b86a07186dc5"
+        }
+      ]
     },
     {
       "claims": {
@@ -22594,7 +24091,12 @@
           }
         }
       },
-      "id": "2027-01-28-live-oak-at-sobrato"
+      "id": "2027-01-28-live-oak-at-sobrato",
+      "published": [
+        {
+          "contestId": "5349796e-83fe-446a-8b6c-9197446752f4"
+        }
+      ]
     },
     {
       "claims": {
@@ -22675,7 +24177,12 @@
           }
         }
       },
-      "id": "2027-01-28-macdonald-at-lynbrook"
+      "id": "2027-01-28-macdonald-at-lynbrook",
+      "published": [
+        {
+          "contestId": "d681fda5-02f0-40af-ba50-70011d5069c0"
+        }
+      ]
     },
     {
       "claims": {
@@ -22756,7 +24263,12 @@
           }
         }
       },
-      "id": "2027-01-28-monta-vista-at-fremont"
+      "id": "2027-01-28-monta-vista-at-fremont",
+      "published": [
+        {
+          "contestId": "750db683-12d7-4a7b-b582-6b04d77ff0e9"
+        }
+      ]
     },
     {
       "claims": {
@@ -22845,7 +24357,12 @@
           }
         }
       },
-      "id": "2027-01-28-mt-pleasant-at-james-lick"
+      "id": "2027-01-28-mt-pleasant-at-james-lick",
+      "published": [
+        {
+          "contestId": "e15efba4-37cb-4333-9cda-6cc8f32cc7fc"
+        }
+      ]
     },
     {
       "claims": {
@@ -22958,7 +24475,12 @@
           }
         }
       },
-      "id": "2027-01-28-prospect-at-yerba-buena"
+      "id": "2027-01-28-prospect-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "c747f00f-0fd7-417c-a974-47dafbf3b754"
+        }
+      ]
     },
     {
       "claims": {
@@ -23047,7 +24569,12 @@
           }
         }
       },
-      "id": "2027-01-28-san-jose-at-del-mar"
+      "id": "2027-01-28-san-jose-at-del-mar",
+      "published": [
+        {
+          "contestId": "18ae1395-84a4-4041-8494-c57e9f88f10e"
+        }
+      ]
     },
     {
       "claims": {
@@ -23128,7 +24655,12 @@
           }
         }
       },
-      "id": "2027-01-28-saratoga-at-cupertino"
+      "id": "2027-01-28-saratoga-at-cupertino",
+      "published": [
+        {
+          "contestId": "fd74b150-d387-427b-b211-f16fd062e551"
+        }
+      ]
     },
     {
       "claims": {
@@ -23237,7 +24769,12 @@
           }
         }
       },
-      "id": "2027-01-28-willow-glen-at-leland"
+      "id": "2027-01-28-willow-glen-at-leland",
+      "published": [
+        {
+          "contestId": "4ec497c4-16c7-4df7-b7f9-760bdae6b533"
+        }
+      ]
     },
     {
       "claims": {
@@ -23318,7 +24855,12 @@
           }
         }
       },
-      "id": "2027-01-29-gunn-at-santa-clara"
+      "id": "2027-01-29-gunn-at-santa-clara",
+      "published": [
+        {
+          "contestId": "7d84a511-e3d8-4640-8fb7-f12c2a638563"
+        }
+      ]
     },
     {
       "claims": {
@@ -23399,7 +24941,12 @@
           }
         }
       },
-      "id": "2027-01-29-los-gatos-at-homestead"
+      "id": "2027-01-29-los-gatos-at-homestead",
+      "published": [
+        {
+          "contestId": "ebbe2042-80fe-4aeb-8027-f8e794033b14"
+        }
+      ]
     },
     {
       "claims": {
@@ -23480,7 +25027,12 @@
           }
         }
       },
-      "id": "2027-01-29-mountain-view-at-palo-alto"
+      "id": "2027-01-29-mountain-view-at-palo-alto",
+      "published": [
+        {
+          "contestId": "346e8405-afd8-457a-bf39-c5df82899c3b"
+        }
+      ]
     },
     {
       "claims": {
@@ -23541,7 +25093,12 @@
           "ref": "efe51a19-3532-4f6c-9ea4-893420d5df19"
         }
       },
-      "id": "2027-01-29-notre-dame-san-jose-at-priory"
+      "id": "2027-01-29-notre-dame-san-jose-at-priory",
+      "published": [
+        {
+          "contestId": "efe51a19-3532-4f6c-9ea4-893420d5df19"
+        }
+      ]
     },
     {
       "claims": {
@@ -23630,7 +25187,12 @@
           }
         }
       },
-      "id": "2027-01-30-evergreen-valley-at-live-oak"
+      "id": "2027-01-30-evergreen-valley-at-live-oak",
+      "published": [
+        {
+          "contestId": "0dedc445-e629-4000-b46c-37a2caa47d78"
+        }
+      ]
     },
     {
       "claims": {
@@ -23705,6 +25267,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-30; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-30:leigh@willow-glen",
           "stamp": {
             "division": "mt-hamilton",
@@ -23719,7 +25282,12 @@
           }
         }
       },
-      "id": "2027-01-30-leigh-at-willow-glen"
+      "id": "2027-01-30-leigh-at-willow-glen",
+      "published": [
+        {
+          "contestId": "85734b4d-33ee-475e-9dbe-c9b72e9fad71"
+        }
+      ]
     },
     {
       "claims": {
@@ -23808,7 +25376,12 @@
           }
         }
       },
-      "id": "2027-01-30-leland-at-piedmont-hills"
+      "id": "2027-01-30-leland-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "993dd5a4-df6b-4b0a-9048-c05f9569d2aa"
+        }
+      ]
     },
     {
       "claims": {
@@ -23869,7 +25442,12 @@
           "ref": "a150e47b-7bdc-480d-b136-2f6fec61ec3d"
         }
       },
-      "id": "2027-01-30-name:university-at-mitty"
+      "id": "2027-01-30-name:university-at-mitty",
+      "published": [
+        {
+          "contestId": "a150e47b-7bdc-480d-b136-2f6fec61ec3d"
+        }
+      ]
     },
     {
       "claims": {
@@ -23982,7 +25560,12 @@
           }
         }
       },
-      "id": "2027-01-30-pioneer-at-branham"
+      "id": "2027-01-30-pioneer-at-branham",
+      "published": [
+        {
+          "contestId": "39d740ad-b1a6-4ff2-930f-6376a28e6bf3"
+        }
+      ]
     },
     {
       "claims": {
@@ -24043,7 +25626,12 @@
           "ref": "9954fa55-4955-4bba-a07b-ffa65427704e"
         }
       },
-      "id": "2027-01-30-riordan-at-valley-christian"
+      "id": "2027-01-30-riordan-at-valley-christian",
+      "published": [
+        {
+          "contestId": "9954fa55-4955-4bba-a07b-ffa65427704e"
+        }
+      ]
     },
     {
       "claims": {
@@ -24176,7 +25764,12 @@
           "ref": "6dc730f2-1924-4155-a41d-f681871d7268"
         }
       },
-      "id": "2027-02-01-name:burlingame-at-los-altos"
+      "id": "2027-02-01-name:burlingame-at-los-altos",
+      "published": [
+        {
+          "contestId": "6dc730f2-1924-4155-a41d-f681871d7268"
+        }
+      ]
     },
     {
       "claims": {
@@ -24265,7 +25858,12 @@
           }
         }
       },
-      "id": "2027-02-02-andrew-hill-at-yerba-buena"
+      "id": "2027-02-02-andrew-hill-at-yerba-buena",
+      "published": [
+        {
+          "contestId": "44089be4-9004-4c62-95a6-08b108d8e528"
+        }
+      ]
     },
     {
       "claims": {
@@ -24354,7 +25952,12 @@
           }
         }
       },
-      "id": "2027-02-02-branham-at-willow-glen"
+      "id": "2027-02-02-branham-at-willow-glen",
+      "published": [
+        {
+          "contestId": "dfd789a2-c91f-4b33-ba6f-241a0e1f704d"
+        }
+      ]
     },
     {
       "claims": {
@@ -24459,7 +26062,12 @@
           }
         }
       },
-      "id": "2027-02-02-cupertino-at-monta-vista"
+      "id": "2027-02-02-cupertino-at-monta-vista",
+      "published": [
+        {
+          "contestId": "79403a99-cb7c-4d35-9393-79a4a4ef1c43"
+        }
+      ]
     },
     {
       "claims": {
@@ -24548,7 +26156,12 @@
           }
         }
       },
-      "id": "2027-02-02-evergreen-valley-at-oak-grove"
+      "id": "2027-02-02-evergreen-valley-at-oak-grove",
+      "published": [
+        {
+          "contestId": "17f9934f-2fdc-4153-8fb6-77f5fdc16281"
+        }
+      ]
     },
     {
       "claims": {
@@ -24657,7 +26270,12 @@
           }
         }
       },
-      "id": "2027-02-02-gilroy-at-leland"
+      "id": "2027-02-02-gilroy-at-leland",
+      "published": [
+        {
+          "contestId": "c0c4bad1-3b70-4264-b39d-3737a0f8d2ec"
+        }
+      ]
     },
     {
       "claims": {
@@ -24738,7 +26356,12 @@
           }
         }
       },
-      "id": "2027-02-02-gunderson-at-james-lick"
+      "id": "2027-02-02-gunderson-at-james-lick",
+      "published": [
+        {
+          "contestId": "1c400d4f-f2d5-4532-91c8-f9e20accb2e6"
+        }
+      ]
     },
     {
       "claims": {
@@ -24827,7 +26450,12 @@
           }
         }
       },
-      "id": "2027-02-02-live-oak-at-lincoln"
+      "id": "2027-02-02-live-oak-at-lincoln",
+      "published": [
+        {
+          "contestId": "3289e198-d49d-4be6-a7d8-74a943b18b9e"
+        }
+      ]
     },
     {
       "claims": {
@@ -24908,7 +26536,12 @@
           }
         }
       },
-      "id": "2027-02-02-lynbrook-at-saratoga"
+      "id": "2027-02-02-lynbrook-at-saratoga",
+      "published": [
+        {
+          "contestId": "1364fd28-de3b-46d9-a0b1-2cb586c43c19"
+        }
+      ]
     },
     {
       "claims": {
@@ -24989,7 +26622,12 @@
           }
         }
       },
-      "id": "2027-02-02-milpitas-at-macdonald"
+      "id": "2027-02-02-milpitas-at-macdonald",
+      "published": [
+        {
+          "contestId": "00b92f80-03c8-4170-b7ca-53d066c22671"
+        }
+      ]
     },
     {
       "claims": {
@@ -25074,7 +26712,12 @@
           "ref": "b31f6a91-2478-44aa-99d3-9908a1d29aef"
         }
       },
-      "id": "2027-02-02-notre-dame-san-jose-at-mercy-burlingame"
+      "id": "2027-02-02-notre-dame-san-jose-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "b31f6a91-2478-44aa-99d3-9908a1d29aef"
+        }
+      ]
     },
     {
       "claims": {
@@ -25163,7 +26806,12 @@
           }
         }
       },
-      "id": "2027-02-02-overfelt-at-del-mar"
+      "id": "2027-02-02-overfelt-at-del-mar",
+      "published": [
+        {
+          "contestId": "eb311772-6a8a-4067-bf57-276704bfd25c"
+        }
+      ]
     },
     {
       "claims": {
@@ -25276,7 +26924,12 @@
           }
         }
       },
-      "id": "2027-02-02-pioneer-at-leigh"
+      "id": "2027-02-02-pioneer-at-leigh",
+      "published": [
+        {
+          "contestId": "9a6ca3ec-0de0-4250-be28-5414a53ddc72"
+        }
+      ]
     },
     {
       "claims": {
@@ -25365,7 +27018,12 @@
           }
         }
       },
-      "id": "2027-02-02-san-jose-at-prospect"
+      "id": "2027-02-02-san-jose-at-prospect",
+      "published": [
+        {
+          "contestId": "b24d755d-0c1e-447c-8cb2-e201e6f44773"
+        }
+      ]
     },
     {
       "claims": {
@@ -25470,7 +27128,12 @@
           }
         }
       },
-      "id": "2027-02-03-homestead-at-los-altos"
+      "id": "2027-02-03-homestead-at-los-altos",
+      "published": [
+        {
+          "contestId": "2cd063f0-5389-44ab-97a7-1a707f26db0c"
+        }
+      ]
     },
     {
       "claims": {
@@ -25531,7 +27194,12 @@
           "ref": "4ccd5f4b-f31a-4518-9c46-5e75a9bf1e0d"
         }
       },
-      "id": "2027-02-03-mitty-at-valley-christian"
+      "id": "2027-02-03-mitty-at-valley-christian",
+      "published": [
+        {
+          "contestId": "4ccd5f4b-f31a-4518-9c46-5e75a9bf1e0d"
+        }
+      ]
     },
     {
       "claims": {
@@ -25612,7 +27280,12 @@
           }
         }
       },
-      "id": "2027-02-03-palo-alto-at-los-gatos"
+      "id": "2027-02-03-palo-alto-at-los-gatos",
+      "published": [
+        {
+          "contestId": "9bdee190-a426-449a-84b5-fffd84e16063"
+        }
+      ]
     },
     {
       "claims": {
@@ -25693,7 +27366,12 @@
           }
         }
       },
-      "id": "2027-02-03-santa-clara-at-mountain-view"
+      "id": "2027-02-03-santa-clara-at-mountain-view",
+      "published": [
+        {
+          "contestId": "e398a883-7b8d-4808-b915-1c62e997f814"
+        }
+      ]
     },
     {
       "claims": {
@@ -25782,7 +27460,12 @@
           }
         }
       },
-      "id": "2027-02-04-branham-at-gilroy"
+      "id": "2027-02-04-branham-at-gilroy",
+      "published": [
+        {
+          "contestId": "ab723f46-eee1-4b54-8d57-684608927df3"
+        }
+      ]
     },
     {
       "claims": {
@@ -25857,6 +27540,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-04; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-02-04:christopher@live-oak",
           "stamp": {
             "division": "santa-teresa",
@@ -25871,7 +27555,12 @@
           }
         }
       },
-      "id": "2027-02-04-christopher-at-live-oak"
+      "id": "2027-02-04-christopher-at-live-oak",
+      "published": [
+        {
+          "contestId": "ad6fd3b3-3ad4-49e8-846e-87776db939c1"
+        }
+      ]
     },
     {
       "claims": {
@@ -25972,7 +27661,12 @@
           }
         }
       },
-      "id": "2027-02-04-gunderson-at-san-jose"
+      "id": "2027-02-04-gunderson-at-san-jose",
+      "published": [
+        {
+          "contestId": "795591bb-7519-47cc-8937-f5c1644c09a7"
+        }
+      ]
     },
     {
       "claims": {
@@ -26061,7 +27755,12 @@
           }
         }
       },
-      "id": "2027-02-04-james-lick-at-overfelt"
+      "id": "2027-02-04-james-lick-at-overfelt",
+      "published": [
+        {
+          "contestId": "513f3583-fc25-4e42-b1bc-c685227fbd75"
+        }
+      ]
     },
     {
       "claims": {
@@ -26150,7 +27849,12 @@
           }
         }
       },
-      "id": "2027-02-04-leigh-at-leland"
+      "id": "2027-02-04-leigh-at-leland",
+      "published": [
+        {
+          "contestId": "2f0c518b-0f15-482b-b3fc-a09260790ef2"
+        }
+      ]
     },
     {
       "claims": {
@@ -26231,7 +27935,12 @@
           }
         }
       },
-      "id": "2027-02-04-macdonald-at-wilcox"
+      "id": "2027-02-04-macdonald-at-wilcox",
+      "published": [
+        {
+          "contestId": "21eaad23-48ae-4a6d-93f0-166fe4b75769"
+        }
+      ]
     },
     {
       "claims": {
@@ -26292,7 +28001,12 @@
           "ref": "5fb5df87-1ce4-4e0c-a038-3ee72e97c1e1"
         }
       },
-      "id": "2027-02-04-mercy-burlingame-at-priory"
+      "id": "2027-02-04-mercy-burlingame-at-priory",
+      "published": [
+        {
+          "contestId": "5fb5df87-1ce4-4e0c-a038-3ee72e97c1e1"
+        }
+      ]
     },
     {
       "claims": {
@@ -26373,7 +28087,12 @@
           }
         }
       },
-      "id": "2027-02-04-monta-vista-at-lynbrook"
+      "id": "2027-02-04-monta-vista-at-lynbrook",
+      "published": [
+        {
+          "contestId": "9f6c1148-bc80-48a3-a6a3-8d9ff0af6a2b"
+        }
+      ]
     },
     {
       "claims": {
@@ -26462,7 +28181,12 @@
           }
         }
       },
-      "id": "2027-02-04-mt-pleasant-at-del-mar"
+      "id": "2027-02-04-mt-pleasant-at-del-mar",
+      "published": [
+        {
+          "contestId": "2be48dc1-7914-41ca-8bb1-84fc5bdc7243"
+        }
+      ]
     },
     {
       "claims": {
@@ -26551,7 +28275,12 @@
           }
         }
       },
-      "id": "2027-02-04-pioneer-at-piedmont-hills"
+      "id": "2027-02-04-pioneer-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "042c6b61-25b2-4c9f-9790-921c617855fb"
+        }
+      ]
     },
     {
       "claims": {
@@ -26636,7 +28365,12 @@
           "ref": "fa6326aa-e9b0-4d1a-ab8e-43cd608f2384"
         }
       },
-      "id": "2027-02-04-riordan-at-name:dublin"
+      "id": "2027-02-04-riordan-at-name:dublin",
+      "published": [
+        {
+          "contestId": "fa6326aa-e9b0-4d1a-ab8e-43cd608f2384"
+        }
+      ]
     },
     {
       "claims": {
@@ -26725,7 +28459,12 @@
           }
         }
       },
-      "id": "2027-02-04-santa-teresa-at-evergreen-valley"
+      "id": "2027-02-04-santa-teresa-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "69a8ae1a-07be-4c57-afb3-ea86e206d1a8"
+        }
+      ]
     },
     {
       "claims": {
@@ -26806,7 +28545,12 @@
           }
         }
       },
-      "id": "2027-02-04-saratoga-at-milpitas"
+      "id": "2027-02-04-saratoga-at-milpitas",
+      "published": [
+        {
+          "contestId": "4db6b84d-f126-479a-961b-8c3a2bcab08d"
+        }
+      ]
     },
     {
       "claims": {
@@ -26943,7 +28687,12 @@
           }
         }
       },
-      "id": "2027-02-04-willow-glen-at-westmont"
+      "id": "2027-02-04-willow-glen-at-westmont",
+      "published": [
+        {
+          "contestId": "1ad7b3d7-878a-4b33-b353-448a4fa13684"
+        }
+      ]
     },
     {
       "claims": {
@@ -27032,7 +28781,12 @@
           }
         }
       },
-      "id": "2027-02-04-yerba-buena-at-independence"
+      "id": "2027-02-04-yerba-buena-at-independence",
+      "published": [
+        {
+          "contestId": "56fa21bd-1ff0-4821-9ad1-23d10437708d"
+        }
+      ]
     },
     {
       "claims": {
@@ -27093,7 +28847,12 @@
           "ref": "afc46a19-0926-4638-b66c-ba83d2b6d286"
         }
       },
-      "id": "2027-02-05-eastside-at-notre-dame-san-jose"
+      "id": "2027-02-05-eastside-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "afc46a19-0926-4638-b66c-ba83d2b6d286"
+        }
+      ]
     },
     {
       "claims": {
@@ -27174,7 +28933,12 @@
           }
         }
       },
-      "id": "2027-02-05-los-altos-at-palo-alto"
+      "id": "2027-02-05-los-altos-at-palo-alto",
+      "published": [
+        {
+          "contestId": "1133cabf-8dd7-4395-b863-967e0911b783"
+        }
+      ]
     },
     {
       "claims": {
@@ -27255,7 +29019,12 @@
           }
         }
       },
-      "id": "2027-02-05-los-gatos-at-santa-clara"
+      "id": "2027-02-05-los-gatos-at-santa-clara",
+      "published": [
+        {
+          "contestId": "29c10a90-4405-4112-b1d5-fa2266db1f20"
+        }
+      ]
     },
     {
       "claims": {
@@ -27336,7 +29105,12 @@
           }
         }
       },
-      "id": "2027-02-05-macdonald-at-monta-vista"
+      "id": "2027-02-05-macdonald-at-monta-vista",
+      "published": [
+        {
+          "contestId": "d43e5515-c989-4054-886b-4217d5708cbd"
+        }
+      ]
     },
     {
       "claims": {
@@ -27417,7 +29191,12 @@
           }
         }
       },
-      "id": "2027-02-05-mountain-view-at-gunn"
+      "id": "2027-02-05-mountain-view-at-gunn",
+      "published": [
+        {
+          "contestId": "6d29f1c8-47bf-4dd7-afbf-6b87673bf447"
+        }
+      ]
     },
     {
       "claims": {
@@ -27478,7 +29257,12 @@
           "ref": "772cdb78-9d42-4801-8f61-7ffc2c043ac9"
         }
       },
-      "id": "2027-02-06-fremont-at-homestead"
+      "id": "2027-02-06-fremont-at-homestead",
+      "published": [
+        {
+          "contestId": "772cdb78-9d42-4801-8f61-7ffc2c043ac9"
+        }
+      ]
     },
     {
       "claims": {
@@ -27539,7 +29323,12 @@
           "ref": "ff982188-ff53-4bec-acac-68e153e797ad"
         }
       },
-      "id": "2027-02-06-menlo-at-name:menloatherton"
+      "id": "2027-02-06-menlo-at-name:menloatherton",
+      "published": [
+        {
+          "contestId": "ff982188-ff53-4bec-acac-68e153e797ad"
+        }
+      ]
     },
     {
       "claims": {
@@ -27600,7 +29389,12 @@
           "ref": "bf509de8-8173-4bd7-a55b-7081e8f92422"
         }
       },
-      "id": "2027-02-06-st-ignatius-at-mitty"
+      "id": "2027-02-06-st-ignatius-at-mitty",
+      "published": [
+        {
+          "contestId": "bf509de8-8173-4bd7-a55b-7081e8f92422"
+        }
+      ]
     },
     {
       "claims": {
@@ -27661,7 +29455,12 @@
           "ref": "be225b67-37f3-4df8-9b70-7e600a7c8b96"
         }
       },
-      "id": "2027-02-06-valley-christian-at-sacred-heart-cathedral"
+      "id": "2027-02-06-valley-christian-at-sacred-heart-cathedral",
+      "published": [
+        {
+          "contestId": "be225b67-37f3-4df8-9b70-7e600a7c8b96"
+        }
+      ]
     },
     {
       "claims": {
@@ -27810,7 +29609,12 @@
           "ref": "ae01729a-9cd6-4a40-9a6a-ca031b532025"
         }
       },
-      "id": "2027-02-09-harker-at-mercy-burlingame"
+      "id": "2027-02-09-harker-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "ae01729a-9cd6-4a40-9a6a-ca031b532025"
+        }
+      ]
     },
     {
       "claims": {
@@ -27899,7 +29703,12 @@
           }
         }
       },
-      "id": "2027-02-09-leland-at-branham"
+      "id": "2027-02-09-leland-at-branham",
+      "published": [
+        {
+          "contestId": "f662d1d8-8006-4226-bcb8-ed17b05bf274"
+        }
+      ]
     },
     {
       "claims": {
@@ -27980,7 +29789,12 @@
           }
         }
       },
-      "id": "2027-02-09-lynbrook-at-cupertino"
+      "id": "2027-02-09-lynbrook-at-cupertino",
+      "published": [
+        {
+          "contestId": "620e54c5-e658-4e57-943a-0981d74fb9ca"
+        }
+      ]
     },
     {
       "claims": {
@@ -28061,7 +29875,12 @@
           }
         }
       },
-      "id": "2027-02-09-milpitas-at-monta-vista"
+      "id": "2027-02-09-milpitas-at-monta-vista",
+      "published": [
+        {
+          "contestId": "0239635b-f938-4ff3-8502-7e5be96d9f36"
+        }
+      ]
     },
     {
       "claims": {
@@ -28160,6 +29979,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-09; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-02-09:piedmont-hills@willow-glen",
           "stamp": {
             "division": "mt-hamilton",
@@ -28174,7 +29994,12 @@
           }
         }
       },
-      "id": "2027-02-09-piedmont-hills-at-willow-glen"
+      "id": "2027-02-09-piedmont-hills-at-willow-glen",
+      "published": [
+        {
+          "contestId": "ada72e27-3764-4dc1-be1b-bf0941adbb1e"
+        }
+      ]
     },
     {
       "claims": {
@@ -28235,7 +30060,12 @@
           "ref": "37fbab9b-e45e-4a09-8c20-aafffde4a799"
         }
       },
-      "id": "2027-02-09-pinewood-at-notre-dame-san-jose"
+      "id": "2027-02-09-pinewood-at-notre-dame-san-jose",
+      "published": [
+        {
+          "contestId": "37fbab9b-e45e-4a09-8c20-aafffde4a799"
+        }
+      ]
     },
     {
       "claims": {
@@ -28348,7 +30178,12 @@
           }
         }
       },
-      "id": "2027-02-09-san-jose-at-james-lick"
+      "id": "2027-02-09-san-jose-at-james-lick",
+      "published": [
+        {
+          "contestId": "01270114-42c4-4af2-b6d5-a01466e739af"
+        }
+      ]
     },
     {
       "claims": {
@@ -28461,7 +30296,12 @@
           }
         }
       },
-      "id": "2027-02-09-silver-creek-at-live-oak"
+      "id": "2027-02-09-silver-creek-at-live-oak",
+      "published": [
+        {
+          "contestId": "dd12572c-7376-4d77-8efb-25bb41067347"
+        }
+      ]
     },
     {
       "claims": {
@@ -28550,7 +30390,12 @@
           }
         }
       },
-      "id": "2027-02-09-sobrato-at-evergreen-valley"
+      "id": "2027-02-09-sobrato-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "697c0203-a639-490d-ab3f-82f902386fa3"
+        }
+      ]
     },
     {
       "claims": {
@@ -28639,7 +30484,12 @@
           }
         }
       },
-      "id": "2027-02-09-westmont-at-pioneer"
+      "id": "2027-02-09-westmont-at-pioneer",
+      "published": [
+        {
+          "contestId": "7abfbabe-4ea6-4674-a268-f510e72e4797"
+        }
+      ]
     },
     {
       "claims": {
@@ -28720,7 +30570,12 @@
           }
         }
       },
-      "id": "2027-02-09-wilcox-at-saratoga"
+      "id": "2027-02-09-wilcox-at-saratoga",
+      "published": [
+        {
+          "contestId": "c693190e-2674-40f6-9eb6-623b9022eddb"
+        }
+      ]
     },
     {
       "claims": {
@@ -28809,7 +30664,12 @@
           }
         }
       },
-      "id": "2027-02-09-yerba-buena-at-del-mar"
+      "id": "2027-02-09-yerba-buena-at-del-mar",
+      "published": [
+        {
+          "contestId": "563dc8bd-050f-4bb1-9294-193f937c40ea"
+        }
+      ]
     },
     {
       "claims": {
@@ -28890,7 +30750,12 @@
           }
         }
       },
-      "id": "2027-02-10-gunn-at-los-gatos"
+      "id": "2027-02-10-gunn-at-los-gatos",
+      "published": [
+        {
+          "contestId": "315c0ec6-0de3-4f25-974d-a91c2967cca9"
+        }
+      ]
     },
     {
       "claims": {
@@ -28971,7 +30836,12 @@
           }
         }
       },
-      "id": "2027-02-10-palo-alto-at-homestead"
+      "id": "2027-02-10-palo-alto-at-homestead",
+      "published": [
+        {
+          "contestId": "71f01d04-4562-4ede-8068-9219f19e634e"
+        }
+      ]
     },
     {
       "claims": {
@@ -29032,7 +30902,12 @@
           "ref": "1baa9a3d-6b70-4ac2-9ec0-5e0da26eb1f0"
         }
       },
-      "id": "2027-02-10-saint-francis-at-mitty"
+      "id": "2027-02-10-saint-francis-at-mitty",
+      "published": [
+        {
+          "contestId": "1baa9a3d-6b70-4ac2-9ec0-5e0da26eb1f0"
+        }
+      ]
     },
     {
       "claims": {
@@ -29113,7 +30988,12 @@
           }
         }
       },
-      "id": "2027-02-10-santa-clara-at-los-altos"
+      "id": "2027-02-10-santa-clara-at-los-altos",
+      "published": [
+        {
+          "contestId": "314cc28b-ff70-4f08-88b1-9b81c0e19932"
+        }
+      ]
     },
     {
       "claims": {
@@ -29174,7 +31054,12 @@
           "ref": "edea0d8d-6894-48d1-9afe-d8d3cb9c4597"
         }
       },
-      "id": "2027-02-10-valley-christian-at-st-ignatius"
+      "id": "2027-02-10-valley-christian-at-st-ignatius",
+      "published": [
+        {
+          "contestId": "edea0d8d-6894-48d1-9afe-d8d3cb9c4597"
+        }
+      ]
     },
     {
       "claims": {
@@ -29263,7 +31148,12 @@
           }
         }
       },
-      "id": "2027-02-11-andrew-hill-at-san-jose"
+      "id": "2027-02-11-andrew-hill-at-san-jose",
+      "published": [
+        {
+          "contestId": "416a49f2-cac6-483f-b56c-ade9ed37c5f2"
+        }
+      ]
     },
     {
       "claims": {
@@ -29412,7 +31302,12 @@
           }
         }
       },
-      "id": "2027-02-11-gunderson-at-del-mar"
+      "id": "2027-02-11-gunderson-at-del-mar",
+      "published": [
+        {
+          "contestId": "73e20486-c689-4edb-9500-6aa8c28961d1"
+        }
+      ]
     },
     {
       "claims": {
@@ -29501,7 +31396,12 @@
           }
         }
       },
-      "id": "2027-02-11-james-lick-at-prospect"
+      "id": "2027-02-11-james-lick-at-prospect",
+      "published": [
+        {
+          "contestId": "e23d6bdf-b962-4520-8fae-573e68e7db32"
+        }
+      ]
     },
     {
       "claims": {
@@ -29590,7 +31490,12 @@
           }
         }
       },
-      "id": "2027-02-11-leigh-at-branham"
+      "id": "2027-02-11-leigh-at-branham",
+      "published": [
+        {
+          "contestId": "ca2437d8-8925-4faf-aa2e-f88f152c980a"
+        }
+      ]
     },
     {
       "claims": {
@@ -29679,7 +31584,12 @@
           }
         }
       },
-      "id": "2027-02-11-lincoln-at-evergreen-valley"
+      "id": "2027-02-11-lincoln-at-evergreen-valley",
+      "published": [
+        {
+          "contestId": "dcc74112-9fed-4edd-8762-d0c33c1516e0"
+        }
+      ]
     },
     {
       "claims": {
@@ -29760,7 +31670,12 @@
           }
         }
       },
-      "id": "2027-02-11-lynbrook-at-fremont"
+      "id": "2027-02-11-lynbrook-at-fremont",
+      "published": [
+        {
+          "contestId": "97ff085e-c9b2-43b7-9027-9e3caa2fbac0"
+        }
+      ]
     },
     {
       "claims": {
@@ -29841,7 +31756,12 @@
           }
         }
       },
-      "id": "2027-02-11-monta-vista-at-wilcox"
+      "id": "2027-02-11-monta-vista-at-wilcox",
+      "published": [
+        {
+          "contestId": "01e1c176-5043-441f-afce-37a615cacc03"
+        }
+      ]
     },
     {
       "claims": {
@@ -29916,6 +31836,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-11; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-02-11:oak-grove@live-oak",
           "stamp": {
             "division": "santa-teresa",
@@ -29930,7 +31851,12 @@
           }
         }
       },
-      "id": "2027-02-11-oak-grove-at-live-oak"
+      "id": "2027-02-11-oak-grove-at-live-oak",
+      "published": [
+        {
+          "contestId": "54773fd9-d9c8-43c4-b419-cc04246d37c2"
+        }
+      ]
     },
     {
       "claims": {
@@ -30035,7 +31961,12 @@
           }
         }
       },
-      "id": "2027-02-11-saratoga-at-macdonald"
+      "id": "2027-02-11-saratoga-at-macdonald",
+      "published": [
+        {
+          "contestId": "2217a712-cd49-4adc-a93f-12f301989ad3"
+        }
+      ]
     },
     {
       "claims": {
@@ -30148,7 +32079,12 @@
           }
         }
       },
-      "id": "2027-02-11-westmont-at-leland"
+      "id": "2027-02-11-westmont-at-leland",
+      "published": [
+        {
+          "contestId": "cddf7276-4f01-4f29-800c-29f1c19696b6"
+        }
+      ]
     },
     {
       "claims": {
@@ -30237,7 +32173,12 @@
           }
         }
       },
-      "id": "2027-02-11-willow-glen-at-pioneer"
+      "id": "2027-02-11-willow-glen-at-pioneer",
+      "published": [
+        {
+          "contestId": "5be26e41-4c05-4c06-94e3-aff26246ed2f"
+        }
+      ]
     },
     {
       "claims": {
@@ -30326,7 +32267,12 @@
           }
         }
       },
-      "id": "2027-02-11-yerba-buena-at-mt-pleasant"
+      "id": "2027-02-11-yerba-buena-at-mt-pleasant",
+      "published": [
+        {
+          "contestId": "0f326090-f7f4-4985-9795-e7960c076a2b"
+        }
+      ]
     },
     {
       "claims": {
@@ -30387,7 +32333,12 @@
           "ref": "64c9235f-180c-4fec-a4b1-fe528bb93f6b"
         }
       },
-      "id": "2027-02-12-eastside-at-mercy-burlingame"
+      "id": "2027-02-12-eastside-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "64c9235f-180c-4fec-a4b1-fe528bb93f6b"
+        }
+      ]
     },
     {
       "claims": {
@@ -30468,7 +32419,12 @@
           }
         }
       },
-      "id": "2027-02-12-homestead-at-santa-clara"
+      "id": "2027-02-12-homestead-at-santa-clara",
+      "published": [
+        {
+          "contestId": "1acc6d6d-1bfd-4b74-bf5c-37507271880b"
+        }
+      ]
     },
     {
       "claims": {
@@ -30549,7 +32505,12 @@
           }
         }
       },
-      "id": "2027-02-12-los-altos-at-gunn"
+      "id": "2027-02-12-los-altos-at-gunn",
+      "published": [
+        {
+          "contestId": "18e03959-a12f-406a-b8f1-a23d231f416c"
+        }
+      ]
     },
     {
       "claims": {
@@ -30630,7 +32591,12 @@
           }
         }
       },
-      "id": "2027-02-12-los-gatos-at-mountain-view"
+      "id": "2027-02-12-los-gatos-at-mountain-view",
+      "published": [
+        {
+          "contestId": "c3dfadfb-9c98-405b-b9ee-34f4922ab0cf"
+        }
+      ]
     },
     {
       "claims": {
@@ -30691,7 +32657,12 @@
           "ref": "7eabcf02-1e03-470a-8688-40bc369c4cef"
         }
       },
-      "id": "2027-02-12-notre-dame-san-jose-at-harker"
+      "id": "2027-02-12-notre-dame-san-jose-at-harker",
+      "published": [
+        {
+          "contestId": "7eabcf02-1e03-470a-8688-40bc369c4cef"
+        }
+      ]
     },
     {
       "claims": {
@@ -30752,7 +32723,12 @@
           "ref": "2bacf7ff-5ec3-466a-ae93-b9aa0958aafe"
         }
       },
-      "id": "2027-02-13-mitty-at-sacred-heart-cathedral"
+      "id": "2027-02-13-mitty-at-sacred-heart-cathedral",
+      "published": [
+        {
+          "contestId": "2bacf7ff-5ec3-466a-ae93-b9aa0958aafe"
+        }
+      ]
     },
     {
       "claims": {
@@ -30813,7 +32789,12 @@
           "ref": "a73472e2-b0d5-446c-8d53-827a526375cc"
         }
       },
-      "id": "2027-02-15-fremont-at-los-altos"
+      "id": "2027-02-15-fremont-at-los-altos",
+      "published": [
+        {
+          "contestId": "a73472e2-b0d5-446c-8d53-827a526375cc"
+        }
+      ]
     },
     {
       "claims": {
@@ -30902,7 +32883,12 @@
           }
         }
       },
-      "id": "2027-02-16-branham-at-piedmont-hills"
+      "id": "2027-02-16-branham-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "8a227af1-ecad-4837-9c40-d59aed376216"
+        }
+      ]
     },
     {
       "claims": {
@@ -31015,7 +33001,12 @@
           }
         }
       },
-      "id": "2027-02-16-del-mar-at-prospect"
+      "id": "2027-02-16-del-mar-at-prospect",
+      "published": [
+        {
+          "contestId": "4cd0056d-be71-4e4f-bc80-ff0995621bcf"
+        }
+      ]
     },
     {
       "claims": {
@@ -31104,7 +33095,12 @@
           }
         }
       },
-      "id": "2027-02-16-evergreen-valley-at-silver-creek"
+      "id": "2027-02-16-evergreen-valley-at-silver-creek",
+      "published": [
+        {
+          "contestId": "274b5c4d-2150-4146-953a-2753c2e1cc0c"
+        }
+      ]
     },
     {
       "claims": {
@@ -31175,6 +33171,7 @@
               "source": "scval-pdf"
             }
           },
+          "leagueFlagNote": "the official SCVAL schedule has this as a league game on 2027-02-16; MaxPreps flags it non-league",
           "ref": "el-camino:2027-02-16:fremont@saratoga",
           "stamp": {
             "division": "el-camino",
@@ -31185,7 +33182,12 @@
           }
         }
       },
-      "id": "2027-02-16-fremont-at-saratoga"
+      "id": "2027-02-16-fremont-at-saratoga",
+      "published": [
+        {
+          "contestId": "aa4b549f-8f01-4e57-841f-4a24fc5df687"
+        }
+      ]
     },
     {
       "claims": {
@@ -31260,6 +33262,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-16; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-02-16:gilroy@willow-glen",
           "stamp": {
             "division": "mt-hamilton",
@@ -31274,7 +33277,12 @@
           }
         }
       },
-      "id": "2027-02-16-gilroy-at-willow-glen"
+      "id": "2027-02-16-gilroy-at-willow-glen",
+      "published": [
+        {
+          "contestId": "a44f213a-891c-4a53-9725-1abb65a6c2d2"
+        }
+      ]
     },
     {
       "claims": {
@@ -31383,7 +33391,12 @@
           }
         }
       },
-      "id": "2027-02-16-independence-at-james-lick"
+      "id": "2027-02-16-independence-at-james-lick",
+      "published": [
+        {
+          "contestId": "2fabd34f-6072-4a35-b0cd-22a066895f23"
+        }
+      ]
     },
     {
       "claims": {
@@ -31496,7 +33509,12 @@
           }
         }
       },
-      "id": "2027-02-16-live-oak-at-santa-teresa"
+      "id": "2027-02-16-live-oak-at-santa-teresa",
+      "published": [
+        {
+          "contestId": "633d75a5-7263-4741-ad49-a8f69008d5a1"
+        }
+      ]
     },
     {
       "claims": {
@@ -31577,7 +33595,12 @@
           }
         }
       },
-      "id": "2027-02-16-milpitas-at-lynbrook"
+      "id": "2027-02-16-milpitas-at-lynbrook",
+      "published": [
+        {
+          "contestId": "a9eb95e9-5e1c-474f-8e8b-8b4fcae000ed"
+        }
+      ]
     },
     {
       "claims": {
@@ -31714,7 +33737,12 @@
           }
         }
       },
-      "id": "2027-02-16-pioneer-at-leland"
+      "id": "2027-02-16-pioneer-at-leland",
+      "published": [
+        {
+          "contestId": "17472462-d376-42b4-9266-9daa6c8bfaef"
+        }
+      ]
     },
     {
       "claims": {
@@ -31823,7 +33851,12 @@
           }
         }
       },
-      "id": "2027-02-16-yerba-buena-at-san-jose"
+      "id": "2027-02-16-yerba-buena-at-san-jose",
+      "published": [
+        {
+          "contestId": "97b1f24e-d747-4cd6-bc34-8b658cee2a8d"
+        }
+      ]
     },
     {
       "claims": {
@@ -31904,7 +33937,12 @@
           }
         }
       },
-      "id": "2027-02-17-gunn-at-homestead"
+      "id": "2027-02-17-gunn-at-homestead",
+      "published": [
+        {
+          "contestId": "65e4de22-24c6-49be-9f93-89c3fc359fd1"
+        }
+      ]
     },
     {
       "claims": {
@@ -31985,7 +34023,12 @@
           }
         }
       },
-      "id": "2027-02-17-mountain-view-at-los-altos"
+      "id": "2027-02-17-mountain-view-at-los-altos",
+      "published": [
+        {
+          "contestId": "0ab3216f-963c-4bba-ac4d-48aac289626f"
+        }
+      ]
     },
     {
       "claims": {
@@ -32066,7 +34109,12 @@
           }
         }
       },
-      "id": "2027-02-17-santa-clara-at-palo-alto"
+      "id": "2027-02-17-santa-clara-at-palo-alto",
+      "published": [
+        {
+          "contestId": "634cb4d3-c508-4c12-8bd4-fd959c9bedd5"
+        }
+      ]
     },
     {
       "claims": {
@@ -32127,7 +34175,12 @@
           "ref": "9e2426cd-2f28-4e2a-a21a-f5513a8396cd"
         }
       },
-      "id": "2027-02-17-valley-christian-at-saint-francis"
+      "id": "2027-02-17-valley-christian-at-saint-francis",
+      "published": [
+        {
+          "contestId": "9e2426cd-2f28-4e2a-a21a-f5513a8396cd"
+        }
+      ]
     }
   ],
   "schemaVersion": 1,

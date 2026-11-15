@@ -13,7 +13,7 @@
 import { ledgerEditor, type EditorView } from '../claims/editor';
 import { claimsFromSnapshot } from '../claims/from-snapshot';
 import { ClaimStore } from '../claims/store';
-import type { ClaimsFile, EditorClaim, ShadowStage } from '../claims/types';
+import type { ClaimsFile, EditorClaim, FixtureId, MaxprepsClaim, ShadowStage } from '../claims/types';
 import { RunView } from '../claims/view';
 import type { FixtureLedger } from '../fixtures/shape';
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
@@ -270,8 +270,8 @@ export interface RunContextInit {
   sink?: LogSink;
   /**
    * The claims file beside the previous snapshot, already checked against it (lib/pipeline/run.ts prepareRun). When
-   * undefined, the claims are seeded from `previous` (lib/claims/from-snapshot.ts). With no previous snapshot the
-   * store starts empty whatever is given: no previous run, nothing to carry.
+   * undefined, the claims are seeded from `previous` (lib/claims/from-snapshot.ts). With no previous snapshot, a
+   * claims file given here is the run's only record of the last publication (claimsAlone); prepareRun gives none.
    */
   claims?: ClaimsFile | null;
   /** The fixture ledger the editor's claims are read from (lib/claims/editor.ts); left out, this build's sport's. */
@@ -294,10 +294,19 @@ export class PipelineContext implements RunContext {
   readonly editor: EditorView;
   /** The shadow harness's record, stage by stage (SCVAL_CLAIMS_SHADOW=1, tests only); null otherwise. */
   readonly shadow: ShadowStage[] | null;
+  /**
+   * Whether the run was given a claims file and no previous snapshot: the claims are then its only record of the last
+   * publication, and a league it does not read is carried from them (the official step, the guards, the cifsshome.org
+   * evidence) where a run with a previous snapshot freezes it to that snapshot's games.
+   */
+  readonly claimsAlone: boolean;
   private readonly sink: LogSink;
   private readonly inRun: readonly LeagueId[];
   private readonly claimsInit: ClaimsFile | null | undefined;
   private store: ClaimStore | null = null;
+  private storedMaxpreps: ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }> | null = null;
+  private storedFixtures: ReadonlySet<FixtureId> = new Set();
+  private storedAt: string | null = null;
   private runView: RunView | null = null;
 
   constructor(init: RunContextInit) {
@@ -314,19 +323,39 @@ export class PipelineContext implements RunContext {
     this.editorClaims = editor.claims;
     this.editor = editor.view;
     this.claimsInit = init.claims;
+    this.claimsAlone = init.previous === null && (init.claims?.fixtures.length ?? 0) > 0;
     this.shadow = process.env.SCVAL_CLAIMS_SHADOW === '1' ? [] : null;
   }
 
   /**
    * The run's claim store (lib/claims/store.ts), built on first use: the claims file beside the previous snapshot,
-   * else the claims seeded from that snapshot; empty with no previous snapshot.
+   * else the claims seeded from that snapshot; with no previous snapshot, the claims file given, else empty.
    */
   get claims(): ClaimStore {
     if (this.store === null) {
-      const file = this.previous === null ? null : this.claimsInit === undefined ? claimsFromSnapshot(this.previous, this.editor) : this.claimsInit;
+      const file = this.previous === null ? (this.claimsInit ?? null) : this.claimsInit === undefined ? claimsFromSnapshot(this.previous, this.editor, this.editorClaims) : this.claimsInit;
       this.store = ClaimStore.fromFile(file);
+      this.storedMaxpreps = new Map(this.store.claimsOf('maxpreps').map(({ id, claim }) => [claim.ref, { id, claim: structuredClone(claim) }]));
+      this.storedFixtures = new Set(this.store.ids());
+      this.storedAt = file?.fetchedAt ?? null;
     }
     return this.store;
+  }
+
+  /**
+   * The MaxPreps claims as the run read them, before step 06 replaced any with this run's rows, by contest id with
+   * the fixture holding each. A frozen league publishes its previous games, so its contests keep these claims
+   * (lib/pipeline/steps/guards.ts).
+   */
+  get maxprepsAsRead(): ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }> {
+    void this.claims;
+    return this.storedMaxpreps as ReadonlyMap<string, { id: FixtureId; claim: MaxprepsClaim }>;
+  }
+
+  /** The fixtures the run read, and the fetchedAt of the run that wrote them (null: none read). */
+  get claimsAsRead(): { fixtures: ReadonlySet<FixtureId>; fetchedAt: string | null } {
+    void this.claims;
+    return { fixtures: this.storedFixtures, fetchedAt: this.storedAt };
   }
 
   /**

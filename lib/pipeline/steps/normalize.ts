@@ -19,9 +19,11 @@
  * classification cleared, and an editor-listed game last published with it is carried the same way (§11 R3's
  * zero-deviation carry): what the other sources added to it then (an si.com fill, a sheet score, a box score, a
  * school calendar's venue) stays while its feed is not read, even where that source was read this run and would now
- * decide otherwise. Rebuilding the game from the claims would re-decide those contributions, which publishes
- * otherwise in exactly that case, so the previous publication is read here. The later steps decide classification
- * again exactly as they decide a fresh game's. Whether a feed counts as carried for its source row also reads the
+ * decide otherwise. The stored claims folded give the same game (lib/claims/resolve.ts resolveCarriedClaims,
+ * tests/claims/carry-fold.test.ts), and are what a contest the previous publication lacks enters as; the previous
+ * publication is still read for the others, because tests/claims/carry.test.ts pins a carried game to what the
+ * previous snapshot shows even where the claims file says otherwise. The later steps decide classification again
+ * exactly as they decide a fresh game's. Whether a feed counts as carried for its source row also reads the
  * previous snapshot: it describes what that publication covered.
  */
 

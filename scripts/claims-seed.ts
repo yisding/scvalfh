@@ -31,7 +31,7 @@ export async function main(argv: readonly string[]): Promise<number> {
   const previous = readPrevious(snapshotFile);
   if (!previous) throw new Error(`no snapshot to seed from at ${snapshotFile}`);
   const editor = ledgerEditor(previous.fetchedAt);
-  const store = ClaimStore.fromFile(claimsFromSnapshot(previous, editor.view));
+  const store = ClaimStore.fromFile(claimsFromSnapshot(previous, editor.view, editor.claims));
   attachEditorClaims(store, editor.claims);
   const claims = store.toFile(previous.fetchedAt, SPORT_ID);
   const out = claimsPathOf(snapshotFile);

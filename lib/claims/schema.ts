@@ -57,6 +57,8 @@ const OfficialClaimSchema = z
     fixture: OfficialFixtureSchema.optional(),
     stamp: OfficialStampSchema.optional(),
     lastMatch: z.object({ contestId: z.string().min(1), stamp: OfficialStampSchema }).strict().optional(),
+    leagueFlagNote: z.string().min(1).optional(),
+    hostNote: z.string().min(1).optional(),
   })
   .strict();
 
@@ -153,7 +155,7 @@ const SdsSheetClaimSchema = z
     result: SdsSheetResultSchema.optional(),
     fixture: SdsSheetFixtureSchema.optional(),
     host: z.string().min(1).optional(),
-    published: z.object({ contestId: z.string().min(1), dateLocal: z.string().min(1) }).strict(),
+    published: z.object({ contestId: z.string().min(1), dateLocal: z.string().min(1), fetchedAt: isoUtc.optional() }).strict(),
   })
   .strict();
 
@@ -192,7 +194,12 @@ const FixtureClaimsSchema = z
   .strict();
 
 const FixtureSchema = z
-  .object({ id: z.string().min(1), aliases: z.array(z.string().min(1)).min(1).optional(), claims: FixtureClaimsSchema })
+  .object({
+    id: z.string().min(1),
+    aliases: z.array(z.string().min(1)).min(1).optional(),
+    claims: FixtureClaimsSchema,
+    published: z.array(z.object({ contestId: z.string().min(1), seenAt }).strict()).min(1).optional(),
+  })
   .strict();
 
 type DiskClaim = { ref: string; seenAt?: string } & Record<string, unknown>;
@@ -225,6 +232,8 @@ export const ClaimsFileSchema = z
     file.fixtures.forEach((f, i) => {
       const at = ['fixtures', i];
       if (f.aliases && !sorted(f.aliases)) issue([...at, 'aliases'], `${f.id}: aliases are not unique and sorted`);
+      const published = (f.published ?? []).map((p) => p.contestId);
+      if (new Set(published).size !== published.length) issue([...at, 'published'], `${f.id}: a contest id published twice`);
       const all = claimsOf(f.claims as Record<string, unknown>);
       if (all.length === 0) issue(at, `${f.id}: a fixture with no claims`);
       for (const source of MULTI_CLAIM_SOURCES) {

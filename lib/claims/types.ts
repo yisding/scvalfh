@@ -106,6 +106,14 @@ export interface OfficialClaim extends ClaimBase<string /* OfficialFixture.id, `
    * read or not valid this run: carryOfficialForward semantics (stamp only, no notes; sources/scval-pdf.ts).
    */
   lastMatch?: { contestId: ContestId; stamp: OfficialStamp };
+  /**
+   * The official step's league-flag note the `lastMatch` game showed with the stamp (its
+   * `provenance.leagueFlagConflict` when that is not normalize's own sentence): a contest carried for a feed the run
+   * did not read shows it as it did (lib/claims/resolve.ts resolveCarriedClaims).
+   */
+  leagueFlagNote?: string;
+  /** The official step's host note the `lastMatch` game showed with the stamp (its `provenance.hostConflict`). */
+  hostNote?: string;
 }
 
 // ---------------------------------------------------------------- si.com
@@ -155,7 +163,12 @@ export interface SdsSheetClaim extends ClaimBase<string /* `${division}:${slugA}
    * The game the row was published on: its contest id (a `cifsds:` game's fixture is found by it) and its local start.
    * A carried tab's rows are read in the previous publication's order, which is lib/format.ts byDateThenId over these.
    */
-  published: { contestId: ContestId; dateLocal: string };
+  published: {
+    contestId: ContestId;
+    dateLocal: string;
+    /** On a game the sheet scored, the `provenance.fetchedAt` it showed: the run that wrote the sheet's score. */
+    fetchedAt?: string;
+  };
 }
 
 // ---------------------------------------------------------------- VNN school calendars (evidence only)
@@ -206,11 +219,23 @@ export type ClaimOf<S extends ClaimSource> = ClaimBySource[S];
 /** The sources a fixture holds several claims of (one per row), each list sorted by ref. */
 export const MULTI_CLAIM_SOURCES: ReadonlySet<ClaimSource> = new Set<ClaimSource>(['sblive', 'cifss', 'vnn']);
 
+/** One contest id a fixture's game was published under, and the fetchedAt of the last run that published it so. */
+export interface PublishedUnder {
+  contestId: ContestId;
+  /** In memory: always set. On disk: omitted when equal to ClaimsFile.fetchedAt. */
+  seenAt: string;
+}
+
 export interface Fixture {
   id: FixtureId;
   /** Ids of fixtures merged into this one (§6.2), sorted. Readable slugs; never published. */
   aliases?: FixtureId[];
   claims: FixtureClaims;
+  /**
+   * The contest ids the fixture's game has been published under, in the order it first was: an si.com rule-2 game, a
+   * bracket sheet game or an editor listing, and then the MaxPreps contest that took it over (lib/claims/supersede.ts).
+   */
+  published?: PublishedUnder[];
 }
 
 export interface ClaimsFile {
@@ -245,12 +270,18 @@ export interface FixtureDecisions {
   /** The first stage at which the fixture is in the view: rule-2 games 'sblive', sheet games 'sdsSheet', a frozen league's passthrough 'guards', editor listings 'results'. */
   from: Stage;
   /**
-   * The game the fixture enters the view with at `from`, when its MaxPreps claim does not give it: a contest carried
-   * at stage `maxpreps` for a feed this run did not read, as the previous run published it with its classification
-   * cleared (lib/claims/sources/maxpreps.ts asLastPublished, §11 R3's zero-deviation carry); an si.com rule-2 game; a
-   * game only the bracket sheet has; an editor listing.
+   * The game the fixture enters the view with at `from`, when its claims do not give it: a contest (or an editor
+   * listing) carried at stage `maxpreps` for a feed this run did not read, as the previous run published it with its
+   * classification cleared (lib/claims/sources/maxpreps.ts asLastPublished); an si.com rule-2 game; a game only the
+   * bracket sheet has; an editor listing.
    */
   enters?: Game;
+  /**
+   * A MaxPreps contest carried at stage `maxpreps` for a feed this run did not read that the previous publication
+   * does not show (or with no previous publication): it enters folded from its stored claims (lib/claims/resolve.ts
+   * resolveCarriedClaims), each other source contributing what the last publication showed from it.
+   */
+  carried?: true;
   /** The official step's decisions, in the order it took them (lib/official/match.ts applyOfficialDecision). */
   official?: readonly OfficialDecision[];
   /** si.com's fill (lib/crosscheck/backfill.ts applyBackfillDecision) and disagreement (lib/crosscheck/crosscheck.ts applyReconcile). */

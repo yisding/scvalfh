@@ -22,12 +22,12 @@ import type { ClaimStore } from './store';
 import { STAGES, type Fixture, type FixtureDecisions, type FixtureId, type RunFacts, type Stage } from './types';
 
 /** The decision fields a stage records by contest id. */
-type ByContest = Omit<FixtureDecisions, 'from' | 'enters' | 'frozen'>;
+type ByContest = Omit<FixtureDecisions, 'from' | 'enters' | 'carried' | 'frozen'>;
 
 const stageIndex = (stage: Stage): number => STAGES.indexOf(stage);
 
 /** The stage each decision field belongs to: recording it forgets what was resolved from that stage on. */
-const FIELD_STAGE: Record<Exclude<keyof FixtureDecisions, 'from' | 'enters'>, Stage> = {
+const FIELD_STAGE: Record<Exclude<keyof FixtureDecisions, 'from' | 'enters' | 'carried'>, Stage> = {
   official: 'official',
   backfill: 'sblive',
   reconcile: 'sblive',
@@ -120,6 +120,23 @@ export class RunView {
       ids.push(id);
     }
     return ids;
+  }
+
+  /**
+   * Fixture `from` was merged into `into` (lib/claims/supersede.ts): the order and the decisions name `into` where
+   * they named `from`, so the view resolves as before over the store as it now is.
+   */
+  rename(from: FixtureId, into: FixtureId): void {
+    if (from === into || this.order.includes(into)) return;
+    this.order = this.order.map((id) => (id === from ? into : id));
+    const d = this.decided.get(from);
+    if (d) {
+      this.decided.set(into, d);
+      this.decided.delete(from);
+    }
+    const memo = this.resolved.get(from);
+    this.resolved.delete(from);
+    if (memo) this.resolved.set(into, memo);
   }
 
   /** The fixtures whose game through `through` matches `drop` leave the order; returns them with those games, in order. */

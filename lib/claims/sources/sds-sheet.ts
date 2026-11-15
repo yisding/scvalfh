@@ -38,7 +38,11 @@ function sheetClaimOf(row: SheetRow, game: Game, seenAt: string, ref: string = s
     seenAt,
     ...('teams' in rest ? { fixture: rest } : { result: rest }),
     ...(game.home.slug ? { host: game.home.slug } : {}),
-    published: { contestId: game.contestId, dateLocal: game.dateLocal },
+    published: {
+      contestId: game.contestId,
+      dateLocal: game.dateLocal,
+      ...('teams' in rest || game.provenance.scores !== 'cifsds-sheet' ? {} : { fetchedAt: game.provenance.fetchedAt }),
+    },
   };
 }
 
@@ -76,6 +80,13 @@ export function createSheetFixtures(store: ClaimStore, created: readonly Game[],
   }
 }
 
+/** A claim without its stamps: its seenAt and the run that wrote the score it published. */
+function sansStamps(c: SdsSheetClaim): SdsSheetClaim {
+  const { fetchedAt: _scoredAt, ...published } = c.published;
+  void _scoredAt;
+  return { ...c, seenAt: '', published };
+}
+
 /**
  * The sheet's claims rewritten from the published games: every stored sheet claim is replaced by what a game shows
  * from the sheet. A claim keeps its stored seenAt while its tab was not read this run and it shows the same;
@@ -99,7 +110,8 @@ export function writeBackSheetClaims(
       taken.add(ref);
       const was = stored.get(ref);
       const fresh = sheetClaimOf(row, game, fetchedAt, ref);
-      const same = was !== undefined && stableStringify({ ...was.claim, seenAt: '' }) === stableStringify({ ...fresh, seenAt: '' });
+      // The run that wrote the score is not what the tab says: a carried tab's row is the same row.
+      const same = was !== undefined && stableStringify(sansStamps(was.claim)) === stableStringify(sansStamps(fresh));
       const claim = same && !tabRead(row.division) ? { ...fresh, seenAt: was.claim.seenAt } : fresh;
       store.attach(publishedFixture(store, game, was?.id), 'sdsSheet', claim);
     }

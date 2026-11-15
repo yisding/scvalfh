@@ -58,8 +58,9 @@ export class ClaimStore {
         for (const c of claimsIn(copy.claims, source)) store.index.set(indexKey(source, c.ref), copy.id);
       }
     }
-    // A fixture that held only the editor's claim is rebuilt by this run under the same id, so it is not taken.
-    store.gc();
+    // A fixture that held only the editor's claim is rebuilt by this run under the same id, so it is not taken; one
+    // that holds the contest ids its game was published under keeps them for the editor's claim to join.
+    for (const [id, f] of store.fixtures) if (!hasClaims(f) && !(f.published && f.published.length > 0)) store.fixtures.delete(id);
     for (const f of store.fixtures.values()) {
       store.taken.add(f.id);
       for (const alias of f.aliases ?? []) store.taken.add(alias);
@@ -176,7 +177,21 @@ export class ClaimStore {
       }
     }
     b.aliases = [...new Set([...(b.aliases ?? []), from, ...(a.aliases ?? [])])].sort(byCodeUnit);
+    for (const p of a.published ?? []) this.markPublished(into, p.contestId, p.seenAt);
     this.fixtures.delete(from);
+  }
+
+  /** Fixture `id`'s game was published under `contestId` by the run stamped `at`: appended, or its stamp moved on. */
+  markPublished(id: FixtureId, contestId: string, at: string): void {
+    const f = this.fixtures.get(id);
+    if (!f) throw new Error(`lib/claims/store.ts: no fixture ${id}`);
+    const list = f.published ?? [];
+    const held = list.find((p) => p.contestId === contestId);
+    if (held) {
+      if (held.seenAt < at) held.seenAt = at;
+    } else {
+      f.published = [...list, { contestId, seenAt: at }];
+    }
   }
 
   /** Drop fixtures with no claims. */
@@ -203,7 +218,12 @@ export class ClaimStore {
           ? structuredClone([...list].sort((x, y) => byCodeUnit(x.ref, y.ref)))
           : structuredClone(list[0]);
       }
-      fixtures.push({ id, ...(f.aliases && f.aliases.length > 0 ? { aliases: [...f.aliases] } : {}), claims });
+      fixtures.push({
+        id,
+        ...(f.aliases && f.aliases.length > 0 ? { aliases: [...f.aliases] } : {}),
+        claims,
+        ...(f.published && f.published.length > 0 ? { published: structuredClone(f.published) } : {}),
+      });
     }
     return { schemaVersion: CLAIMS_SCHEMA_VERSION, sport, fetchedAt, fixtures };
   }

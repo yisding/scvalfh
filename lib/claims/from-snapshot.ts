@@ -31,21 +31,23 @@ import { overtimeDecider, unadjudicated, uncorrected, withoutReadTally } from '.
 import { SPORT_ID } from '../sports/current';
 import { resolveTeam } from '../teams';
 import type { Game, GameSide, Outcome, Snapshot } from '../types';
-import type { EditorView } from './editor';
+import { attachEditorClaims, type EditorView } from './editor';
 import { baseFixtureId, fixtureSideKey } from './identity';
 import { SDS_BRACKETS_FILE } from '../postseason/sds-brackets-file';
 import { publishedFixture } from './published';
 import { boxClaimOfScore } from './sources/box';
 import { cifssClaimRef } from './sources/cifss';
 import { writeBackSbliveClaims } from './sources/sblive';
-import { writeBackOfficialClaims } from './sources/official';
+import { officialFlagNoteOf, writeBackOfficialClaims } from './sources/official';
 import { writeBackSheetClaims } from './sources/sds-sheet';
 import { vnnClaimsOf } from './sources/vnn';
 import { ClaimStore } from './store';
+import { recordPublished } from './supersede';
 import {
   MAXPREPS_PROVENANCE_KEYS,
   RECONSTRUCTED_FIELDS,
   type ClaimsFile,
+  type EditorClaim,
   type FixtureId,
   type MaxprepsClaim,
   type MaxprepsGame,
@@ -113,7 +115,7 @@ function projected(g: Game): MaxprepsGame {
     if (v !== undefined) (kept as Record<string, unknown>)[key] = v;
   }
   // The official step's note shares the key; only normalize's own sentence is the contest's (normalize.ts toGame).
-  if (kept.leagueFlagConflict !== undefined && !kept.leagueFlagConflict.startsWith('contestType disagrees')) delete kept.leagueFlagConflict;
+  if (officialFlagNoteOf(g) !== undefined) delete kept.leagueFlagConflict;
   return {
     ...rest,
     countsFor: null,
@@ -249,9 +251,10 @@ export function byDateKeyThenRef(a: MaxprepsClaim, b: MaxprepsClaim): number {
 
 /**
  * The claims a previous snapshot implies (§9), stamped with its fetchedAt; null with no previous snapshot. Every
- * MaxPreps (GUID) game of the snapshot gets a claim on a fixture of its own.
+ * MaxPreps (GUID) game of the snapshot gets a claim on a fixture of its own, and every fixture records the contest id
+ * its game was published under. `editorClaims` (the run's editor claims) are attached as a run attaches them.
  */
-export function claimsFromSnapshot(previous: Snapshot | null, editor: EditorView): ClaimsFile | null {
+export function claimsFromSnapshot(previous: Snapshot | null, editor: EditorView, editorClaims: readonly EditorClaim[] = []): ClaimsFile | null {
   if (!previous) return null;
   const claims = previous.games.filter((g) => GUID_RE.test(g.contestId)).map((g) => maxprepsClaimFromGame(g, previous.fetchedAt));
   const store = new ClaimStore();
@@ -273,5 +276,9 @@ export function claimsFromSnapshot(previous: Snapshot | null, editor: EditorView
     const box = boxClaimOfScore(g, previous.fetchedAt);
     if (box) store.attach(id, 'box', box);
   }
+  // The editor's claims, as a run attaches them: an editor's listing the snapshot published keeps its fixture, and
+  // with it the contest ids it was published under (lib/claims/supersede.ts).
+  attachEditorClaims(store, editorClaims);
+  recordPublished(store, previous.games, previous.fetchedAt);
   return store.toFile(previous.fetchedAt, SPORT_ID);
 }

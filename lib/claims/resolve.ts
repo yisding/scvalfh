@@ -3,8 +3,10 @@
  * by stage. Each stage applies its rule module's per-game function (`applyX`) to the game the stage before left,
  * with that stage's decision and explicit editor slices (never the ledger's defaults):
  *
- *   maxpreps   the MaxPreps claim on the editor's day and at the editor's host, or the game the fixture enters with
- *              (FixtureDecisions.enters: a contest carried for a feed the run did not read, as last published)
+ *   maxpreps   the MaxPreps claim on the editor's day and at the editor's host; or the game the fixture enters
+ *              with (FixtureDecisions.enters: a contest carried for a feed the run did not read, as last published);
+ *              or, for a carried contest the previous publication lacks, that claim with every other source's
+ *              stored claim folded in (resolveCarriedClaims)
  *   official   the official step's stamps and notes             (lib/official/match.ts applyOfficialDecision)
  *   sblive     si.com's fill, then its disagreement             (lib/crosscheck/backfill.ts, crosscheck.ts)
  *   vnn        the school calendars' venue and start time       (lib/sources/vnn-ics.ts applyVnnStageDecision)
@@ -32,11 +34,77 @@ import { applyVnnStageDecision } from '../sources/vnn-ics';
 import type { Game } from '../types';
 import type { EditorView } from './editor';
 import type { ClaimStore } from './store';
-import { STAGES, type Fixture, type FixtureDecisions, type FixtureId, type MaxprepsClaim, type RunFacts, type Stage } from './types';
+import { SDS_BRACKET_SHEET_URL } from '../league-config/sections';
+import type { SdsSheetResult } from '../sources/sds-bracket-sheet';
+import { applyVnnCarry } from '../sources/vnn-ics';
+import {
+  STAGES,
+  type Fixture,
+  type FixtureDecisions,
+  type FixtureId,
+  type MaxprepsClaim,
+  type RunFacts,
+  type Stage,
+} from './types';
 
 /** The game a MaxPreps claim holds, on the editor's day and at the editor's host (lib/pipeline/normalize.ts normalizeGames' order). */
 export function resolveMaxprepsClaim(claim: MaxprepsClaim, editor: Pick<EditorView, 'dates' | 'hosts'>): Game {
   return applyHostCorrection(applyDateCorrection(claim.game as Game, editor.dates[claim.ref]), editor.hosts);
+}
+
+/**
+ * A published game with the classification a run gives it cleared: the official stamp and its notes, countsFor and
+ * postseason. A game carried into a run enters with these cleared, so that the official and classify stages decide
+ * them again exactly as they decide a fresh game's.
+ */
+export function withoutClassification(g: Game): Game {
+  const { official: _official, ...rest } = g;
+  void _official;
+  const { classificationNote: _note, hostConflict: _host, ...provenance } = g.provenance;
+  void [_note, _host];
+  return { ...rest, countsFor: null, postseason: null, provenance };
+}
+
+/**
+ * A MaxPreps contest carried for a feed the run did not read, folded from its fixture's stored claims: the contest
+ * on the editor's day and host, then what the last publication showed from each other source, stage by stage, each
+ * through the function its stage applies (the official step's league-flag note; si.com's fill or disagreement; the
+ * school calendars' venue and confirmed start time; the bracket sheet's score or time; the level final settled;
+ * the cifsshome.org and box-score evidence and the editor's result corrections), with the classification cleared.
+ * Every other source's claim is the last publication's (written back at the end of every run), so the game is the one
+ * the previous run published, and what those sources added stays while the feed is not read, even where a source
+ * read this run would now decide otherwise. null for a fixture with no MaxPreps claim.
+ */
+export function resolveCarriedClaims(f: Fixture, editor: EditorView): Game | null {
+  const claim = f.claims.maxpreps;
+  if (!claim) return null;
+  const id = claim.ref;
+  let g = resolveMaxprepsClaim(claim, editor);
+  const note = f.claims.official?.lastMatch?.contestId === id ? f.claims.official.leagueFlagNote : undefined;
+  if (note !== undefined) g = { ...g, provenance: { ...g.provenance, leagueFlagConflict: note } };
+  const sblive = f.claims.sblive ?? [];
+  const fill = sblive.find((c) => c.fill !== undefined && c.fill.rule !== 'absent-fixture' && c.fill.contestId === id)?.fill;
+  if (fill && fill.rule !== 'absent-fixture') g = applyBackfillDecision(g, { kind: 'carried', published: fill.published });
+  const conflict = sblive.find((c) => c.conflict?.contestId === id)?.conflict;
+  if (conflict) g = applyReconcile(g, { scoreConflict: conflict.scoreConflict });
+  for (const c of f.claims.vnn ?? []) if (c.applied && c.ref.endsWith(`:contest:${id}`)) g = applyVnnCarry(g, c.applied);
+  const sheet = f.claims.sdsSheet?.published.contestId === id ? f.claims.sdsSheet : undefined;
+  if (sheet?.result) {
+    const result: SdsSheetResult = { ...sheet.result, ...(sheet.host ? { host: sheet.host } : {}) };
+    g = applySdsSheetDecision(g, { kind: 'score', result, rule: 'score-pending', sheetUrl: SDS_BRACKET_SHEET_URL, fetchedAt: sheet.published.fetchedAt ?? sheet.seenAt });
+  } else if (sheet?.fixture?.time) {
+    g = applySdsSheetDecision(g, { kind: 'time', time: sheet.fixture.time, sheetUrl: SDS_BRACKET_SHEET_URL });
+  }
+  g = settleLevelFinal(classifyGames([g])[0]);
+  const cifss = (f.claims.cifss ?? []).find((c) => c.ref === `contest:${id}`)?.conflict;
+  const box = f.claims.box?.ref === id ? f.claims.box.sides : undefined;
+  return withoutClassification(
+    finalizeResult(g, {
+      cifss: cifss ? { cifss: cifss.cifss, cifssUrl: cifss.cifssUrl } : undefined,
+      corrections: editor.results,
+      box: box ? new Map([[id, new Map(Object.entries(box))]]) : undefined,
+    }),
+  );
 }
 
 /** The decisions of a fixture no stage decided anything for: a MaxPreps contest from stage `maxpreps` on. */
@@ -45,6 +113,7 @@ export const NO_DECISIONS: FixtureDecisions = { from: 'maxpreps' };
 /** The game a fixture enters the view with at its first stage, or null when it has none. */
 function enteringGame(f: Fixture, d: FixtureDecisions, editor: EditorView): Game | null {
   if (d.enters) return d.enters;
+  if (d.carried) return resolveCarriedClaims(f, editor);
   return d.from === 'maxpreps' && f.claims.maxpreps ? resolveMaxprepsClaim(f.claims.maxpreps, editor) : null;
 }
 

@@ -91,6 +91,14 @@ export function decisionsFromOfficialStep(before: readonly Game[], after: readon
 export interface StoredOfficial {
   stamps: ReadonlyMap<ContestId, OfficialStamp>;
   unmatched: readonly OfficialFixture[];
+  /** The league-flag and host notes each stamped contest showed with its stamp (a contest with none has no entry). */
+  notes: ReadonlyMap<ContestId, { leagueFlagNote?: string; hostNote?: string }>;
+}
+
+/** The league-flag and host notes a stamp came with, or null when it came with none. */
+function notesOf(leagueFlagNote: string | undefined, hostNote: string | undefined): { leagueFlagNote?: string; hostNote?: string } | null {
+  if (leagueFlagNote === undefined && hostNote === undefined) return null;
+  return { ...(leagueFlagNote !== undefined ? { leagueFlagNote } : {}), ...(hostNote !== undefined ? { hostNote } : {}) };
 }
 
 /** The snapshot's own order of official fixtures (lib/pipeline/steps/assemble.ts): date, then id. */
@@ -100,12 +108,16 @@ const byDateThenFixtureId = (a: OfficialFixture, b: OfficialFixture): number =>
 /** The stored official claims as the carry reads them: the stamps their `lastMatch` records, the unmatched rows in the snapshot's order. */
 export function storedOfficialOf(store: ClaimStore): StoredOfficial {
   const stamps = new Map<ContestId, OfficialStamp>();
+  const notes = new Map<ContestId, { leagueFlagNote?: string; hostNote?: string }>();
   const unmatched: OfficialFixture[] = [];
   for (const { claim } of store.claimsOf('official')) {
-    if (claim.lastMatch) stamps.set(claim.lastMatch.contestId, claim.lastMatch.stamp);
-    else if (claim.fixture) unmatched.push(claim.fixture);
+    if (claim.lastMatch) {
+      stamps.set(claim.lastMatch.contestId, claim.lastMatch.stamp);
+      const shown = notesOf(claim.leagueFlagNote, claim.hostNote);
+      if (shown) notes.set(claim.lastMatch.contestId, shown);
+    } else if (claim.fixture) unmatched.push(claim.fixture);
   }
-  return { stamps, unmatched: unmatched.sort(byDateThenFixtureId) };
+  return { stamps, unmatched: unmatched.sort(byDateThenFixtureId), notes };
 }
 
 /**
@@ -114,8 +126,14 @@ export function storedOfficialOf(store: ClaimStore): StoredOfficial {
  */
 export function storedOfficialFromSnapshot(previous: Pick<Snapshot, 'games' | 'officialFixtures'> | null): StoredOfficial {
   const stamps = new Map<ContestId, OfficialStamp>();
-  for (const g of previous?.games ?? []) if (g.official) stamps.set(g.contestId, g.official);
-  return { stamps, unmatched: [...(previous?.officialFixtures ?? [])].sort(byDateThenFixtureId) };
+  const notes = new Map<ContestId, { leagueFlagNote?: string; hostNote?: string }>();
+  for (const g of previous?.games ?? []) {
+    if (!g.official) continue;
+    stamps.set(g.contestId, g.official);
+    const shown = notesOf(officialFlagNoteOf(g), g.provenance.hostConflict);
+    if (shown) notes.set(g.contestId, shown);
+  }
+  return { stamps, unmatched: [...(previous?.officialFixtures ?? [])].sort(byDateThenFixtureId), notes };
 }
 
 /**
@@ -134,12 +152,21 @@ export function carryOfficialFromClaims(
   return { ...restored, stamped };
 }
 
+/**
+ * The official step's league-flag note a game shows, if any: its `provenance.leagueFlagConflict` unless that is
+ * normalize's own sentence about the contest's two team rows, which the MaxPreps claim holds.
+ */
+export function officialFlagNoteOf(g: Pick<Game, 'provenance'>): string | undefined {
+  const note = g.provenance.leagueFlagConflict;
+  return note !== undefined && !note.startsWith('contestType disagrees') ? note : undefined;
+}
+
 const sameClaim = (a: OfficialClaim, b: OfficialClaim): boolean => stableStringify({ ...a, seenAt: '' }) === stableStringify({ ...b, seenAt: '' });
 
 /**
  * The official claims rewritten from what the run published: one claim per stamp a published game shows (on that
- * game's fixture, `lastMatch` recording the contest and stamp) and one per official fixture no game matched (on an
- * official-only fixture). `read` holds the rows read this run and their divisions: a claim keeps the row read, else
+ * game's fixture, `lastMatch` recording the contest and stamp, with the step's league-flag and host notes) and one per
+ * official fixture no game matched (on an official-only fixture). `read` holds the rows read this run and their divisions: a claim keeps the row read, else
  * the row it held; it is stamped `fetchedAt` unless its division was not read and it holds the same as before. Also
  * how claims are seeded from a snapshot (lib/claims/from-snapshot.ts).
  */
@@ -171,7 +198,15 @@ export function writeBackOfficialClaims(
     if (!stamp) continue;
     const ref = refOf(stamp.fixtureId);
     const row = rows.get(stamp.fixtureId) ?? stored.get(ref)?.claim.fixture;
-    const claim: OfficialClaim = { ref, seenAt: fetchedAt, ...(row ? { fixture: row } : { stamp }), lastMatch: { contestId: game.contestId, stamp } };
+    const note = officialFlagNoteOf(game);
+    const claim: OfficialClaim = {
+      ref,
+      seenAt: fetchedAt,
+      ...(row ? { fixture: row } : { stamp }),
+      lastMatch: { contestId: game.contestId, stamp },
+      ...(note !== undefined ? { leagueFlagNote: note } : {}),
+      ...(game.provenance.hostConflict !== undefined ? { hostNote: game.provenance.hostConflict } : {}),
+    };
     store.attach(publishedFixture(store, game, stored.get(ref)?.id), 'official', kept(claim, stamp.division));
   }
   for (const fixture of unmatched) {

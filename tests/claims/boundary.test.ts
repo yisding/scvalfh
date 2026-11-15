@@ -76,12 +76,27 @@ describe('the site and the snapshot loader never reach lib/claims/', () => {
   }
 });
 
-describe('no site module names the claims file', () => {
-  // A path built for readFileSync is invisible to the import graph; the file's name is not.
-  for (const file of SITE_MODULES) {
+describe('no site or loader module names the claims file', () => {
+  // A path built for readFileSync is invisible to the import graph; the file's name is not. A path assembled from
+  // parts ('claims' + '.json', path.join(dir, 'claims', ...)) is caught by forbidding the bare word `claims` in
+  // these files outside comments: none of them uses it today, so there is no false positive to allow for.
+  const NAMING = [...SITE_MODULES, ...LOADER_MODULES, path.join(ROOT, 'lib', 'data-file.ts')];
+  const naming = (src: string) => /claims/i.test(stripComments(src));
+
+  it('the scan sees a whole name, a name in parts, and a path join, and ignores a comment', () => {
+    expect(naming("readFileSync(join(dir, 'claims.json'))")).toBe(true);
+    expect(naming("const f = 'claims' + '.json';")).toBe(true);
+    expect(naming("path.join(dir, `${'cla' + 'ims'}.json`)")).toBe(false); // split inside the word: out of reach, and nothing does it
+    expect(naming('const claimsPath = x;')).toBe(true);
+    expect(naming('// the claims file is not read here\nconst a = 1;')).toBe(false);
+    expect(naming('/* claims.json */ const a = 1;')).toBe(false);
+  });
+
+  for (const file of NAMING) {
     it(repoPath(file, ROOT), () => {
       const text = readFileSync(file, 'utf8');
       expect(text.includes('claims.json')).toBe(false);
+      expect(naming(text), 'the word "claims" outside a comment').toBe(false);
     });
   }
 });

@@ -136,14 +136,14 @@ interface StepState {
 }
 
 /** Put back the previous run's annotations for one division, from the official claims; true when anything came back. */
-function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, division: DivisionId): boolean {
+function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, division: DivisionId, withNotes = false): boolean {
   const restored = carryOfficialFromClaims([division], state.stored, state.games);
   ctx.shadow?.push({ stage: 'official', kind: 'carry', division, games: state.games, fixtures: restored.fixtures, out: restored.games, carried: restored.carried });
   if (restored.fixtures.length === 0 && restored.carried === 0) return false;
   state.games = restored.games;
   for (const id of new Set(restored.stamped)) {
     const stamp = state.stored.stamps.get(id);
-    if (stamp) recordOfficialDecision(state.decisions, id, { stamp });
+    if (stamp) recordOfficialDecision(state.decisions, id, { stamp, ...(withNotes ? state.stored.notes.get(id) : {}) });
   }
   state.unmatched.push(...restored.fixtures);
   state.carriedDivisions.add(division);
@@ -406,8 +406,15 @@ export const stepOfficial: OfficialStep = async (ctx, games) => {
     readDivisions: new Set(),
   };
 
+  const alone = ctx.claimsAlone === true;
   for (const league of LEAGUES) {
-    if (!inRun.has(league.id)) continue;
+    // A league the run does not read is the guards' (frozen to the previous snapshot's games); with the claims file
+    // alone, its divisions are carried from the official claims as a division not read is, with the notes each stamp
+    // came with, since a frozen league publishes its games as last published.
+    if (!inRun.has(league.id)) {
+      if (alone) for (const d of league.divisions.filter(hasOfficialDocument)) carryDivision(ctx, state, league.id, d.id, true);
+      continue;
+    }
     // A mode-'none' division (EAL) has no document: it is in neither list and is classified by
     // MaxPreps' league flag (classify step), with no fixtures and no revision check.
     const documented = league.divisions.filter(hasOfficialDocument);

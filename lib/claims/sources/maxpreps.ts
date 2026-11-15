@@ -5,21 +5,22 @@
  * COLLECT is normalize with no ledger fact: the contest exactly as toGame builds it. MATCH applies the editor's day
  * and host (resolve), drops the editor's rejected and duplicate rows and the ghost teams' contests, dedupes
  * phantom pairs, and carries a stored claim forward only while a side's feed was not read this run. A carried
- * contest enters the view as the previous run published it, classification cleared (`published`, §11 R3's
- * zero-deviation carry), so it keeps what the other sources added to it then; given no publication, it is the
- * contest MaxPreps last listed, on today's editor day and host, and the other stages decide it again (§0.3).
+ * contest enters the view as the previous run published it, classification cleared (`published`), so it keeps what
+ * the other sources added to it then; a carried contest that publication does not show (or every one, in a run given
+ * no previous snapshot) is folded from its stored claims (lib/claims/resolve.ts resolveCarriedClaims), which hold
+ * what the last publication showed from each source, so it is the same game.
  */
 
 import { byDateThenId } from '../../format';
-import { isOfficialContestId } from '../../game-id';
+import { GUID_RE, isOfficialContestId } from '../../game-id';
 import { applyExclusions, dedupePhantomPairs, normalizeGames, type NormalizeResult } from '../../pipeline/normalize';
 import type { ScheduleRow } from '../../sources/maxpreps';
 import type { ContestId, DroppedContest, Game, TeamId, TeamSlug } from '../../types';
 import { exclusionsOf, type EditorView } from '../editor';
-import { byDateKeyThenRef, maxprepsBaseId } from '../from-snapshot';
-import { resolveMaxprepsClaim } from '../resolve';
+import { byDateKeyThenRef, maxprepsBaseId, maxprepsClaimFromGame } from '../from-snapshot';
+import { resolveCarriedClaims, resolveMaxprepsClaim, withoutClassification } from '../resolve';
 import type { ClaimStore } from '../store';
-import type { FeedRead, FixtureDecisions, FixtureId, MaxprepsClaim, MaxprepsGame } from '../types';
+import type { FeedRead, Fixture, FixtureDecisions, FixtureId, MaxprepsClaim, MaxprepsGame } from '../types';
 
 export type { FeedRead } from '../types';
 
@@ -50,11 +51,7 @@ function maxprepsReadScope(feeds: ReadonlyMap<TeamSlug, FeedRead>): (claim: Maxp
  * again exactly as they decide a fresh one.
  */
 export function asLastPublished(g: Game): Game {
-  const { official: _official, ...rest } = g;
-  void _official;
-  const { classificationNote: _note, hostConflict: _host, ...provenance } = g.provenance;
-  void [_note, _host];
-  return { ...rest, countsFor: null, postseason: null, provenance };
+  return withoutClassification(g);
 }
 
 export interface MaxprepsMatch {
@@ -87,9 +84,10 @@ export function matchMaxpreps(input: {
   tbaDropped: readonly DroppedContest[];
   normDropped: readonly DroppedContest[];
   /**
-   * The previous publication's games by contest id (§11 R3's zero-deviation carry): a carried contest publishes as
-   * it was last published, classification cleared, so it keeps what the other sources added to it rather than
-   * having this run's reads decide it again. Absent: a carried contest is its MaxPreps claim alone.
+   * The previous publication's games by contest id: a carried contest it shows enters as it was published there,
+   * classification cleared, so it keeps what the other sources added to it rather than having this run's reads
+   * decide it again. A carried contest it lacks (or every one, when absent) is folded from its stored claims
+   * (lib/claims/resolve.ts resolveCarriedClaims), which hold what the last publication showed from each source.
    */
   published?: ReadonlyMap<ContestId, Game>;
 }): MaxprepsMatch {
@@ -118,7 +116,7 @@ export function matchMaxpreps(input: {
   const carriedGames = new Map<ContestId, Game>(
     candidates.map((c) => {
       const last = published.get(c.ref);
-      return [c.ref, last ? asLastPublished(last) : resolveMaxprepsClaim(c, editor)];
+      return [c.ref, last ? asLastPublished(last) : (resolveCarriedClaims(store.get(store.fixtureOf('maxpreps', c.ref) as FixtureId) as Fixture, editor) as Game)];
     }),
   );
   // An editor-listed game published last run that touches an unread feed is carried as published (passthrough).
@@ -150,7 +148,39 @@ export function matchMaxpreps(input: {
     const id = store.fixtureOf('maxpreps', g.contestId) ?? `passthrough:${g.contestId}`;
     const last = carriedGames.get(g.contestId);
     if (last && published.has(g.contestId)) decisions.set(id, { from: 'maxpreps', enters: last });
+    else if (last) decisions.set(id, { from: 'maxpreps', carried: true });
     return id;
   });
   return { view, decisions, dropped, unusedExclusions: excluded.unused, droppedByConfig: excluded.dropped.length + deduped.dropped.length, carried: carried.map((g) => g.contestId), games };
+}
+
+/**
+ * A frozen league's MaxPreps claims (lib/pipeline/steps/guards.ts): the league publishes its previous games, so the
+ * claims of its contests (`inLeague`) are the ones the run read (`asRead`), whatever its feeds listed this run. A
+ * contest this run's read added is detached, one it re-keyed or deleted gets its stored claim back, and a published
+ * game (`published`, the previous snapshot's, stamped `previousFetchedAt`) the stored claims lack is seeded from that
+ * game, so that every contest the run publishes under a MaxPreps id keeps a MaxPreps claim.
+ */
+export function keepFrozenClaims(input: {
+  store: ClaimStore;
+  asRead: ReadonlyMap<ContestId, { id: FixtureId; claim: MaxprepsClaim }>;
+  inLeague: (game: Pick<Game, 'home' | 'away'>) => boolean;
+  published: readonly Game[];
+  previousFetchedAt: string;
+  editor: EditorView;
+}): void {
+  const { store, asRead, editor } = input;
+  for (const { claim } of store.claimsOf('maxpreps')) {
+    if (input.inLeague(claim.game) && !asRead.has(claim.ref)) store.detach('maxpreps', claim.ref);
+  }
+  for (const { id, claim } of asRead.values()) {
+    if (!input.inLeague(claim.game)) continue;
+    const home = store.get(id) !== undefined ? id : (store.fixtureOf('maxpreps', claim.ref) ?? store.create(maxprepsBaseId(claim, editor)));
+    store.attach(home, 'maxpreps', structuredClone(claim));
+  }
+  for (const g of input.published) {
+    if (!GUID_RE.test(g.contestId) || store.fixtureOf('maxpreps', g.contestId) !== undefined) continue;
+    const claim = maxprepsClaimFromGame(g, input.previousFetchedAt);
+    store.attach(store.create(maxprepsBaseId(claim, editor)), 'maxpreps', claim);
+  }
 }

@@ -1,5 +1,5 @@
 /**
- * lib/sources/vnn-ics.ts — decideVnn + applyVnnDecision against the composed applyVnnEvents, on the scenarios
+ * lib/sources/vnn-ics.ts — decideVnn's decisions, and applyVnnEvents applying them, on the scenarios
  * tests/vnn-ics.test.ts runs.
  */
 
@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { applyVnnDecision, applyVnnEvents, decideVnn, parseVnnIcs } from '../lib/sources/vnn-ics';
+import { applyVnnEvents, decideVnn, parseVnnIcs } from '../lib/sources/vnn-ics';
 import type { Game } from '../lib/types';
 import { REPO, game } from './helpers';
 
@@ -30,18 +30,40 @@ const scenarios: Record<string, Game[]> = {
   'no games': [],
 };
 
-describe('decideVnn + applyVnnDecision equal applyVnnEvents', () => {
+/** What each scenario decides, written out from the fixture: the Santa Clara home game of 2026-09-29 is the one the calendar lists. */
+const venue = 'Santa Clara High School';
+const expected: Record<string, { decided: Array<[number, { venueName?: string; timeConfirmed?: true }]>; venues: number; times: number; unmatched: number; warnings: RegExp[] }> = {
+  'venue and a confirmed time': { decided: [[0, { venueName: venue, timeConfirmed: true }]], venues: 1, times: 1, unmatched: 3, warnings: [] },
+  'a venue MaxPreps already has': { decided: [[0, { timeConfirmed: true }]], venues: 0, times: 1, unmatched: 3, warnings: [] },
+  'a time disagreement': { decided: [[0, { venueName: venue }]], venues: 1, times: 0, unmatched: 3, warnings: [/MaxPreps 15:30 PT, palo-alto's calendar 16:00 PT$/] },
+  'a TBA time': { decided: [[0, { venueName: venue }]], venues: 1, times: 0, unmatched: 3, warnings: [/MaxPreps time is TBA; palo-alto's calendar says 16:00 PT$/] },
+  'no matching event': { decided: [], venues: 0, times: 0, unmatched: 4, warnings: [] },
+  'several games, one matched': { decided: [[1, { venueName: venue, timeConfirmed: true }]], venues: 1, times: 1, unmatched: 3, warnings: [] },
+  'no games': { decided: [], venues: 0, times: 0, unmatched: 4, warnings: [] },
+};
+
+describe('decideVnn decides what the calendar fixture says, and applyVnnEvents applies it', () => {
   for (const [name, games] of Object.entries(scenarios)) {
     it(`for ${name}`, () => {
+      const want = expected[name];
       const d = decideVnn(games, varsity);
+      expect([...d.decisions]).toEqual(want.decided.map(([i, decision]) => [games[i].contestId, decision]));
+      expect([d.venuesAdded, d.timesConfirmed, d.unmatched]).toEqual([want.venues, want.times, want.unmatched]);
+      expect(d.warnings).toHaveLength(want.warnings.length);
+      want.warnings.forEach((re, i) => expect(d.warnings[i]).toMatch(re));
+
       const whole = applyVnnEvents(games, varsity);
-      const composed = games.map((g) => {
-        const decision = d.decisions.get(g.contestId);
-        return decision ? applyVnnDecision(g, decision) : g;
+      expect(whole.games).toHaveLength(games.length);
+      games.forEach((g, i) => {
+        const decided = want.decided.find(([j]) => j === i);
+        if (!decided) return expect(whole.games[i]).toBe(g);
+        expect(whole.games[i].timeConfirmed === true).toBe(decided[1].timeConfirmed === true);
+        expect(whole.games[i].venue.name).toBe(decided[1].venueName ?? g.venue.name);
+        // MaxPreps' own time is never rewritten.
+        expect(whole.games[i].dateLocal).toBe(g.dateLocal);
       });
-      expect(composed).toEqual(whole.games);
-      expect(d.warnings).toEqual(whole.warnings);
-      expect([d.venuesAdded, d.timesConfirmed, d.unmatched]).toEqual([whole.venuesAdded, whole.timesConfirmed, whole.unmatched]);
+      expect([whole.venuesAdded, whole.timesConfirmed, whole.unmatched]).toEqual([want.venues, want.times, want.unmatched]);
+      expect(whole.warnings).toEqual(d.warnings);
     });
   }
 
