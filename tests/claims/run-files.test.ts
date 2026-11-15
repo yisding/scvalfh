@@ -1,5 +1,5 @@
 /**
- * The claims file at the run's edges (§6.1, §6.3, §6.4, risk R5): `writeOutputs` writes it beside the snapshot and
+ * The claims file at the run's edges (docs/DATA-SOURCES.md §4.2): `writeOutputs` writes it beside the snapshot and
  * its meta file; `prepareRun` reads it only when it was written with the previous snapshot (same fetchedAt and
  * sport), seeds the claims from the snapshot otherwise, starts empty with no previous snapshot whatever file lies
  * beside --out, and never lets a corpus's previous snapshot meet a claims file left by an earlier run.
@@ -80,7 +80,7 @@ describe('writeOutputs and prepareRun', () => {
     expect(prepared.ctx.claims.ids()).toEqual([]);
   });
 
-  it('a corpus’s previous snapshot copied to --out takes away the claims file an earlier run left there (R5)', async () => {
+  it('a corpus’s previous snapshot copied to --out takes away the claims file an earlier run left there', async () => {
     const out = tmpOut();
     const claims = await firstRun(out);
     // The finals-regression variant ships a previous snapshot with no claims file.

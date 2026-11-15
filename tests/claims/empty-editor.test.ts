@@ -1,5 +1,5 @@
 /**
- * The hidden-default detector (pipeline inversion §3 decision 5, P7): the pipeline reads the fixture ledger only as
+ * The hidden-default detector (docs/DATA-SOURCES.md §4.1): the pipeline reads the fixture ledger only as
  * the editor's claims (lib/claims/editor.ts), and passes their slices to every rule it calls. A run whose editor
  * reads an EMPTY ledger must therefore publish none of the real ledger's facts: no corrected day, host or result,
  * no listed game, no rejected or duplicate row dropped, and none of the ledger's citation sentences anywhere in the

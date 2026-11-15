@@ -1,12 +1,13 @@
 /**
- * claimsFromSnapshot (lib/claims/from-snapshot.ts, §9): each MaxPreps row of the table, undone from a stored game.
+ * claimsFromSnapshot (lib/claims/from-snapshot.ts, docs/DATA-SOURCES.md §4.2): each step that merges into a MaxPreps
+ * game, undone from a stored game.
  *
  *  - The committed snapshot's games the ledger corrects (date fc8be1f8, host 8f8d3fe5, result 7d6e0426, the result
  *    a bracket sheet gave dba373ca): the seeded claim, resolved through the `maxpreps` stage under the ledger, is
  *    the stored game's day, host and sides again, and names what it could not recover.
  *  - Every MaxPreps game of the committed snapshot: the same, for day and sides.
- *  - One case per row of the table: a clean contest, merged by the step that writes the row, comes back as it was,
- *    apart from the fields the row says are lost, which the claim names in `reconstructed`.
+ *  - One case per step: a clean contest, merged by that step, comes back as it was, apart from the fields the step
+ *    loses, which the claim names in `reconstructed`.
  */
 
 import { readFileSync } from 'node:fs';
@@ -107,7 +108,7 @@ describe('every MaxPreps game of the committed snapshot', () => {
   });
 });
 
-describe('each MaxPreps row of §9, undone', () => {
+describe('each thing a run merges into a MaxPreps game, undone', () => {
   // A plain contest: a final decided in play between two CCS teams (no shootout section), with nothing merged in.
   const base: Game = (() => {
     const g = snapshot.games.find(

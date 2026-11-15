@@ -16,8 +16,7 @@
  *
  * A fixture that first appears at a later stage (an si.com rule-2 game, a sheet game, a frozen league's passthrough,
  * an editor listing) starts from the game it enters with and is folded from that stage on. `resolveView` over the
- * view's order is what the run publishes after each stage (lib/pipeline/run.ts), and what the legacy step chain
- * published there (tests/claims/shadow.test.ts checks it stage by stage). Pure.
+ * view's order is what the run publishes after each stage (lib/pipeline/run.ts). Pure.
  */
 
 import { classifyGames } from '../classify';

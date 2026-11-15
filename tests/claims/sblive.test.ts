@@ -1,5 +1,5 @@
 /**
- * si.com's claims (pipeline inversion P6, §7.3): seeded from a snapshot and rewritten from each run's publication,
+ * si.com's claims (docs/DATA-SOURCES.md §4.2): seeded from a snapshot and rewritten from each run's publication,
  * one fill per si.com value a game published (each rule-2 `sblive:` game on a fixture of its own) and one mark per
  * disagreement a game with no fill published. Rule 10 and a run that reads no si.com data carry from them exactly
  * as they carried from the previous snapshot's games, and the stage's games are the step's decisions applied to its

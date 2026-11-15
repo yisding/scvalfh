@@ -1,8 +1,8 @@
 /**
- * lib/claims/schema.ts (§6.5): a run's claims file parses and round-trips, and each refinement rejects what it
- * names: unsorted or repeated fixture ids, a (source, ref) held twice, a MaxPreps claim that is not its contest or
- * holds a field a later stage decides, an official claim with neither row nor stamp, a rule-2 fill whose game is
- * not an si.com game, and a fixture with no claims.
+ * lib/claims/schema.ts (docs/DATA-SOURCES.md §4.2): a run's claims file parses and round-trips, and each refinement
+ * rejects what it names: unsorted or repeated fixture ids, a (source, ref) held twice, a MaxPreps claim that is not
+ * its contest or holds a field a later stage decides, an official claim with neither row nor stamp, a rule-2 fill
+ * whose game is not an si.com game, and a fixture with no claims.
  */
 
 import { beforeAll, describe, expect, it } from 'vitest';

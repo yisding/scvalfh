@@ -1,5 +1,5 @@
 /**
- * The claims boundary (pipeline inversion §10.9): the claims are the pipeline's own working state, written beside
+ * The claims boundary (docs/DATA-SOURCES.md §4.2): the claims are the pipeline's own working state, written beside
  * the snapshot, and the site never reads them. No module of the rendered site (app/, components/, lib/data.ts) nor
  * the snapshot loader (lib/snapshot/snapshot-load.ts, snapshot-migrate.ts) reaches lib/claims/ through its runtime
  * imports, no site module names the claims file, and lib/claims/ never loads the site's data loader.
@@ -7,8 +7,8 @@
  * Walks the same import graph as tests/build-only-boundary.test.ts (tests/import-graph.ts); a failure prints the
  * chain. A type-only import vanishes at compile time and is allowed.
  *
- * And the ledger boundary (§3, §10 P8): the pipeline is to read the fixture ledger only as the editor's claims
- * (lib/claims/editor.ts), never LEDGER_VIEW, EXCLUSIONS or LEDGER themselves. The pipeline-side modules that still
+ * And the ledger boundary (docs/DATA-SOURCES.md §4.1): the pipeline is to read the fixture ledger only as the editor's
+ * claims (lib/claims/editor.ts), never LEDGER_VIEW, EXCLUSIONS or LEDGER themselves. The pipeline-side modules that still
  * import one of them are a frozen list, in tests/data-boundary.test.ts's style: a module may leave it (shrink the
  * list), never join it. All but lib/claims/editor.ts keep the import as a default parameter for their other callers.
  */

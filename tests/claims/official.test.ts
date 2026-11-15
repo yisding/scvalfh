@@ -1,5 +1,5 @@
 /**
- * The league schedules' claims (pipeline inversion P5, §7.2): seeded from a snapshot and rewritten from each run's
+ * The league schedules' claims (docs/DATA-SOURCES.md §4.2): seeded from a snapshot and rewritten from each run's
  * publication, one claim per official row, with the contest and stamp it last published (`lastMatch`) or, for a
  * row no game matched, on an official-only fixture. A division the run does not read is carried from them exactly
  * as it was carried from the previous snapshot, and the stage's games are the step's decisions applied to its

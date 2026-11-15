@@ -1,7 +1,6 @@
 /**
- * Step 06's carry from claims: a feed the run did not read is carried from the MaxPreps
- * claims the previous run wrote, not from the previous snapshot's game list. Over the all-2026-10-02 corpus with the
- * real official and si.com steps:
+ * Step 06's carry from claims: a feed the run did not read is carried from the claims the previous run wrote, not
+ * from the previous snapshot's game list. Over the all-2026-10-02 corpus with the real official and si.com steps:
  *  - a run that reads the claims FILE publishes what a run that seeds its claims from the snapshot publishes;
  *  - a carried claim keeps the stamp of the run that last read it, and the game publishes that stamp;
  *  - a contest a fresh read no longer lists loses its claim; a contest dropped or deleted this run is never carried;

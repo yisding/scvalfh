@@ -1,15 +1,15 @@
 /**
- * The committed claims files (pipeline inversion P1): beside each sport's committed snapshot sits the claims file a
- * run writes, or scripts/claims-seed.ts seeded from it. Each one parses (lib/claims/schema.ts), is written as the
- * pipeline writes it, and is for its sport.
+ * The committed claims files: beside each sport's committed snapshot sits the claims file a run writes, or
+ * scripts/claims-seed.ts seeded from it. Each one parses (lib/claims/schema.ts), is written as the pipeline writes
+ * it, and is for its sport.
  *
  * Two properties are NOT asserted, because the data crons may legitimately break them: the file's size (the pipeline
  * warns past CLAIMS_WARN_BYTES, and that warning is the signal), and that its `fetchedAt` is the snapshot's (the
  * pipeline ignores a mismatched file and seeds from the snapshot, lib/pipeline/run.ts `previousClaims`; a data cron
  * commit landing on main before a branch merges, or a workflow revert, makes one). When the stamps DO match the file
  * is the one the pipeline wrote for that snapshot, and then every MaxPreps game of the snapshot has a claim. A frozen
- * league's games are the previous run's while the claims are this run's reads (risk R13), so the check is that each
- * game HAS a claim (a frozen league keeps its claims), not that the two agree.
+ * league's games are the previous snapshot's and its claims the ones the run started with (keepFrozenClaims), so the
+ * check is that each game HAS a claim, not that the two agree.
  */
 
 import { readFileSync } from 'node:fs';

@@ -1,5 +1,5 @@
 /**
- * The pure-resolve property (pipeline inversion §4.3, P7): the claims file a run wrote, read back as any later run
+ * The pure-resolve property (docs/DATA-SOURCES.md §4.2): the claims file a run wrote, read back as any later run
  * reads it, plus the run's decisions and view order (lib/claims/view.ts), resolve (lib/claims/resolve.ts resolveView)
  * to exactly the games the run's snapshot published, before assembly gave them their URLs and content dates. So the
  * published games are a function of the stored claims and the decisions alone: no stage keeps a game the claims and

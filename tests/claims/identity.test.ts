@@ -1,6 +1,7 @@
 /**
- * Fixture ids (lib/claims/identity.ts, §6.2): read like a game slug, a school outside the registry by its name key,
- * a doubleheader told apart by `~2`, and minted in an order that does not depend on the order the rows came in.
+ * Fixture ids (lib/claims/identity.ts, docs/DATA-SOURCES.md §4.2): read like a game slug, a school outside the
+ * registry by its name key, a doubleheader told apart by `~2`, and minted in an order that does not depend on the order
+ * the rows came in.
  */
 
 import { readFileSync } from 'node:fs';

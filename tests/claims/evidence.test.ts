@@ -1,5 +1,5 @@
 /**
- * The evidence-only sources' claims (pipeline inversion P3, §7.4, §7.9, §7.10): school calendars, cifsshome.org and
+ * The evidence-only sources' claims (docs/DATA-SOURCES.md §4.2): school calendars, cifsshome.org and
  * box scores. Each is seeded from what a snapshot's games show, written by a run, and read back: the VNN per-site
  * carry reads the calendars' claims, and step 11c weighs the cifss and box evidence the claims hold. None of them
  * ever creates a fixture.

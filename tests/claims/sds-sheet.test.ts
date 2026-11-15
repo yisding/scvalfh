@@ -1,5 +1,5 @@
 /**
- * The bracket sheet's claims (pipeline inversion P4, §7.6): seeded from a snapshot's games and rewritten from each
+ * The bracket sheet's claims (docs/DATA-SOURCES.md §4.2): seeded from a snapshot's games and rewritten from each
  * run's published games, read back as the rows a tab the run does not read carries. The rows are the ones the
  * previous snapshot's games show (lib/postseason/sds-sheet-results.ts sheetResultsFromGames), in that snapshot's
  * order and with the host it published, and each `cifsds:` game is a fixture of its own, which the evidence-only

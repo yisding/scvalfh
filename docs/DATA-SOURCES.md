@@ -3646,7 +3646,7 @@ nothing under `lib/claims/` loads `lib/data.ts` (`tests/claims/boundary.test.ts`
 `data/basketball/claims.json`, `data/volleyball/claims.json`. A run writes it with the snapshot and its meta file
 (`writeOutputs`); for an `--out` that is not named `snapshot.json` it is `<out minus .json>.claims.json`, as the meta
 file is `<out minus .json>.meta.json` (`claimsPathOf`, `lib/claims/file.ts`). It is stable JSON, parsed against
-`lib/claims/schema.ts` (a claim's game is checked against the snapshot's own `GameSchema`), about 2.2 MB for field
+`lib/claims/schema.ts` (a claim's game is checked against the snapshot's own `GameSchema`), about 2.3 MB for field
 hockey; a run warns over `CLAIMS_WARN_BYTES` (3,000,000). Abridged, one fixture:
 
 ```jsonc
@@ -3663,7 +3663,8 @@ hockey; a run warns over `CLAIMS_WARN_BYTES` (3,000,000). Abridged, one fixture:
                       "stamp": { /* … */ },
                       "lastMatch": { "contestId": "1b7ee7fb-…", "stamp": { /* … */ } } },
         "sblive":   [ { "ref": "contest:1b7ee7fb-…", "conflict": { /* … */ } } ]
-      }
+      },
+      "published": [ { "contestId": "1b7ee7fb-…" } ]  // every contest id the fixture's game was published under
     }
   ]
 }
@@ -3672,7 +3673,10 @@ hockey; a run warns over `CLAIMS_WARN_BYTES` (3,000,000). Abridged, one fixture:
 Every claim has a `ref` (the source's own key for the row) and a `seenAt`, the `fetchedAt` of the last run that saw
 it. A `seenAt` equal to the file's `fetchedAt` is left out of the file, and so is a MaxPreps game's
 `provenance.fetchedAt` (it equals the claim's `seenAt`), so a run over unchanged upstream changes the file's stamp and
-nothing else; reading restores both. The sources are `maxpreps`, `official`, `sblive`, `cifss`, `sdsSheet`, `vnn`,
+nothing else; reading restores both. A fixture's `published` lists the contest ids its game has been published under, in
+the order it first was (`PublishedUnder`): each with the `seenAt` of the last run that published it so, left out on
+disk when it equals the file's `fetchedAt`, and, for an editor's listing (`official:`), the `builtAt` of the run that
+first built it. The sources are `maxpreps`, `official`, `sblive`, `cifss`, `sdsSheet`, `vnn`,
 `box` and `editor` (`ClaimSource`, `lib/claims/types.ts`). A fixture left with no claim is not written.
 
 **Fixture identity** (`lib/claims/identity.ts`). A fixture's id is `<dateKey>-<away>-at-<home>`, each side by its
@@ -3681,10 +3685,14 @@ letters and digits of the name, `sideJoinKey`), with `~2`, `~3` … for two game
 order. A fixture the ledger links to a MaxPreps contest is named by the ledger's `fixtureKey`, the same form. The id is
 minted once, from the claim that creates the fixture, and never changes afterwards, not when a later run corrects the
 day; an id (or an alias of a merged fixture) is never minted twice. Identity is by stored ref: a source row always
-lands on the fixture that already holds its `(source, ref)`, so the same MaxPreps contest, league fixture or si.com row
-is the same fixture run after run. A claim that evidence sources and write-backs keep about an already published game
-goes to the fixture that game is (`lib/claims/published.ts`): a MaxPreps contest's, a `cifsds:` game's (found by its
-sheet claim), an `official:` listing's (named by its `fixtureKey`) or an `sblive:` game's (found by its fill).
+lands on the fixture that already holds its `(source, ref)`, so the same MaxPreps contest, league fixture or si.com
+row is the same fixture run after run. When MaxPreps lists a game that si.com's rule 2, the San Diego sheet or an
+editor's listing published first (`sblive:`, `cifsds:` or `official:`), the contest's claim, on a fixture created this
+run, joins the fixture of that game (`joinSupersededFixtures`, `ClaimStore.merge`, `lib/claims/supersede.ts`): the new
+fixture's id becomes an alias of the old one, whose id the game keeps, and `published` holds both contest ids. A claim
+that evidence sources and write-backs keep about an already published game goes to the fixture that game is
+(`lib/claims/published.ts`): a MaxPreps contest's, a `cifsds:` game's (found by its sheet claim), an `official:`
+listing's (named by its `fixtureKey`) or an `sblive:` game's (found by its fill).
 
 **The claims, source by source.** "Decides" is the cross-game rule (it reads the whole view and decides which game
 each row is about; it changes no game), "applies" is the per-game function that writes one decision onto one game.
@@ -3692,14 +3700,14 @@ each row is about; it changes no game), "applies" is the per-game function that 
 
 | Source (claim `ref`) | The claim holds | Collected | Decides | Applies | When the source is not read |
 |---|---|---|---|---|---|
-| `maxpreps` (the contest GUID) | the contest as `toGame` builds it with no ledger fact applied (`game`); on a seeded claim, `reconstructed` | step 06, `collectMaxprepsClaims` (`lib/claims/sources/maxpreps.ts`) over the rows of step 05 | `matchMaxpreps`: the editor's rejected rows and the ghost teams dropped, phantom pairs deduped, the carry | `resolveMaxprepsClaim`: the editor's day, then its host (`lib/claims/resolve.ts`) | a side's feed failed or was not fetched: the claim is carried while the contest is neither dropped nor reported Deleted, and publishes as last published (caveat 2) |
-| `official` (the league fixture's id, `division:date:away@home`) | the document row as read (`fixture`), the stamp, and `lastMatch`: the contest and stamp the last publication showed; a row no game matched sits on a fixture of its own | step 07, `lib/pipeline/steps/official.ts` (SCVAL's PDFs live, the bundled BVAL, PCAL and MCAL files) | `decideOfficialMatches` (`lib/official/match.ts`) | `applyOfficialDecision`: the stamp, its league-flag and host notes, or the classification note | a division not read (a grid failed or parsed empty, `--no-official`, a bundled file that failed validation): `carryOfficialFromClaims` gives each game of it the stamp its contest last showed, no notes, and brings the division's unmatched rows back |
+| `maxpreps` (the contest GUID) | the contest as `toGame` builds it with no ledger fact applied (`game`); on a seeded claim, `reconstructed` | step 06, `collectMaxprepsClaims` (`lib/claims/sources/maxpreps.ts`) over the rows of step 05 | `matchMaxpreps`: the editor's rejected rows and the ghost teams dropped, phantom pairs deduped, the carry | `resolveMaxprepsClaim`: the editor's day, then its host (`lib/claims/resolve.ts`) | a side's feed failed or was not fetched: the claim is carried while the contest is neither dropped nor reported Deleted, and the game is folded from the fixture's stored claims (caveat 2); a frozen league keeps the claims the run started with (`keepFrozenClaims`, `guards`) |
+| `official` (the league fixture's id, `division:date:away@home`) | the document row as read (`fixture`), the stamp, and `lastMatch`: the contest and stamp the last publication showed, with the notes the game showed beside the stamp (`leagueFlagNote`, `hostNote`); a row no game matched sits on a fixture of its own | step 07, `lib/pipeline/steps/official.ts` (SCVAL's PDFs live, the bundled BVAL, PCAL and MCAL files) | `decideOfficialMatches` (`lib/official/match.ts`) | `applyOfficialDecision`: the stamp, its league-flag and host notes, or the classification note | a division not read (a grid failed or parsed empty, `--no-official`, a bundled file that failed validation): `carryOfficialFromClaims` gives each game of it the stamp its contest last showed, no notes, and brings the division's unmatched rows back; with the claims file alone, a league the run does not read is carried the same way with the notes (caveat 5) |
 | `sblive` (the si.com row's game id; `contest:<id>` for a disagreement mark) | a fill (rule 2: the whole `sblive:` game as published; rules 3 and 4: the value written onto the contest), with the row when the run read it, or a disagreement (`conflict`) with the scores the game showed beside it | step 08, `lib/pipeline/steps/sblive.ts` | `decideBackfill` (rules 2 to 4 and the carry, rule 10, `lib/crosscheck/backfill.ts`) and `decideReconcile` (rule 5, `lib/crosscheck/crosscheck.ts`) | `applyBackfillDecision`, then `applyReconcile`; rule 2's games enter the view after the official stage, each on a fixture created from its row (`createSbliveFixtures`) | rule 10 re-applies the stored fills where still eligible (`storedFillsOf`) and a disagreement is kept while its game shows the scores it was published beside (`carriedConflicts`); the cross-check report is carried from the previous snapshot (caveat 4) |
 | `vnn` (`<school>:contest:<id>`) | `applied`: the venue name and address and the confirmed start time the game showed when published, whatever wrote them | step 09, `stepVnn` in `lib/pipeline/steps/secondary.ts` | `decideVnn` over the events read; `decideVnnCarry` for a school whose calendar did not answer | `applyVnnStageDecision`: the events' decision, then the carry's | per school: the claims fill a hole with what the game last showed (`vnnPublishedFrom`); only with a previous snapshot. A claim never creates a fixture |
-| `sdsSheet` (`<division>:<slugA>~<slugB>`, the pair sorted) | the sheet's result or its game to play as last published (the row without its host), the `host`, and the `contestId` and `dateLocal` of the game it was published on | step 09, `lib/pipeline/steps/sds-sheet.ts` | `decideSdsSheet` (`lib/postseason/sds-sheet-results.ts`) | `applySdsSheetDecision`: the sheet's score (rule 2) or time (rule 4); a game only the sheet has (`cifsds:`, rules 3 and 5) enters the view on a fixture created from its row (`createSheetFixtures`) | per tab: the rows the previous publication showed, read back in its order (`storedSheetRows`) |
-| `cifss` (`contest:<id>`) | the cross-check report's conflict row for the game: the cifsshome.org score and its link | step 11b, `lib/pipeline/steps/cifss.ts` (the report), recorded by `recordCifssClaims` | none: evidence only, handed to each game by `cifssEvidenceFrom` | `finalizeResult` (`withCifssScore`) at stage `results` | the report itself is carried over this run's games when a Section was not read in full; the claims are replaced every run by the report's rows |
-| `box` (the contest) | the sides' box-score entry of the player-stats file, by team slug | the run, from `<data dir>/player-stats.json` (none with `--fixtures`), recorded by `recordBoxClaims` | none: evidence only, handed over by `boxEvidenceOf` | `finalizeResult` (`withBoxScore`) at stage `results` | the stored claims stay, and each game keeps the box evidence it holds |
-| `editor` (the ledger's `fixtureKey`) | the ledger's `CanonicalFixture` | `ledgerEditor` when the run's context is built, put on the store by `attachEditorClaims` | `matchMaxpreps` (rejected rows), the results step (listings, `ledgerProblems`), the official and si.com steps (moves) | `resolveMaxprepsClaim` (day and host), `finalizeResult` (result corrections) | never carried: rebuilt from the ledger every run, written to the file for information, discarded on read |
+| `sdsSheet` (`<division>:<slugA>~<slugB>`, the pair sorted) | the sheet's result or its game to play as last published (the row without its host), the `host`, and, in `published`, the `contestId` and `dateLocal` of the game it was published on and, on a game the sheet scored or only the sheet has, the `fetchedAt` the game showed (the run that wrote the sheet's score, or built the game) | step 09, `lib/pipeline/steps/sds-sheet.ts` | `decideSdsSheet` (`lib/postseason/sds-sheet-results.ts`) | `applySdsSheetDecision`: the sheet's score (rule 2) or time (rule 4); a game only the sheet has (`cifsds:`, rules 3 and 5) enters the view on a fixture created from its row (`createSheetFixtures`) | per tab: the rows the previous publication showed, read back in its order (`storedSheetRows`) |
+| `cifss` (`contest:<id>`) | the cross-check report's conflict row for the game: the cifsshome.org score and its link | step 11b, `lib/pipeline/steps/cifss.ts` (the report), recorded by `recordCifssClaims` | none: evidence only, handed to each game by `cifssEvidenceFrom` | `finalizeResult` (`withCifssScore`) at stage `results` | the report itself is carried over this run's games when a Section was not read in full; the claims are replaced every run by the report's rows (with the claims file alone and no report to carry, the stored claims stay) |
+| `box` (the contest) | the sides' box-score entry of the player-stats file, by team slug | the run, from `<data dir>/player-stats.json` (none with `--fixtures`), recorded by `recordBoxClaims` | none: evidence only, handed over by `boxEvidenceOf` | `finalizeResult` (`withBoxScore`) at stage `results` | the results step leaves each game's box evidence as the game holds it, and the stored claims stay until the end of the run, when `writeBackBoxClaims` rewrites them from the published games, so a carried contest shows the box score it was last published with |
+| `editor` (the ledger's `fixtureKey`) | the ledger's `CanonicalFixture` | `ledgerEditor` when the run's context is built, put on the store by `attachEditorClaims` | `matchMaxpreps` (rejected rows), the results step (listings, `ledgerProblems`), the official and si.com steps (moves) | `resolveMaxprepsClaim` (day and host), `finalizeResult` (result corrections) | never carried: rebuilt from the ledger every run, written to the file for information, discarded on read; a listing's fixture keeps its `published` history, which holds the stamp the listing was built with |
 
 **The stage driver** (`lib/pipeline/run.ts`, `lib/claims/view.ts`, `lib/claims/resolve.ts`). The run keeps a view: the
 fixtures it publishes, in order, and the decisions each stage has taken about them. At each game stage, in the order
@@ -3708,7 +3716,7 @@ fixtures it publishes, in order, and the decisions each stage has taken about th
 1. COLLECT. The step reads its source. A source not read this run is carried from its stored claims, as the table says.
 2. MATCH. The step decides over `state.games`, the view resolved through the stage before: which game each row is
    about (by contest id), which games enter the view (si.com's rule-2 games, the sheet's games, the editor's
-   listings), and, where a step used to re-sort the list, the same sort. The view's order is never derived from the
+   listings), and the re-sort a step applies to its list. The view's order is never derived from the
    ids: several rules decide by list order (the official matcher takes the first game, the backfill keeps a used set,
    the sheet takes the first candidate).
 3. RESOLVE. The run records the decisions in the view and assigns `state.games` to the view resolved through this stage:
@@ -3717,13 +3725,13 @@ fixtures it publishes, in order, and the decisions each stage has taken about th
 
 | Stage | Step | What the run records | What resolves it |
 |---|---|---|---|
-| `maxpreps` | 06 | the view's order; for a carried contest, the game it enters with | `resolveMaxprepsClaim`, or that game |
+| `maxpreps` | 06 | the view's order; which contests and editor listings are carried | `resolveMaxprepsClaim`, or `resolveCarriedClaims` for a carried one |
 | `official` | 07 | each contest's decisions, in the order taken | `applyOfficialDecision` |
 | `sblive` | 08 | the rule-2 games entering; fills and disagreements by contest | `applyBackfillDecision`, `applyReconcile` |
 | `vnn` | 09 | each contest's events and carry decisions | `applyVnnStageDecision` |
 | `sdsSheet` | 09 | the sheet's decisions by contest; its games entering; the sheet's order | `applySdsSheetDecision` |
 | `classify` | 10 | the official step's degraded divisions | `classifyGames`, then `settleLevelFinal` |
-| `guards` | 11 | a frozen league's games leaving the view and its previous games coming back | the game as last published |
+| `guards` | 11 | a frozen league's games leaving the view and its previous snapshot's games coming back (with the claims file alone, they stay, as carried from the claims) | the game as last published |
 | `results` | 11c | the editor's listings entering; the cifss and box evidence by contest | `finalizeResult` with the editor's result corrections |
 
 The cifsshome.org cross-check (11b) runs between `guards` and `results`; standings (12) and assembly (13) follow.
@@ -3741,38 +3749,56 @@ contract and is handled as one that threw (logged, the run goes on without its c
    apply to the games as the earlier stages left them, and classification runs over the games the sheet added. So each
    stage decides over the view as resolved through the stage before, and only then is the next stage's input fixed.
    No rule decides from a game's claims alone.
-2. **A MaxPreps contest whose feed was not read is carried by identity from the claims file, but publishes as the
-   previous run published it.** When a side's feed failed or was not fetched, the stored claim stays on its fixture
-   and the contest is carried; its game enters the view as the previous snapshot's game with its classification
-   cleared (the official stamp, the classification and host-conflict notes, `countsFor` and `postseason`:
-   `asLastPublished` in `lib/claims/sources/maxpreps.ts`), recorded as the fixture's `enters` decision. What the other
-   sources added to it then (an si.com fill, a sheet score, a school calendar's venue, a box score) therefore stays
-   for as long as its feed is not read, even where that source was read this run and would now decide otherwise; the
-   later stages decide the classification again as they decide a fresh game's. A contest the previous snapshot lacks
-   publishes from its claim alone, on today's editor day and host. An editor listing (`official:`) the previous run
-   published that touches an unread feed is carried the same way, on a fixture that is never stored. The carry's
-   guards are in §5.1.
-3. **The sheet, official, si.com and school-calendar claims are rewritten at the end of the run from what was
-   published.** After assembly, `writeBackSbliveClaims`, `writeBackSheetClaims`, `writeBackOfficialClaims` and
-   `writeBackVnnClaims` replace those sources' claims with what `snapshot.games` and `snapshot.officialFixtures` show,
-   in that order, because an `sblive:` game's fixture is found by its fill and a `cifsds:` game's by its sheet claim.
-   They are the last publication, not a copy of the read: a claim keeps the row as read when the run read it, else
-   the row it held, and is stamped `fetchedAt` unless its source (its division, tab, school or si.com row) was not
-   read this run and it shows what it showed before, so `seenAt` says when it was last read. The `maxpreps` claims
-   are replaced when step 06 reads the feeds, the `cifss` and `box` claims when those results are recorded.
+2. **A MaxPreps contest or editor listing whose feed was not read is carried by identity and built from its
+   fixture's stored claims.** When a side's feed failed or was not fetched, the stored claim stays on its fixture and
+   the contest is carried: its game is folded by `resolveCarriedClaims` (`lib/claims/resolve.ts`) as the MaxPreps
+   claim on the editor's day and host, then what the last publication showed from each other source, read from that
+   source's claim on the fixture (the official step's league-flag note, si.com's fill or disagreement, a school
+   calendar's venue and confirmed start time, the sheet's score or time, the cifsshome.org and box-score evidence, the
+   editor's result corrections), with the classification cleared. It is recorded as the fixture's `carried`
+   decision. Those claims are the last publication's, written back at the end of every run, so what the other sources
+   added to the game stays for as long as its feed is not read, even where that source was read this run and would now
+   decide otherwise; the later stages decide the classification again as they decide a fresh game's. An editor listing
+   (`official:`) the last run published that touches an unread feed is carried the same way: it is rebuilt from the
+   ledger with the stamp of the run that first built it, which its fixture keeps in `published` (`builtAt`), and then
+   folded from the fixture's claims. No carried game is read from the previous snapshot. The carry's guards are in
+   §5.1.
+3. **The sheet, official, si.com, school-calendar and box claims are rewritten at the end of the run from what was
+   published.** After assembly, `writeBackSbliveClaims`, `writeBackSheetClaims`, `writeBackOfficialClaims`,
+   `writeBackVnnClaims` and `writeBackBoxClaims` replace those sources' claims with what `snapshot.games` and
+   `snapshot.officialFixtures` show, in that order, because an `sblive:` game's fixture is found by its fill and a
+   `cifsds:` game's by its sheet claim; `recordPublished` then adds each game's contest id to its fixture's
+   `published`. They are the last publication, not a copy of the read: a claim keeps the row as read when the run read
+   it, else the row it held, and is stamped `fetchedAt` unless its source (its division, tab, school or si.com row)
+   was not read this run and it shows what it showed before, so `seenAt` says when it was last read; a box claim keeps
+   its stored `seenAt` while it holds the same. The `maxpreps` claims are replaced when step 06 reads the feeds, and
+   the `cifss` claims when the report is recorded.
 4. **Run-history reads stay on the previous snapshot.** What is about the last run rather than about a game is not a
    claim: a frozen league's games, unmatched official fixtures and division classification (`guards`, a publication
-   rule), `leagueHealth` and everything that reads it (the league's `lastFreshAt`, the finals regression, the 80%
-   systemic check, each division's `previousCountedFinals`), the reported standings rows of a table that failed, the
-   si.com and cifsshome.org cross-check reports and the CCS calendar and brackets that are carried, `carriedFrom`
-   stamps, an empty feed read as a failure when the previous snapshot holds games for the team, whether a missing
-   feed counts as carried, the previous publication that a carried contest is read from (caveat 2), each game's slug
-   and aliases, `supersededGames`, `contentRemovals` and the content dates (`contentChangedAt`).
-5. **With no claims file, the claims are seeded from the previous snapshot.** The context reads the file beside the
-   previous snapshot only when it was written by the same run for the same sport (its `fetchedAt` equals the snapshot's
-   and its `sport` matches); a missing, unparsable or mismatched file is logged (a warning when unparsable) and the
-   claims are seeded by `claimsFromSnapshot` (`lib/claims/from-snapshot.ts`) from the loaded snapshot; with no
-   previous snapshot the store starts empty and nothing is carried. A seeded MaxPreps claim is the contest
+   rule), and the MaxPreps claims seeded from those games when the stored claims lack one (`keepFrozenClaims`);
+   `leagueHealth` and everything that reads it (the league's `lastFreshAt`, the finals regression, the 80% systemic
+   check, each division's `previousCountedFinals`); the reported standings rows of a table that failed; the si.com and
+   cifsshome.org cross-check reports and the CCS calendar and brackets that are carried; `carriedFrom` stamps; an
+   empty feed read as a failure when the previous snapshot holds games for the team; whether a missing feed counts as
+   carried; each game's slug and aliases; `contentRemovals` and the content dates (`contentChangedAt`); and the
+   `supersededGames` entries carried from earlier runs or made from a league's own schedule. A carried contest is
+   not read from the previous snapshot (caveat 2), and the `supersededGames` entries for an si.com, sheet or listing
+   game that a MaxPreps contest took over are read from the fixtures' `published` history (`lib/claims/supersede.ts`).
+5. **With no claims file, the claims are seeded from the previous snapshot; a claims file with no previous snapshot
+   is used on its own.** `prepareRun` hands the context the file beside the previous snapshot only when it was written
+   by the same run for the same sport (its `fetchedAt` equals the snapshot's and its `sport` matches); a missing,
+   unparsable or mismatched file is logged (a warning when unparsable) and the claims are seeded by
+   `claimsFromSnapshot` (`lib/claims/from-snapshot.ts`) from the loaded snapshot. `prepareRun` hands a run with no
+   previous snapshot no file, so the store starts empty and nothing is carried, whatever file lies beside `--out`. A
+   context given a claims file and no previous snapshot (`claimsAlone`) takes the file as its only record of the last
+   publication and resolves the games published with it: every contest is carried and folded from its claims, the
+   official step carries the divisions of a league the run does not read from the official claims with the notes
+   each stamp came with, the si.com step re-applies the stored fills, the guards keep a league the run does not read
+   as the claims give it, with its si.com rule-2 games from the si.com claims (where a run with a previous snapshot
+   freezes it to that snapshot's games), and the results step weighs the stored cifsshome.org and box-score claims.
+   `tests/claims/claims-alone.test.ts` compares every field of every game with the snapshot written with the file but
+   `aliases` and `provenance.contentChangedAt`, which assembly derives from the previous snapshot. A seeded MaxPreps
+   claim is the contest
    `toGame` built, recovered by undoing the later steps in reverse order; where a step's input is lost, the claim holds
    the merged value or a reconstruction and names the field in `reconstructed` (`dateUtc`, `isDateTba`, `isTimeTba`,
    `flags`, `decider`, `forfeit`, `resultConflict`, `status`, `venue`, `site`, `seenAt`, `shootout`). Each is a field
@@ -3783,27 +3809,42 @@ contract and is handled as one that threw (logged, the run goes on without its c
    editor's claims and passes its slices to every rule explicitly; `LEDGER_VIEW` and `EXCLUSIONS` stay as the rule
    modules' default parameters for the snapshot loader, the site's reads, the JV script and the tests (§4.1).
 
-**Seeding.** `pnpm tsx scripts/claims-seed.ts` writes the claims file beside the committed snapshot, seeded from it and
-stamped with its `fetchedAt`, so that the next scheduled run reads the file and does not seed again; the editor's claims
-of the current ledger are included, as a run writes them. `SCVAL_SPORT=basketball pnpm tsx scripts/claims-seed.ts`
-does it for another sport, and `--snapshot <path>` for the snapshot at that path. It reads no network. A corpus (or a
-variant) whose manifest names a `previous` snapshot may name `previousClaims`, the claims file written beside it; it is
-copied beside `--out` with the snapshot, and without one the run seeds from `previous`.
+**Seeding.** `pnpm claims-seed` (`pnpm tsx scripts/claims-seed.ts`) writes the claims file beside the committed
+snapshot, seeded from it and stamped with its `fetchedAt`, so that the next scheduled run reads the file and does not
+seed again; the editor's claims of the current ledger are included, as a run writes them. `SCVAL_SPORT=basketball pnpm
+claims-seed` does it for another sport, and `--snapshot <path>` for the snapshot at that path. It reads no network. A
+corpus (or a variant) whose manifest names a `previous` snapshot may name `previousClaims`, the claims file written
+beside it; it is copied beside `--out` with the snapshot, and without one the run seeds from `previous`.
 
-**Checking byte identity.** `pnpm tsx scripts/claims-diff.ts [--rev <rev>]` (dev only, not in CI) runs every offline
-corpus, each variant over `all-2026-10-02`, each base corpus again over its own output and claims file, and the si.com
-cases (not read, down, read whole after a run with fills, from that run and from the committed snapshot and claims
-file; a rule-2 game MaxPreps lists later), through `scripts/fetch-data.ts` on a revision (default `HEAD`, a temporary
-git worktree) and on the working tree. It prints one line per run and file and exits 1 when any `snapshot.json` or
-`snapshot.meta.json` differs; the claims file is not compared.
+**Checking byte identity.** `pnpm claims-diff [--rev <rev>]` (`pnpm tsx scripts/claims-diff.ts`; dev only, not in CI)
+runs every offline corpus, each variant over `all-2026-10-02`, each base corpus again over its own output and claims
+file, and the si.com cases (not read, down, read whole after a run with fills, from that run and from the committed
+snapshot and claims file; a rule-2 game MaxPreps lists later), through `scripts/fetch-data.ts` on a revision (default
+`HEAD`, a temporary git worktree) and on the working tree. It prints one line per run and file and exits 1 when any
+`snapshot.json` or `snapshot.meta.json` differs; the claims file is not compared.
 
-The tests: `tests/claims/shadow.test.ts` runs every corpus, with and without a previous run (claims read from the file
-and seeded from the snapshot), every variant and the carry cases with `SCVAL_CLAIMS_SHADOW=1`, and at each stage checks
-that what the claims publish equals what the stage's legacy rule publishes over the same input; the legacy rules are
-kept as the oracle in `tests/claims/support/legacy.ts` and nowhere else, since the pipeline no longer runs them.
-`tests/claims/resolve.test.ts` holds the pure-resolve property, `tests/claims/empty-editor.test.ts` the ledger
-boundary of §4.1, and `tests/claims/committed.test.ts` that each committed claims file parses, matches its snapshot's
-`fetchedAt` and sport, and gives every MaxPreps game of the snapshot a claim.
+The tests, in `tests/claims/`. `shadow.test.ts` (and `shadow-volleyball.test.ts` for the volleyball build) runs every
+corpus, with and without a previous run (claims read from the file and seeded from the snapshot), every variant and
+the carry cases with `SCVAL_STAGE_TRACE=1`, which has each stage record what it read and published (`StageTrace`,
+`ctx.trace`; off in every real run). It compares five of those records with the rule the stage ran before the claims
+existed, kept in `support/legacy.ts` and `support/shadow.ts`, over the same input and reading the previous snapshot
+where the pipeline reads claims: at `maxpreps`, the games, their order and the contests carried against step 06 with
+the previous snapshot's games carried (a game's slug, aliases and `contentChangedAt` left out); at `official`, each
+division carried from the official claims against `carryOfficialForward` over the previous snapshot; at `sblive`, with
+no si.com data read, the disagreements carried against the previous snapshot's; at `sdsSheet`, the rows of the tabs
+not read or read with warnings against the rows read back from the previous snapshot's games; at `classify`, the view
+against `classifyGames` and `settleLevelFinal` over the game list (the volleyball file checks the first four). Every
+other comparison is of the view the run published against what the stage recorded, and the official and si.com stages
+against the games their steps returned: the `vnn`, `guards` and `results` stages and si.com's fills (rules 2 to 4) are
+compared with no earlier rule. That the pipeline publishes what it published before the claims rests on the tests that
+predate them, which call the rules through the list forms in `tests/support/list-steps.ts` (used only by tests), and
+on `pnpm claims-diff --rev <commit>`. `resolve.test.ts` holds the pure-resolve property; `claims-alone.test.ts` that a
+run given only a claims file publishes the games written with it (caveat 5); `carry-fold.test.ts` that every MaxPreps
+game of a snapshot is its fixture's claims folded; `frozen.test.ts` that a frozen league keeps its MaxPreps claims;
+`supersede.test.ts` that a contest taking over another source's game joins its fixture; `empty-editor.test.ts` the
+ledger boundary of §4.1; `boundary.test.ts` that the site and the snapshot loader do not reach `lib/claims/`; and
+`committed.test.ts` that each committed claims file parses, is written as the pipeline writes it and is for its sport,
+and, when its `fetchedAt` is its snapshot's, gives every MaxPreps game of the snapshot a claim.
 
 **In the workflows.** The update-data workflows (`update-data.yml` and the soccer, basketball and volleyball ones)
 commit the sport's claims file with its snapshot, and when only the run's timestamp moved they revert it with the
@@ -3862,8 +3903,8 @@ over the games the stage before left, and the run resolves the fixtures through 
 | Scope | Effect | Triggers |
 |---|---|---|
 | **Run abort** (exit 1, nothing written, previous snapshot and claims file stay) | the whole run is rejected | (1) the bootstrap's season ids differ from config; (2) the league/team config or registry fails its own invariants; (3) the assembled snapshot fails schema validation; (4) a systemic outage: published games under 80% of the previous snapshot, or 60% or more of the feeds attempted failed, or every league in the run ended frozen |
-| **League freeze** (`state: frozen`) | that league's games between its own teams, and its unmatched official fixtures, come from the previous snapshot (the `guards` stage's `frozen` decision, a publication rule that reads the snapshot, not the claims: §4.2) and its table is recomputed from them, with the reasons published; other leagues publish fresh | (a) a division's metadata has the wrong season, year or section id; (b) 50% or more of the league's team feeds failed; (c) finals regression: counted finals in a division dropped by 3 or more against the previous run (1-2 vanished finals publish, each named in a warning) unless the league is passed to `--accept-regression`; (d) the league is not in `--leagues` |
-| **Source stale** (`status: stale`, `carriedFrom`) | that source's previous contribution is carried and the league becomes `partial` | a MaxPreps standings table failing (0 rows, HTTP 400, schema error, network); a team feed failing (that team's MaxPreps claims stay on their fixtures and its contests are carried, guarded: never an `sblive:` game, never a contest another feed reported Deleted this run, the earlier classification cleared so the game is matched and classified again, and the phantom dedupe re-run over fresh plus carried games with the fresh row always winning; each carried contest publishes as the previous run published it, §4.2 caveat 2); an SCVAL PDF failing or parsing empty (the division's stamps and unmatched rows come from the official claims); an official-revision or MCAL changes check seeing a new hash (fixtures still used); an si.com page not read this run (a failed page, an item past the team-page cap, `--no-sblive`, nothing to read, or every request failing): the earlier si.com fills its data covered are re-applied from the si.com claims where still eligible, and a failed page's row is `stale` when something was carried in its place |
+| **League freeze** (`state: frozen`) | that league's games between its own teams, and its unmatched official fixtures, come from the previous snapshot (the `guards` stage's `frozen` decision, a publication rule that reads the snapshot, not the claims: §4.2; its contests keep the MaxPreps claims the run started with, and a run given the claims file and no previous snapshot keeps the league as the claims give it, §4.2 caveat 5) and its table is recomputed from them, with the reasons published; other leagues publish fresh | (a) a division's metadata has the wrong season, year or section id; (b) 50% or more of the league's team feeds failed; (c) finals regression: counted finals in a division dropped by 3 or more against the previous run (1-2 vanished finals publish, each named in a warning) unless the league is passed to `--accept-regression`; (d) the league is not in `--leagues` |
+| **Source stale** (`status: stale`, `carriedFrom`) | that source's previous contribution is carried and the league becomes `partial` | a MaxPreps standings table failing (0 rows, HTTP 400, schema error, network); a team feed failing (that team's MaxPreps claims stay on their fixtures and its contests are carried, guarded: never an `sblive:` game, never a contest another feed reported Deleted this run, the earlier classification cleared so the game is matched and classified again, and the phantom dedupe re-run over fresh plus carried games with the fresh row always winning; each carried contest is folded from its fixture's stored claims and so publishes as the previous run published it, and an editor listing the last run published that touches the feed is carried the same way, §4.2 caveat 2); an SCVAL PDF failing or parsing empty (the division's stamps and unmatched rows come from the official claims); an official-revision or MCAL changes check seeing a new hash (fixtures still used); an si.com page not read this run (a failed page, an item past the team-page cap, `--no-sblive`, nothing to read, or every request failing): the earlier si.com fills its data covered are re-applied from the si.com claims where still eligible, and a failed page's row is `stale` when something was carried in its place |
 
 The **CCS calendar and bracket** are not a league source (no league changes state) and carry per
 part: a part not read this run (`--no-ccs`, no CCS league in `--leagues` such as an MCAL-only
@@ -3986,7 +4027,7 @@ scores, and a si.com game that is not a junk row (rule 7).**
 10. **Supersede and carry-forward:** a MaxPreps contest that later matches a filled fixture wins;
     no `sblive:` game is emitted for it, a score difference becomes an ordinary conflict, and the
     fill's page is the MaxPreps game's from then on: it takes over the fill's slug, and the fill's old id URL
-    is one of its aliases, a permanent (308) redirect (`supersededGames`, carried for the rest of the season). An earlier si.com fill is decided again only by the si.com data that
+    is one of its aliases, a permanent (308) redirect (`supersededGames`, carried for the rest of the season). A contest new to the claims joins the fixture the fill was published on, so the game keeps its fixture (§4.2). An earlier si.com fill is decided again only by the si.com data that
     covers it (a scoreboard row of the pair near the date, or a team page of either side). Whenever
     this run did not read that data — its page failed (a partial failure is enough), the item was
     past the team-page cap or not planned, `--no-sblive`, nothing was read, or every request failed —

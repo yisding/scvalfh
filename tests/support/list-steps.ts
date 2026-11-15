@@ -1,8 +1,8 @@
 /**
  * The stages and rules as functions over a whole game list, for the tests that call them that way. The pipeline
  * decides over its view and applies each decision to one game (lib/claims/resolve.ts); each function here composes
- * the same decide and apply functions over a list, as the step did before the claims existed, so a test of the rule
- * reads as it always has.
+ * the same decide and apply functions over a list, in the order the step takes them, so a test of a rule calls it with
+ * a game list and reads the games it returns.
  */
 
 import { classifyGames } from '../../lib/classify';

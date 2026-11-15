@@ -1333,9 +1333,10 @@ never reads it, so it has no `.d.json.ts` sidecar and no override variable. Two 
 to it (`docs/DATA-SOURCES.md` §4.2):
 
 ```bash
-pnpm tsx scripts/claims-seed.ts   # rewrite the claims file beside the committed snapshot, seeded from it
-pnpm tsx scripts/claims-diff.ts   # dev only, not in CI: every offline run on HEAD and on the working tree
+pnpm claims-seed                  # rewrite the claims file beside the committed snapshot, seeded from it
+pnpm claims-diff                  # dev only, not in CI: every offline run on HEAD and on the working tree
                                   # must write the same snapshot.json and snapshot.meta.json
+pnpm claims-diff --rev <commit>   # the same, with the code at <commit> in place of HEAD
 ```
 
 The vinext scripts read the
