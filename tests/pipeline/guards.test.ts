@@ -258,14 +258,30 @@ describe('trigger c against a game a configured correction scores (PR #127 revie
   // Helix 2, Bonita Vista 1 (Oct 7, Metro Mesa): MaxPreps lists the game with no score and
   // DATA_QUALITY.resultCorrections scores it, so the published snapshot counts one more final than the feed has.
   // The next run's feed is unchanged: that game has not vanished, and Metro is not partial for it.
+  // The bundled file may hold the game either way: as the feed had it (written before the correction existed) or
+  // corrected (every refresh since writes it so, `provenance.resultCorrection.maxpreps` null for "no score"). The
+  // feed's row is rebuilt from the corrected game, so the check does not depend on which (update-data, 2026-11-14).
   it('counts this run’s finals with the same corrections the last update had', () => {
     const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as Snapshot;
     const loaded = loadSnapshot(raw as unknown);
     const helix = '3a37744f-8264-47f8-baa3-6c660b8e3892';
-    const unscored = raw.games.find((g) => g.contestId === helix)!;
     const scored = loaded.games.find((g) => g.contestId === helix)!;
-    expect(unscored.status, 'the feed still has no score').not.toBe('final');
     expect(scored.status).toBe('final');
+    expect(scored.provenance.resultCorrection, 'the correction scores it').toBeDefined();
+    expect(scored.provenance.resultCorrection?.maxpreps, 'the feed has no score').toBeNull();
+    const { resultCorrection: _applied, ...feedProvenance } = scored.provenance;
+    void _applied;
+    const unscored: Game = {
+      ...scored,
+      status: 'score-pending',
+      home: { ...scored.home, score: null, result: null },
+      away: { ...scored.away, score: null, result: null },
+      decider: null,
+      otPeriods: 0,
+      isOt: false,
+      shootout: null,
+      provenance: feedProvenance,
+    };
     // The last update as the pipeline wrote it: each Metro division's count is of its games, the scored one included.
     const previous: Snapshot = {
       ...loaded,

@@ -196,6 +196,37 @@ describe('the sheet’s games with no score yet', () => {
     expect(later.listed[0].status).toBe('score-pending');
   });
 
+  it('lists nothing when MaxPreps has the pair on another date, or with none (update-data, 2026-11-14)', () => {
+    // Two teams meet once in the playoffs: MaxPreps' contest for the pair is the fixture, whatever its date says.
+    const target = maxpreps.find((g) => g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa')!;
+    const scheduled: Game = {
+      ...target,
+      status: 'scheduled',
+      home: { ...target.home, score: null, result: null },
+      away: { ...target.away, score: null, result: null },
+      decider: null,
+      otPeriods: 0,
+      isOt: false,
+    };
+    const run = (contest: Game) =>
+      applySdsSheetResults({
+        games: maxpreps.map((g) => (g.contestId === target.contestId ? contest : g)),
+        results: [],
+        fixtures: [{ ...at('2025-11-12', '19:00'), teams: ['mira-mesa', 'del-norte'] }],
+        today: '2025-11-10',
+        file,
+        windowFirst: SDS_2025_WINDOW.first,
+        sheetUrl: SHEET,
+        fetchedAt: AT,
+      });
+    const farOff = { ...scheduled, ...datesAtLocal('2025-11-20', '16:00') };
+    expect(run(farOff).listed, 'a date MaxPreps has not moved yet').toEqual([]);
+    expect(run(farOff).games.filter((g) => g.contestId.startsWith('cifsds:mira-mesa'))).toEqual([]);
+    expect(run({ ...scheduled, isDateTba: true }).listed, 'no date yet').toEqual([]);
+    // A postponed row is no contest: the sheet's game is listed.
+    expect(run({ ...farOff, status: 'postponed' }).listed.map((g) => g.contestId)).toEqual(['cifsds:mira-mesa-at-del-norte']);
+  });
+
   it('times a MaxPreps contest that has none, on the same date, and only that', () => {
     const target = maxpreps.find((g) => g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa')!;
     const tba: Game = {

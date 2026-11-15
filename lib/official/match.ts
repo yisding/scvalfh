@@ -5,6 +5,8 @@
  *    byte for byte — same pass order, same ordered tier 3 (league games first, then nearest date,
  *    non-league candidates capped at ±14 days) — now stamping the widened OfficialStamp
  *    (`division`, `fixtureId`, `pass`). Golden-gated (tests/golden/scval-corpus.json officialStamps).
+ *    One pass added since (2026-11-15), run last and only for the fixtures still open: a rescheduled leg
+ *    MaxPreps also hosts the other way round, stamped 'rescheduled' with the host conflict published.
  *  - 'two-phase' (BVAL, PCAL, MCAL): pass 1 same-date ordered for ALL fixtures, pass 2 same-date
  *    unordered for all remaining (host conflict published), pass 3 rescheduled legs assigned
  *    GLOBALLY by smallest |Δdays| (ties: fixture date, fixture id, contestId), so an early unplayed
@@ -124,6 +126,7 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
   const byDateOrdered = new Map<string, Game[]>();
   const byDateUnordered = new Map<string, Game[]>();
   const byOrdered = new Map<string, Game[]>();
+  const byUnordered = new Map<string, Game[]>();
   for (const g of games) {
     if (opts.isExcluded(g)) continue;
     const away = sideJoinKey(g.away);
@@ -131,6 +134,7 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
     push(byDateOrdered, `${g.dateKey}|${orderedKey(away, home)}`, g);
     push(byDateUnordered, `${g.dateKey}|${unorderedPairKey(away, home)}`, g);
     push(byOrdered, orderedKey(away, home), g);
+    push(byUnordered, unorderedPairKey(away, home), g);
   }
 
   const take = (list: Game[] | undefined): Game | null => {
@@ -139,8 +143,30 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
     return null;
   };
 
+  /** The grid-host sentence a game whose host MaxPreps has the other way round carries. */
+  const hostSentence = (fixture: OfficialFixture & { homeSlug: TeamSlug }, game: Game): string => {
+    const gridHost = resolveTeam(fixture.homeSlug)?.name ?? fixture.homeName;
+    return (
+      `the official ${divisionLabel(fixture.division)} grid has ${gridHost} hosting; ` +
+      `MaxPreps has ${game.home.name}, and MaxPreps is the only source of the two that ` +
+      'states home and away.'
+    );
+  };
+
   const unmatched: OfficialFixture[] = [];
   let matched = 0;
+  const stamp = (fixture: OfficialFixture, game: Game, pass: Pass) => {
+    consumed.add(game.contestId);
+    official.set(game.contestId, stampOf(fixture, pass));
+    matched += 1;
+    if (!game.isLeague) {
+      const note =
+        `the official ${divisionLabel(fixture.division)} grid has this as a league fixture ` +
+        `on ${fixture.dateKey}; MaxPreps flags it non-league`;
+      leagueDisagreements.push(`${game.contestId} (${fixture.awayName} @ ${fixture.homeName}) — ${note}`);
+      disagreed.set(game.contestId, note);
+    }
+  };
 
   for (const fixture of fixtures) {
     if (!fixture.awaySlug || !fixture.homeSlug) {
@@ -160,13 +186,7 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
         // Home/away stays MaxPreps' — but the disagreement is PUBLISHED on the game. The sentence
         // is read by a human on the game page, so it uses the display name rather than the grid's
         // UPPERCASE spelling, and carries no date (this is the same-date pass).
-        const gridHost = resolveTeam(fixture.homeSlug)?.name ?? fixture.homeName;
-        hostDisagreed.set(
-          swapped.contestId,
-          `the official ${divisionLabel(fixture.division)} grid has ${gridHost} hosting; ` +
-            `MaxPreps has ${swapped.home.name}, and MaxPreps is the only source of the two that ` +
-            'states home and away.',
-        );
+        hostDisagreed.set(swapped.contestId, hostSentence({ ...fixture, homeSlug: fixture.homeSlug }, swapped));
         game = swapped;
         pass = 'same-date-swapped';
       }
@@ -198,16 +218,34 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
       unmatched.push(fixture);
       continue;
     }
-    consumed.add(game.contestId);
-    official.set(game.contestId, stampOf(fixture, pass));
-    matched += 1;
-    if (!game.isLeague) {
-      const note =
-        `the official ${divisionLabel(fixture.division)} grid has this as a league fixture ` +
-        `on ${fixture.dateKey}; MaxPreps flags it non-league`;
-      leagueDisagreements.push(`${game.contestId} (${fixture.awayName} @ ${fixture.homeName}) — ${note}`);
-      disagreed.set(game.contestId, note);
+    stamp(fixture, game, pass);
+  }
+
+  // Last, for the fixtures still open: a rescheduled leg MaxPreps also hosts the other way round (SCVAL's Sep 9
+  // Homestead @ Cupertino, the 5-5 MaxPreps has at Homestead and contestDateOverrides dates Sep 11). Same order as
+  // the rescheduled pass, among the contests no fixture took, after every fixture has had its own passes, so it
+  // can only fill a fixture that would otherwise be unmatched and never take another fixture's leg.
+  for (const fixture of [...unmatched]) {
+    const { awaySlug, homeSlug } = fixture;
+    if (!awaySlug || !homeSlug) continue;
+    const candidates = (byUnordered.get(unorderedPairKey(awaySlug, homeSlug)) ?? []).filter(
+      (g) => !consumed.has(g.contestId) && (g.isLeague || days(g.dateKey, fixture.dateKey) <= opts.rescheduleWindowDays),
+    );
+    candidates.sort(
+      (a, b) =>
+        Number(b.isLeague) - Number(a.isLeague) ||
+        days(a.dateKey, fixture.dateKey) - days(b.dateKey, fixture.dateKey) ||
+        (a.contestId < b.contestId ? -1 : a.contestId > b.contestId ? 1 : 0),
+    );
+    const game = candidates[0];
+    if (!game) continue;
+    unmatched.splice(unmatched.indexOf(fixture), 1);
+    warnings.push(`${fixture.awayName} @ ${fixture.homeName}: official ${fixture.dateKey}, MaxPreps ${game.dateKey}`);
+    if (sideJoinKey(game.home) !== homeSlug) {
+      warnings.push(`${fixture.dateKey} ${fixture.awayName} @ ${fixture.homeName}: MaxPreps has the host the other way round`);
+      hostDisagreed.set(game.contestId, hostSentence({ ...fixture, homeSlug }, game));
     }
+    stamp(fixture, game, 'rescheduled');
   }
 
   const out = games.map((g) => {

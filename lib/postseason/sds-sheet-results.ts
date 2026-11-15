@@ -29,7 +29,11 @@
  *      (`provenance.schedule 'cifsds-sheet'`); a contest MaxPreps times is left as it is.
  *   5. no MaxPreps contest: the game is published from the sheet as `cifsds:<away>-at-<home>`, scheduled (score
  *      pending once its day has passed), hosted as in rule 3. When its result is posted, rule 3 makes the same id
- *      final; when MaxPreps posts it, it is superseded as in rule 3.
+ *      final; when MaxPreps posts it, it is superseded as in rule 3. "No MaxPreps contest" means none for the pair
+ *      anywhere in the playoffs, not only within two days: two teams meet once in the Section's playoffs, so a
+ *      MaxPreps contest of the pair on another date (or with no date yet) is this game, and listing the sheet's
+ *      copy too would put one game in the bracket twice, the copy with no card of its own (the update-data run of
+ *      2026-11-14 failed on a San Diego final listed beside MaxPreps' contest for it).
  *
  * Pure: no I/O, no clock.
  */
@@ -251,6 +255,20 @@ function candidatesOf(games: readonly Game[], key: string, dateKey: string, wind
     .sort((a, b) => Math.abs(dayDiff(a.dateKey, dateKey)) - Math.abs(dayDiff(b.dateKey, dateKey)) || a.contestId.localeCompare(b.contestId));
 }
 
+/**
+ * A MaxPreps contest of the pair on or after the playoffs' first day, on any date or none, not postponed: the one
+ * meeting the playoffs allow them (rule 5).
+ */
+function playoffContestOf(games: readonly Game[], key: string, windowFirst: string): Game | undefined {
+  return games.find(
+    (g) =>
+      !isCifsdsContest(g.contestId) &&
+      g.status !== 'postponed' &&
+      (g.isDateTba || g.dateKey >= windowFirst) &&
+      pairKey(g.home.slug, g.away.slug) === key,
+  );
+}
+
 /** The sheet's results and fixtures applied to this run's games (rules 1-5 above). */
 export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyResult {
   let games = input.games.filter((g) => !isCifsdsContest(g.contestId));
@@ -312,6 +330,7 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
     if (!teams.has(a) || !teams.has(b) || a === b || resultPairs.has(key)) continue;
     const candidates = candidatesOf(games, key, f.dateKey, input.windowFirst);
     const contest = candidates[0];
+    if (!contest && playoffContestOf(games, key, input.windowFirst)) continue;
     if (contest) {
       // Rule 4: MaxPreps' contest keeps its own time; one with none, on the sheet's date, takes the sheet's.
       if (contest.isTimeTba && f.time !== null && contest.dateKey === f.dateKey && contest.status !== 'final') {
