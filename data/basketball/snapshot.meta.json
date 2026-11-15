@@ -7,20 +7,20 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "a0656ad13c522a397a8451c3a58d043930b9a5de259cb94615151fa486aa0148",
+  "contentHash": "1f1386b83529211858babe61864678f0d98a0be70c98d48ef32f6987e7090fc4",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 265,
+        "games": 266,
         "leagueGames": 120,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 197,
+        "games": 196,
         "leagueGames": 96,
         "teams": 15
       }
@@ -33,7 +33,7 @@
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-15T13:50:08.245Z",
+  "fetchedAt": "2026-11-15T20:19:32.005Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -109,7 +109,7 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": 25,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -289,7 +289,7 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -349,7 +349,7 @@
     },
     {
       "label": "yerba-buena schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -436,7 +436,7 @@
   "today": "2026-11-15",
   "warnings": 8,
   "window": {
-    "firstGame": "2026-11-17T18:00:00",
+    "firstGame": "2026-11-19T16:50:00",
     "lastGame": "2027-02-16T19:00:00",
     "lastLeagueGame": "2027-02-16T19:00:00"
   }
