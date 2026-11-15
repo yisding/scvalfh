@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * The cron entry point (SPEC §7.12): a thin CLI over lib/pipeline/ — parse args → RunContext →
- * runPipeline → write outputs. A run abort (RunAbort) exits 1 and writes nothing, so the previous
+ * runPipeline → write outputs (the snapshot, its meta file and the claims file beside them). A run abort (RunAbort) exits 1 and writes nothing, so the previous
  * snapshot stays.
  *
  *   pnpm fetch-data                          live: the 131-request MaxPreps sweep (1 bootstrap + 14 league
@@ -44,7 +44,7 @@ export async function main(argv: readonly string[]): Promise<number> {
     }
     const metaPath = run.writeOutputs(resolved.out, result);
     const rel = (p: string) => p.replace(`${process.cwd()}/`, '');
-    ctx.log(`wrote ${rel(resolved.out)} and ${rel(metaPath)}`);
+    ctx.log(`wrote ${rel(resolved.out)}, ${rel(metaPath)} and ${rel(run.claimsPathOf(resolved.out))}`);
     return 0;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

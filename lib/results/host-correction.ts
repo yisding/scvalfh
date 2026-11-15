@@ -83,3 +83,14 @@ export function applyHostCorrection(game: Game, overrides: HostCorrections = LED
     provenance: { ...swapped.provenance, hostCorrection: { maxprepsHome: game.home.slug, source: o.source, url: o.url } },
   };
 }
+
+/**
+ * A host-corrected game as MaxPreps lists it: the sides swapped back and `provenance.hostCorrection` gone; the same
+ * object when no host correction was applied. Used to seed the claims of a stored game (lib/claims/from-snapshot.ts).
+ */
+export function unswapHost(game: Game): Game {
+  if (!game.provenance.hostCorrection) return game;
+  const { hostCorrection: _applied, ...provenance } = game.provenance;
+  void _applied;
+  return swapSides({ ...game, provenance });
+}

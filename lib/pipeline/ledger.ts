@@ -10,6 +10,10 @@
  * No clock: `today` is localDateKey(fetchedAt), never Date.now().
  */
 
+import { ledgerEditor, type EditorView } from '../claims/editor';
+import { claimsFromSnapshot } from '../claims/from-snapshot';
+import { ClaimStore } from '../claims/store';
+import type { ClaimsFile, EditorClaim, ShadowStage } from '../claims/types';
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
 import { LEAGUES, findDivision } from '../leagues';
 import { SDS_BRACKET_SHEET_TABS } from '../league-config/sections';
@@ -262,6 +266,12 @@ export interface RunContextInit {
   transport: Transport;
   previous: Snapshot | null;
   sink?: LogSink;
+  /**
+   * The claims file beside the previous snapshot, already checked against it (lib/pipeline/run.ts prepareRun). When
+   * undefined, the claims are seeded from `previous` (lib/claims/from-snapshot.ts). With no previous snapshot the
+   * store starts empty whatever is given: no previous run, nothing to carry.
+   */
+  claims?: ClaimsFile | null;
 }
 
 /** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
@@ -275,8 +285,15 @@ export class PipelineContext implements RunContext {
   readonly leagues = new LeagueLedger();
   readonly dropped = new DroppedLedger();
   readonly logLines: string[] = [];
+  /** The fixture ledger as the editor's claims (lib/claims/editor.ts), and the slices the steps read from them. */
+  readonly editorClaims: readonly EditorClaim[];
+  readonly editor: EditorView;
+  /** The shadow harness's record, stage by stage (SCVAL_CLAIMS_SHADOW=1, tests only); null otherwise. */
+  readonly shadow: ShadowStage[] | null;
   private readonly sink: LogSink;
   private readonly inRun: readonly LeagueId[];
+  private readonly claimsInit: ClaimsFile | null | undefined;
+  private store: ClaimStore | null = null;
 
   constructor(init: RunContextInit) {
     this.args = init.args;
@@ -288,6 +305,23 @@ export class PipelineContext implements RunContext {
     const wanted = init.args.leagues;
     // Config order, whatever order the flag listed them in.
     this.inRun = LEAGUES.map((l) => l.id).filter((id) => wanted === null || wanted.includes(id));
+    const editor = ledgerEditor(init.args.fetchedAt);
+    this.editorClaims = editor.claims;
+    this.editor = editor.view;
+    this.claimsInit = init.claims;
+    this.shadow = process.env.SCVAL_CLAIMS_SHADOW === '1' ? [] : null;
+  }
+
+  /**
+   * The run's claim store (lib/claims/store.ts), built on first use: the claims file beside the previous snapshot,
+   * else the claims seeded from that snapshot; empty with no previous snapshot.
+   */
+  get claims(): ClaimStore {
+    if (this.store === null) {
+      const file = this.previous === null ? null : this.claimsInit === undefined ? claimsFromSnapshot(this.previous, this.editor) : this.claimsInit;
+      this.store = ClaimStore.fromFile(file);
+    }
+    return this.store;
   }
 
   log(line: string): void {

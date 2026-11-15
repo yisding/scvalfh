@@ -99,7 +99,7 @@ export function withCifssScore(game: Game, row: Pick<CifssConflictRow, 'cifss' |
   return { ...game, provenance: { ...game.provenance, cifssScore: { home: row.cifss.home, away: row.cifss.away, url: row.cifssUrl } } };
 }
 
-function overtimeDecider(otPeriods: number): Decider {
+export function overtimeDecider(otPeriods: number): Decider {
   return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
 }
 
@@ -201,7 +201,7 @@ function withReportedWinner(game: Game, c: ResultCorrection | undefined): Game {
 }
 
 /** A corrected game as MaxPreps had it (`resultCorrection.maxpreps`; no score when it listed none), uncorrected. */
-function uncorrected(game: Game, was: NonNullable<Game['provenance']['resultCorrection']>): Game {
+export function uncorrected(game: Game, was: NonNullable<Game['provenance']['resultCorrection']>): Game {
   const { resultCorrection: _applied, ...provenance } = game.provenance;
   void _applied;
   const mp = was.maxpreps;
@@ -260,7 +260,7 @@ export function correctionProblems(
 const outcomeOf = (own: number, other: number): Outcome => (own > other ? 'W' : own < other ? 'L' : 'T');
 
 /** The game as MaxPreps had it, where `adjudicateScore` published another score; the same object otherwise. */
-function unadjudicated(game: Game): Game {
+export function unadjudicated(game: Game): Game {
   const was = game.provenance.adjudicated;
   if (!was) return game;
   const { adjudicated: _gone, ...provenance } = game.provenance;
@@ -390,7 +390,7 @@ export function withBoxOvertime(game: Game): Game {
 }
 
 /** The game without a tally `unfoldShootout` read into it; the same object when its tally is recorded or absent. */
-function withoutReadTally(game: Game): Game {
+export function withoutReadTally(game: Game): Game {
   if (!game.provenance.shootoutSource) return game;
   const { shootoutSource: _read, ...provenance } = game.provenance;
   void _read;

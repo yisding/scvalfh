@@ -19,11 +19,19 @@
  *   11c results    corrections, level finals that must have a winner, tallies, and every final's GameResult
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
+ *
+ * Beside step 06 the run records its MaxPreps and editor claims (lib/claims/), and the claims file is written beside
+ * the snapshot. Nothing reads the claims to publish yet: the steps above still produce the snapshot.
  */
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { attachEditorClaims } from '../claims/editor';
+import { CLAIMS_WARN_BYTES, claimsFileText, claimsPathOf, readClaimsFile } from '../claims/file';
+import { resolveView } from '../claims/resolve';
+import { collectMaxprepsClaims, matchMaxpreps } from '../claims/sources/maxpreps';
+import type { ClaimsFile, RunFacts } from '../claims/types';
 import { carryCrossCheck } from '../crosscheck/crosscheck';
 import { parseFetchedAtFlag, parseLeaguesFlag } from '../cli-flags';
 import { localDateKey } from '../format';
@@ -41,7 +49,7 @@ import {
   type Transport,
 } from './contract';
 import { loadCorpus, type Corpus } from './corpus';
-import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink } from './ledger';
+import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink, type RunState } from './ledger';
 import { stepAssemble } from './steps/assemble';
 import { stepBootstrap } from './steps/bootstrap';
 import { stepCifss } from './steps/cifss';
@@ -64,7 +72,9 @@ import {
   RecordingTransport,
   type RequestCounts,
 } from './transport';
-import { DATA_DIR } from '../sports/current';
+import { DATA_DIR, SPORT_ID } from '../sports/current';
+
+export { claimsPathOf } from '../claims/file';
 
 // ---------------------------------------------------------------- the run context
 
@@ -74,13 +84,15 @@ export interface CreateContextInit {
   transport: Transport;
   previous: Snapshot | null;
   sink?: LogSink;
+  /** The claims file beside the previous snapshot (prepareRun); undefined seeds the claims from `previous`. */
+  claims?: ClaimsFile | null;
 }
 
 /** A PipelineContext whose transport is metered and logs through the context. */
 export function createPipelineContext(init: CreateContextInit): PipelineContext {
   let ctx: PipelineContext | null = null;
   const metered = new MeteredTransport(init.transport, (line) => ctx?.log(line));
-  ctx = new PipelineContext({ args: init.args, transport: metered, previous: init.previous, sink: init.sink });
+  ctx = new PipelineContext({ args: init.args, transport: metered, previous: init.previous, sink: init.sink, claims: init.claims });
   return ctx;
 }
 
@@ -131,6 +143,56 @@ async function runSblive(
   }
 }
 
+/** What resolve reads of the run at the `maxpreps` stage: the feeds read; every later source not migrated yet. */
+function maxprepsFacts(ctx: PipelineContext, state: RunState): RunFacts {
+  return {
+    fetchedAt: ctx.fetchedAt,
+    today: ctx.today,
+    leaguesInRun: ctx.leaguesInRun(),
+    reads: {
+      maxprepsFeeds: new Map([...state.feeds].map(([slug, f]) => [slug, f.status])),
+      officialDivisions: new Map(),
+      sblive: { read: false, consulted: () => false },
+      vnnSites: new Map(),
+      sdsTabs: new Map(),
+      cifss: 'none',
+      box: false,
+    },
+    degradedDivisions: new Set(),
+  };
+}
+
+/**
+ * The run's MaxPreps and editor claims into the store (lib/claims/sources/maxpreps.ts), beside step 06, which
+ * still publishes. Nothing is logged and nothing is dropped here: step 06 does both. With the shadow harness on,
+ * the step's games and the claims' view at this stage are recorded side by side.
+ */
+function recordMaxprepsClaims(ctx: PipelineContext, state: RunState): void {
+  const { claims: fresh, norm } = collectMaxprepsClaims(state.rows, ctx.fetchedAt);
+  const deletedThisRun = new Set(state.rows.filter((r) => r.calculatedFields.contestState === 1).map((r) => r.contest.contestId));
+  const m = matchMaxpreps({
+    store: ctx.claims,
+    fresh,
+    editor: ctx.editor,
+    feeds: state.feeds,
+    deletedThisRun,
+    tbaDropped: state.tbaDropped,
+    normDropped: norm.dropped,
+  });
+  attachEditorClaims(ctx.claims, ctx.editorClaims);
+  if (ctx.shadow) {
+    const games = resolveView(m.view, ctx.claims, new Map(), maxprepsFacts(ctx, state), ctx.editor, 'maxpreps');
+    const published = new Set(games.map((g) => g.contestId));
+    const freshRefs = new Set(fresh.map((c) => c.ref));
+    ctx.shadow.push({
+      stage: 'maxpreps',
+      legacy: { games: [...state.games], unmatched: [...state.unmatched] },
+      claims: { view: [...m.view], games, unplaced: state.games.map((g) => g.contestId).filter((id) => !published.has(id)) },
+      carried: state.games.map((g) => g.contestId).filter((id) => !freshRefs.has(id)),
+    });
+  }
+}
+
 /** Runs §7.4 steps 01-13. Returns null when the season-window guard stops the run (nothing to write). */
 export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): Promise<PipelineResult | null> {
   // 01
@@ -149,6 +211,7 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   await stepReported(ctx, state); // 04
   await stepSchedules(ctx, state); // 05
   stepNormalize(ctx, state); // 06
+  recordMaxprepsClaims(ctx, state);
 
   // 07 official (the injectable official step)
   const { games: officialGames, unmatched, ...officialFlags } = await runOfficial(ctx, steps, state.games);
@@ -185,7 +248,13 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
 
   // 13 assemble (may throw RunAbort)
   const { snapshot, meta } = stepAssemble(ctx, { state, table, requests: requestCounts(ctx.transport) });
-  return { snapshot, meta, logLines: [...ctx.logLines] };
+
+  // The claims file beside the snapshot. Checked after the meta is built, so a size warning never moves meta.warnings.
+  ctx.claims.gc();
+  const claims = ctx.claims.toFile(ctx.fetchedAt, SPORT_ID);
+  const bytes = Buffer.byteLength(claimsFileText(claims), 'utf8');
+  if (bytes > CLAIMS_WARN_BYTES) ctx.warn(`claims file is ${bytes} bytes, over the ${CLAIMS_WARN_BYTES}-byte budget`);
+  return { snapshot, meta, claims, logLines: [...ctx.logLines] };
 }
 
 // ---------------------------------------------------------------- CLI plumbing (§7.12)
@@ -329,29 +398,53 @@ export function prepareRun(raw: RunArgs, sink: LogSink = CONSOLE_SINK, live?: ()
   }
 
   let previousFile: string | null = args.out;
+  // The claims file written beside the previous snapshot; null: none goes with it.
+  let claimsFile: string | null = claimsPathOf(args.out);
   if (corpus?.previous) {
     if (args.dryRun) {
       previousFile = corpus.previous;
+      claimsFile = corpus.previousClaims;
     } else {
       mkdirSync(path.dirname(args.out), { recursive: true });
       copyFileSync(corpus.previous, args.out);
       sink.log(`previous: started from ${path.relative(process.cwd(), corpus.previous)} (copied to ${path.relative(process.cwd(), args.out)})`);
+      // A claims file already beside --out was written beside another snapshot: it goes, or the corpus's own replaces it.
+      if (corpus.previousClaims) copyFileSync(corpus.previousClaims, claimsFile);
+      else rmSync(claimsFile, { force: true });
     }
   }
   const previous = previousFile ? readPrevious(previousFile, sink) : null;
-  const ctx = createPipelineContext({ args, transport, previous, sink });
+  const claims = previous ? previousClaims(claimsFile, previous, sink) : null;
+  const ctx = createPipelineContext({ args, transport, previous, sink, claims });
   return { args, corpus, previousFile: previous ? previousFile : null, ctx };
+}
+
+/**
+ * The claims file beside the previous snapshot when it was written by the same run for the same sport (its
+ * fetchedAt and sport match), else undefined: the context then seeds the claims from the snapshot.
+ */
+function previousClaims(file: string | null, previous: Snapshot, sink: LogSink): ClaimsFile | undefined {
+  const rel = (p: string) => path.relative(process.cwd(), p);
+  const claims = file ? readClaimsFile(file, (line) => sink.warn(line)) : null;
+  if (claims && claims.fetchedAt === previous.fetchedAt && claims.sport === SPORT_ID) return claims;
+  if (file && claims) sink.log(`claims: ${rel(file)} does not match the previous snapshot; seeded from it`);
+  else sink.log(`claims: no claims file beside the previous snapshot; seeded from it`);
+  return undefined;
 }
 
 export function metaPathOf(out: string): string {
   return out.replace(/\.json$/, '') + '.meta.json';
 }
 
-/** Writes snapshot.json and snapshot.meta.json (stable, key-sorted JSON). Returns the meta path. */
+/**
+ * Writes snapshot.json, snapshot.meta.json and the claims file beside them (stable, key-sorted JSON), in that
+ * order. Returns the meta path.
+ */
 export function writeOutputs(out: string, result: PipelineResult): string {
   mkdirSync(path.dirname(out), { recursive: true });
   writeFileSync(out, stableStringify(result.snapshot), 'utf8');
   const metaPath = metaPathOf(out);
   writeFileSync(metaPath, stableStringify(result.meta), 'utf8');
+  writeFileSync(claimsPathOf(out), claimsFileText(result.claims), 'utf8');
   return metaPath;
 }

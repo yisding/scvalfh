@@ -4,6 +4,7 @@
  * error classes; no I/O.
  */
 
+import type { ClaimsFile } from '../claims/types';
 import type { CifssSectionKey } from '../sources/cifss';
 import type { RawResponse } from '../sources/http';
 import type {
@@ -237,5 +238,7 @@ export interface PipelineResult {
   snapshot: Snapshot;
   /** The data/snapshot.meta.json object (§7.11). */
   meta: SnapshotMeta;
+  /** The claims file written beside the snapshot (lib/claims/file.ts claimsPathOf), stamped with the run's fetchedAt. */
+  claims: ClaimsFile;
   logLines: string[];
 }

@@ -52,4 +52,42 @@ describe('lint layer zones (eslint.config.mjs)', () => {
   it('scripts/ must not import tests/', async () => {
     expect(await restrictedImports(`import x from '../tests/helpers';`, 'scripts/x.ts')).toHaveLength(1);
   });
+
+  it('the rule modules lib/claims calls must not import lib/claims', async () => {
+    for (const dir of ['sources', 'crosscheck', 'official', 'results', 'postseason']) {
+      const errors = await restrictedImports(`import x from '../claims/store';`, `lib/${dir}/x.ts`);
+      expect(errors, dir).toHaveLength(1);
+      expect(errors[0], dir).toMatch(/must not depend on it/);
+    }
+  });
+
+  it('lib/results and lib/postseason keep the general lib/ bans', async () => {
+    expect(await restrictedImports(`import x from '../../components/ui/ResultChip';`, 'lib/results/x.ts')).toHaveLength(1);
+    expect(await restrictedImports(`import x from '@/lib/format';`, 'lib/postseason/x.ts')).toHaveLength(1);
+  });
+
+  it('lib/claims must not import the pipeline, but may import its contract and its normalize functions', async () => {
+    const errors = await restrictedImports(`import x from '../pipeline/run';`, 'lib/claims/x.ts');
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(/lib\/claims must not depend on lib\/pipeline/);
+    expect(await restrictedImports(`import x from '../../pipeline/ledger';`, 'lib/claims/sources/x.ts')).toHaveLength(1);
+    expect(await restrictedImports(`import x from '../pipeline/contract';`, 'lib/claims/x.ts')).toEqual([]);
+    expect(await restrictedImports(`import x from '../../pipeline/normalize';`, 'lib/claims/sources/x.ts')).toEqual([]);
+  });
+
+  it('lib/claims must not import lib/data.ts or the site', async () => {
+    expect(await restrictedImports(`import x from '../data';`, 'lib/claims/x.ts')).toHaveLength(1);
+    expect(await restrictedImports(`import x from '../../components/ui/ResultChip';`, 'lib/claims/x.ts')).toHaveLength(1);
+  });
+
+  it('components/ and app/ must not import lib/claims', async () => {
+    const errors = await restrictedImports(`import x from '../../lib/claims/file';`, 'components/x/y.ts');
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(/lib\/claims is build-only/);
+    expect(await restrictedImports(`import x from '@/lib/claims/types';`, 'app/x/page.tsx')).toHaveLength(1);
+  });
+
+  it('lib/pipeline may import lib/claims', async () => {
+    expect(await restrictedImports(`import x from '../claims/store';`, 'lib/pipeline/x.ts')).toEqual([]);
+  });
 });
