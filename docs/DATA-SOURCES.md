@@ -2707,6 +2707,16 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   Saint Francis' JV), and results with no score (the Sep 21 loss to St. Ignatius, the Sep 25 win over Monta
   Vista). Its 2-1 JV loss to Cupertino on Fri Sep 11 moves MaxPreps' Sep 9 row there
   (`lib/jv/jv-corrections.ts` dateMoves).
+  Fremont's athletics site (`fremonthsathletics.org/field-hockey#fhschedule`, given by the owner on 2026-11-15)
+  is the fourth, read the same day: the page embeds a published Google Sheet ("FHS Field Hockey Schedule
+  2026-2027") whose results column reads "Varsity / JV", winner's score first ("L 6-0 / L 4-0"). A second tab,
+  the athletic office's own checklist (website, Facilitron, Arbiter, bussing), has no results and dates the
+  last Homestead game Oct 26 where the results tab and MaxPreps have Oct 28. All 22 varsity scores match
+  MaxPreps'; its "Playoffs, DA #4 or EC #4, Oct 30" line is the SCVAL play-in, which Los Altos played as De
+  Anza #4. Its JV scores fill five MaxPreps rows with no score and add the Oct 2 game against Carmel. Two
+  are left out because the opponent's page scores them differently: Sep 9 against Saint Francis (4-0 there, 5-0
+  on sfhsathletics.com) and Sep 28 against St. Ignatius ("6-0" with no W/L there, 7-0 on siwildcats.com). With
+  them its JV record reads 13-5-1 (league 4-5-1), the sheet's own totals, which count the two scrimmages.
 - **Rosters** (shown since 2026-11-06, `lib/jv/jv-rosters.ts`): MaxPreps' `/jv/roster/` pages, read for
   all 102 schools by `pnpm fetch-rosters --level jv` into `data/jv-rosters.json` (the varsity parser,
   with the JV sport season id), list 508 players for 34 schools on 2026-11-06 (11 on 2026-10-05). Several

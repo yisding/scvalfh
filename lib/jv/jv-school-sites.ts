@@ -18,8 +18,15 @@
  * but one (Los Gatos at Homestead, Sep 2: 3-1 there, 3-2 on MaxPreps); its Aug 31 game against "Saint Francis
  * (Freshman)", which MaxPreps files as Saint Francis' JV, is left out.
  *
- * The rows below were read from those pages on 2026-11-03 (2026-11-15 for Homestead) and are transcribed, not
- * fetched on each run: the JV league season was over by then, and a re-read would add a scraper for three pages.
+ * Fremont's athletics site (given by the owner on 2026-11-15) is the fourth: its field hockey page embeds a
+ * published Google Sheet of the season with each result as "Varsity / JV" ("W 3-2 / W 4-0", winner's score
+ * first). Its varsity scores match MaxPreps' on all 22 games. Its JV scores agree with every JV score we already
+ * had but two, and both rows are left out so the committed pages never disagree: Sep 9 v Saint Francis ("L 4-0";
+ * 5-0 on Saint Francis' page) and Sep 28 v St. Ignatius ("6-0" with no W/L; 7-0 on St. Ignatius' page). Its JV
+ * start is the time after the slash; its "No JV" games (Presentation, Valley Christian twice) have no row.
+ *
+ * The rows below were read from those pages on 2026-11-03 (2026-11-15 for Homestead and Fremont) and are transcribed,
+ * not fetched on each run: the JV league season was over by then, and a re-read would add a scraper for four pages.
  * Each row is one game from the page's school's side.
  *
  * The rules, the si.com merge's (MaxPreps first):
@@ -123,6 +130,34 @@ const FIELD_HOCKEY_JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
       { dateKey: '2026-10-07', time: '17:15', opponent: 'los-altos', home: false, score: null },
       { dateKey: '2026-10-13', time: '15:30', opponent: 'cupertino', home: true, score: [1, 0] },
       { dateKey: '2026-10-14', time: '16:45', opponent: 'st-ignatius', home: false, score: [0, 8] },
+    ],
+  },
+  {
+    school: 'fremont',
+    // The page embeds the schedule as a published Google Sheet, "FHS Field Hockey Schedule 2026-2027".
+    url: 'https://www.fremonthsathletics.org/field-hockey#fhschedule',
+    readOn: '2026-11-15',
+    label: 'Fremont’s athletics site',
+    games: [
+      { dateKey: '2026-08-27', time: '17:15', opponent: 'santa-clara', home: true, score: [4, 0] },
+      { dateKey: '2026-08-28', time: '17:15', opponent: 'cupertino', home: false, score: [1, 0] },
+      { dateKey: '2026-09-01', time: '17:15', opponent: 'monta-vista', home: true, score: [4, 0] },
+      // Sep 9 v Saint Francis left out: "L 4-0" here, 5-0 on Saint Francis' page (kept above).
+      { dateKey: '2026-09-11', time: '17:15', opponent: 'lynbrook', home: false, score: [4, 0] },
+      { dateKey: '2026-09-16', time: '17:15', opponent: 'cupertino', home: false, score: [1, 0] },
+      { dateKey: '2026-09-18', time: '17:15', opponent: 'homestead', home: true, score: [3, 0] },
+      { dateKey: '2026-09-21', time: '17:15', opponent: 'los-altos', home: true, score: [0, 2] },
+      { dateKey: '2026-09-23', time: '17:15', opponent: 'prospect', home: false, score: [3, 0] },
+      { dateKey: '2026-09-24', time: '16:45', opponent: 'bella-vista', home: true, score: [3, 0] },
+      // Sep 28 v St. Ignatius left out: "6-0" here (no W/L), 7-0 on St. Ignatius' page (kept above).
+      { dateKey: '2026-09-30', time: '17:15', opponent: 'homestead', home: false, score: [2, 0] },
+      { dateKey: '2026-10-02', time: '16:45', opponent: 'carmel', home: true, score: [2, 0] },
+      { dateKey: '2026-10-05', time: '17:15', opponent: 'saint-francis', home: false, score: [0, 3] },
+      { dateKey: '2026-10-14', time: '15:30', opponent: 'los-altos', home: false, score: [1, 0] },
+      { dateKey: '2026-10-16', time: '16:45', opponent: 'cupertino', home: true, score: [4, 0] },
+      { dateKey: '2026-10-19', time: '16:45', opponent: 'palo-alto', home: false, score: [6, 0] },
+      { dateKey: '2026-10-21', time: '16:45', opponent: 'st-ignatius', home: false, score: [0, 4] },
+      { dateKey: '2026-10-28', time: '16:45', opponent: 'homestead', home: true, score: [2, 2] },
     ],
   },
 ];

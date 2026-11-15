@@ -761,6 +761,12 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   Leigh (Sep 15) and at Los Altos (Oct 7), played with no score reported (rows with `score: null`, never used
   to fill or contradict a score), and disagrees with MaxPreps once (Los Gatos at Homestead, Sep 2: 3-1 against
   MaxPreps' 3-2).
+  Fremont's athletics site (its schedule sheet, read 2026-11-15) is a fourth: it fills 5 of Fremont's JV
+  scores (at Cupertino Aug 28 and Sep 16, Prospect Sep 23, Cupertino Oct 16, at Palo Alto Oct 19) and adds
+  its 2-0 JV win over Carmel on Oct 2, which no other source lists. Its varsity scores match MaxPreps' on all
+  22 games. Two JV rows are left out because they disagree with the opponent's page, which stays shown:
+  Saint Francis on Sep 9 (4-0 there, 5-0 on Saint Francis') and St. Ignatius on Sep 28 (6-0 there, 7-0 on
+  St. Ignatius').
 
 `lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
 (`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).
