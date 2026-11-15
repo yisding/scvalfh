@@ -287,6 +287,9 @@ export const GameSchema = z
       contentChangedAt: z.string().min(20).optional(),
       leagueFlagConflict: z.string().optional(),
       hostConflict: z.string().optional(),
+      hostCorrection: z
+        .object({ maxprepsHome: z.string().min(1), source: z.string().min(1), url: httpUrl.nullable() })
+        .optional(),
       resultConflict: z.string().optional(),
       classificationNote: z.string().optional(),
       dateCorrection: z

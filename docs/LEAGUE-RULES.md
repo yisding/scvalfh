@@ -441,9 +441,12 @@ sheet and the 2025 tournament use six, so the site follows the sheet and says so
 
 Play-in (only if needed) Fri Oct 23; quarterfinals Mon Oct 26; semifinals Wed Oct 28 (the
 lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at #2, confirmed by the
-2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. The final's site is Tamalpais High
-School, 700 Miller Ave, Mill Valley, CA 94941 (the schools' HomeCampus calendars name the turf "Tam
-Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, students, children and
+2025 bracket); final Fri Oct 30, all at 4:00 PM. The final was set for Tamalpais High School, 700
+Miller Ave, Mill Valley (the play-off sheet; the schools' HomeCampus calendars name the turf "Tam Turf at
+Bruce Grant Field/Sam Chapman Stadium") and moved to Redwood High School, 395 Doherty Dr, Larkspur, CA
+94939: the MCAL's playoffs page has "Championship Game at Redwood" and "Moved to Redwood High School" (read
+Nov 15, 2026), and MaxPreps still lists Tamalpais as host, so DATA_QUALITY.contestHostOverrides puts the game at
+Redwood and `finalSite` is Redwood; admission is adults $10, students, children and
 seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
 passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
 that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
@@ -456,7 +459,9 @@ regulation game: a one-goal result MaxPreps does not mark as overtime carries th
 config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
 (Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
 Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
-University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
+University) were overtime goals [V: Marin IJ]; and the final, Redwood 2-1 Tamalpais (Fri Oct 30), was
+decided in regulation, its winner four minutes from the end of the fourth quarter (Redwood Bark, Nov 1, 2026), so
+its note says that instead of the caveat. The title rule's source is the MCAL General Rules,
 Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
 is different than the regular season winner, they will also be awarded a pennant."
 Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a

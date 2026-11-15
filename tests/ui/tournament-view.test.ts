@@ -89,7 +89,7 @@ function view(games: readonly Game[], phase: SeasonPhase = 'regular'): { v: Tour
     teamOf: (slug) => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: getDivision(DIV).ladderLine,
-    // As the page passes it (components/playoffs/tournament-league.ts): the slug makes the final "at" when Tamalpais
+    // As the page passes it (components/playoffs/tournament-league.ts): the slug makes the final "at" when Redwood
     // is in it, and the address is the site school's (data/schools.json).
     finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
   });
@@ -134,7 +134,7 @@ describe('buildTournamentView — the engine’s shared 6th (a play-in is needed
     expect(v.rounds.map((r) => `${r.title} · ${r.meta}`), VIEW).toEqual([
       'Quarterfinals · Mon Oct 26 · 4 PM PT',
       'Semifinals · Wed Oct 28 · 4 PM PT',
-      'Final · Fri Oct 30 · 4 PM PT · at Tamalpais',
+      'Final · Fri Oct 30 · 4 PM PT · at Redwood',
     ]);
     expect(lines(v), VIEW).toEqual([
       `5 ${short(LW)} at 4 ${short(BK)}`,
@@ -169,7 +169,7 @@ describe('buildTournamentView — a play-in that is only possible', () => {
   });
 });
 
-describe('buildTournamentView — results re-seed the semifinals; the final is at Tamalpais', () => {
+describe('buildTournamentView — results re-seed the semifinals; the final is at Redwood', () => {
   const season = league([...TOP, [UN, MC, 2, 1], [MC, UN, 1, 1], [MC, CS, 1, 0]]);
   const playIn = tournament(MC, UN, 1, 2, '2026-10-23');
   const qfs = [tournament(BK, LW, 0, 2, '2026-10-26'), tournament(TM, UN, 3, 0, '2026-10-26')];
@@ -191,15 +191,14 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     expect(lines(v).slice(2, 4), VIEW).toEqual([`5 ${short(LW)} at 1 ${short(AW)}`, `3 ${short(TM)} at 2 ${short(RW)}`]);
   });
 
-  it('the final at Tamalpais with Tamalpais in it reads visitor at host, as the game page does; its result completes the tournament', () => {
+  it('a fixed site neither finalist calls home stays "vs", better seed first; its result completes the tournament', () => {
     let { v } = view([...season, playIn, ...qfs, ...sfs], 'tournament');
-    // 1 Archie Williams v 3 Tamalpais at Tamalpais: Tamalpais is the host, so it is listed last with "at".
-    expect(lines(v)[4], VIEW).toBe(`1 ${short(AW)} at 3 ${short(TM)}`);
+    // 1 Archie Williams v 3 Tamalpais at Redwood: neither finalist hosts, so the better seed comes first with "vs".
+    expect(lines(v)[4], VIEW).toBe(`1 ${short(AW)} vs 3 ${short(TM)}`);
     const final = v.rounds.find((r) => r.round === 'final')!;
-    expect(final.meta, VIEW).toBe('Fri Oct 30 · 4 PM PT · at Tamalpais');
-    expect(final.games[0].site, VIEW).toBe('Tamalpais');
-    expect(final.games[0].connector, VIEW).toBe('at');
-    expect(final.games[0].home.teams.map((t) => t.slug), VIEW).toEqual([TM]);
+    expect(final.meta, VIEW).toBe('Fri Oct 30 · 4 PM PT · at Redwood');
+    expect(final.games[0].site, VIEW).toBe('Redwood');
+    expect(final.games[0].connector, VIEW).toBe('vs');
     expect(final.games[0].winner, VIEW).toBeNull();
     expect(final.games[0].outcome, VIEW).toBeNull();
 
@@ -208,8 +207,8 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     const done = v.rounds.find((r) => r.round === 'final')!.games[0];
     expect(done.game?.contestId, VIEW).toBe(fin.contestId);
     expect(done.note, VIEW).toBe(SHOOTOUT_NOTE);
-    // Tamalpais 2-1: the winner is the view's host side, and the sr-only sentence says what it won.
-    expect(done.winner, VIEW).toBe('home');
+    // Tamalpais 2-1, and the sr-only sentence says what it won.
+    expect(done.winner === 'home' ? done.home.teams.map((t) => t.slug) : done.away.teams.map((t) => t.slug), VIEW).toEqual([TM]);
     expect(done.outcome, VIEW).toBe(`${short(TM)} wins the MCAL tournament.`);
   });
 
@@ -226,13 +225,15 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     expect([sf2.winner, sf2.outcome], VIEW).toEqual(['away', `${short(TM)} won and advances to the final.`]);
   });
 
-  it('a fixed site neither finalist calls home stays "vs", better seed first', () => {
-    // sf-2 goes to 2 Redwood instead: the final is 1 Archie Williams v 2 Redwood at Tamalpais.
+  it('the final at Redwood with Redwood in it reads visitor at host, as the game page does', () => {
+    // sf-2 goes to 2 Redwood instead: the final is 1 Archie Williams v 2 Redwood at Redwood, Redwood the host,
+    // listed last with "at".
     const redwood = [tournament(AW, LW, 2, 0, '2026-10-28'), tournament(RW, TM, 1, 0, '2026-10-28')];
     const { v } = view([...season, playIn, ...qfs, ...redwood], 'tournament');
     const final = v.rounds.find((r) => r.round === 'final')!.games[0];
-    expect(final.connector, VIEW).toBe('vs');
-    expect(final.line, VIEW).toBe(`1 ${short(AW)} vs 2 ${short(RW)}`);
+    expect(final.connector, VIEW).toBe('at');
+    expect(final.line, VIEW).toBe(`1 ${short(AW)} at 2 ${short(RW)}`);
+    expect(final.home.teams.map((t) => t.slug), VIEW).toEqual([RW]);
   });
 
   it('the bracket marks the winner’s line only (data-won, no bar), prints results as scores and speaks the outcome (LeagueTournament.tsx)', async () => {
@@ -252,7 +253,7 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     expect(html.match(/<div (?:id="[^"]*" )?class="sx-tie sx-target" data-state="final"/g)?.length, COMPONENT).toBe(6);
     expect(html.match(/<span class="sx-num sx-tie-score">\d+<\/span>/g)?.length, COMPONENT).toBe(12);
     expect(html.match(/href="\/game\//g)?.length, COMPONENT).toBe(6);
-    expect(textOf(html), COMPONENT).toContain(`1 ${short(AW)} at 3 ${short(TM)}. ${short(TM)} wins the MCAL tournament.`);
+    expect(textOf(html), COMPONENT).toContain(`1 ${short(AW)} vs 3 ${short(TM)}. ${short(TM)} wins the MCAL tournament.`);
     expect(textOf(html), COMPONENT).toContain(`3 ${short(TM)} at 2 ${short(RW)}. ${short(TM)} won and advances to the final.`);
     // The winner's line: its team's slug, the mark, the name and its seed.
     expect(html, COMPONENT).toMatch(
@@ -338,10 +339,10 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(html, PAGE).toContain('<h3>Final, Fri Oct 30</h3>');
     const finalCell = html.slice(html.indexOf('id="final"'));
     expect(finalCell.slice(0, finalCell.indexOf('</div></div>')), PAGE).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4 PM</span>');
-    expect(textOf(finalCell), PAGE).toContain('At Tamalpais');
+    expect(textOf(finalCell), PAGE).toContain('At Redwood');
     // The final's where and how much, from config finalSite (DESIGN §3.8): venue, address, Directions, admission.
-    expect(t, PAGE).toContain('Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941.');
-    expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=700%20Miller%20Ave%2C%20Mill%20Valley%2C%20CA%2094941"');
+    expect(t, PAGE).toContain('Redwood High School, 395 Doherty Dr, Larkspur, CA 94939.');
+    expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=395%20Doherty%20Dr%2C%20Larkspur%2C%20CA%2094939"');
     expect(t, PAGE).toContain('Admission: Adults $10; students, children and seniors $5; pre-sale on GoFan.');
     expect(t, PAGE).toContain('(MCAL 2026 Field Hockey Play-off sheet)');
     expect(t, PAGE).toContain('Source: MCAL General Rules, Pennants 1–3');

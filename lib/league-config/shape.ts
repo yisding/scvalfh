@@ -621,6 +621,13 @@ export interface DataQualityConfig {
    */
   contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
   /**
+   * A contest played at the school MaxPreps lists as the visitor, by contest GUID: `home` is the slug of the school
+   * that hosted (lib/results/host-override.ts swaps the sides, in the pipeline's normalize step and in the snapshot
+   * loader, and keeps MaxPreps' host in Game.provenance.hostCorrection). `source` is one sentence naming the source
+   * and what it says, without a final period; the game page prints it. Keys are contest GUIDs (assertLeagues).
+   */
+  contestHostOverrides: Readonly<Record<ContestId, { home: TeamSlug; source: string; url: string | null }>>;
+  /**
    * A final's result recorded from a better source than the feed, by contest GUID (lib/types.ts ResultCorrection;
    * lib/results/result.ts applies it before anything counts the game). For a result the feed cannot state: a
    * shootout MaxPreps stores as the score. `goals` and `shootout` name both sides by slug (assertLeagues), and

@@ -98,10 +98,13 @@ describe('MCAL 2025 field hockey tournament', () => {
     expect(semifinals(seeds, [seedOf(UN), seedOf(MC)], MCAL)).toEqual(semifinals(seeds, [seedOf(MC), seedOf(UN)], MCAL));
   });
 
-  it('plays the final at Tamalpais even though Redwood was the #1 seed', () => {
-    const f = finalGame([seedOf(RW), seedOf(TM)], MCAL);
+  it('plays the final at its fixed site, not the higher seed’s: Tamalpais in 2025 although Redwood was the #1 seed', () => {
+    // The 2026 config's site is Redwood (the 2026 final was moved there); 2025's was Tamalpais.
+    const ps = MCAL.postseason;
+    if (ps.kind !== 'league-tournament') throw new Error('MCAL has no league tournament');
+    const AT_TAM: LeagueConfig = { ...MCAL, postseason: { ...ps, finalSite: { ...ps.finalSite, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' } } };
+    const f = finalGame([seedOf(RW), seedOf(TM)], AT_TAM);
     expect(f.site).toBe('Tamalpais');
-    expect(f.site).toBe(MCAL.postseason.kind === 'league-tournament' ? MCAL.postseason.finalSite.label : null);
     expect([slugsIn(f.home), slugsIn(f.away)]).toEqual([[RW], [TM]]);
     // A fixed site, not "the higher seed hosts": the final's site is never null (null = the home seat's field).
     expect(f.site).not.toBeNull();
@@ -121,11 +124,18 @@ describe('MCAL 2025 field hockey tournament', () => {
 });
 
 describe('MCAL 2025 bracket, end to end with the 2025 results', () => {
-  /** The 2026 config with the 2025 round dates (QF Tue Oct 28, SF Wed Oct 29, final Fri Oct 31). */
+  /** The 2026 config with the 2025 round dates (QF Tue Oct 28, SF Wed Oct 29, final Fri Oct 31) and site (Tamalpais). */
   const ps = MCAL.postseason;
   if (ps.kind !== 'league-tournament') throw new Error('MCAL has no league tournament');
   const dates: Record<string, string> = { 'play-in': '2025-10-24', 'qf-1': '2025-10-28', 'qf-2': '2025-10-28', 'sf-1': '2025-10-29', 'sf-2': '2025-10-29', final: '2025-10-31' };
-  const MCAL_2025: LeagueConfig = { ...MCAL, postseason: { ...ps, rounds: ps.rounds.map((r) => ({ ...r, date: dates[r.id] })) } };
+  const MCAL_2025: LeagueConfig = {
+    ...MCAL,
+    postseason: {
+      ...ps,
+      rounds: ps.rounds.map((r) => ({ ...r, date: dates[r.id] })),
+      finalSite: { ...ps.finalSite, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' },
+    },
+  };
 
   const games: Game[] = bracket2025.postseason.map((c) => {
     const side = (s: (typeof c)['home']) => ({

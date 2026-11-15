@@ -298,7 +298,7 @@ describe('postseason lines per kind (components/playoffs/team-postseason-line.ts
         expect(line.href, `components/playoffs/team-postseason-line.ts ${team.slug} href`).toBe('/playoffs/mcal');
         expect(line.linkText, `components/playoffs/team-postseason-line.ts ${team.slug} link`).toBe('MCAL tournament');
         expect(line.sentence, `components/playoffs/team-postseason-line.ts ${team.slug} sentence`).toBe(
-          'Top six make the MCAL tournament: quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed), final Fri Oct 30 at Tamalpais; seeds 1-2 get byes to the semifinals.',
+          'Top six make the MCAL tournament: quarterfinals Mon Oct 26 (a play-in Fri Oct 23 only if needed), final Fri Oct 30 at Redwood; seeds 1-2 get byes to the semifinals.',
         );
         expect(`${line.label} ${line.sentence}`, `components/playoffs/team-postseason-line.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier/i);
       }

@@ -71,11 +71,11 @@ describe('gameAddress (lib/schools/venue.ts)', () => {
       .toBeNull();
   });
 
-  it('the MCAL final is at its fixed site (Tamalpais), whoever MaxPreps lists as home', () => {
+  it('the MCAL final is at its fixed site (Redwood, where it was moved), whoever MaxPreps lists as home', () => {
     const final = getLeagueTournament('mcal').games.find((tg) => tg.round === 'final')?.game;
     if (!final) return; // a snapshot from before the final is set
-    expect(gameAddress(final)).toMatchObject({ source: 'final-site', address: schoolAddress('tamalpais') });
+    expect(gameAddress(final)).toMatchObject({ source: 'final-site', address: schoolAddress('redwood') });
     const swapped: Game = { ...final, home: final.away, away: final.home };
-    expect(gameAddress(swapped)).toMatchObject({ source: 'final-site', address: schoolAddress('tamalpais') });
+    expect(gameAddress(swapped)).toMatchObject({ source: 'final-site', address: schoolAddress('redwood') });
   });
 });

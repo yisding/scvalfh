@@ -616,6 +616,12 @@ export interface Game {
     contentChangedAt?: string;
     leagueFlagConflict?: string;
     hostConflict?: string;
+    /**
+     * Set when DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts) swapped the sides because the game was
+     * played at the school MaxPreps lists as the visitor: MaxPreps' host's slug and the override's citation, which the
+     * game page prints.
+     */
+    hostCorrection?: { maxprepsHome: TeamSlug; source: string; url: string | null };
     /** NEW. D2 rule 4a evidence: result flags contradict the score, or the two rows disagree. */
     resultConflict?: string;
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */

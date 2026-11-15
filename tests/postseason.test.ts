@@ -276,13 +276,13 @@ describe('bracket builders', () => {
     expect(() => semifinals(SEEDS, [{ seed: 1, slug: AW }, { seed: 5, slug: LW }], MCAL)).toThrow();
   });
 
-  it('final: Fri Oct 30 at Tamalpais, a fixed site', () => {
+  it('final: Fri Oct 30 at Redwood, a fixed site (moved from Tamalpais)', () => {
     const f = finalGame(null, MCAL);
-    expect([f.id, f.round, f.date, f.time, f.site]).toEqual(['final', 'final', '2026-10-30', '16:00', 'Tamalpais']);
+    expect([f.id, f.round, f.date, f.time, f.site]).toEqual(['final', 'final', '2026-10-30', '16:00', 'Redwood']);
     expect(f.home).toEqual({ kind: 'winner-of', gameId: 'sf-1', label: 'Semifinal 1 winner' });
     const g = finalGame([{ seed: 5, slug: LW }, { seed: 2, slug: RW }], MCAL);
     expect([one(g.home), one(g.away)]).toEqual([[RW], [LW]]);
-    expect(g.site).toBe('Tamalpais');
+    expect(g.site).toBe('Redwood');
   });
 });
 
@@ -355,7 +355,7 @@ describe('buildLeagueTournament', () => {
     const sfs = [game(AW, LW, 2, 0, '2026-10-28', { postseason: true }), game(RW, TM, 0, 1, '2026-10-28', { postseason: true })];
     p = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs], 'tournament', '2026-10-29');
     expect([one(p.games[4].home), one(p.games[4].away)]).toEqual([[AW], [TM]]);
-    expect(p.games[4].site).toBe('Tamalpais');
+    expect(p.games[4].site).toBe('Redwood');
     expect(p.status).toBe('in-progress');
 
     const fin = game(TM, AW, 2, 1, '2026-10-30', { postseason: true });
@@ -386,7 +386,7 @@ describe('buildLeagueTournament', () => {
     expect(tournamentOutcome(before, AW)).toMatchObject({ kind: 'in-final', opponent: TM });
     expect(copy(before, AW)).toEqual({
       label: 'In the MCAL tournament final',
-      sentence: `${name(AW)} plays ${name(TM)} in the MCAL tournament final, Fri Oct 30, 4 PM PT at Tamalpais.`,
+      sentence: `${name(AW)} plays ${name(TM)} in the MCAL tournament final, Fri Oct 30, 4 PM PT at Redwood.`,
     });
     expect(copy(before, LW)).toEqual({
       label: 'Lost in the semifinal',
@@ -400,8 +400,8 @@ describe('buildLeagueTournament', () => {
     });
     expect(tournamentHeadline(before, MCAL)).toEqual({
       champion: null,
-      // Tamalpais hosts the final at Tamalpais (config finalSite.slug): visitor at host, as the game page says it.
-      next: `Final Fri Oct 30, 4 PM PT at Tamalpais: 1 ${getTeamBySlug(AW)!.shortName} at 3 ${getTeamBySlug(TM)!.shortName}`,
+      // The final is at Redwood (config finalSite.slug), which is not in it: a neutral site, better seed first, "vs".
+      next: `Final Fri Oct 30, 4 PM PT at Redwood: 1 ${getTeamBySlug(AW)!.shortName} vs 3 ${getTeamBySlug(TM)!.shortName}`,
     });
 
     // Quarterfinals in, semifinals to come: the next round's two matchups.
@@ -441,21 +441,21 @@ describe('buildLeagueTournament', () => {
     const ps = MCAL.postseason;
     if (ps.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
     const short = (slug: string) => getTeamBySlug(slug)!.shortName;
-    // 2026: 1 Tamalpais (home slot) and 3 Redwood, at Tamalpais — the game page's "Redwood at Tamalpais".
-    const tamHome = finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL);
-    expect(fixedSiteHost(tamHome, ps.finalSite.slug)).toBe('home');
-    expect(tournamentGameLine(tamHome, ps.finalSite.slug)).toBe(`3 ${short(RW)} at 1 ${short(TM)}`);
-    // The site team as the worse seed still hosts: it is listed last.
-    const tamAway = finalGame([{ seed: 1, slug: AW }, { seed: 3, slug: TM }], MCAL);
-    expect(fixedSiteHost(tamAway, ps.finalSite.slug)).toBe('away');
-    expect(tournamentGameLine(tamAway, ps.finalSite.slug)).toBe(`1 ${short(AW)} at 3 ${short(TM)}`);
+    // The site team in the home slot: 1 Redwood and 3 Tamalpais at Redwood — the game page's "Tamalpais at Redwood".
+    const siteHome = finalGame([{ seed: 1, slug: RW }, { seed: 3, slug: TM }], MCAL);
+    expect(fixedSiteHost(siteHome, ps.finalSite.slug)).toBe('home');
+    expect(tournamentGameLine(siteHome, ps.finalSite.slug)).toBe(`3 ${short(TM)} at 1 ${short(RW)}`);
+    // The site team as the worse seed still hosts: it is listed last (2026: 1 Tamalpais and 3 Redwood, at Redwood).
+    const siteAway = finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL);
+    expect(fixedSiteHost(siteAway, ps.finalSite.slug)).toBe('away');
+    expect(tournamentGameLine(siteAway, ps.finalSite.slug)).toBe(`1 ${short(TM)} at 3 ${short(RW)}`);
     // Neither finalist is the host: a neutral fixed site, better seed first, "vs".
-    const neutral = finalGame([{ seed: 1, slug: AW }, { seed: 2, slug: RW }], MCAL);
+    const neutral = finalGame([{ seed: 1, slug: AW }, { seed: 2, slug: TM }], MCAL);
     expect(fixedSiteHost(neutral, ps.finalSite.slug)).toBeNull();
-    expect(tournamentGameLine(neutral, ps.finalSite.slug)).toBe(`1 ${short(AW)} vs 2 ${short(RW)}`);
+    expect(tournamentGameLine(neutral, ps.finalSite.slug)).toBe(`1 ${short(AW)} vs 2 ${short(TM)}`);
     // Finalists not known yet: the written slots, "vs"; no site slug passed: "vs" as well (no host known).
     expect(tournamentGameLine(finalGame(null, MCAL), ps.finalSite.slug)).toBe('Semifinal 1 winner vs Semifinal 2 winner');
-    expect(tournamentGameLine(tamHome)).toBe(`1 ${short(TM)} vs 3 ${short(RW)}`);
+    expect(tournamentGameLine(siteHome)).toBe(`1 ${short(RW)} vs 3 ${short(TM)}`);
     // A round at the higher seed's field has no fixed site: visitor at host whatever the slug.
     const [qf1] = quarterfinals(seedsFromStandings(rows, MCAL), MCAL);
     expect(fixedSiteHost(qf1, ps.finalSite.slug)).toBeNull();

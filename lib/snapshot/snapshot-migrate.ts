@@ -44,6 +44,7 @@ import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
 import { flagConflictSentence, mustHaveWinner } from '../postseason/level-final';
 import type { BoxEvidence } from '../results/box-evidence';
+import { applyHostOverride } from '../results/host-override';
 import { excessOver, finalizeResult, withAddedGames } from '../results/result';
 import { stableStringify } from '../stable-json';
 import { DATA_QUALITY } from '../league-config/data-quality';
@@ -597,7 +598,8 @@ function exclusionOf(g: Game): { reason: 'ghost-team' | 'excluded-by-config'; no
 
 /** One stored game as the current rules record it (lib/results/result.ts), given the file's cifss conflict rows. */
 function recorded(g: Game, cifss: ReadonlyMap<string, CifssConflictRow>, box: BoxEvidence | undefined): Game {
-  return finalizeResult(unfillSettledLevelScore(g), { cifss: cifss.get(g.contestId), box });
+  // The host a better source names first (DATA_QUALITY.contestHostOverrides), as the pipeline's normalize step does.
+  return finalizeResult(unfillSettledLevelScore(applyHostOverride(g)), { cifss: cifss.get(g.contestId), box });
 }
 
 function cifssRowsOf(raw: Json): Map<string, CifssConflictRow> {

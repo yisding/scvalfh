@@ -599,7 +599,8 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
     expect(stableStringify(loadSnapshot(loaded))).toBe(stableStringify(loaded));
     expect(needsRecordedResults(loaded)).toBe(false);
     for (const g of loaded.games) expect(g.result !== undefined, g.contestId).toBe(g.status === 'final');
-    // No game's score moves on load except one a cited correction names or one whose si.com fill was undone.
+    // No game's score moves on load except one a cited correction names, one whose si.com fill was undone, or one
+    // whose sides a cited host correction swapped (the same two scores, mirrored).
     const byId = new Map(COMMITTED.games.map((g) => [g.contestId, g]));
     for (const g of loaded.games) {
       const was = byId.get(g.contestId);
@@ -609,6 +610,7 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
         continue;
       }
       if (was.home.score === g.home.score && was.away.score === g.away.score) continue;
+      if (g.provenance.hostCorrection && was.home.score === g.away.score && was.away.score === g.home.score) continue;
       expect(g.provenance.resultCorrection !== undefined || was.provenance.backfill !== undefined, g.contestId).toBe(true);
     }
   });

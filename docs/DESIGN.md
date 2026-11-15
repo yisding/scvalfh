@@ -4920,13 +4920,15 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
 - **Shootout and overtime.** A one-goal tournament result MaxPreps does not mark as overtime carries the shootout
   caveat (`mayHideShootout`), an overtime goal none, and a result the config sources in `resultNotes` prints that
   sentence instead (the Oct 28 Tamalpais 3–1 Marin Catholic semifinal: 0–0 after two overtimes, a 3–1 shootout,
-  Marin IJ). The overtime citation is the Handbook §9; the title rule's is the General Rules, Pennants 1–3.
-- **The final's venue.** `finalSite` holds Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941, and the
+  Marin IJ; and the Oct 30 final, Redwood 2–1, decided in regulation, Redwood Bark). The overtime citation is the Handbook §9; the title rule's is the General Rules, Pennants 1–3.
+- **The final's venue.** `finalSite` holds Redwood High School, 395 Doherty Dr, Larkspur, CA 94939 (the final was
+  moved there from Tamalpais, per the MCAL's playoffs page; DATA_QUALITY.contestHostOverrides makes the game itself
+  Tamalpais at Redwood, since MaxPreps still lists Tamalpais as host), and the
   admission line (adults $10; students, children and seniors $5; pre-sale on GoFan; no booster passes or student
   body cards; lifetime MCAL, NCS and CIF passes honored); the bracket prints the venue sentence, a Directions link
   (`mapsSearchHref`) and the admission under the Final, and a finalist's Next card gets the Directions pill.
 - **Results-aware copy** (§24.13's paragraph has the engine): `/playoffs/mcal` gains a `#headline` block above the
-  seeds, "Next" with the next round ("Final Fri Oct 30, 4 PM PT at Tamalpais: 3 Redwood at 1 Tamalpais") or
+  seeds, "Next" with the next round ("Final Fri Oct 30, 4 PM PT at Redwood: 1 Tamalpais at 3 Redwood") or
   "Champion" with the champion's sentence and the pennant sentence; the header meta, `generateMetadata` and the
   OG card follow it; the seeds table's Status column reads the outcome ("In the MCAL tournament final", "Lost in
   the semifinal") instead of the ladder label. The NCS note ("Not a section playoff", whose "North Coast
