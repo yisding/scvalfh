@@ -1161,8 +1161,9 @@ club slugs, a team at most once per level, no handle twice, an https `foundAt` o
 build (`tests/instagram-file.test.ts`). A second round on 2026-11-14 went back over the 64 teams and 9
 clubs without a record and added Tamalpais's and two clubs' (Lightning, the Huntington Beach Surfers); the
 owner then gave Los Altos's, Homestead's, Valley Christian's and Lynbrook's, and trying likely handles
-(`<school>fieldhockey`, `<school>fockey`, `<school>fh` and the like) found seven BVAL teams':
-53 records for 50 of the 102 teams, and 21 of the 28 clubs.
+(`<school>fieldhockey`, `<school>fockey`, `<school>fh` and the like) found seven BVAL teams'. On
+2026-11-15 the owner gave four San Diego teams' (San Marcos, Poway, Bishop's, Canyon Hills): 57 records for
+54 of the 102 teams, and 21 of the 28 clubs.
 
 The soccer, basketball and volleyball builds read their own files (`data/soccer/`, `data/basketball/`,
 `data/volleyball/`), researched on 2026-11-14 under the same rule for that build's program: the girls

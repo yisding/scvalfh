@@ -8,14 +8,21 @@ import type { Game, TeamSlug } from '../types';
 
 /**
  * The winning side of a final: the higher score; a level score goes to the side MaxPreps marks 'W' alone (the
- * San Diego shootout convention); null when the game is not final or nothing decides it. The play-in card's
- * winner line (components/playoffs/PlayInCard.tsx) and the ladder outcomes (postseason-outcomes.ts) read it,
- * so card and team line agree.
+ * San Diego shootout convention); null when the game is not final or nothing decides it. A game played with no
+ * score published whose sides a source marks W and L (an added game's `winner`, a correction's reported winner:
+ * lib/results/result.ts) has that side's win, so the bracket advances it while no record counts the game. The
+ * play-in card's winner line (components/playoffs/PlayInCard.tsx) and the ladder outcomes
+ * (postseason-outcomes.ts) read it, so card and team line agree.
  */
 export function winningSide(game: Game): 'home' | 'away' | null {
-  if (game.status !== 'final') return null;
   const h = game.home.score;
   const a = game.away.score;
+  if (game.status === 'score-pending' && h === null && a === null) {
+    if (game.home.result === 'W' && game.away.result === 'L') return 'home';
+    if (game.away.result === 'W' && game.home.result === 'L') return 'away';
+    return null;
+  }
+  if (game.status !== 'final') return null;
   if (h === null || a === null) return null;
   if (h > a) return 'home';
   if (a > h) return 'away';

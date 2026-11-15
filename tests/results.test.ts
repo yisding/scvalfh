@@ -11,6 +11,7 @@ import {
   applyResultCorrection, correctionProblems, excessOver, finalizeResult, finalizeResults, readExcess, resolveResult, unfoldShootout,
 } from '../lib/results/result';
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { winningSide } from '../lib/postseason/game-winner';
 import type { DataQualityConfig } from '../lib/league-config/shape';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { boxEvidenceFrom, type BoxEvidence } from '../lib/results/box-evidence';
@@ -330,6 +331,48 @@ describe('a result recorded from a better source (DATA_QUALITY.resultCorrections
     expect(applyResultCorrection(other, corrections)).toBe(other);
     expect(correctionProblems([other], corrections)).toHaveLength(1);
     expect(correctionProblems([maxpreps], corrections)).toEqual([]);
+  });
+});
+
+describe('a winner a source names with no score (resultCorrections, goals null)', () => {
+  // The San Diego Open final, Sat Nov 14: Canyon Hills v Bishop's, which MaxPreps lists with no score; the owner has
+  // Bishop's the winner (2026-11-15).
+  const id = '10a472ed-c57c-4874-ae7b-295d7f032db6';
+  const pending = game({ home: 'bishops', away: 'canyon-hills', league: false, date: '2026-11-14', status: 'score-pending', contestId: id });
+  const corrections: DataQualityConfig['resultCorrections'] = {
+    [id]: { goals: null, winner: 'bishops', otPeriods: 0, shootout: null, source: 'the owner’s report', url: null, certainty: 'reported' },
+  };
+
+  it('marks the winner, leaves the game unscored and unrecorded, and the bracket advances it', () => {
+    expect(DATA_QUALITY.resultCorrections[id]?.winner).toBe('bishops');
+    const g = finalizeResult(pending, { corrections });
+    expect([g.status, g.home.score, g.away.score, g.home.result, g.away.result, g.decider]).toEqual(['score-pending', null, null, 'W', 'L', null]);
+    expect(g.result).toBeUndefined();
+    expect(sideOutcome(g, 'home'), 'no record counts it').toBeNull();
+    expect(winningSide(g)).toBe('home');
+    expect(g.provenance.reportedWinner).toEqual({ certainty: 'reported', source: 'the owner’s report', url: null });
+    expect(describeGame(g).note).toBe(`${g.home.name} won (the owner’s report); no source has published the score yet.`);
+    expect(finalizeResult(g, { corrections }), 'applied once').toBe(g);
+    expect(correctionProblems([pending], corrections)).toEqual([]);
+  });
+
+  it('gives way to a score, and to the correction’s removal', () => {
+    const marked = applyResultCorrection(pending, corrections);
+    const scored: Game = { ...marked, status: 'final', home: { ...marked.home, score: 2, result: 'W' }, away: { ...marked.away, score: 1, result: 'L' } };
+    const g = applyResultCorrection(scored, corrections);
+    expect([g.home.score, g.away.score, g.home.result]).toEqual([2, 1, 'W']);
+    expect(g.provenance.reportedWinner, 'the score stands on its own').toBeUndefined();
+    const gone = applyResultCorrection(marked, {});
+    expect([gone.home.result, gone.away.result, gone.provenance.reportedWinner]).toEqual([null, null, undefined]);
+    // A game stored with an earlier, scored correction: the winner-only correction undoes it first (PR #152 review).
+    const scoredBefore = applyResultCorrection(pending, { [id]: { goals: { bishops: 3, 'canyon-hills': 1 }, otPeriods: 0, shootout: null, source: 'a report', url: null } });
+    expect([scoredBefore.status, scoredBefore.home.score]).toEqual(['final', 3]);
+    const reworked = applyResultCorrection(scoredBefore, corrections);
+    expect([reworked.status, reworked.home.score, reworked.away.score, reworked.home.result, reworked.provenance.resultCorrection]).toEqual(['score-pending', null, null, 'W', undefined]);
+    expect(reworked.provenance.reportedWinner?.source).toBe('the owner’s report');
+    const wrong = game({ home: 'la-jolla', away: 'canyon-hills', status: 'score-pending', contestId: id });
+    expect(applyResultCorrection(wrong, corrections)).toBe(wrong);
+    expect(correctionProblems([wrong], corrections)).toHaveLength(1);
   });
 });
 
