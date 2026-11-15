@@ -43,6 +43,7 @@ import { z } from 'zod';
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { careerIdFromUrl } from './maxpreps-roster';
 import { recaseName } from './person-name';
+import { isPlaceholderName } from '../players/placeholder-name';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -721,7 +722,14 @@ export function joinToRoster(
   const warnings: string[] = [];
   const lines = page.players.map((p): JoinedStatLine => {
     const r = p.careerId ? byCareer.get(p.careerId) : undefined;
-    if (!r) warnings.push(`${p.shortName} has stats but is not on the MaxPreps roster`);
+    if (!r) {
+      // MaxPreps' "Player #4" (lib/players/placeholder-name.ts) is never a roster row: a number with stats and no name.
+      warnings.push(
+        isPlaceholderName(p.shortName)
+          ? `${p.shortName} has stats but names nobody (MaxPreps' placeholder for a number not on the roster)`
+          : `${p.shortName} has stats but is not on the MaxPreps roster`,
+      );
+    }
     return {
       ...p,
       athleteId: r?.athleteId ?? null,

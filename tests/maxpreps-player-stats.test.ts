@@ -23,6 +23,7 @@ import {
   playerStatsUrl,
   reconcileTotals,
   teamStatsPageUrl,
+  type PlayerStatsPage,
 } from '../lib/sources/maxpreps-player-stats';
 import {
   FIELD_STAT_KEYS,
@@ -176,6 +177,20 @@ describe('parsePlayerStats over the captures', () => {
         expect(l.fullName, `${team.slug} ${l.shortName}`).toContain(last);
       }
     }
+  });
+});
+
+describe("joinToRoster: MaxPreps' \"Player #N\" stand-in", () => {
+  it('keeps the line under the sheet\'s own name, off the roster, and says it names nobody', () => {
+    const line = (careerId: string, shortName: string, jersey: string) =>
+      ({ careerId, careerUrl: null, shortName, jersey, field: null, goalkeeping: null }) as unknown as PlayerStatsPage['players'][number];
+    const page = { players: [line('c1', 'A. Lee', '3'), line('c4', 'Player #4', '4')] } as unknown as PlayerStatsPage;
+    const { lines, warnings } = joinToRoster(page, [{ careerId: 'c1', athleteId: 'a1', fullName: 'Ava Lee' }]);
+    expect(lines.map((l) => [l.fullName, l.onRoster, l.athleteId])).toEqual([
+      ['Ava Lee', true, 'a1'],
+      ['Player #4', false, null],
+    ]);
+    expect(warnings).toEqual(["Player #4 has stats but names nobody (MaxPreps' placeholder for a number not on the roster)"]);
   });
 });
 

@@ -20,6 +20,7 @@ import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
 import { readOverride } from './data-file';
+import { gameSlug } from './game-slug';
 import {
   isoDateKey,
   localDateKey,
@@ -54,6 +55,7 @@ import { boxEvidenceFrom } from './results/box-evidence';
 import { SDS_BRACKETS_FILE } from './postseason/sds-brackets-file';
 import { withSdsFinalLinks } from './postseason/sds-final-links';
 import { withFixtureGames } from './results/fixture-games';
+import { getHudlStreamsFile, withHudlStreams } from './streams/hudl-streams';
 import { loadSnapshot } from './snapshot/snapshot-load';
 import { countsOf } from './snapshot/snapshot-migrate';
 import { divisionGames, sortStandings } from './standings/engine';
@@ -136,7 +138,8 @@ const stored = load();
 const snapshot: Snapshot = (() => {
   const listed = withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt);
   // A San Diego final's stream and tickets from the bracket file, where its game has none (lib/postseason/sds-final-links.ts).
-  const games = withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE);
+  // Then each game's Hudl TV broadcast, where a covered school streams it (lib/streams/hudl-streams.ts).
+  const games = withHudlStreams(withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE), getHudlStreamsFile());
   if (listed.listed.length === 0) return { ...stored, games };
   return { ...stored, games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
 })();
@@ -228,7 +231,7 @@ export function getContentRemovals(): readonly ContentRemoval[] {
   return snapshot.contentRemovals ?? [];
 }
 
-/** 'sblive:<id>' games a MaxPreps contest has since superseded → that contest (D2 rule 10). */
+/** Retired game ids a MaxPreps contest has since superseded → that contest (D2 rule 10); each is an alias of that contest's game (lib/game-urls.ts). */
 export function getSupersededGames(): Readonly<Record<ContestId, ContestId>> {
   return snapshot.supersededGames;
 }
@@ -471,6 +474,14 @@ export function getGames(filter: GameFilter = {}): Game[] {
 
 export function getGameById(contestId: ContestId): Game | undefined {
   return snapshot.games.find((g) => g.contestId === contestId);
+}
+
+/** slug → game, for `/game/<slug>` (lib/game-slug.ts): every game the site lists has one, and no two share it. */
+const gamesBySlug: ReadonlyMap<string, Game> = new Map(snapshot.games.map((g) => [gameSlug(g), g]));
+
+/** The game at `/game/<slug>`; undefined for anything else, an alias included (those are redirected before a page is looked for). */
+export function getGameBySlug(slug: string): Game | undefined {
+  return gamesBySlug.get(slug);
 }
 
 /** Every date with at least one contest, ascending — the /scores/[date] static params. */

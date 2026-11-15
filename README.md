@@ -27,13 +27,16 @@ documents. BVAL was added to both winter builds on 2026-11-13 so the ratings cou
 against BVAL schools (see "BVAL in the winter builds"). See "Boys basketball" under "Local development" and
 docs/MULTI-SPORT.md.
 
-**Girls volleyball (SCVAL and BVAL, 2026).** The same code builds a fourth site, NorCal High School Girls
-Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8)
-and the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), fall 2026, from the data
+**Girls volleyball (SCVAL, BVAL, WCAL and WBAL, 2026).** The same code builds a fourth site, NorCal High School Girls
+Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8),
+the BVAL's 26 (Mt. Hamilton 6, Santa Teresa 6, Almaden Valley 6, West Valley 8), the WCAL's 6 and the WBAL's 13
+(Foothill 7, Skyline 6; both leagues added 2026-11-14, see "WCAL and WBAL in the volleyball build"), 60 teams, fall 2026, from the data
 under `data/volleyball/`, with a match's score read as its sets won, tables ordered on the league record and
 player stats per set. Its /playoffs draws one bracket per division, read whole from MaxPreps' tournament pages
 (`playoffs.brackets`): the CIF State divisions an SCVAL or BVAL team plays in (the NorCal regional, then the
-state final), then the CCS's Open Division and Divisions 1-3. See "Girls volleyball" under "Local development" and docs/MULTI-SPORT.md.
+state final), then the CCS's Open Division and Divisions 1-3. It has field hockey's recruiting pages too (/clubs,
+/commits, /recruiting), from research of 2026-11-13 and 2026-11-14. See "Girls volleyball" and "Girls volleyball: recruiting"
+under "Local development" and docs/MULTI-SPORT.md.
 
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
@@ -156,7 +159,7 @@ Per-league pages show their own region's league chips.
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
-| `/game/[id]` | One game's detail page (one static page per game; OG card per game). On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
+| `/game/[id]` | One game's detail page (one static page per game; OG card per game), at the game's slug: `/game/2026-10-06-santa-catalina-at-greenfield` (the date, then away `at` home, `vs` at a neutral site, `-2` on a same-day rematch). See "Game URLs" under "Deploy notes". On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table, the independents' included (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
 | `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts; Santa Catalina's are York's, which plays its PCAL JV slot, each read from York's side, with York's JV table line), its player stats and roster, then its JV roster where one was found (`#jv-roster`) (102 pages, all nine leagues and the five independents; an independent's "league" figures are its games against the other four); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
@@ -249,10 +252,12 @@ cifsshome.org         ──┘  (cross-check only)
 ### The cron
 
 `.github/workflows/update-data.yml` runs `pnpm fetch-data` on a schedule, **twice a day, only in
-season** (cron `0 14 * 8-12 *` and `0 5 * 8-12 *` — 7:00 AM and 10:00 PM Pacific during PDT,
-restricted to Aug-Dec so it rarely fires out of season; the cron's months are UTC, and December
-is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
-season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
+season** (cron `0 14 * 8-11 *` and `0 5 * 8-11 *` — 7:00 AM and 10:00 PM Pacific during PDT,
+restricted to Aug-Nov so it rarely fires out of season; the cron's months are UTC, and the last
+in-window run, Nov 21 9:00 PM Pacific, is still November in UTC). A fire outside the window
+(Nov 22-30) stops at the workflow's own `window` job, before the checkout, the install and the
+tests; its `SEASON_START` and `SEASON_END` are held to the sections' windows by
+`tests/workflows.test.ts`. The season itself is bounded by the scripts' own Aug 1 - Nov 21 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/league-config/sections.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
@@ -316,7 +321,7 @@ Flags on `fetch-data` (`pnpm fetch-data --help` prints them, as does the header 
 | `--leagues scval,bval` | fetch only these leagues; the others are carried from the previous snapshot, frozen |
 | `--accept-regression bval` | skip the finals-regression guard for these leagues, this run only |
 | `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere; validate and report without writing (captures included); pin the run's stamp |
-| `--force` | bypass the Aug 1 - Nov 30 season-window guard |
+| `--force` | bypass the Aug 1 - Nov 21 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn`, `--no-cifss` | skip individual secondary sources (`--no-cifss`: the cifsshome.org cross-check) |
 
@@ -397,7 +402,8 @@ season; run it by hand or weekly). The page encodes each athlete as a 38-element
 MaxPreps added `isClaimed` in November 2026; the parser reads both layouts and nothing else), so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
-a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
+a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; the "null Player #4" rows
+MaxPreps' stat entry creates for a number nobody is rostered under read "Player #4" unless another source names her (docs/DATA-SOURCES.md); a team whose fetch fails
 keeps its previous rows with `status: "carried-forward"`. Failures are scoped to the team, and
 `--leagues scval,bval` scopes a run to leagues, as `fetch-data --leagues` does: a league outside the
 run keeps its previous rows, and one league failing never stops another being read. A team no run
@@ -600,7 +606,7 @@ Stats change after every game, so `update-data.yml` runs this twice a day in sea
 stops the score refresh: the step may fail, and a team whose call failed keeps its previous rows
 (`carried-forward`). When nothing but the run's stamp would change, the script leaves the file
 exactly as it was, so there is nothing to commit. Like `fetch-data`, it writes nothing outside the
-Aug 1 - Nov 30 Pacific window unless given `--force`, and takes `--leagues` (a league outside the run
+Aug 1 - Nov 21 Pacific window unless given `--force`, and takes `--leagues` (a league outside the run
 keeps its previous rows; the workflow's manual `leagues` input reaches it too). Failures are scoped
 to the team: one league's outage never blocks another league's stats, and the previous file is
 salvaged row by row exactly as for rosters. The run exits 1, still writing the file, when a team it
@@ -664,6 +670,11 @@ starting times (JV 5:30 before a 7:00 varsity game; on a quad day the boys JV at
 double round robin (Article V §2). The SCVAL soccer schedules give starting times by site format only, and
 no field hockey document schedules a JV round, so neither has slots; a league gets them by adding `jv` to
 its bundle's fixtures.
+
+A fifth JV layer, `lib/jv/jv-added.ts` (`mergeJvAdded`), lists the JV game of a varsity game no feed lists
+(`DATA_QUALITY.addedGames` with a `jv` field) until MaxPreps lists a JV game of the pair within three days of
+it: today the JV game of Santa Teresa at Cupertino, Tue Nov 24 at 5:30, from Cupertino's own schedule, given by the owner on 2026-11-14 (see
+docs/LEAGUE-RULES.md, "A game reported before its day").
 
 #### JV standings
 
@@ -746,6 +757,10 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   play had ended. They fill 12 scores and add 3 games (marked †, "Score via the school's athletics
   site"), and disagree with MaxPreps once (St. Ignatius at Homestead, Sep 21: 6-0 against MaxPreps'
   5-0; MaxPreps' score is shown and the other noted). With them the De Anza JV table is shown (26 of 30).
+  Homestead's athletic director's weekly update (read 2026-11-15) is a third: it adds Homestead's JV games at
+  Leigh (Sep 15) and at Los Altos (Oct 7), played with no score reported (rows with `score: null`, never used
+  to fill or contradict a score), and disagrees with MaxPreps once (Los Gatos at Homestead, Sep 2: 3-1 against
+  MaxPreps' 3-2).
 
 `lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
 (`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).
@@ -1152,6 +1167,19 @@ link only the school's or the athletics department's account, and a profile that
 school it is ("Fremont Girls Soccer", "MVHS Girls Volleyball") is left out unless a page of the school's
 links it or the profile links the school's own page. Every profile kept was opened in a browser.
 
+### Hudl TV broadcasts
+
+`data/hudl-streams.json` (and its siblings under `data/soccer/`, `data/basketball/` and `data/volleyball/`)
+holds the Hudl TV broadcast of a game where a covered school streams it on Hudl's fan site, keyed by contest
+id: the game page shows it as a "Hudl TV" button beside "NFHS stream" (a final's replay among its result
+links), a team's Next card and the bracket cells as a pill, and the home page's next-game card as its stream
+chip when MaxPreps has no NFHS stream. MaxPreps never carries a Hudl broadcast, so the links were read from
+each school's fan.hudl.com page on 2026-11-14 and matched to the games by sport, varsity team, date and
+opponent (docs/DATA-SOURCES.md §1.12). The file is research, written by a script run by hand; nothing in the
+data jobs rewrites it. `lib/streams/hudl-streams.ts` validates it at import (each contest once, every link a
+fan.hudl.com watch page) and adds each link to its game where `lib/data.ts` reads the snapshot, so a refresh
+keeps them; a record whose game has left the snapshot is ignored (`tests/hudl-streams-file.test.ts`).
+
 ## Code layout
 
 ```
@@ -1299,6 +1327,20 @@ Cloudflare scripts. The other nine files have no override.
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
+
+**Typecheck memory.** Every data/ JSON file the code imports has a `<name>.d.json.ts` sidecar beside
+it (`data/snapshot.d.json.ts` for `data/snapshot.json`, …) that types the import `unknown`.
+`allowArbitraryExtensions` in `tsconfig.json` makes tsc read the sidecar instead of the JSON.
+Bundlers ignore the sidecars, so the build still imports the real file. Without the sidecars, tsc
+infers a literal type for each file: 26 MB and ~800,000 lines of JSON across the four sports, put
+together into four-way unions by the per-sport ternaries. Measured on 2026-11-14 with `tsc --noEmit
+--extendedDiagnostics`, the sidecars cut the typecheck from 2.13 GB of heap and 54 s to 1.07 GB and
+18 s. Before that it ran past Node's default ~2 GB heap and crashed in smaller containers. Nothing
+used the inferred types: each loader passes the import as `unknown` to its zod schema (or, for an
+empty placeholder file, casts it). `resolveJsonModule` stays on because Next requires it and
+rewrites `tsconfig.json` when it is off. **A new data JSON import needs a sidecar**: copy any
+existing one. `tests/json-sidecars.test.ts` fails when one is missing, because the typecheck itself
+would pass, only slower and heavier.
 
 Imports are relative everywhere (`app/`, `components/`, `lib/`, `scripts/`, `tests/`), never the
 `@/` alias that `tsconfig.json` declares: Vitest has no path alias (`vitest.config.mts`), and the
@@ -1496,9 +1538,81 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   for a grade, and one El Camino JV row prints "7", stored with no grade). BVAL is marked unavailable, as in
   the winter builds.
 
-What it leaves out, as the winter builds do: /clubs, /commits and /recruiting, si.com, the VNN calendars and
-the region toggle. Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS
-Volleyball Bylaws' allocation of the field, and the smoke and axe passes on this build.
+What it leaves out, as the winter builds do: si.com, the VNN calendars, /club-calendar and the region toggle.
+Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS Volleyball Bylaws'
+allocation of the field, and the smoke and axe passes on this build.
+
+### Girls volleyball: recruiting
+
+The volleyball build has /clubs, /clubs/[slug], /commits and /recruiting, and its team rosters show the same
+profile, club and commitment lines field hockey's do (`HAS_RECRUITING` in `lib/sports/current.ts`). The data is
+research by hand in `data/volleyball/`, under field hockey's schemas, loaders and rules ("Rosters", "Clubs" and
+"College commitments" above), with one change of place: where field hockey accepts a class year plus a location in
+the school's half of the state, volleyball asks for a hometown in the school's own area (its city or a neighbouring
+one). Two rounds: 2026-11-13 for the 41 SCVAL and BVAL schools, and 2026-11-14 for the 19 WCAL and WBAL schools,
+with the name-by-name searches the first round did not finish, at all 60. DATA-SOURCES §1.11 has the method, source
+by source. Counted from the files on 2026-11-14:
+
+- **Recruiting profiles** (`rosters-enrichment.json`, `profiles[]` only): **797 for 544 of the 876 varsity rows,
+  at 57 of the 60 schools** (400 Hudl, 197 claimed MaxPreps pages, 111 NCSA, 89 SportsRecruits); 600 of them, for
+  465 players, are on a recruiting platform rather than MaxPreps. The WCAL and WBAL schools hold 301 of them, for
+  202 of their 307 rows, at all 19. A volleyball profile names no sport; profiles in another sport: 7 softball, 3
+  basketball, 2 each rowing, soccer and track and field, 1 each beach volleyball, lacrosse and swimming and diving.
+  No profile was found at Evergreen Valley, James Lick or Oak Grove. `jv-profiles.json` holds **76 for 75 JV
+  players at 14 schools** (67 Hudl, 5 SportsRecruits, 4 NCSA). Hudl's public rosters were read for every school's
+  girls volleyball teams, NCSA through a headless browser for every school page and every named row by name,
+  every varsity row's MaxPreps career page for the claimed flag, and a SportsRecruits address probe over every
+  named varsity and JV row. Every Hudl and NCSA page was re-read by a second reader.
+- **Clubs** (`clubs.json`): **37 clubs** (South Bay 11, Peninsula 11, East Bay 4, Central Coast 4, San Francisco 4,
+  Marin 2, elsewhere 1) and **422 ties for 290 of the 876 varsity rows, at 48 of the 60 schools**: 94 current, 201
+  listed (unknown) and 127 earlier; 101 players are tied to more than one club. The most ties: Vision 80, MVVC 73,
+  Academy 63, Panda 31, Red Rock 29, Encore 23, Stingray 20, City Beach 17. 9 clubs have no tied player. The ties
+  rest on 656 source entries on 456 URLs (Hudl 324, NCSA 81, Prep Dig and PrepVolleyball 75, MaxPreps career pages
+  63, SportsRecruits 59, club sites 37, school and local papers 16, a college release 1). Most come from the team
+  list of a player's own Hudl page, which sits on her school's team; a club's own roster gives names only, so a
+  roster match counts only with a second page that names the player, the club and her school. Only the Peninsula
+  and the South Bay were searched for every club (`SEARCHED_REGIONS`); /clubs says so of the others. JV players'
+  clubs are not listed.
+- **College commitments** (`commits.json`): **10 players at 9 schools, to 10 colleges**. From 2026-11-13: Maura
+  Hambly (Palo Alto) signed with Cal on 2026-11-11 (Cal's own release names her with Palo Alto High School); Aanya
+  Hotha (Saratoga) to Penn, Kylee Mark (Monta Vista) to Cal Poly and Katie Hamburger (Homestead) to Tulane in beach
+  volleyball, each from her school's student paper; Emi Yu-Yang (Palo Alto) to Hamilton, medium confidence, from
+  her own SportsRecruits page. From 2026-11-14: Chayse Courtney (Mitty) to Stanford, Abby Cardenas (Saint Francis)
+  to UC Irvine, Eileen Pfeffer (St. Ignatius) to Nevada and Whitney Fleming (Valley Christian) to UC Riverside, from
+  Prep Dig's player pages and its California list (PrepVolleyball or Vision's College Bound page agreeing for
+  Courtney and Fleming), and Orli Jones (Notre Dame San Jose) to Portland, from her own SportsRecruits page. Every
+  quote was checked against its page as served, twice.
+- **Instagram** (`instagram.json`): 27 clubs' accounts, each linked from the club's own site, and 10 of the 41
+  teams' (2026-11-14; see "Instagram accounts").
+
+What the research did not reach, so that an absence here says little:
+
+- **Web search.** Name-by-name web searches covered every senior at the 60 schools but only 40 of the 271 juniors;
+  the other juniors, and every ungraded row, were looked up on Prep Dig, PrepVolleyball and NCSA by name instead
+  (and, at the SCVAL schools, on their school and local papers' own site search). The 20 WCAL and WBAL rows with no
+  name (MaxPreps' "Player #N") could not be searched at all.
+- **Clubs with no record**, so their players' ties are not shown: Apex Volleyball Club (Pioneer players' pages name
+  it; no site or city found), Frisco Bay Volleyball Club (one NCSA page; not identified), and a few clubs named on
+  one page each (`clubs.json`'s notes list them). Absolute, Club 415, Rage Westside, SF Juniors and Kamikaze have
+  records since 2026-11-14.
+- **Name-only roster matches.** About 60 players' exact names are on a club roster with no second page tying
+  the name to the school; they are not listed.
+- **Private or bare pages.** 127 rostered players have only private Hudl profiles; about 880 live SportsRecruits
+  pages show at most a class year. Notre Dame San Jose is not on Hudl, Eastside and Presentation have no girls
+  volleyball team there, and Harker's Hudl rosters are stale (classes of 2021 to 2027).
+- **Commitments.** The fall signing period opened on 2026-11-11 and many colleges had posted nothing. About 890
+  college athletics sites' feeds were read on 2026-11-14, but 72 refused automated reads, among them Cal, UC Irvine,
+  UC Riverside, Nevada and Tulane, so a signing release naming Eileen Pfeffer (Nevada) or Whitney Fleming (UC
+  Riverside) was not checked and both stay committed. SportsRecruits' commits feed was read for 434 of about 3,700
+  programs; student papers were found for 15 of the 41 SCVAL and BVAL schools and 7 of the 19 WCAL and WBAL schools (none for
+  Riordan, SHC, Valley Christian, Presentation, Notre Dame Belmont, Notre Dame San Jose, Pinewood, Priory, Mercy,
+  King's Academy or Eastside).
+- **Not searched at all:** school athletics sites for roster values, NCSA's beach volleyball pages, FieldLevel
+  beyond 140 addresses, the JV rows' MaxPreps career pages, and a second reader for the SportsRecruits pages.
+
+`pnpm build-players` stamped each record's `playerId` and added the profiles to `data/players.json`. Re-run it
+after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
+`pnpm test` and the build for this sport as it does for field hockey ("When a roster refetch breaks it").
 
 ## Tests
 
@@ -1671,11 +1785,47 @@ The soccer build also covers the West Catholic Athletic League and the West Bay 
 - **MaxPreps** keeps Presentation's girls soccer team in no league, so its West Bay Foothill table has six rows
   (`maxprepsMissing`); its WCAL and West Bay Skyline tables match the leagues'.
 - **Last season**: the WCAL's 2025-26 final standings and all-league teams are on wcalsports.org and not
-  transcribed yet; the WBAL's site keeps no standings archive (its 2025-26 all-league teams are published). Both
-  cards on /history/2025-26 are marked unavailable and link what the league publishes (`scripts/build-history.ts`
-  `wcalNotTranscribed`, `wbalNoStandings`).
+  transcribed yet; nor are the WBAL's, which its history page links (hs.wbalsports.org/2025-2026/socstg.html, and
+  its all-league page). Both cards on /history/2025-26 are marked unavailable and link what the league publishes
+  (`scripts/build-history.ts` `wcalNotTranscribed`, `wbalNotTranscribed`). An earlier version of the WBAL card said
+  the site kept no standings archive; that was wrong, and was corrected the same day.
 - **Addresses** for the nineteen schools are MaxPreps' school fields (`data/soccer/schools.json`), and the fourteen
   schools no other registry holds have MaxPreps' mascot tiles in `public/mascots/`.
+
+### WCAL and WBAL in the volleyball build
+
+The volleyball build covers the same two leagues (owner request, 2026-11-14), with volleyball's own divisions and
+rules. The registry holds 60 teams.
+
+- **WCAL** (`lib/league-config/volleyball/wcal.ts`, `lib/registry/volleyball/wcal.ts`): the same six schools as
+  soccer (each volleyball seed is the school's soccer seed on its volleyball page, so the registry is not copied), the columns of the league's 2026 composite schedule and the rows of its final standings (Archbishop
+  Mitty 10-0, October 28, 2026). Rules from WCAL By-Laws Article XII – Volleyball and Article III (both updated
+  2024-2025): two points a win and none a loss, so the table is ordered on league wins (§13.A); head-to-head and
+  then wins among the tied teams (§15.B.1-2; the later steps are not computed); no girls' league playoff. No WCAL
+  document counts the league's automatic CCS berths: §17.A makes the round robin's winner its #1 seed and Article
+  III §17.D enters the rest as at-large entries in order of finish, so one place is marked. League play was a
+  double round robin, ten matches a team, Sep 22 to Oct 28, 2026.
+- **WBAL** (`lib/league-config/volleyball/wbal.ts`, `lib/registry/volleyball/wbal.ts`): Foothill (Harker, The
+  King's Academy, Menlo, Mercy Burlingame, Notre Dame Belmont, Presentation, Sacred Heart Prep) and Skyline
+  (Castilleja, Crystal Springs Uplands, Eastside College Prep, Notre Dame San Jose, Pinewood, Priory), the varsity
+  tables on hs.wbalsports.org/vbstg.html. These are not soccer's divisions. Rules from WBAL By-Laws Article X –
+  Volleyball: the round robin's winner is champion (§1007.1) and the table is ordered on the match record; ties
+  are broken on head-to-head and then the set difference among the tied teams (§1007.4 steps 1-2, `h2h-goal-diff`:
+  a volleyball score is sets), and stay level from step 3, the points in those sets. §1007.4 is "For CCS
+  Advancement only", and the league's own table prints such teams tied (T4 in both divisions in 2026); the site's
+  table applies the steps and cites them. Four automatic CCS berths (§1008.1): Foothill's top three and the
+  Skyline top finisher, unless Foothill's fourth-place team, below .500 in and out of league, needs a playoff with
+  it. Foothill played twelve league matches a team (Sep 9 to Oct 27), Skyline ten (Sep 22 to Oct 27).
+- **League matches are read by membership**, as in the soccer build and for the same reason: a match between two
+  members of one division inside its league play that MaxPreps does not type as a tournament game. On 2026-11-14
+  every team's computed league record matched its league's own final standings and MaxPreps' table.
+- **Recruiting**: the 2026-11-13 sweep for recruiting pages, clubs and commitments covered the SCVAL and BVAL
+  schools only; the round of 2026-11-14 searched the nineteen WCAL and WBAL schools by the same methods ("Girls
+  volleyball: recruiting").
+- **Last season**: neither league's 2025 final standings are transcribed; /history/2025-26 marks both
+  unavailable and links the WCAL's standings and awards pages and the WBAL's 2025-26 standings and all-league pages.
+- **The test corpus** (`tests/fixtures/corpus/volleyball-2026-11-14/`) was recaptured on 2026-11-14 with all four
+  leagues.
 
 ### Last season's standings in the soccer and basketball builds
 
@@ -1835,7 +1985,7 @@ against the teams above the tie; (3) the spring draw numbers, lowest first. The 
 place (6th) is decided on the field instead: a play-in on Fri Oct 23 unless one team swept the
 head-to-head 2-0, so the site leaves it shared until then. MCAL has no regular-season overtime. The
 top six make the MCAL tournament (seeds 1-2 get a bye to the Oct 28 semifinals, quarterfinals Mon
-Oct 26, final Fri Oct 30, 4 PM, at Tamalpais High School, 700 Miller Ave, Mill Valley; adults $10,
+Oct 26, final Fri Oct 30, 4 PM, moved from Tamalpais to Redwood High School, 395 Doherty Dr, Larkspur; adults $10,
 students $5, pre-sale on GoFan, from the league's play-off sheet). Once it is under way the site reads the
 results: who is in the final, who lost where (a team "lost", never "was eliminated"), and the champion, with the
 regular-season points leader named MCAL Champion and a different tournament winner also receiving a pennant; a
@@ -2404,7 +2554,40 @@ prerendered too. It is NOT `output: 'export'`, though: serving it needs Next.js'
 host adapter that provides one, `vinext start` or vinext's Cloudflare Worker (see "vinext" and
 "Cloudflare Workers" below), because the 404s for unknown dynamic params and the metadata routes
 (`/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`) are served by the
-framework.
+framework, and so are the redirects of old game URLs (next).
+
+### Game URLs
+
+A game's page is `/game/<slug>`, and the slug says what the game is: `2026-10-06-santa-catalina-at-greenfield`
+(`lib/game-slug.ts`: the date, the away side, `at` or, at a neutral site, `vs`, the home side; a registry team is its
+slug, any other school its name; the second game of a pair on one day ends `-2`). The slug is stored with the game
+(`Game.slug`) and follows it: a game moved to another day, or whose host or opponent's name changed, gets the slug of
+what it is now. The contest id (a MaxPreps GUID, `sblive:<n>`, …) stays the game's identity in the data and is never
+in a link.
+
+Every other URL segment a game was published at is one of its **aliases** (`Game.aliases`, `lib/game-urls.ts`) and
+is a permanent (308) redirect to the slug, as is its OG image:
+
+- a slug the game had before it changed;
+- its contest id as a URL segment, which was the URL before slugs (`/game/<MaxPreps GUID>`, `/game/sblive-<n>`,
+  `/game/cifsds-<away>-at-<home>`, `/game/official-<date>-<away>-at-<home>`);
+- and those of any game it superseded (an si.com fill, a San Diego bracket-sheet game or a league-schedule game
+  that MaxPreps lists now: the snapshot's `supersededGames`).
+
+A slug in use always beats an alias, and an alias belongs to one game, the one that had it last. The pipeline assigns
+both on every run with the previous snapshot beside it (`lib/pipeline/steps/assemble.ts` `gameUrlsOf`); a snapshot
+written before slugs gets them when it is read (`lib/snapshot/snapshot-load.ts`), each game keeping its id as an alias.
+
+Two places answer the redirects, both built from the snapshot (`lib/game-aliases.ts`):
+
+- `next.config.ts` `redirects()` carries the old **slugs**: few, one per change. (Vercel allows a config 1,024
+  redirects.)
+- `proxy.ts` carries the old **id** URLs, one per game published before slugs (about a thousand a sport). It is the
+  site's only request-time code, and its matcher runs it for those four URL shapes only: a slug starts with a date,
+  so no page the site links to ever touches it.
+
+`tests/game-aliases.test.ts` follows every old URL of every sport's committed snapshot to its page, and
+`scripts/smoke-server.sh` does the same against each of the three servers.
 
 Copy `.env.example` to `.env` (or set the same variables in the host's dashboard) and set
 `SITE_URL` before the first production build.

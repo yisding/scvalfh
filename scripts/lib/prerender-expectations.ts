@@ -6,8 +6,8 @@
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
  * loads it), the league config (`lib/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
- * file (through lib/players/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
- * tests/game-id.test.ts holds and both gates' ':' check backs up.
+ * file (through lib/players/clubs.ts). Games take their slug (`Game.slug`, lib/game-slug.ts), which
+ * tests/game-urls.test.ts holds and both gates' ':' check backs up (a contest id never reaches a path).
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
  * gate checks, never its oracle; scripts/a11y-axe.mjs runs a curated one-page-per-family sample,
@@ -16,9 +16,10 @@
  */
 
 import { getClubSlugs } from '../../lib/players/clubs';
-import { gameIdToParam } from '../../lib/game-id';
+import { gameSlug } from '../../lib/game-slug';
+import { gameAliasTable } from '../../lib/game-urls';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
@@ -40,17 +41,18 @@ const ALL_FIXED_PAGES = [
 ] as const;
 
 /**
- * The fixed pages this build prerenders: a route only field hockey has (lib/sports/current.ts HAS_RECRUITING)
- * is a 404 in another sport's build, which `next build` writes as a not-found page and vinext skips, so it is
- * not expected.
+ * The fixed pages this build prerenders: a route this sport's build does not have (lib/sports/current.ts
+ * HAS_RECRUITING: field hockey and volleyball; HAS_CLUB_CALENDAR: field hockey) is a 404 there, which
+ * `next build` writes as a not-found page and vinext skips, so it is not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
-  (p) => HAS_RECRUITING || !['clubs', 'club-calendar', 'commits', 'recruiting'].includes(p),
+  (p) => (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) && (HAS_CLUB_CALENDAR || p !== 'club-calendar'),
 );
 
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
-  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/club-calendar', '/commits', '/recruiting']),
+  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
+  ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
 ];
 
@@ -60,8 +62,12 @@ export interface ExpectedFamilies {
   /** The league-tournament leagues: the /playoffs/[league] family. */
   tournament: readonly string[];
   gameParams: readonly string[];
-  /** One stub per `supersededGames` key: a game page, but never in the sitemap. */
-  stubParams: readonly string[];
+  /**
+   * Every alias of a game (`Game.aliases`: a slug it had, or its id, the URL before slugs): never a page
+   * (next.config.ts and proxy.ts redirect it to the game's slug, lib/game-aliases.ts), so never a
+   * prerendered file and never in the sitemap.
+   */
+  redirectParams: readonly string[];
   /** The distinct game dates, sorted. */
   dates: readonly string[];
   slugs: readonly string[];
@@ -82,7 +88,7 @@ export function sample(list: readonly string[]): string {
 /**
  * Each family's expected params, and the cross-checks that make them trustworthy: the snapshot's
  * leagues and tournament leagues are the config's, its teams are the registry's by name and in
- * order, and no superseded stub is also a live game. Each disagreement goes to `fail`.
+ * order, and no alias is also a game's slug, whose page the redirect would hide. Each disagreement goes to `fail`.
  */
 export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void): ExpectedFamilies {
   const snapshotLeagues = snapshot.season.leagues.map((l) => l.id);
@@ -90,10 +96,16 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     fail(`snapshot season.leagues [${snapshotLeagues.join(', ')}] ≠ lib/leagues.ts LEAGUE_IDS [${LEAGUE_IDS.join(', ')}]`);
   }
 
-  const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));
-  const stubParams = Object.keys(snapshot.supersededGames).map(gameIdToParam);
-  const overlap = stubParams.filter((p) => gameParams.includes(p));
-  if (overlap.length) fail(`superseded stubs that are also live games: ${sample(overlap)}`);
+  const gameParams = snapshot.games.map((g) => gameSlug(g));
+  if (new Set(gameParams).size !== gameParams.length) fail('two games share a slug');
+  const unnamed = snapshot.games.filter((g) => g.slug === undefined).map((g) => g.contestId);
+  if (unnamed.length) fail(`games with no stored slug: ${sample(unnamed)}`);
+  // The table drops an alias that is a slug (lib/game-urls.ts rule 3), so a listed one that is missing from it
+  // is exactly an alias that would hide a page.
+  const redirectParams = [...gameAliasTable(snapshot.games).keys()];
+  const listed = snapshot.games.flatMap((g) => g.aliases ?? []);
+  const overlap = listed.filter((p) => gameParams.includes(p));
+  if (overlap.length) fail(`aliases that are also a game's slug: ${sample(overlap)}`);
 
   const slugs = snapshot.teams.map((t) => t.slug);
   const registry = TEAMS.map((t) => t.slug);
@@ -118,7 +130,7 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     leagueIds: [...LEAGUE_IDS],
     tournament,
     gameParams,
-    stubParams,
+    redirectParams,
     dates: [...new Set(snapshot.games.map((g) => g.dateKey))].sort(),
     slugs,
     clubSlugs: getClubSlugs(),
@@ -177,7 +189,7 @@ export function makeFamilyChecker(
     family('standings', expected.leagueIds, { og: true });
     family('schedule', expected.leagueIds, { og: true });
     family('playoffs', expected.tournament, { og: true });
-    family('game', [...expected.gameParams, ...expected.stubParams], { og: true });
+    family('game', expected.gameParams, { og: true });
     family('scores', expected.dates, { og: true });
     family('teams', expected.slugs, { og: true });
     // One JV calendar per league (app/jv/[league]); it takes the root OG card.

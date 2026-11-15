@@ -530,7 +530,8 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
     }
     expect(checked, 'a side with a record was checked').toBeGreaterThan(0);
     expect(html).not.toContain(' in league');
-    expect(html).not.toMatch(/\b\d+-\d+-\d+\b/);
+    // A record is three numbers; so is the date in a game link's slug and in a <time>, which are not on the page as text.
+    expect(text).not.toMatch(/\b\d+-\d+-\d+\b/);
     expect(text).not.toContain('0-0-0');
     const nonLeague = upcoming.find((g) => g.countsFor === null);
     if (nonLeague) {

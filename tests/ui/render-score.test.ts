@@ -575,8 +575,9 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
     });
     const html = renderToStaticMarkup(createElement(GameRow, { game: sb }));
     expect(html, 'components/game-row/GameRow.tsx sentence').toContain('SCVAL league game.');
-    expect(html, 'components/game-row/GameRow.tsx gameHref').toContain('href="/game/sblive-6541425"');
-    expect(html).not.toContain('href="/game/sblive:6541425"');
+    // The link is the game's slug (lib/game-id.ts gameHref), whatever kind of id it has: never the id itself.
+    expect(html, 'components/game-row/GameRow.tsx gameHref').toMatch(/href="\/game\/\d{4}-\d{2}-\d{2}-[a-z0-9-]+-at-[a-z0-9-]+"/);
+    expect(html).not.toContain('href="/game/sblive');
     const nl = renderToStaticMarkup(createElement(GameRow, { game: nonMember() }));
     expect(nl).toContain(' Non-league.');
   });
@@ -724,7 +725,7 @@ describe('the one game row (GameRow, GameList)', () => {
       // The empty row link first, the status slot second: in every state.
       expect(classes[0]).toBe('sx-game-link');
       expect(classes[1]).toBe('sx-game-status');
-      expect(html).toMatch(/<a class="sx-game-link" aria-label="[^"]+" href="\/game\/c-1"><\/a><span class="sx-game-status" aria-hidden="true">/);
+      expect(html).toMatch(/<a class="sx-game-link" aria-label="[^"]+" href="\/game\/\d{4}-\d{2}-\d{2}-[a-z0-9-]+"><\/a><span class="sx-game-status" aria-hidden="true">/);
       // Then away, home (each followed by its score when there is one), then at most one note.
       const expected = s.scores
         ? ['sx-game-team sx-pinnable', 'sx-num sx-game-score text-score', 'sx-game-team sx-pinnable', 'sx-num sx-game-score text-score']
@@ -838,15 +839,16 @@ describe('the one game row (GameRow, GameList)', () => {
 
   it('`GameList` wraps its list in `sx-gamelist`, renders rows as <li>, and keeps the order it is given', async () => {
     const { GameList } = await import('../../components/schedule/GameList');
-    const a = final(2, 1, { contestId: 'c-a' });
-    const b = game({ contestId: 'c-b', dateKey: '2026-09-20', dateLocal: '2026-09-20T15:00:00' });
-    const c = game({ contestId: 'c-c', status: 'live' });
-    const d = final(0, 0, { contestId: 'c-d', dateKey: '2026-09-01', dateLocal: '2026-09-01T15:00:00' });
+    // Each with its own slug, as the snapshot's games have: the link is the slug, and two of these share a day and a pair.
+    const a = final(2, 1, { contestId: 'c-a', slug: '2026-09-10-c-a' });
+    const b = game({ contestId: 'c-b', slug: '2026-09-20-c-b', dateKey: '2026-09-20', dateLocal: '2026-09-20T15:00:00' });
+    const c = game({ contestId: 'c-c', slug: '2026-09-10-c-c', status: 'live' });
+    const d = final(0, 0, { contestId: 'c-d', slug: '2026-09-01-c-d', dateKey: '2026-09-01', dateLocal: '2026-09-01T15:00:00' });
     for (const order of [[a, b, c, d], [d, c, b, a], [c, a, d, b]]) {
       const html = renderToStaticMarkup(createElement(GameList, { games: order }));
       expect(html).toMatch(/^<div class="sx-gamelist"><ul class="sx-games[^"]*"><li class="sx-game"/);
       expect(html).toMatch(/<\/li><\/ul><\/div>$/);
-      expect([...html.matchAll(/href="\/game\/(c-[a-d])"/g)].map((m) => m[1])).toEqual(order.map((g) => g.contestId));
+      expect([...html.matchAll(/href="\/game\/[0-9-]+(c-[a-d])"/g)].map((m) => m[1])).toEqual(order.map((g) => g.contestId));
       expect(html.match(/<li class="sx-game"/g)).toHaveLength(4);
       // The status slot is first in every row of a mixed list.
       expect(html.match(/<\/a><span class="sx-game-status" aria-hidden="true">/g)).toHaveLength(4);

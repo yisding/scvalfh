@@ -83,10 +83,10 @@ async function load(snapshotPath: string): Promise<Loaded> {
       renderToStaticMarkup((await teamPage.default({ params: Promise.resolve({ slug }) } as never)) as ReactElement),
     renderGame: async (contestId) =>
       renderToStaticMarkup(
-        (await gamePage.default({ params: Promise.resolve({ id: contestId }) } as never)) as ReactElement,
+        (await gamePage.default({ params: Promise.resolve({ id: d.getGameById(contestId)!.slug! }) } as never)) as ReactElement,
       ),
     renderElsewhere: (contestId) =>
-      renderToStaticMarkup(createElement(GameElsewhere, { model: gm.buildGameView(contestId.replace(':', '-'))! })),
+      renderToStaticMarkup(createElement(GameElsewhere, { model: gm.buildGameViewOf(contestId)! })),
     renderIndex: () => renderToStaticMarkup(createElement(indexPage)),
     describeTeam: async (slug) => {
       const meta = await teamPage.generateMetadata({ params: Promise.resolve({ slug }) } as never);
@@ -224,7 +224,7 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.decider, 'lib/pipeline/normalize.ts decider').toBe('SO');
     expect(game.shootout, 'DATA_QUALITY.resultCorrections: the tally on MaxPreps’ game page').toEqual({ home: 2, away: 1 });
-    const model = eal.gm.buildGameView(game.contestId)!;
+    const model = eal.gm.buildGameViewOf(game.contestId)!;
     const title = eal.gm.gameTitle(model);
     expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);
     expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').toContain('SO');
@@ -243,14 +243,14 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
 
   it('counts it as a win in the season series', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    const summary = eal.gm.buildGameView(game.contestId)!.series.summary;
+    const summary = eal.gm.buildGameViewOf(game.contestId)!.series.summary;
     expect(summary, 'components/game/game-view.ts series summary').toMatch(/^Chico leads the season series 1-0\./);
     expect(summary, 'components/game/game-view.ts series summary').not.toMatch(/draw|level/);
   });
 
   it('gives each side its outcome chip: Chico W, Davis L', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    const model = eal.gm.buildGameView(game.contestId)!;
+    const model = eal.gm.buildGameViewOf(game.contestId)!;
     const chico = [model.home, model.away].find((s) => s.team?.slug === 'chico')!;
     const davis = [model.home, model.away].find((s) => s.team?.slug === 'davis')!;
     expect(chico.outcome, 'components/game/game-view.ts chico').toBe('W');
@@ -263,7 +263,7 @@ describe('the 9/2 Pleasant Valley at Chico game page (MaxPreps: 1-0 in three ove
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     expect([game.home.score, game.away.score, game.otPeriods, game.decider]).toEqual([0, 0, 2, 'SO']);
     expect(game.provenance.resultCorrection?.maxpreps).toEqual({ home: 0, away: 1, otPeriods: 3 });
-    const model = eal.gm.buildGameView(game.contestId)!;
+    const model = eal.gm.buildGameViewOf(game.contestId)!;
     expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBe('SO');
     expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
       'Chico 0, Pleasant Valley 0, final; Pleasant Valley won on 1 v 1s.',
@@ -276,7 +276,7 @@ describe('the 9/2 Pleasant Valley at Chico game page (MaxPreps: 1-0 in three ove
   it('words the earlier-meeting line as a 1 v 1 loss', async () => {
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     const html = await eal.renderTeam('chico');
-    expect(html, 'app/teams/[slug]/page.tsx: the game is linked').toContain(`href="/game/${game.contestId}"`);
+    expect(html, 'app/teams/[slug]/page.tsx: the game is linked').toContain(`href="/game/${game.slug}"`);
     const earlier = eal.v.earlierMeeting(
       eal.d.getTeamBySlug('chico')!,
       eal.d.getTeamBySlug('pleasant-valley')!,
@@ -347,7 +347,7 @@ describe('the cross-check paragraph (components/game/GameSources.tsx GameElsewhe
 describe('a Super Regional game (tag league-postseason)', () => {
   it('says it does not count in the league table, under the EAL Super Regional label', async () => {
     expect(tagged.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
-    const model = withTag.gm.buildGameView(tagged.contestId)!;
+    const model = withTag.gm.buildGameViewOf(tagged.contestId)!;
     expect(model.postseasonNotes, 'components/game/game-view.ts postseasonNotes').toEqual([
       'Super Regional game — it does not count in the league table.',
     ]);

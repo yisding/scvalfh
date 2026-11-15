@@ -583,7 +583,7 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
     site: a.neutral ? 'neutral' : 'home',
     // Unscored: still to play before its day, played with no score published after it. Never 0-0.
     status: scored ? 'final' : a.dateKey < localDateKey(fetchedAt) ? 'score-pending' : 'scheduled',
-    isLeague: home.division === away.division,
+    isLeague: home.division === away.division && !a.nonLeague,
     leagueDivision: home.division === away.division ? home.division : null,
     contestTypes: { home: null, away: null },
     countsFor: null,
@@ -609,7 +609,8 @@ export function addedGame(a: AddedGame, fetchedAt: string): Game | null {
 /**
  * `games` with every configured added game no feed lists: one is left out while a feed game of the same two
  * schools on the same date exists (the feed has it after all) or its id is already there, and none is added to a
- * file stamped before its day or without both schools' games. The same array when nothing is added.
+ * file stamped before its day (or, for a game reported before it was played, before `reportedOn`) or without both
+ * schools' games. The same array when nothing is added.
  */
 export function withAddedGames(
   games: readonly Game[],
@@ -619,12 +620,13 @@ export function withAddedGames(
   const ids = new Set(games.map((g) => g.contestId));
   const pairOn = new Set(games.map((g) => `${g.dateKey}|${[g.home.slug, g.away.slug].sort().join('~')}`));
   const more: Game[] = [];
-  // Only into a file that could hold the game: one stamped on or after its day (an earlier capture never saw it)
-  // whose games include both schools (a run restricted to other leagues carries neither's schedule).
+  // Only into a file that could hold the game: one stamped on or after its day (an earlier capture never saw it),
+  // or on or after the day a game still to be played was reported (`reportedOn`), whose games include both schools
+  // (a run restricted to other leagues carries neither's schedule).
   const today = localDateKey(fetchedAt);
   const slugs = new Set(games.flatMap((g) => [g.home.slug, g.away.slug]));
   for (const a of added) {
-    if (a.dateKey > today || !slugs.has(a.home) || !slugs.has(a.away)) continue;
+    if ((a.reportedOn ?? a.dateKey) > today || !slugs.has(a.home) || !slugs.has(a.away)) continue;
     const g = addedGame(a, fetchedAt);
     if (!g || ids.has(g.contestId) || pairOn.has(`${a.dateKey}|${[a.home, a.away].sort().join('~')}`)) continue;
     ids.add(g.contestId);

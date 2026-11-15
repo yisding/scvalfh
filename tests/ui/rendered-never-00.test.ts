@@ -30,7 +30,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { buildGameView, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
+import { buildGameViewOf, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
 import { GameLogRow } from '../../components/game-row/GameLogRow';
 import { GameRow } from '../../components/game-row/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
@@ -39,7 +39,7 @@ import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
 
 interface Rendered {
   games: Game[];
-  buildGameView: typeof buildGameView;
+  buildGameViewOf: typeof buildGameViewOf;
   gameTitle: typeof gameTitle;
   gameDescription: typeof gameDescription;
   gameKicker: typeof gameKicker;
@@ -49,7 +49,7 @@ interface Rendered {
 
 const live: Rendered = {
   games: getGames(),
-  buildGameView,
+  buildGameViewOf,
   gameTitle,
   gameDescription,
   gameKicker,
@@ -150,7 +150,7 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
       const { r, nonFinal } = sets();
       const offenders: string[] = [];
       for (const game of nonFinal) {
-        const model = r.buildGameView(game.contestId);
+        const model = r.buildGameViewOf(game.contestId);
         expect(model).toBeDefined();
         for (const line of [r.gameTitle(model!), r.gameDescription(model!), r.gameKicker(model!)]) {
           if (SCORE_PAIR.test(line)) offenders.push(`${game.contestId}: ${line}`);
@@ -206,7 +206,7 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       const log = await import('../../components/game-row/GameLogRow');
       corpus = {
         games: data.getGames(),
-        buildGameView: model.buildGameView,
+        buildGameViewOf: model.buildGameViewOf,
         gameTitle: model.gameTitle,
         gameDescription: model.gameDescription,
         gameKicker: model.gameKicker,
@@ -293,11 +293,11 @@ describe('every league, rendered', () => {
     expect(textOf(scoped)).not.toContain(`· ${awayShort}`);
   });
 
-  it('links every game through gameHref (sblive ids become sblive-<n>, cifsds ids cifsds-<away>-at-<home>)', () => {
+  it('links every game through gameHref: its slug, never its id', () => {
     for (const game of games) {
       const html = renderToStaticMarkup(createElement(GameRow, { game }));
       expect(html, `components/game-row/GameRow.tsx ${game.contestId}`).toContain(
-        `href="/game/${game.contestId.replace(/^(sblive|cifsds|official):/, '$1-')}"`,
+        `href="/game/${game.slug}"`,
       );
     }
   });

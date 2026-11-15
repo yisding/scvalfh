@@ -83,6 +83,17 @@ describe('stampContentChanges (lib/pipeline/steps/assemble.ts)', () => {
     const out = stampContentChanges([moved, noted, fresh], [a, b], RUN);
     expect(out.map((g) => g.provenance.contentChangedAt)).toEqual([RUN, RUN, RUN]);
   });
+
+  it('a game’s own slug and aliases are where the page is, not content; a side’s slug is content', () => {
+    // lib/game-urls.ts: a new alias, or the slug itself, restamps nothing (what changed the slug already did).
+    const located = { ...a, slug: '2026-09-09-fremont-at-cupertino', aliases: [a.contestId] };
+    expect(stampContentChanges([located], [a], RUN)[0].provenance.contentChangedAt, 'slug and aliases added').toBeUndefined();
+    const renamed = { ...located, slug: '2026-09-09-fremont-at-cupertino-2', aliases: [a.contestId, '2026-09-09-fremont-at-cupertino'] };
+    expect(stampContentChanges([renamed], [located], RUN)[0].provenance.contentChangedAt, 'slug changed alone').toBeUndefined();
+    // A side that gained its registry slug is a change the page shows (its name becomes a link).
+    const linked = { ...located, away: { ...located.away, slug: null } };
+    expect(stampContentChanges([located], [linked], RUN)[0].provenance.contentChangedAt, 'a side’s slug').toBe(RUN);
+  });
 });
 
 describe('contentRemovalsOf (lib/pipeline/steps/assemble.ts) and the pages a removal touched', () => {
@@ -95,6 +106,16 @@ describe('contentRemovalsOf (lib/pipeline/steps/assemble.ts) and the pages a rem
   it('records nothing without a previous snapshot, or when every contest stayed on its date', () => {
     expect(contentRemovalsOf([kept], null, RUN)).toEqual([]);
     expect(contentRemovalsOf([kept, deleted], { games: [kept, deleted] }, RUN)).toEqual([]);
+  });
+
+  it('a contest gone altogether leaves its page’s slug and aliases on the record; one that only moved does not', () => {
+    const gone = { ...deleted, slug: '2026-09-16-los-altos-at-cupertino', aliases: [deleted.contestId] };
+    const was = { ...before, slug: '2026-09-23-los-altos-at-fremont', aliases: [before.contestId] };
+    const out = contentRemovalsOf([kept, moved], { games: [kept, gone, was] }, RUN);
+    expect(out.find((r) => r.contestId === deleted.contestId)).toMatchObject({ slug: '2026-09-16-los-altos-at-cupertino', aliases: [deleted.contestId] });
+    const stillThere = out.find((r) => r.contestId === before.contestId)!;
+    expect(stillThere).not.toHaveProperty('slug');
+    expect(stillThere).not.toHaveProperty('aliases');
   });
 
   it('records a contest gone from the snapshot, and one that left its old date', () => {

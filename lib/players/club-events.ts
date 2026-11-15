@@ -8,7 +8,8 @@
  * in data/clubs.json. A bad file fails at import, and so `pnpm test` and the build fail.
  *
  * Field hockey's alone. Another sport's build serves no events: the route is a 404 there
- * (lib/sports/current.ts HAS_RECRUITING) and the club pages are too.
+ * (lib/sports/current.ts HAS_CLUB_CALENDAR), and a volleyball club page, which that build does have, shows
+ * no "Tournaments and leagues" section.
  */
 
 import bundled from '../../data/club-events.json';

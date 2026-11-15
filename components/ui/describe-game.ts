@@ -283,8 +283,12 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
     isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
-    // A † names where a SCORE came from: a game the Section's sheet lists but nobody has scored yet has none.
-    sourceMark: game.status === 'final' || game.provenance.scores !== 'cifsds-sheet' ? (SOURCE_MARKS[game.provenance.scores] ?? null) : null,
+    // A † names where a SCORE came from: a game the Section's sheet or a school's page lists but nobody has scored
+    // yet has none.
+    sourceMark:
+      game.status === 'final' || (game.provenance.scores !== 'cifsds-sheet' && game.provenance.scores !== 'school-site')
+        ? (SOURCE_MARKS[game.provenance.scores] ?? null)
+        : null,
   };
 }
 

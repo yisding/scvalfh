@@ -10,7 +10,7 @@ import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { plural } from '../../components/words/plural';
-import { HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club calendar';
@@ -48,7 +48,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default function ClubCalendarPage() {
-  if (!HAS_RECRUITING) notFound();
+  if (!HAS_CLUB_CALENDAR) notFound();
   const view = buildClubCalendarView();
 
   return (

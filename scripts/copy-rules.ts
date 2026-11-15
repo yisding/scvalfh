@@ -295,12 +295,22 @@ export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp
 ];
 
 /**
+ * A player's tie to a club, as the recruiting pages word it (/clubs, /clubs/<slug>, /about#recruiting: "a public
+ * page ties to it", "pages that tie them to", "each tie checked twice", "every tie", "most ties rest on", "such a
+ * tie is never shown as current"). The volleyball build has those pages (lib/sports/current.ts HAS_RECRUITING) and
+ * no tied game, so these phrases, and only these, are taken out before the tied-game pattern reads the text: "a
+ * tie", "1 for a tie", "1 point for every tie" and "each tie awards a point" are still found.
+ */
+export const CLUB_TIE_WORDS =
+  /\bpages?\s+(?:we found\s+|that\s+)?ties?\b|\beach\s+tie\s+checked\b|\bsource\s+for\s+every\s+tie\b|\bevery\s+tie\s+links\b|\bmost\s+ties\s+rest\b|\bsuch\s+a\s+tie\s+is\s+never\s+shown\b/gi;
+
+/**
  * Every NO_TIES_SPORT_CLAIMS hit in `text`, each as '<what> — “…context…”'. `properNouns` are strings the data
  * prints verbatim (tournament names, venue notes, opponents' names): each is removed first, whatever its case, so a
  * name is never read as copy.
  */
 export function noTiesSportClaims(text: string, properNouns: readonly string[] = []): string[] {
-  let cleaned = text;
+  let cleaned = text.replace(CLUB_TIE_WORDS, ' ');
   // Longest first, so a name that contains another is removed whole.
   for (const noun of [...new Set(properNouns)].filter((n) => n.trim().length > 0).sort((a, b) => b.length - a.length)) {
     cleaned = cleaned.replace(new RegExp(noun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'), 'gi'), ' ');

@@ -15,6 +15,7 @@ import { tournamentBracketView } from '../components/playoffs/tournament-bracket
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
 import { getLeague } from '../lib/leagues';
 import { roundSiteOf, withRoundSite } from '../lib/postseason/round-site';
+import { mergeJvAdded } from '../lib/jv/jv-added';
 import { fixtureGame, withFixtureGames } from '../lib/results/fixture-games';
 import { addedGame, applyResultCorrection, resolveResult, withAddedGames } from '../lib/results/result';
 import type { AddedGame, OfficialFixture } from '../lib/types';
@@ -44,11 +45,16 @@ describe('an official fixture no source lists is a game on the schedule', () => 
 
   it('has a URL of its own, and leaves a fixture with a school outside the registry a fixture', () => {
     expect(isOfficialContestId(officialContestId('2026-10-06', 'santa-catalina', 'greenfield'))).toBe(true);
-    expect(gameHref('official:2026-10-06-santa-catalina-at-greenfield')).toBe('/game/official-2026-10-06-santa-catalina-at-greenfield');
     expect(paramToGameId(gameIdToParam('official:2026-10-06-santa-catalina-at-greenfield'))).toBe('official:2026-10-06-santa-catalina-at-greenfield');
     const outside = { ...fixture, id: 'x', awaySlug: null } as OfficialFixture;
     const out = withFixtureGames([], [fixture, outside], '2026-11-14', FETCHED);
     expect(out.listed.map((g) => g.contestId)).toEqual(['official:2026-10-06-santa-catalina-at-greenfield']);
+    // Its page is at its slug: the date and the sides, which is its id without the prefix.
+    expect(out.listed.map((g) => g.slug)).toEqual(['2026-10-06-santa-catalina-at-greenfield']);
+    expect(gameHref(out.listed[0])).toBe('/game/2026-10-06-santa-catalina-at-greenfield');
+    // A slug a stored game holds is not taken twice.
+    const taken = { ...out.listed[0], contestId: 'sblive:1', official: undefined };
+    expect(withFixtureGames([taken], [fixture], '2026-11-14', FETCHED).listed.map((g) => g.slug)).toEqual(['2026-10-06-santa-catalina-at-greenfield-2']);
     expect(out.rest).toEqual([outside]);
     // Once a game carries the fixture's stamp, the fixture adds nothing.
     const matched = { ...fixtureGame(fixture, '2026-11-14', FETCHED)!, contestId: '00000000-0000-4000-8000-00000000abcd' };
@@ -85,6 +91,16 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
     expect(resolveResult(g)).toBeNull();
   });
 
+  it('keeps a third meeting of two division mates out of the league table when it is marked nonLeague', () => {
+    const third: AddedGame = {
+      dateKey: '2026-10-13', time: '16:45', home: 'homestead', away: 'cupertino', goals: { homestead: 3, cupertino: 0 },
+      forfeitBy: null, otPeriods: 0, from: 'derived', nonLeague: true, source: 's', url: null,
+    };
+    const g = addedGame(third, FETCHED)!;
+    expect([g.status, g.isLeague, g.leagueDivision, g.countsFor, g.home.result]).toEqual(['final', false, 'de-anza', null, 'W']);
+    expect(addedGame({ ...third, nonLeague: undefined }, FETCHED)!.countsFor).toBe('de-anza');
+  });
+
   it('goes only into a file that could hold it, and steps aside when a feed lists the pair that day', () => {
     const poway = game({ home: 'poway', away: 'del-norte', hs: 1, as: 0, date: '2026-10-20' });
     const vc = game({ home: 'valley-center', away: 'del-norte', hs: 0, as: 1, date: '2026-10-21' });
@@ -96,6 +112,30 @@ describe('a game an official source has and no feed lists (DATA_QUALITY.addedGam
     expect(withAddedGames(partial, FETCHED, [forfeit])).toBe(partial);
     const listed = [poway, vc, game({ home: 'poway', away: 'valley-center', hs: 0, as: 1, date: '2026-10-30' })];
     expect(withAddedGames(listed, FETCHED, [forfeit])).toBe(listed);
+  });
+
+  it('puts a game reported before its day on the schedule from the day it was reported, scheduled', () => {
+    const poway = game({ home: 'poway', away: 'del-norte', hs: 1, as: 0, date: '2026-10-20' });
+    const vc = game({ home: 'valley-center', away: 'del-norte', hs: 0, as: 1, date: '2026-10-21' });
+    const ahead: AddedGame = { ...forfeit, dateKey: '2026-11-20', goals: null, forfeitBy: null, from: 'derived', reportedOn: '2026-11-14' };
+    const out = withAddedGames([poway, vc], FETCHED, [ahead]);
+    const g = out.find((x) => x.contestId === 'official:2026-11-20-valley-center-at-poway');
+    expect([g?.status, g?.home.score, g?.away.score]).toEqual(['scheduled', null, null]);
+    // Not into a capture from before the report, and not without `reportedOn` (an earlier capture never saw it).
+    expect(withAddedGames([poway, vc], '2026-11-13T12:00:00.000Z', [ahead])).toHaveLength(2);
+    expect(withAddedGames([poway, vc], FETCHED, [{ ...ahead, reportedOn: undefined }])).toHaveLength(2);
+  });
+
+  it('lists the JV game a reported game comes with until a JV game of the pair is listed near its day', () => {
+    const ahead: AddedGame = {
+      ...forfeit, dateKey: '2026-11-20', goals: null, forfeitBy: null, from: 'derived', reportedOn: '2026-11-14',
+      jv: { dateKey: '2026-11-20', time: '16:30' },
+    };
+    const [g] = mergeJvAdded({ games: [], added: [ahead], today: '2026-11-14', fetchedAt: FETCHED }).games;
+    expect([g.contestId, g.dateLocal, g.status, g.home.score]).toEqual(['added-jv:2026-11-20-valley-center-at-poway', '2026-11-20T16:30:00', 'scheduled', null]);
+    expect(mergeJvAdded({ games: [], added: [ahead], today: '2026-11-13', fetchedAt: FETCHED }).added).toEqual([]);
+    const listed = game({ home: 'valley-center', away: 'poway', date: '2026-11-21' });
+    expect(mergeJvAdded({ games: [listed], added: [ahead], today: '2026-11-14', fetchedAt: FETCHED }).added).toEqual([]);
   });
 
   it('puts the 2026 EAL Super Regional’s five unlisted games on the schedule, none with a score', () => {

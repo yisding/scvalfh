@@ -138,11 +138,12 @@ jobs:
       # The basketball test files load every basketball data file through its validating loader (and hold the
       # JV schedule to one JV game per league fixture). When they fail and the stats or JV file changed in this
       # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
+      # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
         run: |
           set -uo pipefail
-          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts; }
+          run() { pnpm exec vitest run tests/basketball.test.ts tests/basketball-standings.test.ts tests/basketball-stats.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts; }
           if run; then exit 0; fi
           if git diff --quiet -- data/basketball/player-stats.json data/basketball/jv.json data/basketball/rosters.json data/basketball/jv-rosters.json; then
             echo "::error::the basketball tests failed and neither the basketball stats nor the basketball JV file changed in this run"

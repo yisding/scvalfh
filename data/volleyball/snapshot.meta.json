@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
-  "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "39383f5baf28d36edf19662ec16bedcc719e485e2093ff76398e835a37c43ec5",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
+  "contentHash": "3857e04d12508fed9a2199e4852b0ddad0c6e204a05dfe9bfb170b6f369c7536",
   "counts": {
     "byLeague": {
       "bval": {
@@ -17,17 +17,31 @@
         "games": 328,
         "leagueGames": 98,
         "teams": 15
+      },
+      "wbal": {
+        "backfilled": 0,
+        "finals": 293,
+        "games": 293,
+        "leagueGames": 72,
+        "teams": 13
+      },
+      "wcal": {
+        "backfilled": 0,
+        "finals": 169,
+        "games": 173,
+        "leagueGames": 30,
+        "teams": 6
       }
     },
-    "finals": 706,
-    "games": 707,
-    "leagueGames": 243,
+    "finals": 1090,
+    "games": 1095,
+    "leagueGames": 345,
     "mismatches": 0,
-    "pending": 0,
-    "teams": 41
+    "pending": 1,
+    "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-14T04:59:00.681Z",
+  "fetchedAt": "2026-11-14T19:17:11.755Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -46,12 +60,30 @@
       "missingPast": 1,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 30,
+      "finalsDelta": 0,
+      "id": "wcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 72,
+      "finalsDelta": 0,
+      "id": "wbal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 1,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 54,
+    "maxpreps": 79,
     "official": 6,
     "sblive": 0
   },
@@ -387,6 +419,131 @@
       "status": "ok"
     },
     {
+      "label": "wcal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "wcal reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "mitty schedule",
+      "rowCount": 35,
+      "status": "ok"
+    },
+    {
+      "label": "riordan schedule",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-cathedral schedule",
+      "rowCount": 40,
+      "status": "ok"
+    },
+    {
+      "label": "saint-francis schedule",
+      "rowCount": 34,
+      "status": "ok"
+    },
+    {
+      "label": "st-ignatius schedule",
+      "rowCount": 40,
+      "status": "ok"
+    },
+    {
+      "label": "valley-christian schedule",
+      "rowCount": 42,
+      "status": "ok"
+    },
+    {
+      "label": "foothill league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "skyline league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "foothill reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "skyline reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "harker schedule",
+      "rowCount": 39,
+      "status": "ok"
+    },
+    {
+      "label": "kings-academy schedule",
+      "rowCount": 34,
+      "status": "ok"
+    },
+    {
+      "label": "menlo schedule",
+      "rowCount": 45,
+      "status": "ok"
+    },
+    {
+      "label": "mercy-burlingame schedule",
+      "rowCount": 33,
+      "status": "ok"
+    },
+    {
+      "label": "notre-dame-belmont schedule",
+      "rowCount": 33,
+      "status": "ok"
+    },
+    {
+      "label": "presentation schedule",
+      "rowCount": 35,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-prep schedule",
+      "rowCount": 34,
+      "status": "ok"
+    },
+    {
+      "label": "castilleja schedule",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "crystal-springs schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "eastside schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "notre-dame-san-jose schedule",
+      "rowCount": 39,
+      "status": "ok"
+    },
+    {
+      "label": "pinewood schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "priory schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "ccs calendar",
       "rowCount": 7,
       "status": "ok"
@@ -410,10 +567,20 @@
       "label": "cif bracket Division III",
       "rowCount": 31,
       "status": "ok"
+    },
+    {
+      "label": "cif bracket Division V",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "cif bracket Open Division",
+      "rowCount": 15,
+      "status": "ok"
     }
   ],
-  "today": "2026-11-13",
-  "warnings": 15,
+  "today": "2026-11-14",
+  "warnings": 17,
   "window": {
     "firstGame": "2026-08-21T19:00:00",
     "lastGame": "2026-11-14T18:00:00",

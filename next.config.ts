@@ -1,5 +1,8 @@
 import type { NextConfig } from 'next';
 
+import { getGames } from './lib/data';
+import { renamedGameRedirects } from './lib/game-aliases';
+
 /**
  * The site is static route families built from one JSON snapshot — pages `/`, `/standings`,
  * `/standings/[league]`, `/schedule`, `/schedule/[league]`, `/scores/[date]`, `/game/[id]`, `/teams`,
@@ -97,6 +100,21 @@ const nextConfig: NextConfig = {
    * What the rule does cover is every route AND the OG image routes AND /manifest.webmanifest AND
    * the four icon routes, all built from the same snapshot and all wanting the same freshness.
    */
+  /**
+   * A game's page is `/game/<slug>` (lib/game-slug.ts), and the slug follows the game: one moved to another day,
+   * or whose host or opponent's name changed, has a new slug, and the one it had is an alias (`Game.aliases`,
+   * lib/game-urls.ts). Each such alias is a 308 to the page it is at now, and the same for its OG image
+   * (lib/game-aliases.ts). Built at build time from the games as the pages read them (lib/data.ts), so a data
+   * commit's redeploy brings the new ones; vinext bakes them into its server entry, so the Worker has them too.
+   *
+   * The OLD ID URLS (`/game/<MaxPreps GUID>` and the rest) are not here: there is one per game published before
+   * slugs, more than the 1,024 redirects a config may carry on Vercel, so proxy.ts answers those.
+   * scripts/smoke-server.sh checks both kinds on all three servers.
+   */
+  async redirects() {
+    return renamedGameRedirects(getGames());
+  },
+
   async headers() {
     return [
       {

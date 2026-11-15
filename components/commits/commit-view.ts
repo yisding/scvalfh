@@ -44,6 +44,7 @@ import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/forma
 import { REGIONS } from '../../lib/league-config/sections';
 import { regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/players/rosters';
+import { SPORT, SPORT_ID } from '../../lib/sports/current';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { capitalized } from '../words/capitalized';
@@ -238,7 +239,7 @@ export function playerCommitLine(teamSlug: TeamSlug, athleteId: string | null): 
   const c = getPlayerCommitment(teamSlug, athleteId);
   if (c === null) return null;
   const { college } = commitProgram(c);
-  const sport = c.sport === 'field-hockey' ? null : SPORT_WORDS[c.sport];
+  const sport = c.sport === SPORT_ID ? null : SPORT_WORDS[c.sport];
   const what = c.status === 'signed' ? 'signing' : 'commitment';
   return {
     status: c.status,
@@ -492,7 +493,7 @@ export function buildCommitsView(): CommitsView {
  *                             lacrosse and 1 in soccer." (the most players first)
  */
 export function ledeWords(trackedTeams: number, commitments: readonly CommitPick[]): string {
-  const opening = `Which players on this site’s ${trackedTeams} varsity rosters have committed to play a sport in college, field hockey or any other, according to public pages that name the player, the college and the sport.`;
+  const opening = `Which players on this site’s ${trackedTeams} varsity rosters have committed to play a sport in college, ${SPORT.noun} or any other, according to public pages that name the player, the college and the sport.`;
   if (commitments.length === 0) return `${opening} No public page we found shows a commitment by a player here yet.`;
   return `${opening} ${countWords(commitments)}`;
 }

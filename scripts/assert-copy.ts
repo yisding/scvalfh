@@ -86,6 +86,9 @@ import path from 'node:path';
 
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/players/clubs';
+import { getRosterEnrichment } from '../lib/players/rosters';
+import { getJvProfilesFile } from '../lib/jv/jv-profiles';
+import { profileLabel } from '../components/teams/roster-view';
 import { getCommitsFile } from '../lib/players/commits';
 import { getSnapshot } from '../lib/data';
 import { gameSentence, thirdPlaceLine } from '../components/history/bracket-view';
@@ -189,9 +192,26 @@ const commitCitedBy = (html: string) =>
 const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set<string>([]);
 const NO_TIES_SKIPPED_BLOCKS: readonly string[] = [];
 /** Strings the snapshot prints verbatim, which are names and never this site's copy. */
-const PROPER_NOUNS: string[] = getSnapshot().games.flatMap((g) =>
-  [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
-);
+const PROPER_NOUNS: string[] = [
+  ...getSnapshot().games.flatMap((g) =>
+    [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
+  ),
+  // What a club's own site says of itself (data/clubs.json, printed on /clubs/<slug>): a club that also runs a
+  // boys' program is a fact about the club, not this site naming another build's program.
+  ...clubsFile.clubs.flatMap((c) => [
+    c.description,
+    ...c.programs.flatMap((p) => [p.name, p.detail]),
+    ...c.sources.map((s) => s.what),
+  ]).filter((s): s is string => typeof s === 'string' && s.length > 0),
+  // A player's own profile in another sport ("NCSA basketball profile", rosters-enrichment.json and
+  // jv-profiles.json `sport`) is a fact about the player, not this site naming another build's program.
+  ...[
+    ...getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+    ...getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+  ]
+    .filter((x) => x.sport !== undefined)
+    .map((x) => profileLabel(x)),
+];
 
 for (const file of files) {
   const html = readFileSync(path.join(APP, file), 'utf8');

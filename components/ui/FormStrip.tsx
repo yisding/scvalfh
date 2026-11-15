@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { OUTCOME_WORDS } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
 import type { Outcome } from '../../lib/types';
 
 import ResultChip, { CHIP_LABEL } from './ResultChip';
@@ -20,7 +19,7 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  * game page's FormGoingIn heading says "League games · oldest → newest".
  *
  * Screen readers get ONE sentence for the whole strip (DESIGN §10.6), never five letters. When
- * the caller supplies contestIds the chips are also links, each with its own label, so both
+ * the caller supplies game links the chips are also links, each with its own label, so both
  * §5.5's sentence and §7.6's per-chip label are present.
  *
  * A LINKED chip is a tap target and is sized like one: a 40px box with an 8px gap (DESIGN §4.4).
@@ -28,8 +27,8 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  */
 export interface FormEntry {
   outcome: Outcome;
-  /** Links the chip to the game page (`gameHref(contestId)`) when the caller has it. */
-  contestId?: string;
+  /** Links the chip to the game page (lib/game-id.ts `gameHref(game)`) when the caller has it. */
+  href?: string;
   opponent?: string;
   score?: string;
   date?: string;
@@ -68,7 +67,7 @@ export function FormStrip({ entries, size = 20, label, className }: FormStripPro
       <span className={['text-meta text-ink-2', className].filter(Boolean).join(' ')}>no results</span>
     );
   }
-  const linked = entries.some((e) => e.contestId);
+  const linked = entries.some((e) => e.href);
   // ONE sentence (DESIGN §10.6). The caller's `label` is already the subject ("Homestead last 4
   // league games"), so the words are appended to it directly; composing it with
   // `formStripLabel()`, which carries its own "Last 4 league games" subject, said it twice.
@@ -82,10 +81,10 @@ export function FormStrip({ entries, size = 20, label, className }: FormStripPro
       {/* `.sx-form`: the chips 2px apart. Position alone says which is newest; there is no marker. */}
       <span className="sx-form" style={linked ? { gap: TAP_GAP } : undefined} aria-hidden={linked ? undefined : 'true'}>
         {entries.map((entry, i) =>
-          entry.contestId ? (
+          entry.href ? (
             <Link
-              key={`${entry.contestId}-${i}`}
-              href={gameHref(entry.contestId)}
+              key={`${entry.href}-${i}`}
+              href={entry.href}
               prefetch={false}
               aria-label={chipLabel(entry)}
               className="inline-flex items-center justify-center"

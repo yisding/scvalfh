@@ -111,7 +111,7 @@ function summarize(games: readonly Game[]): JvListSummary {
   );
   return {
     sbliveScores: games.filter((g) => g.provenance.scores === 'sblive').length,
-    schoolSiteScores: games.filter((g) => g.provenance.scores === 'school-site').length,
+    schoolSiteScores: games.filter((g) => g.provenance.scores === 'school-site' && g.status === 'final').length,
     differs: games.filter((g) => jvDiffersNote(g) !== null).length,
     fromSchedule: scheduled.length,
     scheduleLeague: leagues.size === 1 ? getLeague([...leagues][0]).shortName : null,

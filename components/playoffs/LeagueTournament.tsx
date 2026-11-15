@@ -186,7 +186,7 @@ function gameTie(game: TournamentGameView, idPrefix: string, id: string): TieMod
     lines: [slotLine(game.away, goals(game.away), result('away')), slotLine(game.home, goals(game.home), result('home'))],
     time: game.timeLabel.replace(/ PT$/, ''),
     note: notes.length > 0 ? notes.join(' ') : null,
-    href: game.game ? gameHref(game.game.contestId) : null,
+    href: game.game ? gameHref(game.game) : null,
     sentence: [
       game.outcome ? `${game.line}. ${game.outcome}` : `${game.line}.`,
       game.game && state !== 'upcoming' ? ` ${describeGame(game.game).sentence}` : '',

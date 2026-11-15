@@ -260,6 +260,7 @@ function tie(
   const links: TournamentTie['links'] = [];
   if (upcoming && game?.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (upcoming && game?.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (upcoming && game?.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   const clock = hhmm ? leagueClock(hhmm) : 'TBD';
   return {
     key: m.id,
@@ -270,7 +271,7 @@ function tie(
     time: upcoming ? (dateKey === m.roundDate ? clock : `${shortDate(dateKey).split(' ')[0]} ${clock}`) : null,
     note,
     links,
-    href: game ? gameHref(game.contestId) : null,
+    href: game ? gameHref(game) : null,
     contestId: game ? game.contestId : null,
     gameSeeds: game
       ? {

@@ -20,6 +20,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { ProjectionRow } from '../../components/playoffs/playoff-view';
 import { listWords } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import type { PlayoffStatus, Snapshot } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025 } from '../fixtures/ccs/bracket-2025';
 import { corpusSnapshotPath, writeTempSnapshot } from '../helpers';
@@ -749,7 +750,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     expect(text, PAGE).not.toContain('no games posted yet');
     expect(text, PAGE).not.toContain('CCS has posted');
     // Every game card links its game page; the seed digits are on the cards.
-    for (const g of games) expect(bracket, `${PAGE}: ${g.contestId}`).toContain(`href="/game/${g.contestId}"`);
+    for (const g of games) expect(bracket, `${PAGE}: ${g.contestId}`).toContain(`href="${gameHref(g)}"`);
     expect(bracket, PAGE).toMatch(/<span class="sx-seed sx-num">#(?:<!-- -->)?8<\/span>/);
     const whole = textOf(seededHtml);
     expect(whole, PAGE).not.toContain('Not seeded yet');

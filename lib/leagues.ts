@@ -29,6 +29,8 @@ import { WBAL_SOCCER_LEAGUE } from './league-config/soccer/wbal';
 import { WCAL_SOCCER_LEAGUE } from './league-config/soccer/wcal';
 import { BVAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/bval';
 import { SCVAL_VOLLEYBALL } from './league-config/volleyball/scval';
+import { WBAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/wbal';
+import { WCAL_VOLLEYBALL_LEAGUE } from './league-config/volleyball/wcal';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
   SHOOTOUT_INFERENCES,
@@ -53,12 +55,12 @@ export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
   ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
   : // The soccer build (SCVAL_SPORT=soccer), the basketball build (SCVAL_SPORT=basketball) and the volleyball build
     // (SCVAL_SPORT=volleyball) cover SCVAL and BVAL (BVAL added to the winter builds 2026-11-13, so the ratings
-    // count SCVAL's games against BVAL schools); the soccer build also covers the WCAL and the WBAL (owner request,
-    // 2026-11-14).
+    // count SCVAL's games against BVAL schools); the soccer and volleyball builds also cover the WCAL and the WBAL
+    // (owner requests, 2026-11-14).
     IS_BASKETBALL
     ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
     : IS_VOLLEYBALL
-      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE]
+      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE]
       : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE];
 
 /**
@@ -897,6 +899,13 @@ export function assertLeagues(): void {
     if (o.timeTba !== true) fail(`contestDateOverrides ${id}: timeTba must be true (no source gives a time)`);
     if (!o.source.trim()) fail(`contestDateOverrides ${id}: needs a source`);
     if (id in DATA_QUALITY.excludedContestIds) fail(`contestDateOverrides ${id}: the contest is excluded`);
+  }
+  // A host correction names its contest by GUID and cites its source in one sentence without a final period; a
+  // contest is never both corrected and excluded. That `home` is a side of the stored contest is tests/host-override.test.ts's check.
+  for (const [id, o] of Object.entries(DATA_QUALITY.contestHostOverrides)) {
+    if (!LOWERCASE_GUID_RE.test(id)) fail(`contestHostOverrides: ${id} is not a contest GUID`);
+    if (!o.source.trim() || /\.$/.test(o.source.trim())) fail(`contestHostOverrides ${id}: needs a source, one sentence without a final period`);
+    if (id in DATA_QUALITY.excludedContestIds) fail(`contestHostOverrides ${id}: the contest is excluded`);
   }
   // A moved fixture names an official fixture (`division:date:away@home`), a real date inside its section's
   // season window and other than the official one, one of its two teams as host, and its source.

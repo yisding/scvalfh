@@ -9,7 +9,6 @@ import { GameSourceLine, ResultFlagConflict, SourceDisagreement } from '../../..
 import SeasonSeries from '../../../components/game/SeasonSeries';
 import {
   buildGameView,
-  buildSupersededStub,
   gameDescription,
   gameStaticParams,
   gameTitle,
@@ -39,15 +38,17 @@ import { localDateKey } from '../../../lib/format';
  * text previews the score itself. List rows no longer expand, so every off-site link a row used
  * to offer (Directions, Stream, Tickets, the MaxPreps game) is in Details.
  *
- * `id` is `gameIdToParam(Game.contestId)`: the MaxPreps GUID itself (the snapshot's dedupe key, so
- * it is stable across rebuilds and cannot collide on a doubleheader), or `sblive-<n>` for a game
- * only si.com has (owner decision D2; the contest id `sblive:<n>` has a ':' no path should carry).
- * `buildGameView` runs `paramToGameId` first. A `supersededGames` key — a si.com game MaxPreps has
- * since published — is prerendered as a stub that links (and is canonical to) the MaxPreps game
- * (SPEC §8.1). The OG image's params are exactly these params (`gameStaticParams`).
+ * `id` is the game's slug (`Game.slug`, lib/game-slug.ts): `2026-10-06-santa-catalina-at-greenfield`, the
+ * date and the two sides as the page words the matchup, with `-2` on the second game of a same-day pair. It
+ * is stored with the game, so it is stable across rebuilds, and it follows the game: one moved to another
+ * day has the new date in its URL. Every segment the game was published at before is an alias
+ * (`Game.aliases`, lib/game-urls.ts) and is not a page: a slug it had is a 308 from next.config.ts, and its
+ * contest id, which was the URL before slugs (`/game/<MaxPreps GUID>`, `/game/sblive-<n>`, …), is a 308 from
+ * proxy.ts (lib/game-aliases.ts, SPEC §8.1). The OG image's params are exactly these params
+ * (`gameStaticParams`).
  *
  * No `searchParams` anywhere, so the route stays fully static (DESIGN decision 7), and
- * `dynamicParams = false` means an id that is not in the snapshot 404s instead of being rendered on
+ * `dynamicParams = false` means a slug that is not in the snapshot 404s instead of being rendered on
  * demand from a snapshot that does not have it.
  */
 
@@ -60,25 +61,7 @@ export function generateStaticParams(): Array<{ id: string }> {
 export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Promise<Metadata> {
   const { id } = await params;
   const model = buildGameView(id);
-  if (!model) {
-    const stub = buildSupersededStub(id);
-    if (stub) {
-      const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
-      return {
-        // Absolute when it is the target game's title, which names the sport (as on the game page below).
-        title: stub.targetModel ? { absolute: title } : title,
-        description: stub.sentence,
-        // The canonical alone says "index the MaxPreps game instead". It used to come with
-        // `noindex, follow`, and the two contradict each other: Google's duplicate-URL guidance is
-        // not to noindex a page whose canonical points elsewhere, since the noindex can be carried
-        // over to the target. The stub stays out of the sitemap (app/sitemap.ts).
-        alternates: { canonical: stub.targetHref },
-        // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
-        openGraph: { ...OG_BASE, title },
-      };
-    }
-    return { title: 'Game not found', robots: { index: false, follow: false } };
-  }
+  if (!model) return { title: 'Game not found', robots: { index: false, follow: false } };
   const title = gameTitle(model);
   const description = gameDescription(model);
   return {
@@ -112,20 +95,7 @@ function leagueWords(contextLabel: string): string {
 export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
   const model = buildGameView(id);
-  if (!model) {
-    const stub = buildSupersededStub(id);
-    if (!stub) notFound();
-    return (
-      <div className="pb-section-lg">
-        <h1 className="mt-6 mb-0">{stub.sentence}</h1>
-        <p className="mt-4 mb-0">
-          <Link href={stub.targetHref} className="sx-action">
-            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'}
-          </Link>
-        </p>
-      </div>
-    );
-  }
+  if (!model) notFound();
 
   const { game, away, home, display } = model;
   // A postseason game's place in its bracket (components/playoffs/bracket-place.ts): its round in words, what its

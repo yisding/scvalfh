@@ -18,7 +18,7 @@ import {
   getSection,
   statusesOf,
 } from '../leagues';
-import { CIFSDS_ID_RE, SBLIVE_ID_RE, SnapshotObject } from './snapshot-schema';
+import { CIFSDS_ID_RE, OFFICIAL_ID_RE, SBLIVE_ID_RE, SnapshotObject } from './snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../teams';
 import type { DivisionId, Snapshot, TiebreakStage } from '../types';
 
@@ -300,14 +300,35 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (!getTeamBySlug(r.slug)) issue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
   });
 
-  // 10. superseded si.com games.
+  // 10. superseded si.com games, San Diego bracket sheet games and added games (DATA_QUALITY.addedGames, `official:`).
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from)) {
-      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits> or cifsds:<away>-at-<home>');
+    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from) && !OFFICIAL_ID_RE.test(from)) {
+      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>');
     }
     if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }
+
+  // 11. game URLs (lib/game-urls.ts): each slug one game's, and an alias neither a slug in use (the redirect would
+  // hide that game's page) nor two games'. A game with no slug is not refused here: lib/snapshot/snapshot-load.ts
+  // names it (a file from before slugs, or a game a load step added), and the pipeline names every game it
+  // assembles (lib/pipeline/steps/assemble.ts gameUrlsOf); scripts/lib/prerender-expectations.ts fails a build
+  // whose site has one.
+  const slugs = new Map<string, number>();
+  s.games.forEach((g, i) => {
+    if (g.slug === undefined) return;
+    if (slugs.has(g.slug)) issue(ctx, ['games', i, 'slug'], `duplicate slug in games (${g.slug})`);
+    slugs.set(g.slug, i);
+  });
+  const aliasOwner = new Map<string, number>();
+  s.games.forEach((g, i) => {
+    for (const alias of g.aliases ?? []) {
+      if (g.slug === undefined) issue(ctx, ['games', i, 'aliases'], 'aliases on a game with no slug');
+      if (slugs.has(alias)) issue(ctx, ['games', i, 'aliases'], `alias ${alias} is the slug of a game`);
+      if (aliasOwner.has(alias)) issue(ctx, ['games', i, 'aliases'], `alias ${alias} is listed on two games`);
+      aliasOwner.set(alias, i);
+    }
+  });
 
   // counts in step with the arrays.
   if (s.counts.teams !== s.teams.length) issue(ctx, ['counts', 'teams'], 'counts.teams is stale');

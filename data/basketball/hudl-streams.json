@@ -1,0 +1,406 @@
+{
+  "builtBy": "Hand-run research, 2026-11-14: a headless browser over each covered school's fan.hudl.com page (past livestreams and Nov-Mar schedule), matched to the snapshot's games; see notes and docs/DATA-SOURCES.md (Hudl TV broadcasts).",
+  "capturedAt": "2026-11-14",
+  "notes": [
+    "Each covered school's page on Hudl's fan site (fan.hudl.com) was opened in a browser on 2026-11-14: its past livestreams (every archived broadcast, newest first, read back past 2026-08-01) and its schedule from November 2026 to March 2027, where an event Hudl will stream is marked Upcoming. Two schools were not found on the fan site (James Lick, Notre Dame San Jose).",
+    "A broadcast is matched to a game by the school's team (Hudl's team list gives its sport, gender and level: varsity only), the Pacific date and the opponent. Where the opponent Hudl names differs from the site's, the match was read by hand: an abbreviation or misspelling (RLS for Stevenson, FV for Fountain Valley, Chap for Chaparral, Hollsiter) is confirmed; a venue camera's recording or a title naming no opponent is 'likely'; a different school (Carmel v York, Los Gatos v Leigh, King's v Harker) is not linked.",
+    "A scheduled broadcast's link was read from the school's month schedule (each event opened; the broadcast the event loads), kept when it is the school's only broadcast starting within 15 minutes of the event. The same watch page carries the live stream and then the replay.",
+    "One link per game: a confirmed match before a likely one, the home school's broadcast before the visitor's, then the broadcast nearest the game's start. A game no covered school streams on Hudl has no record; that is not a claim that no stream exists."
+  ],
+  "streams": [
+    {
+      "contestId": "59f44c5c-ab2f-4126-8418-4c0f03e49cfa",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkxNw%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e1b2947e-8682-49ae-8c85-f413962b8b8e",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5MjkzMQ%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "00571397-b698-4005-9ace-0e83e2ebe78f",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkyMA%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl's broadcast is titled \"Kathleen MacDonald High School vs Piedmont High School Mens Varsity Basketball\"; matched on the school, date and start time"
+    },
+    {
+      "contestId": "1fd56346-7a07-494f-8476-92a5a8a4aa72",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI3Nw%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3fd2d412-8441-4ba1-b42f-19b3ccbfafdd",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDEyNA%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a996b608-68ad-4f85-8437-2a59bb88de89",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDEzMw%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f6536c1f-44d7-466d-ada8-8858ba2a60f1",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkyNA%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "51898299-e2e6-4839-b9c7-66b7585453b7",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDE0OQ%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "62faebc0-582b-469f-a3b7-8473c55b124a",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkyNw%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "42d8645f-fbb6-4be3-8e8f-c1e1586840c5",
+      "url": "https://fan.hudl.com/usa/ca/palo-alto/organization/4744/palo-alto-high-school/watch?b=QnJvYWRjYXN0NDcwMDU4Mw%3D%3D",
+      "by": "Palo Alto",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "likely",
+      "note": "Hudl's broadcast is titled \"Burlingame Lions Club Invitational-Day 1, Game 4\"; matched on the school, date and start time"
+    },
+    {
+      "contestId": "54d6616c-a174-4836-8911-39784f4a11c4",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzIyOA%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "5f19c636-041d-4de7-8743-eea0976354c7",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODIyNw%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "efc3bd6a-23d3-4448-9bc2-f86ffc4d5dab",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkyOQ%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e7caad92-2692-462d-b6d9-898470e1255e",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzIzMQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1e9ee7b2-f36f-4d15-bca3-561c4b3b0fca",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI4MA%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "49864163-2087-440d-a4c7-cc8ec14915b7",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkzMQ%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8f61078f-5746-44f9-8994-2694744665de",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzIzNQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "1f22e033-c5bf-4353-bd0f-2e1e95e93973",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkzMw%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4692c6de-22ef-41ec-b3b8-931f23244d9d",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDI3NA%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "4d63e134-94a3-4132-b623-926074339051",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI4OA%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "6ab0bbd6-aa4a-4dca-9cde-586262c724c5",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI0MA%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b3088697-6586-45c9-a192-ca170a598f74",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODM3Nw%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "409c9b8c-5c34-4ff8-9cba-bcae43d380da",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI0NA%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "74dff015-7391-459a-b7b9-cf6d85da55d7",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkzNA%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b4ae5e79-c1b1-4137-a2a2-af5c004ce8ad",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI4OQ%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "ca096645-6508-4e29-847a-d645d66cb6a2",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDI5OQ%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "aebe5a8a-e7cb-4674-a73a-032f93962e9b",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODUwMw%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "b801202c-8698-4fbf-a76d-e80f7e1b66b2",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDMzNw%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "c681b6c3-c48d-4477-951d-276832b40223",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI5MA%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "da0821d6-12d6-4c53-9988-dc2c787f6799",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkzNQ%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e5db9cce-e8b9-4ce9-b94e-0ce5cb92d47e",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI0OQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a586356d-5b5e-4f43-b1f8-d9f8bf93ab8a",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI5Mg%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3908dc84-cac9-41da-8918-3ac9c7ff75b1",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTkzNw%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "40b517e3-d525-4799-8427-9e74d764b436",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDM2Nw%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "0b04dc24-5c74-4a08-8285-a85e15fec6fa",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI5Mw%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "5ba8d0e2-da70-4a2e-acaf-f11cb34112ae",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTk0OQ%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "aecdc2c5-24e6-40f8-963b-38fb5d277b6f",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI1MQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "cd6c603b-91b5-41f2-b26a-367edf326454",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODUzNA%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "28e46889-d404-4d58-902a-1b16b3b1e916",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDM5Mg%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "648cdb28-e9e7-4441-9686-e8acfe2076fc",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODU0OA%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "11e1ebb8-4ac4-4791-8bcb-f3888f15d5bd",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODU2NA%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "8c165e24-2984-42fd-a859-0a7103c28208",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTk1MQ%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "a9523469-a1f2-41a6-94eb-a2f45cee48cb",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI1NQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "e7b899d5-5d95-4986-bf3c-395a2ae8b25c",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI5NQ%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "f6e0123b-3471-4e25-bb49-b9024e4061d6",
+      "url": "https://fan.hudl.com/usa/ca/morgan-hill/organization/18667/live-oak-high-school/watch?b=QnJvYWRjYXN0NDM5NDQwNA%3D%3D",
+      "by": "Live Oak",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "3bf3a556-0a9d-46ac-87eb-23d9ce338405",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/171532/kathleen-macdonald-high-school/watch?b=QnJvYWRjYXN0NDIwNTk1Mg%3D%3D",
+      "by": "MacDonald",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "743e3051-b2bd-448a-8579-414902395d33",
+      "url": "https://fan.hudl.com/usa/ca/los-gatos/organization/28837/los-gatos-high-school/watch?b=QnJvYWRjYXN0NDU1MzI1OQ%3D%3D",
+      "by": "Los Gatos",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "655ecaa8-e170-4a08-998d-b73aa062792c",
+      "url": "https://fan.hudl.com/usa/ca/sunnyvale/organization/19028/fremont-high-school/watch?b=QnJvYWRjYXN0NDYzODI5Ng%3D%3D",
+      "by": "Fremont",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    },
+    {
+      "contestId": "7a29a5a2-6bf9-41f0-b4fa-111cd7763b28",
+      "url": "https://fan.hudl.com/usa/ca/san-jose/organization/17430/evergreen-valley-high-school/watch?b=QnJvYWRjYXN0NDc5ODU5MQ%3D%3D",
+      "by": "Evergreen Valley",
+      "kind": "scheduled",
+      "access": "free",
+      "match": "confirmed"
+    }
+  ]
+}

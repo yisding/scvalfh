@@ -160,7 +160,9 @@ on the schedule whether or not MaxPreps lists it).
 - *A league's own fixture.* An official fixture no source lists is a game on the schedule
   (`lib/results/fixture-games.ts`, contest id `official:<date>-<away>-at-<home>`): the schedule's date, start
   and host, counted for its division, no score. Before its day it is scheduled; after it, "score not reported",
-  never 0-0. It goes the day a source lists the game. On 2026-11-13 that is one PCAL fixture (Santa Catalina at
+  never 0-0. It goes the day a source lists the game, which takes over its page: the same URL when the date is
+  the same (`/game/<date>-<away>-at-<home>`), a redirect to the new one otherwise (the next run records it in
+  `supersededGames` and the game's `aliases`; `lib/game-urls.ts`). On 2026-11-13 that is one PCAL fixture (Santa Catalina at
   Greenfield, Oct 6), 88 girls soccer fixtures and 26 boys basketball fixtures. The site adds them when it reads
   the snapshot; the stored file keeps them as fixtures for the pipeline's matcher.
 - *A game from another official source* (`DATA_QUALITY.addedGames`, each with its citation). Poway's forfeit to
@@ -178,6 +180,15 @@ on the schedule whether or not MaxPreps lists it).
   drawn as a bracket on /playoffs (`#eal-bracket`, `components/playoffs/tournament-bracket-view.ts`): the first
   round, the semifinals and the final, the top two on byes, then the third- and fifth-place games; no seed is
   printed.
+- *A game reported before its day* (`DATA_QUALITY.addedGames` with `reportedOn`). An added game normally joins
+  only a snapshot stamped on or after its own day; one with `reportedOn` joins every snapshot stamped on or after
+  the day it was reported, so it is on the schedule before it is played: scheduled, then "score not reported"
+  after its day, until a feed lists the pair that day (an earlier run's `official:` id then maps to the feed's
+  contest in `supersededGames`). Its `jv` gives the JV game, which `lib/jv/jv-added.ts` lists
+  (`added-jv:<date>-<away>-at-<home>`) until a JV game of the pair is listed within three days of it. Boys
+  basketball: Santa Teresa at Cupertino, Tue Nov 24, 2026, varsity 7:00 and JV 5:30, non-league, given by the
+  owner on 2026-11-14 with Cupertino's own printable schedule (chs.fuhsd.org, updated 11/11/26) and on neither
+  school's MaxPreps schedule that day.
 - *A league game MaxPreps types otherwise* (`leagueGameOverrides`). Granite Hills at Southwest, Oct 16, is on the
   Metro Conference schedule and typed a tournament game; it counts, so Metro South Bay is twelve games and
   Granite Hills 6-0. The two Hilltop at Granite Hills games on Oct 29 and 30 are both real (East County Sports).
@@ -430,9 +441,12 @@ sheet and the 2025 tournament use six, so the site follows the sheet and says so
 
 Play-in (only if needed) Fri Oct 23; quarterfinals Mon Oct 26; semifinals Wed Oct 28 (the
 lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at #2, confirmed by the
-2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. The final's site is Tamalpais High
-School, 700 Miller Ave, Mill Valley, CA 94941 (the schools' HomeCampus calendars name the turf "Tam
-Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, students, children and
+2025 bracket); final Fri Oct 30, all at 4:00 PM. The final was set for Tamalpais High School, 700
+Miller Ave, Mill Valley (the play-off sheet; the schools' HomeCampus calendars name the turf "Tam Turf at
+Bruce Grant Field/Sam Chapman Stadium") and moved to Redwood High School, 395 Doherty Dr, Larkspur, CA
+94939: the MCAL's playoffs page has "Championship Game at Redwood" and "Moved to Redwood High School" (read
+Nov 15, 2026), and MaxPreps still lists Tamalpais as host, so DATA_QUALITY.contestHostOverrides puts the game at
+Redwood and `finalSite` is Redwood; admission is adults $10, students, children and
 seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
 passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
 that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
@@ -445,7 +459,9 @@ regulation game: a one-goal result MaxPreps does not mark as overtime carries th
 config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
 (Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
 Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
-University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
+University) were overtime goals [V: Marin IJ]; and the final, Redwood 2-1 Tamalpais (Fri Oct 30), was
+decided in regulation, its winner four minutes from the end of the fourth quarter (Redwood Bark, Nov 1, 2026), so
+its note says that instead of the caveat. The title rule's source is the MCAL General Rules,
 Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
 is different than the regular season winner, they will also be awarded a pennant."
 Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a

@@ -160,7 +160,7 @@ function cardOf(r: Resolved, resolved: ReadonlyMap<string, Resolved>, today: str
     time: status === 'scheduled' ? when : null,
     clock: status === 'scheduled' ? leagueClock(r.spec.time) : null,
     site: r.spec.venue,
-    href: r.game ? gameHref(r.game.contestId) : null,
+    href: r.game ? gameHref(r.game) : null,
     sentence: [sentence],
     note: notes.join(' · '),
   };

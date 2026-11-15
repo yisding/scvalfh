@@ -27,7 +27,7 @@ import { gameHref } from '../lib/game-id';
 import { getHistoryLastChecked } from '../lib/history/history';
 import { getJvFetchedAt, getJvGamesOn } from '../lib/jv/jv';
 import { getJvProfilesFile } from '../lib/jv/jv-profiles';
-import { HAS_RECRUITING } from '../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
@@ -36,9 +36,9 @@ import { HAS_RECRUITING } from '../lib/sports/current';
  * one per game. The clubs come in lib/players/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
- * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
- * route (`/game/sblive-<id>`). The `supersededGames` stub pages are NOT listed: they are not in
- * `games` (they exist only to keep an old link resolving, with rel=canonical to the MaxPreps game).
+ * Game URLs go through `gameHref`, so each game is listed at its slug (`/game/<slug>`, lib/game-slug.ts),
+ * the one URL its page answers at. An alias (a slug the game had, or its id, the URL before slugs) is NOT
+ * listed: it redirects to the slug (lib/game-aliases.ts).
  *
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
@@ -99,13 +99,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(HAS_RECRUITING
       ? [
           { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
-          // The club calendar (DESIGN §34) takes the day data/club-events.json was last checked.
-          {
-            url: url('/club-calendar'),
-            lastModified: new Date(getClubEventsLastChecked()),
-            changeFrequency: 'monthly' as const,
-            priority: 0.4,
-          },
+          // The club calendar (DESIGN §34) takes the day data/club-events.json was last checked. Field hockey's alone.
+          ...(HAS_CLUB_CALENDAR
+            ? [
+                {
+                  url: url('/club-calendar'),
+                  lastModified: new Date(getClubEventsLastChecked()),
+                  changeFrequency: 'monthly' as const,
+                  priority: 0.4,
+                },
+              ]
+            : []),
           { url: url('/commits'), lastModified: commitsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
           { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
         ]
@@ -158,7 +162,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const gameRoutes: MetadataRoute.Sitemap = games.map((game) => ({
-    url: url(gameHref(game.contestId)),
+    url: url(gameHref(game)),
     lastModified: latestContentDate(gamePageInputs(game, games), getFetchedAt(), removalsForGame(removals, game)),
     changeFrequency: 'weekly',
     priority: 0.4,

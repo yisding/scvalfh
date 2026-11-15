@@ -42,7 +42,7 @@ export interface GameDetailsProps {
 }
 
 /** The links drawn as buttons: somewhere to go for THIS game (the rest are reference pages). */
-const BUTTONS: ReadonlySet<string> = new Set(['Directions', 'NFHS stream', 'Tickets']);
+const BUTTONS: ReadonlySet<string> = new Set(['Directions', 'NFHS stream', 'Hudl TV', 'Tickets']);
 
 export function GameDetails({ model, className }: GameDetailsProps) {
   const { game, home, away, countsAs } = model;
@@ -59,6 +59,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
   const links: Array<{ href: string; label: string }> = [];
   if (address) links.push({ href: mapsSearchHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
@@ -114,13 +115,18 @@ export function GameDetails({ model, className }: GameDetailsProps) {
     <section className={className} aria-labelledby="game-details-kicker">
       <SectionHeader kicker="Details" as="h2" id="game-details-kicker" />
       <dl className="m-0 flex flex-col gap-3 text-body text-ink">
-        {address || game.provenance.hostConflict ? (
+        {address || game.provenance.hostConflict || game.provenance.hostCorrection ? (
           <div>
             <dt className="sr-only">Address</dt>
             <dd className="m-0">
               {address ? <span className="block">{addressLine(address)}</span> : null}
               {game.provenance.hostConflict ? (
                 <span className="block text-cell text-ink-2">Hosts disagree — {game.provenance.hostConflict}</span>
+              ) : null}
+              {/* DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts): the host shown is a better source's,
+                  not MaxPreps'; say so, on whose word (the override's source sentence). */}
+              {game.provenance.hostCorrection ? (
+                <span className="block text-cell text-ink-2">{game.provenance.hostCorrection.source}.</span>
               ) : null}
             </dd>
           </div>

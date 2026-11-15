@@ -18,6 +18,8 @@
 import { z } from 'zod';
 
 import { GUID_RE } from '../game-id';
+import { GAME_SLUG_RE } from '../game-slug';
+import { isGameUrlSegment } from '../game-urls';
 import { dateKey, httpUrl, slugId } from '../schema-primitives';
 import { OFFICIAL_SOURCE_IDS, type Snapshot } from '../types';
 
@@ -29,7 +31,11 @@ const id = slugId;
 export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
 export const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
-/** A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts); never in a stored file. */
+/**
+ * A league-schedule fixture no source lists, as the site reads it (lib/results/fixture-games.ts; never in a stored
+ * file), or a game no feed lists recorded from DATA_QUALITY.addedGames (stored, and a `supersededGames` key once a
+ * feed lists it).
+ */
 export const OFFICIAL_ID_RE = /^official:\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
 const contestId = z
@@ -190,6 +196,8 @@ const backfillProvenance = z.object({
 export const GameSchema = z
   .object({
     contestId,
+    slug: z.string().regex(GAME_SLUG_RE, 'a game slug is <YYYY-MM-DD>-<words>').optional(),
+    aliases: z.array(z.string().refine(isGameUrlSegment, 'an alias is a game slug or a legacy id param')).min(1).optional(),
     dateLocal: z.string().min(10),
     dateUtc: z.string().min(10),
     dateKey: dateOnly,
@@ -279,6 +287,9 @@ export const GameSchema = z
       contentChangedAt: z.string().min(20).optional(),
       leagueFlagConflict: z.string().optional(),
       hostConflict: z.string().optional(),
+      hostCorrection: z
+        .object({ maxprepsHome: z.string().min(1), source: z.string().min(1), url: httpUrl.nullable() })
+        .optional(),
       resultConflict: z.string().optional(),
       classificationNote: z.string().optional(),
       dateCorrection: z
@@ -743,6 +754,8 @@ export const SnapshotObject = z.object({
         dateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         slugs: z.array(z.string().min(1)),
         removedAt: z.string().min(20),
+        slug: z.string().regex(GAME_SLUG_RE).optional(),
+        aliases: z.array(z.string().refine(isGameUrlSegment)).min(1).optional(),
       }),
     )
     .optional(),

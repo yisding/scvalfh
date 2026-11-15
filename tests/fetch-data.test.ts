@@ -391,7 +391,7 @@ describe('fetch-data: flags', () => {
 });
 
 describe('fetch-data: the season-window guard', () => {
-  it('exits 0 with "out of season" and touches nothing outside Aug 1 - Nov 30', () => {
+  it('exits 0 with "out of season" and touches nothing outside Aug 1 - Nov 21', () => {
     for (const month of ['07', '12']) {
       const res = runFixtureCli({ corpus: 'scval', fetchedAt: `2026-${month}-15T20:00:00.000Z` });
       expect(res.status, res.output).toBe(0);

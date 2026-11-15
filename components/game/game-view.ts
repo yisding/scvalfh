@@ -24,11 +24,11 @@
 import { orderNoun } from '../../lib/standings/order';
 import {
   getGameById,
+  getGameBySlug,
   getGames,
   getLeagueTournament,
   getSbliveCrossCheck,
   getStandingFor,
-  getSupersededGames,
   getTeamBySlug,
   getTeamForm,
   getTeams,
@@ -44,7 +44,8 @@ import {
   sideOutcome,
   timeOfDayPT,
 } from '../../lib/format';
-import { gameHref, gameIdToParam, isPrefixedContestId, paramToGameId } from '../../lib/game-id';
+import { gameHref } from '../../lib/game-id';
+import { gameSlug } from '../../lib/game-slug';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import {
   divisionDisplay,
@@ -182,9 +183,9 @@ export interface CountsAs {
 
 export interface GameModel {
   game: Game;
-  /** The URL param: `gameIdToParam(contestId)`. */
+  /** The URL param: the game's slug (lib/game-slug.ts). */
   param: string;
-  /** `gameHref(contestId)`, the canonical path. */
+  /** `gameHref(game)`, the canonical path. */
   canonical: string;
   display: GameDisplay;
   /**
@@ -243,21 +244,6 @@ export interface GameModel {
   dayLabel: string;
   /** "Sep 24, 2026 · 4:00 PM PT", or the date alone when the time is TBA. */
   whenLabel: string;
-}
-
-/** A `/game/sblive-<id>` page whose si.com game a MaxPreps contest has since superseded (SPEC §8.1). */
-export interface SupersededStub {
-  param: string;
-  /** The si.com contest id (`sblive:<n>`). */
-  contestId: string;
-  /** The MaxPreps contest that replaced it. */
-  target: string;
-  /** `gameHref(target)`: the link AND the canonical. */
-  targetHref: string;
-  /** `<SHORT> game — this result is now on MaxPreps.` */
-  sentence: string;
-  /** The target game's model (the OG card renders it), when the target is in the snapshot. */
-  targetModel: GameModel | undefined;
 }
 
 // ---------------------------------------------------------------- helpers
@@ -411,6 +397,8 @@ function resultLinksFor(game: Game): GameLink[] {
     );
   }
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  // The Hudl TV broadcast's page carries the replay once the game is over (lib/streams/hudl-streams.ts).
+  if (game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   return links;
 }
 
@@ -433,7 +421,7 @@ function formBefore(game: Game, side: GameSide): { entries: FormEntry[]; playedB
   const decided = before.filter((g) => g.outcome !== null);
   const entries: FormEntry[] = decided.slice(-5).map((g) => ({
     outcome: g.outcome as Outcome,
-    contestId: g.contestId,
+    href: hrefOfContest(g.contestId),
     opponent: g.opponent,
     date: monthDay(g.date),
   }));
@@ -974,29 +962,40 @@ function countsAsFor(game: Game): CountsAs {
 // ---------------------------------------------------------------- params
 
 /**
- * The /game/[id] params: every game (`gameIdToParam`, so `sblive:123` → `sblive-123`) plus every
- * superseded si.com id (stub pages). The page AND its opengraph-image both return exactly this
- * (SPEC §8.1, §10.6), so the OG URL a page points at always exists.
+ * The /game/[id] params: every game's slug (lib/game-slug.ts: `2026-10-06-santa-catalina-at-greenfield`). The
+ * page AND its opengraph-image both return exactly this (SPEC §8.1, §10.6), so the OG URL a page points at
+ * always exists. An alias is not one (a slug the game had, or its id, the URL before slugs): next.config.ts
+ * and proxy.ts redirect those to the slug (lib/game-aliases.ts).
  */
 export function gameStaticParams(): Array<{ id: string }> {
-  const ids = [
-    ...getGames().map((g) => gameIdToParam(g.contestId)),
-    ...Object.keys(getSupersededGames()).map((id) => gameIdToParam(id)),
-  ];
-  return [...new Set(ids)].map((id) => ({ id }));
+  return [...new Set(getGames().map((g) => gameSlug(g)))].map((id) => ({ id }));
+}
+
+/** The link to a contest's page, when it is a game the site lists. */
+function hrefOfContest(contestId: string): string | undefined {
+  const game = getGameById(contestId);
+  return game ? gameHref(game) : undefined;
 }
 
 // ---------------------------------------------------------------- the model
 
 /**
- * `undefined` for a param that is not a game in the snapshot — the page turns that into a 404 (or a
- * superseded stub). `param` is the URL segment: `paramToGameId` runs FIRST, so `sblive-123` finds
- * `sblive:123`, and no accessor that can throw runs for an unknown id.
+ * `undefined` for a param that is not a game's slug — the page turns that into a 404 (an alias never
+ * gets here: it is redirected before a page is looked for). `param` is the URL segment, looked up as
+ * it is, so no accessor that can throw runs for an unknown one.
  */
 export function buildGameView(param: string): GameModel | undefined {
-  const contestId = paramToGameId(param);
+  const game = getGameBySlug(param);
+  return game ? buildGameModel(game) : undefined;
+}
+
+/** The model of the game with this contest id, wherever its page is; `undefined` when the site does not list it. */
+export function buildGameViewOf(contestId: string): GameModel | undefined {
   const game = getGameById(contestId);
-  if (!game) return undefined;
+  return game ? buildGameModel(game) : undefined;
+}
+
+function buildGameModel(game: Game): GameModel {
   const display = describeGame(game);
   const away = sideModel(game, game.away, display.away, display);
   const home = sideModel(game, game.home, display.home, display);
@@ -1009,8 +1008,8 @@ export function buildGameView(param: string): GameModel | undefined {
 
   return {
     game,
-    param: gameIdToParam(game.contestId),
-    canonical: gameHref(game.contestId),
+    param: gameSlug(game),
+    canonical: gameHref(game),
     display,
     resultLinks: resultLinksFor(game),
     away,
@@ -1045,32 +1044,6 @@ export function buildGameView(param: string): GameModel | undefined {
     conflict: conflictFor(game),
     source: sourceFor(game),
     resultConflictNote: resultConflictNoteFor(game),
-  };
-}
-
-/**
- * The stub for a superseded si.com or bracket-sheet game (`/game/sblive-<id>`, `/game/cifsds-<away>-at-<home>`, whose result MaxPreps now has):
- * `<SHORT> game — this result is now on MaxPreps.`, linking and canonical to the MaxPreps game.
- * undefined for any other param.
- */
-export function buildSupersededStub(param: string): SupersededStub | undefined {
-  const contestId = paramToGameId(param);
-  // Only a non-MaxPreps id (an si.com game, or a San Diego bracket-sheet game) can be superseded,
-  // and the map is a plain JSON object: an own-property lookup, so 'constructor' or '__proto__'
-  // never reads Object.prototype as a "target".
-  if (!isPrefixedContestId(contestId)) return undefined;
-  const map = getSupersededGames();
-  const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
-  if (typeof target !== 'string' || target === '') return undefined;
-  const targetModel = buildGameView(gameIdToParam(target));
-  const short = targetModel?.league?.shortName;
-  return {
-    param: gameIdToParam(contestId),
-    contestId,
-    target,
-    targetHref: gameHref(target),
-    sentence: `${short ? `${short} game` : 'Game'} — this result is now on MaxPreps.`,
-    targetModel,
   };
 }
 

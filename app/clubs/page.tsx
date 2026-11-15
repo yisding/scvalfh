@@ -9,7 +9,7 @@ import RecruitingTabs from '../../components/recruiting/RecruitingTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
 import { notFound } from 'next/navigation';
-import { HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_RECRUITING, SPORT } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club teams';
@@ -47,13 +47,13 @@ const PAGE_TITLE = 'Club teams';
  */
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `The youth field hockey clubs that players on the ${getRosters().teams.length} varsity rosters here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
+  description: `The youth ${SPORT.noun} clubs that players on the ${getRosters().teams.length} varsity rosters here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
   alternates: { canonical: '/clubs' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/clubs' },
 };
 
 export default function ClubsPage() {
-  // Field hockey's alone (club teams): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  // Field hockey's and volleyball's (club teams): another build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
   if (!HAS_RECRUITING) notFound();
   const view = buildClubsIndexView();
 
@@ -62,13 +62,15 @@ export default function ClubsPage() {
       <PageHeader title="Club teams">
         <RecruitingTabs current="clubs" />
       </PageHeader>
-      <ul className="sx-linkrow">
-        <li>
-          <Link href="/club-calendar" prefetch={false} className="sx-action">
-            Club calendar: when and where NorCal club teams play
-          </Link>
-        </li>
-      </ul>
+      {HAS_CLUB_CALENDAR ? (
+        <ul className="sx-linkrow">
+          <li>
+            <Link href="/club-calendar" prefetch={false} className="sx-action">
+              Club calendar: when and where NorCal club teams play
+            </Link>
+          </li>
+        </ul>
+      ) : null}
 
       {view.regions.map((region, i) => (
         <section

@@ -263,7 +263,7 @@ describe('scripts/fetch-player-stats.ts --fixtures', () => {
 
   it('writes nothing outside the season window unless forced', () => {
     const out = tmpOut();
-    // 2026-07-15 noon Pacific: July, outside Aug 1 – Nov 30.
+    // 2026-07-15 noon Pacific: July, outside Aug 1 – Nov 21.
     const log = buildFromFixtures(out, '2026-07-15T19:00:00.000Z');
     expect(log).toContain('out of season: 2026-07-15');
     expect(existsSync(out)).toBe(false);

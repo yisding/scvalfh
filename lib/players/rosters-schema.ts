@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from '../leagues';
 import { dateKey, httpUrl, httpsUrl, playerId, slugId } from '../schema-primitives';
+import { SPORT_ID } from '../sports/current';
 import { contentKey } from '../stable-json';
 import { TEAMS, getTeamBySlug } from '../teams';
 
@@ -220,6 +221,8 @@ export const ENRICHMENT_KINDS = [
   'maxpreps-career',
   /** a MaxPreps team home page (coach names) */
   'maxpreps-team',
+  /** the team's own page on Hudl, kept by its coaches: its roster and the players' profiles */
+  'hudl',
 ] as const;
 const enrichmentKind = z.enum(ENRICHMENT_KINDS);
 
@@ -244,6 +247,21 @@ export const EnrichedGradeSchema = z.object({
   derived: z.boolean(),
   ...sourced,
 });
+
+/**
+ * A name for a row MaxPreps names nobody on: its stat-entry stand-in, "Player #11"
+ * (lib/players/placeholder-name.ts), which another source ties to a player by the same number on the
+ * same team this season. Never a second spelling of a name MaxPreps has (that is `sourceName`).
+ */
+export const EnrichedNameSchema = z
+  .object({
+    /** As the source spells it: "Grace Gnagne". */
+    value: z.string().min(1),
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    ...sourced,
+  })
+  .refine((n) => n.value === `${n.firstName} ${n.lastName}`, 'value must be firstName and lastName joined with a space');
 
 export const EnrichedPositionsSchema = z.object({
   value: z.array(z.string().min(1)).min(1),
@@ -324,9 +342,13 @@ export const PlayerProfileSchema = z
     /** The graduation year the profile states, when it states one. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     note: z.string().min(1).nullable(),
-    /** The profile's sport when it is not field hockey; a field hockey profile has none. */
-    sport: z.enum(COMMIT_SPORTS).exclude(['field-hockey']).optional(),
+    /**
+     * The profile's sport when it is not the build's own (field hockey's file names no field hockey profile's
+     * sport, volleyball's no volleyball profile's); a profile in the build's sport has none.
+     */
+    sport: z.enum(COMMIT_SPORTS).optional(),
   })
+  .refine((p) => p.sport !== SPORT_ID, { message: `a ${SPORT_ID} profile names no sport: it is this build's own`, path: ['sport'] })
   .refine((p) => {
     const host = hostOf(p.url);
     if (host === null) return false;
@@ -336,8 +358,8 @@ export const PlayerProfileSchema = z
   }, 'url is not a valid URL on the platform it names')
   .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none');
 
-/** A profile's uniqueness key, platform and sport (field hockey when it names none): one profile per pair. */
-export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? 'field-hockey'}`;
+/** A profile's uniqueness key, platform and sport (the build's own when it names none): one profile per pair. */
+export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? SPORT_ID}`;
 
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({
@@ -362,6 +384,8 @@ export const EnrichedPlayerSchema = z
     fullName: z.string().min(1),
     /** As the source spells it, when that differs (e.g. "Gabriella" for "Gigi"). */
     sourceName: z.string().min(1).nullable(),
+    /** The name of a row MaxPreps names nobody on ("Player #11"); only on such a row (lib/players/rosters.ts checks). */
+    name: EnrichedNameSchema.nullable().optional(),
     /** Only where a school source says which squad a row belongs to (Los Gatos). */
     level: z.enum(['varsity', 'jv']).nullable(),
     levelSource: httpUrl.nullable(),
@@ -376,7 +400,7 @@ export const EnrichedPlayerSchema = z
   })
   .refine(
     (p) =>
-      p.sourceName !== null || p.level !== null || p.grade !== null || p.positions !== null ||
+      p.sourceName !== null || (p.name ?? null) !== null || p.level !== null || p.grade !== null || p.positions !== null ||
       p.jersey !== null || p.height !== null || p.conflicts.length > 0 || p.profiles.length > 0,
     'an enrichment record must add something',
   )
@@ -431,6 +455,7 @@ export const RosterEnrichmentSchema = z
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;
 export type EnrichedJersey = z.infer<typeof EnrichedJerseySchema>;
+export type EnrichedName = z.infer<typeof EnrichedNameSchema>;
 export type EnrichedHeight = z.infer<typeof EnrichedHeightSchema>;
 export type PlayerProfile = z.infer<typeof PlayerProfileSchema>;
 export type RosterConflict = z.infer<typeof RosterConflictSchema>;

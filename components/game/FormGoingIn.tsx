@@ -27,7 +27,7 @@ export interface FormGoingInProps {
 
 /** The chips as the standings' Last 5 draws them: five 16px letters, 2px apart, not five links. */
 function unlinked(entry: FormEntry): FormEntry {
-  return { ...entry, contestId: undefined };
+  return { ...entry, href: undefined };
 }
 
 function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: number }) {

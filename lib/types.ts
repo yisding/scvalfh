@@ -300,6 +300,11 @@ export interface AddedGame {
   from: 'cifss' | 'derived';
   /** true for a game at a neutral site (a tournament day at one school): `home` is then only the listed side. */
   neutral?: true;
+  /**
+   * true for a game the two schools played outside their league schedule although they share a division (a third
+   * meeting): it is not flagged as a league game, so it counts for no table, as a MaxPreps non-league game would.
+   */
+  nonLeague?: true;
   /** The field the source names ('Pleasant Valley High School'). */
   venue?: string;
   /** The team the source says won a game it gives no score for: marked W and L on the sides, with no score. */
@@ -308,6 +313,17 @@ export interface AddedGame {
   certainty?: 'reported';
   /** What the source says of a game it gives no score for (who won, where), printed as the game's note. */
   note?: string;
+  /**
+   * The day the source gave a game still to be played (YYYY-MM-DD): the game joins every file stamped on or after
+   * it, so it is on the schedule before its day. Absent for a game reported after it was played, which joins the
+   * files stamped on or after its own day (an earlier capture never saw it).
+   */
+  reportedOn?: string;
+  /**
+   * The JV game the source gives with it (Cupertino's JV plays Santa Teresa's at 5:30 before the 7:00 varsity
+   * game): lib/jv/jv-added.ts lists it as a JV game until MaxPreps lists the pair's JV game.
+   */
+  jv?: { dateKey: string; time: string | null };
   otPeriods: number;
   /** The source and what it says, one sentence without a final period. */
   source: string;
@@ -471,6 +487,18 @@ export interface BackfillProvenance {
 
 export interface Game {
   contestId: ContestId;
+  /**
+   * The game's URL segment, `/game/<slug>` (lib/game-slug.ts: `2026-10-06-santa-catalina-at-greenfield`). Stored:
+   * the pipeline assigns it with the previous snapshot beside it (lib/game-urls.ts), and a file written before slugs
+   * existed gets its slugs on load, so every game the site reads has one. Absent only on a game not assembled yet.
+   */
+  slug?: string;
+  /**
+   * Every other segment this game was published at: a slug it had before its date, host or opponent's name changed,
+   * its legacy id param (`/game/<contest id>` was the URL before slugs), and those of the games it superseded. Each
+   * redirects to `slug` (next.config.ts, proxy.ts). Absent when there are none.
+   */
+  aliases?: string[];
   dateLocal: string;
   dateUtc: string;
   dateKey: string;
@@ -524,6 +552,11 @@ export interface Game {
     /** The San Diego Section's bracket sheet, when the published score is the Section's (`provenance.scores === 'cifsds-sheet'`). */
     cifsds?: string;
     nfhsStream: string | null;
+    /**
+     * The game's Hudl TV broadcast (its fan.hudl.com watch page: the live stream, then the replay), from
+     * data/hudl-streams.json (lib/streams/hudl-streams.ts). Added where the site reads the snapshot, never stored.
+     */
+    hudl?: string;
     goFan: string | null;
   };
   provenance: {
@@ -588,6 +621,12 @@ export interface Game {
     contentChangedAt?: string;
     leagueFlagConflict?: string;
     hostConflict?: string;
+    /**
+     * Set when DATA_QUALITY.contestHostOverrides (lib/results/host-override.ts) swapped the sides because the game was
+     * played at the school MaxPreps lists as the visitor: MaxPreps' host's slug and the override's citation, which the
+     * game page prints.
+     */
+    hostCorrection?: { maxprepsHome: TeamSlug; source: string; url: string | null };
     /** NEW. D2 rule 4a evidence: result flags contradict the score, or the two rows disagree. */
     resultConflict?: string;
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
@@ -1195,6 +1234,13 @@ export interface ContentRemoval {
   slugs: TeamSlug[];
   /** The run that saw it gone (that run's `fetchedAt`). */
   removedAt: string;
+  /**
+   * Where its page was, when the contest left the snapshot altogether (not when it only changed its date): its slug
+   * and aliases then (lib/game-urls.ts). If the contest comes back, every one of them is an alias of it again
+   * (lib/pipeline/steps/assemble.ts gameUrlsOf), so a link to the page it had still arrives.
+   */
+  slug?: string;
+  aliases?: string[];
 }
 
 export interface Snapshot {
@@ -1224,9 +1270,11 @@ export interface Snapshot {
   /** Official fixtures, ALL leagues, that matched no published game. */
   officialFixtures?: OfficialFixture[];
   /**
-   * NEW. 'sblive:<id>' games that D2 published in an earlier run and that a MaxPreps contest has since superseded
-   * (rule 10), mapped to that contest. Carried forward for the season so /game/sblive-<id> keeps resolving as a
-   * stub page (canonical → the MaxPreps game). Empty object when none.
+   * NEW. Games an earlier build published that a MaxPreps contest has since superseded (D2 rule 10: an si.com
+   * `sblive:` fill, a San Diego bracket-sheet `cifsds:` game, an added or league-schedule `official:` game), mapped
+   * to that contest. Carried forward for the season. The pipeline reads it when it assigns URLs: the contest
+   * takes over the superseded game's slug and aliases, its old id URL among them (lib/game-urls.ts), so every
+   * URL it was published at still arrives. Empty object when none.
    */
   supersededGames: Record<ContestId, ContestId>;
   /**

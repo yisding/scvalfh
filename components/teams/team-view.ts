@@ -39,6 +39,7 @@ import {
   mapsSearchHref,
   noMoreGamesSentence,
 } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import { CCS } from '../../lib/league-config/sections';
 import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
@@ -676,6 +677,7 @@ function nextChips(game: Game): NextChip[] {
   if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
   if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (game.urls.hudl) chips.push({ href: game.urls.hudl, label: 'Hudl TV' });
   if (game.urls.goFan) chips.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) chips.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   return chips;
@@ -829,7 +831,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     return {
       // A final always has an outcome; the fallback keeps the type honest rather than asserting.
       outcome: outcome ?? 'T',
-      contestId: game.contestId,
+      href: gameHref(game),
       opponent: theirs.slug ? (getTeamBySlug(theirs.slug)?.shortName ?? theirs.name) : theirs.name,
       score: scorePair(game, team.id),
       date: monthDay(game.dateLocal),

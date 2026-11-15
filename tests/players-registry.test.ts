@@ -684,6 +684,17 @@ describe('what the reviewers broke', () => {
     expect(named(back, 'Quit Early')[0].stints.map((s) => `${s.jersey} ${s.gone ?? false}`)).toEqual(['14 false']);
   });
 
+  it('a "Player #N" stand-in a previous build made a player of is not remembered once no source lists it', () => {
+    // Gilroy volleyball, 2026-10: two stand-ins once made one registry player, "null Player #12".
+    const before = build([
+      row({ name: 'Ada Stone', careerIds: ['c1'], obs: { jersey: '9' } }),
+      row({ name: 'null Player #12', careerIds: ['c12'], obs: { jersey: '12' } }),
+    ]);
+    expect(before.players).toHaveLength(2);
+    const after = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { jersey: '9' } })], { previous: before });
+    expect(after.players.map((p) => p.name)).toEqual(['Ada Stone']);
+  });
+
   it('a player whose career id passes to somebody else between builds is kept, under her name', () => {
     const before = build([row({ name: 'Ada Stone', careerIds: ['c1'], obs: { grade: 11, jersey: '9' } })]);
     const after = build([row({ name: 'Bob Jones', careerIds: ['c1'], obs: { grade: 10 } })], { previous: before });
@@ -904,6 +915,116 @@ describe('the sources as sightings', () => {
     );
     expect(sightings.map((s) => s.careerIds)).toEqual([['c1']]);
     expect(skipped).toEqual(['soccer jv-rosters is for season 26-27, the rosters for 27-28: left out']);
+  });
+
+  it("MaxPreps' \"Player #N\" stand-ins are nobody: no sighting from a roster row or a stat line (Gilroy volleyball, 2026-10)", () => {
+    // Gilroy's #11 and #12 once came out as one registry player under "null Player #12".
+    const { sightings } = currentSeasonSightings(
+      {
+        sport: 'volleyball',
+        rosters: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                rosterRow({}),
+                rosterRow({ athleteId: 'a11', careerId: 'c11', firstName: null, lastName: 'Player #11', fullName: 'null Player #11', jersey: '11', positions: [], isCaptain: false }),
+                rosterRow({ athleteId: 'a12', careerId: 'c12', firstName: null, lastName: 'Player #12', fullName: 'Player #12', jersey: '12', positions: [], isCaptain: false }),
+              ],
+            },
+          ],
+        },
+        jvRosters: null,
+        enrichment: null,
+        playerStats: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                { careerId: 'c11', fullName: 'Player #11', shortName: 'Player #11', jersey: '11', onRoster: false },
+                { careerId: 'c12', fullName: 'null Player #12', shortName: 'Player #12', jersey: '12', onRoster: true },
+              ],
+            },
+          ],
+        },
+        jvSchoolSites: null,
+        jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings.map((s) => s.careerIds)).toEqual([['c1']]);
+  });
+
+  it('a "Player #N" stand-in the overlay names is that player, under the name its source gives', () => {
+    const { sightings } = currentSeasonSightings(
+      {
+        sport: 'volleyball',
+        rosters: {
+          season: '26-27',
+          teams: [{ slug: 'gilroy', players: [rosterRow({ athleteId: 'a12', careerId: 'c12', firstName: null, lastName: 'Player #12', fullName: 'Player #12', jersey: '12', positions: [], isCaptain: false })] }],
+        },
+        jvRosters: null,
+        enrichment: {
+          season: '26-27',
+          teams: [
+            {
+              slug: 'gilroy',
+              players: [
+                {
+                  athleteId: 'a12', fullName: 'Player #12', sourceName: null, level: null,
+                  name: { value: 'Grace Gnagne', firstName: 'Grace', lastName: 'Gnagne', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
+                  grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                },
+              ],
+            },
+          ],
+        },
+        playerStats: null,
+        jvSchoolSites: null,
+        jvProfiles: null,
+      },
+      NO_IDENTITY,
+    );
+    expect(sightings).toHaveLength(1);
+    expect(sightings[0]).toMatchObject({ careerIds: ['c12'], nameKeys: ['gracegnagne'], firstName: 'Grace', lastName: 'Gnagne' });
+    expect(sightings[0].observations).toEqual([
+      { src: 'maxpreps-roster', jersey: '12', athleteId: 'a12' },
+      { src: 'enrichment', kind: 'hudl', url: 'https://www.hudl.com/profile/1', name: 'Grace Gnagne' },
+    ]);
+    expect(build(sightings).players.map((p) => p.name)).toEqual(['Grace Gnagne']);
+  });
+
+  it('refuses an overlay name on a row MaxPreps already names, as the roster loader does', () => {
+    expect(() =>
+      currentSeasonSightings(
+        {
+          sport: 'volleyball',
+          rosters: { season: '26-27', teams: [{ slug: 'alpha', players: [rosterRow({})] }] },
+          jvRosters: null,
+          enrichment: {
+            season: '26-27',
+            teams: [
+              {
+                slug: 'alpha',
+                players: [
+                  {
+                    athleteId: 'a1', fullName: 'Xia Lam', sourceName: null, level: null,
+                    name: { value: 'Ann Other', firstName: 'Ann', lastName: 'Other', kind: 'hudl', source: 'https://www.hudl.com/profile/1' },
+                    grade: null, positions: null, jersey: null, height: null, conflicts: [], profiles: [],
+                  },
+                ],
+              },
+            ],
+          },
+          playerStats: null,
+          jvSchoolSites: null,
+          jvProfiles: null,
+        },
+        NO_IDENTITY,
+      ),
+    ).toThrow(/alpha \/ Xia Lam: rosters-enrichment names a row that is not a numbered "Player #N" stand-in/);
   });
 
   it('a past season is its stat sheets and its all-league lists', () => {

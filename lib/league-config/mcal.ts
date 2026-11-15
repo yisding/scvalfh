@@ -92,15 +92,17 @@ export const MCAL: LeagueConfig = {
       { id: 'qf-2', round: 'quarterfinal', date: '2026-10-26', time: '16:00', optional: false, pairing: '6 at 3' },
       { id: 'sf-1', round: 'semifinal', date: '2026-10-28', time: '16:00', optional: false, pairing: 'Lowest-ranked remaining seed at 1' },
       { id: 'sf-2', round: 'semifinal', date: '2026-10-28', time: '16:00', optional: false, pairing: 'Highest-ranked remaining seed of 3-6 at 2' },
-      { id: 'final', round: 'final', date: '2026-10-30', time: '16:00', optional: false, pairing: 'Semifinal winners, at Tamalpais' },
+      { id: 'final', round: 'final', date: '2026-10-30', time: '16:00', optional: false, pairing: 'Semifinal winners, at Redwood (moved from Tamalpais)' },
     ],
     finalSite: {
-      slug: 'tamalpais', label: 'Tamalpais',
-      venue: 'Tamalpais High School',
-      // On campus: the schools' HomeCampus calendars (cifncshome.org; Redwood's Oct 30 event "MCAL Championship Game",
-      // facility Tamalpais, 700 Miller Ave, Mill Valley, California, 94941, the address data/schools.json holds for
-      // tamalpais; Tam's Oct 28 semifinal names the turf: "Tam Turf at Bruce Grant Field/Sam Chapman Stadium").
-      // Research of 2026-10-29.
+      slug: 'redwood', label: 'Redwood',
+      venue: 'Redwood High School',
+      // Moved to Redwood. The 2026 play-off sheet and both schools' HomeCampus calendars (cifncshome.org, read Oct 29:
+      // Redwood's Oct 30 event "MCAL Championship Game", facility Tamalpais, 700 Miller Ave, Mill Valley) had the final
+      // at Tamalpais, and MaxPreps still lists it there. The MCAL's playoffs page (mcalsports.org/FieldHockey.htm, read
+      // Nov 15, 2026): "Championship Game at Redwood: Redwood W vs Tamalpais L", "Moved to Redwood High School"; the
+      // Redwood Bark (Nov 1) has the win "on their home field". The game itself is put at Redwood by
+      // DATA_QUALITY.contestHostOverrides. The admission line is unchanged on the playoffs page.
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     },
@@ -119,9 +121,15 @@ export const MCAL: LeagueConfig = {
     // one-goal caveat cannot catch. DATA_QUALITY.resultCorrections records the game as it was played (0-0, two
     // overtimes, a 3-1 shootout) wherever the site or the pipeline reads it; the file a run fetched before the correction
     // existed still holds 3-1 until the next refresh. This sentence says so on the bracket.
+    // The final, Fri Oct 30: a one-goal regulation result, so the generic caveat would say it may hide a shootout. The
+    // Redwood Bark (Nov 1, 2026, "Varsity field hockey defeats Tamalpais 2-1 to claim MCAL championship") times all three
+    // goals in play, the winner "with just four minutes remaining in the fourth quarter", so it was decided in regulation
+    // and MaxPreps' 2-1 stands.
     resultNotes: {
       '7bb048ba-9e33-4ad1-a743-2348c6637602':
         'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1 (Marin Independent Journal, Oct 28, 2026). MaxPreps records the shootout tally, 3–1, as the score.',
+      '8f8d3fe5-f112-4d22-a5a6-44e027ada681':
+        'Decided in regulation: Redwood’s winning goal came with four minutes left in the fourth quarter (Redwood Bark, Nov 1, 2026).',
     },
     sourceUrl: 'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf',
   },

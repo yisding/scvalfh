@@ -45,8 +45,8 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # 41 schedule feeds and six league tables, the official revision checks, the CCS calendar and bracket
-    # page; then 41 stats rollups (and a box score per new final) and 41 JV feeds.
+    # 60 schedule feeds and nine league tables, the official revision checks, the CCS calendar and bracket
+    # page; then 60 stats rollups (and a box score per new final) and 60 JV feeds.
     timeout-minutes: 30
 
     env:
@@ -142,11 +142,12 @@ jobs:
 
       # tests/volleyball.test.ts loads every volleyball data file through its validating loader. When they fail and the stats or JV file changed in this
       # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
+      # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
       - name: Test
         id: test
         run: |
           set -uo pipefail
-          run() { pnpm exec vitest run tests/volleyball.test.ts; }
+          run() { pnpm exec vitest run tests/volleyball.test.ts tests/game-aliases.test.ts; }
           if run; then exit 0; fi
           if git diff --quiet -- data/volleyball/player-stats.json data/volleyball/jv.json data/volleyball/rosters.json data/volleyball/jv-rosters.json; then
             echo "::error::the volleyball tests failed and neither the volleyball stats nor the volleyball JV file changed in this run"

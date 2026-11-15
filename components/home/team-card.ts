@@ -73,7 +73,7 @@ function lastGameView(game: Game, slug: string): HomeLastGame {
     mineIsHome: game.home.slug === slug,
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),
-    href: gameHref(game.contestId),
+    href: gameHref(game),
   };
 }
 
@@ -84,7 +84,9 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
   const address = gameAddress(game)?.address;
   if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
+  // One stream chip: the NFHS Network's, else the Hudl TV broadcast (lib/streams/hudl-streams.ts).
   if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
+  else if (game.urls.hudl) links.push({ label: 'Hudl TV', href: game.urls.hudl });
   if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan });
   return {
     dateLabel: shortDate(game.dateLocal),
@@ -93,7 +95,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     versus: describeGame(game, slug).versus ?? 'vs',
     opponent: shortNameOf(theirs.slug, theirs.name),
     kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
-    href: gameHref(game.contestId),
+    href: gameHref(game),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every
     // team (no layout shift).
     links: links.slice(0, 2),

@@ -86,7 +86,7 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
   });
 
   it('links every joined card to its game page, and never nests a link inside one', () => {
-    for (const g of games) expect(played, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g.contestId)}"`);
+    for (const g of games) expect(played, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g)}"`);
     expect(played.match(/href="\/game\//g)?.length, COMPONENT).toBe(26);
     for (const a of played.match(/<a [^>]*href="\/game\/[\s\S]*?<\/a>/g) ?? []) {
       expect(a.slice(2).includes('<a '), `${COMPONENT}: an anchor inside a game card`).toBe(false);
@@ -158,7 +158,7 @@ describe('the 2025 brackets before a game is played', () => {
     const upcoming = { ...first, status: 'scheduled' as const, home: { ...first.home, score: null, result: null }, away: { ...first.away, score: null, result: null }, dateLocal: '2025-11-04T15:30:00', isTimeTba: false };
     const d1 = buildSdsBrackets(file, [upcoming]).find((d) => d.id === 'division-1')!;
     const card = sdsBracketView(d1, BEFORE).rounds[0].cards[0];
-    expect(card, VIEW).toMatchObject({ status: 'scheduled', href: gameHref(first.contestId), time: 'Tue Nov 4 · 3:30 PM PT' });
+    expect(card, VIEW).toMatchObject({ status: 'scheduled', href: gameHref(first), time: 'Tue Nov 4 · 3:30 PM PT' });
     // In the cell: the time, with the weekday only when the card is not on its round's day.
     expect(card.clock, VIEW).toMatch(/^(Tue )?3:30 PM$/);
     expect(card.sentence.join(''), VIEW).toBe('Poway (8) plays University City (9), Tue Nov 4, 3:30 PM PT.');

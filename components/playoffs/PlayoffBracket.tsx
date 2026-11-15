@@ -95,6 +95,7 @@ function gameTie(entry: BracketGame, round: BracketRound): TieModel {
   const links: Array<{ href: string; label: string }> = [];
   if (unplayed && game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (unplayed && game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
+  if (unplayed && game.urls.hudl) links.push({ href: game.urls.hudl, label: 'Hudl TV' });
   const clock = game.isTimeTba ? 'TBD' : statusWords(display);
   // A final nobody reported, a postponed game: its status in words, in the note row.
   const off = state === 'off' ? statusWords(display) : null;
@@ -119,7 +120,7 @@ function gameTie(entry: BracketGame, round: BracketRound): TieModel {
     // `prefetch={false}`: every route here is STATIC, so Next 16's `auto` downloads the whole linked route the
     // moment the link scrolls into view, and a full bracket is fourteen game pages. Navigation still fetches on click.
     link: named ? (
-      <Link href={gameHref(game.contestId)} prefetch={false} className="absolute inset-0">
+      <Link href={gameHref(game)} prefetch={false} className="absolute inset-0">
         <span className="sr-only">{display.sentence}</span>
       </Link>
     ) : undefined,

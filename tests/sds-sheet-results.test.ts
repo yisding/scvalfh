@@ -307,6 +307,13 @@ describe('review follow-ups', () => {
     const out = SnapshotSchema.safeParse({ ...snapshot, supersededGames: { 'cifsds:del-norte-at-torrey-pines-x': to } });
     expect(out.success ? [] : out.error.issues.map((i) => i.message)).toEqual([]);
   });
+
+  it('accepts an added game (official:) superseded by a MaxPreps contest in the snapshot', () => {
+    const snapshot = getSnapshot();
+    const to = snapshot.games.find((g) => !g.contestId.includes(':'))!.contestId;
+    const out = SnapshotSchema.safeParse({ ...snapshot, supersededGames: { 'official:2026-11-24-santa-teresa-at-cupertino': to } });
+    expect(out.success ? [] : out.error.issues.map((i) => i.message)).toEqual([]);
+  });
 });
 
 describe('carry-forward and supersede', () => {

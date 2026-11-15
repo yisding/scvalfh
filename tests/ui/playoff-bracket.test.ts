@@ -123,7 +123,7 @@ describe('PlayoffBracket on the 2025 championship', () => {
 
   it('links every named game cell to its game page, once, with prefetch off', () => {
     for (const g of GAMES.filter((x) => x.bracket?.name === 'Division 1')) {
-      expect(html, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g.contestId)}"`);
+      expect(html, `${COMPONENT}: ${g.contestId}`).toContain(`href="${gameHref(g)}"`);
     }
     expect(html.match(/href="\/game\//g)?.length, COMPONENT).toBe(7);
     expect(html, COMPONENT).not.toContain('prefetch="true"');
@@ -187,7 +187,7 @@ describe('PlayoffBracket before the games exist', () => {
     expect(upcoming, COMPONENT).toHaveLength(2);
     // The round's heading carries the day; the cell carries the time where a score will be (never a score, never a dash).
     expect(text, COMPONENT).toContain(`Quarterfinals, ${shortDate(CCS.keyDates.quarterfinals)}`);
-    const cellOf = (g: Game) => upcoming.find((t) => t.includes(gameHref(g.contestId)))!;
+    const cellOf = (g: Game) => upcoming.find((t) => t.includes(gameHref(g)))!;
     expect(cellOf(ticketed), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4:00 PM</span>');
     expect(cellOf(tba), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">TBD</span>');
     for (const cell of upcoming) expect(cell, COMPONENT).not.toContain('sx-tie-score');
@@ -200,8 +200,8 @@ describe('PlayoffBracket before the games exist', () => {
     // The links sit beside the game link, never inside it: an anchor holds no anchor.
     expect(html, COMPONENT).not.toMatch(/<a [^>]*href="\/game\/[^"]*"[^>]*>(?:(?!<\/a>)[\s\S])*<a /);
     // Both unplayed cells still link their game page and mark no winner; the two played quarterfinals do.
-    expect(html, COMPONENT).toContain(`href="${gameHref(ticketed.contestId)}"`);
-    expect(html, COMPONENT).toContain(`href="${gameHref(tba.contestId)}"`);
+    expect(html, COMPONENT).toContain(`href="${gameHref(ticketed)}"`);
+    expect(html, COMPONENT).toContain(`href="${gameHref(tba)}"`);
     expect(html.match(/ data-won=""/g)?.length, COMPONENT).toBe(2);
     for (const cell of upcoming) expect(cell, COMPONENT).not.toMatch(/data-won|data-lost/);
     expect(html, COMPONENT).not.toContain(WINNER_RULE);

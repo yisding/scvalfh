@@ -107,6 +107,13 @@ const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
       dateKey: '2026-10-08',
       source: 'St. Ignatius’ JV schedule has this game on Oct 8, “Rescheduled from 9/9/26”; MaxPreps still dates it Sep 9.',
     },
+    // Homestead's athletic director's weekly update (owner, 2026-11-15): JV "Lost 2 - 1 vs Cupertino (Friday 9/11)",
+    // the day of the pair's 5-5 varsity tie (DATA_QUALITY.contestDateOverrides moves that game to Sep 11 too).
+    'e8207b3a-c887-40c6-94ec-0976eb224c33': {
+      fromDateKey: '2026-09-09',
+      dateKey: '2026-09-11',
+      source: 'Homestead’s athletic director’s weekly update has this game on Friday Sep 11, a 2-1 loss for Homestead; MaxPreps dates it Sep 9, the league schedule’s day.',
+    },
   },
 };
 
