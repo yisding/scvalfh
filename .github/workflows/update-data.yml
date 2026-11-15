@@ -338,6 +338,8 @@ jobs:
             echo "no snapshot change — only the run timestamp moved"
             # Drop the timestamp-only churn so the working tree matches HEAD exactly.
             git checkout -- data/snapshot.json data/snapshot.meta.json
+            # The claims file rides with the snapshot; it may be new and untracked, so remove it then.
+            git checkout -- data/claims.json 2>/dev/null || rm -f data/claims.json
           fi
           # The player stats. fetch-player-stats leaves the file untouched when only its stamps
           # would change (playerStatsContentKey in lib/players/player-stats-schema.ts), so a plain diff is
@@ -389,9 +391,15 @@ jobs:
             ')
             if [ "$STATS" = "true" ]; then
               git add data/snapshot.json data/snapshot.meta.json data/player-stats.json
+              if [ -e data/claims.json ]; then
+                git add data/claims.json
+              fi
               git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})${JV_TAIL}"
             else
               git add data/snapshot.json data/snapshot.meta.json
+              if [ -e data/claims.json ]; then
+                git add data/claims.json
+              fi
               git commit -m "data: refresh snapshot ${SUMMARY}${JV_TAIL}"
             fi
           else

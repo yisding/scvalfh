@@ -62,22 +62,26 @@ describe('the update-data commit and the deploy gate', () => {
   it('commits only files the gate accepts, and the gate accepts nothing else', () => {
     expect([...committedFiles].sort()).toEqual([...gateFiles].sort());
     expect([...gateFiles].sort()).toEqual([
+      'data/basketball/claims.json',
       'data/basketball/jv-rosters.json',
       'data/basketball/jv.json',
       'data/basketball/player-stats.json',
       'data/basketball/rosters.json',
       'data/basketball/snapshot.json',
       'data/basketball/snapshot.meta.json',
+      'data/claims.json',
       'data/jv.json',
       'data/player-stats.json',
       'data/snapshot.json',
       'data/snapshot.meta.json',
+      'data/soccer/claims.json',
       'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
       'data/soccer/player-stats.json',
       'data/soccer/rosters.json',
       'data/soccer/snapshot.json',
       'data/soccer/snapshot.meta.json',
+      'data/volleyball/claims.json',
       'data/volleyball/jv-rosters.json',
       'data/volleyball/jv.json',
       'data/volleyball/player-stats.json',
@@ -361,6 +365,31 @@ describe('the teamViews budget gates ci, never the data cron', () => {
     expect(stepBody(update, 'Test')).toMatch(/^\s*pnpm test$/m);
     for (const text of [update, updateSoccer, updateBasketball, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
   });
+});
+
+describe('the claims file travels with the snapshot', () => {
+  const sports: [string, string, string][] = [
+    ['field hockey', 'data', update],
+    ['soccer', 'data/soccer', updateSoccer],
+    ['basketball', 'data/basketball', updateBasketball],
+    ['volleyball', 'data/volleyball', updateVolleyball],
+  ];
+  const esc = (v: string) => v.replace(/[./]/g, '\\$&');
+  for (const [name, dir, text] of sports) {
+    it(`${name}: staged behind a guard wherever the snapshot is, and reverted with it`, () => {
+      const claims = `${dir}/claims.json`;
+      // Every snapshot staging line is followed by a guarded add of the claims file (it may not exist yet).
+      const snapAdds = [...text.matchAll(new RegExp(`^\\s*git add ${esc(dir)}/snapshot\\.json ${esc(dir)}/snapshot\\.meta\\.json\\b[^\n]*$`, 'gm'))];
+      const guarded = [...text.matchAll(new RegExp(`^\\s*git add [^\n]*\n\\s*if \\[ -e ${esc(claims)} \\]; then\n\\s*git add ${esc(claims)}\n\\s*fi$`, 'gm'))];
+      expect(snapAdds.length).toBeGreaterThan(0);
+      expect(guarded.length).toBe(snapAdds.length);
+      // No other `git add` names it.
+      expect([...text.matchAll(new RegExp(`git add [^\n]*${esc(claims)}`, 'g'))].length).toBe(snapAdds.length);
+      // The no-snapshot-change branch reverts it with the snapshot, removing a new untracked one.
+      expect(text).toContain(`git checkout -- ${dir}/snapshot.json ${dir}/snapshot.meta.json\n`);
+      expect(text).toContain(`git checkout -- ${claims} 2>/dev/null || rm -f ${claims}`);
+    });
+  }
 });
 
 describe('the soccer refresh', () => {

@@ -179,6 +179,8 @@ jobs:
           if [ "$SNAPSHOT" != "true" ]; then
             echo "no snapshot change — only the run timestamp moved"
             git checkout -- data/volleyball/snapshot.json data/volleyball/snapshot.meta.json
+            # The claims file rides with the snapshot; it may be new and untracked, so remove it then.
+            git checkout -- data/volleyball/claims.json 2>/dev/null || rm -f data/volleyball/claims.json
           fi
           if git diff --quiet -- data/volleyball/player-stats.json; then STATS=false; else STATS=true; fi
           if git diff --quiet -- data/volleyball/jv.json; then JV=false; else JV=true; fi
@@ -207,6 +209,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then
             git add data/volleyball/snapshot.json data/volleyball/snapshot.meta.json
+            if [ -e data/volleyball/claims.json ]; then
+              git add data/volleyball/claims.json
+            fi
           fi
           if [ "$STATS" = "true" ]; then
             git add data/volleyball/player-stats.json
