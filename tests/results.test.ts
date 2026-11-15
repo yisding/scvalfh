@@ -335,8 +335,8 @@ describe('a result recorded from a better source (DATA_QUALITY.resultCorrections
 });
 
 describe('a winner a source names with no score (resultCorrections, goals null)', () => {
-  // The San Diego Open final, Sat Nov 14: Canyon Hills v Bishop's, which MaxPreps lists with no score; the owner has
-  // Bishop's the winner (2026-11-15).
+  // The San Diego Open final, Sat Nov 14: Canyon Hills v Bishop's, which MaxPreps lists with no score; the owner first
+  // gave Bishop's the winner alone (2026-11-15), then the score, 1-0, which the live config now carries.
   const id = '10a472ed-c57c-4874-ae7b-295d7f032db6';
   const pending = game({ home: 'bishops', away: 'canyon-hills', league: false, date: '2026-11-14', status: 'score-pending', contestId: id });
   const corrections: DataQualityConfig['resultCorrections'] = {
@@ -344,7 +344,8 @@ describe('a winner a source names with no score (resultCorrections, goals null)'
   };
 
   it('marks the winner, leaves the game unscored and unrecorded, and the bracket advances it', () => {
-    expect(DATA_QUALITY.resultCorrections[id]?.winner).toBe('bishops');
+    expect(DATA_QUALITY.resultCorrections[id]?.goals, 'the live config has the score').toEqual({ bishops: 1, 'canyon-hills': 0 });
+    expect(finalizeResult(pending), 'and scores the game from it').toMatchObject({ status: 'final', home: { score: 1, result: 'W' }, away: { score: 0, result: 'L' } });
     const g = finalizeResult(pending, { corrections });
     expect([g.status, g.home.score, g.away.score, g.home.result, g.away.result, g.decider]).toEqual(['score-pending', null, null, 'W', 'L', null]);
     expect(g.result).toBeUndefined();
