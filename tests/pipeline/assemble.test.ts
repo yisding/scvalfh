@@ -137,6 +137,14 @@ describe('gameUrlsOf: each game’s slug and aliases, against the previous snaps
       '2026-09-11-greenfield-at-santa-catalina',
       ...['2026-08-28-greenfield-at-santa-catalina', old.contestId].sort(),
     ]);
+    // …and unless a game used that slug while the contest was away and has since left it: the alias is that
+    // game's, whichever contest id sorts first (the returning contest's does here).
+    const leaver = { ...game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-18', official: null }), contestId: 'ffffffff-ffff-4fff-8fff-ffffffffffff' };
+    const used = { ...kept, games: [...kept.games, { ...leaver, slug: '2026-09-18-greenfield-at-santa-catalina', aliases: ['2026-09-04-greenfield-at-santa-catalina'] }] } as Snapshot;
+    expect(old.contestId < leaver.contestId, 'tests: the returning contest sorts first').toBe(true);
+    const both = urls(gameUrlsOf([back, leaver], used, [], {}, AT));
+    expect(both[leaver.contestId]).toEqual(['2026-09-18-greenfield-at-santa-catalina', '2026-09-04-greenfield-at-santa-catalina']);
+    expect(both[old.contestId]).toEqual(['2026-09-11-greenfield-at-santa-catalina', ...['2026-08-28-greenfield-at-santa-catalina', old.contestId].sort()]);
     // A removal of a game that is still there (it only changed its date) vouches for nothing new.
     const moved = { ...loaded([old]), contentRemovals: [{ contestId: old.contestId, dateKey: '2026-08-28', slugs: [], removedAt: AT }] } as Snapshot;
     expect(urls(gameUrlsOf([old, other], moved, [], {}, AT))[other.contestId]).toEqual(['2026-10-06-santa-catalina-at-greenfield']);

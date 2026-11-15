@@ -18,8 +18,9 @@
  *     lib/pipeline/steps/assemble.ts supersededGamesOf), and those games' aliases.
  *  3. A slug always beats an alias: a segment that is some game's slug now is nobody's alias.
  *  4. An alias belongs to one game: the one that had it most recently. A slug a game just left comes first, then a
- *     segment claimed for the first time (a legacy param), then an alias already held, and last a superseded id
- *     recorded in an earlier run, which its game normally holds as an alias already.
+ *     segment claimed for the first time (a legacy param), then an alias already held, and last what is only
+ *     remembered: a superseded id recorded in an earlier run (its game normally holds it as an alias already), and
+ *     the URLs a contest had before it left the snapshot and came back.
  *
  * Pure: no I/O, no clock, and no import beyond the two id leaves, so proxy.ts can bundle it.
  */
@@ -115,6 +116,11 @@ export interface GameUrlHistory {
    * is back). An alias nobody ever used costs nothing; a URL that was live and stops answering does.
    */
   publishedAtLegacyParam?: (game: UrlGame) => boolean;
+  /**
+   * Segments a game had before it left the snapshot, for a contest that is back (ContentRemoval.slug). The weakest
+   * claim there is: a game that has used one since, as its slug or as an alias it still holds, keeps it.
+   */
+  remembered?: (game: UrlGame) => readonly string[];
 }
 
 /**
@@ -171,14 +177,15 @@ export function withGameAliases<T extends UrlGame>(games: readonly T[], history:
   // replaces in this run had. `fresh`: segments claimed for the first time (its legacy param; those of a game it
   // replaces in this run). `kept`: aliases it, or that game, already had. `carried`: the legacy segments of an id
   // superseded in an EARLIER run. `superseded` is carried all season, so these come up on every run; the game has
-  // them among its aliases unless another game has had the segment since, and that game keeps it.
+  // them among its aliases unless another game has had the segment since, and that game keeps it. So does a game
+  // holding a segment that a contest back from a removal remembers (`history.remembered`), which ranks with these.
   const claims = [...games]
     .sort((a, b) => (a.contestId < b.contestId ? -1 : a.contestId > b.contestId ? 1 : 0))
     .map((game) => {
       const left: string[] = [];
       const fresh: string[] = [];
       const kept: string[] = [...(game.aliases ?? [])];
-      const carried: string[] = [];
+      const carried: string[] = [...(history.remembered?.(game) ?? [])];
       const prior = before.get(game.contestId);
       if (prior?.slug) left.push(prior.slug);
       kept.push(...(prior?.aliases ?? []));

@@ -126,7 +126,8 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
  * nothing here can say otherwise: with no previous snapshot (a first run, or a file that would not load), and for
  * a contest the previous snapshot records as gone that is back (`contentRemovals`). Anything else new was first
  * seen now, and its id was never a URL. A contest that is back also gets the slug and aliases its removal record
- * kept (ContentRemoval.slug), as aliases it already had: whatever has used one of them since keeps it.
+ * kept (ContentRemoval.slug), as the weakest claim there is: a game that has used one of them since, as its slug
+ * or as an alias it still holds, keeps it.
  */
 export function gameUrlsOf(
   games: readonly Game[],
@@ -151,12 +152,12 @@ export function gameUrlsOf(
     const had = [...(r.slug ? [r.slug] : []), ...(r.aliases ?? [])];
     if (had.length > 0 || !returned.has(r.contestId)) returned.set(r.contestId, had);
   }
-  const remembering = slugged.map((g) => (returned.get(g.contestId)?.length ? { ...g, aliases: returned.get(g.contestId) } : g));
-  return withGameAliases(remembering, {
+  return withGameAliases(slugged, {
     previous: before,
     superseded,
     reserved,
     publishedAtLegacyParam: (g) => previous === null || returned.has(g.contestId),
+    remembered: (g) => returned.get(g.contestId) ?? [],
   });
 }
 
