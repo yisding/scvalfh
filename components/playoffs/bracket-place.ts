@@ -25,6 +25,16 @@ export interface BracketPlace {
   round: string | null;
   /** 'The winner plays Willow Glen or Homestead in the semifinal, Wed Nov 11.'; null when there is nothing to say. */
   next: string | null;
+  /** The day of the round `next` speaks of ('2026-11-11'); null for the final, or when `next` is null. */
+  nextDateKey: string | null;
+  /** True when the game is its bracket's final. */
+  isFinal: boolean;
+  /**
+   * Once the bracket's final has a winner, the sentence that says so ('St. Ignatius won CCS Division 1.', 'Bishop's won
+   * the Open Division final.'), the same words the final's own `next` prints; null until then. A team page whose
+   * team went out earlier ends its line with it, so the line never keeps a past round as still to come.
+   */
+  decided: string | null;
   link: BracketLink;
 }
 
@@ -64,11 +74,16 @@ function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
     // Score first, then a lone W (lib/postseason/game-winner.ts winnerOf), so the words agree with the side the bracket advances.
     const winner = winnerOf(game);
     const later: BracketRound | undefined = path.rounds[r + 1];
+    // The division's final, once it has a winner: the line of a team that went out earlier ends with it.
+    const lastRound = path.rounds.at(-1);
+    const finalCard = lastRound?.key === 'finals' ? lastRound.cards.find((c) => c.kind === 'game') : undefined;
+    const champion = finalCard?.kind === 'game' ? winnerOf(finalCard.game) : null;
+    const decided = champion ? `${nameOf(champion)} won ${path.name}.` : null;
     if (!later) {
       // Only the final names a division winner: without the seed file a bracket has only the rounds MaxPreps lists,
       // so a quarterfinal can be the last round drawn for a day or two.
       const final = round.key === 'finals';
-      return { round: label, next: final && winner ? `${nameOf(winner)} won ${path.name}.` : null, link };
+      return { round: label, next: final && winner ? `${nameOf(winner)} won ${path.name}.` : null, nextDateKey: null, isFinal: final, decided, link };
     }
     // A decided game's winner alone goes on; before a result, either side may.
     const teams = new Set((winner ? [winner] : [game.home.slug, game.away.slug]).filter((s): s is TeamSlug => s !== null));
@@ -87,7 +102,14 @@ function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
       if (holds(c.top)) { opponent = ccsSideWords(c.bottom); break; }
       if (holds(c.bottom)) { opponent = ccsSideWords(c.top); break; }
     }
-    return { round: label, next: nextSentence(winner, opponent, singular(later.name), later.dateLabel), link };
+    return {
+      round: label,
+      next: nextSentence(winner, opponent, singular(later.name), later.dateLabel),
+      nextDateKey: later.dateKey,
+      isFinal: false,
+      decided,
+      link,
+    };
   }
   return null;
 }
@@ -109,16 +131,24 @@ function sdsPlace(game: Game, link: BracketLink): BracketPlace | null {
     if (!at) continue;
     const label = `${division.label} ${singular(at.round.name)}`;
     const winner = winnerOf(game);
+    // The division's final (the one card that feeds no other), once it has a winner.
+    const finalCard = cards.find(({ card }) => !card.next)?.card;
+    const championSlot = finalCard?.winner ? finalCard[finalCard.winner] : null;
+    const champion = championSlot && !('tbd' in championSlot) ? championSlot.slug : null;
+    const decided = champion ? `${nameOf(champion)} won the ${division.label} final.` : null;
     if (!at.card.next) {
-      return { round: label, next: winner ? `${nameOf(winner)} won the ${division.label} final.` : null, link };
+      return { round: label, next: winner ? `${nameOf(winner)} won the ${division.label} final.` : null, nextDateKey: null, isFinal: true, decided, link };
     }
     const target = cards.find(({ card }) => card.id === at.card.next?.id);
-    if (!target) return { round: label, next: null, link };
+    if (!target) return { round: label, next: null, nextDateKey: null, isFinal: false, decided, link };
     const other = at.card.next.side === 'top' ? target.card.bottom : target.card.top;
     // A later round's game already listed gives the day; else the round's own date.
     return {
       round: label,
       next: nextSentence(winner, sdsSideWords(other), singular(target.round.name), shortDate(target.card.dateKey)),
+      nextDateKey: target.card.dateKey,
+      isFinal: false,
+      decided,
       link,
     };
   }
@@ -131,5 +161,5 @@ export function getBracketPlace(game: Game): BracketPlace | null {
   if (!link) return null;
   const kind = game.postseason?.kind;
   const place = kind === 'ccs' ? ccsPlace(game, link) : kind === 'section-playoffs' ? sdsPlace(game, link) : null;
-  return place ?? { round: null, next: null, link };
+  return place ?? { round: null, next: null, nextDateKey: null, isFinal: false, decided: null, link };
 }

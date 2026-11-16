@@ -5,16 +5,19 @@
  * its phase lead (components/home/phase-lead.ts) uses `playInClause`. Server-only: it reads the snapshot through lib/data.
  */
 
-import { getLeaguePairings, getLeagueTournament, getStandingFor, getToday } from '../../lib/data';
-import { dateSpan, leagueClock, numberWord, ordinalWord, shortDate } from '../../lib/format';
+import { getGames, getLeaguePairings, getLeagueTournament, getStandingFor, getToday } from '../../lib/data';
+import { dateSpan, leagueClock, listWords, numberWord, ordinalWord, shortDate } from '../../lib/format';
+import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
+import { SDS_BRACKETS_FILE, sdsDivisionTeams } from '../../lib/postseason/sds-brackets-file';
 import { CCS } from '../../lib/league-config/sections';
 import type { LeagueConfig, PairingConfig, PostseasonConfig } from '../../lib/league-config/shape';
-import { findLeague, getDivision, outsideTournamentOf, pairingWindow } from '../../lib/leagues';
+import { findLeague, getDivision, outsideTournamentOf, pairingWindow, sectionOf } from '../../lib/leagues';
 import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
 import { postseasonHref } from '../../lib/postseason/postseason-kind';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel } from '../../lib/standings/ladder';
 import { getTeamById, getTeamBySlug } from '../../lib/teams';
+import { eventFinish, eventFinishCopy } from './tournament-bracket-view';
 
 export interface TeamPostseasonLine {
   label: string;
@@ -60,12 +63,23 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
     const event = outsideTournamentOf(league.sectionId);
     const entrant = event !== null && event.entrants.includes(team.slug);
     const count = event ? numberWord(event.entrants.length) : '';
+    // Once the event has a result for this team, its finish is the line ('Won the Tournament of Champions',
+    // 'Fourth in the Tournament of Champions'), read from its bracket's games on every refresh.
+    const finish = event?.bracket && entrant
+      ? eventFinish(event.bracket.games, getGames({ postseason: true }).filter((g) => g.postseason?.kind === 'outside-tournament'), team.slug)
+      : null;
+    if (event && finish) {
+      const words = eventFinishCopy(finish, team.slug, event.name, sectionOf(league.id).shootout?.words ?? 'a shootout');
+      return { ...words, href: `/playoffs#${event.id}`, linkText: event.name, caveat: RESULTS_CAVEAT };
+    }
+    // 'was' once the event's last day has passed.
+    const be = event && getToday() > event.window.last ? (entrant ? 'was' : 'was not') : entrant ? 'is' : 'is not';
     return {
       label: event
         ? `${entrant ? 'In' : 'Not in'} the ${event.name}`
         : playoffOutcomeLabel(row.division, outcomesFor(row)),
       sentence: event
-        ? `${ps.note} ${team.name} ${entrant ? 'is' : 'is not'} one of its ${count} teams.`
+        ? `${ps.note} ${team.name} ${be} one of its ${count} teams.`
         : ps.note,
       href: event ? `/playoffs#${event.id}` : postseasonHref(league),
       linkText: event ? event.name : 'Postseason',
@@ -82,6 +96,26 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // power rankings, so a league place is no route except 1st (a designated champion's play-in). The
       // sentence is the config's one qualification line, then the team's own playoff division from the
       // Section's 2026 Divisions sheet; never the EAL's "top N" template, and no seed.
+      // Once the Section's brackets are published (data/sds-brackets-2026.json), a team in none of them is out of the
+      // playoffs: the line says so, rather than a qualification rule that no longer decides anything. A team in a bracket
+      // reads its bracket game instead (components/teams/team-view.ts bracketAwareLine).
+      const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
+      if (SDS_BRACKETS_FILE.divisions.length > 0 && (!seeding || getToday() >= seeding.date)) {
+        const placed = SDS_BRACKETS_FILE.divisions.flatMap(sdsDivisionTeams);
+        if (!placed.includes(team.slug)) {
+          const names = listWords(SDS_BRACKETS_FILE.divisions.map((d) => d.label));
+          return {
+            label: `Not in the ${ps.name}`,
+            sentence:
+              `The Section placed ${numberWord(placed.length)} teams in its ${names} brackets` +
+              `${seeding ? ` after its ${shortDate(seeding.date)} seeding meeting` : ''}; ${team.name} was not one of them, ` +
+              `so its season ended with its last game.`,
+            href: postseasonHref(league),
+            linkText: ps.name,
+            caveat: null,
+          };
+        }
+      }
       const division = ps.playoffDivisionOf[team.slug];
       const divisionSentence = division
         ? ` The Section lists ${team.name} in Division ${division}; Open Division teams are drawn from Division I at the end of the regular season.`
@@ -122,8 +156,30 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         caveat: projection.status === 'projected' ? PROJECTED_CAVEAT : RESULTS_CAVEAT,
       };
     }
-    case 'unbracketed-tournament':
-      // The EAL's Super Regional: the rule and the dates, never a bracket or a seed (DESIGN §22).
+    case 'unbracketed-tournament': {
+      // Once the event has a result for this team (its day's schedule in config, `bracket`), its finish is the line:
+      // 'Won the Super Regional', 'Fifth in the Super Regional' (DESIGN §22: still no seed).
+      const finish = ps.bracket
+        ? eventFinish(
+            ps.bracket.games,
+            getGames({ postseason: true }).filter((g) => g.postseason?.kind === 'league-postseason' && g.postseason.leagueId === league.id),
+            team.slug,
+          )
+        : null;
+      if (finish) {
+        const words = eventFinishCopy(finish, team.slug, ps.name, sectionOf(league.id).shootout?.words ?? 'a shootout');
+        return { ...words, href: postseasonHref(league), linkText: 'Postseason', caveat: RESULTS_CAVEAT };
+      }
+      // The rule and the dates, never a bracket or a seed (DESIGN §22); past tense once the event's last day has passed.
+      if (getToday() > ps.dates.last) {
+        return {
+          label,
+          sentence: `The top ${numberWord(ps.qualifiers)} schools played the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}, and every ${league.shortName} team was one of the ${numberWord(ps.qualifiers)}; no result of ${team.name}’s is posted.`,
+          href: postseasonHref(league),
+          linkText: 'Postseason',
+          caveat: null,
+        };
+      }
       return {
         label,
         sentence: ps.site
@@ -133,6 +189,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         linkText: 'Postseason',
         caveat: null,
       };
+    }
     case 'ccs-ladder': {
       // A final play-in is the team's outcome, its own label and sentence ('Won the play-in', 'Lost the play-in';
       // lib/postseason/postseason-outcomes.ts); a final crossover keeps the ladder's label and adds its result to the sentence.
@@ -144,6 +201,20 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           href: postseasonHref(league),
           linkText: 'CCS playoffs',
           caveat: CCS_RESULTS_CAVEAT,
+        };
+      }
+      // Once CCS has seeded the field (the seed file, data/ccs-bracket-2026.json, is filled), a team in none of its
+      // divisions is out of the playoffs: the line says so instead of an at-large hope the committee has already
+      // settled. A team in the field reads its bracket game instead (components/teams/team-view.ts bracketAwareLine).
+      const seeds = getToday() >= CCS.keyDates.seedingMeeting.slice(0, 10) ? getCcsSeeds() : null;
+      if (seeds && !seeds.divisions.some((d) => d.seeds.some((x) => x.slug === team.slug))) {
+        const field = seeds.divisions.reduce((n, d) => n + d.seeds.length, 0);
+        return {
+          label: 'Not in the CCS field',
+          sentence: `CCS seeded its ${numberWord(field)}-team field on ${shortDate(CCS.keyDates.seedingMeeting)} without ${team.name}, so its season ended with its last game.`,
+          href: postseasonHref(league),
+          linkText: 'CCS playoffs',
+          caveat: null,
         };
       }
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');

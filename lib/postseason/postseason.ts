@@ -406,7 +406,8 @@ export function buildLeagueTournament(
  */
 export type TournamentOutcome =
   | { kind: 'projected' }
-  | { kind: 'below-line' }
+  /** `over`: the tournament is complete (its final has a winner), so the sentence is in the past tense. */
+  | { kind: 'below-line'; over: boolean }
   | { kind: 'champion'; game: Game; opponent: TeamSlug }
   | { kind: 'runner-up'; game: Game; opponent: TeamSlug }
   | { kind: 'in-final'; next: TournamentGame; opponent: TeamSlug | null }
@@ -439,7 +440,7 @@ export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug)
     if (last.round === 'final') return won ? { kind: 'champion', game: g, opponent } : { kind: 'runner-up', game: g, opponent };
     if (!won) return { kind: 'lost', round: last.round, game: g, opponent };
   }
-  if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line' };
+  if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line', over: p.status === 'complete' };
   // Not out: the next game whose slot names this team and has no winner yet (unplayed, or posted level).
   const next = all.find((tg) => tournamentGameWinner(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
   if (next && next.round === 'final') return { kind: 'in-final', next, opponent: opponentIn(next, slug) };
@@ -454,7 +455,9 @@ const ROUND_WORDS: Readonly<Record<TournamentGame['round'], string>> = {
 function scoreWords(g: Game, winner: TeamSlug): string {
   const w = g.home.slug === winner ? g.home.score : g.away.score;
   const l = g.home.slug === winner ? g.away.score : g.home.score;
-  const ot = g.decider === 'OT' || g.decider === '2OT' ? ' in overtime' : '';
+  // A shootout MaxPreps records as a level score (Tamalpais v Marin Catholic, Oct 28, 2026: 0–0, the decider 'SO')
+  // says how it was settled, never a bare '0–0' beside "lost".
+  const ot = g.decider === 'OT' || g.decider === '2OT' ? ' in overtime' : g.decider === 'SO' ? ' in a shootout' : '';
   return `${w}${EN_DASH}${l}${ot}`;
 }
 
@@ -482,7 +485,12 @@ export function tournamentOutcomeCopy(
     case 'projected':
       return ladder;
     case 'below-line':
-      return { label: ladder.label, sentence: `The ${numberWord(ps.qualifiers)}-team ${ps.name} is under way without ${team}; its season ended with its last league game.` };
+      // 'was played' once the final has a winner (2026-11-16: Archie Williams' page still said "is under way" two weeks
+      // after Redwood won it).
+      return {
+        label: ladder.label,
+        sentence: `The ${numberWord(ps.qualifiers)}-team ${ps.name} ${outcome.over ? 'was played' : 'is under way'} without ${team}; its season ended with its last league game.`,
+      };
     case 'champion':
       return {
         label: `${ps.name} champion`,
