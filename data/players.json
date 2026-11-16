@@ -39,11 +39,11 @@
     "multiSeason": 972,
     "multiSport": 36,
     "nameOnly": 536,
-    "observations": 11153,
+    "observations": 11204,
     "players": 5498,
     "review": 80,
     "stintConflicts": 58,
-    "stints": 6777,
+    "stints": 6778,
     "withCareer": 4962
   },
   "notes": [
@@ -1980,6 +1980,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-francisco/st-ignatius-college-preparatory-wildcats/athletes/stella-kwok/?careerid=8j7vhsvu05377"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-17274720"
             }
           ],
           "positions": [
@@ -8207,6 +8213,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/sarah-moniak/?careerid=a7179bs0id2rb"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-78228706"
             }
           ],
           "positions": [
@@ -8875,6 +8887,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/casey_moorehouse"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-59973522"
             }
           ],
           "positions": [],
@@ -27481,6 +27499,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-jose/archbishop-mitty-monarchs/athletes/hana-mercado/?careerid=0jj4flo2uqik4"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-39494488"
             }
           ],
           "positions": [
@@ -29645,6 +29669,12 @@
               "jersey": "22",
               "name": "C. Arwin",
               "src": "maxpreps-stats"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-36348967"
             }
           ],
           "positions": [],
@@ -39080,6 +39110,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/canyon-hills-rattlers/athletes/sami-lee/?careerid=f2s7ehnmtid33"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-50794279"
             }
           ],
           "positions": [],
@@ -49971,6 +50007,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/la-jolla/bishops-knights/athletes/brooke-gibbons/?careerid=rt18rr8hb7r55"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-31209616"
             }
           ],
           "positions": [],
@@ -56862,6 +56904,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/torrey-pines-falcons/athletes/ava-hauer/?careerid=nqaovnm20risc"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-17757888"
             }
           ],
           "positions": [
@@ -57722,6 +57770,12 @@
               "kind": "ncsa",
               "src": "profile",
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/la-jolla/the-bishops-school/myla-mccandless"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-14744791"
             }
           ],
           "positions": [],
@@ -60013,6 +60067,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/frankie_lemieux"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-54653045"
             }
           ],
           "positions": [
@@ -72365,6 +72425,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/25186067"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-52526575"
             }
           ],
           "positions": [
@@ -77424,6 +77490,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/jessica_long4"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-65696860"
             }
           ],
           "positions": [
@@ -79630,6 +79702,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/reese_roldan"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/reese-roldan/"
             }
           ],
           "positions": [],
@@ -82295,6 +82373,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/20178210"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-90880803"
             }
           ],
           "positions": [
@@ -86674,6 +86758,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/27562422"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-11761949"
             }
           ],
           "positions": [
@@ -98106,6 +98196,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/28416180"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2029-abigail-scharrenberg/"
             }
           ],
           "positions": [
@@ -105045,6 +105141,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/27602669"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-76724168"
             }
           ],
           "positions": [
@@ -107741,6 +107843,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/canyon-hills-rattlers/athletes/eva-allen/?careerid=mf02bp7gig1qa"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-31007444"
             }
           ],
           "positions": [],
@@ -111249,6 +111357,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23864990"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-66157140"
             }
           ],
           "positions": [
@@ -121327,6 +121441,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23576479"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-23858241"
             }
           ],
           "positions": [
@@ -126903,6 +127023,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/kenzie_rackleff"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-03217391"
             }
           ],
           "positions": [],
@@ -128992,6 +129118,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/31370702"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-42523235"
             }
           ],
           "positions": [
@@ -136664,6 +136796,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/brooke_lanski"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-54683342"
             }
           ],
           "positions": [],
@@ -142765,6 +142903,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/lizzie-moorehouse/?careerid=h4cv1kae6b522"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-43820924"
             }
           ],
           "positions": [],
@@ -148504,6 +148648,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/torrey-pines-falcons/athletes/dylan-rietti/?careerid=h1afshie4n100"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-82829473"
             }
           ],
           "positions": [
@@ -160165,6 +160315,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23693419"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-96323273"
             }
           ],
           "positions": [
@@ -167434,6 +167590,12 @@
               "kind": "fieldlevel",
               "src": "profile",
               "url": "https://www.fieldlevel.com/app/profile/arden.pantel/fieldhockeywomen"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-69941359"
             }
           ],
           "positions": [],
@@ -169963,6 +170125,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/torrey-pines-falcons/athletes/sophie-sant/?careerid=p8f4pvug4llee"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-14235636"
             }
           ],
           "positions": [
@@ -180442,6 +180610,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/20178201"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-13144189"
             }
           ],
           "positions": [
@@ -184124,6 +184298,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/samantha_ippolito"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-91346508"
             }
           ],
           "positions": [],
@@ -188197,6 +188377,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/mill-valley/tamalpais-red-tailed-hawks/athletes/josie-stout/?careerid=9mq0hafqdosaa"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-35611811"
             }
           ],
           "positions": [],
@@ -188635,6 +188821,12 @@
               "kind": "ncsa",
               "src": "profile",
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-francisco/st-ignatius-college-preparatory1/samantha-brunsell"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-98167136"
             }
           ],
           "positions": [],
@@ -216782,6 +216974,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/margaux-schlumberger/?careerid=gfsheruv796td"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-99874382"
             }
           ],
           "positions": [
@@ -218171,6 +218369,12 @@
               "kind": "fieldlevel",
               "src": "profile",
               "url": "https://www.fieldlevel.com/app/profile/kendall.gann/fieldhockeywomen"
+            },
+            {
+              "classOf": 2027,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/kendall-gann/"
             }
           ],
           "positions": [],
@@ -223371,6 +223575,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/laura-pellegrino/?careerid=n7k6dtv3oo0g0"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-83815892"
             }
           ],
           "positions": [],
@@ -233231,6 +233441,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/spencer_white5"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-24117831"
             }
           ],
           "positions": [],
@@ -234121,6 +234337,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/la-jolla/bishops-knights/athletes/alexa-chan/?careerid=dhbuf8m6ajr00"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-06565990"
             }
           ],
           "positions": [],
@@ -240620,6 +240842,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/canyon-hills-rattlers/athletes/rylie-storm/?careerid=vcp2lng84rv55"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-56005678"
             }
           ],
           "positions": [],
@@ -241484,6 +241712,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/torrey-pines-falcons/athletes/izzy-adams/?careerid=injbr45k1rb44"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-57092936"
             }
           ],
           "positions": [
@@ -245973,6 +246207,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/anaya-mehta-vasisht/?careerid=jl938s65odfn7"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-90830367"
             }
           ],
           "positions": [
@@ -246715,6 +246955,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-diego/torrey-pines-falcons/athletes/victoria-eduardo/?careerid=56ho7s9hj7688"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-46590834"
             }
           ],
           "positions": [
@@ -249887,6 +250133,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23576478"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-38854235"
             }
           ],
           "positions": [
@@ -257243,7 +257495,7 @@
           "grade": 9,
           "height": null,
           "jersey": null,
-          "level": "jv",
+          "level": "varsity",
           "name": "Beatrix Monk",
           "observations": [
             {
@@ -257258,16 +257510,37 @@
               "url": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027"
             },
             {
-              "grade": 9,
-              "name": "Beatrix Monk",
-              "src": "school-jv-roster",
-              "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster"
-            },
-            {
               "classOf": 2030,
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/beatrix_monk"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-22165538"
+            }
+          ],
+          "positions": [],
+          "season": "26-27",
+          "sport": "field-hockey",
+          "team": "los-gatos"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "level": "jv",
+          "name": "Beatrix Monk",
+          "observations": [
+            {
+              "grade": 9,
+              "name": "Beatrix Monk",
+              "src": "school-jv-roster",
+              "url": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster"
             }
           ],
           "positions": [],
@@ -262896,6 +263169,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://iwlca.sportsrecruits.com/athlete/lola_conway2"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-57060436"
             }
           ],
           "positions": [],
@@ -269686,6 +269965,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/?careerid=nrdsamg37e6p9"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2030-eleanor-levy/"
             }
           ],
           "positions": [
@@ -271343,6 +271628,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23693443"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-00707767"
             }
           ],
           "positions": [
@@ -272467,6 +272758,12 @@
               "kind": "maxpreps",
               "src": "profile",
               "url": "https://www.maxpreps.com/ca/san-francisco/university-red-devils/athletes/vivienne-wong/?careerid=74io7bmafgi77"
+            },
+            {
+              "classOf": 2030,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-69236851"
             }
           ],
           "positions": [
@@ -275079,6 +275376,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/28227895/Minka-Mendoza"
+            },
+            {
+              "classOf": 2029,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/2029-minka-mendoza/"
             }
           ],
           "positions": [
@@ -280323,6 +280626,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/kira_kelly"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-68209860"
             }
           ],
           "positions": [
@@ -284625,6 +284934,12 @@
               "kind": "sportsrecruits",
               "src": "profile",
               "url": "https://nfhca.sportsrecruits.com/athlete/amelia_zedonis"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-07005018"
             }
           ],
           "positions": [
@@ -285213,6 +285528,12 @@
               "kind": "hudl",
               "src": "profile",
               "url": "https://www.hudl.com/profile/23806169"
+            },
+            {
+              "classOf": 2028,
+              "kind": "maxfh",
+              "src": "profile",
+              "url": "https://maxfh.longstreth.com/players/ryan-hemeon/"
             }
           ],
           "positions": [],

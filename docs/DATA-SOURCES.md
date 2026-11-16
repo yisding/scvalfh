@@ -672,6 +672,25 @@ lists, derived; two from The Epitaph's Nov 2, 2026 game review), and Lynbrook's 
 Rajamani keep the school site's grade 11 on the owner's decision, Stick Together's 2025 list (which would make
 them 12 and 10) recorded as conflicts.
 
+*2026-11-16: MAX Field Hockey.* MAX Field Hockey (`maxfh.longstreth.com`) keeps an athlete page per player
+(class year, position, hometown, high school, club, college commitment; the player can claim it), now server-
+rendered under two addresses, `athlete/?Athlete_ID=ID-<8 digits>` and the newer `players/<slug>/`. Since this
+date it is a profile platform, `maxfh` (`MAX Field Hockey profile` on the roster; a field hockey page, so it names
+no sport in this build). Its California pages were read in full: the player directory filtered to CA (57 current
+players and 17 in the archive), the 109 California high-school pages, and the club pages those link (19, among
+them the out-of-state clubs some California players list), which gave 305 `Athlete_ID` pages and 50 `/players/`
+pages. Each was matched to the varsity and JV rosters by the profile rule above and re-read the same day: 51
+pages for 51 varsity players at 20 schools (45 `Athlete_ID`, 6 `/players/`), 960 profiles for 640 players in all
+(Tamalpais' Chloe Arwin had none). Every page but one names the school with a class year that agrees; Samantha
+Brunsell's is tagged with the Chicago St. Ignatius (`(IL)`), a mislinked school record (§1.1j2 notes the same
+slip), and is linked on class of 2028 plus her San Francisco, CA hometown and the San Francisco club. Six pages
+give another form of the name and name the school (Eva Jo Allen, Francine Lemieux, Lala (Laura) Pellegrino,
+Samantha Lee, Sammy Ippolito, Abigail Scharrenberg). Not linked: a Sophia Smith of Chicago (class of 2028, as
+Mission Hills' Sophia Smith is, but St. Ignatius (IL) and Rise); California players at schools not tracked here
+(Moorpark, Dougherty Valley, the Lycée Français) or at boarding schools out of state; archived graduates. The
+three JV-list matches (Huntington Beach's Sarah Moniak, University City's Lala Pellegrino, Harvard-Westlake's
+Margaux Schlumberger) are players also on their varsity rows, where the pages are linked.
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six
@@ -998,7 +1017,8 @@ sites. It added 8 ties for five players.
 
 The file then held 94 affiliations for 80 players at 25 schools; thirteen players were tied to more
 than one club (with the Southern California sweep: 170 for 148 players at 48 schools, twenty players
-tied to more than one club; 171 for 149 with the 2026-10-07 tie of Westmont's Kaylee True to Fly FHC). The sweep met three clubs near the EAL teams' schools, and all three were added on
+tied to more than one club; 171 for 149 with the 2026-10-07 tie of Westmont's Kaylee True to Fly FHC; 173 for 150
+since 2026-11-16, with Margaux Schlumberger's RUSH tie and Beatrix Monk's NorCal Impact tie moved from the JV ties). The sweep met three clubs near the EAL teams' schools, and all three were added on
 2026-10-04: D-City FHC (Davis) and Roseville FHC, in the region `sacramento` (shown as the
 Sacramento area), and Chico Hotshots, in the new region `north-state` (the North State). Neither
 area was searched for every club, so `SEARCHED_REGIONS` is unchanged and `/clubs` says so.
@@ -1124,7 +1144,18 @@ blocks, read in a browser because they are rendered by script): four ties for th
 players, Casey Moorehouse (NorCal Impact and SF Hawks), Beatrix Monk (NorCal Impact U16) and Colette
 Von Klemperer (NorCal Impact), each on her own profile with a class year that agrees with the roster
 grade, and each current under the live-profile rule. Only the profiles the overlay links were read,
-so other JV players may have club ties no page here records.
+so other JV players may have club ties no page here records. Beatrix Monk's tie moved to `affiliations` on
+2026-11-16 with her row (below), leaving three ties for two players.
+
+*2026-11-16: MAX Field Hockey.* The athlete pages of the profile sweep (§1.1j, recruiting profiles) each name a club; every club they
+name for a tracked player was already tied here but one: Harvard-Westlake's Margaux Schlumberger, whose page and
+MAX's Rush Field Hockey club page list her with "Rush". The tie is `unknown` (neither page dates it) and
+`medium`, since her SportsRecruits club reads "RUSH DEVILS, VCRD", the joint squad this file ties to VCRD, and
+MAX's "Rush" may stand for it. Beatrix Monk's MAX page also lists her 2026 freshman season as "Varsity #1"
+("First freshman selected to Varsity team in program history", with her goals and assists), so her Los Gatos row
+is varsity since that day, its `levelSource` her MAX page, though the school's own JV list, re-read the same day,
+still holds her and its varsity list (27 names) does not; Los Gatos posts no MaxPreps stats to settle it. Casey
+Moorehouse's MAX page claims no varsity spot, and her row stays JV.
 
 **(j3) College commitments** — `data/commits.json` (`lib/players/commits-schema.ts`, read by
 `lib/players/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page

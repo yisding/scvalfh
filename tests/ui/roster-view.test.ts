@@ -245,14 +245,15 @@ describe('buildRosterView', () => {
       }
     }
     const platforms = (slug: string) => views.find((v) => v.slug === slug)!.view.profilePlatforms;
-    expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits']);
+    // MAX Field Hockey since the 2026-11-16 sweep (three Los Gatos players' athlete pages).
+    expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits', 'MAX Field Hockey']);
     expect(platforms('saratoga')).toEqual(['Hudl']);
     // Valley Christian had none until the 2026-10-12 probe found its softball players' SportsRecruits pages,
     // and the 2026-11-13 Hudl sweep added seven of its players' Hudl pages.
     expect(platforms('valley-christian')).toEqual(['SportsRecruits', 'Hudl']);
     // The EAL (recruiting pages swept 2026-10-04): footnote platforms in NCSA, SportsRecruits, Hudl order.
     expect(platforms('chico')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
-    expect(platforms('davis')).toEqual(['NCSA', 'SportsRecruits']);
+    expect(platforms('davis')).toEqual(['NCSA', 'SportsRecruits', 'MAX Field Hockey']);
     expect(platforms('lassen')).toEqual(['NCSA']);
     expect(platforms('pleasant-valley')).toEqual(['NCSA', 'Hudl']);
     // Bella Vista had none until the 2026-10-12 probe found Rylee Tabor's lacrosse page.
@@ -275,7 +276,7 @@ describe('buildRosterView', () => {
     ]);
     // NCSA first on a row that has both, and her claimed MaxPreps page after the recruiting sites.
     const lizzie = views.find((v) => v.slug === 'los-gatos')!.view.rows.find((r) => r.name === 'Lizzie Moorehouse')!;
-    expect(lizzie.profiles.map((x) => x.label)).toEqual(['NCSA profile', 'SportsRecruits profile', 'MaxPreps profile']);
+    expect(lizzie.profiles.map((x) => x.label)).toEqual(['NCSA profile', 'SportsRecruits profile', 'MAX Field Hockey profile', 'MaxPreps profile']);
   });
 
   it('shows no profile from a JV row, which the list leaves out', () => {
@@ -317,7 +318,8 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    expect(tied).toBe(149);
+    // 150 since Beatrix Monk's Los Gatos row moved to varsity (2026-11-16).
+    expect(tied).toBe(150);
   });
 
   it('words the pinned rows', () => {

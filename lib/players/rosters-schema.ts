@@ -286,7 +286,7 @@ export const EnrichedHeightSchema = z
 
 /**
  * A player's own recruiting page: a profile the athlete (or their family) published for college
- * coaches — NCSA, SportsRecruits, FieldLevel, Hudl, Captain U, or a personal recruiting site.
+ * coaches — NCSA, SportsRecruits, FieldLevel, Hudl, Captain U, MAX Field Hockey, or a personal recruiting site.
  * Social media, news stories and team rosters are not profiles.
  *
  * Linked only when the page (or, for NCSA, whose pages are behind a bot wall, the search result
@@ -303,6 +303,11 @@ export const EnrichedHeightSchema = z
  * keeps for every player. It needs no name match, being the page the row comes from, so
  * lib/players/rosters.ts checks at load that its URL is the row's `careerUrl`. One page covers every sport,
  * so it carries no `sport`.
+ *
+ * `maxfh` (since 2026-11-16) is a MAX Field Hockey athlete page (`maxfh.longstreth.com/athlete/?Athlete_ID=…`):
+ * the site's player directory, a profile per player with class year, position, hometown, high school, club
+ * and college commitment, which the player can claim and keep up. It is a field hockey page: in the field hockey
+ * build it names no sport, in any other it names `field-hockey`.
  */
 export const PROFILE_PLATFORMS = [
   'ncsa',
@@ -310,6 +315,8 @@ export const PROFILE_PLATFORMS = [
   'fieldlevel',
   'hudl',
   'captainu',
+  /** a MAX Field Hockey athlete page (maxfh.longstreth.com) */
+  'maxfh',
   /** the row's own MaxPreps career page, once the player or a parent has claimed it */
   'maxpreps',
   /** a site built for this one athlete, on any host */
@@ -324,6 +331,7 @@ export const PROFILE_HOSTS: Record<Exclude<ProfilePlatform, 'personal'>, string>
   fieldlevel: 'fieldlevel.com',
   hudl: 'hudl.com',
   captainu: 'captainu.com',
+  maxfh: 'maxfh.longstreth.com',
   maxpreps: 'maxpreps.com',
 };
 
@@ -356,7 +364,8 @@ export const PlayerProfileSchema = z
     const want = PROFILE_HOSTS[p.platform];
     return host === want || host.endsWith(`.${want}`);
   }, 'url is not a valid URL on the platform it names')
-  .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none');
+  .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none')
+  .refine((p) => p.platform !== 'maxfh' || (p.sport ?? SPORT_ID) === 'field-hockey', 'a maxfh profile is a field hockey page');
 
 /** A profile's uniqueness key, platform and sport (the build's own when it names none): one profile per pair. */
 export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? SPORT_ID}`;

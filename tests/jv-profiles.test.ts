@@ -154,7 +154,7 @@ describe('the profile links on the team page’s JV roster', () => {
       for (const e of entries.filter((x) => x.slug === slug)) {
         const row = view.rows.find((r) => nameKey(r.name) === nameKey(e.name))!;
         expect(row.profiles.map((p) => p.url).sort(), `${slug}: ${e.name}`).toEqual(e.profiles.map((p) => p.url).sort());
-        for (const p of row.profiles) expect(p.label).toMatch(/^(NCSA|SportsRecruits|FieldLevel|Hudl|Captain U)( [a-z &]+)? profile$|recruiting site$/i);
+        for (const p of row.profiles) expect(p.label).toMatch(/^(NCSA|SportsRecruits|FieldLevel|Hudl|Captain U|MAX Field Hockey)( [a-z &]+)? profile$|recruiting site$/i);
       }
       expect(view.profilePlatforms.length, slug).toBeGreaterThan(0);
       const text = textOf(renderToStaticMarkup(createElement(TeamJvRoster, { view })));

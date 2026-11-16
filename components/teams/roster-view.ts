@@ -97,6 +97,7 @@ const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }>
   fieldlevel: { link: 'FieldLevel profile', footnote: 'FieldLevel' },
   hudl: { link: 'Hudl profile', footnote: 'Hudl' },
   captainu: { link: 'Captain U profile', footnote: 'Captain U' },
+  maxfh: { link: 'MAX Field Hockey profile', footnote: 'MAX Field Hockey' },
   maxpreps: { link: 'MaxPreps profile', footnote: 'MaxPreps' },
   personal: { link: 'Recruiting site', footnote: 'personal sites' },
 };
