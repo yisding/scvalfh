@@ -103,13 +103,14 @@ could find, and the San Diego Section's power rankings are not league standings)
 third-party is shown in their place; the independents' card says they played as independents in
 2025-26 too (MaxPreps' 2025-26 Palomares, League B and Marmonte tables each list one field hockey
 team), so there was no table to publish. MCAL's card links the league's
-official 2025 all-league team without reproducing it. The page also shows the 2025 section playoff brackets with
-every result: the CCS's two divisions (from the CCS's own bracket pages and its field hockey history)
-after PCAL, and the San Diego Section's Open, Division I and Division II (from the Section's bracket
-sheet and Record Book) after Metro, and the 2025 Tournament of Champions after the LA independents
-(`#toc`: Harvard-Westlake 4-0 Newport Harbor in the final; no bracket or seeds were published, so the
-bracket is assembled from the Harvard-Westlake Chronicle and MaxPreps' 2025-26 schedules and prints no
-seed), so the SoCal half has last season's results even though no SoCal league published standings. Rosters and player stats cover all 102 teams.
+official 2025 all-league team without reproducing it. The page opens, before any league, on the 2025 section
+playoff brackets with every result: the CCS's two divisions (from the CCS's own bracket pages and its field hockey
+history) in NorCal, and the San Diego Section's Open, Division I and Division II (from the Section's bracket
+sheet and Record Book) and the 2025 Tournament of Champions in SoCal (`#toc`: Harvard-Westlake 4-0 Newport Harbor
+in the final; no bracket or seeds were published, so the bracket is assembled from the Harvard-Westlake Chronicle
+and MaxPreps' 2025-26 schedules, prints no seed, and is laid out as `/playoffs` lays out the 2026 event, the
+third-place game a card under the final), so the SoCal half has last season's results even though no SoCal league
+published standings. Rosters and player stats cover all 102 teams.
 
 The EAL has no schedule or standings document of its own: its rules come from the CIF Northern
 Section's Field Hockey Guidelines 2026-28, its league games are the games MaxPreps marks as league
@@ -172,7 +173,7 @@ Per-league pages show their own region's league chips.
 | `/playoffs` | "Playoffs", one block per region, each opening with "Where every league stands" (`#board-norcal`, `#board-socal`: one row per postseason with what it is and its next dated item, linking its section) and "This week in the postseason" (`#this-week-norcal`, `#this-week-socal`: the region's postseason games and dated events from two days back to a week ahead, at most 12 rows, each linking its game page or block). Every league has a section of the same shape (DESIGN §32). `#norcal`: the CCS intro and `#bracket` under it (one path per proven CCS division, "CCS Division 1" and "CCS Division 2", from the games MaxPreps lists, with seeds and pairing cards from `data/ccs-bracket-2026.json`; before seeding, one sentence), then `#scval #bval #pcal` (each league's crossover and play-in cards first, `#<league>-pairings`, with their results, then its division tables), the at-large berths, the key dates with each round's site in the CCS calendar's words, `#mcal` (the tournament's next round or champion, linking `/playoffs/mcal`) and `#eal` (the Super Regional's dates, the top-six rule, the listed site and streams, the Guidelines and the results by day as MaxPreps posts them; no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, the round dates (`#sds-round-dates`) and links to the Section's brackets sheet, the officials' calendar and the Section's field hockey page; `#sds-bracket`, the Section's published brackets with MaxPreps' results, from `data/sds-brackets-2026.json`; never a projected place or a seed word), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card (with the Tournament of Champions, `#toc`, the postseason for both the Sunset and the LA independents) and an `#independents` card pointing to it |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s). Once it is under way it reads the results, the bracket before the seeds: a `#headline` block ("Next" with the next round, "3 Redwood at 1 Tamalpais", or "Champion"), each seed's outcome in the Status column, the winner of each decided game marked, the final's venue, Directions link and admission, and the same headline in its title and OG card |
 | `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the five independents, who are on every SoCal board, league record included), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
-| `/history/2025-26` | (The soccer and basketball builds: SCVAL's two divisions, `#de-anza #el-camino`, varsity and JV final standings and the all-league teams, and no bracket.) Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either; the 2025 CCS bracket (`#ccs`, after PCAL), the San Diego Section's (`#sds`, after Metro) and the 2025 Tournament of Champions (`#toc`, after the LA independents, unseeded, its third-place game under it; the Sunset and LA cards link it) |
+| `/history/2025-26` | Opens on the postseason, before any league. Field hockey: the 2025 CCS bracket (`#ccs`, NorCal: each division's champion, then `#ccs-division-1` and `#ccs-division-2`), the San Diego Section's (`#sds`, SoCal) and the 2025 Tournament of Champions (`#toc`, SoCal, laid out as `/playoffs` lays out the 2026 event: its dates in the heading, `#toc-bracket` with the third-place game as a card under the final, unseeded; the Sunset and LA cards link it). Then the prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either. (The soccer, basketball and volleyball builds: the 2025-26 CCS championship, `#ccs` (every division's champion, then each division with a team of ours, drawn as `/playoffs` draws the current season's, the others named once), and the CIF State divisions our teams played in, `#cif`, both read whole from MaxPreps' tournament pages into `data/<sport>/history-brackets-2025-26.json` `published`; then SCVAL's two divisions, `#de-anza #el-camino`, varsity and JV final standings and the all-league teams, and the other leagues marked unavailable.) |
 | `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
@@ -1875,7 +1876,21 @@ entry, and BVAL's marked unavailable (above). SCVAL's comes from two inputs (`sc
   a third team, which the schema's optional `thirdTeam` holds), and the De Anza girls soccer PDF's text comes
   out of pdftotext with letters split from their words, so no parser reads them.
 
-Neither build has a 2025 bracket in the archive: the CCS brackets' other schools are not in their registries.
+### Last season's CCS and CIF State brackets in the soccer, basketball and volleyball builds
+
+`data/<sport>/history-brackets-2025-26.json` holds `published` (added 2026-11-16): the 2025-26 CCS championship,
+every division, and the CIF State divisions a team of ours played in, read whole from MaxPreps' tournament pages
+by the parser `/playoffs` reads the current season's with (`lib/sources/maxpreps-tournament.ts`), in its shape
+(`lib/types.ts` TournamentBracket), and validated by `PublishedBracketsSchema` (`lib/history/history-brackets-schema.ts`:
+one tree per division, every game decided, every winner going on). The pages were found from last season's team
+schedules (each bracket game's `tournamentCanonicalUrl` under the prior `sportSeasonId`) and read one division at
+a time; the file's `notes` list each page. /history/2025-26 opens on them (`#ccs`: every division's champion, then
+the divisions that hold a team of ours, drawn by `components/playoffs/TournamentBrackets.tsx`, the others named
+once; `#cif`: the regional our teams played in and the state final), so last season's bracket reads as this
+season's does. Every school is in it, ours or not: a side is keyed by MaxPreps' school id and the registry names
+ours. The 2025 girls volleyball pages print no round headers, so each round's name comes from its place in the
+tree and its day from the games' own dates in last season's schedules (or, where no team of ours played that
+round, the same round's day in the other divisions); the `notes` say which. Nothing refreshes the file.
 
 Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
 standings they are on MaxPreps: the schedule read takes a season id, and each team's

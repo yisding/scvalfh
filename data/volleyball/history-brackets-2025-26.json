@@ -2,5 +2,5237 @@
   "season": "2025-26",
   "sport": "Girls Volleyball",
   "sections": {},
-  "tournaments": {}
+  "tournaments": {},
+  "published": {
+    "retrievedOn": "2026-11-16",
+    "notes": [
+      "Read whole from MaxPreps' tournament pages on 2026-11-16 by lib/sources/maxpreps-tournament.ts, one division page at a time (/tournament/<tournament>/<bracket>/….htm; the site answered 403 to faster reads). The pages were found from last season's team schedules: each bracket game's tournamentCanonicalUrl under the prior sportSeasonId. Each bracket's `url` is the page MaxPreps names canonical.",
+      "CCS: the 2025 Central Coast Section Girls Volleyball Championship (tournament 40f73ee4-310f-4dc6-907c-2988ad5ac922), the Open Division and Divisions 1-5, every division whether or not a team of ours played in it.",
+      "CIF State: the 2025 CIF State Girls Volleyball Championships (tournament c3d49834-5c65-4e9e-81f8-2ba917f95824), the four divisions a team of ours played in: Open, I, II and III.",
+      "The 2025 CCS pages print no round headers (no round-name, no start-date), so each round's name is its depth in the tree (Final, Semi Finals, Quarter Finals, 1st Round) and its day the most common date of its games in last season's team schedules. Three rounds held no game of ours and take the same round's day in the other CCS divisions: Division 4's Final (2025-11-08), Division 5's 1st Round (2025-11-01) and Division 5's Final (2025-11-08).",
+      "The CIF State pages print their own round headers."
+    ],
+    "brackets": [
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "76bab8c5-8629-44b6-ab45-f4c82bac8579",
+        "name": "Open Division",
+        "matchups": [
+          {
+            "id": "f0455936-b1cc-48ba-9bf8-8bdd39049316",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-01",
+            "next": "e7017f7e-ebe6-4a36-be1e-d5036f050ca8",
+            "contestId": "cc6c5191-6f26-4ab3-9696-5a93e43dd80e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0279f2de-d5ce-484d-b210-2286ded42058",
+                "name": "Los Altos",
+                "seed": 6,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "5ef9c1df-4add-47e4-b0e3-5bebbcd23ef4",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-01",
+            "next": "e7017f7e-ebe6-4a36-be1e-d5036f050ca8",
+            "contestId": "810a6656-1214-413a-9f42-0b7c17bebe34",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
+                "name": "Homestead",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "4729d5ec-3c28-4624-8815-c1d5120f85c4",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-01",
+            "next": "83735823-6983-48c3-bf82-825920b48ad9",
+            "contestId": "435ebfda-e496-4e01-84ee-22cbd411543b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "27d82a51-2b44-492e-b2cf-114730027de3",
+                "name": "Sacred Heart Prep",
+                "seed": 5,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+                "name": "Valley Christian",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ebe7a17e-8acb-42da-8d75-e6f9a65e7999",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-01",
+            "next": "83735823-6983-48c3-bf82-825920b48ad9",
+            "contestId": "08fa99dd-b84c-4536-8b04-e8622caf7634",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+                "name": "Palo Alto",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e7017f7e-ebe6-4a36-be1e-d5036f050ca8",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-05",
+            "next": "66e4b49d-dcb2-4885-8a98-f6f192d38dcb",
+            "contestId": "3484cf4e-b0a3-430e-80f6-404cf3289256",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 3,
+                "score": 3,
+                "from": "f0455936-b1cc-48ba-9bf8-8bdd39049316"
+              },
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 2,
+                "score": 0,
+                "from": "5ef9c1df-4add-47e4-b0e3-5bebbcd23ef4"
+              }
+            ]
+          },
+          {
+            "id": "83735823-6983-48c3-bf82-825920b48ad9",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-05",
+            "next": "66e4b49d-dcb2-4885-8a98-f6f192d38dcb",
+            "contestId": "4b03eade-cac2-49fc-8bab-dab13cff3a4a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+                "name": "Valley Christian",
+                "seed": 4,
+                "score": 0,
+                "from": "4729d5ec-3c28-4624-8815-c1d5120f85c4"
+              },
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 3,
+                "from": "ebe7a17e-8acb-42da-8d75-e6f9a65e7999"
+              }
+            ]
+          },
+          {
+            "id": "66e4b49d-dcb2-4885-8a98-f6f192d38dcb",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "9cb7a99d-f511-4e06-a76d-a441f0577342",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 3,
+                "score": 0,
+                "from": "e7017f7e-ebe6-4a36-be1e-d5036f050ca8"
+              },
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 3,
+                "from": "83735823-6983-48c3-bf82-825920b48ad9"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "48dddfd1-ec35-46ee-bf77-348c69dec11c",
+        "name": "Division 1",
+        "matchups": [
+          {
+            "id": "720501db-1091-428b-90ea-6444ed03b74b",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "2f06cabd-8720-4775-bdf4-40cae26f1868",
+            "contestId": "4b85df55-1a4d-4438-a6cb-1029343cd0ed",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "554a6e7c-06b6-473a-9461-9f155294d249",
+                "name": "Evergreen Valley",
+                "seed": 11,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
+                "name": "Cupertino",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "703fdf70-22ad-4f4a-a707-2141ee566b80",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "2f06cabd-8720-4775-bdf4-40cae26f1868",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
+                "name": "Milpitas",
+                "seed": 3,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "084ecd54-c7f0-4161-bef5-e814fb6ffd46",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "c946ce65-9ba4-4ca9-848e-3a779002957d",
+            "contestId": "79477646-65b7-400f-8286-12a4b7c9f07f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "67ecee2b-27a0-4bb1-af2c-0eefe9197f9a",
+                "name": "Alisal",
+                "seed": 10,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "f91b7d00-fca4-4bfe-992f-896e0d81a43c",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "c946ce65-9ba4-4ca9-848e-3a779002957d",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+                "name": "Salinas",
+                "seed": 2,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ee0d80c5-36db-4cc8-8770-4d526349a091",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "9257020d-2bac-432e-8a5b-7395ae23c654",
+            "contestId": "2e86e552-71cb-46c4-b1c2-faaf8f9776d2",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
+                "name": "Branham",
+                "seed": 12,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
+                "name": "Carlmont",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "4c99cfa5-1b8b-49ad-9b41-e096ce602406",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "9257020d-2bac-432e-8a5b-7395ae23c654",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 4,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a37819af-3131-4821-92f8-c9b51bc2fe9c",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "20e7b88b-070a-4b57-8b54-48455df1f7c5",
+            "contestId": "9131cd13-80f9-4f8a-a100-60aaa7937e7e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "09beba1b-240a-45b8-aa6e-281decefa275",
+                "name": "Mountain View",
+                "seed": 9,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+                "name": "Hollister",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "75468a16-1ad1-416d-9137-27219063d0a8",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "20e7b88b-070a-4b57-8b54-48455df1f7c5",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2f06cabd-8720-4775-bdf4-40cae26f1868",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "59256e1e-99eb-41b0-b683-7b7e3235a093",
+            "contestId": "3f35a1dd-3bb8-4764-9c79-b7e7fe39cd3f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
+                "name": "Cupertino",
+                "seed": 6,
+                "score": 2,
+                "from": "720501db-1091-428b-90ea-6444ed03b74b"
+              },
+              {
+                "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
+                "name": "Milpitas",
+                "seed": 3,
+                "score": 3,
+                "from": "703fdf70-22ad-4f4a-a707-2141ee566b80"
+              }
+            ]
+          },
+          {
+            "id": "c946ce65-9ba4-4ca9-848e-3a779002957d",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "59256e1e-99eb-41b0-b683-7b7e3235a093",
+            "contestId": "5495fb86-3548-44bb-b78f-6c06fff2e150",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 7,
+                "score": 3,
+                "from": "084ecd54-c7f0-4161-bef5-e814fb6ffd46"
+              },
+              {
+                "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+                "name": "Salinas",
+                "seed": 2,
+                "score": 0,
+                "from": "f91b7d00-fca4-4bfe-992f-896e0d81a43c"
+              }
+            ]
+          },
+          {
+            "id": "9257020d-2bac-432e-8a5b-7395ae23c654",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "57fc1bfe-b0db-4d78-ad11-c2b8ce1ba1e1",
+            "contestId": "193dc55c-b7a7-4218-8ab0-fffbf35ef229",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
+                "name": "Carlmont",
+                "seed": 5,
+                "score": 0,
+                "from": "ee0d80c5-36db-4cc8-8770-4d526349a091"
+              },
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 4,
+                "score": 3,
+                "from": "4c99cfa5-1b8b-49ad-9b41-e096ce602406"
+              }
+            ]
+          },
+          {
+            "id": "20e7b88b-070a-4b57-8b54-48455df1f7c5",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "57fc1bfe-b0db-4d78-ad11-c2b8ce1ba1e1",
+            "contestId": "68451306-44e8-425b-a4b0-7f46898e3fdf",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+                "name": "Hollister",
+                "seed": 8,
+                "score": 0,
+                "from": "a37819af-3131-4821-92f8-c9b51bc2fe9c"
+              },
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 1,
+                "score": 3,
+                "from": "75468a16-1ad1-416d-9137-27219063d0a8"
+              }
+            ]
+          },
+          {
+            "id": "59256e1e-99eb-41b0-b683-7b7e3235a093",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "a724424f-ae37-4217-ba84-a4d1198cb602",
+            "contestId": "014c3dea-79f5-4af1-8ef7-bb56a9201506",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
+                "name": "Milpitas",
+                "seed": 3,
+                "score": 3,
+                "from": "2f06cabd-8720-4775-bdf4-40cae26f1868"
+              },
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 7,
+                "score": 1,
+                "from": "c946ce65-9ba4-4ca9-848e-3a779002957d"
+              }
+            ]
+          },
+          {
+            "id": "57fc1bfe-b0db-4d78-ad11-c2b8ce1ba1e1",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "a724424f-ae37-4217-ba84-a4d1198cb602",
+            "contestId": "58275acc-88f2-48a6-bfac-dbe40778f933",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 4,
+                "score": 0,
+                "from": "9257020d-2bac-432e-8a5b-7395ae23c654"
+              },
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 1,
+                "score": 3,
+                "from": "20e7b88b-070a-4b57-8b54-48455df1f7c5"
+              }
+            ]
+          },
+          {
+            "id": "a724424f-ae37-4217-ba84-a4d1198cb602",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "5d7c21e8-af1a-46da-a6c0-dcd8c581c24f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
+                "name": "Milpitas",
+                "seed": 3,
+                "score": 3,
+                "from": "59256e1e-99eb-41b0-b683-7b7e3235a093"
+              },
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 1,
+                "score": 1,
+                "from": "57fc1bfe-b0db-4d78-ad11-c2b8ce1ba1e1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "ee9b7a1a-bb7a-48a4-a884-84b8244f7d9d",
+        "name": "Division 2",
+        "matchups": [
+          {
+            "id": "bebcfd4e-e1a2-4279-82ea-05fd354050b3",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "1af9a36b-9062-4de0-a0f7-84049b0cbd7d",
+            "contestId": "38b843e7-eb55-4521-83a1-fb0d050ffe82",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
+                "name": "Ann Sobrato",
+                "seed": 11,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "df328832-de09-4e7a-b24a-aff523ff6aa5",
+                "name": "Rancho San Juan",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "b6589611-3c75-435d-902e-fe052813afb7",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "1af9a36b-9062-4de0-a0f7-84049b0cbd7d",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
+                "name": "Burlingame",
+                "seed": 3,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "bb532ce8-88e7-4dfc-ab38-e3bb95979cd6",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3950cc5c-3a9f-448c-b561-413e26a3d37d",
+            "contestId": "72b2b470-df5c-4bcf-84ab-584deb3d731b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
+                "name": "Wilcox",
+                "seed": 10,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "23723b27-4092-4f9b-8f32-892896c67a84",
+                "name": "Lincoln",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "26552057-41e8-48cc-bfa0-363b3e871f3f",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3950cc5c-3a9f-448c-b561-413e26a3d37d",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0c47301e-e7da-4a1f-9be2-00ab216f8e91",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "11559419-674e-4390-b0fb-62637b51e6b8",
+            "contestId": "48b7510e-a45b-48c2-b34f-c1528c349bad",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "55853f70-2545-4bfe-a107-4142093e929a",
+                "name": "San Mateo",
+                "seed": 12,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
+                "name": "Santa Clara",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "581a52f8-7549-4671-a8cf-5c1bcbb0f60a",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "11559419-674e-4390-b0fb-62637b51e6b8",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+                "name": "Leland",
+                "seed": 4,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "5e53b417-60b6-4861-bb5d-83b9bbd7e9f6",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "a750dc4e-557c-40d0-ad13-81857d5c5b44",
+            "contestId": "6e2e20ab-05da-4d55-b268-13fc4b73d436",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1959d651-408f-4764-94a5-144cea89c499",
+                "name": "Westmont",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
+                "name": "Gunn",
+                "seed": 8,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "70d2e2e5-49c3-4802-bb6a-76918364e8f6",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "a750dc4e-557c-40d0-ad13-81857d5c5b44",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "1af9a36b-9062-4de0-a0f7-84049b0cbd7d",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "a8046dc6-0c81-4831-9c61-c164513d1e57",
+            "contestId": "826f7eb7-da41-46f2-b47d-426a3afb91d5",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
+                "name": "Ann Sobrato",
+                "seed": 11,
+                "score": 0,
+                "from": "bebcfd4e-e1a2-4279-82ea-05fd354050b3"
+              },
+              {
+                "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
+                "name": "Burlingame",
+                "seed": 3,
+                "score": 3,
+                "from": "b6589611-3c75-435d-902e-fe052813afb7"
+              }
+            ]
+          },
+          {
+            "id": "3950cc5c-3a9f-448c-b561-413e26a3d37d",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "a8046dc6-0c81-4831-9c61-c164513d1e57",
+            "contestId": "f00180c0-bd83-4134-8911-845505cfbc3f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "23723b27-4092-4f9b-8f32-892896c67a84",
+                "name": "Lincoln",
+                "seed": 7,
+                "score": 0,
+                "from": "bb532ce8-88e7-4dfc-ab38-e3bb95979cd6"
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": 3,
+                "from": "26552057-41e8-48cc-bfa0-363b3e871f3f"
+              }
+            ]
+          },
+          {
+            "id": "11559419-674e-4390-b0fb-62637b51e6b8",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "b9aad8cb-9f59-41a6-ac30-c9357ca04644",
+            "contestId": "ec8bf020-c16e-485a-8563-d445fdd988a0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
+                "name": "Santa Clara",
+                "seed": 5,
+                "score": 0,
+                "from": "0c47301e-e7da-4a1f-9be2-00ab216f8e91"
+              },
+              {
+                "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+                "name": "Leland",
+                "seed": 4,
+                "score": 3,
+                "from": "581a52f8-7549-4671-a8cf-5c1bcbb0f60a"
+              }
+            ]
+          },
+          {
+            "id": "a750dc4e-557c-40d0-ad13-81857d5c5b44",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "b9aad8cb-9f59-41a6-ac30-c9357ca04644",
+            "contestId": "2288fc18-98d4-4284-abdb-03909f353157",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1959d651-408f-4764-94a5-144cea89c499",
+                "name": "Westmont",
+                "seed": 9,
+                "score": 0,
+                "from": "5e53b417-60b6-4861-bb5d-83b9bbd7e9f6"
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": 3,
+                "from": "70d2e2e5-49c3-4802-bb6a-76918364e8f6"
+              }
+            ]
+          },
+          {
+            "id": "a8046dc6-0c81-4831-9c61-c164513d1e57",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "0e31202a-90d6-4d91-855c-544289b09ed6",
+            "contestId": "eb860fa0-dcbe-4be4-a4f4-a6f9393e655d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
+                "name": "Burlingame",
+                "seed": 3,
+                "score": 1,
+                "from": "1af9a36b-9062-4de0-a0f7-84049b0cbd7d"
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": 3,
+                "from": "3950cc5c-3a9f-448c-b561-413e26a3d37d"
+              }
+            ]
+          },
+          {
+            "id": "b9aad8cb-9f59-41a6-ac30-c9357ca04644",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "0e31202a-90d6-4d91-855c-544289b09ed6",
+            "contestId": "001f8577-f264-42b1-8903-666f9a034460",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+                "name": "Leland",
+                "seed": 4,
+                "score": 2,
+                "from": "11559419-674e-4390-b0fb-62637b51e6b8"
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": 3,
+                "from": "a750dc4e-557c-40d0-ad13-81857d5c5b44"
+              }
+            ]
+          },
+          {
+            "id": "0e31202a-90d6-4d91-855c-544289b09ed6",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "e9b691cc-0719-4585-a3a6-317696e4c6ef",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": 1,
+                "from": "a8046dc6-0c81-4831-9c61-c164513d1e57"
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": 3,
+                "from": "b9aad8cb-9f59-41a6-ac30-c9357ca04644"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "d5b3f9f8-006e-4654-a12c-3ece71caf29d",
+        "name": "Division 3",
+        "matchups": [
+          {
+            "id": "2efb6bbc-3ddd-45a1-b7e4-e23c6a91e892",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "01066549-1f56-4c1a-ab27-a0beb5d1535a",
+            "contestId": "b69fb76e-9a3a-4261-835e-745853783a35",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f",
+                "name": "North Monterey County",
+                "seed": 11,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
+                "name": "Soquel",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "b3045868-bc4d-4847-9fa3-ac053993efef",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "01066549-1f56-4c1a-ab27-a0beb5d1535a",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
+                "name": "Capuchino",
+                "seed": 3,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "9f1e0ad9-5ed5-422e-8186-dc2485e98baf",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3dfbd744-27f0-4ccb-b41b-5b1a40319974",
+            "contestId": "00461e9b-f600-4556-a578-bf4036e349c4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
+                "name": "Pioneer",
+                "seed": 10,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
+                "name": "Aptos",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "4312fc44-dc9f-4d55-ab68-251dc2efaa09",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3dfbd744-27f0-4ccb-b41b-5b1a40319974",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 2,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "462d300b-89b3-47ed-ad6a-1caabda686e0",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "51c95f73-de31-4657-8cb9-51dea5037de5",
+            "contestId": "75c440bb-fbaa-4850-b36b-6a7b554acdbd",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666",
+                "name": "Mills",
+                "seed": 12,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
+                "name": "Santa Cruz",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "33177354-c0a5-46d7-8a2c-478d9ca58087",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "51c95f73-de31-4657-8cb9-51dea5037de5",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+                "name": "Monterey",
+                "seed": 4,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e17e6ec1-5d09-4dc8-9d89-abc7a545677c",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "61be2b05-b9c8-4af3-9b64-13a3037e3c58",
+            "contestId": "ac436dcf-7f4f-4a26-945d-5d96a9924d2e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
+                "name": "Saratoga",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "0539f031-d94b-48f4-bd7f-7f9374edacb8",
+                "name": "King City",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "85154ade-07cd-4a95-891d-448523f451b0",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "61be2b05-b9c8-4af3-9b64-13a3037e3c58",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+                "name": "Sacred Heart Cathedral Preparatory",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "01066549-1f56-4c1a-ab27-a0beb5d1535a",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "eba09d9c-07e6-4506-8e31-f94e52c74206",
+            "contestId": "5f559b31-4eba-481c-aeb1-36662ac5038b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
+                "name": "Soquel",
+                "seed": 6,
+                "score": 1,
+                "from": "2efb6bbc-3ddd-45a1-b7e4-e23c6a91e892"
+              },
+              {
+                "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
+                "name": "Capuchino",
+                "seed": 3,
+                "score": 3,
+                "from": "b3045868-bc4d-4847-9fa3-ac053993efef"
+              }
+            ]
+          },
+          {
+            "id": "3dfbd744-27f0-4ccb-b41b-5b1a40319974",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "eba09d9c-07e6-4506-8e31-f94e52c74206",
+            "contestId": "f15f35b8-178d-46a3-b3a7-c2ba43461ef4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
+                "name": "Aptos",
+                "seed": 7,
+                "score": 0,
+                "from": "9f1e0ad9-5ed5-422e-8186-dc2485e98baf"
+              },
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 2,
+                "score": 3,
+                "from": "4312fc44-dc9f-4d55-ab68-251dc2efaa09"
+              }
+            ]
+          },
+          {
+            "id": "51c95f73-de31-4657-8cb9-51dea5037de5",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "7813990d-2020-42dc-b2b5-53fb76701d0b",
+            "contestId": "6d5293be-6f08-456e-b3b5-79f4b61da581",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
+                "name": "Santa Cruz",
+                "seed": 5,
+                "score": 3,
+                "from": "462d300b-89b3-47ed-ad6a-1caabda686e0"
+              },
+              {
+                "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+                "name": "Monterey",
+                "seed": 4,
+                "score": 0,
+                "from": "33177354-c0a5-46d7-8a2c-478d9ca58087"
+              }
+            ]
+          },
+          {
+            "id": "61be2b05-b9c8-4af3-9b64-13a3037e3c58",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "7813990d-2020-42dc-b2b5-53fb76701d0b",
+            "contestId": "6063e18d-720f-4ce2-b658-33fdd999ae61",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
+                "name": "Saratoga",
+                "seed": 9,
+                "score": 3,
+                "from": "e17e6ec1-5d09-4dc8-9d89-abc7a545677c"
+              },
+              {
+                "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+                "name": "Sacred Heart Cathedral Preparatory",
+                "seed": 1,
+                "score": 2,
+                "from": "85154ade-07cd-4a95-891d-448523f451b0"
+              }
+            ]
+          },
+          {
+            "id": "eba09d9c-07e6-4506-8e31-f94e52c74206",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "c057addf-cc6f-4436-89ba-c0289b440ec8",
+            "contestId": "698605f2-f26c-41aa-b86a-5148cce18b25",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
+                "name": "Capuchino",
+                "seed": 3,
+                "score": 0,
+                "from": "01066549-1f56-4c1a-ab27-a0beb5d1535a"
+              },
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 2,
+                "score": 3,
+                "from": "3dfbd744-27f0-4ccb-b41b-5b1a40319974"
+              }
+            ]
+          },
+          {
+            "id": "7813990d-2020-42dc-b2b5-53fb76701d0b",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "c057addf-cc6f-4436-89ba-c0289b440ec8",
+            "contestId": "01c1f64f-d1bb-42ee-b281-6f90899f242f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
+                "name": "Santa Cruz",
+                "seed": 5,
+                "score": 3,
+                "from": "51c95f73-de31-4657-8cb9-51dea5037de5"
+              },
+              {
+                "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
+                "name": "Saratoga",
+                "seed": 9,
+                "score": 1,
+                "from": "61be2b05-b9c8-4af3-9b64-13a3037e3c58"
+              }
+            ]
+          },
+          {
+            "id": "c057addf-cc6f-4436-89ba-c0289b440ec8",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "aedf07fd-3b60-4146-8e54-b89264bf0751",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 2,
+                "score": 3,
+                "from": "eba09d9c-07e6-4506-8e31-f94e52c74206"
+              },
+              {
+                "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
+                "name": "Santa Cruz",
+                "seed": 5,
+                "score": 0,
+                "from": "7813990d-2020-42dc-b2b5-53fb76701d0b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "21eec1aa-1e5b-40b3-903b-7199bcc63841",
+        "name": "Division 4",
+        "matchups": [
+          {
+            "id": "a4341f62-51b1-48f4-b87d-e0ef18206cdd",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3a7f5270-f9fb-4b5b-be90-6d445424d22f",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 6,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6ab6c189-fbae-4f22-9ebc-e272f206dd4d",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3a7f5270-f9fb-4b5b-be90-6d445424d22f",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "5041038f-a821-4209-90af-196b6d756e48",
+                "name": "Pacific Grove",
+                "seed": 3,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "49bd0662-3aa9-4d85-b2c6-13592543f582",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "4e143efe-f807-462d-8f80-f70d6766949f",
+            "contestId": "157c5062-63a7-48f4-b443-b668e53cf089",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
+                "name": "Stevenson",
+                "seed": 10,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+                "name": "Carmel",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "267d56fe-c498-4af5-8f7e-4ad82653d7f9",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "4e143efe-f807-462d-8f80-f70d6766949f",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
+                "name": "Harbor",
+                "seed": 2,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "75666ae4-fdd9-4e67-8b30-48c03022b6df",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "04ef1bfb-bfc7-402f-ae18-899831ea4f59",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
+                "name": "Harker",
+                "seed": 5,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "eb6c47e3-90a8-402c-a830-b8806db3283c",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "04ef1bfb-bfc7-402f-ae18-899831ea4f59",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
+                "name": "Notre Dame",
+                "seed": 4,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "c61ccb76-5f65-456f-8313-db3319fe8bb7",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "510ee239-5916-455a-94e2-8a2e5f8ccd8f",
+            "contestId": "d4ae9c98-68c6-42d2-8e43-6e85aa079047",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+                "name": "King's Academy",
+                "seed": 9,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926",
+                "name": "Half Moon Bay",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "524d8cf9-030d-45e7-9ca4-c437b1846c34",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "510ee239-5916-455a-94e2-8a2e5f8ccd8f",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
+                "name": "Scotts Valley",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "3a7f5270-f9fb-4b5b-be90-6d445424d22f",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "aeb31870-7b23-48d8-a2c4-a6444cdbe85d",
+            "contestId": "5c7a137b-4f26-4fe3-b567-5dc9c52e7172",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 6,
+                "score": 3,
+                "from": "a4341f62-51b1-48f4-b87d-e0ef18206cdd"
+              },
+              {
+                "teamId": "5041038f-a821-4209-90af-196b6d756e48",
+                "name": "Pacific Grove",
+                "seed": 3,
+                "score": 1,
+                "from": "6ab6c189-fbae-4f22-9ebc-e272f206dd4d"
+              }
+            ]
+          },
+          {
+            "id": "4e143efe-f807-462d-8f80-f70d6766949f",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "aeb31870-7b23-48d8-a2c4-a6444cdbe85d",
+            "contestId": "3e5b090c-3a45-4348-8337-ad0e756b4fd7",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
+                "name": "Carmel",
+                "seed": 7,
+                "score": 0,
+                "from": "49bd0662-3aa9-4d85-b2c6-13592543f582"
+              },
+              {
+                "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
+                "name": "Harbor",
+                "seed": 2,
+                "score": 3,
+                "from": "267d56fe-c498-4af5-8f7e-4ad82653d7f9"
+              }
+            ]
+          },
+          {
+            "id": "04ef1bfb-bfc7-402f-ae18-899831ea4f59",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "cd9a3bf3-d6c8-4473-92bc-721c0c96692f",
+            "contestId": "b1921da4-6469-4025-8acf-767bcabafc98",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
+                "name": "Harker",
+                "seed": 5,
+                "score": 3,
+                "from": "75666ae4-fdd9-4e67-8b30-48c03022b6df"
+              },
+              {
+                "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b",
+                "name": "Notre Dame",
+                "seed": 4,
+                "score": 1,
+                "from": "eb6c47e3-90a8-402c-a830-b8806db3283c"
+              }
+            ]
+          },
+          {
+            "id": "510ee239-5916-455a-94e2-8a2e5f8ccd8f",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "cd9a3bf3-d6c8-4473-92bc-721c0c96692f",
+            "contestId": "0432d200-0c18-42a4-901c-d44020a69027",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926",
+                "name": "Half Moon Bay",
+                "seed": 8,
+                "score": 0,
+                "from": "c61ccb76-5f65-456f-8313-db3319fe8bb7"
+              },
+              {
+                "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
+                "name": "Scotts Valley",
+                "seed": 1,
+                "score": 3,
+                "from": "524d8cf9-030d-45e7-9ca4-c437b1846c34"
+              }
+            ]
+          },
+          {
+            "id": "aeb31870-7b23-48d8-a2c4-a6444cdbe85d",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "cc384f10-b70a-4dd4-9f6b-5fefa287b1c8",
+            "contestId": "55a48461-ae20-4783-95d5-a07f3744055c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 6,
+                "score": 2,
+                "from": "3a7f5270-f9fb-4b5b-be90-6d445424d22f"
+              },
+              {
+                "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
+                "name": "Harbor",
+                "seed": 2,
+                "score": 3,
+                "from": "4e143efe-f807-462d-8f80-f70d6766949f"
+              }
+            ]
+          },
+          {
+            "id": "cd9a3bf3-d6c8-4473-92bc-721c0c96692f",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "cc384f10-b70a-4dd4-9f6b-5fefa287b1c8",
+            "contestId": "cc8f40b5-fc1a-48af-98a5-f428c1a7c881",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
+                "name": "Harker",
+                "seed": 5,
+                "score": 0,
+                "from": "04ef1bfb-bfc7-402f-ae18-899831ea4f59"
+              },
+              {
+                "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
+                "name": "Scotts Valley",
+                "seed": 1,
+                "score": 3,
+                "from": "510ee239-5916-455a-94e2-8a2e5f8ccd8f"
+              }
+            ]
+          },
+          {
+            "id": "cc384f10-b70a-4dd4-9f6b-5fefa287b1c8",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "641e55b6-e5df-4bd1-8337-ab3116681ced",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
+                "name": "Harbor",
+                "seed": 2,
+                "score": 3,
+                "from": "aeb31870-7b23-48d8-a2c4-a6444cdbe85d"
+              },
+              {
+                "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
+                "name": "Scotts Valley",
+                "seed": 1,
+                "score": 2,
+                "from": "cd9a3bf3-d6c8-4473-92bc-721c0c96692f"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/5D73QA8xxk2QfCmIrVrJIg/volleyball-25/2025-central-coast-section-girls-volleyball-championship.htm",
+        "tournament": "2025 Central Coast Section Girls Volleyball Championship",
+        "bracketId": "fba2da7c-c459-497b-ad81-43f58dd7d07c",
+        "name": "Division 5",
+        "matchups": [
+          {
+            "id": "8f11f7d5-7659-49fc-845d-46e777e0bba8",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3a86d1b9-3c93-48df-92ee-6444c817cded",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 6,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "d4009501-9f75-42c6-84ac-a1ac995d8457",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "3a86d1b9-3c93-48df-92ee-6444c817cded",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+                "name": "St. Francis",
+                "seed": 3,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "697348bb-e30e-4c1d-8b7e-f4af9cfce3f3",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "b8fe6c76-02e2-4f7d-b4a7-058f4dfad500",
+            "contestId": "1de76d0a-8231-4738-8bc4-fbf9f58ec845",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+                "name": "More",
+                "seed": 10,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "7480e790-84cc-48ce-bf55-4126dac053f1",
+                "name": "Pescadero",
+                "seed": 7,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "eb09366f-2b5a-4da7-a47c-7a274338684a",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "b8fe6c76-02e2-4f7d-b4a7-058f4dfad500",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+                "name": "Palma",
+                "seed": 2,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "db3e1e86-1263-405c-92b4-cff627893d8f",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "996509cf-909b-440c-a3e6-aaf476d223c4",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "6934218c-981b-42db-97e7-887e6ea8457d",
+                "name": "Basis Independent Silicon Valley",
+                "seed": 5,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "eb1ce256-934c-47a8-b77e-a756f5baa4a3",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "996509cf-909b-440c-a3e6-aaf476d223c4",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+                "name": "Santa Catalina",
+                "seed": 4,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "dba97ab1-5f8e-497c-9d04-52113a99c266",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "cd99b956-c5ee-4690-8682-c42cf7833598",
+            "contestId": "38967c19-98bf-4b1a-b380-3028b0c99fe1",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+                "name": "The Nueva School",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "9d178297-4c8d-4c2e-851f-c9053d575004",
+                "name": "Notre Dame",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "64a8ca0a-b181-4159-8339-908b4274db6a",
+            "round": "1st Round",
+            "roundDate": "2025-11-01",
+            "next": "cd99b956-c5ee-4690-8682-c42cf7833598",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+                "name": "Summit Shasta",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "3a86d1b9-3c93-48df-92ee-6444c817cded",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "27585e58-ce82-41fb-aa76-e30ef578eb65",
+            "contestId": "658b7be0-5c80-48ed-99b1-4c712a50d86b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 6,
+                "score": 3,
+                "from": "8f11f7d5-7659-49fc-845d-46e777e0bba8"
+              },
+              {
+                "teamId": "6d65925e-66af-471f-b5d9-ccb35f534eff",
+                "name": "St. Francis",
+                "seed": 3,
+                "score": 0,
+                "from": "d4009501-9f75-42c6-84ac-a1ac995d8457"
+              }
+            ]
+          },
+          {
+            "id": "b8fe6c76-02e2-4f7d-b4a7-058f4dfad500",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "27585e58-ce82-41fb-aa76-e30ef578eb65",
+            "contestId": "b2ad4107-1db4-4e78-901f-eab09e8d0234",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+                "name": "More",
+                "seed": 10,
+                "score": 0,
+                "from": "697348bb-e30e-4c1d-8b7e-f4af9cfce3f3"
+              },
+              {
+                "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+                "name": "Palma",
+                "seed": 2,
+                "score": 3,
+                "from": "eb09366f-2b5a-4da7-a47c-7a274338684a"
+              }
+            ]
+          },
+          {
+            "id": "996509cf-909b-440c-a3e6-aaf476d223c4",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "fe167aa6-f45d-4494-80b9-40f12b40b899",
+            "contestId": "9db28dbc-ba16-4e8c-a33d-887f8228f7c3",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "6934218c-981b-42db-97e7-887e6ea8457d",
+                "name": "Basis Independent Silicon Valley",
+                "seed": 5,
+                "score": 0,
+                "from": "db3e1e86-1263-405c-92b4-cff627893d8f"
+              },
+              {
+                "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+                "name": "Santa Catalina",
+                "seed": 4,
+                "score": 3,
+                "from": "eb1ce256-934c-47a8-b77e-a756f5baa4a3"
+              }
+            ]
+          },
+          {
+            "id": "cd99b956-c5ee-4690-8682-c42cf7833598",
+            "round": "Quarter Finals",
+            "roundDate": "2025-11-04",
+            "next": "fe167aa6-f45d-4494-80b9-40f12b40b899",
+            "contestId": "b77ff8bc-c694-4a99-a396-db7ab8c94393",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+                "name": "The Nueva School",
+                "seed": 9,
+                "score": 0,
+                "from": "dba97ab1-5f8e-497c-9d04-52113a99c266"
+              },
+              {
+                "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+                "name": "Summit Shasta",
+                "seed": 1,
+                "score": 3,
+                "from": "64a8ca0a-b181-4159-8339-908b4274db6a"
+              }
+            ]
+          },
+          {
+            "id": "27585e58-ce82-41fb-aa76-e30ef578eb65",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "0410cc7a-f8d8-41c9-bf4d-11924f5ad015",
+            "contestId": "484ed16e-3fdf-46e0-b813-c36e95a66ca2",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 6,
+                "score": 2,
+                "from": "3a86d1b9-3c93-48df-92ee-6444c817cded"
+              },
+              {
+                "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+                "name": "Palma",
+                "seed": 2,
+                "score": 3,
+                "from": "b8fe6c76-02e2-4f7d-b4a7-058f4dfad500"
+              }
+            ]
+          },
+          {
+            "id": "fe167aa6-f45d-4494-80b9-40f12b40b899",
+            "round": "Semi Finals",
+            "roundDate": "2025-11-06",
+            "next": "0410cc7a-f8d8-41c9-bf4d-11924f5ad015",
+            "contestId": "3987e610-7c62-43b8-8ff7-8baaacb55ba4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
+                "name": "Santa Catalina",
+                "seed": 4,
+                "score": 0,
+                "from": "996509cf-909b-440c-a3e6-aaf476d223c4"
+              },
+              {
+                "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+                "name": "Summit Shasta",
+                "seed": 1,
+                "score": 3,
+                "from": "cd99b956-c5ee-4690-8682-c42cf7833598"
+              }
+            ]
+          },
+          {
+            "id": "0410cc7a-f8d8-41c9-bf4d-11924f5ad015",
+            "round": "Final",
+            "roundDate": "2025-11-08",
+            "next": null,
+            "contestId": "ed742166-42f5-4ff7-87cc-d01a1e59056a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645",
+                "name": "Palma",
+                "seed": 2,
+                "score": 1,
+                "from": "27585e58-ce82-41fb-aa76-e30ef578eb65"
+              },
+              {
+                "teamId": "71f8a5a3-7d91-4b95-9d41-3b0fbdcf1d82",
+                "name": "Summit Shasta",
+                "seed": 1,
+                "score": 3,
+                "from": "fe167aa6-f45d-4494-80b9-40f12b40b899"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/NJjUw2Vcnk6B-CupF_lYJA/dZlx3pWmlEmhluLhmTfqDw/volleyball-25/2025-cif-state-girls-volleyball-championships-open-division.htm",
+        "tournament": "2025 CIF State Girls Volleyball Championships",
+        "bracketId": "de719975-a695-4994-a196-e2e19937ea0f",
+        "name": "Open Division",
+        "matchups": [
+          {
+            "id": "52a42358-d589-42f7-9aa0-dd1e8db5a700",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "05d966e0-ef9e-4615-a742-986c7b969f07",
+            "contestId": "cae9b19a-ca8e-42e4-b982-4e9ee11de5dc",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "12616b84-157c-48d3-b353-434576d9df8d",
+                "name": "Redwood",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a6648ef7-d1b8-4666-8356-8659aab4fa97",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "05d966e0-ef9e-4615-a742-986c7b969f07",
+            "contestId": "e8c3a85d-658a-4231-a564-be3f673e37df",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f609f271-97c9-4af9-bda1-b4250bb3f146",
+                "name": "Folsom",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+                "name": "Marin Catholic",
+                "seed": 5,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "fcfb1ff3-b7aa-41b9-a418-e64358b9c24b",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "18815093-d6d6-4b8c-9a06-aaa826e1063b",
+            "contestId": "03700d90-f567-4e83-becc-0482ceb64163",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "21c1edbb-4233-47ff-8f5a-70857a366328",
+                "name": "Rocklin",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "4dbaeb2d-c9ae-4629-89e9-814d2666094b",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "18815093-d6d6-4b8c-9a06-aaa826e1063b",
+            "contestId": "d7e290b2-31e5-471c-87cc-ab702f35fcbf",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8ccdb557-16f2-41cd-a724-6b71bc221661",
+                "name": "Branson",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6d724c56-6956-42a2-9730-d5c18639fd37",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "723f2c05-2acd-4fee-9a53-a534fbf4118d",
+            "contestId": "f4533989-d205-4fb8-9044-617e960aeb92",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3e6d32d9-9a21-4391-aba1-d59804bf82e6",
+                "name": "Sierra Canyon",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "616bf1cd-fbea-485e-9c0b-e66d559ee695",
+                "name": "Mira Costa",
+                "seed": 8,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "9a1ee635-1145-43af-857e-24242573d84a",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "723f2c05-2acd-4fee-9a53-a534fbf4118d",
+            "contestId": "bd47459d-a3d8-42b0-be03-0350b97b3de5",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "15c34e49-1a29-4298-8a84-00a2ec6ae36b",
+                "name": "Cathedral Catholic",
+                "seed": 4,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "4a7cc56c-81ae-43a1-8cd0-0bc312573b25",
+                "name": "Marymount",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2824458f-a8cc-44cb-a200-3b1e9c3d60af",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "b01b340c-cf82-4bce-b6df-fe0115f92fc3",
+            "contestId": "bd4ed8f7-6ff2-42f2-8c9e-677787eec86e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ad43e80f-2296-4b96-a0a9-44e6a8ea76f2",
+                "name": "Torrey Pines",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "684b3413-6189-4268-8532-111afb3a24d7",
+                "name": "San Juan Hills",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "bab75cc6-2663-435a-94ba-c7d24d9b895b",
+            "round": "Round I",
+            "roundDate": "2025-11-12",
+            "next": "b01b340c-cf82-4bce-b6df-fe0115f92fc3",
+            "contestId": "40b5e6ed-c7bc-4294-951e-7db608bd297d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "64933a7c-b8f1-4d59-96f6-c22658ba76e3",
+                "name": "Redondo Union",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "05d966e0-ef9e-4615-a742-986c7b969f07",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "f6a6a132-fe46-4a0b-8ecb-bc19897204a5",
+            "contestId": "fa57dcbc-1fc6-4036-9d9d-b12429d52a57",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 3,
+                "from": "52a42358-d589-42f7-9aa0-dd1e8db5a700"
+              },
+              {
+                "teamId": "f609f271-97c9-4af9-bda1-b4250bb3f146",
+                "name": "Folsom",
+                "seed": 4,
+                "score": 0,
+                "from": "a6648ef7-d1b8-4666-8356-8659aab4fa97"
+              }
+            ]
+          },
+          {
+            "id": "18815093-d6d6-4b8c-9a06-aaa826e1063b",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "f6a6a132-fe46-4a0b-8ecb-bc19897204a5",
+            "contestId": "958d57f0-11ac-41d1-99fa-5727d1ec246d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "21c1edbb-4233-47ff-8f5a-70857a366328",
+                "name": "Rocklin",
+                "seed": 3,
+                "score": 3,
+                "from": "fcfb1ff3-b7aa-41b9-a418-e64358b9c24b"
+              },
+              {
+                "teamId": "8ccdb557-16f2-41cd-a724-6b71bc221661",
+                "name": "Branson",
+                "seed": 2,
+                "score": 2,
+                "from": "4dbaeb2d-c9ae-4629-89e9-814d2666094b"
+              }
+            ]
+          },
+          {
+            "id": "723f2c05-2acd-4fee-9a53-a534fbf4118d",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "63e813f0-2558-45b4-9dfa-4dec18b345b3",
+            "contestId": "075bd1e1-2916-4b65-9806-1b3e9980afbb",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3e6d32d9-9a21-4391-aba1-d59804bf82e6",
+                "name": "Sierra Canyon",
+                "seed": 1,
+                "score": 3,
+                "from": "6d724c56-6956-42a2-9730-d5c18639fd37"
+              },
+              {
+                "teamId": "4a7cc56c-81ae-43a1-8cd0-0bc312573b25",
+                "name": "Marymount",
+                "seed": 5,
+                "score": 1,
+                "from": "9a1ee635-1145-43af-857e-24242573d84a"
+              }
+            ]
+          },
+          {
+            "id": "b01b340c-cf82-4bce-b6df-fe0115f92fc3",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "63e813f0-2558-45b4-9dfa-4dec18b345b3",
+            "contestId": "cff975ed-dd76-4200-9a01-522ca32f429f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ad43e80f-2296-4b96-a0a9-44e6a8ea76f2",
+                "name": "Torrey Pines",
+                "seed": 3,
+                "score": 1,
+                "from": "2824458f-a8cc-44cb-a200-3b1e9c3d60af"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 3,
+                "from": "bab75cc6-2663-435a-94ba-c7d24d9b895b"
+              }
+            ]
+          },
+          {
+            "id": "f6a6a132-fe46-4a0b-8ecb-bc19897204a5",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "fa98c2c0-b311-4c0b-8360-e527ce4a13d9",
+            "contestId": "825b8213-2b51-4dcf-8a22-f815f7e76374",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 1,
+                "score": 2,
+                "from": "05d966e0-ef9e-4615-a742-986c7b969f07"
+              },
+              {
+                "teamId": "21c1edbb-4233-47ff-8f5a-70857a366328",
+                "name": "Rocklin",
+                "seed": 3,
+                "score": 3,
+                "from": "18815093-d6d6-4b8c-9a06-aaa826e1063b"
+              }
+            ]
+          },
+          {
+            "id": "63e813f0-2558-45b4-9dfa-4dec18b345b3",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "fa98c2c0-b311-4c0b-8360-e527ce4a13d9",
+            "contestId": "888b9350-e88f-4cdd-9014-1aeb402eb41f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3e6d32d9-9a21-4391-aba1-d59804bf82e6",
+                "name": "Sierra Canyon",
+                "seed": 1,
+                "score": 1,
+                "from": "723f2c05-2acd-4fee-9a53-a534fbf4118d"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 3,
+                "from": "b01b340c-cf82-4bce-b6df-fe0115f92fc3"
+              }
+            ]
+          },
+          {
+            "id": "fa98c2c0-b311-4c0b-8360-e527ce4a13d9",
+            "round": "State Final",
+            "roundDate": "2025-11-22",
+            "next": null,
+            "contestId": "764582f4-1e14-4261-b59e-3eaedca4a7e0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "21c1edbb-4233-47ff-8f5a-70857a366328",
+                "name": "Rocklin",
+                "seed": 3,
+                "score": 0,
+                "from": "f6a6a132-fe46-4a0b-8ecb-bc19897204a5"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 3,
+                "from": "63e813f0-2558-45b4-9dfa-4dec18b345b3"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/NJjUw2Vcnk6B-CupF_lYJA/6G0ILo7KiES2XzDSQGgqWQ/volleyball-25/2025-cif-state-girls-volleyball-championships-division-i.htm",
+        "tournament": "2025 CIF State Girls Volleyball Championships",
+        "bracketId": "2e086de8-ca8e-4488-b65f-30d240682a59",
+        "name": "Division I",
+        "matchups": [
+          {
+            "id": "3e38a06d-2adb-4de7-9d4e-196935f390c9",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "910280b1-b2b0-4149-8967-c19663d25ea3",
+            "contestId": "3ed76dc3-5b90-4726-aa9c-1e2bb0af0c5a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "89761d70-2610-4f7e-a35d-4a2a1a4e9694",
+                "name": "Woodcreek",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
+                "name": "University",
+                "seed": 16,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "fea69a70-bc4e-4193-8b93-af48795f805d",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "910280b1-b2b0-4149-8967-c19663d25ea3",
+            "contestId": "63a0ac2d-6c90-4101-bac2-ae6f959b353a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74c1621c-e0cf-4821-b5e1-3c8170c8125a",
+                "name": "Oak Ridge",
+                "seed": 8,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "708539f3-2756-49e5-8e7e-ae8fc3e75747",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "5d8cf445-9f65-433d-a872-b172d0ca3482",
+            "contestId": "179c61b3-b6c5-4e67-bc9b-09ac345d5489",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+                "name": "Valley Christian",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "21625f1d-edb3-4fa8-9158-f6b6b0a04e2d",
+                "name": "Monte Vista",
+                "seed": 12,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "7bb7f18d-a1d4-445c-9b4e-2ee609c2d237",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "5d8cf445-9f65-433d-a872-b172d0ca3482",
+            "contestId": "fef4711e-3a87-4e8b-9287-574aee554a16",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a5d2f400-1bb1-473c-9f8a-3c72156d5202",
+                "name": "Clovis",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "0279f2de-d5ce-484d-b210-2286ded42058",
+                "name": "Los Altos",
+                "seed": 13,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "c6f7b802-c10a-4ba5-89b9-c2947a63dea1",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "cc9c7200-ce87-4a79-9a11-2abfbc18d199",
+            "contestId": "2ac209ce-4581-422f-bba7-c2da2234fe9a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
+                "name": "Homestead",
+                "seed": 14,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "857a3ef2-1f73-44c4-9b16-d5682fb270ca",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "cc9c7200-ce87-4a79-9a11-2abfbc18d199",
+            "contestId": "946d650d-f6bd-4ba0-8a21-0941e9b3cdd1",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b6b1981a-7182-44bd-9b84-e4db9df44256",
+                "name": "Campolindo",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "27d82a51-2b44-492e-b2cf-114730027de3",
+                "name": "Sacred Heart Prep",
+                "seed": 11,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "65d12f00-0ba9-4e24-a526-d779009f55ab",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "70d37fb1-bd59-4def-97fe-5e43df1fc41c",
+            "contestId": "d9265cf9-2b16-49f1-9874-8f5719e08ded",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3bf22287-c7fd-4487-99c5-928f512ff7c3",
+                "name": "James Logan",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "f62e70f3-0c88-4711-9e52-3e9e132006b3",
+                "name": "Carondelet",
+                "seed": 10,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "fa2b441e-9e93-4585-a203-94f96f12e915",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "70d37fb1-bd59-4def-97fe-5e43df1fc41c",
+            "contestId": "b4b6c046-2594-4b6f-a8f3-1504db3084f9",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "38af84a6-48a9-4953-804e-cad1cc07c0ef",
+                "name": "Del Oro",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "195ab09f-c612-45d5-a280-c770287db433",
+                "name": "Saint Mary's",
+                "seed": 15,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "910280b1-b2b0-4149-8967-c19663d25ea3",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "7ac0d6f6-e7f6-4302-8739-a5ea9b60d7a5",
+            "contestId": "c8a55a68-1898-4543-87ea-f539596220cc",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "89761d70-2610-4f7e-a35d-4a2a1a4e9694",
+                "name": "Woodcreek",
+                "seed": 1,
+                "score": 3,
+                "from": "3e38a06d-2adb-4de7-9d4e-196935f390c9"
+              },
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 9,
+                "score": 0,
+                "from": "fea69a70-bc4e-4193-8b93-af48795f805d"
+              }
+            ]
+          },
+          {
+            "id": "5d8cf445-9f65-433d-a872-b172d0ca3482",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "7ac0d6f6-e7f6-4302-8739-a5ea9b60d7a5",
+            "contestId": "0c6a0035-7ef0-4378-acd5-27c1dbcd2d25",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
+                "name": "Valley Christian",
+                "seed": 5,
+                "score": 0,
+                "from": "708539f3-2756-49e5-8e7e-ae8fc3e75747"
+              },
+              {
+                "teamId": "a5d2f400-1bb1-473c-9f8a-3c72156d5202",
+                "name": "Clovis",
+                "seed": 4,
+                "score": 3,
+                "from": "7bb7f18d-a1d4-445c-9b4e-2ee609c2d237"
+              }
+            ]
+          },
+          {
+            "id": "cc9c7200-ce87-4a79-9a11-2abfbc18d199",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "67cd7940-c86b-47bf-901a-1964380a86f3",
+            "contestId": "6286b9ca-3dad-403c-bf07-323d9d2ad27b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 3,
+                "score": 3,
+                "from": "c6f7b802-c10a-4ba5-89b9-c2947a63dea1"
+              },
+              {
+                "teamId": "b6b1981a-7182-44bd-9b84-e4db9df44256",
+                "name": "Campolindo",
+                "seed": 6,
+                "score": 2,
+                "from": "857a3ef2-1f73-44c4-9b16-d5682fb270ca"
+              }
+            ]
+          },
+          {
+            "id": "70d37fb1-bd59-4def-97fe-5e43df1fc41c",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "67cd7940-c86b-47bf-901a-1964380a86f3",
+            "contestId": "226ed4a6-51ea-44c2-8dcb-2c44493b896b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "3bf22287-c7fd-4487-99c5-928f512ff7c3",
+                "name": "James Logan",
+                "seed": 7,
+                "score": 3,
+                "from": "65d12f00-0ba9-4e24-a526-d779009f55ab"
+              },
+              {
+                "teamId": "38af84a6-48a9-4953-804e-cad1cc07c0ef",
+                "name": "Del Oro",
+                "seed": 2,
+                "score": 2,
+                "from": "fa2b441e-9e93-4585-a203-94f96f12e915"
+              }
+            ]
+          },
+          {
+            "id": "7ac0d6f6-e7f6-4302-8739-a5ea9b60d7a5",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "e9f64a8f-4c36-44b2-a414-c1c0cccd931d",
+            "contestId": "5b9f773f-9c44-4076-8330-829d0e5d80be",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "89761d70-2610-4f7e-a35d-4a2a1a4e9694",
+                "name": "Woodcreek",
+                "seed": 1,
+                "score": 3,
+                "from": "910280b1-b2b0-4149-8967-c19663d25ea3"
+              },
+              {
+                "teamId": "a5d2f400-1bb1-473c-9f8a-3c72156d5202",
+                "name": "Clovis",
+                "seed": 4,
+                "score": 1,
+                "from": "5d8cf445-9f65-433d-a872-b172d0ca3482"
+              }
+            ]
+          },
+          {
+            "id": "67cd7940-c86b-47bf-901a-1964380a86f3",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "e9f64a8f-4c36-44b2-a414-c1c0cccd931d",
+            "contestId": "4d882e0a-2d8a-45b3-9faf-95de72bfb536",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 3,
+                "score": 2,
+                "from": "cc9c7200-ce87-4a79-9a11-2abfbc18d199"
+              },
+              {
+                "teamId": "3bf22287-c7fd-4487-99c5-928f512ff7c3",
+                "name": "James Logan",
+                "seed": 7,
+                "score": 3,
+                "from": "70d37fb1-bd59-4def-97fe-5e43df1fc41c"
+              }
+            ]
+          },
+          {
+            "id": "4ebbb571-f5ac-4254-b6a1-daf451c481a7",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "03cc47eb-9d08-499d-ab30-7eeb922fbda1",
+            "contestId": "4b363b80-3e9e-4820-8a99-586d0c9b7644",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+                "name": "Harvard-Westlake",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "6735bf63-d80d-4140-9c35-7eb389c661be",
+                "name": "San Marcos",
+                "seed": 16,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "460773e2-0552-4fea-b025-b98ccb49e5bd",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "03cc47eb-9d08-499d-ab30-7eeb922fbda1",
+            "contestId": "5fd59e53-6fc9-48ef-b6d8-01da5b680b26",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e3798ac4-f77c-4305-b7c1-ec498ea3adfc",
+                "name": "San Luis Obispo",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "6089f6a4-f1e9-46cc-b64f-c5302d41e69d",
+                "name": "Long Beach Poly",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "dde9c18c-082b-498f-9bd2-9b2681f7fcdc",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "5e9cc897-ea11-4ae9-9b34-3018fa386163",
+            "contestId": "62c074f0-5add-453b-a0d3-b62c1e70a693",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c24601db-aee8-4989-ba5d-bfbf0a91b927",
+                "name": "La Jolla Country Day",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "c35b557f-0e37-45cd-8c1e-c125fa22d388",
+                "name": "Bishop Montgomery",
+                "seed": 12,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e7017ac5-730c-4784-b9f6-f23e1ae6f091",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "5e9cc897-ea11-4ae9-9b34-3018fa386163",
+            "contestId": "4834c3fa-588f-4536-b7b6-399c82a9dae0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "761854d3-ab36-4d6b-9bb7-ebaa61589cff",
+                "name": "West Ranch",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "517db0fa-0e27-4de2-a1cc-a89e9948f121",
+                "name": "Redlands",
+                "seed": 13,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "04b437b3-a96c-4a2d-b0fa-efbf238616a5",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "b0ed5ab7-492f-428d-a0b7-211f867d1ccd",
+            "contestId": "5fac1408-92b0-4802-a726-ee83e5b2b714",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "ff3dcd2f-cdea-46e6-accf-fd929c0a4374",
+                "name": "San Marcos",
+                "seed": 14,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "3de76123-e680-4129-b83f-c8ff4bcac034",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "b0ed5ab7-492f-428d-a0b7-211f867d1ccd",
+            "contestId": "add7f914-5faa-49b6-a654-42fc5e218684",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "cced71fd-7626-472c-b23d-25187e78b508",
+                "name": "Coronado",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "a3a4b4d3-bce3-47b1-a57b-30226feba5e1",
+                "name": "JSerra Catholic",
+                "seed": 11,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "1152cd57-bcae-46a3-a397-5b3439e1e843",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "9d774d7b-b3a5-4f72-a996-7d343baa89c7",
+            "contestId": "dd1846c2-2543-4a15-b365-d7c433a34124",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9d14d198-9976-4ed2-872d-047b9f317035",
+                "name": "Bishop's",
+                "seed": 7,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "a8a6f59d-5b3b-486b-af11-9f6aa7983a20",
+                "name": "Centennial",
+                "seed": 10,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a99e7707-5c61-4c04-8771-551d83ba1d53",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "9d774d7b-b3a5-4f72-a996-7d343baa89c7",
+            "contestId": "1e0b3ff2-3934-4eb5-8d88-c44e7792066f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8f350275-199e-4549-b574-2257e718069f",
+                "name": "Temecula Valley",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "098e1491-1717-4088-b7a0-55e47c8e1d17",
+                "name": "Orange Lutheran",
+                "seed": 15,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "03cc47eb-9d08-499d-ab30-7eeb922fbda1",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "6b29816e-358b-40e1-94b9-6be2da733ee6",
+            "contestId": "6e1c61c9-0d49-46c1-8872-f480116c03bd",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+                "name": "Harvard-Westlake",
+                "seed": 1,
+                "score": 3,
+                "from": "4ebbb571-f5ac-4254-b6a1-daf451c481a7"
+              },
+              {
+                "teamId": "6089f6a4-f1e9-46cc-b64f-c5302d41e69d",
+                "name": "Long Beach Poly",
+                "seed": 9,
+                "score": 2,
+                "from": "460773e2-0552-4fea-b025-b98ccb49e5bd"
+              }
+            ]
+          },
+          {
+            "id": "5e9cc897-ea11-4ae9-9b34-3018fa386163",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "6b29816e-358b-40e1-94b9-6be2da733ee6",
+            "contestId": "fed5963f-31a7-4dfa-ab3d-6de61bf06b68",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c35b557f-0e37-45cd-8c1e-c125fa22d388",
+                "name": "Bishop Montgomery",
+                "seed": 12,
+                "score": 3,
+                "from": "dde9c18c-082b-498f-9bd2-9b2681f7fcdc"
+              },
+              {
+                "teamId": "761854d3-ab36-4d6b-9bb7-ebaa61589cff",
+                "name": "West Ranch",
+                "seed": 4,
+                "score": 2,
+                "from": "e7017ac5-730c-4784-b9f6-f23e1ae6f091"
+              }
+            ]
+          },
+          {
+            "id": "b0ed5ab7-492f-428d-a0b7-211f867d1ccd",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "d2690437-4b54-4848-b1b6-52ff746d1271",
+            "contestId": "6d90df7c-5fb4-4759-a616-a8dbf2348575",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 3,
+                "score": 3,
+                "from": "04b437b3-a96c-4a2d-b0fa-efbf238616a5"
+              },
+              {
+                "teamId": "cced71fd-7626-472c-b23d-25187e78b508",
+                "name": "Coronado",
+                "seed": 6,
+                "score": 0,
+                "from": "3de76123-e680-4129-b83f-c8ff4bcac034"
+              }
+            ]
+          },
+          {
+            "id": "9d774d7b-b3a5-4f72-a996-7d343baa89c7",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "d2690437-4b54-4848-b1b6-52ff746d1271",
+            "contestId": "80f363d7-f04b-4ffa-a04b-82f9893b6d7d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a8a6f59d-5b3b-486b-af11-9f6aa7983a20",
+                "name": "Centennial",
+                "seed": 10,
+                "score": 1,
+                "from": "1152cd57-bcae-46a3-a397-5b3439e1e843"
+              },
+              {
+                "teamId": "8f350275-199e-4549-b574-2257e718069f",
+                "name": "Temecula Valley",
+                "seed": 2,
+                "score": 3,
+                "from": "a99e7707-5c61-4c04-8771-551d83ba1d53"
+              }
+            ]
+          },
+          {
+            "id": "6b29816e-358b-40e1-94b9-6be2da733ee6",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "bc0ec747-5177-401b-9d30-2628ab3ba8c4",
+            "contestId": "509948a4-2bd0-4270-af11-9dc89d440409",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+                "name": "Harvard-Westlake",
+                "seed": 1,
+                "score": 3,
+                "from": "03cc47eb-9d08-499d-ab30-7eeb922fbda1"
+              },
+              {
+                "teamId": "c35b557f-0e37-45cd-8c1e-c125fa22d388",
+                "name": "Bishop Montgomery",
+                "seed": 12,
+                "score": 2,
+                "from": "5e9cc897-ea11-4ae9-9b34-3018fa386163"
+              }
+            ]
+          },
+          {
+            "id": "d2690437-4b54-4848-b1b6-52ff746d1271",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "bc0ec747-5177-401b-9d30-2628ab3ba8c4",
+            "contestId": "1a358592-e286-4105-8e3a-ec6db511b552",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 3,
+                "score": 3,
+                "from": "b0ed5ab7-492f-428d-a0b7-211f867d1ccd"
+              },
+              {
+                "teamId": "8f350275-199e-4549-b574-2257e718069f",
+                "name": "Temecula Valley",
+                "seed": 2,
+                "score": 0,
+                "from": "9d774d7b-b3a5-4f72-a996-7d343baa89c7"
+              }
+            ]
+          },
+          {
+            "id": "e9f64a8f-4c36-44b2-a414-c1c0cccd931d",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "a000ff38-7d9c-47f1-a5a7-7c449ffecb04",
+            "contestId": "f06ddc96-5e84-4d89-aa71-31e5c7bdbd52",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "89761d70-2610-4f7e-a35d-4a2a1a4e9694",
+                "name": "Woodcreek",
+                "seed": 1,
+                "score": 3,
+                "from": "7ac0d6f6-e7f6-4302-8739-a5ea9b60d7a5"
+              },
+              {
+                "teamId": "3bf22287-c7fd-4487-99c5-928f512ff7c3",
+                "name": "James Logan",
+                "seed": 7,
+                "score": 1,
+                "from": "67cd7940-c86b-47bf-901a-1964380a86f3"
+              }
+            ]
+          },
+          {
+            "id": "bc0ec747-5177-401b-9d30-2628ab3ba8c4",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "a000ff38-7d9c-47f1-a5a7-7c449ffecb04",
+            "contestId": "2de9773a-66f1-489d-8764-bebcb63bfae2",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+                "name": "Harvard-Westlake",
+                "seed": 1,
+                "score": 3,
+                "from": "6b29816e-358b-40e1-94b9-6be2da733ee6"
+              },
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 3,
+                "score": 1,
+                "from": "d2690437-4b54-4848-b1b6-52ff746d1271"
+              }
+            ]
+          },
+          {
+            "id": "a000ff38-7d9c-47f1-a5a7-7c449ffecb04",
+            "round": "State Final",
+            "roundDate": "2025-11-21",
+            "next": null,
+            "contestId": "b6ce9390-fd04-4d27-b8d1-c20dbf0ed0d4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "89761d70-2610-4f7e-a35d-4a2a1a4e9694",
+                "name": "Woodcreek",
+                "seed": 1,
+                "score": 0,
+                "from": "e9f64a8f-4c36-44b2-a414-c1c0cccd931d"
+              },
+              {
+                "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+                "name": "Harvard-Westlake",
+                "seed": 1,
+                "score": 3,
+                "from": "bc0ec747-5177-401b-9d30-2628ab3ba8c4"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/NJjUw2Vcnk6B-CupF_lYJA/ULmjyKHPq0GXkA5m8plCLQ/volleyball-25/2025-cif-state-girls-volleyball-championships-division-ii.htm",
+        "tournament": "2025 CIF State Girls Volleyball Championships",
+        "bracketId": "c8a3b950-cfa1-41ab-9790-0e66f299422d",
+        "name": "Division II",
+        "matchups": [
+          {
+            "id": "9d354bd7-330d-44f9-9ce4-768a41b50dc0",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "069b5af0-ed71-47a3-9dfa-510494f37822",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+                "name": "Palo Alto",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2bcbee0f-129b-4a1e-84a9-07d2fe495575",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "069b5af0-ed71-47a3-9dfa-510494f37822",
+            "contestId": "dfcb5ba5-966d-4c0a-9267-af141cdfefe8",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "efca3a35-79ab-47d1-904f-b01c5a1c5758",
+                "name": "Central Valley Christian",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "6c68b5d2-1cab-449d-9140-bd7c8adb2791",
+                "name": "Berkeley",
+                "seed": 9,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a3f8a005-1195-4eea-a308-2ebcb02c4d13",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "3b80e8f7-dc79-4e34-a481-9e13707e3876",
+            "contestId": "6187a9ef-3a3c-409c-bff2-7bee7f8a082d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
+                "name": "Milpitas",
+                "seed": 5,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "b35c2fcd-db5f-447c-b41b-a4fa58b5c0be",
+                "name": "Christian Brothers",
+                "seed": 12,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "bcbc4844-d738-4b36-a661-ad416d7fa42a",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "3b80e8f7-dc79-4e34-a481-9e13707e3876",
+            "contestId": "2f8d3c05-ec4b-47ef-8854-4d3d2b3cde9e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "55a9d5be-3ec6-4ef2-9fe2-cbfbfc16e432",
+                "name": "Clovis West",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 13,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "048f43f8-865d-4eed-8025-385f116525a0",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "31b04a5d-833e-47c8-bfbd-14adbef0a43e",
+            "contestId": "6d1053cd-c850-4b50-b8be-7414069ebc46",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e08f3ab1-9693-4dd1-b7fe-fe0278b15ec0",
+                "name": "West Park",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
+                "name": "Scotts Valley",
+                "seed": 14,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e0e27de2-de23-4d41-8684-af61f11655df",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "31b04a5d-833e-47c8-bfbd-14adbef0a43e",
+            "contestId": "5c2dbbbd-57a1-44b4-9e5b-6143af7dac8e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "edb194cb-a04d-44bf-a09f-fc78a93e8c6f",
+                "name": "St. Mary's",
+                "seed": 11,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6da5bbeb-b5c6-4f1d-b1a3-4248d149e424",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "e1975fa9-cfd9-4e87-a864-0f8ed74af3dd",
+            "contestId": "159e112c-251a-435a-a7fa-161bdf98299d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "ad47af1b-1b44-42d7-ac0e-a495ff09a7e7",
+                "name": "Cardinal Newman",
+                "seed": 10,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "f4d10e2a-7f03-40ee-a885-69faaf68124f",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "e1975fa9-cfd9-4e87-a864-0f8ed74af3dd",
+            "contestId": "d8d3cc03-021c-4e19-a01e-58726d4b2018",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "aa03a009-dae4-4fec-8061-b1b804a31e12",
+                "name": "St. Francis",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "67b79ebf-71d4-4b9b-93a0-20d52fbf2110",
+                "name": "Ripon",
+                "seed": 15,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "069b5af0-ed71-47a3-9dfa-510494f37822",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "b904ad7a-f99d-4b6c-b73e-3c360bc3f608",
+            "contestId": "6678a31b-b160-4c41-b589-c8b4122f1344",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+                "name": "Palo Alto",
+                "seed": 1,
+                "score": 3,
+                "from": "9d354bd7-330d-44f9-9ce4-768a41b50dc0"
+              },
+              {
+                "teamId": "efca3a35-79ab-47d1-904f-b01c5a1c5758",
+                "name": "Central Valley Christian",
+                "seed": 8,
+                "score": 0,
+                "from": "2bcbee0f-129b-4a1e-84a9-07d2fe495575"
+              }
+            ]
+          },
+          {
+            "id": "3b80e8f7-dc79-4e34-a481-9e13707e3876",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "b904ad7a-f99d-4b6c-b73e-3c360bc3f608",
+            "contestId": "7259f406-8f3a-42d1-b32b-586b79d4b3cd",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b35c2fcd-db5f-447c-b41b-a4fa58b5c0be",
+                "name": "Christian Brothers",
+                "seed": 12,
+                "score": 0,
+                "from": "a3f8a005-1195-4eea-a308-2ebcb02c4d13"
+              },
+              {
+                "teamId": "55a9d5be-3ec6-4ef2-9fe2-cbfbfc16e432",
+                "name": "Clovis West",
+                "seed": 4,
+                "score": 3,
+                "from": "bcbc4844-d738-4b36-a661-ad416d7fa42a"
+              }
+            ]
+          },
+          {
+            "id": "31b04a5d-833e-47c8-bfbd-14adbef0a43e",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "01265658-63e4-4826-aa5f-dae7a0cf0aa0",
+            "contestId": "19744c94-ec7e-47d2-a07d-811a37ece81d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e08f3ab1-9693-4dd1-b7fe-fe0278b15ec0",
+                "name": "West Park",
+                "seed": 3,
+                "score": 3,
+                "from": "048f43f8-865d-4eed-8025-385f116525a0"
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 6,
+                "score": 0,
+                "from": "e0e27de2-de23-4d41-8684-af61f11655df"
+              }
+            ]
+          },
+          {
+            "id": "e1975fa9-cfd9-4e87-a864-0f8ed74af3dd",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "01265658-63e4-4826-aa5f-dae7a0cf0aa0",
+            "contestId": "433d481d-784c-4ec2-b302-b840abd83b63",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ad47af1b-1b44-42d7-ac0e-a495ff09a7e7",
+                "name": "Cardinal Newman",
+                "seed": 10,
+                "score": 2,
+                "from": "6da5bbeb-b5c6-4f1d-b1a3-4248d149e424"
+              },
+              {
+                "teamId": "aa03a009-dae4-4fec-8061-b1b804a31e12",
+                "name": "St. Francis",
+                "seed": 2,
+                "score": 3,
+                "from": "f4d10e2a-7f03-40ee-a885-69faaf68124f"
+              }
+            ]
+          },
+          {
+            "id": "b904ad7a-f99d-4b6c-b73e-3c360bc3f608",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "0b5d7af2-c144-4a79-9f70-0b10688b9b5e",
+            "contestId": "f9f3f2be-e838-4f32-a3e4-3db5d6e3a0b2",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+                "name": "Palo Alto",
+                "seed": 1,
+                "score": 2,
+                "from": "069b5af0-ed71-47a3-9dfa-510494f37822"
+              },
+              {
+                "teamId": "55a9d5be-3ec6-4ef2-9fe2-cbfbfc16e432",
+                "name": "Clovis West",
+                "seed": 4,
+                "score": 3,
+                "from": "3b80e8f7-dc79-4e34-a481-9e13707e3876"
+              }
+            ]
+          },
+          {
+            "id": "01265658-63e4-4826-aa5f-dae7a0cf0aa0",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "0b5d7af2-c144-4a79-9f70-0b10688b9b5e",
+            "contestId": "069e514d-0669-4845-869b-cb8b73a67587",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e08f3ab1-9693-4dd1-b7fe-fe0278b15ec0",
+                "name": "West Park",
+                "seed": 3,
+                "score": 1,
+                "from": "31b04a5d-833e-47c8-bfbd-14adbef0a43e"
+              },
+              {
+                "teamId": "aa03a009-dae4-4fec-8061-b1b804a31e12",
+                "name": "St. Francis",
+                "seed": 2,
+                "score": 3,
+                "from": "e1975fa9-cfd9-4e87-a864-0f8ed74af3dd"
+              }
+            ]
+          },
+          {
+            "id": "b4b11621-27f1-4aa5-a2a7-39230da5007b",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0019f1e3-6409-4e24-9676-951ac275dec4",
+            "contestId": "c558a4a6-6528-4534-b360-0f7e2fa15788",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c17546ed-7f7e-4324-8919-ddd0da2bb553",
+                "name": "Liberty",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "3bc34a32-a552-42c4-a8bd-edef5067ff09",
+                "name": "Oak Park",
+                "seed": 16,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "f5781b83-4a2a-40dc-8469-eb9da099199f",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0019f1e3-6409-4e24-9676-951ac275dec4",
+            "contestId": "69d30f40-5f4e-49da-b3e4-6c4c47368bee",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "5bb3581c-7c17-4942-a860-a7f998d7068b",
+                "name": "Flintridge Prep",
+                "seed": 8,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "59e38f88-dd08-4300-a8a6-680a6516ac0a",
+                "name": "Arroyo Grande",
+                "seed": 9,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "671ebe3d-52fa-4272-b55d-4f5ad8caec35",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "7eabf8f2-898b-4019-bd45-ffef29fe7e2a",
+            "contestId": "837275b9-ddc5-4c85-af4d-4ea599630c08",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "fdcaffe2-f6d5-450a-b17f-af4b52e2a651",
+                "name": "Christian",
+                "seed": 5,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "0e9f56dc-2cc1-44ae-a719-9b49eac32de9",
+                "name": "La Canada",
+                "seed": 12,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "8eb9b160-1092-4675-b0ca-5929a57bf44e",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "7eabf8f2-898b-4019-bd45-ffef29fe7e2a",
+            "contestId": "4cdbdeec-f3bc-40fe-857b-95a364a59582",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1982cdd7-b066-4104-9b36-b4b4ef67f33a",
+                "name": "Foothill",
+                "seed": 4,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "02277c1d-2f70-4ad7-82be-7502ec0e9380",
+                "name": "Ventura",
+                "seed": 13,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e5c3be26-03b8-4996-91c2-84c816f70583",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "1ccf369c-38dc-478c-a11e-9d3057045249",
+            "contestId": "1beacaf2-f96f-462f-9f0e-5de6f78a5a65",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8d16b41b-3499-420c-b6e4-396d59520cc4",
+                "name": "Cypress",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "cb134f17-80c0-44ef-9e36-1e3dc29c2fdc",
+                "name": "Venice",
+                "seed": 14,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "9f360ac4-70da-4389-a09f-3bc028885ccd",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "1ccf369c-38dc-478c-a11e-9d3057045249",
+            "contestId": "96b750bc-fb87-4ac5-a508-e0b08d9b7d1e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5",
+                "name": "Scripps Ranch",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "59a69ccf-834f-4a89-a095-413ab6bb50a1",
+                "name": "St. Margaret's",
+                "seed": 11,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "93d0948a-5ae2-4629-912e-f9278abfa045",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0ee96791-c3f4-4458-9d83-7ad2cedf650a",
+            "contestId": "11bc07dd-474a-4886-81b0-0d78c2b5ad11",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4da93598-1256-4435-a5ff-9977bc572ea9",
+                "name": "Carlsbad",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "f8a54c04-e88d-4bd2-831d-fd355f791540",
+                "name": "Palisades",
+                "seed": 10,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2d9fcc60-dc08-47af-afe4-f6100b406be1",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0ee96791-c3f4-4458-9d83-7ad2cedf650a",
+            "contestId": "32bf0cb9-bc94-4cb2-9eb8-75b36e59759d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
+                "name": "Westview",
+                "seed": 2,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "4f923cde-a88e-4070-9c01-692ecc35d3dd",
+                "name": "Dana Hills",
+                "seed": 15,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0019f1e3-6409-4e24-9676-951ac275dec4",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "d86cbcc6-3663-469a-8915-1ba942a8215f",
+            "contestId": "1469323e-a1d7-41ad-9f3c-e30270ea37a0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c17546ed-7f7e-4324-8919-ddd0da2bb553",
+                "name": "Liberty",
+                "seed": 1,
+                "score": 3,
+                "from": "b4b11621-27f1-4aa5-a2a7-39230da5007b"
+              },
+              {
+                "teamId": "59e38f88-dd08-4300-a8a6-680a6516ac0a",
+                "name": "Arroyo Grande",
+                "seed": 9,
+                "score": 0,
+                "from": "f5781b83-4a2a-40dc-8469-eb9da099199f"
+              }
+            ]
+          },
+          {
+            "id": "7eabf8f2-898b-4019-bd45-ffef29fe7e2a",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "d86cbcc6-3663-469a-8915-1ba942a8215f",
+            "contestId": "f07a4a34-73b5-4b57-9853-d2da6815faa7",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0e9f56dc-2cc1-44ae-a719-9b49eac32de9",
+                "name": "La Canada",
+                "seed": 12,
+                "score": 3,
+                "from": "671ebe3d-52fa-4272-b55d-4f5ad8caec35"
+              },
+              {
+                "teamId": "02277c1d-2f70-4ad7-82be-7502ec0e9380",
+                "name": "Ventura",
+                "seed": 13,
+                "score": 2,
+                "from": "8eb9b160-1092-4675-b0ca-5929a57bf44e"
+              }
+            ]
+          },
+          {
+            "id": "1ccf369c-38dc-478c-a11e-9d3057045249",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "2f56087f-c965-4be2-90e6-e329652e23a6",
+            "contestId": "4b139d91-660f-4713-bb04-6b5bf1761b8a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8d16b41b-3499-420c-b6e4-396d59520cc4",
+                "name": "Cypress",
+                "seed": 3,
+                "score": 3,
+                "from": "e5c3be26-03b8-4996-91c2-84c816f70583"
+              },
+              {
+                "teamId": "7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5",
+                "name": "Scripps Ranch",
+                "seed": 6,
+                "score": 2,
+                "from": "9f360ac4-70da-4389-a09f-3bc028885ccd"
+              }
+            ]
+          },
+          {
+            "id": "0ee96791-c3f4-4458-9d83-7ad2cedf650a",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "2f56087f-c965-4be2-90e6-e329652e23a6",
+            "contestId": "0a1402d1-846f-4033-9f76-dfdeab1c5d4c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4da93598-1256-4435-a5ff-9977bc572ea9",
+                "name": "Carlsbad",
+                "seed": 7,
+                "score": 3,
+                "from": "93d0948a-5ae2-4629-912e-f9278abfa045"
+              },
+              {
+                "teamId": "4f923cde-a88e-4070-9c01-692ecc35d3dd",
+                "name": "Dana Hills",
+                "seed": 15,
+                "score": 2,
+                "from": "2d9fcc60-dc08-47af-afe4-f6100b406be1"
+              }
+            ]
+          },
+          {
+            "id": "d86cbcc6-3663-469a-8915-1ba942a8215f",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "6a8de983-1e3a-47a0-877e-db270c35e9fa",
+            "contestId": "e06bf495-48bd-43d6-86be-209c76e8988e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c17546ed-7f7e-4324-8919-ddd0da2bb553",
+                "name": "Liberty",
+                "seed": 1,
+                "score": 3,
+                "from": "0019f1e3-6409-4e24-9676-951ac275dec4"
+              },
+              {
+                "teamId": "0e9f56dc-2cc1-44ae-a719-9b49eac32de9",
+                "name": "La Canada",
+                "seed": 12,
+                "score": 1,
+                "from": "7eabf8f2-898b-4019-bd45-ffef29fe7e2a"
+              }
+            ]
+          },
+          {
+            "id": "2f56087f-c965-4be2-90e6-e329652e23a6",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "6a8de983-1e3a-47a0-877e-db270c35e9fa",
+            "contestId": "32152d22-2cb2-44fb-89b3-b3b9a9f8f667",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "8d16b41b-3499-420c-b6e4-396d59520cc4",
+                "name": "Cypress",
+                "seed": 3,
+                "score": 3,
+                "from": "1ccf369c-38dc-478c-a11e-9d3057045249"
+              },
+              {
+                "teamId": "4da93598-1256-4435-a5ff-9977bc572ea9",
+                "name": "Carlsbad",
+                "seed": 7,
+                "score": 2,
+                "from": "0ee96791-c3f4-4458-9d83-7ad2cedf650a"
+              }
+            ]
+          },
+          {
+            "id": "0b5d7af2-c144-4a79-9f70-0b10688b9b5e",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "1a68ee76-5377-4a40-8406-8ffa6711d28c",
+            "contestId": "6ba0c328-218f-47c7-b3cd-23363a3fbe09",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "55a9d5be-3ec6-4ef2-9fe2-cbfbfc16e432",
+                "name": "Clovis West",
+                "seed": 4,
+                "score": 3,
+                "from": "b904ad7a-f99d-4b6c-b73e-3c360bc3f608"
+              },
+              {
+                "teamId": "aa03a009-dae4-4fec-8061-b1b804a31e12",
+                "name": "St. Francis",
+                "seed": 2,
+                "score": 1,
+                "from": "01265658-63e4-4826-aa5f-dae7a0cf0aa0"
+              }
+            ]
+          },
+          {
+            "id": "6a8de983-1e3a-47a0-877e-db270c35e9fa",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "1a68ee76-5377-4a40-8406-8ffa6711d28c",
+            "contestId": "b4723614-5dca-4c73-89f6-8ce9475fcba4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c17546ed-7f7e-4324-8919-ddd0da2bb553",
+                "name": "Liberty",
+                "seed": 1,
+                "score": 2,
+                "from": "d86cbcc6-3663-469a-8915-1ba942a8215f"
+              },
+              {
+                "teamId": "8d16b41b-3499-420c-b6e4-396d59520cc4",
+                "name": "Cypress",
+                "seed": 3,
+                "score": 3,
+                "from": "2f56087f-c965-4be2-90e6-e329652e23a6"
+              }
+            ]
+          },
+          {
+            "id": "1a68ee76-5377-4a40-8406-8ffa6711d28c",
+            "round": "State Final",
+            "roundDate": "2025-11-22",
+            "next": null,
+            "contestId": "6ce12e3f-5c20-4a72-a9e1-697a57f703d8",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "55a9d5be-3ec6-4ef2-9fe2-cbfbfc16e432",
+                "name": "Clovis West",
+                "seed": 4,
+                "score": 0,
+                "from": "0b5d7af2-c144-4a79-9f70-0b10688b9b5e"
+              },
+              {
+                "teamId": "8d16b41b-3499-420c-b6e4-396d59520cc4",
+                "name": "Cypress",
+                "seed": 3,
+                "score": 3,
+                "from": "6a8de983-1e3a-47a0-877e-db270c35e9fa"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/NJjUw2Vcnk6B-CupF_lYJA/eZEg3Mn1KU-z2pJRGv50mQ/volleyball-25/2025-cif-state-girls-volleyball-championships-division-iii.htm",
+        "tournament": "2025 CIF State Girls Volleyball Championships",
+        "bracketId": "dc209179-f5c9-4f29-b3da-92511afe7499",
+        "name": "Division III",
+        "matchups": [
+          {
+            "id": "e5438491-c05a-451c-ac8c-f8a16b76e01c",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "d1d85eb8-4e29-495c-8279-e94f1c55059b",
+            "contestId": null,
+            "dateLocal": null,
+            "bye": true,
+            "winner": null,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 1,
+                "score": null,
+                "from": null
+              },
+              {
+                "teamId": null,
+                "name": null,
+                "seed": null,
+                "score": null,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6c8842da-744a-4721-b5f2-b2b7a625a0d5",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "d1d85eb8-4e29-495c-8279-e94f1c55059b",
+            "contestId": "1cfdd7c3-4cd4-4bba-9db4-21893f033b18",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "21ebd1ff-5e34-4072-b209-c3657db3898b",
+                "name": "Bullard",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "da35e3a8-55bc-468c-bfaf-b684cd160963",
+                "name": "Hughson",
+                "seed": 9,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "4d3d3277-3a63-44da-9da8-ecb076b9c010",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "219501dd-6664-4553-a04f-73fd85a026bc",
+            "contestId": "be4f6770-4d13-454d-8d54-c3ca3593d874",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "8e01c2fa-4888-483f-8d26-6a45518c1bd8",
+                "name": "Pleasant Valley",
+                "seed": 12,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "8f987c48-2220-48dc-bb47-da48c243da3b",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "219501dd-6664-4553-a04f-73fd85a026bc",
+            "contestId": "d1d88b2e-a046-4332-9ade-4dff39f81914",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
+                "name": "Burlingame",
+                "seed": 4,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "e3575c9e-ba9a-45fc-87af-b1dfd2fe6172",
+                "name": "Lowell",
+                "seed": 13,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "216cde25-36f6-4b11-8a99-7425ae9d1a08",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "f282380d-494a-4dd8-bb24-113058b983ae",
+            "contestId": "c0d7be69-feed-4839-8a97-9be87a40c028",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "915d875e-d088-4063-abe0-745c37bb5300",
+                "name": "Pitman",
+                "seed": 3,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "2993e4ff-72d9-4f83-b862-8db615e795aa",
+                "name": "Shasta",
+                "seed": 14,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "fde8800f-a7c0-43df-924c-cf26cc12ea60",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "f282380d-494a-4dd8-bb24-113058b983ae",
+            "contestId": "cde068da-e09a-40e9-b63e-408661d84630",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f7fac454-ac74-40b3-9b57-bd4009f5db33",
+                "name": "Heritage",
+                "seed": 6,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "fe1a574e-0d22-4d7b-9f57-62056d7914f5",
+                "name": "Foothill",
+                "seed": 11,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "040a3e8f-47b0-42c5-8c6a-5eb0f5969059",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "35efaecd-8980-407d-9d5a-5616bea93090",
+            "contestId": "52277c18-cd22-4136-a337-21f4685f1da4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "0dc9a612-5404-476d-9509-c0110e86d73b",
+                "name": "Sonora",
+                "seed": 10,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e66309a2-181a-43af-b9f3-2d5e11d5f64c",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "35efaecd-8980-407d-9d5a-5616bea93090",
+            "contestId": "dcd6911e-5585-4dd3-8cbc-2f842c85e046",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "79ab6d94-2736-4050-9aa8-bdef51d35557",
+                "name": "Lincoln",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "a5eb7a23-ec6a-4184-802a-b1a087f97c1a",
+                "name": "San Marin",
+                "seed": 15,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "d1d85eb8-4e29-495c-8279-e94f1c55059b",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "38a0afcf-1258-4f15-90a3-0186adfcf78f",
+            "contestId": "c7b180ad-f701-48eb-85c8-5baca0bcd11b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 1,
+                "score": 3,
+                "from": "e5438491-c05a-451c-ac8c-f8a16b76e01c"
+              },
+              {
+                "teamId": "21ebd1ff-5e34-4072-b209-c3657db3898b",
+                "name": "Bullard",
+                "seed": 8,
+                "score": 2,
+                "from": "6c8842da-744a-4721-b5f2-b2b7a625a0d5"
+              }
+            ]
+          },
+          {
+            "id": "219501dd-6664-4553-a04f-73fd85a026bc",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "38a0afcf-1258-4f15-90a3-0186adfcf78f",
+            "contestId": "08b319c6-6591-4ab6-a4b9-b8d508b46c91",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 5,
+                "score": 3,
+                "from": "4d3d3277-3a63-44da-9da8-ecb076b9c010"
+              },
+              {
+                "teamId": "e3575c9e-ba9a-45fc-87af-b1dfd2fe6172",
+                "name": "Lowell",
+                "seed": 13,
+                "score": 0,
+                "from": "8f987c48-2220-48dc-bb47-da48c243da3b"
+              }
+            ]
+          },
+          {
+            "id": "f282380d-494a-4dd8-bb24-113058b983ae",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "5cf6cbf8-48cd-424a-bb3a-38cedb7ab5b8",
+            "contestId": "f9742711-a98d-477b-a6d5-8858937cb03e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2993e4ff-72d9-4f83-b862-8db615e795aa",
+                "name": "Shasta",
+                "seed": 14,
+                "score": 1,
+                "from": "216cde25-36f6-4b11-8a99-7425ae9d1a08"
+              },
+              {
+                "teamId": "fe1a574e-0d22-4d7b-9f57-62056d7914f5",
+                "name": "Foothill",
+                "seed": 11,
+                "score": 3,
+                "from": "fde8800f-a7c0-43df-924c-cf26cc12ea60"
+              }
+            ]
+          },
+          {
+            "id": "35efaecd-8980-407d-9d5a-5616bea93090",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "5cf6cbf8-48cd-424a-bb3a-38cedb7ab5b8",
+            "contestId": "3604b835-324e-4f25-9c7b-f38522395da4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
+                "name": "Archbishop Riordan",
+                "seed": 7,
+                "score": 2,
+                "from": "040a3e8f-47b0-42c5-8c6a-5eb0f5969059"
+              },
+              {
+                "teamId": "79ab6d94-2736-4050-9aa8-bdef51d35557",
+                "name": "Lincoln",
+                "seed": 2,
+                "score": 3,
+                "from": "e66309a2-181a-43af-b9f3-2d5e11d5f64c"
+              }
+            ]
+          },
+          {
+            "id": "38a0afcf-1258-4f15-90a3-0186adfcf78f",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "dce22765-a86d-4bf2-8a98-b5c6e125ffc7",
+            "contestId": "fde06f4b-28e9-4d36-9f2f-53eb0b53151c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 1,
+                "score": 3,
+                "from": "d1d85eb8-4e29-495c-8279-e94f1c55059b"
+              },
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 5,
+                "score": 2,
+                "from": "219501dd-6664-4553-a04f-73fd85a026bc"
+              }
+            ]
+          },
+          {
+            "id": "5cf6cbf8-48cd-424a-bb3a-38cedb7ab5b8",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "dce22765-a86d-4bf2-8a98-b5c6e125ffc7",
+            "contestId": "7c5b9de9-b2ff-4aa2-8bcf-961888417716",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "fe1a574e-0d22-4d7b-9f57-62056d7914f5",
+                "name": "Foothill",
+                "seed": 11,
+                "score": 1,
+                "from": "f282380d-494a-4dd8-bb24-113058b983ae"
+              },
+              {
+                "teamId": "79ab6d94-2736-4050-9aa8-bdef51d35557",
+                "name": "Lincoln",
+                "seed": 2,
+                "score": 3,
+                "from": "35efaecd-8980-407d-9d5a-5616bea93090"
+              }
+            ]
+          },
+          {
+            "id": "0521d671-405c-49aa-bb33-211023ada836",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "56ad099a-093e-4a54-a6f8-6a362d5b71be",
+            "contestId": "52ebfb0f-9d71-4191-9105-96ae86fa82a1",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74924b7c-c128-4c04-8456-c5d51dbeb0e7",
+                "name": "Academy of Our Lady of Peace",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "21b5019c-a9d1-4d42-8065-37b4ee7aaad0",
+                "name": "Arrowhead Christian",
+                "seed": 16,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "118f41ed-4c35-4238-bd1b-ac6d21b65849",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "56ad099a-093e-4a54-a6f8-6a362d5b71be",
+            "contestId": "566be120-d84e-4719-91d5-3635e108f3ca",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "943e467e-2678-4aba-851a-b2f42962d7a3",
+                "name": "Royal",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "b887560d-fc7a-48c0-a962-ae7d4ada9719",
+                "name": "Garces Memorial",
+                "seed": 9,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a54668a0-fa9b-418f-b04c-1271c86b442b",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0c5e695c-2161-4f0b-85ce-023772e97131",
+            "contestId": "ad1d19e5-19c2-4940-9a55-7b5b6ba1fb2a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e71f479e-b2c8-48da-a8b4-4f270c3afb92",
+                "name": "Patrick Henry",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "68a421c5-cca9-497e-8645-2049ebc86149",
+                "name": "Cleveland",
+                "seed": 12,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6751010e-9dc3-468b-8245-a2c442f8d75c",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0c5e695c-2161-4f0b-85ce-023772e97131",
+            "contestId": "bc041870-1dd9-4692-856d-dfef0af20525",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "351e2ce0-7021-4bc9-9b29-665923a9b21b",
+                "name": "Santa Fe Christian",
+                "seed": 4,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "804990b1-145b-4b80-96cf-bd728f338bbc",
+                "name": "El Camino Real",
+                "seed": 13,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0b87a798-7343-4081-819b-46a99f499f0e",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "fb6d1ec0-5027-4777-8cef-5bb21217f177",
+            "contestId": "3f86bda2-d73f-4080-938b-867a329a6fcd",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
+                "name": "Mission Vista",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "c2b5d33d-caaa-42f4-a5a7-35e3e8456dfd",
+                "name": "Taft",
+                "seed": 14,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "9cbf0715-7f29-45b3-a7e6-ec982f9cbf25",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "fb6d1ec0-5027-4777-8cef-5bb21217f177",
+            "contestId": "4e944e7a-44bc-4010-bede-a3a1ebd147a9",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "42d0ed8f-c1eb-4e73-a80a-c66ed3cb81a5",
+                "name": "Ontario Christian",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "77e50c7a-6f0b-4b7d-a29e-33cc88e6f74a",
+                "name": "Santa Barbara",
+                "seed": 11,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2e7e31d0-6126-4951-ac53-dbb9897edeba",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0ba18755-a1fe-4f22-8d06-b5981b20db04",
+            "contestId": "049c6451-b5ee-4152-87ee-975cb6057295",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "7e1d66eb-53fd-48ae-8ba2-2e1528c5dbf0",
+                "name": "Chadwick",
+                "seed": 7,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "bbe212cc-5f9b-4c6b-be20-fc13cc136e14",
+                "name": "Eagle Rock",
+                "seed": 10,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ed68a6c6-1d86-443b-b257-822a4a426696",
+            "round": "Round I",
+            "roundDate": "2025-11-11",
+            "next": "0ba18755-a1fe-4f22-8d06-b5981b20db04",
+            "contestId": "9db87b0a-e696-43ee-80c4-85c0ace1f3e6",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "d2cda95b-4ea1-469e-9440-ff6cee65183c",
+                "name": "Frontier",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "e311071e-5828-47fd-9a20-fbbceabc7d61",
+                "name": "Wiseburn- Da Vinci",
+                "seed": 15,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "56ad099a-093e-4a54-a6f8-6a362d5b71be",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "9d8889bc-31e4-40ac-bbe8-5ebe4eac74ba",
+            "contestId": "3c187c17-4b8d-4c2d-9dbb-fc67dacbb0da",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74924b7c-c128-4c04-8456-c5d51dbeb0e7",
+                "name": "Academy of Our Lady of Peace",
+                "seed": 1,
+                "score": 3,
+                "from": "0521d671-405c-49aa-bb33-211023ada836"
+              },
+              {
+                "teamId": "943e467e-2678-4aba-851a-b2f42962d7a3",
+                "name": "Royal",
+                "seed": 8,
+                "score": 0,
+                "from": "118f41ed-4c35-4238-bd1b-ac6d21b65849"
+              }
+            ]
+          },
+          {
+            "id": "0c5e695c-2161-4f0b-85ce-023772e97131",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "9d8889bc-31e4-40ac-bbe8-5ebe4eac74ba",
+            "contestId": "63ace26a-456c-472d-a117-875a13ba6012",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e71f479e-b2c8-48da-a8b4-4f270c3afb92",
+                "name": "Patrick Henry",
+                "seed": 5,
+                "score": 0,
+                "from": "a54668a0-fa9b-418f-b04c-1271c86b442b"
+              },
+              {
+                "teamId": "351e2ce0-7021-4bc9-9b29-665923a9b21b",
+                "name": "Santa Fe Christian",
+                "seed": 4,
+                "score": 3,
+                "from": "6751010e-9dc3-468b-8245-a2c442f8d75c"
+              }
+            ]
+          },
+          {
+            "id": "fb6d1ec0-5027-4777-8cef-5bb21217f177",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "93c4b522-69ee-46c5-803e-0845ce622deb",
+            "contestId": "5e7a0a18-2713-4eff-87f0-a5819b70a619",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
+                "name": "Mission Vista",
+                "seed": 3,
+                "score": 3,
+                "from": "0b87a798-7343-4081-819b-46a99f499f0e"
+              },
+              {
+                "teamId": "42d0ed8f-c1eb-4e73-a80a-c66ed3cb81a5",
+                "name": "Ontario Christian",
+                "seed": 6,
+                "score": 2,
+                "from": "9cbf0715-7f29-45b3-a7e6-ec982f9cbf25"
+              }
+            ]
+          },
+          {
+            "id": "0ba18755-a1fe-4f22-8d06-b5981b20db04",
+            "round": "Round II",
+            "roundDate": "2025-11-13",
+            "next": "93c4b522-69ee-46c5-803e-0845ce622deb",
+            "contestId": "a3a333cc-a5ba-45e8-89f9-e195db91bcaf",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "7e1d66eb-53fd-48ae-8ba2-2e1528c5dbf0",
+                "name": "Chadwick",
+                "seed": 7,
+                "score": 0,
+                "from": "2e7e31d0-6126-4951-ac53-dbb9897edeba"
+              },
+              {
+                "teamId": "d2cda95b-4ea1-469e-9440-ff6cee65183c",
+                "name": "Frontier",
+                "seed": 2,
+                "score": 3,
+                "from": "ed68a6c6-1d86-443b-b257-822a4a426696"
+              }
+            ]
+          },
+          {
+            "id": "9d8889bc-31e4-40ac-bbe8-5ebe4eac74ba",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "c7296602-d88a-4e3a-9591-210229519149",
+            "contestId": "9709dc82-9194-49a3-a281-93eca0c23767",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74924b7c-c128-4c04-8456-c5d51dbeb0e7",
+                "name": "Academy of Our Lady of Peace",
+                "seed": 1,
+                "score": 3,
+                "from": "56ad099a-093e-4a54-a6f8-6a362d5b71be"
+              },
+              {
+                "teamId": "351e2ce0-7021-4bc9-9b29-665923a9b21b",
+                "name": "Santa Fe Christian",
+                "seed": 4,
+                "score": 1,
+                "from": "0c5e695c-2161-4f0b-85ce-023772e97131"
+              }
+            ]
+          },
+          {
+            "id": "93c4b522-69ee-46c5-803e-0845ce622deb",
+            "round": "Regional Semifinals",
+            "roundDate": "2025-11-15",
+            "next": "c7296602-d88a-4e3a-9591-210229519149",
+            "contestId": "ffefecd5-9e66-4bf0-baa3-b045fe659efd",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
+                "name": "Mission Vista",
+                "seed": 3,
+                "score": 3,
+                "from": "fb6d1ec0-5027-4777-8cef-5bb21217f177"
+              },
+              {
+                "teamId": "d2cda95b-4ea1-469e-9440-ff6cee65183c",
+                "name": "Frontier",
+                "seed": 2,
+                "score": 0,
+                "from": "0ba18755-a1fe-4f22-8d06-b5981b20db04"
+              }
+            ]
+          },
+          {
+            "id": "dce22765-a86d-4bf2-8a98-b5c6e125ffc7",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "70e0a9e0-3044-47fa-9fc3-4083f28bf2c0",
+            "contestId": "d059d697-306e-4907-8991-f51cb852f9ac",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 1,
+                "score": 3,
+                "from": "38a0afcf-1258-4f15-90a3-0186adfcf78f"
+              },
+              {
+                "teamId": "79ab6d94-2736-4050-9aa8-bdef51d35557",
+                "name": "Lincoln",
+                "seed": 2,
+                "score": 2,
+                "from": "5cf6cbf8-48cd-424a-bb3a-38cedb7ab5b8"
+              }
+            ]
+          },
+          {
+            "id": "c7296602-d88a-4e3a-9591-210229519149",
+            "round": "Regional Finals",
+            "roundDate": "2025-11-18",
+            "next": "70e0a9e0-3044-47fa-9fc3-4083f28bf2c0",
+            "contestId": "68926562-62b3-4ff9-9bbb-ed678cf668c0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74924b7c-c128-4c04-8456-c5d51dbeb0e7",
+                "name": "Academy of Our Lady of Peace",
+                "seed": 1,
+                "score": 3,
+                "from": "9d8889bc-31e4-40ac-bbe8-5ebe4eac74ba"
+              },
+              {
+                "teamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
+                "name": "Mission Vista",
+                "seed": 3,
+                "score": 0,
+                "from": "93c4b522-69ee-46c5-803e-0845ce622deb"
+              }
+            ]
+          },
+          {
+            "id": "70e0a9e0-3044-47fa-9fc3-4083f28bf2c0",
+            "round": "State Final",
+            "roundDate": "2025-11-22",
+            "next": null,
+            "contestId": "e7192479-8bdc-4a12-968c-afaf832f5578",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 1,
+                "score": 0,
+                "from": "dce22765-a86d-4bf2-8a98-b5c6e125ffc7"
+              },
+              {
+                "teamId": "74924b7c-c128-4c04-8456-c5d51dbeb0e7",
+                "name": "Academy of Our Lady of Peace",
+                "seed": 1,
+                "score": 3,
+                "from": "c7296602-d88a-4e3a-9591-210229519149"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

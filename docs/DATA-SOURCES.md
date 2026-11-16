@@ -2231,8 +2231,8 @@ redirects.
     extend `scripts/build-history.ts`, and the schema (`lib/history/history-schema.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
-  `lib/history/history-brackets-schema.ts`, read by `lib/history/history.ts`, shown on /history/2025-26 as `#ccs` after
-  PCAL, `#sds` after Metro and `#toc` after the LA independents). Transcribed by hand on 2026-10-07 (the
+  `lib/history/history-brackets-schema.ts`, read by `lib/history/history.ts`, shown at the top of /history/2025-26, before any
+  league: `#ccs` in NorCal, `#sds` and `#toc` in SoCal; 2026-11-16). Transcribed by hand on 2026-10-07 (the
   Tournament of Champions on 2026-11-03); nothing refreshes it. Each entry's `notes` say exactly what was
   read:
   - **CCS** — the two official bracket pages linked from `https://www.cifccs.org/sports/fh/index`
@@ -2253,7 +2253,7 @@ redirects.
     2024, so Eastlake's final win over Del Norte has no score.
   - The NCS, the Northern Section and the Southern Section held no 2025 field hockey playoffs, so
     MCAL and the EAL have no bracket block.
-  - **Tournament of Champions** (`tournaments.toc`, shown as `#toc` after the LA independents; added
+  - **Tournament of Champions** (`tournaments.toc`, shown as `#toc`; added
     2026-11-03) — the Sunset's and the LA independents' postseason, which no CIF section runs (§1.8). No
     bracket, pairings or seeds were published, so the bracket is assembled from the games and its sides
     carry `seed: null`: Harvard-Westlake's three games from the Harvard-Westlake Chronicle (Nov 15, 2025:
@@ -2264,7 +2264,19 @@ redirects.
     `decidedBy: 'tiebreak-unreported'`: MaxPreps marks it a Bonita loss and Newport Harbor played on, but no
     source gives a shootout (MaxPreps' game page returned 403 on 2026-11-03). Huntington Beach 1-0 Edison on
     Oct 25, the two beaten semifinalists, is stored as `thirdPlace` (the 2026 format names a third-place
-    game; no 2025 source does). Each card's top side is MaxPreps' home team.
+    game; no 2025 source does), drawn as a card under the final, as /playoffs draws the 2026 event's
+    (2026-11-16). Each card's top side is MaxPreps' home team.
+- **2025-26 CCS and CIF State brackets in the soccer, basketball and volleyball builds**
+  (`data/<sport>/history-brackets-2025-26.json` `published`, `PublishedBracketsSchema`; read 2026-11-16). MaxPreps'
+  tournament pages, read whole by `lib/sources/maxpreps-tournament.ts`: the 2025 Central Coast Section Girls
+  Volleyball Championship, the CIF Central Coast Section 2026 Girls' Soccer Championships and the 2026 CIF Central
+  Coast Section Boys' Basketball Championships (California), every division, and the CIF State divisions a team of
+  ours played in. Found from last season's team schedules (a bracket game's `tournamentCanonicalUrl` under the prior
+  `sportSeasonId`), each division read from its own page (`/tournament/<tournament>/<bracket>/….htm`, the two GUIDs
+  in .NET byte order, base64url) one a minute: the site answers 403 to faster reads. The 2025 volleyball pages print
+  no round headers; the round's name is its depth in the tree and its day the games' own dates (the `notes` list
+  each round that borrowed another division's day). The boys basketball Open Division was pool play, not a bracket,
+  and is not in the file.
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
 

@@ -4400,6 +4400,20 @@ explains (Bonita 1-1 Newport Harbor) reads "Newport Harbor and Bonita drew 1-1; 
 with "Tiebreak not reported" under the card, never a shootout it cannot cite. The Sunset and LA unavailable
 cards point to it; the "no champion on an unavailable card" check reads past the event's name.
 
+**The postseason first, laid out as this season's (2026-11-16).** Owner request: "move the CCS results to the top of
+the page", "make the tournament of champions display consistent with this year's", and CCS results for the other
+sports. /history/2025-26 now opens on the postseason, before any league (`#ccs` in NorCal; `#sds`, then `#toc`, in
+SoCal), and `#toc` is laid out as /playoffs lays out the 2026 event: the dates beside the heading ("Oct 21–25"),
+the bracket as `#toc-bracket` with the third-place game as a card under the final (a "Third place" column on a
+wide screen, shown with the final's tab on a phone), the line saying what the bracket is drawn from, the note,
+and the two Chronicle articles as a link row. It keeps the champion card the section blocks open with. The
+soccer, basketball and volleyball archives open on `#ccs` (every division's champion as a row, then the
+divisions with a team of ours drawn by the /playoffs view) and `#cif` (the CIF State regional our teams played
+in and the state final), from MaxPreps' pages read whole (DATA-SOURCES "2025-26 CCS and CIF State brackets").
+On /playoffs the Tournament of Champions' note no longer repeats whose postseason it is, and a live CCS card
+spells out how a final was decided ("Shootout", "Overtime") as every other bracket on the site does, where it
+printed the score chip's tag ("SO").
+
 **MCAL copy reads the results (2026-10-29).** `LeagueTournamentProjection.champion` is the final's winner once it
 has one (a level final with no W flag completes nothing); `tournamentOutcome(projection, slug)` is one team's
 standing in the bracket (champion, runner-up, in the final, lost in a round, alive, below the line, or projected),

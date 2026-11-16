@@ -2,5 +2,2248 @@
   "season": "2025-26",
   "sport": "Girls Soccer",
   "sections": {},
-  "tournaments": {}
+  "tournaments": {},
+  "published": {
+    "retrievedOn": "2026-11-16",
+    "notes": [
+      "Read whole from MaxPreps' tournament pages on 2026-11-16 by lib/sources/maxpreps-tournament.ts, one division page at a time (/tournament/<tournament>/<bracket>/….htm; the site answered 403 to faster reads). The pages were found from last season's team schedules: each bracket game's tournamentCanonicalUrl under the prior sportSeasonId. Each bracket's `url` is the page MaxPreps names canonical.",
+      "CCS: the CIF Central Coast Section 2026 Girls' Soccer Championships (tournament ba4fb1a4-13d8-4669-9d3e-dfe36c6c2341), Divisions I-V; the tournament's list page names no other division (no Open Division).",
+      "CIF State: the 2026 CIF State Girls Soccer Championships (tournament c84f3b42-1d74-4412-bd27-3d0a3fe51738), the three divisions a team of ours played in: I, II and IV.",
+      "A level game MaxPreps marks a winner of was decided on penalty kicks; the page gives the level score and the winner, not the tally."
+    ],
+    "brackets": [
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/pLFPutgTaUadPt_jbGwjQQ/ZIVSgfJbBkCbsmLKqr8Dsw/girls-soccer-winter-25-26/cif-central-coast-section-2026-girls-soccer-championships-division-i.htm",
+        "tournament": "CIF Central Coast Section 2026 Girls' Soccer Championships",
+        "bracketId": "81528564-5bf2-4006-9bb2-62caaabf03b3",
+        "name": "Division I",
+        "matchups": [
+          {
+            "id": "945e3494-a36a-4fc5-a58f-6625a9a50779",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "df5769be-d4d8-4c2a-9a31-1a5cb4c22df5",
+            "contestId": "c1b0ff28-819d-4491-bae6-b8866552ac1a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0279f2de-d5ce-484d-b210-2286ded42058",
+                "name": "Los Altos",
+                "seed": 6,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 3,
+                "score": 4,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "b5b35cbc-9e82-4d7d-992a-3de87e96adf7",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "df5769be-d4d8-4c2a-9a31-1a5cb4c22df5",
+            "contestId": "252bae74-ff06-4091-884b-f7d40d946bfa",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
+                "name": "Leland",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 2,
+                "score": 8,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e2cb3c44-4c8e-4bbe-ac8f-451d863c99af",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "09347342-717c-4d0e-9947-e765e4dcd356",
+            "contestId": "e076681f-cd4f-4ea9-a517-06c8e369cba0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
+                "name": "Leigh",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 4,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "f40e1b58-eaff-4695-8ac7-1573431b1f77",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "09347342-717c-4d0e-9947-e765e4dcd356",
+            "contestId": "cfef9734-e1c1-4a56-b9ed-f9f08093f38a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
+                "name": "Carlmont",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 1,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "df5769be-d4d8-4c2a-9a31-1a5cb4c22df5",
+            "round": "Semifinals",
+            "roundDate": "2026-02-24",
+            "next": "044f4978-a662-4fad-b411-551e836f9d8e",
+            "contestId": "65c0ec62-9588-4084-95f1-90c15048863d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 3,
+                "score": 0,
+                "from": "945e3494-a36a-4fc5-a58f-6625a9a50779"
+              },
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 2,
+                "score": 4,
+                "from": "b5b35cbc-9e82-4d7d-992a-3de87e96adf7"
+              }
+            ]
+          },
+          {
+            "id": "09347342-717c-4d0e-9947-e765e4dcd356",
+            "round": "Semifinals",
+            "roundDate": "2026-02-24",
+            "next": "044f4978-a662-4fad-b411-551e836f9d8e",
+            "contestId": "cd33c312-7b14-49e9-87df-c66c462bc7d0",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 4,
+                "score": 0,
+                "from": "e2cb3c44-4c8e-4bbe-ac8f-451d863c99af"
+              },
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 1,
+                "score": 6,
+                "from": "f40e1b58-eaff-4695-8ac7-1573431b1f77"
+              }
+            ]
+          },
+          {
+            "id": "044f4978-a662-4fad-b411-551e836f9d8e",
+            "round": "Finals",
+            "roundDate": "2026-02-27",
+            "next": null,
+            "contestId": "71df3ca2-0c4e-4f6c-91ae-0416a62f03c3",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 2,
+                "score": 4,
+                "from": "df5769be-d4d8-4c2a-9a31-1a5cb4c22df5"
+              },
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 1,
+                "score": 3,
+                "from": "09347342-717c-4d0e-9947-e765e4dcd356"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/pLFPutgTaUadPt_jbGwjQQ/3Nk9lZJ8R0e3l2uKQWyepw/girls-soccer-winter-25-26/cif-central-coast-section-2026-girls-soccer-championships-division-ii.htm",
+        "tournament": "CIF Central Coast Section 2026 Girls' Soccer Championships",
+        "bracketId": "953dd9dc-7c92-4747-b797-6b8a416c9ea7",
+        "name": "Division II",
+        "matchups": [
+          {
+            "id": "76986026-7372-4820-a93b-c828e630b28b",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "8796699e-dff3-4212-8536-d69d9d55b365",
+            "contestId": "9eddf894-421b-41b6-a0c5-7a1c4d972cac",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
+                "name": "Homestead",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+                "name": "Salinas",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "6826da76-1b8c-4e61-b0ea-1a960ed3fdf5",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "8796699e-dff3-4212-8536-d69d9d55b365",
+            "contestId": "fbbf338d-7c3d-4a40-80a8-ef80fffccbc4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 7,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "09beba1b-240a-45b8-aa6e-281decefa275",
+                "name": "Mountain View",
+                "seed": 2,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "790dc2d6-9276-4783-8a2f-a8387810dab0",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "787fbf41-d4fe-4f59-8dad-1df137a6b6e7",
+            "contestId": "b1c5ee07-f686-4955-b97c-9c3bac90f60d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
+                "name": "Pioneer",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+                "name": "Sacred Heart Cathedral Preparatory",
+                "seed": 4,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ce10db37-8ba5-4fa3-81ec-2dcb7466b672",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "787fbf41-d4fe-4f59-8dad-1df137a6b6e7",
+            "contestId": "c2959d7c-9b9d-44db-9a84-a27bed4a9ccc",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
+                "name": "Palo Alto",
+                "seed": 8,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "a35649f4-23d3-4986-bf27-8b517521d021",
+                "name": "Woodside",
+                "seed": 1,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "8796699e-dff3-4212-8536-d69d9d55b365",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "986a2398-7cfa-42b4-8336-8e870ec9edd4",
+            "contestId": "820bc968-aece-4b8e-82f4-d81b688d7cb7",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+                "name": "Salinas",
+                "seed": 3,
+                "score": 4,
+                "from": "76986026-7372-4820-a93b-c828e630b28b"
+              },
+              {
+                "teamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
+                "name": "Menlo-Atherton",
+                "seed": 7,
+                "score": 1,
+                "from": "6826da76-1b8c-4e61-b0ea-1a960ed3fdf5"
+              }
+            ]
+          },
+          {
+            "id": "787fbf41-d4fe-4f59-8dad-1df137a6b6e7",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "986a2398-7cfa-42b4-8336-8e870ec9edd4",
+            "contestId": "cfd66937-8671-4fb6-9ff1-a9ffb64c5507",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+                "name": "Sacred Heart Cathedral Preparatory",
+                "seed": 4,
+                "score": 1,
+                "from": "790dc2d6-9276-4783-8a2f-a8387810dab0"
+              },
+              {
+                "teamId": "a35649f4-23d3-4986-bf27-8b517521d021",
+                "name": "Woodside",
+                "seed": 1,
+                "score": 0,
+                "from": "ce10db37-8ba5-4fa3-81ec-2dcb7466b672"
+              }
+            ]
+          },
+          {
+            "id": "986a2398-7cfa-42b4-8336-8e870ec9edd4",
+            "round": "Finals",
+            "roundDate": "2026-02-28",
+            "next": null,
+            "contestId": "0a5bbc23-8f15-4d7c-a511-93b1734c8256",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
+                "name": "Salinas",
+                "seed": 3,
+                "score": 4,
+                "from": "8796699e-dff3-4212-8536-d69d9d55b365"
+              },
+              {
+                "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
+                "name": "Sacred Heart Cathedral Preparatory",
+                "seed": 4,
+                "score": 0,
+                "from": "787fbf41-d4fe-4f59-8dad-1df137a6b6e7"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/pLFPutgTaUadPt_jbGwjQQ/4jDHZUQwk0q7E-Z0fNGyAg/girls-soccer-winter-25-26/cif-central-coast-section-2026-girls-soccer-championships-division-iii.htm",
+        "tournament": "CIF Central Coast Section 2026 Girls' Soccer Championships",
+        "bracketId": "65c730e2-3044-4a93-bb13-e6747cd1b202",
+        "name": "Division III",
+        "matchups": [
+          {
+            "id": "96c2daf1-adf2-4fdb-8fc4-14d8ae5c03f4",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "3981f10b-b962-4715-bb68-3f2f045c32be",
+            "contestId": "952d23d9-19de-4379-ae3d-80e47937d304",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "27d82a51-2b44-492e-b2cf-114730027de3",
+                "name": "Sacred Heart Prep",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+                "name": "Monterey",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a1d8cee3-b281-44e8-af53-33da02b34213",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "3981f10b-b962-4715-bb68-3f2f045c32be",
+            "contestId": "460e3f13-fbcf-482d-9701-858c1b051892",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
+                "name": "Piedmont Hills",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+                "name": "King's Academy",
+                "seed": 2,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0c5b1e4e-3c31-41c7-845e-4fa5c6f7832b",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "6583639b-6054-40f1-a5b6-60efb7326a6a",
+            "contestId": "1514f0c0-dcaa-4634-87e5-9d534a63283f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
+                "name": "Branham",
+                "seed": 5,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 4,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "39cf1872-5891-4bf2-a754-9519d7fc219a",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "6583639b-6054-40f1-a5b6-60efb7326a6a",
+            "contestId": "933b8d1a-a3d1-4532-9ee5-c7b3cc6c9f4a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
+                "name": "Gilroy",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
+                "name": "Aptos",
+                "seed": 1,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "3981f10b-b962-4715-bb68-3f2f045c32be",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "8def85c9-4c83-438f-a001-b9959dbdd327",
+            "contestId": "b8fcf32f-fadf-416c-8eb8-9397a72ffe22",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
+                "name": "Monterey",
+                "seed": 3,
+                "score": 1,
+                "from": "96c2daf1-adf2-4fdb-8fc4-14d8ae5c03f4"
+              },
+              {
+                "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+                "name": "King's Academy",
+                "seed": 2,
+                "score": 2,
+                "from": "a1d8cee3-b281-44e8-af53-33da02b34213"
+              }
+            ]
+          },
+          {
+            "id": "6583639b-6054-40f1-a5b6-60efb7326a6a",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "8def85c9-4c83-438f-a001-b9959dbdd327",
+            "contestId": "749c2958-8f47-4968-b202-2acd94f1d5d1",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
+                "name": "Sequoia",
+                "seed": 4,
+                "score": 1,
+                "from": "0c5b1e4e-3c31-41c7-845e-4fa5c6f7832b"
+              },
+              {
+                "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
+                "name": "Aptos",
+                "seed": 1,
+                "score": 3,
+                "from": "39cf1872-5891-4bf2-a754-9519d7fc219a"
+              }
+            ]
+          },
+          {
+            "id": "8def85c9-4c83-438f-a001-b9959dbdd327",
+            "round": "Finals",
+            "roundDate": "2026-02-28",
+            "next": null,
+            "contestId": "f91dce09-171b-4f38-b81a-9720eab583cb",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
+                "name": "King's Academy",
+                "seed": 2,
+                "score": 0,
+                "from": "3981f10b-b962-4715-bb68-3f2f045c32be"
+              },
+              {
+                "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
+                "name": "Aptos",
+                "seed": 1,
+                "score": 1,
+                "from": "6583639b-6054-40f1-a5b6-60efb7326a6a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/pLFPutgTaUadPt_jbGwjQQ/bLbEGn4bjEqVHhPC9TJO9Q/girls-soccer-winter-25-26/cif-central-coast-section-2026-girls-soccer-championships-division-iv.htm",
+        "tournament": "CIF Central Coast Section 2026 Girls' Soccer Championships",
+        "bracketId": "1ac4b66c-1b7e-4a8c-951e-13c2f5324ef5",
+        "name": "Division IV",
+        "matchups": [
+          {
+            "id": "5d78c0b2-0be0-4d7b-bb62-ab448f42d377",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "0f721b6f-73af-4bed-9680-c85380ff5832",
+            "contestId": "61afa989-ad3b-4868-adc8-d56861604cb4",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "30d65e43-1478-45b5-90de-fd69689344f8",
+                "name": "Silver Creek",
+                "seed": 6,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 3,
+                "score": 6,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "42e2d642-b808-420d-9b70-f3d4b5af4647",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "0f721b6f-73af-4bed-9680-c85380ff5832",
+            "contestId": "94eeee70-bdfa-40cb-bc92-0e5c8d4b73ef",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
+                "name": "Gunn",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+                "name": "Hollister",
+                "seed": 2,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "848e17de-5061-4b22-a743-cb208e9cca62",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "f4d74be9-d82b-4d63-94b0-5e8ec63132c9",
+            "contestId": "08d3f8f0-9601-47c4-983b-d47d3c213f6e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 5,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
+                "name": "Santa Cruz",
+                "seed": 4,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "a08ca411-3e73-43d4-a568-bc30c3ce8079",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "f4d74be9-d82b-4d63-94b0-5e8ec63132c9",
+            "contestId": "95183eea-1dcf-4e27-8dbb-f2863008c63a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "eddcc26a-1a48-4c33-a8e9-7cd666f7d42a",
+                "name": "Pacific Collegiate",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0f721b6f-73af-4bed-9680-c85380ff5832",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "7061fbcb-94bb-42cb-94b8-172fd90ad527",
+            "contestId": "b191b214-570b-4b7d-9eb5-4a308e35bdb7",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 3,
+                "score": 2,
+                "from": "5d78c0b2-0be0-4d7b-bb62-ab448f42d377"
+              },
+              {
+                "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
+                "name": "Hollister",
+                "seed": 2,
+                "score": 1,
+                "from": "42e2d642-b808-420d-9b70-f3d4b5af4647"
+              }
+            ]
+          },
+          {
+            "id": "f4d74be9-d82b-4d63-94b0-5e8ec63132c9",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "7061fbcb-94bb-42cb-94b8-172fd90ad527",
+            "contestId": "e6b6a605-934a-4bd4-813e-34f7b6d2cc32",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 5,
+                "score": 1,
+                "from": "848e17de-5061-4b22-a743-cb208e9cca62"
+              },
+              {
+                "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
+                "name": "Aragon",
+                "seed": 1,
+                "score": 0,
+                "from": "a08ca411-3e73-43d4-a568-bc30c3ce8079"
+              }
+            ]
+          },
+          {
+            "id": "7061fbcb-94bb-42cb-94b8-172fd90ad527",
+            "round": "Finals",
+            "roundDate": "2026-02-28",
+            "next": null,
+            "contestId": "a827bd7d-8fbc-4b05-8d44-d0aefa622b1c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
+                "name": "Crystal Springs Uplands",
+                "seed": 3,
+                "score": 0,
+                "from": "0f721b6f-73af-4bed-9680-c85380ff5832"
+              },
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 5,
+                "score": 1,
+                "from": "f4d74be9-d82b-4d63-94b0-5e8ec63132c9"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "ccs",
+        "url": "https://www.maxpreps.com/tournament/pLFPutgTaUadPt_jbGwjQQ/LTD-NkoZO0OeFd37ivGkzg/girls-soccer-winter-25-26/cif-central-coast-section-2026-girls-soccer-championships-division-v.htm",
+        "tournament": "CIF Central Coast Section 2026 Girls' Soccer Championships",
+        "bracketId": "36fe302d-194a-433b-9e15-ddfb8af1a4ce",
+        "name": "Division V",
+        "matchups": [
+          {
+            "id": "ee2b540e-42de-4055-beb2-8be64b969258",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "ce90ded5-88ed-435f-b1e7-1be87337744d",
+            "contestId": "9a9bdb0d-f53d-45f7-a287-e3d4e97e036f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
+                "name": "Oak Grove",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+                "name": "The Nueva School",
+                "seed": 3,
+                "score": 6,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "f65b2a05-7c0d-4298-9c7e-0a65e8a3c4bf",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "ce90ded5-88ed-435f-b1e7-1be87337744d",
+            "contestId": "bce5dd23-b6fe-43df-bfd4-53823266960c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4c310f02-1ea4-4c58-95a6-cd632c9c055b",
+                "name": "More",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": 5,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "9d3184bc-af15-41c1-a02a-beb56766c95d",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "62e637e3-0d50-463d-99cd-b0ae6a840ffb",
+            "contestId": "b79abb44-1354-4eb0-8896-529f90cf225b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "783e6de8-bd47-447c-9a87-3923e84f99e0",
+                "name": "Everett Alvarez",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+                "name": "Watsonville",
+                "seed": 4,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "1bc203b1-59cf-4ac8-884e-b5bb31dc4c6d",
+            "round": "Quarterfinals",
+            "roundDate": "2026-02-21",
+            "next": "62e637e3-0d50-463d-99cd-b0ae6a840ffb",
+            "contestId": "fafa7204-cfeb-415b-9ab4-da4478c43b28",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "eea80135-d43b-4ba1-b650-4c4e1b38eea2",
+                "name": "Gonzales",
+                "seed": 8,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34",
+                "name": "Terra Nova",
+                "seed": 1,
+                "score": 4,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ce90ded5-88ed-435f-b1e7-1be87337744d",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "8ff552e9-5151-4a32-a660-b11f839fb97a",
+            "contestId": "ee00631d-bf73-4888-9eaa-4d3ccac9be2e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+                "name": "The Nueva School",
+                "seed": 3,
+                "score": 1,
+                "from": "ee2b540e-42de-4055-beb2-8be64b969258"
+              },
+              {
+                "teamId": "405614ad-a015-4270-b527-18e899c90824",
+                "name": "Monta Vista",
+                "seed": 2,
+                "score": 1,
+                "from": "f65b2a05-7c0d-4298-9c7e-0a65e8a3c4bf"
+              }
+            ]
+          },
+          {
+            "id": "62e637e3-0d50-463d-99cd-b0ae6a840ffb",
+            "round": "Semifinals",
+            "roundDate": "2026-02-25",
+            "next": "8ff552e9-5151-4a32-a660-b11f839fb97a",
+            "contestId": "ec342cb6-df5b-4d11-a07e-a86926085c7c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+                "name": "Watsonville",
+                "seed": 4,
+                "score": 1,
+                "from": "9d3184bc-af15-41c1-a02a-beb56766c95d"
+              },
+              {
+                "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34",
+                "name": "Terra Nova",
+                "seed": 1,
+                "score": 0,
+                "from": "1bc203b1-59cf-4ac8-884e-b5bb31dc4c6d"
+              }
+            ]
+          },
+          {
+            "id": "8ff552e9-5151-4a32-a660-b11f839fb97a",
+            "round": "Finals",
+            "roundDate": "2026-02-28",
+            "next": null,
+            "contestId": "34e6a4b1-5292-4198-b9f9-0f55fc055c05",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "32102f3d-6d77-4ed8-abad-27f4e864d72e",
+                "name": "The Nueva School",
+                "seed": 3,
+                "score": 2,
+                "from": "ce90ded5-88ed-435f-b1e7-1be87337744d"
+              },
+              {
+                "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4",
+                "name": "Watsonville",
+                "seed": 4,
+                "score": 3,
+                "from": "62e637e3-0d50-463d-99cd-b0ae6a840ffb"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/QjtPyHQdEkS9Jz0KP-UXOA/LEZ5-aSlmUiHQZxsWdtULA/girls-soccer-winter-25-26/2026-cif-state-girls-soccer-championships-division-i.htm",
+        "tournament": "2026 CIF State Girls Soccer Championships",
+        "bracketId": "f979462c-a5a4-4899-8741-9c6c59db542c",
+        "name": "Division I",
+        "matchups": [
+          {
+            "id": "54d27944-bc5c-4596-9d09-33376195c884",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "84b878ca-1a9b-4e72-b114-5604fc2b4438",
+            "contestId": "b9fe589a-4890-460c-bfaf-76345d4ca950",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "65b614fd-d453-4103-b2c8-74b5aa558661",
+                "name": "Gregori",
+                "seed": 1,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "f62e70f3-0c88-4711-9e52-3e9e132006b3",
+                "name": "Carondelet",
+                "seed": 8,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "87ebf79d-3e96-4f2b-ae0b-64cb5db0a474",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "84b878ca-1a9b-4e72-b114-5604fc2b4438",
+            "contestId": "aaf92bee-d7df-4860-a808-ab88225d11fe",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
+                "name": "Saint Francis",
+                "seed": 4,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 5,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "117b0ee0-3a84-45c1-bbab-20cd836a50eb",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "559f2d64-9355-4a13-a926-75bc28993496",
+            "contestId": "1a3461c9-9638-4398-a78f-638d4d73191b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "7e4752b7-5373-46d5-a866-aaee7b1eb0c5",
+                "name": "Vacaville",
+                "seed": 6,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "112e3aff-b7bf-42f3-88f2-e0b0bd589fa9",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "559f2d64-9355-4a13-a926-75bc28993496",
+            "contestId": "a4313ee2-baeb-4565-8978-f7fab6af9d64",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f8a146fc-198e-4220-b0fc-ee145a8a81d9",
+                "name": "Bishop O'Dowd",
+                "seed": 2,
+                "score": 4,
+                "from": null
+              },
+              {
+                "teamId": "21c1edbb-4233-47ff-8f5a-70857a366328",
+                "name": "Rocklin",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "8e4dd3f3-3cd7-4eb7-a44b-b0aeb8b4b6d3",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "230d9feb-b06b-4749-943d-1938be5c6030",
+            "contestId": "20de8018-c851-4a89-85e2-8c947883756a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 1,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "d39c723c-ce7f-410e-95ae-35c156df0211",
+                "name": "Roosevelt",
+                "seed": 8,
+                "score": 2,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "7a4ad5f9-8099-4d08-b0ee-e27d1efdb5c2",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "230d9feb-b06b-4749-943d-1938be5c6030",
+            "contestId": "96e351d1-9412-4797-ac5c-abca129f9951",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "68a421c5-cca9-497e-8645-2049ebc86149",
+                "name": "Cleveland",
+                "seed": 4,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "64933a7c-b8f1-4d59-96f6-c22658ba76e3",
+                "name": "Redondo Union",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "310df169-8fe7-4756-bf36-a0860dc20770",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "80c9ae8b-6231-4a4b-b852-45c3386a0870",
+            "contestId": "c735f813-d86b-4190-bb39-bc322e80520a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "688ec7f8-2985-4e7e-900a-4d78f845b197",
+                "name": "Mt. Carmel",
+                "seed": 3,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "75b3c4b6-a228-4423-a670-32f9396be309",
+                "name": "Oaks Christian",
+                "seed": 6,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "07dc586f-73a3-483e-b00e-710b6b2871f7",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "80c9ae8b-6231-4a4b-b852-45c3386a0870",
+            "contestId": "93896d17-6c31-4ff1-a85d-c636e029c31e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 5,
+                "from": null
+              },
+              {
+                "teamId": "ff3dcd2f-cdea-46e6-accf-fd929c0a4374",
+                "name": "San Marcos",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "84b878ca-1a9b-4e72-b114-5604fc2b4438",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "43637342-80cd-43f4-af27-7e3a8d9c1622",
+            "contestId": "eeee7989-2f20-487e-aa4a-ad2ec1c221b3",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f62e70f3-0c88-4711-9e52-3e9e132006b3",
+                "name": "Carondelet",
+                "seed": 8,
+                "score": 0,
+                "from": "54d27944-bc5c-4596-9d09-33376195c884"
+              },
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 5,
+                "score": 0,
+                "from": "87ebf79d-3e96-4f2b-ae0b-64cb5db0a474"
+              }
+            ]
+          },
+          {
+            "id": "559f2d64-9355-4a13-a926-75bc28993496",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "43637342-80cd-43f4-af27-7e3a8d9c1622",
+            "contestId": "a88ed63f-74ce-472a-8ac6-469e52b58364",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
+                "name": "Los Gatos",
+                "seed": 3,
+                "score": 1,
+                "from": "117b0ee0-3a84-45c1-bbab-20cd836a50eb"
+              },
+              {
+                "teamId": "f8a146fc-198e-4220-b0fc-ee145a8a81d9",
+                "name": "Bishop O'Dowd",
+                "seed": 2,
+                "score": 2,
+                "from": "112e3aff-b7bf-42f3-88f2-e0b0bd589fa9"
+              }
+            ]
+          },
+          {
+            "id": "230d9feb-b06b-4749-943d-1938be5c6030",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "18cef5ed-eb55-4b4d-963a-cbf18b54e42d",
+            "contestId": "1653a89e-df65-4e75-ad9f-fc8182956a6f",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 1,
+                "score": 3,
+                "from": "8e4dd3f3-3cd7-4eb7-a44b-b0aeb8b4b6d3"
+              },
+              {
+                "teamId": "68a421c5-cca9-497e-8645-2049ebc86149",
+                "name": "Cleveland",
+                "seed": 4,
+                "score": 0,
+                "from": "7a4ad5f9-8099-4d08-b0ee-e27d1efdb5c2"
+              }
+            ]
+          },
+          {
+            "id": "80c9ae8b-6231-4a4b-b852-45c3386a0870",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "18cef5ed-eb55-4b4d-963a-cbf18b54e42d",
+            "contestId": "d426043c-9665-4efd-9d3c-31c12e6cc704",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "75b3c4b6-a228-4423-a670-32f9396be309",
+                "name": "Oaks Christian",
+                "seed": 6,
+                "score": 0,
+                "from": "310df169-8fe7-4756-bf36-a0860dc20770"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 2,
+                "from": "07dc586f-73a3-483e-b00e-710b6b2871f7"
+              }
+            ]
+          },
+          {
+            "id": "43637342-80cd-43f4-af27-7e3a8d9c1622",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "68e0776b-3152-4cdd-9777-d7f552bf554c",
+            "contestId": "8f869339-ecf9-4fec-bc92-c71f86670920",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "54ef2b21-237c-4544-804f-af1d8e056c2b",
+                "name": "Buchanan",
+                "seed": 5,
+                "score": 0,
+                "from": "84b878ca-1a9b-4e72-b114-5604fc2b4438"
+              },
+              {
+                "teamId": "f8a146fc-198e-4220-b0fc-ee145a8a81d9",
+                "name": "Bishop O'Dowd",
+                "seed": 2,
+                "score": 4,
+                "from": "559f2d64-9355-4a13-a926-75bc28993496"
+              }
+            ]
+          },
+          {
+            "id": "18cef5ed-eb55-4b4d-963a-cbf18b54e42d",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "68e0776b-3152-4cdd-9777-d7f552bf554c",
+            "contestId": "06ff78db-e35b-44a0-ad59-0d77bc116202",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ff429903-681b-4ad1-abd7-356a7492395e",
+                "name": "Santa Margarita",
+                "seed": 1,
+                "score": 0,
+                "from": "230d9feb-b06b-4749-943d-1938be5c6030"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 2,
+                "from": "80c9ae8b-6231-4a4b-b852-45c3386a0870"
+              }
+            ]
+          },
+          {
+            "id": "68e0776b-3152-4cdd-9777-d7f552bf554c",
+            "round": "State Final",
+            "roundDate": "2026-03-14",
+            "next": null,
+            "contestId": "21de0283-46f5-49bd-83a8-e1731a16e6ae",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": "Natomas HS",
+            "sides": [
+              {
+                "teamId": "f8a146fc-198e-4220-b0fc-ee145a8a81d9",
+                "name": "Bishop O'Dowd",
+                "seed": 2,
+                "score": 0,
+                "from": "43637342-80cd-43f4-af27-7e3a8d9c1622"
+              },
+              {
+                "teamId": "2b6b45d3-4465-4750-ba48-a273b674e37c",
+                "name": "Mater Dei",
+                "seed": 2,
+                "score": 2,
+                "from": "18cef5ed-eb55-4b4d-963a-cbf18b54e42d"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/QjtPyHQdEkS9Jz0KP-UXOA/r9OKWyCAd0ac4ZzdXYi1sg/girls-soccer-winter-25-26/2026-cif-state-girls-soccer-championships-division-ii.htm",
+        "tournament": "2026 CIF State Girls Soccer Championships",
+        "bracketId": "5b8ad3af-8020-4677-9ce1-9cdd5d88b5b2",
+        "name": "Division II",
+        "matchups": [
+          {
+            "id": "19d8e549-a715-4b07-81f3-bee7e270dcaf",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "0011b8aa-c628-4a9e-bfdc-d463691b6d49",
+            "contestId": "2ba75e85-827e-4489-a400-a8a592110d04",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "288ca10d-8448-41e9-b26e-463df226b8c8",
+                "name": "Davis Sr.",
+                "seed": 1,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "a34f251c-c120-40b8-b1ef-d17d0e8baa69",
+                "name": "Las Lomas",
+                "seed": 8,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "e9907d4e-b5e8-46ac-bedf-4818161b024e",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "0011b8aa-c628-4a9e-bfdc-d463691b6d49",
+            "contestId": "c9aa7124-44b2-4435-aa84-a3f91a844a21",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 4,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "db693a74-09e7-4f63-982b-d3cbb3cf138a",
+                "name": "Amador Valley",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "84359eba-6081-432b-a38e-c336f6310980",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "00460680-2078-4a80-889d-3153dc733e9b",
+            "contestId": "93d54479-4828-4521-b29b-a9a185d62ece",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ad47af1b-1b44-42d7-ac0e-a495ff09a7e7",
+                "name": "Cardinal Newman",
+                "seed": 3,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
+                "name": "St. Ignatius College Preparatory",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "975c23b0-5af5-4f67-bcba-63385e21c8f7",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "00460680-2078-4a80-889d-3153dc733e9b",
+            "contestId": "5e2d7968-58e7-45cc-aaef-6b83428f1189",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "d6e80050-eb7a-4461-b54a-ccb18581c77c",
+                "name": "Vista del Lago",
+                "seed": 2,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 7,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "91e34ecf-d439-43c7-9b68-28db2b657306",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "b02ecda1-4d5f-4a24-a4e0-1edd3ab2db16",
+            "contestId": "bdcd85b1-438b-4a26-b23c-2fce1d1e5e9d",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "86009247-6ae1-40e1-acfa-58c200528743",
+                "name": "Newport Harbor",
+                "seed": 1,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
+                "name": "Westview",
+                "seed": 8,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "99d983ed-be01-4055-9c46-7323b1ca9cf8",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "b02ecda1-4d5f-4a24-a4e0-1edd3ab2db16",
+            "contestId": "ca0ee87e-a13a-4d66-9c54-6acb538aa83a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "4da93598-1256-4435-a5ff-9977bc572ea9",
+                "name": "Carlsbad",
+                "seed": 4,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "7f79a046-d5c4-465f-b1c4-41fe50ed8ea8",
+                "name": "Notre Dame (SO)",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "160b51f4-213e-437d-ab09-494e2f597e55",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "f6856174-5bba-4fed-990e-98ec15cafb60",
+            "contestId": "29db6a0a-1127-45ca-9c1a-d2aa635a309c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b887560d-fc7a-48c0-a962-ae7d4ada9719",
+                "name": "Garces Memorial",
+                "seed": 3,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "1fd5ff77-0482-4f19-a9c2-e03a6ef04ce8",
+                "name": "Granada Hills Charter",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "7c4f6c8b-ff48-4339-837c-f9b9173d3406",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "f6856174-5bba-4fed-990e-98ec15cafb60",
+            "contestId": "13d27533-1479-469e-8fee-58d3fe93c248",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "bbdfe0de-c4fd-47d5-92e2-6c51aa38f03e",
+                "name": "Westlake",
+                "seed": 2,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "78ad824a-61a0-462b-aa6f-1d5f6fb1bd5f",
+                "name": "La Costa Canyon",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "0011b8aa-c628-4a9e-bfdc-d463691b6d49",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "d8e24e39-bc53-4efc-902f-6b0a199489a8",
+            "contestId": "a19a829a-55a3-4020-b1d0-cf3a51ba2a02",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "a34f251c-c120-40b8-b1ef-d17d0e8baa69",
+                "name": "Las Lomas",
+                "seed": 8,
+                "score": 1,
+                "from": "19d8e549-a715-4b07-81f3-bee7e270dcaf"
+              },
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 4,
+                "score": 2,
+                "from": "e9907d4e-b5e8-46ac-bedf-4818161b024e"
+              }
+            ]
+          },
+          {
+            "id": "00460680-2078-4a80-889d-3153dc733e9b",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "d8e24e39-bc53-4efc-902f-6b0a199489a8",
+            "contestId": "00ce56eb-2495-49b5-9534-b37684f3c6da",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ad47af1b-1b44-42d7-ac0e-a495ff09a7e7",
+                "name": "Cardinal Newman",
+                "seed": 3,
+                "score": 0,
+                "from": "84359eba-6081-432b-a38e-c336f6310980"
+              },
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 7,
+                "score": 1,
+                "from": "975c23b0-5af5-4f67-bcba-63385e21c8f7"
+              }
+            ]
+          },
+          {
+            "id": "b02ecda1-4d5f-4a24-a4e0-1edd3ab2db16",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "962d152b-59c1-4eb4-8ae2-2c1cdc0c55fb",
+            "contestId": "d1a95007-4af1-4c38-94b6-b70d564f0ee5",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
+                "name": "Westview",
+                "seed": 8,
+                "score": 2,
+                "from": "91e34ecf-d439-43c7-9b68-28db2b657306"
+              },
+              {
+                "teamId": "7f79a046-d5c4-465f-b1c4-41fe50ed8ea8",
+                "name": "Notre Dame (SO)",
+                "seed": 5,
+                "score": 0,
+                "from": "99d983ed-be01-4055-9c46-7323b1ca9cf8"
+              }
+            ]
+          },
+          {
+            "id": "f6856174-5bba-4fed-990e-98ec15cafb60",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "962d152b-59c1-4eb4-8ae2-2c1cdc0c55fb",
+            "contestId": "1e4acbdb-6bc3-4c60-9546-5034623b7a81",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "b887560d-fc7a-48c0-a962-ae7d4ada9719",
+                "name": "Garces Memorial",
+                "seed": 3,
+                "score": 0,
+                "from": "160b51f4-213e-437d-ab09-494e2f597e55"
+              },
+              {
+                "teamId": "bbdfe0de-c4fd-47d5-92e2-6c51aa38f03e",
+                "name": "Westlake",
+                "seed": 2,
+                "score": 1,
+                "from": "7c4f6c8b-ff48-4339-837c-f9b9173d3406"
+              }
+            ]
+          },
+          {
+            "id": "d8e24e39-bc53-4efc-902f-6b0a199489a8",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "9fac6568-6918-46c6-8f69-aef4b00e6841",
+            "contestId": "91c33dd6-570b-4cc3-a0cf-8dd0de49eeab",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
+                "name": "Archbishop Mitty",
+                "seed": 4,
+                "score": 0,
+                "from": "0011b8aa-c628-4a9e-bfdc-d463691b6d49"
+              },
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 7,
+                "score": 1,
+                "from": "00460680-2078-4a80-889d-3153dc733e9b"
+              }
+            ]
+          },
+          {
+            "id": "962d152b-59c1-4eb4-8ae2-2c1cdc0c55fb",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "9fac6568-6918-46c6-8f69-aef4b00e6841",
+            "contestId": "3f3a87c9-c13d-4176-ba11-6ba95245ca0b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
+                "name": "Westview",
+                "seed": 8,
+                "score": 0,
+                "from": "b02ecda1-4d5f-4a24-a4e0-1edd3ab2db16"
+              },
+              {
+                "teamId": "bbdfe0de-c4fd-47d5-92e2-6c51aa38f03e",
+                "name": "Westlake",
+                "seed": 2,
+                "score": 0,
+                "from": "f6856174-5bba-4fed-990e-98ec15cafb60"
+              }
+            ]
+          },
+          {
+            "id": "9fac6568-6918-46c6-8f69-aef4b00e6841",
+            "round": "State Final",
+            "roundDate": "2026-03-13",
+            "next": null,
+            "contestId": "f55fb13e-bfe8-4193-8a17-d195155dae6a",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": "Natomas HS",
+            "sides": [
+              {
+                "teamId": "594e7f5d-3e25-480c-bc2c-c15cbf09c737",
+                "name": "San Ramon Valley",
+                "seed": 7,
+                "score": 1,
+                "from": "d8e24e39-bc53-4efc-902f-6b0a199489a8"
+              },
+              {
+                "teamId": "bbdfe0de-c4fd-47d5-92e2-6c51aa38f03e",
+                "name": "Westlake",
+                "seed": 2,
+                "score": 0,
+                "from": "962d152b-59c1-4eb4-8ae2-2c1cdc0c55fb"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "event": "cif",
+        "url": "https://www.maxpreps.com/tournament/QjtPyHQdEkS9Jz0KP-UXOA/jHb7kZOiAkWY6RXpx7wrdA/girls-soccer-winter-25-26/2026-cif-state-girls-soccer-championships-division-iv.htm",
+        "tournament": "2026 CIF State Girls Soccer Championships",
+        "bracketId": "91fb768c-a293-4502-98e9-15e9c7bc2b74",
+        "name": "Division IV",
+        "matchups": [
+          {
+            "id": "9d16beef-c04d-4eda-875e-0a292fe20b8b",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "5ee0ecce-5a50-4500-9721-79ccfcf95e83",
+            "contestId": "39e2e073-f1cc-44de-b3af-3a61f2396b80",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+                "name": "Marin Catholic",
+                "seed": 1,
+                "score": 4,
+                "from": null
+              },
+              {
+                "teamId": "01e250af-f9de-4e2b-8e1a-11cc0a1fd241",
+                "name": "Winters",
+                "seed": 8,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "d33d255e-c1f5-47b9-aaba-92a1046d37f6",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "5ee0ecce-5a50-4500-9721-79ccfcf95e83",
+            "contestId": "0845cd88-93fa-4e04-b37f-f2d76544d74c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "be2fc7fb-ec14-4069-9c6d-f6083a2f9229",
+                "name": "Fresno Christian",
+                "seed": 4,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "fcea74f2-f0cb-4917-823f-3f72037a2560",
+                "name": "West Campus",
+                "seed": 5,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "2df5388b-60ea-4295-b5bc-0e254afd63d0",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "ab28baf1-eb63-43cd-ba4d-7a6a5543728a",
+            "contestId": "6f55207a-65f1-4dcd-8ab5-d5c9e8d9f4fb",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 3,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "0ec72890-2274-4c03-b87b-4b42c604c562",
+                "name": "Terra Linda",
+                "seed": 6,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "604980cf-0ac7-416a-81f5-baa7b8a46ba0",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "ab28baf1-eb63-43cd-ba4d-7a6a5543728a",
+            "contestId": "cb13760c-e0c9-4f10-9a28-01471a342d08",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ef272e7e-917f-42aa-acc2-6eba92c7a19b",
+                "name": "Twelve Bridges",
+                "seed": 2,
+                "score": 3,
+                "from": null
+              },
+              {
+                "teamId": "2993e4ff-72d9-4f83-b862-8db615e795aa",
+                "name": "Shasta",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "abc6c4e0-134f-40d4-9fa6-9709dba95822",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "2afa4b2d-e6ec-4282-84b5-4d7d55b78c73",
+            "contestId": "c683972e-671f-4748-9f97-71bd465adeae",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "44c8b068-0418-47f8-a08c-c5139adf0cf9",
+                "name": "Birmingham",
+                "seed": 1,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "ba35330e-6e9a-4f9d-8867-86cd68fad308",
+                "name": "Segerstrom",
+                "seed": 8,
+                "score": 1,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "ef916fcd-6ffa-4291-b3c2-05564f12133e",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "2afa4b2d-e6ec-4282-84b5-4d7d55b78c73",
+            "contestId": "8aa0d9a4-1862-44ba-876f-bff88ac0d171",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "9b33cc3d-0504-466f-a3b8-91f5123dfc75",
+                "name": "Ramona",
+                "seed": 4,
+                "score": 2,
+                "from": null
+              },
+              {
+                "teamId": "2820c11b-09a0-4c3a-9587-48b03d4c4b76",
+                "name": "Coachella Valley",
+                "seed": 5,
+                "score": 3,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "5b93d7d9-5db4-4ca6-8282-47edabf88afd",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "11b6646a-036d-48dc-9f57-3c91bec22541",
+            "contestId": "bb1cb8a3-e67d-41e0-b76a-b1fa222a8b0e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "239c4e28-a48f-4cf3-ab07-db3613861d20",
+                "name": "San Jacinto",
+                "seed": 3,
+                "score": 1,
+                "from": null
+              },
+              {
+                "teamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
+                "name": "Mission Vista",
+                "seed": 6,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "722bbe8b-874f-4311-b3af-ba642344284c",
+            "round": "Round I",
+            "roundDate": "2026-03-03",
+            "next": "11b6646a-036d-48dc-9f57-3c91bec22541",
+            "contestId": "7005107a-6190-4edf-8b71-88d12ee1d88e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "c7b51c61-b423-4f92-82ca-9c2dc66d3b9c",
+                "name": "Immaculate Heart",
+                "seed": 2,
+                "score": 0,
+                "from": null
+              },
+              {
+                "teamId": "300f459c-387d-4332-b654-5f0df27412b5",
+                "name": "Del Sol",
+                "seed": 7,
+                "score": 0,
+                "from": null
+              }
+            ]
+          },
+          {
+            "id": "5ee0ecce-5a50-4500-9721-79ccfcf95e83",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "03c0e3c9-1510-4207-b9a1-813fd0e5e514",
+            "contestId": "f09b7fb4-0a5f-4e40-abb5-47fde7c11b6c",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+                "name": "Marin Catholic",
+                "seed": 1,
+                "score": 3,
+                "from": "9d16beef-c04d-4eda-875e-0a292fe20b8b"
+              },
+              {
+                "teamId": "be2fc7fb-ec14-4069-9c6d-f6083a2f9229",
+                "name": "Fresno Christian",
+                "seed": 4,
+                "score": 0,
+                "from": "d33d255e-c1f5-47b9-aaba-92a1046d37f6"
+              }
+            ]
+          },
+          {
+            "id": "ab28baf1-eb63-43cd-ba4d-7a6a5543728a",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "03c0e3c9-1510-4207-b9a1-813fd0e5e514",
+            "contestId": "d6d034d9-7d33-47c1-8951-98dcf936d53e",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
+                "name": "Menlo School",
+                "seed": 3,
+                "score": 0,
+                "from": "2df5388b-60ea-4295-b5bc-0e254afd63d0"
+              },
+              {
+                "teamId": "ef272e7e-917f-42aa-acc2-6eba92c7a19b",
+                "name": "Twelve Bridges",
+                "seed": 2,
+                "score": 0,
+                "from": "604980cf-0ac7-416a-81f5-baa7b8a46ba0"
+              }
+            ]
+          },
+          {
+            "id": "2afa4b2d-e6ec-4282-84b5-4d7d55b78c73",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "09391e4d-76c5-43b2-b0b2-e03ae29af722",
+            "contestId": "a2406e62-582b-48ba-8feb-60477628476b",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 1,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "ba35330e-6e9a-4f9d-8867-86cd68fad308",
+                "name": "Segerstrom",
+                "seed": 8,
+                "score": 1,
+                "from": "abc6c4e0-134f-40d4-9fa6-9709dba95822"
+              },
+              {
+                "teamId": "2820c11b-09a0-4c3a-9587-48b03d4c4b76",
+                "name": "Coachella Valley",
+                "seed": 5,
+                "score": 4,
+                "from": "ef916fcd-6ffa-4291-b3c2-05564f12133e"
+              }
+            ]
+          },
+          {
+            "id": "11b6646a-036d-48dc-9f57-3c91bec22541",
+            "round": "Regional Semifinals",
+            "roundDate": "2026-03-05",
+            "next": "09391e4d-76c5-43b2-b0b2-e03ae29af722",
+            "contestId": "bb227f36-eaa2-4a45-aa8e-844d9b041857",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "239c4e28-a48f-4cf3-ab07-db3613861d20",
+                "name": "San Jacinto",
+                "seed": 3,
+                "score": 3,
+                "from": "5b93d7d9-5db4-4ca6-8282-47edabf88afd"
+              },
+              {
+                "teamId": "300f459c-387d-4332-b654-5f0df27412b5",
+                "name": "Del Sol",
+                "seed": 7,
+                "score": 2,
+                "from": "722bbe8b-874f-4311-b3af-ba642344284c"
+              }
+            ]
+          },
+          {
+            "id": "03c0e3c9-1510-4207-b9a1-813fd0e5e514",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "19f693a2-e991-4d6e-991d-5972f327630f",
+            "contestId": "13eaf019-6484-4be8-8161-97d60403f2d2",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+                "name": "Marin Catholic",
+                "seed": 1,
+                "score": 1,
+                "from": "5ee0ecce-5a50-4500-9721-79ccfcf95e83"
+              },
+              {
+                "teamId": "ef272e7e-917f-42aa-acc2-6eba92c7a19b",
+                "name": "Twelve Bridges",
+                "seed": 2,
+                "score": 0,
+                "from": "ab28baf1-eb63-43cd-ba4d-7a6a5543728a"
+              }
+            ]
+          },
+          {
+            "id": "09391e4d-76c5-43b2-b0b2-e03ae29af722",
+            "round": "Regional Finals",
+            "roundDate": "2026-03-07",
+            "next": "19f693a2-e991-4d6e-991d-5972f327630f",
+            "contestId": "2c146868-216f-4b03-bbb6-b9d0f48ea142",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": null,
+            "sides": [
+              {
+                "teamId": "2820c11b-09a0-4c3a-9587-48b03d4c4b76",
+                "name": "Coachella Valley",
+                "seed": 5,
+                "score": 3,
+                "from": "2afa4b2d-e6ec-4282-84b5-4d7d55b78c73"
+              },
+              {
+                "teamId": "239c4e28-a48f-4cf3-ab07-db3613861d20",
+                "name": "San Jacinto",
+                "seed": 3,
+                "score": 1,
+                "from": "11b6646a-036d-48dc-9f57-3c91bec22541"
+              }
+            ]
+          },
+          {
+            "id": "19f693a2-e991-4d6e-991d-5972f327630f",
+            "round": "State Final",
+            "roundDate": "2026-03-13",
+            "next": null,
+            "contestId": "160f6ab8-0aea-48c2-affb-e26b03cf2926",
+            "dateLocal": null,
+            "bye": false,
+            "winner": 0,
+            "site": "Natomas HS",
+            "sides": [
+              {
+                "teamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
+                "name": "Marin Catholic",
+                "seed": 1,
+                "score": 4,
+                "from": "03c0e3c9-1510-4207-b9a1-813fd0e5e514"
+              },
+              {
+                "teamId": "2820c11b-09a0-4c3a-9587-48b03d4c4b76",
+                "name": "Coachella Valley",
+                "seed": 5,
+                "score": 1,
+                "from": "09391e4d-76c5-43b2-b0b2-e03ae29af722"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

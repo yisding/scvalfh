@@ -14,13 +14,14 @@ import {
   getAvailableHistoryLeagues,
   getHistoryBrackets,
   getHistoryLeagues,
+  getHistoryPublishedBrackets,
   getHistorySeason,
   getHistoryTournaments,
   getUnavailableHistoryLeagues,
   historyGroupsSentence,
 } from '../../lib/history/history';
 import { TOC } from '../../lib/league-config/sections';
-import { getLeague, getSection, isIndependentLeague } from '../../lib/leagues';
+import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 export const SEASON = getHistorySeason();
@@ -28,14 +29,26 @@ export const HISTORY_LEAGUES = getHistoryLeagues();
 export const BRACKETS = getHistoryBrackets();
 export const TOURNAMENTS = getHistoryTournaments();
 /**
+ * The soccer, basketball and volleyball builds' 2025-26 brackets, read whole from MaxPreps, by event: the CCS's
+ * divisions, then the CIF State divisions a team of ours played in. Empty in field hockey (BRACKETS instead).
+ */
+const PUBLISHED = getHistoryPublishedBrackets();
+export const PUBLISHED_READ_ON = PUBLISHED?.retrievedOn ?? null;
+export const PUBLISHED_EVENTS = (['ccs', 'cif'] as const)
+  .map((event) => ({ event, brackets: (PUBLISHED?.brackets ?? []).filter((b) => b.event === event) }))
+  .filter((e) => e.brackets.length > 0);
+/** 'SCVAL, BVAL, WCAL or WBAL': the leagues whose teams the published brackets draw. */
+export const LEAGUE_WORDS = listWords(LEAGUE_IDS.map((id) => getLeague(id).shortName), 'or');
+/**
  * "the CCS and San Diego Section playoff brackets and the Tournament of Champions": the brackets the page
- * shows, the sections' and the tournaments', or null when it shows none (the soccer and basketball builds,
- * whose registries hold SCVAL alone).
+ * shows, the sections' and the tournaments' (field hockey), or the CCS's and the CIF State's read whole (the other
+ * builds), or null when it shows none.
  */
 export const BRACKET_WORDS: string | null =
   [
     ...(BRACKETS.length > 0 ? [`the ${listWords(BRACKETS.map((b) => getSection(b.id).briefLabel))} playoff brackets`] : []),
     ...TOURNAMENTS.map(() => `the ${TOC.name}`),
+    ...PUBLISHED_EVENTS.map((e) => (e.event === 'ccs' ? 'the CCS playoff brackets' : 'the CIF State brackets our teams played in')),
   ].join(' and ') || null;
 export const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
