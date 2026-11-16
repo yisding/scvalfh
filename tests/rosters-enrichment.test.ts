@@ -1088,7 +1088,9 @@ describe('lib/players/rosters.ts merged view', () => {
     // The one row whose level does not come from the school's lists: Beatrix Monk, varsity on her MAX Field Hockey
     // page's 2026 season ('Freshman Season, Varsity #1'), which the school's JV list has not caught up with.
     const lgRaw = raw.teams.find((t) => t.slug === 'los-gatos')!;
-    const offSchool = lgRaw.players.filter((p) => p.levelSource !== null && !p.levelSource.includes('losgatosathletics.org'));
+    const offSchool = lgRaw.players.filter(
+      (p) => p.levelSource !== null && new URL(p.levelSource).hostname !== 'www.losgatosathletics.org',
+    );
     expect(offSchool.map((p) => [p.fullName, p.level])).toEqual([['Beatrix Monk', 'varsity']]);
     expect(lg.coaches.map((c) => c.role)).toContain('Head Coach');
   });
