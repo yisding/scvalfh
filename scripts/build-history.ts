@@ -1,9 +1,10 @@
 #!/usr/bin/env tsx
 /**
- * Build data/history-2025-26.json: one entry per league. With SCVAL_SPORT=soccer or basketball, build
- * data/<sport>/history-2025-26.json instead: SCVAL alone, from its standings PDF and the hand transcription of
- * the sport's all-league PDFs (scripts/lib/history-scval-documents.ts; `--from tests/fixtures/<sport>/scval-history`
- * rebuilds it offline).
+ * Build data/history-2025-26.json: one entry per league. With SCVAL_SPORT=soccer, basketball or volleyball, build
+ * data/<sport>/history-2025-26.json instead: SCVAL from its standings PDF and the hand transcription of the sport's
+ * all-league PDFs (scripts/lib/history-scval-documents.ts; `--from tests/fixtures/<sport>/scval-history` rebuilds it
+ * offline), and BVAL from its 2025-26 standings sheet for the sport (scripts/lib/history-bval-sheet.ts;
+ * `--bval-from tests/fixtures/<sport>/bval-history --retrieved-on 2026-11-16` offline).
  *
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
@@ -49,7 +50,9 @@ import {
 } from '../lib/sources/scval-pdf';
 import {
   BVAL_HISTORY_SOURCES,
+  BVAL_SEASON_SHEETS,
   bvalDocExportUrl,
+  bvalSheetUrls,
   bvalRegistrySlugs,
   parseAllLeagueHtml,
   parseStandingsCsv,
@@ -63,6 +66,7 @@ import { isCalendarDate } from '../lib/schema-primitives';
 import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
+import { buildBvalSheetHistory, bvalJvNote } from './lib/history-bval-sheet';
 import { buildScvalDocumentsHistory, transcriptionPath, type Transcription } from './lib/history-scval-documents';
 
 interface Args {
@@ -117,28 +121,28 @@ function pick<T extends { division: string; level: string }>(
 /**
  * Another sport's build (SCVAL_SPORT=soccer, basketball or volleyball): its file has the SCVAL entry, built from
  * scval.com's standings PDF and the hand transcription of the sport's all-league PDFs
- * (scripts/lib/history-scval-documents.ts), and a BVAL entry marked unavailable (bvalNotTranscribed); the soccer and volleyball files also have the WCAL's and the
- * WBAL's, unavailable too (wcalNotTranscribed, wbalNotTranscribed). `--from` is
- * a folder holding the standings PDF's text (tests/fixtures/<sport>/scval-history); `--bval-from` and
- * `--retrieved-on` are field hockey's.
+ * (scripts/lib/history-scval-documents.ts), and the BVAL entry from the league's standings sheet (bvalFromSheet);
+ * the soccer and volleyball files also have the WCAL's and the WBAL's, unavailable (wcalNotTranscribed,
+ * wbalNotTranscribed). `--from` is a folder holding the standings PDF's text (tests/fixtures/<sport>/scval-history);
+ * `--bval-from` a folder holding the BVAL sheet's CSV (tests/fixtures/<sport>/bval-history).
  */
 /**
- * BVAL in a winter build, added 2026-11-13: bval.org/standings links the league's official standings sheets, but
- * the 2025-26 winter ones are not transcribed here yet, so the card says so and links the page. It never says no
- * standings were published.
+ * BVAL in the soccer, basketball and volleyball builds: the league's official 2025-26 standings sheet for the sport
+ * (scripts/lib/history-bval-sheet.ts), given by the owner on 2026-11-16. Downloaded, or read offline from
+ * `--bval-from <dir>/standings-2025-26.csv` with `--retrieved-on` (tests/fixtures/<sport>/bval-history).
  */
-function bvalNotTranscribed() {
-  const sport = IS_BASKETBALL ? 'boys basketball' : IS_VOLLEYBALL ? 'girls volleyball' : 'girls soccer';
-  // The winter builds added BVAL on 2026-11-13; the volleyball build was made with it on 2026-11-14.
-  const [added, checkedOn] = IS_VOLLEYBALL ? ['November 14, 2026', '2026-11-14'] : ['November 13, 2026', '2026-11-13'];
-  return {
-    status: 'unavailable' as const,
-    league: getLeague('bval').name,
-    reason: `BVAL publishes its official standings on bval.org. This site added BVAL ${sport} on ${added} and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.`,
-    checkedOn,
-    checked: ['https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)'],
-    alsoPublished: [{ label: 'BVAL standings', url: 'https://bval.org/standings/' }],
-  };
+async function bvalFromSheet(args: Args): Promise<{ entry: Record<string, unknown>; problems: string[] }> {
+  const sport = IS_BASKETBALL ? 'basketball' : IS_VOLLEYBALL ? 'volleyball' : 'soccer';
+  let csv: string;
+  if (args.bvalFrom) {
+    csv = readFileSync(path.join(args.bvalFrom, 'standings-2025-26.csv'), 'utf8');
+    console.log(`build-history: BVAL offline, from ${args.bvalFrom} (retrieved-on ${args.retrievedOn})`);
+  } else {
+    console.log('build-history: downloading the BVAL standings sheet');
+    const http = new HttpClient({ onLog: (l) => console.log(`  ${l}`) });
+    csv = (await http.text(bvalSheetUrls(BVAL_SEASON_SHEETS[sport]).csv, 'text/csv,*/*')).body;
+  }
+  return buildBvalSheetHistory({ sport, csv, retrievedOn: args.retrievedOn });
 }
 
 /**
@@ -187,10 +191,6 @@ function wbalNotTranscribed() {
 }
 
 async function mainOtherSport(args: Args): Promise<number> {
-  if (args.bvalFrom) {
-    console.error('FAILED: --bval-from is field hockey\'s: this build transcribes SCVAL alone');
-    return 1;
-  }
   const transcription = JSON.parse(readFileSync(transcriptionPath(DATA_DIR), 'utf8')) as Transcription;
   let built: Awaited<ReturnType<typeof buildScvalDocumentsHistory>>;
   try {
@@ -200,9 +200,11 @@ async function mainOtherSport(args: Args): Promise<number> {
     return 1;
   }
   const { entry, problems } = built;
+  const bval = await bvalFromSheet(args);
+  problems.push(...bval.problems);
   const leagues = IS_BASKETBALL
-    ? { scval: entry, bval: bvalNotTranscribed() }
-    : { scval: entry, bval: bvalNotTranscribed(), wcal: wcalNotTranscribed(), wbal: wbalNotTranscribed() };
+    ? { scval: entry, bval: bval.entry }
+    : { scval: entry, bval: bval.entry, wcal: wcalNotTranscribed(), wbal: wbalNotTranscribed() };
   const history = { season: transcription.season, sport: transcription.sport, leagues };
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));
@@ -391,6 +393,7 @@ export async function main(argv: readonly string[]): Promise<number> {
       retrievedOn: args.retrievedOn,
       extraction:
         'Google Sheets CSV export of the standings sheet; Google Docs HTML export of the two all-league documents (table cells).',
+      jvNote: bvalJvNote({ stored: false, placed: bvalStandings.reduce((n, b) => n + b.jv.length, 0) }),
       notes: [
         'Official BVAL sheet titled "BVAL Field Hockey / 2025-26 Team Standings", linked from bval.org/standings. Varsity order is the sheet\'s own "Place".',
         'Records only: the sheet has Overall and League Record per school and no points, goals or tiebreak data, so none are stored or computed.',

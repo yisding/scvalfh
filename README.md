@@ -1786,9 +1786,17 @@ finals between registry teams in 2025-26 (114 with SCVAL alone) and 335 girls so
   varsity time and JV game from the document's game times or the game's own note ("4p/615p", "V 5p/JV 7p"). Soccer's
   Gunderson has no JV team, so its games have no JV game. `tests/bval-winter-fixtures.test.ts` holds both bundles
   to their texts.
-- **Last season**: BVAL publishes its standings as Google Sheets on bval.org/standings/; they are not transcribed
-  yet, so /history/2025-26 marks BVAL unavailable and links the page (`scripts/build-history.ts`
-  `bvalNotTranscribed`).
+- **Last season**: BVAL publishes its standings as Google Sheets on bval.org/standings/. The owner gave the
+  2025-26 girls soccer, boys basketball and girls volleyball sheets on 2026-11-16, and /history/2025-26 shows them
+  (`scripts/lib/history-bval-sheet.ts`, `lib/sources/bval-sheet.ts` `BVAL_SEASON_SHEETS`; the CSVs are saved in
+  `tests/fixtures/<sport>/bval-history/`, and `SCVAL_SPORT=<sport> pnpm build-history --from
+  tests/fixtures/<sport>/scval-history --bval-from tests/fixtures/<sport>/bval-history --retrieved-on 2026-11-16`
+  rebuilds the file offline). Records only, as field hockey's sheet: no all-league awards (those documents are not
+  transcribed). The 2025-26 divisions are the sheets' own (`seasonAlignment`): boys basketball's Santa Teresa North
+  and South no longer exist and are filed under ids of their own, girls volleyball had three divisions, not four, and
+  the page lists the teams that moved. Places are printed as the sheet ranks them, ties included ("2, 2, 4"; girls
+  volleyball's Santa Teresa had co-champions, Lincoln and Pioneer), and a team page says "tied for 2nd". JV is shown
+  where the sheet ranks every JV team (basketball, volleyball), not where it ranks three (soccer).
 - **Addresses** for the fourteen schools field hockey does not have are MaxPreps' school fields
   (`data/<sport>/schools.json`).
 

@@ -55,6 +55,80 @@ export interface BvalStandingRow {
 export interface BvalStandingsBlock {
   division: DivisionId;
   rows: BvalStandingRow[];
+  /**
+   * The block's JV rows, from its JV Place and JV Record columns, ordered on the JV place (the sheet's row order
+   * among equal places): every row whose JV record is a record. `jvUnplaced` names those with a record and no
+   * place, so a build can tell a ranked JV table from records alone. Field hockey's build does not store JV.
+   */
+  jv: BvalStandingRow[];
+  jvUnplaced: string[];
+}
+
+/** A division as one season's sheet labels it: the label row's text and the id this site files it under. */
+export interface BvalSheetDivision {
+  id: DivisionId;
+  /** The sheet's label row, compared without case ("Santa Teresa - North"). */
+  sheetLabel: string;
+}
+
+/**
+ * Where BVAL keeps each sport's 2025-26 final standings: the Google Sheet bval.org/standings links (the CSV export
+ * of its standings tab is what the build reads), and the season's divisions as the sheet labels them. Field
+ * hockey's is `BVAL_HISTORY_SOURCES` above, with its all-league documents; these sheets were given by the owner on
+ * 2026-11-16 and their all-league documents are not transcribed.
+ *
+ * The 2025-26 alignments differ from 2026-27's (lib/league-config/<sport>/bval.ts):
+ *  - girls soccer: the same three divisions, with different members;
+ *  - boys basketball: Mt. Hamilton, Santa Teresa - North, Santa Teresa - South and West Valley. The two Santa
+ *    Teresa divisions no longer exist (2026-27 has Santa Teresa and Almaden Valley), so they are filed under ids
+ *    of their own;
+ *  - girls volleyball: Mt. Hamilton, Santa Teresa and West Valley, three where 2026-27 has four (Almaden Valley).
+ */
+export interface BvalSeasonSheet {
+  title: string;
+  sheetId: string;
+  gid: string;
+  divisions: ReadonlyArray<BvalSheetDivision & { label: string; past: boolean }>;
+}
+
+export const BVAL_SEASON_SHEETS: Readonly<Record<'soccer' | 'basketball' | 'volleyball', BvalSeasonSheet>> = {
+  soccer: {
+    title: 'BVAL Girls Soccer / 2025 - 26 Team Standings',
+    sheetId: '1KdPgTSbacBwGPtTHFIUqab6-BP3EPD68',
+    gid: '1950531199',
+    divisions: [
+      { id: 'mt-hamilton', sheetLabel: 'Mt. Hamilton', label: 'Mt. Hamilton', past: false },
+      { id: 'santa-teresa', sheetLabel: 'Santa Teresa', label: 'Santa Teresa', past: false },
+      { id: 'west-valley', sheetLabel: 'West Valley', label: 'West Valley', past: false },
+    ],
+  },
+  basketball: {
+    title: 'BVAL Boys Basketball / 2025 - 26 Team Standings',
+    sheetId: '1FsWvfXTqA87Qunf_5-5z0zYmDOJTYsqw',
+    gid: '182098527',
+    divisions: [
+      { id: 'mt-hamilton', sheetLabel: 'Mt. Hamilton', label: 'Mt. Hamilton', past: false },
+      { id: 'santa-teresa-north', sheetLabel: 'Santa Teresa - North', label: 'Santa Teresa North', past: true },
+      { id: 'santa-teresa-south', sheetLabel: 'Santa Teresa - South', label: 'Santa Teresa South', past: true },
+      { id: 'west-valley', sheetLabel: 'West Valley', label: 'West Valley', past: false },
+    ],
+  },
+  volleyball: {
+    title: 'BVAL Girls Volleyball / 2025 - 26 Team Standings',
+    sheetId: '1XsFPR7woftHNAJFQl8OQUNgjBs9_Z6PS',
+    gid: '1116204855',
+    divisions: [
+      { id: 'mt-hamilton', sheetLabel: 'Mt. Hamilton', label: 'Mt. Hamilton', past: false },
+      { id: 'santa-teresa', sheetLabel: 'Santa Teresa', label: 'Santa Teresa', past: false },
+      { id: 'west-valley', sheetLabel: 'West Valley', label: 'West Valley', past: false },
+    ],
+  },
+};
+
+/** The sheet's CSV export (what the build reads) and its view URL (what the page links). */
+export function bvalSheetUrls(sheet: Pick<BvalSeasonSheet, 'sheetId' | 'gid'>): { csv: string; view: string } {
+  const base = `https://docs.google.com/spreadsheets/d/${sheet.sheetId}`;
+  return { csv: `${base}/export?format=csv&gid=${sheet.gid}`, view: `${base}/edit?gid=${sheet.gid}#gid=${sheet.gid}` };
 }
 
 /** Minimal RFC 4180 reader: quoted cells, doubled quotes, CRLF. */
@@ -108,12 +182,15 @@ export function bvalSlug(name: string): TeamSlug | null {
 }
 
 /**
- * The sheet's two division blocks, in sheet order. The division label row is a row whose only
- * non-empty cell is a division label of the league ("Mt. Hamilton", "Santa Teresa"); data rows
- * start with a numeric place. Everything else (title rows, the Place/School header) is skipped.
+ * The sheet's division blocks, in sheet order. The division label row is a row whose only non-empty cell is a
+ * division label (`divisions`: the season's, by default the league's current ones, "Mt. Hamilton", "Santa
+ * Teresa"); data rows start with a numeric place. Everything else (title rows, the Place/School header) is skipped.
  */
-export function parseStandingsCsv(text: string): BvalStandingsBlock[] {
-  const labels = new Map(divisionsOf('bval').map((d) => [d.label.toLowerCase(), d.id]));
+export function parseStandingsCsv(
+  text: string,
+  divisions: readonly BvalSheetDivision[] = divisionsOf('bval').map((d) => ({ id: d.id, sheetLabel: d.label })),
+): BvalStandingsBlock[] {
+  const labels = new Map(divisions.map((d) => [d.sheetLabel.trim().toLowerCase(), d.id]));
   const blocks: BvalStandingsBlock[] = [];
   let current: BvalStandingsBlock | null = null;
   for (const cells of parseCsv(text)) {
@@ -121,7 +198,7 @@ export function parseStandingsCsv(text: string): BvalStandingsBlock[] {
     const first = (cells[0] ?? '').trim();
     const division = nonEmpty.length === 1 ? labels.get(first.toLowerCase()) : undefined;
     if (division) {
-      current = { division, rows: [] };
+      current = { division, rows: [], jv: [], jvUnplaced: [] };
       blocks.push(current);
       continue;
     }
@@ -129,15 +206,27 @@ export function parseStandingsCsv(text: string): BvalStandingsBlock[] {
     const name = (cells[1] ?? '').trim();
     const leagueRecord = normalizeRecord(cells[3]);
     if (!name || !leagueRecord) continue;
+    const slug = bvalSlug(name);
     current.rows.push({
       place: Number(first),
       name,
-      slug: bvalSlug(name),
+      slug,
       leagueRecord,
       ...splitRecord(leagueRecord),
       overallRecord: normalizeRecord(cells[2]),
     });
+    // JV: a record ("5 - 7") with a whole-number place ("5"; the xlsx's "1.0" is "1" in the CSV). "n/a" or an
+    // empty cell is no JV row.
+    const jvRecord = normalizeRecord(cells[5]);
+    const jvPlace = (cells[4] ?? '').trim();
+    if (jvRecord && /^\d+$/.test(jvPlace)) {
+      current.jv.push({ place: Number(jvPlace), name, slug, leagueRecord: jvRecord, ...splitRecord(jvRecord), overallRecord: null });
+    } else if (jvRecord) {
+      current.jvUnplaced.push(name);
+    }
   }
+  // Ordered on the JV place; Array.prototype.sort is stable, so equal places keep the sheet's order.
+  for (const b of blocks) b.jv.sort((a, z) => a.place - z.place);
   return blocks;
 }
 

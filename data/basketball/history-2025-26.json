@@ -1,19 +1,602 @@
 {
   "leagues": {
     "bval": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "BVAL standings",
-          "url": "https://bval.org/standings/"
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "mt-hamilton",
+          "label": "Mt. Hamilton",
+          "standings": {
+            "jv": [
+              {
+                "l": 1,
+                "leagueRecord": "11-1",
+                "name": "Christopher",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "christopher",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Leigh",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "leigh",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Westmont",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "westmont",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Santa Teresa",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "santa-teresa",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Willow Glen",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "willow-glen",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Evergreen Valley",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "evergreen-valley",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 10,
+                "leagueRecord": "2-10",
+                "name": "Pioneer",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "pioneer",
+                "t": 0,
+                "w": 2
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "11-1",
+                "name": "Willow Glen",
+                "overallRecord": "22-1",
+                "place": 1,
+                "slug": "willow-glen",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Christopher",
+                "overallRecord": "18-6",
+                "place": 2,
+                "slug": "christopher",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Westmont",
+                "overallRecord": "20-4",
+                "place": 2,
+                "slug": "westmont",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Evergreen Valley",
+                "overallRecord": "14-8",
+                "place": 4,
+                "slug": "evergreen-valley",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Pioneer",
+                "overallRecord": "13-11",
+                "place": 5,
+                "slug": "pioneer",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Leigh",
+                "overallRecord": "7-16",
+                "place": 5,
+                "slug": "leigh",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "Santa Teresa",
+                "overallRecord": "6-18",
+                "place": 7,
+                "slug": "santa-teresa",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "santa-teresa-north",
+          "label": "Santa Teresa North",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "10-0",
+                "name": "Branham",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "branham",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "8-2",
+                "name": "Piedmont Hills",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "piedmont-hills",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 4,
+                "leagueRecord": "6-4",
+                "name": "Independence",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "independence",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 6,
+                "leagueRecord": "4-6",
+                "name": "Lincoln",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "lincoln",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8",
+                "name": "Prospect",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "prospect",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 10,
+                "leagueRecord": "0-10",
+                "name": "Mt. Pleasant",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "mt-pleasant",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "9-1",
+                "name": "Branham",
+                "overallRecord": "13-11",
+                "place": 1,
+                "slug": "branham",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 2,
+                "leagueRecord": "8-2",
+                "name": "Independence",
+                "overallRecord": "14-10",
+                "place": 2,
+                "slug": "independence",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Piedmont Hills",
+                "overallRecord": "10-14",
+                "place": 3,
+                "slug": "piedmont-hills",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Lincoln",
+                "overallRecord": "13-11",
+                "place": 3,
+                "slug": "lincoln",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8",
+                "name": "Prospect",
+                "overallRecord": "7-17",
+                "place": 5,
+                "slug": "prospect",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 9,
+                "leagueRecord": "1-9",
+                "name": "Mt. Pleasant",
+                "overallRecord": "6-16",
+                "place": 6,
+                "slug": "mt-pleasant",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "santa-teresa-south",
+          "label": "Santa Teresa South",
+          "standings": {
+            "jv": [
+              {
+                "l": 1,
+                "leagueRecord": "9-1",
+                "name": "Sobrato",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "sobrato",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 3,
+                "leagueRecord": "7-3",
+                "name": "Live Oak",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "live-oak",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 4,
+                "leagueRecord": "6-4",
+                "name": "Silver Creek",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "silver-creek",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Leland",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "leland",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8",
+                "name": "Gilroy",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "gilroy",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 10,
+                "leagueRecord": "0-10",
+                "name": "Oak Grove",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "oak-grove",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "9-1",
+                "name": "Leland",
+                "overallRecord": "16-8",
+                "place": 1,
+                "slug": "leland",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 3,
+                "leagueRecord": "7-3",
+                "name": "Live Oak",
+                "overallRecord": "17-7",
+                "place": 2,
+                "slug": "live-oak",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Sobrato",
+                "overallRecord": "12-12",
+                "place": 3,
+                "slug": "sobrato",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Silver Creek",
+                "overallRecord": "9-15",
+                "place": 3,
+                "slug": "silver-creek",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 6,
+                "leagueRecord": "4-6",
+                "name": "Gilroy",
+                "overallRecord": "11-13",
+                "place": 5,
+                "slug": "gilroy",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 10,
+                "leagueRecord": "0-10",
+                "name": "Oak Grove",
+                "overallRecord": "1-22",
+                "place": 6,
+                "slug": "oak-grove",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "west-valley",
+          "label": "West Valley",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "10-0",
+                "name": "Overfelt",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "overfelt",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "8-2",
+                "name": "Yerba Buena",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "yerba-buena",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Gunderson",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "gunderson",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Andrew Hill",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "andrew-hill",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8",
+                "name": "Del Mar",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "del-mar",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 10,
+                "leagueRecord": "0-10",
+                "name": "San Jose",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "san-jose",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "11-1",
+                "name": "Overfelt",
+                "overallRecord": "12-9",
+                "place": 1,
+                "slug": "overfelt",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "Gunderson",
+                "overallRecord": "11-8",
+                "place": 2,
+                "slug": "gunderson",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Del Mar",
+                "overallRecord": "12-10",
+                "place": 3,
+                "slug": "del-mar",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "San Jose",
+                "overallRecord": "7-17",
+                "place": 4,
+                "slug": "san-jose",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Yerba Buena",
+                "overallRecord": "4-20",
+                "place": 5,
+                "slug": "yerba-buena",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 10,
+                "leagueRecord": "2-10",
+                "name": "Andrew Hill",
+                "overallRecord": "2-20",
+                "place": 6,
+                "slug": "andrew-hill",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "James Lick",
+                "overallRecord": "1-21",
+                "place": 7,
+                "slug": "james-lick",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://bval.org/standings/ (the league’s standings sheets, one per sport and gender)"
-      ],
-      "checkedOn": "2026-11-13",
       "league": "Blossom Valley Athletic League",
-      "reason": "BVAL publishes its official standings on bval.org. This site added BVAL boys basketball on November 13, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeagueDocs": {},
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Google Sheets CSV export of the standings sheet.",
+        "jvNote": "The JV tables are the sheet’s JV Place and JV Record columns, in its JV order. James Lick has no JV row: the sheet prints no JV record for it.",
+        "notes": [
+          "Official BVAL sheet titled \"BVAL Boys Basketball / 2025 - 26 Team Standings\", linked from bval.org/standings. Varsity order is the sheet's own \"Place\".",
+          "Records only: the sheet has Overall and League Record per school and no points, goals or tiebreak data, so none are stored or computed.",
+          "Records are written as the sheet prints them (W-L), without the spaces around each hyphen; the sport has no ties, so t is 0.",
+          "Places are the sheet's, ties included: Christopher and Westmont (2); Pioneer and Leigh (5); Piedmont Hills and Lincoln (3); Sobrato and Silver Creek (3). A tied place is stored as printed, and the next place skips.",
+          "The 2025-26 divisions are the sheet's (Mt. Hamilton; Santa Teresa North, \"Santa Teresa - North\" in the sheet; Santa Teresa South, \"Santa Teresa - South\" in the sheet; West Valley), not 2026-27's in lib/registry/basketball/bval.ts. Santa Teresa North and Santa Teresa South are divisions BVAL no longer has (seasonAlignment.pastDivisions). Santa Teresa and Almaden Valley did not exist in 2025-26. Filed elsewhere in 2026-27: Branham (Santa Teresa North), Independence (Santa Teresa North), Piedmont Hills (Santa Teresa North), Lincoln (Santa Teresa North), Prospect (Santa Teresa North), Mt. Pleasant (Santa Teresa North), Leland (Santa Teresa South), Live Oak (Santa Teresa South), Sobrato (Santa Teresa South), Silver Creek (Santa Teresa South), Gilroy (Santa Teresa South), Oak Grove (Santa Teresa South), Overfelt (West Valley). The registry is not changed; the page says these teams moved.",
+          "JV is stored from the JV Place and JV Record columns, ordered on the JV place (the sheet's row order among equal places); tied JV places: Westmont and Santa Teresa (3); Live Oak and Silver Creek (2); Gunderson and Andrew Hill (3). No JV row for James Lick: its JV record is not a record (\"n/a\" or empty).",
+          "No all-league awards: this sport's BVAL all-league documents are not transcribed, so every division's awards are null."
+        ],
+        "retrievedOn": "2026-11-16",
+        "source": "bval-sheet",
+        "standingsIndex": "https://bval.org/standings/",
+        "standingsSheet": "https://docs.google.com/spreadsheets/d/1FsWvfXTqA87Qunf_5-5z0zYmDOJTYsqw/export?format=csv&gid=182098527",
+        "standingsSheetView": "https://docs.google.com/spreadsheets/d/1FsWvfXTqA87Qunf_5-5z0zYmDOJTYsqw/edit?gid=182098527#gid=182098527"
+      },
+      "seasonAlignment": {
+        "pastDivisions": [
+          "santa-teresa-north",
+          "santa-teresa-south"
+        ]
+      },
+      "status": "available"
     },
     "scval": {
       "divisions": [

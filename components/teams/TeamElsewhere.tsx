@@ -19,6 +19,7 @@ export function TeamElsewhere({
   sblive,
   history,
   historySize,
+  historyTied = false,
   historyScope,
   officialSchedule,
 }: {
@@ -27,7 +28,8 @@ export function TeamElsewhere({
   officialSchedule?: { href: string; leagueShort: string } | null;
   /** @deprecated The page has one column and a rail; ignored. */
   logOutweighs?: boolean;
-} & Pick<TeamPageParts, 'sblive' | 'history' | 'historySize' | 'historyScope'>) {
+} & Pick<TeamPageParts, 'sblive' | 'history' | 'historySize' | 'historyScope'> &
+  Partial<Pick<TeamPageParts, 'historyTied'>>) {
   const instagram = getTeamInstagram(team.slug);
   const jvInstagram = getTeamInstagram(team.slug, 'jv');
   return (
@@ -86,7 +88,8 @@ export function TeamElsewhere({
           SCVAL's PDF drops a zero tie count on some rows). */}
       {history ? (
         <p className="sx-note">
-          Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in {historyScope},{' '}
+          Last season ({getHistorySeason()}): {historyTied ? 'tied for ' : ''}
+          {ordinal(history.row.place)} of {historySize} in {historyScope},{' '}
           <span className="whitespace-nowrap">{history.row.leagueRecord}.</span>{' '}
           <Link href={`/history/2025-26#${history.division}`} prefetch={false} className="sx-link whitespace-nowrap">
             {getHistorySeason()} standings

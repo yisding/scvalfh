@@ -12,6 +12,7 @@ import { z } from 'zod';
 
 import { LEAGUE_IDS, divisionsOf, getLeague } from '../leagues';
 import { dateKey, slugId } from '../schema-primitives';
+import { SPORT } from '../sports/current';
 import { teamsInLeague } from '../teams';
 import type { LeagueId } from '../types';
 
@@ -26,7 +27,12 @@ function leagueSchema(leagueId: LeagueId) {
   const slugs: ReadonlySet<string> = new Set(teamsInLeague(leagueId).map((t) => t.slug));
   const divisions: ReadonlySet<string> = new Set(divisionsOf(leagueId).map((d) => d.id));
   const teamSlug = slugId.refine((slug) => slugs.has(slug), `not a registry slug of league ${leagueId}`);
-  const division = slugId.refine((d) => divisions.has(d), `not a division of league ${leagueId}`);
+  /**
+   * A division id: one of the league's divisions now, or one of the season's own that it no longer has
+   * (`seasonAlignment.pastDivisions`, BVAL boys basketball's 2025-26 Santa Teresa North and South). Which of the
+   * two it may be is the entry's to say, so membership is checked on the entry (`knownDivisions` below).
+   */
+  const division = slugId;
 
   const row = z
     .object({
@@ -54,7 +60,9 @@ function leagueSchema(leagueId: LeagueId) {
         r.leagueRecord === (r.t === null ? `${r.w}-${r.l}` : `${r.w}-${r.l}-${r.t}`) ||
         // SCVAL's parser has always stored a two-part PDF record ("2-10") with t: 0. That file is
         // unchanged; every other league must say null for a record with no ties field.
-        (leagueId === 'scval' && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`),
+        (leagueId === 'scval' && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`) ||
+        // A sport with no ties (basketball, volleyball): a W-L record has zero ties, not unpublished ones.
+        (!SPORT.scoring.allowsTies && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`),
       'leagueRecord does not match w/l/t',
     );
 
@@ -123,9 +131,21 @@ function leagueSchema(leagueId: LeagueId) {
           /** The day the sheet and documents were read. */
           retrievedOn: dateKey,
           extraction: z.string(),
+          /**
+           * What the page says of JV, one sentence a reader is given: the sheets differ (field hockey's and girls
+           * soccer's rank too few JV teams to publish a table; boys basketball's and girls volleyball's rank every one).
+           */
+          jvNote: z.string().min(20),
           notes: z.array(z.string()),
         }),
       ]),
+      /**
+       * Present when the season's divisions are not this site's current alignment of the league (BVAL's winter
+       * sports and girls volleyball realigned for 2026-27): its divisions are then the season's own, some of the
+       * league's current ones (by the same id and name) and `pastDivisions`, the ones it no longer has. Absent,
+       * the entry has every current division exactly once.
+       */
+      seasonAlignment: z.object({ pastDivisions: z.array(slugId) }).optional(),
       divisions: z.array(
         z.object({
           division,
@@ -136,14 +156,32 @@ function leagueSchema(leagueId: LeagueId) {
       ),
     })
     .refine(
-      (h) => h.divisions.length === divisions.size && new Set(h.divisions.map((d) => d.division)).size === divisions.size,
+      (h) => (h.seasonAlignment?.pastDivisions ?? []).every((d) => !divisions.has(d)),
+      `a past division of ${leagueId} is one of its current divisions`,
+    )
+    .refine((h) => {
+      const known = knownDivisions(h.seasonAlignment?.pastDivisions);
+      const ids = h.divisions.map((d) => d.division);
+      return (
+        new Set(ids).size === ids.length &&
+        ids.every((id) => known.has(id)) &&
+        (h.seasonAlignment?.pastDivisions ?? []).every((id) => ids.includes(id)) &&
+        Object.keys(allLeagueDocsOf(h.provenance)).every((id) => known.has(id)) &&
+        h.divisions.every((d) => [d.awards.varsity, d.awards.jv].every((a) => a === null || a.division === d.division))
+      );
+    }, `a division is unknown to ${leagueId}, repeated, or keyed under another division`)
+    .refine(
+      (h) => h.seasonAlignment !== undefined || h.divisions.length === divisions.size,
       `expected each of the ${divisions.size} division(s) of ${leagueId} exactly once`,
     )
-    // Places must be 1..n with no gaps, or the table would render a hole.
+    // Places run 1..n in order with no gap: a row's place is its position, or the place of the row above when
+    // the source ranks them level (BVAL's sheets print "2, 2, 4"; SCVAL's PDF order never ties).
     .refine(
       (h) =>
         h.divisions.every((d) =>
-          [d.standings.varsity, d.standings.jv].every((rows) => rows.every((r, i) => r.place === i + 1)),
+          [d.standings.varsity, d.standings.jv].every((rows) =>
+            rows.every((r, i) => r.place === i + 1 || (i > 0 && r.place === rows[i - 1].place)),
+          ),
         ),
       'standings places are not 1..n in order',
     )
@@ -170,6 +208,17 @@ function leagueSchema(leagueId: LeagueId) {
   });
 
   return z.discriminatedUnion('status', [available, unavailable]);
+
+  function knownDivisions(past: readonly string[] | undefined): ReadonlySet<string> {
+    return new Set([...divisions, ...(past ?? [])]);
+  }
+}
+
+/** The all-league document map of an entry's provenance, by division (none for SCVAL's single-PDF source). */
+function allLeagueDocsOf(p: { source: string }): Record<string, unknown> {
+  if ('allLeagueDocs' in p) return p.allLeagueDocs as Record<string, unknown>;
+  if ('allLeaguePdfs' in p) return p.allLeaguePdfs as Record<string, unknown>;
+  return {};
 }
 
 const leagueShape = Object.fromEntries(LEAGUE_IDS.map((l) => [l, leagueSchema(l)])) as Record<

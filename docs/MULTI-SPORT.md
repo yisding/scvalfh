@@ -193,8 +193,9 @@ aside), and the field hockey tests, golden files and asserts pass as they were.
   in `CcsConfig`, the snapshot schema and every reader.
 - **Data.** Under `data/soccer/`: the snapshot, JV, rosters, player stats and last season's games come
   from the usual fetchers (README, "Girls soccer"); the official fixtures are transcribed; the 2025-26
-  archive (`history-2025-26.json`, SCVAL alone) is built by `scripts/build-history.ts` from SCVAL's standings
-  PDF and a hand transcription of its all-league PDFs (`official/scval-all-league-2025-26.json`), and
+  archive (`history-2025-26.json`) is built by `scripts/build-history.ts` from SCVAL's standings
+  PDF and a hand transcription of its all-league PDFs (`official/scval-all-league-2025-26.json`), and BVAL's
+  standings sheet (added 2026-11-16), and
   validated like field hockey's; clubs, commits and the bracket files (the 2025 history brackets included: a
   CCS bracket's other schools are not in this registry) are empty placeholders the loaders serve without field
   hockey's validation.
@@ -254,7 +255,8 @@ where soccer could reuse field hockey's rules, basketball could not, so parts of
 against BVAL schools. Each sport has `lib/league-config/<sport>/bval.ts` and `lib/registry/<sport>/bval.ts`,
 `LEAGUES` lists both leagues, the CCS block allocates BVAL's six automatic berths, and the BVAL schedules are
 bundled by `scripts/build-bval-winter-fixtures.ts` (README, "BVAL in the winter builds"). The registries hold 41
-teams each. /history/2025-26 marks BVAL unavailable until its standings sheets are transcribed.
+teams each. /history/2025-26 shows BVAL's 2025-26 final standings from its sheets (owner, 2026-11-16; README,
+"BVAL in the winter builds"), in the 2025-26 divisions, which `seasonAlignment` lets differ from 2026-27's.
 
 **WCAL and WBAL, soccer only (2026-11-14).** The owner asked for the West Catholic and West Bay leagues on the
 soccer site. `lib/league-config/soccer/{wcal,wbal}.ts` and `lib/registry/soccer/{wcal,wbal}.ts` add 19 teams (60 in

@@ -526,6 +526,7 @@
         },
         "builtBy": "scripts/build-history.ts",
         "extraction": "Google Sheets CSV export of the standings sheet; Google Docs HTML export of the two all-league documents (table cells).",
+        "jvNote": "JV is not shown: the sheet lists JV records but gives a JV place for one school only.",
         "notes": [
           "Official BVAL sheet titled \"BVAL Field Hockey / 2025-26 Team Standings\", linked from bval.org/standings. Varsity order is the sheet's own \"Place\".",
           "Records only: the sheet has Overall and League Record per school and no points, goals or tiebreak data, so none are stored or computed.",

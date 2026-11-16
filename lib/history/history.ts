@@ -47,7 +47,7 @@ import {
 } from './history-schema';
 import { readOverride, validateData } from '../data-file';
 import { listWords } from '../format';
-import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
+import { LEAGUE_IDS, getDivision, getLeague, getSection, isIndependentLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
@@ -200,49 +200,86 @@ export function getHistoryAwards(
   return divisionEntry(division)?.awards[level] ?? null;
 }
 
-/** Every 2025-26 row for one school, across divisions and levels. */
+/**
+ * Every 2025-26 row for one school, across divisions and levels, with its league and the division's label as the
+ * season named it: a division can be one the league no longer has (BVAL boys basketball's Santa Teresa North), which
+ * lib/leagues.ts does not know.
+ */
 export function getHistoryFor(slug: TeamSlug): Array<{
+  leagueId: LeagueId;
   division: DivisionId;
+  /** The division's label in the archive ('Santa Teresa North'). */
+  label: string;
   level: HistoryLevel;
   row: HistoryRow;
 }> {
-  const out: Array<{ division: DivisionId; level: HistoryLevel; row: HistoryRow }> = [];
-  for (const { entry } of getAvailableHistoryLeagues()) {
+  const out: ReturnType<typeof getHistoryFor> = [];
+  for (const { id, entry } of getAvailableHistoryLeagues()) {
     for (const d of entry.divisions) {
       for (const level of ['varsity', 'jv'] as const) {
         const row = d.standings[level].find((r) => r.slug === slug);
-        if (row) out.push({ division: d.division, level, row });
+        if (row) out.push({ leagueId: id, division: d.division, label: d.label, level, row });
       }
     }
   }
   return out;
 }
 
-/** One league's first-place varsity rows, for a one-line archive summary. */
+/** True when another row of the same table shares this row's place (BVAL's sheets print "2, 2, 4"). */
+export function isTiedPlace(rows: readonly HistoryRow[], row: HistoryRow): boolean {
+  return rows.some((r) => r !== row && r.place === row.place);
+}
+
+/**
+ * One league's first-place varsity rows, for a one-line archive summary: every row placed 1st, so co-champions
+ * (BVAL girls volleyball's 2025-26 Santa Teresa: Lincoln and Pioneer, 13-1 each) are both named.
+ */
 export function getHistoryChampions(leagueId: LeagueId): Array<{ division: DivisionId; row: HistoryRow }> {
   const entry = history.leagues[leagueId];
   if (entry?.status !== 'available') return [];
-  return entry.divisions
-    .map((d) => ({ division: d.division, row: d.standings.varsity[0] }))
-    .filter((x): x is { division: DivisionId; row: HistoryRow } => !!x.row);
+  return entry.divisions.flatMap((d) =>
+    d.standings.varsity.filter((r) => r.place === 1).map((row) => ({ division: d.division, row })),
+  );
+}
+
+/** The divisions of a league's 2025-26 entry that it no longer has (BVAL boys basketball's Santa Teresa North and South). */
+export function getHistoryPastDivisions(leagueId: LeagueId): Array<{ division: DivisionId; label: string }> {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  const past = new Set(entry.seasonAlignment?.pastDivisions ?? []);
+  return entry.divisions.filter((d) => past.has(d.division)).map((d) => ({ division: d.division, label: d.label }));
 }
 
 /**
  * Teams whose 2025-26 division (as the source printed it) is not the division the registry lists
  * today (the 2026-27 alignment), e.g. Leland: Santa Teresa in the 2025-26 sheet, Mt. Hamilton in
- * the registry. The history keeps the source's division; the page says that the team moved.
+ * the registry. The history keeps the source's division; the page says that the team moved. A row in a division
+ * the league no longer has always moved. Labels come with the ids: the season's from the archive, today's from
+ * lib/leagues.ts.
  */
-export function getHistoryDivisionChanges(
-  leagueId: LeagueId,
-): Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> {
+export function getHistoryDivisionChanges(leagueId: LeagueId): Array<{
+  slug: TeamSlug;
+  name: string;
+  historyDivision: DivisionId;
+  historyLabel: string;
+  registryDivision: DivisionId;
+  registryLabel: string;
+}> {
   const entry = history.leagues[leagueId];
   if (entry?.status !== 'available') return [];
-  const out: Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> = [];
+  const out: ReturnType<typeof getHistoryDivisionChanges> = [];
   for (const d of entry.divisions) {
     for (const r of d.standings.varsity) {
       const team = r.slug ? getTeamBySlug(r.slug) : undefined;
       if (r.slug && team && team.division !== d.division) {
-        out.push({ slug: r.slug, name: team.name, historyDivision: d.division, registryDivision: team.division });
+        out.push({
+          slug: r.slug,
+          name: team.name,
+          historyDivision: d.division,
+          historyLabel: d.label,
+          registryDivision: team.division,
+          registryLabel: getDivision(team.division).label,
+        });
       }
     }
   }

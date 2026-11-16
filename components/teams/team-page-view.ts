@@ -8,8 +8,8 @@
  */
 
 import { getToday } from '../../lib/data';
-import { getHistoryFor, getHistoryStandings, type HistoryRow } from '../../lib/history/history';
-import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
+import { getHistoryFor, getHistoryStandings, isTiedPlace, type HistoryRow } from '../../lib/history/history';
+import { getLeague, isSingleDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
 import { buildTeamJvRosterView, type TeamJvRosterView } from '../jv/jv-roster-view';
@@ -62,11 +62,12 @@ export function postseasonDescription(view: TeamPageView): string {
  * league when this team plays in another league now, so no page reads as if "El Camino" were a
  * division of its own league.
  */
-function lastSeasonScope(division: DivisionId, league: LeagueId): string {
-  const owner = leagueOfDivision(division);
-  const heading = divisionHeading(division);
-  if (heading === null) return owner.shortName;
-  return owner.id === league ? heading : `${owner.shortName} ${heading}`;
+function lastSeasonScope(history: { leagueId: LeagueId; label: string }, league: LeagueId): string {
+  // The archive's own label: the division can be one the league no longer has (BVAL boys basketball's Santa Teresa
+  // North), which lib/leagues.ts does not know.
+  const owner = getLeague(history.leagueId);
+  if (isSingleDivision(owner.id)) return owner.shortName;
+  return owner.id === league ? history.label : `${owner.shortName} ${history.label}`;
 }
 
 /** The team page's own reads and layout decisions; see the module comment. */
@@ -75,6 +76,8 @@ export interface TeamPageParts {
   history: { division: DivisionId; row: HistoryRow } | undefined;
   /** The size of that division as it was then. */
   historySize: number;
+  /** Another school shared that place (BVAL's sheets print tied places: "tied for 2nd"). */
+  historyTied: boolean;
   /** Where that row sat (`lastSeasonScope`): '' with no row. */
   historyScope: string;
   /** The team's si.com games page. */
@@ -107,8 +110,10 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   // division as it was then (the alignment can change between seasons: Leland played in Santa
   // Teresa in 2025-26 and is in Mt. Hamilton now).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
-  const historySize = history ? getHistoryStandings(history.division).length : 0;
-  const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
+  const historyRows = history ? getHistoryStandings(history.division) : [];
+  const historySize = historyRows.length;
+  const historyTied = history ? isTiedPlace(historyRows, history.row) : false;
+  const historyScope = history ? lastSeasonScope(history, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
   // Both exist for every registry team; an empty or pending team gets a stated empty state.
   const roster = buildRosterView(team.slug);
@@ -147,6 +152,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   return {
     history,
     historySize,
+    historyTied,
     historyScope,
     sblive,
     roster,

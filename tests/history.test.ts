@@ -342,6 +342,55 @@ describe('history: the SCVAL entry is scoped to SCVAL (SPEC §0.2 #12, §4.2)', 
     oneDivision.leagues.scval.divisions.pop();
     expect(HistorySchema.safeParse(oneDivision).success).toBe(false);
   });
+
+  it('takes a season’s own divisions only when the entry declares them (seasonAlignment)', () => {
+    type Entry = {
+      seasonAlignment?: { pastDivisions: string[] };
+      divisions: Array<{ division: string; label: string; awards: { varsity: { division: string } | null } }>;
+    };
+    const bvalOf = (f: typeof file) => f.leagues.bval as unknown as Entry;
+    // An unknown division is refused, unless the entry names it as a past division of the league.
+    const past = structuredClone(file);
+    Object.assign(bvalOf(past).divisions[1], { division: 'santa-teresa-north', label: 'Santa Teresa North' });
+    bvalOf(past).divisions[1].awards.varsity!.division = 'santa-teresa-north';
+    expect(HistorySchema.safeParse(past).success).toBe(false);
+    bvalOf(past).seasonAlignment = { pastDivisions: ['santa-teresa-north'] };
+    expect(HistorySchema.safeParse(past).success).toBe(true);
+    // Awards filed under another division than the one they sit in are refused.
+    bvalOf(past).divisions[1].awards.varsity!.division = 'mt-hamilton';
+    expect(HistorySchema.safeParse(past).success).toBe(false);
+    // A past division must be on the entry and must not be a current one.
+    const unused = structuredClone(file);
+    bvalOf(unused).seasonAlignment = { pastDivisions: ['santa-teresa-north'] };
+    expect(HistorySchema.safeParse(unused).success).toBe(false);
+    const current = structuredClone(file);
+    bvalOf(current).seasonAlignment = { pastDivisions: ['santa-teresa'] };
+    expect(HistorySchema.safeParse(current).success).toBe(false);
+    // With seasonAlignment the season may have fewer divisions than the league has now; without it, it may not.
+    const fewer = structuredClone(file);
+    bvalOf(fewer).divisions.pop();
+    expect(HistorySchema.safeParse(fewer).success).toBe(false);
+    bvalOf(fewer).seasonAlignment = { pastDivisions: [] };
+    expect(HistorySchema.safeParse(fewer).success).toBe(true);
+    // Never the same division twice.
+    const twice = structuredClone(file);
+    bvalOf(twice).seasonAlignment = { pastDivisions: [] };
+    bvalOf(twice).divisions[1].division = 'mt-hamilton';
+    expect(HistorySchema.safeParse(twice).success).toBe(false);
+  });
+
+  it('takes tied places as a source prints them ("2, 2, 4"), never a gap or a step back', () => {
+    const rowsOf = (f: typeof file) => f.leagues.bval.divisions[0].standings.varsity as Array<{ place: number }>;
+    const tied = structuredClone(file);
+    rowsOf(tied)[2].place = 2; // Christopher level with Gilroy; Willow Glen stays 4th.
+    expect(HistorySchema.safeParse(tied).success).toBe(true);
+    const gap = structuredClone(file);
+    rowsOf(gap)[3].place = 5;
+    expect(HistorySchema.safeParse(gap).success).toBe(false);
+    const back = structuredClone(file);
+    rowsOf(back)[2].place = 1;
+    expect(HistorySchema.safeParse(back).success).toBe(false);
+  });
 });
 
 describe('history: the read API', () => {
@@ -729,17 +778,26 @@ describe('history: the league-aware read API', () => {
     ]);
     expect(h.getHistoryAwards('santa-teresa')?.overall).toHaveLength(6);
     expect(h.getHistoryAwards('mt-hamilton', 'jv')).toBeNull();
-    expect(h.getHistoryFor('leland').map((x) => [x.division, x.level, x.row.place])).toEqual([
-      ['santa-teresa', 'varsity', 1],
+    expect(h.getHistoryFor('leland').map((x) => [x.leagueId, x.division, x.label, x.level, x.row.place])).toEqual([
+      ['bval', 'santa-teresa', 'Santa Teresa', 'varsity', 1],
     ]);
+    expect(h.getHistoryPastDivisions('bval')).toEqual([]);
   });
 
   it('flags Leland and Prospect as moved and Sobrato as having unpublished ties, and nothing else', async () => {
     const h = await import('../lib/history/history');
     // Two teams swapped divisions between the 2025-26 sheet and the registry's 2026-27 alignment.
     expect(h.getHistoryDivisionChanges('bval')).toEqual([
-      { slug: 'prospect', name: 'Prospect', historyDivision: 'mt-hamilton', registryDivision: 'santa-teresa' },
-      { slug: 'leland', name: 'Leland', historyDivision: 'santa-teresa', registryDivision: 'mt-hamilton' },
+      {
+        slug: 'prospect', name: 'Prospect',
+        historyDivision: 'mt-hamilton', historyLabel: 'Mt. Hamilton',
+        registryDivision: 'santa-teresa', registryLabel: 'Santa Teresa',
+      },
+      {
+        slug: 'leland', name: 'Leland',
+        historyDivision: 'santa-teresa', historyLabel: 'Santa Teresa',
+        registryDivision: 'mt-hamilton', registryLabel: 'Mt. Hamilton',
+      },
     ]);
     expect(h.getHistoryDivisionChanges('scval')).toEqual([]);
     expect(h.getHistoryUnpublishedTies('bval').map((r) => r.name)).toEqual(['Sobrato']);
