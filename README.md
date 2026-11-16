@@ -778,6 +778,11 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   22 games. Two JV rows are left out because they disagree with the opponent's page, which stays shown:
   Saint Francis on Sep 9 (4-0 there, 5-0 on Saint Francis') and St. Ignatius on Sep 28 (6-0 there, 7-0 on
   St. Ignatius').
+  Santa Clara's athletics site (its Home Campus JV schedule & results page, read 2026-11-16) is a fifth: it scores
+  all 13 of Santa Clara's JV games. MaxPreps agrees on 11; on the other two, at Monta Vista on Sep 10 (4-0 there,
+  3-0 on MaxPreps) and Los Gatos at Santa Clara on Sep 15 (12-0 to Los Gatos there, 7-2 on MaxPreps), si.com agrees
+  with Santa Clara, so a score fix in `lib/jv/jv-corrections.ts` (`scoreFixes`, by contest id, applied only while
+  MaxPreps still has the score it names) shows the school's score, marked †.
 
 `lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
 (`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).
