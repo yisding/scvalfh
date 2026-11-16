@@ -7,13 +7,13 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "1f1386b83529211858babe61864678f0d98a0be70c98d48ef32f6987e7090fc4",
+  "contentHash": "84a3b88e019baed331ff164b45d20a89eabbb56da65051f1573d9edaccae257a",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 266,
+        "games": 267,
         "leagueGames": 120,
         "teams": 26
       },
@@ -26,14 +26,14 @@
       }
     },
     "finals": 0,
-    "games": 425,
+    "games": 426,
     "leagueGames": 216,
     "mismatches": 0,
     "pending": 0,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-15T20:19:32.005Z",
+  "fetchedAt": "2026-11-16T15:33:32.099Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -234,7 +234,7 @@
     },
     {
       "label": "leigh schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -244,7 +244,7 @@
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -399,7 +399,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -414,12 +414,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 4,
+      "rowCount": 149,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 5,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -433,7 +433,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-15",
+  "today": "2026-11-16",
   "warnings": 8,
   "window": {
     "firstGame": "2026-11-19T16:50:00",
