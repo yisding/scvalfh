@@ -59,7 +59,7 @@ export function readPlayersFile(root: string): PlayersFile | null {
 }
 
 export function readPlayerIdentity(root: string): PlayerIdentity {
-  return readJson(root, PLAYER_IDENTITY_FILE, PlayerIdentitySchema) ?? { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [] };
+  return readJson(root, PLAYER_IDENTITY_FILE, PlayerIdentitySchema) ?? { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
 }
 
 /** The sources only a season's live files carry: a past season that has them was seen live. */
@@ -122,4 +122,29 @@ export function readBuildInput(root: string, builtBy: string): BuildInput & { sk
     }
   }
   return { previous, identity, built, sightings, builtBy, skipped };
+}
+
+/**
+ * MaxPreps career id → its career page, from every roster and stat file that records one: the link
+ * a person checks a review item against. A career no file links is left out.
+ */
+export function readCareerUrls(root: string): Map<string, string> {
+  const out = new Map<string, string>();
+  const walk = (v: unknown): void => {
+    if (Array.isArray(v)) {
+      for (const x of v) walk(x);
+      return;
+    }
+    if (v === null || typeof v !== 'object') return;
+    const r = v as Record<string, unknown>;
+    if (typeof r.careerId === 'string' && typeof r.careerUrl === 'string' && !out.has(r.careerId)) out.set(r.careerId, r.careerUrl);
+    for (const x of Object.values(r)) walk(x);
+  };
+  for (const sport of SPORT_IDS) {
+    for (const name of ['rosters.json', 'jv-rosters.json', 'player-stats.json', 'prior-players.json']) {
+      const file = path.join(root, sportDataDir(sport), name);
+      if (existsSync(file)) walk(JSON.parse(readFileSync(file, 'utf8')));
+    }
+  }
+  return out;
 }

@@ -27,7 +27,7 @@ import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/regi
 import { SPORT_IDS } from '../lib/sports/current';
 import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
 
-const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [] };
+const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
 
 /** A roster-row sighting: field hockey, 26-27, varsity unless said otherwise. */
 function row(over: Partial<Sighting> & { name: string; obs?: Partial<Observation> }): Sighting {
@@ -231,6 +231,46 @@ describe('who is who', () => {
     expect(file.review).toEqual([]);
   });
 
+  it('a player is shown by her official name, and every other spelling says what it is', () => {
+    const file = build([
+      row({ name: 'Maddie Grimsley', careerIds: ['c1'], obs: { grade: 11 } }),
+      { ...row({ name: 'Madeleine Grimsly', careerIds: ['c1'], season: '25-26' }), softLevel: true, observations: [{ src: 'maxpreps-stats', name: 'Madeleine Grimsly', grade: 10 }] },
+      row({ name: 'Madeleine Grimsley', careerIds: ['c1'], level: 'jv', observations: [{ src: 'school-jv-roster', name: 'Madeleine Grimsley' }] }),
+    ]);
+    const [p] = file.players;
+    expect(p.name).toBe('Madeleine Grimsley');
+    expect(p.aliases).toEqual([
+      { name: 'Maddie Grimsley', kind: 'nickname' },
+      { name: 'Madeleine Grimsly', kind: 'spelling' },
+    ]);
+    // A stint still shows what its own best source says.
+    expect(p.stints.find((s) => s.level === 'varsity' && s.season === '26-27')?.name).toBe('Maddie Grimsley');
+  });
+
+  it('a person decides an official name and the names a player no longer goes by, and names one player only', () => {
+    const rows = [
+      {
+        ...row({ name: 'Domingo Jhayde', careerIds: ['c1'] }),
+        observations: [{ src: 'maxpreps-roster' as const, name: 'Domingo Jhayde' }, { src: 'enrichment' as const, name: 'Jhayde Domingo' }],
+      },
+    ];
+    const decide = (names: PlayerIdentity['names']) => build(rows, { identity: { ...NO_IDENTITY, names } });
+    const file = decide([{ sport: 'field-hockey', team: 'alpha', name: 'Domingo Jhayde', official: 'Jhayde Domingo', previous: ['Jhayde Cruz'], basis: 'swapped fields; a name change' }]);
+    expect(file.players[0]).toMatchObject({
+      name: 'Jhayde Domingo',
+      names: ['Jhayde Domingo', 'Domingo Jhayde', 'Jhayde Cruz'],
+      aliases: [{ name: 'Domingo Jhayde', kind: 'variant' }, { name: 'Jhayde Cruz', kind: 'previous' }],
+    });
+    expect(() => decide([{ sport: 'field-hockey', team: 'alpha', name: 'Nobody Here', official: 'X Y', basis: 'b' }])).toThrow(/fits no player/);
+    expect(() => decide([{ sport: 'soccer', team: 'alpha', name: 'Jhayde Domingo', official: 'X Y', basis: 'b' }])).toThrow(/fits no player/);
+    expect(() =>
+      decide([
+        { sport: 'field-hockey', team: 'alpha', name: 'Jhayde Domingo', official: 'Jhayde Domingo', basis: 'b' },
+        { sport: 'field-hockey', team: 'alpha', name: 'Domingo Jhayde', previous: ['Jhayde Cruz'], basis: 'b' },
+      ]),
+    ).toThrow(/2 entries for one player/);
+  });
+
   it('one career under two unrelated names is two players, and the id stays with the latest', () => {
     const file = build([
       // The same season: the varsity roster's row keeps the id.
@@ -293,7 +333,9 @@ describe('what a stint shows', () => {
       { ...row({ name: 'K. Lowe', careerIds: ['c1'] }), softLevel: true, nameKeys: [], observations: [{ src: 'maxpreps-stats', name: 'K. Lowe', jersey: '16' }] },
     ]);
     const [p] = file.players;
-    expect(p.names).toEqual(['Kai Lowe', 'Kailani Lowe']);
+    // The stint shows its best source's spelling; the player, her official name (Kai is a short form).
+    expect(p.names).toEqual(['Kailani Lowe', 'Kai Lowe']);
+    expect(p.aliases).toEqual([{ name: 'Kai Lowe', kind: 'nickname' }]);
     const [s] = p.stints;
     expect(s).toMatchObject({ name: 'Kai Lowe', grade: 11, jersey: '6', positions: ['F'], captain: false });
     expect(s.conflicts).toEqual([

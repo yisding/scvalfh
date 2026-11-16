@@ -72,56 +72,12 @@ import {
 } from './registry-schema';
 import type { SportId } from '../sports/current';
 import { isPlaceholderName } from './placeholder-name';
+import { editDistance, nameKey, nameTokens, slipApart } from './name-compare';
+import { chooseNames } from './official-name';
+
+export { nameKey, nameTokens };
 
 // ---------------------------------------------------------------- names and class years
-
-/** Letters NFKD leaves whole: folded by hand so "Đỗ" and "Do", "Søren" and "Soren" are one name. */
-const FOLD: Readonly<Record<string, string>> = { đ: 'd', ø: 'o', ł: 'l', æ: 'ae', œ: 'oe', ß: 'ss', þ: 'th', ð: 'd', ı: 'i' };
-
-function fold(name: string): string {
-  return name
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[đøłæœßþðı]/g, (c) => FOLD[c] ?? c);
-}
-
-/**
- * "Zoë  O'Brien-Smith" → "zoeobriensmith": a name compared across sources' spellings. Empty for a
- * name with no Latin letter at all, which therefore matches nothing.
- */
-export function nameKey(name: string): string {
-  return fold(name).replace(/[^a-z]/g, '');
-}
-
-/** Words a roster types beside a name that are not part of it: "(GK)", "Jr.", a grade. */
-const NOT_A_NAME = new Set(['gk', 'jr', 'sr', 'ii', 'iii', 'iv', 'slug']);
-
-/** "Sienna Steele (GK) 10" → ["sienna", "steele"]. */
-export function nameTokens(name: string): string[] {
-  return fold(name)
-    .replace(/['’]/g, '')
-    .split(/[^a-z]+/)
-    .filter((w) => w.length > 1 && !NOT_A_NAME.has(w));
-}
-
-function editDistance(a: string, b: string): number {
-  let row = Array.from({ length: b.length + 1 }, (_, j) => j);
-  for (let i = 1; i <= a.length; i += 1) {
-    const next = [i];
-    for (let j = 1; j <= b.length; j += 1) {
-      next[j] = Math.min(row[j] + 1, next[j - 1] + 1, row[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-    }
-    row = next;
-  }
-  return row[b.length];
-}
-
-/** A slip of the pen: two letters in a long word, one in a middling one, none in a short one. */
-function slipApart(a: string, b: string): boolean {
-  const shorter = Math.min(a.length, b.length);
-  return editDistance(a, b) <= (shorter >= 6 ? 2 : shorter >= 4 ? 1 : 0);
-}
 
 /**
  * Whether two spellings could be one person's: the same name, a shared last name ("Cammie Pearce",
@@ -930,24 +886,39 @@ export function buildRegistry(input: BuildInput): PlayersFile {
   }
 
   // ---- 6. the records
+  const namesDecided = new Map<string, Array<PlayerIdentity['names'][number]>>();
+  for (const e of identity.names) {
+    const k = `${e.sport} ${e.team} ${nameKey(e.name)}`;
+    namesDecided.set(k, [...(namesDecided.get(k) ?? []), e]);
+  }
+  const namesUsedBy = new Map<PlayerIdentity['names'][number], string[]>();
   const players: Player[] = drafts.map((d) => {
     const ordered = [...d.stints].sort(
       (a, b) => byText(b.season, a.season) || byLevel(a.level, b.level) || byText(a.sport, b.sport) || byText(a.team, b.team),
     );
     // A stint's name is a stat sheet's only when no other source of the stint spells one.
     const fromSheetOnly = (s: Stint) => s.observations.every((o) => o.name === undefined || o.src === 'maxpreps-stats');
-    const name = (ordered.find((s) => !fromSheetOnly(s)) ?? ordered[0]).name;
-    const names = [name];
-    const keys = new Set([nameKey(name)]);
+    const spelled = [(ordered.find((s) => !fromSheetOnly(s)) ?? ordered[0]).name];
+    const keys = new Set([nameKey(spelled[0])]);
     const offer = (candidate: string, onlyIfNewKey: boolean) => {
-      if (names.includes(candidate)) return;
+      if (spelled.includes(candidate)) return;
       if (onlyIfNewKey && keys.has(nameKey(candidate))) return;
-      names.push(candidate);
+      spelled.push(candidate);
       keys.add(nameKey(candidate));
     };
     for (const s of ordered) for (const o of s.observations) if (o.name && o.src !== 'maxpreps-stats') offer(o.name, false);
     // A stat sheet's rebuilt or abbreviated name is listed only when no other source spells that name.
     for (const s of ordered) for (const o of s.observations) if (o.name && o.src === 'maxpreps-stats' && !isShortName(o.name)) offer(o.name, true);
+    // The official name, and what every other spelling is (lib/players/official-name.ts).
+    const decided = [...new Set(spelled.flatMap((n) => [...new Set(d.stints.map(teamKey))].flatMap((t) => namesDecided.get(`${t} ${nameKey(n)}`) ?? [])))];
+    if (decided.length > 1) {
+      throw new Error(`registry: data/player-identity.json names gives ${decided.length} entries for one player (${decided.map((e) => e.name).join(', ')}): give one`);
+    }
+    for (const e of decided) namesUsedBy.set(e, [...(namesUsedBy.get(e) ?? []), spelled[0]]);
+    const seenAs = d.stints.flatMap((s) => s.observations.flatMap((o) => (o.name ? [{ name: o.name, src: o.src, season: s.season }] : [])));
+    const choice = chooseNames(spelled, seenAs, decided[0]);
+    const name = choice.name;
+    const names = [name, ...choice.aliases.map((a) => a.name)];
 
     const claims = classClaims(d.stints);
     const classOf = resolveClassOf(claims);
@@ -975,12 +946,21 @@ export function buildRegistry(input: BuildInput): PlayersFile {
       formerIds: [...(formerOf.get(d) ?? [])].sort(),
       name,
       names,
+      aliases: choice.aliases,
       classOf,
       classOfConflicts,
       identifiers: d.identifiers,
       stints: d.stints,
     };
   });
+  for (const e of identity.names) {
+    const by = namesUsedBy.get(e) ?? [];
+    if (by.length !== 1) {
+      throw new Error(
+        `registry: data/player-identity.json names "${e.name}" (${e.sport} ${e.team}) fits ${by.length === 0 ? 'no player' : `${by.length} players (${by.join(', ')})`}: name one player by a spelling her lists use`,
+      );
+    }
+  }
   const idOfRoot = new Map(drafts.flatMap((d) => (d.root === null ? [] : [[d.root, idOf.get(d) as string] as const])));
   const idOfRow = (i: number) => idOfRoot.get(clusters.find(i)) as string;
 
@@ -1147,6 +1127,7 @@ const NOTES = [
   'One record per person across every sport and season this repository holds. Internal: no page reads this file.',
   'A player is identified by a MaxPreps career id where one is known, otherwise by a name on one team\'s lists. Rows are joined on a career id (unless it is listed under names that could not be one person\'s), or on an identical name inside one team and sport when their class years do not contradict; never on a nickname or a near spelling (those are listed under review as possible-match).',
   'A stint is one player on one team in one season of one sport at one level; its fields are the first of its observations to state them, in the order MaxPreps roster page, overlay, school JV list, stat sheet, all-league list, recruiting profile. Every other statement that differs is listed under conflicts. A stint marked gone is one no source lists any more, kept as an earlier build left it.',
+  'name is the player\'s official name: the fullest of her spellings (never a nickname or a part of another), then the clean one, the one more sources give, the one with its accents, and the one from the more official source (lib/players/official-name.ts). aliases lists every other spelling as a nickname, previous name, short form, spelling or variant.',
   'classOf is the graduation year most of the player\'s sources imply (a tie goes to the latest season\'s best source); classOfConflicts lists every statement implying another year.',
-  'Stints of a (sport, season) not named under built are carried forward from the previous build as they were. What a person has decided about who is who lives in data/player-identity.json; this file is never edited by hand.',
+  'Stints of a (sport, season) not named under built are carried forward from the previous build as they were. What a person has decided about who is who, and what a player is called, lives in data/player-identity.json; this file is never edited by hand.',
 ];
