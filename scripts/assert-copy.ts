@@ -70,8 +70,8 @@
  *    nothing is shown for it that we could not read from an official source;
  *  - an available league's tables are the data's: every varsity row's league record is on the page.
  * `leaders.html` (the site-wide leaderboards, one half per region):
- *  - has `id="players"`, then `id="schools"` (SoCal: `players-socal`, `schools-socal`; Players first
- *    since the 2026-11-12 refresh), and the anchor of every board the view model builds;
+ *  - has `id="schools"`, then `id="players"` (SoCal: `schools-socal`, `players-socal`; Teams first),
+ *    and the anchor of every board the view model builds;
  *  - links /about#ratings, and `about.html`'s `#ratings` section names every team that has entered no
  *    player stats, so no player board reads as if it covered every team (the boards carry no notes
  *    of their own any more; the sentence lives once, on /about).
@@ -428,13 +428,13 @@ if (!existsSync(historyPath)) {
       for (const id of [region.playersId, region.schoolsId, ...[...region.players, ...region.schools].map((b) => b.id)]) {
         if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
       }
-      // Players first, then Teams (`schoolsId`): the order of the refresh (spec 5.4).
+      // Teams (`schoolsId`) first, then Players.
       const players = sectionById(main, region.playersId);
       const schools = sectionById(main, region.schoolsId);
       if (!players) fail(file, `no <section id="${region.playersId}">`);
       if (!schools) fail(file, `no <section id="${region.schoolsId}">`);
-      if (players && schools && main.indexOf(players) > main.indexOf(schools)) {
-        fail(file, `the ${region.shortName} Players section does not come before its Teams section`);
+      if (players && schools && main.indexOf(schools) > main.indexOf(players)) {
+        fail(file, `the ${region.shortName} Teams section does not come before its Players section`);
       }
     }
     // The boards carry no notes of their own: who is missing from the player boards is said once, on
