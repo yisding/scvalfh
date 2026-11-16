@@ -37,7 +37,7 @@ import type {
 } from '../../lib/players/player-stats-schema';
 import { SPORT } from '../../lib/sports/current';
 import type { Game, TeamSlug } from '../../lib/types';
-import { playerAnchors } from './player-anchors';
+import { rosterEntries, type RosterEntry } from './player-anchors';
 
 /** Whether this build's stat line is basketball's (`Sport.stats.model`): one line per player, no goalkeepers. */
 const BASKETBALL = SPORT.stats.model === 'basketball';
@@ -57,6 +57,8 @@ export interface StatRow {
   name: string;
   /** The player's roster row on the team page (`#player-jane-doe`), where the line joins one. */
   href?: string;
+  /** That row's grade and position ("Junior", "Midfield"), only the ones it has. */
+  facts?: string[];
   jersey: string | null;
   /** One per column; null prints as a dash. */
   values: Array<number | null>;
@@ -88,6 +90,7 @@ export interface GoalieCard {
   name: string;
   /** As StatRow's. */
   href?: string;
+  facts?: string[];
   jersey: string | null;
   /** In GOALIE order; `text` null prints as a dash with "not recorded" for a screen reader. */
   stats: Array<{ label: string; text: string | null }>;
@@ -233,21 +236,24 @@ export function notedGames(credits: readonly NoteCredit[]): NotedGame[] {
     });
 }
 
-/** A stat line's link to its player's roster row; none where the line joins no row. */
-type PlayerLink = (p: PlayerStatLine) => string | undefined;
-const NO_LINK: PlayerLink = () => undefined;
+/**
+ * What a stat line's row reads from its player's roster row: the link to it and its grade and
+ * position. Nothing where the line joins no row.
+ */
+type PlayerLink = (p: PlayerStatLine) => Pick<StatRow, 'href' | 'facts'>;
+const NO_LINK: PlayerLink = () => ({});
 
-/** `#player-jane-doe` for a line whose athleteId has an anchor (components/teams/player-anchors.ts). */
-function anchorLink(anchors: ReadonlyMap<string, string>): PlayerLink {
+/** `#player-jane-doe` and the row's facts, for a line whose athleteId joins a roster row (components/teams/player-anchors.ts). */
+function rosterLink(roster: ReadonlyMap<string, RosterEntry>): PlayerLink {
   return (p) => {
-    const id = p.athleteId === null ? undefined : anchors.get(p.athleteId);
-    return id === undefined ? undefined : `#${id}`;
+    const entry = p.athleteId === null ? undefined : roster.get(p.athleteId);
+    return entry === undefined ? {} : { href: `#${entry.anchor}`, facts: entry.facts };
   };
 }
 
-/** The team's roster anchors, from the merged roster the team page's roster section prints. */
-function teamAnchors(slug: TeamSlug): ReadonlyMap<string, string> {
-  return playerAnchors(getEnrichedTeamRoster(slug)?.players ?? []);
+/** The team's roster rows, from the merged roster the team page's roster section prints. */
+function teamRoster(slug: TeamSlug): ReadonlyMap<string, RosterEntry> {
+  return rosterEntries(getEnrichedTeamRoster(slug)?.players ?? []);
 }
 
 function table(
@@ -265,7 +271,7 @@ function table(
     .map((p, i) => ({
       key: p.careerId ?? `${p.shortName}-${i}`,
       name: p.fullName,
-      href: link(p),
+      ...link(p),
       jersey: p.jersey,
       values: columns.map((c) => p.field?.[c.key] ?? null),
       noted: isNoted(noted, p),
@@ -334,7 +340,7 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: 
   return {
     key: p.careerId ?? `${p.shortName}-${i}`,
     name: p.fullName,
-    href: link(p),
+    ...link(p),
     jersey: p.jersey,
     stats,
     flag,
@@ -591,7 +597,7 @@ export function basketballTables(
       return {
         key: p.careerId ?? `${p.shortName}-${i}`,
         name: p.fullName,
-        href: link(p),
+        ...link(p),
         jersey: p.jersey,
         values,
         texts: columns.map((c, at) => (values[at] === null ? null : c.derived ? (c.digits === 3 ? threeDecimals(values[at]!) : oneDecimal(values[at]!)) : String(Math.round(values[at]!)))),
@@ -624,6 +630,8 @@ const BASKETBALL_DERIVED = new Set(LINE_TABLES.flatMap((t) => t.columns.filter((
  * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
  *   added (lib/players/note-stats.ts). Tests pass a fixture build, since the committed file moves with
  *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
+ * @param roster the team's varsity roster rows by athleteId, each row's anchor and grade and position
+ *   (components/teams/player-anchors.ts); a line it does not join gets neither a link nor facts.
  */
 export function buildPlayerStatsView(
   slug: TeamSlug,
@@ -631,10 +639,10 @@ export function buildPlayerStatsView(
   team:
     | (TeamPlayerStats & { noteCredits?: readonly NoteCredit[]; noteTracked?: TeamPlayerStats['tracked'] })
     | undefined = getTeamPlayerStatsWithNotes(slug),
-  anchors: ReadonlyMap<string, string> = teamAnchors(slug),
+  roster: ReadonlyMap<string, RosterEntry> = teamRoster(slug),
 ): PlayerStatsView | null {
   if (!team) return null;
-  const link = anchorLink(anchors);
+  const link = rosterLink(roster);
   const credits = team.noteCredits ?? [];
   const notedScoring = notedKeys(credits, ['goals', 'assists']);
   const notedSaves = notedKeys(credits, ['saves']);

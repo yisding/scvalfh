@@ -2,7 +2,7 @@ import { LETTER_SIZE, type TeamMonogramProps } from './TeamMonogram';
 
 /**
  * The square for a school this site does not track (DESIGN §8; §33): the same sizes as TeamMonogram
- * and the same 2px corner, a `--sx-surface-3` square with one or two upright 600 letters
+ * and the same corner (a quarter of its side), a `--sx-surface-3` square with one or two upright 600 letters
  * (`.sx-monogram:not(img)`, app/globals.css), because nothing may pretend to be a school's logo
  * that the registry never recorded.
  *

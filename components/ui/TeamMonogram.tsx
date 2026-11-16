@@ -3,7 +3,7 @@ import type { Team } from '../../lib/types';
 
 /**
  * A school's logo (DESIGN §7.1, §12.4; §33): the real file, drawn straight on the page. No tile, no
- * border, no padding, no filter, in either theme; a 2px corner (`img.sx-monogram`).
+ * border, no padding, no filter, in either theme; a corner a quarter of its side (`img.sx-monogram`).
  *
  * The mascot is MaxPreps' own school logo, downloaded once by `pnpm fetch-mascots` into
  * public/mascots/ and served from this site, so no page makes a third-party image request and
@@ -41,10 +41,12 @@ export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number>
   64: 22,
 };
 
-/** @deprecated The logo's corner is 2px at every size (`.sx-monogram`, app/globals.css). */
+/**
+ * The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 64px hero is 16px, the
+ * `border-radius: 25%` `.sx-monogram` draws (app/globals.css).
+ */
 export function monogramRadius(size: number): number {
-  void size;
-  return 2;
+  return Math.round(size / 4);
 }
 
 export function TeamMonogram({

@@ -48,7 +48,8 @@
 >   row on the team page (`#player-<name>`, components/teams/player-anchors.ts), as the team page's stats
 >   tables link each name. GD bars, LEFT/MAX columns, recap sentences and
 >   per-row link trios are gone.
-> - **Logos**: the real files, drawn straight on the page (2px corner; no tile or border).
+> - **Logos**: the real files, drawn straight on the page (a corner a quarter of the side, restored
+>   2026-11-16; no tile or border).
 > - **Your team**: an accent star after the name; a bold name in tables. No bar, tint or fill.
 > - **Motion**: row hover 120ms, the More sheet 160ms, a live-dot pulse; all under
 >   `prefers-reduced-motion: no-preference`. Nothing else moves.

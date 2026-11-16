@@ -728,9 +728,10 @@
   /* ── Team logo ────────────────────────────────────────────────────────────── */
   /* The files are opaque squares (96 of 108 on white, 12 full-bleed). No tile, no border, no padding,
      no filter, in either theme: on a white page a white-ground logo has no edge at all, and on the
-     dark page and the navy band it is its own small white square with a 2px corner. */
-  img.sx-monogram { display: block; flex: none; border-radius: 2px; }
-  .sx-monogram:not(img) { display: inline-grid; place-items: center; flex: none; border-radius: 2px; background: var(--sx-surface-3); color: var(--sx-text-2); font-style: normal; font-weight: 600; line-height: 1; }
+     dark page and the navy band it is its own small white square. The corner is a quarter of the side
+     (25%: 6px on a 24px row tile, 16px on the 64px hero), the rounded square the site drew before §33. */
+  img.sx-monogram { display: block; flex: none; border-radius: 25%; }
+  .sx-monogram:not(img) { display: inline-grid; place-items: center; flex: none; border-radius: 25%; background: var(--sx-surface-3); color: var(--sx-text-2); font-style: normal; font-weight: 600; line-height: 1; }
 
   /* ── Game row ─────────────────────────────────────────────────────────────── */
   /* One component, one DOM, one row shape, one size. Three columns:

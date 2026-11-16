@@ -1,15 +1,17 @@
 /**
  * components/teams/player-anchors.ts and its two readers on the team page: every varsity roster row
- * carries a `player-…` id, and every player stats name that joins a roster row links it.
+ * carries a `player-…` id, and every player stats name that joins a roster row links it and prints
+ * its grade and position.
  */
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamPage from '../../app/teams/[slug]/page';
-import { playerAnchors } from '../../components/teams/player-anchors';
+import { playerAnchors, playerFacts } from '../../components/teams/player-anchors';
 import { buildPlayerStatsView } from '../../components/teams/player-stats-view';
 import { getPlayerStats } from '../../lib/players/player-stats';
+import { getEnrichedTeamRoster } from '../../lib/players/rosters';
 import { TEAMS } from '../../lib/teams';
 
 async function render(slug: string): Promise<string> {
@@ -57,11 +59,15 @@ describe('playerAnchors', () => {
   });
 });
 
-describe('the team page links each player stats name to the player’s roster row', () => {
+describe('the team page links each player stats name to the player’s roster row, with its grade and position', () => {
   it('passes the anchors through to every table row and goalkeeper', () => {
     const team = getPlayerStats().teams.find((t) => t.players.length > 0)!;
-    const ids = new Map(team.players.flatMap((pl) => (pl.athleteId ? [[pl.athleteId, `player-x-${pl.athleteId}`] as const] : [])));
-    const view = buildPlayerStatsView(team.slug, [], team, ids)!;
+    const roster = new Map(
+      team.players.flatMap((pl) =>
+        pl.athleteId ? [[pl.athleteId, { anchor: `player-x-${pl.athleteId}`, facts: ['Junior', pl.fullName] }] as [string, { anchor: string; facts: string[] }]] : [],
+      ),
+    );
+    const view = buildPlayerStatsView(team.slug, [], team, roster)!;
     const rows = [
       ...(view.scoring?.rows ?? []),
       ...(view.more?.rows ?? []),
@@ -72,10 +78,12 @@ describe('the team page links each player stats name to the player’s roster ro
     for (const row of rows) {
       const line = team.players.find((pl) => pl.fullName === row.name)!;
       expect(row.href, row.name).toBe(line.athleteId ? `#player-x-${line.athleteId}` : undefined);
+      expect(row.facts, row.name).toEqual(line.athleteId ? ['Junior', row.name] : undefined);
     }
-    // No anchors, no links.
+    // No roster rows, no links and no facts.
     const bare = buildPlayerStatsView(team.slug, [], team, new Map())!;
-    expect([...(bare.scoring?.rows ?? []), ...(bare.tables ?? []).flatMap((t) => t.table.rows)].every((r) => r.href === undefined)).toBe(true);
+    const bareRows = [...(bare.scoring?.rows ?? []), ...bare.goalies, ...(bare.tables ?? []).flatMap((t) => t.table.rows)];
+    expect(bareRows.every((r) => r.href === undefined && r.facts === undefined)).toBe(true);
   });
 
   it('every in-page player link lands on a roster row of that page, and every id is unique', async () => {
@@ -94,5 +102,23 @@ describe('the team page links each player stats name to the player’s roster ro
     }
     // The join works on the committed data: stat lines do link their roster rows.
     expect(links).toBeGreaterThan(0);
+  });
+
+  it("prints under each linked name the grade and position that player's roster row has", () => {
+    let withFacts = 0;
+    for (const team of TEAMS) {
+      const roster = getEnrichedTeamRoster(team.slug)!;
+      const anchors = playerAnchors(roster.players);
+      const view = buildPlayerStatsView(team.slug);
+      if (!view) continue;
+      const rows = [...(view.scoring?.rows ?? []), ...(view.more?.rows ?? []), ...view.goalies, ...(view.tables ?? []).flatMap((t) => t.table.rows)];
+      for (const row of rows) {
+        if (!row.href) continue;
+        const player = roster.players.find((pl) => pl.athleteId !== null && `#${anchors.get(pl.athleteId)}` === row.href)!;
+        expect(row.facts, `${team.slug}: ${row.name}`).toEqual(playerFacts(player));
+        if (row.facts!.length > 0) withFacts += 1;
+      }
+    }
+    expect(withFacts).toBeGreaterThan(0);
   });
 });

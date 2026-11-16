@@ -135,7 +135,7 @@ export default async function Image({ params }: PageProps<'/teams/[slug]'>) {
               justifyContent: 'center',
               width: 118,
               height: 118,
-              borderRadius: 4,
+              borderRadius: 16,
               background: `#${team.colors.primary}`,
               color: team.colors.onPrimary,
               border: `2px solid ${OG.RULE}`,

@@ -1,7 +1,8 @@
 /**
  * Each varsity player's anchor on their team page: the `id` of their roster row, so a link can open
  * the team page on that one player (`/teams/mitty#player-jane-doe`). /leaders links a player's row
- * to it, and the team page's own stats tables link each name to it.
+ * to it, and the team page's own stats tables link each name to it and print the row's grade and
+ * position under it (`rosterEntries`), as /leaders does (`playerFacts`).
  *
  * The id is the player's name, not MaxPreps' athleteId, which MaxPreps reissues every season: a
  * link someone shares keeps working across a roster refresh as long as the name does. Two varsity
@@ -13,7 +14,9 @@
  * on the varsity roster, so no anchor.
  */
 
+import { gradeWord } from '../../lib/format';
 import type { MergedPlayer } from '../../lib/players/rosters';
+import { positionWords } from '../words/position-words';
 
 export type AnchorPlayer = Pick<MergedPlayer, 'athleteId' | 'fullName' | 'level'>;
 
@@ -28,6 +31,31 @@ function nameSlug(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+/** The grade and position(s) the team page's roster prints for a player ("Senior", "Forward / Midfield"), only those it has. */
+export function playerFacts(p: Pick<MergedPlayer, 'grade' | 'positions'>): string[] {
+  const facts: string[] = [];
+  if (p.grade !== null) facts.push(gradeWord(p.grade));
+  if (p.positions.length > 0) facts.push(positionWords(p.positions));
+  return facts;
+}
+
+/** What a stat line joined to a varsity roster row reads from it: the row's `id` and its grade and position. */
+export interface RosterEntry {
+  anchor: string;
+  facts: string[];
+}
+
+/** athleteId → the roster row's anchor and facts, for every varsity player of one team. */
+export function rosterEntries(players: readonly (AnchorPlayer & Pick<MergedPlayer, 'grade' | 'positions'>)[]): ReadonlyMap<string, RosterEntry> {
+  const anchors = playerAnchors(players);
+  return new Map(
+    players.flatMap((p) => {
+      const anchor = p.athleteId === null ? undefined : anchors.get(p.athleteId);
+      return anchor === undefined ? [] : [[p.athleteId!, { anchor, facts: playerFacts(p) }] as const];
+    }),
+  );
 }
 
 /** athleteId → the roster row's `id`, for every varsity player of one team. */
