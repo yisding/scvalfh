@@ -1,8 +1,8 @@
 /**
  * A postseason round the Section plays at one named site is at a neutral site, whichever school a feed lists as
  * host. The San Diego Section's three finals are at La Jolla High School (the rounds of `postseason` in
- * lib/league-config/sds.ts); MaxPreps lists the Open final, Canyon Hills v Bishop's (Nov 14), at Bishop's (owner,
- * 2026-11-14: "the final for Bishop's is at La Jolla High School"). Pure.
+ * lib/league-config/sds.ts); MaxPreps first listed the Open final, Canyon Hills v Bishop's (Nov 14), at
+ * Bishop's and later at Canyon Hills (owner, 2026-11-14: "the final for Bishop's is at La Jolla High School"). Pure.
  */
 
 import { LEAGUES } from '../leagues';

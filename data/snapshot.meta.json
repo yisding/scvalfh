@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "646f57c07023a391eb9ac421f9c4025391288c1ae39b7c3fa061de15c79ec8f0",
+  "contentHash": "b0a42b1ad783ea245e927ff92966ca63032cd4646ceeed376159d5f99d74656d",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 184,
+        "finals": 185,
         "games": 185,
         "leagueGames": 60,
         "teams": 12
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 278,
+        "finals": 279,
         "games": 279,
         "leagueGames": 102,
         "teams": 19
@@ -81,11 +81,11 @@
         "teams": 8
       }
     },
-    "finals": 969,
+    "finals": 971,
     "games": 977,
     "leagueGames": 544,
-    "mismatches": 40,
-    "pending": 8,
+    "mismatches": 39,
+    "pending": 6,
     "teams": 102
   },
   "crossCheck": {
@@ -95,7 +95,7 @@
     "conflicts": 4,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-15T12:28:58.170Z",
+  "fetchedAt": "2026-11-16T00:36:20.165Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -1067,6 +1067,6 @@
   "window": {
     "firstGame": "2026-08-13T19:00:00",
     "lastGame": "2026-11-14T18:00:00",
-    "lastLeagueGame": "2026-11-10T14:30:00"
+    "lastLeagueGame": "2026-10-31T13:30:00"
   }
 }
