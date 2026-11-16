@@ -1948,28 +1948,6 @@
     },
     {
       "teamSlug": "los-gatos",
-      "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
-      "playerId": "pe072bd5b7a",
-      "fullName": "Beatrix Monk",
-      "club": "norcal-impact",
-      "clubTeam": "U16",
-      "status": "current",
-      "asOf": null,
-      "confidence": "high",
-      "sources": [
-        {
-          "url": "https://nfhca.sportsrecruits.com/athlete/beatrix_monk",
-          "kind": "sportsrecruits",
-          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN U16, NorCal Impact CLUB … TEAMS U16, NorCal Impact 82 Los Gatos High School Los Gatos , CA",
-          "statedSchool": "Los Gatos High School",
-          "statedClassYear": 2030,
-          "sourceDate": null
-        }
-      ],
-      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, names 'U16, NorCal Impact' as her CLUB and lists it under TEAMS beside Los Gatos High School. Her Los Gatos row is JV, so the tie is recorded here, not in affiliations. Read in a browser on 2026-10-05; a live profile with 2026 events (the AAU Junior Olympics in August 2026), so current under the live-profile rule."
-    },
-    {
-      "teamSlug": "los-gatos",
       "athleteId": "7bf1074d-84a9-4d73-9028-ea16360038e9",
       "playerId": "pd416f5a7f4",
       "fullName": "Colette Von Klemperer",
@@ -3287,6 +3265,36 @@
         }
       ],
       "basis": "The NFHCA 2026 High School Watchlist (published 2026-08-27) has a table row naming Los Gatos High School, NorCal Impact FHC, Lizzie Moorehouse, Junior (= class of 2028 = roster grade 11), so (a)(b)(c) are met on one first-hand page. The MAX Field Hockey Los Gatos High School page and the Norcal Impact club page (both read through their Caspio embeds) independently list her with Class 2028, Los Gatos and Club NorCal Impact. Her SportsRecruits profile confirms 2028, Los Gatos CA and 'I go by Lizzie' (legal name Mary Elizabeth), and her NCSA profile lists no club name, only a Club Coach (Leaf Huynh)."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "f4b28b4b-941f-449f-a2be-0c6e4537e6cb",
+      "playerId": "pe072bd5b7a",
+      "fullName": "Beatrix Monk",
+      "club": "norcal-impact",
+      "clubTeam": "U16",
+      "status": "current",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://nfhca.sportsrecruits.com/athlete/beatrix_monk",
+          "kind": "sportsrecruits",
+          "quote": "2030 GRAD YR Los Gatos, CA HOMETOWN U16, NorCal Impact CLUB … TEAMS U16, NorCal Impact 82 Los Gatos High School Los Gatos , CA",
+          "statedSchool": "Los Gatos High School",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        },
+        {
+          "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-22165538",
+          "kind": "other",
+          "quote": "Beatrix Monk | Class of 2030 | Midfield | Hometown | Los Gatos, CA | High school | Los Gatos | Club | NorCal Impact",
+          "statedSchool": "Los Gatos",
+          "statedClassYear": 2030,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits field hockey profile (the one the roster overlay links) gives class of 2030 (agrees with grade 9) and Los Gatos, CA, names 'U16, NorCal Impact' as her CLUB and lists it under TEAMS beside Los Gatos High School. Recorded among the JV ties until 2026-11-16, when her Los Gatos row was moved to varsity. Read in a browser on 2026-10-05; a live profile with 2026 events (the AAU Junior Olympics in August 2026), so current under the live-profile rule. MAX Field Hockey's athlete page for her (read 2026-11-16) names Los Gatos, class of 2030 and NorCal Impact too."
     },
     {
       "teamSlug": "palo-alto",
@@ -6307,6 +6315,36 @@
         }
       ],
       "basis": "The NFHCA 2025 high school watchlist (published 2025-08-28) lists her under Harvard-Westlake School with the club column and a Class that equals 2027. Rule (a): a page names the player, West Coast Riptide (Studio City) and the school (Harvard-Westlake School); the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown: the 2025 watchlist (2025-08-28) prints 'VCRD, HTC, Riptide' and the 2026 list no longer names Riptide. Medium: the page prints only 'Riptide'; it is read as West Coast Riptide because the player attends Harvard-Westlake (Studio City) and that club is based in Studio City, with no other Southern California 'Riptide' club found. It is a nickname for the club, not a full name."
+    },
+    {
+      "teamSlug": "harvard-westlake",
+      "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+      "playerId": "pbba20946bb",
+      "fullName": "Margaux Schlumberger",
+      "club": "rush",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://maxfh.longstreth.com/athlete/?Athlete_ID=ID-99874382",
+          "kind": "other",
+          "quote": "Margaux Schlumberger | Class of 2027 | Midfield/Forward | Hometown | Santa Monica, CA | High school | Harvard-Westlake | Club | Rush",
+          "statedSchool": "Harvard-Westlake",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://maxfh.longstreth.com/club/?Club_ID=ID-61817789",
+          "kind": "other",
+          "quote": "Margaux Schlumberger | Class of 2027 | CA | Harvard-Westlake | Rush",
+          "statedSchool": "Harvard-Westlake",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "MAX Field Hockey's athlete page for her gives class of 2027, hometown Santa Monica, CA, high school Harvard-Westlake and club \"Rush\", and MAX's Rush Field Hockey club page (RUSH, San Diego) lists her with Harvard-Westlake, class 2027. Rule (a): a page names the player, RUSH and the school; the class year 2027 agrees with the roster (roster grade 12 = class of 2027). Status unknown: neither page dates the listing. Medium: her SportsRecruits CLUB reads 'RUSH DEVILS, VCRD', the joint RUSH and VCRD squad, which this file ties to VCRD, and MAX's 'Rush' may stand for that squad rather than RUSH's own teams. Read 2026-11-16."
     },
     {
       "teamSlug": "harvard-westlake",
