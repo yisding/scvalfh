@@ -103,6 +103,19 @@ describe('the finals a reader sees first', () => {
     expect(champion('soccer', 'ccs', 'Division I')).toBe('Los Gatos: Beat Saint Francis 4-3 in the final');
   });
 
+  it('soccer: a level game MaxPreps marks a winner of reads as drawn, the tiebreak unreported, never "beat … 1–1"', async () => {
+    vi.stubEnv('SCVAL_SPORT', 'soccer');
+    vi.resetModules();
+    const { tournamentBracketsView } = await import('../components/playoffs/tournament-brackets-view');
+    const brackets = read('soccer').published!.brackets as TournamentBracket[];
+    const view = tournamentBracketsView(brackets.filter((b) => b.event === 'ccs'), [], '9999-12-31');
+    const ties = view.brackets.flatMap((b) => b.rounds.flatMap((r) => r.ties));
+    const woodside = ties.find((t) => t.sentence.startsWith('Woodside'))!;
+    expect(woodside.sentence).toMatch(/^Woodside \(\d+\) and Palo Alto \(\d+\) drew 1–1; Woodside \(\d+\) went through\.$/);
+    expect(woodside.note).toBe('Tiebreak not reported');
+    expect(ties.filter((t) => / beat .* (\d+)–\1\.$/.test(t.sentence))).toEqual([]);
+  });
+
   it('basketball: Milpitas won the 2026 CCS Division I, Willow Glen Division II', () => {
     expect(champion('basketball', 'ccs', 'Division I')).toBe('Milpitas: Beat Los Gatos 49-36 in the final');
     expect(champion('basketball', 'ccs', 'Division II')).toBe('Willow Glen: Beat Saint Francis 47-44 in the final');
