@@ -209,8 +209,8 @@ reported", and its page says who won and from where (`provenance.reportedWinner`
 winner and names a final's winner as champion; no record counts the game. When MaxPreps or the Section's sheet
 scores the game, that score stands and the correction does nothing. San Diego finals, Sat Nov 14, 2026 (owner,
 2026-11-15): Division I, San Marcos 4–2 Poway (three goals by Arden Pantel, one by Brenna Kirsch; an Instagram
-post of the game, `reported`); the Open final, Bishop's 1–0 Canyon Hills (the goal by Cece Jeffery, `reported`).
-The Open final was first recorded as the winner alone, until the owner gave the score the same day.
+post of the game, `reported`). The Open final, Bishop's v Canyon Hills, carries no correction: the owner's 1–0
+(2026-11-15) was withdrawn on 2026-11-16 as wrong, and the game is MaxPreps' alone.
 
 **Overtime.** An overtime record the rule cannot give is shown without its overtime tag and explained on the
 game page (`overtimeDoubtOf`, `components/ui/describe-game.ts`). That applies to a regular-season game between

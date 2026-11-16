@@ -17,18 +17,19 @@ import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 /**
  * `/leaders` (DESIGN §16, §23, §33) — "Who leads the whole site?" Leaderboards across every covered
  * league and the independents: the players with the most points (raw and Elo-adjusted:
- * lib/ratings/adjusted-scoring.ts), assists, saves and clean sheets, and the schools with the best
+ * lib/ratings/adjusted-scoring.ts), goals, assists, saves and clean sheets, and the schools with the best
  * records, the most goals per game (raw and Elo-adjusted), the fewest allowed, the most clean
  * sheets and the highest Elo rating (lib/ratings/ratings.ts, DESIGN §20).
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
  * team page and a school's record is the one in its standings row. Under the title, ONE tab row,
- * Players / Teams (anchors; the page's only control). Per region (DESIGN-socal §2.3, §2.4), two
- * sections, `#players` and then `#schools` (SoCal's `#players-socal`, `#schools-socal`, every board
+ * Teams / Players (anchors; the page's only control). Per region (DESIGN-socal §2.3, §2.4), two
+ * sections, `#schools` and then `#players` (SoCal's `#schools-socal`, `#players-socal`, every board
  * id suffixed too, so both regions render on one page without a duplicate id), each carrying
  * `data-region-scope` so the reader's region shows. Each section (components/leaders/LeaderSection.tsx)
- * is a grid of top-five boards, every board visible at once.
+ * is a grid of top-five boards, every board visible at once, each a
+ * compact table with all of its columns (a points board's G, A and Pts).
  *
  * Who qualifies for a board, which teams enter no player stats and how the ratings are fitted are
  * on /about; the page links it once, at the end.
@@ -46,20 +47,20 @@ export const metadata: Metadata = {
       ? `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most points per game, the best average margins and the highest Elo ratings, and the players with the most points, rebounds and assists per game, steals, blocks and three-pointers.`
       : SPORT.stats.model === 'volleyball'
         ? `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the best average margins and the highest Elo ratings, and the players with the most kills, aces, digs and assists per set, kills and solo blocks.`
-      : `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
+      : `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), goals, assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };
 
 export default function LeadersPage() {
   const view = buildLeadersView();
-  // Each region's tabs go to its own suffixed anchors (DESIGN-socal §2.4): `#players`/`#schools` for
-  // NorCal, as always, and `#players-socal`/`#schools-socal` for SoCal; the scope stylesheet shows the
+  // Each region's tabs go to its own suffixed anchors (DESIGN-socal §2.4): `#schools`/`#players` for
+  // NorCal, as always, and `#schools-socal`/`#players-socal` for SoCal; the scope stylesheet shows the
   // reader's pair. With JS off all four show, so each carries its region in sr-only text ('Teams,
   // Southern California'): the same visible words go to different boards (review 2026-10-06).
   const tabs = view.regions.flatMap((region) => [
-    { href: `#${region.playersId}`, label: 'Players', region: region.region, srSuffix: `, ${region.name}` },
     { href: `#${region.schoolsId}`, label: 'Teams', region: region.region, srSuffix: `, ${region.name}` },
+    { href: `#${region.playersId}`, label: 'Players', region: region.region, srSuffix: `, ${region.name}` },
   ]);
 
   return (
@@ -78,19 +79,19 @@ export default function LeadersPage() {
       {view.regions.map((region) => (
         <Fragment key={region.region}>
           <LeaderSection
-            id={region.playersId}
-            region={region.region}
-            title="Players"
-            label={`Player leaders, ${region.name}`}
-            boards={region.players}
-            className="mt-5"
-          />
-          <LeaderSection
             id={region.schoolsId}
             region={region.region}
             title="Teams"
             label={`Team leaders, ${region.name}`}
             boards={region.schools}
+            className="mt-5"
+          />
+          <LeaderSection
+            id={region.playersId}
+            region={region.region}
+            title="Players"
+            label={`Player leaders, ${region.name}`}
+            boards={region.players}
           />
         </Fragment>
       ))}

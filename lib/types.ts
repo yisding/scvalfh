@@ -348,7 +348,7 @@ export interface BoxSide {
  * no score (status 'score-pending'), which becomes a final.
  *
  * `goals` null with `winner` set records who won a game MaxPreps lists with no score, where the source gives no
- * score (owner, 2026-11-15: Bishop's won the San Diego Open final, before its 1-0 score came): the sides are marked W and L, the game stays
+ * score (owner, 2026-11-15: Bishop's won the San Diego Open final, a report since withdrawn): the sides are marked W and L, the game stays
  * score pending, and `provenance.reportedWinner` keeps the citation. The bracket advances the winner and no record
  * counts the game. Once any source scores the game the marks are its, and the correction does nothing.
  */
