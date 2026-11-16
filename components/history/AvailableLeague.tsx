@@ -4,12 +4,14 @@ import { listWords } from '../../lib/format';
 import {
   getHistoryChampions,
   getHistoryDivisionChanges,
+  getHistoryPastDivisions,
   getHistoryUnpublishedTies,
   historyPlaceShared,
   historySchoolName,
   type AvailableLeagueHistory,
 } from '../../lib/history/history';
-import { divisionHeading, getDivision, getLeague, regionOf } from '../../lib/leagues';
+import { divisionHeading, getLeague, regionOf } from '../../lib/leagues';
+import { SPORT } from '../../lib/sports/current';
 import type { LeagueId } from '../../lib/types';
 
 import AwardsBlock from './AwardsBlock';
@@ -21,9 +23,10 @@ import HistoryStandingsTable, { leagueHasOverall } from './HistoryStandingsTable
  */
 function allLeagueLinks(
   pdfs: Record<string, { varsity: string | null; jv: string | null }>,
+  labelOf: (division: string) => string,
 ): Array<{ key: string; label: string; url: string }> {
   return Object.entries(pdfs).flatMap(([division, { varsity, jv }]) => {
-    const label = getDivision(division)?.label ?? division;
+    const label = labelOf(division);
     if (varsity && varsity === jv) return [{ key: division, label, url: varsity }];
     return [
       ...(varsity ? [{ key: `${division}-varsity`, label: `${label} varsity`, url: varsity }] : []),
@@ -60,6 +63,20 @@ export default function AvailableLeague({
     [d.standings.varsity, d.standings.jv].some((rows) => rows.some((r) => historyPlaceShared(rows, r))),
   );
   const p = entry.provenance;
+  const pastDivisions = getHistoryPastDivisions(leagueId);
+  // A division's label as the season named it: the archive's, since it can be one the league no longer has.
+  const labelOf = (division: string) => divisions.find((d) => d.division === division)?.label ?? division;
+  // The source sentence's example: the league's first record, as the sheet prints it and as this page writes it.
+  const sampleRecord = divisions[0]?.standings.varsity[0]?.leagueRecord ?? '';
+  // Teams that moved within the league, grouped by where they came from and where they play now: one clause per
+  // pair, so a league that realigned (BVAL girls volleyball moved 14 schools) gets one sentence, not a paragraph a
+  // school. A school now in another league keeps its own note (below).
+  const moves: Array<{ names: string[]; from: string; to: string }> = [];
+  for (const c of changes.filter((c) => c.registryLeague === leagueId)) {
+    const move = moves.find((m) => m.from === c.historyLabel && m.to === c.registryLabel);
+    if (move) move.names.push(c.name);
+    else moves.push({ names: [c.name], from: c.historyLabel, to: c.registryLabel });
+  }
 
   // One strip heads a division's block: the division at the left, the level at its right end; a
   // single-division league whose division has no label of its own prints the level alone.
@@ -133,7 +150,7 @@ export default function AvailableLeague({
             Source: scval.com &mdash;{' '}
             <ExternalLink href={p.standingsPdf}>{season} final standings (PDF)</ExternalLink> and the all-league
             awards (PDF):{' '}
-            {allLeagueLinks(p.allLeaguePdfs).map(({ key, label, url }, i, all) => (
+            {allLeagueLinks(p.allLeaguePdfs, labelOf).map(({ key, label, url }, i, all) => (
               <span key={key}>
                 <ExternalLink href={url}>{label}</ExternalLink>
                 {i < all.length - 1 ? ' · ' : ''}
@@ -184,7 +201,7 @@ export default function AvailableLeague({
               url ? (
                 <span key={division}>
                   {i === 0 ? ' and the all-league documents: ' : ''}
-                  <ExternalLink href={url}>{getDivision(division)?.label ?? division}</ExternalLink>
+                  <ExternalLink href={url}>{labelOf(division)}</ExternalLink>
                   {i < all.length - 1 ? ' · ' : ''}
                 </span>
               ) : null,
@@ -192,9 +209,14 @@ export default function AvailableLeague({
             . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the MaxPreps data
             the rest of the site uses &mdash; MaxPreps only ever serves the current season. Records are
             the sheet&rsquo;s league and overall records, written without the spaces it puts around each
-            hyphen (its &ldquo;8 - 1 - 1&rdquo; is 8-1-1 here); a record it prints without a ties field stays
-            W-L. It carries no points or goals, so none are shown or computed. JV is not shown: the sheet
-            lists JV records but gives a JV place for one school only.
+            hyphen (its &ldquo;{sampleRecord.replace(/-/g, ' - ')}&rdquo; is {sampleRecord} here)
+            {/* A sport whose games never end level (basketball, volleyball) has no ties or goals to speak of. */}
+            {SPORT.scoring.allowsTies
+              ? '; a record it prints without a ties field stays W-L. It carries no points or goals'
+              : '. It carries no standings points or game scores'}
+            , so none are shown or computed.
+            {sharedPlaces ? ' Places are the sheet’s: schools it ranks level share a place, and the next place skips.' : ''}{' '}
+            {p.jvNote}
           </p>
         )}
         {unpublishedTies.length > 0 ? (
@@ -204,21 +226,34 @@ export default function AvailableLeague({
             {unpublishedTies.length === 1 ? 'it is' : 'they are'} shown as published; we do not assume zero ties.
           </p>
         ) : null}
-        {changes.map((c) =>
-          c.registryLeague === leagueId ? (
-            <p key={c.slug} className="sx-note">
-              {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {season}, as the
-              source lists it. {league.shortName}&rsquo;s current alignment on this site lists {c.name} in {getDivision(c.registryDivision)?.label ?? c.registryDivision}, so {c.name} moved.
-            </p>
-          ) : (
+        {pastDivisions.length > 0 ? (
+          <p className="sx-note">
+            {listWords(pastDivisions.map((d) => d.label))} {pastDivisions.length === 1 ? 'was a division' : 'were divisions'} of{' '}
+            {league.shortName}&rsquo;s {season} alignment, as the source lists {pastDivisions.length === 1 ? 'it' : 'them'};{' '}
+            {league.shortName} no longer has {pastDivisions.length === 1 ? 'it' : 'them'}.
+          </p>
+        ) : null}
+        {moves.length > 0 ? (
+          <p className="sx-note">
+            Teams that changed divisions since {season}, the source&rsquo;s division first and {league.shortName}&rsquo;s
+            current alignment on this site second:{' '}
+            {moves.map((m, i) => (
+              <span key={`${m.from}-${m.to}`}>
+                {listWords(m.names)} ({m.from} to {m.to}){i < moves.length - 1 ? '; ' : '.'}
+              </span>
+            ))}
+          </p>
+        ) : null}
+        {changes
+          .filter((c) => c.registryLeague !== leagueId)
+          .map((c) => (
             <p key={c.slug} className="sx-note">
               {c.name} played in the {league.shortName} in {season}, as the source lists it, and is in the{' '}
               {getLeague(c.registryLeague).shortName}
               {divisionHeading(c.registryDivision) ? `’s ${divisionHeading(c.registryDivision)} division` : ''} now, so
               this site lists it there.
             </p>
-          ),
-        )}
+          ))}
       </div>
     </section>
   );

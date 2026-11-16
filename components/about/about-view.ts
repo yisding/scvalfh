@@ -659,7 +659,10 @@ export function buildAboutView(): AboutView {
             case 'scval-documents':
               return `${name}’s standings and all-league PDFs`;
             case 'bval-sheet':
-              return `${name}’s standings sheet and all-league documents`;
+              // Field hockey's entry has the all-league documents too; the other builds' have the sheet alone.
+              return Object.values(entry.provenance.allLeagueDocs).some(Boolean)
+                ? `${name}’s standings sheet and all-league documents`
+                : `${name}’s standings sheet`;
             case 'league-documents':
               return `${name}’s standings and all-league ${entry.provenance.standings.kind === 'pdf' ? 'PDFs' : 'pages'}`;
           }

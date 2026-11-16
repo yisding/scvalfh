@@ -9,7 +9,7 @@
 
 import { getToday } from '../../lib/data';
 import { getHistoryFor, getHistoryStandings, historyPlaceShared, type HistoryRow } from '../../lib/history/history';
-import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
+import { getLeague, isSingleDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
 import { buildTeamJvRosterView, type TeamJvRosterView } from '../jv/jv-roster-view';
@@ -62,11 +62,12 @@ export function postseasonDescription(view: TeamPageView): string {
  * league when this team plays in another league now, so no page reads as if "El Camino" were a
  * division of its own league.
  */
-function lastSeasonScope(division: DivisionId, league: LeagueId): string {
-  const owner = leagueOfDivision(division);
-  const heading = divisionHeading(division);
-  if (heading === null) return owner.shortName;
-  return owner.id === league ? heading : `${owner.shortName} ${heading}`;
+function lastSeasonScope(history: { leagueId: LeagueId; label: string }, league: LeagueId): string {
+  // The archive's own label: the division can be one the league no longer has (BVAL boys basketball's Santa Teresa
+  // North), which lib/leagues.ts does not know.
+  const owner = getLeague(history.leagueId);
+  if (isSingleDivision(owner.id)) return owner.shortName;
+  return owner.id === league ? history.label : `${owner.shortName} ${history.label}`;
 }
 
 /** The team page's own reads and layout decisions; see the module comment. */
@@ -113,7 +114,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   const historySize = historyRows.length;
   // A place the league's table gives two teams (the WBAL's): the line says "tied for".
   const historyTied = history ? historyPlaceShared(historyRows, history.row) : false;
-  const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
+  const historyScope = history ? lastSeasonScope(history, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
   // Both exist for every registry team; an empty or pending team gets a stated empty state.
   const roster = buildRosterView(team.slug);

@@ -17,8 +17,8 @@ import TeamMonogram from '../ui/TeamMonogram';
  * (BVAL's sheet) gets it in every one of its tables (the page decides once per league: `hasOverall`),
  * and a row that has none still shows a dash there. Overall answers to the table's own width
  * (`sx-col-mid`: it is dropped under 20rem, a 320px phone). `place` is the source's own finish order,
- * not a value recomputed by this site. With `champion`, row 1's name is bold and followed by the plain
- * label "Champion" (it was a card above the table).
+ * not a value recomputed by this site; a tied place prints on each row that shares it. With `champion`, the
+ * name of each row placed 1st is bold and followed by the plain label "Champion" (it was a card above the table).
  */
 
 /** A record the source left out: a dash for the eye, words for a screen reader. */
@@ -41,7 +41,7 @@ export interface HistoryStandingsTableProps {
    * one league would stop lining up across its tables.
    */
   hasOverall: boolean;
-  /** Row 1 is the division's champion: its name is bold and followed by the plain label "Champion". */
+  /** The rows placed 1st are the division's champions: each name is bold and followed by the plain label "Champion". */
   champion?: boolean;
 }
 
@@ -76,10 +76,11 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall, c
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => {
+          {rows.map((row) => {
             const team = row.slug ? getTeamBySlug(row.slug) : undefined;
             const name = historySchoolName(row.slug, row.name);
-            const first = champion && index === 0;
+            // Every row placed 1st: co-champions share the place (BVAL girls volleyball's 2025-26 Santa Teresa).
+            const first = champion && row.place === 1;
             return (
               <tr key={`${row.place}-${row.slug ?? row.name}`} data-team-slug={team?.slug}>
                 <td className="sx-num sx-col-rank">{row.place}</td>

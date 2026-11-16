@@ -48,9 +48,10 @@ const division = (sport: 'soccer' | 'volleyball', league: string, id: string) =>
 const order = (rows: Row[]) => rows.map((r) => `${r.place} ${r.slug} ${r.leagueRecord}`);
 
 describe('data/soccer/history-2025-26.json: the WCAL and the WBAL', () => {
-  it('has both leagues available, from their own documents, and BVAL alone unavailable', () => {
-    expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'wcal', 'wbal']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['bval']);
+  it('has both leagues available, from their own documents, beside SCVAL and BVAL', () => {
+    // BVAL from its standings sheet (2026-11-16: tests/history-other-sports.test.ts).
+    expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval', 'wcal', 'wbal']);
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([]);
     const f = readFile('soccer');
     expect([f.leagues.wcal.provenance, f.leagues.wbal.provenance].map((p) => [p.source, p.publisher])).toEqual([
       ['league-documents', 'wcalsports.org'],
@@ -90,7 +91,10 @@ describe('data/soccer/history-2025-26.json: the WCAL and the WBAL', () => {
 
   it('says which teams moved, Presentation from one league to the other', () => {
     expect(m.history.getHistoryDivisionChanges('wcal')).toEqual([
-      { slug: 'presentation', name: 'Presentation', historyDivision: 'wcal', registryDivision: 'foothill', registryLeague: 'wbal' },
+      {
+        slug: 'presentation', name: 'Presentation', historyDivision: 'wcal', historyLabel: 'WCAL',
+        registryDivision: 'foothill', registryLabel: 'Foothill', registryLeague: 'wbal',
+      },
     ]);
     expect(m.history.getHistoryDivisionChanges('wbal').map((c) => `${c.slug} ${c.historyDivision}>${c.registryDivision}`)).toEqual([
       'notre-dame-san-jose foothill>skyline',
