@@ -7,14 +7,14 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "4d20de83c52bb4d2152bf94f1d965e7e16e9230e4ccaff8b23e0205125e5ca53",
+  "contentHash": "2c98a8e24d6955da382f36fe3c57d41b11f52bac1a4c18109598e3afab095172",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 194,
-        "leagueGames": 132,
+        "games": 212,
+        "leagueGames": 148,
         "teams": 26
       },
       "scval": {
@@ -27,7 +27,7 @@
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 66,
+        "games": 67,
         "leagueGames": 17,
         "teams": 13
       },
@@ -40,14 +40,14 @@
       }
     },
     "finals": 0,
-    "games": 408,
-    "leagueGames": 251,
+    "games": 426,
+    "leagueGames": 267,
     "mismatches": 0,
     "pending": 0,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-15T19:55:39.569Z",
+  "fetchedAt": "2026-11-16T13:56:38.184Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 84,
+  "officialFixturesUnmatched": 68,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -251,22 +251,22 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 12,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "leigh schedule",
-      "rowCount": 10,
+      "rowCount": 12,
       "status": "ok"
     },
     {
       "label": "leland schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
       "label": "piedmont-hills schedule",
-      "rowCount": 13,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -276,7 +276,7 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 9,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -286,17 +286,17 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 7,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -306,22 +306,22 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 6,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 6,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 12,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -481,7 +481,7 @@
     },
     {
       "label": "menlo schedule",
-      "rowCount": 2,
+      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -536,7 +536,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 3,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -546,17 +546,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 1,
+      "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 6,
+      "rowCount": 43,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 0,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -570,8 +570,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-15",
-  "warnings": 17,
+  "today": "2026-11-16",
+  "warnings": 27,
   "window": {
     "firstGame": "2026-11-19T19:00:00",
     "lastGame": "2027-02-17T18:00:00",
