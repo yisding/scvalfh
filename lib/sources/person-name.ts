@@ -54,8 +54,11 @@ function isUncased(name: string): boolean {
 
 /**
  * Spellings a person has confirmed that MaxPreps gets wrong, applied after the recasing so a refetch
- * keeps them. Each is a run of whole words as MaxPreps writes them and as the family does. Curated,
- * never guessed: an entry says who confirmed it.
+ * keeps them. Each is a run of whole words as MaxPreps writes them and as the family does, matched in
+ * any case (a school that types the roster in capitals sends "OLIVIA VAN DE BRAAK", and the recasing
+ * leaves a two-letter word such as "DE" as it is). The two sides have the same number of words, word for
+ * word, so a roster row's first and last names are respelled along with its full name. Curated, never
+ * guessed: an entry says who confirmed it.
  */
 export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis: string }[] = [
   {
@@ -65,27 +68,57 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
       "Olivia Van de Braak (St. Ignatius): the site owner confirmed the lowercase 'de' (2026-11-16), as SCVAL's " +
       '2025-26 all-league list writes it.',
   },
+  {
+    maxpreps: 'Gretta Jungjohann',
+    spelled: 'Greta Jungjohann',
+    basis: 'Greta Jungjohann (Stevenson): the site owner confirmed the one-t spelling of her first name (2026-11-16).',
+  },
 ];
 
-const SPELLING_RES = NAME_SPELLINGS.map(({ maxpreps, spelled }) => ({
-  re: new RegExp(`(?<![\\p{L}'’-])${maxpreps.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}'’-])`, 'gu'),
-  spelled,
-}));
+const words = (name: string) => name.split(/\s+/).filter(Boolean);
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** Whole words only: not inside a longer word, a hyphenated name or an apostrophe ("Smith-Van De Braak"). */
+const wholeWords = (text: string, flags: string) =>
+  new RegExp(`(?<![\\p{L}'’-])${escape(text)}(?![\\p{L}'’-])`, flags);
+
+const SPELLINGS = NAME_SPELLINGS.map(({ maxpreps, spelled }) => {
+  const from = words(maxpreps);
+  const to = words(spelled);
+  if (from.length !== to.length) {
+    throw new Error(`lib/sources/person-name.ts: "${maxpreps}" and "${spelled}" differ in their number of words`);
+  }
+  return { re: wholeWords(maxpreps, 'giu'), spelled, pairs: from.map((w, i) => [w, to[i]] as const) };
+});
 
 function respell(name: string): string {
-  return SPELLING_RES.reduce((n, { re, spelled }) => n.replace(re, spelled), name);
+  return SPELLINGS.reduce((n, { re, spelled }) => n.replace(re, spelled), name);
+}
+
+/**
+ * A first or last name respelled word for word by every entry its row's full name matched: "Gretta" is
+ * "Greta" only on Gretta Jungjohann's row, never on every Gretta's.
+ */
+function respellPart(part: string, fullName: string): string {
+  return SPELLINGS.filter(({ re }) => {
+    re.lastIndex = 0;
+    return re.test(fullName);
+  }).reduce(
+    (n, { pairs }) => pairs.reduce((m, [from, to]) => m.replace(wholeWords(from, 'giu'), to), n),
+    part,
+  );
 }
 
 function recaseAs(name: string, uncased: boolean): string {
-  return respell(name.replace(/\S+/g, uncased ? capitalize : (w) => fixCased(recaseShouted(w))));
+  return name.replace(/\S+/g, uncased ? capitalize : (w) => fixCased(recaseShouted(w)));
 }
 
 /**
  * "PAIGE PIERSON" → "Paige Pierson", "McKAELA" → "McKaela", "O'BRIEN-SMITH" → "O'Brien-Smith",
- * "addie dawson" → "Addie Dawson", "A. dawson" → "A. Dawson", "Wright-lopez" → "Wright-Lopez".
+ * "addie dawson" → "Addie Dawson", "A. dawson" → "A. Dawson", "Wright-lopez" → "Wright-Lopez"; then
+ * NAME_SPELLINGS ("Olivia Van De Braak" → "Olivia Van de Braak").
  */
 export function recaseName(name: string): string {
-  return recaseAs(name, isUncased(name));
+  return respell(recaseAs(name, isUncased(name)));
 }
 
 /**
@@ -96,10 +129,7 @@ export function recaseNameParts<P extends { firstName: string | null; lastName: 
   p: P,
 ): P {
   const uncased = isUncased(p.fullName);
-  return {
-    ...p,
-    firstName: p.firstName === null ? null : recaseAs(p.firstName, uncased),
-    lastName: p.lastName === null ? null : recaseAs(p.lastName, uncased),
-    fullName: recaseAs(p.fullName, uncased),
-  };
+  const fullName = recaseAs(p.fullName, uncased);
+  const part = (name: string | null) => (name === null ? null : respellPart(recaseAs(name, uncased), fullName));
+  return { ...p, firstName: part(p.firstName), lastName: part(p.lastName), fullName: respell(fullName) };
 }

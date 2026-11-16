@@ -125,7 +125,7 @@ export default function AwardsDraftPage() {
           </Link>
           :
           Freshman <P team="stevenson" name="Lotti Schulte" /> (92 points) and Junior{' '}
-          <P team="stevenson" name="Gretta Jungjohann" /> (85 points) leading <T slug="stevenson">Stevenson</T> to a
+          <P team="stevenson" name="Greta Jungjohann" /> (85 points) leading <T slug="stevenson">Stevenson</T> to a
           perfect 12-0 in league play. &ldquo;Do they play club? Which one? How come we&rsquo;ve never heard of
           them?&rdquo; Turns out the answer is yes, before joining the <T slug="stevenson">Pirates</T>, they played field hockey at hundred year
           old clubs in Germany. A very warm welcome to the duo from Deutschland!
@@ -133,7 +133,7 @@ export default function AwardsDraftPage() {
 
         <h2 className="mt-8 text-ink">Closest to the Postseason</h2>
         <p>
-          Of all of the teams that didn&rsquo;t make the CCS this year, one stands out. <T slug="fremont">Fremont</T>{' '}
+          Of all of the teams that didn&rsquo;t make the CCS playoffs this year, one stands out. <T slug="fremont">Fremont</T>{' '}
           ended the season with 1706 Elo points, hundreds of Elo points higher than many others that did make postseason
           tournaments. Led by the twin sisters <P team="fremont" name="Sophie Dhillon">Sophie</P> and{' '}
           <P team="fremont" name="Emma Dhillon">Emma Dhillon</P>, <T slug="fremont">Fremont</T> was also most improved
