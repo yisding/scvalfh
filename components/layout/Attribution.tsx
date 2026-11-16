@@ -7,10 +7,12 @@ import ThemeToggle from '../prefs/ThemeToggle';
 
 import LastUpdated from './LastUpdated';
 import { DATA_CORRECTIONS_URL, NAV_LABELS } from './site';
+import { OTHER_SPORT_SITES } from '../../lib/sports/sites';
 
 /**
  * The footer that ends EVERY page (DESIGN §33; SPEC §6): the same navy band as the header. A site
- * index in the header's own words, the two preferences as plain text buttons ("Dark mode",
+ * index in the header's own words, the other sport sites ("Other sports": each sport is its own build on its
+ * own origin, lib/sports/sites.ts), the two preferences as plain text buttons ("Dark mode",
  * "Switch to SoCal": not switches), then two lines: when the data was last updated (the long form of
  * the stamp, linked to how updates work), and where the scores come from and that the site is
  * unofficial. Nothing decorative.
@@ -58,6 +60,18 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             <ExternalLink href={DATA_CORRECTIONS_URL}>{NAV_LABELS.report}</ExternalLink>
           </li>
         </ul>
+        {/* `id="site-sports"`: scripts/assert-copy.ts takes this out before it holds a page to its own sport's
+            words, since naming the other programs is the row's whole point. Plain links in the same tab. */}
+        <nav className="sx-foot-sports" id="site-sports" aria-labelledby="site-sports-label">
+          <span id="site-sports-label">Other sports</span>
+          <ul>
+            {OTHER_SPORT_SITES.map((site) => (
+              <li key={site.id}>
+                <a href={site.href}>{site.title}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <div className="sx-foot-prefs">
           <ThemeToggle />
           <RegionSwitcher face="text" className="sx-textbtn" />

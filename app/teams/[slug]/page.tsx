@@ -13,6 +13,7 @@ import TeamJvGames from '../../../components/jv/TeamJvGames';
 import TeamJvRoster from '../../../components/jv/TeamJvRoster';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
+import TeamOtherSports from '../../../components/teams/TeamOtherSports';
 import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
 import TeamPlayoffLine from '../../../components/teams/TeamPlayoffLine';
 import TeamRoster from '../../../components/teams/TeamRoster';
@@ -58,7 +59,8 @@ import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE } from '../../../lib/sports/curre
  *    official schedule under their own strip), JV games, Player stats, Roster, JV roster;
  *  - rail (beside the main column from 768px, after it below): the division's standings with this
  *    team's row bold, Last 5 games (form, streak, home and away records), the postseason picture,
- *    the opponents not beaten yet (only when there is one), the Elo rating (`#elo`), Elsewhere.
+ *    the opponents not beaten yet (only when there is one), the Elo rating (`#elo`), the school's pages on
+ *    the other sport sites (`#other-sports`, only when another site covers it), Elsewhere.
  *
  * A team with no results still gets this whole page: the header without figures, the schedule, the
  * official-schedule fixtures and every empty line (DESIGN §8).
@@ -238,6 +240,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           <TeamUnbeaten view={view} />
 
           <TeamElo elo={view.elo} />
+
+          <TeamOtherSports team={team} />
 
           <TeamElsewhere
             team={team}

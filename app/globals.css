@@ -996,6 +996,11 @@
   .sx-foot-index { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin: 0; padding: 0; list-style: none; }
   .sx-foot-index a { display: inline-flex; align-items: center; gap: 0.25rem; min-height: 2.25rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-band-text); text-decoration: none; }
   .sx-foot-index a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  /* The other sport sites (Attribution, lib/sports/sites.ts): a quieter label, then the links in the index's own face. */
+  .sx-foot-sports { display: flex; flex-wrap: wrap; align-items: center; gap: 0 1.5rem; }
+  .sx-foot-sports ul { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .sx-foot-sports a { display: inline-flex; align-items: center; min-height: 2.25rem; font-size: 0.9375rem; font-weight: 500; color: var(--sx-band-text); text-decoration: none; }
+  .sx-foot-sports a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   /* Preferences: two plain text buttons, not switches. "Dark mode" (or "Light mode": the label names what
      a press does) and, on a multi-region build, "Switch to SoCal". */
   .sx-foot-prefs { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin-top: 0.25rem; }
@@ -1007,7 +1012,7 @@
   .sx-foot .sx-stamp time { white-space: nowrap; }
   .sx-foot-line a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   .sx-foot :focus-visible { outline-color: var(--sx-band-accent); }
-  @media (pointer: coarse) { .sx-foot-index a, .sx-textbtn { min-height: 2.75rem; } }
+  @media (pointer: coarse) { .sx-foot-index a, .sx-foot-sports a, .sx-textbtn { min-height: 2.75rem; } }
   @media (min-width: 48rem) { .sx-foot-inner { padding: 1.5rem 1.5rem 2.5rem; } }
   @media (min-width: 80rem) { .sx-foot-inner { padding-inline: 2rem; } }
 
