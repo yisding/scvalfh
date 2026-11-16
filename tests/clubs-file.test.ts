@@ -95,6 +95,12 @@ function allUrls(f: ClubsFile): string[] {
   ];
 }
 
+/** A tie the 2026-11-16 read of MAX Field Hockey's California pages added: its basis says so. */
+const fromMaxfh1116 = (a: { basis: string }) => a.basis.endsWith('Read 2026-11-16.');
+
+/** Beatrix Monk's tie, moved from jvAffiliations on 2026-11-16 when her Los Gatos row was moved to varsity. */
+const movedToVarsity1116 = (a: { basis: string }) => a.basis.includes('when her Los Gatos row was moved to varsity');
+
 const countBy = <T>(xs: readonly T[], key: (x: T) => string) =>
   xs.reduce<Record<string, number>>((acc, x) => ({ ...acc, [key(x)]: (acc[key(x)] ?? 0) + 1 }), {});
 
@@ -194,6 +200,20 @@ describe('data/clubs.json', () => {
     expect(raw.jvAffiliations.filter((a) => OCT_7_ROWS.has(a.athleteId))).toEqual([]);
   });
 
+  it('ties one more player from the 2026-11-16 read of MAX Field Hockey: Margaux Schlumberger to RUSH, medium', () => {
+    const found = raw.affiliations.filter(fromMaxfh1116);
+    expect(found.map((a) => [a.teamSlug, a.fullName, a.club, a.clubTeam, a.status, a.asOf, a.confidence])).toEqual([
+      ['harvard-westlake', 'Margaux Schlumberger', 'rush', null, 'unknown', null, 'medium'],
+    ]);
+    expect(found[0].sources.map((s) => [s.kind, s.statedSchool, s.statedClassYear, new URL(s.url).hostname])).toEqual([
+      ['other', 'Harvard-Westlake', 2027, 'maxfh.longstreth.com'],
+      ['other', 'Harvard-Westlake', 2027, 'maxfh.longstreth.com'],
+    ]);
+    // Her VCRD tie (the joint 'RUSH DEVILS' squad) stands: MAX's 'Rush' may mean that squad, so the RUSH tie is medium.
+    expect(raw.affiliations.some((a) => a.fullName === 'Margaux Schlumberger' && a.club === 'vcrd' && a.status === 'current')).toBe(true);
+    expect(raw.jvAffiliations.filter(fromMaxfh1116)).toEqual([]);
+  });
+
   describe('NorCal, as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
     // These sweeps covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL), and the counts here are
     // over them: their ties, and the 16 clubs they found (HTC among them, whose record the 2026-10-06
@@ -201,7 +221,10 @@ describe('data/clubs.json', () => {
     const SWEPT = new Set(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const swept = teams.filter((t) => SWEPT.has(getTeamBySlug(t.slug)!.league));
     // Ties from the 2026-10-07 sweep of the rows MaxPreps added later are pinned in their own test below.
-    const norcal = raw.affiliations.filter((a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId));
+    // Beatrix Monk's tie moved here from jvAffiliations on 2026-11-16 with her row: it is pinned with the JV ties below.
+    const norcal = raw.affiliations.filter(
+      (a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId) && !movedToVarsity1116(a),
+    );
     const norcalClubs = raw.clubs.filter((c) => !SOCAL_CLUBS.has(c.slug));
     const players = new Set(norcal.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(norcal.map((a) => a.teamSlug));
@@ -216,7 +239,8 @@ describe('data/clubs.json', () => {
       // (Marin Academy's 18 and Westmont's 3, less one Tamalpais row MaxPreps dropped), and the 2026-11-13
       // re-read of every roster 76 more (not swept for clubs either).
       expect(rows).toHaveLength(936);
-      expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
+      // 29 when swept; 28 since Beatrix Monk moved to varsity (2026-11-16).
+      expect(rows.filter((r) => r.level === 'jv')).toHaveLength(28);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
       expect(swept).toHaveLength(49);
       expect(teams).toHaveLength(102);
@@ -387,7 +411,8 @@ describe('data/clubs.json', () => {
         }),
       );
       expect(byLeague).toEqual({
-        scval: [36, 12],
+        // 36 as swept; Los Gatos' Beatrix Monk (moved to varsity 2026-11-16) is the 37th.
+        scval: [37, 12],
         // 18 at 6 schools as swept; Westmont's Kaylee True (2026-10-07) is the 19th.
         bval: [19, 6],
         pcal: [0, 0],
@@ -404,7 +429,8 @@ describe('data/clubs.json', () => {
 
   describe('Southern California, as researched 2026-10-06 (changes only with a new sweep)', () => {
     const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
-    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league));
+    // The 2026-11-16 MAX Field Hockey read added one SoCal tie, pinned in its own test below.
+    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league) && !fromMaxfh1116(a));
     const LEVY_MAXPREPS =
       'https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/bio/?careerid=nrdsamg37e6p9';
 
@@ -424,12 +450,13 @@ describe('data/clubs.json', () => {
       expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
       expect(raw.clubs).toHaveLength(28);
       expect(socal).toHaveLength(76);
-      // 170, and the one 2026-10-07 tie (above).
-      expect(raw.affiliations).toHaveLength(171);
+      // 170, the one 2026-10-07 tie and the one 2026-11-16 tie (both above), and Beatrix Monk's tie moved from
+      // jvAffiliations (2026-11-16).
+      expect(raw.affiliations).toHaveLength(173);
       expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
-      expect(raw.affiliations.length - socal.length).toBe(95);
+      expect(raw.affiliations.filter((a) => !fromMaxfh1116(a) && !movedToVarsity1116(a)).length - socal.length).toBe(95);
     });
 
     it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {
@@ -505,13 +532,18 @@ describe('data/clubs.json', () => {
 });
 
 describe('data/clubs.json: jvAffiliations', () => {
-  it('holds 4 ties for 3 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
+  it('holds 3 ties for 2 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
     expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
       ['Casey Moorehouse', 9, 'norcal-impact', 'current', null],
       ['Casey Moorehouse', 9, 'sf-hawks', 'current', null],
-      ['Beatrix Monk', 9, 'norcal-impact', 'current', 'U16'],
       ['Colette Von Klemperer', 10, 'norcal-impact', 'current', null],
     ]);
+    // Beatrix Monk's tie was the fourth until 2026-11-16, when her row moved to varsity and the tie with it.
+    const monk = raw.affiliations.filter(movedToVarsity1116);
+    expect(monk.map((a) => [a.fullName, rowOf(a)!.level, a.club, a.status, a.clubTeam])).toEqual([
+      ['Beatrix Monk', 'varsity', 'norcal-impact', 'current', 'U16'],
+    ]);
+    expect(monk[0].sources.map((s) => s.kind)).toEqual(['sportsrecruits', 'other']);
     for (const a of raw.jvAffiliations) {
       expect(a.teamSlug).toBe('los-gatos');
       expect(rowOf(a)!.level, a.fullName).toBe('jv');
@@ -786,7 +818,7 @@ describe('a bad file is refused at load', () => {
     expect(loadError(club)).toContain('jvAffiliations.0.club: nope is not a club in clubs[]');
     const twice = structuredClone(raw);
     twice.jvAffiliations.push(structuredClone(twice.jvAffiliations[0]));
-    expect(refusals(twice)).toEqual(['jvAffiliations.4: duplicate JV affiliation: los-gatos / Casey Moorehouse / norcal-impact']);
+    expect(refusals(twice)).toEqual(['jvAffiliations.3: duplicate JV affiliation: los-gatos / Casey Moorehouse / norcal-impact']);
     const year = structuredClone(raw);
     year.jvAffiliations[0].sources[0].statedClassYear = 2027;
     expect(loadError(year)).toMatch(/Casey Moorehouse \(norcal-impact\): sportsrecruits source says class of 2027, the roster shows grade 9/);

@@ -71,6 +71,8 @@ const fromSweep1106 = (x: { note: string | null }) => x.note?.includes('Found by
 const fromSweep1113 = (x: { note: string | null }) => /Found by the 2026-11-13 (Hudl team-roster|NCSA school-page) sweep/.test(x.note ?? '');
 /** A profile the 2026-11-13 search of four schools (Sobrato, Cupertino, Lynbrook, Homestead) linked: its note says so. */
 const fromFour1113 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-13 search of four schools') ?? false;
+/** A MAX Field Hockey athlete page the 2026-11-16 sweep linked: the only profiles on that platform. */
+const fromMaxfh1116 = (x: { platform: string }) => x.platform === 'maxfh';
 /**
  * A JV-list player's profile moved to her varsity row on 2026-11-13, when the re-read rosters put her on varsity
  * (data/jv-profiles.json had linked it): its note says so.
@@ -99,7 +101,7 @@ const pre: RosterEnrichment = {
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
         profiles: p.profiles.filter(
-          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x) && !fromSweep1113(x) && !fromFour1113(x),
+          (x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x) && !movedFromJv1113(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x),
         ),
       }))
       .filter(
@@ -324,8 +326,9 @@ describe('data/rosters-enrichment.json', () => {
     // The level split only exists for Los Gatos, whose MaxPreps list is the whole program.
     expect(scval.filter((t) => t.players.some((p) => p.level !== null)).map((t) => t.slug)).toEqual(['los-gatos']);
     const lg = pre.teams.find((t) => t.slug === 'los-gatos')!;
-    expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(27);
-    expect(lg.players.filter((p) => p.level === 'jv').length).toBe(29);
+    // 27 and 29 as captured; Beatrix Monk moved to varsity on 2026-11-16, on her MAX Field Hockey page (below).
+    expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(28);
+    expect(lg.players.filter((p) => p.level === 'jv').length).toBe(28);
   });
 
   it('names no coach from a rejected or unverifiable source', () => {
@@ -779,7 +782,7 @@ describe('recruiting profiles', () => {
     // On 2026-11-13: one page unlinked (Olivia Lynch), one record folded into another (Alexandra Schmidt into Lexie
     // Schmidt), and six JV-list players' pages moved to their varsity rows: 814 for 587.
     const all = raw.teams.flatMap((t) => t.players);
-    const before = (x: { note: string | null }) => !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x);
+    const before = (x: { platform: string; note: string | null }) => !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
     expect(all.flatMap((p) => p.profiles.filter(before))).toHaveLength(814);
     expect(all.filter((p) => p.profiles.some(before))).toHaveLength(587);
     expect(all.flatMap((p) => p.profiles.filter(movedFromJv1113))).toHaveLength(6);
@@ -809,7 +812,7 @@ describe('recruiting profiles', () => {
     // 816 profiles for 588 players in all; 821 for 592 after the 2026-11-13 roster refresh (see the 2026-11-03 test),
     // before the 2026-11-13 Hudl and NCSA sweep (below).
     const all = raw.teams.flatMap((t) => t.players);
-    const by1106 = (x: { note: string | null }) => !fromSweep1113(x) && !fromFour1113(x);
+    const by1106 = (x: { platform: string; note: string | null }) => !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
     expect(all.flatMap((p) => p.profiles.filter(by1106))).toHaveLength(821);
     expect(all.filter((p) => p.profiles.some(by1106))).toHaveLength(592);
   });
@@ -851,8 +854,9 @@ describe('recruiting profiles', () => {
     // Berkeley's Sage Murphy was on the JV list when the sweep ran and joined the varsity roster the same day.
     expect(found.some((r) => r.slug === 'berkeley' && r.p.fullName === 'Sage Murphy')).toBe(true);
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles.filter((x) => !fromFour1113(x)))).toHaveLength(903);
-    expect(all.filter((p) => p.profiles.some((x) => !fromFour1113(x)))).toHaveLength(634);
+    const by1113 = (x: { platform: string; note: string | null }) => !fromFour1113(x) && !fromMaxfh1116(x);
+    expect(all.flatMap((p) => p.profiles.filter(by1113))).toHaveLength(903);
+    expect(all.filter((p) => p.profiles.some(by1113))).toHaveLength(634);
   });
 
   it('what the 2026-11-13 search of Sobrato, Cupertino, Lynbrook and Homestead found: six pages for five players', () => {
@@ -867,10 +871,63 @@ describe('recruiting profiles', () => {
       ['sobrato', 'Cameron Isle', 'ncsa', 'basketball', 2027],
     ]);
     for (const { p, x } of found) expect(x.note, p.fullName).toMatch(/re-read by an independent refuter\.$/);
-    // 909 profiles for 639 players in all.
+    // 909 profiles for 639 players in all, before the 2026-11-16 MAX Field Hockey sweep (below).
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(909);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(639);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromMaxfh1116(x)))).toHaveLength(909);
+    expect(all.filter((p) => p.profiles.some((x) => !fromMaxfh1116(x)))).toHaveLength(639);
+  });
+
+  it('what the 2026-11-16 MAX Field Hockey sweep found: 51 athlete pages, each re-read', () => {
+    const found = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromMaxfh1116).map((x) => ({ slug: t.slug, p, x }))));
+    expect(found).toHaveLength(51);
+    expect(new Set(found.map((r) => `${r.slug} ${r.p.athleteId}`)).size).toBe(51);
+    const bySchool = Object.fromEntries([...new Set(found.map((r) => r.slug))].sort().map((s) => [s, found.filter((r) => r.slug === s).length]));
+    expect(bySchool).toEqual({
+      bishops: 4,
+      'canyon-hills': 4,
+      christopher: 1,
+      'convent-sacred-heart': 2,
+      davis: 2,
+      'harvard-westlake': 3,
+      'huntington-beach': 1,
+      'lick-wilmerding': 2,
+      'los-gatos': 3,
+      mitty: 1,
+      'saint-francis': 3,
+      'san-marcos': 2,
+      'scripps-ranch': 1,
+      'st-ignatius': 6,
+      tamalpais: 3,
+      'temecula-valley': 1,
+      'torrey-pines': 5,
+      'university-city': 1,
+      'university-sf': 5,
+      westview: 1,
+    });
+    for (const { p, x } of found) {
+      // Both of the site's athlete-page addresses: the older Athlete_ID one and the newer /players/<slug>/.
+      expect(x.url, p.fullName).toMatch(/^https:\/\/maxfh\.longstreth\.com\/(athlete\/\?Athlete_ID=ID-\d{8}|players\/[a-z0-9-]+\/)$/);
+      expect(x.sport, p.fullName).toBeUndefined();
+      expect(x.classOf, p.fullName).not.toBeNull();
+      expect(x.note, p.fullName).toMatch(/Found by the 2026-11-16 MAX Field Hockey sweep .* and re-read the same day\.$/);
+    }
+    // Every page names the school but one: Samantha Brunsell's is tagged with the Chicago St. Ignatius, and is
+    // linked on her class year and San Francisco hometown.
+    expect(found.filter((r) => !/It names the school/.test(r.x.note!)).map((r) => r.p.fullName)).toEqual(['Samantha Brunsell']);
+    expect(found.filter((r) => r.x.url.includes('/players/'))).toHaveLength(6);
+    // Six pages use another form of the name, each naming the school.
+    expect(found.filter((r) => /The page spells her/.test(r.x.note!)).map((r) => r.p.fullName).sort()).toEqual([
+      'Abby Scharrenberg',
+      'Eva Allen',
+      'Frankie Lemieux',
+      'Laura Pellegrino',
+      'Samantha Ippolito',
+      'Sami Lee',
+    ]);
+    // 960 profiles for 640 players in all: Tamalpais' Chloe Arwin had none before.
+    const all = raw.teams.flatMap((t) => t.players);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(960);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(640);
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
@@ -884,7 +941,8 @@ describe('recruiting profiles', () => {
     expect(new Set(claimed.map((r) => r.slug)).size).toBe(73);
     // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more); 158 since
     // Marin Catholic's Lexie Schmidt took her deleted duplicate row's lacrosse page (2026-11-13).
-    const by1013 = (x: { note: string | null }) => !fromProbe1103(x) && !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x);
+    const by1013 = (x: { platform: string; note: string | null }) =>
+      !fromProbe1103(x) && !fromSweep1106(x) && !fromSweep1113(x) && !fromFour1113(x) && !fromMaxfh1116(x);
     expect(claimed.filter((r) => r.p.profiles.filter(by1013).length === 1)).toHaveLength(158);
     for (const { slug, p, x } of claimed) {
       // The row's own career page, never a namesake's: it needs no name match.
@@ -1024,9 +1082,16 @@ describe('lib/players/rosters.ts merged view', () => {
   it('carries the Los Gatos squad split and the coaches', () => {
     const lg = getEnrichedTeamRoster('los-gatos')!;
     expect(lg.players.length).toBe(58);
-    expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(27);
-    expect(lg.players.filter((p) => p.level === 'jv').length).toBe(29);
+    expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(28);
+    expect(lg.players.filter((p) => p.level === 'jv').length).toBe(28);
     expect(lg.players.filter((p) => p.level === null).length).toBe(2);
+    // The one row whose level does not come from the school's lists: Beatrix Monk, varsity on her MAX Field Hockey
+    // page's 2026 season ('Freshman Season, Varsity #1'), which the school's JV list has not caught up with.
+    const lgRaw = raw.teams.find((t) => t.slug === 'los-gatos')!;
+    const offSchool = lgRaw.players.filter(
+      (p) => p.levelSource !== null && new URL(p.levelSource).hostname !== 'www.losgatosathletics.org',
+    );
+    expect(offSchool.map((p) => [p.fullName, p.level])).toEqual([['Beatrix Monk', 'varsity']]);
     expect(lg.coaches.map((c) => c.role)).toContain('Head Coach');
   });
 
