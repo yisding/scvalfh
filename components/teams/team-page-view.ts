@@ -8,7 +8,7 @@
  */
 
 import { getToday } from '../../lib/data';
-import { getHistoryFor, getHistoryStandings, isTiedPlace, type HistoryRow } from '../../lib/history/history';
+import { getHistoryFor, getHistoryStandings, historyPlaceShared, type HistoryRow } from '../../lib/history/history';
 import { getLeague, isSingleDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
@@ -76,10 +76,10 @@ export interface TeamPageParts {
   history: { division: DivisionId; row: HistoryRow } | undefined;
   /** The size of that division as it was then. */
   historySize: number;
-  /** Another school shared that place (BVAL's sheets print tied places: "tied for 2nd"). */
-  historyTied: boolean;
   /** Where that row sat (`lastSeasonScope`): '' with no row. */
   historyScope: string;
+  /** Whether another team shared that place. */
+  historyTied: boolean;
   /** The team's si.com games page. */
   sblive: string | undefined;
   roster: RosterView | null;
@@ -112,7 +112,8 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
   const historyRows = history ? getHistoryStandings(history.division) : [];
   const historySize = historyRows.length;
-  const historyTied = history ? isTiedPlace(historyRows, history.row) : false;
+  // A place the league's table gives two teams (the WBAL's): the line says "tied for".
+  const historyTied = history ? historyPlaceShared(historyRows, history.row) : false;
   const historyScope = history ? lastSeasonScope(history, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
   // Both exist for every registry team; an empty or pending team gets a stated empty state.
@@ -152,8 +153,8 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   return {
     history,
     historySize,
-    historyTied,
     historyScope,
+    historyTied,
     sblive,
     roster,
     jv,

@@ -1,12 +1,13 @@
 import Link from 'next/link';
 
+import { getLeagueSummaries } from '../../lib/data';
 import { monthDay, shortDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
-import type { Game, RegionId } from '../../lib/types';
+import type { Game, LeagueId, RegionId } from '../../lib/types';
 import { CalendarGlyph, ChevronLeft, ChevronRight } from '../ui/glyphs';
 
 import SeasonCalendar from './SeasonCalendar';
-import { dayRegions } from './day-summary';
+import { dayRegions, gamesOfLeague } from './day-summary';
 import { dateBarView, dayCountWords } from './scores-page-view';
 
 /**
@@ -17,6 +18,13 @@ import { dateBarView, dayCountWords } from './scores-page-view';
  * A cell is three lines: the weekday ("Today" on the snapshot's own day), the date, and the number
  * of games that day in the reader's region. While a game that day is being played the count reads
  * "2 live". Today's cell links to `/`.
+ *
+ * The count follows the league tab, as the day's groups below do: one count line for the All tab
+ * (`data-scope="none"`, the region's games) and one per league of the region (`data-scope="<league>"`,
+ * the games with a side in that league), and the scope stylesheet shows the reader's. So on the SCVAL
+ * tab a day with only other leagues' games reads "No games", as the list under it says, never the
+ * region's "2 games" over "No SCVAL games on this day." The cells and arrows still walk the region's
+ * game days. JV games are in no count (they are not in the varsity lists either).
  *
  * Each region walks ITS OWN game days: a NorCal reader never steps onto a day with only SoCal games.
  * So the cells and the two arrows are rendered once per region, each `data-region-scope`d (the scope
@@ -78,6 +86,9 @@ export function DateBar({ date, dates, today, gamesOn }: DateBarProps) {
   /** A day's games with a side in the region (every game in a one-region build). */
   const inRegion = (d: string, region: RegionId): readonly Game[] =>
     scoped ? (dayRegions(gamesOn(d)).regions.find((r) => r.id === region)?.withSide ?? []) : gamesOn(d);
+  /** The league tabs a region's cells carry a count for (every league in a one-region build). */
+  const leaguesOf = (region: RegionId): LeagueId[] =>
+    getLeagueSummaries(scoped ? region : undefined).map((league) => league.id);
   const bars = REGIONS.map((region) => ({
     region: scoped ? region.id : undefined,
     id: region.id,
@@ -96,7 +107,10 @@ export function DateBar({ date, dates, today, gamesOn }: DateBarProps) {
         {bars.flatMap((bar) =>
           bar.view.cells.map((cell) => {
             const games = inRegion(cell.date, bar.id);
-            const count = dayCountWords(games);
+            const counts = [
+              { scope: 'none', count: dayCountWords(games) },
+              ...leaguesOf(bar.id).map((league) => ({ scope: league, count: dayCountWords(gamesOfLeague(games, league)) })),
+            ];
             return (
               <li key={`${bar.id}:${cell.date}`} data-far={cell.far ?? undefined} data-region-scope={bar.region}>
                 <Link
@@ -105,11 +119,14 @@ export function DateBar({ date, dates, today, gamesOn }: DateBarProps) {
                   prefetch={false}
                   aria-current={cell.current ? 'date' : undefined}
                   data-today={cell.today ? '' : undefined}
-                  data-live={count.live ? '' : undefined}
                 >
                   {cell.today ? 'Today' : shortDate(cell.date).split(' ')[0]}
                   <b>{monthDay(cell.date)}</b>
-                  <small>{count.text}</small>
+                  {counts.map(({ scope, count }) => (
+                    <small key={scope} data-scope={scope} data-live={count.live ? '' : undefined}>
+                      {count.text}
+                    </small>
+                  ))}
                 </Link>
               </li>
             );

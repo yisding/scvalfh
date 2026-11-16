@@ -1,0 +1,84 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Volleyball",
+  "league": "wcal",
+  "publisher": "wcalsports.org",
+  "retrievedOn": "2026-11-16",
+  "standings": {"url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf", "kind": "pdf", "index": "https://wcalsports.org/standings/"},
+  "allLeague": {"url": "https://wcalsports.org/__static/jdj5jdewjezgbwvbauh4tevwuuvnwmfs/AL-2025-26(4).pdf", "kind": "pdf", "index": "https://wcalsports.org/awardsrecords/"},
+  "transcription": "Transcribed from the pdftotext -layout text of both PDFs, read 2026-11-16: each row as printed, and checked against the PDFs row by row.",
+  "notes": [
+    "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/; the all-league PDF is its 2025-26 awards book, linked as \"2025-2026\" from wcalsports.org/awardsrecords/.",
+    "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it.",
+    "Overall is the PDF's \"Season\" columns.",
+    "Presentation played in the WCAL in 2025-26 and is in the WBAL's Foothill division now; its rows keep its slug (`formerMembers`), and the page says it moved.",
+    "The PDF's freshman tables are not stored: the archive has varsity and JV only.",
+    "Girls volleyball tables of October 29, 2025: league wins and losses, then the season's. A match cannot end level, so records are W-L and t is stored as 0.",
+    "The awards are the PDF's \"2025 WCAL Girls Volleyball All League Teams\": a Player of the Year (printed \"Player – School\", with no year), a first team, a second team and an honorable mention (Name, School, Year, Position). The WCAL names no JV all-league team."
+  ],
+  "formerMembers": ["presentation"],
+  "joinedSince": [],
+  "schoolSpellings": {},
+  "divisions": [
+    {
+      "division": "wcal",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "Archbishop Mitty", "league": "12-0", "overall": "27-3"},
+          {"place": 2, "name": "Saint Ignatius", "league": "10-2", "overall": "23-9"},
+          {"place": 3, "name": "Saint Francis", "league": "7-5", "overall": "18-10"},
+          {"place": 4, "name": "Valley Christian", "league": "6-6", "overall": "19-8"},
+          {"place": 5, "name": "Sacred Heart Cathedral", "league": "4-8", "overall": "20-12"},
+          {"place": 6, "name": "Archbishop Riordan", "league": "3-9", "overall": "11-13"},
+          {"place": 7, "name": "Presentation", "league": "0-12", "overall": "7-24"}
+        ],
+        "jv": [
+          {"place": 1, "name": "Saint Francis", "league": "12-0", "overall": "26-0"},
+          {"place": 2, "name": "Saint Ignatius", "league": "9-3", "overall": "20-4"},
+          {"place": 3, "name": "Archbishop Mitty", "league": "8-4", "overall": "14-7"},
+          {"place": 4, "name": "Sacred Heart Cathedral", "league": "6-6", "overall": "22-7"},
+          {"place": 5, "name": "Valley Christian", "league": "5-7", "overall": "12-7"},
+          {"place": 6, "name": "Archbishop Riordan", "league": "3-9", "overall": "14-9"},
+          {"place": 7, "name": "Presentation", "league": "0-12", "overall": "5-26"}
+        ]
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Player of the Year", "player": "Makenna Crosson", "school": "Archbishop Mitty", "position": "", "year": ""}
+          ],
+          "firstTeam": [
+            ["Amelia Leha’Uli", "Archbishop Riordan", "Outside Hitter", "Senior"],
+            ["Chayse Courtney", "Archbishop Mitty", "Outside Hitter", "Sophomore"],
+            ["Eileen Pfeffer", "Saint Ignatius", "Middle Blocker", "Junior"],
+            ["Ella Fulton", "Saint Francis", "Outside Hitter/Middle Blocker", "Senior"],
+            ["Lauren Nip", "Saint Ignatius", "Libero", "Senior"],
+            ["Makenna Crosson", "Archbishop Mitty", "Outside Hitter", "Senior"],
+            ["Noe Vanacht", "Saint Francis", "Libero", "Senior"],
+            ["Whitney Fleming", "Valley Christian", "Outside Hitter", "Junior"]
+          ],
+          "secondTeam": [
+            ["Abby Cardenas", "Saint Francis", "RS/Outside Hitter", "Sophomore"],
+            ["Elina Yin", "Valley Christian", "Libero", "Junior"],
+            ["Ellie Diehl-Palmer", "Archbishop Mitty", "Outside Hitter/Opposite", "Senior"],
+            ["Grace Paedon", "Valley Christian", "Middle Hitter", "Freshman"],
+            ["Katelyn Sentous", "Archbishop Mitty", "Middle Blocker", "Senior"],
+            ["Madi Mullins", "Sacred Heart Cathedral", "Libero", "Senior"],
+            ["Makayla Tran", "Archbishop Mitty", "Libero", "Sophomore"],
+            ["Marley Miyagishima", "Sacred Heart Cathedral", "Outside Hitter/Opposite", "Senior"],
+            ["Neve Harlen", "Saint Ignatius", "Outside Hitter", "Junior"]
+          ],
+          "honorableMention": [
+            ["Danielle Whitmill", "Valley Christian", "Setter", "Sophomore"],
+            ["Giulia McManigal", "Saint Ignatius", "Setter/Opposite", "Sophomore"],
+            ["Laurie Nguyen", "Archbishop Mitty", "Setter", "Sophomore"],
+            ["Michaela Artmore", "Presentation", "Middle Hitter", "Senior"],
+            ["Riley Barulich", "Saint Francis", "Setter", "Senior"],
+            ["Zoie Loui", "Archbishop Riordan", "Setter", "Junior"]
+          ]
+        },
+        "jv": null
+      }
+    }
+  ]
+}

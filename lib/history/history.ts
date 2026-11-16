@@ -225,11 +225,6 @@ export function getHistoryFor(slug: TeamSlug): Array<{
   return out;
 }
 
-/** True when another row of the same table shares this row's place (BVAL's sheets print "2, 2, 4"). */
-export function isTiedPlace(rows: readonly HistoryRow[], row: HistoryRow): boolean {
-  return rows.some((r) => r !== row && r.place === row.place);
-}
-
 /**
  * One league's first-place varsity rows, for a one-line archive summary: every row placed 1st, so co-champions
  * (BVAL girls volleyball's 2025-26 Santa Teresa: Lincoln and Pioneer, 13-1 each) are both named.
@@ -255,7 +250,8 @@ export function getHistoryPastDivisions(leagueId: LeagueId): Array<{ division: D
  * today (the 2026-27 alignment), e.g. Leland: Santa Teresa in the 2025-26 sheet, Mt. Hamilton in
  * the registry. The history keeps the source's division; the page says that the team moved. A row in a division
  * the league no longer has always moved. Labels come with the ids: the season's from the archive, today's from
- * lib/leagues.ts.
+ * lib/leagues.ts. `registryLeague` is the league it is in now, which is another league for a school that changed
+ * leagues (Presentation: the WCAL in 2025-26, the WBAL's Foothill now).
  */
 export function getHistoryDivisionChanges(leagueId: LeagueId): Array<{
   slug: TeamSlug;
@@ -264,6 +260,7 @@ export function getHistoryDivisionChanges(leagueId: LeagueId): Array<{
   historyLabel: string;
   registryDivision: DivisionId;
   registryLabel: string;
+  registryLeague: LeagueId;
 }> {
   const entry = history.leagues[leagueId];
   if (entry?.status !== 'available') return [];
@@ -279,11 +276,17 @@ export function getHistoryDivisionChanges(leagueId: LeagueId): Array<{
           historyLabel: d.label,
           registryDivision: team.division,
           registryLabel: getDivision(team.division).label,
+          registryLeague: team.league,
         });
       }
     }
   }
   return out;
+}
+
+/** Whether another row of the same table shares this row's place (BVAL's sheets print "2, 2, 4"; the WBAL's tables rank level teams alike). */
+export function historyPlaceShared(rows: readonly HistoryRow[], row: HistoryRow): boolean {
+  return rows.some((r) => r !== row && r.place === row.place);
 }
 
 /** Varsity rows whose source record has no ties field (`t` is null), by division. */

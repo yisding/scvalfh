@@ -248,8 +248,8 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             sblive={parts.sblive}
             history={parts.history}
             historySize={parts.historySize}
-            historyTied={parts.historyTied}
             historyScope={parts.historyScope}
+            historyTied={parts.historyTied}
             officialSchedule={
               view.officialScheduleUrl ? { href: view.officialScheduleUrl, leagueShort: view.league.shortName } : null
             }

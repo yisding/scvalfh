@@ -791,12 +791,12 @@ describe('history: the league-aware read API', () => {
       {
         slug: 'prospect', name: 'Prospect',
         historyDivision: 'mt-hamilton', historyLabel: 'Mt. Hamilton',
-        registryDivision: 'santa-teresa', registryLabel: 'Santa Teresa',
+        registryDivision: 'santa-teresa', registryLabel: 'Santa Teresa', registryLeague: 'bval',
       },
       {
         slug: 'leland', name: 'Leland',
         historyDivision: 'santa-teresa', historyLabel: 'Santa Teresa',
-        registryDivision: 'mt-hamilton', registryLabel: 'Mt. Hamilton',
+        registryDivision: 'mt-hamilton', registryLabel: 'Mt. Hamilton', registryLeague: 'bval',
       },
     ]);
     expect(h.getHistoryDivisionChanges('scval')).toEqual([]);

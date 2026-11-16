@@ -663,6 +663,8 @@ export function buildAboutView(): AboutView {
               return Object.values(entry.provenance.allLeagueDocs).some(Boolean)
                 ? `${name}’s standings sheet and all-league documents`
                 : `${name}’s standings sheet`;
+            case 'league-documents':
+              return `${name}’s standings and all-league ${entry.provenance.standings.kind === 'pdf' ? 'PDFs' : 'pages'}`;
           }
         }),
         unavailableLeagues: historyUnavailableLeagues,

@@ -1,0 +1,133 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Volleyball",
+  "league": "wbal",
+  "publisher": "hs.wbalsports.org",
+  "retrievedOn": "2026-11-16",
+  "standings": {"url": "https://hs.wbalsports.org/2025-2026/vbstg.html", "kind": "page", "index": "https://hs.wbalsports.org/history.html"},
+  "allLeague": {"url": "https://hs.wbalsports.org/alvbg25.html", "kind": "page", "index": "https://hs.wbalsports.org/history.html"},
+  "transcription": "Transcribed from the two pages' HTML, read 2026-11-16, leaving out the tables the standings page comments out: each row as printed, and checked against the pages row by row.",
+  "notes": [
+    "The standings page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (1, 2, 2, 4).",
+    "The standings print a league record and no overall record, so every overallRecord is null.",
+    "The all-league page prints each player as \"Player, School\" with no year or position, so every year and position is null.",
+    "Division membership is the 2025-26 pages' own, which is not the 2026-27 alignment; the page says which teams moved.",
+    "Presentation played in the WCAL in 2025-26 (`joinedSince`): no WBAL table of that season lists it.",
+    "School spellings are the pages' own (\"Crystal\", \"Mercy\"); `slug` is the join key.",
+    "Girls volleyball: the page prints matches played, a W-L record, a win percentage and games back; a match cannot end level, so t is stored as 0.",
+    "The page's freshman table is not stored, nor its boys table, which is commented out of its HTML.",
+    "The Foothill page names Co-Most Valuable Players, two entries under one title."
+  ],
+  "formerMembers": [],
+  "joinedSince": ["presentation"],
+  "schoolSpellings": {"Mercy": "Mercy Burlingame"},
+  "divisions": [
+    {
+      "division": "foothill",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "Sacred Heart Prep", "league": "12-0", "overall": null},
+          {"place": 2, "name": "Notre Dame Belmont", "league": "9-3", "overall": null},
+          {"place": 3, "name": "Menlo", "league": "8-4", "overall": null},
+          {"place": 4, "name": "Harker", "league": "6-6", "overall": null},
+          {"place": 5, "name": "Mercy", "league": "5-7", "overall": null},
+          {"place": 6, "name": "Crystal", "league": "1-11", "overall": null},
+          {"place": 6, "name": "Notre Dame San Jose", "league": "1-11", "overall": null}
+        ],
+        "jv": [
+          {"place": 1, "name": "Sacred Heart Prep", "league": "11-1", "overall": null},
+          {"place": 2, "name": "Harker", "league": "9-3", "overall": null},
+          {"place": 3, "name": "Menlo", "league": "7-5", "overall": null},
+          {"place": 4, "name": "Mercy", "league": "6-6", "overall": null},
+          {"place": 4, "name": "Notre Dame Belmont", "league": "6-6", "overall": null},
+          {"place": 6, "name": "Notre Dame San Jose", "league": "3-9", "overall": null},
+          {"place": 7, "name": "Crystal", "league": "0-12", "overall": null}
+        ]
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Co-Most Valuable Players", "player": "Leilah Abrams", "school": "Sacred Heart Prep", "position": "", "year": ""},
+            {"award": "Co-Most Valuable Players", "player": "Gia Rivera", "school": "Notre Dame Belmont", "position": "", "year": ""}
+          ],
+          "firstTeam": [
+            ["Elie Ahluwalia", "Harker", "", ""],
+            ["Keira Chang", "Harker", "", ""],
+            ["Alex Fair", "Menlo", "", ""],
+            ["Peyton Fu-Sarosa", "Sacred Heart Prep", "", ""],
+            ["Jamie Johnson", "Menlo", "", ""],
+            ["Kiley McGibben", "Sacred Heart Prep", "", ""],
+            ["Ava Wang", "Menlo", "", ""]
+          ],
+          "secondTeam": [
+            ["Aline Grinspan", "Harker", "", ""],
+            ["Arianna Juarez", "Notre Dame Belmont", "", ""],
+            ["Hadley Mahon", "Sacred Heart Prep", "", ""],
+            ["Sadie McCulloch", "Mercy", "", ""],
+            ["Poema Ueligitone", "Sacred Heart Prep", "", ""],
+            ["Allison Yu", "Menlo", "", ""],
+            ["Kathy Zhang", "Crystal", "", ""]
+          ],
+          "honorableMention": [
+            ["Linda Amrhein", "Notre Dame San Jose", "", ""],
+            ["Vivienne Butler", "Notre Dame Belmont", "", ""],
+            ["Juliette Escobar", "Mercy", "", ""],
+            ["Petra Hennessy", "Crystal", "", ""],
+            ["Cierra Huynh", "Notre Dame San Jose", "", ""],
+            ["Mia Macdonnell", "Notre Dame Belmont", "", ""]
+          ]
+        },
+        "jv": null
+      }
+    },
+    {
+      "division": "skyline",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "The King's Academy", "league": "8-0", "overall": null},
+          {"place": 2, "name": "Castilleja", "league": "5-3", "overall": null},
+          {"place": 3, "name": "Pinewood", "league": "4-4", "overall": null},
+          {"place": 4, "name": "Priory", "league": "3-5", "overall": null},
+          {"place": 5, "name": "Eastside College Prep", "league": "0-8", "overall": null}
+        ],
+        "jv": [
+          {"place": 1, "name": "The King's Academy", "league": "8-0", "overall": null},
+          {"place": 2, "name": "Castilleja", "league": "6-2", "overall": null},
+          {"place": 3, "name": "Priory", "league": "4-4", "overall": null},
+          {"place": 4, "name": "Pinewood", "league": "2-6", "overall": null},
+          {"place": 5, "name": "Eastside College Prep", "league": "0-8", "overall": null}
+        ]
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Most Valuable Player", "player": "Mailey Wang", "school": "Pinewood", "position": "", "year": ""}
+          ],
+          "firstTeam": [
+            ["Amelie Bellemans", "Castilleja", "", ""],
+            ["Siena Ebeid", "Priory", "", ""],
+            ["Sophia Giles", "The King's Academy", "", ""],
+            ["Emerson Kjellesvig", "The King's Academy", "", ""],
+            ["Juli Pierre", "Castilleja", "", ""],
+            ["Emily Shen", "Castilleja", "", ""],
+            ["Adelynn Wang", "Pinewood", "", ""],
+            ["Michaela Wu", "The King's Academy", "", ""]
+          ],
+          "secondTeam": [
+            ["Barrett Bruel", "Priory", "", ""],
+            ["Aria Feitelberg", "Castilleja", "", ""],
+            ["A'Nyrah Green Frazier", "Eastside College Prep", "", ""],
+            ["Shuwen Jin", "The King's Academy", "", ""],
+            ["Camila Revuelta", "Priory", "", ""],
+            ["Abi Wessel", "Pinewood", "", ""]
+          ],
+          "honorableMention": [
+            ["Rae Cantrell", "Eastside College Prep", "", ""],
+            ["Sophie Saibi", "Pinewood", "", ""]
+          ]
+        },
+        "jv": null
+      }
+    }
+  ]
+}

@@ -6,11 +6,11 @@ import {
   getHistoryDivisionChanges,
   getHistoryPastDivisions,
   getHistoryUnpublishedTies,
+  historyPlaceShared,
   historySchoolName,
-  isTiedPlace,
   type AvailableLeagueHistory,
 } from '../../lib/history/history';
-import { getLeague, regionOf } from '../../lib/leagues';
+import { divisionHeading, getLeague, regionOf } from '../../lib/leagues';
 import { SPORT } from '../../lib/sports/current';
 import type { LeagueId } from '../../lib/types';
 
@@ -58,20 +58,21 @@ export default function AvailableLeague({
   const hasOverall = leagueHasOverall(divisions.flatMap((d) => [d.standings.varsity, d.standings.jv]));
   const champions = new Set(getHistoryChampions(leagueId).map((c) => c.division));
   const changes = getHistoryDivisionChanges(leagueId);
-  const pastDivisions = getHistoryPastDivisions(leagueId);
   const unpublishedTies = getHistoryUnpublishedTies(leagueId);
+  const sharedPlaces = divisions.some((d) =>
+    [d.standings.varsity, d.standings.jv].some((rows) => rows.some((r) => historyPlaceShared(rows, r))),
+  );
   const p = entry.provenance;
+  const pastDivisions = getHistoryPastDivisions(leagueId);
   // A division's label as the season named it: the archive's, since it can be one the league no longer has.
+  const labelOf = (division: string) => divisions.find((d) => d.division === division)?.label ?? division;
   // The source sentence's example: the league's first record, as the sheet prints it and as this page writes it.
   const sampleRecord = divisions[0]?.standings.varsity[0]?.leagueRecord ?? '';
-  const hasTiedPlace = divisions.some((d) =>
-    [d.standings.varsity, d.standings.jv].some((rows) => rows.some((r) => isTiedPlace(rows, r))),
-  );
-  const labelOf = (division: string) => divisions.find((d) => d.division === division)?.label ?? division;
-  // Moved teams, grouped by where they came from and where they play now: one clause per pair, so a league that
-  // realigned (BVAL girls volleyball moved 14 schools) gets one sentence, not a paragraph a school.
+  // Teams that moved within the league, grouped by where they came from and where they play now: one clause per
+  // pair, so a league that realigned (BVAL girls volleyball moved 14 schools) gets one sentence, not a paragraph a
+  // school. A school now in another league keeps its own note (below).
   const moves: Array<{ names: string[]; from: string; to: string }> = [];
-  for (const c of changes) {
+  for (const c of changes.filter((c) => c.registryLeague === leagueId)) {
     const move = moves.find((m) => m.from === c.historyLabel && m.to === c.registryLabel);
     if (move) move.names.push(c.name);
     else moves.push({ names: [c.name], from: c.historyLabel, to: c.registryLabel });
@@ -159,6 +160,27 @@ export default function AvailableLeague({
             site uses &mdash; MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDF
             lists league records only; its overall-record column was empty for this season.
           </p>
+        ) : p.source === 'league-documents' ? (
+          <p className="sx-note">
+            Source: {p.publisher} &mdash;{' '}
+            <ExternalLink href={p.standings.url}>
+              {season} final standings ({p.standings.kind === 'pdf' ? 'PDF' : 'web page'})
+            </ExternalLink>
+            {p.allLeague ? (
+              <>
+                {' '}and{' '}
+                <ExternalLink href={p.allLeague.url}>
+                  {season} all-league teams ({p.allLeague.kind === 'pdf' ? 'PDF' : 'web page'})
+                </ExternalLink>
+              </>
+            ) : null}
+            . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the MaxPreps data the
+            rest of the site uses &mdash; MaxPreps only ever serves the current season.{' '}
+            {hasOverall
+              ? 'Overall is the season record the standings print beside the league record.'
+              : 'The standings print league records only.'}
+            {sharedPlaces ? ` Teams ${league.shortName}’s table ranks level share a place, as it prints them.` : ''}
+          </p>
         ) : p.source === 'scval-pdf' ? (
           <p className="sx-note">
             Source: scval.com &mdash;{' '}
@@ -193,7 +215,7 @@ export default function AvailableLeague({
               ? '; a record it prints without a ties field stays W-L. It carries no points or goals'
               : '. It carries no standings points or game scores'}
             , so none are shown or computed.
-            {hasTiedPlace ? ' Places are the sheet’s: schools it ranks level share a place, and the next place skips.' : ''}{' '}
+            {sharedPlaces ? ' Places are the sheet’s: schools it ranks level share a place, and the next place skips.' : ''}{' '}
             {p.jvNote}
           </p>
         )}
@@ -222,6 +244,16 @@ export default function AvailableLeague({
             ))}
           </p>
         ) : null}
+        {changes
+          .filter((c) => c.registryLeague !== leagueId)
+          .map((c) => (
+            <p key={c.slug} className="sx-note">
+              {c.name} played in the {league.shortName} in {season}, as the source lists it, and is in the{' '}
+              {getLeague(c.registryLeague).shortName}
+              {divisionHeading(c.registryDivision) ? `’s ${divisionHeading(c.registryDivision)} division` : ''} now, so
+              this site lists it there.
+            </p>
+          ))}
       </div>
     </section>
   );

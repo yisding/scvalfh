@@ -352,14 +352,14 @@ describe('the bundled volleyball data', () => {
     }
   });
 
-  it('holds a stats entry, a roster and a JV entry for every team, and last season’s SCVAL and BVAL archive', () => {
+  it('holds a stats entry, a roster and a JV entry for every team, and last season’s archive of all four leagues', () => {
     for (const team of m.teams.TEAMS) {
       expect(m.playerStats.getTeamPlayerStats(team.slug), team.slug).toBeDefined();
       expect(m.rosters.getTeamRoster(team.slug), team.slug).toBeDefined();
     }
     expect(m.jv.getJvFile().teams).toHaveLength(60);
-    expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['wcal', 'wbal']);
+    expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval', 'wcal', 'wbal']);
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([]);
     // BVAL's 2025-26 Santa Teresa had co-champions, Lincoln and Pioneer at 13-1 (the league's standings sheet).
     expect(m.history.getHistoryChampions('bval').map((c) => c.row.slug)).toEqual(['leland', 'lincoln', 'pioneer', 'santa-teresa']);
     // The El Camino JV document prints one player's year as "7": no grade is stored for her.
