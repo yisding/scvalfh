@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T15:33:32.099Z",
+  "fetchedAt": "2026-11-16T23:43:08.979Z",
   "fixtures": [
     {
       "claims": {
@@ -284,17 +284,17 @@
             },
             "countsFor": null,
             "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T18:00:00",
-            "dateUtc": "2026-11-20T02:00:00Z",
+            "dateLocal": "2026-11-19T19:00:00",
+            "dateUtc": "2026-11-20T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "Santa Clara",
-              "name": "Santa Clara",
+              "city": "San Jose",
+              "name": "Leigh",
               "result": null,
               "score": null,
-              "slug": "santa-clara",
-              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+              "slug": "leigh",
+              "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -305,7 +305,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-13T18:54:24",
+              "maxprepsModifiedOn": "2026-11-16T04:56:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -314,7 +314,7 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/san-mateo-vs-santa-clara/11-19-2026/?c=cbb857d6-1e6b-432c-ab91-d1a0ba767043",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-san-mateo/11-19-2026/?c=cbb857d6-1e6b-432c-ab91-d1a0ba767043",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamba2501d6b4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
@@ -1350,7 +1350,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-16T15:33:32.099Z",
+          "builtAt": "2026-11-16T23:43:08.979Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -1667,7 +1667,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082555?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-evergreen-valley-san-jose/11-27-2026/?c=b4a8ade1-a735-4117-b11e-db0a987dc901",
               "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam2f3760545c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -2364,8 +2364,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-11-30",
-            "dateLocal": "2026-11-30T18:30:00",
-            "dateUtc": "2026-12-01T02:30:00Z",
+            "dateLocal": "2026-11-30T19:30:00",
+            "dateUtc": "2026-12-01T03:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -2385,7 +2385,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-09T03:25:57",
+              "maxprepsModifiedOn": "2026-11-16T22:20:03",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8225,6 +8225,72 @@
           "game": {
             "away": {
               "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "contestId": "b6bb6ec9-141f-4d87-901b-1f77b1cbc197",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-16",
+            "dateLocal": "2026-12-16T16:30:00",
+            "dateUtc": "2026-12-17T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Basis Independent Silicon Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "6934218c-981b-42db-97e7-887e6ea8457d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T11:07:55",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/basis-independent-silicon-valley-san-jose-vs-del-mar-san-jose/12-16-2026/?c=b6bb6ec9-141f-4d87-901b-1f77b1cbc197",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "b6bb6ec9-141f-4d87-901b-1f77b1cbc197"
+        }
+      },
+      "id": "2026-12-16-del-mar-at-name:basisindependentsiliconvalley",
+      "published": [
+        {
+          "contestId": "b6bb6ec9-141f-4d87-901b-1f77b1cbc197"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
               "name": "Leland",
               "result": null,
               "score": null,
@@ -8612,6 +8678,72 @@
       "published": [
         {
           "contestId": "330e1a33-50e0-4582-a48d-f3d50bc69040"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Saratoga",
+              "name": "Prospect",
+              "result": null,
+              "score": null,
+              "slug": "prospect",
+              "teamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f"
+            },
+            "contestId": "da1a5024-860a-46ef-9e91-469cc0947107",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-17",
+            "dateLocal": "2026-12-17T18:00:00",
+            "dateUtc": "2026-12-18T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Basis Independent Silicon Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "6934218c-981b-42db-97e7-887e6ea8457d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T11:08:15",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/basis-independent-silicon-valley-san-jose-vs-prospect-saratoga/12-17-2026/?c=da1a5024-860a-46ef-9e91-469cc0947107",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "da1a5024-860a-46ef-9e91-469cc0947107"
+        }
+      },
+      "id": "2026-12-17-prospect-at-name:basisindependentsiliconvalley",
+      "published": [
+        {
+          "contestId": "da1a5024-860a-46ef-9e91-469cc0947107"
         }
       ]
     },
@@ -9404,6 +9536,72 @@
       "published": [
         {
           "contestId": "5f19c636-041d-4de7-8743-eea0976354c7"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Morgan Hill",
+              "name": "Ann Sobrato",
+              "result": null,
+              "score": null,
+              "slug": "sobrato",
+              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
+            },
+            "contestId": "ff01e22b-b681-4699-8d1c-59bc3224a5e8",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-18",
+            "dateLocal": "2026-12-18T00:00:00",
+            "dateUtc": "2026-12-18T08:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Basis Independent Silicon Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "6934218c-981b-42db-97e7-887e6ea8457d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": true,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T11:08:28",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-basis-independent-silicon-valley-san-jose/12-18-2026/?c=ff01e22b-b681-4699-8d1c-59bc3224a5e8",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "ff01e22b-b681-4699-8d1c-59bc3224a5e8"
+        }
+      },
+      "id": "2026-12-18-sobrato-at-name:basisindependentsiliconvalley",
+      "published": [
+        {
+          "contestId": "ff01e22b-b681-4699-8d1c-59bc3224a5e8"
         }
       ]
     },
@@ -14128,6 +14326,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "contestId": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-06",
+            "dateLocal": "2027-01-06T19:30:00",
+            "dateUtc": "2027-01-07T03:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T22:23:23",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-mt-pleasant-san-jose/1-6-2027/?c=5cdf9261-de44-4a24-8b2c-6473f8ac2ea1",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam7a7803d0e2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1"
+        },
         "official": {
           "fixture": {
             "awayName": "Mt. Pleasant",
@@ -14145,10 +14399,29 @@
             "source": "bval-docx",
             "time": "19:30"
           },
+          "lastMatch": {
+            "contestId": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-06:mt-pleasant@del-mar",
+              "jv": {
+                "dateKey": "2027-01-06",
+                "time": "18:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-06",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-01-06:mt-pleasant@del-mar"
         }
       },
-      "id": "2027-01-06-mt-pleasant-at-del-mar"
+      "id": "2027-01-06-mt-pleasant-at-del-mar~2",
+      "published": [
+        {
+          "contestId": "5cdf9261-de44-4a24-8b2c-6473f8ac2ea1"
+        }
+      ]
     },
     {
       "claims": {
@@ -14581,6 +14854,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "contestId": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-08",
+            "dateLocal": "2027-01-08T19:00:00",
+            "dateUtc": "2027-01-09T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Andrew Hill",
+              "result": null,
+              "score": null,
+              "slug": "andrew-hill",
+              "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T14:23:49",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/6843799?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-hill-san-jose/1-8-2027/?c=f4dbe46a-cb61-4184-911c-0a9abdda9fdb",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/andrew-hill-high-school-san-jose-ca/gam1b123bc4b0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb"
+        },
         "official": {
           "fixture": {
             "awayName": "Del Mar",
@@ -14598,10 +14927,30 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-08:del-mar@andrew-hill",
+              "jv": {
+                "dateKey": "2027-01-08",
+                "time": "17:30"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-08",
+              "source": "bval-docx"
+            }
+          },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-08; MaxPreps flags it non-league",
           "ref": "west-valley:2027-01-08:del-mar@andrew-hill"
         }
       },
-      "id": "2027-01-08-del-mar-at-andrew-hill"
+      "id": "2027-01-08-del-mar-at-andrew-hill~2",
+      "published": [
+        {
+          "contestId": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb"
+        }
+      ]
     },
     {
       "claims": {
@@ -15938,7 +16287,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082557?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-saratoga/1-8-2027/?c=29aa4ceb-b54a-4eee-8d33-d8ca5f82b7bc",
               "nfhsStream": null
             },
@@ -20131,12 +20480,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Pleasanton",
-              "name": "Foothill",
+              "city": "Atwater",
+              "name": "Atwater",
               "result": null,
               "score": null,
               "slug": null,
-              "teamId": "c3d3c40c-8434-48d8-8561-b6920c22062b"
+              "teamId": "5895a93a-53b1-482d-a096-8fdf845c1f79"
             },
             "contestId": "75415fef-950b-4a36-9f26-a7e28fb6d4b9",
             "contestTypes": {
@@ -20145,8 +20494,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-16",
-            "dateLocal": "2027-01-16T17:00:00",
-            "dateUtc": "2027-01-17T01:00:00Z",
+            "dateLocal": "2027-01-16T15:30:00",
+            "dateUtc": "2027-01-16T23:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -20166,7 +20515,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T22:11:32",
+              "maxprepsModifiedOn": "2026-11-16T20:08:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20175,7 +20524,7 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/foothill-pleasanton-vs-monta-vista-cupertino/1-16-2027/?c=75415fef-950b-4a36-9f26-a7e28fb6d4b9",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/atwater-vs-monta-vista-cupertino/1-16-2027/?c=75415fef-950b-4a36-9f26-a7e28fb6d4b9",
               "nfhsStream": null
             },
             "venue": {
@@ -21221,7 +21570,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082558?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-monta-vista-cupertino/1-20-2027/?c=15ac2917-1321-4438-9e3e-ffab394718d3",
               "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam8afae87a81?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -22337,6 +22686,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "James Lick",
+              "result": null,
+              "score": null,
+              "slug": "james-lick",
+              "teamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237"
+            },
+            "contestId": "91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-22",
+            "dateLocal": "2027-01-22T19:30:00",
+            "dateUtc": "2027-01-23T03:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T22:25:09",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-james-lick-san-jose/1-22-2027/?c=91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam2fc167fe1a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2"
+        },
         "official": {
           "fixture": {
             "awayName": "James Lick",
@@ -22354,10 +22759,29 @@
             "source": "bval-docx",
             "time": "19:30"
           },
+          "lastMatch": {
+            "contestId": "91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-22:james-lick@del-mar",
+              "jv": {
+                "dateKey": "2027-01-22",
+                "time": "18:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-22",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-01-22:james-lick@del-mar"
         }
       },
-      "id": "2027-01-22-james-lick-at-del-mar"
+      "id": "2027-01-22-james-lick-at-del-mar~2",
+      "published": [
+        {
+          "contestId": "91bc615f-4c0b-4c7a-ad7a-d61d8b4245a2"
+        }
+      ]
     },
     {
       "claims": {
@@ -23969,6 +24393,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "contestId": "fdafc801-39ca-48b8-bf6f-3e5a0285ef6e",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-27",
+            "dateLocal": "2027-01-27T19:00:00",
+            "dateUtc": "2027-01-28T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T14:28:10",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-mt-pleasant-san-jose/1-27-2027/?c=fdafc801-39ca-48b8-bf6f-3e5a0285ef6e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "fdafc801-39ca-48b8-bf6f-3e5a0285ef6e"
+        },
         "official": {
           "fixture": {
             "awayName": "Del Mar",
@@ -23986,10 +24466,30 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "fdafc801-39ca-48b8-bf6f-3e5a0285ef6e",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-27:del-mar@mt-pleasant",
+              "jv": {
+                "dateKey": "2027-01-27",
+                "time": "17:30"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-27",
+              "source": "bval-docx"
+            }
+          },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-27; MaxPreps flags it non-league",
           "ref": "west-valley:2027-01-27:del-mar@mt-pleasant"
         }
       },
-      "id": "2027-01-27-del-mar-at-mt-pleasant"
+      "id": "2027-01-27-del-mar-at-mt-pleasant~2",
+      "published": [
+        {
+          "contestId": "fdafc801-39ca-48b8-bf6f-3e5a0285ef6e"
+        }
+      ]
     },
     {
       "claims": {
@@ -24138,7 +24638,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082559?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-fremont-sunnyvale/1-27-2027/?c=9f67f3e4-65fc-42f5-9749-14c1c3939c0f",
               "nfhsStream": null
             },
@@ -25502,6 +26002,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Andrew Hill",
+              "result": null,
+              "score": null,
+              "slug": "andrew-hill",
+              "teamId": "847b67d2-64a0-459a-b726-484e88392ba6"
+            },
+            "contestId": "6c70b978-8526-434f-a5b1-4917b49778c4",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-29",
+            "dateLocal": "2027-01-29T19:30:00",
+            "dateUtc": "2027-01-30T03:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Del Mar",
+              "result": null,
+              "score": null,
+              "slug": "del-mar",
+              "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-16T14:28:51",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-hill-san-jose/1-29-2027/?c=6c70b978-8526-434f-a5b1-4917b49778c4",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam3120f3c3d1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "6c70b978-8526-434f-a5b1-4917b49778c4"
+        },
         "official": {
           "fixture": {
             "awayName": "Andrew Hill",
@@ -25519,10 +26075,30 @@
             "source": "bval-docx",
             "time": "19:30"
           },
+          "lastMatch": {
+            "contestId": "6c70b978-8526-434f-a5b1-4917b49778c4",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-29:andrew-hill@del-mar",
+              "jv": {
+                "dateKey": "2027-01-29",
+                "time": "18:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-29",
+              "source": "bval-docx"
+            }
+          },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-29; MaxPreps flags it non-league",
           "ref": "west-valley:2027-01-29:andrew-hill@del-mar"
         }
       },
-      "id": "2027-01-29-andrew-hill-at-del-mar"
+      "id": "2027-01-29-andrew-hill-at-del-mar~2",
+      "published": [
+        {
+          "contestId": "6c70b978-8526-434f-a5b1-4917b49778c4"
+        }
+      ]
     },
     {
       "claims": {
@@ -27900,9 +28476,9 @@
               "home": 0
             },
             "countsFor": null,
-            "dateKey": "2027-02-02",
-            "dateLocal": "2027-02-02T19:30:00",
-            "dateUtc": "2027-02-03T03:30:00Z",
+            "dateKey": "2027-02-05",
+            "dateLocal": "2027-02-05T19:30:00",
+            "dateUtc": "2027-02-06T03:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -27922,7 +28498,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T09:51:41",
+              "maxprepsModifiedOn": "2026-11-16T17:03:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27931,8 +28507,8 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-san-jose/2-2-2027/?c=9e4ce91c-53e2-44e2-8476-a6d73bfce6b4",
-              "nfhsStream": null
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-san-jose/2-5-2027/?c=9e4ce91c-53e2-44e2-8476-a6d73bfce6b4",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gamaca346f3ac?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -27966,7 +28542,7 @@
                 "dateKey": "2027-02-05",
                 "time": "18:00"
               },
-              "pass": "rescheduled",
+              "pass": "same-date",
               "scheduledDate": "2027-02-05",
               "source": "bval-docx"
             }
@@ -28969,7 +29545,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082560?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-macdonald-san-jose/2-3-2027/?c=a5aec4db-ca37-49c9-8a60-34dcd6473132",
               "nfhsStream": null
             },
@@ -29381,7 +29957,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/christopher-gilroy-vs-pioneer-san-jose/2-3-2027/?c=37af39e8-34ea-4a04-a2c0-50994e9bac78",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/christopher-high-school-gilroy-ca/gam58fd7c8d72?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -30846,72 +31422,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Jose",
-              "name": "San Jose",
-              "result": null,
-              "score": null,
-              "slug": "san-jose",
-              "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
-            },
-            "contestId": "d9e5177a-358b-498f-8dce-490ce4ba18ad",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2027-02-05",
-            "dateLocal": "2027-02-05T18:00:00",
-            "dateUtc": "2027-02-06T02:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Redwood City",
-              "name": "Design Tech",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "ccd2acd7-1720-4166-bcf3-cdd292bbdb36"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-03T21:45:07",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/design-tech-redwood-city-vs-san-jose/2-5-2027/?c=d9e5177a-358b-498f-8dce-490ce4ba18ad",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Club Oracle, 250 Oracle Pkwy, Redwood City"
-            }
-          },
-          "ref": "d9e5177a-358b-498f-8dce-490ce4ba18ad"
-        }
-      },
-      "id": "2027-02-05-san-jose-at-name:designtech",
-      "published": [
-        {
-          "contestId": "d9e5177a-358b-498f-8dce-490ce4ba18ad"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Santa Clara",
               "name": "Santa Clara",
               "result": null,
@@ -30955,7 +31465,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7082561?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/cupertino-vs-santa-clara/2-5-2027/?c=a189254b-70d8-43f0-9dac-6b6422e37c4f",
               "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam3c995c1348?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -31551,7 +32061,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/christopher-gilroy-vs-evergreen-valley-san-jose/2-10-2027/?c=5e9d249e-bada-4232-ab13-b8d7b63d2c92",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/christopher-high-school-gilroy-ca/gamcad6a70ac7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -35821,7 +36331,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/christopher-gilroy-vs-santa-teresa-san-jose/2-16-2027/?c=61441e2b-1f5a-440d-81ac-f9b7f2f37294",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/christopher-high-school-gilroy-ca/gamfc292be964?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
