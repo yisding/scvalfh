@@ -417,9 +417,8 @@ export const FIELD_HOCKEY_LEDGER: FixtureLedger = {
     //  - Division I: San Marcos 4, Poway 2 (owner, 2026-11-15, with an Instagram post of the game); San Marcos'
     //    goals were three by Arden Pantel (#14) and one by Brenna Kirsch (#5). A two-goal margin was settled in
     //    regulation (overtime is sudden victory).
-    //  - Open: Bishop's 1, Canyon Hills 0 (owner, 2026-11-15); the goal was Cece Jeffery's (#5). The owner first
-    //    gave the winner alone, recorded with `goals` null; the score followed the same day. A one-goal margin was
-    //    settled in regulation (overtime is sudden victory).
+    //  - Open: Bishop's v Canyon Hills carries no result here. The owner's 1-0 (2026-11-15) was withdrawn on
+    //    2026-11-16 as wrong, so the game is MaxPreps' alone.
     {
       dateKey: '2026-11-14',
       home: 'san-marcos',
@@ -431,20 +430,6 @@ export const FIELD_HOCKEY_LEDGER: FixtureLedger = {
         shootout: null,
         source: 'an Instagram post of the Division I final, given by the owner Nov 15, 2026: San Marcos 4, Poway 2, with three goals by Arden Pantel and one by Brenna Kirsch; MaxPreps lists the game with no score',
         url: 'https://www.instagram.com/p/DfwJW8PGwlY/',
-        certainty: 'reported',
-      },
-    },
-    {
-      dateKey: '2026-11-14',
-      home: 'bishops',
-      away: 'canyon-hills',
-      sources: { maxpreps: '10a472ed-c57c-4874-ae7b-295d7f032db6' },
-      result: {
-        goals: { bishops: 1, 'canyon-hills': 0 },
-        otPeriods: 0,
-        shootout: null,
-        source: 'the owner’s report, Nov 15, 2026: Bishop’s 1, Canyon Hills 0, the goal by Cece Jeffery; MaxPreps lists the game with no score',
-        url: null,
         certainty: 'reported',
       },
     },
