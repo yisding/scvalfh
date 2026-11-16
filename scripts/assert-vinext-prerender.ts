@@ -51,7 +51,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { getSnapshot } from '../lib/data';
-import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample, SKIPPED_ROUTES } from './lib/prerender-expectations';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample, SKIPPED_ROUTES, UNLISTED_PAGES } from './lib/prerender-expectations';
 
 interface PrerenderRoute {
   route: string;
@@ -119,7 +119,10 @@ const notFoundFiles = new Set(
 );
 const pageFiles = new Set(files.filter((f) => f.endsWith('.html') && f !== '404.html' && !notFoundFiles.has(f)));
 const sitemapFiles = sitemapPaths.map((p) => (p === '/' ? 'index' : p.slice(1)) + '.html');
-const unlisted = [...pageFiles].filter((f) => !sitemapFiles.includes(f));
+// A draft (UNLISTED_PAGES) is prerendered and left out of the sitemap on purpose.
+const unlistedOnPurpose = new Set(UNLISTED_PAGES.map((p) => `${p}.html`));
+const unlisted = [...pageFiles].filter((f) => !sitemapFiles.includes(f) && !unlistedOnPurpose.has(f));
+const listedDraft = sitemapFiles.filter((f) => unlistedOnPurpose.has(f));
 const unrendered = sitemapFiles.filter((f) => !pageFiles.has(f));
 console.log(`sitemap: ${sitemapPaths.length} URLs; prerendered pages: ${pageFiles.size}` +
   `${notFoundFiles.size ? ` (+ ${notFoundFiles.size} prerendered 404s)` : ''}`);
@@ -127,6 +130,7 @@ const listedNotFound = sitemapFiles.filter((f) => notFoundFiles.has(f));
 if (listedNotFound.length) fail('in the sitemap but prerendered as a 404: ' + sample(listedNotFound));
 if (unrendered.length) fail('in the sitemap but not prerendered: ' + sample(unrendered));
 if (unlisted.length) fail('prerendered but not in the sitemap: ' + sample(unlisted));
+if (listedDraft.length) fail('a draft in the sitemap: ' + sample(listedDraft));
 if (new Set(sitemapFiles).size !== sitemapFiles.length) fail('the sitemap lists a URL twice');
 const listedRedirects = sitemapFiles.filter((f) => redirectFiles.has(f));
 if (listedRedirects.length) fail('redirected aliases listed in the sitemap: ' + sample(listedRedirects));

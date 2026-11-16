@@ -53,6 +53,12 @@ export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
     (IS_FIELD_HOCKEY || p !== 'draft/awards'),
 );
 
+/**
+ * Fixed pages kept out of the sitemap on purpose: a draft post (app/draft/*) is `noindex` and linked from
+ * nowhere until it is published, so the sitemap gates do not expect it there.
+ */
+export const UNLISTED_PAGES: readonly string[] = ['draft/awards'];
+
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
