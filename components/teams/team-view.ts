@@ -40,7 +40,8 @@ import {
   noMoreGamesSentence,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { CCS } from '../../lib/league-config/sections';
+import { CCS, ccsLastDay } from '../../lib/league-config/sections';
+import { SDS_BRACKETS_FILE } from '../../lib/postseason/sds-brackets-file';
 import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
   divisionHeading,
@@ -71,6 +72,7 @@ import type {
 import { gameAddress } from '../../lib/schools/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { getBracketPlace } from '../playoffs/bracket-place';
+import { winnerOf } from '../../lib/postseason/game-winner';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, tiebreakRuleOf } from '../ui/describe-game';
 import { maxPrepsLabel } from '../words/maxpreps-label';
@@ -420,12 +422,17 @@ export function leagueCopy(
       // the bracket", which named no day).
       const seeding = CCS.keyDates.seedingMeeting.slice(0, 10);
       const seeded = today !== undefined && today >= seeding;
+      // Once the last finals day has passed there is no CCS game left to list: the sentence points to the bracket.
+      const finals = ccsLastDay(CCS.keyDates);
+      const over = today !== undefined && today > finals;
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: null,
         seasonEndSentence: `${ended}${after}.`,
-        bracketSentence: `CCS ${seeded ? 'seeded' : 'seeds'} the field on ${shortDate(seeding)}; we list each CCS game as MaxPreps posts it.`,
+        bracketSentence: over
+          ? `CCS played its finals ${shortDate(finals)}; the bracket and every result are on the playoffs page.`
+          : `CCS ${seeded ? 'seeded' : 'seeds'} the field on ${shortDate(seeding)}; we list each CCS game as MaxPreps posts it.`,
       };
     }
     case 'league-tournament': {
@@ -482,12 +489,20 @@ export function leagueCopy(
       // projects no seed (DESIGN-socal §2.4), so the sentence says when the brackets come, nothing more.
       const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
       const when = seeding ? ` after its ${shortDate(seeding.date)} seeding meeting` : '';
+      // Past tense once the last finals day has passed; once the brackets are transcribed (data/sds-brackets-2026.json)
+      // they are on the playoffs page, so the sentence points there rather than promising them.
+      const over = today !== undefined && today > ps.dates.last;
+      const drawn = SDS_BRACKETS_FILE.divisions.length > 0 && today !== undefined && (!seeding || today >= seeding.date);
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: ps.name,
-        seasonEndSentence: `${ended}; the ${ps.name} follow, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: `We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page${when}.`,
+        seasonEndSentence: `${ended}; the ${ps.name} ${over ? 'followed' : 'follow'}, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
+        bracketSentence: over && drawn
+          ? `The Section’s brackets and every result are on the playoffs page.`
+          : drawn
+            ? `The Section’s brackets are on the playoffs page; we list each playoff game as MaxPreps posts it.`
+            : `We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page${when}.`,
       };
     }
   }
@@ -765,6 +780,13 @@ export function buildNextCard(
  * team's card (components/playoffs/bracket-place.ts): "CCS Division 2 quarterfinal · 5 v 4: at Homestead, Sat Nov 7,
  * 10:00 AM PT. The winner plays Leigh or Santa Clara in the semifinal, Wed Nov 11." Before a bracket exists, or for
  * any other postseason, the line is the accessor's.
+ *
+ * Once the team's run is over (its latest bracket game is final, none is still to play) the label is its finish,
+ * read from the results on every refresh (2026-11-16): 'CCS Division 1 champion' / 'CCS Division 1 runner-up' /
+ * 'Lost in the CCS Division 1 quarterfinal' ('Won the Open Division final' / 'Lost in the Division I first round'
+ * for the San Diego Section, which this site never calls a champion, DESIGN §24.5). The sentence after the game says
+ * how the bracket ended once its final has a winner ('St. Ignatius won CCS Division 1.'), and the next round's
+ * matchup only while that round is still to come, so the line never tells a past game as one to play.
  */
 function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: readonly Game[], today: string): TeamPostseasonLine | null {
   if (!line) return line;
@@ -777,12 +799,24 @@ function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: re
   const mineIsHome = game.home.slug === team.slug;
   const other = mineIsHome ? game.away : game.home;
   const opponent = (other.slug ? getTeamBySlug(other.slug)?.shortName : undefined) ?? other.name;
+  const round = place.round.split(' · ')[0];
+  const winner = upcoming ? null : winnerOf(game);
+  const ccs = game.postseason?.kind === 'ccs';
+  let label = round;
+  let after = place.next;
+  if (winner !== null && winner !== team.slug) {
+    // Out: the round it lost in, then how its bracket ended (or the next round, while that is still to come).
+    label = place.isFinal && ccs ? `${round.replace(/ final$/, '')} runner-up` : `Lost in the ${round}`;
+    after = place.decided ?? (place.nextDateKey !== null && place.nextDateKey >= today ? place.next : null);
+  } else if (winner === team.slug && place.isFinal) {
+    label = ccs ? `${round.replace(/ final$/, '')} champion` : `Won the ${round}`;
+  }
   const what = upcoming
     ? `${game.site === 'neutral' || mineIsHome ? 'vs' : 'at'} ${opponent}, ${shortDate(game.dateKey)}${game.isTimeTba ? '' : `, ${timeOfDayPT(game.dateLocal)}`}.`
     : describeGame(game).sentence;
   return {
-    label: place.round.split(' · ')[0],
-    sentence: [`${place.round}: ${what}`, place.next].filter(Boolean).join(' '),
+    label,
+    sentence: [`${place.round}: ${what}`, after].filter(Boolean).join(' '),
     href: place.link.href,
     linkText: `${team.shortName} in the ${place.link.label}`,
     caveat: null,

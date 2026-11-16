@@ -206,3 +206,72 @@ export function tournamentBracketView(
   if (last && extra.length > 0) last.extra = extra;
   return { division: { rounds } };
 }
+
+/**
+ * Where one team finished in an event drawn from its schedule (the EAL's Super Regional, the Tournament of Champions),
+ * read off the same resolved games as its bracket: its latest game with a known winner, by playing order. Null while
+ * the team has played no such game. A team page's postseason line reads it (components/playoffs/team-postseason-line.ts),
+ * so the line follows the results on every data refresh with no copy to edit by hand.
+ */
+export interface EventFinish {
+  round: TournamentBracketGame['round'];
+  won: boolean;
+  opponent: string;
+  game: Game | null;
+  date: string;
+}
+
+export function eventFinish(specs: readonly TournamentBracketGame[], games: readonly Game[], slug: string): EventFinish | null {
+  const resolved = [...resolve(specs, games).values()];
+  const mine = resolved.filter((r) => r.winner !== null && (r.home === slug || r.away === slug));
+  const last = mine.at(-1);
+  if (!last) return null;
+  const opponent = (last.home === slug ? last.away : last.home) ?? '';
+  return { round: last.spec.round, won: last.winner === slug, opponent, game: last.game, date: last.spec.date };
+}
+
+const FINISH_ROUND: Readonly<Record<TournamentBracketGame['round'], string>> = {
+  'first-round': 'first round',
+  semifinal: 'semifinal',
+  final: 'final',
+  'third-place': 'third-place game',
+  'fifth-place': 'fifth-place game',
+};
+
+/**
+ * The finish in words: a label ('Won the Super Regional', 'Runner-up in the Tournament of Champions', 'Third in the
+ * Super Regional', 'Lost in the first round') and one sentence about the deciding game ('Harvard-Westlake beat
+ * Huntington Beach 4–0 in the Tournament of Champions final on Thu Oct 29.'). `words` is the section's tiebreak
+ * ('1 v 1s' for the Northern Section), for a game a shootout settled. No seed word and never "eliminat…".
+ */
+export function eventFinishCopy(finish: EventFinish, slug: string, eventName: string, words: string): { label: string; sentence: string } {
+  const team = getTeamBySlug(slug)?.name ?? slug;
+  const opp = getTeamBySlug(finish.opponent)?.name ?? finish.opponent;
+  const { round, won } = finish;
+  const label =
+    round === 'final' ? (won ? `Won the ${eventName}` : `Runner-up in the ${eventName}`)
+    : round === 'third-place' ? `${won ? 'Third' : 'Fourth'} in the ${eventName}`
+    : round === 'fifth-place' ? `${won ? 'Fifth' : 'Sixth'} in the ${eventName}`
+    : won ? `In the ${eventName}` : `Lost in the ${eventName} ${FINISH_ROUND[round]}`;
+  const where = `in the ${eventName} ${FINISH_ROUND[round]} on ${shortDate(finish.date)}`;
+  const g = finish.game;
+  const view = g ? renderScore(g) : null;
+  if (!g || view?.kind !== 'final') {
+    // A winner a source names with no score published.
+    return { label, sentence: `${won ? `${team} beat ${opp}` : `${team} lost to ${opp}`} ${where}; no score was posted.` };
+  }
+  const mineHome = g.home.slug === slug;
+  const [us, them] = mineHome ? [view.home, view.away] : [view.away, view.home];
+  if (g.decider === 'SO') {
+    const tally = g.shootout ? `, ${Math.max(g.shootout.home, g.shootout.away)}${EN_DASH}${Math.min(g.shootout.home, g.shootout.away)}` : '';
+    const { onPhrase } = shootoutPhrases(words);
+    return { label, sentence: `${team} and ${opp} drew ${us}${EN_DASH}${them} ${where}; ${won ? team : opp} won ${onPhrase}${tally}.` };
+  }
+  const ot = g.decider === '2OT' ? ' in double overtime' : g.decider === 'OT' ? ' in overtime' : '';
+  return {
+    label,
+    sentence: won
+      ? `${team} beat ${opp} ${us}${EN_DASH}${them}${ot} ${where}.`
+      : `${team} lost to ${opp} ${them}${EN_DASH}${us}${ot} ${where}.`,
+  };
+}
