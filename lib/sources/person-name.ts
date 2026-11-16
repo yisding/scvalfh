@@ -52,8 +52,32 @@ function isUncased(name: string): boolean {
     .some((w) => /\p{Lu}/u.test(w));
 }
 
+/**
+ * Spellings a person has confirmed that MaxPreps gets wrong, applied after the recasing so a refetch
+ * keeps them. Each is a run of whole words as MaxPreps writes them and as the family does. Curated,
+ * never guessed: an entry says who confirmed it.
+ */
+export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis: string }[] = [
+  {
+    maxpreps: 'Van De Braak',
+    spelled: 'Van de Braak',
+    basis:
+      "Olivia Van de Braak (St. Ignatius): the site owner confirmed the lowercase 'de' (2026-11-16), as SCVAL's " +
+      '2025-26 all-league list writes it.',
+  },
+];
+
+const SPELLING_RES = NAME_SPELLINGS.map(({ maxpreps, spelled }) => ({
+  re: new RegExp(`(?<![\\p{L}'’-])${maxpreps.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}'’-])`, 'gu'),
+  spelled,
+}));
+
+function respell(name: string): string {
+  return SPELLING_RES.reduce((n, { re, spelled }) => n.replace(re, spelled), name);
+}
+
 function recaseAs(name: string, uncased: boolean): string {
-  return name.replace(/\S+/g, uncased ? capitalize : (w) => fixCased(recaseShouted(w)));
+  return respell(name.replace(/\S+/g, uncased ? capitalize : (w) => fixCased(recaseShouted(w))));
 }
 
 /**

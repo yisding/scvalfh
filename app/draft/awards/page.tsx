@@ -18,10 +18,11 @@ const PAGE_TITLE = 'NCFH.net Inaugural High School Field Hockey Awards';
  * Not linked from anywhere, not in the sitemap and marked `noindex`, so it is read only by whoever is
  * given the URL until it is published. Field hockey's alone: another sport's build renders it as a 404.
  *
- * Every team name links to its team page and every player name to her team page's roster (`#roster`),
- * so the links stay on this site; the two colleges link to their rows on /commits. Each link is checked
- * at build time: a team slug not in the registry, a player not on that team's varsity roster or a
- * commitment not in data/commits.json throws, so a roster refresh that drops a name fails the build
+ * Every team name (nicknames too) links to its team page and every player name to her team page's roster
+ * (`#roster`), so the links stay on this site; the two colleges link to their rows on /commits, and the
+ * Tournament of Champions wins to their brackets (2025 on /history/2025-26, 2026 on /playoffs). Each link
+ * to a team, player or college is checked at build time: a team slug not in the registry, a player not on
+ * that team's varsity roster or a commitment not in data/commits.json throws, so a roster refresh that drops a name fails the build
  * rather than shipping a link to the wrong place. Every link carries `prefetch={false}`: the post has
  * about fifty of them, and the default would download every team page it names.
  */
@@ -91,7 +92,7 @@ export default function AwardsDraftPage() {
           Freshman <P team="stevenson" name="Lotti Schulte" /> (92 points) and Junior{' '}
           <P team="stevenson" name="Gretta Jungjohann" /> (85 points) leading <T slug="stevenson">Stevenson</T> to a
           perfect 12-0 in league play. &ldquo;Do they play club? Which one? How come we&rsquo;ve never heard of
-          them?&rdquo; Turns out the answer is yes, before joining the Pirates, they played field hockey at hundred year
+          them?&rdquo; Turns out the answer is yes, before joining the <T slug="stevenson">Pirates</T>, they played field hockey at hundred year
           old clubs in Germany. A very warm welcome to the duo from Deutschland!
         </p>
 
@@ -138,12 +139,10 @@ export default function AwardsDraftPage() {
         <p>
           20 and 1. 17 Clean Sheets, 135 goals goal difference. From start to finish, NorCal&rsquo;s best team has never
           been in doubt this season. Yes, I&rsquo;m talking about the one and only <T slug="st-ignatius">St. Ignatius</T>.
-          The Wildcats had an unstoppable run in the postseason not conceding a single goal in all 4 postseason matches
+          The <T slug="st-ignatius">Wildcats</T> had an unstoppable run in the postseason not conceding a single goal in all 4 postseason matches
           they played! Jersey #1 <P team="st-ignatius" name="Storey Lewis" /> had 99 points this season, which would be
           enough for first place in NorCal, if not for her teammate, and NorCal High School MVP{' '}
-          <P team="st-ignatius" name="Olivia Van De Braak">
-            Olivia Van de Braak
-          </P>{' '}
+          <P team="st-ignatius" name="Olivia Van de Braak" />{' '}
           with 126. 42 goals and 42 assists. Truly the meaning of life!
         </p>
 
@@ -167,7 +166,14 @@ export default function AwardsDraftPage() {
         <p>
           It&rsquo;s hard to finish this post without mentioning one more player. JWNT player{' '}
           <P team="harvard-westlake" name="Margaux Schlumberger" /> led <T slug="harvard-westlake">Harvard-Westlake</T> to
-          two consecutive Tournament of Champions (Los Angeles Field Hockey Association) wins. After this year,
+          {/* The 2025 final is on the history page, the 2026 final on /playoffs. */}
+          <Link href="/history/2025-26#toc-bracket" prefetch={false}>
+            two consecutive
+          </Link>{' '}
+          <Link href="/playoffs#toc-final" prefetch={false}>
+            Tournament of Champions
+          </Link>{' '}
+          (Los Angeles Field Hockey Association) wins. After this year,
           she&rsquo;s moving across the country to play for the other{' '}
           <C college="harvard" player="Margaux Schlumberger">
             Harvard

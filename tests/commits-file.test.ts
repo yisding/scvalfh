@@ -333,7 +333,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       'Ryan Hemeon',
       'Frankie Lemieux',
       'Gianna Rinaldi',
-      'Olivia Van De Braak',
+      'Olivia Van de Braak',
       'Kaye Zilinskas',
       'Shyla Paredes',
     ]);
