@@ -542,7 +542,7 @@
   .sx-day[aria-current] { color: var(--sx-text); font-weight: 700; box-shadow: inset 0 -3px 0 var(--sx-accent); }
   .sx-day[aria-current] > b { font-weight: 700; }
   .sx-day[data-today] { color: var(--sx-accent-ink); font-weight: 700; }   /* the word "Today" is the today marker */
-  .sx-day[data-live] > small { color: var(--sx-live); font-weight: 700; }
+  .sx-day > small[data-live] { color: var(--sx-live); font-weight: 700; }
   .sx-day:focus-visible { outline-offset: -3px; }
   .sx-datebar .sx-btn { min-height: 2.75rem; }
   .sx-datebar .sx-btn > svg { display: none; }
