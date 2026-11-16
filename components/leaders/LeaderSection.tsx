@@ -8,7 +8,7 @@ import type { LeaderBoard } from './types';
  * visible at once.
  *
  * The section is a block that carries `data-region-scope`; the grid is the element inside it.
- * `titleHidden`: the section directly under the page's Players / Teams tab row keeps its h2 for
+ * `titleHidden`: the section directly under the page's Teams / Players tab row keeps its h2 for
  * the outline but does not draw it, since the tab row above it has just said the same word.
  */
 export interface LeaderSectionProps {

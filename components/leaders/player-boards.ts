@@ -1,5 +1,5 @@
 /**
- * The /leaders player boards (data/player-stats.json): most points, Elo-adjusted points, assists, saves
+ * The /leaders player boards (data/player-stats.json): most points, goals, Elo-adjusted points, assists, saves
  * and clean sheets, plus the notes under them. A player's numbers are exactly what the team page shows:
  * season totals as the coach entered them on MaxPreps, plus the goals and saves the coach wrote in game
  * notes instead (lib/players/note-stats.ts). Their grade and position are the team page's roster row's
@@ -116,6 +116,20 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     ],
     rankedBy: 2,
     lead: 'Points are MaxPreps’: 2 per goal, 1 per assist.',
+  },
+  {
+    id: 'player-goals',
+    title: 'Most goals',
+    navLabel: 'Goals',
+    statWord: 'goals',
+    who: ['player', 'players'],
+    stat: { block: 'field', key: 'goals' },
+    columns: [
+      { key: 'gamesPlayed', label: 'GP', title: 'Games played', cell: field('gamesPlayed') },
+      { key: 'goals', label: 'G', title: 'Goals', cell: field('goals') },
+    ],
+    rankedBy: 1,
+    lead: 'Goals as the coach entered them.',
   },
   {
     id: 'adjusted-points',
