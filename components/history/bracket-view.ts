@@ -1,4 +1,4 @@
-import { monthDay, shortDate } from '../../lib/format';
+import { shortDate } from '../../lib/format';
 import {
   bracketSides,
   historySchoolName,
@@ -141,14 +141,6 @@ export function finalLine(final: HistoryBracketGame): string {
   return `Beat ${l} ${score} in the final${final.decidedBy ? ` ${AFTER[final.decidedBy]}` : ''}`;
 }
 
-/**
- * The third-place game's line under a bracket that held one (the Tournament of Champions), or null:
- * "Third place, Oct 25: Huntington Beach beat Edison 1-0."
- */
-export function thirdPlaceLine(division: HistoryBracketDivision): string | null {
-  const third = division.thirdPlace;
-  return third ? `Third place, ${monthDay(third.date)}: ${gameSentence(third.game)}` : null;
-}
 
 /** A round's heading date, with its weekday as every bracket on the site prints it: "Thu Nov 5". */
 export const roundDate = (round: HistoryBracketRound): string => shortDate(round.date);
@@ -218,9 +210,28 @@ export interface BracketDivisionView {
   rounds: BracketRoundView[];
 }
 
-/** A 2025 archive division as the shared model: what /history/2025-26 has always printed, unchanged. */
+/**
+ * A 2025 archive division as the shared model. A third-place game (the Tournament of Champions') is the last
+ * round's `extra`, drawn as a card under the final with the final's tab on a phone, as /playoffs draws the 2026
+ * event's (components/playoffs/tournament-bracket-view.ts); its card notes its day when that is not the final's.
+ */
 export function historyBracketView(division: HistoryBracketDivision): BracketDivisionView {
   const side = (s: HistoryBracketSide): BracketSideView => ({ seed: s.seed, slug: s.slug, name: sideName(s) });
+  const card = (game: HistoryBracketGame, round: HistoryBracketRound): BracketCardView => ({
+    key: `${game.top.slug}-${game.bottom.slug}`,
+    top: side(game.top),
+    bottom: side(game.bottom),
+    winner: game.winner,
+    score: game.score ?? null,
+    status: 'final' as const,
+    time: null,
+    site: game.site ?? null,
+    href: null,
+    sentence: [gameSentence(game), gameSentenceTail(game, round)],
+    note: gameNote(game, round),
+  });
+  const last = division.rounds.length - 1;
+  const third = division.thirdPlace;
   return {
     rounds: division.rounds.map((round, roundIndex) => {
       const byes = roundByes(division, roundIndex);
@@ -232,19 +243,10 @@ export function historyBracketView(division: HistoryBracketDivision): BracketDiv
           byes.length > 0
             ? byes.map((s) => (s.seed === null ? sideName(s) : `${sideName(s)} (${s.seed})`)).join(', ')
             : null,
-        cards: round.games.map((game) => ({
-          key: `${game.top.slug}-${game.bottom.slug}`,
-          top: side(game.top),
-          bottom: side(game.bottom),
-          winner: game.winner,
-          score: game.score ?? null,
-          status: 'final' as const,
-          time: null,
-          site: game.site ?? null,
-          href: null,
-          sentence: [gameSentence(game), gameSentenceTail(game, round)],
-          note: gameNote(game, round),
-        })),
+        cards: round.games.map((game) => card(game, round)),
+        ...(roundIndex === last && third
+          ? { extra: [{ name: 'Third place', cards: [card({ ...third.game, date: third.date }, round)] }] }
+          : {}),
       };
     }),
   };

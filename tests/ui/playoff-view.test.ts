@@ -378,9 +378,11 @@ describe('buildOutsideTournamentView — the Tournament of Champions (SectionCon
     const text = textOf(html);
     expect(html.match(/id="toc"/g)?.length, PAGE).toBe(1);
     expect(html.match(/id="toc-games"/g)?.length, PAGE).toBe(1);
-    // The heading carries the dates as its fact; whose postseason it is opens the note under the games.
+    // The heading carries the dates as its fact; whose postseason it is opens the event's note under the games.
     expect(html, PAGE).toMatch(/id="toc-heading"><div><h2 [^>]*>Tournament of Champions<\/h2><span [^>]*>Oct 22–29<\/span>/);
-    expect(text, PAGE).toContain('The postseason for the Sunset and the LA independents.');
+    expect(text, PAGE).toContain('The Tournament of Champions is the postseason for the Sunset and the LA independents');
+    // Said once: the note is the event's own, with no sentence in front of it repeating whose postseason it is.
+    expect(text.match(/postseason for the Sunset and the LA independents/g)?.length, PAGE).toBe(1);
     expect(text, PAGE).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
     // The section opens on its heading and its games, and each league's own section follows it: neither league owns it.
     const toc = html.indexOf('id="toc"');

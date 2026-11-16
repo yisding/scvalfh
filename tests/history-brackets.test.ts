@@ -24,7 +24,6 @@ import {
   historyBracketView,
   roundByes,
   sideName,
-  thirdPlaceLine,
 } from '../components/history/bracket-view';
 import { HistoryBracketsSchema, type HistoryBrackets } from '../lib/history/history-brackets-schema';
 import {
@@ -213,7 +212,12 @@ describe('the 2025 Tournament of Champions', () => {
     expect(finalLine(final)).toBe('Beat Newport Harbor 4-0 in the final');
     expect(gameNote(final, d.rounds[2])).toBe('At Ted Slavin Field, Harvard-Westlake');
     expect(gameNote(d.rounds[0].games[3], d.rounds[0])).toBe('Tiebreak not reported');
-    expect(thirdPlaceLine(d)).toBe('Third place, Oct 25: Huntington Beach beat Edison 1-0.');
+    // The third-place game is a card under the final, as /playoffs draws the 2026 event's.
+    const finalRound = historyBracketView(d).rounds.at(-1)!;
+    expect(finalRound.extra?.map((e) => [e.name, e.cards.map((c) => c.sentence.join(''))])).toEqual([
+      ['Third place', ['Huntington Beach beat Edison 1-0.']],
+    ]);
+    expect(historyBracketView(d).rounds.slice(0, -1).every((r) => r.extra === undefined)).toBe(true);
   });
 
   it('is every game between two Southern Section teams of Oct 21-25, 2025 in MaxPreps’ schedules, home team on top', () => {
@@ -245,14 +249,12 @@ describe('the 2025 Tournament of Champions', () => {
 });
 
 describe('lib/history/history bracket reads', () => {
-  it('places the CCS bracket after PCAL and the San Diego Section’s after Metro', () => {
-    expect(getHistoryBrackets().map((b) => `${b.id}:${b.afterLeague}`)).toEqual(['ccs:pcal', 'sds:metro']);
+  it('lists the CCS bracket, then the San Diego Section’s', () => {
+    expect(getHistoryBrackets().map((b) => b.id)).toEqual(['ccs', 'sds']);
   });
 
-  it('places the Tournament of Champions after the LA independents, the postseason of them and the Sunset', () => {
-    expect(getHistoryTournaments().map((t) => `${t.id}:${t.afterLeague}:${t.leagues.join('+')}`)).toEqual([
-      `${TOC.id}:independents:sunset+independents`,
-    ]);
+  it('lists the Tournament of Champions as the postseason of the Sunset and the LA independents', () => {
+    expect(getHistoryTournaments().map((t) => `${t.id}:${t.leagues.join('+')}`)).toEqual([`${TOC.id}:sunset+independents`]);
     expect(getHistoryTournamentFor('sunset')?.id).toBe('toc');
     expect(getHistoryTournamentFor('independents')?.id).toBe('toc');
     for (const id of ['scval', 'mcal', 'city', 'north-county', 'metro'] as const) expect(getHistoryTournamentFor(id)).toBeNull();

@@ -219,20 +219,33 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     for (const id of ['city', 'north-county', 'metro']) expect(sectionById(html, id)).not.toContain('href="#toc"');
   });
 
-  it('draws the 2025 Tournament of Champions after the LA independents, in SoCal, with no seed', async () => {
+  it('opens on the 2025 postseason: the CCS, the San Diego Section and the Tournament of Champions, before any league', async () => {
+    const { default: HistoryPage } = await import('../../app/history/2025-26/page');
+    const html = renderToStaticMarkup(createElement(HistoryPage));
+    const at = (id: string) => html.indexOf(`<section id="${id}"`);
+    expect(at('ccs')).toBeGreaterThan(0);
+    expect(at('ccs')).toBeLessThan(at('sds'));
+    expect(at('sds')).toBeLessThan(at('toc'));
+    expect(at('toc')).toBeLessThan(at('scval'));
+  });
+
+  it('draws the 2025 Tournament of Champions as /playoffs draws the 2026 event, in SoCal, with no seed', async () => {
     const { default: HistoryPage } = await import('../../app/history/2025-26/page');
     const html = renderToStaticMarkup(createElement(HistoryPage));
     expect(html).toMatch(/<section id="toc" data-region-scope="socal"/);
     // No tab of its own in the league row (its tabs are leagues): the Sunset's and the LA independents' sections link it.
     for (const id of ['sunset', 'independents']) expect(sectionById(html, id), `#${id} points to #toc`).toContain('href="#toc"');
-    expect(html.indexOf('<section id="toc"')).toBeGreaterThan(html.indexOf('<section id="independents"'));
+    // The heading carries the dates; the bracket is `#toc-bracket`, the third-place game a card under the final.
+    expect(html).toMatch(/id="toc-heading"><div><h2 [^>]*>Tournament of Champions<\/h2><span [^>]*>Oct 21–25<\/span>/);
+    expect(html).toContain('id="toc-bracket"');
     const toc = sectionById(html, 'toc')!;
     const text = textOf(toc);
     expect(text).toContain('Tournament of Champions champion');
     expect(text).toContain('Harvard-Westlake');
     expect(text).toContain('Beat Newport Harbor 4-0 in the final');
     expect(text).toContain('Newport Harbor and Bonita drew 1-1; Newport Harbor went through.');
-    expect(text).toContain('Third place, Oct 25: Huntington Beach beat Edison 1-0.');
+    expect(text).toContain('Third place');
+    expect(text).toContain('Huntington Beach beat Edison 1-0.');
     expect(text).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
     expect(text).not.toMatch(SEED_CLAIM);
     // No drawn line carries a seed.

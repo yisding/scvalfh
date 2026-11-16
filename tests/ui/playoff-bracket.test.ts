@@ -12,7 +12,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { PlayoffBracket } from '../../components/playoffs/PlayoffBracket';
+import { PlayoffBracket, deciderWords } from '../../components/playoffs/PlayoffBracket';
 import { buildBrackets, type BracketPath } from '../../components/playoffs/bracket-model';
 import { gameHref } from '../../lib/game-id';
 import { shortDate } from '../../lib/format';
@@ -205,5 +205,16 @@ describe('PlayoffBracket before the games exist', () => {
     expect(html.match(/ data-won=""/g)?.length, COMPONENT).toBe(2);
     for (const cell of upcoming) expect(cell, COMPONENT).not.toMatch(/data-won|data-lost/);
     expect(html, COMPONENT).not.toContain(WINNER_RULE);
+  });
+});
+
+describe('deciderWords: how a final was decided, under its card', () => {
+  it('spells the tag out, as the archive, the San Diego bracket and the Tournament of Champions do', () => {
+    expect(deciderWords('OT', null)).toBe('Overtime');
+    expect(deciderWords('2 OT', null)).toBe('Double overtime');
+    expect(deciderWords('3 OT', null)).toBe('3 overtimes');
+    expect(deciderWords('SO', null)).toBe('Shootout');
+    expect(deciderWords('SO', '(2–1 SO)')).toBe('Shootout 2–1');
+    expect(deciderWords('F', null)).toBe('Forfeit');
   });
 });

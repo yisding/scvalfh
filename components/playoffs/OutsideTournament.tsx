@@ -16,7 +16,7 @@ import type { OutsideTournamentView } from './playoff-view';
  *    otherwise by day under a strip naming the round the schools' schedules give that day
  *    ('Round 1', 'Semifinals', 'Final and third-place game') with the day at its right end, as the site's
  *    game rows (`GameList`);
- * 3. one note (whose postseason it is, then the event's own: who runs it, its rounds, that CIF does not) and
+ * 3. the event's note (whose postseason it is, who runs it, its rounds, that CIF does not) and
  *    the sources;
  * 4. `children`: the leagues' own sections (`#sunset`, `#independents`), each saying which of its teams play
  *    in it, after the tournament's.
@@ -28,8 +28,6 @@ export interface OutsideTournamentProps {
   view: OutsideTournamentView;
   /** `toc`: the section's id, the target of the board row's and the team pages' links. */
   id: string;
-  /** 'the Sunset and the LA independents': whose postseason it is, for the heading's meta. */
-  whose: string;
   /** The event as a bracket (TournamentBracket), drawn in place of the games by day when its config has one. */
   bracket?: React.ReactNode;
   /** The leagues' sections, drawn after the tournament's. */
@@ -37,7 +35,7 @@ export interface OutsideTournamentProps {
   className?: string;
 }
 
-export function OutsideTournament({ view, id, whose, bracket, children, className }: OutsideTournamentProps) {
+export function OutsideTournament({ view, id, bracket, children, className }: OutsideTournamentProps) {
   return (
     <>
       <section id={id} aria-labelledby={`${id}-heading`} className={['sx-section', className].filter(Boolean).join(' ')}>
@@ -61,7 +59,7 @@ export function OutsideTournament({ view, id, whose, bracket, children, classNam
             ))
           )}
         </div>
-        <p className="sx-note">{`The postseason for ${whose}. ${view.note}`}</p>
+        <p className="sx-note">{view.note}</p>
         <p className="sx-linkrow">
           {view.sources.map((s) => (
             <ExternalLink key={s.href} href={s.href} className="sx-action">

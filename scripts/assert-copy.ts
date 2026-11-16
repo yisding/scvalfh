@@ -91,7 +91,7 @@ import { getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { profileLabel } from '../components/teams/roster-view';
 import { getCommitsFile } from '../lib/players/commits';
 import { getSnapshot } from '../lib/data';
-import { gameSentence, thirdPlaceLine } from '../components/history/bracket-view';
+import { gameSentence } from '../components/history/bracket-view';
 import { getHistoryBrackets, getHistoryLeagues, getHistoryTournaments, type HistoryBracketDivision } from '../lib/history/history';
 import { getPlayerStats } from '../lib/players/player-stats';
 import {
@@ -383,11 +383,13 @@ if (!existsSync(historyPath)) {
   for (const msg of historyPageProblems(main, getHistoryLeagues())) fail(historyFile, msg);
   // Each 2025 section bracket, and the Tournament of Champions', is its own section, and every game of it
   // reads on the page.
-  const blocks: ReadonlyArray<{ id: string; divisions: readonly HistoryBracketDivision[] }> = [
-    ...getHistoryBrackets(),
-    ...getHistoryTournaments(),
-  ].map(({ id, bracket }) => ({ id, divisions: bracket.divisions }));
-  for (const { id, divisions } of blocks) {
+  // A section's divisions are anchored `#ccs-division-1`; the Tournament of Champions' one bracket `#toc-bracket`,
+  // as /playoffs anchors the 2026 event's.
+  const blocks: ReadonlyArray<{ id: string; divisions: readonly HistoryBracketDivision[]; anchor: (d: HistoryBracketDivision) => string }> = [
+    ...getHistoryBrackets().map(({ id, bracket }) => ({ id, divisions: bracket.divisions, anchor: (d: HistoryBracketDivision) => `${id}-${d.id}` })),
+    ...getHistoryTournaments().map(({ id, bracket }) => ({ id, divisions: bracket.divisions, anchor: () => `${id}-bracket` })),
+  ];
+  for (const { id, divisions, anchor } of blocks) {
     const section = sectionById(main, id);
     if (!section) {
       fail(historyFile, `no <section id="${id}"> for the ${id} bracket`);
@@ -395,15 +397,15 @@ if (!existsSync(historyPath)) {
     }
     const text = visibleText(section);
     for (const d of divisions) {
-      if (!section.includes(`id="${id}-${d.id}"`)) fail(historyFile, `${id}: no id="${id}-${d.id}" division anchor`);
+      if (!section.includes(`id="${anchor(d)}"`)) fail(historyFile, `${id}: no id="${anchor(d)}" division anchor`);
       for (const round of d.rounds) {
         for (const game of round.games) {
           const sentence = gameSentence(game);
           if (!text.includes(sentence)) fail(historyFile, `${id}/${d.id}: “${sentence}” is not on the page`);
         }
       }
-      const third = thirdPlaceLine(d);
-      if (third && !text.includes(third)) fail(historyFile, `${id}/${d.id}: “${third}” is not on the page`);
+      const third = 'thirdPlace' in d && d.thirdPlace ? gameSentence(d.thirdPlace.game) : null;
+      if (third && !text.includes(third)) fail(historyFile, `${id}/${d.id}: the third-place game “${third}” is not on the page`);
     }
   }
   // The Tournament of Champions publishes no seeds, so its block prints no seed word (copy rule 5).
