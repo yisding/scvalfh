@@ -19,7 +19,7 @@ import { getClubSlugs } from '../../lib/players/clubs';
 import { gameSlug } from '../../lib/game-slug';
 import { gameAliasTable } from '../../lib/game-urls';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../../lib/sports/current';
+import { HAS_CLUB_CALENDAR, HAS_RECRUITING, IS_FIELD_HOCKEY } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
@@ -38,21 +38,32 @@ const ALL_FIXED_PAGES = [
   'commits',
   'recruiting',
   'jv',
+  'draft/awards',
 ] as const;
 
 /**
  * The fixed pages this build prerenders: a route this sport's build does not have (lib/sports/current.ts
- * HAS_RECRUITING: field hockey and volleyball; HAS_CLUB_CALENDAR: field hockey) is a 404 there, which
- * `next build` writes as a not-found page and vinext skips, so it is not expected.
+ * HAS_RECRUITING: field hockey and volleyball; HAS_CLUB_CALENDAR: field hockey; app/draft/awards: field hockey) is
+ * a 404 there, which `next build` writes as a not-found page and vinext skips, so it is not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
-  (p) => (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) && (HAS_CLUB_CALENDAR || p !== 'club-calendar'),
+  (p) =>
+    (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)) &&
+    (HAS_CLUB_CALENDAR || p !== 'club-calendar') &&
+    (IS_FIELD_HOCKEY || p !== 'draft/awards'),
 );
+
+/**
+ * Fixed pages kept out of the sitemap on purpose: a draft post (app/draft/*) is `noindex` and linked from
+ * nowhere until it is published, so the sitemap gates do not expect it there.
+ */
+export const UNLISTED_PAGES: readonly string[] = ['draft/awards'];
 
 /** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
   ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),
+  ...(IS_FIELD_HOCKEY ? [] : ['/draft/awards']),
   ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
 ];
 

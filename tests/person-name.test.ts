@@ -40,7 +40,7 @@ describe('recaseName', () => {
   it.each([
     'AJ Smith',
     'TJ',
-    'Olivia Van De Braak',
+    'Olivia Van de Braak',
     'McKenna Lee',
     'Anna van der Berg',
     'Harmony Cooks-Macdonald',
@@ -55,6 +55,30 @@ describe('recaseName', () => {
       expect(recaseName(name)).toBe(name);
     },
   );
+});
+
+describe('NAME_SPELLINGS', () => {
+  it.each([
+    ['Olivia Van De Braak', 'Olivia Van de Braak'],
+    ['O. Van De Braak', 'O. Van de Braak'],
+    ['olivia van de braak', 'Olivia Van de Braak'],
+    ['Van De Braak', 'Van de Braak'],
+  ])('%s → %s', (name, spelled) => {
+    expect(recaseName(name)).toBe(spelled);
+  });
+
+  it('respells whole words only', () => {
+    expect(recaseName('Ava Van De Braaker')).toBe('Ava Van De Braaker');
+    expect(recaseName('Ava Smith-Van De Braak')).toBe('Ava Smith-Van De Braak');
+  });
+
+  it('respells a roster row on all three fields', () => {
+    expect(recaseNameParts({ firstName: 'Olivia', lastName: 'Van De Braak', fullName: 'Olivia Van De Braak' })).toEqual({
+      firstName: 'Olivia',
+      lastName: 'Van de Braak',
+      fullName: 'Olivia Van de Braak',
+    });
+  });
 });
 
 describe('recaseNameParts', () => {

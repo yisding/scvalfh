@@ -41,7 +41,7 @@ const OPTS = { expectedTeamId: 'team-1', expectedSeasonId: 'season-1' };
 describe('nameFromCareerUrl', () => {
   it('takes the first name from the link and the last name from the sheet', () => {
     expect(nameFromCareerUrl(career('storey-lewis', 'a'), 'S. Lewis')).toBe('Storey Lewis');
-    expect(nameFromCareerUrl(career('olivia-van-de-braak', 'a'), 'O. Van De Braak')).toBe('Olivia Van De Braak');
+    expect(nameFromCareerUrl(career('olivia-van-de-braak', 'a'), 'O. Van De Braak')).toBe('Olivia Van de Braak');
     expect(nameFromCareerUrl(career('mary-kate-oneil', 'a'), "M. O'Neil")).toBe("Mary Kate O'Neil");
     expect(nameFromCareerUrl(career('linnea-boublik-whiteley', 'a'), 'L. Boublik-Whiteley')).toBe('Linnea Boublik-Whiteley');
   });
