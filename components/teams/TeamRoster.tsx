@@ -241,7 +241,11 @@ export function TeamRoster({ view }: TeamRosterProps) {
     <div>
       <ul className="sx-auto m-0 list-none p-0">
         {rows.map((row) => (
-          <li key={row.key} className="flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5">
+          <li
+            key={row.key}
+            id={row.anchor ?? undefined}
+            className="sx-target flex min-w-0 items-baseline gap-3 border-b border-hairline py-1.5"
+          >
             {showNumbers ? (
               <span className={['sx-num shrink-0 text-right text-body text-ink-2', numberWidth].join(' ')}>
                 {row.jersey ? (

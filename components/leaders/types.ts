@@ -207,7 +207,7 @@ export interface LeadersView {
 /** A team's roster rows, as far as a leaderboard reads them. */
 export interface RosterSource {
   slug: Team['slug'];
-  players: readonly Pick<MergedPlayer, 'athleteId' | 'grade' | 'positions'>[];
+  players: readonly Pick<MergedPlayer, 'athleteId' | 'fullName' | 'level' | 'grade' | 'positions'>[];
 }
 
 /** What the page is built from. Defaults to the bundled snapshot and player stats. */
@@ -224,7 +224,8 @@ export interface LeaderSources {
   prior?: PriorSeason | null;
   /**
    * The rosters a player's stat line joins to on its athleteId, for the grade and position the
-   * team page shows; left out, no row has either.
+   * team page shows and the roster row a player's row links to; left out, no row has either, and
+   * every player's row links the team page's stats section.
    */
   rosters?: readonly RosterSource[];
   /** The goal model's Newton iterations (lib/ratings/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */

@@ -22,6 +22,7 @@ import LeadersPage from '../../app/leaders/page';
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
 import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '../../components/leaders/elo-board';
 import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { buildRosterView } from '../../components/teams/roster-view';
 import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '../../components/leaders/scope';
 import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
@@ -171,7 +172,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
           const value = (player[block] as Record<string, number | null> | null)?.[key] ?? null;
           expect(value, `${board.id}: ${row.name}`).toBeGreaterThan(0);
           expect(row.cells[board.rankedBy].text, `${board.id}: ${row.name}`).toBe(statText(value));
-          expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
+          // The player's own roster row (`#player-…`), or the stats section where no row joins.
+          expect(row.team.href, row.name).toMatch(new RegExp(`^/teams/${row.team.slug}#player-`));
         });
       }
     }
@@ -223,8 +225,9 @@ describe('buildLeadersView — rules, over the committed data', () => {
     }
   });
 
-  it("prints each player's grade and position exactly as the team page's roster has them", () => {
+  it("prints each player's grade and position exactly as the team page's roster has them, and links that row", () => {
     let withFacts = 0;
+    let anchored = 0;
     for (const board of view.regions.flatMap((r) => r.players)) {
       for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
         const line = stats.find((t) => t.slug === row.team.slug)!.players.find((p) => p.fullName === row.name)!;
@@ -239,10 +242,15 @@ describe('buildLeadersView — rules, over the committed data', () => {
           : [];
         expect(row.facts, `${board.id}: ${row.name}`).toEqual(expected);
         if (row.facts.length > 0) withFacts += 1;
+        // The link opens the team page on the id its roster section gives that same player's row.
+        const anchor = buildRosterView(row.team.slug)!.rows.find((r) => line.athleteId !== null && r.key === line.athleteId)?.anchor;
+        expect(row.team.href, `${board.id}: ${row.name}`).toBe(`/teams/${row.team.slug}#${anchor ?? 'player-stats'}`);
+        if (anchor) anchored += 1;
       }
     }
     // The join works: most listed players have a roster row with a grade or a position.
     expect(withFacts).toBeGreaterThan(0);
+    expect(anchored).toBeGreaterThan(0);
   });
 
   it("prints each school's record as its standings row has it, and only for a school past its region's minimum", () => {
@@ -734,9 +742,9 @@ describe('buildLeadersView — players, over synthetic stats', () => {
         {
           slug: 'mitty',
           players: [
-            { athleteId: 'mitty-a0', grade: 12, positions: ['F', 'M'] },
-            { athleteId: 'mitty-a1', grade: null, positions: ['D'] },
-            { athleteId: 'mitty-a3', grade: 10, positions: [] },
+            { athleteId: 'mitty-a0', fullName: 'Ana Ames', level: null, grade: 12, positions: ['F', 'M'] },
+            { athleteId: 'mitty-a1', fullName: 'Bea Bell', level: null, grade: null, positions: ['D'] },
+            { athleteId: 'mitty-a3', fullName: 'Gia Gray', level: null, grade: 10, positions: [] },
           ],
         },
       ],
@@ -750,14 +758,20 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       'Eve Eck': [],
     });
     expect(facts('most-saves')['Gia Gray']).toEqual(['Sophomore']);
-    // DESIGN §33: a board row is the name over ONE small line, the player's school. The grade and
-    // position stay in the view model (the team page prints them); the row strings no facts together.
+    // A board row is the name over the player's school, and under that, on a line of their own, the
+    // grade and position the roster has, a dot a screen reader skips between them; a player with
+    // neither gets the school alone.
     const html = renderToStaticMarkup(
       createElement(LeaderBoardTable, { board: nc(v).players.find((b) => b.id === 'most-points')! }),
     );
-    expect(html).toMatch(/Ana Ames<\/a><small>Mitty<\/small>/);
-    expect(html).not.toContain('·');
-    expect(html).not.toContain('Senior');
+    const dot = '<span aria-hidden="true"> · </span><span class="sr-only">, </span>';
+    expect(html).toContain(`Ana Ames</a><small>Mitty</small><small><span>Senior</span><span>${dot}Forward / Midfield</span></small>`);
+    expect(html).toContain('Bea Bell</a><small>Mitty</small><small><span>Defense</span></small>');
+    expect(html).toMatch(/Dee Dunn<\/a><small>[^<]+<\/small><\/span>/);
+    // Each joined row links its player's roster row on the team page; one no roster row joins, the stats.
+    expect(html).toContain('href="/teams/mitty#player-ana-ames"');
+    expect(html).toContain('href="/teams/mitty#player-bea-bell"');
+    expect(html).toMatch(/href="\/teams\/[a-z-]+#player-stats">(?:<span class="sr-only">.*?<\/span>)?Dee Dunn</);
     // No rosters given: no facts, never a guess.
     expect(board('most-points').rows.every((r) => r.facts.length === 0)).toBe(true);
     for (const b of nc(v).schools) for (const r of b.rows) expect(r.facts, b.id).toEqual([]);

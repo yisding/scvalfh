@@ -16,6 +16,9 @@ import { statText } from './player-stats-view';
  * Column heads are abbreviations a reader may not know (GWG, SOG), so each head carries its full
  * name for a screen reader and the legend under the tables spells every one out.
  *
+ * Each name links the player's row in the roster section below (`#player-jane-doe`) and has the
+ * grade and position that row prints under it, where the stat line joins a roster row.
+ *
  * Goals, assists and saves a coach wrote in a game note instead (lib/players/note-stats.ts) are added in, and every
  * row or card holding one carries a mark that the list of noted games under the tables explains.
  */
@@ -29,6 +32,47 @@ function NotedMark() {
       </sup>
       <span className="sr-only"> (includes a game note)</span>
     </>
+  );
+}
+
+/**
+ * A player's name, linked to their roster row further down the team page (`#player-jane-doe`,
+ * components/teams/player-anchors.ts) where the stat line joins one; plain text where it does not.
+ * A team-name link's face: ink, underlined on hover. `standalone` is for a name that is the only
+ * thing in its block (a goalkeeper card's heading with no number): there the link must be a 24px
+ * target itself (WCAG 2.5.8; scripts/a11y-axe.mjs), where in a table the row is what is aimed at.
+ */
+function PlayerName({ name, href, standalone = false }: { name: string; href: string | undefined; standalone?: boolean }) {
+  return href ? (
+    <a href={href} className={standalone ? 'sx-teamlink inline-block min-h-6' : 'sx-teamlink'}>
+      {name}
+    </a>
+  ) : (
+    <>{name}</>
+  );
+}
+
+/**
+ * The grade and position the player's roster row prints ("Junior · Midfield"), on a line of their
+ * own under the name, as /leaders prints them; nothing where the line joins no roster row (and on
+ * the game page, which passes none). The dot is drawn, a screen reader hears a comma.
+ */
+function Facts({ facts }: { facts: string[] | undefined }) {
+  if (!facts || facts.length === 0) return null;
+  return (
+    <span className="block text-cell font-normal text-ink-2">
+      {facts.map((fact, i) => (
+        <span key={fact} className="whitespace-nowrap">
+          {i > 0 ? (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span className="sr-only">, </span>
+            </>
+          ) : null}
+          {fact}
+        </span>
+      ))}
+    </span>
   );
 }
 
@@ -88,8 +132,9 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
                     </span>
                   ) : null}
                   <span className="min-w-0">
-                    {row.name}
+                    <PlayerName name={row.name} href={row.href} />
                     {row.noted ? <NotedMark /> : null}
+                    <Facts facts={row.facts} />
                   </span>
                 </span>
               </th>
@@ -119,9 +164,10 @@ function Goalie({ card }: { card: GoalieCard }) {
             {card.jersey}
           </span>
         ) : null}
-        {card.name}
+        <PlayerName name={card.name} href={card.href} standalone />
         {card.noted ? <NotedMark /> : null}
       </h4>
+      <Facts facts={card.facts} />
       <dl className="m-0 mt-2 grid grid-cols-3 gap-x-3 gap-y-2 sm:grid-cols-4">
         {card.stats.map((s) => (
           <div key={s.label} className="min-w-0">
@@ -233,8 +279,9 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
                               </span>
                             ) : null}
                             <span className="min-w-0">
-                              {g.name}
+                              <PlayerName name={g.name} href={g.href} />
                               {g.noted ? <NotedMark /> : null}
+                              <Facts facts={g.facts} />
                             </span>
                           </span>
                           {g.flag ? <span className="block text-cell text-ink-2">{g.flag}</span> : null}

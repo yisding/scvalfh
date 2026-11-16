@@ -14,7 +14,7 @@
  */
 
 import type { AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
-import { gradeWord, listWords, shortDate } from '../../lib/format';
+import { listWords, shortDate } from '../../lib/format';
 import { notedKinds } from '../../lib/players/note-stats';
 import type {
   FieldStatKey,
@@ -24,9 +24,9 @@ import type {
 } from '../../lib/players/player-stats-schema';
 import { SPORT } from '../../lib/sports/current';
 import type { Game, Team, TeamId } from '../../lib/types';
+import { playerAnchors, playerFacts } from '../teams/player-anchors';
 import { gamesSinceUpdate, hittingPercent, oneDecimal, perGameRate, savePercent, shootingPercent, threeDecimals } from '../teams/player-stats-view';
 import { plural } from '../words/plural';
-import { positionWords } from '../words/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
 import type { BoardScope } from './scope';
@@ -40,6 +40,8 @@ interface PlayerEntry {
   team: Team;
   /** LeaderRow.facts: the grade and position on the player's roster row. */
   facts: string[];
+  /** The roster row's anchor on the team page (`#player-jane-doe`), or the stats section's where none joins. */
+  anchor: string;
   /**
    * The team's schedule factor (lib/ratings/adjusted-scoring.ts), or null when the team is under the Elo
    * board's minimum: too few games for one.
@@ -371,12 +373,10 @@ const VOLLEYBALL_PLAYER_BOARDS: PlayerBoardSpec[] = [
 const BOARDS: readonly PlayerBoardSpec[] =
   SPORT.stats.model === 'basketball' ? BASKETBALL_PLAYER_BOARDS : VOLLEYBALL ? VOLLEYBALL_PLAYER_BOARDS : PLAYER_BOARDS;
 
-/** The grade and position(s) the team page's roster prints for a player, only those it has. */
-function playerFacts(p: RosterSource['players'][number]): string[] {
-  const facts: string[] = [];
-  if (p.grade !== null) facts.push(gradeWord(p.grade));
-  if (p.positions.length > 0) facts.push(positionWords(p.positions));
-  return facts;
+/** `#player-jane-doe` when the stat line joins a roster row, else the team page's stats section. */
+function anchorOf(anchors: ReadonlyMap<string, string> | undefined, athleteId: string | null): string {
+  const id = athleteId === null ? undefined : anchors?.get(athleteId);
+  return `#${id ?? 'player-stats'}`;
 }
 
 function playerBoard(
@@ -406,7 +406,7 @@ function playerBoard(
     tied,
     name: e.player.fullName,
     facts: e.facts,
-    team: teamRef(e.team, '#player-stats'),
+    team: teamRef(e.team, e.anchor),
     cells: spec.columns.map((c) => c.cell(e)),
   }));
   const rows = listed.filter((r) => r.rank <= BOARD_PLACES);
@@ -493,6 +493,8 @@ export function buildPlayerBoards(input: PlayerBoardsInput): PlayerBoards {
       r.players.flatMap((p) => (p.athleteId === null ? [] : [[`${r.slug}:${p.athleteId}`, playerFacts(p)] as const])),
     ),
   );
+  // The roster row each player's row links to, by the same join (components/teams/player-anchors.ts).
+  const anchorsBySlug = new Map(rosters.map((r) => [r.slug, playerAnchors(r.players)]));
   // The schedule factor of a team past the Elo board's minimum (the games both count are the same).
   const factorOf = (team: Team): number | null => {
     const a = adjusted.get(team.id);
@@ -511,6 +513,7 @@ export function buildPlayerBoards(input: PlayerBoardsInput): PlayerBoards {
       stats: s,
       team,
       facts: (player.athleteId === null ? undefined : factsByPlayer.get(`${s.slug}:${player.athleteId}`)) ?? [],
+      anchor: anchorOf(anchorsBySlug.get(s.slug), player.athleteId),
       factor,
     })),
   );

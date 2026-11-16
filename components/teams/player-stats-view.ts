@@ -28,6 +28,7 @@
 import { listWords, numberWord, plural, shortDate } from '../../lib/format';
 import type { NoteCredit, NoteStatKind } from '../../lib/players/note-stats';
 import { getTeamPlayerStatsWithNotes } from '../../lib/players/player-stats';
+import { getEnrichedTeamRoster } from '../../lib/players/rosters';
 import type {
   FieldStatKey,
   GoalieStatKey,
@@ -36,6 +37,7 @@ import type {
 } from '../../lib/players/player-stats-schema';
 import { SPORT } from '../../lib/sports/current';
 import type { Game, TeamSlug } from '../../lib/types';
+import { rosterEntries, type RosterEntry } from './player-anchors';
 
 /** Whether this build's stat line is basketball's (`Sport.stats.model`): one line per player, no goalkeepers. */
 const BASKETBALL = SPORT.stats.model === 'basketball';
@@ -53,6 +55,10 @@ export interface StatColumn {
 export interface StatRow {
   key: string;
   name: string;
+  /** The player's roster row on the team page (`#player-jane-doe`), where the line joins one. */
+  href?: string;
+  /** That row's grade and position ("Junior", "Midfield"), only the ones it has. */
+  facts?: string[];
   jersey: string | null;
   /** One per column; null prints as a dash. */
   values: Array<number | null>;
@@ -82,6 +88,9 @@ export interface NamedStatTable {
 export interface GoalieCard {
   key: string;
   name: string;
+  /** As StatRow's. */
+  href?: string;
+  facts?: string[];
   jersey: string | null;
   /** In GOALIE order; `text` null prints as a dash with "not recorded" for a screen reader. */
   stats: Array<{ label: string; text: string | null }>;
@@ -227,12 +236,33 @@ export function notedGames(credits: readonly NoteCredit[]): NotedGame[] {
     });
 }
 
+/**
+ * What a stat line's row reads from its player's roster row: the link to it and its grade and
+ * position. Nothing where the line joins no row.
+ */
+type PlayerLink = (p: PlayerStatLine) => Pick<StatRow, 'href' | 'facts'>;
+const NO_LINK: PlayerLink = () => ({});
+
+/** `#player-jane-doe` and the row's facts, for a line whose athleteId joins a roster row (components/teams/player-anchors.ts). */
+function rosterLink(roster: ReadonlyMap<string, RosterEntry>): PlayerLink {
+  return (p) => {
+    const entry = p.athleteId === null ? undefined : roster.get(p.athleteId);
+    return entry === undefined ? {} : { href: `#${entry.anchor}`, facts: entry.facts };
+  };
+}
+
+/** The team's roster rows, from the merged roster the team page's roster section prints. */
+function teamRoster(slug: TeamSlug): ReadonlyMap<string, RosterEntry> {
+  return rosterEntries(getEnrichedTeamRoster(slug)?.players ?? []);
+}
+
 function table(
   team: TeamPlayerStats,
   spec: typeof SCORING,
   players: PlayerStatLine[],
   keep: (values: Array<number | null>) => boolean,
   noted: Set<string> = new Set(),
+  link: PlayerLink = NO_LINK,
 ): StatTable | null {
   const tracked = new Set<string>(team.tracked.field);
   const columns = spec.filter((c) => tracked.has(c.key));
@@ -241,6 +271,7 @@ function table(
     .map((p, i) => ({
       key: p.careerId ?? `${p.shortName}-${i}`,
       name: p.fullName,
+      ...link(p),
       jersey: p.jersey,
       values: columns.map((c) => p.field?.[c.key] ?? null),
       noted: isNoted(noted, p),
@@ -270,7 +301,7 @@ export function goalieFiguresDisagree(g: NonNullable<PlayerStatLine['goalkeeping
   return (g.saves ?? 0) + (g.goalsAgainst ?? 0) > g.opponentShotsOnGoal;
 }
 
-function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: Set<string>): GoalieCard {
+function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: Set<string>, link: PlayerLink): GoalieCard {
   const tracked = new Set<string>(team.tracked.goalkeeping);
   const g = p.goalkeeping!;
   // Saves that include a game note's cover games the entered goals against and shots on goal do
@@ -309,6 +340,7 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: 
   return {
     key: p.careerId ?? `${p.shortName}-${i}`,
     name: p.fullName,
+    ...link(p),
     jersey: p.jersey,
     stats,
     flag,
@@ -550,7 +582,10 @@ function byPoints(a: PlayerStatLine, b: PlayerStatLine): number {
  * same order in every table so a reader can follow one player down the page. A table none of whose columns
  * the team tracks is left out.
  */
-export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' | 'players'>): NamedStatTable[] {
+export function basketballTables(
+  team: Pick<TeamPlayerStats, 'name' | 'tracked' | 'players'>,
+  link: PlayerLink = NO_LINK,
+): NamedStatTable[] {
   const tracked = new Set<string>(team.tracked.field);
   const players = team.players.filter((p) => p.field !== null).sort(VOLLEYBALL ? byKills : byPoints);
   const out: NamedStatTable[] = [];
@@ -562,6 +597,7 @@ export function basketballTables(team: Pick<TeamPlayerStats, 'name' | 'tracked' 
       return {
         key: p.careerId ?? `${p.shortName}-${i}`,
         name: p.fullName,
+        ...link(p),
         jersey: p.jersey,
         values,
         texts: columns.map((c, at) => (values[at] === null ? null : c.derived ? (c.digits === 3 ? threeDecimals(values[at]!) : oneDecimal(values[at]!)) : String(Math.round(values[at]!)))),
@@ -594,6 +630,8 @@ const BASKETBALL_DERIVED = new Set(LINE_TABLES.flatMap((t) => t.columns.filter((
  * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
  *   added (lib/players/note-stats.ts). Tests pass a fixture build, since the committed file moves with
  *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
+ * @param roster the team's varsity roster rows by athleteId, each row's anchor and grade and position
+ *   (components/teams/player-anchors.ts); a line it does not join gets neither a link nor facts.
  */
 export function buildPlayerStatsView(
   slug: TeamSlug,
@@ -601,8 +639,10 @@ export function buildPlayerStatsView(
   team:
     | (TeamPlayerStats & { noteCredits?: readonly NoteCredit[]; noteTracked?: TeamPlayerStats['tracked'] })
     | undefined = getTeamPlayerStatsWithNotes(slug),
+  roster: ReadonlyMap<string, RosterEntry> = teamRoster(slug),
 ): PlayerStatsView | null {
   if (!team) return null;
+  const link = rosterLink(roster);
   const credits = team.noteCredits ?? [];
   const notedScoring = notedKeys(credits, ['goals', 'assists']);
   const notedSaves = notedKeys(credits, ['saves']);
@@ -610,7 +650,7 @@ export function buildPlayerStatsView(
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
   const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
   if (BASKETBALL || VOLLEYBALL) {
-    const tables = basketballTables(team);
+    const tables = basketballTables(team, link);
     return {
       teamName: team.name,
       status: team.status,
@@ -631,15 +671,15 @@ export function buildPlayerStatsView(
   }
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
-  const scoring = table(team, SCORING, field, () => true, notedScoring);
+  const scoring = table(team, SCORING, field, () => true, notedScoring, link);
   // The "more" table lists only players with at least one of its numbers above zero. Notes add
   // goals and assists only, which are on the scoring table, so nothing here is marked.
-  const more = table(team, MORE, field, (values) => values.some((v) => v !== null && v > 0));
+  const more = table(team, MORE, field, (values) => values.some((v) => v !== null && v > 0), new Set(), link);
 
   const goalies = team.players
     .filter((p) => p.goalkeeping !== null)
     .sort(byTimeInGoal)
-    .map((p, i) => goalieCard(team, p, i, notedSaves))
+    .map((p, i) => goalieCard(team, p, i, notedSaves, link))
     .filter((c) => c.stats.length > 0);
 
   return {
