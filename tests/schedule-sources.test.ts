@@ -179,7 +179,8 @@ describe('where a postseason game is, and where it is filed', () => {
   it('files a playoff game between two teams of one conference under the Section’s playoffs, not the conference', () => {
     const groups = dayGroups(data.getGames({ date: '2026-11-14' }));
     const playoffs = groups.find((g) => g.name === 'San Diego Section playoffs');
-    expect(playoffs?.games.some((g) => g.home.slug === 'bishops' && g.away.slug === 'canyon-hills')).toBe(true);
+    // MaxPreps has listed either school as host, so the pair is matched in either order.
+    expect(playoffs?.games.some((g) => [g.home.slug, g.away.slug].sort().join() === 'bishops,canyon-hills')).toBe(true);
     expect(groups.find((g) => g.leagueId === 'city')).toBeUndefined();
   });
 
