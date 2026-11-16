@@ -5,10 +5,11 @@ import {
   getHistoryChampions,
   getHistoryDivisionChanges,
   getHistoryUnpublishedTies,
+  historyPlaceShared,
   historySchoolName,
   type AvailableLeagueHistory,
 } from '../../lib/history/history';
-import { getDivision, getLeague, regionOf } from '../../lib/leagues';
+import { divisionHeading, getDivision, getLeague, regionOf } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import AwardsBlock from './AwardsBlock';
@@ -55,6 +56,9 @@ export default function AvailableLeague({
   const champions = new Set(getHistoryChampions(leagueId).map((c) => c.division));
   const changes = getHistoryDivisionChanges(leagueId);
   const unpublishedTies = getHistoryUnpublishedTies(leagueId);
+  const sharedPlaces = divisions.some((d) =>
+    [d.standings.varsity, d.standings.jv].some((rows) => rows.some((r) => historyPlaceShared(rows, r))),
+  );
   const p = entry.provenance;
 
   // One strip heads a division's block: the division at the left, the level at its right end; a
@@ -139,6 +143,27 @@ export default function AvailableLeague({
             site uses &mdash; MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDF
             lists league records only; its overall-record column was empty for this season.
           </p>
+        ) : p.source === 'league-documents' ? (
+          <p className="sx-note">
+            Source: {p.publisher} &mdash;{' '}
+            <ExternalLink href={p.standings.url}>
+              {season} final standings ({p.standings.kind === 'pdf' ? 'PDF' : 'web page'})
+            </ExternalLink>
+            {p.allLeague ? (
+              <>
+                {' '}and{' '}
+                <ExternalLink href={p.allLeague.url}>
+                  {season} all-league teams ({p.allLeague.kind === 'pdf' ? 'PDF' : 'web page'})
+                </ExternalLink>
+              </>
+            ) : null}
+            . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the MaxPreps data the
+            rest of the site uses &mdash; MaxPreps only ever serves the current season.{' '}
+            {hasOverall
+              ? 'Overall is the season record the standings print beside the league record.'
+              : 'The standings print league records only.'}
+            {sharedPlaces ? ` Teams ${league.shortName}’s table ranks level share a place, as it prints them.` : ''}
+          </p>
         ) : p.source === 'scval-pdf' ? (
           <p className="sx-note">
             Source: scval.com &mdash;{' '}
@@ -179,12 +204,21 @@ export default function AvailableLeague({
             {unpublishedTies.length === 1 ? 'it is' : 'they are'} shown as published; we do not assume zero ties.
           </p>
         ) : null}
-        {changes.map((c) => (
-          <p key={c.slug} className="sx-note">
-            {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {season}, as the
-            source lists it. {league.shortName}&rsquo;s current alignment on this site lists {c.name} in {getDivision(c.registryDivision)?.label ?? c.registryDivision}, so {c.name} moved.
-          </p>
-        ))}
+        {changes.map((c) =>
+          c.registryLeague === leagueId ? (
+            <p key={c.slug} className="sx-note">
+              {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {season}, as the
+              source lists it. {league.shortName}&rsquo;s current alignment on this site lists {c.name} in {getDivision(c.registryDivision)?.label ?? c.registryDivision}, so {c.name} moved.
+            </p>
+          ) : (
+            <p key={c.slug} className="sx-note">
+              {c.name} played in the {league.shortName} in {season}, as the source lists it, and is in the{' '}
+              {getLeague(c.registryLeague).shortName}
+              {divisionHeading(c.registryDivision) ? `’s ${divisionHeading(c.registryDivision)} division` : ''} now, so
+              this site lists it there.
+            </p>
+          ),
+        )}
       </div>
     </section>
   );

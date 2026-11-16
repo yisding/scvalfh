@@ -8,7 +8,7 @@
  */
 
 import { getToday } from '../../lib/data';
-import { getHistoryFor, getHistoryStandings, type HistoryRow } from '../../lib/history/history';
+import { getHistoryFor, getHistoryStandings, historyPlaceShared, type HistoryRow } from '../../lib/history/history';
 import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
@@ -77,6 +77,8 @@ export interface TeamPageParts {
   historySize: number;
   /** Where that row sat (`lastSeasonScope`): '' with no row. */
   historyScope: string;
+  /** Whether another team shared that place. */
+  historyTied: boolean;
   /** The team's si.com games page. */
   sblive: string | undefined;
   roster: RosterView | null;
@@ -107,7 +109,10 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   // division as it was then (the alignment can change between seasons: Leland played in Santa
   // Teresa in 2025-26 and is in Mt. Hamilton now).
   const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
-  const historySize = history ? getHistoryStandings(history.division).length : 0;
+  const historyRows = history ? getHistoryStandings(history.division) : [];
+  const historySize = historyRows.length;
+  // A place the league's table gives two teams (the WBAL's): the line says "tied for".
+  const historyTied = history ? historyPlaceShared(historyRows, history.row) : false;
   const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
   const sblive = team.external.sbliveGamesUrl;
   // Both exist for every registry team; an empty or pending team gets a stated empty state.
@@ -148,6 +153,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
     history,
     historySize,
     historyScope,
+    historyTied,
     sblive,
     roster,
     jv,

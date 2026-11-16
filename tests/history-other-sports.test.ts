@@ -45,8 +45,8 @@ const read = (sport: SportId): File =>
 const division = (sport: SportId, id: string) => read(sport).leagues.scval.divisions.find((d) => d.division === id)!;
 const order = (rows: Row[]) => rows.map((r) => `${r.slug} ${r.leagueRecord}`);
 
-describe('scripts/build-history.ts for the soccer and basketball builds', () => {
-  for (const sport of SPORTS) {
+describe('scripts/build-history.ts for the soccer, basketball and volleyball builds', () => {
+  for (const sport of [...SPORTS, 'volleyball'] as const) {
     it(`rebuilds data/${sport}/history-2025-26.json byte for byte from the fixtures`, () => {
       const out = path.join(mkdtempSync(path.join(tmpdir(), `scvalfh-history-${sport}-`)), 'history.json');
       const r = runScript(

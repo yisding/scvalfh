@@ -738,8 +738,8 @@ describe('history: the league-aware read API', () => {
     const h = await import('../lib/history/history');
     // Two teams swapped divisions between the 2025-26 sheet and the registry's 2026-27 alignment.
     expect(h.getHistoryDivisionChanges('bval')).toEqual([
-      { slug: 'prospect', name: 'Prospect', historyDivision: 'mt-hamilton', registryDivision: 'santa-teresa' },
-      { slug: 'leland', name: 'Leland', historyDivision: 'santa-teresa', registryDivision: 'mt-hamilton' },
+      { slug: 'prospect', name: 'Prospect', historyDivision: 'mt-hamilton', registryDivision: 'santa-teresa', registryLeague: 'bval' },
+      { slug: 'leland', name: 'Leland', historyDivision: 'santa-teresa', registryDivision: 'mt-hamilton', registryLeague: 'bval' },
     ]);
     expect(h.getHistoryDivisionChanges('scval')).toEqual([]);
     expect(h.getHistoryUnpublishedTies('bval').map((r) => r.name)).toEqual(['Sobrato']);

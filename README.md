@@ -173,7 +173,7 @@ Per-league pages show their own region's league chips.
 | `/playoffs` | "Playoffs", one block per region, each opening with "Where every league stands" (`#board-norcal`, `#board-socal`: one row per postseason with what it is and its next dated item, linking its section) and "This week in the postseason" (`#this-week-norcal`, `#this-week-socal`: the region's postseason games and dated events from two days back to a week ahead, at most 12 rows, each linking its game page or block). Every league has a section of the same shape (DESIGN §32). `#norcal`: the CCS intro and `#bracket` under it (one path per proven CCS division, "CCS Division 1" and "CCS Division 2", from the games MaxPreps lists, with seeds and pairing cards from `data/ccs-bracket-2026.json`; before seeding, one sentence), then `#scval #bval #pcal` (each league's crossover and play-in cards first, `#<league>-pairings`, with their results, then its division tables), the at-large berths, the key dates with each round's site in the CCS calendar's words, `#mcal` (the tournament's next round or champion, linking `/playoffs/mcal`) and `#eal` (the Super Regional's dates, the top-six rule, the listed site and streams, the Guidelines and the results by day as MaxPreps posts them; no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, the round dates (`#sds-round-dates`) and links to the Section's brackets sheet, the officials' calendar and the Section's field hockey page; `#sds-bracket`, the Section's published brackets with MaxPreps' results, from `data/sds-brackets-2026.json`; never a projected place or a seed word), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card (with the Tournament of Champions, `#toc`, the postseason for both the Sunset and the LA independents) and an `#independents` card pointing to it |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s). Once it is under way it reads the results, the bracket before the seeds: a `#headline` block ("Next" with the next round, "3 Redwood at 1 Tamalpais", or "Champion"), each seed's outcome in the Status column, the winner of each decided game marked, the final's venue, Directions link and admission, and the same headline in its title and OG card |
 | `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the five independents, who are on every SoCal board, league record included), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
-| `/history/2025-26` | Opens on the postseason, before any league. Field hockey: the 2025 CCS bracket (`#ccs`, NorCal: each division's champion, then `#ccs-division-1` and `#ccs-division-2`), the San Diego Section's (`#sds`, SoCal) and the 2025 Tournament of Champions (`#toc`, SoCal, laid out as `/playoffs` lays out the 2026 event: its dates in the heading, `#toc-bracket` with the third-place game as a card under the final, unseeded; the Sunset and LA cards link it). Then the prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either. (The soccer, basketball and volleyball builds: the 2025-26 CCS championship, `#ccs` (every division's champion, then each division with a team of ours, drawn as `/playoffs` draws the current season's, the others named once), and the CIF State divisions our teams played in, `#cif`, both read whole from MaxPreps' tournament pages into `data/<sport>/history-brackets-2025-26.json` `published`; then SCVAL's two divisions, `#de-anza #el-camino`, varsity and JV final standings and the all-league teams, and the other leagues marked unavailable.) |
+| `/history/2025-26` | Opens on the postseason, before any league. Field hockey: the 2025 CCS bracket (`#ccs`, NorCal: each division's champion, then `#ccs-division-1` and `#ccs-division-2`), the San Diego Section's (`#sds`, SoCal) and the 2025 Tournament of Champions (`#toc`, SoCal, laid out as `/playoffs` lays out the 2026 event: its dates in the heading, `#toc-bracket` with the third-place game as a card under the final, unseeded; the Sunset and LA cards link it). Then the prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either. (The soccer, basketball and volleyball builds: the 2025-26 CCS championship, `#ccs` (every division's champion, then each division with a team of ours, drawn as `/playoffs` draws the current season's, the others named once), and the CIF State divisions our teams played in, `#cif`, both read whole from MaxPreps' tournament pages into `data/<sport>/history-brackets-2025-26.json` `published`; then SCVAL's two divisions, `#de-anza #el-camino`, varsity and JV final standings and the all-league teams; in the soccer and volleyball builds the WCAL's (`#wcal`) and the WBAL's (`#foothill #skyline`) likewise, from their own documents; and BVAL marked unavailable.) |
 | `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
@@ -1434,7 +1434,8 @@ What the soccer build has: SCVAL's two divisions from the official 2026-27 girls
 `data/soccer/official/scval-2026.json`), the SCVAL Soccer By-Laws' 3-1-0 points, head-to-head tiebreak and
 CCS ladder (De Anza 1-3 and El Camino 1 are automatic), standings, schedules, scores, team and game pages,
 leaders, JV, /playoffs and /history/2025-26 (SCVAL's 2025-26 final standings, varsity and JV, and all-league
-teams, from SCVAL's own PDFs; see "Last season's standings in the soccer and basketball builds"). What it
+teams, from SCVAL's own PDFs, and the WCAL's and the WBAL's from theirs; see "Last season's standings in the soccer
+and basketball builds" and "WCAL and WBAL last season"). What it
 leaves out: /clubs, /commits and /recruiting (field hockey's research; each renders a 404), si.com, the VNN
 calendars and the region toggle. The CCS dates come
 from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
@@ -1574,8 +1575,8 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   Section it reads, so the refresh runs with `--no-cifss` and /about says no comparison has been made.
 - **Last season**: /history/2025-26 has SCVAL's 2025-26 final standings and all-league teams from scval.com's
   PDFs (`data/volleyball/official/scval-all-league-2025-26.json`; the De Anza documents print a graduating class
-  for a grade, and one El Camino JV row prints "7", stored with no grade). BVAL is marked unavailable, as in
-  the winter builds.
+  for a grade, and one El Camino JV row prints "7", stored with no grade), and the WCAL's and the WBAL's from
+  their own documents ("WCAL and WBAL last season"). BVAL is marked unavailable, as in the winter builds.
 
 What it leaves out, as the winter builds do: si.com, the VNN calendars, /club-calendar and the region toggle.
 Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS Volleyball Bylaws'
@@ -1823,11 +1824,10 @@ The soccer build also covers the West Catholic Athletic League and the West Bay 
   the refresh job's roster step is not fatal.
 - **MaxPreps** keeps Presentation's girls soccer team in no league, so its West Bay Foothill table has six rows
   (`maxprepsMissing`); its WCAL and West Bay Skyline tables match the leagues'.
-- **Last season**: the WCAL's 2025-26 final standings and all-league teams are on wcalsports.org and not
-  transcribed yet; nor are the WBAL's, which its history page links (hs.wbalsports.org/2025-2026/socstg.html, and
-  its all-league page). Both cards on /history/2025-26 are marked unavailable and link what the league publishes
-  (`scripts/build-history.ts` `wcalNotTranscribed`, `wbalNotTranscribed`). An earlier version of the WBAL card said
-  the site kept no standings archive; that was wrong, and was corrected the same day.
+- **Last season**: /history/2025-26 has both leagues' 2025-26 final standings and all-league teams, from their own
+  documents (transcribed 2026-11-16; see "WCAL and WBAL last season"). Until then both cards were marked
+  unavailable; an earlier version of the WBAL card said the site kept no standings archive, which was wrong and
+  was corrected the same day.
 - **Addresses** for the nineteen schools are MaxPreps' school fields (`data/soccer/schools.json`), and the fourteen
   schools no other registry holds have MaxPreps' mascot tiles in `public/mascots/`.
 
@@ -1861,15 +1861,16 @@ rules. The registry holds 60 teams.
 - **Recruiting**: the 2026-11-13 sweep for recruiting pages, clubs and commitments covered the SCVAL and BVAL
   schools only; the round of 2026-11-14 searched the nineteen WCAL and WBAL schools by the same methods ("Girls
   volleyball: recruiting").
-- **Last season**: neither league's 2025 final standings are transcribed; /history/2025-26 marks both
-  unavailable and links the WCAL's standings and awards pages and the WBAL's 2025-26 standings and all-league pages.
+- **Last season**: /history/2025-26 has both leagues' 2025 final standings and all-league teams, from their own
+  documents (transcribed 2026-11-16; see "WCAL and WBAL last season").
 - **The test corpus** (`tests/fixtures/corpus/volleyball-2026-11-14/`) was recaptured on 2026-11-14 with all four
   leagues.
 
 ### Last season's standings in the soccer and basketball builds
 
-`SCVAL_SPORT=soccer pnpm build-history` (or `basketball`) writes `data/<sport>/history-2025-26.json`: SCVAL's
-entry, and BVAL's marked unavailable (above). SCVAL's comes from two inputs (`scripts/lib/history-scval-documents.ts`):
+`SCVAL_SPORT=soccer pnpm build-history` (or `basketball`, or `volleyball`) writes `data/<sport>/history-2025-26.json`:
+SCVAL's entry, BVAL's marked unavailable (above), and in the soccer and volleyball builds the WCAL's and the WBAL's
+(see "WCAL and WBAL last season"). SCVAL's comes from two inputs (`scripts/lib/history-scval-documents.ts`):
 
 - the standings PDF on `https://www.scval.com/standings/` ("SCVAL 2025-26 Girls' Soccer Standings.pdf", "SCVAL
   2025-26 Boys' Basketball standings.pdf"), read by field hockey's parser; `--from
@@ -1881,6 +1882,36 @@ entry, and BVAL's marked unavailable (above). SCVAL's comes from two inputs (`sc
   and fails on any it cannot read. The documents are laid out differently from field hockey's (basketball names
   a third team, which the schema's optional `thirdTeam` holds), and the De Anza girls soccer PDF's text comes
   out of pdftotext with letters split from their words, so no parser reads them.
+
+### WCAL and WBAL last season
+
+The soccer and volleyball builds' `data/<sport>/history-2025-26.json` has the WCAL's and the WBAL's 2025-26 final
+standings, varsity and JV, and their all-league teams, from each league's own documents, transcribed on 2026-11-16
+into `data/<sport>/official/{wcal,wbal}-2025-26.json` (each row as printed, checked against the documents row by
+row) and built by `scripts/lib/history-league-documents.ts` (`pnpm build-history` reads the files; nothing is
+downloaded for them, and `tests/history-other-sports.test.ts` rebuilds both archives byte for byte):
+
+- **WCAL**: the 2025-2026 standings archive PDF linked from wcalsports.org/standings/ (girls soccer tables of Feb
+  18, 2026; girls volleyball of Oct 29, 2025) and the 2025-26 all-league PDF linked from
+  wcalsports.org/awardsrecords/ (players of the year, first and second teams and honorable mention, each with year
+  and position). The PDF prints no place column, so a row's place is its order; Overall is its season record. Its
+  freshman tables are not stored. Archbishop Riordan's varsity soccer row is 1-11-1, a game more than anyone's,
+  and its JV row prints 5 points for 1-10-1; both are kept as printed.
+- **WBAL**: the 2025-26 standings pages and all-league pages its history page links (2025-2026/socstg.html,
+  alsocg2526.html; 2025-2026/vbstg.html, alvbg25.html). Its tables give a place to the first of two level teams and
+  leave the next row's blank; the schema lets such a row repeat the place above (1, 2, 2, 4), the page prints both
+  and says so, and a team page reads "tied for 2nd". It prints no overall record, and no year or position on the
+  all-league teams. Only Foothill had a soccer JV table (the page comments out Skyline's).
+- **Division membership is 2025-26's.** Notre Dame San Jose was in soccer's Foothill then; in volleyball Crystal
+  Springs Uplands and Notre Dame San Jose were in Foothill and The King's Academy in Skyline. The page says who
+  moved, as for BVAL.
+- **Presentation changed leagues.** It played in the WCAL in 2025-26 (7th in both sports) and is in the WBAL's
+  Foothill now. Its WCAL rows and all-league players keep its slug (the transcription's `formerMembers`; the
+  schema accepts a slug of another league of the build only for the WCAL and the WBAL, and the builder only for a
+  school so named), so its team page reads last season's WCAL line, and the WCAL card says it moved to the WBAL.
+  The WBAL transcription lists it as `joinedSince`, the one team of the league in none of its 2025-26 tables.
+- **Volleyball records are W-L with t 0**, as SCVAL's are: a match cannot end level, so the schema lets a sport
+  with no ties store a two-part record without a ties field (a soccer record must have one).
 
 ### Last season's CCS and CIF State brackets in the soccer, basketball and volleyball builds
 

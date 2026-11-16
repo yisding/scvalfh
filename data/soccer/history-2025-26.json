@@ -1336,44 +1336,1215 @@
       "status": "available"
     },
     "wbal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WBAL 2025-26 girls soccer standings",
-          "url": "https://hs.wbalsports.org/2025-2026/socstg.html"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "foothill",
+              "firstTeam": [
+                {
+                  "player": "Krista Arreola",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Addison Bartell",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Caelyn Dyer",
+                  "position": null,
+                  "school": "Notre Dame San Jose",
+                  "slug": "notre-dame-san-jose",
+                  "year": null
+                },
+                {
+                  "player": "Josie Lee",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Ella Leyte Vidal",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                },
+                {
+                  "player": "Yeonu Na",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Hana Osman",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Layla Pine",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Savianna Sassone",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Allie Willis",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                },
+                {
+                  "player": "Clementine Xiong",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Aris Yu",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Nava Ammari",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Marissa Barber",
+                  "position": null,
+                  "school": "Notre Dame San Jose",
+                  "slug": "notre-dame-san-jose",
+                  "year": null
+                },
+                {
+                  "player": "Reagan Connors",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Brooklyn Denegri",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                },
+                {
+                  "player": "Chloe Heo",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Brooke Klemens",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Sarina Rabkin",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                },
+                {
+                  "player": "Dahlia Schroeder",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Evin Shanafelt",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Claire Shin",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                },
+                {
+                  "player": "Ella Skinner",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Parker Sunwoo",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Forward of the Year",
+                  "value": "Lauryn Masetti, Sacred Heart Prep"
+                },
+                {
+                  "award": "Midfielder of the Year",
+                  "value": "Isabelle Lee, The King's Academy"
+                },
+                {
+                  "award": "Defender of the Year",
+                  "value": "Lauryn Fleshman, Crystal"
+                },
+                {
+                  "award": "Goalkeeper of the Year",
+                  "value": "Bianca Putanec, Menlo"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Julia Axelrod",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Annalyse Bottazzo",
+                  "position": null,
+                  "school": "Notre Dame San Jose",
+                  "slug": "notre-dame-san-jose",
+                  "year": null
+                },
+                {
+                  "player": "Audrey Cabot",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Emerson Kjellesvig",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Katie Kossow",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Anya Kothari",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Ashley Luong",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Scout Reese",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                },
+                {
+                  "player": "Talia Samuels",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Maisie Street",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                },
+                {
+                  "player": "Averie Sui",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Kaylin Yip",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                }
+              ]
+            }
+          },
+          "division": "foothill",
+          "label": "Foothill",
+          "standings": {
+            "jv": [
+              {
+                "l": 1,
+                "leagueRecord": "5-1-0",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "menlo",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 1,
+                "leagueRecord": "5-1-0",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "sacred-heart-prep",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "1-4-1",
+                "name": "Notre Dame Belmont",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "notre-dame-belmont",
+                "t": 1,
+                "w": 1
+              },
+              {
+                "l": 5,
+                "leagueRecord": "0-5-1",
+                "name": "Notre Dame San Jose",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "notre-dame-san-jose",
+                "t": 1,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "6-1-5",
+                "name": "The King's Academy",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "kings-academy",
+                "t": 5,
+                "w": 6
+              },
+              {
+                "l": 2,
+                "leagueRecord": "5-2-5",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "menlo",
+                "t": 5,
+                "w": 5
+              },
+              {
+                "l": 2,
+                "leagueRecord": "5-2-5",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "sacred-heart-prep",
+                "t": 5,
+                "w": 5
+              },
+              {
+                "l": 3,
+                "leagueRecord": "5-3-4",
+                "name": "Crystal",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "crystal-springs",
+                "t": 4,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "5-4-3",
+                "name": "Castilleja",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "castilleja",
+                "t": 3,
+                "w": 5
+              },
+              {
+                "l": 6,
+                "leagueRecord": "3-6-3",
+                "name": "Notre Dame Belmont",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "notre-dame-belmont",
+                "t": 3,
+                "w": 3
+              },
+              {
+                "l": 11,
+                "leagueRecord": "0-11-1",
+                "name": "Notre Dame San Jose",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "notre-dame-san-jose",
+                "t": 1,
+                "w": 0
+              }
+            ]
+          }
         },
         {
-          "label": "WBAL 2025-26 girls soccer honors",
-          "url": "https://hs.wbalsports.org/alsocg2526.html"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "skyline",
+              "firstTeam": [
+                {
+                  "player": "MacEnzie Blue",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Sallie Haun",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                },
+                {
+                  "player": "Kaitlyn Nelson",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Ruby Richards",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Alyssa Rodriguez",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Fiona Ross",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Ally Ruiz",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Frankie Shannon",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Aanya Sharma",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Julianna Umansor",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Audrey Yang",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Nerea Amezcua",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                },
+                {
+                  "player": "Kylie Auger",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Angie Calderon",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Sophie Han",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Alina Hsieh",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Riley Nicoletti",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Sherlyn Segura",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Abigail Volker",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Emma Wang",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Nova Weissman",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Forward of the Year",
+                  "value": "Isela Santana, Mercy"
+                },
+                {
+                  "award": "Midfielder of the Year",
+                  "value": "Eva Cheng, Harker"
+                },
+                {
+                  "award": "Co-Defenders of the Year",
+                  "value": "Liliana Bronzoni, Mercy"
+                },
+                {
+                  "award": "Co-Defenders of the Year",
+                  "value": "Addison Parenti, Pinewood"
+                },
+                {
+                  "award": "Goalkeeper of the Year",
+                  "value": "Riya Samuel, Harker"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Emily Agnich",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                },
+                {
+                  "player": "Natalie Barth",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Madeline Baszucki",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Kamila Camorlinga",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Adriana Chavez",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Avery Hall",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                },
+                {
+                  "player": "Emma Harris",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Sophia Hernandez",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Mia Ji",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Liliana Klingler",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Cynthia Xie",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                }
+              ]
+            }
+          },
+          "division": "skyline",
+          "label": "Skyline",
+          "standings": {
+            "jv": [],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "7-0-1",
+                "name": "Harker",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "harker",
+                "t": 1,
+                "w": 7
+              },
+              {
+                "l": 1,
+                "leagueRecord": "5-1-2",
+                "name": "Mercy",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "mercy-burlingame",
+                "t": 2,
+                "w": 5
+              },
+              {
+                "l": 3,
+                "leagueRecord": "4-3-1",
+                "name": "Priory",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "priory",
+                "t": 1,
+                "w": 4
+              },
+              {
+                "l": 6,
+                "leagueRecord": "2-6-0",
+                "name": "Pinewood",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "pinewood",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 8,
+                "leagueRecord": "0-8-0",
+                "name": "Eastside College Prep",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "eastside",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://hs.wbalsports.org/2025-2026/socstg.html (the 2025-26 standings, linked from the league’s history page)",
-        "https://hs.wbalsports.org/alsocg2526.html (its 2025-26 season honors)"
-      ],
-      "checkedOn": "2026-11-14",
       "league": "West Bay Athletic League",
-      "reason": "The WBAL keeps last season’s standings and its season honors on hs.wbalsports.org. This site added WBAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": {
+          "kind": "page",
+          "url": "https://hs.wbalsports.org/alsocg2526.html"
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the two pages' HTML, read 2026-11-16, leaving out the tables the standings page comments out: each row as printed, and checked against the pages row by row.",
+        "notes": [
+          "WBAL girls soccer 2025-26, from hs.wbalsports.org: the standings linked from https://hs.wbalsports.org/history.html and the all-league teams linked from https://hs.wbalsports.org/history.html. Rows are in the league's own order; nothing is recomputed.",
+          "The standings page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (1, 2, 2, 4).",
+          "The standings print a league record and no overall record, so every overallRecord is null.",
+          "The all-league page prints each player as \"Player, School\" with no year or position, so every year and position is null.",
+          "Division membership is the 2025-26 pages' own, which is not the 2026-27 alignment; the page says which teams moved.",
+          "Presentation played in the WCAL in 2025-26 (`joinedSince`): no WBAL table of that season lists it.",
+          "School spellings are the pages' own (\"Crystal\", \"Mercy\"); `slug` is the join key.",
+          "Girls soccer: the page prints points, games played, a W-L-T record and a win percentage; the record is stored, the rest follows from it (three points a win, one a tie).",
+          "Only Foothill has a JV table (four teams); the page's Skyline JV table, Pinewood and Priory at 0-0-0, is commented out of its HTML and is not stored.",
+          "The all-league page lists one honorable mention as \"Brooklyn Denegri Notre Dame Belmont\", with no comma; it is read as the player Brooklyn Denegri of Notre Dame Belmont.",
+          "The Skyline page names Co-Defenders of the Year, two entries under one title."
+        ],
+        "publisher": "hs.wbalsports.org",
+        "retrievedOn": "2026-11-16",
+        "source": "league-documents",
+        "standings": {
+          "kind": "page",
+          "url": "https://hs.wbalsports.org/2025-2026/socstg.html"
+        }
+      },
+      "status": "available"
     },
     "wcal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WCAL standings",
-          "url": "https://wcalsports.org/standings/"
-        },
-        {
-          "label": "WCAL awards and records",
-          "url": "https://wcalsports.org/awardsrecords/"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "wcal",
+              "firstTeam": [
+                {
+                  "player": "Caitlin Motil",
+                  "position": "Defender",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Penelope Correa",
+                  "position": "Forward",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Sophie McCarthy",
+                  "position": "Midfielder",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 11
+                },
+                {
+                  "player": "Grier Gowdy",
+                  "position": "Forward",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 11
+                },
+                {
+                  "player": "Laila Ortiz",
+                  "position": "Defender",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 12
+                },
+                {
+                  "player": "Zuri Brandt",
+                  "position": "Forward",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 11
+                },
+                {
+                  "player": "Lilly Jones",
+                  "position": "Forward",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 10
+                },
+                {
+                  "player": "Gussie Robillard",
+                  "position": "Midfielder",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 12
+                },
+                {
+                  "player": "Alex Villalta",
+                  "position": "Defender",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 12
+                },
+                {
+                  "player": "Kylee Po",
+                  "position": "Midfielder",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 12
+                },
+                {
+                  "player": "Francesca Johnson",
+                  "position": "Forward",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 11
+                },
+                {
+                  "player": "Kaitlyn Wagner",
+                  "position": "Forward",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 12
+                },
+                {
+                  "player": "Ella Claveran",
+                  "position": "Goalkeeper",
+                  "school": "Presentation",
+                  "slug": "presentation",
+                  "year": 10
+                },
+                {
+                  "player": "Natalie Dueber",
+                  "position": "Midfielder",
+                  "school": "Archbishop Riordan",
+                  "slug": "riordan",
+                  "year": 12
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Maya Meltz",
+                  "position": "Forward",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 10
+                },
+                {
+                  "player": "Danielle Paredes",
+                  "position": "Midfielder",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 12
+                },
+                {
+                  "player": "Bryce Killion",
+                  "position": "Midfielder",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 10
+                },
+                {
+                  "player": "Gabi Cameron",
+                  "position": "Forward",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 12
+                },
+                {
+                  "player": "Maya Patience",
+                  "position": "Midfielder",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 12
+                },
+                {
+                  "player": "Sofia Hofman",
+                  "position": "Midfielder",
+                  "school": "Presentation",
+                  "slug": "presentation",
+                  "year": 11
+                },
+                {
+                  "player": "Cienna Lujano",
+                  "position": "Midfielder",
+                  "school": "Archbishop Riordan",
+                  "slug": "riordan",
+                  "year": 12
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Goalkeeper of the Year",
+                  "value": "Layla Tucakovic, Archbishop Mitty, 11"
+                },
+                {
+                  "award": "Defender of the Year",
+                  "value": "Caitlin Motil, Saint Francis, 12"
+                },
+                {
+                  "award": "Midfielder of the Year",
+                  "value": "Kylee Po, Sacred Heart Cathedral, 12"
+                },
+                {
+                  "award": "Forward of the Year",
+                  "value": "Penelope Correa, Saint Francis, 12"
+                },
+                {
+                  "award": "Player of the Year",
+                  "value": "Caitlin Motil, Saint Francis, 12"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Julia Malcolm",
+                  "position": "Midfielder",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Lynn Byun",
+                  "position": "Midfielder",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 10
+                },
+                {
+                  "player": "Layla Tucakovic",
+                  "position": "Goalkeeper",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 11
+                },
+                {
+                  "player": "Brooklynn Collier",
+                  "position": "Midfielder",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 11
+                },
+                {
+                  "player": "Taylor Bellotti",
+                  "position": "Midfielder",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 12
+                },
+                {
+                  "player": "Keira Bromwell",
+                  "position": "Defender",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 11
+                },
+                {
+                  "player": "Margaret Manuel",
+                  "position": "Defender",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 11
+                },
+                {
+                  "player": "Alice Forster",
+                  "position": "Midfielder",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 11
+                },
+                {
+                  "player": "Macy Fricke",
+                  "position": "Defender",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 12
+                },
+                {
+                  "player": "Tanisha Rameshkumar",
+                  "position": "Midfielder",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 10
+                },
+                {
+                  "player": "Emerson Kosmynka",
+                  "position": "Defender",
+                  "school": "Presentation",
+                  "slug": "presentation",
+                  "year": 10
+                },
+                {
+                  "player": "Amara Malhi",
+                  "position": "Defender",
+                  "school": "Presentation",
+                  "slug": "presentation",
+                  "year": 12
+                },
+                {
+                  "player": "Carmen Giuffre",
+                  "position": "Midfielder",
+                  "school": "Archbishop Riordan",
+                  "slug": "riordan",
+                  "year": 11
+                }
+              ]
+            }
+          },
+          "division": "wcal",
+          "label": "WCAL",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "10-0-1",
+                "name": "Saint Francis",
+                "overallRecord": "17-0-1",
+                "place": 1,
+                "slug": "saint-francis",
+                "t": 1,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "9-2-1",
+                "name": "Saint Ignatius",
+                "overallRecord": "13-3-2",
+                "place": 2,
+                "slug": "st-ignatius",
+                "t": 1,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "7-4-1",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "7-3-2",
+                "place": 3,
+                "slug": "sacred-heart-cathedral",
+                "t": 1,
+                "w": 7
+              },
+              {
+                "l": 4,
+                "leagueRecord": "7-4-1",
+                "name": "Archbishop Mitty",
+                "overallRecord": "9-4-1",
+                "place": 4,
+                "slug": "mitty",
+                "t": 1,
+                "w": 7
+              },
+              {
+                "l": 9,
+                "leagueRecord": "2-9-1",
+                "name": "Valley Christian",
+                "overallRecord": "4-9-4",
+                "place": 5,
+                "slug": "valley-christian",
+                "t": 1,
+                "w": 2
+              },
+              {
+                "l": 10,
+                "leagueRecord": "2-10-0",
+                "name": "Presentation",
+                "overallRecord": "5-13-1",
+                "place": 6,
+                "slug": "presentation",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 10,
+                "leagueRecord": "1-10-1",
+                "name": "Archbishop Riordan",
+                "overallRecord": "4-9-3",
+                "place": 7,
+                "slug": "riordan",
+                "t": 1,
+                "w": 1
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "11-0-1",
+                "name": "Saint Francis",
+                "overallRecord": "17-0-1",
+                "place": 1,
+                "slug": "saint-francis",
+                "t": 1,
+                "w": 11
+              },
+              {
+                "l": 2,
+                "leagueRecord": "9-2-1",
+                "name": "Archbishop Mitty",
+                "overallRecord": "14-3-1",
+                "place": 2,
+                "slug": "mitty",
+                "t": 1,
+                "w": 9
+              },
+              {
+                "l": 2,
+                "leagueRecord": "8-2-2",
+                "name": "Saint Ignatius",
+                "overallRecord": "12-3-4",
+                "place": 3,
+                "slug": "st-ignatius",
+                "t": 2,
+                "w": 8
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7-0",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "12-7-1",
+                "place": 4,
+                "slug": "sacred-heart-cathedral",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 8,
+                "leagueRecord": "3-8-1",
+                "name": "Valley Christian",
+                "overallRecord": "7-11-2",
+                "place": 5,
+                "slug": "valley-christian",
+                "t": 1,
+                "w": 3
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8-2",
+                "name": "Presentation",
+                "overallRecord": "5-11-4",
+                "place": 6,
+                "slug": "presentation",
+                "t": 2,
+                "w": 2
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11-1",
+                "name": "Archbishop Riordan",
+                "overallRecord": "2-13-3",
+                "place": 7,
+                "slug": "riordan",
+                "t": 1,
+                "w": 1
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)",
-        "https://wcalsports.org/awardsrecords/ (its season honors)"
-      ],
-      "checkedOn": "2026-11-14",
       "league": "West Catholic Athletic League",
-      "reason": "The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL girls soccer on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": {
+          "kind": "pdf",
+          "url": "https://wcalsports.org/__static/jdj5jdewjezgbwvbauh4tevwuuvnwmfs/AL-2025-26(4).pdf"
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the pdftotext -layout text of both PDFs, read 2026-11-16: each row as printed, and checked against the PDFs row by row.",
+        "notes": [
+          "WCAL girls soccer 2025-26, from wcalsports.org: the standings linked from https://wcalsports.org/standings/ and the all-league teams linked from https://wcalsports.org/awardsrecords/. Rows are in the league's own order; nothing is recomputed.",
+          "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/; the all-league PDF is its 2025-26 awards book, linked as \"2025-2026\" from wcalsports.org/awardsrecords/.",
+          "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it.",
+          "Overall is the PDF's \"Season\" columns.",
+          "Presentation played in the WCAL in 2025-26 and is in the WBAL's Foothill division now; its rows keep its slug (`formerMembers`), and the page says it moved.",
+          "The PDF's freshman tables are not stored: the archive has varsity and JV only.",
+          "Girls soccer tables of February 18, 2026: league wins, losses, ties and points, then the season's. Points are not stored; every row's is three a win and one a tie except Archbishop Riordan's JV row, which prints 1-10-1 and 5 points.",
+          "Archbishop Riordan's varsity row prints 1-11-1, thirteen league games where every other team played twelve; it is kept as printed.",
+          "The JV table lists Sacred Heart Cathedral and Archbishop Mitty, both 7-4-1 with 22 points, in that order; with no place column, they are 3rd and 4th.",
+          "The awards are the PDF's \"2026 WCAL Women's Soccer Players of the Year\" (each \"Player – Year – School\") and its first team, second team and honorable mention (Name, School, Year, Position). The WCAL names no JV all-league team."
+        ],
+        "publisher": "wcalsports.org",
+        "retrievedOn": "2026-11-16",
+        "source": "league-documents",
+        "standings": {
+          "kind": "pdf",
+          "url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf"
+        }
+      },
+      "status": "available"
     }
   },
   "season": "2025-26",

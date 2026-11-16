@@ -12,7 +12,8 @@ import { z } from 'zod';
 
 import { LEAGUE_IDS, divisionsOf, getLeague } from '../leagues';
 import { dateKey, slugId } from '../schema-primitives';
-import { teamsInLeague } from '../teams';
+import { SPORT } from '../sports/current';
+import { TEAMS, teamsInLeague } from '../teams';
 import type { LeagueId } from '../types';
 
 /**
@@ -26,6 +27,15 @@ function leagueSchema(leagueId: LeagueId) {
   const slugs: ReadonlySet<string> = new Set(teamsInLeague(leagueId).map((t) => t.slug));
   const divisions: ReadonlySet<string> = new Set(divisionsOf(leagueId).map((d) => d.id));
   const teamSlug = slugId.refine((slug) => slugs.has(slug), `not a registry slug of league ${leagueId}`);
+  /**
+   * A row or a listed player may be keyed to a team of another league of this build: a school that has changed
+   * leagues since (Presentation, in the WCAL in 2025-26 and in the WBAL's Foothill now, in the soccer and
+   * volleyball builds). Its builder names each such school (scripts/lib/history-league-documents.ts
+   * `formerMembers`), so no other row lets a stray school through; the page says it moved.
+   */
+  const buildSlugs: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
+  const anyTeamSlug = slugId.refine((slug) => buildSlugs.has(slug), 'not a registry slug of this build');
+  const rowSlug = leagueId === 'scval' || leagueId === 'bval' ? teamSlug : anyTeamSlug;
   const division = slugId.refine((d) => divisions.has(d), `not a division of league ${leagueId}`);
 
   const row = z
@@ -37,7 +47,7 @@ function leagueSchema(leagueId: LeagueId) {
        * as provenance; the page prints the registry name (lib/history/history.ts historySchoolName).
        */
       name: z.string().min(1),
-      slug: teamSlug.nullable(),
+      slug: rowSlug.nullable(),
       leagueRecord: z.string().regex(/^\d+-\d+(-\d+)?$/),
       w: z.number().int().min(0),
       l: z.number().int().min(0),
@@ -53,15 +63,16 @@ function leagueSchema(leagueId: LeagueId) {
       (r) =>
         r.leagueRecord === (r.t === null ? `${r.w}-${r.l}` : `${r.w}-${r.l}-${r.t}`) ||
         // SCVAL's parser has always stored a two-part PDF record ("2-10") with t: 0. That file is
-        // unchanged; every other league must say null for a record with no ties field.
-        (leagueId === 'scval' && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`),
+        // unchanged; every other league must say null for a record with no ties field, unless the sport has no
+        // ties to leave out (volleyball: a match cannot end level, so "12-0" is the whole record).
+        ((leagueId === 'scval' || !SPORT.scoring.allowsTies) && r.t === 0 && r.leagueRecord === `${r.w}-${r.l}`),
       'leagueRecord does not match w/l/t',
     );
 
   const player = z.object({
     player: z.string().min(1),
     school: z.string().min(1),
-    slug: teamSlug.nullable(),
+    slug: rowSlug.nullable(),
     /** null = the source left the cell empty. */
     position: z.string().nullable(),
     /** null = the document's year cell is not a grade (SCVAL girls volleyball 2025-26: one JV row prints "7"). */
@@ -110,6 +121,24 @@ function leagueSchema(leagueId: LeagueId) {
           notes: z.array(z.string()),
         }),
         z.object({
+          /**
+           * A league's own final standings and all-league teams, as it publishes them (the WCAL's two PDFs on
+           * wcalsports.org, the WBAL's two pages on hs.wbalsports.org), transcribed by hand into
+           * data/<sport>/official/<league>-2025-26.json (scripts/lib/history-league-documents.ts).
+           */
+          source: z.literal('league-documents'),
+          builtBy: z.string(),
+          /** The site the documents are on ("wcalsports.org"), as the page's source line names it. */
+          publisher: z.string().min(1),
+          /** 'pdf' for a PDF, 'page' for a web page: how the page labels the link. */
+          standings: z.object({ url: z.string().url(), kind: z.enum(['pdf', 'page']) }),
+          allLeague: z.object({ url: z.string().url(), kind: z.enum(['pdf', 'page']) }).nullable(),
+          /** The day the documents were read. */
+          retrievedOn: dateKey,
+          extraction: z.string(),
+          notes: z.array(z.string()),
+        }),
+        z.object({
           source: z.literal('bval-sheet'),
           builtBy: z.string(),
           /** The official Google Sheet of final standings (the CSV export is what the build reads). */
@@ -139,13 +168,17 @@ function leagueSchema(leagueId: LeagueId) {
       (h) => h.divisions.length === divisions.size && new Set(h.divisions.map((d) => d.division)).size === divisions.size,
       `expected each of the ${divisions.size} division(s) of ${leagueId} exactly once`,
     )
-    // Places must be 1..n with no gaps, or the table would render a hole.
+    // Places must be 1..n with no gaps, or the table would render a hole. A league whose table ranks two teams
+    // level (the WBAL prints one place for both and leaves the next row's blank) gives the second the first's
+    // place, and the row after them takes its own row number again (1, 2, 2, 4): standard competition ranking.
     .refine(
       (h) =>
         h.divisions.every((d) =>
-          [d.standings.varsity, d.standings.jv].every((rows) => rows.every((r, i) => r.place === i + 1)),
+          [d.standings.varsity, d.standings.jv].every((rows) =>
+            rows.every((r, i) => r.place === i + 1 || (i > 0 && r.place === rows[i - 1].place)),
+          ),
         ),
-      'standings places are not 1..n in order',
+      'standings places are not 1..n in order (a shared place repeats the one above it)',
     )
     .refine(
       (h) => h.divisions.every((d) => d.standings.varsity.length > 0),
