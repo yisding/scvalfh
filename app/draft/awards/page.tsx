@@ -182,10 +182,10 @@ export default function AwardsDraftPage() {
           High School MVP.
         </p>
 
-        <h2 className="mt-8 text-ink">Honorable Mentions</h2>
+        <h2 className="mt-8 text-ink">Honorable Mention</h2>
         <p>
           It&rsquo;s hard to finish this post without mentioning one more player. JWNT player{' '}
-          <P team="harvard-westlake" name="Margaux Schlumberger" /> led <T slug="harvard-westlake">Harvard-Westlake</T> to
+          <P team="harvard-westlake" name="Margaux Schlumberger" /> led <T slug="harvard-westlake">Harvard-Westlake</T> to{' '}
           {/* The 2025 final is on the history page, the 2026 final on /playoffs. */}
           <Link href="/history/2025-26#toc-bracket" prefetch={false}>
             two consecutive
