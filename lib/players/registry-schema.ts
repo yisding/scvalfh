@@ -31,7 +31,8 @@
  *   3. a player has at least one identifier and at least one stint
  *   4. a stint is unique per (season, sport, team, level), has at least one observation, and each
  *      of its fields is the value of one of its observations (or null when none states it)
- *   5. `names` starts with `name` and has no repeats
+ *   5. `names` starts with `name` and has no repeats, and `aliases` lists the rest of `names`, each
+ *      under its kind (lib/players/official-name.ts)
  *   6. a conflict names a field its stint shows another value for
  */
 
@@ -188,6 +189,19 @@ export function identifierKey(i: PlayerIdentifier): string {
   return i.kind === 'maxpreps-career' ? `mp:${i.careerId}` : `name:${i.sport}:${i.team}:${i.name}`;
 }
 
+/**
+ * What a spelling other than a player's official name is (lib/players/official-name.ts):
+ *   nickname    a familiar or chosen form of the official name ("Maddie" for Madeleine)
+ *   previous    a name the player no longer goes by; only data/player-identity.json says so
+ *   short-form  the official name with a part left out (a middle name, one of two last names)
+ *   spelling    the same words a letter or two apart
+ *   variant     anything else (words in another order, a source's annotations)
+ */
+export const NAME_KINDS = ['nickname', 'previous', 'short-form', 'spelling', 'variant'] as const;
+export type NameKind = (typeof NAME_KINDS)[number];
+
+export const PlayerAliasSchema = z.object({ name: text, kind: z.enum(NAME_KINDS) }).strict();
+
 export const ClassOfConflictSchema = z
   .object({
     classOf: z.number().int(),
@@ -206,10 +220,15 @@ export const PlayerSchema = z
     id: playerId,
     /** Ids this player was once filed under, after two records were found to be one person. */
     formerIds: z.array(playerId),
-    /** The name to show: the latest season's best source's spelling. */
+    /**
+     * The official name: what data/player-identity.json `names` decides, else the fullest spelling
+     * from the most official source (lib/players/official-name.ts).
+     */
     name: text,
-    /** Every spelling any source uses, `name` first. */
+    /** Every spelling any source uses, and any name a person has recorded, `name` first. */
     names: z.array(text).min(1),
+    /** `names` after the first, each with what it is beside the official name. */
+    aliases: z.array(PlayerAliasSchema),
     /** Graduation year, from the latest season's best source; null when no source gives a grade. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     /** Every statement that implies another graduation year. */
@@ -220,6 +239,7 @@ export const PlayerSchema = z
   .strict()
   .refine((p) => p.names[0] === p.name, 'names must start with name')
   .refine((p) => new Set(p.names).size === p.names.length, 'names has a repeat')
+  .refine((p) => p.aliases.map((a) => a.name).join('\u0001') === p.names.slice(1).join('\u0001'), 'aliases must list names after the first')
   .refine(
     (p) => new Set(p.stints.map((s) => `${s.season} ${s.sport} ${s.team} ${s.level}`)).size === p.stints.length,
     'two stints for one season, sport, team and level',
@@ -382,7 +402,18 @@ export function countPlayers(players: readonly Player[], review: number): Player
  *              `sport`'s team; one name given twice is that name at the school in two sports. It
  *              only settles the question: two MaxPreps careers under ONE name on one team are kept
  *              apart by `distinct`.
+ *   names      what the player its lists call `name` (on `team`, in `sport`) is called: `official`
+ *              is the name the registry shows (any spelling, a source's or not, when the basis says
+ *              where it is from), and `previous` are names she went by and no longer does. It names
+ *              no one new and joins nothing: a row spelled with a previous name is tied to her by
+ *              `sameAs`.
  */
+/**
+ * Why a person decided what they did. `pnpm build-players --drafts` writes answers whose basis
+ * starts "DRAFT": one is refused here until a person has checked it and rewritten it.
+ */
+const basis = text.refine((b) => !/^\s*DRAFT\b/.test(b), 'a draft basis: check the evidence, then rewrite it without "DRAFT"');
+
 export const PlayerIdentitySchema = z
   .object({
     notes: z.array(text),
@@ -394,16 +425,30 @@ export const PlayerIdentitySchema = z
           name: text,
           careerId: text.optional(),
           isName: text.optional(),
-          basis: text,
+          basis,
         })
         .strict()
         .refine((e) => (e.careerId === undefined) !== (e.isName === undefined), 'give exactly one of careerId and isName'),
     ),
     rowSplits: z.array(
-      z.object({ sport: z.enum(SPORT_IDS), team: text, page: z.enum(PLAYER_LEVELS), name: text, careerId: text, basis: text }).strict(),
+      z.object({ sport: z.enum(SPORT_IDS), team: text, page: z.enum(PLAYER_LEVELS), name: text, careerId: text, basis }).strict(),
     ),
-    distinct: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, careerIds: z.tuple([text, text]), basis: text }).strict()),
-    notSame: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, names: z.tuple([text, text]), basis: text }).strict()),
+    distinct: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, careerIds: z.tuple([text, text]), basis }).strict()),
+    notSame: z.array(z.object({ sport: z.enum(SPORT_IDS), team: text, names: z.tuple([text, text]), basis }).strict()),
+    names: z.array(
+      z
+        .object({
+          sport: z.enum(SPORT_IDS),
+          team: text,
+          name: text,
+          official: text.optional(),
+          previous: z.array(text).min(1).optional(),
+          basis,
+        })
+        .strict()
+        .refine((e) => e.official !== undefined || e.previous !== undefined, 'give official, previous or both')
+        .refine((e) => !(e.previous ?? []).includes(e.official ?? '\u0000'), 'a previous name cannot be the official one'),
+    ),
   })
   .strict();
 export type PlayerIdentity = z.infer<typeof PlayerIdentitySchema>;

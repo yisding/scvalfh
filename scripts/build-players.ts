@@ -8,7 +8,14 @@
  *                                  hand-curated files that name players
  *   pnpm build-players --check     build and compare: exit 1 when a run would change a file
  *   pnpm build-players --dry-run   build and report, write nothing
- *   pnpm build-players --review    also list everything left for a person to decide
+ *   pnpm build-players --review    also list everything left for a person to decide: the
+ *                                  questions by pattern with each side's evidence and links, what a
+ *                                  rule decided, and official names chosen on a tie
+ *                                  (lib/players/review-report.ts)
+ *   pnpm build-players --drafts <file>
+ *                                  write a draft answer for each question and tie to <file>, as
+ *                                  data/player-identity.json entries whose basis says "DRAFT": check
+ *                                  each, rewrite its basis, and move it into the curation file
  *   pnpm build-players --no-stamp  leave the curated files alone
  *
  * One run covers every sport whatever SCVAL_SPORT is: a player is one person in every sport.
@@ -31,28 +38,36 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { buildRegistry } from '../lib/players/registry-build';
-import { PLAYERS_FILE, readBuildInput, sportDataDir } from '../lib/players/registry-file';
+import { PLAYERS_FILE, readBuildInput, readCareerUrls, sportDataDir } from '../lib/players/registry-file';
+import { buildReviewReport, formatReviewReport } from '../lib/players/review-report';
 import type { PlayersFile } from '../lib/players/registry-schema';
 import { SPORT_IDS, type SportId } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
 
-const USAGE = 'Usage: pnpm build-players [--check | --dry-run] [--review] [--no-stamp]';
+const USAGE = 'Usage: pnpm build-players [--check | --dry-run] [--review] [--drafts <file>] [--no-stamp]';
 
 interface Args {
   check: boolean;
   dryRun: boolean;
   review: boolean;
+  drafts: string | null;
   stamp: boolean;
 }
 
 function parseArgs(argv: readonly string[]): Args {
-  const args: Args = { check: false, dryRun: false, review: false, stamp: true };
-  for (const flag of argv) {
+  const args: Args = { check: false, dryRun: false, review: false, drafts: null, stamp: true };
+  for (let i = 0; i < argv.length; i += 1) {
+    const flag = argv[i];
     if (flag === '--check') args.check = true;
     else if (flag === '--dry-run') args.dryRun = true;
     else if (flag === '--review') args.review = true;
-    else if (flag === '--no-stamp') args.stamp = false;
+    else if (flag === '--drafts') {
+      const file = argv[i + 1];
+      if (!file || file.startsWith('--')) throw new Error(`--drafts needs a file\n${USAGE}`);
+      args.drafts = file;
+      i += 1;
+    } else if (flag === '--no-stamp') args.stamp = false;
     else throw new Error(`unknown flag ${flag}\n${USAGE}`);
   }
   return args;
@@ -194,11 +209,14 @@ export function main(argv: readonly string[]): number {
     const added = file.players.filter((p) => !had.has(p.id)).length;
     console.log(`${added} new player(s) · ${gone.length} id(s) no source lists any more${gone.length ? `: ${gone.slice(0, 12).join(', ')}${gone.length > 12 ? ', …' : ''}` : ''}`);
   }
-  if (args.review) {
-    const kinds = new Map<string, number>();
-    for (const r of file.review) kinds.set(r.kind, (kinds.get(r.kind) ?? 0) + 1);
-    console.log(`\nfor review: ${[...kinds].map(([k, n]) => `${k} ${n}`).join(' · ') || 'nothing'}`);
-    for (const r of file.review) console.log(`  ${r.kind.padEnd(22)} ${r.sport} ${r.team}: ${r.names.join(' / ')} — ${r.note}`);
+  if (args.review || args.drafts) {
+    const report = buildReviewReport(file, input.identity, { careerUrls: readCareerUrls(root), today: new Date().toISOString().slice(0, 10) });
+    if (args.review) console.log(`\n${formatReviewReport(report)}`);
+    if (args.drafts) {
+      const d = report.drafts;
+      writeFileSync(path.resolve(root, args.drafts), `${JSON.stringify(d, null, 2)}\n`, 'utf8');
+      console.log(`\nwrote ${d.sameAs.length} sameAs, ${d.notSame.length} notSame and ${d.names.length} names draft(s) to ${args.drafts}`);
+    }
   }
 
   const writes = new Map<string, string>();

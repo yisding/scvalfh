@@ -1933,7 +1933,8 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   number and a class; the registry adds a graduation year and ties a person's seasons, squads and sports
   together. None of it is rendered, but it is in the repository.
 - **Three layers.** A *player* has an id this repository mints (`p` + ten hex digits of the SHA-256 of the
-  first identifier) and never changes, a display name, every spelling any source uses, a graduation year
+  first identifier) and never changes, an official name, every other spelling any source uses with what it
+  is (below), a graduation year
   (`classOf`) and the keys other sources know the player by (`identifiers`: MaxPreps career ids, or a name on
   one team's lists). A *stint* is that player on one team in one season of one sport at one level (varsity,
   JV or, for the basketball programs that field one, the freshman team: no file lists a freshman team's
@@ -2006,6 +2007,50 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
   Deleting a `notSame` entry only puts the pair back on the review list.
 - **28 items remain**, all already acted on by a rule and listed to be checked: the 23 joined careers and
   the 5 split ones.
+- **Names, nicknames and previous names** (2026-11-16; `lib/players/official-name.ts`). A player's `name` is
+  her official name and `aliases` file every other spelling under a kind: `nickname` (Maddie for
+  Madeleine, a name in parentheses or quotes, a nickname written in as a middle word), `short-form` (a
+  middle name or a second last name left out), `spelling` (a letter or two apart), `variant` (words in
+  another order, a source's "(GK) 10") and `previous` (a name she no longer goes by: only a person says so).
+  The official name is the fullest form, never a nickname or a part of another of her spellings; then a
+  clean spelling over an annotated, uncapitalised or decorated one; then the spelling more sources give
+  (each source once a season, MaxPreps' pages as one); then accents, apostrophes and hyphens kept; then the
+  more official source: the school's own list, the overlay's cited pages, MaxPreps' rosters, a recruiting
+  profile, the all-league list, a stat sheet. The all-league lists rank low on spelling only: of the
+  one-against-one spelling ties between an all-league list and a MaxPreps roster, the list held the slip in
+  nearly every one ("Mitchelle", "Caityln", "Neibuhr", "Maletec"); their full names still win through the
+  first rule. Before the volleyball answers below, the rule changed 55 players' names (Nathan for Nate
+  Crawford, Madeleine Grimsley, Breanna Plancarte Medina, Erika Toledano without "(GK)"); after them, 167
+  players carry another spelling: 74 nicknames, 11 short forms, 53 spellings and 33 variants. A
+  stint still shows what its own best source says. **`names`** in `data/player-identity.json` settles what
+  the rule cannot: `official` (any spelling, a source's or not, when the basis says where it is from) and
+  `previous`. Two entries so far: Jhayde Domingo (MaxPreps' 26-27 row has the names in each other's
+  fields) and Megumi Pugel (Fremont volleyball's school list spells her "Magumi").
+- **`pnpm build-players --review`** (`lib/players/review-report.ts`) prints three sections: the questions,
+  grouped by pattern, most likely one player first (two lists of one season, each giving one spelling; a
+  returning player under a new MaxPreps career; a name on last season's list and a career this season;
+  neither; listed in one season at two levels, which is usually sisters), each side with its class year,
+  numbers, MaxPreps career link and the pages its sources were read on; what a rule decided, to check; and
+  the official names that came down to source order because the spellings' support was even.
+  `--drafts <file>` writes a draft `sameAs`, `notSame` or `names` entry for each, its basis prefilled from
+  the evidence and starting "DRAFT", which `data/player-identity.json` refuses until a person rewrites it.
+- **The 27 volleyball look-alikes were answered on 2026-11-16** from the repository's copies of the lists
+  (the live pages were not re-read): 23 are one player (`sameAs`) and 4 two people (`notSame`). Eleven
+  were two lists of one 26-27 JV team each giving one spelling, where the lists otherwise agree almost
+  name for name (Palo Alto 12 of 13, Branham 13 of 14, Monta Vista 15 of 16; at Fremont and Saratoga the
+  school-only names are exactly the MaxPreps-only ones a letter off): Alvendia / Alvendina, Popok /
+  Popek, Lyer / Iyer and the like. Seven were returning players under a new MaxPreps career (Caylee Chin /
+  Chinn, Maddie / Madelyn Luceno), five a name on the 25-26 all-league list and a career in 26-27
+  (Emmeline / Emme Liao, Kailaya / Kai Estrada). The two people: Christopher's Maia and Maja Ysabel
+  Handog and Sacred Heart Cathedral's Caylee and Chelsie Chinn (varsity and JV in one season, different
+  classes and numbers), Yerba Buena's Jenny and Jaylene Nguyen, and MacDonald's Maya and Nayla Castro (each
+  a freshman, a year apart). **The weakest**: Pioneer's Mary / Marianggy Gonzalez (#8 then #7, a common
+  last name; same class, one career ending as the other begins), and Saratoga's three, whose school list
+  gives no grade.
+- **2026-11-16 build**: 5,475 players (4,955 with a MaxPreps career, 520 known by name alone), 6,766 stints,
+  11,153 observations, 984 in more than one season, 36 in more than one sport, 59 conflicts inside a stint
+  and 60 class-year conflicts. The review list holds only what a rule decided: 44 joined careers and 9
+  split ones.
 - **2026-11-14 build, after those answers**: 3,946 players (3,488 with a MaxPreps career, 458 known by name
   alone), 4,834 stints, 7,638 observations, 631 players in more than one season, 22 in more than one sport,
   50 conflicts inside a stint and 57 class-year conflicts. Before them it was 4,030 players.
