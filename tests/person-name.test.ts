@@ -63,6 +63,10 @@ describe('NAME_SPELLINGS', () => {
     ['O. Van De Braak', 'O. Van de Braak'],
     ['olivia van de braak', 'Olivia Van de Braak'],
     ['Van De Braak', 'Van de Braak'],
+    ['OLIVIA VAN DE BRAAK', 'Olivia Van de Braak'],
+    ['Gretta Jungjohann', 'Greta Jungjohann'],
+    ['GRETTA JUNGJOHANN', 'Greta Jungjohann'],
+    ['Sophie (mai Lam) Vu', 'Sophie (Mai Lam) Vu'],
   ])('%s → %s', (name, spelled) => {
     expect(recaseName(name)).toBe(spelled);
   });
@@ -70,6 +74,34 @@ describe('NAME_SPELLINGS', () => {
   it('respells whole words only', () => {
     expect(recaseName('Ava Van De Braaker')).toBe('Ava Van De Braaker');
     expect(recaseName('Ava Smith-Van De Braak')).toBe('Ava Smith-Van De Braak');
+  });
+
+  it('leaves the same first name alone on anyone else', () => {
+    expect(recaseName('Gretta Smith')).toBe('Gretta Smith');
+    expect(recaseNameParts({ firstName: 'Gretta', lastName: 'Smith', fullName: 'Gretta Smith' })).toEqual({
+      firstName: 'Gretta',
+      lastName: 'Smith',
+      fullName: 'Gretta Smith',
+    });
+  });
+
+  it('respells the first name of a roster row whose full name matches', () => {
+    expect(recaseNameParts({ firstName: 'Gretta', lastName: 'Jungjohann', fullName: 'Gretta Jungjohann' })).toEqual({
+      firstName: 'Greta',
+      lastName: 'Jungjohann',
+      fullName: 'Greta Jungjohann',
+    });
+    expect(recaseNameParts({ firstName: 'OLIVIA', lastName: 'VAN DE BRAAK', fullName: 'OLIVIA VAN DE BRAAK' })).toEqual({
+      firstName: 'Olivia',
+      lastName: 'Van de Braak',
+      fullName: 'Olivia Van de Braak',
+    });
+  });
+
+  it('respells a parenthesized middle name on a roster row', () => {
+    expect(
+      recaseNameParts({ firstName: 'Sophie (mai Lam)', lastName: 'Vu', fullName: 'Sophie (mai Lam) Vu' }),
+    ).toEqual({ firstName: 'Sophie (Mai Lam)', lastName: 'Vu', fullName: 'Sophie (Mai Lam) Vu' });
   });
 
   it('respells a roster row on all three fields', () => {

@@ -395,6 +395,39 @@ describe('applyJvCorrections: a date move', () => {
   });
 });
 
+describe('applyJvCorrections: a score fix', () => {
+  it('rescores a final from the school’s page only while MaxPreps still has the score the entry names', () => {
+    const g = jvGame({ home: 'monta-vista', away: 'santa-clara', date: '2026-09-10', hs: 3, as: 0, status: 'final' });
+    const fix = { maxpreps: [3, 0] as const, score: [4, 0] as const, url: 'https://example.org/jv', source: 'The school has 4-0.' };
+    const r = applyJvCorrections([g], { excludedContestIds: {}, opponentFixes: {}, scoreFixes: { [g.contestId]: fix } });
+    const m = r.games[0];
+    expect([m.home.score, m.away.score]).toEqual([4, 0]);
+    expect([m.home.result, m.away.result]).toEqual(['W', 'L']);
+    expect(m.provenance.scores).toBe('school-site');
+    expect(m.urls.school).toBe('https://example.org/jv');
+    expect(r.rescored.map((x) => x.game.contestId)).toEqual([g.contestId]);
+    expect(r.unused).toEqual([]);
+    const already = { ...g, home: { ...g.home, score: 4 } };
+    const left = applyJvCorrections([already], { excludedContestIds: {}, opponentFixes: {}, scoreFixes: { [g.contestId]: fix } });
+    expect(left.games[0]).toBe(already);
+    expect(left.unused).toEqual([g.contestId]);
+  });
+
+  it('leaves Santa Clara’s JV games as its own athletics site scores them', () => {
+    const unused = new Set(getJvCorrections().unused);
+    for (const id of Object.keys(JV_CORRECTIONS.scoreFixes ?? {})) expect(unused.has(id), id).toBe(false);
+    const site = JV_SCHOOL_SITES.find((s) => s.school === 'santa-clara')!;
+    const shown = getJvGamesForTeam('santa-clara');
+    for (const row of site.games) {
+      const g = shown.find((x) => x.dateKey === row.dateKey && (x.home.slug === row.opponent || x.away.slug === row.opponent));
+      expect(g, row.dateKey).toBeDefined();
+      const mine = g!.home.slug === 'santa-clara' ? g!.home : g!.away;
+      const theirs = g!.home.slug === 'santa-clara' ? g!.away : g!.home;
+      expect([mine.score, theirs.score], row.dateKey).toEqual(row.score);
+    }
+  });
+});
+
 describe('mergeJvSchoolSites: a school’s own athletics site, after MaxPreps and si.com', () => {
   const today = '2026-11-03';
   const fetchedAt = '2026-11-03T15:00:00.000Z';

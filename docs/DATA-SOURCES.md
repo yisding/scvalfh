@@ -2776,6 +2776,14 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   are left out because the opponent's page scores them differently: Sep 9 against Saint Francis (4-0 there, 5-0
   on sfhsathletics.com) and Sep 28 against St. Ignatius ("6-0" with no W/L there, 7-0 on siwildcats.com). With
   them its JV record reads 13-5-1 (league 4-5-1), the sheet's own totals, which count the two scrimmages.
+  Santa Clara's athletics site (`schsathletics.com/lower/field-hockey-junior-varsity/schedule-results/`, Home
+  Campus, given by the owner on 2026-11-16) is the fifth, read the same day. The list loads by script
+  (`wp-admin/admin-ajax.php?action=load_schedule_results_full&level_id=10&sportID=30&school_id=905&year=2026-27`),
+  so a plain fetch gets only the page shell. It scores all 13 JV games (0-12-1, league 0-9-1). MaxPreps agrees on
+  11; on the other two si.com's game pages agree with Santa Clara's against MaxPreps: at Monta Vista Sep 10 (4-0;
+  MaxPreps 3-0, si.com 6469093) and Los Gatos at Santa Clara Sep 15 (12-0 to Los Gatos; MaxPreps 7-2, si.com
+  6469098). Those two MaxPreps rows are rescored in `lib/jv/jv-corrections.ts` (`scoreFixes`), only while MaxPreps
+  still has the score the entry names.
 - **Rosters** (shown since 2026-11-06, `lib/jv/jv-rosters.ts`): MaxPreps' `/jv/roster/` pages, read for
   all 102 schools by `pnpm fetch-rosters --level jv` into `data/jv-rosters.json` (the varsity parser,
   with the JV sport season id), list 508 players for 34 schools on 2026-11-06 (11 on 2026-10-05). Several
