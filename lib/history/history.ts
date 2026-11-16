@@ -25,10 +25,12 @@ import {
   BRACKET_SECTION_IDS,
   BRACKET_TOURNAMENT_IDS,
   HistoryBracketsSchema,
+  OtherHistoryBracketsSchema,
   type BracketSectionId,
   type BracketTournamentId,
   type HistoryBracketGame,
   type HistoryBracketSide,
+  type PublishedBrackets,
   type SectionBracket,
   type TournamentBracket,
 } from './history-brackets-schema';
@@ -69,6 +71,7 @@ export type {
 export type {
   BracketSectionId,
   BracketTournamentId,
+  PublishedBrackets,
   HistoryBracketDivision,
   HistoryBracketGame,
   HistoryBracketRound,
@@ -152,7 +155,10 @@ export function getHistoryLastChecked(): string {
         ? [entry.provenance.retrievedOn]
         : [],
   );
-  const bracketDays = [...getHistoryBrackets(), ...getHistoryTournaments()].map((b) => b.bracket.retrievedOn);
+  const bracketDays = [
+    ...[...getHistoryBrackets(), ...getHistoryTournaments()].map((b) => b.bracket.retrievedOn),
+    ...(getHistoryPublishedBrackets() ? [getHistoryPublishedBrackets()!.retrievedOn] : []),
+  ];
   // Every section bracket and every league built from documents read on a day has a `retrievedOn`, and a
   // build either has a bracket (field hockey) or a league with one (soccer and basketball: SCVAL's PDFs), so
   // the list is never empty.
@@ -262,22 +268,36 @@ function loadBrackets() {
   return validateData('history brackets', HistoryBracketsSchema, bundledBrackets);
 }
 
+/**
+ * The soccer, basketball and volleyball builds' file holds no transcribed section or tournament (their registries
+ * hold too few of a section's schools to key its bracket by registry slug); it holds `published`, the 2025-26
+ * brackets read whole from MaxPreps' tournament pages, validated here as their own contract.
+ */
+const otherBrackets = IS_FIELD_HOCKEY ? null : validateData('history brackets', OtherHistoryBracketsSchema, bundledBrackets);
+
 const brackets = IS_FIELD_HOCKEY
   ? loadBrackets()
-  : (bundledBrackets as unknown as ReturnType<typeof loadBrackets>);
+  : ({ ...otherBrackets, sections: {}, tournaments: {} } as unknown as ReturnType<typeof loadBrackets>);
 
 /**
- * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the
- * section's last league in lib/leagues.ts order (PCAL for the CCS, Metro for the San Diego Section),
- * so the bracket sits after the leagues that fed it and inside their region.
+ * The 2025-26 CCS and CIF State brackets as MaxPreps published them (the soccer, basketball and volleyball builds'
+ * `published`), or null: field hockey's archive transcribes its brackets (getHistoryBrackets) instead.
  */
-export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {
-  // A section the archive has no bracket for (every section of the soccer and basketball builds, whose
-  // registries hold SCVAL alone, so a CCS bracket's other schools could not be keyed) is left out.
-  return BRACKET_SECTION_IDS.filter((id) => brackets.sections[id] !== undefined).map((id) => {
-    const leagues = LEAGUE_IDS.filter((l) => getLeague(l).sectionId === id);
-    return { id, bracket: brackets.sections[id], afterLeague: leagues[leagues.length - 1] };
-  });
+export function getHistoryPublishedBrackets(): PublishedBrackets | null {
+  return otherBrackets?.published ?? null;
+}
+
+/**
+ * Each section with a 2025 bracket, in BRACKET_SECTION_IDS order (the CCS, then the San Diego Section): the
+ * blocks /history/2025-26 opens with, each in its section's region.
+ */
+export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket }> {
+  // A section the field hockey archive has no bracket for is left out; the other builds keep their 2025-26
+  // brackets in `published` (getHistoryPublishedBrackets).
+  return BRACKET_SECTION_IDS.filter((id) => brackets.sections[id] !== undefined).map((id) => ({
+    id,
+    bracket: brackets.sections[id],
+  }));
 }
 
 /** The section bracket of a league's section, or null when its section held none (NCS, NS, SS). */
@@ -287,14 +307,12 @@ export function getHistoryBracketFor(leagueId: LeagueId): { id: BracketSectionId
 }
 
 /**
- * Each postseason with a 2025 bracket that no CIF section runs (the Tournament of Champions), with the
- * league its block follows on /history/2025-26: the last of the leagues whose teams play in it in
- * lib/leagues.ts order (the LA independents, after the Sunset), so it sits after both, in their region.
+ * Each postseason with a 2025 bracket that no CIF section runs (the Tournament of Champions), with the leagues
+ * whose postseason it is: /history/2025-26 draws it after the section brackets, in their region.
  */
 export function getHistoryTournaments(): Array<{
   id: BracketTournamentId;
   bracket: TournamentBracket;
-  afterLeague: LeagueId;
   /** The leagues whose postseason it is (the Sunset and the LA independents), in config order. */
   leagues: LeagueId[];
 }> {
@@ -305,7 +323,7 @@ export function getHistoryTournaments(): Array<{
       const league = getLeague(l);
       return getSection(league.sectionId).outsideTournament?.id === id && league.postseason.kind === 'no-postseason';
     });
-    return { id, bracket: brackets.tournaments[id], afterLeague: leagues[leagues.length - 1], leagues };
+    return { id, bracket: brackets.tournaments[id], leagues };
   });
 }
 

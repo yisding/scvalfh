@@ -18,6 +18,10 @@ import type { TournamentBracketView, TournamentBracketsView, TournamentTie, Tour
  */
 export interface TournamentBracketsProps {
   view: TournamentBracketsView;
+  /** The wrapper's id: `bracket` on /playoffs; the archive draws two (`ccs-brackets`, `cif-brackets`). */
+  id?: string;
+  /** The jump row's accessible name: 'Brackets' on /playoffs, 'CCS brackets' on the archive. */
+  navLabel?: string;
   /** The snapshot's day (YYYY-MM-DD): "as MaxPreps had them on …". */
   readOn: string;
   /** The names of the leagues this build covers, for the sentence about the other divisions: 'SCVAL or BVAL'. */
@@ -71,15 +75,15 @@ export function tournamentRounds(bracket: TournamentBracketView): BracketRoundMo
   }));
 }
 
-export function TournamentBrackets({ view, readOn, leagueWords, extra, children }: TournamentBracketsProps) {
+export function TournamentBrackets({ view, id = 'bracket', navLabel = 'Brackets', readOn, leagueWords, extra, children }: TournamentBracketsProps) {
   const { brackets, ccsOthers } = view;
   if (brackets.length === 0) return null;
   // One source link per event: its first bracket's page.
   const sources = brackets.filter((b, i) => brackets.findIndex((x) => x.event === b.event) === i);
   return (
-    <div id="bracket" className="sx-target">
+    <div id={id} className="sx-target">
       {brackets.length > 1 ? (
-        <nav aria-label="Brackets" className="sx-linkrow sx-print-hide">
+        <nav aria-label={navLabel} className="sx-linkrow sx-print-hide">
           {brackets.map((b) => (
             <a key={b.id} href={`#${b.id}`} className="sx-action">
               {b.nav}

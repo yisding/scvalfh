@@ -208,6 +208,93 @@ export const HistoryBracketsSchema = z.object({
   tournaments: z.object({ toc: tournamentSchema() }).strict(),
 });
 
+// ---------------------------------------------------------------- the other builds' 2025-26 brackets, read whole
+
+const guid = z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+
+const publishedSide = z.object({
+  teamId: guid.nullable(),
+  name: z.string().min(1).nullable(),
+  seed: z.number().int().min(1).nullable(),
+  score: z.number().int().min(0).nullable(),
+  from: guid.nullable(),
+});
+
+const publishedMatchup = z
+  .object({
+    id: guid,
+    round: z.string().min(1),
+    roundDate: dateKey,
+    next: guid.nullable(),
+    contestId: guid.nullable(),
+    dateLocal: z.null(),
+    bye: z.boolean(),
+    winner: z.union([z.literal(0), z.literal(1)]).nullable(),
+    site: z.string().min(1).nullable(),
+    sides: z.tuple([publishedSide, publishedSide]),
+  })
+  // A finished championship: every game has both teams and a winner; a bye has one team and no winner.
+  .refine(
+    (m) => (m.bye ? m.winner === null && m.sides.filter((s) => s.teamId !== null).length === 1 : m.winner !== null && m.sides.every((s) => s.teamId !== null && s.name !== null)),
+    'a game with no winner or an unnamed team, or a bye with a winner',
+  );
+
+/**
+ * One division's bracket of a 2025-26 championship, as MaxPreps' tournament page published it (lib/types.ts
+ * TournamentBracket, read by lib/sources/maxpreps-tournament.ts as /playoffs reads the current season's), so the
+ * archive draws it with the same view (components/playoffs/tournament-brackets-view.ts). Every school of the
+ * division is in it, ours or not: a side is keyed by MaxPreps' school id, and the registry names ours.
+ */
+const publishedBracket = z
+  .object({
+    event: z.enum(['ccs', 'cif']),
+    tournament: z.string(),
+    bracketId: guid,
+    name: z.string().min(1),
+    url: z.string().url(),
+    matchups: z.array(publishedMatchup).min(1),
+  })
+  .refine((b) => {
+    const ids = new Set(b.matchups.map((m) => m.id));
+    const linked = b.matchups.every((m) => [m.next, m.sides[0].from, m.sides[1].from].every((l) => l === null || ids.has(l)));
+    return ids.size === b.matchups.length && linked && b.matchups.filter((m) => m.next === null).length === 1;
+  }, 'the matchups do not join into one tree')
+  .refine(
+    (b) =>
+      b.matchups.every((m) => {
+        if (m.next === null || m.bye) return true;
+        // The winner goes on: the next game has the winner's school on the side this game feeds.
+        const next = b.matchups.find((n) => n.id === m.next)!;
+        const into = next.sides.find((s) => s.from === m.id);
+        return into !== undefined && into.teamId === m.sides[m.winner as 0 | 1].teamId;
+      }),
+    'a winner does not go on to the next game',
+  );
+
+/**
+ * `published` in the soccer, basketball and volleyball builds' data/<sport>/history-brackets-2025-26.json: the
+ * 2025-26 CCS divisions (every one, ours or not) and the CIF State divisions a team of ours played in, read whole
+ * from MaxPreps' tournament pages once the season was over. Nothing refreshes it.
+ */
+export const PublishedBracketsSchema = z.object({
+  /** The day the pages were read. */
+  retrievedOn: dateKey,
+  /** Provenance a maintainer needs; not printed. */
+  notes: z.array(z.string().min(1)),
+  brackets: z.array(publishedBracket).min(1),
+});
+
+/** The other builds' file: no section or tournament the field hockey archive transcribes, and the brackets read whole. */
+export const OtherHistoryBracketsSchema = z.object({
+  season: z.string(),
+  sport: z.string(),
+  sections: z.object({}).strict(),
+  tournaments: z.object({}).strict(),
+  published: PublishedBracketsSchema.optional(),
+});
+
+export type PublishedBrackets = z.infer<typeof PublishedBracketsSchema>;
+
 export type HistoryBrackets = z.infer<typeof HistoryBracketsSchema>;
 export type SectionBracket = HistoryBrackets['sections'][BracketSectionId];
 export type TournamentBracket = HistoryBrackets['tournaments'][BracketTournamentId];

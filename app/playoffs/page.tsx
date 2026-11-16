@@ -55,7 +55,6 @@ import {
   NO_POSTSEASON_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
-  isIndependentLeague,
   sectionOf,
 } from '../../lib/leagues';
 import { ordersByRecord } from '../../lib/standings/order';
@@ -514,7 +513,6 @@ export default function PlayoffsPage() {
                   />
                 ) : undefined
               }
-              whose={listWords(leaguesOf.map((l) => `the ${isIndependentLeague(l.id) ? l.name : l.shortName}`))}
             >
               {leaguesOf.map((league) => (
                 <NoPostseasonCard key={league.id} summary={league} />

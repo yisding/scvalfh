@@ -27,8 +27,10 @@ import type { CcsPlayoffs, ContestId, Game, TournamentBracket, TournamentBracket
  * A CELL keeps the page's side order (the upper side is the one the upper feeding game sends), prints a registry
  * team by its short name and any other school by MaxPreps' name, the seed MaxPreps prints, and what the page
  * gives as each side's result (sets won, for volleyball). A side not decided yet names the two teams that can
- * reach it ("Los Altos or Burlingame") or `TBD`. A game the snapshot holds (one of ours) links to its game page;
- * an unplayed one carries its start time, its site and its ticket and stream links. Nothing is inferred: a game
+ * reach it ("Los Altos or Burlingame") or `TBD`. A level score the page marks a winner of (a soccer game settled on
+ * penalty kicks, no tally given) reads "drew 1–1; … went through", with "Tiebreak not reported" under the card.
+ * A game the snapshot holds (one of ours) links to its game page; an unplayed one carries its start time, its site
+ * and its ticket and stream links. Nothing is inferred: a game
  * whose day has passed with no result says "No result posted yet".
  *
  * WHEN THE PAGE IS BEHIND. The tournament page and the team feeds are two reads, and a bracket can be the previous
@@ -244,8 +246,14 @@ function tie(
     const w = m.sides[m.winner as 0 | 1];
     const l = m.sides[m.winner === 0 ? 1 : 0];
     const score = w.score !== null && l.score !== null ? ` ${w.score}${EN_DASH}${l.score}` : '';
-    sentence = `${teamWords(w)} beat ${teamWords(l)}${score || '; no score was posted'}.`;
-    if (dateKey !== m.roundDate) note = `Played ${shortDate(dateKey)}`;
+    // A level score the page marks a winner of (a soccer game settled on penalty kicks): the page gives no tally,
+    // so the card says the tiebreak went unreported, as the field hockey archive's cards do, and never "beat … 1–1".
+    const level = w.score !== null && w.score === l.score;
+    sentence = level
+      ? `${teamWords(w)} and ${teamWords(l)} drew${score}; ${teamWords(w)} went through.`
+      : `${teamWords(w)} beat ${teamWords(l)}${score || '; no score was posted'}.`;
+    const notes = [level ? 'Tiebreak not reported' : null, dateKey !== m.roundDate ? `Played ${shortDate(dateKey)}` : null].filter(Boolean);
+    if (notes.length > 0) note = notes.join(', ');
   } else if (!known) {
     sentence = `${a} v ${b}, ${when}${site ? `, at ${site}` : ''}. Not decided yet.`;
     if (site) note = `At ${site}`;

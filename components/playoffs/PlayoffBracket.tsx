@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { shortDate } from '../../lib/format';
+import { SPORT_TIEBREAK_TAG, SPORT_TIEBREAK_WORDS, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import ExternalLink from '../ui/ExternalLink';
 import { rowState, statusWords } from '../game-row/summary';
@@ -84,6 +84,25 @@ function gameLine(side: SideView, seed: number | null, scored: boolean, decided:
   };
 }
 
+/**
+ * How a final was decided, in the words every other bracket on the site writes under a card ('Overtime', 'Double
+ * overtime', 'Shootout 2–1': the archive's, the San Diego Section's and the Tournament of Champions'), not the
+ * score chip's tag ('OT', 'SO') the game rows print beside a score. A stored tally is added when there is one.
+ */
+export function deciderWords(tag: string, tally: string | null): string {
+  if (tag === 'OT') return 'Overtime';
+  if (tag === '2 OT' || tag === '2OT') return 'Double overtime';
+  const periods = /^(\d+) ?OT$/.exec(tag);
+  if (periods) return `${periods[1]} overtimes`;
+  if (tag === SPORT_TIEBREAK_TAG) {
+    const noun = SPORT_TIEBREAK_WORDS.replace(/^an? /, '');
+    const score = /(\d+)\s*[–-]\s*(\d+)/.exec(tally ?? '');
+    return `${noun[0].toUpperCase()}${noun.slice(1)}${score ? ` ${score[1]}–${score[2]}` : ''}`;
+  }
+  if (tag === 'F') return 'Forfeit';
+  return tag;
+}
+
 function gameTie(entry: BracketGame, round: BracketRound): TieModel {
   const { game, seeds } = entry;
   const display = describeGame(game);
@@ -108,7 +127,7 @@ function gameTie(entry: BracketGame, round: BracketRound): TieModel {
     ],
     // The round's heading carries its day; a game moved off it says which day.
     time: game.dateLocal.slice(0, 10) === round.dateKey ? clock : `${shortDate(game.dateLocal).split(' ')[0]} ${clock}`,
-    note: off ?? (display.deciderTag && state === 'final' ? display.deciderTag : venue ? `At ${venue}` : null),
+    note: off ?? (display.deciderTag && state === 'final' ? deciderWords(display.deciderTag, display.shootoutText) : venue ? `At ${venue}` : null),
     links:
       links.length > 0
         ? links.map((l) => (
