@@ -20,7 +20,9 @@ const PAGE_TITLE = 'NCFH.net Inaugural High School Field Hockey Awards';
  *
  * Every team name (nicknames too) links to its team page and every player name to her team page's roster
  * (`#roster`), so the links stay on this site; the two colleges link to their rows on /commits, and the
- * Tournament of Champions wins to their brackets (2025 on /history/2025-26, 2026 on /playoffs). Each link
+ * Tournament of Champions wins to their brackets (2025 on /history/2025-26, 2026 on /playoffs). The leaders
+ * lists it names link to their NorCal boards on /leaders, its Elo figures to the Elo boards (Bishop's to
+ * SoCal's, St. Ignatius to NorCal's: there is no statewide board) and De Anza to its standings. Each link
  * to a team, player or college is checked at build time: a team slug not in the registry, a player not on
  * that team's varsity roster or a commitment not in data/commits.json throws, so a roster refresh that drops a name fails the build
  * rather than shipping a link to the wrong place. Every link carries `prefetch={false}`: the post has
@@ -70,6 +72,15 @@ function C({ college, player, children }: { college: string; player: string; chi
   );
 }
 
+/** "De Anza", linked to the division's standings table. */
+function DeAnza() {
+  return (
+    <Link href="/standings/scval#de-anza" prefetch={false}>
+      De Anza
+    </Link>
+  );
+}
+
 export default function AwardsDraftPage() {
   if (!IS_FIELD_HOCKEY) notFound();
 
@@ -108,7 +119,11 @@ export default function AwardsDraftPage() {
 
         <h2 className="mt-8 text-ink">NorCal&rsquo;s Most Impressive Newcomers</h2>
         <p>
-          Longtime fans of field hockey in northern California might see two unfamiliar names on the top 5 points lists:
+          Longtime fans of field hockey in northern California might see two unfamiliar names on the{' '}
+          <Link href="/leaders#most-points" prefetch={false}>
+            top 5 points lists
+          </Link>
+          :
           Freshman <P team="stevenson" name="Lotti Schulte" /> (92 points) and Junior{' '}
           <P team="stevenson" name="Gretta Jungjohann" /> (85 points) leading <T slug="stevenson">Stevenson</T> to a
           perfect 12-0 in league play. &ldquo;Do they play club? Which one? How come we&rsquo;ve never heard of
@@ -123,8 +138,9 @@ export default function AwardsDraftPage() {
           tournaments. Led by the twin sisters <P team="fremont" name="Sophie Dhillon">Sophie</P> and{' '}
           <P team="fremont" name="Emma Dhillon">Emma Dhillon</P>, <T slug="fremont">Fremont</T> was also most improved
           in NorCal, increasing their Elo by 369 points over the fall. Even a 10-9-3 overall record wasn&rsquo;t enough
-          to make it out of the very competitive De Anza division this year, home to both{' '}
-          <T slug="st-ignatius">St. Ignatius</T> and <T slug="saint-francis">Saint Francis</T>. But not to worry,{' '}
+          to make it out of the very competitive <DeAnza /> division this year, home to both{' '}
+          CCS champion <T slug="st-ignatius">St. Ignatius</T> and CCS runner-up <T slug="saint-francis">Saint Francis</T>.
+          But not to worry,{' '}
           <P team="fremont" name="Sophie Dhillon">Sophie</P> and <P team="fremont" name="Emma Dhillon">Emma</P> are only
           freshmen, so I have a feeling we&rsquo;ll see them in the CCS very soon.
         </p>
@@ -133,8 +149,11 @@ export default function AwardsDraftPage() {
         <p>
           I&rsquo;ve already mentioned <P team="stevenson" name="Lotti Schulte">Lotti</P> and the{' '}
           <P team="fremont" name="Sophie Dhillon">Dhillon sisters</P>, but there were some other awesome performances put together by the
-          class of 2030. On offense, you might notice that the only person not from <T slug="st-ignatius">SI</T> in the
-          &ldquo;Elo-Adjusted Points&rdquo; list is <T slug="university-sf">University High</T>&rsquo;s{' '}
+          class of 2030. On offense, you might notice that the only person not from <T slug="st-ignatius">SI</T> in the{' '}
+          <Link href="/leaders#adjusted-points" prefetch={false}>
+            &ldquo;Elo-Adjusted Points&rdquo; list
+          </Link>{' '}
+          is <T slug="university-sf">University High</T>&rsquo;s{' '}
           <P team="university-sf" name="Vivienne Wong" />. 64 points in a single season is an impressive start to her
           high school career! On the other side of the pitch was <T slug="saint-francis">Saint Francis</T>&rsquo;s{' '}
           <P team="saint-francis" name="Nora Lagenfeld" />. 66 saves and a save rate of 91.7%! Simply putting a shot on
@@ -146,8 +165,8 @@ export default function AwardsDraftPage() {
           As impressive as <P team="saint-francis" name="Nora Lagenfeld">Nora</P>&rsquo;s stats were, there was another
           goalie who caught our attention on the stats sheets even more. <P team="valley-christian" name="Shyla Paredes" />{' '}
           recorded 242 saves this season, boosting <T slug="valley-christian">Valley Christian</T> to third place in the
-          very tough De Anza division. That is an impressive number of saves and stamina! This is after last year where
-          she already won De Anza&rsquo;s goalie of the year as a sophomore.{' '}
+          very tough <DeAnza /> division. That is an impressive number of saves and stamina! This is after last year where
+          she already won <DeAnza />&rsquo;s goalie of the year as a sophomore.{' '}
           <P team="valley-christian" name="Shyla Paredes">Shyla</P> also committed to playing softball at{' '}
           <C college="cal-baptist" player="Shyla Paredes">
             Cal Baptist
@@ -172,8 +191,15 @@ export default function AwardsDraftPage() {
           in La Jolla (outside San Diego). Yes, this site is called NorCal Field Hockey, but it&rsquo;s impossible to
           ignore the absolutely superlative performance they&rsquo;ve put together all season long. Playing the second
           toughest schedule in the state (only behind <T slug="scripps-ranch">Scripps Ranch</T>){' '}
-          <T slug="bishops">Bishop&rsquo;s</T> outscored their opponents 171 to 5 achieving an Elo of 2725, 107 points
-          higher than the second highest Elo in the state (<T slug="st-ignatius">SI</T>). But, you might say that those
+          <T slug="bishops">Bishop&rsquo;s</T> outscored their opponents 171 to 5 achieving{' '}
+          <Link href="/leaders#elo-rating-socal" prefetch={false}>
+            an Elo of 2725
+          </Link>
+          , 107 points higher than the{' '}
+          <Link href="/leaders#elo-rating" prefetch={false}>
+            second highest Elo in the state
+          </Link>{' '}
+          (<T slug="st-ignatius">SI</T>). But, you might say that those
           Elo points are just imaginary internet chess rankings. Fair enough, so let me show you another points number:
           177. The JWNT player <P team="bishops" name="Lola Conway" /> led <T slug="bishops">Bishop&rsquo;s</T> attack
           with 177 points in a single season. That&rsquo;s 69 goals and 39 assists over a single season against some of
