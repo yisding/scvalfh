@@ -25,7 +25,12 @@
  * 5-0 on Saint Francis' page) and Sep 28 v St. Ignatius ("6-0" with no W/L; 7-0 on St. Ignatius' page). Its JV
  * start is the time after the slash; its "No JV" games (Presentation, Valley Christian twice) have no row.
  *
- * The rows below were read from those pages on 2026-11-03 (2026-11-15 for Homestead and Fremont) and are transcribed,
+ * Santa Clara's athletics site (Home Campus, given by the owner on 2026-11-16) is the fifth: its JV schedule & results
+ * page scores all 13 of Santa Clara's JV games. MaxPreps agrees on 11; on the other two (at Monta Vista Sep 10, 4-0
+ * there and 3-0 on MaxPreps; Los Gatos Sep 15, 12-0 there and 7-2 on MaxPreps) si.com agrees with Santa Clara, so
+ * lib/jv/jv-corrections.ts rescores those MaxPreps rows before the merge and every row here agrees.
+ *
+ * The rows below were read from those pages on 2026-11-03 (2026-11-15 for Homestead and Fremont, 2026-11-16 for Santa Clara) and are transcribed,
  * not fetched on each run: the JV league season was over by then, and a re-read would add a scraper for four pages.
  * Each row is one game from the page's school's side.
  *
@@ -158,6 +163,29 @@ const FIELD_HOCKEY_JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
       { dateKey: '2026-10-19', time: '16:45', opponent: 'palo-alto', home: false, score: [6, 0] },
       { dateKey: '2026-10-21', time: '16:45', opponent: 'st-ignatius', home: false, score: [0, 4] },
       { dateKey: '2026-10-28', time: '16:45', opponent: 'homestead', home: true, score: [2, 2] },
+    ],
+  },
+  {
+    school: 'santa-clara',
+    // Home Campus: the list loads by script (admin-ajax.php load_schedule_results_full, level_id 10, year 2026-27).
+    url: 'https://www.schsathletics.com/lower/field-hockey-junior-varsity/schedule-results/',
+    readOn: '2026-11-16',
+    label: 'Santa Clara’s athletics site',
+    games: [
+      { dateKey: '2026-08-24', time: '17:15', opponent: 'homestead', home: false, score: [0, 4] },
+      { dateKey: '2026-08-27', time: '17:15', opponent: 'fremont', home: false, score: [0, 4] },
+      { dateKey: '2026-09-01', time: '17:30', opponent: 'cupertino', home: false, score: [0, 2] },
+      { dateKey: '2026-09-10', time: '17:20', opponent: 'monta-vista', home: false, score: [0, 4] },
+      { dateKey: '2026-09-15', time: '17:20', opponent: 'los-gatos', home: true, score: [0, 12] },
+      { dateKey: '2026-09-17', time: '17:20', opponent: 'mitty', home: false, score: [0, 7] },
+      { dateKey: '2026-09-29', time: '17:20', opponent: 'palo-alto', home: true, score: [2, 2] },
+      // "vs Lynbrook" with no venue; MaxPreps has Lynbrook at Santa Clara too.
+      { dateKey: '2026-10-01', time: '17:20', opponent: 'lynbrook', home: true, score: [0, 1] },
+      { dateKey: '2026-10-06', time: '17:20', opponent: 'monta-vista', home: true, score: [0, 1] },
+      { dateKey: '2026-10-08', time: '17:30', opponent: 'los-gatos', home: false, score: [0, 6] },
+      { dateKey: '2026-10-13', time: '16:45', opponent: 'mitty', home: true, score: [0, 7] },
+      { dateKey: '2026-10-22', time: '16:45', opponent: 'palo-alto', home: false, score: [2, 4] },
+      { dateKey: '2026-10-27', time: '17:30', opponent: 'lynbrook', home: false, score: [1, 7] },
     ],
   },
 ];

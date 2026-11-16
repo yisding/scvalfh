@@ -15,6 +15,9 @@
  *     never took), moved there with MaxPreps' own date kept in `provenance.dateCorrection`.
  *   - JV slot: a row filed under a school that fields no JV team (Santa Catalina) is the game of the team
  *     that plays its JV slot (York), by the league's own schedule; applied to every such row.
+ *   - scoreFixes: a final whose score the school's own athletics site gives otherwise, with si.com agreeing with
+ *     the school against MaxPreps. The row takes the school's score (`provenance.scores: 'school-site'`, the †),
+ *     only while MaxPreps still has the score the entry names, so a row MaxPreps fixes is left alone.
  *   - opponent: a row that is a real game but names the wrong MaxPreps team for one side. The side
  *     becomes the registry school only while MaxPreps still names the wrong team id (`wrongTeamId`), so
  *     a row MaxPreps fixes is left alone and the entry is reported unused.
@@ -45,17 +48,32 @@ export interface JvDateMove {
   source: string;
 }
 
+export interface JvScoreFix {
+  /** MaxPreps' score the fix applies to, [home, away]: a row MaxPreps has since rescored is left alone. */
+  maxpreps: readonly [number, number];
+  /** The score shown, [home, away]. */
+  score: readonly [number, number];
+  /** The school athletics page the score is read from. */
+  url: string;
+  /** One sentence: the sources and what each says. */
+  source: string;
+}
+
 export interface JvCorrections {
   excludedContestIds: Readonly<Record<ContestId, string>>;
   opponentFixes: Readonly<Record<ContestId, JvOpponentFix>>;
   /** A game played on another day than MaxPreps' row says; the time of day is kept. */
   dateMoves?: Readonly<Record<ContestId, JvDateMove>>;
+  /** A final rescored from the school's own page where si.com agrees with it against MaxPreps. */
+  scoreFixes?: Readonly<Record<ContestId, JvScoreFix>>;
   /**
    * A JV league game the varsity-counterpart rule cannot see (lib/jv/jv-standings.ts rule 0): the division and
    * one sentence of evidence. For a JV slot team whose varsity partner's game moved and its own did not.
    */
   leagueGames?: Readonly<Record<ContestId, { division: DivisionId; source: string }>>;
 }
+
+const SANTA_CLARA_JV_URL = 'https://www.schsathletics.com/lower/field-hockey-junior-varsity/schedule-results/';
 
 const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
   excludedContestIds: {
@@ -115,6 +133,22 @@ const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
       source: 'Homestead’s athletic director’s weekly update has this game on Friday Sep 11, a 2-1 loss for Homestead; MaxPreps dates it Sep 9, the league schedule’s day.',
     },
   },
+  scoreFixes: {
+    // Santa Clara's JV schedule & results (schsathletics.com, Home Campus, read 2026-11-16) scores all 13 of its JV
+    // games; MaxPreps agrees on 11. On these two si.com's game pages agree with Santa Clara's, so theirs is shown.
+    '8cc67424-36f6-44a6-b25f-b47e4e11fc33': {
+      maxpreps: [3, 0],
+      score: [4, 0],
+      url: SANTA_CLARA_JV_URL,
+      source: 'Santa Clara’s JV results and si.com (6469093) have Santa Clara at Monta Vista, Sep 10, 4-0; MaxPreps has 3-0.',
+    },
+    '0d869e72-540d-42a1-a942-0c5b5edce83e': {
+      maxpreps: [2, 7],
+      score: [0, 12],
+      url: SANTA_CLARA_JV_URL,
+      source: 'Santa Clara’s JV results and si.com (6469098) have Los Gatos at Santa Clara, Sep 15, 12-0 for Los Gatos; MaxPreps has 7-2.',
+    },
+  },
 };
 
 /** This build's JV corrections: field hockey's (each names a field hockey contest); none for soccer. */
@@ -141,6 +175,8 @@ export interface JvCorrectionResult {
   fixed: Array<{ game: Game; source: string }>;
   /** Rows moved to the date a better source gives. */
   moved: Array<{ game: Game; source: string }>;
+  /** Finals rescored from the school's own page. */
+  rescored: Array<{ game: Game; source: string }>;
   /** Entries that matched no row (or a row MaxPreps has since fixed). */
   unused: ContestId[];
 }
@@ -152,6 +188,21 @@ function pacificToUtc(dateLocal: string): string {
     if (toLocalTimestamp(iso) === dateLocal) return iso;
   }
   throw new Error(`jv-corrections: no Pacific instant for ${dateLocal}`);
+}
+
+function outcome(mine: number, theirs: number): 'W' | 'L' | 'T' {
+  return mine > theirs ? 'W' : mine < theirs ? 'L' : 'T';
+}
+
+function rescored(g: Game, fix: JvScoreFix): Game {
+  const [home, away] = fix.score;
+  return {
+    ...g,
+    home: { ...g.home, score: home, result: outcome(home, away) },
+    away: { ...g.away, score: away, result: outcome(away, home) },
+    urls: { ...g.urls, school: fix.url },
+    provenance: { ...g.provenance, scores: 'school-site' },
+  };
 }
 
 function moved(g: Game, move: JvDateMove): Game {
@@ -172,6 +223,7 @@ export function applyJvCorrections(games: readonly Game[], config: JvCorrections
   const excluded: JvCorrectionResult['excluded'] = [];
   const fixed: JvCorrectionResult['fixed'] = [];
   const movedRows: JvCorrectionResult['moved'] = [];
+  const rescoredRows: JvCorrectionResult['rescored'] = [];
   const seen = new Set<ContestId>();
   const out: Game[] = [];
   for (const g of games) {
@@ -212,12 +264,21 @@ export function applyJvCorrections(games: readonly Game[], config: JvCorrections
       out.push(m);
       continue;
     }
+    const scoreFix = config.scoreFixes?.[g.contestId];
+    if (scoreFix && g.status === 'final' && g.home.score === scoreFix.maxpreps[0] && g.away.score === scoreFix.maxpreps[1]) {
+      seen.add(g.contestId);
+      const r = rescored(g, scoreFix);
+      rescoredRows.push({ game: r, source: scoreFix.source });
+      out.push(r);
+      continue;
+    }
     out.push(g);
   }
   const unused = [
     ...Object.keys(config.excludedContestIds),
     ...Object.keys(config.opponentFixes),
     ...Object.keys(config.dateMoves ?? {}),
+    ...Object.keys(config.scoreFixes ?? {}),
   ].filter((id) => !seen.has(id));
-  return { games: out.sort(byDateThenId), excluded, fixed, moved: movedRows, unused };
+  return { games: out.sort(byDateThenId), excluded, fixed, moved: movedRows, rescored: rescoredRows, unused };
 }
