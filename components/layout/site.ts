@@ -22,7 +22,8 @@ import { SEASON_YEARS_DISPLAY } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
 import { OG_SIZE } from '../metadata/og-theme';
-import { GENDER_NAME, IS_FIELD_HOCKEY, SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
+import { SPORT, SPORT_AUDIENCE, SPORT_ID } from '../../lib/sports/current';
+import { programTitle } from '../../lib/sports/sites';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -35,9 +36,10 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
 
 /**
  * The program as a title names it: 'Field Hockey' (a girls' sport only here, so the gender goes unsaid),
- * 'Girls Soccer' (a sport with a boys' program too).
+ * 'Girls Soccer' (a sport with a boys' program too). lib/sports/sites.ts programTitle, which the links to the
+ * other sports' sites name them by.
  */
-const PROGRAM_TITLE = IS_FIELD_HOCKEY ? SPORT.name : `${GENDER_NAME} ${SPORT.name}`;
+const PROGRAM_TITLE = programTitle(SPORT_ID);
 
 /**
  * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false

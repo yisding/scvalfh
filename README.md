@@ -2692,8 +2692,26 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
 
 `SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
-deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
-it, `SCVAL_BUILD_AT` and the six file overrides; copy it to `.env` for a local production build.
+deploy environment — a build's own origin is never hardcoded (only the sport sites' production origins are, in
+`lib/sports/sites.ts`, for the links between them: see "Links between the sport sites"). `.env.example` lists
+`SITE_URL`, `SCVAL_BUILD_AT` and the six file overrides; copy it to `.env` for a local production build.
+
+### Links between the sport sites
+
+Each sport is its own site (`ncfh.net`, `soccer.ncfh.net`, `basketball.ncfh.net`, `volleyball.ncfh.net`), and each
+links to the others (2026-11-16, owner's request):
+
+- **The footer**, on every page: an "Other sports" row naming every other site by its program (`Girls Soccer`,
+  `Boys Basketball`, …), from `lib/sports/sites.ts` (`OTHER_SPORT_SITES`, `SPORT_SITE_ORIGINS`).
+- **A team page**, in the rail before Elsewhere: an "Other sports" block linking the same school's team page on
+  each other site whose registry holds the school (`lib/schools/other-sports.ts`, which reads every sport's
+  registry and matches on the MaxPreps school id). A school no other site covers (PCAL, MCAL, the EAL, SoCal) gets
+  no block.
+
+The origins are the production domains, not `SITE_URL`, so a preview or a local build links to the live sites.
+A new sport or a new domain is one entry in `SPORT_SITE_ORIGINS`. Both blocks name other programs on purpose, so
+`scripts/assert-copy.ts` takes them out (`#site-sports`, `#other-sports`) before it holds a basketball or
+volleyball page to its own sport's words.
 
 ### vinext
 

@@ -28,7 +28,9 @@ own origin (a subdomain such as `soccer.` is a hosting choice on top of this). W
 The cost: `/clubs`, `/commits` and `/recruiting` existed only for field hockey at first, so their presence
 is per sport (`HAS_RECRUITING`: field hockey, and volleyball since 2026-11-13; `/club-calendar` is still field
 hockey's alone, `HAS_CLUB_CALENDAR`). (`/jv` and `/history/2025-26` are every build's now.) A page that shows one school across several
-sports would need links between origins.
+sports would need links between origins: since 2026-11-16 the footer links every other sport's site and a team
+page links the same school's page on each other site that covers it (`lib/sports/sites.ts`,
+`lib/schools/other-sports.ts`; README, "Links between the sport sites").
 
 ## The seam: `lib/sports/`
 

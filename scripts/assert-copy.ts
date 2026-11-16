@@ -191,6 +191,11 @@ const commitCitedBy = (html: string) =>
 /** The pages and blocks NO_TIES_SPORT_CLAIMS is not applied to yet (see the loop below). */
 const NO_TIES_SKIPPED_FILES: ReadonlySet<string> = new Set<string>([]);
 const NO_TIES_SKIPPED_BLOCKS: readonly string[] = [];
+/** The links to the other sport sites, by id and tag: components/layout/Attribution.tsx, components/teams/TeamOtherSports.tsx. */
+const OTHER_SPORTS_BLOCKS: ReadonlyArray<readonly [string, string]> = [
+  ['site-sports', 'nav'],
+  ['other-sports', 'section'],
+];
 /** Strings the snapshot prints verbatim, which are names and never this site's copy. */
 const PROPER_NOUNS: string[] = [
   ...getSnapshot().games.flatMap((g) =>
@@ -259,7 +264,13 @@ for (const file of files) {
   // (NO_TIES_SPORT_CLAIMS). Not yet held to it, each a block another change owns: /leaders and /jv, and on the
   // other pages the #elo, #roster, #player-stats and #jv blocks. Remove an entry here as its copy is done.
   if (!SPORT.scoring.allowsTies && !NO_TIES_SKIPPED_FILES.has(file)) {
+    // The links to the other sport sites (the footer's row and a team page's block) name the other programs on
+    // purpose: they are those sites' names, not this site's copy.
     let scoped = html;
+    for (const [id, tag] of OTHER_SPORTS_BLOCKS) {
+      const block = elementById(scoped, id, tag);
+      if (block) scoped = scoped.replace(block, '');
+    }
     for (const id of NO_TIES_SKIPPED_BLOCKS) {
       for (const tag of ['section', 'div', 'details']) {
         const block = elementById(scoped, id, tag);
