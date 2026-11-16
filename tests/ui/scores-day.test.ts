@@ -231,7 +231,9 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     /** The selected cell of a region's set of the date bar: its count line. */
     const selectedCount = (html: string, region: string): string | undefined =>
       html.match(
-        new RegExp(`<li data-region-scope="${region}"><a class="sx-day" [^>]*aria-current="date"[^>]*>[^<]*<b>[^<]*</b><small>([^<]*)</small>`),
+        new RegExp(
+          `<li data-region-scope="${region}"><a class="sx-day" [^>]*aria-current="date"[^>]*>[^<]*<b>[^<]*</b><small data-scope="none"[^>]*>([^<]*)</small>`,
+        ),
       )?.[1];
     const both = dateWhere('games in both regions', ({ regions }) => regions.every((r) => r.withSide.length > 0));
     const games = data.getGames({ date: both });
@@ -264,6 +266,36 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     expect(await describeDay(one), 'a one-region day keeps daySummary’s sentence').toBe(
       day.daySummary(oneGames, `${longDate(one)}, ${parseLocal(one).year}`).sentence,
     );
+  });
+
+  it('counts each league tab’s own games in the date bar, as the groups under it do', async () => {
+    // The selected cell's count lines, by data-scope, in the given region's set of the bar.
+    const selectedCounts = (html: string, region: string): Map<string, string> => {
+      const cell = html.match(
+        new RegExp(`<li data-region-scope="${region}"><a class="sx-day" [^>]*aria-current="date"[^>]*>(.*?)</a>`),
+      )?.[1];
+      expect(cell, `components/schedule/DayNav.tsx: the selected ${region} cell`).toBeDefined();
+      return new Map([...cell!.matchAll(/<small data-scope="([^"]+)"[^>]*>([^<]*)<\/small>/g)].map((m) => [m[1], m[2]]));
+    };
+    const words = (n: number) => (n === 0 ? 'No games' : `${n} ${n === 1 ? 'game' : 'games'}`);
+    // A day on which some league of a region has no game while the region has some.
+    const date = dateWhere('a league with no game while its region has some', ({ regions }) =>
+      regions.some(
+        (r) =>
+          r.withSide.length > 0 &&
+          data.getLeagueSummaries(r.id).some((league) => day.gamesOfLeague(r.withSide, league.id).length === 0),
+      ),
+    );
+    const html = await renderDay(date);
+    for (const region of day.dayRegions(data.getGames({ date })).regions) {
+      const counts = selectedCounts(html, region.id);
+      expect(counts.get('none'), `${date} ${region.id} All tab`).toBe(words(region.withSide.length));
+      for (const league of data.getLeagueSummaries(region.id)) {
+        expect(counts.get(league.id), `${date} ${region.id} ${league.id} tab`).toBe(
+          words(day.gamesOfLeague(region.withSide, league.id).length),
+        );
+      }
+    }
   });
 
   it('splits the JV games into #jv and #jv-socal, each region-scoped and omitted when empty', async () => {
