@@ -100,6 +100,17 @@ describe('chooseNames', () => {
     });
   });
 
+  it('a name a person says she no longer goes by is never official, even when it is the fuller one', () => {
+    // PR #167 review: a curated `previous` alone used to compete, and win, on the fullest-name rule.
+    const seen = [at('Maddie Smith', 'maxpreps-roster'), at('Madeleine Smith', 'all-league', '25-26')];
+    expect(choose(seen).name).toBe('Madeleine Smith');
+    expect(choose(seen, { previous: ['Madeleine Smith'] })).toEqual({
+      name: 'Maddie Smith',
+      decidedBy: 'only',
+      aliases: [{ name: 'Madeleine Smith', kind: 'previous' }],
+    });
+  });
+
   it('picks the same name whatever order the spellings arrive in', () => {
     const seen = [at('Olivia Seaman', 'maxpreps-roster'), at('Olivia Seamane', 'enrichment'), at('Olivia Seaman', 'maxpreps-jv-roster')];
     const names = [...new Set(seen.map((s) => s.name))];

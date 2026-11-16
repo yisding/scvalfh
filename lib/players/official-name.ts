@@ -228,10 +228,14 @@ export function chooseNames(order: readonly string[], spellings: readonly Spelli
   }
   const parsed = new Map(order.map((n) => [n, parse(n)]));
   const firstNames = new Set([...parsed.values()].flatMap((p) => (p.core.length ? [p.core[0], ...p.paren] : [])));
+  // A name a person has said she no longer goes by is never official, and never outranks one she
+  // does: rules 2–7 run on her current spellings only (all of them, if a person gave up every one).
+  const previous = new Set(curated?.previous ?? []);
+  const current = order.some((n) => !previous.has(n)) ? order.filter((n) => !previous.has(n)) : [...order];
   const lesser = (a: string) =>
-    order.some((b) => b !== a && nameKey(b) !== '' && (lesserForm(parsed.get(a) as Parsed, parsed.get(b) as Parsed, firstNames) !== null || shortFormOf(parsed.get(a) as Parsed, parsed.get(b) as Parsed, firstNames)));
-  const open = order.filter((n) => !lesser(n));
-  const pool = open.length > 0 ? open : [...order];
+    current.some((b) => b !== a && nameKey(b) !== '' && (lesserForm(parsed.get(a) as Parsed, parsed.get(b) as Parsed, firstNames) !== null || shortFormOf(parsed.get(a) as Parsed, parsed.get(b) as Parsed, firstNames)));
+  const open = current.filter((n) => !lesser(n));
+  const pool = open.length > 0 ? open : [...current];
   const score = (n: string) => {
     const p = parsed.get(n) as Parsed;
     const s = seen.get(n);
@@ -251,7 +255,7 @@ export function chooseNames(order: readonly string[], spellings: readonly Spelli
   const name = curated?.official ?? pool[0];
   let decidedBy: DecidedBy = 'only';
   if (curated?.official !== undefined) decidedBy = 'person';
-  else if (pool.length === 1) decidedBy = order.length > 1 ? 'fullest' : 'only';
+  else if (pool.length === 1) decidedBy = current.length > 1 ? 'fullest' : 'only';
   else {
     const [x, y] = [score(pool[0]), score(pool[1])];
     const rules: DecidedBy[] = ['clean', 'listed', 'support', 'marks', 'source'];
@@ -259,7 +263,6 @@ export function chooseNames(order: readonly string[], spellings: readonly Spelli
     const [sa, sb] = [seen.get(pool[0])?.season ?? '', seen.get(pool[1])?.season ?? ''];
     decidedBy = i !== -1 ? rules[i] : sa !== sb ? 'season' : nameKey(pool[0]).length !== nameKey(pool[1]).length ? 'length' : 'alphabet';
   }
-  const previous = new Set(curated?.previous ?? []);
   const official = parse(name);
   const rest = [...order.filter((n) => n !== name), ...[...previous].filter((n) => n !== name && !order.includes(n))];
   return {
