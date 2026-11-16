@@ -1,0 +1,101 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Soccer",
+  "league": "wcal",
+  "publisher": "wcalsports.org",
+  "retrievedOn": "2026-11-16",
+  "standings": {"url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf", "kind": "pdf", "index": "https://wcalsports.org/standings/"},
+  "allLeague": {"url": "https://wcalsports.org/__static/jdj5jdewjezgbwvbauh4tevwuuvnwmfs/AL-2025-26(4).pdf", "kind": "pdf", "index": "https://wcalsports.org/awardsrecords/"},
+  "transcription": "Transcribed from the pdftotext -layout text of both PDFs, read 2026-11-16: each row as printed, and checked against the PDFs row by row.",
+  "notes": [
+    "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/; the all-league PDF is its 2025-26 awards book, linked as \"2025-2026\" from wcalsports.org/awardsrecords/.",
+    "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it.",
+    "Overall is the PDF's \"Season\" columns.",
+    "Presentation played in the WCAL in 2025-26 and is in the WBAL's Foothill division now; its rows keep its slug (`formerMembers`), and the page says it moved.",
+    "The PDF's freshman tables are not stored: the archive has varsity and JV only.",
+    "Girls soccer tables of February 18, 2026: league wins, losses, ties and points, then the season's. Points are not stored; every row's is three a win and one a tie except Archbishop Riordan's JV row, which prints 1-10-1 and 5 points.",
+    "Archbishop Riordan's varsity row prints 1-11-1, thirteen league games where every other team played twelve; it is kept as printed.",
+    "The JV table lists Sacred Heart Cathedral and Archbishop Mitty, both 7-4-1 with 22 points, in that order; with no place column, they are 3rd and 4th.",
+    "The awards are the PDF's \"2026 WCAL Women's Soccer Players of the Year\" (each \"Player – Year – School\") and its first team, second team and honorable mention (Name, School, Year, Position). The WCAL names no JV all-league team."
+  ],
+  "formerMembers": ["presentation"],
+  "joinedSince": [],
+  "schoolSpellings": {},
+  "divisions": [
+    {
+      "division": "wcal",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "Saint Francis", "league": "11-0-1", "overall": "17-0-1"},
+          {"place": 2, "name": "Archbishop Mitty", "league": "9-2-1", "overall": "14-3-1"},
+          {"place": 3, "name": "Saint Ignatius", "league": "8-2-2", "overall": "12-3-4"},
+          {"place": 4, "name": "Sacred Heart Cathedral", "league": "5-7-0", "overall": "12-7-1"},
+          {"place": 5, "name": "Valley Christian", "league": "3-8-1", "overall": "7-11-2"},
+          {"place": 6, "name": "Presentation", "league": "2-8-2", "overall": "5-11-4"},
+          {"place": 7, "name": "Archbishop Riordan", "league": "1-11-1", "overall": "2-13-3"}
+        ],
+        "jv": [
+          {"place": 1, "name": "Saint Francis", "league": "10-0-1", "overall": "17-0-1"},
+          {"place": 2, "name": "Saint Ignatius", "league": "9-2-1", "overall": "13-3-2"},
+          {"place": 3, "name": "Sacred Heart Cathedral", "league": "7-4-1", "overall": "7-3-2"},
+          {"place": 4, "name": "Archbishop Mitty", "league": "7-4-1", "overall": "9-4-1"},
+          {"place": 5, "name": "Valley Christian", "league": "2-9-1", "overall": "4-9-4"},
+          {"place": 6, "name": "Presentation", "league": "2-10-0", "overall": "5-13-1"},
+          {"place": 7, "name": "Archbishop Riordan", "league": "1-10-1", "overall": "4-9-3"}
+        ]
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Goalkeeper of the Year", "player": "Layla Tucakovic", "school": "Archbishop Mitty", "position": "", "year": "Junior"},
+            {"award": "Defender of the Year", "player": "Caitlin Motil", "school": "Saint Francis", "position": "", "year": "Senior"},
+            {"award": "Midfielder of the Year", "player": "Kylee Po", "school": "Sacred Heart Cathedral", "position": "", "year": "Senior"},
+            {"award": "Forward of the Year", "player": "Penelope Correa", "school": "Saint Francis", "position": "", "year": "Senior"},
+            {"award": "Player of the Year", "player": "Caitlin Motil", "school": "Saint Francis", "position": "", "year": "Senior"}
+          ],
+          "firstTeam": [
+            ["Caitlin Motil", "Saint Francis", "Defender", "Senior"],
+            ["Penelope Correa", "Saint Francis", "Forward", "Senior"],
+            ["Sophie McCarthy", "Saint Francis", "Midfielder", "Junior"],
+            ["Grier Gowdy", "Saint Francis", "Forward", "Junior"],
+            ["Laila Ortiz", "Archbishop Mitty", "Defender", "Senior"],
+            ["Zuri Brandt", "Archbishop Mitty", "Forward", "Junior"],
+            ["Lilly Jones", "Archbishop Mitty", "Forward", "Sophomore"],
+            ["Gussie Robillard", "Saint Ignatius", "Midfielder", "Senior"],
+            ["Alex Villalta", "Saint Ignatius", "Defender", "Senior"],
+            ["Kylee Po", "Sacred Heart Cathedral", "Midfielder", "Senior"],
+            ["Francesca Johnson", "Sacred Heart Cathedral", "Forward", "Junior"],
+            ["Kaitlyn Wagner", "Valley Christian", "Forward", "Senior"],
+            ["Ella Claveran", "Presentation", "Goalkeeper", "Sophomore"],
+            ["Natalie Dueber", "Archbishop Riordan", "Midfielder", "Senior"]
+          ],
+          "secondTeam": [
+            ["Julia Malcolm", "Saint Francis", "Midfielder", "Senior"],
+            ["Lynn Byun", "Saint Francis", "Midfielder", "Sophomore"],
+            ["Layla Tucakovic", "Archbishop Mitty", "Goalkeeper", "Junior"],
+            ["Brooklynn Collier", "Archbishop Mitty", "Midfielder", "Junior"],
+            ["Taylor Bellotti", "Saint Ignatius", "Midfielder", "Senior"],
+            ["Keira Bromwell", "Saint Ignatius", "Defender", "Junior"],
+            ["Margaret Manuel", "Sacred Heart Cathedral", "Defender", "Junior"],
+            ["Alice Forster", "Sacred Heart Cathedral", "Midfielder", "Junior"],
+            ["Macy Fricke", "Valley Christian", "Defender", "Senior"],
+            ["Tanisha Rameshkumar", "Valley Christian", "Midfielder", "Sophomore"],
+            ["Emerson Kosmynka", "Presentation", "Defender", "Sophomore"],
+            ["Amara Malhi", "Presentation", "Defender", "Senior"],
+            ["Carmen Giuffre", "Archbishop Riordan", "Midfielder", "Junior"]
+          ],
+          "honorableMention": [
+            ["Maya Meltz", "Saint Francis", "Forward", "Sophomore"],
+            ["Danielle Paredes", "Archbishop Mitty", "Midfielder", "Senior"],
+            ["Bryce Killion", "Saint Ignatius", "Midfielder", "Sophomore"],
+            ["Gabi Cameron", "Sacred Heart Cathedral", "Forward", "Senior"],
+            ["Maya Patience", "Valley Christian", "Midfielder", "Senior"],
+            ["Sofia Hofman", "Presentation", "Midfielder", "Junior"],
+            ["Cienna Lujano", "Archbishop Riordan", "Midfielder", "Senior"]
+          ]
+        },
+        "jv": null
+      }
+    }
+  ]
+}

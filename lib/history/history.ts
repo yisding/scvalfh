@@ -231,22 +231,39 @@ export function getHistoryChampions(leagueId: LeagueId): Array<{ division: Divis
  * Teams whose 2025-26 division (as the source printed it) is not the division the registry lists
  * today (the 2026-27 alignment), e.g. Leland: Santa Teresa in the 2025-26 sheet, Mt. Hamilton in
  * the registry. The history keeps the source's division; the page says that the team moved.
+ * `registryLeague` is the league it is in now, which is another league for a school that changed
+ * leagues (Presentation: the WCAL in 2025-26, the WBAL's Foothill now).
  */
-export function getHistoryDivisionChanges(
-  leagueId: LeagueId,
-): Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> {
+export function getHistoryDivisionChanges(leagueId: LeagueId): Array<{
+  slug: TeamSlug;
+  name: string;
+  historyDivision: DivisionId;
+  registryDivision: DivisionId;
+  registryLeague: LeagueId;
+}> {
   const entry = history.leagues[leagueId];
   if (entry?.status !== 'available') return [];
-  const out: Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> = [];
+  const out: ReturnType<typeof getHistoryDivisionChanges> = [];
   for (const d of entry.divisions) {
     for (const r of d.standings.varsity) {
       const team = r.slug ? getTeamBySlug(r.slug) : undefined;
       if (r.slug && team && team.division !== d.division) {
-        out.push({ slug: r.slug, name: team.name, historyDivision: d.division, registryDivision: team.division });
+        out.push({
+          slug: r.slug,
+          name: team.name,
+          historyDivision: d.division,
+          registryDivision: team.division,
+          registryLeague: team.league,
+        });
       }
     }
   }
   return out;
+}
+
+/** Whether another row of the same table shares this row's place (the WBAL's tables rank level teams alike). */
+export function historyPlaceShared(rows: readonly HistoryRow[], row: HistoryRow): boolean {
+  return rows.some((r) => r !== row && r.place === row.place);
 }
 
 /** Varsity rows whose source record has no ties field (`t` is null), by division. */

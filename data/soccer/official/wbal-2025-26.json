@@ -1,0 +1,163 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Soccer",
+  "league": "wbal",
+  "publisher": "hs.wbalsports.org",
+  "retrievedOn": "2026-11-16",
+  "standings": {"url": "https://hs.wbalsports.org/2025-2026/socstg.html", "kind": "page", "index": "https://hs.wbalsports.org/history.html"},
+  "allLeague": {"url": "https://hs.wbalsports.org/alsocg2526.html", "kind": "page", "index": "https://hs.wbalsports.org/history.html"},
+  "transcription": "Transcribed from the two pages' HTML, read 2026-11-16, leaving out the tables the standings page comments out: each row as printed, and checked against the pages row by row.",
+  "notes": [
+    "The standings page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (1, 2, 2, 4).",
+    "The standings print a league record and no overall record, so every overallRecord is null.",
+    "The all-league page prints each player as \"Player, School\" with no year or position, so every year and position is null.",
+    "Division membership is the 2025-26 pages' own, which is not the 2026-27 alignment; the page says which teams moved.",
+    "Presentation played in the WCAL in 2025-26 (`joinedSince`): no WBAL table of that season lists it.",
+    "School spellings are the pages' own (\"Crystal\", \"Mercy\"); `slug` is the join key.",
+    "Girls soccer: the page prints points, games played, a W-L-T record and a win percentage; the record is stored, the rest follows from it (three points a win, one a tie).",
+    "Only Foothill has a JV table (four teams); the page's Skyline JV table, Pinewood and Priory at 0-0-0, is commented out of its HTML and is not stored.",
+    "The all-league page lists one honorable mention as \"Brooklyn Denegri Notre Dame Belmont\", with no comma; it is read as the player Brooklyn Denegri of Notre Dame Belmont.",
+    "The Skyline page names Co-Defenders of the Year, two entries under one title."
+  ],
+  "formerMembers": [],
+  "joinedSince": ["presentation"],
+  "schoolSpellings": {"Mercy": "Mercy Burlingame"},
+  "divisions": [
+    {
+      "division": "foothill",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "The King's Academy", "league": "6-1-5", "overall": null},
+          {"place": 2, "name": "Menlo", "league": "5-2-5", "overall": null},
+          {"place": 2, "name": "Sacred Heart Prep", "league": "5-2-5", "overall": null},
+          {"place": 4, "name": "Crystal", "league": "5-3-4", "overall": null},
+          {"place": 5, "name": "Castilleja", "league": "5-4-3", "overall": null},
+          {"place": 6, "name": "Notre Dame Belmont", "league": "3-6-3", "overall": null},
+          {"place": 7, "name": "Notre Dame San Jose", "league": "0-11-1", "overall": null}
+        ],
+        "jv": [
+          {"place": 1, "name": "Menlo", "league": "5-1-0", "overall": null},
+          {"place": 1, "name": "Sacred Heart Prep", "league": "5-1-0", "overall": null},
+          {"place": 3, "name": "Notre Dame Belmont", "league": "1-4-1", "overall": null},
+          {"place": 4, "name": "Notre Dame San Jose", "league": "0-5-1", "overall": null}
+        ]
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Forward of the Year", "player": "Lauryn Masetti", "school": "Sacred Heart Prep", "position": "", "year": ""},
+            {"award": "Midfielder of the Year", "player": "Isabelle Lee", "school": "The King's Academy", "position": "", "year": ""},
+            {"award": "Defender of the Year", "player": "Lauryn Fleshman", "school": "Crystal", "position": "", "year": ""},
+            {"award": "Goalkeeper of the Year", "player": "Bianca Putanec", "school": "Menlo", "position": "", "year": ""}
+          ],
+          "firstTeam": [
+            ["Krista Arreola", "Menlo", "", ""],
+            ["Addison Bartell", "The King's Academy", "", ""],
+            ["Caelyn Dyer", "Notre Dame San Jose", "", ""],
+            ["Josie Lee", "Menlo", "", ""],
+            ["Ella Leyte Vidal", "Notre Dame Belmont", "", ""],
+            ["Yeonu Na", "The King's Academy", "", ""],
+            ["Hana Osman", "Castilleja", "", ""],
+            ["Layla Pine", "Sacred Heart Prep", "", ""],
+            ["Savianna Sassone", "The King's Academy", "", ""],
+            ["Allie Willis", "Crystal", "", ""],
+            ["Clementine Xiong", "The King's Academy", "", ""],
+            ["Aris Yu", "Sacred Heart Prep", "", ""]
+          ],
+          "secondTeam": [
+            ["Julia Axelrod", "Menlo", "", ""],
+            ["Annalyse Bottazzo", "Notre Dame San Jose", "", ""],
+            ["Audrey Cabot", "The King's Academy", "", ""],
+            ["Emerson Kjellesvig", "The King's Academy", "", ""],
+            ["Katie Kossow", "Menlo", "", ""],
+            ["Anya Kothari", "Menlo", "", ""],
+            ["Ashley Luong", "The King's Academy", "", ""],
+            ["Scout Reese", "Crystal", "", ""],
+            ["Talia Samuels", "Sacred Heart Prep", "", ""],
+            ["Maisie Street", "Notre Dame Belmont", "", ""],
+            ["Averie Sui", "Sacred Heart Prep", "", ""],
+            ["Kaylin Yip", "Castilleja", "", ""]
+          ],
+          "honorableMention": [
+            ["Nava Ammari", "Sacred Heart Prep", "", ""],
+            ["Marissa Barber", "Notre Dame San Jose", "", ""],
+            ["Reagan Connors", "The King's Academy", "", ""],
+            ["Brooklyn Denegri", "Notre Dame Belmont", "", ""],
+            ["Chloe Heo", "Castilleja", "", ""],
+            ["Brooke Klemens", "Sacred Heart Prep", "", ""],
+            ["Sarina Rabkin", "Crystal", "", ""],
+            ["Dahlia Schroeder", "Castilleja", "", ""],
+            ["Evin Shanafelt", "The King's Academy", "", ""],
+            ["Claire Shin", "Crystal", "", ""],
+            ["Ella Skinner", "Menlo", "", ""],
+            ["Parker Sunwoo", "Menlo", "", ""]
+          ]
+        },
+        "jv": null
+      }
+    },
+    {
+      "division": "skyline",
+      "standings": {
+        "varsity": [
+          {"place": 1, "name": "Harker", "league": "7-0-1", "overall": null},
+          {"place": 2, "name": "Mercy", "league": "5-1-2", "overall": null},
+          {"place": 3, "name": "Priory", "league": "4-3-1", "overall": null},
+          {"place": 4, "name": "Pinewood", "league": "2-6-0", "overall": null},
+          {"place": 5, "name": "Eastside College Prep", "league": "0-8-0", "overall": null}
+        ],
+        "jv": []
+      },
+      "awards": {
+        "varsity": {
+          "overall": [
+            {"award": "Forward of the Year", "player": "Isela Santana", "school": "Mercy", "position": "", "year": ""},
+            {"award": "Midfielder of the Year", "player": "Eva Cheng", "school": "Harker", "position": "", "year": ""},
+            {"award": "Co-Defenders of the Year", "player": "Liliana Bronzoni", "school": "Mercy", "position": "", "year": ""},
+            {"award": "Co-Defenders of the Year", "player": "Addison Parenti", "school": "Pinewood", "position": "", "year": ""},
+            {"award": "Goalkeeper of the Year", "player": "Riya Samuel", "school": "Harker", "position": "", "year": ""}
+          ],
+          "firstTeam": [
+            ["MacEnzie Blue", "Harker", "", ""],
+            ["Sallie Haun", "Pinewood", "", ""],
+            ["Kaitlyn Nelson", "Harker", "", ""],
+            ["Ruby Richards", "Priory", "", ""],
+            ["Alyssa Rodriguez", "Mercy", "", ""],
+            ["Fiona Ross", "Priory", "", ""],
+            ["Ally Ruiz", "Eastside College Prep", "", ""],
+            ["Frankie Shannon", "Mercy", "", ""],
+            ["Aanya Sharma", "Harker", "", ""],
+            ["Julianna Umansor", "Mercy", "", ""],
+            ["Audrey Yang", "Harker", "", ""]
+          ],
+          "secondTeam": [
+            ["Emily Agnich", "Pinewood", "", ""],
+            ["Natalie Barth", "Harker", "", ""],
+            ["Madeline Baszucki", "Priory", "", ""],
+            ["Kamila Camorlinga", "Eastside College Prep", "", ""],
+            ["Adriana Chavez", "Mercy", "", ""],
+            ["Avery Hall", "Pinewood", "", ""],
+            ["Emma Harris", "Priory", "", ""],
+            ["Sophia Hernandez", "Mercy", "", ""],
+            ["Mia Ji", "Harker", "", ""],
+            ["Liliana Klingler", "Mercy", "", ""],
+            ["Cynthia Xie", "Harker", "", ""]
+          ],
+          "honorableMention": [
+            ["Nerea Amezcua", "Pinewood", "", ""],
+            ["Kylie Auger", "Mercy", "", ""],
+            ["Angie Calderon", "Eastside College Prep", "", ""],
+            ["Sophie Han", "Harker", "", ""],
+            ["Alina Hsieh", "Priory", "", ""],
+            ["Riley Nicoletti", "Priory", "", ""],
+            ["Sherlyn Segura", "Eastside College Prep", "", ""],
+            ["Abigail Volker", "Mercy", "", ""],
+            ["Emma Wang", "Harker", "", ""],
+            ["Nova Weissman", "Pinewood", "", ""]
+          ]
+        },
+        "jv": null
+      }
+    }
+  ]
+}

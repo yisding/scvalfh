@@ -1233,44 +1233,952 @@
       "status": "available"
     },
     "wbal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WBAL 2025-26 girls volleyball standings",
-          "url": "https://hs.wbalsports.org/2025-2026/vbstg.html"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "foothill",
+              "firstTeam": [
+                {
+                  "player": "Elie Ahluwalia",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Keira Chang",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Alex Fair",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Peyton Fu-Sarosa",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Jamie Johnson",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Kiley McGibben",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Ava Wang",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Linda Amrhein",
+                  "position": null,
+                  "school": "Notre Dame San Jose",
+                  "slug": "notre-dame-san-jose",
+                  "year": null
+                },
+                {
+                  "player": "Vivienne Butler",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                },
+                {
+                  "player": "Juliette Escobar",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Petra Hennessy",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                },
+                {
+                  "player": "Cierra Huynh",
+                  "position": null,
+                  "school": "Notre Dame San Jose",
+                  "slug": "notre-dame-san-jose",
+                  "year": null
+                },
+                {
+                  "player": "Mia Macdonnell",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Co-Most Valuable Players",
+                  "value": "Leilah Abrams, Sacred Heart Prep"
+                },
+                {
+                  "award": "Co-Most Valuable Players",
+                  "value": "Gia Rivera, Notre Dame Belmont"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Aline Grinspan",
+                  "position": null,
+                  "school": "Harker",
+                  "slug": "harker",
+                  "year": null
+                },
+                {
+                  "player": "Arianna Juarez",
+                  "position": null,
+                  "school": "Notre Dame Belmont",
+                  "slug": "notre-dame-belmont",
+                  "year": null
+                },
+                {
+                  "player": "Hadley Mahon",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Sadie McCulloch",
+                  "position": null,
+                  "school": "Mercy",
+                  "slug": "mercy-burlingame",
+                  "year": null
+                },
+                {
+                  "player": "Poema Ueligitone",
+                  "position": null,
+                  "school": "Sacred Heart Prep",
+                  "slug": "sacred-heart-prep",
+                  "year": null
+                },
+                {
+                  "player": "Allison Yu",
+                  "position": null,
+                  "school": "Menlo",
+                  "slug": "menlo",
+                  "year": null
+                },
+                {
+                  "player": "Kathy Zhang",
+                  "position": null,
+                  "school": "Crystal",
+                  "slug": "crystal-springs",
+                  "year": null
+                }
+              ]
+            }
+          },
+          "division": "foothill",
+          "label": "Foothill",
+          "standings": {
+            "jv": [
+              {
+                "l": 1,
+                "leagueRecord": "11-1",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "sacred-heart-prep",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Harker",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "harker",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "menlo",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Mercy",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "mercy-burlingame",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Notre Dame Belmont",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "notre-dame-belmont",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Notre Dame San Jose",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "notre-dame-san-jose",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "Crystal",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "crystal-springs",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "sacred-heart-prep",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Notre Dame Belmont",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "notre-dame-belmont",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "menlo",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Harker",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "harker",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Mercy",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "mercy-burlingame",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "Crystal",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "crystal-springs",
+                "t": 0,
+                "w": 1
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "Notre Dame San Jose",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "notre-dame-san-jose",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
         },
         {
-          "label": "WBAL 2025-26 girls volleyball honors",
-          "url": "https://hs.wbalsports.org/alvbg25.html"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "skyline",
+              "firstTeam": [
+                {
+                  "player": "Amelie Bellemans",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Siena Ebeid",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Sophia Giles",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Emerson Kjellesvig",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Juli Pierre",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Emily Shen",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "Adelynn Wang",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                },
+                {
+                  "player": "Michaela Wu",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Rae Cantrell",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Sophie Saibi",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Most Valuable Player",
+                  "value": "Mailey Wang, Pinewood"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Barrett Bruel",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Aria Feitelberg",
+                  "position": null,
+                  "school": "Castilleja",
+                  "slug": "castilleja",
+                  "year": null
+                },
+                {
+                  "player": "A'Nyrah Green Frazier",
+                  "position": null,
+                  "school": "Eastside College Prep",
+                  "slug": "eastside",
+                  "year": null
+                },
+                {
+                  "player": "Shuwen Jin",
+                  "position": null,
+                  "school": "The King's Academy",
+                  "slug": "kings-academy",
+                  "year": null
+                },
+                {
+                  "player": "Camila Revuelta",
+                  "position": null,
+                  "school": "Priory",
+                  "slug": "priory",
+                  "year": null
+                },
+                {
+                  "player": "Abi Wessel",
+                  "position": null,
+                  "school": "Pinewood",
+                  "slug": "pinewood",
+                  "year": null
+                }
+              ]
+            }
+          },
+          "division": "skyline",
+          "label": "Skyline",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "8-0",
+                "name": "The King's Academy",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "kings-academy",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 2,
+                "leagueRecord": "6-2",
+                "name": "Castilleja",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "castilleja",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 4,
+                "leagueRecord": "4-4",
+                "name": "Priory",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "priory",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 6,
+                "leagueRecord": "2-6",
+                "name": "Pinewood",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "pinewood",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 8,
+                "leagueRecord": "0-8",
+                "name": "Eastside College Prep",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "eastside",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "8-0",
+                "name": "The King's Academy",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "kings-academy",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 3,
+                "leagueRecord": "5-3",
+                "name": "Castilleja",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "castilleja",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "4-4",
+                "name": "Pinewood",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "pinewood",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 5,
+                "leagueRecord": "3-5",
+                "name": "Priory",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "priory",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 8,
+                "leagueRecord": "0-8",
+                "name": "Eastside College Prep",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "eastside",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://hs.wbalsports.org/2025-2026/vbstg.html (the 2025-26 standings, linked from the league’s history page)",
-        "https://hs.wbalsports.org/alvbg25.html (its 2025-26 season honors)"
-      ],
-      "checkedOn": "2026-11-14",
       "league": "West Bay Athletic League",
-      "reason": "The WBAL keeps last season’s standings and its season honors on hs.wbalsports.org. This site added WBAL girls volleyball on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": {
+          "kind": "page",
+          "url": "https://hs.wbalsports.org/alvbg25.html"
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the two pages' HTML, read 2026-11-16, leaving out the tables the standings page comments out: each row as printed, and checked against the pages row by row.",
+        "notes": [
+          "WBAL girls volleyball 2025-26, from hs.wbalsports.org: the standings linked from https://hs.wbalsports.org/history.html and the all-league teams linked from https://hs.wbalsports.org/history.html. Rows are in the league's own order; nothing is recomputed.",
+          "The standings page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (1, 2, 2, 4).",
+          "The standings print a league record and no overall record, so every overallRecord is null.",
+          "The all-league page prints each player as \"Player, School\" with no year or position, so every year and position is null.",
+          "Division membership is the 2025-26 pages' own, which is not the 2026-27 alignment; the page says which teams moved.",
+          "Presentation played in the WCAL in 2025-26 (`joinedSince`): no WBAL table of that season lists it.",
+          "School spellings are the pages' own (\"Crystal\", \"Mercy\"); `slug` is the join key.",
+          "Girls volleyball: the page prints matches played, a W-L record, a win percentage and games back; a match cannot end level, so t is stored as 0.",
+          "The page's freshman table is not stored, nor its boys table, which is commented out of its HTML.",
+          "The Foothill page names Co-Most Valuable Players, two entries under one title."
+        ],
+        "publisher": "hs.wbalsports.org",
+        "retrievedOn": "2026-11-16",
+        "source": "league-documents",
+        "standings": {
+          "kind": "page",
+          "url": "https://hs.wbalsports.org/2025-2026/vbstg.html"
+        }
+      },
+      "status": "available"
     },
     "wcal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WCAL standings",
-          "url": "https://wcalsports.org/standings/"
-        },
-        {
-          "label": "WCAL awards and records",
-          "url": "https://wcalsports.org/awardsrecords/"
+          "awards": {
+            "jv": null,
+            "varsity": {
+              "division": "wcal",
+              "firstTeam": [
+                {
+                  "player": "Amelia Leha’Uli",
+                  "position": "Outside Hitter",
+                  "school": "Archbishop Riordan",
+                  "slug": "riordan",
+                  "year": 12
+                },
+                {
+                  "player": "Chayse Courtney",
+                  "position": "Outside Hitter",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 10
+                },
+                {
+                  "player": "Eileen Pfeffer",
+                  "position": "Middle Blocker",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 11
+                },
+                {
+                  "player": "Ella Fulton",
+                  "position": "Outside Hitter/Middle Blocker",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Lauren Nip",
+                  "position": "Libero",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 12
+                },
+                {
+                  "player": "Makenna Crosson",
+                  "position": "Outside Hitter",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 12
+                },
+                {
+                  "player": "Noe Vanacht",
+                  "position": "Libero",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Whitney Fleming",
+                  "position": "Outside Hitter",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 11
+                }
+              ],
+              "honorableMention": [
+                {
+                  "player": "Danielle Whitmill",
+                  "position": "Setter",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 10
+                },
+                {
+                  "player": "Giulia McManigal",
+                  "position": "Setter/Opposite",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 10
+                },
+                {
+                  "player": "Laurie Nguyen",
+                  "position": "Setter",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 10
+                },
+                {
+                  "player": "Michaela Artmore",
+                  "position": "Middle Hitter",
+                  "school": "Presentation",
+                  "slug": "presentation",
+                  "year": 12
+                },
+                {
+                  "player": "Riley Barulich",
+                  "position": "Setter",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 12
+                },
+                {
+                  "player": "Zoie Loui",
+                  "position": "Setter",
+                  "school": "Archbishop Riordan",
+                  "slug": "riordan",
+                  "year": 11
+                }
+              ],
+              "level": "varsity",
+              "overall": [
+                {
+                  "award": "Player of the Year",
+                  "value": "Makenna Crosson, Archbishop Mitty"
+                }
+              ],
+              "secondTeam": [
+                {
+                  "player": "Abby Cardenas",
+                  "position": "RS/Outside Hitter",
+                  "school": "Saint Francis",
+                  "slug": "saint-francis",
+                  "year": 10
+                },
+                {
+                  "player": "Elina Yin",
+                  "position": "Libero",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 11
+                },
+                {
+                  "player": "Ellie Diehl-Palmer",
+                  "position": "Outside Hitter/Opposite",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 12
+                },
+                {
+                  "player": "Grace Paedon",
+                  "position": "Middle Hitter",
+                  "school": "Valley Christian",
+                  "slug": "valley-christian",
+                  "year": 9
+                },
+                {
+                  "player": "Katelyn Sentous",
+                  "position": "Middle Blocker",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 12
+                },
+                {
+                  "player": "Madi Mullins",
+                  "position": "Libero",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 12
+                },
+                {
+                  "player": "Makayla Tran",
+                  "position": "Libero",
+                  "school": "Archbishop Mitty",
+                  "slug": "mitty",
+                  "year": 10
+                },
+                {
+                  "player": "Marley Miyagishima",
+                  "position": "Outside Hitter/Opposite",
+                  "school": "Sacred Heart Cathedral",
+                  "slug": "sacred-heart-cathedral",
+                  "year": 12
+                },
+                {
+                  "player": "Neve Harlen",
+                  "position": "Outside Hitter",
+                  "school": "Saint Ignatius",
+                  "slug": "st-ignatius",
+                  "year": 11
+                }
+              ]
+            }
+          },
+          "division": "wcal",
+          "label": "WCAL",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "Saint Francis",
+                "overallRecord": "26-0",
+                "place": 1,
+                "slug": "saint-francis",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "Saint Ignatius",
+                "overallRecord": "20-4",
+                "place": 2,
+                "slug": "st-ignatius",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "Archbishop Mitty",
+                "overallRecord": "14-7",
+                "place": 3,
+                "slug": "mitty",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "22-7",
+                "place": 4,
+                "slug": "sacred-heart-cathedral",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "Valley Christian",
+                "overallRecord": "12-7",
+                "place": 5,
+                "slug": "valley-christian",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Archbishop Riordan",
+                "overallRecord": "14-9",
+                "place": 6,
+                "slug": "riordan",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "Presentation",
+                "overallRecord": "5-26",
+                "place": 7,
+                "slug": "presentation",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "Archbishop Mitty",
+                "overallRecord": "27-3",
+                "place": 1,
+                "slug": "mitty",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "Saint Ignatius",
+                "overallRecord": "23-9",
+                "place": 2,
+                "slug": "st-ignatius",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "Saint Francis",
+                "overallRecord": "18-10",
+                "place": 3,
+                "slug": "saint-francis",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 6,
+                "leagueRecord": "6-6",
+                "name": "Valley Christian",
+                "overallRecord": "19-8",
+                "place": 4,
+                "slug": "valley-christian",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "20-12",
+                "place": 5,
+                "slug": "sacred-heart-cathedral",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "Archbishop Riordan",
+                "overallRecord": "11-13",
+                "place": 6,
+                "slug": "riordan",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "Presentation",
+                "overallRecord": "7-24",
+                "place": 7,
+                "slug": "presentation",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)",
-        "https://wcalsports.org/awardsrecords/ (its season honors)"
-      ],
-      "checkedOn": "2026-11-14",
       "league": "West Catholic Athletic League",
-      "reason": "The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL girls volleyball on November 14, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": {
+          "kind": "pdf",
+          "url": "https://wcalsports.org/__static/jdj5jdewjezgbwvbauh4tevwuuvnwmfs/AL-2025-26(4).pdf"
+        },
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the pdftotext -layout text of both PDFs, read 2026-11-16: each row as printed, and checked against the PDFs row by row.",
+        "notes": [
+          "WCAL girls volleyball 2025-26, from wcalsports.org: the standings linked from https://wcalsports.org/standings/ and the all-league teams linked from https://wcalsports.org/awardsrecords/. Rows are in the league's own order; nothing is recomputed.",
+          "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/; the all-league PDF is its 2025-26 awards book, linked as \"2025-2026\" from wcalsports.org/awardsrecords/.",
+          "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it.",
+          "Overall is the PDF's \"Season\" columns.",
+          "Presentation played in the WCAL in 2025-26 and is in the WBAL's Foothill division now; its rows keep its slug (`formerMembers`), and the page says it moved.",
+          "The PDF's freshman tables are not stored: the archive has varsity and JV only.",
+          "Girls volleyball tables of October 29, 2025: league wins and losses, then the season's. A match cannot end level, so records are W-L and t is stored as 0.",
+          "The awards are the PDF's \"2025 WCAL Girls Volleyball All League Teams\": a Player of the Year (printed \"Player – School\", with no year), a first team, a second team and an honorable mention (Name, School, Year, Position). The WCAL names no JV all-league team."
+        ],
+        "publisher": "wcalsports.org",
+        "retrievedOn": "2026-11-16",
+        "source": "league-documents",
+        "standings": {
+          "kind": "pdf",
+          "url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf"
+        }
+      },
+      "status": "available"
     }
   },
   "season": "2025-26",

@@ -660,6 +660,8 @@ export function buildAboutView(): AboutView {
               return `${name}’s standings and all-league PDFs`;
             case 'bval-sheet':
               return `${name}’s standings sheet and all-league documents`;
+            case 'league-documents':
+              return `${name}’s standings and all-league ${entry.provenance.standings.kind === 'pdf' ? 'PDFs' : 'pages'}`;
           }
         }),
         unavailableLeagues: historyUnavailableLeagues,

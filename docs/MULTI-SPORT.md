@@ -260,7 +260,9 @@ teams each. /history/2025-26 marks BVAL unavailable until its standings sheets a
 soccer site. `lib/league-config/soccer/{wcal,wbal}.ts` and `lib/registry/soccer/{wcal,wbal}.ts` add 19 teams (60 in
 the soccer registry; basketball stays at 41, so `lib/teams.ts` counts each sport's own), the CCS block allocates the
 WCAL's two berths and the WBAL's four, and league games are read by membership, since neither league's schedule is
-a document that holds still (README, "WCAL and WBAL in the soccer build"). /history/2025-26 marks both unavailable.
+a document that holds still (README, "WCAL and WBAL in the soccer build"). /history/2025-26 has both leagues' 2025-26
+final standings and all-league teams from their own documents, transcribed 2026-11-16 (README, "WCAL and WBAL last
+season").
 
 Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
