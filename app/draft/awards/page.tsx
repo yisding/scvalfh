@@ -80,8 +80,28 @@ export default function AwardsDraftPage() {
       <article className="sx-prose mt-4">
         <p>
           With Saturday&rsquo;s final tournaments played and won, it&rsquo;s the end of a great season of field hockey
-          in California. Congratulations to <T slug="st-ignatius">St. Ignatius</T>, <T slug="los-altos">Los Altos</T>,{' '}
-          <T slug="point-loma">Point Loma</T>, <T slug="san-marcos">San Marcos</T>, and <T slug="bishops">Bishop&rsquo;s</T>{' '}
+          in California. Congratulations to{' '}
+          {/* This sentence alone links each winner to the bracket it won: the CCS divisions' sections, and
+              the San Diego Section finals' own ties (a tie's id opens its round). */}
+          <Link href="/playoffs#ccs-division-1" prefetch={false}>
+            St. Ignatius
+          </Link>
+          ,{' '}
+          <Link href="/playoffs#ccs-division-2" prefetch={false}>
+            Los Altos
+          </Link>
+          ,{' '}
+          <Link href="/playoffs#sds-division-2-4-0" prefetch={false}>
+            Point Loma
+          </Link>
+          ,{' '}
+          <Link href="/playoffs#sds-division-1-3-0" prefetch={false}>
+            San Marcos
+          </Link>
+          , and{' '}
+          <Link href="/playoffs#sds-open-2-0" prefetch={false}>
+            Bishop&rsquo;s
+          </Link>{' '}
           on their victories.
         </p>
         <p>With all games played, it&rsquo;s time for the first ever NCFH.net awards for 2026:</p>
