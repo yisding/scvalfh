@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T16:07:05.396Z",
+  "fetchedAt": "2026-11-16T23:27:15.644Z",
   "fixtures": [
     {
       "claims": {
@@ -80427,7 +80427,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-13T05:02:59",
+              "maxprepsModifiedOn": "2026-11-16T19:28:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
