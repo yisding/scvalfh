@@ -7,47 +7,47 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "2c98a8e24d6955da382f36fe3c57d41b11f52bac1a4c18109598e3afab095172",
+  "contentHash": "0ce03c2afcc34956f95a3a87541f5505844a8e12a40989577b1c398ad2d278ec",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 212,
+        "games": 214,
         "leagueGames": 148,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 153,
+        "games": 155,
         "leagueGames": 84,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 67,
+        "games": 69,
         "leagueGames": 17,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 47,
+        "games": 48,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 0,
-    "games": 426,
+    "games": 433,
     "leagueGames": 267,
     "mismatches": 0,
     "pending": 0,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-16T13:56:38.184Z",
+  "fetchedAt": "2026-11-16T23:29:16.778Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -161,12 +161,12 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "lynbrook schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -331,7 +331,7 @@
     },
     {
       "label": "del-mar schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -366,7 +366,7 @@
     },
     {
       "label": "san-jose schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -426,7 +426,7 @@
     },
     {
       "label": "sacred-heart-cathedral schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
@@ -476,7 +476,7 @@
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
@@ -491,7 +491,7 @@
     },
     {
       "label": "presentation schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
@@ -551,7 +551,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 43,
+      "rowCount": 42,
       "status": "ok"
     },
     {

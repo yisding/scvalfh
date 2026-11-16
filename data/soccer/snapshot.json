@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": {
     "agreements": 0,
-    "cifssFetchedAt": "2026-11-16T13:56:38.184Z",
+    "cifssFetchedAt": "2026-11-16T23:29:16.778Z",
     "cifssOnlyScored": [],
     "compared": 0,
     "conflicts": [],
@@ -52,34 +52,34 @@
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 212,
+        "games": 214,
         "leagueGames": 148,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 153,
+        "games": 155,
         "leagueGames": 84,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 67,
+        "games": 69,
         "leagueGames": 17,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 47,
+        "games": 48,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 0,
-    "games": 426,
+    "games": 433,
     "leagueGames": 267,
     "mismatches": 0,
     "pending": 0,
@@ -196,7 +196,7 @@
       ]
     }
   ],
-  "fetchedAt": "2026-11-16T13:56:38.184Z",
+  "fetchedAt": "2026-11-16T23:29:16.778Z",
   "games": [
     {
       "aliases": [
@@ -238,7 +238,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T21:25:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -296,7 +296,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-23T18:10:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -354,7 +354,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T20:09:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -412,7 +412,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T18:47:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -470,7 +470,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-04T00:21:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -486,6 +486,62 @@
       },
       "venue": {
         "text": "@Santa Teresa / JV @5PM / VAR @7PM"
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Lynbrook",
+        "result": null,
+        "score": null,
+        "slug": "lynbrook",
+        "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
+      },
+      "contestId": "82e69670-7be9-4b0c-82b7-a1215d67440a",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-24",
+      "dateLocal": "2026-11-24T12:00:00",
+      "dateUtc": "2026-11-24T20:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Santa Cruz",
+        "name": "Harbor",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T11:35:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-11-24-lynbrook-at-harbor",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-lynbrook-san-jose/11-24-2026/?c=82e69670-7be9-4b0c-82b7-a1215d67440a",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/harbor-high-school-santa-cruz-ca/game750a64ef4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -528,7 +584,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:31:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -586,7 +642,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T13:58:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -644,7 +700,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-13T09:39:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -660,6 +716,62 @@
       },
       "venue": {
         "text": "Murray Field"
+      }
+    },
+    {
+      "away": {
+        "city": "Felton",
+        "name": "San Lorenzo Valley",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "1b3a82da-476f-4a32-9652-c238da7764c7"
+      },
+      "contestId": "e12482da-5a5c-4ca2-8c5a-494e7714ece2",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-11-30",
+      "dateLocal": "2026-11-30T15:30:00",
+      "dateUtc": "2026-11-30T23:30:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Presentation",
+        "result": null,
+        "score": null,
+        "slug": "presentation",
+        "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T13:05:19",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-11-30-san-lorenzo-valley-at-presentation",
+      "status": "scheduled",
+      "urls": {
+        "goFan": "https://gofan.co/event/6991523?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/presentation-san-jose-vs-san-lorenzo-valley-felton/11-30-2026/?c=e12482da-5a5c-4ca2-8c5a-494e7714ece2",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
       }
     },
     {
@@ -702,7 +814,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T14:50:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -760,7 +872,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T00:21:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -818,7 +930,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-13T16:51:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -876,7 +988,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-11T19:13:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -934,7 +1046,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T14:58:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -992,7 +1104,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T11:51:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1050,7 +1162,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-27T10:07:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1108,7 +1220,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T22:12:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1166,7 +1278,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:28:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1224,7 +1336,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-05T09:51:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1282,7 +1394,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:05:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1340,7 +1452,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T21:59:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1398,7 +1510,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T18:12:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1456,7 +1568,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T22:07:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1514,7 +1626,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T08:33:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1572,7 +1684,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-23T18:10:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1630,7 +1742,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-05T19:01:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1688,7 +1800,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:48:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1746,7 +1858,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T17:48:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1804,7 +1916,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-05T23:53:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1862,7 +1974,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T13:59:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1920,7 +2032,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-25T10:10:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1978,7 +2090,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:28:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2036,7 +2148,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T05:03:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2094,7 +2206,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T18:49:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2152,7 +2264,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T14:49:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2210,7 +2322,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-05T22:26:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2268,7 +2380,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-22T22:54:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2326,7 +2438,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T11:20:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2384,7 +2496,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T19:09:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2442,7 +2554,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T11:49:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2500,7 +2612,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T14:59:25",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2558,7 +2670,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-13T17:11:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2616,7 +2728,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T18:50:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2674,7 +2786,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:30:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2732,7 +2844,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T11:52:02",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2790,7 +2902,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-13T21:45:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2848,7 +2960,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-23T18:10:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2917,7 +3029,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-02T21:06:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2982,7 +3094,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:31:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3040,7 +3152,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-21T09:21:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3109,7 +3221,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:06:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3178,7 +3290,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:13:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3236,7 +3348,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T18:50:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3294,7 +3406,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:19:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3352,7 +3464,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-28T20:56:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3410,7 +3522,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T20:06:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3468,7 +3580,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T10:09:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3526,7 +3638,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-05T17:12:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3584,7 +3696,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T16:06:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3642,7 +3754,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T11:30:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3700,7 +3812,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-05T22:30:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3758,7 +3870,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-01T15:02:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3816,7 +3928,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T11:10:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3874,7 +3986,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T23:01:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3932,7 +4044,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T11:20:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3990,7 +4102,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-09T05:02:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4048,7 +4160,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-13T21:29:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4106,7 +4218,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:29:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4164,7 +4276,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-01T19:16:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4222,7 +4334,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:49:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4278,7 +4390,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T19:55:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4336,7 +4448,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:00:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4394,7 +4506,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T22:39:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4452,7 +4564,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T14:13:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4510,7 +4622,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-25T00:03:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4568,7 +4680,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T22:07:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4626,7 +4738,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T05:03:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4684,7 +4796,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-21T18:13:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4743,7 +4855,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T10:13:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4801,7 +4913,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T17:28:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4859,7 +4971,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:24:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4917,7 +5029,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-20T08:27:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4975,7 +5087,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-10T18:51:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5033,7 +5145,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T11:52:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5091,7 +5203,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T05:03:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5149,7 +5261,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-03T14:35:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5207,7 +5319,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T18:08:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5276,7 +5388,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T23:04:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5334,7 +5446,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T22:07:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5403,7 +5515,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:32:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5461,7 +5573,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T11:28:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5519,7 +5631,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T22:12:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5577,7 +5689,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T17:48:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5635,7 +5747,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T17:28:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5693,7 +5805,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-21T18:19:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5752,7 +5864,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-09T17:45:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5810,7 +5922,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T21:11:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5868,7 +5980,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T12:09:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5926,7 +6038,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-09T05:02:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -5984,7 +6096,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-23T18:10:58",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6053,7 +6165,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2026-12-08; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-10-02T14:06:28",
         "schedule": "maxpreps-api",
@@ -6123,7 +6235,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T20:15:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6181,7 +6293,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6239,7 +6351,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T20:01:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6297,7 +6409,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:30:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6355,7 +6467,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T21:59:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6413,7 +6525,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-22T22:54:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6471,7 +6583,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T15:02:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6529,7 +6641,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:43:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6587,7 +6699,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T20:07:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6645,7 +6757,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T12:01:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6703,7 +6815,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T14:38:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6761,7 +6873,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T17:28:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6819,7 +6931,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T11:13:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6888,7 +7000,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:02:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -6946,7 +7058,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T22:03:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7015,7 +7127,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T21:32:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7073,7 +7185,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:10:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7131,7 +7243,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T00:51:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7189,7 +7301,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-22T12:14:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7247,7 +7359,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:01:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7316,7 +7428,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:07:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7372,7 +7484,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T17:37:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7430,7 +7542,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-03T17:41:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7488,7 +7600,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-21T09:21:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7546,7 +7658,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T16:10:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7604,7 +7716,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:31:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7662,7 +7774,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T10:10:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7675,6 +7787,62 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/homestead-cupertino-vs-rancho-san-juan-salinas/12-12-2026/?c=c86fde7a-3527-49c0-9702-6f0f00e38cc6",
         "nfhsStream": "https://www.nfhsnetwork.com/events/homestead-high-school-cupertino-ca/gam46b4f01ad4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Francisco",
+        "name": "Sacred Heart Cathedral",
+        "result": null,
+        "score": null,
+        "slug": "sacred-heart-cathedral",
+        "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
+      },
+      "contestId": "2e282e4a-7252-448b-86cd-13a47bc19745",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-12",
+      "dateLocal": "2026-12-12T12:00:00",
+      "dateUtc": "2026-12-12T20:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Aptos",
+        "name": "Aptos",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T12:33:59",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-12-12-sacred-heart-cathedral-at-aptos",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/aptos-vs-sacred-heart-cathedral-preparatory-san-francisco/12-12-2026/?c=2e282e4a-7252-448b-86cd-13a47bc19745",
+        "nfhsStream": null
       },
       "venue": {
         "text": null
@@ -7720,7 +7888,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T14:09:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7732,6 +7900,62 @@
       "urls": {
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/sacred-heart-prep-atherton-vs-scotts-valley/12-12-2026/?c=fc0e8972-56e6-479c-b0e2-1d480c6b6921",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Santa Cruz",
+        "name": "Harbor",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+      },
+      "contestId": "2d36de38-623e-4f30-a5a1-95fad62d9868",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-12",
+      "dateLocal": "2026-12-12T13:00:00",
+      "dateUtc": "2026-12-12T21:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "San Jose",
+        "result": null,
+        "score": null,
+        "slug": "san-jose",
+        "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T11:44:22",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-12-12-harbor-at-san-jose",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harbor-santa-cruz-vs-san-jose/12-12-2026/?c=2d36de38-623e-4f30-a5a1-95fad62d9868",
         "nfhsStream": null
       },
       "venue": {
@@ -7778,7 +8002,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-12T21:23:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7836,7 +8060,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T14:38:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7894,7 +8118,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T08:33:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7952,7 +8176,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-03T17:56:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8010,7 +8234,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T18:49:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8068,7 +8292,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-19T00:38:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8126,7 +8350,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-29T17:01:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8184,7 +8408,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:32:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8242,7 +8466,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T12:09:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8311,7 +8535,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:03:02",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8380,7 +8604,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-02T14:06:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8438,7 +8662,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T14:11:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8507,7 +8731,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:08:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8519,6 +8743,62 @@
       "urls": {
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-mt-pleasant-san-jose/12-15-2026/?c=55953e4d-a7c7-4bad-bb48-70a121238074",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Santa Cruz",
+        "name": "Harbor",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+      },
+      "contestId": "a60702bb-41a7-466b-879c-68979cf6a5f1",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T19:00:00",
+      "dateUtc": "2026-12-16T03:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Del Mar",
+        "result": null,
+        "score": null,
+        "slug": "del-mar",
+        "teamId": "8c56113f-9229-43a2-a56e-4f8443494857"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T11:39:06",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-12-15-harbor-at-del-mar",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/del-mar-san-jose-vs-harbor-santa-cruz/12-15-2026/?c=a60702bb-41a7-466b-879c-68979cf6a5f1",
         "nfhsStream": null
       },
       "venue": {
@@ -8565,7 +8845,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-23T18:10:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8634,7 +8914,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:34:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8692,7 +8972,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-03T17:57:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8750,7 +9030,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-16T20:41:56",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8808,7 +9088,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-09T21:11:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8877,7 +9157,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:05:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -8946,7 +9226,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-02T14:06:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9015,7 +9295,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:34:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9080,7 +9360,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:09:24",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9138,7 +9418,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-02T22:36:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9194,7 +9474,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T19:48:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9252,7 +9532,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-30T12:40:58",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9310,7 +9590,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-03T17:58:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9368,7 +9648,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T23:26:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9381,6 +9661,62 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harker-san-jose-vs-monta-vista-cupertino/12-18-2026/?c=e5c9e0e8-e8cf-47a8-87ee-5fcb2db9cd31",
         "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "The King’s Academy",
+        "result": null,
+        "score": null,
+        "slug": "kings-academy",
+        "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9"
+      },
+      "contestId": "078ab5bb-0620-4f59-a4fe-8864aaa4615a",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-18",
+      "dateLocal": "2026-12-18T17:00:00",
+      "dateUtc": "2026-12-19T01:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Aptos",
+        "name": "Aptos",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T12:36:02",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-12-18-kings-academy-at-aptos",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/aptos-vs-kings-academy-sunnyvale/12-18-2026/?c=078ab5bb-0620-4f59-a4fe-8864aaa4615a",
+        "nfhsStream": "https://www.nfhsnetwork.com/events/aptos-high-school-aptos-ca/gam5ad1b16aca?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
       },
       "venue": {
         "text": null
@@ -9426,7 +9762,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-29T19:40:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9484,7 +9820,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T20:07:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9542,7 +9878,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:25:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9600,7 +9936,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T14:10:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9658,7 +9994,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T03:25:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9716,7 +10052,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:03:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9774,7 +10110,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-16T12:21:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9786,6 +10122,62 @@
       "urls": {
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/live-oak-morgan-hill-vs-sacred-heart-prep-atherton/12-19-2026/?c=8fd81a08-2a08-45da-9ef4-0cc2d191d653",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Fremont",
+        "result": null,
+        "score": null,
+        "slug": "fremont",
+        "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
+      },
+      "contestId": "ca73a181-7339-46ab-a22e-bdeb791dbc4e",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-19",
+      "dateLocal": "2026-12-19T13:00:00",
+      "dateUtc": "2026-12-19T21:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Santa Cruz",
+        "name": "Harbor",
+        "result": null,
+        "score": null,
+        "slug": null,
+        "teamId": "f0378a8c-c57d-4759-a27b-d53843f786a5"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": null,
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "contentChangedAt": "2026-11-16T23:29:16.778Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
+        "maxprepsModifiedOn": "2026-11-16T19:43:34",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "shootout": null,
+      "site": "home",
+      "slug": "2026-12-19-fremont-at-harbor",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/fremont-sunnyvale-vs-harbor-santa-cruz/12-19-2026/?c=ca73a181-7339-46ab-a22e-bdeb791dbc4e",
         "nfhsStream": null
       },
       "venue": {
@@ -9832,7 +10224,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-24T06:26:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9890,7 +10282,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-13T22:31:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9948,7 +10340,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-15T08:26:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10006,7 +10398,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T08:34:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10071,7 +10463,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:40:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10129,7 +10521,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T14:11:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10198,7 +10590,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:12:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10263,7 +10655,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T23:05:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10328,7 +10720,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-05T15:57:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10393,7 +10785,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:23:48",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10462,7 +10854,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:35:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10531,7 +10923,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:04:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10601,7 +10993,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T20:06:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10670,7 +11062,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:10:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10739,7 +11131,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T01:48:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10808,7 +11200,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:16:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10873,7 +11265,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10942,7 +11334,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:25",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11011,7 +11403,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-05; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-10-21T09:22:24",
         "schedule": "maxpreps-api",
@@ -11070,7 +11462,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:21:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11135,7 +11527,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:45:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11193,7 +11585,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:33:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11258,7 +11650,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:55:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11323,7 +11715,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11381,7 +11773,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:42:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11450,7 +11842,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:35:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11515,7 +11907,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:27:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11585,7 +11977,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-15T12:56:08.529Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T06:49:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11650,7 +12042,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:17:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11719,7 +12111,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T01:55:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11789,7 +12181,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-07; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:38:16",
         "schedule": "maxpreps-api",
@@ -11855,7 +12247,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11924,7 +12316,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:12:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -11993,7 +12385,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-25T15:34:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12062,7 +12454,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12120,7 +12512,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:34:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12185,7 +12577,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12250,7 +12642,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:45:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12308,7 +12700,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-11T08:40:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12373,7 +12765,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-13T04:30:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12431,7 +12823,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:34:25",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12489,7 +12881,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:34:57",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12547,7 +12939,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:22:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12616,7 +13008,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:36:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12681,7 +13073,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:17:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12746,7 +13138,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:23:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12811,7 +13203,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:27:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12876,7 +13268,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:18:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -12945,7 +13337,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:06:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13014,7 +13406,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:12:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13083,7 +13475,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13152,7 +13544,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T21:38:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13222,7 +13614,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T20:07:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13291,7 +13683,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:13:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13360,7 +13752,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:07:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13430,7 +13822,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-12; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-16T01:39:08",
         "schedule": "maxpreps-api",
@@ -13500,7 +13892,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13565,7 +13957,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:55:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13630,7 +14022,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13695,7 +14087,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13753,7 +14145,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:35:48",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13811,7 +14203,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:23:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13876,7 +14268,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:32:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13945,7 +14337,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T21:36:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14014,7 +14406,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:13:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14079,7 +14471,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:24:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14148,7 +14540,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:07:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14217,7 +14609,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T20:27:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14287,7 +14679,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-14; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:39:32",
         "schedule": "maxpreps-api",
@@ -14357,7 +14749,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T01:55:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14422,7 +14814,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14491,7 +14883,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-14; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-10-21T02:22:43",
         "schedule": "maxpreps-api",
@@ -14561,7 +14953,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14630,7 +15022,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:13:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14699,7 +15091,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-14; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-07-31T01:18:30",
         "schedule": "maxpreps-api",
@@ -14758,7 +15150,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:35:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14816,7 +15208,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:43:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14881,7 +15273,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:56:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -14946,7 +15338,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15011,7 +15403,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:34:10",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15076,7 +15468,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:46:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15134,7 +15526,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:36:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15192,7 +15584,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:24:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15250,7 +15642,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:35:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15308,7 +15700,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:43:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15373,7 +15765,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:37:25",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15442,7 +15834,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:19:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15507,7 +15899,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:19:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15572,7 +15964,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:24:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15641,7 +16033,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:14:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15710,7 +16102,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:08:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15779,7 +16171,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15848,7 +16240,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T08:55:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15917,7 +16309,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:13:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -15982,7 +16374,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16052,7 +16444,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-16T04:21:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16121,7 +16513,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16179,7 +16571,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:31:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16244,7 +16636,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T17:29:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16309,7 +16701,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16374,7 +16766,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16443,7 +16835,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:14:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16508,7 +16900,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:25:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16573,7 +16965,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:20:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16638,7 +17030,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T22:30:33",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16707,7 +17099,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:09:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16778,7 +17170,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "hostConflict": "the official BVAL schedule has Gilroy hosting; MaxPreps has Piedmont Hills, and MaxPreps is the only source of the two that states home and away.",
         "maxprepsModifiedOn": "2026-11-16T04:42:49",
         "schedule": "maxpreps-api",
@@ -16848,7 +17240,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T01:55:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16917,7 +17309,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:38:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16986,7 +17378,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-21; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-07-31T01:18:34",
         "schedule": "maxpreps-api",
@@ -17056,7 +17448,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T01:48:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17126,7 +17518,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-21; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:40:04",
         "schedule": "maxpreps-api",
@@ -17196,7 +17588,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:08:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17265,7 +17657,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:20:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17323,7 +17715,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:36:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17381,7 +17773,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:44:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17446,7 +17838,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T00:30:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17511,7 +17903,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:57:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17576,7 +17968,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17634,7 +18026,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:37:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17692,7 +18084,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-21T10:50:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17757,7 +18149,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:26:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17822,7 +18214,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official SCVAL schedule has this as a league game on 2027-01-23; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-09-12T01:21:34",
         "schedule": "maxpreps-api",
@@ -17881,7 +18273,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T04:18:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17939,7 +18331,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-12T15:21:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18004,7 +18396,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18069,7 +18461,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T17:31:00",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18134,7 +18526,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:27:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18203,7 +18595,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:38:33",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18268,7 +18660,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:34:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18337,7 +18729,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:08:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18406,7 +18798,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:15:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18475,7 +18867,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T08:55:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18540,7 +18932,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18610,7 +19002,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-15T12:56:08.529Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-14T22:39:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18680,7 +19072,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-26; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:40:24",
         "schedule": "maxpreps-api",
@@ -18750,7 +19142,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:15:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18819,7 +19211,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18888,7 +19280,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:10:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -18946,7 +19338,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T01:44:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19011,7 +19403,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:56:34",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19076,7 +19468,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19141,7 +19533,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:46:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19206,7 +19598,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:20:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19275,7 +19667,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:39:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19340,7 +19732,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:35:19",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19409,7 +19801,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:09:18",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19479,7 +19871,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T20:13:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19548,7 +19940,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:11:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19617,7 +20009,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T21:38:24",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19686,7 +20078,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19755,7 +20147,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:15:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19824,7 +20216,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T01:48:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19893,7 +20285,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:16:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19958,7 +20350,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20016,7 +20408,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T07:37:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20081,7 +20473,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T00:31:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20146,7 +20538,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:46:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20211,7 +20603,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-12T21:31:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20269,7 +20661,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-21T17:40:57",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20327,7 +20719,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:38:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20396,7 +20788,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-30; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-10-21T02:22:57",
         "schedule": "maxpreps-api",
@@ -20467,7 +20859,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-01-30; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:41:09",
         "schedule": "maxpreps-api",
@@ -20537,7 +20929,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20606,7 +20998,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T22:18:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20673,7 +21065,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T20:12:16",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20731,7 +21123,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-13T21:48:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20789,7 +21181,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:37:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20858,7 +21250,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-16T08:39:58",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20923,7 +21315,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:35:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20988,7 +21380,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T16:26:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21053,7 +21445,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:21:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21122,7 +21514,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21191,7 +21583,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:11:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21260,7 +21652,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T21:42:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21329,7 +21721,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:16:07",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21394,7 +21786,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:16:54",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21464,7 +21856,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-02; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:41:25",
         "schedule": "maxpreps-api",
@@ -21534,7 +21926,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T21:38:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21603,7 +21995,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-11T08:38:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21672,7 +22064,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:21:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21742,7 +22134,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-15T20:14:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21807,7 +22199,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:58:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21865,7 +22257,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T06:39:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21930,7 +22322,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:37",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -21995,7 +22387,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:29",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22053,7 +22445,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:44:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22111,7 +22503,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T01:43:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22181,7 +22573,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-04; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:41:53",
         "schedule": "maxpreps-api",
@@ -22247,7 +22639,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:36:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22312,7 +22704,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:12:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22377,7 +22769,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:27:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22446,7 +22838,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:08",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22516,7 +22908,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-15T12:56:08.529Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-14T22:40:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22585,7 +22977,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:22:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22654,7 +23046,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T01:56:11",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22719,7 +23111,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22788,7 +23180,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:17:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22857,7 +23249,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:40:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22926,7 +23318,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:16:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -22995,7 +23387,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:10:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23064,7 +23456,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-04; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-07-31T01:18:41",
         "schedule": "maxpreps-api",
@@ -23123,7 +23515,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T07:42:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23188,7 +23580,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:58:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23253,7 +23645,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:38",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23318,7 +23710,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T09:47:26",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23383,7 +23775,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:38:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23441,7 +23833,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T17:32:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23499,7 +23891,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:40:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23557,7 +23949,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T01:43:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23615,7 +24007,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T18:24:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23673,7 +24065,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T07:40:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23731,7 +24123,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:45:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23796,7 +24188,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:22:28",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23861,7 +24253,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:28:02",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23930,7 +24322,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T21:38:51",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23999,7 +24391,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:13:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24068,7 +24460,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:40:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24137,7 +24529,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:16:53",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24206,7 +24598,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T01:44:09",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24276,7 +24668,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-16T04:21:21",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24341,7 +24733,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-12T01:21:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24410,7 +24802,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24468,7 +24860,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T23:41:50",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24526,7 +24918,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T12:34:17",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24591,7 +24983,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24656,7 +25048,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:39",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24721,7 +25113,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T17:33:24",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24786,7 +25178,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-08T23:22:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24851,7 +25243,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T15:37:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24920,7 +25312,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-14T11:13:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -24985,7 +25377,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:28:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25054,7 +25446,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:18:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25123,7 +25515,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:11:35",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25193,7 +25585,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-11; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:42:35",
         "schedule": "maxpreps-api",
@@ -25263,7 +25655,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-08T14:41:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25332,7 +25724,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-11; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-07-31T01:18:42",
         "schedule": "maxpreps-api",
@@ -25402,7 +25794,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-07T01:48:05",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25473,7 +25865,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "hostConflict": "the official BVAL schedule has Piedmont Hills hosting; MaxPreps has Gilroy, and MaxPreps is the only source of the two that states home and away.",
         "maxprepsModifiedOn": "2026-11-16T04:43:02",
         "schedule": "maxpreps-api",
@@ -25539,7 +25931,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T12:22:59",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25608,7 +26000,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T01:56:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25677,7 +26069,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:17:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25735,7 +26127,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-09-17T00:40:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25793,7 +26185,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-26T08:45:44",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25858,7 +26250,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-11T16:58:46",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25923,7 +26315,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25988,7 +26380,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T08:11:40",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26046,7 +26438,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-04T19:35:45",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26104,7 +26496,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-13T01:51:55",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26173,7 +26565,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-04T20:27:31",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26242,7 +26634,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T23:07:15",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26307,7 +26699,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-06T08:28:49",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26376,7 +26768,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-19T08:56:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26445,7 +26837,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-11-10T14:17:52",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26514,7 +26906,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-29T10:19:04",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26584,7 +26976,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-16; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-11-15T17:42:57",
         "schedule": "maxpreps-api",
@@ -26654,7 +27046,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-07-31T01:18:43",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26723,7 +27115,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-06T14:12:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26792,7 +27184,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official BVAL schedule has this as a league game on 2027-02-16; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-10-21T02:22:59",
         "schedule": "maxpreps-api",
@@ -26858,7 +27250,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "leagueFlagConflict": "the official SCVAL schedule has this as a league game on 2027-02-16; MaxPreps flags it non-league",
         "maxprepsModifiedOn": "2026-09-12T01:21:43",
         "schedule": "maxpreps-api",
@@ -26917,7 +27309,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-07T06:42:03",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -26982,7 +27374,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-06T16:48:22",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -27047,7 +27439,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-08-28T05:02:32",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -27113,7 +27505,7 @@
       "postseason": null,
       "provenance": {
         "contentChangedAt": "2026-11-16T13:56:38.184Z",
-        "fetchedAt": "2026-11-16T13:56:38.184Z",
+        "fetchedAt": "2026-11-16T23:29:16.778Z",
         "maxprepsModifiedOn": "2026-10-27T00:34:30",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -27172,7 +27564,7 @@
           "reportedTable": "ok"
         }
       ],
-      "lastFreshAt": "2026-11-16T13:56:38.184Z",
+      "lastFreshAt": "2026-11-16T23:29:16.778Z",
       "leagueId": "scval",
       "reasons": [],
       "state": "fresh",
@@ -27240,7 +27632,7 @@
           "reportedTable": "ok"
         }
       ],
-      "lastFreshAt": "2026-11-16T13:56:38.184Z",
+      "lastFreshAt": "2026-11-16T23:29:16.778Z",
       "leagueId": "bval",
       "reasons": [],
       "state": "fresh",
@@ -27266,7 +27658,7 @@
           "reportedTable": "ok"
         }
       ],
-      "lastFreshAt": "2026-11-16T13:56:38.184Z",
+      "lastFreshAt": "2026-11-16T23:29:16.778Z",
       "leagueId": "wcal",
       "reasons": [],
       "state": "fresh",
@@ -27304,7 +27696,7 @@
           "reportedTable": "ok"
         }
       ],
-      "lastFreshAt": "2026-11-16T13:56:38.184Z",
+      "lastFreshAt": "2026-11-16T23:29:16.778Z",
       "leagueId": "wbal",
       "reasons": [],
       "state": "fresh",
@@ -28461,7 +28853,7 @@
   },
   "sources": [
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-html",
       "kind": "bootstrap",
@@ -28470,7 +28862,7 @@
       "url": "https://www.maxpreps.com/ca/soccer/girls/"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -28483,7 +28875,7 @@
       "url": "https://production.api.maxpreps.com/leagues/57fa3fa4-67eb-405d-92b6-87e8b9d12c3f/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -28496,7 +28888,7 @@
       "url": "https://production.api.maxpreps.com/leagues/73cc7932-8a91-4671-ab68-b5145c5df339/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -28511,7 +28903,7 @@
       "url": "https://production.api.maxpreps.com/leagues/57fa3fa4-67eb-405d-92b6-87e8b9d12c3f/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -28522,11 +28914,11 @@
         "league": "scval"
       },
       "status": "ok",
-      "upstreamModifiedOn": "2026-11-13T17:11:11",
+      "upstreamModifiedOn": "2026-11-16T19:35:06",
       "url": "https://production.api.maxpreps.com/leagues/73cc7932-8a91-4671-ab68-b5145c5df339/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28541,7 +28933,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bc239f20-79b3-42db-a2f0-0a8ec0ec0821&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28556,7 +28948,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=738a2432-7acb-4ad6-b041-115ec0f331c2&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28571,7 +28963,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0279f2de-d5ce-484d-b210-2286ded42058&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28586,7 +28978,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28601,7 +28993,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=09beba1b-240a-45b8-aa6e-281decefa275&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28616,7 +29008,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a38a628c-c65f-487f-a65e-7264b6804ce0&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28631,7 +29023,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=17fad4fb-c82b-4b5a-8a31-3ce13c0ede13&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28646,12 +29038,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=97ffffbe-54ba-4c25-86bb-41332627f64e&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "fremont schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "scope": {
         "division": "el-camino",
         "league": "scval",
@@ -28661,12 +29053,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a97c219c-2fbe-4fa4-9a0c-cc18502a8d24&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "lynbrook schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "scope": {
         "division": "el-camino",
         "league": "scval",
@@ -28676,7 +29068,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=d7c7f7a1-06be-44fb-a4a2-64599519aa4c&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28691,7 +29083,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=69890515-0a8d-4a73-b798-b6ed4fe4d2ef&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28706,7 +29098,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8ff5a211-5896-4289-9596-760a8179c34d&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28721,7 +29113,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=405614ad-a015-4270-b527-18e899c90824&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28736,7 +29128,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=12a470ab-e17d-4e5a-b74b-055d1f46d46b&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28751,7 +29143,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=4169ba3d-78d4-48ed-a4a4-2b79af41d3ee&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "scval-pdf",
       "kind": "official-schedule",
       "label": "SCVAL · De Anza official schedule (bundled copy)",
@@ -28764,7 +29156,7 @@
       "url": "https://scval.com/winterSports/26-27%20SCVAL%20Soccer%20Girls%20DA%20Schedule%20Final_sept17.pdf"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "kind": "official-revision-check",
@@ -28777,7 +29169,7 @@
       "url": "https://scval.com/winterSports/26-27%20SCVAL%20Soccer%20Girls%20DA%20Schedule%20Final_sept17.pdf"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "scval-pdf",
       "kind": "official-schedule",
       "label": "SCVAL · El Camino official schedule (bundled copy)",
@@ -28790,7 +29182,7 @@
       "url": "https://scval.com/winterSports/26-27%20SCVAL%20Soccer%20Girls%20EC%20Schedule%20Final_sept17.pdf"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "scval-pdf",
       "kind": "official-revision-check",
@@ -28803,7 +29195,7 @@
       "url": "https://scval.com/winterSports/26-27%20SCVAL%20Soccer%20Girls%20EC%20Schedule%20Final_sept17.pdf"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -28816,7 +29208,7 @@
       "url": "https://production.api.maxpreps.com/leagues/34ddb6c6-da1f-4dee-ab9b-50ae2d3a694f/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -28829,7 +29221,7 @@
       "url": "https://production.api.maxpreps.com/leagues/ab6d2929-ec57-4416-903a-cdbf92f32a38/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -28842,7 +29234,7 @@
       "url": "https://production.api.maxpreps.com/leagues/4234d452-ab66-464a-aa40-a0aa36b8ca6e/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -28857,7 +29249,7 @@
       "url": "https://production.api.maxpreps.com/leagues/34ddb6c6-da1f-4dee-ab9b-50ae2d3a694f/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -28872,7 +29264,7 @@
       "url": "https://production.api.maxpreps.com/leagues/ab6d2929-ec57-4416-903a-cdbf92f32a38/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -28883,11 +29275,11 @@
         "league": "bval"
       },
       "status": "ok",
-      "upstreamModifiedOn": "2026-11-06T23:07:15",
+      "upstreamModifiedOn": "2026-11-16T19:44:22",
       "url": "https://production.api.maxpreps.com/leagues/4234d452-ab66-464a-aa40-a0aa36b8ca6e/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28902,7 +29294,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=c81780c9-d396-45a1-a7f9-0aae05905a97&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28917,7 +29309,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=fa72c6cc-34dc-4bb4-a184-9c4efaa643d3&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28932,7 +29324,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=bd6662e8-a2ee-45ca-b0e8-dd03dec005c9&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28947,7 +29339,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=cb6e2cbf-71b1-4ef0-9c63-feef33010bf2&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28962,7 +29354,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=2bbd7758-7073-4238-9aaf-8d4d7360b6b1&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28977,7 +29369,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=dd1fc5bd-c075-4fe3-86dc-70112b7e6217&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -28992,7 +29384,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1959d651-408f-4764-94a5-144cea89c499&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29007,7 +29399,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e0d5f596-a80c-4142-9c2a-e2bee576fdc9&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29022,7 +29414,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=773e862d-e186-44aa-b268-461b4064ce52&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29037,7 +29429,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=554a6e7c-06b6-473a-9461-9f155294d249&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29052,7 +29444,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=23723b27-4092-4f9b-8f32-892896c67a84&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29067,7 +29459,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=a52c60ac-fbe9-438f-b052-c1eba43afacd&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29082,7 +29474,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=b5c6ef6d-8399-41f6-99b5-2b536ea2b71a&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29097,7 +29489,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=fa386930-cf18-4a7d-8b90-1dbddfd399da&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29112,7 +29504,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=30d65e43-1478-45b5-90de-fd69689344f8&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29127,7 +29519,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=01bf9fda-9b10-4f04-9eef-3195d7d501dc&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29142,12 +29534,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=847b67d2-64a0-459a-b726-484e88392ba6&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "del-mar schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "scope": {
         "division": "west-valley",
         "league": "bval",
@@ -29157,7 +29549,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8c56113f-9229-43a2-a56e-4f8443494857&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29172,7 +29564,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aa94942a-3659-42ea-8c1a-463de8693f1f&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29187,7 +29579,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=177cef60-d6fd-4dd6-ace9-59ff72a4e0e6&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29202,7 +29594,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=f0fce34f-ad2a-43af-9d22-3672ae34f237&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29217,7 +29609,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1c9b4d85-17ea-4aa4-8665-0fb4da2d465d&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29232,7 +29624,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e1adcbbb-7b19-4e93-976e-5b963ed5f866&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29247,12 +29639,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=24d74484-a18f-450e-9f4a-ccbd5299bf1f&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "san-jose schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "scope": {
         "division": "west-valley",
         "league": "bval",
@@ -29262,7 +29654,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aede8bb3-d592-4aaf-949a-dd3f8fbe3b62&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29277,7 +29669,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=9c5e65a2-4b73-4672-a5da-a9c61745d19d&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "bval-docx",
       "kind": "official-schedule",
       "label": "BVAL · Mt. Hamilton official schedule (bundled copy)",
@@ -29290,7 +29682,7 @@
       "url": "https://docs.google.com/document/d/1S22661CC2U9OcxRWoxzVW6ixLYax7d7y/edit"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "bval-docx",
       "kind": "official-revision-check",
@@ -29303,7 +29695,7 @@
       "url": "https://drive.google.com/uc?export=download&id=1S22661CC2U9OcxRWoxzVW6ixLYax7d7y"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "bval-docx",
       "kind": "official-schedule",
       "label": "BVAL · Santa Teresa official schedule (bundled copy)",
@@ -29316,7 +29708,7 @@
       "url": "https://docs.google.com/document/d/11FQiuy8k21XBz93b1lzKuCRjIp9gZrek/edit"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "bval-docx",
       "kind": "official-revision-check",
@@ -29329,7 +29721,7 @@
       "url": "https://drive.google.com/uc?export=download&id=11FQiuy8k21XBz93b1lzKuCRjIp9gZrek"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "bval-docx",
       "kind": "official-schedule",
       "label": "BVAL · West Valley official schedule (bundled copy)",
@@ -29342,7 +29734,7 @@
       "url": "https://docs.google.com/document/d/1QruwyPY6OQadMYlc2sbnDCgiqONZMyqI/edit"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "bval-docx",
       "kind": "official-revision-check",
@@ -29355,7 +29747,7 @@
       "url": "https://drive.google.com/uc?export=download&id=1QruwyPY6OQadMYlc2sbnDCgiqONZMyqI"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -29368,7 +29760,7 @@
       "url": "https://production.api.maxpreps.com/leagues/ef5de1d8-7260-4767-9862-f0692026925f/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -29379,11 +29771,11 @@
         "league": "wcal"
       },
       "status": "ok",
-      "upstreamModifiedOn": "2026-10-23T18:10:56",
+      "upstreamModifiedOn": "2026-11-16T20:33:59",
       "url": "https://production.api.maxpreps.com/leagues/ef5de1d8-7260-4767-9862-f0692026925f/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29398,7 +29790,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=0f63870a-34f3-4d5b-9dbf-653c8410f969&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29413,12 +29805,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=ea81d3e5-b4ae-4673-afda-207b10865ffe&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "sacred-heart-cathedral schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "scope": {
         "division": "wcal",
         "league": "wcal",
@@ -29428,7 +29820,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1806a4eb-3371-4e7c-a755-835229bc515e&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29443,7 +29835,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=de6d3780-e8f6-4a2a-93f2-b5d89499f9b0&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29458,7 +29850,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=1dc4836b-4daf-4573-b525-27b474bd5366&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29473,7 +29865,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8a8c04d2-5606-44cf-9993-34db55474240&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -29486,7 +29878,7 @@
       "url": "https://production.api.maxpreps.com/leagues/ddee84e9-44d4-4a16-934a-6e929fd46e37/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "league-meta",
@@ -29499,7 +29891,7 @@
       "url": "https://production.api.maxpreps.com/leagues/6b936de1-3430-4ec1-942a-2799f9bb4cb6/v1"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -29510,11 +29902,11 @@
         "league": "wbal"
       },
       "status": "ok",
-      "upstreamModifiedOn": "2026-11-16T03:55:34",
+      "upstreamModifiedOn": "2026-11-16T20:36:03",
       "url": "https://production.api.maxpreps.com/leagues/ddee84e9-44d4-4a16-934a-6e929fd46e37/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "reported-standings",
@@ -29529,7 +29921,7 @@
       "url": "https://production.api.maxpreps.com/leagues/6b936de1-3430-4ec1-942a-2799f9bb4cb6/standings/v1?sportseasonid=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29544,7 +29936,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=65205c0e-02f1-4b46-8b8a-e310b62d1249&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29559,12 +29951,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=67c08b6d-5f06-432a-a783-aee8b2a7a939&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "kings-academy schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "scope": {
         "division": "foothill",
         "league": "wbal",
@@ -29574,7 +29966,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=5e75f63f-09f0-4922-8a9d-78e239e9c1f9&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29589,7 +29981,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=f133ba52-590e-4f91-b798-d9c06fd9fc4c&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29604,12 +29996,12 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=6ffd5704-345e-4ec2-bfa4-0aff6800306b&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
       "label": "presentation schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "scope": {
         "division": "foothill",
         "league": "wbal",
@@ -29619,7 +30011,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e1db3a4f-3bcf-4281-a574-d313212296a1&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29634,7 +30026,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=27d82a51-2b44-492e-b2cf-114730027de3&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29649,7 +30041,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=aabdd1c5-8378-485d-91d3-75827048bf70&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29664,7 +30056,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=8c578d8d-b5c7-4f3a-a428-6ed79089ccaa&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29679,7 +30071,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=5303348f-35e0-4054-aaa0-0cb11cce3b79&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29694,7 +30086,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=e5d23742-6a32-47e1-b752-d16dfcf77119&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29709,7 +30101,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=ac9c9167-10bf-4859-bc74-7eb0f69517c6&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "maxpreps-api",
       "kind": "team-schedule",
@@ -29724,7 +30116,7 @@
       "url": "https://production.api.maxpreps.com/gatewayweb/react/schedule-calculated/v1?teamId=b22f99e1-f106-4b39-8d64-35983d4da891&sportSeasonId=893e6888-5e0c-48eb-b952-16ac29e0ae0a"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
@@ -29734,7 +30126,7 @@
       "url": "https://www.cifsshome.org/widget/schedule-score?section_id=4&year=2026&sport_id=25&date_from=11%2F01%2F2026&date_to=11%2F16%2F2026"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
@@ -29744,7 +30136,7 @@
       "url": "https://www.cifsshome.org/widget/schedule-score?section_id=7&year=2026&sport_id=25&date_from=11%2F01%2F2026&date_to=11%2F16%2F2026"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
@@ -29754,7 +30146,7 @@
       "url": "https://www.cifsshome.org/widget/schedule-score?section_id=8&year=2026&sport_id=25&date_from=11%2F01%2F2026&date_to=11%2F16%2F2026"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
@@ -29764,17 +30156,17 @@
       "url": "https://www.cifsshome.org/widget/schedule-score?section_id=5&year=2026&sport_id=25&date_from=11%2F01%2F2026&date_to=11%2F16%2F2026"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 43,
+      "rowCount": 42,
       "status": "ok",
       "url": "https://www.cifsshome.org/widget/schedule-score?section_id=1&year=2026&sport_id=25&date_from=11%2F01%2F2026&date_to=11%2F16%2F2026"
     },
     {
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "httpStatus": 200,
       "id": "cifss",
       "kind": "cifss-scores",
@@ -29785,7 +30177,7 @@
     },
     {
       "error": "season gate: polling opens 2027-02-10 (today 2026-11-16)",
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "ccs-ical",
       "kind": "ccs-calendar",
       "label": "ccs calendar",
@@ -29797,7 +30189,7 @@
     },
     {
       "error": "season gate: polling opens 2027-02-10 (today 2026-11-16)",
-      "fetchedAt": "2026-11-16T13:56:38.184Z",
+      "fetchedAt": "2026-11-16T23:29:16.778Z",
       "id": "maxpreps-html",
       "kind": "ccs-bracket",
       "label": "ccs bracket",
@@ -30768,7 +31160,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-11-13T17:11:11",
+        "modifiedOn": "2026-11-16T19:35:06",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -33035,7 +33427,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-11-04T20:28:30",
+        "modifiedOn": "2026-11-16T19:39:06",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -33742,7 +34134,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-11-06T23:07:15",
+        "modifiedOn": "2026-11-16T19:44:22",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -34146,7 +34538,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-10-08T21:19:10",
+        "modifiedOn": "2026-11-16T20:33:59",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
@@ -35128,7 +35520,7 @@
         "homeLosses": 0,
         "homeTies": 0,
         "homeWins": 0,
-        "modifiedOn": "2026-10-29T18:51:30",
+        "modifiedOn": "2026-11-16T20:36:03",
         "neutralLosses": 0,
         "neutralTies": 0,
         "neutralWins": 0,
