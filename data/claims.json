@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T13:20:13.072Z",
+  "fetchedAt": "2026-11-16T23:06:53.167Z",
   "fixtures": [
     {
       "claims": {
@@ -11796,7 +11796,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6541425"
                   },
-                  "fetchedAt": "2026-11-16T13:20:13.072Z",
+                  "fetchedAt": "2026-11-16T23:06:53.167Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -47882,7 +47882,7 @@
       "id": "2026-10-13-cupertino-at-homestead",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-13-cupertino-at-homestead"
         }
       ]
@@ -50167,7 +50167,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6543418"
                   },
-                  "fetchedAt": "2026-11-16T13:20:13.072Z",
+                  "fetchedAt": "2026-11-16T23:06:53.167Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -62726,7 +62726,7 @@
                     "sbliveGameId": "6906776"
                   },
                   "contentChangedAt": "2026-10-27T10:08:16.816Z",
-                  "fetchedAt": "2026-11-16T13:20:13.072Z",
+                  "fetchedAt": "2026-11-16T23:06:53.167Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -67090,7 +67090,7 @@
       "id": "2026-10-29-newport-harbor-at-edison",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-29-newport-harbor-at-edison"
         }
       ]
@@ -68758,7 +68758,7 @@
       "id": "2026-10-30-valley-center-at-poway",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-30-valley-center-at-poway"
         }
       ]
@@ -68791,7 +68791,7 @@
       "id": "2026-10-31-bella-vista-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-31-bella-vista-at-davis"
         }
       ]
@@ -68824,7 +68824,7 @@
       "id": "2026-10-31-bella-vista-at-lassen",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-31-bella-vista-at-lassen"
         }
       ]
@@ -68923,7 +68923,7 @@
       "id": "2026-10-31-chico-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-31-chico-at-davis"
         }
       ]
@@ -69045,7 +69045,7 @@
       "id": "2026-10-31-corning-at-chico",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-31-corning-at-chico"
         }
       ]
@@ -69077,7 +69077,7 @@
       "id": "2026-10-31-lassen-at-corning",
       "published": [
         {
-          "builtAt": "2026-11-16T13:20:13.072Z",
+          "builtAt": "2026-11-16T23:06:53.167Z",
           "contestId": "official:2026-10-31-lassen-at-corning"
         }
       ]
@@ -69506,7 +69506,7 @@
           "published": {
             "contestId": "cifsds:mira-mesa-at-san-pasqual",
             "dateLocal": "2026-11-04T18:00:00",
-            "fetchedAt": "2026-11-16T13:20:13.072Z"
+            "fetchedAt": "2026-11-16T23:06:53.167Z"
           },
           "ref": "division-2:mira-mesa~san-pasqual",
           "result": {
@@ -70198,7 +70198,7 @@
           "published": {
             "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
             "dateLocal": "2026-11-06T17:00:00",
-            "fetchedAt": "2026-11-16T13:20:13.072Z"
+            "fetchedAt": "2026-11-16T23:06:53.167Z"
           },
           "ref": "division-1:rancho-bernardo~san-dieguito-academy",
           "result": {
@@ -71879,7 +71879,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T17:27:11",
+              "maxprepsModifiedOn": "2026-11-16T18:13:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -71954,7 +71954,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T02:02:46",
+              "maxprepsModifiedOn": "2026-11-16T15:13:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -72009,8 +72009,8 @@
             "away": {
               "city": "Poway",
               "name": "Poway",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 2,
               "slug": "poway",
               "teamId": "9adef103-5c38-4dc2-a6c4-b36ea4f5400c"
             },
@@ -72023,13 +72023,13 @@
             "dateKey": "2026-11-14",
             "dateLocal": "2026-11-14T15:30:00",
             "dateUtc": "2026-11-14T23:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Marcos",
               "name": "San Marcos",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 4,
               "slug": "san-marcos",
               "teamId": "ff3dcd2f-cdea-46e6-accf-fd929c0a4374"
             },
@@ -72042,13 +72042,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-14T15:01:17",
+              "maxprepsModifiedOn": "2026-11-16T16:41:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/poway-vs-san-marcos/11-14-2026/?c=607baf70-0136-4bf7-bc72-a3def7973c55",
