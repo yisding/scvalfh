@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T00:36:20.165Z",
+  "fetchedAt": "2026-11-16T13:20:13.072Z",
   "fixtures": [
     {
       "claims": {
@@ -11796,7 +11796,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6541425"
                   },
-                  "fetchedAt": "2026-11-16T00:36:20.165Z",
+                  "fetchedAt": "2026-11-16T13:20:13.072Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -12034,7 +12034,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-23T20:29:47",
+              "maxprepsModifiedOn": "2026-11-16T05:34:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38855,7 +38855,7 @@
             "otPeriods": 2,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-20T16:31:34",
+              "maxprepsModifiedOn": "2026-11-16T05:01:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -47882,7 +47882,7 @@
       "id": "2026-10-13-cupertino-at-homestead",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-13-cupertino-at-homestead"
         }
       ]
@@ -50167,7 +50167,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6543418"
                   },
-                  "fetchedAt": "2026-11-16T00:36:20.165Z",
+                  "fetchedAt": "2026-11-16T13:20:13.072Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -62551,7 +62551,7 @@
             "otPeriods": 1,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T05:01:36",
+              "maxprepsModifiedOn": "2026-11-16T05:24:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62726,7 +62726,7 @@
                     "sbliveGameId": "6906776"
                   },
                   "contentChangedAt": "2026-10-27T10:08:16.816Z",
-                  "fetchedAt": "2026-11-16T00:36:20.165Z",
+                  "fetchedAt": "2026-11-16T13:20:13.072Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -67090,7 +67090,7 @@
       "id": "2026-10-29-newport-harbor-at-edison",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-29-newport-harbor-at-edison"
         }
       ]
@@ -68758,7 +68758,7 @@
       "id": "2026-10-30-valley-center-at-poway",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-30-valley-center-at-poway"
         }
       ]
@@ -68791,7 +68791,7 @@
       "id": "2026-10-31-bella-vista-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-31-bella-vista-at-davis"
         }
       ]
@@ -68824,7 +68824,7 @@
       "id": "2026-10-31-bella-vista-at-lassen",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-31-bella-vista-at-lassen"
         }
       ]
@@ -68923,7 +68923,7 @@
       "id": "2026-10-31-chico-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-31-chico-at-davis"
         }
       ]
@@ -69045,7 +69045,7 @@
       "id": "2026-10-31-corning-at-chico",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-31-corning-at-chico"
         }
       ]
@@ -69077,7 +69077,7 @@
       "id": "2026-10-31-lassen-at-corning",
       "published": [
         {
-          "builtAt": "2026-11-16T00:36:20.165Z",
+          "builtAt": "2026-11-16T13:20:13.072Z",
           "contestId": "official:2026-10-31-lassen-at-corning"
         }
       ]
@@ -69506,7 +69506,7 @@
           "published": {
             "contestId": "cifsds:mira-mesa-at-san-pasqual",
             "dateLocal": "2026-11-04T18:00:00",
-            "fetchedAt": "2026-11-16T00:36:20.165Z"
+            "fetchedAt": "2026-11-16T13:20:13.072Z"
           },
           "ref": "division-2:mira-mesa~san-pasqual",
           "result": {
@@ -70198,7 +70198,7 @@
           "published": {
             "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
             "dateLocal": "2026-11-06T17:00:00",
-            "fetchedAt": "2026-11-16T00:36:20.165Z"
+            "fetchedAt": "2026-11-16T13:20:13.072Z"
           },
           "ref": "division-1:rancho-bernardo~san-dieguito-academy",
           "result": {
