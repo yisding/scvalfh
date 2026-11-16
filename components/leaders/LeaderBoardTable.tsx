@@ -15,9 +15,10 @@ import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './type
  * in a second table whose columns line up with the first (a fixed layout from one `<colgroup>`).
  *
  * A real `<table>` (`.sx-table.sx-leadtable`): the place, the school's logo, the name over one small
- * line (a player's school; a school's league), then every column the board carries, each under its
+ * line (a player's school, with the grade and position the team page's roster prints on a line
+ * below it; a school's league), then every column the board carries, each under its
  * head ("G A Pts", "W-L-T Pct GD"). The column the board is ranked on is the bold one
- * (`.sx-col-key`). Every row is the same size: the leader is not drawn larger.
+ * (`.sx-col-key`). The leader is not drawn larger than the rows under it.
  *
  * The place follows the standings tables: `1`, `T7` for a shared place (with "tied for 7th" for a
  * screen reader), never colour alone. Every row carries `data-team-slug`, so the pinned-team script
@@ -25,8 +26,9 @@ import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './type
  * players); the hidden "Your team" note leads the row link's name.
  *
  * The row is one link: the name's `::after` stretches over the `relative` row (`.sx-rowlink`) and
- * carries the focus ring. A player's row goes to the team's player stats, a school's to its page.
- * The names are the short ones at every width, so a row never needs two lines.
+ * carries the focus ring. A player's row goes to the player's own row on the team page's roster
+ * (`#player-jane-doe`, or the team's player stats where no roster row joins), a school's to its page.
+ * The names are the short ones at every width, so a name never wraps.
  */
 
 /**
@@ -84,7 +86,31 @@ function Row({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
               </span>
               {player ? row.name : team.shortName}
             </Link>
-            <small>{player ? team.shortName : team.leagueShort}</small>
+            {player ? (
+              <>
+                <small>{team.shortName}</small>
+                {/* The grade and position the team page's roster prints ("Junior · Midfield"), only
+                    the ones it has, on a line of their own: a board is about 350px wide at every
+                    width, so after the school they would end in an ellipsis on most rows. */}
+                {row.facts.length > 0 ? (
+                  <small>
+                    {row.facts.map((fact, i) => (
+                      <span key={fact}>
+                        {i > 0 ? (
+                          <>
+                            <span aria-hidden="true"> · </span>
+                            <span className="sr-only">, </span>
+                          </>
+                        ) : null}
+                        {fact}
+                      </span>
+                    ))}
+                  </small>
+                ) : null}
+              </>
+            ) : (
+              <small>{team.leagueShort}</small>
+            )}
           </span>
         </span>
       </th>

@@ -43,7 +43,10 @@
 >   the game; on touch the row is one link. Groups sit under a tint strip. One `StandingsTable` with
 >   logos, untinted column heads over an ink rule, grouped columns (W L T Pts | GF GA GD | Overall |
 >   Last 5; no Pct beside Pts), 16px Last 5 chips and the labelled qualification line; the full table is
->   capped at 47rem. Leaders are a grid of top-5 boards. GD bars, LEFT/MAX columns, recap sentences and
+>   capped at 47rem. Leaders are a grid of top-5 boards; a player row is the name over the school, then the
+>   roster's grade and position on a line of their own (restored 2026-11-16), and links the player's roster
+>   row on the team page (`#player-<name>`, components/teams/player-anchors.ts), as the team page's stats
+>   tables link each name. GD bars, LEFT/MAX columns, recap sentences and
 >   per-row link trios are gone.
 > - **Logos**: the real files, drawn straight on the page (2px corner; no tile or border).
 > - **Your team**: an accent star after the name; a bold name in tables. No bar, tint or fill.

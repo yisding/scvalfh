@@ -41,6 +41,7 @@ import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
 import { positionWords } from '../words/position-words';
+import { playerAnchors } from './player-anchors';
 
 /**
  * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier
@@ -154,6 +155,8 @@ export interface RosterProfileLink {
 
 export interface RosterRow {
   key: string;
+  /** The row's `id`, `player-jane-doe` (components/teams/player-anchors.ts); null without an athleteId. */
+  anchor: string | null;
   name: string;
   /** The name is not MaxPreps' (it shows "Player #11" for this number): another source's, marked †. */
   nameElsewhere: boolean;
@@ -309,7 +312,7 @@ function elsewhereSource(tag: MergedPlayer['provenance'][keyof MergedPlayer['pro
   return tag !== null && tag !== 'maxpreps' ? tag : null;
 }
 
-function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
+function rowFor(team: TeamSlug, p: MergedPlayer, index: number, anchor: string | null): RosterRow {
   const facts: RosterFact[] = [];
   if (p.grade !== null) {
     facts.push({ text: gradeWord(p.grade), elsewhere: elsewhereSource(p.provenance.grade) !== null });
@@ -325,6 +328,7 @@ function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
   }
   return {
     key: p.athleteId ?? `${p.fullName}-${index}`,
+    anchor,
     name: p.fullName,
     nameElsewhere: elsewhereSource(p.provenance.name) !== null,
     jersey:
@@ -511,7 +515,8 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
 
   const varsity = team.players.filter((p) => p.level !== 'jv');
   const players = sortedPlayers({ players: varsity });
-  const rows = players.map((p, i) => rowFor(slug, p, i));
+  const anchors = playerAnchors(team.players);
+  const rows = players.map((p, i) => rowFor(slug, p, i, p.athleteId === null ? null : (anchors.get(p.athleteId) ?? null)));
 
   const conflicts: RosterConflictLine[] = players.flatMap((p) => p.conflicts.map((c, i) => conflictLine(p, c, i)));
 

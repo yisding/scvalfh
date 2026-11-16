@@ -32,6 +32,21 @@ function NotedMark() {
   );
 }
 
+/**
+ * A player's name, linked to their roster row further down the team page (`#player-jane-doe`,
+ * components/teams/player-anchors.ts) where the stat line joins one; plain text where it does not.
+ * A team-name link's face: ink, underlined on hover.
+ */
+function PlayerName({ name, href }: { name: string; href: string | undefined }) {
+  return href ? (
+    <a href={href} className="sx-teamlink">
+      {name}
+    </a>
+  ) : (
+    <>{name}</>
+  );
+}
+
 /** A stat table of the team page's shape; the game page's Game stats section uses it too. */
 export function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
   // The number slot is the table's, not the row's: when any row has a number, every row keeps the
@@ -88,7 +103,7 @@ export function StatsTable({ table, caption }: { table: StatTable; caption: stri
                     </span>
                   ) : null}
                   <span className="min-w-0">
-                    {row.name}
+                    <PlayerName name={row.name} href={row.href} />
                     {row.noted ? <NotedMark /> : null}
                   </span>
                 </span>
@@ -119,7 +134,7 @@ function Goalie({ card }: { card: GoalieCard }) {
             {card.jersey}
           </span>
         ) : null}
-        {card.name}
+        <PlayerName name={card.name} href={card.href} />
         {card.noted ? <NotedMark /> : null}
       </h4>
       <dl className="m-0 mt-2 grid grid-cols-3 gap-x-3 gap-y-2 sm:grid-cols-4">
@@ -233,7 +248,7 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
                               </span>
                             ) : null}
                             <span className="min-w-0">
-                              {g.name}
+                              <PlayerName name={g.name} href={g.href} />
                               {g.noted ? <NotedMark /> : null}
                             </span>
                           </span>

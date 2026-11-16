@@ -921,7 +921,7 @@
   .sx-leadtable thead.sx-leadtable-head-sr th { height: 0; padding-block: 0; border: 0; font-size: 0; line-height: 0; overflow: hidden; }   /* the continued table's head: kept for a screen reader, drawn as nothing */
   .sx-leadtable thead.sx-leadtable-head-sr + tbody tr:first-child > * { border-top: 0; }
   .sx-leader-name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; color: var(--sx-text); }
-  .sx-leader-name + small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-2); }
+  .sx-leader-name ~ small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; line-height: 1.125rem; font-weight: 400; color: var(--sx-text-2); }
   .sx-leadtable tr[data-pinned] .sx-leader-name { font-weight: 700; }
 
   /* ── Your team (pinned): a small star after the name, and a bold name in tables. The star is drawn
