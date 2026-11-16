@@ -38,11 +38,13 @@ function NotedMark() {
 /**
  * A player's name, linked to their roster row further down the team page (`#player-jane-doe`,
  * components/teams/player-anchors.ts) where the stat line joins one; plain text where it does not.
- * A team-name link's face: ink, underlined on hover.
+ * A team-name link's face: ink, underlined on hover. `standalone` is for a name that is the only
+ * thing in its block (a goalkeeper card's heading with no number): there the link must be a 24px
+ * target itself (WCAG 2.5.8; scripts/a11y-axe.mjs), where in a table the row is what is aimed at.
  */
-function PlayerName({ name, href }: { name: string; href: string | undefined }) {
+function PlayerName({ name, href, standalone = false }: { name: string; href: string | undefined; standalone?: boolean }) {
   return href ? (
-    <a href={href} className="sx-teamlink">
+    <a href={href} className={standalone ? 'sx-teamlink inline-block min-h-6' : 'sx-teamlink'}>
       {name}
     </a>
   ) : (
@@ -162,7 +164,7 @@ function Goalie({ card }: { card: GoalieCard }) {
             {card.jersey}
           </span>
         ) : null}
-        <PlayerName name={card.name} href={card.href} />
+        <PlayerName name={card.name} href={card.href} standalone />
         {card.noted ? <NotedMark /> : null}
       </h4>
       <Facts facts={card.facts} />
