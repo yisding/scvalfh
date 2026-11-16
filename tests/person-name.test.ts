@@ -66,6 +66,7 @@ describe('NAME_SPELLINGS', () => {
     ['OLIVIA VAN DE BRAAK', 'Olivia Van de Braak'],
     ['Gretta Jungjohann', 'Greta Jungjohann'],
     ['GRETTA JUNGJOHANN', 'Greta Jungjohann'],
+    ['Sophie (mai Lam) Vu', 'Sophie (Mai Lam) Vu'],
   ])('%s → %s', (name, spelled) => {
     expect(recaseName(name)).toBe(spelled);
   });
@@ -95,6 +96,12 @@ describe('NAME_SPELLINGS', () => {
       lastName: 'Van de Braak',
       fullName: 'Olivia Van de Braak',
     });
+  });
+
+  it('respells a parenthesized middle name on a roster row', () => {
+    expect(
+      recaseNameParts({ firstName: 'Sophie (mai Lam)', lastName: 'Vu', fullName: 'Sophie (mai Lam) Vu' }),
+    ).toEqual({ firstName: 'Sophie (Mai Lam)', lastName: 'Vu', fullName: 'Sophie (Mai Lam) Vu' });
   });
 
   it('respells a roster row on all three fields', () => {

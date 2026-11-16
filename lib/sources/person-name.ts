@@ -73,6 +73,11 @@ export const NAME_SPELLINGS: readonly { maxpreps: string; spelled: string; basis
     spelled: 'Greta Jungjohann',
     basis: 'Greta Jungjohann (Stevenson): the site owner confirmed the one-t spelling of her first name (2026-11-16).',
   },
+  {
+    maxpreps: 'Sophie (mai Lam) Vu',
+    spelled: 'Sophie (Mai Lam) Vu',
+    basis: "Sophie (Mai Lam) Vu (Saratoga): the site owner confirmed the capital 'Mai' (2026-11-16).",
+  },
 ];
 
 const words = (name: string) => name.split(/\s+/).filter(Boolean);
