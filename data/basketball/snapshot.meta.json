@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "1fc8d6bc77fd4d3d41b4e030ff330534ca54c4e56f8237e75b8e0b267967555c",
+  "contentHash": "9a0c6f8e204fd378b866675812b8706848e3c9a39ad81509e3b2208fbd847cd7",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 275,
+        "games": 291,
         "leagueGames": 125,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 195,
+        "games": 204,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 433,
+    "games": 454,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 0,
+    "pending": 3,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-17T15:52:50.155Z",
+  "fetchedAt": "2026-11-17T22:51:11.318Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -91,22 +91,22 @@
     },
     {
       "label": "gunn schedule",
-      "rowCount": 23,
-      "status": "ok"
-    },
-    {
-      "label": "homestead schedule",
       "rowCount": 25,
       "status": "ok"
     },
     {
-      "label": "los-gatos schedule",
+      "label": "homestead schedule",
       "rowCount": 27,
       "status": "ok"
     },
     {
+      "label": "los-gatos schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
       "label": "lynbrook schedule",
-      "rowCount": 28,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -116,12 +116,12 @@
     },
     {
       "label": "mountain-view schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "palo-alto schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -131,12 +131,12 @@
     },
     {
       "label": "fremont schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 28,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -146,17 +146,17 @@
     },
     {
       "label": "monta-vista schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "santa-clara schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "saratoga schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -216,7 +216,7 @@
     },
     {
       "label": "almaden-valley reported standings",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -231,27 +231,27 @@
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": 23,
-      "status": "ok"
-    },
-    {
-      "label": "leigh schedule",
       "rowCount": 25,
       "status": "ok"
     },
     {
+      "label": "leigh schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
       "label": "pioneer schedule",
-      "rowCount": 26,
+      "rowCount": 28,
       "status": "ok"
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
       "label": "westmont schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -261,7 +261,7 @@
     },
     {
       "label": "branham schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -271,27 +271,27 @@
     },
     {
       "label": "leland schedule",
-      "rowCount": 26,
+      "rowCount": 28,
       "status": "ok"
     },
     {
       "label": "live-oak schedule",
-      "rowCount": 27,
+      "rowCount": 29,
       "status": "ok"
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 11,
+      "rowCount": 13,
       "status": "ok"
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 26,
+      "rowCount": 28,
       "status": "ok"
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -301,7 +301,7 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 10,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -311,22 +311,22 @@
     },
     {
       "label": "piedmont-hills schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "prospect schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
       "label": "andrew-hill schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "del-mar schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -416,12 +416,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 295,
+      "rowCount": 308,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 27,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -436,9 +436,9 @@
     }
   ],
   "today": "2026-11-17",
-  "warnings": 12,
+  "warnings": 13,
   "window": {
-    "firstGame": "2026-11-19T16:50:00",
+    "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:00:00",
     "lastLeagueGame": "2027-02-16T19:00:00"
   }
