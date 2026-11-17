@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T23:29:16.778Z",
+  "fetchedAt": "2026-11-17T14:49:47.310Z",
   "fixtures": [
     {
       "claims": {
@@ -3055,9 +3055,9 @@
               "home": 1
             },
             "countsFor": null,
-            "dateKey": "2026-12-03",
-            "dateLocal": "2026-12-03T19:00:00",
-            "dateUtc": "2026-12-04T03:00:00Z",
+            "dateKey": "2026-12-08",
+            "dateLocal": "2026-12-08T19:00:00",
+            "dateUtc": "2026-12-09T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -3077,7 +3077,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-10T18:50:34",
+              "maxprepsModifiedOn": "2026-11-17T06:25:06",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3086,7 +3086,7 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/lincoln-san-jose-vs-pioneer-san-jose/12-3-2026/?c=cd7b6ada-cf86-47f6-98ff-ae13e34fc7c0",
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/lincoln-san-jose-vs-pioneer-san-jose/12-8-2026/?c=cd7b6ada-cf86-47f6-98ff-ae13e34fc7c0",
               "nfhsStream": null
             },
             "venue": {
@@ -20542,7 +20542,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/milpitas-vs-monta-vista-cupertino/1-19-2027/?c=9e772254-d2e6-41fc-859d-27c6196beed7",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam84d173ad04?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
