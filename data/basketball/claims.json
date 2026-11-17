@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T23:43:08.979Z",
+  "fetchedAt": "2026-11-17T15:52:50.155Z",
   "fixtures": [
     {
       "claims": {
@@ -577,7 +577,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083039?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/hill-san-jose-vs-macdonald-san-jose/11-23-2026/?c=59f44c5c-ab2f-4126-8418-4c0f03e49cfa",
               "nfhsStream": null
             },
@@ -965,7 +965,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-03T19:23:19",
+              "maxprepsModifiedOn": "2026-11-17T00:06:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1173,7 +1173,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/james-lick-san-jose-vs-university-prep-academy-san-jose/11-24-2026/?c=4fdc0a18-8508-4f97-8385-ebddc0b4f3ae",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gamb6363c8249?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -1303,7 +1303,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083049?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/macdonald-san-jose-vs-piedmont-hills-san-jose/11-24-2026/?c=00571397-b698-4005-9ace-0e83e2ebe78f",
               "nfhsStream": null
             },
@@ -1350,7 +1350,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-16T23:43:08.979Z",
+          "builtAt": "2026-11-17T15:52:50.155Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -3053,7 +3053,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083073?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/macdonald-san-jose-vs-overfelt-san-jose/12-1-2026/?c=f6536c1f-44d7-466d-ada8-8858ba2a60f1",
               "nfhsStream": null
             },
@@ -4835,7 +4835,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083113?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/macdonald-san-jose-vs-oakwood-morgan-hill/12-4-2026/?c=62faebc0-582b-469f-a3b7-8473c55b124a",
               "nfhsStream": null
             },
@@ -9125,7 +9125,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083142?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/james-lick-san-jose-vs-macdonald-san-jose/12-18-2026/?c=efc3bd6a-23d3-4448-9bc2-f86ffc4d5dab",
               "nfhsStream": null
             },
@@ -13184,7 +13184,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7083151?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/fremont-sunnyvale-vs-macdonald-san-jose/1-5-2027/?c=1f22e033-c5bf-4353-bd0f-2e1e95e93973",
               "nfhsStream": null
             },
@@ -13351,7 +13351,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-harbor-santa-cruz/1-5-2027/?c=1ed7574c-2b3b-4ba3-9570-01b90434a3f8",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/harbor-high-school-santa-cruz-ca/gama7396aacdc?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": null
@@ -15860,7 +15860,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/james-lick-san-jose-vs-summit-tahoma-san-jose/1-8-2027/?c=4f1f5f6d-cb99-4474-924f-29c2d0389454",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam30167c4cf1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -17638,7 +17638,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lincoln-san-jose-vs-overfelt-san-jose/1-13-2027/?c=526720ff-93e9-4803-af7e-a1a4e60387eb",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/william-c-overfelt-high-school-san-jose-ca/gam21bfaeddc9?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -25333,7 +25333,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/oak-grove-san-jose-vs-overfelt-san-jose/1-27-2027/?c=39fa76bc-b54c-4818-83b5-6fc15fe9c3f5",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/william-c-overfelt-high-school-san-jose-ca/gam0fadd452dc?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null

@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "06c6ff1fa8e72d27087318d91faa76087bcb61f47d72c578f22c97da763431bd",
+  "contentHash": "1fc8d6bc77fd4d3d41b4e030ff330534ca54c4e56f8237e75b8e0b267967555c",
   "counts": {
     "byLeague": {
       "bval": {
@@ -33,7 +33,7 @@
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-16T23:43:08.979Z",
+  "fetchedAt": "2026-11-17T15:52:50.155Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -50,8 +50,10 @@
       "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "BVAL revised the West Valley schedule after our copy (revised 10/12/26); official dates may be out of date."
+      ],
+      "state": "partial"
     }
   ],
   "officialFixturesUnmatched": 21,
@@ -219,7 +221,7 @@
     },
     {
       "label": "west-valley reported standings",
-      "rowCount": 7,
+      "rowCount": 6,
       "status": "ok"
     },
     {
@@ -390,16 +392,16 @@
     {
       "label": "BVAL · West Valley official schedule revision check",
       "rowCount": null,
-      "status": "ok"
+      "status": "stale"
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 9,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -409,17 +411,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 1,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 158,
+      "rowCount": 295,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 10,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -433,8 +435,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-16",
-  "warnings": 10,
+  "today": "2026-11-17",
+  "warnings": 12,
   "window": {
     "firstGame": "2026-11-19T16:50:00",
     "lastGame": "2027-02-16T19:00:00",
