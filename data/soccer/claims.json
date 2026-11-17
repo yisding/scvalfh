@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-17T14:49:47.310Z",
+  "fetchedAt": "2026-11-17T22:36:25.106Z",
   "fixtures": [
     {
       "claims": {
@@ -204,6 +204,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Burlingame",
+              "name": "Mercy Burlingame",
+              "result": null,
+              "score": null,
+              "slug": "mercy-burlingame",
+              "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
+            },
+            "contestId": "62658c50-7380-4750-b454-95f3920583d2",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-20",
+            "dateLocal": "2026-11-20T18:30:00",
+            "dateUtc": "2026-11-21T02:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Mateo",
+              "name": "Hillsdale",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T09:57:20",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-mercy-burlingame/11-20-2026/?c=62658c50-7380-4750-b454-95f3920583d2",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Scrimmage"
+            }
+          },
+          "ref": "62658c50-7380-4750-b454-95f3920583d2"
+        }
+      },
+      "id": "2026-11-20-mercy-burlingame-at-name:hillsdale",
+      "published": [
+        {
+          "contestId": "62658c50-7380-4750-b454-95f3920583d2"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Mill Valley",
               "name": "Tamalpais",
               "result": null,
@@ -394,6 +460,72 @@
       "published": [
         {
           "contestId": "82e69670-7be9-4b0c-82b7-a1215d67440a"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Burlingame",
+              "name": "Mercy Burlingame",
+              "result": null,
+              "score": null,
+              "slug": "mercy-burlingame",
+              "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
+            },
+            "contestId": "5425a880-9125-4ac4-940c-6f878c548a68",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-24",
+            "dateLocal": "2026-11-24T15:15:00",
+            "dateUtc": "2026-11-24T23:15:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Francisco",
+              "name": "Archbishop Riordan",
+              "result": null,
+              "score": null,
+              "slug": "riordan",
+              "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T09:57:45",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-riordan-san-francisco-vs-mercy-burlingame/11-24-2026/?c=5425a880-9125-4ac4-940c-6f878c548a68",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Preseason"
+            }
+          },
+          "ref": "5425a880-9125-4ac4-940c-6f878c548a68"
+        }
+      },
+      "id": "2026-11-24-mercy-burlingame-at-riordan",
+      "published": [
+        {
+          "contestId": "5425a880-9125-4ac4-940c-6f878c548a68"
         }
       ]
     },
@@ -833,7 +965,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T22:07:27",
+              "maxprepsModifiedOn": "2026-11-17T19:41:06",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -846,7 +978,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Monta Vista High School"
             }
           },
           "ref": "23846b2d-1cf1-4ee4-8f0d-d33a9fc8b811"
@@ -1524,6 +1656,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Francisco",
+              "name": "Convent of the Sacred Heart",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "d15d09d0-f8a6-463e-86d4-d998dbee7751"
+            },
+            "contestId": "22258cc3-ef2a-49c2-bb63-7073977e928b",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-01",
+            "dateLocal": "2026-12-01T15:30:00",
+            "dateUtc": "2026-12-01T23:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Burlingame",
+              "name": "Mercy Burlingame",
+              "result": null,
+              "score": null,
+              "slug": "mercy-burlingame",
+              "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T09:58:41",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/convent-of-the-sacred-heart-san-francisco-vs-mercy-burlingame/12-1-2026/?c=22258cc3-ef2a-49c2-bb63-7073977e928b",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Preseason"
+            }
+          },
+          "ref": "22258cc3-ef2a-49c2-bb63-7073977e928b"
+        }
+      },
+      "id": "2026-12-01-name:conventofthesacredheart-at-mercy-burlingame",
+      "published": [
+        {
+          "contestId": "22258cc3-ef2a-49c2-bb63-7073977e928b"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Cristo Rey San Jose Jesuit",
               "result": null,
@@ -2176,6 +2374,72 @@
       "published": [
         {
           "contestId": "d106cc0f-3796-4643-a803-0e64fe8bcdbe"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Francisco",
+              "name": "Archbishop Riordan",
+              "result": null,
+              "score": null,
+              "slug": "riordan",
+              "teamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe"
+            },
+            "contestId": "52f3c2db-d6ed-4371-b150-a2a6891920a3",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-01",
+            "dateLocal": "2026-12-01T18:00:00",
+            "dateUtc": "2026-12-02T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Santa Clara",
+              "name": "Santa Clara",
+              "result": null,
+              "score": null,
+              "slug": "santa-clara",
+              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T09:56:41",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/archbishop-riordan-san-francisco-vs-santa-clara/12-1-2026/?c=52f3c2db-d6ed-4371-b150-a2a6891920a3",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Clara High School"
+            }
+          },
+          "ref": "52f3c2db-d6ed-4371-b150-a2a6891920a3"
+        }
+      },
+      "id": "2026-12-01-riordan-at-santa-clara",
+      "published": [
+        {
+          "contestId": "52f3c2db-d6ed-4371-b150-a2a6891920a3"
         }
       ]
     },
@@ -3077,7 +3341,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T06:25:06",
+              "maxprepsModifiedOn": "2026-11-17T19:23:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4709,6 +4973,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Mountain View",
+              "name": "Mountain View",
+              "result": null,
+              "score": null,
+              "slug": "mountain-view",
+              "teamId": "09beba1b-240a-45b8-aa6e-281decefa275"
+            },
+            "contestId": "b4d17762-ff06-49b3-849f-ea639b3d7b5c",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-05",
+            "dateLocal": "2026-12-05T13:45:00",
+            "dateUtc": "2026-12-05T21:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Pioneer",
+              "result": null,
+              "score": null,
+              "slug": "pioneer",
+              "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T20:04:38",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mountain-view-vs-pioneer-san-jose/12-5-2026/?c=b4d17762-ff06-49b3-849f-ea639b3d7b5c",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "b4d17762-ff06-49b3-849f-ea639b3d7b5c"
+        }
+      },
+      "id": "2026-12-05-mountain-view-at-pioneer",
+      "published": [
+        {
+          "contestId": "b4d17762-ff06-49b3-849f-ea639b3d7b5c"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Burlingame",
               "name": "Burlingame",
               "result": null,
@@ -5295,72 +5625,6 @@
       "published": [
         {
           "contestId": "e111c1a4-45d4-4106-ba81-7b6e17f19f0d"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Pioneer",
-              "result": null,
-              "score": null,
-              "slug": "pioneer",
-              "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
-            },
-            "contestId": "c55eab11-8bc4-4d33-a2f1-3d06d40864ff",
-            "contestTypes": {
-              "away": 2,
-              "home": 2
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-05",
-            "dateLocal": "2026-12-05T13:45:00",
-            "dateUtc": "2026-12-05T21:45:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Mountain View",
-              "name": "Mountain View",
-              "result": null,
-              "score": null,
-              "slug": "mountain-view",
-              "teamId": "09beba1b-240a-45b8-aa6e-281decefa275"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T05:03:03",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "neutral",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mountain-view-vs-pioneer-san-jose/12-5-2026/?c=c55eab11-8bc4-4d33-a2f1-3d06d40864ff",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Game @ Saratoga HS"
-            }
-          },
-          "ref": "c55eab11-8bc4-4d33-a2f1-3d06d40864ff"
-        }
-      },
-      "id": "2026-12-05-pioneer-at-mountain-view",
-      "published": [
-        {
-          "contestId": "c55eab11-8bc4-4d33-a2f1-3d06d40864ff"
         }
       ]
     },
@@ -6679,7 +6943,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-09T12:09:19",
+              "maxprepsModifiedOn": "2026-11-17T17:55:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -6692,7 +6956,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "daad7b8b-0100-4c29-884a-a763e5346a03"
@@ -8834,6 +9098,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Burlingame",
+              "name": "Mercy Burlingame",
+              "result": null,
+              "score": null,
+              "slug": "mercy-burlingame",
+              "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
+            },
+            "contestId": "8e8240df-92a3-4023-b298-f781c253e26f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-12",
+            "dateLocal": "2026-12-12T12:30:00",
+            "dateUtc": "2026-12-12T20:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Pacifica",
+              "name": "Terra Nova",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T10:00:26",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mercy-burlingame-vs-terra-nova-pacifica/12-12-2026/?c=8e8240df-92a3-4023-b298-f781c253e26f",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/terra-nova-high-school-pacifica-ca/gamc0b3d1eb24?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Preseason"
+            }
+          },
+          "ref": "8e8240df-92a3-4023-b298-f781c253e26f"
+        }
+      },
+      "id": "2026-12-12-mercy-burlingame-at-name:terranova",
+      "published": [
+        {
+          "contestId": "8e8240df-92a3-4023-b298-f781c253e26f"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Santa Cruz",
               "name": "Harbor",
               "result": null,
@@ -9463,7 +9793,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-12T21:23:00",
+              "maxprepsModifiedOn": "2026-11-17T17:57:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9476,7 +9806,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Presentation High School"
             }
           },
           "ref": "c551105c-eba6-4f83-acc1-1fb6c150a407"
@@ -11180,6 +11510,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "5a57d126-f40e-4ee2-a64f-4a884e884ff7",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-18",
+            "dateLocal": "2026-12-18T17:45:00",
+            "dateUtc": "2026-12-19T01:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Hollister",
+              "name": "Hollister",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T12:59:00",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/6962953?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gilroy-vs-hollister/12-18-2026/?c=5a57d126-f40e-4ee2-a64f-4a884e884ff7",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/san-benito-high-school-hollister-ca/gam5e0b568819?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "5a57d126-f40e-4ee2-a64f-4a884e884ff7"
+        }
+      },
+      "id": "2026-12-18-gilroy-at-name:hollister",
+      "published": [
+        {
+          "contestId": "5a57d126-f40e-4ee2-a64f-4a884e884ff7"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Sunnyvale",
               "name": "The King’s Academy",
               "result": null,
@@ -11611,7 +12007,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-29T19:40:51",
+              "maxprepsModifiedOn": "2026-11-17T17:57:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11624,7 +12020,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "ab2ced74-c971-4bed-8a0c-fa619e0a7f8a"
@@ -15601,8 +15997,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-08",
-            "dateLocal": "2027-01-08T19:00:00",
-            "dateUtc": "2027-01-09T03:00:00Z",
+            "dateLocal": "2027-01-08T18:00:00",
+            "dateUtc": "2027-01-09T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -15622,7 +16018,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-13T04:30:19",
+              "maxprepsModifiedOn": "2026-11-17T17:56:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15635,7 +16031,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam3b68f17caf?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "47e49fa9-bf51-4680-883b-5397bcbe9c3a"
@@ -15736,6 +16132,72 @@
       "published": [
         {
           "contestId": "d257fab1-8016-4bc7-b62a-e78c9ea0d03c"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Santa Clara",
+              "name": "Santa Clara",
+              "result": null,
+              "score": null,
+              "slug": "santa-clara",
+              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+            },
+            "contestId": "d2c488b8-a5e7-4bcc-8c01-a62efcb057d4",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-11",
+            "dateLocal": "2027-01-11T15:15:00",
+            "dateUtc": "2027-01-11T23:15:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Valencia",
+              "name": "Trinity Classical Academy",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "9c288ffb-67b1-47c8-82df-d39d9f6959e6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-17T09:56:27",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-clara-vs-trinity-classical-academy-valencia/1-11-2027/?c=d2c488b8-a5e7-4bcc-8c01-a62efcb057d4",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Tesoro Sports Park"
+            }
+          },
+          "ref": "d2c488b8-a5e7-4bcc-8c01-a62efcb057d4"
+        }
+      },
+      "id": "2027-01-11-santa-clara-at-name:trinityclassicalacademy",
+      "published": [
+        {
+          "contestId": "d2c488b8-a5e7-4bcc-8c01-a62efcb057d4"
         }
       ]
     },
@@ -17516,7 +17978,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:09",
+              "maxprepsModifiedOn": "2026-11-17T17:57:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17529,7 +17991,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "461526f3-59a3-49fc-9c5f-3535d289541d"
@@ -19498,7 +19960,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:19",
+              "maxprepsModifiedOn": "2026-11-17T17:57:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -19511,7 +19973,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Gatos High School"
             }
           },
           "ref": "693f916d-5406-4421-9c65-4566c599fde5"
@@ -21216,7 +21678,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:16",
+              "maxprepsModifiedOn": "2026-11-17T17:57:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21229,7 +21691,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "68390b9b-0f28-49bf-bc6a-efe2b6d084e6"
@@ -23132,7 +23594,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-27T00:30:12",
+              "maxprepsModifiedOn": "2026-11-17T17:55:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -23145,7 +23607,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Homestead HS"
             }
           },
           "ref": "e7df3163-f41f-479e-8d4f-8a3c5b92c2e1"
@@ -23781,7 +24243,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:22",
+              "maxprepsModifiedOn": "2026-11-17T17:57:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -23794,7 +24256,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "37d2b5aa-8f35-4990-aada-22ee363c9360"
@@ -26764,7 +27226,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-12T21:31:05",
+              "maxprepsModifiedOn": "2026-11-17T17:56:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -26777,7 +27239,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "7d84a511-e3d8-4640-8fb7-f12c2a638563"
@@ -29607,7 +30069,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:29",
+              "maxprepsModifiedOn": "2026-11-17T17:54:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29620,7 +30082,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Mountain View High School-Mountain View"
             }
           },
           "ref": "e398a883-7b8d-4808-b915-1c62e997f814"
@@ -31411,7 +31873,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:38",
+              "maxprepsModifiedOn": "2026-11-17T17:57:47",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -31424,7 +31886,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "29c10a90-4405-4112-b1d5-fa2266db1f20"
@@ -33454,7 +33916,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:31",
+              "maxprepsModifiedOn": "2026-11-17T17:55:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33467,7 +33929,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gam8c06b9ca5e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "314cc28b-ff70-4f08-88b1-9b81c0e19932"
@@ -35102,7 +35564,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:32",
+              "maxprepsModifiedOn": "2026-11-17T17:55:26",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35115,7 +35577,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "1acc6d6d-1bfd-4b74-bf5c-37507271880b"
@@ -36943,7 +37405,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-28T05:02:32",
+              "maxprepsModifiedOn": "2026-11-17T17:57:07",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -36956,7 +37418,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/palo-alto-high-school-palo-alto-ca/gamc4c411c2da?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Palo Alto High School"
             }
           },
           "ref": "634cb4d3-c508-4c12-8bd4-fd959c9bedd5"

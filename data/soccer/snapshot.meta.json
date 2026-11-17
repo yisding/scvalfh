@@ -7,47 +7,47 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "91d140eb0047d430317604bbe80eb086578e6b56af1bce33d9f54f49bef7cc22",
+  "contentHash": "e31d28a0f19590a47f66dacfd34230ab6be2deb8a151a05c1854a1645ae78ecb",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 214,
+        "games": 215,
         "leagueGames": 148,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 155,
+        "games": 157,
         "leagueGames": 84,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 69,
+        "games": 73,
         "leagueGames": 17,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 48,
+        "games": 50,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 0,
-    "games": 433,
+    "games": 440,
     "leagueGames": 267,
     "mismatches": 0,
     "pending": 0,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-17T14:49:47.310Z",
+  "fetchedAt": "2026-11-17T22:36:25.106Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -141,7 +141,7 @@
     },
     {
       "label": "mountain-view schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -151,7 +151,7 @@
     },
     {
       "label": "santa-clara schedule",
-      "rowCount": 20,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -251,7 +251,7 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -271,7 +271,7 @@
     },
     {
       "label": "pioneer schedule",
-      "rowCount": 19,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -421,7 +421,7 @@
     },
     {
       "label": "riordan schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -511,7 +511,7 @@
     },
     {
       "label": "mercy-burlingame schedule",
-      "rowCount": 12,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -536,7 +536,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -551,7 +551,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 107,
+      "rowCount": 108,
       "status": "ok"
     },
     {
