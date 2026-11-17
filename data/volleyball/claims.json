@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-17T16:16:12.624Z",
+  "fetchedAt": "2026-11-17T22:30:24.713Z",
   "fixtures": [
     {
       "claims": {
@@ -65186,7 +65186,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-18T16:56:31",
+              "maxprepsModifiedOn": "2026-11-17T17:56:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -65199,7 +65199,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "6d6ea30b-2800-41cb-98b2-c340042b1dae"
@@ -69204,7 +69204,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-03T01:34:49",
+              "maxprepsModifiedOn": "2026-11-17T17:56:06",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -69217,7 +69217,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "420f9691-e881-4773-a348-a4297e371255"
@@ -75441,7 +75441,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:18:27",
+              "maxprepsModifiedOn": "2026-11-17T17:56:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -75454,7 +75454,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Clara High School"
             }
           },
           "ref": "60d8cb3f-4213-47b7-b7a8-96887aa90f64"
@@ -77427,7 +77427,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:25:51",
+              "maxprepsModifiedOn": "2026-11-17T19:31:56",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
