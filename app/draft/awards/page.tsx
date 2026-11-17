@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { collegeAnchor, commitRegion } from '../../../components/commits/commit-view';
 import PageHeader from '../../../components/layout/PageHeader';
+import ExternalLink from '../../../components/ui/ExternalLink';
 import { getCommitments } from '../../../lib/players/commits';
 import { getRosters } from '../../../lib/players/rosters';
 import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
@@ -12,6 +13,9 @@ import { getTeamBySlug } from '../../../lib/teams';
 /** The page's title, and its og:title too. */
 const PAGE_TITLE = 'NCFH.net Inaugural High School Field Hockey Awards';
 
+/** USA Field Hockey's 2026 U-18 women's national team list, which names both Lola Conway and Margaux Schlumberger. */
+const USAFH_U18_ROSTER = 'https://usafieldhockey.com/junior-uswnt#_2026_U_S__U_18_Women_s_National_Team_cs60';
+
 /**
  * /draft/awards — a DRAFT post: the owner's end-of-season awards for 2026, written by hand.
  *
@@ -19,7 +23,8 @@ const PAGE_TITLE = 'NCFH.net Inaugural High School Field Hockey Awards';
  * given the URL until it is published. Field hockey's alone: another sport's build renders it as a 404.
  *
  * Every team name (nicknames too) links to its team page and every player name to her team page's roster
- * (`#roster`), so the links stay on this site; the two colleges link to their rows on /commits, and the
+ * (`#roster`), so the links stay on this site (the one exception: "Team USA U-18" links to USA Field Hockey's U-18
+ * roster); the two colleges link to their rows on /commits, and the
  * Tournament of Champions wins to their brackets (2025 on /history/2025-26, 2026 on /playoffs). The leaders
  * lists it names link to their NorCal boards on /leaders, its Elo figures to the Elo boards (Bishop's to
  * SoCal's, St. Ignatius to NorCal's: there is no statewide board) and De Anza to its standings. Each link
@@ -135,7 +140,7 @@ export default function AwardsDraftPage() {
         <p>
           Of all of the teams that didn&rsquo;t make the CCS playoffs this year, one stands out. <T slug="fremont">Fremont</T>{' '}
           ended the season with 1706 Elo points, hundreds of Elo points higher than many others that did make postseason
-          tournaments. Led by the twin sisters <P team="fremont" name="Sophie Dhillon">Sophie</P> and{' '}
+          tournaments. Led by the twins <P team="fremont" name="Sophie Dhillon">Sophie</P> and{' '}
           <P team="fremont" name="Emma Dhillon">Emma Dhillon</P>, <T slug="fremont">Fremont</T> was also most improved
           in NorCal, increasing their Elo by 369 points over the fall. Even a 10-9-3 overall record wasn&rsquo;t enough
           to make it out of the very competitive <DeAnza /> division this year, home to both{' '}
@@ -201,7 +206,11 @@ export default function AwardsDraftPage() {
           </Link>{' '}
           (<T slug="st-ignatius">SI</T>). But, you might say that those
           Elo points are just imaginary internet chess rankings. Fair enough, so let me show you another points number:
-          177. The JWNT player <P team="bishops" name="Lola Conway" /> led <T slug="bishops">Bishop&rsquo;s</T> attack
+          177. The{' '}
+          <ExternalLink href={USAFH_U18_ROSTER} arrow={false}>
+            Team USA U-18
+          </ExternalLink>{' '}
+          player <P team="bishops" name="Lola Conway" /> led <T slug="bishops">Bishop&rsquo;s</T> attack
           with 177 points in a single season. That&rsquo;s 69 goals and 39 assists over a single season against some of
           the best teams in the state! For that reason, I&rsquo;m forced to crown <T slug="bishops">Bishop&rsquo;s</T> as
           California&rsquo;s best high school team of 2026 and <P team="bishops" name="Lola Conway" /> as 2026 California
@@ -210,7 +219,11 @@ export default function AwardsDraftPage() {
 
         <h2 className="mt-8 text-ink">Honorable Mention</h2>
         <p>
-          It&rsquo;s hard to finish this post without mentioning one more player. JWNT player{' '}
+          It&rsquo;s hard to finish this post without mentioning one more player.{' '}
+          <ExternalLink href={USAFH_U18_ROSTER} arrow={false}>
+            Team USA U-18
+          </ExternalLink>{' '}
+          player{' '}
           <P team="harvard-westlake" name="Margaux Schlumberger" /> led <T slug="harvard-westlake">Harvard-Westlake</T> to{' '}
           {/* The 2025 final is on the history page, the 2026 final on /playoffs. */}
           <Link href="/history/2025-26#toc-bracket" prefetch={false}>
