@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "e9155a9cfc55de5ffed60c640cd8c5aed9dd9b9a7f96cb4d3f3a73fe7ab1dbc9",
+  "contentHash": "7c829e9c8017bddf19326bdf55ff8436f9b5805a2ae77839268d8f54ef9b1a33",
   "counts": {
     "byLeague": {
       "bval": {
@@ -89,13 +89,13 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 113,
+    "agreements": 108,
     "backfilled": 3,
-    "compared": 142,
-    "conflicts": 4,
-    "sbliveOnlyScored": 8
+    "compared": 135,
+    "conflicts": 2,
+    "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-16T23:06:53.167Z",
+  "fetchedAt": "2026-11-17T14:04:59.346Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 17
+    "sblive": 16
   },
   "sources": [
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-11-02",
-      "rowCount": 11,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-11-03",
       "rowCount": 2,
       "status": "ok"
@@ -1062,8 +1057,8 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-16",
-  "warnings": 42,
+  "today": "2026-11-17",
+  "warnings": 40,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
     "lastGame": "2026-11-14T18:00:00",

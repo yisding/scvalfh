@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-16T23:06:53.167Z",
+  "fetchedAt": "2026-11-17T14:04:59.346Z",
   "fixtures": [
     {
       "claims": {
@@ -11796,7 +11796,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6541425"
                   },
-                  "fetchedAt": "2026-11-16T23:06:53.167Z",
+                  "fetchedAt": "2026-11-17T14:04:59.346Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -47882,7 +47882,7 @@
       "id": "2026-10-13-cupertino-at-homestead",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-13-cupertino-at-homestead"
         }
       ]
@@ -50167,7 +50167,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6543418"
                   },
-                  "fetchedAt": "2026-11-16T23:06:53.167Z",
+                  "fetchedAt": "2026-11-17T14:04:59.346Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -62726,7 +62726,7 @@
                     "sbliveGameId": "6906776"
                   },
                   "contentChangedAt": "2026-10-27T10:08:16.816Z",
-                  "fetchedAt": "2026-11-16T23:06:53.167Z",
+                  "fetchedAt": "2026-11-17T14:04:59.346Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -67090,7 +67090,7 @@
       "id": "2026-10-29-newport-harbor-at-edison",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-29-newport-harbor-at-edison"
         }
       ]
@@ -68173,26 +68173,7 @@
             }
           },
           "ref": "dbac5f77-1d98-4463-9b49-739a7943446b"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "dbac5f77-1d98-4463-9b49-739a7943446b",
-              "published": {
-                "away": 0,
-                "home": 0
-              },
-              "scoreConflict": {
-                "note": "Sources disagree: we show MaxPreps’ 0-1 (Hilltop–Granite Hills); si.com reports 1-2. MaxPreps’ score stands.",
-                "sblive": {
-                  "away": 1,
-                  "home": 2
-                }
-              }
-            },
-            "ref": "contest:dbac5f77-1d98-4463-9b49-739a7943446b"
-          }
-        ]
+        }
       },
       "id": "2026-10-30-hilltop-at-granite-hills",
       "published": [
@@ -68203,14 +68184,6 @@
     },
     {
       "claims": {
-        "box": {
-          "ref": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c",
-          "sides": {
-            "mission-hills": {
-              "goals": 2
-            }
-          }
-        },
         "maxpreps": {
           "game": {
             "away": {
@@ -68266,26 +68239,7 @@
             }
           },
           "ref": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c"
-        },
-        "sblive": [
-          {
-            "conflict": {
-              "contestId": "f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c",
-              "published": {
-                "away": 2,
-                "home": 1
-              },
-              "scoreConflict": {
-                "note": "Sources disagree: we show MaxPreps’ 1-0 (Mission Hills–San Pasqual); si.com reports 2-1. MaxPreps’ score stands.",
-                "sblive": {
-                  "away": 2,
-                  "home": 1
-                }
-              }
-            },
-            "ref": "contest:f0ed5d0a-8a61-4fb4-86e9-d9d06f70074c"
-          }
-        ]
+        }
       },
       "id": "2026-10-30-mission-hills-at-san-pasqual",
       "published": [
@@ -68758,7 +68712,7 @@
       "id": "2026-10-30-valley-center-at-poway",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-30-valley-center-at-poway"
         }
       ]
@@ -68791,7 +68745,7 @@
       "id": "2026-10-31-bella-vista-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-31-bella-vista-at-davis"
         }
       ]
@@ -68824,7 +68778,7 @@
       "id": "2026-10-31-bella-vista-at-lassen",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-31-bella-vista-at-lassen"
         }
       ]
@@ -68923,7 +68877,7 @@
       "id": "2026-10-31-chico-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-31-chico-at-davis"
         }
       ]
@@ -69045,7 +68999,7 @@
       "id": "2026-10-31-corning-at-chico",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-31-corning-at-chico"
         }
       ]
@@ -69077,7 +69031,7 @@
       "id": "2026-10-31-lassen-at-corning",
       "published": [
         {
-          "builtAt": "2026-11-16T23:06:53.167Z",
+          "builtAt": "2026-11-17T14:04:59.346Z",
           "contestId": "official:2026-10-31-lassen-at-corning"
         }
       ]
@@ -69506,7 +69460,7 @@
           "published": {
             "contestId": "cifsds:mira-mesa-at-san-pasqual",
             "dateLocal": "2026-11-04T18:00:00",
-            "fetchedAt": "2026-11-16T23:06:53.167Z"
+            "fetchedAt": "2026-11-17T14:04:59.346Z"
           },
           "ref": "division-2:mira-mesa~san-pasqual",
           "result": {
@@ -70198,7 +70152,7 @@
           "published": {
             "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
             "dateLocal": "2026-11-06T17:00:00",
-            "fetchedAt": "2026-11-16T23:06:53.167Z"
+            "fetchedAt": "2026-11-17T14:04:59.346Z"
           },
           "ref": "division-1:rancho-bernardo~san-dieguito-academy",
           "result": {
