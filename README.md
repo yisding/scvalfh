@@ -1663,7 +1663,7 @@ college team, in their own sport or any other. **Data only for now**: no page re
 basketball builds still render /commits as a 404, and `tests/prior-commits.test.ts` fails if anything under
 `app/` or `components/` names them. Last season's seniors are not included.
 
-They follow `data/commits.json`'s rules ("College commitments") and reuse its source, college and program shapes
+They follow `data/field-hockey/commits.json`'s rules ("College commitments") and reuse its source, college and program shapes
 (`lib/players/prior-commits-schema.ts`), with these differences:
 
 - A commitment names its player by the registry's `playerId` ("The player registry"), with MaxPreps' `careerId`
@@ -1673,7 +1673,7 @@ They follow `data/commits.json`'s rules ("College commitments") and reuse its so
 - `joinPriorCommits` checks every commitment against the registry: the player exists, has a varsity stint in
   the file's sport at that team in 2025-26 or 2026-27, is known under `fullName`, and agrees with `grade` (each
   season's stint grade, the registry's class year and every class year a source states).
-- A program's level may also be `njcaa` or `cccaa` (two-year colleges), which `data/commits.json` does not take.
+- A program's level may also be `njcaa` or `cccaa` (two-year colleges), which `data/field-hockey/commits.json` does not take.
 
 Coverage, researched 2026-11-18 (the method is DATA-SOURCES §1.13): **soccer, 8 commitments**, all in soccer, at
 four schools. Saara Lahtela (Homestead) and Teagan Kaefer (Los Gatos) signed with Santa Clara, whose release of
