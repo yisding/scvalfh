@@ -3195,6 +3195,34 @@ The file is research, written by a script run by hand (its `builtBy`); the data 
 `lib/streams/hudl-streams.ts` validates it at import and lays each link on its game's `urls.hudl` where the site
 reads the snapshot (`lib/data.ts`), so a data refresh keeps the links and the stored snapshot stays MaxPreps'.
 
+### 1.13 LAST SEASON'S COMMITMENTS — soccer and basketball (`data/<sport>/prior-commits.json`)
+
+Research by hand on 2026-11-18, for the 2025-26 varsity juniors and sophomores of the soccer and basketball
+builds' 41 registry teams each. Data only: no page reads the files (README, "Soccer and basketball: last season's
+commitments").
+
+- **Who was searched.** The registry's 2025-26 stints (MaxPreps stat sheets and all-league lists) plus each team's
+  MaxPreps 2025-26 roster page (`<team URL>/25-26/roster/`), read once that day to list the players: girls soccer
+  198 juniors and 166 sophomores, boys basketball 216 juniors, 64 sophomores and 7 ungraded Gunn rows. The roster
+  pages were a research input only and are not stored; MaxPreps' edge answered some reads with 403 and the reads
+  were retried slowly.
+- **Name searches**: at least one web search per row, with the school, city or sport, by research agents working
+  in batches; 35 soccer juniors got none after the session's web-search budget ran out.
+- **Lists read whole**: TopDrawerSoccer's California girls commitment search for the classes of 2027 (221) and
+  2028 (128), matched by name against every soccer row, then each match's profile and its college's commitments
+  table; SoccerWire's monthly commitment lists (June to November 2026); Prep Hoops' NorCal commitments page (2023,
+  no match). Prep Hoops' and Cal-Hi Sports' 2027 and 2028 basketball lists are behind a paywall.
+- **Checked**: each kept quote against its page as served (curl) or rendered (headless Chromium, for PrepSoccer's
+  and TopDrawerSoccer's script-filled pages); colleges' divisions and conferences from the NCAA directory's 2026-27
+  women's soccer member lists; Santa Clara's signing release of 2026-11-12; Hawaii's and UC San Diego's women's
+  soccer news feeds (no signing release naming a player here).
+- **Refused or not reached**: calbears.com (Cal's signing release of 2026-11-12), Illinois' news feed, and every
+  community college's PrestoSports site (West Valley, De Anza, San Jose City, Mission, Evergreen Valley, Gavilan);
+  Foothill's site did not answer.
+- **Rejected**: same-name players at other schools; TopDrawerSoccer rows with no high school and no hometown;
+  "plans to play in college" without a college; a player's own social-media post; and the seniors the searches
+  turned up, which are out of scope.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
