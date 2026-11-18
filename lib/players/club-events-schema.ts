@@ -1,9 +1,9 @@
 /**
- * The Zod contract for data/club-events.json — the tournaments, league days and national events
+ * The Zod contract for data/field-hockey/club-events.json — the tournaments, league days and national events
  * Northern California club field hockey teams play in, as the organizers' own pages list them
  * (/club-calendar, DESIGN §34).
  *
- * The file is research, not a script's output, like data/clubs.json: it was written by hand on its
+ * The file is research, not a script's output, like data/field-hockey/clubs.json: it was written by hand on its
  * `capturedAt` date from pages read that day, and nothing refreshes it. Club events move (a turf
  * becomes unavailable, a tournament fills), so every event carries the pages it was read from and
  * the page prints the day it was read.
@@ -15,7 +15,7 @@
  *   4. a dated event's `end`, when set, is on or after its `start`; an `expected` event has no
  *      `start` and says in words when it usually runs (`expectedWhen`)
  *   5. `sessions` (a league's days) are real days, in order, inside `start`..`end` when both are set
- *   6. `hostClub` and every slug in `clubs` name a club in data/clubs.json — checked by
+ *   6. `hostClub` and every slug in `clubs` name a club in data/field-hockey/clubs.json — checked by
  *      lib/players/club-events.ts, which can see the clubs; this file cannot
  * 1, 4 and 5 are one file-level `superRefine`, whose every failure is a named issue with a path.
  *
@@ -86,9 +86,9 @@ export const ClubEventSchema = z.object({
   name: text,
   /** Who runs it, as the event's page names the organization (never a person). */
   organizer: text,
-  /** The club in data/clubs.json that hosts it, when one does. */
+  /** The club in data/field-hockey/clubs.json that hosts it, when one does. */
   hostClub: slugId.nullable(),
-  /** Clubs in data/clubs.json whose own pages say they enter it (the host is not repeated here). */
+  /** Clubs in data/field-hockey/clubs.json whose own pages say they enter it (the host is not repeated here). */
   clubs: z.array(slugId),
   kind: z.enum(CLUB_EVENT_KINDS),
   level: z.enum(CLUB_EVENT_LEVELS),

@@ -18,7 +18,7 @@
  * assists, saves or scoring but fits none of these is reported, never guessed at.
  *
  * Names (resolveName). A name is credited only when it resolves to exactly one player on exactly
- * one of the game's two rosters (data/rosters.json): the full name; a curated alias
+ * one of the game's two rosters (data/field-hockey/rosters.json): the full name; a curated alias
  * (lib/players/name-aliases.ts); a full name whose first name is a common nickname of the roster's
  * ("Gabby" for Gabrielle), or either half one letter off ("Emery" for Emry, "Molly" for Moll), or
  * whose last name is the last word of a longer one; or a lone first or last name only one roster

@@ -3,12 +3,12 @@
  * games, so tests can run lib/postseason/sds-bracket.ts against a bracket that was really played (plan final-07,
  * 2026-10-29). Nothing on the site reads this module.
  *
- * - `seedsFromHistory('sds')` turns the 2025 brackets in data/history-brackets-2025-26.json (transcribed from
- *   the Section's "2025 Championship Brackets" sheet) into a data/sds-brackets-2026.json-shaped file: each
+ * - `seedsFromHistory('sds')` turns the 2025 brackets in data/field-hockey/history-brackets-2025-26.json (transcribed from
+ *   the Section's "2025 Championship Brackets" sheet) into a data/field-hockey/sds-brackets-2026.json-shaped file: each
  *   division's places from its rounds, the Division II play-in (Helix v Granite Hills for the 11th place,
  *   Mon Nov 3) and the round dates as the sheet had them. It is checked against 2025's playoffs window,
  *   Nov 2–15 (the 2025 finals were Sat Nov 15).
- * - `sdsGames2025()` rebuilds the 26 San Diego playoff rows of data/prior-season.json (every final between two
+ * - `sdsGames2025()` rebuilds the 26 San Diego playoff rows of data/field-hockey/prior-season.json (every final between two
  *   San Diego teams on or after Nov 2, 2025) with tests/game-builder.ts `game()` on their own dates, tagged
  *   `section-playoffs` as the pipeline tags them now (lib/classify.ts keys the window on 2026's dates, so the
  *   tag is passed). MaxPreps has 26 of the 30 bracket games: no row for the play-in, for Bonita Vista v
@@ -84,7 +84,7 @@ export function seedsFromHistory(section: 'sds'): SdsBracketsFile {
 }
 
 /**
- * The three level 2025 rows and the side MaxPreps marks W on each: data/prior-season.json keeps scores but
+ * The three level 2025 rows and the side MaxPreps marks W on each: data/field-hockey/prior-season.json keeps scores but
  * no result flags, so the flags are restored here from the Section's sheet and Record Book (the history
  * file's `winner`): Canyon Crest Academy won the Open quarterfinal at Torrey Pines 1-1 in a shootout,
  * Mt. Carmel the Division I final 2-2 (3-2 in the shootout), Eastlake the Division II final (MaxPreps 0-0;
@@ -102,7 +102,7 @@ const SDS_SLUGS: ReadonlySet<string> = new Set(
   ),
 );
 
-/** The 26 San Diego playoff rows of data/prior-season.json as tagged games, on their 2025 dates. */
+/** The 26 San Diego playoff rows of data/field-hockey/prior-season.json as tagged games, on their 2025 dates. */
 export function sdsGames2025(): Game[] {
   return getPriorSeason()
     .games.filter((r) => r.date >= SDS_2025_WINDOW.first && SDS_SLUGS.has(r.homeSlug) && SDS_SLUGS.has(r.awaySlug))

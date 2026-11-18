@@ -5,10 +5,10 @@
  *
  *   pnpm exec tsx scripts/data-issues.ts <previous-meta.json> <out-dir>
  *
- * Reads data/snapshot.json (through `loadSnapshot`, so a renamed field fails the type check, not the
- * 05:00 run) and data/snapshot.meta.json, and writes `<n>.title` and `<n>.body` into <out-dir> for
+ * Reads data/field-hockey/snapshot.json (through `loadSnapshot`, so a renamed field fails the type check, not the
+ * 05:00 run) and data/field-hockey/snapshot.meta.json, and writes `<n>.title` and `<n>.body` into <out-dir> for
  * the workflow's `gh issue` loop, which edits the open issue of the same title or creates one. The
- * previous run's meta is `git show HEAD:data/snapshot.meta.json`; a missing or unreadable one counts
+ * previous run's meta is `git show HEAD:data/field-hockey/snapshot.meta.json`; a missing or unreadable one counts
  * as no league frozen before, so a first run opens no frozen-league issue.
  */
 

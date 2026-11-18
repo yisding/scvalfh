@@ -1,11 +1,11 @@
 /**
- * The read API for data/rosters.json and data/rosters-enrichment.json — every registry team's
+ * The read API for data/field-hockey/rosters.json and data/field-hockey/rosters-enrichment.json — every registry team's
  * roster, all nine leagues and the five independents (SPEC §1.1j).
  *
  * Two files, one view:
- *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
+ *   - data/field-hockey/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
  *     on a weekly schedule, not by the twice-daily cron).
- *   - data/rosters-enrichment.json is what other public sources add — school athletics sites, a
+ *   - data/field-hockey/rosters-enrichment.json is what other public sources add — school athletics sites, a
  *     school roster PDF, school and local papers, MaxPreps career, JV and earlier-season pages — joined on team slug +
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
  *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
@@ -23,11 +23,11 @@
  */
 
 import { z } from 'zod';
-import bundledEnrichmentFieldHockey from '../../data/rosters-enrichment.json';
+import bundledEnrichmentFieldHockey from '../../data/field-hockey/rosters-enrichment.json';
 import bundledEnrichmentBasketball from '../../data/basketball/rosters-enrichment.json';
 import bundledEnrichmentVolleyball from '../../data/volleyball/rosters-enrichment.json';
 import bundledEnrichmentSoccer from '../../data/soccer/rosters-enrichment.json';
-import bundledRostersFieldHockey from '../../data/rosters.json';
+import bundledRostersFieldHockey from '../../data/field-hockey/rosters.json';
 import bundledRostersBasketball from '../../data/basketball/rosters.json';
 import bundledRostersVolleyball from '../../data/volleyball/rosters.json';
 import bundledRostersSoccer from '../../data/soccer/rosters.json';
@@ -58,9 +58,9 @@ import type { TeamSlug } from '../types';
 /** Names this module in a failed override read. */
 const MODULE = 'lib/players/rosters.ts';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledEnrichmentVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledRostersVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
 
 export type {

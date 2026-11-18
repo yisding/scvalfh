@@ -1,5 +1,5 @@
 /**
- * The read API for data/player-stats.json — each team's MaxPreps season player stats (SPEC §1.1k).
+ * The read API for data/field-hockey/player-stats.json — each team's MaxPreps season player stats (SPEC §1.1k).
  *
  * Built by `scripts/fetch-player-stats.ts`; see lib/players/player-stats-schema.ts for what a number means
  * (a tracked 0 is a real zero, an untracked stat is null). Imported so the build bundles it, for
@@ -12,7 +12,7 @@
  * status 'pending'; one whose coach entered nothing is status 'none'.
  */
 
-import bundledFieldHockey from '../../data/player-stats.json';
+import bundledFieldHockey from '../../data/field-hockey/player-stats.json';
 import bundledBasketball from '../../data/basketball/player-stats.json';
 import bundledVolleyball from '../../data/volleyball/player-stats.json';
 import bundledSoccer from '../../data/soccer/player-stats.json';
@@ -34,7 +34,7 @@ import {
 import { getTeamRoster, placeholderNames } from './rosters';
 import type { TeamSlug } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): PlayerStatsFile {
@@ -47,7 +47,7 @@ function load(): PlayerStatsFile {
 
 /**
  * The stats run joins each line to its roster row and keeps that row's name, so a MaxPreps "Player
- * #11" (lib/players/placeholder-name.ts) arrives under that name. Where data/rosters-enrichment.json
+ * #11" (lib/players/placeholder-name.ts) arrives under that name. Where data/field-hockey/rosters-enrichment.json
  * names the number, its stat lines and box-score lines show the same name the roster does.
  */
 function withPlaceholderNames(f: PlayerStatsFile): PlayerStatsFile {

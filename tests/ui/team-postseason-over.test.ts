@@ -1,5 +1,5 @@
 /**
- * Team pages once the postseason is over (2026-11-16), on the committed snapshot (data/snapshot.json): every
+ * Team pages once the postseason is over (2026-11-16), on the committed snapshot (data/field-hockey/snapshot.json): every
  * team's postseason line, and the empty Next card under it, is read from the results and the snapshot's day, so a
  * data refresh moves them with no copy to edit by hand. The invariant here is what keeps that true: once a team's
  * postseason has had its last day, its line projects nothing, promises no game, and says no event "is under way".
@@ -31,7 +31,7 @@ let view: View;
 let sections: Sections;
 
 beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = path.resolve(__dirname, '../../data/snapshot.json');
+  process.env.SCVAL_SNAPSHOT = path.resolve(__dirname, '../../data/field-hockey/snapshot.json');
   vi.resetModules();
   data = await import('../../lib/data');
   leagues = await import('../../lib/leagues');

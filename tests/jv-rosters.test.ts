@@ -1,6 +1,6 @@
 /**
- * The JV rosters: data/jv-rosters.json (MaxPreps' JV roster pages, `pnpm fetch-rosters --level jv`),
- * data/jv-rosters-school-sites.json (the schools' own JV lists, transcribed), lib/jv/jv-rosters.ts
+ * The JV rosters: data/field-hockey/jv-rosters.json (MaxPreps' JV roster pages, `pnpm fetch-rosters --level jv`),
+ * data/field-hockey/jv-rosters-school-sites.json (the schools' own JV lists, transcribed), lib/jv/jv-rosters.ts
  * (which list a school gets, less its varsity players) and the team page's JV roster section
  * (components/jv/jv-roster-view.ts, TeamJvRoster).
  */
@@ -23,9 +23,9 @@ import { TEAMS, getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 import { textOf } from './ui/html-text';
 
-const read = (name: string): unknown => JSON.parse(readFileSync(path.join(REPO, 'data', name), 'utf8'));
+const read = (name: string): unknown => JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', name), 'utf8'));
 
-describe('data/jv-rosters.json', () => {
+describe('data/field-hockey/jv-rosters.json', () => {
   const file = RostersSchema.parse(read('jv-rosters.json'));
 
   it('holds one MaxPreps JV roster entry per registry school, each read from its JV roster page', () => {
@@ -60,7 +60,7 @@ describe('parseRosterPage: the sport season a page must be for', () => {
   });
 });
 
-describe('data/jv-rosters-school-sites.json', () => {
+describe('data/field-hockey/jv-rosters-school-sites.json', () => {
   const file = JvSiteRostersFileSchema.parse(read('jv-rosters-school-sites.json'));
 
   it('validates, one entry per school, each list this season’s and dated', () => {

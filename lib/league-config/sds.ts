@@ -120,7 +120,7 @@ export function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' |
     ],
     calendarUrl: 'https://sdfhoa.weebly.com/calendar.html',
     bracketsPageUrl: SDS_FIELD_HOCKEY_URL,
-    // The Section's published brackets (read 2026-11-03; transcribed into data/sds-brackets-2026.json).
+    // The Section's published brackets (read 2026-11-03; transcribed into data/field-hockey/sds-brackets-2026.json).
     bracketSheetUrl: SDS_BRACKET_SHEET_URL,
     note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section placed teams from its power rankings at its Oct 31 seeding meeting and has published its brackets; this site draws them and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
     sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',

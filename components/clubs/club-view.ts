@@ -5,7 +5,7 @@
  *
  * What the pages promise, and this module enforces:
  *   - only rows on the tracked varsity rosters are named: a row is an affiliation, and every
- *     affiliation joined a non-JV row of data/rosters.json at load (lib/players/clubs.ts), under that
+ *     affiliation joined a non-JV row of data/field-hockey/rosters.json at load (lib/players/clubs.ts), under that
  *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here, and
@@ -316,7 +316,7 @@ export interface ClubsIndexView {
   clubsWithPlayers: number;
   /**
    * "Oct 3, 2026": the file's capturedAt, the day of the first sweep. A later sweep added ties
-   * without moving it (data/clubs.json notes[5]), so the page does not date the checks by it.
+   * without moving it (data/field-hockey/clubs.json notes[5]), so the page does not date the checks by it.
    */
   capturedOn: string;
   /**
@@ -590,7 +590,7 @@ function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
   };
 }
 
-/** One club's page. null for a slug data/clubs.json does not hold. */
+/** One club's page. null for a slug data/field-hockey/clubs.json does not hold. */
 export function buildClubPageView(slug: string): ClubPageView | null {
   const club = getClub(slug);
   if (!club) return null;

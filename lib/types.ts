@@ -561,7 +561,7 @@ export interface Game {
     nfhsStream: string | null;
     /**
      * The game's Hudl TV broadcast (its fan.hudl.com watch page: the live stream, then the replay), from
-     * data/hudl-streams.json (lib/streams/hudl-streams.ts). Added where the site reads the snapshot, never stored.
+     * data/field-hockey/hudl-streams.json (lib/streams/hudl-streams.ts). Added where the site reads the snapshot, never stored.
      */
     hudl?: string;
     goFan: string | null;

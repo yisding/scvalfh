@@ -1,5 +1,5 @@
 /**
- * data/official/{bval,pcal,mcal}-2026.json (SPEC §7.8): each bundle passes the schema and the
+ * data/field-hockey/official/{bval,pcal,mcal}-2026.json (SPEC §7.8): each bundle passes the schema and the
  * config checks, every division is a double round robin (30 + 30, 42, 72), the build script
  * reproduces the committed bytes, codes resolve through the league's scope only, and York is never
  * a fixture side.
@@ -29,7 +29,7 @@ import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '../scripts/build-of
 import { REPO, runScript } from './helpers';
 
 const raw = (league: string): unknown =>
-  JSON.parse(readFileSync(path.join(REPO, 'data', 'official', `${league}-2026.json`), 'utf8')) as unknown;
+  JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'official', `${league}-2026.json`), 'utf8')) as unknown;
 
 const EXPECTED: Record<string, Record<string, number>> = {
   bval: { 'mt-hamilton': 30, 'santa-teresa': 30 },

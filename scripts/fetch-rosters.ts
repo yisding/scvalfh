@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every registry team's MaxPreps roster page into data/rosters.json (SPEC §1.1j): all nine
+ * Fetch every registry team's MaxPreps roster page into data/field-hockey/rosters.json (SPEC §1.1j): all nine
  * leagues and the three independents, 102 teams.
  *
  *   pnpm fetch-rosters                     live: one roster page per registry team (102)
@@ -11,7 +11,7 @@
  *   pnpm fetch-rosters --dry-run           parse and report, write nothing (captures included)
  *   pnpm fetch-rosters --fetched-at <iso>  pin the stamp (reproducible fixture builds)
  *   pnpm fetch-rosters --level jv          the JV roster pages instead (`<team URL>jv/roster/`, the
- *                                          JV sport season) into data/jv-rosters.json; every other
+ *                                          JV sport season) into data/field-hockey/jv-rosters.json; every other
  *                                          flag works the same (fixtures: jv-roster-<slug>.html)
  *
  * A run whose rows equal the previous file's apart from fetchedAt / error text leaves it as it was.
@@ -144,12 +144,12 @@ const VARSITY_NOTES = [
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
-/** data/jv-rosters.json: the same pages one level down, read the same way. */
+/** data/field-hockey/jv-rosters.json: the same pages one level down, read the same way. */
 const JV_NOTES = [
   `One entry per registry school, all ${LEAGUES_PROPER.length} leagues and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}: the school's JV roster page on MaxPreps (<team URL>jv/roster/, the JV sport season). A school whose JV page lists nobody has status empty: MaxPreps publishes no JV roster for it, which is not a claim that the school fields no JV team.`,
   'Rows are decoded exactly as the varsity roster rows are (GSSP_ROSTER_SERIALIZE_KEYS, cross-checked against the rendered table), and the page must be for the JV sport season.',
   'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed.',
-  "A school's own athletics site can publish its JV list too: those are transcribed in data/jv-rosters-school-sites.json, and the team page shows the fuller of the two (lib/jv/jv-rosters.ts).",
+  "A school's own athletics site can publish its JV list too: those are transcribed in data/field-hockey/jv-rosters-school-sites.json, and the team page shows the fuller of the two (lib/jv/jv-rosters.ts).",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 

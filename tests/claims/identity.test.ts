@@ -17,7 +17,7 @@ import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Game, Snapshot } from '../../lib/types';
 import { REPO } from '../helpers';
 
-const committed = (): Snapshot => loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
+const committed = (): Snapshot => loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown);
 
 describe('fixture ids', () => {
   it('reads like a game slug, a school outside the registry by its name key', () => {

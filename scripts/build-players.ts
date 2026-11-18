@@ -26,7 +26,7 @@
  *
  * Ids are stable: a rebuild keeps every id the previous file gave (lib/players/registry-build.ts).
  *
- * STAMPING. data/clubs.json, data/commits.json, data/rosters-enrichment.json and data/jv-profiles.json
+ * STAMPING. data/field-hockey/clubs.json, data/field-hockey/commits.json, data/field-hockey/rosters-enrichment.json and data/field-hockey/jv-profiles.json
  * name a player by team and MaxPreps' per-season athlete id (or, for JV profiles, by team and name),
  * which a new season makes meaningless. Each record gains a `playerId`, written beside that key and
  * never read by the site: the durable half of the join, which is what a rollover re-keys from.

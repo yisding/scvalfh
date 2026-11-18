@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Read who was on each registry team's MaxPreps stat sheet LAST season into data/prior-players.json
+ * Read who was on each registry team's MaxPreps stat sheet LAST season into data/field-hockey/prior-players.json
  * (lib/players/prior-players-schema.ts): the names, numbers and classes the player registry
  * (scripts/build-players.ts) uses to follow a player from one season into the next.
  *
  *   pnpm fetch-prior-players                     the season before lib/season.ts' (26-27 → 25-26)
  *   pnpm fetch-prior-players --year 24-25        another MaxPreps season year (with --ssid)
  *   pnpm fetch-prior-players --ssid <id>         that season's varsity sportSeasonId; the default is
- *                                                the one data/prior-season.json was built from
+ *                                                the one data/field-hockey/prior-season.json was built from
  *   pnpm fetch-prior-players --fixtures <dir>    offline: read stats-<slug>.json captures
  *   pnpm fetch-prior-players --capture <dir>     live, and save each body as <dir>/stats-<slug>.json
  *   pnpm fetch-prior-players --refresh           ask again for teams already read
@@ -105,7 +105,7 @@ function parseArgs(argv: readonly string[]): Args {
   return args;
 }
 
-/** The varsity sportSeasonId data/prior-season.json was built from, when that file is for `year`. */
+/** The varsity sportSeasonId data/field-hockey/prior-season.json was built from, when that file is for `year`. */
 function seasonIdFromPriorSeason(year: string): string | null {
   const file = path.join(process.cwd(), DATA_DIR, 'prior-season.json');
   if (!existsSync(file)) return null;

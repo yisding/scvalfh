@@ -1,5 +1,5 @@
 /**
- * The 2025-26 archive's award lines in the site's own words (DESIGN §3.9). data/history-2025-26.json
+ * The 2025-26 archive's award lines in the site's own words (DESIGN §3.9). data/field-hockey/history-2025-26.json
  * keeps every document's text as written (it is provenance, rebuilt byte for byte by
  * scripts/build-history.ts); this is where the page turns it into one consistent form:
  *

@@ -4,7 +4,7 @@
  * decides the results; MaxPreps stays primary).
  *
  * One request per division tab (three), from the playoffs' first day (the config's window, Nov 2), while a San
- * Diego league is in the run and data/sds-brackets-2026.json has its brackets. PER TAB carry-forward: a tab not
+ * Diego league is in the run and data/field-hockey/sds-brackets-2026.json has its brackets. PER TAB carry-forward: a tab not
  * read this run (the gate, `--leagues` without a San Diego league, not in the corpus, a failed request, a tab
  * whose title is not its division's) keeps the results the previous run published from it, read from the sheet's
  * claims (lib/claims/sources/sds-sheet.ts: the rows as the previous publication's games showed them), so a failed

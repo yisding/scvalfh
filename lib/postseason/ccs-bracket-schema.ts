@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/ccs-bracket-2026.json — the CCS field hockey championship's seeds, transcribed by
+ * The Zod contract for data/field-hockey/ccs-bracket-2026.json — the CCS field hockey championship's seeds, transcribed by
  * hand from the MaxPreps tournament page (CCS.bracketUrl) once the CCS committee's seeding meeting (Mon Nov 2,
  * 1:00 PM) has been entered there, so lib/postseason/ccs-bracket.ts getCcsSeeds() can put a seed beside each team in
  * the bracket the site draws from `playoffs.games`.
@@ -18,7 +18,7 @@
  * `divisions` is empty or exactly the two CCS divisions in config order (CCS.ccsDivisions: 'Division 1',
  * 'Division 2'); each has exactly eight seeds numbered 1..8 — MaxPreps and the CCS bracket sheets number
  * each division 1-8, and the committee's 9-16 for Division 2 is a grouping, never a printed number
- * (data/history-brackets-2025-26.json shows both divisions seeded 1-8); every slug is a registry team of a
+ * (data/field-hockey/history-brackets-2025-26.json shows both divisions seeded 1-8); every slug is a registry team of a
  * league with `sectionId === 'ccs'` (SCVAL, BVAL, PCAL) and appears once in the whole file; `retrievedOn`
  * and `source` are required as soon as a division is filled.
  */
@@ -95,7 +95,7 @@ export interface CcsSeeds {
   season: string;
   retrievedOn: string;
   source: { label: string; url: string };
-  /** 'owner-file' = data/ccs-bracket-2026.json; a pipeline parser would add its own value. */
+  /** 'owner-file' = data/field-hockey/ccs-bracket-2026.json; a pipeline parser would add its own value. */
   provenance: 'owner-file';
   divisions: Array<{ name: CcsDivisionName; seeds: CcsSeed[] }>;
 }

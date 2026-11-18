@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all nine leagues and the five independents
+ * The Zod contract for data/field-hockey/rosters.json — every registry team's MaxPreps roster, all nine leagues and the five independents
  * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 102-team registry.
  *
  * Separate from lib/players/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
@@ -197,7 +197,7 @@ export type Rosters = z.infer<typeof RostersSchema>;
 // ---------------------------------------------------------------- the enrichment overlay
 
 /**
- * data/rosters-enrichment.json — what OTHER public sources add to the MaxPreps rosters, joined on
+ * data/field-hockey/rosters-enrichment.json — what OTHER public sources add to the MaxPreps rosters, joined on
  * team slug + MaxPreps athleteId (SPEC §1.1j).
  *
  * It is an overlay, never a replacement. The three rules, enforced by lib/players/rosters.ts at load time:

@@ -4,7 +4,7 @@
  *
  * Byte-identical output is the contract: a scheduled run over unchanged upstream data must write
  * exactly the bytes already committed, so the cron has nothing to commit. One walk (normalizeKeys)
- * sorts keys at every level and drops `undefined`, so data/snapshot.json (lib/pipeline), the
+ * sorts keys at every level and drops `undefined`, so data/field-hockey/snapshot.json (lib/pipeline), the
  * rosters and player-stats files (scripts/fetch-rosters.ts, scripts/fetch-player-stats.ts) and the
  * history archive (scripts/build-history.ts) are all written, and compared, the same way.
  *

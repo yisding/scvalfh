@@ -60,7 +60,7 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('field-hockey', base, soccerData)).toBe(SKIP);
     expect(decide('soccer', base, soccerData)).toBe(BUILD);
 
-    const hockeyData = commit(['data/snapshot.json', 'data/player-stats.json']);
+    const hockeyData = commit(['data/field-hockey/snapshot.json', 'data/field-hockey/player-stats.json']);
     expect(decide('soccer', soccerData, hockeyData)).toBe(SKIP);
     expect(decide('field-hockey', soccerData, hockeyData)).toBe(BUILD);
     expect(decide('basketball', soccerData, hockeyData)).toBe(SKIP);

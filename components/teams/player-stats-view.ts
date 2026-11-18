@@ -1,5 +1,5 @@
 /**
- * The team page's player stats section (SPEC §1.1k), derived from data/player-stats.json, for every
+ * The team page's player stats section (SPEC §1.1k), derived from data/field-hockey/player-stats.json, for every
  * team of all five leagues. Pure, so tests/ui/player-stats-view.test.ts can assert it over the real
  * file.
  *
@@ -620,14 +620,14 @@ const BASKETBALL_DERIVED = new Set(LINE_TABLES.flatMap((t) => t.columns.filter((
 
 /**
  * The player stats section for any registry team, in every league. null only for a slug
- * data/player-stats.json does not hold (not a registry team). A team whose coach enters no stats
+ * data/field-hockey/player-stats.json does not hold (not a registry team). A team whose coach enters no stats
  * still gets a view, with no tables, and the section says so (status 'none'); one no run has
  * covered yet has status 'pending' and says that instead; one whose fetch failed with nothing to
  * fall back on has status 'error'. Never throws for a registry slug.
  *
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
- * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
+ * @param team the team's stats; defaults to data/field-hockey/player-stats.json's with the team's game notes
  *   added (lib/players/note-stats.ts). Tests pass a fixture build, since the committed file moves with
  *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
  * @param roster the team's varsity roster rows by athleteId, each row's anchor and grade and position

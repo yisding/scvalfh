@@ -96,7 +96,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // power rankings, so a league place is no route except 1st (a designated champion's play-in). The
       // sentence is the config's one qualification line, then the team's own playoff division from the
       // Section's 2026 Divisions sheet; never the EAL's "top N" template, and no seed.
-      // Once the Section's brackets are published (data/sds-brackets-2026.json), a team in none of them is out of the
+      // Once the Section's brackets are published (data/field-hockey/sds-brackets-2026.json), a team in none of them is out of the
       // playoffs: the line says so, rather than a qualification rule that no longer decides anything. A team in a bracket
       // reads its bracket game instead (components/teams/team-view.ts bracketAwareLine).
       const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
@@ -203,7 +203,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           caveat: CCS_RESULTS_CAVEAT,
         };
       }
-      // Once CCS has seeded the field (the seed file, data/ccs-bracket-2026.json, is filled), a team in none of its
+      // Once CCS has seeded the field (the seed file, data/field-hockey/ccs-bracket-2026.json, is filled), a team in none of its
       // divisions is out of the playoffs: the line says so instead of an at-large hope the committee has already
       // settled. A team in the field reads its bracket game instead (components/teams/team-view.ts bracketAwareLine).
       const seeds = getToday() >= CCS.keyDates.seedingMeeting.slice(0, 10) ? getCcsSeeds() : null;

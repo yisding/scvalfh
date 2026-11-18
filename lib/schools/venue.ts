@@ -4,7 +4,7 @@
  * `location` share, so no two of them can disagree.
  *
  * MaxPreps gives a game no address in the sweep (`venue.address` is a lazy game-page fetch; 0 of 945 games
- * carry one on 2026-11-03), but the registry knows where every school is (data/schools.json). In order:
+ * carry one on 2026-11-03), but the registry knows where every school is (data/field-hockey/schools.json). In order:
  *
  * 1. `game`: the game's own address, when a source gave one.
  * 2. `final-site`: a league tournament's final at its fixed site (the MCAL final at Tamalpais), the site

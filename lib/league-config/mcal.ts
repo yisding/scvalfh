@@ -33,7 +33,7 @@ export const MCAL: LeagueConfig = {
       expectedTeams: 9, gamesPerTeam: 16,
       leaguePlay: { first: '2026-08-24', last: '2026-10-22' },
       official: {
-        source: 'mcal-pdf', mode: 'bundled', bundledFile: 'data/official/mcal-2026.json',
+        source: 'mcal-pdf', mode: 'bundled', bundledFile: 'data/field-hockey/official/mcal-2026.json',
         scheduleUrl: 'https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf',
         revisionCheckUrl: 'https://www.mcalsports.org/Schedules/Fall/FieldHockey_26.pdf',
         bundledSha256: 'aee4894e665be7aebbe37dcb9c14db37dcc5c177dfe7adca2586459eb4370319',

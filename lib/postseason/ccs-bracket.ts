@@ -12,14 +12,14 @@
  * (needsPlayoffGames), the way stale tags are reclassified, so a file written before this derivation
  * existed heals itself.
  *
- * `getCcsSeeds` is the seed switch: the owner file data/ccs-bracket-2026.json when it is filled
+ * `getCcsSeeds` is the seed switch: the owner file data/field-hockey/ccs-bracket-2026.json when it is filled
  * (lib/postseason/ccs-bracket-schema.ts says what it guards and why it is hand-entered), else null — a bracket with no
  * seeds prints no seed, never a guessed one (DESIGN §7.11). `seedsFromHistory` turns a 2025 bracket from
- * data/history-brackets-2025-26.json into the same file shape, which is how the schema is proved against a
+ * data/field-hockey/history-brackets-2025-26.json into the same file shape, which is how the schema is proved against a
  * real sixteen-seed field before the 2026 file exists.
  */
 
-import bundledFileFieldHockey from '../../data/ccs-bracket-2026.json';
+import bundledFileFieldHockey from '../../data/field-hockey/ccs-bracket-2026.json';
 import bundledFileBasketball from '../../data/basketball/ccs-bracket-2026.json';
 import bundledFileVolleyball from '../../data/volleyball/ccs-bracket-2026.json';
 import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
@@ -30,7 +30,7 @@ import { ccsFirstDay } from '../league-config/sections';
 import type { SectionBracket } from '../history/history-brackets-schema';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledFileVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
 
 /**
@@ -83,7 +83,7 @@ export function ccsSeedOf(seeds: CcsSeeds | null, division: CcsDivisionName, slu
 }
 
 /**
- * A section bracket of data/history-brackets-2025-26.json (the CCS's: two divisions, a first round of four
+ * A section bracket of data/field-hockey/history-brackets-2025-26.json (the CCS's: two divisions, a first round of four
  * seeded games each) as a seed file: the sixteen seeded sides of the first round, one division at a time, each
  * division's label as its name. Used by tests/ccs-bracket-file.test.ts to prove the schema against a real
  * field; a maintainer can use the same shape to check a hand-entered 2026 file.

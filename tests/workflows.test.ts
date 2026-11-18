@@ -69,11 +69,11 @@ describe('the update-data commit and the deploy gate', () => {
       'data/basketball/rosters.json',
       'data/basketball/snapshot.json',
       'data/basketball/snapshot.meta.json',
-      'data/claims.json',
-      'data/jv.json',
-      'data/player-stats.json',
-      'data/snapshot.json',
-      'data/snapshot.meta.json',
+      'data/field-hockey/claims.json',
+      'data/field-hockey/jv.json',
+      'data/field-hockey/player-stats.json',
+      'data/field-hockey/snapshot.json',
+      'data/field-hockey/snapshot.meta.json',
       'data/soccer/claims.json',
       'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
@@ -178,7 +178,7 @@ describe('the JV games step', () => {
 
   it('is committed when it changed, alone or riding along with the snapshot or the stats', () => {
     const commit = stepBody(update, 'Commit the data that changed');
-    expect(commit).toContain('if git diff --quiet -- data/jv.json; then JV=false; else JV=true; fi');
+    expect(commit).toContain('if git diff --quiet -- data/field-hockey/jv.json; then JV=false; else JV=true; fi');
     expect(commit).toContain('git commit -m "data: refresh JV games ${DAY} (${JV_SUMMARY})"');
     expect(commit).toContain('${JV_TAIL}"');
   });
@@ -201,23 +201,23 @@ describe('the Test step never lets a stats file block the snapshot', () => {
       const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.com', ...args], { cwd: dir, encoding: 'utf8' });
       if (r.status !== 0) throw new Error(`git ${args.join(' ')}: ${r.stderr}`);
     };
-    mkdirSync(path.join(dir, 'data'));
-    writeFileSync(path.join(dir, 'data', 'player-stats.json'), committed);
-    writeFileSync(path.join(dir, 'data', 'snapshot.json'), '{"snapshot":"good"}\n');
-    writeFileSync(path.join(dir, 'data', 'jv.json'), committedJv);
+    mkdirSync(path.join(dir, 'data', 'field-hockey'), { recursive: true });
+    writeFileSync(path.join(dir, 'data', 'field-hockey', 'player-stats.json'), committed);
+    writeFileSync(path.join(dir, 'data', 'field-hockey', 'snapshot.json'), '{"snapshot":"good"}\n');
+    writeFileSync(path.join(dir, 'data', 'field-hockey', 'jv.json'), committedJv);
     git('init', '-q');
     git('add', '.');
     git('commit', '-q', '-m', 'init');
     // What this run's fetch steps wrote.
-    if (files.stats) writeFileSync(path.join(dir, 'data', 'player-stats.json'), files.stats);
-    if (files.snapshot) writeFileSync(path.join(dir, 'data', 'snapshot.json'), files.snapshot);
-    if (files.jv) writeFileSync(path.join(dir, 'data', 'jv.json'), files.jv);
+    if (files.stats) writeFileSync(path.join(dir, 'data', 'field-hockey', 'player-stats.json'), files.stats);
+    if (files.snapshot) writeFileSync(path.join(dir, 'data', 'field-hockey', 'snapshot.json'), files.snapshot);
+    if (files.jv) writeFileSync(path.join(dir, 'data', 'field-hockey', 'jv.json'), files.jv);
     const bin = path.join(dir, '.bin');
     mkdirSync(bin);
     // `pnpm test` passes unless a data file says "bad"; every call is logged.
     writeFileSync(
       path.join(bin, 'pnpm'),
-      '#!/usr/bin/env bash\necho "pnpm $*" >> "$CALLS"\n! grep -q bad data/player-stats.json data/snapshot.json data/jv.json\n',
+      '#!/usr/bin/env bash\necho "pnpm $*" >> "$CALLS"\n! grep -q bad data/field-hockey/player-stats.json data/field-hockey/snapshot.json data/field-hockey/jv.json\n',
       { mode: 0o755 },
     );
     return { dir, bin };
@@ -237,8 +237,8 @@ describe('the Test step never lets a stats file block the snapshot', () => {
     });
     return {
       code: res.status,
-      stats: readFileSync(path.join(dir, 'data', 'player-stats.json'), 'utf8'),
-      jv: readFileSync(path.join(dir, 'data', 'jv.json'), 'utf8'),
+      stats: readFileSync(path.join(dir, 'data', 'field-hockey', 'player-stats.json'), 'utf8'),
+      jv: readFileSync(path.join(dir, 'data', 'field-hockey', 'jv.json'), 'utf8'),
       output: readFileSync(output, 'utf8'),
       calls: readFileSync(calls, 'utf8').trim().split('\n').filter(Boolean),
     };
@@ -247,7 +247,7 @@ describe('the Test step never lets a stats file block the snapshot', () => {
   it('found the step and its script', () => {
     expect(step).toContain('id: test');
     expect(step).not.toMatch(/continue-on-error/);
-    expect(script).toContain('git checkout -- data/player-stats.json');
+    expect(script).toContain('git checkout -- data/field-hockey/player-stats.json');
   });
 
   it('passes as it is when the suite passes, keeping the new stats', () => {
@@ -320,7 +320,7 @@ describe('the Test step never lets a stats file block the snapshot', () => {
   it('runs before the commit step, which reads the restored file as no stats change', () => {
     expect(update.indexOf('- name: Test')).toBeLessThan(update.indexOf('- name: Commit the data that changed'));
     expect(stepBody(update, 'Commit the data that changed')).toContain(
-      'if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi',
+      'if git diff --quiet -- data/field-hockey/player-stats.json; then STATS=false; else STATS=true; fi',
     );
   });
 });
@@ -369,7 +369,7 @@ describe('the teamViews budget gates ci, never the data cron', () => {
 
 describe('the claims file travels with the snapshot', () => {
   const sports: [string, string, string][] = [
-    ['field hockey', 'data', update],
+    ['field hockey', 'data/field-hockey', update],
     ['soccer', 'data/soccer', updateSoccer],
     ['basketball', 'data/basketball', updateBasketball],
     ['volleyball', 'data/volleyball', updateVolleyball],
@@ -596,13 +596,13 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 
 /**
  * scripts/assert-prerender.ts over a synthetic `.next/server/app` that holds exactly what the
- * build prerenders for data/snapshot.json and data/clubs.json, plus whatever a case adds. `next
+ * build prerenders for data/field-hockey/snapshot.json and data/field-hockey/clubs.json, plus whatever a case adds. `next
  * start` caches the 404 of an unknown param's opengraph-image there (a 0-byte `.body` + a `.meta`
  * with status 404), so the assertion must still pass on a `.next` that has served the smoke script
  * or a crawler.
  */
 describe('assert:prerender on a .next that has served traffic', () => {
-  const SNAPSHOT = path.join(REPO, 'data', 'snapshot.json');
+  const SNAPSHOT = path.join(REPO, 'data', 'field-hockey', 'snapshot.json');
   // Loaded as the build (and the script) loads it: a file written before a league was added is upgraded.
   const stored = loadSnapshot(JSON.parse(readFileSync(SNAPSHOT, 'utf8')));
   // As the site reads it (lib/data.ts): a league fixture no source lists is a game with a page of its own.
@@ -640,7 +640,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
         put(`${family}/${p}/opengraph-image.meta`, OK_META);
       }
     }
-    // One page per club of data/clubs.json (DESIGN §17), and no OG card: the clubs pages take the
+    // One page per club of data/field-hockey/clubs.json (DESIGN §17), and no OG card: the clubs pages take the
     // root one.
     for (const slug of getClubSlugs()) put(`clubs/${slug}.html`);
     // One JV calendar per league (app/jv/[league]), no OG card either.
@@ -685,7 +685,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
     expect(r.status).toBe(1);
   });
 
-  it('fails a clubs page that is not a club of data/clubs.json, or a club with no page, naming it', () => {
+  it('fails a clubs page that is not a club of data/field-hockey/clubs.json, or a club with no page, naming it', () => {
     const extra = run(tree({ 'clubs/nope.html': '' }));
     expect(extra.output).toContain('FAIL clubs/: 1 unexpected page(s) prerendered: nope');
     expect(extra.status).toBe(1);

@@ -28,7 +28,7 @@
  * Every cell of a round's column must be one of those things. A cell this parser cannot place (a school name it
  * cannot resolve, a note in a new wording) makes that column unreadable: no game in it, and none fed from it, is
  * read, and the reason is returned as a warning, so a misread can never pair the wrong two teams. Team names
- * resolve only to the teams of that division in data/sds-brackets-2026.json, after the sheet's " HS" and
+ * resolve only to the teams of that division in data/field-hockey/sds-brackets-2026.json, after the sheet's " HS" and
  * "Charter" are dropped ("Helix Charter HS" is Helix).
  *
  * Pure: no I/O. lib/pipeline/steps/sds-sheet.ts fetches the tabs and lib/postseason/sds-sheet-results.ts turns
@@ -41,7 +41,7 @@ import { parseCsv } from './bval-sheet';
 
 /** One game the sheet has a result for. */
 export interface SdsSheetResult {
-  /** The division id from data/sds-brackets-2026.json ('open', 'division-1', 'division-2'). */
+  /** The division id from data/field-hockey/sds-brackets-2026.json ('open', 'division-1', 'division-2'). */
   division: string;
   /** The round's column date, or the date of a "Game Moved to …" note in the game's cells. */
   dateKey: string;

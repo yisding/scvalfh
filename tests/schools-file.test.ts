@@ -1,5 +1,5 @@
 /**
- * data/schools.json (lib/schools/schools.ts): one campus address per registry school, keyed by slug, and the
+ * data/field-hockey/schools.json (lib/schools/schools.ts): one campus address per registry school, keyed by slug, and the
  * game-address rules every Directions link and the game page's WHERE line share (lib/schools/venue.ts).
  */
 
@@ -16,9 +16,9 @@ import { addressLine, gameAddress } from '../lib/schools/venue';
 import { game } from './game-builder';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'schools.json'), 'utf8')) as Record<string, unknown>;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'schools.json'), 'utf8')) as Record<string, unknown>;
 
-describe('data/schools.json', () => {
+describe('data/field-hockey/schools.json', () => {
   it('validates and holds exactly one record per registry school', () => {
     expect(() => loadSchools(raw)).not.toThrow();
     expect(Object.keys(SCHOOL_ADDRESSES).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
@@ -35,9 +35,9 @@ describe('data/schools.json', () => {
     const schools = raw.schools as Record<string, unknown>;
     const bad = (patch: Record<string, unknown>) => ({ ...raw, schools: { ...schools, ...patch } });
     expect(() => loadSchools(bad({ fremont: { street: '575 W. Fremont Avenue', city: 'Sunnyvale', region: 'CA', postalCode: '94087-1234' } })))
-      .toThrow(/data\/schools.json failed validation:[\s\S]*five-digit ZIP/);
+      .toThrow(/data\/field-hockey\/schools.json failed validation:[\s\S]*five-digit ZIP/);
     expect(() => loadSchools(bad({ fremont: { street: ' ', city: 'Sunnyvale', region: 'CA', postalCode: '94087' } })))
-      .toThrow(/data\/schools.json failed validation/);
+      .toThrow(/data\/field-hockey\/schools.json failed validation/);
     expect(() => schoolAddress('not-a-school')).toThrow(/no record for not-a-school/);
   });
 });

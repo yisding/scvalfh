@@ -17,7 +17,7 @@
 # What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
 # schedule, playoffs; a game is at its slug, and every alias of it, its old id URL included, is no
-# page but a 308 to that slug, with its OG image, and is kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §17; no
+# page but a 308 to that slug, with its OG image, and is kept out of the sitemap), and data/field-hockey/clubs.json's count of /clubs/<slug> (DESIGN §17; no
 # OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, the two region wrappers #norcal
 # #socal and the Southern California sections, leagues and divisions (DESIGN-socal §2.4) and the Southern
@@ -149,7 +149,7 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 
 # The counts every family must have, from the snapshot this tree holds as lib/data.ts loads it (the
 # one the server was built from), never from the server: games, distinct game dates, teams, leagues,
-# league-tournament leagues, the clubs of data/clubs.json (every club has a page, one with no tied player
+# league-tournament leagues, the clubs of data/field-hockey/clubs.json (every club has a page, one with no tied player
 # included), and each old URL segment of a game as `<segment> <the game's slug>`: every alias (`Game.aliases`,
 # lib/game-urls.ts: a slug it had, and the id it was published at before slugs, a MaxPreps GUID or sblive-N,
 # cifsds-A-at-B, official-D-A-at-B), and for a schedule-only game (not stored, so nothing lists an alias for it)
@@ -162,7 +162,7 @@ facts=$(node_modules/.bin/tsx -e '
   // The snapshot as the site loads it: lib/data.ts adds a game for each official fixture and each
   // configured game the feeds lack, and every one of them has a page.
   const s = getSnapshot();
-  const clubs = JSON.parse(fs.readFileSync("data/clubs.json", "utf8")).clubs;
+  const clubs = JSON.parse(fs.readFileSync("data/field-hockey/clubs.json", "utf8")).clubs;
   console.log([s.games.length, new Set(s.games.map((g) => g.dateKey)).size, s.teams.length, s.season.leagues.length,
     s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").length, clubs.length].join(" "));
   console.log(s.season.leagues.filter((l) => l.postseasonKind === "league-tournament").map((l) => l.id).join(" "));
@@ -177,7 +177,7 @@ read -r n_games n_dates n_teams n_leagues n_tournaments n_clubs <<< "$(sed -n 1p
 aliases=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
-# generateStaticParams family with EXACTLY the snapshot's count, or data/clubs.json's for /clubs/
+# generateStaticParams family with EXACTLY the snapshot's count, or data/field-hockey/clubs.json's for /clubs/
 # (scripts/assert-vinext-prerender.ts also matches the sitemap against the prerendered pages one
 # for one).
 expect /sitemap.xml 200 application/xml "$public"
@@ -195,7 +195,7 @@ families=''
 for family in "game:$n_games" "scores:$n_dates" "teams:$n_teams" "standings:$n_leagues" "schedule:$n_leagues" \
   "playoffs:$n_tournaments" "clubs:$n_clubs"; do
   n=$(grep -cE "^/${family%:*}/[^/]+$" <<< "$paths" || true)
-  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot or data/clubs.json)"
+  [ "$n" = "${family#*:}" ] || fail /sitemap.xml "lists $n /${family%:*}/ pages, expected ${family#*:} (from the snapshot or data/field-hockey/clubs.json)"
   families+=" $n /${family%:*}/"
 done
 listed_aliases=$(grep -xFf <(sed -n 's#^\([^ ]*\) .*#/game/\1#p' <<< "$aliases") <<< "$paths" || true)

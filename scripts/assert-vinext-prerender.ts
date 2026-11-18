@@ -18,12 +18,12 @@
  *
  * The page families are EXACT, derived from the build's input, never from its output (the built
  * sitemap would make the check circular), by scripts/lib/prerender-expectations.ts, which
- * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/snapshot.json or
+ * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/field-hockey/snapshot.json or
  * SCVAL_SNAPSHOT), cross-checked against lib/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
  * tournament, `game/<slug>` for every game (`Game.slug`, lib/game-slug.ts; an alias is no page,
  * next.config.ts and proxy.ts redirect it), `scores/<date>` for every distinct game
- * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
+ * date and `teams/<slug>` for the registry's teams; data/field-hockey/clubs.json (DESIGN §17, SPEC §1.1j2,
  * through lib/players/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
  * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
  * No prerendered path may contain ':'. Every family with an image has

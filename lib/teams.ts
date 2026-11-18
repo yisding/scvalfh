@@ -40,7 +40,7 @@ import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import { SCHOOL_ADDRESSES } from './schools/schools';
 import { MAXPREPS_WEB, SBLIVE_WEB } from './season';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from './sports/current';
+import { DATA_DIR, bySport } from './sports/current';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = MAXPREPS_WEB;
@@ -108,24 +108,23 @@ function toTeam(s: Seed): Team {
   };
 }
 
-const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HOCKEY ? {
-  scval: SCVAL_SEEDS,
-  bval: BVAL_SEEDS,
-  pcal: PCAL_SEEDS,
-  mcal: MCAL_SEEDS,
-  eal: EAL_SEEDS,
-  sunset: SUNSET_SEEDS,
-  city: CITY_SEEDS,
-  'north-county': NORTH_COUNTY_SEEDS,
-  metro: METRO_SEEDS,
-  independents: INDEPENDENTS_SEEDS,
-} : {
-  scval: IS_BASKETBALL ? SCVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? SCVAL_VOLLEYBALL_SEEDS : SCVAL_SOCCER_SEEDS,
-  bval: IS_BASKETBALL ? BVAL_BASKETBALL_SEEDS : IS_VOLLEYBALL ? BVAL_VOLLEYBALL_SEEDS : BVAL_SOCCER_SEEDS,
-  // Soccer and volleyball (LEAGUES lists neither in the basketball build).
-  wcal: IS_VOLLEYBALL ? WCAL_VOLLEYBALL_SEEDS : WCAL_SOCCER_SEEDS,
-  wbal: IS_VOLLEYBALL ? WBAL_VOLLEYBALL_SEEDS : WBAL_SOCCER_SEEDS,
-};
+const SEEDS_BY_LEAGUE = bySport<Readonly<Record<LeagueId, readonly Seed[]>>>({
+  'field-hockey': {
+    scval: SCVAL_SEEDS,
+    bval: BVAL_SEEDS,
+    pcal: PCAL_SEEDS,
+    mcal: MCAL_SEEDS,
+    eal: EAL_SEEDS,
+    sunset: SUNSET_SEEDS,
+    city: CITY_SEEDS,
+    'north-county': NORTH_COUNTY_SEEDS,
+    metro: METRO_SEEDS,
+    independents: INDEPENDENTS_SEEDS,
+  },
+  soccer: { scval: SCVAL_SOCCER_SEEDS, bval: BVAL_SOCCER_SEEDS, wcal: WCAL_SOCCER_SEEDS, wbal: WBAL_SOCCER_SEEDS },
+  basketball: { scval: SCVAL_BASKETBALL_SEEDS, bval: BVAL_BASKETBALL_SEEDS },
+  volleyball: { scval: SCVAL_VOLLEYBALL_SEEDS, bval: BVAL_VOLLEYBALL_SEEDS, wcal: WCAL_VOLLEYBALL_SEEDS, wbal: WBAL_VOLLEYBALL_SEEDS },
+});
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
 export const TEAMS: readonly Team[] = LEAGUES.flatMap((l) => SEEDS_BY_LEAGUE[l.id] ?? []).map(toTeam);
@@ -307,22 +306,25 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
  * league-scoped in LeagueConfig.officialCodes), and every one of the seven keeps its name, aliases,
  * slug and MaxPreps GUID as keys. Recomputed by running this module over the 102 seeds.
  */
-const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
-  ? ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS']
-  : // The soccer, basketball and volleyball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both MVHS;
-    // CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
-    // Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont).
-    // The soccer and volleyball registries' WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation, Pinewood
-    // and Priory to PHS, and bring MHS (Milpitas, Mercy Burlingame) and NDHS (the two Notre Dames).
-    IS_BASKETBALL
-    ? ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS']
-    : ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'WHS'];
+// The soccer, basketball and volleyball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both
+// MVHS; CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
+// Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont). The
+// soccer and volleyball registries' WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation,
+// Pinewood and Priory to PHS, and bring MHS (Milpitas, Mercy Burlingame) and NDHS (the two Notre Dames).
+const SCVAL_BVAL_COLLISIONS = ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS'];
+const WITH_WCAL_WBAL_COLLISIONS = ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'WHS'];
+const EXPECTED_ACRONYM_COLLISIONS = bySport<readonly string[]>({
+  'field-hockey': ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS'],
+  soccer: WITH_WCAL_WBAL_COLLISIONS,
+  basketball: SCVAL_BVAL_COLLISIONS,
+  volleyball: WITH_WCAL_WBAL_COLLISIONS,
+});
 
 /**
  * The registry's size: field hockey's 102 teams, basketball's 41 (SCVAL's 15 and BVAL's 26), or soccer's and
  * volleyball's 60 (those 41, the WCAL's 6 and the WBAL's 13).
  */
-const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : IS_BASKETBALL ? 41 : 60;
+const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 60, basketball: 41, volleyball: 60 });
 
 function assertRegistry(): void {
   const fail = (m: string): never => {
@@ -426,11 +428,11 @@ function assertRegistry(): void {
     fail(`ACRONYM_COLLISIONS is [${ACRONYM_COLLISIONS.join(', ')}], expected [${EXPECTED_ACRONYM_COLLISIONS.join(', ')}]`);
   }
 
-  // 6. data/schools.json has one record per registry school, and none for a slug that is not a team
+  // 6. data/field-hockey/schools.json has one record per registry school, and none for a slug that is not a team
   const teamSlugs = new Set(TEAMS.map((t) => t.slug));
   const missing = TEAMS.filter((t) => !Object.hasOwn(SCHOOL_ADDRESSES, t.slug)).map((t) => t.slug);
-  if (missing.length) fail(`data/schools.json has no address for ${missing.join(', ')}`);
+  if (missing.length) fail(`${DATA_DIR}/schools.json has no address for ${missing.join(', ')}`);
   const extra = Object.keys(SCHOOL_ADDRESSES).filter((slug) => !teamSlugs.has(slug));
-  if (extra.length) fail(`data/schools.json has a record for ${extra.join(', ')}, which is not a registry team`);
+  if (extra.length) fail(`${DATA_DIR}/schools.json has a record for ${extra.join(', ')}, which is not a registry team`);
 }
 assertRegistry();

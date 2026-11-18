@@ -19,7 +19,7 @@ import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
  *
- * One static page per club in data/clubs.json, in lib/players/clubs.ts' display order. A club no tracked
+ * One static page per club in data/field-hockey/clubs.json, in lib/players/clubs.ts' display order. A club no tracked
  * player is tied to still gets its page, with an honest empty state (DESIGN §8): what the club is,
  * what it runs and where that was read are true whether or not a public page names a player here.
  *
@@ -36,7 +36,7 @@ import { getClubInstagram, instagramUrl } from '../../../lib/social/instagram';
  * itself names no individual.
  *
  * Heading outline: h1 → h2 Players (→ an h3 per group, only when there are two) → h2 Teams and
- * programs (when the club lists any) → h2 Tournaments and leagues (when data/club-events.json has an
+ * programs (when the club lists any) → h2 Tournaments and leagues (when data/field-hockey/club-events.json has an
  * event the club hosts or whose page says the club enters it; each links /club-calendar#<event>,
  * DESIGN §34) → h2 Where this comes from (→ h3 labels). The page takes the
  * root OG card: there is no per-club card (DESIGN §17.6), so ROOT_OG_IMAGE is safe to spread here.

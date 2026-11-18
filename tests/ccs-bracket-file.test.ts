@@ -1,10 +1,10 @@
 /**
- * data/ccs-bracket-2026.json and its contract, lib/postseason/ccs-bracket-schema.ts.
+ * data/field-hockey/ccs-bracket-2026.json and its contract, lib/postseason/ccs-bracket-schema.ts.
  *
  * The file is the owner's hand transcription of the CCS seeds from the MaxPreps tournament page once the
  * committee enters them (Mon Nov 2); this suite is what `pnpm test` runs before the file is committed, and the
  * data cron's Test step gates its own commit on the suite. The schema is proved here against a real
- * sixteen-seed field — the 2025 bracket in data/history-brackets-2025-26.json, converted by `seedsFromHistory`
+ * sixteen-seed field — the 2025 bracket in data/field-hockey/history-brackets-2025-26.json, converted by `seedsFromHistory`
  * — and refused the ways a transcription slips: a short division, a repeated school, a school of another
  * section, the committee's 9-16 grouping typed as seeds, the divisions out of order.
  */
@@ -20,9 +20,9 @@ import { HistoryBracketsSchema } from '../lib/history/history-brackets-schema';
 import { CCS } from '../lib/league-config/sections';
 import { REPO } from './helpers';
 
-const committed = JSON.parse(readFileSync(path.join(REPO, 'data', 'ccs-bracket-2026.json'), 'utf8')) as unknown;
+const committed = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'ccs-bracket-2026.json'), 'utf8')) as unknown;
 const history = HistoryBracketsSchema.parse(
-  JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as unknown,
+  JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'history-brackets-2025-26.json'), 'utf8')) as unknown,
 );
 const seeds2025 = seedsFromHistory(history.sections.ccs, '2025-26');
 
@@ -51,7 +51,7 @@ describe('the committed seed file', () => {
 });
 
 describe('the contract, against the real 2025 field', () => {
-  it('accepts the 2025 bracket’s sixteen seeds converted from data/history-brackets-2025-26.json', () => {
+  it('accepts the 2025 bracket’s sixteen seeds converted from data/field-hockey/history-brackets-2025-26.json', () => {
     const parsed = CcsSeedFileSchema.parse(seeds2025);
     expect(parsed.divisions.map((d) => d.name)).toEqual(CCS.ccsDivisions.map((d) => d.name));
     expect(parsed.divisions.map((d) => d.seeds.length)).toEqual([8, 8]);

@@ -37,9 +37,9 @@ import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
  * all-league documents) shows its divisions in pairs: varsity standings (row 1 bold, with the plain label
  * "Champion"), JV standings, all-league awards. A league we found no official 2025-26 final standings for
  * says "No standings available", with the reason, any official document it did publish (MCAL's all-league
- * team) and what was checked (data/history-2025-26.json), and shows no table in its place. Everything is
+ * team) and what was checked (data/field-hockey/history-2025-26.json), and shows no table in its place. Everything is
  * built once by `scripts/build-history.ts`. The page opens on the 2025 postseason, before any league: each
- * section's playoff bracket (`#ccs` in NorCal, `#sds` in SoCal: data/history-brackets-2025-26.json,
+ * section's playoff bracket (`#ccs` in NorCal, `#sds` in SoCal: data/field-hockey/history-brackets-2025-26.json,
  * transcribed from the sections' own pages), so SoCal, where no league published standings, still has last
  * season's results, and the unavailable leagues' sections point to it; then the 2025 Tournament of Champions
  * (`#toc`, SoCal), the postseason the Sunset and the LA independents share, which no CIF section runs (DESIGN
@@ -56,7 +56,7 @@ import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
  * (data/<sport>/history-brackets-2025-26.json `published`) and drawn as /playoffs draws the current season's. A
  * one-league archive draws no league row (a row of one tab goes nowhere).
  *
- * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts, never from
+ * The leagues, divisions and notes all come from `data/field-hockey/history-2025-26.json` and lib/leagues.ts, never from
  * a literal list, so a league cannot be dropped or invented here. The title has no sentence under it: what
  * the page covers is the metadata description's, and provenance sits in each league's source note.
  */

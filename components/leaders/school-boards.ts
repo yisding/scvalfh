@@ -1,5 +1,5 @@
 /**
- * The /leaders school boards (data/snapshot.json): best record, best league record, goals scored per game
+ * The /leaders school boards (data/field-hockey/snapshot.json): best record, best league record, goals scored per game
  * raw and Elo-adjusted, goals allowed per game, clean sheets, and last the highest Elo rating (elo-board.ts,
  * DESIGN §23), plus the notes under them. Records are the `Standing` rows the standings and team pages
  * print (`overall` is every final, `computed` the league games the table counts), so a team's record here

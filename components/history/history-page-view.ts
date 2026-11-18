@@ -1,6 +1,6 @@
 /**
  * The page data for /history/2025-26 (app/history/2025-26/page.tsx), read once, at module load, from
- * lib/history/history.ts (data/history-2025-26.json, data/history-brackets-2025-26.json) and lib/leagues.ts:
+ * lib/history/history.ts (data/field-hockey/history-2025-26.json, data/field-hockey/history-brackets-2025-26.json) and lib/leagues.ts:
  * the season, the leagues and brackets in page order, and the sentences the page's header and its metadata
  * both print. The page hands the season to its components (components/history/AvailableLeague.tsx and its
  * siblings) as a prop.

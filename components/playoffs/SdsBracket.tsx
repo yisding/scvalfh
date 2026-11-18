@@ -10,7 +10,7 @@ import { sdsBracketIntro, sdsBracketView } from './sds-bracket-view';
  * The San Diego Section's brackets on /playoffs (`#sds-bracket`, the first thing in the SoCal block once
  * they exist: spec §5.6, bracket-first).
  *
- * Drawn only from the Section's PUBLISHED bracket (data/sds-brackets-2026.json, transcribed from its
+ * Drawn only from the Section's PUBLISHED bracket (data/field-hockey/sds-brackets-2026.json, transcribed from its
  * Championship Brackets sheet after the seeding meeting; lib/postseason/sds-bracket.ts joins MaxPreps' results
  * to it). The site still projects no place, and while the file is the placeholder the page never renders
  * this component.

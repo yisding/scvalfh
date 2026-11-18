@@ -5,10 +5,10 @@
  * Elo is ONE fit over every registry team (lib/ratings/ratings.ts computeRatings, unchanged): each region's board
  * shows its own teams' numbers from that one table, so a NorCal and a SoCal rating are on one scale. What
  * links the two regions is the finals between them, few so far, so the board's method says how many (this
- * season's from the snapshot, last season's from data/prior-season.json, both counted at build time, never
+ * season's from the snapshot, last season's from data/field-hockey/prior-season.json, both counted at build time, never
  * typed in). The board's minimum counts the games its fit counts this season, by the rule of
  * ranking.ts qualifyingMinimum; a team under it is still rated on its own page, as provisional. The ratings
- * start from last season's (data/prior-season.json); synthetic sources without one start every team at
+ * start from last season's (data/field-hockey/prior-season.json); synthetic sources without one start every team at
  * average.
  */
 
@@ -65,7 +65,7 @@ export interface EloBoardView {
 /**
  * The finals that link the two regions on the Elo scale: this season's that the fit counts
  * (lib/ratings/ratings.ts ratingGames: finals with a score between two registry teams, forfeits left out) between
- * a NorCal and a SoCal team, and last season's (data/prior-season.json) between two registry teams of
+ * a NorCal and a SoCal team, and last season's (data/field-hockey/prior-season.json) between two registry teams of
  * different regions, as the fit's starts read them. Teams outside the configured leagues have no region
  * and count in neither.
  */

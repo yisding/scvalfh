@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/sds-brackets-2026.json — the San Diego Section's 2026 field hockey brackets,
+ * The Zod contract for data/field-hockey/sds-brackets-2026.json — the San Diego Section's 2026 field hockey brackets,
  * transcribed by hand from the Section's published bracket sheet (the "2026 CIFSDS Field Hockey
  * Championships" Google Sheet its field hockey page links after the Sat Oct 31 seeding meeting), so
  * lib/postseason/sds-bracket.ts can draw the three brackets and join them to MaxPreps' results.

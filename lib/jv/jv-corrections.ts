@@ -2,7 +2,7 @@
  * Corrections to MaxPreps' JV rows, applied at load (lib/jv/jv.ts) before the si.com merge, the JV
  * counterpart of the fixture ledger for varsity (lib/fixtures/).
  *
- * data/jv.json keeps what each source said; this list says which of MaxPreps' JV rows the site does
+ * data/field-hockey/jv.json keeps what each source said; this list says which of MaxPreps' JV rows the site does
  * not take as said, and why. Every entry is a contest id, read and checked by hand (2026-11-03), never
  * a rule over names:
  *

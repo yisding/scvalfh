@@ -1,6 +1,6 @@
 # Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
 # stats (all 102 teams, all nine leagues and the independents), then the JV games (MaxPreps' JV schedules and si.com's JV
-# pages), and commit data/snapshot.json, data/player-stats.json and data/jv.json only where the
+# pages), and commit data/field-hockey/snapshot.json, data/field-hockey/player-stats.json and data/field-hockey/jv.json only where the
 # CONTENT actually changed.
 #
 # Schedule (SPEC §5.2 — one to two runs a day, never more):
@@ -28,7 +28,7 @@
 # to the team, which keeps its previous rows (scripts/lib/team-scope.ts), so one league's outage never
 # blocks another's stats. Their fetch is allowed to fail: a MaxPreps hiccup on the stats endpoint
 # must never cost the day's scores. Nor may the stats file the fetch wrote: when the tests fail
-# and data/player-stats.json changed in this run, the Test step restores the committed one and runs
+# and data/field-hockey/player-stats.json changed in this run, the Test step restores the committed one and runs
 # the tests again, so only a failure that is not the stats file's blocks the snapshot commit.
 # The JV games ride the same run on the same terms as the stats (scripts/fetch-jv.ts: 102 MaxPreps JV
 # feeds through the same politeness gate, then up to 102 si.com JV pages one at a time, 1 s apart):
@@ -133,7 +133,7 @@ jobs:
           fetch-depth: 1
 
       # pdftotext, for the two official SCVAL schedule PDFs (BVAL, PCAL and MCAL fixtures are bundled
-      # under data/official/). Without it the SCVAL PDF sources fail and the previous run's SCVAL
+      # under data/field-hockey/official/). Without it the SCVAL PDF sources fail and the previous run's SCVAL
       # fixtures are carried forward, so a bad apt mirror must NOT take the whole day's refresh with it.
       - name: Install poppler-utils (pdftotext)
         continue-on-error: true
@@ -253,29 +253,29 @@ jobs:
           if pnpm test; then exit 0; fi
           jv_changed=false
           stats_changed=false
-          git diff --quiet -- data/jv.json || jv_changed=true
-          git diff --quiet -- data/player-stats.json || stats_changed=true
+          git diff --quiet -- data/field-hockey/jv.json || jv_changed=true
+          git diff --quiet -- data/field-hockey/player-stats.json || stats_changed=true
           if [ "$jv_changed" != true ] && [ "$stats_changed" != true ]; then
-            echo "::error::the tests failed and neither data/jv.json nor data/player-stats.json changed in this run"
+            echo "::error::the tests failed and neither data/field-hockey/jv.json nor data/field-hockey/player-stats.json changed in this run"
             exit 1
           fi
           if [ "$jv_changed" = true ]; then
             NEW_JV="${RUNNER_TEMP:-/tmp}/jv-this-run.json"
-            cp data/jv.json "$NEW_JV"
-            echo "::warning::the tests failed; testing again without this run's data/jv.json"
-            git checkout -- data/jv.json
+            cp data/field-hockey/jv.json "$NEW_JV"
+            echo "::warning::the tests failed; testing again without this run's data/field-hockey/jv.json"
+            git checkout -- data/field-hockey/jv.json
             if pnpm test; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 0; fi
             if [ "$stats_changed" != true ]; then echo "jv_restored=true" >> "$GITHUB_OUTPUT"; exit 1; fi
             # Not the JV file alone: put it back and try without this run's stats file instead.
-            cp "$NEW_JV" data/jv.json
+            cp "$NEW_JV" data/field-hockey/jv.json
           fi
-          echo "::warning::the tests failed; testing again without this run's data/player-stats.json"
-          git checkout -- data/player-stats.json
+          echo "::warning::the tests failed; testing again without this run's data/field-hockey/player-stats.json"
+          git checkout -- data/field-hockey/player-stats.json
           echo "stats_restored=true" >> "$GITHUB_OUTPUT"
           if pnpm test; then exit 0; fi
           if [ "$jv_changed" != true ]; then exit 1; fi
-          echo "::warning::the tests still failed; testing again without this run's data/jv.json either"
-          git checkout -- data/jv.json
+          echo "::warning::the tests still failed; testing again without this run's data/field-hockey/jv.json either"
+          git checkout -- data/field-hockey/jv.json
           echo "jv_restored=true" >> "$GITHUB_OUTPUT"
           pnpm test
 
@@ -292,7 +292,7 @@ jobs:
         run: |
           set -euo pipefail
           PREV="${RUNNER_TEMP:-/tmp}/previous-meta-for-issues.json"
-          git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || echo '{}' > "$PREV"
+          git show HEAD:data/field-hockey/snapshot.meta.json > "$PREV" 2>/dev/null || echo '{}' > "$PREV"
           OUT="${RUNNER_TEMP:-/tmp}/issues"
           rm -rf "$OUT" && mkdir -p "$OUT"
           pnpm exec tsx scripts/data-issues.ts "$PREV" "$OUT"
@@ -322,14 +322,14 @@ jobs:
           # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every
           # `fetchedAt` stripped (lib/snapshot/snapshot-hash.ts). That is what "changed" means here.
           PREV="${RUNNER_TEMP:-/tmp}/previous-snapshot-meta.json"
-          git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || true
+          git show HEAD:data/field-hockey/snapshot.meta.json > "$PREV" 2>/dev/null || true
           SNAPSHOT=$(node -e '
             const fs = require("node:fs");
             const hashOf = (p) => {
               try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
               catch { return null; }
             };
-            const next = hashOf("data/snapshot.meta.json");
+            const next = hashOf("data/field-hockey/snapshot.meta.json");
             const prev = hashOf(process.argv[1]);
             // No hash on either side ⇒ treat it as changed rather than silently skipping.
             process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
@@ -337,17 +337,17 @@ jobs:
           if [ "$SNAPSHOT" != "true" ]; then
             echo "no snapshot change — only the run timestamp moved"
             # Drop the timestamp-only churn so the working tree matches HEAD exactly.
-            git checkout -- data/snapshot.json data/snapshot.meta.json
+            git checkout -- data/field-hockey/snapshot.json data/field-hockey/snapshot.meta.json
             # The claims file rides with the snapshot; it may be new and untracked, so remove it then.
-            git checkout -- data/claims.json 2>/dev/null || rm -f data/claims.json
+            git checkout -- data/field-hockey/claims.json 2>/dev/null || rm -f data/field-hockey/claims.json
           fi
           # The player stats. fetch-player-stats leaves the file untouched when only its stamps
           # would change (playerStatsContentKey in lib/players/player-stats-schema.ts), so a plain diff is
           # the content check.
-          if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi
+          if git diff --quiet -- data/field-hockey/player-stats.json; then STATS=false; else STATS=true; fi
           # The JV games: fetch-jv leaves the file untouched when only its stamps would change
           # (jvContentKey in lib/jv/jv-schema.ts), so a plain diff is the content check here too.
-          if git diff --quiet -- data/jv.json; then JV=false; else JV=true; fi
+          if git diff --quiet -- data/field-hockey/jv.json; then JV=false; else JV=true; fi
           echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
           echo "stats=$STATS" >> "$GITHUB_OUTPUT"
           echo "jv=$JV" >> "$GITHUB_OUTPUT"
@@ -357,30 +357,30 @@ jobs:
             exit 0
           fi
           STATS_SUMMARY=$(node -e '
-            const c = require("./data/player-stats.json").counts;
+            const c = require("./data/field-hockey/player-stats.json").counts;
             process.stdout.write(`${c.players} players on ${c.teamsWithStats} teams`);
           ')
           JV_SUMMARY=$(node -e '
-            const c = require("./data/jv.json").counts;
+            const c = require("./data/field-hockey/jv.json").counts;
             process.stdout.write(`${c.games} games, ${c.finals} final`);
           ')
           # deploy-cloudflare.yml ships this commit without a ci run of its own only because it is
           # recognisably this one: author github-actions[bot], one parent, a message starting
           # "data: refresh snapshot", "data: refresh player stats" or "data: refresh JV games",
-          # nothing but data/snapshot.json, data/snapshot.meta.json, data/claims.json (which rides with
-          # the snapshot), data/player-stats.json and data/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
+          # nothing but data/field-hockey/snapshot.json, data/field-hockey/snapshot.meta.json, data/field-hockey/claims.json (which rides with
+          # the snapshot), data/field-hockey/player-stats.json and data/field-hockey/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
           # against the gate).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$JV" = "true" ]; then
-            git add data/jv.json
+            git add data/field-hockey/jv.json
           fi
           # The message names the biggest change first; a JV change rides along as "+ JV games".
           JV_TAIL=''
           [ "$JV" = "true" ] && JV_TAIL=" + JV games (${JV_SUMMARY})"
           if [ "$SNAPSHOT" = "true" ]; then
             SUMMARY=$(node -e '
-              const meta = require("./data/snapshot.meta.json");
+              const meta = require("./data/field-hockey/snapshot.meta.json");
               // meta.today is the PACIFIC date; meta.fetchedAt is UTC and would read as tomorrow
               // for the 10 PM Pacific run. commitSummary is per league, e.g.
               // "SCVAL +3 finals · BVAL +2 · PCAL frozen (meta season mismatch) · MCAL +4".
@@ -390,22 +390,22 @@ jobs:
               process.stdout.write(`${day} · ${summary}`);
             ')
             if [ "$STATS" = "true" ]; then
-              git add data/snapshot.json data/snapshot.meta.json data/player-stats.json
-              if [ -e data/claims.json ]; then
-                git add data/claims.json
+              git add data/field-hockey/snapshot.json data/field-hockey/snapshot.meta.json data/field-hockey/player-stats.json
+              if [ -e data/field-hockey/claims.json ]; then
+                git add data/field-hockey/claims.json
               fi
               git commit -m "data: refresh snapshot ${SUMMARY} + player stats (${STATS_SUMMARY})${JV_TAIL}"
             else
-              git add data/snapshot.json data/snapshot.meta.json
-              if [ -e data/claims.json ]; then
-                git add data/claims.json
+              git add data/field-hockey/snapshot.json data/field-hockey/snapshot.meta.json
+              if [ -e data/field-hockey/claims.json ]; then
+                git add data/field-hockey/claims.json
               fi
               git commit -m "data: refresh snapshot ${SUMMARY}${JV_TAIL}"
             fi
           else
             DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
             if [ "$STATS" = "true" ]; then
-              git add data/player-stats.json
+              git add data/field-hockey/player-stats.json
               git commit -m "data: refresh player stats ${DAY} (${STATS_SUMMARY})${JV_TAIL}"
             else
               git commit -m "data: refresh JV games ${DAY} (${JV_SUMMARY})"
@@ -436,10 +436,10 @@ jobs:
             echo "- JV games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
             echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
             echo "- JV games restored after failing the tests: \`${{ steps.test.outputs.jv_restored || 'false' }}\`"
-            if [ -f data/snapshot.meta.json ]; then
+            if [ -f data/field-hockey/snapshot.meta.json ]; then
               echo ""
               echo '```json'
-              cat data/snapshot.meta.json
+              cat data/field-hockey/snapshot.meta.json
               echo '```'
             fi
           } >> "$GITHUB_STEP_SUMMARY"

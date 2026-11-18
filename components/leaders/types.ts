@@ -185,7 +185,7 @@ export interface RegionLeadersView {
 export interface CrossRegionFinals {
   /** This season's finals the Elo fit counts between a NorCal and a SoCal team. */
   thisSeason: number;
-  /** Last season's (data/prior-season.json) finals between two registry teams of different regions. */
+  /** Last season's (data/field-hockey/prior-season.json) finals between two registry teams of different regions. */
   lastSeason: number;
   /**
    * 'The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on 7
@@ -214,7 +214,7 @@ export interface RosterSource {
 export interface LeaderSources {
   /** Every registry team. */
   teams: readonly Team[];
-  /** data/player-stats.json's per-team entries. */
+  /** data/field-hockey/player-stats.json's per-team entries. */
   stats: readonly TeamPlayerStats[];
   /** One Standing per team (lib/standings/engine.ts). */
   standings: readonly Standing[];

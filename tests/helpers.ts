@@ -200,7 +200,7 @@ function contentHash(file: string): string {
 let pipelineJsonMemo: string[] | null = null;
 
 /**
- * Every `.json` file in the runtime import closure of scripts/fetch-data.ts (data/schools.json, the
+ * Every `.json` file in the runtime import closure of scripts/fetch-data.ts (data/field-hockey/schools.json, the
  * bracket files, …), sorted: the data the pipeline bundles rather than reads from the corpus.
  */
 function pipelineJsonImports(): string[] {
@@ -235,7 +235,7 @@ function corpusSnapshotKey(corpus: CorpusName, extraArgs: readonly string[]): st
   hash.update(`\0${JSON.stringify(extraArgs)}\0`);
   for (const line of [
     ...treeStamp(path.join(REPO, 'lib')),
-    ...treeStamp(path.join(REPO, 'data', 'official')),
+    ...treeStamp(path.join(REPO, 'data', 'field-hockey', 'official')),
     ...treeStamp(path.join(corpusDir(corpus))),
   ]) {
     hash.update(`${line}\n`);
@@ -256,8 +256,8 @@ const corpusSnapshotMemo = new Map<string, string>();
  * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`), built
  * once into os.tmpdir() and reused afterwards — by later calls in this process and by later test
  * files and runs. The cache key (corpusSnapshotKey) hashes the manifest, the run's extra flags, the
- * mtimes of lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/official/**, the contents of
- * every JSON file the cron script imports (data/schools.json, the bracket files, …), pnpm-lock.yaml
+ * mtimes of lib/**, scripts/fetch-data.ts, scripts/cli.ts and data/field-hockey/official/**, the contents of
+ * every JSON file the cron script imports (data/field-hockey/schools.json, the bracket files, …), pnpm-lock.yaml
  * and the corpus variants, and SCVAL_SPORT, so any change to the pipeline, its data or the corpus
  * rebuilds it. A test file that renders against a corpus points lib/data at it with
  * `stubCorpusSnapshot(corpus)` below (which stubs SCVAL_SNAPSHOT to this path and resets the module
@@ -296,7 +296,7 @@ export function writeTempSnapshot(snap: Snapshot, label: string): string {
 }
 
 /**
- * Build data/player-stats.json from the 2026-10-02 stats captures (the SCVAL teams') by running the
+ * Build data/field-hockey/player-stats.json from the 2026-10-02 stats captures (the SCVAL teams') by running the
  * real script, and return it; every other team is 'pending'. Tests that assert specific numbers
  * read this, never the committed file, which the scheduled refresh rewrites whenever a coach
  * enters a game.

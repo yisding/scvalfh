@@ -130,7 +130,7 @@ describe('recaseNameParts', () => {
 
 describe('committed names', () => {
   it.each(['rosters.json', 'player-stats.json', 'rosters-enrichment.json'])('%s has no name left to recase', (file) => {
-    const raw = JSON.parse(readFileSync(path.join(REPO, 'data', file), 'utf8')) as {
+    const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', file), 'utf8')) as {
       teams: { slug: string; players: Record<string, unknown>[] }[];
     };
     const str = (v: unknown) => (typeof v === 'string' ? v : null);

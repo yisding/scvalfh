@@ -68,7 +68,7 @@ describe('applyHostCorrection', () => {
 });
 
 describe('the ledger’s hosts, against the committed snapshot', () => {
-  const raw = JSON.parse(readFileSync(path.join(__dirname, '..', 'data', 'snapshot.json'), 'utf8')) as { games: Game[] };
+  const raw = JSON.parse(readFileSync(path.join(__dirname, '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as { games: Game[] };
 
   it('each names a stored contest and one of its two schools', () => {
     for (const [id, o] of Object.entries(LEDGER_VIEW.hosts)) {

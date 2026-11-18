@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/jv.json — every registry school's JV games: MaxPreps' JV schedule
+ * The Zod contract for data/field-hockey/jv.json — every registry school's JV games: MaxPreps' JV schedule
  * feeds, plus the scored si.com JV finals that lib/jv/jv-merge.ts may supplement them with.
  *
  * Separate from lib/jv/jv.ts (the read API, which imports the file) so scripts/fetch-jv.ts can

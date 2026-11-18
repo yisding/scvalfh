@@ -651,7 +651,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
-    // The Section's brackets are transcribed (data/sds-brackets-2026.json), so the block says they are drawn below.
+    // The Section's brackets are transcribed (data/field-hockey/sds-brackets-2026.json), so the block says they are drawn below.
     expect(text, PAGE).toContain('The Section has published its brackets; the brackets above are the Section’s, with results as MaxPreps posts them.');
     expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);

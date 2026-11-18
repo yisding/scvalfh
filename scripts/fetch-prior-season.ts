@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Read last season's results into data/prior-season.json (DESIGN §20.1): every final between two
+ * Read last season's results into data/field-hockey/prior-season.json (DESIGN §20.1): every final between two
  * registry teams, from each team's MaxPreps schedule for that season. The Elo rating starts each
  * team from the rating these games give it (lib/ratings/ratings.ts); nothing else reads them.
  *

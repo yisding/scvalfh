@@ -428,7 +428,7 @@ describe('what the data audit of 2026-11-13 found', () => {
 
 describe('the committed snapshot, as the loader records it', () => {
   it('drops a row the config has since excluded, lists it as dropped, and recounts the table', () => {
-    const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as { games: Array<{ contestId: string }> };
+    const raw = JSON.parse(readFileSync('data/field-hockey/snapshot.json', 'utf8')) as { games: Array<{ contestId: string }> };
     const loaded = loadSnapshot(raw);
     for (const id of Object.keys(LEDGER_VIEW.rejected)) {
       expect(loaded.games.some((g) => g.contestId === id), id).toBe(false);
@@ -438,7 +438,7 @@ describe('the committed snapshot, as the loader records it', () => {
     for (const row of loaded.standings.filter((r) => r.division === 'avocado')) expect(row.computed.gp, row.slug).toBeLessThanOrEqual(10);
   });
 
-  const snapshot = loadSnapshot(JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as unknown);
+  const snapshot = loadSnapshot(JSON.parse(readFileSync('data/field-hockey/snapshot.json', 'utf8')) as unknown);
 
   it('gives every final a result that agrees with its outcome, and no other game one', () => {
     for (const g of snapshot.games) {
@@ -455,8 +455,8 @@ describe('the committed snapshot, as the loader records it', () => {
   });
 
   it('is a fixed point with the season’s box scores weighed in, as lib/data.ts loads it', () => {
-    const box = boxEvidenceFrom(JSON.parse(readFileSync('data/player-stats.json', 'utf8')) as unknown);
-    const once = loadSnapshot(JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as unknown, { box });
+    const box = boxEvidenceFrom(JSON.parse(readFileSync('data/field-hockey/player-stats.json', 'utf8')) as unknown);
+    const once = loadSnapshot(JSON.parse(readFileSync('data/field-hockey/snapshot.json', 'utf8')) as unknown, { box });
     const twice = loadSnapshot(JSON.parse(JSON.stringify(once)) as unknown, { box });
     expect(JSON.stringify(twice.games)).toBe(JSON.stringify(once.games));
     expect(JSON.stringify(twice.standings)).toBe(JSON.stringify(once.standings));

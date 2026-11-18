@@ -634,7 +634,7 @@ export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
  * places, since the Section places teams.
  *
  * The third state (2026-10-30, plan final-08): once the owner has transcribed the Section's published brackets
- * (data/sds-brackets-2026.json, so lib/postseason/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
+ * (data/field-hockey/sds-brackets-2026.json, so lib/postseason/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
  * `#sds-bracket`), `drawn` is true and the sentence says the brackets above are the Section's, with MaxPreps'
  * results. Still no place is projected: the brackets are the Section's own.
  */
@@ -826,7 +826,7 @@ export interface TournamentInput {
   ladderLine: { after: number; label: string } | null;
   /**
    * The final's fixed site from config (the host school's slug, venue, admission) with the site school's address
-   * from data/schools.json; omitted ⇒ the round
+   * from data/field-hockey/schools.json; omitted ⇒ the round
    * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
    * is a finalist (lib/postseason/postseason.ts fixedSiteHost).
    */

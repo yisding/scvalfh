@@ -18,7 +18,7 @@ const PAGE_TITLE = 'Club calendar';
 /**
  * /club-calendar — "When and where do Northern California club teams play?" (DESIGN §34).
  *
- * The tournaments, league days and national events of data/club-events.json, as their organizers'
+ * The tournaments, league days and national events of data/field-hockey/club-events.json, as their organizers'
  * own pages listed them on the file's `capturedAt` day, which the header prints. It is the club
  * season's page: the high school season ends in November, and the club tournaments run from
  * December to July.

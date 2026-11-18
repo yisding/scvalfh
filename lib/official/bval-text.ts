@@ -2,7 +2,7 @@
  * BVAL schedule docx TEXT → bundle fixtures (SPEC §7.8). Used ONLY by
  * `scripts/build-official-fixtures.ts --bval-text <A> <B>` and by tests/bval-text.test.ts, which
  * proves that the two division texts (tests/fixtures/official/bval-sched-{A,B}.txt) reproduce the
- * fixtures of data/official/bval-2026.json exactly. The cron never parses a docx: it reads the
+ * fixtures of data/field-hockey/official/bval-2026.json exactly. The cron never parses a docx: it reads the
  * bundle and only hashes the upstream document to notice a revision.
  *
  * The text shape: a header (league, `2026 - 2027`, `<DIVISION> DIVISION`, the team list, chair,

@@ -73,10 +73,10 @@ describe('parseRunArgs (§7.12 flags)', () => {
     expect(parseRunArgs(['--no-official'], opts).official).toBe(false);
   });
 
-  it('defaults: live run stamped now, data/snapshot.json, every source on; offline leaves the stamp to the corpus', () => {
+  it('defaults: live run stamped now, data/field-hockey/snapshot.json, every source on; offline leaves the stamp to the corpus', () => {
     const live = parseRunArgs([], opts);
     expect(live).toMatchObject({ fixtures: null, fetchedAt: '2026-10-02T15:00:00.000Z', leagues: null, sblive: true, official: true });
-    expect(live.out).toBe(path.join(REPO, 'data', 'snapshot.json'));
+    expect(live.out).toBe(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'));
     expect(parseRunArgs(['--fixtures', 'x'], opts).fetchedAt).toBe('');
   });
 
@@ -389,7 +389,7 @@ describe('steps 07-08 never abort the run', () => {
 });
 
 describe('readPrevious', () => {
-  const committed = () => JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+  const committed = () => JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as Snapshot;
 
   it('carries a snapshot written under an earlier classification rule instead of starting from nothing (DESIGN §24.11)', () => {
     // The committed file as the flag-based Sunset wrote it: its countsFor no longer match the rule.

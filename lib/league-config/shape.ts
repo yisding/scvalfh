@@ -193,7 +193,7 @@ export interface DivisionConfig {
   leaguePlay: { first: string; last: string };
   /**
    * The league's own schedule document. 'live-pdf' = SCVAL PDFs parsed each run; 'bundled' =
-   * data/official/<file>, sha256 revision-checked; 'none' = the league publishes no schedule (EAL), so its
+   * data/field-hockey/official/<file>, sha256 revision-checked; 'none' = the league publishes no schedule (EAL), so its
    * games are classified from MaxPreps' league flag and every reader narrows on `mode`.
    */
   official:
@@ -411,7 +411,7 @@ export type PostseasonConfig =
        * The final's fixed site: the host school's slug and short label (the bracket's "at Tamalpais"), the venue's
        * name, and the league's admission sentence with its source, or null when the league publishes none. The
        * street address (the Directions link on the bracket and on a finalist's Next card) is the site school's own
-       * record in data/schools.json, read through `slug`. MCAL: the play-off sheet and the General Rules admission
+       * record in data/field-hockey/schools.json, read through `slug`. MCAL: the play-off sheet and the General Rules admission
        * table.
        */
       finalSite: {

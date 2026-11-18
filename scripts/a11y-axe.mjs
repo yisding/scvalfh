@@ -28,7 +28,7 @@
  *     (/clubs/sf-hawks today) and the first empty one puts the empty state, the programs and the
  *     sources through axe with no player rows (/clubs/pac-heights today).
  *  2. `/` once per remembered league: an init script sets localStorage['scvalfh.league'] to each
- *     league id of data/snapshot.json (plus 'city', so a SoCal league runs even on a snapshot written
+ *     league id of data/field-hockey/snapshot.json (plus 'city', so a SoCal league runs even on a snapshot written
  *     before the SoCal leagues were added) and to 'all' (the no-league run is `/` in 1), once with
  *     only scvalfh.pinnedTeam = 'tamalpais', and the region runs (DESIGN-socal §2.4): scvalfh.region =
  *     'socal' alone (the SoCal first-visit view), and with a NorCal pin (the pin kept, no league from
@@ -83,7 +83,7 @@ const CONCURRENCY = Math.max(1, Number(process.env.SCVAL_A11Y_CONCURRENCY) || av
  */
 function readSnapshot() {
   // An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
-  const file = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
+  const file = process.env.SCVAL_SNAPSHOT || 'data/field-hockey/snapshot.json';
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
 }
 const snapshot = readSnapshot();
@@ -105,11 +105,11 @@ const PIN_LEAGUE = snapshot?.teams.find((t) => t.slug === PIN)?.league ?? 'mcal'
 const SOCAL_QUERY = 'la jolla';
 
 /**
- * The clubs of data/clubs.json no affiliation names: their pages show the empty state. Read like
+ * The clubs of data/field-hockey/clubs.json no affiliation names: their pages show the empty state. Read like
  * the snapshot, from this tree; none (and no extra run) when the script runs outside the repo.
  */
 function readEmptyClubs() {
-  const file = 'data/clubs.json';
+  const file = 'data/field-hockey/clubs.json';
   if (!existsSync(file)) return new Set();
   const { clubs, affiliations } = JSON.parse(readFileSync(file, 'utf8'));
   const tied = new Set(affiliations.map((a) => a.club));

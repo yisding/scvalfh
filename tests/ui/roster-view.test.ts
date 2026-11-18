@@ -1,6 +1,6 @@
 /**
  * `components/teams/roster-view.ts` and `TeamRoster` — the team page's roster section, over the
- * committed data/rosters.json + data/rosters-enrichment.json.
+ * committed data/field-hockey/rosters.json + data/field-hockey/rosters-enrichment.json.
  *
  * The section makes three promises a test can hold it to: it is varsity only, a blank is never
  * filled with a guess, and every value that did not come from MaxPreps is marked and sourced. A
@@ -516,7 +516,7 @@ describe('TeamRoster', () => {
 
 describe('TeamRoster: commitment lines', () => {
   // A synthetic row on a real view: the line's markup is what is under test, and no real player is
-  // named as committed anywhere data/commits.json does not say so.
+  // named as committed anywhere data/field-hockey/commits.json does not say so.
   const si = views.find((v) => v.slug === 'st-ignatius')!.view;
   const committedRow = (status: 'committed' | 'signed', college = 'Example', sport: string | null = null) => ({
     ...si.rows[0],

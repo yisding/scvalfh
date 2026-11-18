@@ -26,7 +26,7 @@ import type { GameModel } from './game-view';
  *    and a coach's scoring note, so it is printed as a note and never labelled "Venue" (SPEC §4).
  * 2. **The address is lib/schools/venue.ts `gameAddress`'s, and Directions appear only when there is one.**
  *    MaxPreps gives a game no address in the sweep, so it is almost always a school's campus from
- *    data/schools.json: the named venue's school, the league final's fixed site, or the host. A neutral
+ *    data/field-hockey/schools.json: the named venue's school, the league final's fixed site, or the host. A neutral
  *    site, a venue that is not a registry school, and a disputed host have none, and print no address
  *    line and no Directions button: a button that cannot resolve a location is a dead affordance.
  * 3. **The venue we do know is the host school, not the field.** When the `.ics` feeds gave a real

@@ -1,6 +1,6 @@
 /**
- * `components/commits/commit-view.ts` and /commits over the committed data/commits.json,
- * data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j3, DESIGN §21), plus the team
+ * `components/commits/commit-view.ts` and /commits over the committed data/field-hockey/commits.json,
+ * data/field-hockey/rosters.json and data/field-hockey/rosters-enrichment.json (SPEC §1.1j3, DESIGN §21), plus the team
  * roster's commitment line.
  *
  * The page makes promises a test can hold it to:

@@ -27,41 +27,62 @@ export const SPORT_ID: SportId = (() => {
 
 /** Whether this build is field hockey's: the pages and files only field hockey has branch on this. */
 export const IS_FIELD_HOCKEY = SPORT_ID === 'field-hockey';
-/** Whether this build is boys basketball's (SCVAL only): the modules with a file or a rule per sport branch on this. */
+/** Whether this build is boys basketball's: for a check that is about basketball alone (a choice among sports is `bySport`). */
 export const IS_BASKETBALL = SPORT_ID === 'basketball';
 
-/** Whether this build is girls volleyball's (SCVAL and BVAL): the modules with a file or a rule per sport branch on this. */
+/** Whether this build is girls volleyball's: for a check that is about volleyball alone (a choice among sports is `bySport`). */
 export const IS_VOLLEYBALL = SPORT_ID === 'volleyball';
 
-export const SPORT_SEASON = IS_BASKETBALL
-  ? BASKETBALL_BOYS_2026
-  : IS_VOLLEYBALL
-    ? VOLLEYBALL_GIRLS_2026
-    : IS_FIELD_HOCKEY
-      ? FIELD_HOCKEY_GIRLS_2026
-      : SOCCER_GIRLS_2026;
+/**
+ * This build's value out of one value per sport: the way every per-sport choice is made (docs/MULTI-SPORT.md, "The
+ * seam"). The record must name every SportId, so a sport added to SPORT_IDS is a type error at each choice that has
+ * no value for it, never a silent fall into another sport's (tests/sport-choices.test.ts holds the code to this).
+ * Every value is evaluated, so pass ones that are cheap and safe in any build; a choice that must stay out of a
+ * bundle (a sport's data file) is a literal `process.env.SCVAL_SPORT` chain instead, which the bundler folds.
+ */
+export function bySport<T>(values: Readonly<Record<SportId, T>>): T {
+  return values[SPORT_ID];
+}
+
+export const SPORT_SEASON = bySport<
+  typeof FIELD_HOCKEY_GIRLS_2026 | typeof SOCCER_GIRLS_2026 | typeof BASKETBALL_BOYS_2026 | typeof VOLLEYBALL_GIRLS_2026
+>({
+  'field-hockey': FIELD_HOCKEY_GIRLS_2026,
+  soccer: SOCCER_GIRLS_2026,
+  basketball: BASKETBALL_BOYS_2026,
+  volleyball: VOLLEYBALL_GIRLS_2026,
+});
 export const SPORT = SPORT_SEASON.sport;
 
 /**
- * The repo-relative folder of this sport's data files: field hockey's stay at data/ (docs/MULTI-SPORT.md
- * step 4: "Field hockey's files stay at data/* until the old paths are retired in one move"), soccer's are
+ * The repo-relative folder of this sport's data files: data/<sport>/ for every sport (field hockey's moved from data/ to data/field-hockey/ on 2026-11-18), so soccer's are
  * under data/soccer/, basketball's under data/basketball/ and volleyball's under data/volleyball/. The fetchers write here; the bundled imports (lib/data.ts and the other loaders) pick
  * the same folder's file.
  */
-export const DATA_DIR = IS_FIELD_HOCKEY ? 'data' : `data/${SPORT_ID}`;
+export const DATA_DIR = `data/${SPORT_ID}`;
 
 /**
- * The hand-researched recruiting pages (/clubs, /clubs/[slug], /commits, /recruiting): field hockey's, and since
- * 2026-11-13 volleyball's (docs/MULTI-SPORT.md, "one sport per build"). A soccer or basketball build renders each
- * as a 404 and links to none of them. The 2025-26 archive (/history/2025-26) is every build's.
+ * The pages and sections a sport has beyond the ones every build has (the 2025-26 archive, /jv and the rest).
+ *
+ * - `recruiting`: the hand-researched recruiting pages (/clubs, /clubs/[slug], /commits, /recruiting): field
+ *   hockey's, and since 2026-11-13 volleyball's (docs/MULTI-SPORT.md, "one sport per build"). A build without them
+ *   renders each as a 404 and links to none of them.
+ * - `clubCalendar`: /club-calendar and the club pages' "Tournaments and leagues" section.
+ *   data/field-hockey/club-events.json is field hockey's research alone, so every other build renders the page as a
+ *   404 and links to it from nowhere.
  */
-export const HAS_RECRUITING = IS_FIELD_HOCKEY || IS_VOLLEYBALL;
+export const SPORT_FEATURES = bySport<{ readonly recruiting: boolean; readonly clubCalendar: boolean }>({
+  'field-hockey': { recruiting: true, clubCalendar: true },
+  soccer: { recruiting: false, clubCalendar: false },
+  basketball: { recruiting: false, clubCalendar: false },
+  volleyball: { recruiting: true, clubCalendar: false },
+});
 
-/**
- * /club-calendar and the club pages' "Tournaments and leagues" section: data/club-events.json is field hockey's
- * research alone, so every other build renders the page as a 404 and links to it from nowhere.
- */
-export const HAS_CLUB_CALENDAR = IS_FIELD_HOCKEY;
+/** The recruiting pages (SPORT_FEATURES.recruiting). */
+export const HAS_RECRUITING = SPORT_FEATURES.recruiting;
+
+/** /club-calendar (SPORT_FEATURES.clubCalendar). */
+export const HAS_CLUB_CALENDAR = SPORT_FEATURES.clubCalendar;
 
 /** 'Girls': the program's gender as MaxPreps and the schools' calendars capitalize it. */
 export const GENDER_NAME = `${SPORT_SEASON.gender.charAt(0).toUpperCase()}${SPORT_SEASON.gender.slice(1)}`;

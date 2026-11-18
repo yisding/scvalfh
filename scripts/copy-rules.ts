@@ -413,7 +413,7 @@ export function attributeText(html: string): string {
 
 // ---------------------------------------------------------------- clubs (SPEC §1.1j2, DESIGN §17.2)
 
-/** The slice of data/clubs.json the leak rule reads. Type-only, so this file stays pure. */
+/** The slice of data/field-hockey/clubs.json the leak rule reads. Type-only, so this file stays pure. */
 interface LeakAffiliation {
   teamSlug: string;
   fullName: string;
@@ -486,7 +486,7 @@ function squash(text: string): string {
 }
 
 /**
- * Where `text` (a built page, or a rendered component) shows what data/clubs.json keeps but never
+ * Where `text` (a built page, or a rendered component) shows what data/field-hockey/clubs.json keeps but never
  * renders: an affiliation's `basis`, or a run of at least LEAK_MIN_FRAGMENT letters and digits from a
  * source's verbatim `quote` (split on "…"), whole or excerpted. Both can name people who are not on
  * the tracked rosters — a club's director, a teammate, a coach — so a hit is a privacy failure, not a
@@ -497,7 +497,7 @@ function squash(text: string): string {
  * /history/2025-26 prints the SCVAL 2025-26 all-league PDF, which four quotes copy a line of. A
  * quote from one of these URLs is not reported; a basis — the researchers' own prose, which no
  * other source can print — always is. scripts/assert-copy.ts passes it only for a page that is not
- * built from data/clubs.json and that cites the document itself.
+ * built from data/field-hockey/clubs.json and that cites the document itself.
  */
 export function affiliationLeaks(
   text: string,
@@ -515,7 +515,7 @@ export function affiliationLeaks(
 
 // ---------------------------------------------------------------- commits (SPEC §1.1j3, DESIGN §21.2)
 
-/** The slice of data/commits.json the leak rule reads. Type-only, so this file stays pure. */
+/** The slice of data/field-hockey/commits.json the leak rule reads. Type-only, so this file stays pure. */
 interface LeakCommitment {
   teamSlug: string;
   fullName: string;
@@ -525,7 +525,7 @@ interface LeakCommitment {
 }
 
 /**
- * `affiliationLeaks` for data/commits.json: a commitment's `basis`, or a fragment of a source's
+ * `affiliationLeaks` for data/field-hockey/commits.json: a commitment's `basis`, or a fragment of a source's
  * verbatim `quote`, shown on a page. Same rule, same threshold, same `printsItself` excuse: a
  * commitment list or a news story can name teammates and coaches who are not on the rosters, so a
  * hit is a privacy failure. One line per leak, naming whose record it came from; [] when clean.

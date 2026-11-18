@@ -105,7 +105,7 @@ export function tournamentView(summary: LeagueSummary, ps: TournamentConfig, con
     teamOf: (slug): Team | undefined => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: division.ladderLine,
-    // The site school's own address (data/schools.json); lib/teams.ts checks the slug is a member.
+    // The site school's own address (data/field-hockey/schools.json); lib/teams.ts checks the slug is a member.
     finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
   });
 }

@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/prior-players.json (and its copies under data/soccer/ and
+ * The Zod contract for data/field-hockey/prior-players.json (and its copies under data/soccer/ and
  * data/basketball/): who played for each registry team LAST season, as far as MaxPreps' season stat
  * sheets show it. Built by scripts/fetch-prior-players.ts; read only by the player registry
  * (scripts/build-players.ts), which is what lets it follow a player from one season into the next.

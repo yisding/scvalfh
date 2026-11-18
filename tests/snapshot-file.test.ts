@@ -1,5 +1,5 @@
 /**
- * The COMMITTED data/snapshot.json, as it stands on disk, read the way the site reads it: through
+ * The COMMITTED data/field-hockey/snapshot.json, as it stands on disk, read the way the site reads it: through
  * `loadSnapshot` (loadSnapshot would migrate a v1 file in memory; the committed file is v2).
  *
  * Every other suite builds its own snapshot, so nothing else looks at the file the site actually
@@ -24,8 +24,8 @@ import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
 import { REPO } from './helpers';
 
-const SNAPSHOT_PATH = path.join(REPO, 'data', 'snapshot.json');
-const META_PATH = path.join(REPO, 'data', 'snapshot.meta.json');
+const SNAPSHOT_PATH = path.join(REPO, 'data', 'field-hockey', 'snapshot.json');
+const META_PATH = path.join(REPO, 'data', 'field-hockey', 'snapshot.meta.json');
 const present = existsSync(SNAPSHOT_PATH);
 
 // A fresh clone before the first `pnpm fetch-data` has no snapshot; that is not a failure.
@@ -82,7 +82,7 @@ describeIfPresent('the committed snapshot', () => {
 
   /**
    * The cron's "commit only if the content changed" gate compares the fresh run's hash against
-   * `HEAD:data/snapshot.meta.json`'s `contentHash` (.github/workflows/update-data.yml). A committed
+   * `HEAD:data/field-hockey/snapshot.meta.json`'s `contentHash` (.github/workflows/update-data.yml). A committed
    * figure that does not describe the committed snapshot therefore guarantees one no-change commit
    * and one pointless hosting rebuild. The hash is over the file as written (v1 or v2), not over
    * the in-memory migration.

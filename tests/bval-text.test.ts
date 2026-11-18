@@ -1,6 +1,6 @@
 /**
  * lib/official/bval-text.ts (SPEC §7.8): the two BVAL docx texts reproduce the fixtures of
- * data/official/bval-2026.json exactly; the five time-override forms and their varsity times; any
+ * data/field-hockey/official/bval-2026.json exactly; the five time-override forms and their varsity times; any
  * other override throws; the `BVAL MEETINGS` lines (which contain `@`) are ignored; the play-in
  * line is an event.
  */
@@ -30,7 +30,7 @@ describe('bval-text: the two documents reproduce the bundle', () => {
     expect(st.revisedOn).toBe('9/22/26');
   });
 
-  it('equals data/official/bval-2026.json fixtures exactly', () => {
+  it('equals data/field-hockey/official/bval-2026.json fixtures exactly', () => {
     const bundle = readOfficialBundle('bval');
     const fromText = parsed
       .map((f) => {
@@ -45,7 +45,7 @@ describe('bval-text: the two documents reproduce the bundle', () => {
   it('builds the identical file through --bval-text', () => {
     expect(serializeBundle(buildBvalFromText([textA, textB]))).toBe(serializeBundle(buildBval()));
     expect(serializeBundle(buildBvalFromText([textA, textB]))).toBe(
-      readFileSync(path.join(REPO, 'data', 'official', 'bval-2026.json'), 'utf8'),
+      readFileSync(path.join(REPO, 'data', 'field-hockey', 'official', 'bval-2026.json'), 'utf8'),
     );
   });
 

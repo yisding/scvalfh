@@ -90,7 +90,7 @@ function view(games: readonly Game[], phase: SeasonPhase = 'regular'): { v: Tour
     lastPlace: ps.lastSpot.place,
     ladderLine: getDivision(DIV).ladderLine,
     // As the page passes it (components/playoffs/tournament-league.ts): the slug makes the final "at" when Redwood
-    // is in it, and the address is the site school's (data/schools.json).
+    // is in it, and the address is the site school's (data/field-hockey/schools.json).
     finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
   });
   return { v, p, rows };

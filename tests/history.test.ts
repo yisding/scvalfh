@@ -1,5 +1,5 @@
 /**
- * data/history-2025-26.json and the two prior-season PDF parsers behind it.
+ * data/field-hockey/history-2025-26.json and the two prior-season PDF parsers behind it.
  *
  * Fixtures are the REAL `pdftotext -layout` output of
  *   https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf
@@ -102,7 +102,7 @@ interface HistoryFile {
 }
 
 const file = JSON.parse(
-  readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'),
+  readFileSync(path.join(REPO, 'data', 'field-hockey', 'history-2025-26.json'), 'utf8'),
 ) as HistoryFile;
 /** SCVAL's entry: every SCVAL assertion below is unchanged from the SCVAL-only file. */
 const history = file.leagues.scval;
@@ -826,7 +826,7 @@ describe('scripts/build-history.ts', () => {
     const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-history-')), 'history.json');
     const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', out]);
     expect(r.status, r.output).toBe(0);
-    expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'));
+    expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'field-hockey', 'history-2025-26.json'), 'utf8'));
   }, 30_000);
 
   it('requires a valid --retrieved-on with --bval-from, rather than stamping today on old files', () => {

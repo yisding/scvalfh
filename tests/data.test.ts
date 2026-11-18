@@ -811,7 +811,7 @@ describe('data: Southern California tables with results', () => {
 // ---------------------------------------------------------------- CCS ladder play-in and crossover results
 
 /**
- * The committed snapshot (data/snapshot.json: SCVAL and BVAL league play over, so every pairing seat is settled)
+ * The committed snapshot (data/field-hockey/snapshot.json: SCVAL and BVAL league play over, so every pairing seat is settled)
  * with the league's own postseason games played (plan final-10, 2026-10-30): Archbishop Mitty 2-0 St. Ignatius in
  * the #1 v #1 crossover (Thu Oct 29), Los Altos 2-1 Santa Clara in the SCVAL 4th-place play-in (Fri Oct 30) and the
  * Santa Teresa champion 3-0 over Mt. Hamilton #4 in the BVAL play-in (Sat Oct 31), stamped Sat Oct 31.
@@ -832,7 +832,7 @@ describe('data: CCS ladder lines after the play-ins', () => {
 
   beforeAll(async () => {
     const base = loadSnapshot(
-      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown,
     );
     const [hosts, visitors] = leaguePairings(base.standings, [], 'bval').find((p) => p.id === 'bval-play-in')!.seats;
     if (!hosts[0]?.slug || !visitors[0]?.slug) throw new Error('bval-play-in: a seat has no team with results');

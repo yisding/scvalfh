@@ -1,5 +1,5 @@
 /**
- * data/hudl-streams.json and its three siblings (lib/streams/hudl-streams.ts): every sport's committed file loads
+ * data/field-hockey/hudl-streams.json and its three siblings (lib/streams/hudl-streams.ts): every sport's committed file loads
  * and keeps its invariants, a bad file is refused at load, the overlay puts a game's Hudl TV broadcast on
  * `urls.hudl` and nothing else, and the site's read of the committed snapshot (lib/data.ts) carries it.
  */
@@ -16,9 +16,9 @@ import { getHudlStreamsFile, loadHudlStreams, withHudlStreams, type HudlStreamsF
 import type { Game } from '../lib/types';
 import { REPO } from './helpers';
 
-const SPORT_DIRS = ['data', 'data/soccer', 'data/basketball', 'data/volleyball'];
+const SPORT_DIRS = ['data/field-hockey', 'data/soccer', 'data/basketball', 'data/volleyball'];
 const read = (dir: string): unknown => JSON.parse(readFileSync(path.join(REPO, dir, 'hudl-streams.json'), 'utf8'));
-const fieldHockey = (): HudlStreamsFile => structuredClone(read('data')) as HudlStreamsFile;
+const fieldHockey = (): HudlStreamsFile => structuredClone(read('data/field-hockey')) as HudlStreamsFile;
 
 const WATCH = 'https://fan.hudl.com/usa/ca/palo-alto/organization/12437/gunn-high-school/watch?b=QnJvYWRjYXN0NDI0NTI2Ng%3D%3D';
 

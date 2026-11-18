@@ -2,7 +2,7 @@
  * Turning `snapshot.playoffs` (and the CCS seeds, when the owner file has them) into the rounds a bracket
  * can render — pure, and still cautious about what it claims. Rewritten 2026-10-30 (plan final-06), the
  * first version to be exercised against a real bracket: the 2025 CCS championship (its fourteen MaxPreps rows
- * in data/prior-season.json and its sixteen seeds in data/history-brackets-2025-26.json) is rebuilt on 2026's
+ * in data/field-hockey/prior-season.json and its sixteen seeds in data/field-hockey/history-brackets-2025-26.json) is rebuilt on 2026's
  * dates in tests/fixtures/ccs/bracket-2025.ts, and tests/ui/bracket-model.test.ts holds this model to it.
  *
  * WHAT THE SNAPSHOT CARRIES NOW. `playoffs.games` is the `Game[]` lib/postseason/ccs-bracket.ts derives: every game

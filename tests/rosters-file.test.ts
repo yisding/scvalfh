@@ -1,5 +1,5 @@
 /**
- * data/rosters.json: the committed file validates (one entry per registry team, all nine leagues and the independents),
+ * data/field-hockey/rosters.json: the committed file validates (one entry per registry team, all nine leagues and the independents),
  * the read API serves it, and the script rebuilds every league that has captures from them. A
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
@@ -24,11 +24,11 @@ import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
-const FILE = path.join(REPO, 'data', 'rosters.json');
+const FILE = path.join(REPO, 'data', 'field-hockey', 'rosters.json');
 const text = readFileSync(FILE, 'utf8');
 const raw = JSON.parse(text) as Rosters;
 /**
- * data/rosters.json as it stood when every SCVAL row was the 2026-10-02 captures' (read 2026-10-07): the file
+ * data/field-hockey/rosters.json as it stood when every SCVAL row was the 2026-10-02 captures' (read 2026-10-07): the file
  * the two rebuild checks below hold the script to. The live file has since been re-read (2026-11-13) and will
  * be again, so its SCVAL rows no longer equal the captures; the captures, and this copy, stay as they were.
  */
@@ -53,7 +53,7 @@ const read = (file: string) => JSON.parse(readFileSync(file, 'utf8')) as Rosters
 /** A team's entry without the stamp of when its rows were read. */
 const unstamped = <T extends { fetchedAt: string | null }>(t: T) => ({ ...t, fetchedAt: null });
 
-describe('data/rosters.json', () => {
+describe('data/field-hockey/rosters.json', () => {
   it('validates against the contract', () => {
     const parsed = RostersSchema.safeParse(raw);
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);

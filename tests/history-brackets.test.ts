@@ -1,12 +1,12 @@
 /**
- * data/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets and the 2025
+ * data/field-hockey/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets and the 2025
  * Tournament of Champions on /history/2025-26 — and its contract, lib/history/history-brackets-schema.ts.
  *
  * The file is a hand transcription, so the results it must reproduce are asserted literally from
  * the sources its `notes` name (read 2026-10-07): the CCS bracket pages on cifccs.org and the CCS
  * Field Hockey History PDF; the San Diego Section's "2025 Championship Brackets" Google Sheet and
  * its Record Book; for the Tournament of Champions (read 2026-11-03), the Harvard-Westlake Chronicle
- * and MaxPreps' 2025-26 schedules, which data/prior-season.json holds. If a value here changes, the
+ * and MaxPreps' 2025-26 schedules, which data/field-hockey/prior-season.json holds. If a value here changes, the
  * page changes with it.
  */
 
@@ -39,7 +39,7 @@ import { teamsInLeague } from '../lib/teams';
 import { SEED_CLAIM } from '../scripts/copy-rules';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;
 const brackets = HistoryBracketsSchema.parse(raw);
 const ccs = brackets.sections.ccs;
 const sds = brackets.sections.sds;

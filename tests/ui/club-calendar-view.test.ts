@@ -1,6 +1,6 @@
 /**
  * `components/club-calendar/calendar-view.ts` and /club-calendar over the committed
- * data/club-events.json (DESIGN §34), plus the links into it from /clubs and the club pages.
+ * data/field-hockey/club-events.json (DESIGN §34), plus the links into it from /clubs and the club pages.
  *
  * The page's promises: an event whose next dates are not posted is never given dates; the split
  * between coming up and earlier is the day the list was read, which the page prints; a quote never

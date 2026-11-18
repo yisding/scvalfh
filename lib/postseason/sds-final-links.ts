@@ -1,5 +1,5 @@
 /**
- * The stream and the tickets of a San Diego Section final, from data/sds-brackets-2026.json onto the final's game.
+ * The stream and the tickets of a San Diego Section final, from data/field-hockey/sds-brackets-2026.json onto the final's game.
  *
  * MaxPreps carries a game's NFHS Network stream and GoFan tickets on its own contest, and a final MaxPreps never
  * lists has neither: 2026's Division I final (Poway v San Marcos, Sat Nov 14) is on the Section's bracket sheet,

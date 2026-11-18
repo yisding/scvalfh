@@ -1,5 +1,5 @@
 /**
- * The join data/clubs.json and data/commits.json both make to the merged rosters (DESIGN §17,
+ * The join data/field-hockey/clubs.json and data/field-hockey/commits.json both make to the merged rosters (DESIGN §17,
  * §21: commitments follow the clubs' matching rule), on team slug + MaxPreps athleteId.
  *
  * Every record must join to a row of its team under the row's own fullName, the row must be at the
@@ -32,7 +32,7 @@ export interface RosterJoinOptions<R> {
   noun: string;
   /**
    * The level every joined row must be: 'varsity' (the default: any row the overlay does not mark
-   * JV) or 'jv' (only rows it does). data/clubs.json's `jvAffiliations` join with 'jv'.
+   * JV) or 'jv' (only rows it does). data/field-hockey/clubs.json's `jvAffiliations` join with 'jv'.
    */
   level?: 'varsity' | 'jv';
   /** The record's club or college, for the message's parenthesis. */

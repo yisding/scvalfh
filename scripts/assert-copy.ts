@@ -37,13 +37,13 @@
  * ban. The pages and card of a league whose table order is this site's own (`orderScope 'site'`:
  * every SoCal league) never say "rules require".
  * The San Diego Section's own brackets (`#sds-bracket`, drawn inside the `#sds-playoffs` block once
- * data/sds-brackets-2026.json is filled; plan final-08, 2026-10-30) sit outside the three conference
+ * data/field-hockey/sds-brackets-2026.json is filled; plan final-08, 2026-10-30) sit outside the three conference
  * cards, so this script's card checks do not read them: tests/ui/sds-bracket.test.ts holds them to the
  * same rules over the rendered section (SEED_CLAIM and no seed word at all, no "eliminat", no champion
  * named, no CCS word), and on the committed placeholder nothing is drawn.
  * On every page: no claim that rosters or player stats are SCVAL-only (both now cover every
  * league), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
- * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
+ * On every page, too: nothing data/field-hockey/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
  * no affiliation's `basis` and no fragment of a source's verbatim `quote`, whole or excerpted, beyond
  * the public names scripts/public-terms.ts lists (`affiliationLeaks` in scripts/copy-rules.ts, which
  * reads past tags, entities and the RSC payload's JSON escapes). Both
@@ -58,7 +58,7 @@
  * McCarroll") is that official line in other words, not a leak (ARCHIVE_LINES). On the
  * pages built from the clubs file — /clubs, /clubs/<slug>, every /teams/<slug> (the club line) and
  * /about — nothing is excused, since they link the very sources the quotes come from.
- * The same rule covers data/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
+ * The same rule covers data/field-hockey/commits.json (DESIGN §21.2, `commitmentLeaks`): no commitment's `basis`
  * and no fragment of a source's `quote` on any page, nothing excused on /commits, every
  * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
@@ -201,7 +201,7 @@ const PROPER_NOUNS: string[] = [
   ...getSnapshot().games.flatMap((g) =>
     [g.venue.text, g.bracket?.tournament ?? null, g.home.name, g.away.name].filter((s): s is string => typeof s === 'string' && s.length > 0),
   ),
-  // What a club's own site says of itself (data/clubs.json, printed on /clubs/<slug>): a club that also runs a
+  // What a club's own site says of itself (data/field-hockey/clubs.json, printed on /clubs/<slug>): a club that also runs a
   // boys' program is a fact about the club, not this site naming another build's program.
   ...clubsFile.clubs.flatMap((c) => [
     c.description,
@@ -237,7 +237,7 @@ for (const file of files) {
   const printsItself = builtFromClubs(file) ? undefined : citedBy(html);
   const restatedLines = file === 'history/2025-26.html' ? ARCHIVE_LINES : undefined;
   for (const leak of affiliationLeaks(html, clubsFile, { printsItself, publicTerms: PUBLIC_TERMS, restatedLines })) {
-    fail(file, `shows what data/clubs.json never renders: ${leak}`);
+    fail(file, `shows what data/field-hockey/clubs.json never renders: ${leak}`);
   }
   const printsCommitSource = builtFromCommits(file) ? undefined : commitCitedBy(html);
   for (const leak of commitmentLeaks(html, commitsFile, {
@@ -245,7 +245,7 @@ for (const file of files) {
     publicTerms: PUBLIC_TERMS,
     restatedLines,
   })) {
-    fail(file, `shows what data/commits.json never renders: ${leak}`);
+    fail(file, `shows what data/field-hockey/commits.json never renders: ${leak}`);
   }
   // The EAL claims (DESIGN §22.5), over what a reader sees or is read out: the body text, then the
   // title, description metas and title/aria-label/alt attributes.

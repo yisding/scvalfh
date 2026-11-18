@@ -31,7 +31,7 @@ export function boxScoreUrl(teamId: string, contestId: string): string {
 }
 
 /**
- * A parsed box score → what data/player-stats.json keeps: each line joined to the roster for its
+ * A parsed box score → what data/field-hockey/player-stats.json keeps: each line joined to the roster for its
  * name, and only the numbers the player has (a stat with no number for the player is left out
  * rather than stored as null). The game's team totals are not kept (lib/players/player-stats-schema.ts says
  * why).

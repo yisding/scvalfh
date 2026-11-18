@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/prior-season.json — last season's results (DESIGN §20.1): every final
+ * The Zod contract for data/field-hockey/prior-season.json — last season's results (DESIGN §20.1): every final
  * between two registry teams in the season before this one, read once from MaxPreps by
  * scripts/fetch-prior-season.ts. Their only use is the Elo rating's starting point
  * (lib/ratings/ratings.ts): each team starts a season from the rating these games give it. Nothing on the

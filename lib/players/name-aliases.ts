@@ -8,7 +8,7 @@
  *
  * Curated, never guessed: each entry says why the two names are one player. An alias only ever
  * resolves to a player on that team's roster (tests/note-stats.test.ts checks every entry against
- * data/rosters.json), so a roster change that drops the player turns the alias into a test failure
+ * data/field-hockey/rosters.json), so a roster change that drops the player turns the alias into a test failure
  * rather than a credit to nobody.
  */
 

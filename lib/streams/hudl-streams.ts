@@ -1,5 +1,5 @@
 /**
- * data/hudl-streams.json — the Hudl TV broadcast of a game, where a covered school streams it on Hudl's fan site
+ * data/field-hockey/hudl-streams.json — the Hudl TV broadcast of a game, where a covered school streams it on Hudl's fan site
  * (fan.hudl.com), keyed by the game's contest id. Game pages, a team's Next card, the home page's next-game card
  * and the bracket cells link it beside the NFHS Network stream MaxPreps carries.
  *
@@ -29,7 +29,7 @@
 
 import { z } from 'zod';
 
-import bundledFieldHockey from '../../data/hudl-streams.json';
+import bundledFieldHockey from '../../data/field-hockey/hudl-streams.json';
 import bundledBasketball from '../../data/basketball/hudl-streams.json';
 import bundledVolleyball from '../../data/volleyball/hudl-streams.json';
 import bundledSoccer from '../../data/soccer/hudl-streams.json';
@@ -37,7 +37,7 @@ import { validateData } from '../data-file';
 import { calendarDateKey, httpsUrl } from '../schema-primitives';
 import type { Game } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const text = z.string().trim().min(1);

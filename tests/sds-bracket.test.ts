@@ -2,7 +2,7 @@
  * lib/postseason/sds-bracket.ts — the San Diego Section's brackets from its published sheet, joined to MaxPreps'
  * results (plan final-07, 2026-10-29). Run against last season: the 2025 brackets in this season's file
  * shape and the 26 San Diego playoff rows MaxPreps posted (tests/fixtures/sds/brackets-2025.ts). Every joined
- * card's winner must be the one the Section's sheet records (data/history-brackets-2025-26.json).
+ * card's winner must be the one the Section's sheet records (data/field-hockey/history-brackets-2025-26.json).
  */
 
 import { describe, expect, it } from 'vitest';

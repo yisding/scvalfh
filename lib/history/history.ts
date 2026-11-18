@@ -1,5 +1,5 @@
 /**
- * The read API for data/history-2025-26.json — the prior-season archive (DESIGN §3.9), validated
+ * The read API for data/field-hockey/history-2025-26.json — the prior-season archive (DESIGN §3.9), validated
  * against lib/history/history-schema.ts.
  *
  * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
@@ -13,11 +13,11 @@
  * way), so a bad file fails at import time rather than half-way through a render.
  */
 
-import bundledBracketsFieldHockey from '../../data/history-brackets-2025-26.json';
+import bundledBracketsFieldHockey from '../../data/field-hockey/history-brackets-2025-26.json';
 import bundledBracketsBasketball from '../../data/basketball/history-brackets-2025-26.json';
 import bundledBracketsVolleyball from '../../data/volleyball/history-brackets-2025-26.json';
 import bundledBracketsSoccer from '../../data/soccer/history-brackets-2025-26.json';
-import bundledHistoryFieldHockey from '../../data/history-2025-26.json';
+import bundledHistoryFieldHockey from '../../data/field-hockey/history-2025-26.json';
 import bundledHistoryBasketball from '../../data/basketball/history-2025-26.json';
 import bundledHistoryVolleyball from '../../data/volleyball/history-2025-26.json';
 import bundledHistorySoccer from '../../data/soccer/history-2025-26.json';
@@ -52,9 +52,9 @@ import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledBrackets = process.env.SCVAL_SPORT === 'basketball' ? bundledBracketsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledBracketsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledBracketsSoccer : bundledBracketsFieldHockey;
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledHistory = process.env.SCVAL_SPORT === 'basketball' ? bundledHistoryBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledHistoryVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledHistorySoccer : bundledHistoryFieldHockey;
 
 export type {
@@ -81,7 +81,7 @@ export type {
 } from './history-brackets-schema';
 
 /**
- * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
+ * data/field-hockey/history-2025-26.json is imported, so the build bundles it, for the reason given in
  * lib/data.ts: a Worker has no project filesystem, and this module loads on the first
  * /history/2025-26 request in every Worker instance, cached page or not (the route's modules load
  * before the cache read). A missing file is a build error: run `pnpm build-history`. SCVAL_HISTORY
@@ -299,7 +299,7 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
 // ---------------------------------------------------------------- section playoff brackets
 
 /**
- * data/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
+ * data/field-hockey/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
  * hand from each section's own documents, and the 2025 Tournament of Champions, assembled from a
  * school newspaper and MaxPreps' schedules (lib/history/history-brackets-schema.ts). Bundled and validated at
  * module scope, like the standings above.

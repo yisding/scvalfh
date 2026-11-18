@@ -81,7 +81,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
   const links: HomeNextGame['links'] = [];
-  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/field-hockey/schools.json).
   const address = gameAddress(game)?.address;
   if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
   // One stream chip: the NFHS Network's, else the Hudl TV broadcast (lib/streams/hudl-streams.ts).

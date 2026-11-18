@@ -37,9 +37,9 @@ import { SPORT_IDS, type SportId } from '../sports/current';
 export const PLAYERS_FILE = 'data/players.json';
 export const PLAYER_IDENTITY_FILE = 'data/player-identity.json';
 
-/** A sport's data directory, relative to the repository: data/ for field hockey, data/<sport>/ otherwise. */
+/** A sport's data directory, relative to the repository: data/<sport>/ for every sport. */
 export function sportDataDir(sport: SportId): string {
-  return sport === 'field-hockey' ? 'data' : `data/${sport}`;
+  return `data/${sport}`;
 }
 
 function readJson<T>(root: string, rel: string, schema: ZodType<T>): T | null {

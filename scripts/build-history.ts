@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Build data/history-2025-26.json: one entry per league. With SCVAL_SPORT=soccer, basketball or volleyball, build
+ * Build data/field-hockey/history-2025-26.json: one entry per league. With SCVAL_SPORT=soccer, basketball or volleyball, build
  * data/<sport>/history-2025-26.json instead: SCVAL from its standings PDF and the hand transcription of the sport's
  * all-league PDFs (scripts/lib/history-scval-documents.ts; `--from tests/fixtures/<sport>/scval-history` rebuilds it
  * offline), BVAL from its 2025-26 standings sheet for the sport (scripts/lib/history-bval-sheet.ts;
@@ -64,7 +64,7 @@ import { HttpClient } from '../lib/sources/http';
 import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
-import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../lib/sports/current';
+import { DATA_DIR, IS_BASKETBALL, IS_FIELD_HOCKEY, SPORT_ID } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { runCliIfMain } from './cli';
 import { buildBvalSheetHistory, bvalJvNote } from './lib/history-bval-sheet';
@@ -135,7 +135,8 @@ function pick<T extends { division: string; level: string }>(
  * `--bval-from <dir>/standings-2025-26.csv` with `--retrieved-on` (tests/fixtures/<sport>/bval-history).
  */
 async function bvalFromSheet(args: Args): Promise<{ entry: Record<string, unknown>; problems: string[] }> {
-  const sport = IS_BASKETBALL ? 'basketball' : IS_VOLLEYBALL ? 'volleyball' : 'soccer';
+  if (SPORT_ID === 'field-hockey') throw new Error('build-history: field hockey has no BVAL sheet history (its 2025-26 BVAL entry is the league documents)');
+  const sport = SPORT_ID;
   let csv: string;
   if (args.bvalFrom) {
     csv = readFileSync(path.join(args.bvalFrom, 'standings-2025-26.csv'), 'utf8');

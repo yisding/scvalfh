@@ -26,7 +26,7 @@ interface Case {
   name: string;
   sport: string;
   args: string[];
-  /** Start from this earlier case's output (snapshot and claims file), or from the tree's committed `data/` ('data'). */
+  /** Start from this earlier case's output (snapshot and claims file), or from the tree's committed `data/field-hockey/` ('data'). */
   after?: string;
 }
 
@@ -87,7 +87,7 @@ function runAll(tree: string, out: string, variants: string): void {
     mkdirSync(dir, { recursive: true });
     const snapshot = path.join(dir, 'snapshot.json');
     if (c.after) {
-      const from = c.after === 'data' ? path.join(tree, 'data') : path.join(out, c.after);
+      const from = c.after === 'data' ? path.join(tree, 'data', 'field-hockey') : path.join(out, c.after);
       copyFileSync(path.join(from, 'snapshot.json'), snapshot);
       const claims = path.join(from, 'claims.json');
       if (existsSync(claims)) copyFileSync(claims, path.join(dir, 'claims.json'));

@@ -101,8 +101,8 @@ describe('all-2026-10-02 variants', () => {
 describe('from the committed snapshot and claims file', () => {
   const ALL_LEAGUES = 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents';
   const committed = () => ({
-    previous: loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown),
-    claims: readClaimsFile(path.join(REPO, 'data', 'claims.json')),
+    previous: loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown),
+    claims: readClaimsFile(path.join(REPO, 'data', 'field-hockey', 'claims.json')),
   });
 
   it.each([
@@ -191,8 +191,8 @@ describe('the San Diego bracket sheet, read on a playoff day', () => {
 
   it('from the committed snapshot and claims file', async () => {
     const extraArgs = ['--accept-regression', 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents'];
-    const previous = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
-    const claims = readClaimsFile(path.join(REPO, 'data', 'claims.json'));
+    const previous = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown);
+    const claims = readClaimsFile(path.join(REPO, 'data', 'field-hockey', 'claims.json'));
     await shadowRun('committed, sheet partly read', { ...socal, variants: [partly()], extraArgs, previous, claims });
     await shadowRun('committed seeded, sheet partly read', { ...socal, variants: [partly()], extraArgs, previous });
   });
