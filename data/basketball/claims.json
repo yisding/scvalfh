@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-18T15:30:42.252Z",
+  "fetchedAt": "2026-11-18T22:33:41.115Z",
   "fixtures": [
     {
       "claims": {
@@ -305,7 +305,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:57:26",
+              "maxprepsModifiedOn": "2026-11-18T18:03:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -437,7 +437,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T08:32:33",
+              "maxprepsModifiedOn": "2026-11-18T17:56:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1039,7 +1039,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": "https://gofan.co/event/7088764?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leland-san-jose-vs-monte-vista-christian-watsonville/11-19-2026/?c=2e998376-0bcf-4b10-8d7e-eb71c8be817d",
               "nfhsStream": null
             },
@@ -1295,7 +1295,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T19:03:07",
+              "maxprepsModifiedOn": "2026-11-18T20:05:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1427,7 +1427,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:59:47",
+              "maxprepsModifiedOn": "2026-11-18T18:07:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1625,7 +1625,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:58:12",
+              "maxprepsModifiedOn": "2026-11-18T19:43:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2087,7 +2087,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T08:32:53",
+              "maxprepsModifiedOn": "2026-11-18T21:02:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2219,7 +2219,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:11:50",
+              "maxprepsModifiedOn": "2026-11-18T17:59:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2232,7 +2232,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "0f5928fc-d802-490f-bc68-a44232a7723a"
@@ -2670,7 +2670,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-18T15:30:42.252Z",
+          "builtAt": "2026-11-18T22:33:41.115Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -2979,7 +2979,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T00:31:22",
+              "maxprepsModifiedOn": "2026-11-18T18:06:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3969,7 +3969,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-25T18:43:27",
+              "maxprepsModifiedOn": "2026-11-18T19:20:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3982,7 +3982,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Branham  High School"
             }
           },
           "ref": "f4eb8d53-0f53-4118-983a-e76bae44fc1b"
@@ -4497,7 +4497,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:39:31",
+              "maxprepsModifiedOn": "2026-11-18T18:00:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4510,7 +4510,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/game55e1a0e6f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "f8139ee2-88f0-4bf3-a840-abc9e0d7531e"
@@ -5289,7 +5289,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T16:41:51",
+              "maxprepsModifiedOn": "2026-11-18T18:04:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -5302,7 +5302,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamf67b7b4352?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "fb229e01-c14b-4757-90dc-bc3197099346"
@@ -6112,6 +6112,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "contestId": "7ec3a038-6c9d-455c-bcee-9b24ead12898",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-04",
+            "dateLocal": "2026-12-04T19:00:00",
+            "dateUtc": "2026-12-05T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Palo Alto",
+              "name": "Gunn",
+              "result": null,
+              "score": null,
+              "slug": "gunn",
+              "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T10:13:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gunn-palo-alto-vs-mills-millbrae/12-4-2026/?c=7ec3a038-6c9d-455c-bcee-9b24ead12898",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Gunn HS"
+            }
+          },
+          "ref": "7ec3a038-6c9d-455c-bcee-9b24ead12898"
+        }
+      },
+      "id": "2026-12-04-name:mills-at-gunn",
+      "published": [
+        {
+          "contestId": "7ec3a038-6c9d-455c-bcee-9b24ead12898"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Morgan Hill",
               "name": "Oakwood",
               "result": null,
@@ -6345,7 +6411,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:16:17",
+              "maxprepsModifiedOn": "2026-11-18T18:06:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8985,7 +9051,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T02:59:15",
+              "maxprepsModifiedOn": "2026-11-18T20:41:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9711,7 +9777,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-03T15:28:31",
+              "maxprepsModifiedOn": "2026-11-18T18:16:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9724,7 +9790,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gamf3c60bda29?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "3b13e3b3-ae31-4c12-b881-89f08a3b3188"
@@ -11295,7 +11361,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:48:29",
+              "maxprepsModifiedOn": "2026-11-18T22:02:03",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11308,7 +11374,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-cruz-high-school-santa-cruz-ca/gam31486b4afb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "Home Game vs Mountain View High School"
+              "text": "Santa Cruz HS"
             }
           },
           "ref": "71b241fc-098f-4e84-bd35-5e08753b98a2"
@@ -12813,7 +12879,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:13:13",
+              "maxprepsModifiedOn": "2026-11-18T17:56:07",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12945,7 +13011,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:50:47",
+              "maxprepsModifiedOn": "2026-11-18T18:13:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12958,7 +13024,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam46d09666f0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "6ed0673d-f03e-409a-b537-c9bfc1be3270"
@@ -13473,7 +13539,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:03:15",
+              "maxprepsModifiedOn": "2026-11-18T17:50:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13486,7 +13552,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam5017f95d73?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "030344ee-7094-4583-95d1-92111cc2c933"
@@ -13703,6 +13769,72 @@
           "game": {
             "away": {
               "city": "San Jose",
+              "name": "Leland",
+              "result": null,
+              "score": null,
+              "slug": "leland",
+              "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
+            },
+            "contestId": "4bd49641-1b53-4517-a080-74cf4ebb0d01",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-30",
+            "dateLocal": "2026-12-30T18:30:00",
+            "dateUtc": "2026-12-31T02:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Santa Clara",
+              "name": "Santa Clara",
+              "result": null,
+              "score": null,
+              "slug": "santa-clara",
+              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T17:56:22",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": "https://gofan.co/event/7018460?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leland-san-jose-vs-santa-clara/12-30-2026/?c=4bd49641-1b53-4517-a080-74cf4ebb0d01",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Clara High School"
+            }
+          },
+          "ref": "4bd49641-1b53-4517-a080-74cf4ebb0d01"
+        }
+      },
+      "id": "2026-12-30-leland-at-santa-clara",
+      "published": [
+        {
+          "contestId": "4bd49641-1b53-4517-a080-74cf4ebb0d01"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
               "name": "Piedmont Hills",
               "result": null,
               "score": null,
@@ -13869,7 +14001,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T08:33:31",
+              "maxprepsModifiedOn": "2026-11-18T18:15:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13914,8 +14046,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-02",
-            "dateLocal": "2027-01-02T19:45:00",
-            "dateUtc": "2027-01-03T03:45:00Z",
+            "dateLocal": "2027-01-02T16:45:00",
+            "dateUtc": "2027-01-03T00:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -13935,7 +14067,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:52:35",
+              "maxprepsModifiedOn": "2026-11-18T18:14:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14442,8 +14574,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-02",
-            "dateLocal": "2027-01-02T19:30:00",
-            "dateUtc": "2027-01-03T03:30:00Z",
+            "dateLocal": "2027-01-02T19:45:00",
+            "dateUtc": "2027-01-03T03:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -14463,7 +14595,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-03T01:40:05",
+              "maxprepsModifiedOn": "2026-11-18T20:29:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15597,8 +15729,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-06",
-            "dateLocal": "2027-01-06T19:30:00",
-            "dateUtc": "2027-01-07T03:30:00Z",
+            "dateLocal": "2027-01-06T19:00:00",
+            "dateUtc": "2027-01-07T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -15618,7 +15750,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:54",
+              "maxprepsModifiedOn": "2026-11-18T20:29:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15915,7 +16047,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:28",
+              "maxprepsModifiedOn": "2026-11-18T17:56:10",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15928,7 +16060,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Battle of the Den"
+              "text": "Leland High School"
             }
           },
           "ref": "2927db3a-4c64-4d70-98a9-95b7b6609878"
@@ -16179,7 +16311,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:57:31",
+              "maxprepsModifiedOn": "2026-11-18T18:16:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16192,7 +16324,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gamc2ae3f0950?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "b24dee99-2d36-4fa2-990f-13634e393423"
@@ -16318,8 +16450,8 @@
             },
             "contestId": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb",
             "contestTypes": {
-              "away": 1,
-              "home": 1
+              "away": 0,
+              "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-01-08",
@@ -16337,14 +16469,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": false,
+            "isLeague": true,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "west-valley",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T14:23:49",
+              "maxprepsModifiedOn": "2026-11-18T21:35:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16357,7 +16489,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/andrew-hill-high-school-san-jose-ca/gam1b123bc4b0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Andrew Hill High School"
             }
           },
           "ref": "f4dbe46a-cb61-4184-911c-0a9abdda9fdb"
@@ -16393,7 +16525,6 @@
               "source": "bval-docx"
             }
           },
-          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-08; MaxPreps flags it non-league",
           "ref": "west-valley:2027-01-08:del-mar@andrew-hill"
         }
       },
@@ -16522,8 +16653,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-08",
-            "dateLocal": "2027-01-08T19:30:00",
-            "dateUtc": "2027-01-09T03:30:00Z",
+            "dateLocal": "2027-01-08T19:45:00",
+            "dateUtc": "2027-01-09T03:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -16543,7 +16674,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-03T01:41:27",
+              "maxprepsModifiedOn": "2026-11-18T20:29:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17368,7 +17499,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T19:03:38",
+              "maxprepsModifiedOn": "2026-11-18T18:00:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17381,7 +17512,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam5356256e66?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "35a0edbb-e0f4-479f-9eb5-55b324a8e92d"
@@ -20391,7 +20522,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-14T12:04:52",
+              "maxprepsModifiedOn": "2026-11-18T18:02:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20404,7 +20535,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gamd2a9981147?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "3a08cede-167c-4105-990c-a86e2e3bc75e"
@@ -21085,7 +21216,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T19:16:09",
+              "maxprepsModifiedOn": "2026-11-18T18:09:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21098,7 +21229,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "d63e3c4e-76ff-494e-9a1e-cba0ef2ff5fc"
@@ -21184,7 +21315,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T19:17:24",
+              "maxprepsModifiedOn": "2026-11-18T18:09:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21194,10 +21325,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gunn-palo-alto-vs-los-gatos/1-15-2027/?c=5e2aa34d-daf9-4bff-a6b5-a29045055c78",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamadbc1aea8c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "5e2aa34d-daf9-4bff-a6b5-a29045055c78"
@@ -22993,8 +23124,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-20",
-            "dateLocal": "2027-01-20T19:30:00",
-            "dateUtc": "2027-01-21T03:30:00Z",
+            "dateLocal": "2027-01-20T19:00:00",
+            "dateUtc": "2027-01-21T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -23014,7 +23145,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-03T01:46:09",
+              "maxprepsModifiedOn": "2026-11-18T20:29:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24869,7 +25000,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:03:18",
+              "maxprepsModifiedOn": "2026-11-18T17:48:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24882,7 +25013,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam04d9b77f62?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "9f5a1b06-062b-40a7-8e1c-8b658a657067"
@@ -25518,6 +25649,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Bruno",
+              "name": "Capuchino",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "410b7fd0-8dfd-4912-9563-468206e7e75a"
+            },
+            "contestId": "38739d70-5260-49fd-86f8-e7925c23bc89",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-23",
+            "dateLocal": "2027-01-23T17:30:00",
+            "dateUtc": "2027-01-24T01:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Santa Clara",
+              "name": "Wilcox",
+              "result": null,
+              "score": null,
+              "slug": "wilcox",
+              "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T12:04:26",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/capuchino-san-bruno-vs-wilcox-santa-clara/1-23-2027/?c=38739d70-5260-49fd-86f8-e7925c23bc89",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Wilcox (Adrian) High School"
+            }
+          },
+          "ref": "38739d70-5260-49fd-86f8-e7925c23bc89"
+        }
+      },
+      "id": "2027-01-23-name:capuchino-at-wilcox",
+      "published": [
+        {
+          "contestId": "38739d70-5260-49fd-86f8-e7925c23bc89"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Fremont",
               "name": "Washington",
               "result": null,
@@ -25685,7 +25882,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:10:40",
+              "maxprepsModifiedOn": "2026-11-18T17:48:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -25698,7 +25895,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "f0c04f05-0330-462e-b310-6689a4a3fb44"
@@ -27889,7 +28086,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:16:07",
+              "maxprepsModifiedOn": "2026-11-18T18:14:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27902,7 +28099,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "c04bf09f-0083-46f5-9a34-683119259a23"
@@ -28264,8 +28461,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-29",
-            "dateLocal": "2027-01-29T19:30:00",
-            "dateUtc": "2027-01-30T03:30:00Z",
+            "dateLocal": "2027-01-29T19:45:00",
+            "dateUtc": "2027-01-30T03:45:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -28285,7 +28482,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-03T01:44:17",
+              "maxprepsModifiedOn": "2026-11-18T20:29:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29752,7 +29949,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-15T14:58:05",
+              "maxprepsModifiedOn": "2026-11-18T18:01:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29765,7 +29962,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gamab3e4bbd4d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "7513a028-e2c1-435f-a37c-b8c8b773a902"
@@ -31088,7 +31285,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:22:34",
+              "maxprepsModifiedOn": "2026-11-18T18:14:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -31101,7 +31298,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam8246da70b8?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "38d86651-8d6e-47aa-8344-b4632cf7a0fe"
@@ -33107,7 +33304,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:23:58",
+              "maxprepsModifiedOn": "2026-11-18T17:48:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33120,7 +33317,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "10b0f151-f7ce-4df6-a05e-1eeab84723fb"
@@ -33899,7 +34096,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:25:47",
+              "maxprepsModifiedOn": "2026-11-18T18:08:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33912,7 +34109,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gambd4a74a10b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "c80f0fa4-f543-43ca-9fa7-ed871a475bf0"
@@ -34665,7 +34862,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:25:52",
+              "maxprepsModifiedOn": "2026-11-18T17:50:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34678,7 +34875,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gamb11e3a1be7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "3dab0ce8-afd3-40ed-8b65-9b0f5f71543e"
@@ -34962,7 +35159,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:25:48",
+              "maxprepsModifiedOn": "2026-11-18T18:15:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34975,7 +35172,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Senior Night"
+              "text": "Leland High School"
             }
           },
           "ref": "b69aa2be-1dfd-4acd-99c5-60d95bdacc1a"
@@ -35604,7 +35801,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-20T20:02:26",
+              "maxprepsModifiedOn": "2026-11-18T18:13:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35617,7 +35814,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gam1aafc599b3?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "1628937d-d95b-4364-b6b4-724ff0a7ca09"
@@ -36573,8 +36770,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-12",
-            "dateLocal": "2027-02-12T19:45:00",
-            "dateUtc": "2027-02-13T03:45:00Z",
+            "dateLocal": "2027-02-12T19:00:00",
+            "dateUtc": "2027-02-13T03:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -36594,7 +36791,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:26:54",
+              "maxprepsModifiedOn": "2026-11-18T20:29:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37179,7 +37376,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:27:04",
+              "maxprepsModifiedOn": "2026-11-18T18:04:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37192,7 +37389,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam60c36f68cf?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "5134a185-e8ba-428e-94f4-6b6f009d9e25"

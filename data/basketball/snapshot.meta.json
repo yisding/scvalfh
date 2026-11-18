@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "5d550d865d363cecfa98e7df132631d48ee19d55d0bc5d2750f636ec92a97e76",
+  "contentHash": "bae6b58dc65d44a6062d8561b7e0e44ea2106be96da955760e35d78d311d8821",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 293,
+        "games": 294,
         "leagueGames": 125,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 204,
+        "games": 207,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 455,
+    "games": 458,
     "leagueGames": 221,
     "mismatches": 0,
     "pending": 10,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-18T15:30:42.252Z",
+  "fetchedAt": "2026-11-18T22:33:41.115Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -91,7 +91,7 @@
     },
     {
       "label": "gunn schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -151,7 +151,7 @@
     },
     {
       "label": "santa-clara schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -161,7 +161,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -271,7 +271,7 @@
     },
     {
       "label": "leland schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -416,12 +416,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 478,
+      "rowCount": 494,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 40,
+      "rowCount": 41,
       "status": "ok"
     },
     {
@@ -436,7 +436,7 @@
     }
   ],
   "today": "2026-11-18",
-  "warnings": 13,
+  "warnings": 12,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:00:00",
