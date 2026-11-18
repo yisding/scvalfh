@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-17T22:30:24.713Z",
+  "fetchedAt": "2026-11-18T15:50:49.746Z",
   "fixtures": [
     {
       "claims": {
@@ -77502,7 +77502,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T01:15:08",
+              "maxprepsModifiedOn": "2026-11-18T03:33:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -80910,8 +80910,8 @@
             "away": {
               "city": "Folsom",
               "name": "Folsom",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 3,
               "slug": null,
               "teamId": "f609f271-97c9-4af9-bda1-b4250bb3f146"
             },
@@ -80933,13 +80933,13 @@
             "dateKey": "2026-11-17",
             "dateLocal": "2026-11-17T18:00:00",
             "dateUtc": "2026-11-18T02:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Archbishop Mitty",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 0,
               "slug": "mitty",
               "teamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969"
             },
@@ -80952,17 +80952,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T04:40:43",
+              "maxprepsModifiedOn": "2026-11-18T03:17:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7075143?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7075143?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/volleyball/match/archbishop-mitty-san-jose-vs-folsom/11-17-2026/?c=df01e58e-c538-45ca-8d66-293350db982f",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/cif/gam6241b98338?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/cif/gam6241b98338?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": null
