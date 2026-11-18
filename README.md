@@ -1654,6 +1654,34 @@ What the research did not reach, so that an absence here says little:
 after editing any of these files. A roster refetch that drops or respells a tied or committed player fails
 `pnpm test` and the build for this sport as it does for field hockey ("When a roster refetch breaks it").
 
+### Soccer and basketball: last season's commitments
+
+`data/soccer/prior-commits.json` and `data/basketball/prior-commits.json` hold which of the 2025-26 varsity
+juniors (class of 2027) and sophomores (class of 2028) a public page says have committed to, or signed with, a
+college team, in their own sport or any other. **Data only for now**: no page reads them, the soccer and
+basketball builds still render /commits as a 404, and `tests/prior-commits.test.ts` fails if anything under
+`app/` or `components/` names them. Last season's seniors are not included.
+
+They follow `data/commits.json`'s rules ("College commitments") and reuse its source, college and program shapes
+(`lib/players/prior-commits-schema.ts`), with these differences:
+
+- A commitment names its player by the registry's `playerId` ("The player registry"), with MaxPreps' `careerId`
+  checked against it, because these players are last season's rows, not this season's roster rows. `grade` is
+  the 2025-26 grade (10 or 11). A player the registry has never seen is named instead by `careerId` and
+  `seasonRoster` (the team's MaxPreps `…/25-26/roster/` page).
+- `joinPriorCommits` checks every commitment against the registry: the player exists, has a varsity stint in
+  the file's sport at that team in 2025-26 or 2026-27, is known under `fullName`, and agrees with `grade` (each
+  season's stint grade, the registry's class year and every class year a source states).
+- A program's level may also be `njcaa` or `cccaa` (two-year colleges), which `data/commits.json` does not take.
+
+Coverage, researched 2026-11-18 (the method is DATA-SOURCES §1.13): **soccer, 8 commitments**, all in soccer, at
+four schools. Saara Lahtela (Homestead) and Teagan Kaefer (Los Gatos) signed with Santa Clara, whose release of
+Nov 12, 2026 names both with their high schools. Abby Nelson (Los Gatos) committed to Cal, Avery Edson (Los Gatos)
+to Hawaii, Allison Park (Leland) to Illinois and Brooke Neschleba (Los Altos) to Brandeis, all high confidence.
+Kailani Bock (Leland) to UC San Diego and Isabella Cain (Los Gatos, class of 2028) to Princeton are medium: each
+rests on TopDrawerSoccer's commitment lists, matched by class year and hometown. **Basketball: none** among 216
+juniors, 64 sophomores and 7 ungraded rows. Recall is partial (each file's `notes` say where).
+
 ## Tests
 
 `pnpm test` runs the full Vitest suite: snapshot-schema validation, standings/tiebreak arithmetic

@@ -1,0 +1,445 @@
+{
+  "builtBy": "Research by hand, 2026-11-18, for the girls soccer build, over every 2025-26 varsity junior and sophomore (grades 11 and 10) on MaxPreps' 2025-26 roster pages and stat sheets for the 41 registry teams: name-by-name web searches for every sophomore and for all but 35 juniors (the session's web-search budget ran out), and, separately, TopDrawerSoccer's California class-of-2027 and class-of-2028 girls commitment lists read whole (349 players) and matched against every row; also the colleges' commitment tables on TopDrawerSoccer, SoccerWire's monthly commitment lists, PrepSoccer, MVLA's pages, school papers and the colleges' signing releases. Every quote was checked against its page as served or rendered that day.",
+  "capturedAt": "2026-11-18",
+  "season": "25-26",
+  "sport": "soccer",
+  "notes": [
+    "Players on the 2025-26 varsity teams who were juniors (class of 2027) or sophomores (class of 2028) that season, and whom a public page says have committed to, or signed with, a college team, in soccer or any other sport. The rules are data/commits.json's (README, \"College commitments\"); a player is named by the player registry's id, and grade is her 2025-26 grade. Last season's seniors are out of scope. Data only: no page reads this file yet.",
+    "Eight commitments, all in soccer, seven from the class of 2027 and one from 2028: Saara Lahtela (Homestead) and Teagan Kaefer (Los Gatos) signed with Santa Clara (its release of 2026-11-12 names both with their high schools); Abby Nelson (Los Gatos) to Cal, Avery Edson (Los Gatos) to Hawaii, Allison Park (Leland) to Illinois and Brooke Neschleba (Los Altos) to Brandeis, high confidence; Kailani Bock (Leland) to UC San Diego and Isabella Cain (Los Gatos, class of 2028) to Princeton, medium, each from TopDrawerSoccer's commitment lists matched by class year and hometown.",
+    "Recall is partial. The rows were 198 juniors and 166 sophomores (a few are one player under two spellings). 35 juniors got no name search once the session's web-search budget ran out (most of them at Del Mar, Fremont and James Lick), but every row was matched against TopDrawerSoccer's whole California class-of-2027 and class-of-2028 lists, which found Bock, Cain, Edson and Lahtela after the searches had not. calbears.com refused automated reads, so Cal's signing release of 2026-11-12 was not read and Nelson stays committed; Illinois' news feed could not be read either. The community colleges' athletics sites (PrestoSports) refused every read."
+  ],
+  "colleges": [
+    {
+      "slug": "santa-clara",
+      "name": "Santa Clara University",
+      "shortName": "Santa Clara",
+      "city": "Santa Clara",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "West Coast Conference",
+          "url": "https://santaclarabroncos.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): Santa Clara University, West Coast Conference."
+        },
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/12/womens-soccer-signs-seven-for-2027.aspx",
+          "what": "Santa Clara's release of 2026-11-12: 'Santa Clara women's soccer announced seven signees that will join the team for the 2027 season.'"
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "cal",
+      "name": "University of California, Berkeley",
+      "shortName": "Cal",
+      "city": "Berkeley",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Atlantic Coast Conference",
+          "url": "https://calbears.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): University of California, Berkeley, Atlantic Coast Conference."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "illinois",
+      "name": "University of Illinois Urbana-Champaign",
+      "shortName": "Illinois",
+      "city": "Champaign",
+      "state": "IL",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big Ten Conference",
+          "url": "https://fightingillini.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): University of Illinois Urbana-Champaign, Big Ten Conference."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "hawaii",
+      "name": "University of Hawaii at Manoa",
+      "shortName": "Hawaii",
+      "city": "Honolulu",
+      "state": "HI",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Mountain West Conference",
+          "url": "https://hawaiiathletics.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): University of Hawaii, Manoa, Mountain West Conference."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "uc-san-diego",
+      "name": "University of California, San Diego",
+      "shortName": "UC San Diego",
+      "city": "La Jolla",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "Big West Conference",
+          "url": "https://ucsdtritons.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): University of California, San Diego, Big West Conference."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "princeton",
+      "name": "Princeton University",
+      "shortName": "Princeton",
+      "city": "Princeton",
+      "state": "NJ",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d1",
+          "conference": "The Ivy League",
+          "url": "https://goprincetontigers.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=I&sportCode=WSO",
+          "what": "The NCAA directory's Division I women's soccer member list for 2026-27 (academicYear 2027): Princeton University, The Ivy League."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    },
+    {
+      "slug": "brandeis",
+      "name": "Brandeis University",
+      "shortName": "Brandeis",
+      "city": "Waltham",
+      "state": "MA",
+      "programs": [
+        {
+          "sport": "soccer",
+          "division": "ncaa-d3",
+          "conference": "University Athletic Association",
+          "url": "https://brandeisjudges.com/sports/womens-soccer"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://web3.ncaa.org/directory/api/directory/memberList?type=12&division=III&sportCode=WSO",
+          "what": "The NCAA directory's Division III women's soccer member list for 2026-27 (academicYear 2027): Brandeis University, University Athletic Association."
+        }
+      ],
+      "checkedOn": "2026-11-18"
+    }
+  ],
+  "commitments": [
+    {
+      "teamSlug": "homestead",
+      "playerId": "pac972543a4",
+      "careerId": "55p8pbbtem966",
+      "seasonRoster": null,
+      "fullName": "Saara Lahtela",
+      "grade": 11,
+      "college": "santa-clara",
+      "sport": "soccer",
+      "status": "signed",
+      "asOf": "2026-11-12",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/12/womens-soccer-signs-seven-for-2027.aspx",
+          "kind": "college",
+          "quote": "The Broncos will welcome Maci Barlow, Mara Gilpin, Emi Hugo, Teagan Kaefer, Saara Lahtela, Kathy Long Capell, and Kyky O'Connor.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "11/12/2026"
+        },
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/12/womens-soccer-signs-seven-for-2027.aspx",
+          "kind": "college",
+          "quote": "Saara Lahtela | 5-3 | Los Altos, Calif. | MVLA | Homestead HS",
+          "statedSchool": "Homestead HS",
+          "statedClassYear": null,
+          "sourceDate": "11/12/2026"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/saara-lahtela/pid-166446",
+          "kind": "other",
+          "quote": "Saara Lahtela Forward - Class of 2027 - Santa Clara",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Santa Clara's own signing release (2026-11-12) names her among seven 2027 signees with Homestead HS, her school, and says she was SCVAL MVP in 2024 at Homestead. TopDrawerSoccer's profile gives the class of 2027 (her 2025-26 grade 11)."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "playerId": "pefd33fd928",
+      "careerId": "blee4go7efvi2",
+      "seasonRoster": null,
+      "fullName": "Teagan Kaefer",
+      "grade": 11,
+      "college": "santa-clara",
+      "sport": "soccer",
+      "status": "signed",
+      "asOf": "2025-12-15",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/12/womens-soccer-signs-seven-for-2027.aspx",
+          "kind": "college",
+          "quote": "The Broncos will welcome Maci Barlow, Mara Gilpin, Emi Hugo, Teagan Kaefer, Saara Lahtela, Kathy Long Capell, and Kyky O'Connor.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "11/12/2026"
+        },
+        {
+          "url": "https://santaclarabroncos.com/news/2026/11/12/womens-soccer-signs-seven-for-2027.aspx",
+          "kind": "college",
+          "quote": "Teagan Kaefer | 5-6 | Los Gatos, Calif. | MVLA | Los Gatos HS",
+          "statedSchool": "Los Gatos HS",
+          "statedClassYear": null,
+          "sourceDate": "11/12/2026"
+        },
+        {
+          "url": "https://prepsoccer.com/2025/12/dominating-performance-by-los-gatos-forward-abby-nelson/",
+          "kind": "news",
+          "quote": "In this match, the key players for the Wildcats were Avery Edson , Teagan Kaefer , and Abby Nelson .  All three are early 2027 college commits, with Edson going to Hawaii, Kaefer to Santa Clara, and Nelson to Cal.",
+          "statedSchool": "Los Gatos",
+          "statedClassYear": 2027,
+          "sourceDate": "December 15, 2025"
+        }
+      ],
+      "basis": "Santa Clara's own signing release (2026-11-12) names her with Los Gatos HS. PrepSoccer's Los Gatos game story of 2025-12-15 (headline 'Dominating performance by Los Gatos forward – Abby Nelson') named her an early 2027 commit to Santa Clara, the earliest dated source."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "playerId": "pf1b8c66dac",
+      "careerId": "167jvd7po3o99",
+      "seasonRoster": null,
+      "fullName": "Abby Nelson",
+      "grade": 11,
+      "college": "cal",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2025-12-15",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepsoccer.com/2025/12/dominating-performance-by-los-gatos-forward-abby-nelson/",
+          "kind": "news",
+          "quote": "In this match, the key players for the Wildcats were Avery Edson , Teagan Kaefer , and Abby Nelson .  All three are early 2027 college commits, with Edson going to Hawaii, Kaefer to Santa Clara, and Nelson to Cal.",
+          "statedSchool": "Los Gatos",
+          "statedClassYear": 2027,
+          "sourceDate": "December 15, 2025"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/abby-nelson/pid-161919",
+          "kind": "other",
+          "quote": "High School: Los Gatos",
+          "statedSchool": "Los Gatos",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/california/clgid-265/tab-commitments",
+          "kind": "other",
+          "quote": "Abby Nelson 2027 D Los Gatos California De Anza Force SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "PrepSoccer's Los Gatos game story (2025-12-15) names her a 2027 commit to Cal; her TopDrawerSoccer profile ('Defender - Class of 2027 - California') gives Los Gatos as her high school, and Cal's commitments list there gives class 2027 and Los Gatos. Cal's 2026-11-12 signing release could not be read (calbears.com refuses automated reads), so she stays committed."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "playerId": "pcdb42fbf81",
+      "careerId": "ap2fvt9amlug0",
+      "seasonRoster": null,
+      "fullName": "Avery Edson",
+      "grade": 11,
+      "college": "hawaii",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2025-12-15",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepsoccer.com/2025/12/dominating-performance-by-los-gatos-forward-abby-nelson/",
+          "kind": "news",
+          "quote": "In this match, the key players for the Wildcats were Avery Edson , Teagan Kaefer , and Abby Nelson .  All three are early 2027 college commits, with Edson going to Hawaii, Kaefer to Santa Clara, and Nelson to Cal.",
+          "statedSchool": "Los Gatos",
+          "statedClassYear": 2027,
+          "sourceDate": "December 15, 2025"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/hawaii/clgid-335/tab-commitments",
+          "kind": "other",
+          "quote": "Avery Edson 2027 D Los Gatos California Mtn. View Los Altos SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "PrepSoccer's Los Gatos game story (2025-12-15) names her, as one of the Wildcats' key players, an early 2027 commit to Hawaii; Hawaii's commitments list on TopDrawerSoccer gives class 2027 and Los Gatos. Her TopDrawerSoccer profile gives no high school. No Hawaii signing release naming her was found in its women's soccer news feed on 2026-11-18."
+    },
+    {
+      "teamSlug": "leland",
+      "playerId": "pf31ccd98b9",
+      "careerId": "hsg53vcqb0hue",
+      "seasonRoster": null,
+      "fullName": "Allison Park",
+      "grade": 11,
+      "college": "illinois",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-02-03",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prepsoccer.com/2026/02/lelands-dramatic-win-comes-from-a-last-gasp-goal-in-90th-minute/",
+          "kind": "news",
+          "quote": "1. Allison Park - Midfielder - 2027 - High School: Leland, CA - Illinois Commit",
+          "statedSchool": "Leland",
+          "statedClassYear": 2027,
+          "sourceDate": "February 3, 2026"
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/illinois/clgid-225/tab-commitments",
+          "kind": "other",
+          "quote": "Allison Park 2027 F San Jose California Mtn. View Los Altos SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "PrepSoccer's Leland game story (2026-02-03) lists her as a 2027 Leland player and Illinois commit; Illinois' commitments list on TopDrawerSoccer gives class 2027 and San Jose, Leland's city. MVLA's coaches page also congratulates her on the commitment."
+    },
+    {
+      "teamSlug": "leland",
+      "playerId": "pe49008760e",
+      "careerId": "sm4motd8vutcc",
+      "seasonRoster": null,
+      "fullName": "Kailani Bock",
+      "grade": 11,
+      "college": "uc-san-diego",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college-soccer/college-soccer-details/women/uc-san-diego/clgid-592/tab-commitments",
+          "kind": "other",
+          "quote": "Kailani Bock 2027 D San Jose California Mtn. View Los Altos SC",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "One line on UC San Diego's commitments list on TopDrawerSoccer, matched by the class of 2027 (her 2025-26 grade 11) and the hometown San Jose, Leland's city; her TopDrawerSoccer profile gives no high school. Medium: a single self-reported list line, and it names MVLA where her NCSA and PrepSoccer pages name Santa Clara Sporting."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "playerId": "p92d1e4c0b7",
+      "careerId": "ao7df2ja59g55",
+      "seasonRoster": null,
+      "fullName": "Isabella Cain",
+      "grade": 10,
+      "college": "princeton",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.topdrawersoccer.com/college/conference/?genderId=&conferenceId=12&conferenceName=ivy-league&tab=commitments",
+          "kind": "other",
+          "quote": "Isabella Cain 2028 Los Gatos California",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.topdrawersoccer.com/club-player-profile/isabella-cain/pid-170312",
+          "kind": "other",
+          "quote": "Forward - Class of 2028 - Princeton",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "TopDrawerSoccer's Ivy League commitments list has her under Princeton with the class of 2028 (her 2025-26 grade 10) and the hometown Los Gatos, her school's town; her profile there agrees (club Los Gatos SC) but gives no high school. Medium: self-reported lines on one site. The registry also holds a 'Bella Cain' from Los Gatos' 2025-26 stat sheet with no career id, very likely the same player; it is not joined."
+    },
+    {
+      "teamSlug": "los-altos",
+      "playerId": "pf4a9caae28",
+      "careerId": "f1al2rmbi96sc",
+      "seasonRoster": null,
+      "fullName": "Brooke Neschleba",
+      "grade": 11,
+      "college": "brandeis",
+      "sport": "soccer",
+      "status": "committed",
+      "asOf": "2026-10-16",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://lahstalon.org/brooke-neschleba-gets-the-ball-rolling-with-brandeis-commitment/",
+          "kind": "news",
+          "quote": "Senior Brooke Neschleba shows off her Brandeis University gear to announce her commitment to Division III women’s soccer.",
+          "statedSchool": null,
+          "statedClassYear": null,
+          "sourceDate": "October 16, 2026"
+        },
+        {
+          "url": "https://lahstalon.org/brooke-neschleba-gets-the-ball-rolling-with-brandeis-commitment/",
+          "kind": "news",
+          "quote": "After four years of playing for Los Altos, Brooke is ready to take the same energy and work ethic with her to Brandeis.",
+          "statedSchool": "Los Altos",
+          "statedClassYear": null,
+          "sourceDate": "October 16, 2026"
+        }
+      ],
+      "basis": "The Talon, Los Altos High School's student paper (2026-10-16), names her as a senior on the Los Altos varsity committed to Brandeis women's soccer; senior in 2026-27 is her 2025-26 grade 11. MVLA's alumni page also lists her Brandeis commitment."
+    }
+  ]
+}
