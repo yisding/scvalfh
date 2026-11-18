@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-18T15:50:49.746Z",
+  "fetchedAt": "2026-11-18T22:09:06.142Z",
   "fixtures": [
     {
       "claims": {
@@ -64229,7 +64229,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T17:22:05",
+              "maxprepsModifiedOn": "2026-11-18T17:50:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -64242,7 +64242,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "82eed5de-4d1c-48a3-bf6f-f4b5a077cd45"
@@ -69105,7 +69105,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-23T06:36:16",
+              "maxprepsModifiedOn": "2026-11-18T17:51:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -69118,7 +69118,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "b46b18e4-76fd-4efa-8c28-bc61b494c244"
@@ -74352,7 +74352,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-28T04:40:21",
+              "maxprepsModifiedOn": "2026-11-18T17:51:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -74365,7 +74365,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/santa-teresa-high-school-san-jose-ca/gam34ffc2abab?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "2db7be4d-6612-4e27-968e-8345d62e7918"
@@ -75111,7 +75111,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T17:54:13",
+              "maxprepsModifiedOn": "2026-11-18T19:16:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -75124,7 +75124,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/sacred-heart-preparatory-atherton-ca/gam981b52c3b3?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": "Senior Night"
+              "text": "Sacred Heart Prep"
             }
           },
           "ref": "6975f792-7f2f-478b-8b8f-fd0d8faca744"
@@ -75243,7 +75243,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-28T20:07:26",
+              "maxprepsModifiedOn": "2026-11-18T17:50:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -75256,7 +75256,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamfa6a4ba3f4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "8ea4ede0-2766-451b-a628-b02fc7a89288"
@@ -76183,12 +76183,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Jose",
-              "name": "Leland",
-              "result": "W",
-              "score": 3,
-              "slug": "leland",
-              "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
+              "city": "Morgan Hill",
+              "name": "Ann Sobrato",
+              "result": "L",
+              "score": 0,
+              "slug": "sobrato",
+              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
             },
             "bracket": {
               "bracketId": "59497b99-91cd-414a-a168-5c99c0854b41",
@@ -76211,12 +76211,12 @@
             "decider": "REG",
             "forfeitBy": null,
             "home": {
-              "city": "Morgan Hill",
-              "name": "Ann Sobrato",
-              "result": "L",
-              "score": 0,
-              "slug": "sobrato",
-              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
+              "city": "San Jose",
+              "name": "Leland",
+              "result": "W",
+              "score": 3,
+              "slug": "leland",
+              "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -76227,12 +76227,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:27:13",
+              "maxprepsModifiedOn": "2026-11-18T17:50:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7014891?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
@@ -76633,12 +76633,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Belmont",
-              "name": "Carlmont",
-              "result": "W",
-              "score": 3,
-              "slug": null,
-              "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": "L",
+              "score": 2,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
             },
             "bracket": {
               "bracketId": "385934f0-4cae-4c82-afdb-d089823982f4",
@@ -76661,12 +76661,12 @@
             "decider": "REG",
             "forfeitBy": null,
             "home": {
-              "city": "San Jose",
-              "name": "Silver Creek",
-              "result": "L",
-              "score": 2,
-              "slug": "silver-creek",
-              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+              "city": "Belmont",
+              "name": "Carlmont",
+              "result": "W",
+              "score": 3,
+              "slug": null,
+              "teamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -76677,12 +76677,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-01T04:39:07",
+              "maxprepsModifiedOn": "2026-11-18T21:31:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "final",
             "urls": {
               "goFan": "https://gofan.co/event/7014885?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
@@ -76752,7 +76752,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T00:56:17",
+              "maxprepsModifiedOn": "2026-11-18T17:50:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -79183,12 +79183,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Salinas",
-              "name": "Palma",
-              "result": "W",
-              "score": 3,
-              "slug": null,
-              "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
+              "city": "Palo Alto",
+              "name": "Castilleja",
+              "result": "L",
+              "score": 0,
+              "slug": "castilleja",
+              "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
             },
             "bracket": {
               "bracketId": "8ea57d2f-38f6-4bc7-8cb0-175f7f63354e",
@@ -79211,12 +79211,12 @@
             "decider": "REG",
             "forfeitBy": null,
             "home": {
-              "city": "Palo Alto",
-              "name": "Castilleja",
-              "result": "L",
-              "score": 0,
-              "slug": "castilleja",
-              "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
+              "city": "Salinas",
+              "name": "Palma",
+              "result": "W",
+              "score": 3,
+              "slug": null,
+              "teamId": "84efa0b6-81c1-4c6b-9546-f538cc132645"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -79227,12 +79227,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T21:32:33",
+              "maxprepsModifiedOn": "2026-11-18T17:51:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "final",
             "urls": {
               "goFan": null,
