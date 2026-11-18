@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "423fc75d4f6493b740791a18fb3e74047783b890146d2e9e09e8bc990746bb45",
+  "contentHash": "dbc5ba24e46fc7346a3f811f7c6bb5d7adfd3b7fbc4b9edb0952464e1250a74c",
   "counts": {
     "byLeague": {
       "bval": {
@@ -89,13 +89,13 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 108,
+    "agreements": 106,
     "backfilled": 3,
-    "compared": 135,
+    "compared": 130,
     "conflicts": 2,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-17T21:58:04.763Z",
+  "fetchedAt": "2026-11-18T13:40:02.087Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -189,11 +189,11 @@
     }
   ],
   "officialFixturesUnmatched": 1,
-  "officialStandingsPdfUrl": null,
+  "officialStandingsPdfUrl": "https://www.scval.com/standings/26-27%20SCVAL%20Field%20Hockey%20Standings.pdf",
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 16
+    "sblive": 15
   },
   "sources": [
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-11-03",
-      "rowCount": 2,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-11-04",
       "rowCount": 3,
       "status": "ok"
@@ -948,7 +943,7 @@
     },
     {
       "label": "sblive scoreboard 2026-11-14",
-      "rowCount": 4,
+      "rowCount": 2,
       "status": "ok"
     },
     {
@@ -988,7 +983,7 @@
     },
     {
       "label": "sblive santa-catalina games",
-      "rowCount": 12,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -1057,7 +1052,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-17",
+  "today": "2026-11-18",
   "warnings": 40,
   "window": {
     "firstGame": "2026-08-13T19:00:00",
