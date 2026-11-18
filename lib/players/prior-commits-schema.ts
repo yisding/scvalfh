@@ -26,7 +26,7 @@
  *      for every record, quotes of 1-300 characters, `asOf` a day, month or year): the shared pieces
  *      of lib/players/commits-schema.ts
  *   9. the join (joinPriorCommits), against the registry: a player named by `careerId` and `seasonRoster`
- *      (no `playerId`) is one the registry does not know, on a MaxPreps roster page of the season; any
+ *      (no `playerId`) is one the registry does not know, on its team's MaxPreps roster page of the season; any
  *      other exists in the registry (by id or a former id),
  *      has a varsity stint in the file's sport at `teamSlug` in the file's season or the next, is
  *      known under `fullName`, carries `careerId` when one is given, and agrees with `grade` (the
@@ -115,7 +115,10 @@ const PriorCommitsFileObject = z.object({
   builtBy: text,
   capturedAt: calendarDateKey,
   /** The season the players played ("25-26"): data/<sport>/prior-players.json's. */
-  season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 25-26'),
+  season: z
+    .string()
+    .regex(/^\d{2}-\d{2}$/, 'expected a season like 25-26')
+    .refine((v) => (Number(v.slice(0, 2)) + 1) % 100 === Number(v.slice(3)), 'a season runs over two consecutive years'),
   sport: z.enum(PRIOR_COMMIT_FILE_SPORTS),
   notes: z.array(text),
   colleges: z.array(PriorCollegeSchema),
@@ -154,7 +157,8 @@ function checkPriorCommitsFile(f: z.infer<typeof PriorCommitsFileObject>, ctx: C
     if (c.asOf !== null && c.asOf > f.capturedAt.slice(0, c.asOf.length)) {
       issue(ctx, ['commitments', i, 'asOf'], `${c.asOf} is after the research date ${f.capturedAt}`);
     }
-    const key = c.playerId ?? `${c.teamSlug} career ${c.careerId}`;
+    // A player outside the registry is one career, whatever team the record names.
+    const key = c.playerId ?? `career ${c.careerId}`;
     if (players.has(key)) issue(ctx, ['commitments', i], `a second commitment for ${c.fullName}: a player has one`);
     players.add(key);
   });
@@ -196,8 +200,16 @@ export function priorClassOf(season: string, grade: number): number {
  * Invariant 9: every commitment joins to the registry. Throws on the first failure, as
  * `prior-commits: <team> / <player> (<college>): <what>`; returns each commitment's registry record id
  * (the current one, when the file names a former id), for the commitments that name one.
+ *
+ * `teamPages` maps each tracked team of the file's sport to its MaxPreps team page for the current
+ * season (data/<sport>/rosters.json's `rosterUrl` without `roster/`): every commitment's team must be
+ * one, and a `seasonRoster` must be that team's page for the file's season (`<team page><season>/roster/`).
  */
-export function joinPriorCommits(file: PriorCommitsFile, registry: PlayersFile): Map<string, string> {
+export function joinPriorCommits(
+  file: PriorCommitsFile,
+  registry: PlayersFile,
+  teamPages: ReadonlyMap<string, string>,
+): Map<string, string> {
   const byId = new Map<string, PlayersFile['players'][number]>();
   for (const p of registry.players) {
     byId.set(p.id, p);
@@ -205,10 +217,12 @@ export function joinPriorCommits(file: PriorCommitsFile, registry: PlayersFile):
   }
   const next = nextSeasonYear(file.season);
   const joined = new Map<string, string>();
+  const current = new Set<string>();
   for (const c of file.commitments) {
     const fail = (what: string): never => {
       throw new Error(`prior-commits: ${c.teamSlug} / ${c.fullName} (${c.college}): ${what}`);
     };
+    const teamPage = teamPages.get(c.teamSlug) ?? fail(`${c.teamSlug} is not a tracked ${file.sport} team`);
     const cls = priorClassOf(file.season, c.grade);
     for (const s of c.sources) {
       if (s.statedClassYear !== null && s.statedClassYear !== cls) {
@@ -220,10 +234,8 @@ export function joinPriorCommits(file: PriorCommitsFile, registry: PlayersFile):
       // commitment names its id like every other.
       const known = registry.players.find((p) => p.identifiers.some((i) => i.kind === 'maxpreps-career' && i.careerId === c.careerId));
       if (known) fail(`the registry knows career ${c.careerId} as ${known.id}: name the player by playerId`);
-      const roster = new URL(c.seasonRoster!);
-      if (roster.hostname !== 'www.maxpreps.com' || !roster.pathname.endsWith(`/${file.season}/roster/`)) {
-        fail(`seasonRoster is not a MaxPreps ${file.season} roster page`);
-      }
+      const expected = `${teamPage.replace(/\/*$/, '/')}${file.season}/roster/`;
+      if (c.seasonRoster !== expected) fail(`seasonRoster is not ${c.teamSlug}'s ${file.season} roster page (${expected})`);
       continue;
     }
     const p = byId.get(c.playerId) ?? fail(`${c.playerId} is not a player in the registry`);
@@ -238,6 +250,9 @@ export function joinPriorCommits(file: PriorCommitsFile, registry: PlayersFile):
     if (then && then.grade !== null && then.grade !== c.grade) fail(`the registry has grade ${then.grade} in ${file.season}`);
     if (now && now.grade !== null && now.grade !== c.grade + 1) fail(`the registry has grade ${now.grade} in ${next}`);
     if (p.classOf !== null && p.classOf !== cls) fail(`the registry has class of ${p.classOf}, grade ${c.grade} is ${cls}`);
+    // A former id and the current one are one player: a second commitment for either is refused.
+    if (current.has(p.id)) fail(`a second commitment for registry player ${p.id}: a player has one`);
+    current.add(p.id);
     joined.set(c.playerId, p.id);
   }
   return joined;

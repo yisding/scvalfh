@@ -1,6 +1,6 @@
 /**
- * data/soccer/prior-commits.json and data/basketball/prior-commits.json: last season's juniors and
- * seniors who a public page says committed to a college team. Each committed file validates
+ * data/soccer/prior-commits.json and data/basketball/prior-commits.json: last season's sophomores and
+ * juniors who a public page says committed to a college team. Each committed file validates
  * (lib/players/prior-commits-schema.ts) and joins to the player registry; a bad file, built in memory,
  * is refused with a message that names what is wrong; and no page reads the files yet.
  */
@@ -20,11 +20,19 @@ import {
   priorClassOf,
   type PriorCommitsFile,
 } from '../lib/players/prior-commits-schema';
-import { readPlayersFile, sportDataDir } from '../lib/players/registry-file';
+import { PLAYERS_FILE, sportDataDir } from '../lib/players/registry-file';
 import type { PlayersFile } from '../lib/players/registry-schema';
 
-const registry = readPlayersFile(ROOT) as PlayersFile;
 const readJson = (rel: string): unknown => JSON.parse(readFileSync(path.join(ROOT, rel), 'utf8'));
+// Read as plain JSON: tests/players-registry.test.ts validates the registry, and a second Zod parse of
+// it in a parallel worker costs memory the suite does not need to spend.
+const registry = readJson(PLAYERS_FILE) as PlayersFile;
+
+/** Each tracked team's MaxPreps team page for the current season: rosters.json's `rosterUrl` without `roster/`. */
+function teamPages(sport: string): Map<string, string> {
+  const rosters = readJson(`data/${sport}/rosters.json`) as { teams: Array<{ slug: string; rosterUrl: string | null }> };
+  return new Map(rosters.teams.flatMap((t) => (t.rosterUrl ? [[t.slug, t.rosterUrl.replace(/roster\/$/, '')] as [string, string]] : [])));
+}
 
 describe('prior-commits files', () => {
   for (const sport of PRIOR_COMMIT_FILE_SPORTS) {
@@ -40,7 +48,7 @@ describe('prior-commits files', () => {
 
     it(`${rel} joins to the registry under current ids`, () => {
       const file = PriorCommitsFileSchema.parse(raw);
-      const joined = joinPriorCommits(file, registry);
+      const joined = joinPriorCommits(file, registry, teamPages(sport));
       expect(joined.size).toBe(file.commitments.filter((c) => c.playerId !== null).length);
       // A merge in the registry retires an id: re-stamp the file rather than lean on formerIds.
       for (const [id, current] of joined) expect(current, `${rel}: ${id} is a former id`).toBe(id);
@@ -121,7 +129,11 @@ function goodFile(): PriorCommitsFile {
   };
 }
 
-const join = (f: PriorCommitsFile) => joinPriorCommits(PriorCommitsFileSchema.parse(f), registry);
+const BASKETBALL_PAGES = teamPages('basketball');
+const join = (f: PriorCommitsFile, reg: PlayersFile = registry) => joinPriorCommits(PriorCommitsFileSchema.parse(f), reg, BASKETBALL_PAGES);
+/** A team's own 2025-26 roster page, as a `seasonRoster` must be. */
+const seasonRoster = (team: string) => `${BASKETBALL_PAGES.get(team)!}25-26/roster/`;
+
 
 describe('prior-commits checks', () => {
   it('a good file joins, a two-year college included', () => {
@@ -158,6 +170,9 @@ describe('prior-commits checks', () => {
     const a = goodFile();
     a.commitments[0].teamSlug = a.commitments[0].teamSlug === 'gunn' ? 'palo-alto' : 'gunn';
     expect(() => join(a)).toThrow(/no basketball varsity stint/);
+    const untracked = goodFile();
+    untracked.commitments[0].teamSlug = 'no-such-school';
+    expect(() => join(untracked)).toThrow(/is not a tracked basketball team/);
     const b = goodFile();
     b.commitments[0].fullName = 'Somebody Else';
     expect(() => join(b)).toThrow(/knows this player as/);
@@ -168,20 +183,49 @@ describe('prior-commits checks', () => {
 
   it('takes a player the registry does not know only by career id and the season\'s roster page', () => {
     const f = goodFile();
-    Object.assign(f.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz', seasonRoster: 'https://www.maxpreps.com/ca/town/school-mascots/basketball/25-26/roster/' });
+    const team = f.commitments[0].teamSlug;
+    const other = [...BASKETBALL_PAGES.keys()].find((t) => t !== team)!;
+    Object.assign(f.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz', seasonRoster: seasonRoster(team) });
     expect(join(f).size).toBe(0);
     const known = goodFile();
-    Object.assign(known.commitments[0], { playerId: null, seasonRoster: 'https://www.maxpreps.com/ca/town/school-mascots/basketball/25-26/roster/' });
+    Object.assign(known.commitments[0], { playerId: null, seasonRoster: seasonRoster(team) });
     expect(() => join(known)).toThrow(/name the player by playerId/);
+    const otherTeam = goodFile();
+    Object.assign(otherTeam.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz', seasonRoster: seasonRoster(other) });
+    expect(() => join(otherTeam)).toThrow(/is not .*'s 25-26 roster page/);
     const page = goodFile();
-    Object.assign(page.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz', seasonRoster: 'https://www.maxpreps.com/ca/town/school-mascots/basketball/roster/' });
-    expect(() => join(page)).toThrow(/not a MaxPreps 25-26 roster page/);
+    Object.assign(page.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz', seasonRoster: `${BASKETBALL_PAGES.get(team)!}roster/` });
+    expect(() => join(page)).toThrow(/is not .*'s 25-26 roster page/);
     const bare = goodFile();
     Object.assign(bare.commitments[0], { playerId: null, careerId: 'zzzzzzzzzzzzz' });
     expect(PriorCommitsFileSchema.safeParse(bare).success).toBe(false);
     const both = goodFile();
-    both.commitments[0].seasonRoster = 'https://www.maxpreps.com/ca/town/school-mascots/basketball/25-26/roster/';
+    both.commitments[0].seasonRoster = seasonRoster(team);
     expect(PriorCommitsFileSchema.safeParse(both).success).toBe(false);
+  });
+
+  it('refuses one player twice: under a former id and the current one, or one career at two teams', () => {
+    const f = goodFile();
+    const id = f.commitments[0].playerId!;
+    const reg: PlayersFile = {
+      ...registry,
+      players: registry.players.map((p) => (p.id === id ? { ...p, formerIds: [...p.formerIds, 'p00000000ff'] } : p)),
+    };
+    f.commitments.push({ ...f.commitments[0], playerId: 'p00000000ff' });
+    expect(() => join(f, reg)).toThrow(/a second commitment for registry player/);
+    const g = goodFile();
+    const [team, other] = [g.commitments[0].teamSlug, [...BASKETBALL_PAGES.keys()].find((t) => t !== g.commitments[0].teamSlug)!];
+    const unknown = { ...g.commitments[0], playerId: null, careerId: 'zzzzzzzzzzzzz' };
+    g.commitments = [
+      { ...unknown, seasonRoster: seasonRoster(team) },
+      { ...unknown, teamSlug: other, seasonRoster: seasonRoster(other) },
+    ];
+    expect(PriorCommitsFileSchema.safeParse(g).success).toBe(false);
+  });
+
+  it('refuses a season that is not two consecutive years', () => {
+    expect(PriorCommitsFileSchema.safeParse({ ...goodFile(), season: '25-27' }).success).toBe(false);
+    expect(PriorCommitsFileSchema.safeParse({ ...goodFile(), season: '99-00' }).success).toBe(true);
   });
 
   it('refuses a second commitment for one player, a college nobody committed to and a date after the research', () => {
