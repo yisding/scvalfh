@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-18T13:40:02.087Z",
+  "fetchedAt": "2026-11-18T21:40:54.777Z",
   "fixtures": [
     {
       "claims": {
@@ -11796,7 +11796,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6541425"
                   },
-                  "fetchedAt": "2026-11-18T13:40:02.087Z",
+                  "fetchedAt": "2026-11-18T21:40:54.777Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -47882,7 +47882,7 @@
       "id": "2026-10-13-cupertino-at-homestead",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-13-cupertino-at-homestead"
         }
       ]
@@ -50167,7 +50167,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6543418"
                   },
-                  "fetchedAt": "2026-11-18T13:40:02.087Z",
+                  "fetchedAt": "2026-11-18T21:40:54.777Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -50613,7 +50613,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-21T02:58:30",
+              "maxprepsModifiedOn": "2026-11-18T19:24:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -50626,7 +50626,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Tamalpais High School"
             }
           },
           "ref": "5bb5e969-9357-4350-b6ff-77e9a110e618"
@@ -50836,7 +50836,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-27T19:17:59",
+              "maxprepsModifiedOn": "2026-11-18T17:48:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -50849,7 +50849,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b"
@@ -51580,7 +51580,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-24T00:36:15",
+              "maxprepsModifiedOn": "2026-11-18T17:48:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -51593,7 +51593,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/university-city-high-school-san-diego-ca/game7da000679?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "University City High School"
             }
           },
           "ref": "a6bb798f-8cd2-40bf-b44d-b3da20800661"
@@ -51894,7 +51894,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-28T17:12:35",
+              "maxprepsModifiedOn": "2026-11-18T17:48:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -51907,7 +51907,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "San Dieguito Academy"
             }
           },
           "ref": "6bcd5428-2f38-41c9-b8fc-e2894d1700bc"
@@ -53866,7 +53866,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-19T19:18:40",
+              "maxprepsModifiedOn": "2026-11-18T17:48:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -53879,7 +53879,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "The Bishop's School"
             }
           },
           "ref": "dc9d7b86-4df9-49aa-a5f8-5feff60df69b"
@@ -57384,8 +57384,8 @@
             },
             "contestId": "404d13f2-1990-4ef8-8e89-813f8b9f8cc5",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2026-10-20",
@@ -57403,14 +57403,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "city-eastern",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T02:01:17",
+              "maxprepsModifiedOn": "2026-11-18T17:48:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -57423,7 +57423,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/university-city-high-school-san-diego-ca/gamaa1ea3fa98?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "University City High School"
             }
           },
           "ref": "404d13f2-1990-4ef8-8e89-813f8b9f8cc5"
@@ -58245,7 +58245,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-27T19:20:32",
+              "maxprepsModifiedOn": "2026-11-18T17:48:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -58258,7 +58258,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "9a442cc6-dbbb-4fa6-838c-84af4eddf29c"
@@ -59005,7 +59005,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-23T17:10:22",
+              "maxprepsModifiedOn": "2026-11-18T15:35:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -59018,7 +59018,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/helix-charter-high-school-la-mesa-ca/gam81d9a22e01?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "Helix Charter School"
             }
           },
           "ref": "20b92fa1-d864-445f-a4a2-cf33dafe69bb"
@@ -60500,7 +60500,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-08T21:39:26",
+              "maxprepsModifiedOn": "2026-11-18T17:48:42",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -60513,7 +60513,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/university-city-high-school-san-diego-ca/gam58b0e0225f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "University City High School"
             }
           },
           "ref": "4c4699b1-eaf0-42c3-a33b-807a96786697"
@@ -62726,7 +62726,7 @@
                     "sbliveGameId": "6906776"
                   },
                   "contentChangedAt": "2026-10-27T10:08:16.816Z",
-                  "fetchedAt": "2026-11-18T13:40:02.087Z",
+                  "fetchedAt": "2026-11-18T21:40:54.777Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -63414,8 +63414,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-10-27",
-            "dateLocal": "2026-10-27T16:00:00",
-            "dateUtc": "2026-10-27T23:00:00Z",
+            "dateLocal": "2026-10-27T18:00:00",
+            "dateUtc": "2026-10-28T01:00:00Z",
             "decider": "REG",
             "forfeitBy": null,
             "home": {
@@ -63435,7 +63435,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-14T23:08:18",
+              "maxprepsModifiedOn": "2026-11-18T17:48:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -63448,7 +63448,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/university-city-high-school-san-diego-ca/gamdddceb9853?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "University City High School"
             }
           },
           "ref": "71de3d77-1334-4676-9cb2-d1f12bbb6451"
@@ -66327,7 +66327,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-30T04:05:54",
+              "maxprepsModifiedOn": "2026-11-18T17:49:02",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -66340,7 +66340,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/la-jolla-high-school-la-jolla-ca/gama0b95c47d1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
-              "text": null
+              "text": "La Jolla HS"
             }
           },
           "ref": "5dfe174f-e53c-4e13-86de-3fb3459abe4e"
@@ -66630,7 +66630,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-03T05:55:17",
+              "maxprepsModifiedOn": "2026-11-18T17:48:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -66643,7 +66643,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "a2848275-4d03-4329-9182-057448b38852"
@@ -67090,7 +67090,7 @@
       "id": "2026-10-29-newport-harbor-at-edison",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-29-newport-harbor-at-edison"
         }
       ]
@@ -68712,7 +68712,7 @@
       "id": "2026-10-30-valley-center-at-poway",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-30-valley-center-at-poway"
         }
       ]
@@ -68745,7 +68745,7 @@
       "id": "2026-10-31-bella-vista-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-31-bella-vista-at-davis"
         }
       ]
@@ -68778,7 +68778,7 @@
       "id": "2026-10-31-bella-vista-at-lassen",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-31-bella-vista-at-lassen"
         }
       ]
@@ -68877,7 +68877,7 @@
       "id": "2026-10-31-chico-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-31-chico-at-davis"
         }
       ]
@@ -68999,7 +68999,7 @@
       "id": "2026-10-31-corning-at-chico",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-31-corning-at-chico"
         }
       ]
@@ -69031,7 +69031,7 @@
       "id": "2026-10-31-lassen-at-corning",
       "published": [
         {
-          "builtAt": "2026-11-18T13:40:02.087Z",
+          "builtAt": "2026-11-18T21:40:54.777Z",
           "contestId": "official:2026-10-31-lassen-at-corning"
         }
       ]
@@ -69460,7 +69460,7 @@
           "published": {
             "contestId": "cifsds:mira-mesa-at-san-pasqual",
             "dateLocal": "2026-11-04T18:00:00",
-            "fetchedAt": "2026-11-18T13:40:02.087Z"
+            "fetchedAt": "2026-11-18T21:40:54.777Z"
           },
           "ref": "division-2:mira-mesa~san-pasqual",
           "result": {
@@ -69763,8 +69763,8 @@
             },
             "contestId": "31085be4-461d-44f4-a0b4-b3103b0f5995",
             "contestTypes": {
-              "away": 4,
-              "home": 4
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2026-11-05",
@@ -69789,7 +69789,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T20:30:04",
+              "maxprepsModifiedOn": "2026-11-18T17:48:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -69802,7 +69802,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "CIF Quarterfinal"
+              "text": "The Bishop's School"
             }
           },
           "ref": "31085be4-461d-44f4-a0b4-b3103b0f5995"
@@ -70152,7 +70152,7 @@
           "published": {
             "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
             "dateLocal": "2026-11-06T17:00:00",
-            "fetchedAt": "2026-11-18T13:40:02.087Z"
+            "fetchedAt": "2026-11-18T21:40:54.777Z"
           },
           "ref": "division-1:rancho-bernardo~san-dieguito-academy",
           "result": {
@@ -71996,7 +71996,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T16:41:12",
+              "maxprepsModifiedOn": "2026-11-18T14:23:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
