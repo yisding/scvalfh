@@ -1,9 +1,13 @@
 {
-  "builtBy": "placeholder",
+  "builtBy": "Research by hand, 2026-11-18, for the boys basketball build: name-by-name web searches for every 2025-26 varsity junior and sophomore (grades 11 and 10) on MaxPreps' 2025-26 roster pages and stat sheets for the 41 registry teams, school-by-school signing-day and recruiting searches, Prep Hoops, Cal-Hi Sports and On3 class lists and offer pages, NCSA and SportsRecruits searches, and school and local papers.",
   "capturedAt": "2026-11-18",
   "season": "25-26",
   "sport": "basketball",
-  "notes": [],
+  "notes": [
+    "Players on the 2025-26 varsity teams who were juniors (class of 2027) or sophomores (class of 2028) that season, and whom a public page says have committed to, or signed with, a college team, in basketball or any other sport. The rules are data/commits.json's (README, \"College commitments\"). Last season's seniors are out of scope. Data only: no page reads this file yet.",
+    "No commitment was found: none of the 216 juniors, 64 sophomores and 7 ungraded Gunn rows had a page naming a college commitment that meets the rule. Near misses were game stories, all-league lists and same-name players elsewhere.",
+    "Recall is partial. Every row got at least one name search, but most of these players have no web presence beyond MaxPreps; Prep Hoops' and Cal-Hi Sports' 2027 and 2028 lists are behind a paywall; and the community colleges' athletics sites (PrestoSports) refused every read."
+  ],
   "colleges": [],
   "commitments": []
 }

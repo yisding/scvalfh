@@ -11,11 +11,11 @@
  *     the player registry's id (data/players.json, `playerId`), which outlasts MaxPreps' per-season
  *     athlete ids and is the one key that follows a player from last season's rows into this season's.
  *     `grade` is the player's 2025-26 grade (10 or 11), so the class is 2028 or 2027.
- *   - The colleges include two-year colleges: last season's seniors are college freshmen now, and many
- *     of them play at a California community college (CCCAA) or a junior college (NJCAA). Their levels
- *     are PRIOR_COLLEGE_DIVISIONS; data/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
- *   - A college's own roster page listing the player is a source of status `signed` (the player is on
- *     the team).
+ *   - A program may be at a two-year college: a California community college (CCCAA) or a junior
+ *     college (NJCAA), where many of these schools' players go on to play. Their levels are
+ *     PRIOR_COLLEGE_DIVISIONS; data/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
+ *   - A player the registry has never seen (on a team whose 2025-26 stat sheet MaxPreps does not have,
+ *     and on no roster since) is named by `careerId` and the season's MaxPreps roster page instead.
  *
  * Invariants (the file-level ones are checkPriorCommitsFile, the join is joinPriorCommits):
  *   1. college slugs are unique, and a college has at most one program per sport
