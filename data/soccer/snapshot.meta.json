@@ -7,28 +7,28 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "e31d28a0f19590a47f66dacfd34230ab6be2deb8a151a05c1854a1645ae78ecb",
+  "contentHash": "12c2d40afe7c8aa429fa4077537969aef0e2c2c4b6ae7667629159e2f4f18b52",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 215,
-        "leagueGames": 148,
+        "games": 216,
+        "leagueGames": 149,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 157,
-        "leagueGames": 84,
+        "games": 158,
+        "leagueGames": 85,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 73,
-        "leagueGames": 17,
+        "games": 74,
+        "leagueGames": 18,
         "teams": 13
       },
       "wcal": {
@@ -40,14 +40,14 @@
       }
     },
     "finals": 0,
-    "games": 440,
-    "leagueGames": 267,
+    "games": 443,
+    "leagueGames": 270,
     "mismatches": 0,
-    "pending": 0,
+    "pending": 1,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-17T22:36:25.106Z",
+  "fetchedAt": "2026-11-18T14:29:20.882Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 68,
+  "officialFixturesUnmatched": 66,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -156,7 +156,7 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -176,7 +176,7 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -271,7 +271,7 @@
     },
     {
       "label": "pioneer schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -301,7 +301,7 @@
     },
     {
       "label": "live-oak schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -356,12 +356,12 @@
     },
     {
       "label": "overfelt schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
       "label": "prospect schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -481,12 +481,12 @@
     },
     {
       "label": "menlo schedule",
-      "rowCount": 3,
+      "rowCount": 4,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 3,
+      "rowCount": 4,
       "status": "ok"
     },
     {
@@ -551,12 +551,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 108,
+      "rowCount": 155,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 7,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -570,10 +570,10 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-17",
-  "warnings": 27,
+  "today": "2026-11-18",
+  "warnings": 26,
   "window": {
-    "firstGame": "2026-11-19T19:00:00",
+    "firstGame": "2026-11-17T19:00:00",
     "lastGame": "2027-02-17T18:00:00",
     "lastLeagueGame": "2027-02-17T18:00:00"
   }
