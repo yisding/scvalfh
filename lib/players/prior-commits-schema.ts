@@ -1,6 +1,6 @@
 /**
  * The Zod contract for data/soccer/prior-commits.json and data/basketball/prior-commits.json: which of
- * LAST season's (2025-26) varsity juniors and seniors a public page says have committed to, signed with
+ * LAST season's (2025-26) varsity sophomores and juniors a public page says have committed to, signed with
  * or joined a college team, in their own sport or any other, and those colleges.
  *
  * Data only, for now: no page reads these files (tests/prior-commits.test.ts holds that nothing under
@@ -9,8 +9,8 @@
  *
  *   - The players are last season's, not this season's roster rows. A commitment names its player by
  *     the player registry's id (data/players.json, `playerId`), which outlasts MaxPreps' per-season
- *     athlete ids and is the one key that reaches last season's seniors, who are on no current roster.
- *     `grade` is the player's 2025-26 grade (11 or 12), so the class is 2027 or 2026.
+ *     athlete ids and is the one key that follows a player from last season's rows into this season's.
+ *     `grade` is the player's 2025-26 grade (10 or 11), so the class is 2028 or 2027.
  *   - The colleges include two-year colleges: last season's seniors are college freshmen now, and many
  *     of them play at a California community college (CCCAA) or a junior college (NJCAA). Their levels
  *     are PRIOR_COLLEGE_DIVISIONS; data/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
@@ -92,8 +92,8 @@ export const PriorCommitmentSchema = z.object({
   seasonRoster: sourceUrl.nullable(),
   /** As the registry knows the player (one of its `names`). */
   fullName: text,
-  /** The player's grade in the file's season: 11 (class of 2027) or 12 (class of 2026). */
-  grade: z.union([z.literal(11), z.literal(12)]),
+  /** The player's grade in the file's season: 10 (class of 2028) or 11 (class of 2027). Seniors are out of scope. */
+  grade: z.union([z.literal(10), z.literal(11)]),
   college: slugId,
   sport: z.enum(COMMIT_SPORTS),
   status: z.enum(COMMIT_STATUSES),

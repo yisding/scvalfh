@@ -60,19 +60,19 @@ describe('prior-commits files', () => {
 
 // ---------------------------------------------------------------- bad files, in memory
 
-/** A 2025-26 basketball senior the registry knows, with a career id: the base of the bad files. */
-function pickSenior(): { player: PlayersFile['players'][number]; team: string; season: string } {
+/** A 2025-26 basketball junior the registry knows, with a career id: the base of the bad files. */
+function pickJunior(): { player: PlayersFile['players'][number]; team: string; season: string } {
   for (const p of registry.players) {
-    const s = p.stints.find((x) => x.sport === 'basketball' && x.season === '25-26' && x.level === 'varsity' && x.grade === 12);
-    if (s && p.identifiers.some((i) => i.kind === 'maxpreps-career') && (p.classOf === null || p.classOf === 2026)) {
+    const s = p.stints.find((x) => x.sport === 'basketball' && x.season === '25-26' && x.level === 'varsity' && x.grade === 11);
+    if (s && p.identifiers.some((i) => i.kind === 'maxpreps-career') && (p.classOf === null || p.classOf === 2027)) {
       return { player: p, team: s.team, season: s.season };
     }
   }
-  throw new Error('no 2025-26 basketball senior in the registry');
+  throw new Error('no 2025-26 basketball junior in the registry');
 }
 
 function goodFile(): PriorCommitsFile {
-  const { player, team, season } = pickSenior();
+  const { player, team, season } = pickJunior();
   const career = player.identifiers.find((i) => i.kind === 'maxpreps-career') as { careerId: string };
   return {
     builtBy: 'test',
@@ -99,7 +99,7 @@ function goodFile(): PriorCommitsFile {
         careerId: career.careerId,
         seasonRoster: null,
         fullName: player.name,
-        grade: 12,
+        grade: 11,
         college: 'de-anza',
         sport: 'basketball',
         status: 'signed',
@@ -133,6 +133,7 @@ describe('prior-commits checks', () => {
     expect(nextSeasonYear('99-00')).toBe('00-01');
     expect(priorClassOf('25-26', 12)).toBe(2026);
     expect(priorClassOf('25-26', 11)).toBe(2027);
+    expect(priorClassOf('25-26', 10)).toBe(2028);
   });
 
   it('refuses a player the registry does not know', () => {
@@ -143,14 +144,14 @@ describe('prior-commits checks', () => {
 
   it('refuses a grade the registry disagrees with', () => {
     const f = goodFile();
-    f.commitments[0].grade = 11;
+    f.commitments[0].grade = 10;
     expect(() => join(f)).toThrow(/grade|class of/);
   });
 
   it('refuses a stated class year that is not the grade\'s', () => {
     const f = goodFile();
-    f.commitments[0].sources[0].statedClassYear = 2027;
-    expect(() => join(f)).toThrow(/says class of 2027/);
+    f.commitments[0].sources[0].statedClassYear = 2028;
+    expect(() => join(f)).toThrow(/says class of 2028/);
   });
 
   it('refuses another team, another name and another career id', () => {
