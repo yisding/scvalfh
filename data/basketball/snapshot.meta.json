@@ -7,13 +7,13 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "9a0c6f8e204fd378b866675812b8706848e3c9a39ad81509e3b2208fbd847cd7",
+  "contentHash": "5d550d865d363cecfa98e7df132631d48ee19d55d0bc5d2750f636ec92a97e76",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 291,
+        "games": 293,
         "leagueGames": 125,
         "teams": 26
       },
@@ -26,14 +26,14 @@
       }
     },
     "finals": 0,
-    "games": 454,
+    "games": 455,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 3,
+    "pending": 10,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-17T22:51:11.318Z",
+  "fetchedAt": "2026-11-18T15:30:42.252Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -146,7 +146,7 @@
     },
     {
       "label": "monta-vista schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -231,7 +231,7 @@
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -261,7 +261,7 @@
     },
     {
       "label": "branham schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -281,7 +281,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -321,7 +321,7 @@
     },
     {
       "label": "andrew-hill schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 16,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -411,17 +411,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 14,
+      "rowCount": 24,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 308,
+      "rowCount": 478,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 29,
+      "rowCount": 40,
       "status": "ok"
     },
     {
@@ -435,7 +435,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-17",
+  "today": "2026-11-18",
   "warnings": 13,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
