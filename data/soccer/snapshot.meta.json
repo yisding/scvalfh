@@ -7,28 +7,28 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "12c2d40afe7c8aa429fa4077537969aef0e2c2c4b6ae7667629159e2f4f18b52",
+  "contentHash": "57e7303ae99685a9c9dfb199f0a34531f1eb9e14829ff2ec9660b6a61625072f",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 216,
-        "leagueGames": 149,
+        "games": 226,
+        "leagueGames": 157,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 158,
-        "leagueGames": 85,
+        "games": 160,
+        "leagueGames": 86,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 74,
-        "leagueGames": 18,
+        "games": 78,
+        "leagueGames": 22,
         "teams": 13
       },
       "wcal": {
@@ -40,14 +40,14 @@
       }
     },
     "finals": 0,
-    "games": 443,
-    "leagueGames": 270,
+    "games": 458,
+    "leagueGames": 283,
     "mismatches": 0,
-    "pending": 1,
+    "pending": 0,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-18T14:29:20.882Z",
+  "fetchedAt": "2026-11-18T22:16:01.735Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 66,
+  "officialFixturesUnmatched": 57,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -131,7 +131,7 @@
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -156,7 +156,7 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -191,7 +191,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -251,12 +251,12 @@
     },
     {
       "label": "gilroy schedule",
-      "rowCount": 16,
+      "rowCount": 18,
       "status": "ok"
     },
     {
       "label": "leigh schedule",
-      "rowCount": 12,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -266,7 +266,7 @@
     },
     {
       "label": "piedmont-hills schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -276,7 +276,7 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 11,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -296,7 +296,7 @@
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -306,17 +306,17 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 8,
-      "status": "ok"
-    },
-    {
-      "label": "santa-teresa schedule",
       "rowCount": 9,
       "status": "ok"
     },
     {
+      "label": "santa-teresa schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
       "label": "silver-creek schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -336,12 +336,12 @@
     },
     {
       "label": "gunderson schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "independence schedule",
-      "rowCount": 8,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -351,7 +351,7 @@
     },
     {
       "label": "mt-pleasant schedule",
-      "rowCount": 8,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -466,37 +466,37 @@
     },
     {
       "label": "castilleja schedule",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 2,
+      "rowCount": 3,
       "status": "ok"
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
       "label": "menlo schedule",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
       "label": "presentation schedule",
-      "rowCount": 6,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -536,7 +536,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 13,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -551,12 +551,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 155,
+      "rowCount": 157,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -571,9 +571,9 @@
     }
   ],
   "today": "2026-11-18",
-  "warnings": 26,
+  "warnings": 30,
   "window": {
-    "firstGame": "2026-11-17T19:00:00",
+    "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:00:00",
     "lastLeagueGame": "2027-02-17T18:00:00"
   }

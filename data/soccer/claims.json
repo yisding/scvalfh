@@ -1,36 +1,36 @@
 {
-  "fetchedAt": "2026-11-18T14:29:20.882Z",
+  "fetchedAt": "2026-11-18T22:16:01.735Z",
   "fixtures": [
     {
       "claims": {
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Morgan Hill",
-              "name": "Live Oak",
+              "city": "Campbell",
+              "name": "Westmont",
               "result": null,
               "score": null,
-              "slug": "live-oak",
-              "teamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd"
+              "slug": "westmont",
+              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
             },
-            "contestId": "3e0e47c9-efdb-4e69-9942-000cc2ce77c8",
+            "contestId": "61a0c155-ede7-462f-8f7d-685be3d077fc",
             "contestTypes": {
               "away": 1,
               "home": 1
             },
             "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
+            "dateKey": "2026-11-18",
+            "dateLocal": "2026-11-18T17:30:00",
+            "dateUtc": "2026-11-19T01:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "San Jose",
-              "name": "Pioneer",
+              "city": "Los Altos",
+              "name": "Los Altos",
               "result": null,
               "score": null,
-              "slug": "pioneer",
-              "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
+              "slug": "los-altos",
+              "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -41,29 +41,95 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:31:25",
+              "maxprepsModifiedOn": "2026-11-18T12:18:07",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/live-oak-morgan-hill-vs-pioneer-san-jose/11-17-2026/?c=3e0e47c9-efdb-4e69-9942-000cc2ce77c8",
-              "nfhsStream": null
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/los-altos-vs-westmont-campbell/11-18-2026/?c=61a0c155-ede7-462f-8f7d-685be3d077fc",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gam0df85dab9c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "Pioneer High"
+              "text": "Los Altos High School-Los Altos"
             }
           },
-          "ref": "3e0e47c9-efdb-4e69-9942-000cc2ce77c8"
+          "ref": "61a0c155-ede7-462f-8f7d-685be3d077fc"
         }
       },
-      "id": "2026-11-17-live-oak-at-pioneer",
+      "id": "2026-11-18-westmont-at-los-altos",
       "published": [
         {
-          "contestId": "3e0e47c9-efdb-4e69-9942-000cc2ce77c8"
+          "contestId": "61a0c155-ede7-462f-8f7d-685be3d077fc"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Independence",
+              "result": null,
+              "score": null,
+              "slug": "independence",
+              "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+            },
+            "contestId": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-19",
+            "dateLocal": "2026-11-19T18:00:00",
+            "dateUtc": "2026-11-20T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Piedmont Hills",
+              "result": null,
+              "score": null,
+              "slug": "piedmont-hills",
+              "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:45:42",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/independence-san-jose-vs-piedmont-hills-san-jose/11-19-2026/?c=aa930816-3cb4-4dfb-96c0-5e1f6bc80056",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/piedmont-hills-high-school-san-jose-ca/gam29d85a2f04?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Piedmont Hills HS"
+            }
+          },
+          "ref": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056"
+        }
+      },
+      "id": "2026-11-19-independence-at-piedmont-hills",
+      "published": [
+        {
+          "contestId": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056"
         }
       ]
     },
@@ -437,7 +503,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-04T00:21:52",
+              "maxprepsModifiedOn": "2026-11-18T17:57:45",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -450,7 +516,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "@Santa Teresa / JV @5PM / VAR @7PM"
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "0fddcbaf-8f4b-4f51-b1b5-773ccc2c8bd0"
@@ -1031,7 +1097,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T19:41:06",
+              "maxprepsModifiedOn": "2026-11-18T17:53:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1691,7 +1757,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T18:12:31",
+              "maxprepsModifiedOn": "2026-11-18T21:30:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1704,7 +1770,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gamf5cd595d33?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "0c7e31fe-6df9-4ebd-a4e3-c1aa27ddca9c"
@@ -2021,7 +2087,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:48:42",
+              "maxprepsModifiedOn": "2026-11-18T17:49:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2034,7 +2100,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/game0b1a8226f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "bec68641-37db-4556-9788-675b6bf9841e"
@@ -2110,6 +2176,72 @@
       "published": [
         {
           "contestId": "91b56ecb-8fde-4930-9b53-d6554b5936c0"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Scotts Valley",
+              "name": "Scotts Valley",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "83a217c2-c6de-4103-8da0-7d4e4761e121"
+            },
+            "contestId": "93a4dc78-67fa-4e00-868b-8c714718185a",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-01",
+            "dateLocal": "2026-12-01T19:00:00",
+            "dateUtc": "2026-12-02T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Santa Teresa",
+              "result": null,
+              "score": null,
+              "slug": "santa-teresa",
+              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T17:57:17",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-teresa-san-jose-vs-scotts-valley/12-1-2026/?c=93a4dc78-67fa-4e00-868b-8c714718185a",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Teresa High School"
+            }
+          },
+          "ref": "93a4dc78-67fa-4e00-868b-8c714718185a"
+        }
+      },
+      "id": "2026-12-01-name:scottsvalley-at-santa-teresa",
+      "published": [
+        {
+          "contestId": "93a4dc78-67fa-4e00-868b-8c714718185a"
         }
       ]
     },
@@ -2879,12 +3011,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-22T22:54:45",
+              "maxprepsModifiedOn": "2026-11-18T20:26:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -2892,7 +3024,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "Silicon Valley Classic"
+              "text": "Leland High School"
             }
           },
           "ref": "05ad1c57-d5ad-4ddb-93d3-088c4e36f9a9"
@@ -3473,7 +3605,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-04T12:30:08",
+              "maxprepsModifiedOn": "2026-11-18T17:58:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3486,7 +3618,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/soquel-high-school-soquel-ca/gam44dc875339?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Soquel HS"
             }
           },
           "ref": "4f3f7ee5-a7b7-40ac-b08e-6ffadcc9491b"
@@ -3563,7 +3695,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-10T18:50:26",
+              "maxprepsModifiedOn": "2026-11-18T17:51:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3576,7 +3708,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam58dced9892?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "1fbe99b3-77a6-42a3-8376-5432ae6eb13a"
@@ -4347,7 +4479,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-05T17:12:43",
+              "maxprepsModifiedOn": "2026-11-18T19:48:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4360,7 +4492,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Live Oak High School"
             }
           },
           "ref": "39214eef-7fba-4535-b69f-7818125524fe"
@@ -5148,7 +5280,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7091683?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/burlingame-vs-santa-clara/12-5-2026/?c=0d847aa4-abc0-48e8-b21a-3fc708feb64c",
               "nfhsStream": null
             },
@@ -5404,7 +5536,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-11T22:39:59",
+              "maxprepsModifiedOn": "2026-11-18T19:17:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -5417,7 +5549,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/sacred-heart-preparatory-atherton-ca/gamdab2e77cc7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Sacred Heart Prep"
             }
           },
           "ref": "4c1b11c4-01d6-488c-bfb9-3a164e1e2205"
@@ -5676,7 +5808,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7091949?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/oak-grove-san-jose-vs-saratoga/12-5-2026/?c=e111c1a4-45d4-4106-ba81-7b6e17f19f0d",
               "nfhsStream": null
             },
@@ -6389,6 +6521,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Gunderson",
+              "result": null,
+              "score": null,
+              "slug": "gunderson",
+              "teamId": "aa94942a-3659-42ea-8c1a-463de8693f1f"
+            },
+            "contestId": "695cac5a-9b96-4696-b623-7dda6b710660",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-08",
+            "dateLocal": "2026-12-08T18:00:00",
+            "dateUtc": "2026-12-09T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T12:01:18",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gunderson-san-jose-vs-mt-pleasant-san-jose/12-8-2026/?c=695cac5a-9b96-4696-b623-7dda6b710660",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Mt. Pleasant High School"
+            }
+          },
+          "ref": "695cac5a-9b96-4696-b623-7dda6b710660"
+        },
         "official": {
           "fixture": {
             "awayName": "Gunderson",
@@ -6402,10 +6590,25 @@
             "source": "bval-docx",
             "time": "18:00"
           },
+          "lastMatch": {
+            "contestId": "695cac5a-9b96-4696-b623-7dda6b710660",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2026-12-08:gunderson@mt-pleasant",
+              "pass": "same-date",
+              "scheduledDate": "2026-12-08",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2026-12-08:gunderson@mt-pleasant"
         }
       },
-      "id": "2026-12-08-gunderson-at-mt-pleasant"
+      "id": "2026-12-08-gunderson-at-mt-pleasant~2",
+      "published": [
+        {
+          "contestId": "695cac5a-9b96-4696-b623-7dda6b710660"
+        }
+      ]
     },
     {
       "claims": {
@@ -6877,7 +7080,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T18:08:20",
+              "maxprepsModifiedOn": "2026-11-18T21:30:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -6890,7 +7093,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/carlmont-high-school-belmont-ca/gam4678dbc718?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Carlmont High School"
             }
           },
           "ref": "faa31d50-8b02-4dd6-9df8-5630d96e6f92"
@@ -7670,12 +7873,12 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-22T22:54:46",
+              "maxprepsModifiedOn": "2026-11-18T17:59:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
@@ -7683,7 +7886,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "5fea41fe-333e-4eae-b851-503cd9d025ba"
@@ -8354,7 +8557,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T11:13:23",
+              "maxprepsModifiedOn": "2026-11-18T21:30:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8367,7 +8570,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Saint Francis HS - Mountain View"
             }
           },
           "ref": "a24c7a04-bfdc-4918-9b39-5fff1ad144cc"
@@ -8420,7 +8623,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-07T00:51:11",
+              "maxprepsModifiedOn": "2026-11-18T17:45:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8433,7 +8636,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gama3aec217d2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "3382f288-c073-4e96-9ae5-22bdef20fb13"
@@ -11809,7 +12012,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T14:10:18",
+              "maxprepsModifiedOn": "2026-11-18T17:55:06",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11822,7 +12025,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "913ec914-e2ac-4670-9d10-1f25ce159855"
@@ -13681,8 +13884,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-05",
-            "dateLocal": "2027-01-05T19:00:00",
-            "dateUtc": "2027-01-06T03:00:00Z",
+            "dateLocal": "2027-01-05T18:00:00",
+            "dateUtc": "2027-01-06T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -13702,7 +13905,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-12T01:21:15",
+              "maxprepsModifiedOn": "2026-11-18T17:53:06",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13715,7 +13918,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Monta Vista High School"
             }
           },
           "ref": "74018ff4-482c-4c24-b959-6f7ee92c60dc"
@@ -14197,7 +14400,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:09",
+              "maxprepsModifiedOn": "2026-11-18T21:31:13",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14210,7 +14413,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gamc2374e3d9f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "9dfd8ab5-d9cf-4cdf-a7d8-ef4480188094"
@@ -14709,8 +14912,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-07",
-            "dateLocal": "2027-01-07T19:00:00",
-            "dateUtc": "2027-01-08T03:00:00Z",
+            "dateLocal": "2027-01-07T18:00:00",
+            "dateUtc": "2027-01-08T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -14730,7 +14933,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-12T01:21:17",
+              "maxprepsModifiedOn": "2026-11-18T22:02:33",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14743,7 +14946,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Saratoga High School"
             }
           },
           "ref": "34d221a8-8f9f-4ddc-9be9-801b44894e8c"
@@ -14973,6 +15176,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "c3afb6fc-3067-4520-b984-dc5bf835471f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-07",
+            "dateLocal": "2027-01-07T19:00:00",
+            "dateUtc": "2027-01-08T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Campbell",
+              "name": "Westmont",
+              "result": null,
+              "score": null,
+              "slug": "westmont",
+              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "mt-hamilton",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:45:35",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gilroy-vs-westmont-campbell/1-7-2027/?c=c3afb6fc-3067-4520-b984-dc5bf835471f",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Westmont High School"
+            }
+          },
+          "ref": "c3afb6fc-3067-4520-b984-dc5bf835471f"
+        },
         "official": {
           "fixture": {
             "awayName": "Gilroy",
@@ -14990,10 +15249,30 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "c3afb6fc-3067-4520-b984-dc5bf835471f",
+            "stamp": {
+              "division": "mt-hamilton",
+              "fixtureId": "mt-hamilton:2027-01-07:gilroy@westmont",
+              "jv": {
+                "dateKey": "2027-01-07",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-07",
+              "source": "bval-docx"
+            }
+          },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-07; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-07:gilroy@westmont"
         }
       },
-      "id": "2027-01-07-gilroy-at-westmont"
+      "id": "2027-01-07-gilroy-at-westmont~2",
+      "published": [
+        {
+          "contestId": "c3afb6fc-3067-4520-b984-dc5bf835471f"
+        }
+      ]
     },
     {
       "claims": {
@@ -15482,7 +15761,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T01:55:40",
+              "maxprepsModifiedOn": "2026-11-18T17:47:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15495,7 +15774,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "0679a09a-bdfe-4e72-8c89-5410bebd545f"
@@ -16018,7 +16297,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:56:40",
+              "maxprepsModifiedOn": "2026-11-18T17:57:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17386,8 +17665,8 @@
             },
             "contestId": "f2cb5974-2ad8-4525-ba8c-a6a5fb90b268",
             "contestTypes": {
-              "away": 1,
-              "home": 1
+              "away": 0,
+              "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-01-12",
@@ -17405,14 +17684,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": false,
+            "isLeague": true,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "santa-teresa",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-16T01:39:08",
+              "maxprepsModifiedOn": "2026-11-18T17:58:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17425,7 +17704,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Santa Teresa High School"
             }
           },
           "ref": "f2cb5974-2ad8-4525-ba8c-a6a5fb90b268"
@@ -17461,7 +17740,6 @@
               "source": "bval-docx"
             }
           },
-          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-12; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-01-12:sobrato@santa-teresa"
         }
       },
@@ -17978,7 +18256,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:57:14",
+              "maxprepsModifiedOn": "2026-11-18T21:31:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18093,7 +18371,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:30:00",
+              "maxprepsModifiedOn": "2026-11-18T17:53:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18389,8 +18667,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-14",
-            "dateLocal": "2027-01-14T19:00:00",
-            "dateUtc": "2027-01-15T03:00:00Z",
+            "dateLocal": "2027-01-14T18:00:00",
+            "dateUtc": "2027-01-15T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -18410,7 +18688,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T01:55:47",
+              "maxprepsModifiedOn": "2026-11-18T19:29:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18509,7 +18787,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:29:43",
+              "maxprepsModifiedOn": "2026-11-18T20:41:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18708,7 +18986,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T08:24:09",
+              "maxprepsModifiedOn": "2026-11-18T21:31:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18721,7 +18999,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Monta Vista High School"
             }
           },
           "ref": "d15e8bc3-5d27-46f2-8244-963076dc4f49"
@@ -19264,7 +19542,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:30:20",
+              "maxprepsModifiedOn": "2026-11-18T21:31:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -19363,7 +19641,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:30:05",
+              "maxprepsModifiedOn": "2026-11-18T17:57:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20182,7 +20460,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T08:55:50",
+              "maxprepsModifiedOn": "2026-11-18T17:51:51",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20195,7 +20473,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "41e03f54-16d7-4e21-a683-baeef6df23c4"
@@ -20746,6 +21024,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Lincoln",
+              "result": null,
+              "score": null,
+              "slug": "lincoln",
+              "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
+            },
+            "contestId": "f63edb47-dfc1-4a46-8ab4-73503293fefc",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-19",
+            "dateLocal": "2027-01-19T19:00:00",
+            "dateUtc": "2027-01-20T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Santa Teresa",
+              "result": null,
+              "score": null,
+              "slug": "santa-teresa",
+              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T17:44:27",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/lincoln-san-jose-vs-santa-teresa-san-jose/1-19-2027/?c=f63edb47-dfc1-4a46-8ab4-73503293fefc",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Teresa High School"
+            }
+          },
+          "ref": "f63edb47-dfc1-4a46-8ab4-73503293fefc"
+        },
         "official": {
           "fixture": {
             "awayName": "Lincoln",
@@ -20763,10 +21097,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "f63edb47-dfc1-4a46-8ab4-73503293fefc",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-19:lincoln@santa-teresa",
+              "jv": {
+                "dateKey": "2027-01-19",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-19",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-19:lincoln@santa-teresa"
         }
       },
-      "id": "2027-01-19-lincoln-at-santa-teresa"
+      "id": "2027-01-19-lincoln-at-santa-teresa~2",
+      "published": [
+        {
+          "contestId": "f63edb47-dfc1-4a46-8ab4-73503293fefc"
+        }
+      ]
     },
     {
       "claims": {
@@ -21768,7 +22121,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T08:31:46",
+              "maxprepsModifiedOn": "2026-11-18T17:53:10",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21859,7 +22212,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T06:30:31",
+              "maxprepsModifiedOn": "2026-11-18T17:58:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24363,7 +24716,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T17:31:00",
+              "maxprepsModifiedOn": "2026-11-18T17:52:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24376,7 +24729,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam8f010acbca?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "8adbb9f2-61a8-40dc-bc41-f877c32ca9ad"
@@ -24454,7 +24807,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:34:59",
+              "maxprepsModifiedOn": "2026-11-18T17:58:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -24528,6 +24881,72 @@
         }
       },
       "id": "2027-01-26-andrew-hill-at-independence"
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Palo Alto",
+              "name": "Castilleja",
+              "result": null,
+              "score": null,
+              "slug": "castilleja",
+              "teamId": "65205c0e-02f1-4b46-8b8a-e310b62d1249"
+            },
+            "contestId": "6b0c6db6-3b2f-44c3-a342-37d0d85888fc",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-26",
+            "dateLocal": "2027-01-26T15:30:00",
+            "dateUtc": "2027-01-26T23:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Menlo School",
+              "result": null,
+              "score": null,
+              "slug": "menlo",
+              "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T12:43:13",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/castilleja-palo-alto-vs-menlo-school-atherton/1-26-2027/?c=6b0c6db6-3b2f-44c3-a342-37d0d85888fc",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Menlo School  DO NOT USE"
+            }
+          },
+          "ref": "6b0c6db6-3b2f-44c3-a342-37d0d85888fc"
+        }
+      },
+      "id": "2027-01-26-castilleja-at-menlo",
+      "published": [
+        {
+          "contestId": "6b0c6db6-3b2f-44c3-a342-37d0d85888fc"
+        }
+      ]
     },
     {
       "claims": {
@@ -26070,7 +26489,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T16:56:34",
+              "maxprepsModifiedOn": "2026-11-18T17:59:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -26083,7 +26502,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamc24ef05fc1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "1264086e-0507-47c7-ae6a-0c80a871cbd1"
@@ -26967,6 +27386,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Oak Grove",
+              "result": null,
+              "score": null,
+              "slug": "oak-grove",
+              "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+            },
+            "contestId": "47f9c7f9-7843-4f2d-89d5-83040d083901",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-28",
+            "dateLocal": "2027-01-28T19:00:00",
+            "dateUtc": "2027-01-29T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Santa Teresa",
+              "result": null,
+              "score": null,
+              "slug": "santa-teresa",
+              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T17:52:14",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/oak-grove-san-jose-vs-santa-teresa-san-jose/1-28-2027/?c=47f9c7f9-7843-4f2d-89d5-83040d083901",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Teresa High School"
+            }
+          },
+          "ref": "47f9c7f9-7843-4f2d-89d5-83040d083901"
+        },
         "official": {
           "fixture": {
             "awayName": "Oak Grove",
@@ -26984,10 +27459,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "47f9c7f9-7843-4f2d-89d5-83040d083901",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-28:oak-grove@santa-teresa",
+              "jv": {
+                "dateKey": "2027-01-28",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-28",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-28:oak-grove@santa-teresa"
         }
       },
-      "id": "2027-01-28-oak-grove-at-santa-teresa"
+      "id": "2027-01-28-oak-grove-at-santa-teresa~2",
+      "published": [
+        {
+          "contestId": "47f9c7f9-7843-4f2d-89d5-83040d083901"
+        }
+      ]
     },
     {
       "claims": {
@@ -27312,8 +27806,8 @@
             },
             "contestId": "4ec497c4-16c7-4df7-b7f9-760bdae6b533",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-01-28",
@@ -27331,14 +27825,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "mt-hamilton",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-07T21:38:24",
+              "maxprepsModifiedOn": "2026-11-18T17:52:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27351,7 +27845,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "4ec497c4-16c7-4df7-b7f9-760bdae6b533"
@@ -27387,6 +27881,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-28; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-28:willow-glen@leland"
         }
       },
@@ -28291,6 +28786,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "contestId": "e3186898-1ac8-4db3-ab6a-35c3c0d9f3e0",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-30",
+            "dateLocal": "2027-01-30T19:00:00",
+            "dateUtc": "2027-01-31T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Santa Teresa",
+              "result": null,
+              "score": null,
+              "slug": "santa-teresa",
+              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T17:47:01",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-teresa-san-jose-vs-silver-creek-san-jose/1-30-2027/?c=e3186898-1ac8-4db3-ab6a-35c3c0d9f3e0",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Santa Teresa High School"
+            }
+          },
+          "ref": "e3186898-1ac8-4db3-ab6a-35c3c0d9f3e0"
+        },
         "official": {
           "fixture": {
             "awayName": "Silver Creek",
@@ -28308,10 +28859,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "e3186898-1ac8-4db3-ab6a-35c3c0d9f3e0",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-30:silver-creek@santa-teresa",
+              "jv": {
+                "dateKey": "2027-01-30",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-30",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-30:silver-creek@santa-teresa"
         }
       },
-      "id": "2027-01-30-silver-creek-at-santa-teresa"
+      "id": "2027-01-30-silver-creek-at-santa-teresa~2",
+      "published": [
+        {
+          "contestId": "e3186898-1ac8-4db3-ab6a-35c3c0d9f3e0"
+        }
+      ]
     },
     {
       "claims": {
@@ -28543,7 +29113,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T21:42:39",
+              "maxprepsModifiedOn": "2026-11-18T20:18:35",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -28556,7 +29126,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/yerba-buena-high-school-san-jose-ca/gameeabd20e5f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "senior night"
+              "text": "Yerba Buena High School"
             }
           },
           "ref": "44089be4-9004-4c62-95a6-08b108d8e528"
@@ -28616,8 +29186,8 @@
             },
             "contestId": "dfd789a2-c91f-4b33-ba6f-241a0e1f704d",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-02-02",
@@ -28635,14 +29205,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "mt-hamilton",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-11T08:38:45",
+              "maxprepsModifiedOn": "2026-11-18T19:45:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -28655,7 +29225,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Willow Glen High School"
             }
           },
           "ref": "dfd789a2-c91f-4b33-ba6f-241a0e1f704d"
@@ -28691,6 +29261,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-02; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-02-02:branham@willow-glen"
         }
       },
@@ -28856,7 +29427,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T14:16:07",
+              "maxprepsModifiedOn": "2026-11-18T19:48:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -28869,7 +29440,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Oak Grove High School"
             }
           },
           "ref": "17f9934f-2fdc-4153-8fb6-77f5fdc16281"
@@ -28949,8 +29520,8 @@
             },
             "contestId": "c0c4bad1-3b70-4264-b39d-3737a0f8d2ec",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-02-02",
@@ -28968,14 +29539,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "mt-hamilton",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-07T21:38:37",
+              "maxprepsModifiedOn": "2026-11-18T17:46:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -28988,7 +29559,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "c0c4bad1-3b70-4264-b39d-3737a0f8d2ec"
@@ -29024,6 +29595,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-02; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-02-02:gilroy@leland"
         }
       },
@@ -29130,6 +29702,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Sunnyvale",
+              "name": "The King’s Academy",
+              "result": null,
+              "score": null,
+              "slug": "kings-academy",
+              "teamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9"
+            },
+            "contestId": "64d05607-192f-48b6-89a0-a6aa0ce94017",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T15:30:00",
+            "dateUtc": "2027-02-02T23:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Sacred Heart Prep",
+              "result": null,
+              "score": null,
+              "slug": "sacred-heart-prep",
+              "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T12:42:27",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/kings-academy-sunnyvale-vs-sacred-heart-prep-atherton/2-2-2027/?c=64d05607-192f-48b6-89a0-a6aa0ce94017",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sacred-heart-preparatory-atherton-ca/gam79fc1d059f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Sacred Heart Prep"
+            }
+          },
+          "ref": "64d05607-192f-48b6-89a0-a6aa0ce94017"
+        }
+      },
+      "id": "2027-02-02-kings-academy-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "64d05607-192f-48b6-89a0-a6aa0ce94017"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Morgan Hill",
               "name": "Live Oak",
               "result": null,
@@ -29165,7 +29803,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-16T08:39:58",
+              "maxprepsModifiedOn": "2026-11-18T19:49:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29178,7 +29816,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Abraham Lincoln High School"
             }
           },
           "ref": "3289e198-d49d-4be6-a7d8-74a943b18b9e"
@@ -29408,6 +30046,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "contestId": "42402515-9112-41a8-8d2b-aa1802c4c6ae",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T18:00:00",
+            "dateUtc": "2027-02-03T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Independence",
+              "result": null,
+              "score": null,
+              "slug": "independence",
+              "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:45:34",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/independence-san-jose-vs-mt-pleasant-san-jose/2-2-2027/?c=42402515-9112-41a8-8d2b-aa1802c4c6ae",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/independence-high-school-san-jose-ca/gam23c6dc1d9c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Independence High School-San Jose"
+            }
+          },
+          "ref": "42402515-9112-41a8-8d2b-aa1802c4c6ae"
+        },
         "official": {
           "fixture": {
             "awayName": "Mt. Pleasant",
@@ -29425,10 +30119,29 @@
             "source": "bval-docx",
             "time": "18:00"
           },
+          "lastMatch": {
+            "contestId": "42402515-9112-41a8-8d2b-aa1802c4c6ae",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-02-02:mt-pleasant@independence",
+              "jv": {
+                "dateKey": "2027-02-02",
+                "time": "16:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-02",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-02-02:mt-pleasant@independence"
         }
       },
-      "id": "2027-02-02-mt-pleasant-at-independence"
+      "id": "2027-02-02-mt-pleasant-at-independence~2",
+      "published": [
+        {
+          "contestId": "42402515-9112-41a8-8d2b-aa1802c4c6ae"
+        }
+      ]
     },
     {
       "claims": {
@@ -29449,8 +30162,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-02",
-            "dateLocal": "2027-02-02T00:00:00",
-            "dateUtc": "2027-02-02T08:00:00Z",
+            "dateLocal": "2027-02-02T15:30:00",
+            "dateUtc": "2027-02-02T23:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -29465,12 +30178,12 @@
             "isForfeit": false,
             "isLeague": true,
             "isOt": false,
-            "isTimeTba": true,
+            "isTimeTba": false,
             "leagueDivision": "skyline",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-17T00:37:54",
+              "maxprepsModifiedOn": "2026-11-18T20:43:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29483,7 +30196,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": "TBA / NO JV"
+              "text": "Murray Field"
             }
           },
           "ref": "b31f6a91-2478-44aa-99d3-9908a1d29aef"
@@ -29799,6 +30512,72 @@
           "game": {
             "away": {
               "city": "San Jose",
+              "name": "Presentation",
+              "result": null,
+              "score": null,
+              "slug": "presentation",
+              "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+            },
+            "contestId": "b6f4bc16-ab46-45a2-a310-024b4d77cf6b",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T14:45:00",
+            "dateUtc": "2027-02-02T22:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Belmont",
+              "name": "Notre Dame Belmont",
+              "result": null,
+              "score": null,
+              "slug": "notre-dame-belmont",
+              "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:48:51",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/notre-dame-belmont-vs-presentation-san-jose/2-2-2027/?c=b6f4bc16-ab46-45a2-a310-024b4d77cf6b",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Notre Dame de Namur University"
+            }
+          },
+          "ref": "b6f4bc16-ab46-45a2-a310-024b4d77cf6b"
+        }
+      },
+      "id": "2027-02-02-presentation-at-notre-dame-belmont",
+      "published": [
+        {
+          "contestId": "b6f4bc16-ab46-45a2-a310-024b4d77cf6b"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
               "name": "San Jose",
               "result": null,
               "score": null,
@@ -29906,8 +30685,8 @@
             },
             "contestId": "b6b12a4a-1caf-4de8-9c8f-7fd5ee7777fa",
             "contestTypes": {
-              "away": 1,
-              "home": 1
+              "away": 0,
+              "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-02-02",
@@ -29925,14 +30704,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": false,
+            "isLeague": true,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "santa-teresa",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T17:41:25",
+              "maxprepsModifiedOn": "2026-11-18T20:18:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29945,7 +30724,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Morgan Hill Complex"
             }
           },
           "ref": "b6b12a4a-1caf-4de8-9c8f-7fd5ee7777fa"
@@ -29981,7 +30760,6 @@
               "source": "bval-docx"
             }
           },
-          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-02; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-02-02:santa-teresa@sobrato"
         }
       },
@@ -30780,7 +31558,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T01:56:11",
+              "maxprepsModifiedOn": "2026-11-18T17:53:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30793,7 +31571,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "2f0c518b-0f15-482b-b3fc-a09260790ef2"
@@ -32266,7 +33044,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T09:47:26",
+              "maxprepsModifiedOn": "2026-11-18T17:52:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32279,7 +33057,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam217e47eac2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "6d29f1c8-47bf-4dd7-afbf-6b87673bf447"
@@ -32627,6 +33405,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "87be82c4-6c20-4a06-b1de-87d36f43062a",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-09",
+            "dateLocal": "2027-02-09T18:00:00",
+            "dateUtc": "2027-02-10T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Leigh",
+              "result": null,
+              "score": null,
+              "slug": "leigh",
+              "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "mt-hamilton",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T12:02:34",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gilroy-vs-leigh-san-jose/2-9-2027/?c=87be82c4-6c20-4a06-b1de-87d36f43062a",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamf164b1f91b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Leigh High School"
+            }
+          },
+          "ref": "87be82c4-6c20-4a06-b1de-87d36f43062a"
+        },
         "official": {
           "fixture": {
             "awayName": "Gilroy",
@@ -32644,10 +33478,30 @@
             "source": "bval-docx",
             "time": "18:00"
           },
+          "lastMatch": {
+            "contestId": "87be82c4-6c20-4a06-b1de-87d36f43062a",
+            "stamp": {
+              "division": "mt-hamilton",
+              "fixtureId": "mt-hamilton:2027-02-09:gilroy@leigh",
+              "jv": {
+                "dateKey": "2027-02-09",
+                "time": "16:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-09",
+              "source": "bval-docx"
+            }
+          },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-09; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-02-09:gilroy@leigh"
         }
       },
-      "id": "2027-02-09-gilroy-at-leigh"
+      "id": "2027-02-09-gilroy-at-leigh~2",
+      "published": [
+        {
+          "contestId": "87be82c4-6c20-4a06-b1de-87d36f43062a"
+        }
+      ]
     },
     {
       "claims": {
@@ -32775,7 +33629,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-07T21:38:51",
+              "maxprepsModifiedOn": "2026-11-18T20:02:34",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32788,7 +33642,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/branham-high-school-san-jose-ca/gamd99ad6ae0f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Branham  High School"
             }
           },
           "ref": "f662d1d8-8006-4226-bcb8-ed17b05bf274"
@@ -32874,7 +33728,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T08:28:02",
+              "maxprepsModifiedOn": "2026-11-18T20:02:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32887,7 +33741,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam1862b8bc1a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Cupertino High School"
             }
           },
           "ref": "620e54c5-e658-4e57-943a-0981d74fb9ca"
@@ -32965,7 +33819,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-08T23:22:28",
+              "maxprepsModifiedOn": "2026-11-18T20:02:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32978,7 +33832,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Monta Vista High School"
             }
           },
           "ref": "0239635b-f938-4ff3-8502-7e5be96d9f36"
@@ -33392,7 +34246,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-31T01:18:42",
+              "maxprepsModifiedOn": "2026-11-18T20:01:04",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33405,7 +34259,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Live Oak High School"
             }
           },
           "ref": "dd12572c-7376-4d77-8efb-25bb41067347"
@@ -33780,7 +34634,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T14:40:40",
+              "maxprepsModifiedOn": "2026-11-18T20:01:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33793,7 +34647,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/del-mar-high-school-san-jose-ca/gam3beb8f3738?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Del Mar High School"
             }
           },
           "ref": "563dc8bd-050f-4bb1-9294-193f937c40ea"
@@ -33879,7 +34733,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:39",
+              "maxprepsModifiedOn": "2026-11-18T20:02:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33892,7 +34746,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Gatos High School"
             }
           },
           "ref": "315c0ec6-0de3-4f25-974d-a91c2967cca9"
@@ -33970,7 +34824,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T17:33:24",
+              "maxprepsModifiedOn": "2026-11-18T20:01:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33983,7 +34837,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/homestead-high-school-cupertino-ca/gam9ef00422ec?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "Senior Night"
+              "text": "Homestead HS"
             }
           },
           "ref": "71f01d04-4562-4ede-8068-9219f19e634e"
@@ -34061,7 +34915,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-04T12:34:17",
+              "maxprepsModifiedOn": "2026-11-18T20:01:53",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34074,7 +34928,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Archbishop Mitty HS"
             }
           },
           "ref": "1baa9a3d-6b70-4ac2-9ec0-5e0da26eb1f0"
@@ -34127,7 +34981,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:55:04",
+              "maxprepsModifiedOn": "2026-11-18T20:01:14",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34789,8 +35643,8 @@
             },
             "contestId": "97ff085e-c9b2-43b7-9027-9e3caa2fbac0",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-02-11",
@@ -34808,14 +35662,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "el-camino",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T08:28:27",
+              "maxprepsModifiedOn": "2026-11-18T20:02:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34828,7 +35682,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/fremont-high-school-sunnyvale-ca/gam13b2ef188c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Fremont High School-Sunnyvale"
             }
           },
           "ref": "97ff085e-c9b2-43b7-9027-9e3caa2fbac0"
@@ -34856,6 +35710,7 @@
               "source": "scval-pdf"
             }
           },
+          "leagueFlagNote": "the official SCVAL schedule has this as a league game on 2027-02-11; MaxPreps flags it non-league",
           "ref": "el-camino:2027-02-11:lynbrook@fremont"
         }
       },
@@ -35412,7 +36267,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T01:56:14",
+              "maxprepsModifiedOn": "2026-11-18T17:52:07",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35425,7 +36280,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "cddf7276-4f01-4f29-800c-29f1c19696b6"
@@ -35775,7 +36630,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:55:26",
+              "maxprepsModifiedOn": "2026-11-18T20:01:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35866,7 +36721,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-11T16:58:46",
+              "maxprepsModifiedOn": "2026-11-18T17:48:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35879,7 +36734,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gam06bb961932?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Gunn HS"
             }
           },
           "ref": "18e03959-a12f-406a-b8f1-a23d231f416c"
@@ -35957,7 +36812,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:40",
+              "maxprepsModifiedOn": "2026-11-18T20:01:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -35970,7 +36825,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Mountain View High School-Mountain View"
             }
           },
           "ref": "c3dfadfb-9c98-405b-b9ee-34f4922ab0cf"
@@ -36145,6 +37000,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Hillsborough",
+              "name": "Crystal Springs Uplands",
+              "result": null,
+              "score": null,
+              "slug": "crystal-springs",
+              "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939"
+            },
+            "contestId": "16a94f91-49dd-445a-9f0f-9525cc050d21",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-15",
+            "dateLocal": "2027-02-15T14:45:00",
+            "dateUtc": "2027-02-15T22:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Presentation",
+              "result": null,
+              "score": null,
+              "slug": "presentation",
+              "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:44:26",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/crystal-springs-uplands-hillsborough-vs-presentation-san-jose/2-15-2027/?c=16a94f91-49dd-445a-9f0f-9525cc050d21",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Presentation High School"
+            }
+          },
+          "ref": "16a94f91-49dd-445a-9f0f-9525cc050d21"
+        }
+      },
+      "id": "2027-02-15-crystal-springs-at-presentation",
+      "published": [
+        {
+          "contestId": "16a94f91-49dd-445a-9f0f-9525cc050d21"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Sunnyvale",
               "name": "Fremont",
               "result": null,
@@ -36154,8 +37075,8 @@
             },
             "contestId": "a73472e2-b0d5-446c-8d53-827a526375cc",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-02-15",
@@ -36173,14 +37094,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": null,
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-13T01:51:55",
+              "maxprepsModifiedOn": "2026-11-18T19:48:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -36193,7 +37114,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gam7c728cfa1e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "a73472e2-b0d5-446c-8d53-827a526375cc"
@@ -36840,6 +37761,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Leigh",
+              "result": null,
+              "score": null,
+              "slug": "leigh",
+              "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
+            },
+            "contestId": "c6f54f6c-b9f8-47e3-a263-9fa0c3be9cb3",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-16",
+            "dateLocal": "2027-02-16T19:00:00",
+            "dateUtc": "2027-02-17T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Campbell",
+              "name": "Westmont",
+              "result": null,
+              "score": null,
+              "slug": "westmont",
+              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "mt-hamilton",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:48:46",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/leigh-san-jose-vs-westmont-campbell/2-16-2027/?c=c6f54f6c-b9f8-47e3-a263-9fa0c3be9cb3",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Westmont High School"
+            }
+          },
+          "ref": "c6f54f6c-b9f8-47e3-a263-9fa0c3be9cb3"
+        },
         "official": {
           "fixture": {
             "awayName": "Leigh",
@@ -36857,10 +37834,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "c6f54f6c-b9f8-47e3-a263-9fa0c3be9cb3",
+            "stamp": {
+              "division": "mt-hamilton",
+              "fixtureId": "mt-hamilton:2027-02-16:leigh@westmont",
+              "jv": {
+                "dateKey": "2027-02-16",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-16",
+              "source": "bval-docx"
+            }
+          },
           "ref": "mt-hamilton:2027-02-16:leigh@westmont"
         }
       },
-      "id": "2027-02-16-leigh-at-westmont"
+      "id": "2027-02-16-leigh-at-westmont~2",
+      "published": [
+        {
+          "contestId": "c6f54f6c-b9f8-47e3-a263-9fa0c3be9cb3"
+        }
+      ]
     },
     {
       "claims": {
@@ -37216,7 +38212,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T08:56:14",
+              "maxprepsModifiedOn": "2026-11-18T17:53:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37229,7 +38225,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Leland High School"
             }
           },
           "ref": "17472462-d376-42b4-9266-9daa6c8bfaef"
@@ -37277,6 +38273,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Santa Clara",
+              "name": "Wilcox",
+              "result": null,
+              "score": null,
+              "slug": "wilcox",
+              "teamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee"
+            },
+            "contestId": "757bba0c-d7dd-4540-9f29-2553932697c8",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-16",
+            "dateLocal": "2027-02-16T18:00:00",
+            "dateUtc": "2027-02-17T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Cupertino",
+              "name": "Cupertino",
+              "result": null,
+              "score": null,
+              "slug": "cupertino",
+              "teamId": "97ffffbe-54ba-4c25-86bb-41332627f64e"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "el-camino",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-18T11:47:35",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/cupertino-vs-wilcox-santa-clara/2-16-2027/?c=757bba0c-d7dd-4540-9f29-2553932697c8",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gamb5199cd4fb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Cupertino High School"
+            }
+          },
+          "ref": "757bba0c-d7dd-4540-9f29-2553932697c8"
+        },
         "official": {
           "fixture": {
             "awayName": "Wilcox",
@@ -37290,10 +38342,25 @@
             "source": "scval-pdf",
             "time": null
           },
+          "lastMatch": {
+            "contestId": "757bba0c-d7dd-4540-9f29-2553932697c8",
+            "stamp": {
+              "division": "el-camino",
+              "fixtureId": "el-camino:2027-02-16:wilcox@cupertino",
+              "pass": "same-date",
+              "scheduledDate": "2027-02-16",
+              "source": "scval-pdf"
+            }
+          },
           "ref": "el-camino:2027-02-16:wilcox@cupertino"
         }
       },
-      "id": "2027-02-16-wilcox-at-cupertino"
+      "id": "2027-02-16-wilcox-at-cupertino~2",
+      "published": [
+        {
+          "contestId": "757bba0c-d7dd-4540-9f29-2553932697c8"
+        }
+      ]
     },
     {
       "claims": {
@@ -37525,7 +38592,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T16:48:22",
+              "maxprepsModifiedOn": "2026-11-18T19:48:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37538,7 +38605,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gama58e055f2e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "0ab3216f-963c-4bba-ac4d-48aac289626f"
