@@ -109,8 +109,8 @@ describe('client boundary: no "use client" module reaches a server-only module',
 
   it('a specifier that resolves under data/ is banned (the snapshot never ships to the client)', () => {
     const from = path.join(ROOT, 'components', 'home', 'Leak.tsx');
-    expect(resolve('../../data/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/snapshot.json' });
-    expect(resolve('@/data/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/snapshot.json' });
+    expect(resolve('../../data/field-hockey/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/field-hockey/snapshot.json' });
+    expect(resolve('@/data/field-hockey/snapshot.json', from)).toEqual({ kind: 'banned', name: 'data/field-hockey/snapshot.json' });
     expect(resolve('../../lib/data', from)).toEqual({ kind: 'banned', name: 'lib/data' });
   });
 

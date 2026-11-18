@@ -1,9 +1,9 @@
 /**
- * The Zod contract for data/commits.json — which players on the tracked varsity rosters a public
+ * The Zod contract for data/field-hockey/commits.json — which players on the tracked varsity rosters a public
  * page says have committed to play a sport in college (field hockey or any other), and the colleges
  * they committed to (SPEC §1.1j3, DESIGN §21).
  *
- * The file is research, not a script's output, like data/clubs.json: it was written by hand on its
+ * The file is research, not a script's output, like data/field-hockey/clubs.json: it was written by hand on its
  * `capturedAt` date, every commitment checked twice (a checker re-opened each source, then an
  * independent refuter tried to break it), and nothing rebuilds it. This contract only says what
  * shape its facts must have.
@@ -30,7 +30,7 @@
  *   7. a quote is 1-300 characters (kept for maintainers, never rendered)
  *   8. `asOf` is a day, a month or a year (isCommitDate): a commitment happens on a date, never
  *      over a season or a range
- *   9. the join to data/rosters.json — the row exists, carries the same fullName, is not JV, and
+ *   9. the join to data/field-hockey/rosters.json — the row exists, carries the same fullName, is not JV, and
  *      agrees with every stated class year — lives in lib/players/commits.ts: this file cannot see the
  *      rosters
  * 1-4 are one file-level `superRefine(checkCommitsFile)`, each failure a named issue with a path
@@ -289,7 +289,7 @@ export const CommitSourceSchema = z.object({
 
 export const CommitmentSchema = z.object({
   teamSlug,
-  /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
+  /** The MaxPreps per-season athlete GUID: the join key to data/field-hockey/rosters.json. */
   athleteId: text,
   /**
    * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It

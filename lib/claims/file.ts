@@ -17,7 +17,7 @@ import type { ClaimSource, ClaimsFile, Fixture, FixtureClaims } from './types';
 
 /**
  * The claims file beside a snapshot written to `snapshotOut`: `<dir>/claims.json` for the default `snapshot.json`
- * (data/claims.json, data/soccer/claims.json …), else `<out>.claims.json`, as the meta file is `<out>.meta.json`.
+ * (data/field-hockey/claims.json, data/soccer/claims.json …), else `<out>.claims.json`, as the meta file is `<out>.meta.json`.
  */
 export function claimsPathOf(snapshotOut: string): string {
   if (path.basename(snapshotOut) === 'snapshot.json') return path.join(path.dirname(snapshotOut), 'claims.json');

@@ -29,7 +29,7 @@ const USAFH_U18_ROSTER = 'https://usafieldhockey.com/junior-uswnt#_2026_U_S__U_1
  * lists it names link to their NorCal boards on /leaders, its Elo figures to the Elo boards (Bishop's to
  * SoCal's, St. Ignatius to NorCal's: there is no statewide board) and De Anza to its standings. Each link
  * to a team, player or college is checked at build time: a team slug not in the registry, a player not on
- * that team's varsity roster or a commitment not in data/commits.json throws, so a roster refresh that drops a name fails the build
+ * that team's varsity roster or a commitment not in data/field-hockey/commits.json throws, so a roster refresh that drops a name fails the build
  * rather than shipping a link to the wrong place. Every link carries `prefetch={false}`: the post has
  * about fifty of them, and the default would download every team page it names.
  */

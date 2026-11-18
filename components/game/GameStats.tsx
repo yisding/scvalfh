@@ -21,7 +21,7 @@ import { buildGameStatsView, type GameStatsLookup } from './game-stats-view';
 export interface GameStatsProps {
   model: GameModel;
   className?: string;
-  /** Where the box scores come from; data/player-stats.json unless a test passes its own. */
+  /** Where the box scores come from; data/field-hockey/player-stats.json unless a test passes its own. */
   lookup?: GameStatsLookup;
 }
 

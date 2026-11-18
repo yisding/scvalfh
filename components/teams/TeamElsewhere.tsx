@@ -11,7 +11,7 @@ import type { TeamPageParts } from './team-page-view';
 /**
  * The team page's Elsewhere block, last in the rail (DESIGN §33): one row of links to the team's
  * pages on MaxPreps and si.com, its program's official Instagram account and its JV team's where
- * data/instagram.json has them (lib/social/instagram.ts), its league's official
+ * data/field-hockey/instagram.json has them (lib/social/instagram.ts), its league's official
  * schedule where the league publishes one, and the way to report an error; then last season in one line.
  */
 export function TeamElsewhere({

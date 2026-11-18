@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/history-2025-26.json — the prior-season archive (DESIGN §3.9): every
+ * The Zod contract for data/field-hockey/history-2025-26.json — the prior-season archive (DESIGN §3.9): every
  * league of lib/leagues.ts with its final standings and awards from an official source, or the
  * reason it has none.
  *

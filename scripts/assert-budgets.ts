@@ -9,7 +9,7 @@
  *
  * | Measure                                                        | Limit                              |
  * |----------------------------------------------------------------|------------------------------------|
- * | data/snapshot.json raw                                         | ≤ SNAPSHOT_MAX_BYTES (warn > SNAPSHOT_WARN_BYTES), lib/pipeline/steps/assemble.ts: 3.2 MB (warn 2.4 MB) |
+ * | data/field-hockey/snapshot.json raw                                         | ≤ SNAPSHOT_MAX_BYTES (warn > SNAPSHOT_WARN_BYTES), lib/pipeline/steps/assemble.ts: 3.2 MB (warn 2.4 MB) |
  * | `/` HTML gzip and RSC gzip                                     | each ≤ 4.4 × baseline `index`      |
  * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>`, `/leaders` | ≤ baseline + 24 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.2 × baseline `standings`       |
@@ -26,7 +26,7 @@
  * build crossed nine lines of this table (the Worker among them) and came within 1 % of a tenth
  * (`/playoffs`), so nine multipliers and the Worker allowance were raised, each from its own
  * measurement, never by a uniform factor. What was done:
- *   1. The tree after the amendment was built on the committed live snapshot (data/snapshot.json,
+ *   1. The tree after the amendment was built on the committed live snapshot (data/field-hockey/snapshot.json,
  *      fetched 2026-10-06T03:19Z: 99 teams, 871 games) at a fixed instant:
  *        SCVAL_BUILD_AT=2026-10-06T12:00:00Z pnpm build && pnpm assert:budgets
  *      The tree before it (commit 43807a3, five leagues) was built at the same instant on ITS OWN
@@ -57,7 +57,7 @@
  *
  * THE GAME BOX SCORE AMENDMENT (2026-10-24, DESIGN §24.6): the Worker line alone, by the same rule
  * as the amendment above (measured bytes plus about 10 %, rounded to 100 KB). The box scores the game
- * pages show (data/player-stats.json `games`) are bundled with the rest of that file; see the
+ * pages show (data/field-hockey/player-stats.json `games`) are bundled with the rest of that file; see the
  * Worker check's comment for the measurement.
  *   The design review's estimates (`/` 3.3–3.5 ×, `/teams` 6.5 ×, `/standings` 1.5 ×, `/schedule`
  *   0.75 ×, `/leaders` 2.4 ×) were estimates; the multipliers above are from the measurement.
@@ -69,8 +69,8 @@
  * each row the twin phone/desktop markup every list uses: built on the committed snapshot (fetched
  * 2026-10-29, "today" Oct 30) at 54,338 B against the 43,224 B line (126 %), so the line is 62,017 B
  * (88 %). The two brackets add about 8 KB gzip when their owner files are filled (the 2025 CCS and
- * SDS fixtures render 3.8 and 4.2 KB): whoever commits a filled data/ccs-bracket-2026.json or
- * data/sds-brackets-2026.json re-measures this line in the same PR.
+ * SDS fixtures render 3.8 and 4.2 KB): whoever commits a filled data/field-hockey/ccs-bracket-2026.json or
+ * data/field-hockey/sds-brackets-2026.json re-measures this line in the same PR.
  *
  * THE NOVEMBER AMENDMENT (2026-11-03, DESIGN §24.6): by the same rule, the two lines that were over or
  * within 5 % of their limit, built on the committed snapshot of 2026-11-03 ("today" Nov 3, both bracket
@@ -81,8 +81,8 @@
  * touched. The bracket note above stands: whoever fills a bracket file re-measures `/playoffs`.
  *
  * THE BRACKETS AMENDMENT (2026-11-03, later the same day): the `/playoffs` line alone, by the same rule, as the
- * bracket note asks of the PR that fills a bracket file. With the CCS seeds (data/ccs-bracket-2026.json, from the
- * MaxPreps tournament page) and the San Diego Section's three brackets (data/sds-brackets-2026.json, from the
+ * bracket note asks of the PR that fills a bracket file. With the CCS seeds (data/field-hockey/ccs-bracket-2026.json, from the
+ * MaxPreps tournament page) and the San Diego Section's three brackets (data/field-hockey/sds-brackets-2026.json, from the
  * Section's sheet) filled, and the MCAL tournament drawn in its `#mcal` section (its bracket and seeds table, as
  * every other league's postseason is drawn on the page), built on the committed snapshot of 2026-11-03: 83,957 B,
  * 111.7 % of the 75,172 B line, so 4.0 → 5.1 × (95,844 B, 88 %).
@@ -141,9 +141,9 @@ if (!workerOnly) {
   // Labels from the pipeline's own constants (budgetLabel), never literals: the caps moved from 1.6 /
   // 1.2 MB to 3.2 / 2.4 MB with the Southern California amendment, and the old literals would have
   // printed the wrong numbers beside the right check.
-  check('data/snapshot.json raw', snapshotBytes, SNAPSHOT_MAX_BYTES, budgetLabel(SNAPSHOT_MAX_BYTES));
+  check('data/field-hockey/snapshot.json raw', snapshotBytes, SNAPSHOT_MAX_BYTES, budgetLabel(SNAPSHOT_MAX_BYTES));
   if (snapshotBytes > SNAPSHOT_WARN_BYTES) {
-    console.warn(`WARN data/snapshot.json is ${snapshotBytes} bytes (> ${budgetLabel(SNAPSHOT_WARN_BYTES)} warning line)`);
+    console.warn(`WARN data/field-hockey/snapshot.json is ${snapshotBytes} bytes (> ${budgetLabel(SNAPSHOT_WARN_BYTES)} warning line)`);
   }
 
   // ------------------------------------------------------------ documents
@@ -290,7 +290,7 @@ if (existsSync(WORKER_BUNDLE)) {
     // Keeping each sport's Worker to its own configs would take that growth back out; it is not done yet.
     //
     // baseline + 1300 KB from 2026-10-24 (it was + 1000 KB; DESIGN §24.6). The game pages' box
-    // scores (846 of them, 4,811 player lines, in data/player-stats.json `games`) are 57,945 B of
+    // scores (846 of them, 4,811 player lines, in data/field-hockey/player-stats.json `games`) are 57,945 B of
     // gzip -9 JSON, and the player-stats chunk of `pnpm build:cloudflare` (bundle/_next/static/
     // player-stats-view-*.js) measured 147,806 B with them. The Worker measured 2,486,508 B over 246
     // files, over the old 2,449,651 B line, and without them it would have been about 2,428,000 B

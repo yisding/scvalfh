@@ -31,7 +31,7 @@
  * attack given the defenses: goals over the goals an average team would expect against the same
  * opponents, a ratio of sums (KenPom's original adjustment averaged per-game ratios instead).
  *
- * Players. Player stats are season totals with no game-by-game split (data/player-stats.json), so a
+ * Players. Player stats are season totals with no game-by-game split (data/field-hockey/player-stats.json), so a
  * player's Elo-adjusted points are their points times their team's schedule factor: every player on a
  * team faced the same defenses, and the factor reads a player's points as spread over the team's games
  * like its goals. A player who sat out the hard (or the easy) games is credited with the team's

@@ -489,7 +489,7 @@ export function leagueCopy(
       // projects no seed (DESIGN-socal §2.4), so the sentence says when the brackets come, nothing more.
       const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
       const when = seeding ? ` after its ${shortDate(seeding.date)} seeding meeting` : '';
-      // Past tense once the last finals day has passed; once the brackets are transcribed (data/sds-brackets-2026.json)
+      // Past tense once the last finals day has passed; once the brackets are transcribed (data/field-hockey/sds-brackets-2026.json)
       // they are on the playoffs page, so the sentence points there rather than promising them.
       const over = today !== undefined && today > ps.dates.last;
       const drawn = SDS_BRACKETS_FILE.divisions.length > 0 && today !== undefined && (!seeding || today >= seeding.date);

@@ -7,7 +7,7 @@
  * posted (tests/fixtures/sds/brackets-2025.ts). The copy rules are checked on what renders: no seed word at all (the
  * Section's places print as bare numerals; scripts/copy-rules.ts SEED_CLAIM covers every San Diego surface), no
  * "eliminat", no champion named, no CCS word. The page is rendered with lib/postseason/sds-bracket mocked to the 2025 file (the
- * committed data/sds-brackets-2026.json is the placeholder and must stay so), the way tests/ui/playoff-view.test.ts
+ * committed data/field-hockey/sds-brackets-2026.json is the placeholder and must stay so), the way tests/ui/playoff-view.test.ts
  * mocks lib/postseason/ccs-bracket; on the placeholder nothing is drawn.
  */
 
@@ -168,7 +168,7 @@ describe('the 2025 brackets before a game is played', () => {
 describe('/playoffs with the Section’s brackets (lib/postseason/sds-bracket mocked to the 2025 file)', () => {
   // The Oct 2 corpus with the snapshot's day moved to Tue Nov 3, after the seeding meeting; the brackets come
   // through getSdsBrackets/getSdsBracketsSource, mocked to the 2025 file joined to its MaxPreps rows the way a
-  // filled data/sds-brackets-2026.json would answer.
+  // filled data/field-hockey/sds-brackets-2026.json would answer.
   const priorEnv = process.env.SCVAL_SNAPSHOT;
   const brackets = buildSdsBrackets(file, games);
   let html = '';

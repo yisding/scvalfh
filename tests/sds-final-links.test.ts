@@ -1,5 +1,5 @@
 /**
- * lib/postseason/sds-final-links.ts: a San Diego final's stream and tickets from data/sds-brackets-2026.json onto
+ * lib/postseason/sds-final-links.ts: a San Diego final's stream and tickets from data/field-hockey/sds-brackets-2026.json onto
  * its game where the game has none, and the site's read of the committed snapshot (lib/data.ts) carrying them.
  */
 

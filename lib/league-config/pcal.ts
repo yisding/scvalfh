@@ -34,7 +34,7 @@ export const PCAL: LeagueConfig = {
       expectedTeams: 7, gamesPerTeam: 12,
       leaguePlay: { first: '2026-09-02', last: '2026-10-29' },
       official: {
-        source: 'pcal-pdf', mode: 'bundled', bundledFile: 'data/official/pcal-2026.json',
+        source: 'pcal-pdf', mode: 'bundled', bundledFile: 'data/field-hockey/official/pcal-2026.json',
         scheduleUrl: 'https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf',
         revisionCheckUrl: 'https://pcalathletics.org/wp-content/pdf/PCAL-Field-Hockey.2026.FINAL_.pdf',
         bundledSha256: '6b99480a4a1b44b0eea2c352e81e93e14ca97e44cbcced0c131f188546b3d224',

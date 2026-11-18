@@ -262,7 +262,7 @@ describe('trigger c against a game a configured correction scores (PR #127 revie
   // corrected (every refresh since writes it so, `provenance.resultCorrection.maxpreps` null for "no score"). The
   // feed's row is rebuilt from the corrected game, so the check does not depend on which (update-data, 2026-11-14).
   it('counts this run’s finals with the same corrections the last update had', () => {
-    const raw = JSON.parse(readFileSync('data/snapshot.json', 'utf8')) as Snapshot;
+    const raw = JSON.parse(readFileSync('data/field-hockey/snapshot.json', 'utf8')) as Snapshot;
     const loaded = loadSnapshot(raw as unknown);
     const helix = '3a37744f-8264-47f8-baa3-6c660b8e3892';
     const scored = loaded.games.find((g) => g.contestId === helix)!;

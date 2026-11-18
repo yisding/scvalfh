@@ -1,5 +1,5 @@
 /**
- * The /leaders player boards (data/player-stats.json): most points, goals, Elo-adjusted points, assists, saves
+ * The /leaders player boards (data/field-hockey/player-stats.json): most points, goals, Elo-adjusted points, assists, saves
  * and clean sheets, plus the notes under them. A player's numbers are exactly what the team page shows:
  * season totals as the coach entered them on MaxPreps, plus the goals and saves the coach wrote in game
  * notes instead (lib/players/note-stats.ts). Their grade and position are the team page's roster row's

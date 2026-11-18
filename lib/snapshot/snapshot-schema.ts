@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/snapshot.json (schema version 2, SPEC §4.1): the artifact's shapes only.
+ * The Zod contract for data/field-hockey/snapshot.json (schema version 2, SPEC §4.1): the artifact's shapes only.
  *
  * Its job is to fail the cron rather than ship a fake scoreline (DESIGN §5.1). Game invariants:
  *   1. a final game carries two numbers

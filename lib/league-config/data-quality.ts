@@ -6,7 +6,7 @@
  * ledger's (lib/fixtures/).
  */
 
-import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../sports/current';
+import { bySport } from '../sports/current';
 import type { DataQualityConfig } from './shape';
 
 /** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
@@ -111,10 +111,9 @@ const VOLLEYBALL_DATA_QUALITY: DataQualityConfig = {
   notCovered: [],
 };
 
-export const DATA_QUALITY: DataQualityConfig = IS_FIELD_HOCKEY
-  ? FIELD_HOCKEY_DATA_QUALITY
-  : IS_BASKETBALL
-    ? BASKETBALL_DATA_QUALITY
-    : IS_VOLLEYBALL
-      ? VOLLEYBALL_DATA_QUALITY
-      : SOCCER_DATA_QUALITY;
+export const DATA_QUALITY: DataQualityConfig = bySport<DataQualityConfig>({
+  'field-hockey': FIELD_HOCKEY_DATA_QUALITY,
+  soccer: SOCCER_DATA_QUALITY,
+  basketball: BASKETBALL_DATA_QUALITY,
+  volleyball: VOLLEYBALL_DATA_QUALITY,
+});

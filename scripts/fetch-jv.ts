@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 102
+ * Fetch every registry school's JV games into data/field-hockey/jv.json: MaxPreps' JV schedule feed for all 102
  * schools, and si.com's JV team page for each of the 102 (lib/jv/jv-teams.ts).
  *
  *   pnpm fetch-jv                       live: 102 MaxPreps JSON calls + up to 102 si.com pages

@@ -26,7 +26,7 @@ import { REPO, corpusDir, corpusSnapshotPath } from '../helpers';
 import { snapshotOf, writeTempVariant } from '../pipeline/support/run-corpus';
 import { resolveSbliveStage } from '../support/list-steps';
 
-const committed = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
+const committed = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown);
 const own = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as unknown);
 const editor = ledgerEditor(committed.fetchedAt).view;
 const NOW = '2026-11-16T15:00:00.000Z';

@@ -1,5 +1,5 @@
 /**
- * data/commits.json (SPEC §1.1j3, DESIGN §21): the committed file validates and holds every
+ * data/field-hockey/commits.json (SPEC §1.1j3, DESIGN §21): the committed file validates and holds every
  * load-time invariant; lib/players/commits.ts serves it in display order (DESIGN §21.1); and a bad file —
  * built in memory, never written to disk — is refused at load with a message that names what is
  * wrong (the path, or the team, player and college).
@@ -45,7 +45,7 @@ import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer } from '.
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'commits.json'), 'utf8')) as CommitsFile;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'commits.json'), 'utf8')) as CommitsFile;
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
 
@@ -113,7 +113,7 @@ function schemaIssues(f: unknown): string[] {
 
 const load = (f: unknown) => () => loadCommits(f, teams, season);
 
-describe('the committed data/commits.json', () => {
+describe('the committed data/field-hockey/commits.json', () => {
   it('validates and loads against the rosters', () => {
     expect(schemaIssues(raw)).toEqual([]);
     // Zod strips unknown keys, so equality proves the contract covers every key the file has.

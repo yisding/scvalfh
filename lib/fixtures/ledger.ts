@@ -38,7 +38,7 @@ import { DATA_QUALITY } from '../league-config/data-quality';
 import { findDivision, getSection, leagueOfDivision } from '../leagues';
 import { SECTIONS } from '../league-config/sections';
 import { isCalendarDate } from '../schema-primitives';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY } from '../sports/current';
+import { bySport } from '../sports/current';
 import { getTeamBySlug } from '../teams';
 import type { AddedGame, ContestId, Game, ResultCorrection, TeamSlug } from '../types';
 import { BASKETBALL_LEDGER } from './basketball';
@@ -49,7 +49,12 @@ import type { CanonicalFixture, FixtureCitation, FixtureLedger } from './shape';
 export const EMPTY_LEDGER: FixtureLedger = { fixtures: [], rejected: {} };
 
 /** This build's sport's ledger (lib/sports/current.ts). */
-export const LEDGER: FixtureLedger = IS_FIELD_HOCKEY ? FIELD_HOCKEY_LEDGER : IS_BASKETBALL ? BASKETBALL_LEDGER : EMPTY_LEDGER;
+export const LEDGER: FixtureLedger = bySport<FixtureLedger>({
+  'field-hockey': FIELD_HOCKEY_LEDGER,
+  soccer: EMPTY_LEDGER,
+  basketball: BASKETBALL_LEDGER,
+  volleyball: EMPTY_LEDGER,
+});
 
 /** A fixture's day where its MaxPreps contest is dated otherwise, and the citation. */
 export interface DateCorrection { dateKey: string; source: string }

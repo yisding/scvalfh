@@ -122,7 +122,7 @@ describe('ledgerProblems: the ledger against what the sources gave', () => {
   });
 
   it('finds every fixture’s contest in the committed snapshot as the game the fixture states', () => {
-    const raw = JSON.parse(readFileSync(path.join(__dirname, '..', 'data', 'snapshot.json'), 'utf8')) as { games: Game[] };
+    const raw = JSON.parse(readFileSync(path.join(__dirname, '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as { games: Game[] };
     expect(ledgerProblems(raw.games)).toEqual([]);
     const stored = new Set(raw.games.map((g) => g.contestId));
     for (const id of LEDGER_VIEW.byContest.keys()) expect(stored.has(id), id).toBe(true);

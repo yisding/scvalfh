@@ -134,11 +134,11 @@ and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb
 `athleteData`: an array of **38-element positional arrays** (37 until MaxPreps added `isClaimed`, between
 2026-11-10 and 2026-11-12), one per athlete — the same tuple encoding
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
-(`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
+(`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/field-hockey/rosters.json`).
 
 **Scope: every registry team, all nine leagues and the five independents (102).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
-`data/rosters.json` (`lib/players/rosters-schema.ts`) holds exactly one entry per team, in registry order,
+`data/field-hockey/rosters.json` (`lib/players/rosters-schema.ts`) holds exactly one entry per team, in registry order,
 each carrying its registry id and division. Everything below that says "captured 2026-10-02" was
 verified on the 15 SCVAL pages, the only ones captured then. All 43 pages of the four earlier
 leagues were then read live on 2026-10-03 with the same adapter, unchanged: 37 teams ok (745
@@ -165,7 +165,7 @@ first-name-and-initial list; the overlay note says how); Westmont added Kaylee T
 Savannah Murdoch; Tamalpais dropped Layla Goldstein, renamed Margaret "maggie" Maher to Maggie Maher
 and swapped Tashi Perkins' and Lauren Townsend's numbers (11 and 20). Nothing else changed in either
 league. The 21 added rows were swept the same day for school sources, recruiting profiles, clubs and
-commitments (see the overlay's, `data/clubs.json`'s and `data/commits.json`'s notes): two NCSA profiles
+commitments (see the overlay's, `data/field-hockey/clubs.json`'s and `data/field-hockey/commits.json`'s notes): two NCSA profiles
 (Kaylee and Lexi True), one club tie (Kaylee True to Fly FHC), no commitment, and a grade conflict for
 Julia Foulke, whom MaxPreps' 2026-27 roster calls a senior while the school's list and MaxPreps' own
 earlier rosters put her in the class of 2028 (MaxPreps kept, as the overlay rule says). A read of the
@@ -227,7 +227,7 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
   `${firstName} ${lastName}`, so it and the table both print **`"null Player #4"`**. The cross-check runs
   on that spelling; then `parseRosterPage` drops the "null", keeps the row as `"Player #4"` and names it
   in a warning, and its stat lines join to it as any row's do. Where another source ties a name to the
-  number, `data/rosters-enrichment.json` fills it (`name`), as it fills any blank; an unnamed one never
+  number, `data/field-hockey/rosters-enrichment.json` fills it (`name`), as it fills any blank; an unnamed one never
   becomes a registry player (the number may be anyone's). Seven teams had them on
   2026-11-14 (Mitty, Milpitas, Gilroy, St. Ignatius, King's Academy, Castilleja, Priory: 27 rows).
   A search that day (school sites, MaxPreps' JV, freshman and earlier rosters and box scores, Hudl, news)
@@ -274,7 +274,7 @@ Ignatius, Fremont, Palo Alto and Wilcox include male-typical names (0/24, 0/24, 
 Saint Francis's 24 names are exactly the school's **2025-26** roster. Useful only as a name
 cross-check (17/17 for Los Altos, 13/13 for Cupertino).
 
-**Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** The overlay has one
+**Beyond MaxPreps — school athletics sites (`data/field-hockey/rosters-enrichment.json`).** The overlay has one
 entry per registry team (102), joined on `slug + athleteId`; its rules below hold for every league.
 SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03 (the second sweep's tables
 follow the SCVAL one). The six EAL entries, added 2026-10-04, hold **recruiting profiles only** (the
@@ -395,7 +395,7 @@ grade agreeing a year on (MaxPreps already has all 19, so nothing is filled). Th
 page name such a page by its URL ("MaxPreps 2025-26 roster"), although the overlay files it under
 the `maxpreps-career` or `maxpreps-jv` kind. This sweep is not a script: re-running it is research.
 
-**Players' own recruiting pages (`profiles` in `data/rosters-enrichment.json`; swept for SCVAL on 2026-10-02, BVAL, PCAL and MCAL on 2026-10-03, the EAL on 2026-10-04 and the 53 Southern California teams on 2026-10-06).** A second sweep on
+**Players' own recruiting pages (`profiles` in `data/field-hockey/rosters-enrichment.json`; swept for SCVAL on 2026-10-02, BVAL, PCAL and MCAL on 2026-10-03, the EAL on 2026-10-04 and the 53 Southern California teams on 2026-10-06).** A second sweep on
 2026-10-02 looked for each rostered SCVAL player's own recruiting profile, in two passes the same day.
 It found 70 for 56 players: 37 SportsRecruits, 27 Hudl and 6 NCSA. 67 are on varsity rows; Los
 Gatos' three are JV and not shown. Every non-NCSA page was re-fetched and checked **[V]** that day.
@@ -524,7 +524,7 @@ track and volleyball pages were kept only where the club named is a girls' club 
 volleyball page for a La Verne school was left out). Each kept page was then re-read.
 118 pages for 116 players: 91 lacrosse (all on iwlca.sportsrecruits.com, the women's lacrosse site),
 15 softball, 6 field hockey that the earlier sweeps had missed, 5 soccer and 1 track and field. One
-shows a commitment not yet in `data/commits.json`: Campbell Trocha's, to Florida Tech, now added
+shows a commitment not yet in `data/field-hockey/commits.json`: Campbell Trocha's, to Florida Tech, now added
 (§1.1j3). NCSA, Hudl and FieldLevel were not probed in other sports, because their profile addresses
 carry numbers that cannot be guessed (NCSA loads in a headless browser, but its school pages list
 only a few recent athletes).
@@ -552,8 +552,8 @@ ones. The claim is not refreshed by `pnpm fetch-rosters`: the flag lives only on
 player's name, Ayva Garcia; it is unclaimed, so nothing is linked.) The same day each claimed page's
 `/bio/` page, where the athlete's own entries live, was read too. It shows **no college commitment**
 for any of the 260: `careerCollegeInterestsData` (15 players) is a list of colleges with no status,
-and the 11 of the 260 already in `data/commits.json` show nothing there. Its club-teams block lists 33
-clubs for 32 players: the 22 field hockey ties were all in `data/clubs.json` already, and one source was
+and the 11 of the 260 already in `data/field-hockey/commits.json` show nothing there. Its club-teams block lists 33
+clubs for 32 players: the 22 field hockey ties were all in `data/field-hockey/clubs.json` already, and one source was
 added (Eleanor Levy's VCRD entry, made after the 2026-10-06 sweep); the 11 clubs in other sports are not
 linked, as that file holds field hockey clubs only.
 
@@ -594,7 +594,7 @@ A FieldLevel address probe (`fieldlevel.com/app/profile/<first.last>/fieldhockey
 addresses cannot be guessed. Hudl (its GraphQL search was not used) and Captain U (behind a login) were not
 searched.
 
-*JV players' profiles* (since 2026-11-06) are in `data/jv-profiles.json` (`lib/jv/jv-profiles.ts`), by the
+*JV players' profiles* (since 2026-11-06) are in `data/field-hockey/jv-profiles.json` (`lib/jv/jv-profiles.ts`), by the
 same rule, joined on team slug + the name the team page's JV list gives (§1.7) and checked at load: the player
 is on that list and not on the varsity roster, a stated class year agrees with the list's grade, no page is
 linked twice or also to a varsity row, and a player with a varsity-file row the overlay marks JV (Los Gatos')
@@ -615,7 +615,7 @@ linked: men's lacrosse pages (`imlca`), pages with a class and no school or plac
 Gallagher, Zoe Shetti, Emersyn Manion, Kaleigh Houghton, Kieara Reno, Nina Wimmer) or a place and no class
 (Ella Gunthermaher in Fair Oaks, Bella Vista's own town), a class that disagrees (Lauren Chow, Isabella Park,
 a Utah Tessa Lambert), and namesakes elsewhere, several committed. No linked page shows a commitment.
-`data/jv-profiles.json` holds 34 JV players with a profile at 14 schools. The varsity rows were not probed
+`data/field-hockey/jv-profiles.json` holds 34 JV players with a profile at 14 schools. The varsity rows were not probed
 again this day.
 
 *2026-11-13: Hudl's team rosters and NCSA's school pages, for all 102 schools.* Hudl's public GraphQL
@@ -650,7 +650,7 @@ The same day every linked SportsRecruits profile (294, varsity and JV) was re-re
 now shows a new commitment (McKenzie Rackleff's, §1.1j3). The SportsRecruits address probe was not
 repeated. The same day's roster refresh put six JV-list players on their varsity rosters, Berkeley's Sage Murphy
 among them, so her Hudl page is on her varsity row: the overlay then holds 903 profiles for 634 players (78
-Hudl and 4 NCSA from this sweep), and `data/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
+Hudl and 4 NCSA from this sweep), and `data/field-hockey/jv-profiles.json` 35 JV players at 15 schools (7 Hudl from it).
 
 *2026-11-13: a search of four schools.* Sobrato, Cupertino, Lynbrook and Homestead (116 players: 72 varsity
 rows, among them the 20 Sobrato rows new to the roster that day, and 44 JV) were searched for recruiting pages
@@ -715,7 +715,7 @@ Gotchas, all **[V]**:
   **FieldLevel** profiles are mostly behind a login. Gabby Moll's SportsRecruits and FieldLevel pages give Los Altos, CA, not Homestead, and the
   roster has no class year to check, so only the NCSA profile (under Homestead) is linked.
 
-EAL differences, all **[V]** on 2026-10-04: the six teams hold 95 players on `data/rosters.json` (Bella
+EAL differences, all **[V]** on 2026-10-04: the six teams hold 95 players on `data/field-hockey/rosters.json` (Bella
 Vista 19, Chico 20, Corning 0, Davis 19, Lassen 15, Pleasant Valley 22).
 - **SportsRecruits** was probed for every player on `my.sportsrecruits.com/athlete/<first_last>` (suffixes
   1-7 and name variants, about 1,200 slugs). Chico's school organization page
@@ -783,11 +783,11 @@ a profile outside those routes could exist and not be linked. The Southern Calif
 Hudl rosters were read; CaptainU and personal sites were barely covered, and a private Hudl profile or
 an NCSA slug with an unguessed nickname stays unfound.
 
-**(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/players/clubs-schema.ts`, read by
+**(j2) Clubs and club affiliations** — `data/field-hockey/clubs.json` (`lib/players/clubs-schema.ts`, read by
 `lib/players/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
 DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
 recruiting profiles on 2026-10-05, and a Southern California sweep on 2026-10-06, not a script: nothing fetches or refreshes it. It holds 28 youth field hockey clubs (13 from 2026-10-03, 3 from
-2026-10-04, 12 from 2026-10-06) and 171 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06, 1 from 2026-10-07), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+2026-10-04, 12 from 2026-10-06) and 171 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06, 1 from 2026-10-07), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/field-hockey/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one
 factual sentence, its teams and programs (each with a short detail and the page it was read from;
 the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
@@ -875,7 +875,7 @@ re-opened their sources (for the three D-City and two Chico Hotshots ties, two v
 apart, after the verifier of the D-City record and the MaxPreps sweep had found them).
 
 *The 2026-10-05 recruiting-profile pass.* Every recruiting profile linked from
-`data/rosters-enrichment.json`, `data/commits.json` or this file was re-read for the clubs it lists:
+`data/field-hockey/rosters-enrichment.json`, `data/field-hockey/commits.json` or this file was re-read for the clubs it lists:
 74 SportsRecruits pages, 36 NCSA pages and 51 Hudl pages. SportsRecruits renders an athlete's CLUB
 and TEAMS blocks by script, so they are not in the page's HTML (its JSON-LD gives only the headline
 club); those pages were read in headless Chromium. NCSA answers curl with HTTP 403 and was read with
@@ -1128,7 +1128,7 @@ Southern California gotchas, all **[V]** on 2026-10-06:
 
 *When a roster refetch breaks it.* The join is checked at load against the merged rosters. If
 `pnpm fetch-rosters` drops or respells a tied player's row, if the overlay marks it JV, or if a
-season rollover moves `data/rosters.json` to a season `data/clubs.json` is not for, `lib/players/clubs.ts`
+season rollover moves `data/field-hockey/rosters.json` to a season `data/field-hockey/clubs.json` is not for, `lib/players/clubs.ts`
 throws at import, so `pnpm test` and the build fail with
 `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources and edit or drop
 it by hand (on a rollover, redo the research for the new season). It is never pruned
@@ -1157,7 +1157,7 @@ is varsity since that day, its `levelSource` her MAX page, though the school's o
 still holds her and its varsity list (27 names) does not; Los Gatos posts no MaxPreps stats to settle it. Casey
 Moorehouse's MAX page claims no varsity spot, and her row stays JV.
 
-**(j3) College commitments** — `data/commits.json` (`lib/players/commits-schema.ts`, read by
+**(j3) College commitments** — `data/field-hockey/commits.json` (`lib/players/commits-schema.ts`, read by
 `lib/players/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
@@ -1167,7 +1167,7 @@ round; and, on 2026-10-06, the every-sport round for the 53 Southern California 
 a script: nothing fetches or refreshes it. It holds 38 commitments (23 in field hockey, 12 in lacrosse,
 1 in soccer, 1 in basketball, 1 in softball; one, Phoebe Miller's, `signed`) and the 29 colleges they are to, with 32 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
-rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
+rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/field-hockey/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
 `COMMIT_SPORTS`), a `status` (`committed`, or `signed` only where a source says so), an `asOf` (the
 earliest date a kept source gives: a day, a month or a year), a `confidence`, and its sources (URL,
@@ -1547,14 +1547,14 @@ NCSA's public pages show no commitment even for committed players, so loading th
 proved nothing. A list sweep re-read FH College Path (classes 2026 to 2031), Play College Field
 Hockey's sheet, MAX Field Hockey's whole commitments table, which MAX now serves as HTML (its player
 pages too, so a MAX page can be cited where before it was a lead), Stick Together, the clubs in
-`data/clubs.json`, and the lacrosse, soccer, softball, volleyball, water polo, basketball and track
+`data/field-hockey/clubs.json`, and the lacrosse, soccer, softball, volleyball, water polo, basketball and track
 lists of earlier rounds, matching each against every row. A news sweep read the Bay Area News Group
 and SCNG papers' high school sections since August, other local papers, Patch, the student papers
 and school athletics sites that answered, and the West Coast college programs' news. Four
 player-by-player sweeps ran one extended web search for each of the 1,375 class-of-2027,
 class-of-2028 and ungraded rows not already in the file (standard-mode results missed known
 commitments, so rows first searched that way were searched again in extended mode). The class years here are
-`data/rosters.json`'s grades (1,406 + 267 = 1,673), so the 267 rows it grades as sophomores or
+`data/field-hockey/rosters.json`'s grades (1,406 + 267 = 1,673), so the 267 rows it grades as sophomores or
 freshmen got none; the 2026-10-12 round's 309 also counted rows graded only by other pages, which
 this round searched as ungraded. Two commitments were found: Kendall Gann, Temecula Valley, class of
 2027, to Barton College (NCAA Division II; its field hockey team plays in the South Atlantic
@@ -1579,7 +1579,7 @@ probe ran in every sport for all 1,673 rows (23,270 addresses; §1.1j) and every
 profile was re-read. A list sweep re-read FH College Path (classes 2027 to 2031), MAX Field Hockey's
 whole commitments table (now at `maxfh.longstreth.com/college-commitments/`, 68 pages, 1,621 rows),
 Play College Field Hockey's sheet, Stick Together (no issue after Oct 6), every club in
-`data/clubs.json`, ADVNC, Lacrosse Masters, Prep Girls Lacrosse, TopDrawerSoccer's California classes
+`data/field-hockey/clubs.json`, ADVNC, Lacrosse Masters, Prep Girls Lacrosse, TopDrawerSoccer's California classes
 of 2027 and 2028, SoccerWire's monthly pages, Prep Soccer, Cal Nuggets, Extra Inning Softball, the
 Prep Network's softball, volleyball and basketball lists and MileSplit's California signings. Two
 news sweeps (NorCal and SoCal) read the student papers, school athletics sites and local papers that
@@ -1682,7 +1682,7 @@ November signing period. No source found said any player had signed. The class o
 and the class of 2028's commitments are when a new sweep would change the file most.
 
 *When a roster refetch breaks it.* As for §1.1j2: `lib/players/commits.ts` throws at import if a committed
-player's row is dropped, respelled or marked JV, or if `data/rosters.json` moves to another season,
+player's row is dropped, respelled or marked JV, or if `data/field-hockey/rosters.json` moves to another season,
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment and edit or drop it by
 hand; on a rollover, redo the research (the seniors will have graduated).
 
@@ -1692,7 +1692,7 @@ hand; on a rollover, redo the research (the seniors will have graduated).
 other three leagues; the rest of those were read live by the script, and the six EAL teams on
 2026-10-04). Like the rosters it joins to, it covers every registry team, all nine leagues and the five independents (102): one
 call per team,
-and `data/player-stats.json` (`lib/players/player-stats-schema.ts`) holds exactly one entry per team in
+and `data/field-hockey/player-stats.json` (`lib/players/player-stats-schema.ts`) holds exactly one entry per team in
 registry order. The same adapter reads every league and throws on any drift. A team's `status` is
 `ok`, `none` (MaxPreps answers "No data was found": the coach entered nothing), `carried-forward`,
 `error`, or `pending` (no run has covered the team; nothing fetched, nothing claimed — the
@@ -1712,7 +1712,7 @@ game note credits; see "Box scores" and "Stats in the game note" below), and, no
 `team-season-stats/rollup/v1` and `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the
 rollup to league games.
 `lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
-`data/player-stats.json`.
+`data/field-hockey/player-stats.json`.
 
 **Box scores [V] 2026-10-24.** `GET /gatewayweb/react/team-contest-player-stats/v1?teamId=&contestId=`
 (no `rollup/` segment; that path is a 404) answers one team's player stats for one game in the
@@ -1729,7 +1729,7 @@ Shape **[V]**: `data.groups[]` = "Field Stats" and "Goaltending Stats", each wit
 second "… (2)" subgroup carries the overflow columns), each a table: `stats.columns[]`
 `{name, header, displayName, overallValue, columnType}` and `stats.rows[].columns[i]`
 `{value, href, caption}` lined up with `stats.columns[i]`. The `Name` cell's `href` is the athlete's
-career URL — its `?careerid=` joins to `data/rosters.json` (121/121 rows on 2026-10-02) — and its
+career URL — its `?careerid=` joins to `data/field-hockey/rosters.json` (121/121 rows on 2026-10-02) — and its
 `caption` is the class (`(Sr)`). Column names (MaxPreps' own): field `Jersey, Name, GamesPlayed,
 FieldMinutesPlayed, Goals, GoalsPerGame, Assists, AssistsPerGame, Points, PointsPerGame, Steals` and
 `Shots, ShotsPerGame, ShotsOnGoal, ShotsOnGoalPerGame, ShotsOnGoalPercentage, GameWinningGoal`;
@@ -1846,11 +1846,11 @@ Gotchas, all **[V]**:
 - Budget: 102 calls of 0.2–35 KB (one per registry team; 99, 49 and 43 at earlier measurements, 43 at about 25 s), at
   the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts), twice a day in season:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
-  (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
+  (non-fatal) and commits `data/field-hockey/player-stats.json` with the snapshot when its content changed; the
   script leaves the file untouched when only its `fetchedAt` stamps would move.
   Each team a game note credits costs one more call, the per-game totals (above): one on 2026-10-06.
 
-**(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
+**(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/field-hockey/prior-season.json`
 (`lib/history/prior-season-schema.ts`, loaded by `lib/history/prior-season.ts`), built once a season by
 `pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
 - The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
@@ -1892,11 +1892,11 @@ Gotchas, all **[V]**:
   measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.
 
-**(l2) Last season's players** — `data/prior-players.json` (`lib/players/prior-players-schema.ts`; one copy
+**(l2) Last season's players** — `data/field-hockey/prior-players.json` (`lib/players/prior-players-schema.ts`; one copy
 per sport), built once a season by `pnpm fetch-prior-players` (`scripts/fetch-prior-players.ts`) and read only
 by the player registry (m). No page reads it. **[V] 2026-11-14.**
 - The source is the stat-sheet rollup of (k), asked for with LAST season's varsity `sportSeasonId` (the one
-  `data/prior-season.json` was built from): `team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
+  `data/field-hockey/prior-season.json` was built from): `team-season-player-stats/rollup/v1?teamId=&sportSeasonId=`
   honours the season id, as the schedule read of (l) does. It is read for who is on it, not for the numbers
   (`lib/sources/maxpreps-stats-names.ts`): every table of every group has a `Name` column whose cell holds the
   short name ("S. Lewis"), the career link (`…/athletes/storey-lewis/?careerid=…`) and the class as a caption
@@ -2064,8 +2064,8 @@ one, and the 2026-11-14 build's HTML and RSC payloads contain none.)
 - **Ids.** A rebuild keeps every id. A player known by name keeps hers when a career id arrives; when two
   records become one, the one with more stints keeps its id and the other becomes a `formerId`; a record
   split back out takes back the id it was founded under.
-- **`playerId` in the curated files.** `data/clubs.json`, `data/commits.json`, `data/rosters-enrichment.json`
-  and `data/jv-profiles.json` join to a roster row by team and MaxPreps' per-season `athleteId` (or by name),
+- **`playerId` in the curated files.** `data/field-hockey/clubs.json`, `data/field-hockey/commits.json`, `data/field-hockey/rosters-enrichment.json`
+  and `data/field-hockey/jv-profiles.json` join to a roster row by team and MaxPreps' per-season `athleteId` (or by name),
   which a new season makes meaningless. `pnpm build-players` writes each record's `playerId` beside that key.
   The site does not read it (the schemas take it as optional and the loaders still join on `athleteId`); it
   is what a rollover re-keys from, instead of redoing the match. `tests/players-registry.test.ts` fails when
@@ -2245,7 +2245,7 @@ redirects.
   6-4-2, Valley Christian 6-5-1, Homestead 2-9-1, Fremont 2-10, Cupertino 1-9-2 (**7 teams — no
   Wilcox**). EC — Los Gatos 14-0, Mitty 11-2-1, Palo Alto 8-5-1, Saratoga 7-5-2, Presentation
   7-6-1, Santa Clara 4-9-1, Lynbrook 1-13, Monta Vista 1-13.
-- **2025-26 history, by league** (`data/history-2025-26.json`, built by `pnpm build-history`; one
+- **2025-26 history, by league** (`data/field-hockey/history-2025-26.json`, built by `pnpm build-history`; one
   entry per league, `available` or `unavailable`; read 2026-10-03). Record-only everywhere: league
   W-L-T as published, no points or goals computed.
   - **SCVAL** — the two PDFs above: 15 teams (7 + 8 varsity rows, 6 + 6 JV rows), awards in all four
@@ -2306,7 +2306,7 @@ redirects.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
     extend `scripts/build-history.ts`, and the schema (`lib/history/history-schema.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
-- **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
+- **2025 section playoff brackets** (`data/field-hockey/history-brackets-2025-26.json`, validated by
   `lib/history/history-brackets-schema.ts`, read by `lib/history/history.ts`, shown at the top of /history/2025-26, before any
   league: `#ccs` in NorCal, `#sds` and `#toc` in SoCal; 2026-11-16). Transcribed by hand on 2026-10-07 (the
   Tournament of Champions on 2026-11-03); nothing refreshes it. Each entry's `notes` say exactly what was
@@ -2335,7 +2335,7 @@ redirects.
     carry `seed: null`: Harvard-Westlake's three games from the Harvard-Westlake Chronicle (Nov 15, 2025:
     5-1 Fountain Valley in the first round Oct 21, 2-1 Edison in the semifinals Oct 23, 4-0 Newport Harbor
     in the final Oct 25 at Ted Slavin Field), the other five from MaxPreps' 2025-26 schedules as
-    `data/prior-season.json` holds them (every game between two Southern Section registry teams dated Oct
+    `data/field-hockey/prior-season.json` holds them (every game between two Southern Section registry teams dated Oct
     21-25, 2025, asserted in tests/history-brackets.test.ts). Bonita 1-1 Newport Harbor in round 1 is
     `decidedBy: 'tiebreak-unreported'`: MaxPreps marks it a Bonita loss and Newport Harbor played on, but no
     source gives a shootout (MaxPreps' game page returned 403 on 2026-11-03). Huntington Beach 1-0 Edison on
@@ -2362,7 +2362,7 @@ stale — dead weight, not used.
 ### 1.3a OFFICIAL — BVAL, PCAL and MCAL schedules (bundled, hash-checked)
 
 BVAL, PCAL and MCAL publish their schedules as documents with no feed, so their league fixtures
-were transcribed once (2026-10-02) and are **bundled** in `data/official/{bval,pcal,mcal}-2026.json`
+were transcribed once (2026-10-02) and are **bundled** in `data/field-hockey/official/{bval,pcal,mcal}-2026.json`
 (Zod-validated every time they load, in the cron and in tests). The files are written by
 `pnpm build-official-fixtures` from the transcriptions in
 `tests/fixtures/official/source/` and are never hand-edited. Each is a double round robin and is
@@ -2405,7 +2405,7 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
    `mcal-fixtures-2026.json` to match the new document.
 3. Run `pnpm build-official-fixtures` (add `--check` to only compare). It
    validates each division as a double round robin before writing anything.
-4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
+4. **Review the diff** of `data/field-hockey/official/*.json` (`git diff`): only the fixtures that really moved
    may change.
 5. Update `bundledSha256` and `revisedOn` for that division in its `lib/league-config/<league>.ts` (the sha256 of the
    new document's bytes: `sha256sum <file>`); for MCAL's changes cell update
@@ -2535,7 +2535,7 @@ the untested plan the paragraph carried since the preseason).
   hand (`lib/postseason/ccs-bracket.ts ccsBracketGames`: tagged `ccs` and dated from the quarterfinals, or marked
   published by the feed, which is how the bracket's games show between the Nov 2 meeting and Nov 7).
 - **Seeds** are in no feed field. After the Mon Nov 2 seeding meeting the owner copies the sixteen from the
-  published MaxPreps page into `data/ccs-bracket-2026.json` (each division numbered 1-8; contract and
+  published MaxPreps page into `data/field-hockey/ccs-bracket-2026.json` (each division numbered 1-8; contract and
   rationale in `lib/postseason/ccs-bracket-schema.ts`; placeholder `{ "season": "2026-27", "retrievedOn": null, "source":
   null, "divisions": [] }`, so `getCcsSeeds()` is null and no seed is printed) and runs `pnpm test` before
   committing it: `tests/ccs-bracket-file.test.ts` refuses a wrong count, a repeated or non-CCS team, seeds
@@ -2583,7 +2583,7 @@ Section's 2026 flag football brackets use (`https://docs.google.com/spreadsheets
 "2026 CIFSDS Flag Football Championship Brackets", read 2026-10-29) **[V]**. The 2026 sheet's id is unknown until
 published and cifsds.org returns a CloudFront 403 from the research sandbox, so the owner pastes it into
 `bracketSheetUrl` (null until then) and the site links it. Since 2026-10-30 the owner also transcribes the placed
-teams and round dates into `data/sds-brackets-2026.json` (about 20 minutes; contract and rationale in
+teams and round dates into `data/field-hockey/sds-brackets-2026.json` (about 20 minutes; contract and rationale in
 `lib/postseason/sds-brackets-schema.ts`, which checks every school against the registry and the field sizes, the play-in,
 the rounds inside Nov 2–14 and every Open Division school against `playoffDivisionOf`) and runs `pnpm test` before
 committing it; the site then draws that published bracket with MaxPreps' results joined to it (`lib/postseason/sds-bracket.ts`,
@@ -2688,7 +2688,7 @@ schedule/venue/time only. Opponent-name formatting differs per school — normal
 It carries JV events too, but the JV games are read from MaxPreps and si.com (§1.7); these feeds
 are not used for JV.
 
-### 1.7 JV games — MaxPreps JV feeds, supplemented by si.com JV pages (`data/jv.json`)
+### 1.7 JV games — MaxPreps JV feeds, supplemented by si.com JV pages (`data/field-hockey/jv.json`)
 
 Built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`), twice a day in season after the player stats
 (`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **kept apart
@@ -2816,14 +2816,14 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   6469098). Those two MaxPreps rows are rescored in `lib/jv/jv-corrections.ts` (`scoreFixes`), only while MaxPreps
   still has the score the entry names.
 - **Rosters** (shown since 2026-11-06, `lib/jv/jv-rosters.ts`): MaxPreps' `/jv/roster/` pages, read for
-  all 102 schools by `pnpm fetch-rosters --level jv` into `data/jv-rosters.json` (the varsity parser,
+  all 102 schools by `pnpm fetch-rosters --level jv` into `data/field-hockey/jv-rosters.json` (the varsity parser,
   with the JV sport season id), list 508 players for 34 schools on 2026-11-06 (11 on 2026-10-05). Several
   carry the whole program: Marin Academy's lists all 18 varsity players with their varsity numbers,
   Clairemont's 19 of its 20 and Harvard-Westlake's 22 of its 25, and all 13 of Huntington Beach's are on
   its varsity roster; Hollister has one player under two career records, one on each page. So a player on
   the varsity roster the page shows is not repeated on the JV list, which counts them (MaxPreps rows match
   by career id or name). The 2026-27 JV lists the schools' own sites publish (or a page the school
-  links as its roster) are transcribed in `data/jv-rosters-school-sites.json` (read 2026-11-06, each with
+  links as its roster) are transcribed in `data/field-hockey/jv-rosters-school-sites.json` (read 2026-11-06, each with
   its evidence for the season; 28 schools, 482 players): Saint Francis and St. Ignatius (Sidearm
   `/sports/jv-field-hockey/roster`, season selector); Los Gatos, Palo Alto, Helix and Bonita (5 Star:
   `/sport/RefreshRosterAthleteStyle2ViewComponent/<JV team id>?schoolYear=2026-2027`, the id from the
@@ -2903,11 +2903,11 @@ Harvard-Westlake 6-0 Temecula Valley on Oct 23; a scoreless Newport Harbor at Gl
 moved to Oct 24). The third-place game (Newport Harbor v Edison, Oct 29) is not on MaxPreps. A Nov 7 all-star
 game at Chaparral (hbfieldhockey.com) may surface as team rows inside the Southern Section's season window.
 
-### 1.9 CLUB CALENDAR — organizers' and clubs' own pages (`data/club-events.json`)
+### 1.9 CLUB CALENDAR — organizers' and clubs' own pages (`data/field-hockey/club-events.json`)
 
 Read by hand on 2026-11-13 for `/club-calendar` (DESIGN §34); nothing fetches it. Two sweeps ran in
 parallel, one over the associations, tournaments and national bodies, one over the 15 Northern
-California clubs of `data/clubs.json`; every quote kept in the file was then re-matched against its
+California clubs of `data/field-hockey/clubs.json`; every quote kept in the file was then re-matched against its
 live page (60 by script in Chromium, the other 9 by hand where the text sits in a page's meta
 description, a calendar feed's markup or a tab the script does not open). What each source gave:
 
@@ -2947,11 +2947,11 @@ and their sentence says whose dates they are; a team name on another club's sche
 Black" on Roseville's Gold Cup page) does not put that club on the event; a month-only date ("April
 2027") is never turned into a day: the event stays `expected`.
 
-### 1.10 INSTAGRAM ACCOUNTS — teams' and clubs' official accounts (`data/instagram.json`)
+### 1.10 INSTAGRAM ACCOUNTS — teams' and clubs' official accounts (`data/field-hockey/instagram.json`)
 
 Links, not a source: no fact on the site is read from an account, and `BANNED_HOSTS` (§1.1j2,
 §1.1j3) still refuses social media as a source everywhere. Researched by hand on 2026-11-13 for the
-102 field hockey teams and the 28 clubs of `data/clubs.json`. Handles were found where a page that is
+102 field hockey teams and the 28 clubs of `data/field-hockey/clubs.json`. Handles were found where a page that is
 not social media names or links them: a club's website (read by script, in Chromium where the links
 are rendered by script), a school's athletics or team page, a student paper, a search result, the
 site's owner. A handle the owner's own page links (a club's site, a school's or a program's) was taken
@@ -3171,7 +3171,7 @@ then assembled onto the first round's files (each new tie or profile says it is 
   title and description, quotes piece by piece; NCSA pages re-read by headless Chromium. All agreed, except
   where a page spells the name another way (Chin, Tuipulotu, Thornton, which the notes already say; Dalessandro without its apostrophe).
 
-### 1.12 HUDL TV BROADCASTS — schools' livestreams on Hudl's fan site (`data/hudl-streams.json`)
+### 1.12 HUDL TV BROADCASTS — schools' livestreams on Hudl's fan site (`data/field-hockey/hudl-streams.json`)
 
 Links, not a source: no score, time or venue is read from Hudl. MaxPreps' schedule rows carry a game's NFHS
 Network stream and GoFan tickets (§1.1 (b), `nfhsStreamUrl`, `goFanUrl`) but never a Hudl broadcast, and many
@@ -3686,7 +3686,7 @@ Load-bearing rules baked into it:
   `playoffs.divisionsPublished` (optional, since 2026-10-29) holds the per-division answer; both are
   carried from the previous snapshot when the page is not recognised (§1.4).
 - The CCS seeds and the San Diego brackets are not in the snapshot: they are the owner files
-  `data/ccs-bracket-2026.json` (`lib/postseason/ccs-bracket-schema.ts`) and `data/sds-brackets-2026.json`
+  `data/field-hockey/ccs-bracket-2026.json` (`lib/postseason/ccs-bracket-schema.ts`) and `data/field-hockey/sds-brackets-2026.json`
   (`lib/postseason/sds-brackets-schema.ts`), bundled and validated at build time (a slip in either fails the build
   and `pnpm test`), placeholders until the sections publish.
 - A level EAL final that MaxPreps flags `W` for one team and `L` for the other is a 1 v 1 win:
@@ -3761,12 +3761,12 @@ schools search reports as not covered. JV games have their own corrections (`lib
 
 The pipeline does not edit a list of games. Every source's rows are kept as **claims**, one per row, each on the
 **fixture** (our own record of one game) it is about, and the games a run publishes are folded from those claims
-stage by stage (`lib/claims/`). `data/snapshot.json` is that fold, the derived and published output, and its schema is
+stage by stage (`lib/claims/`). `data/field-hockey/snapshot.json` is that fold, the derived and published output, and its schema is
 unchanged. The claims are the pipeline's own working state: the site and the snapshot loader never read them, and
 nothing under `lib/claims/` loads `lib/data.ts` (`tests/claims/boundary.test.ts`; no module of `app/`, `components/`,
 `lib/data.ts`, `snapshot-load.ts` or `snapshot-migrate.ts` reaches `lib/claims/` or names `claims.json`).
 
-**The file.** Each sport has a claims file beside its snapshot: `data/claims.json`, `data/soccer/claims.json`,
+**The file.** Each sport has a claims file beside its snapshot: `data/field-hockey/claims.json`, `data/soccer/claims.json`,
 `data/basketball/claims.json`, `data/volleyball/claims.json`. A run writes it with the snapshot and its meta file
 (`writeOutputs`); for an `--out` that is not named `snapshot.json` it is `<out minus .json>.claims.json`, as the meta
 file is `<out minus .json>.meta.json` (`claimsPathOf`, `lib/claims/file.ts`). It is stable JSON, parsed against
@@ -3992,7 +3992,7 @@ alone in their own leagues), so only its five schedules are read.
 final changed since the last run, in a separate process:** the workflow then
 runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all nine leagues and the five independents, §1.1k) as a non-fatal step
 (`continue-on-error`), so a stats outage never costs the day's scores, and commits
-`data/player-stats.json` with the snapshot when its content changed. It is not part of the 131 below
+`data/field-hockey/player-stats.json` with the snapshot when its content changed. It is not part of the 131 below
 and shares no abort scope with the pipeline.
 
 ### 5.0 Request budget per run
@@ -4274,7 +4274,7 @@ pnpm fetch-data --capture tests/fixtures/corpus/<new-name>     # live: also reco
 the live transport in a recorder; it is the only way to make a new corpus, and the only reason to
 run a live fetch by hand. Tests that assert league-specific values build their snapshot from the
 corpus with `corpusSnapshotPath('all-2026-10-02')` (`tests/helpers.ts`); tests over the bundled
-`data/snapshot.json` assert invariants only, since that file changes every run. An offline run
+`data/field-hockey/snapshot.json` assert invariants only, since that file changes every run. An offline run
 never touches the network. It writes the snapshot, its meta file and the claims file (§4.2) beside `--out`:
 `/tmp/snap.json`, `/tmp/snap.meta.json` and `/tmp/snap.claims.json` for the first command above.
 
@@ -4301,14 +4301,14 @@ held to 2025's:
   2025-11-01 Super Regional rows of Davis's feed, bytes unchanged. They live in the `postseason-2025/`
   subfolder because `tests/helpers.ts allScheduleRows()` sweeps every `sched-*.json` directly under
   `tests/fixtures/maxpreps/` into the SCVAL corpus (293 rows from 15 feeds, pinned).
-- `tests/fixtures/ccs/bracket-2025.ts`: the 14 CCS games of `data/prior-season.json` rebuilt with the `game()`
+- `tests/fixtures/ccs/bracket-2025.ts`: the 14 CCS games of `data/field-hockey/prior-season.json` rebuilt with the `game()`
   builder on Nov 7/11/14 2026, with `bracket` and the `ccs` tag, the sixteen 2025 seeds from
-  `data/history-brackets-2025-26.json` (`seedsFromHistory`), the Stevenson–Willow Glen 1-1 (`4e75d107`) given Willow
+  `data/field-hockey/history-brackets-2025-26.json` (`seedsFromHistory`), the Stevenson–Willow Glen 1-1 (`4e75d107`) given Willow
   Glen's W as the history file records, and the finals' venue text from the history sites (`@ Los Altos HS`, `@
   Gilroy HS`). `tests/ui/bracket-model.test.ts`, `tests/ui/playoff-bracket.test.ts` and `tests/ui/playoff-view.test.ts`
   use it.
 - `tests/fixtures/sds/brackets-2025.ts`: the 2025 San Diego brackets as an owner file (`seedsFromHistory('sds')`,
-  window Nov 2–15 2025), the 26 SDS playoff rows of `data/prior-season.json` rebuilt with `game()` and tagged
+  window Nov 2–15 2025), the 26 SDS playoff rows of `data/field-hockey/prior-season.json` rebuilt with `game()` and tagged
   `section-playoffs` (three level rows given the W/L the sheet's winners imply) and a synthetic Helix 2-1 Granite
   Hills play-in (not on MaxPreps). 26 of the 30 bracket games have a MaxPreps row, so the join is asserted only
   where one exists. `tests/sds-bracket.test.ts` and `tests/ui/sds-bracket.test.ts` use it.
@@ -4327,7 +4327,7 @@ never poll the CCS bracket page itself expecting data.
 
 **Cadence (observed 2026-10-29).** There is no extra run on game days: the two crons (`0 14 * 8-11 *` and
 `0 5 * 8-11 *`, 7 AM and 10 PM Pacific during PDT, 6 AM and 9 PM after Nov 1) are the only schedule, and
-GitHub started them late every day of Oct 21–29 (the git log of `data/snapshot.meta.json`: the 05:00 UTC run
+GitHub started them late every day of Oct 21–29 (the git log of `data/field-hockey/snapshot.meta.json`: the 05:00 UTC run
 4.2–6.2 h late, the 14:00 UTC run 3.2–5.7 h late). In PST that is about 1–3 AM and 9–11:45 AM Pacific, so
 nothing lands between about noon and 1 AM: a game played in the afternoon or evening is first on the site
 the next night or morning, the Nov 2 1 PM seeding is first detectable on the early Nov 3 run, and fan copy
@@ -4343,7 +4343,7 @@ Super Regional rows (Nov 1 2025, `contestType` 5 and `homeAwayType` 2 on both si
 `contest.location`, the all-zero tournament id, entered the day after; a real capture in
 `tests/fixtures/maxpreps/postseason-2025/`) are what the window and the `/playoffs#eal` results list are
 tested against. **The San Diego Section's brackets are not polled**: the owner transcribes the published sheet
-into `data/sds-brackets-2026.json` (§1.4), and the Section's playoff games arrive in the team feeds like any
+into `data/field-hockey/sds-brackets-2026.json` (§1.4), and the Section's playoff games arrive in the team feeds like any
 other, tagged `section-playoffs` from Nov 2. The sheet's RESULTS are read every run from Nov 2 (three CSV tabs,
 §1.4 "as a results source"), for the games MaxPreps lacks or has no score for.
 
@@ -4415,8 +4415,8 @@ rules clause.)
 - `dateCode` nonzero semantics and `contestState` 0 were never observed — treat any future occurrence
   as unverified territory. (`contestState` 3 was observed on 2026-10-05, and `homeAwayType` 2 (neutral)
   on both sides of 2025's EAL Super Regional rows and CCS Division 1 final, read 2026-10-29; §1.1(g).)
-- **The CCS seeds and the San Diego brackets are typed in by hand.** `data/ccs-bracket-2026.json` (after the
-  Mon Nov 2 seeding meeting, from the MaxPreps tournament page) and `data/sds-brackets-2026.json` (after the Sat
+- **The CCS seeds and the San Diego brackets are typed in by hand.** `data/field-hockey/ccs-bracket-2026.json` (after the
+  Mon Nov 2 seeding meeting, from the MaxPreps tournament page) and `data/field-hockey/sds-brackets-2026.json` (after the Sat
   Oct 31 meeting, from the Section's sheet) are transcriptions: the schemas refuse a wrong count, a repeated or
   out-of-league school, an impossible play-in or a round outside the playoffs' dates, but not a team typed into
   the wrong numbered place. Run `pnpm test` before committing either. No parser exists for the published MaxPreps
@@ -4477,7 +4477,7 @@ rules clause.)
   recruiting-page overlay covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL
   2026-10-03, recall partial in each), with only recruiting profiles for the EAL (2026-10-04). The 53
   Sunset, City, North County, Metro and independent teams' overlay entries hold recruiting profiles only
-  (2026-10-06): no school-athletics sweep was made for them (`data/rosters-enrichment.json` notes). A team's page that does
+  (2026-10-06): no school-athletics sweep was made for them (`data/field-hockey/rosters-enrichment.json` notes). A team's page that does
   not parse fails that team (carried forward, or `error`), never writes a wrong value; a team no run
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
@@ -4505,8 +4505,8 @@ rules clause.)
   drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
   history, by league"); PCAL, MCAL, the EAL and the four SoCal leagues are marked `unavailable` in
-  `data/history-2025-26.json` (the CCS and San Diego Section 2025 playoff brackets are in
-  `data/history-brackets-2025-26.json`),
+  `data/field-hockey/history-2025-26.json` (the CCS and San Diego Section 2025 playoff brackets are in
+  `data/field-hockey/history-brackets-2025-26.json`),
   since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
   all nine leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
   season's, and nothing on the site prints them as a record or a standings table.

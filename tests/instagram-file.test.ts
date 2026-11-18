@@ -1,5 +1,5 @@
 /**
- * data/instagram.json (lib/social/instagram.ts): the committed file loads and keeps every invariant, the
+ * data/field-hockey/instagram.json (lib/social/instagram.ts): the committed file loads and keeps every invariant, the
  * soccer, basketball and volleyball files parse, and a bad file — built in memory from the real one, never
  * written to disk — is refused at load with a message naming the list, the slug and what is wrong.
  */
@@ -24,10 +24,10 @@ import {
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'instagram.json'), 'utf8')) as InstagramFile;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'instagram.json'), 'utf8')) as InstagramFile;
 const copy = (): InstagramFile => structuredClone(raw);
 
-describe('data/instagram.json', () => {
+describe('data/field-hockey/instagram.json', () => {
   const file = getInstagramFile();
 
   it('loads, with at least one team and one club account', () => {
@@ -35,7 +35,7 @@ describe('data/instagram.json', () => {
     expect(file.clubs.length).toBeGreaterThan(0);
   });
 
-  it('names only registry teams and data/clubs.json clubs, each once', () => {
+  it('names only registry teams and data/field-hockey/clubs.json clubs, each once', () => {
     for (const a of file.teams) expect(getTeamBySlug(a.slug), a.slug).toBeDefined();
     for (const a of file.clubs) expect(getClub(a.slug), a.slug).toBeDefined();
     expect(new Set(file.teams.map((a) => `${a.slug} ${a.level}`)).size).toBe(file.teams.length);
@@ -93,10 +93,10 @@ describe('loadInstagram refuses a bad file', () => {
   it('a slug that is not a team or a club, or one listed twice', () => {
     const f = copy();
     f.teams[0]!.slug = 'no-such-team';
-    expect(() => loadInstagram(f)).toThrow('data/instagram.json: teams no-such-team: not a registry team');
+    expect(() => loadInstagram(f)).toThrow('data/field-hockey/instagram.json: teams no-such-team: not a registry team');
     const g = copy();
     g.clubs[0]!.slug = 'no-such-club';
-    expect(() => loadInstagram(g)).toThrow('data/instagram.json: clubs no-such-club: not a club in data/clubs.json');
+    expect(() => loadInstagram(g)).toThrow('data/field-hockey/instagram.json: clubs no-such-club: not a club in data/field-hockey/clubs.json');
     const h = copy();
     h.teams.push({ ...h.teams[0]!, handle: 'another.handle' });
     expect(() => loadInstagram(h)).toThrow(/listed twice/);

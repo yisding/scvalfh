@@ -15,7 +15,7 @@
  * component that suppressed every zero would pass the first assertion and be wrong.
  *
  * Multi-league (SPEC §10.4, §13.6): every walk covers SCVAL, BVAL, PCAL, MCAL and EAL. The rule
- * runs three times. Over the bundled data/snapshot.json (replaced twice a day by the data cron,
+ * runs three times. Over the bundled data/field-hockey/snapshot.json (replaced twice a day by the data cron,
  * whose commit this suite gates) it asserts per-game INVARIANTS only — loops that pass trivially
  * when a set is empty, because a day with no score-pending game (every score entered, or
  * backfilled by D2 rule 3) or no 0-0 final is a normal day and must never block publishing. The

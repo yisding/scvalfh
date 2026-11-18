@@ -1,6 +1,6 @@
 /**
- * The JV players' own recruiting pages: data/jv-profiles.json, read by hand like the varsity
- * profiles in data/rosters-enrichment.json and linked by the same rule (lib/players/rosters-schema.ts
+ * The JV players' own recruiting pages: data/field-hockey/jv-profiles.json, read by hand like the varsity
+ * profiles in data/field-hockey/rosters-enrichment.json and linked by the same rule (lib/players/rosters-schema.ts
  * PlayerProfileSchema): a page names the player and a sport, and either names the school or shows a
  * class year that agrees with the grade plus a hometown in the school's own area.
  *
@@ -10,23 +10,23 @@
  * module compares names across sources (`nameKey`). Asserted at load time, so a bad file fails at
  * import rather than half-way through a render:
  *   - every entry is a player on the JV list the school's team page shows, and not on its varsity
- *     roster (a player who moves up gets her profiles in data/rosters-enrichment.json instead);
+ *     roster (a player who moves up gets her profiles in data/field-hockey/rosters-enrichment.json instead);
  *   - a class year a profile states agrees with the grade the JV list shows;
  *   - no profile is linked twice, in this file or across it and the varsity overlay;
  *   - no `maxpreps` profile: the claimed-page read of 2026-10-13 covered the varsity rows only.
  *
- * A row of data/rosters.json that a school source marks JV (Los Gatos': its MaxPreps list is the whole
- * program) keeps its profiles in data/rosters-enrichment.json, joined on its MaxPreps id like any
+ * A row of data/field-hockey/rosters.json that a school source marks JV (Los Gatos': its MaxPreps list is the whole
+ * program) keeps its profiles in data/field-hockey/rosters-enrichment.json, joined on its MaxPreps id like any
  * other row; the varsity roster leaves that row out, so its profiles are shown here, on the JV list
  * row of the same name. This file holds the JV players who have no such row, and refuses one who has.
  *
- * Commitments and clubs stay varsity-only (data/commits.json and data/clubs.json join on the varsity
+ * Commitments and clubs stay varsity-only (data/field-hockey/commits.json and data/field-hockey/clubs.json join on the varsity
  * rows' MaxPreps ids): this file holds profiles alone.
  */
 
 import { z } from 'zod';
 
-import bundledFieldHockey from '../../data/jv-profiles.json';
+import bundledFieldHockey from '../../data/field-hockey/jv-profiles.json';
 import bundledBasketball from '../../data/basketball/jv-profiles.json';
 import bundledVolleyball from '../../data/volleyball/jv-profiles.json';
 import bundledSoccer from '../../data/soccer/jv-profiles.json';
@@ -34,11 +34,12 @@ import { validateData } from '../data-file';
 import { classOf, getRosterEnrichment } from '../players/rosters';
 import { PlayerProfileSchema, profileSportKey, type PlayerProfile } from '../players/rosters-schema';
 import { dateKey, playerId } from '../schema-primitives';
+import { DATA_DIR } from '../sports/current';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export const JvProfilePlayerSchema = z
@@ -117,7 +118,7 @@ function load(): JvProfilesFile {
       const p = byName.get(nameKey(e.name));
       if (!p) fail(team.slug, e.name, 'not a player on the JV list the team page shows (or now on the varsity roster)');
       if (overlayJv.has(`${team.slug} ${nameKey(e.name)}`)) {
-        fail(team.slug, e.name, 'data/rosters-enrichment.json marks this MaxPreps row JV: link the profile there');
+        fail(team.slug, e.name, `${DATA_DIR}/rosters-enrichment.json marks this MaxPreps row JV: link the profile there`);
       }
       for (const x of e.profiles) {
         if (varsityUrls.has(x.url)) fail(team.slug, e.name, `${x.url} is already linked to a varsity player`);

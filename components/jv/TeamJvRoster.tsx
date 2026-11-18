@@ -7,7 +7,7 @@ import type { TeamJvRosterView } from './jv-roster-view';
 /**
  * A team page's JV roster: the varsity roster's list (components/teams/TeamRoster.tsx: the same
  * `sx-auto` columns of hairline rows, number, name and one line of the facts that exist, a blank never printed as a guess).
- * Of its recruiting lines only the profile links appear (the same Profiles line, data/jv-profiles.json):
+ * Of its recruiting lines only the profile links appear (the same Profiles line, data/field-hockey/jv-profiles.json):
  * commitments and clubs are for the varsity rosters. The footnote names the source
  * and when it was read, and a link under it goes there. A player on the varsity roster above is not repeated
  * (lib/jv/jv-rosters.ts): the footnote counts them, and a list that is all varsity players says so in

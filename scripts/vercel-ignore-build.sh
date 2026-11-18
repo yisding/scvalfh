@@ -5,10 +5,8 @@
 # the project's last deployment are all ANOTHER sport's data files, which its build never reads
 # (lib/sports/current.ts DATA_DIR):
 #
-#   field hockey skips a change only under data/soccer/, data/basketball/ or data/volleyball/  (the other sports' refreshes);
-#   soccer skips a change only under data/ outside data/soccer/;
-#   basketball skips a change only under data/ outside data/basketball/;
-#   volleyball skips a change only under data/ outside data/volleyball/.
+#   each sport skips a change only under data/ outside its own data/<sport>/ (the other sports' refreshes):
+#   field hockey skips one only under data/soccer/, data/basketball/ or data/volleyball/, and so on.
 #
 # Set in each Vercel project (Settings → Git → Ignored Build Step), naming the project's sport:
 #   bash scripts/vercel-ignore-build.sh field-hockey
@@ -44,13 +42,8 @@ changed=$(git diff --name-only "$base" "$head") || build "git diff $base $head f
 [ -n "$changed" ] || skip "nothing changed since $base"
 
 while IFS= read -r file; do
-  case "$sport" in
-    field-hockey)
-      case "$file" in data/soccer/* | data/basketball/* | data/volleyball/*) ;; *) build "$file changed" ;; esac ;;
-    soccer | basketball | volleyball)
-      # Its own folder builds; any other data file is another sport's.
-      case "$file" in "data/$sport/"*) build "$file changed" ;; data/*) ;; *) build "$file changed" ;; esac ;;
-  esac
+  # Its own folder builds; any other data file is another sport's.
+  case "$file" in "data/$sport/"*) build "$file changed" ;; data/*) ;; *) build "$file changed" ;; esac
 done <<< "$changed"
 
 skip "only another sport's data changed since $base"

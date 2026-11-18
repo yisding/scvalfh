@@ -270,7 +270,7 @@ committee’s call."; once the play-in is final its winner reads "Won the play-i
 automatic CCS qualifier.") and its loser "Lost the play-in" ("Lost the play-in; SCVAL submits the loser for at-large
 consideration.", Article VII §2), and a final crossover adds "<winner> beat <loser> <score> in the #n v #n crossover on
 <date>; CCS uses it when it seeds." Never "eliminated". The CCS seeds are the committee's: the site prints them only
-from `data/ccs-bracket-2026.json`, which the owner fills from the published MaxPreps bracket after the Nov 2 meeting
+from `data/field-hockey/ccs-bracket-2026.json`, which the owner fills from the published MaxPreps bracket after the Nov 2 meeting
 (each CCS division numbered 1-8; DESIGN §31.3).
 
 **Official sources.** The two schedule grids as PDFs (De Anza and El Camino), read live every run and
@@ -325,7 +325,7 @@ berth.") and its loser "Lost the play-in" ("Lost the play-in; no automatic berth
 are the CCS committee’s call."), and the play-in card adds "Winner: <team> — BVAL’s 4th automatic CCS berth".
 
 **Official sources.** The two division schedules, Google Docs revised 9/20/26 (Mt. Hamilton) and
-9/22/26 (Santa Teresa); 60 fixtures bundled in `data/official/bval-2026.json` and hash-checked every
+9/22/26 (Santa Teresa); 60 fixtures bundled in `data/field-hockey/official/bval-2026.json` and hash-checked every
 run. The by-laws are a Google Doc. A league game counts when it matches a fixture; MaxPreps'
 `contestType` 2 and 4 (tournament, neutral) never count.
 
@@ -383,7 +383,7 @@ automatic CCS qualifiers. 3rd and lower have no automatic berth and may apply fo
 berth (By-laws §23.4). There are no PCAL pairings; the next game is the CCS bracket.
 
 **Official sources.** One PDF schedule (2026 FINAL); 42 fixtures bundled in
-`data/official/pcal-2026.json` and hash-checked every run. The grid's codes `STE CAR HOL MON SAL GRE
+`data/field-hockey/official/pcal-2026.json` and hash-checked every run. The grid's codes `STE CAR HOL MON SAL GRE
 CAT` map to the registry; `CAT/YOR` and `SCAT` are Santa Catalina. A game counts when it matches a
 fixture, including a game MaxPreps moved by up to two weeks.
 
@@ -486,7 +486,7 @@ Games dated **Oct 23 or later** between MCAL teams are tournament play
 and never count in the league table, unless a maintainer lists a rescheduled league game as an
 override.
 
-**Official sources.** The 2026 schedule PDF (72 fixtures, bundled in `data/official/mcal-2026.json`
+**Official sources.** The 2026 schedule PDF (72 fixtures, bundled in `data/field-hockey/official/mcal-2026.json`
 and hash-checked every run); the Handbook; the Tie-Breaking Criteria; the 2026 play-off sheet. Approved
 schedule changes (two so far) are posted on the league's schedule-changes page, not in the PDF, so
 that page's field hockey cell is hashed every run too.
@@ -808,7 +808,7 @@ named league champion" (the designated champion, which the league names, not thi
 by the Section" (badge "By selection"; the historical label until 2026-10-29 was "No league route", badge
 "Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
 **The brackets** (2026-10-30). After the Sat Oct 31 meeting the owner transcribes the Section's published sheet into
-`data/sds-brackets-2026.json` (the three divisions' sizes, places, a play-in if any and the round dates, which
+`data/field-hockey/sds-brackets-2026.json` (the three divisions' sizes, places, a play-in if any and the round dates, which
 default to the officials' calendar and follow the sheet where it differs; the 2025 sheet put Division II's play-in on
 Mon Nov 3 and its first round on Thu Nov 5) and runs `pnpm test` before committing it. The schema
 (`lib/postseason/sds-brackets-schema.ts`) refuses a school outside the San Diego registry or listed twice, a field size other

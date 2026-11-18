@@ -1,6 +1,6 @@
 /**
- * The Zod contract for data/player-stats.json — each team's MaxPreps season player stats, joined
- * to data/rosters.json on the career id (SPEC §1.1k).
+ * The Zod contract for data/field-hockey/player-stats.json — each team's MaxPreps season player stats, joined
+ * to data/field-hockey/rosters.json on the career id (SPEC §1.1k).
  *
  * Separate from lib/players/player-stats.ts (the read API, which imports the file) so
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
@@ -58,7 +58,7 @@ export const GoalieStatsSchema = z.object(
 );
 
 export const PlayerStatLineSchema = z.object({
-  /** The `?careerid=` key: the join to data/rosters.json. */
+  /** The `?careerid=` key: the join to data/field-hockey/rosters.json. */
   careerId: z.string().min(1).nullable(),
   careerUrl: httpUrl.nullable(),
   /** The roster row's per-season id, when the join found one. */
@@ -276,7 +276,7 @@ export function countPlayerStats(teams: readonly TeamPlayerStats[]): PlayerStats
  * same key differ only in when they were read and in a failure's message text (which can carry a
  * duration or request id), so scripts/fetch-player-stats.ts leaves the old one in place and the
  * scheduled refresh (.github/workflows/update-data.yml) has nothing to commit — the same job
- * data/snapshot.meta.json's `contentHash` does for the snapshot. A team's `status` stays in the
+ * data/field-hockey/snapshot.meta.json's `contentHash` does for the snapshot. A team's `status` stays in the
  * key, so a team going from ok to carried-forward still counts as a change.
  */
 export function playerStatsContentKey(file: PlayerStatsFile): string {

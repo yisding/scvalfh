@@ -1,5 +1,5 @@
 /**
- * Last season's results (lib/history/prior-season-schema.ts, data/prior-season.json; DESIGN §20.1): the committed
+ * Last season's results (lib/history/prior-season-schema.ts, data/field-hockey/prior-season.json; DESIGN §20.1): the committed
  * file's promises, the schema that holds it to them, and the normalization scripts/fetch-prior-season.ts
  * runs over each team's MaxPreps feed, on synthetic rows.
  */
@@ -20,7 +20,7 @@ import { SEASON_YEAR } from '../lib/season';
 import { ScheduleRowSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 
-describe('data/prior-season.json', () => {
+describe('data/field-hockey/prior-season.json', () => {
   const file = getPriorSeason();
 
   it('is the season before this one, so the next-season bootstrap cannot forget it', () => {

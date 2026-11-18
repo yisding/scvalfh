@@ -23,7 +23,7 @@ import type { SportId } from '../../lib/sports/current';
 import { REPO } from '../helpers';
 
 const DIRS: ReadonlyArray<[SportId, string]> = [
-  ['field-hockey', 'data'],
+  ['field-hockey', 'data/field-hockey'],
   ['soccer', 'data/soccer'],
   ['basketball', 'data/basketball'],
   ['volleyball', 'data/volleyball'],

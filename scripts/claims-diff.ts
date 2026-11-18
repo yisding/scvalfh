@@ -26,7 +26,7 @@ interface Case {
   name: string;
   sport: string;
   args: string[];
-  /** Start from this earlier case's output (snapshot and claims file), or from the tree's committed `data/` ('data'). */
+  /** Start from this earlier case's output (snapshot and claims file), or from the tree's committed `data/field-hockey/` ('data'). */
   after?: string;
 }
 
@@ -81,13 +81,22 @@ function sbliveCases(): Case[] {
   ];
 }
 
+/**
+ * The tree's committed field hockey data folder: data/field-hockey/, or data/ in a revision from before the move of
+ * 2026-11-18 (a `--rev` older than that), so a comparison across the move still finds its snapshot.
+ */
+function committedDataDir(tree: string): string {
+  const current = path.join(tree, 'data', 'field-hockey');
+  return existsSync(path.join(current, 'snapshot.json')) ? current : path.join(tree, 'data');
+}
+
 function runAll(tree: string, out: string, variants: string): void {
   for (const c of CASES) {
     const dir = path.join(out, c.name);
     mkdirSync(dir, { recursive: true });
     const snapshot = path.join(dir, 'snapshot.json');
     if (c.after) {
-      const from = c.after === 'data' ? path.join(tree, 'data') : path.join(out, c.after);
+      const from = c.after === 'data' ? committedDataDir(tree) : path.join(out, c.after);
       copyFileSync(path.join(from, 'snapshot.json'), snapshot);
       const claims = path.join(from, 'claims.json');
       if (existsSync(claims)) copyFileSync(claims, path.join(dir, 'claims.json'));

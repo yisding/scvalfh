@@ -386,7 +386,7 @@ describe('clockTime', () => {
   });
 });
 
-describe('partialDate: the five shapes of a hand-researched date (data/clubs.json asOf)', () => {
+describe('partialDate: the five shapes of a hand-researched date (data/field-hockey/clubs.json asOf)', () => {
   it('words a day, a month, a year, a season and a range', () => {
     expect(partialDate('2026-07-08')).toBe('Jul 8, 2026');
     expect(partialDate('2025-10')).toBe('Oct 2025');

@@ -1,5 +1,5 @@
 /**
- * The JV players' recruiting pages: data/jv-profiles.json, lib/jv/jv-profiles.ts (which joins each
+ * The JV players' recruiting pages: data/field-hockey/jv-profiles.json, lib/jv/jv-profiles.ts (which joins each
  * entry to the team page's JV list by name), the profile links on the team page's JV roster
  * (components/jv/jv-roster-view.ts, TeamJvRoster) and the JV rows on /recruiting.
  */
@@ -22,7 +22,7 @@ import { REPO } from './helpers';
 import { textOf } from './ui/html-text';
 
 const file = JvProfilesFileSchema.parse(
-  JSON.parse(readFileSync(path.join(REPO, 'data', 'jv-profiles.json'), 'utf8')) as unknown,
+  JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'jv-profiles.json'), 'utf8')) as unknown,
 );
 const fileEntries = file.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug as TeamSlug, ...p })));
 /** Every JV player with a profile: this file's, and the overlay's JV-marked rows (Los Gatos'). */
@@ -31,7 +31,7 @@ const entries = [
   ...getOverlayJvProfileRows().map((r) => ({ ...r, profiles: [...getJvPlayerProfiles(r.slug, r.name)] })),
 ];
 
-describe('data/jv-profiles.json', () => {
+describe('data/field-hockey/jv-profiles.json', () => {
   it('validates, and is the file the site reads', () => {
     expect(getJvProfilesFile()).toEqual(file);
     expect(file.season).toBe(getRosterEnrichment().season);
@@ -84,7 +84,7 @@ describe('data/jv-profiles.json', () => {
     const probe = all.filter(({ x }) => x.note?.includes('Found by the 2026-11-06 address probe'));
     // 33 pages for 33 players at 13 schools when found; on 2026-11-13 six of those players joined their varsity
     // rosters (Berkeley, Leland, Marin Catholic twice, Saint Francis, Westview), so their pages moved to
-    // data/rosters-enrichment.json: 27 here, at 11 schools.
+    // data/field-hockey/rosters-enrichment.json: 27 here, at 11 schools.
     expect(probe).toHaveLength(27);
     expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(27);
     expect(probe.every(({ x }) => x.platform === 'sportsrecruits' && x.classOf !== null)).toBe(true);

@@ -1,7 +1,7 @@
 /**
  * The game page's Game stats section: components/game/game-stats-view.ts and
  * components/game/GameStats.tsx, over synthetic box scores on a real final (whatever the committed
- * snapshot holds), and over every box score in the committed data/player-stats.json for the rules
+ * snapshot holds), and over every box score in the committed data/field-hockey/player-stats.json for the rules
  * every refresh must keep.
  */
 
@@ -329,7 +329,7 @@ describe('GameStats', () => {
   });
 });
 
-describe('every box score in data/player-stats.json', () => {
+describe('every box score in data/field-hockey/player-stats.json', () => {
   const games = new Map(getSnapshot().games.map((g) => [g.contestId, g]));
   const finals = [...new Set(getPlayerStats().teams.flatMap((t) => (t.games ?? []).map((b) => b.contestId)))]
     .map((id) => games.get(id))

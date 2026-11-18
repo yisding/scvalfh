@@ -1,11 +1,11 @@
 /**
  * The read API for the JV rosters: one list per school, from one of two files.
  *
- *   - data/jv-rosters.json is each registry school's MaxPreps JV roster page (`<team URL>jv/roster/`,
+ *   - data/field-hockey/jv-rosters.json is each registry school's MaxPreps JV roster page (`<team URL>jv/roster/`,
  *     the JV sport season), rebuilt by `pnpm fetch-rosters --level jv` with the varsity roster's own
  *     parser and the same file contract (lib/players/rosters-schema.ts RostersSchema). By hand, like
  *     the varsity rosters: not part of the twice-daily cron.
- *   - data/jv-rosters-school-sites.json is the JV lists the schools' own athletics sites (or the page
+ *   - data/field-hockey/jv-rosters-school-sites.json is the JV lists the schools' own athletics sites (or the page
  *     a school links as its roster) publish for 2026-27, transcribed by hand with the date each was read
  *     and the evidence for its season (the posture of lib/jv/jv-school-sites.ts' JV results). Validated here.
  *
@@ -35,8 +35,8 @@
 
 import { z } from 'zod';
 
-import bundledMaxPrepsFieldHockey from '../../data/jv-rosters.json';
-import bundledSitesFieldHockey from '../../data/jv-rosters-school-sites.json';
+import bundledMaxPrepsFieldHockey from '../../data/field-hockey/jv-rosters.json';
+import bundledSitesFieldHockey from '../../data/field-hockey/jv-rosters-school-sites.json';
 import bundledMaxPrepsBasketball from '../../data/basketball/jv-rosters.json';
 import bundledMaxPrepsVolleyball from '../../data/volleyball/jv-rosters.json';
 import bundledMaxPrepsSoccer from '../../data/soccer/jv-rosters.json';
@@ -50,7 +50,7 @@ import { dateKey, httpUrl } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
-/** This build's copies (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copies (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundledMaxPreps = process.env.SCVAL_SPORT === 'basketball' ? bundledMaxPrepsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledMaxPrepsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledMaxPrepsSoccer : bundledMaxPrepsFieldHockey;
 const bundledSites = process.env.SCVAL_SPORT === 'basketball' ? bundledSitesBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSitesVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSitesSoccer : bundledSitesFieldHockey;
 

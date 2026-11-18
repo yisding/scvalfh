@@ -22,7 +22,7 @@ import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
  * sheets and the highest Elo rating (lib/ratings/ratings.ts, DESIGN §20).
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
- * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
+ * reads (data/field-hockey/player-stats.json and data/field-hockey/snapshot.json), so a player's line is the one on their
  * team page and a school's record is the one in its standings row. Under the title, ONE tab row,
  * Teams / Players (anchors; the page's only control). Per region (DESIGN-socal §2.3, §2.4), two
  * sections, `#schools` and then `#players` (SoCal's `#schools-socal`, `#players-socal`, every board

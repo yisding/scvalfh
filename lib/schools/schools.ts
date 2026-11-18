@@ -1,5 +1,5 @@
 /**
- * data/schools.json — one record per registry school, keyed by team slug: today, the street address of
+ * data/field-hockey/schools.json — one record per registry school, keyed by team slug: today, the street address of
  * its campus. The one place a school's address is written down: the game pages' WHERE line and every
  * Directions link (lib/schools/venue.ts) and a league final's fixed site (LeagueConfig postseason
  * `finalSite.slug`) all read it from here, by slug. It is not a field of `Team`, because the snapshot
@@ -17,15 +17,16 @@
 
 import { z } from 'zod';
 
-import bundledFieldHockey from '../../data/schools.json';
+import bundledFieldHockey from '../../data/field-hockey/schools.json';
 import bundledBasketball from '../../data/basketball/schools.json';
 import bundledVolleyball from '../../data/volleyball/schools.json';
 import bundledSoccer from '../../data/soccer/schools.json';
 import { validateData } from '../data-file';
 import { dateKey, isCalendarDate, slugId } from '../schema-primitives';
+import { DATA_DIR } from '../sports/current';
 import type { StreetAddress, TeamSlug } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const nonEmpty = z.string().trim().min(1);
@@ -48,9 +49,9 @@ export const SchoolsFileSchema = z.strictObject({
 
 export type SchoolsFile = z.infer<typeof SchoolsFileSchema>;
 
-/** Parse a schools file, throwing `data/schools.json failed validation: …` with the first issues. */
+/** Parse a schools file, throwing `data/field-hockey/schools.json failed validation: …` with the first issues. */
 export function loadSchools(input: unknown): SchoolsFile {
-  return validateData('data/schools.json', SchoolsFileSchema, input);
+  return validateData(`${DATA_DIR}/schools.json`, SchoolsFileSchema, input);
 }
 
 const SCHOOLS = loadSchools(bundled);
@@ -61,6 +62,6 @@ export const SCHOOL_ADDRESSES: Readonly<Record<TeamSlug, StreetAddress>> = SCHOO
 /** A registry school's campus address. Every registry slug has one (lib/teams.ts assertRegistry step 6). */
 export function schoolAddress(slug: TeamSlug): StreetAddress {
   const address = SCHOOL_ADDRESSES[slug];
-  if (!address) throw new Error(`data/schools.json: no record for ${slug}`);
+  if (!address) throw new Error(`${DATA_DIR}/schools.json: no record for ${slug}`);
   return address;
 }

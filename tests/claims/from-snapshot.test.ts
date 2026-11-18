@@ -29,7 +29,7 @@ import { loadSnapshot } from '../../lib/snapshot/snapshot-load';
 import type { Game, Snapshot } from '../../lib/types';
 import { REPO } from '../helpers';
 
-const snapshot: Snapshot = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
+const snapshot: Snapshot = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown);
 const LATER = '2026-11-20T15:00:00.000Z';
 
 const stored = (prefix: string): Game => {

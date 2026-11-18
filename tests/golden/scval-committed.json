@@ -2,8 +2,8 @@
   "_meta": {
     "fetchedAt": "2026-10-02T10:48:51.206Z",
     "generatedFrom": "cbe1aa06c74c46016edfa7236a36f8fcb1f87c5c",
-    "notes": "standings = parsed snapshot.standings (parseSnapshot); divisionGames = sorted contest ids; projection = getPlayoffProjection() with SCVAL_SNAPSHOT=data/snapshot.json (asOf omitted); phases = getSeasonPhase(`${d}T19:00:00.000Z`); labels.legends = statusLabel(s, \"2026-10-30\") from components/standings/standings-view.ts; labels.badges = STATUS_BADGE[s] read via buildDivisionView().statusGroups; labels.unions = playoffOutcomeLabel(union.split(\"|\")).",
-    "source": "data/snapshot.json"
+    "notes": "standings = parsed snapshot.standings (parseSnapshot); divisionGames = sorted contest ids; projection = getPlayoffProjection() with SCVAL_SNAPSHOT=data/field-hockey/snapshot.json (asOf omitted); phases = getSeasonPhase(`${d}T19:00:00.000Z`); labels.legends = statusLabel(s, \"2026-10-30\") from components/standings/standings-view.ts; labels.badges = STATUS_BADGE[s] read via buildDivisionView().statusGroups; labels.unions = playoffOutcomeLabel(union.split(\"|\")).",
+    "source": "data/field-hockey/snapshot.json"
   },
   "crossCheck": [
     {

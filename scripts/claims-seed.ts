@@ -5,7 +5,7 @@
  * file that matches its previous snapshot. The editor's claims of the current ledger are included, as a run writes
  * them. Reads only the committed snapshot: no network.
  *
- *   pnpm tsx scripts/claims-seed.ts                          field hockey (data/claims.json)
+ *   pnpm tsx scripts/claims-seed.ts                          field hockey (data/field-hockey/claims.json)
  *   SCVAL_SPORT=basketball pnpm tsx scripts/claims-seed.ts   basketball (data/basketball/claims.json)
  *   pnpm tsx scripts/claims-seed.ts --snapshot <path>        the claims file beside another snapshot
  */

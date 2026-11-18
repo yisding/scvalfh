@@ -274,7 +274,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     });
-    // The address is the site school's own record (data/schools.json), as the HomeCampus calendars give it.
+    // The address is the site school's own record (data/field-hockey/schools.json), as the HomeCampus calendars give it.
     expect(schoolAddress(mcal.postseason.finalSite.slug)).toEqual({
       street: '395 Doherty Dr', city: 'Larkspur', region: 'CA', postalCode: '94939',
     });
@@ -797,7 +797,7 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
   it('10. every bundled official source names its file, revision URL and sha256', () => {
     for (const d of ALL_DIVISIONS) {
       if (d.official.mode !== 'bundled') continue;
-      expect(d.official.bundledFile).toMatch(/^data\/official\/.+\.json$/);
+      expect(d.official.bundledFile).toMatch(/^data\/field-hockey\/official\/.+\.json$/);
       expect(d.official.revisionCheckUrl).toMatch(/^https:\/\//);
       expect(d.official.bundledSha256).toMatch(/^[0-9a-f]{64}$/);
     }
@@ -1328,7 +1328,7 @@ describe('leagues: SoCal invariants (DESIGN-socal §2.1.7)', () => {
       const d = getDivision('avocado') as { official: unknown };
       const before = d.official;
       d.official = {
-        mode: 'bundled', source: 'pcal-pdf', scheduleUrl: 'https://example.org/a.pdf', bundledFile: 'data/official/x.json',
+        mode: 'bundled', source: 'pcal-pdf', scheduleUrl: 'https://example.org/a.pdf', bundledFile: 'data/field-hockey/official/x.json',
         revisionCheckUrl: 'https://example.org/a.pdf', bundledSha256: 'a'.repeat(64), revisedOn: null,
       };
       return () => { d.official = before; };

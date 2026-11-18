@@ -10,7 +10,7 @@
  * All tab) and once per league (`data-scope="<league>"`); the scope stylesheet shows one, so "each game
  * once" is asserted over the every-league copy (`everyLeague`).
  *
- * On the committed snapshot (data/snapshot.json), as tests/ui/render-score.test.ts walks it: no corpus
+ * On the committed snapshot (data/field-hockey/snapshot.json), as tests/ui/render-score.test.ts walks it: no corpus
  * holds both regions (socal-2026-10-06 has only the Southern California schedules, all-2026-10-02 only
  * the NorCal ones), and a day with NorCal games, SoCal games and a NorCal vs SoCal game needs both. The
  * dates are found from the data (dayRegions), never hard-coded, and only the shape is asserted, so a
@@ -56,7 +56,7 @@ beforeAll(async () => {
 /** The first date whose day matches, or a failure naming the case the corpus no longer has. */
 function dateWhere(what: string, test: (regions: ReturnType<Day['dayRegions']>) => boolean): string {
   const date = data.getGameDates().find((d) => test(day.dayRegions(data.getGames({ date: d }))));
-  expect(date, `data/snapshot.json: a date with ${what}`).toBeDefined();
+  expect(date, `data/field-hockey/snapshot.json: a date with ${what}`).toBeDefined();
   return date!;
 }
 
@@ -190,7 +190,7 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
       const { regions, between } = day.dayRegions(data.getGames({ date: d }));
       return between.length === 0 && regions[0].games.length === 0 && jvView.buildDayJvView(d, 'norcal').rows.length === 0;
     });
-    expect(socalOnly, 'data/snapshot.json: a date with SoCal games only, varsity and JV').toBeDefined();
+    expect(socalOnly, 'data/field-hockey/snapshot.json: a date with SoCal games only, varsity and JV').toBeDefined();
     const html = await renderDay(socalOnly!);
     expect(textOf(block(html, 'norcal', ['socal']))).toContain('No Northern California games on this day.');
     expect(html.indexOf('id="norcal"'), 'the empty NorCal block still comes first').toBeLessThan(html.indexOf('id="socal"'));
@@ -302,7 +302,7 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
     const date = data.getGameDates().find(
       (d) => jvView.buildDayJvView(d, 'norcal').rows.length > 0 && jvView.buildDayJvView(d, 'socal').rows.length > 0,
     );
-    expect(date, 'data/snapshot.json: a date with JV games in both regions').toBeDefined();
+    expect(date, 'data/field-hockey/snapshot.json: a date with JV games in both regions').toBeDefined();
     const html = await renderDay(date!);
     expect(html).toMatch(/<section id="jv" data-region-scope="norcal" aria-labelledby="jv-heading"/);
     expect(html).toMatch(/<section id="jv-socal" data-region-scope="socal" aria-labelledby="jv-socal-heading"/);
@@ -366,7 +366,7 @@ describe('dayGroups: a postseason game is never a "league game" (components/sche
   it('files the Oct 27 Huntington Beach game under the Tournament of Champions, not "Sunset · 1 league game"', async () => {
     const games = data.getGames({ date: '2026-10-27' });
     const hb = games.find((g) => g.contestId.startsWith('1f555407'));
-    expect(hb, 'data/snapshot.json: the Oct 27 Huntington Beach v Newport Harbor game').toBeDefined();
+    expect(hb, 'data/field-hockey/snapshot.json: the Oct 27 Huntington Beach v Newport Harbor game').toBeDefined();
     // The tag names the shared league (sunset), so it is the kind, not a null leagueId, that routes it.
     expect(hb!.postseason).toMatchObject({ kind: 'outside-tournament' });
     const groups = day.dayGroups(games);
@@ -399,7 +399,7 @@ describe('dayGroups: a postseason game is never a "league game" (components/sche
     const date = data.getGameDates().find((d) =>
       data.getGames({ date: d }).filter((g) => g.countsFor !== null && g.countsFor.startsWith('de-anza')).length > 0,
     );
-    expect(date, 'data/snapshot.json: a date with a De Anza league game').toBeDefined();
+    expect(date, 'data/field-hockey/snapshot.json: a date with a De Anza league game').toBeDefined();
     const league = data.getGames({ date: date! }).filter((g) => g.countsFor !== null && day.dayGroups([g])[0]?.leagueId === 'scval');
     expect(league.length).toBeGreaterThan(0);
     const crossover = postseasonGame('synthetic-crossover', date!, 'los-gatos', 'saint-francis', {

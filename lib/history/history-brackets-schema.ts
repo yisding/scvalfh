@@ -1,12 +1,12 @@
 /**
- * The Zod contract for data/history-brackets-2025-26.json — the 2025 postseason brackets the
+ * The Zod contract for data/field-hockey/history-brackets-2025-26.json — the 2025 postseason brackets the
  * archive shows beside last season's league standings (DESIGN §3.9): the CCS championship (fed by
  * SCVAL, BVAL and PCAL), the San Diego Section championships (City, North County and Metro) and the
  * Tournament of Champions (the Sunset's and the LA independents' postseason, which no CIF section runs:
  * `tournaments.toc`, DESIGN §24.13).
  *
  * The file is transcribed by hand, once, from each section's own documents (its `notes` say which
- * and how), like the bundled schedules in data/official/; the Tournament of Champions, which publishes
+ * and how), like the bundled schedules in data/field-hockey/official/; the Tournament of Champions, which publishes
  * no bracket, from a school newspaper and MaxPreps' 2025-26 schedules. Nothing refreshes it: a 2025
  * bracket does not change. What this contract guards is that a transcription slip cannot reach
  * the page: every school is a registry team of the bracket's leagues, every winner matches its

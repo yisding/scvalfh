@@ -1,6 +1,6 @@
 /**
  * `components/clubs/club-view.ts` and the clubs routes (/clubs, /clubs/[slug]) over the committed
- * data/clubs.json, data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17).
+ * data/field-hockey/clubs.json, data/field-hockey/rosters.json and data/field-hockey/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17).
  *
  * The pages make promises a test can hold them to:
  *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and

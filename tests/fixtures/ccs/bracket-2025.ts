@@ -3,12 +3,12 @@
  * and PlayoffBracket.tsx against a bracket that was really played (plan final-06, 2026-10-30). Nothing on the
  * site reads this module.
  *
- * - `ccsGames2025()` rebuilds the fourteen CCS 2025 rows of data/prior-season.json (Nov 5: eight quarterfinals,
+ * - `ccsGames2025()` rebuilds the fourteen CCS 2025 rows of data/field-hockey/prior-season.json (Nov 5: eight quarterfinals,
  *   Nov 8: four semifinals, Nov 12: two finals; every row between two teams of a CCS league on those dates) with
  *   tests/game-builder.ts `game()` on 2026's key dates (Sat Nov 7, Wed Nov 11, Sat Nov 14), each carrying the
  *   `Game.bracket` the 2025 Los Gatos feed carried (lib/pipeline/normalize.ts bracketOf: the CCS tournament id, the
  *   division's bracket id, 'Division 1' / 'Division 2', published) and the tag lib/classify.ts rule 1c writes
- *   for it. The division of each game is the one data/history-brackets-2025-26.json draws it in. MaxPreps
+ *   for it. The division of each game is the one data/field-hockey/history-brackets-2025-26.json draws it in. MaxPreps
  *   records the Division 2 semifinal Stevenson v Willow Glen as 1-1 with Willow Glen W (a shootout the feed
  *   does not tally), so that row's result flags are restored from the history file's `winner`; the Division 1
  *   final's `site` is 'neutral' (Los Altos HS), the Division 2 final's 'home' (Gilroy HS), as prior-season.json

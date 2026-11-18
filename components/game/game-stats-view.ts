@@ -1,6 +1,6 @@
 /**
  * The game page's Game stats section (SPEC §1.1k): each followed side's box score for this game, as
- * its coach entered it on MaxPreps (`TeamPlayerStats.games` in data/player-stats.json, read by
+ * its coach entered it on MaxPreps (`TeamPlayerStats.games` in data/field-hockey/player-stats.json, read by
  * scripts/fetch-player-stats.ts). Pure, so tests/ui/game-stats-view.test.ts can assert it over the
  * real file and over synthetic box scores.
  *
@@ -106,7 +106,7 @@ export interface GameStatsView {
   legend: string[];
 }
 
-/** Where a side's entries come from: data/player-stats.json, or a test's own. */
+/** Where a side's entries come from: data/field-hockey/player-stats.json, or a test's own. */
 export type GameStatsLookup = (contestId: string, slug: TeamSlug) => GameStatsEntry;
 
 /** A box score line, with whether a game note added to its field stats and to its goalkeeping. */

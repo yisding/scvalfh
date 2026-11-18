@@ -1,6 +1,6 @@
 /**
  * Last season's players from MaxPreps' stat sheets: the names parser (lib/sources/maxpreps-stats-names.ts)
- * on answers shaped like the rollup's, and each sport's committed data/prior-players.json.
+ * on answers shaped like the rollup's, and each sport's committed data/field-hockey/prior-players.json.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -116,7 +116,7 @@ describe('parseStatSheetNames', () => {
   });
 });
 
-describe('data/prior-players.json', () => {
+describe('data/field-hockey/prior-players.json', () => {
   for (const sport of SPORT_IDS) {
     const rel = `${sportDataDir(sport)}/prior-players.json`;
     it.skipIf(!existsSync(path.join(ROOT, rel)))(`${rel} validates, is this sport's, and matches its prior-season file`, () => {

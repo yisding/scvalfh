@@ -77,7 +77,7 @@ function settleSeat(standings: readonly Standing[], seat: 0 | 1, place: number):
 
 beforeAll(async () => {
   const base = loadSnapshot(
-    JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+    JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown,
   );
   const standings = settleSeat(settleSeat(base.standings, 0, 1), 1, 4);
   const [hosts, visitors] = leaguePairings(standings, [], 'bval').find((p) => p.id === 'bval-play-in')!.seats;

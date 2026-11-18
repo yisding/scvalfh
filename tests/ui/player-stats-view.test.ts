@@ -5,7 +5,7 @@
  * player has no entry for is a dash (never a 0), a team with no stats says so, and the reader is
  * told when MaxPreps' totals are behind the games already played.
  *
- * Two data sets. The rules are asserted over the COMMITTED data/player-stats.json, since they must
+ * Two data sets. The rules are asserted over the COMMITTED data/field-hockey/player-stats.json, since they must
  * hold for whatever the scheduled refresh writes. Specific numbers and teams are asserted over a
  * build from the frozen 2026-10-02 captures (buildFixturePlayerStats): the committed file moves
  * whenever a coach enters a game, and a test pinned to it would fail the refresh's own test step

@@ -41,7 +41,7 @@ async function firstRun(out: string): Promise<ClaimsFile> {
 
 describe('claimsPathOf', () => {
   it('is claims.json beside a snapshot.json, else <out>.claims.json', () => {
-    expect(claimsPathOf('/x/data/snapshot.json')).toBe('/x/data/claims.json');
+    expect(claimsPathOf('/x/data/field-hockey/snapshot.json')).toBe('/x/data/field-hockey/claims.json');
     expect(claimsPathOf('/x/data/soccer/snapshot.json')).toBe('/x/data/soccer/claims.json');
     expect(claimsPathOf('/tmp/x.json')).toBe('/tmp/x.claims.json');
   });

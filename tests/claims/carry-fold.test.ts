@@ -60,7 +60,7 @@ describe('a MaxPreps game is its claims folded', () => {
   });
 
   it('in the committed field hockey snapshot and its claims file', () => {
-    const read = (rel: string) => readFileSync(path.join(REPO, 'data', rel), 'utf8');
+    const read = (rel: string) => readFileSync(path.join(REPO, 'data', 'field-hockey', rel), 'utf8');
     const snapshot = loadSnapshot(JSON.parse(read('snapshot.json')) as unknown);
     expect(expectEveryContestFolds(snapshot, parseClaimsText(read('claims.json')))).toBeGreaterThan(100);
   });

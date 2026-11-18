@@ -401,8 +401,8 @@ describe('the "league added" upgrade for the four Southern California leagues an
     }
   });
 
-  it('loads the committed data/snapshot.json, whichever side of the amendment it was written on', () => {
-    const committed = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+  it('loads the committed data/field-hockey/snapshot.json, whichever side of the amendment it was written on', () => {
+    const committed = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as Snapshot;
     const predates = lacksConfiguredLeagues(committed);
     const loaded = loadSnapshot(committed);
     expect(loaded.teams).toHaveLength(102);
@@ -425,7 +425,7 @@ describe('the "league added" upgrade for the four Southern California leagues an
 
 // ---------------------------------------------------------------- "rules changed" (DESIGN §24.11)
 
-const COMMITTED = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+const COMMITTED = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as Snapshot;
 
 function reportedOf(s: Snapshot): Map<TeamId, ReportedRecord> {
   return new Map(s.standings.flatMap((r) => (r.reported ? [[r.teamId, r.reported] as const] : [])));

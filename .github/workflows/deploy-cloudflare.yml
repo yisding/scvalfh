@@ -18,13 +18,13 @@
 # and every run deploys main's tip as it is when the run starts.
 #
 # What may ship. The code that ships must have passed ci on main; update-data's data commits only
-# replace data/snapshot.json, its meta file, data/player-stats.json and data/jv.json, after running
+# replace data/field-hockey/snapshot.json, its meta file, data/field-hockey/player-stats.json and data/field-hockey/jv.json, after running
 # the suite on them, and ci never runs on them. So the gate walks down from main's tip past the data
 # commits (by the bot, one parent, "data: refresh snapshot ...", "data: refresh player stats ...",
 # "data: refresh JV games ...", update-data-soccer.yml's "data: refresh soccer ..." or
 # update-data-basketball.yml's "data: refresh basketball ..." or update-data-volleyball.yml's "data: refresh volleyball ...") to the newest
 # other commit, the one whose code ships, requires a successful ci run on main for exactly that commit,
-# and requires that nothing but those data files (the four of data/, and the same four plus the two roster
+# and requires that nothing but those data files (the four of data/field-hockey/, and the same four plus the two roster
 # files of data/soccer/ and of data/basketball/) changed above it. A soccer or basketball data commit changes nothing this Worker
 # serves; it is let through so that it never holds back the next field hockey deploy. Otherwise it
 # skips: the ci run of that commit deploys main once it passes, and a red one never ships,
@@ -205,10 +205,7 @@ jobs:
             own=''
             while IFS= read -r file; do
               [ -n "$file" ] || continue
-              case "$SCVAL_SPORT" in
-                field-hockey) case "$file" in data/soccer/* | data/basketball/* | data/volleyball/*) ;; *) own="$file" ;; esac ;;
-                *) case "$file" in "data/$SCVAL_SPORT/"*) own="$file" ;; data/*) ;; *) own="$file" ;; esac ;;
-              esac
+              case "$file" in "data/$SCVAL_SPORT/"*) own="$file" ;; data/*) ;; *) own="$file" ;; esac
               [ -z "$own" ] || break
             done <<< "$changed"
             [ -n "$own" ] || [ -z "$changed" ] || skip "skipped $SCVAL_SPORT: only another sport's data changed since its last deploy ($last)."
@@ -237,7 +234,7 @@ jobs:
           # base's tree with newer data.
           others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
             if .status == "identical" or .status == "ahead"
-            then [.files[]?.filename] - ["data/snapshot.json", "data/snapshot.meta.json", "data/claims.json", "data/player-stats.json", "data/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json"] | join(" ")
+            then [.files[]?.filename] - ["data/field-hockey/snapshot.json", "data/field-hockey/snapshot.meta.json", "data/field-hockey/claims.json", "data/field-hockey/player-stats.json", "data/field-hockey/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json"] | join(" ")
             else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
           [ -z "$others" ] || refuse "main ($tip) changes more than the data above $base: $others"
           # And base must have passed ci on main: a successful ci run for that exact commit, other

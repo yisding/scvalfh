@@ -11,7 +11,7 @@
  *  - a postseason game (any `Game.postseason` tag: a CCS or San Diego playoff, a league tournament, a play-in, a
  *    crossover, the Tournament of Champions). Saint Francis 1, Archbishop Mitty 1 (CCS Division 1 semifinal, Nov
  *    11, 2026, contest 7d6e0426) is marked W for Saint Francis, who play the final; the 2025 CCS semifinal Willow
- *    Glen 1, Stevenson 1 has the same shape (data/history-brackets-2025-26.json). Read as its score, such a game
+ *    Glen 1, Stevenson 1 has the same shape (data/field-hockey/history-brackets-2025-26.json). Read as its score, such a game
  *    was a tie in both teams' records, form and game logs while the bracket (lib/postseason/game-winner.ts)
  *    advanced the marked side.
  *  - any game of a sport that cannot end level (`Sport.scoring.allowsTies` false: basketball plays overtime

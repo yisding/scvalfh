@@ -1,5 +1,5 @@
 /**
- * data/clubs.json (SPEC §1.1j2, DESIGN §17): the committed file validates and holds every
+ * data/field-hockey/clubs.json (SPEC §1.1j2, DESIGN §17): the committed file validates and holds every
  * load-time invariant; lib/players/clubs.ts serves it in display order (DESIGN §17.5); and a bad file —
  * built in memory from the real one, never written to disk — is refused at load with a message
  * that names what is wrong (the path, or the team, player and club).
@@ -44,7 +44,7 @@ import { isHttpsUrl } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'clubs.json'), 'utf8')) as ClubsFile;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'clubs.json'), 'utf8')) as ClubsFile;
 /** The twelve club records the 2026-10-06 Southern California sweep added. */
 const SOCAL_CLUBS: ReadonlySet<string> = new Set([
   'rush', 'coastal-clash', 'myto', 'knights-fhc', 'vcrd', 'bulldogs',
@@ -104,7 +104,7 @@ const movedToVarsity1116 = (a: { basis: string }) => a.basis.includes('when her 
 const countBy = <T>(xs: readonly T[], key: (x: T) => string) =>
   xs.reduce<Record<string, number>>((acc, x) => ({ ...acc, [key(x)]: (acc[key(x)] ?? 0) + 1 }), {});
 
-describe('data/clubs.json', () => {
+describe('data/field-hockey/clubs.json', () => {
   it('validates against the contract, drops nothing in the parse, and is what lib/players/clubs.ts serves', () => {
     expect(refusals(raw)).toEqual([]);
     // Zod strips keys it does not know: equality proves the contract covers every key in the file.
@@ -531,7 +531,7 @@ describe('data/clubs.json', () => {
 
 });
 
-describe('data/clubs.json: jvAffiliations', () => {
+describe('data/field-hockey/clubs.json: jvAffiliations', () => {
   it('holds 3 ties for 2 Los Gatos JV players, each on a JV row with a class year that agrees', () => {
     expect(raw.jvAffiliations.map((a) => [a.fullName, rowOf(a)!.grade, a.club, a.status, a.clubTeam])).toEqual([
       ['Casey Moorehouse', 9, 'norcal-impact', 'current', null],

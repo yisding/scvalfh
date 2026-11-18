@@ -6,7 +6,7 @@
  *
  * What the page promises, and this module enforces (the clubs pages' posture, DESIGN §17.2):
  *   - only rows on the tracked varsity rosters are named: every commitment joined a non-JV row of
- *     data/rosters.json at load (lib/players/commits.ts), and is shown under that row's own spelling;
+ *     data/field-hockey/rosters.json at load (lib/players/commits.ts), and is shown under that row's own spelling;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here;
  *   - a commitment is never worded as more than its sources say: "Committed" unless a source says
@@ -108,7 +108,7 @@ export function sportLabel(sport: CommitSport): string {
 
 /**
  * Clubs in other sports whose own sites a commitment cites (a lacrosse club's commitments page).
- * They are not field hockey clubs, so data/clubs.json does not hold them.
+ * They are not field hockey clubs, so data/field-hockey/clubs.json does not hold them.
  */
 const OTHER_CLUBS: Readonly<Record<string, string>> = {
   'stepscalifornia.com': 'STEPS California',
@@ -131,7 +131,7 @@ const PLATFORM_NAMES: Record<SocialPlatform, string> = {
   threads: 'Threads',
 };
 
-/** Which club's own site a URL is on: every club of data/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
+/** Which club's own site a URL is on: every club of data/field-hockey/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
 const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
   getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), clubDisplayName(c)] as const] : [])),
 );

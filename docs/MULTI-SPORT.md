@@ -38,7 +38,18 @@ page links the same school's page on each other site that covers it (`lib/sports
 |---|---|
 | `shape.ts` | Types only. `Sport` holds what all programs of a sport share: words, source identifiers, rating constants, stat lines. `SportSeason` holds one program's season and the MaxPreps ids it is read by. |
 | `field-hockey.ts` | `FIELD_HOCKEY` and `FIELD_HOCKEY_GIRLS_2026`. Every value moved here unchanged from the literal it replaced, keeping its citation. |
-| `current.ts` | `SPORT` and `SPORT_SEASON`, the build's one switch point, plus the derived words `GENDER_NAME` ('Girls'), `PROGRAM_WORDS` ('girls varsity') and `SPORT_AUDIENCE` ('girls varsity field hockey'). |
+| `current.ts` | `SPORT_ID`, `SPORT` and `SPORT_SEASON`, the build's one switch point; `bySport`, the way every per-sport choice is made; `SPORT_FEATURES`, the pages a sport has beyond every build's (`HAS_RECRUITING`, `HAS_CLUB_CALENDAR`); `DATA_DIR` (`data/<sport>`); and the derived words `GENDER_NAME` ('Girls'), `PROGRAM_WORDS` ('girls varsity') and `SPORT_AUDIENCE` ('girls varsity field hockey'). |
+
+**Choosing among sports.** A value that differs by sport is `bySport({ 'field-hockey': …, soccer: …, basketball: …,
+volleyball: … })`. The record must name every `SportId`, so adding a sport to `SPORT_IDS` is a type error at each
+choice that has no value for it, never a silent fall into another sport's value (until 2026-11-18 these were
+`IS_FIELD_HOCKEY ? … : IS_BASKETBALL ? … : soccer's` chains, whose last branch caught any sport not named). The
+`IS_*` flags stay for a check about one sport alone. The one exception is a bundled data file: its loader keeps a
+literal `process.env.SCVAL_SPORT === 'basketball' ? … : … : field hockey's` chain, because the bundler folds that
+and leaves the other sports' files out of the build, which a `bySport` record would not. `tests/sport-choices.test.ts`
+holds both rules: no multi-way `IS_*` chain anywhere, and every data chain names every sport, each branch its own
+file. Every sport's data is under `data/<sport>/` (field hockey's moved from `data/` on 2026-11-18); `data/` itself
+holds only those folders and the cross-sport player registry (`data/players.json`, `data/player-identity.json`).
 
 All three are leaves, importing nothing but each other, and they are on the client-safe allowlist in
 `tests/ui/client-boundary.test.ts`. `lib/season.ts` derives its constants from the switch, keeping
@@ -58,7 +69,7 @@ byte-identical to the build before the seam.
 ## What is already cross-sport (keep)
 
 - **Schools.** A team id is MaxPreps' school id, so it is the same in every sport. A school's name,
-  short name, abbreviation, mascot, city, colors, address (`data/schools.json`), mascot tile, venue and
+  short name, abbreviation, mascot, city, colors, address (`data/field-hockey/schools.json`), mascot tile, venue and
   si.com and VNN site ids carry nothing sport-specific. The sport is chosen by the MaxPreps
   `sportSeasonId`.
 - **Regions and sections.** `REGIONS` is fully generic. A section's id, names, region and MaxPreps
@@ -96,7 +107,7 @@ byte-identical to the build before the seam.
     sizes and `DATA_QUALITY`.
   - Each section's field hockey overlay: `holdsFieldHockeyChampionship`, `rulesSource`, `shootout`,
     `seasonWindow`, `noChampionshipNote`, `outsideTournament`.
-- **Official schedules.** `OFFICIAL_SOURCE_IDS`, `data/official/*`, the BVAL sheet ids and the SCVAL
+- **Official schedules.** `OFFICIAL_SOURCE_IDS`, `data/field-hockey/official/*`, the BVAL sheet ids and the SCVAL
   PDF grid year.
 - **Ties and deciders.**
   - The `Outcome` 'T', `Decider` 'OT' | '2OT' | 'SO', the shootout override in `sideOutcome`, and the
@@ -153,7 +164,7 @@ byte-identical to the build before the seam.
      (`lib/sports/<sport>/bundled.ts`), because a Worker has no filesystem.
    - Add `--sport` to the pipeline's `RunArgs` and carry the definition on `RunContext`.
    - Make `update-data.yml`, `tests/workflows.test.ts` and the assert scripts take the sport.
-   - Field hockey's files stay at `data/*` until the old paths are retired in one move.
+   - Field hockey's files moved from `data/*` to `data/field-hockey/` on 2026-11-18, so every sport's data is under `data/<sport>/`.
 5. **Rules that vary by sport.**
    - Add `allowsTies`, the decider kinds and their words, and the record format (W-L-T or W-L) to
      `Sport`, and wire them into `recordString`, `OUTCOME_WORDS` and `describe-game.ts`.
@@ -339,7 +350,7 @@ volleyball like we did for field hockey". The volleyball build now has /clubs, /
 - The copy rules: the tied-game pattern of a sport with no ties leaves a player's tie to a club
   (`CLUB_TIE_WORDS`), and a club's own description is data, so a club that also runs a boys' program is not the
   site naming another build's program.
-- /club-calendar stays field hockey's (`HAS_CLUB_CALENDAR`): `data/club-events.json` is field hockey research.
+- /club-calendar stays field hockey's (`HAS_CLUB_CALENDAR`): `data/field-hockey/club-events.json` is field hockey research.
 
 **WCAL and WBAL (2026-11-14).** The owner asked for the two leagues on the volleyball site too.
 `lib/league-config/volleyball/{wcal,wbal}.ts` and `lib/registry/volleyball/{wcal,wbal}.ts` add the same 19 schools
@@ -359,6 +370,7 @@ accounts.
 - `tests/ui/client-boundary.test.ts` and `tests/build-only-boundary.test.ts`. A sport module a client
   can reach must stay a leaf.
 - `tests/legacy-imports.test.ts`. No deleted `lib/season` name may come back.
+- `tests/sport-choices.test.ts`. Every choice among sports names every sport ("Choosing among sports" above).
 - `tests/maxpreps-client.test.ts` and the si.com corpus fixtures, which hold exact URLs.
 - `pnpm assert:prerender`, `assert:budgets` and `assert:copy` on the built site.
 - First-load JS. Turbopack keeps a whole `as const` sport object once any of its fields is read,

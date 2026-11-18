@@ -11,7 +11,7 @@
  *   noise; the score is already in the event's `name` (gameTitle) and `description`.
  * - `location` is only what the DETAILS card prints (components/game/GameDetails.tsx): the venue's
  *   name when the school's calendar gave one, a league final's fixed site, or the host school, each
- *   with lib/schools/venue.ts `gameAddress`'s street address (a school's campus from data/schools.json) when
+ *   with lib/schools/venue.ts `gameAddress`'s street address (a school's campus from data/field-hockey/schools.json) when
  *   there is one, else the host's city; nothing on a neutral site, whose venue is not published.
  *   `venue.text` is MaxPreps' NOTE field ("Senior Night"), never a place.
  * - `eventStatus` is never EventCancelled: the data has no cancelled state (a deleted MaxPreps row is

@@ -96,8 +96,8 @@ describe('resolving the written claims file with the run’s decisions gives the
     const socal = { corpus: 'socal-2026-10-06' as CorpusName, fetchedAt: PLAYOFF_DAY, variants: [variant] };
     const { snapshot } = await expectPureResolve('sheet read', socal);
     expect(snapshot.games.some((g) => g.contestId.startsWith('cifsds:'))).toBe(true);
-    const previous = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as unknown);
-    const claims = parseClaimsText(readFileSync(path.join(REPO, 'data', 'claims.json'), 'utf8'));
+    const previous = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown);
+    const claims = parseClaimsText(readFileSync(path.join(REPO, 'data', 'field-hockey', 'claims.json'), 'utf8'));
     await expectPureResolve('committed', { ...socal, previous, claims, extraArgs: ['--accept-regression', 'scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents'] });
   });
 

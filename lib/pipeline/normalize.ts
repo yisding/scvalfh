@@ -59,7 +59,7 @@ export interface NormalizeOptions {
    * the Northern Section Guidelines' §VII.E.4 (one sudden-victory period, then 1 v 1s) governs a
    * varsity game and says nothing that would decide a level JV game either. Before the rule was keyed
    * on the section, the EAL's JV rows went through the same inference as its varsity rows (no JV final
-   * in data/jv.json had that shape on 2026-10-06, so no stored JV game changed); a JV game now never gets
+   * in data/field-hockey/jv.json had that shape on 2026-10-06, so no stored JV game changed); a JV game now never gets
    * decider 'SO', a level JV final flagged W/L keeps the flags as a contradiction
    * (`provenance.resultConflict`) and counts as the tie its score says, and a level JV final with no
    * winner flagged is not worth a warning.

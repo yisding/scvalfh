@@ -6,7 +6,7 @@
  * counterpart's classification; tables order as the league's varsity tables do; a table is shown only once enough of the
  * played JV league games have a score). The copy says which of those it is, in words.
  *
- * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json and the snapshot.
+ * SERVER-ONLY: reads lib/jv/jv, which imports data/field-hockey/jv.json and the snapshot.
  */
 
 import { listWords, monthDay, ordinal, plural, recordString } from '../../lib/format';

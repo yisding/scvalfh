@@ -2,14 +2,14 @@
  * The San Diego Section's 2026 brackets, drawn from the Section's PUBLISHED bracket and joined to the
  * results MaxPreps posts (plan final-07, 2026-10-29).
  *
- * Where the brackets come from: data/sds-brackets-2026.json, which the owner transcribes from the Section's
+ * Where the brackets come from: data/field-hockey/sds-brackets-2026.json, which the owner transcribes from the Section's
  * bracket sheet once it is linked after the Sat Oct 31 seeding meeting (lib/postseason/sds-brackets-schema.ts says
  * why it is a hand-entered file and what it guards). The site still projects nothing: until the file is
  * filled, getSdsBrackets() is null and no San Diego bracket is drawn (DESIGN §24.8; the reversal covers the
  * Section's published bracket only).
  *
  * The template: the file gives the placed teams and the round dates; the pairings are the Section's
- * fixed template, which the 2025 sheet confirms (data/history-brackets-2025-26.json):
+ * fixed template, which the 2025 sheet confirms (data/field-hockey/history-brackets-2025-26.json):
  *   - 12 teams: first round 8 v 9, 5 v 12, 6 v 11, 7 v 10; quarterfinals 1 v (8/9), 4 v (5/12),
  *     3 v (6/11), 2 v (7/10); places 1-4 skip the first round. A play-in, when the Section holds one,
  *     fills one place (the 11th in 2025's Division II, Helix v Granite Hills).
@@ -365,7 +365,7 @@ export function buildSdsBrackets(file: SdsBracketsFile, games: readonly Game[]):
 
 // ---------------------------------------------------------------- the committed file
 
-/** data/sds-brackets-2026.json, validated (lib/postseason/sds-brackets-file.ts). */
+/** data/field-hockey/sds-brackets-2026.json, validated (lib/postseason/sds-brackets-file.ts). */
 const file = SDS_BRACKETS_FILE;
 
 /** The Section's published brackets joined to the snapshot's games; null while the file is the placeholder. */

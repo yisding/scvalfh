@@ -627,7 +627,7 @@ describe('the team views (components/home/team-card.ts ← home-view.ts teamView
 
 /**
  * The team view after the SCVAL play-in (plan final-10, 2026-10-30): the committed 2026-10-29 snapshot
- * (data/snapshot.json, SCVAL league play over: Los Altos is De Anza #4, Santa Clara El Camino #4) with Los Altos 2-1
+ * (data/field-hockey/snapshot.json, SCVAL league play over: Los Altos is De Anza #4, Santa Clara El Camino #4) with Los Altos 2-1
  * Santa Clara played Fri Oct 30, stamped Sat Oct 31. The outcome label replaces the 'Final place:' lead, as an MCAL
  * tournament outcome does, and fits one 288px line. A fresh module instance; the corpus views above are
  * already built.
@@ -639,7 +639,7 @@ describe('the team view after the SCVAL play-in (home-view.ts ← lib/postseason
 
   beforeAll(async () => {
     const base = loadSnapshot(
-      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown,
     );
     const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
     const playIn = game({
@@ -705,7 +705,7 @@ describe('the home "This week in the postseason" view (home-view.ts <- playoffs/
 
   beforeAll(async () => {
     const base = loadSnapshot(
-      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'field-hockey', 'snapshot.json'), 'utf8')) as unknown,
     );
     const games = [
       ...base.games.filter((g) => g.postseason === null),

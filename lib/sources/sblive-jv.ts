@@ -1,5 +1,5 @@
 /**
- * si.com JV team pages → the scored JV finals data/jv.json keeps (lib/jv/jv-schema.ts JvSbliveRow).
+ * si.com JV team pages → the scored JV finals data/field-hockey/jv.json keeps (lib/jv/jv-schema.ts JvSbliveRow).
  *
  * The page is the same `teams/Games` payload as a varsity team's (lib/sources/sblive.ts
  * TeamGamesPropsSchema); what differs is identity. A JV side is ours only when its si.com team id

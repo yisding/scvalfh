@@ -6,7 +6,7 @@
  * counterpart counts. JV games stay apart from varsity: these views feed no varsity record, form
  * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *
- * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json.
+ * SERVER-ONLY: reads lib/jv/jv, which imports data/field-hockey/jv.json.
  */
 
 import { byDateThenId, localDateKey, recordString, shiftDateKey, shortDate, sideOutcome } from '../../lib/format';
@@ -186,7 +186,7 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
  * One day's JV games, by time; with `region`, only those with a registry side in that region (the day
  * page's `#jv` and `#jv-socal` blocks, DESIGN §24.3), and the footnote's counts over those alone. A JV
  * game with a side in each region would be listed in both blocks, each the JV schedule of that region's
- * team: data/jv.json of 2026-10-06 has none (every JV game in it is between two schools of one region), and
+ * team: data/field-hockey/jv.json of 2026-10-06 has none (every JV game in it is between two schools of one region), and
  * the varsity page's NorCal vs SoCal block is for varsity alone.
  */
 export function buildDayJvView(dateKey: string, region?: RegionId): JvListSummary & { rows: JvRowView[] } {

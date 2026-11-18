@@ -32,7 +32,7 @@ import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the team pages (one per registry team),
- * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
+ * `/clubs/<slug>` per club of data/field-hockey/clubs.json (DESIGN §17.1), one page per date with a contest, and
  * one per game. The clubs come in lib/players/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
@@ -51,12 +51,12 @@ import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
  * with an unmatched official fixture takes the snapshot stamp. So a September final stops
  * "changing" twice a day. The hubs, the league pages and the team pages (whose standings and Elo
  * rating move with any game in the league) take the snapshot stamp. /jv takes the later of
- * data/jv.json's `fetchedAt` and the snapshot's, and /history/2025-26 the last day its sources were
+ * data/field-hockey/jv.json's `fetchedAt` and the snapshot's, and /history/2025-26 the last day its sources were
  * read (`getHistoryLastChecked`): a finished season does not change with the snapshot. The clubs
- * pages take the last day data/clubs.json was checked
+ * pages take the last day data/field-hockey/clubs.json was checked
  * instead (`getClubsLastChecked`: its `capturedAt`, or a later club `checkedOn`), as /commits does:
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
- * /commits takes the last day data/commits.json was checked (`getCommitsLastChecked`: its
+ * /commits takes the last day data/field-hockey/commits.json was checked (`getCommitsLastChecked`: its
  * `capturedAt`, or a later college `checkedOn`) for the same reason (DESIGN §21.4). /recruiting gathers
  * the clubs, the commitments, the roster overlay's recruiting profiles and the JV players' (DESIGN §25),
  * so it takes the latest of the four files' dates.
@@ -99,7 +99,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(HAS_RECRUITING
       ? [
           { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
-          // The club calendar (DESIGN §34) takes the day data/club-events.json was last checked. Field hockey's alone.
+          // The club calendar (DESIGN §34) takes the day data/field-hockey/club-events.json was last checked. Field hockey's alone.
           ...(HAS_CLUB_CALENDAR
             ? [
                 {

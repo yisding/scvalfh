@@ -140,7 +140,7 @@ describe('summarizeByLeague', () => {
 });
 
 describe('readPreviousFile: the previous file, salvaged row by row', () => {
-  const committed = readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8');
+  const committed = readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), 'utf8');
   const raw = JSON.parse(committed) as Rosters;
   const read = (file: unknown) =>
     readPreviousFile(typeof file === 'string' ? file : JSON.stringify(file), {
@@ -161,7 +161,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     expect([...p.rows.keys()]).toEqual(TEAMS.map((t) => t.slug));
     expect(p.rows.get('leigh')).toEqual(raw.teams.find((t) => t.slug === 'leigh'));
     expect(p.whole).toEqual(raw);
-    expect(describePrevious(p, 'data/rosters.json')).toEqual([]);
+    expect(describePrevious(p, 'data/field-hockey/rosters.json')).toEqual([]);
   });
 
   it('drops only the rows that fail on their own, naming each, and keeps the rest', () => {
@@ -183,8 +183,8 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     expect(p.rows.get('st-ignatius')).toEqual(raw.teams.find((t) => t.slug === 'st-ignatius'));
     // A file that lost a row is never "unchanged".
     expect(p.whole).toBeNull();
-    const log = describePrevious(p, 'data/rosters.json');
-    expect(log[0]).toMatch(/^WARN previous data\/rosters\.json: 4 row\(s\) do not validate and are dropped/);
+    const log = describePrevious(p, 'data/field-hockey/rosters.json');
+    expect(log[0]).toMatch(/^WARN previous data\/field-hockey\/rosters\.json: 4 row\(s\) do not validate and are dropped/);
     for (const slug of ['leigh', 'not-a-school', 'greenfield', 'stevenson']) {
       expect(log.some((l) => l.startsWith(`WARN   ${slug}`)), slug).toBe(true);
     }
@@ -195,7 +195,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     file.teams[file.teams.findIndex((t) => t.slug === 'del-mar')].slug = 'not-a-school';
     const p = rowsOf(read(file));
     expect(p.dropped).toEqual([expect.objectContaining({ slug: 'not-a-school', team: 'del-mar' })]);
-    expect(describePrevious(p, 'data/rosters.json')).toContain(
+    expect(describePrevious(p, 'data/field-hockey/rosters.json')).toContain(
       `WARN   not-a-school (del-mar): ${p.dropped[0].reason}`,
     );
     // An SCVAL-only run must not report Del Mar (BVAL) as kept: it lost its row.
@@ -212,7 +212,7 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     file.teams[i].teamId = 'not-a-maxpreps-id';
     const p = rowsOf(read(file));
     expect(p.dropped).toEqual([expect.objectContaining({ slug: `teams[${i}]`, team: null })]);
-    expect(describePrevious(p, 'data/rosters.json').some((l) => /names no registry team; the run fails/.test(l))).toBe(true);
+    expect(describePrevious(p, 'data/field-hockey/rosters.json').some((l) => /names no registry team; the run fails/.test(l))).toBe(true);
     // No league can claim the lost team, so only the unattributed drop fails the run.
     const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
     const byLeague = summarizeByLeague(teams, ['scval'], new Set());
@@ -257,9 +257,9 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
       expect(p.otherSeason).toBe(season ?? '(none)');
       expect(p.dropped).toHaveLength(TEAMS.length);
       expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
-      const log = describePrevious(p, 'data/rosters.json');
+      const log = describePrevious(p, 'data/field-hockey/rosters.json');
       expect(log).toHaveLength(1);
-      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its ${TEAMS.length} row(s) are ignored, as if absent`)).toBe(true);
+      expect(log[0].startsWith(`WARN previous data/field-hockey/rosters.json is season ${season ?? '(none)'}: its ${TEAMS.length} row(s) are ignored, as if absent`)).toBe(true);
     }
   });
 

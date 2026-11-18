@@ -206,7 +206,7 @@ export function makeFamilyChecker(
     // One JV calendar per league (app/jv/[league]); it takes the root OG card.
     family('jv', expected.leagueIds, { og: false });
     family('history', ['2025-26'], { og: false });
-    // One page per club of data/clubs.json, a club with no tied player included; no OG card (the
+    // One page per club of data/field-hockey/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.
     family('clubs', expected.clubSlugs, { og: false });
   }

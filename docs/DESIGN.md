@@ -140,10 +140,10 @@
 > 40 KB allowance (see the note on §13 above).
 >
 > **The clubs pages came later still.** `/clubs`, `/clubs/[slug]` and a club line on each team
-> page's roster were added from `data/clubs.json` (researched 2026-10-03); §17 ("Clubs amendment
+> page's roster were added from `data/field-hockey/clubs.json` (researched 2026-10-03); §17 ("Clubs amendment
 > (2026-10)") records what they answer, the privacy rules they keep and how they are laid out, and
 > §1.1 lists the two routes. `/commits` and a commitment line on team rosters followed, from
-> `data/commits.json`; §21 records them, and §1.1 lists the route.
+> `data/field-hockey/commits.json`; §21 records them, and §1.1 lists the route.
 >
 > **The postseason fortnight (§31, 2026-10-29/30).** "This week in the postseason" on `/playoffs` and the
 > home page, the CCS bracket drawn from MaxPreps' feeds with seeds from an owner file, the San Diego
@@ -231,7 +231,7 @@ equivalent moment; this is it. **[R-9]**
 | `/history/2025-26` | "How did last year finish?" 2025-26 final standings + all-league awards | static | — |
 | `/about` | "Where does this come from and can I trust it?" | static | — |
 | `/clubs` *(§17)* | "Which clubs do players here play for?" The youth clubs by region, each with its tied players' count and schools | static | — |
-| `/clubs/[slug]` *(§17)* | "Who here plays for this club, and how do we know?" | static, `generateStaticParams` over `data/clubs.json` (13, a club with no tied player included) | `slug` = `sf-hawks`, `fly-fhc`, … |
+| `/clubs/[slug]` *(§17)* | "Who here plays for this club, and how do we know?" | static, `generateStaticParams` over `data/field-hockey/clubs.json` (13, a club with no tied player included) | `slug` = `sf-hawks`, `fly-fhc`, … |
 | `/commits` *(§21)* | "Who here has committed to play in college, and where?" Players by class year, then the colleges | static | — |
 
 Machine routes: `/sitemap.xml` (`app/sitemap.ts`), `/robots.txt` (`app/robots.ts`),
@@ -912,7 +912,7 @@ region with "This week in the postseason" (§31.1). The not-seeded state's "Not 
 meter, the key dates (each round with the CCS calendar's site words) and the projection tables stand; the
 league intros and the home card footer are dated around the Mon Nov 2 meeting (§31.2). Seeded means a path to
 draw (`paths.length > 0`), not `bracketPublished`: one path per proven CCS division under its own `h3` ("CCS
-Division 1", "CCS Division 2"), seeds from `data/ccs-bracket-2026.json`, pairing cards ("Winner of 1 v 8", "TBD")
+Division 1", "CCS Division 2"), seeds from `data/field-hockey/ccs-bracket-2026.json`, pairing cards ("Winner of 1 v 8", "TBD")
 where MaxPreps lists no game yet, and each unplayed card's date, time, location and Tickets / NFHS stream pills
 (§31.3); the anchor tabs and the "Homestead's path" block of the second wireframe were not built. The EAL card
 lists the Super Regional's results (§31.6); the San Diego block lists the round dates and, once the owner file is
@@ -2948,7 +2948,7 @@ On a game row the † is StatusLabel's SourceMark, a sans footnote mark, not a `
 ### 15.10 Budgets
 
 Fail CI (`scripts/assert-budgets.ts`), against baselines captured from `main` before the change:
-`data/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
+`data/field-hockey/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
 most 2.2 x baseline (2.0 x until 2026-10-03; see §16.4); first-load client JS for `/`, `/schedule/<league>`, `/teams` and
 `/standings/<league>` each at most baseline + 20 KB (24 KB since the dependency update of 2026-11-10: `scripts/assert-budgets.ts`; this catches the config, registry or zod
 leaking into the browser: the client boundary forbids it); `/standings` (overview) at most 1.0 x its
@@ -3049,7 +3049,7 @@ not for a new section.
 ## 17. Clubs amendment (2026-10)
 
 The site gained club field hockey: which youth clubs the players on the 43 tracked varsity rosters
-play for, or played for, according to public pages that name both. The data is `data/clubs.json`,
+play for, or played for, according to public pages that name both. The data is `data/field-hockey/clubs.json`,
 research done by hand on 2026-10-03 and checked twice (`docs/DATA-SOURCES.md` §1.1j2, README
 "Clubs"); nothing refreshes it. This section records what the pages answer, the rules they keep and
 how they are laid out. Everything in §1-§15 still stands: static rendering, the rule-and-kicker
@@ -3273,7 +3273,7 @@ Elo points (1500 is the average rated team; 400 points is about 10-to-1), fitted
 season at once rather than game by game, because one season of about ten games a team leaves
 classic Elo near where it started. The fit is least squares on goal margin capped at 5, with a home
 edge where a game has a host, and each team starts from its rating over last season's finals
-(`data/prior-season.json`, read once a season by `pnpm fetch-prior-season`), carried over in full
+(`data/field-hockey/prior-season.json`, read once a season by `pnpm fetch-prior-season`), carried over in full
 and counting for one game. 175 points is a goal: the value that best fits Elo's expected-score
 curve over two replayed seasons. It counts every final between two of the 43 teams and nothing
 else: no forfeit, no game against a school outside the four leagues, this season or last. A given
@@ -3295,13 +3295,13 @@ game; the board's note says only what a 400-point gap means on the scale.
 
 `/leaders` gains a tenth board of at most 15 rows and stays inside its 1.0 × standings HTML budget
 (§16). The team page gains one closed disclosure of about 800 bytes of HTML before gzip. The server bundle gains
-`data/prior-season.json` (about 100 KB raw, one line per game), which no page sends to a browser.
+`data/field-hockey/prior-season.json` (about 100 KB raw, one line per game), which no page sends to a browser.
 
 ## 21. College commitments amendment (2026-10)
 
 The site gained college commitments: which players on the tracked varsity rosters (43 then, 49 with
 the EAL) a public page says have committed to play a sport in college, and where. It began with
-field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
+field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/field-hockey/commits.json`,
 research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
 commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
 differ: the same matching rule, the same privacy posture, the same row and list layout. This section
@@ -3344,7 +3344,7 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
 
 ### 21.2 Privacy posture
 
-§17.2 applies unchanged, with `data/commits.json` for `data/clubs.json`:
+§17.2 applies unchanged, with `data/field-hockey/commits.json` for `data/field-hockey/clubs.json`:
 
 - **Only rows on the tracked varsity rosters are named**, joined on team slug + MaxPreps athleteId
   and shown under the roster's own spelling; JV rows and graduates are out. A commitment list or a
@@ -3602,7 +3602,7 @@ the four-league tree to this one (the two trees also differ in data):
 The EAL's team pages are 28,496 (Corning) to 37,276 bytes (Davis). First-load client JS changed by at
 most 49 bytes on any route (`/` 504,322 to 504,371, against a limit of 515,098; `/teams` 485,628 to
 485,650, against 490,367), so no league config reaches a browser bundle. The serialized home team views
-are 51,215 bytes on `data/snapshot.json` for 49 teams (budget 61,440). `data/snapshot.json` is
+are 51,215 bytes on `data/field-hockey/snapshot.json` for 49 teams (budget 61,440). `data/field-hockey/snapshot.json` is
 979,296 bytes (limit 1,600,000), and the Cloudflare Worker is 1805.5 KB gzip against 1992.2 KB. **No
 multiplier was raised.** `tests/golden/page-weights-main.json` is untouched.
 
@@ -3615,7 +3615,7 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
 - **Snapshot compatibility.** A schema-version 2 file written before a configured league existed still
   loads: `loadSnapshot` adds the missing league (its teams, section, standings rows and a `degraded`
   health row that says the file predates it) and re-resolves every game side. The committed
-  `data/snapshot.json` was regenerated by `pnpm fetch-data` on 2026-10-04 (`fetchedAt`
+  `data/field-hockey/snapshot.json` was regenerated by `pnpm fetch-data` on 2026-10-04 (`fetchedAt`
   2026-10-04T13:04:21.846Z) and loaded through that upgrade with no `--accept-regression`.
   `tests/fixtures/corpus/variants/finals-regression/previous-snapshot.json` is **frozen**: it stays a
   four-league file and exercises the upgrade in the pipeline tests.
@@ -3629,11 +3629,11 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   schedules, 7 si.com scoreboards, 2 si.com team-games pages), was captured live and replays with no
   missing resource; it drives `tests/pipeline/eal.test.ts`, the EAL view tests and the second
   copy-honesty pass.
-- **History 2025-26: `unavailable`** (`data/history-2025-26.json`, `leagues.eal`, checked 2026-10-04).
+- **History 2025-26: `unavailable`** (`data/field-hockey/history-2025-26.json`, `leagues.eal`, checked 2026-10-04).
   The EAL published no 2025-26 final standings of its own, the Section's field hockey page and Playoff
   Center post none, and the site does not show standings from newspapers or third-party sites. The
   three pages checked are listed on the card.
-- **Prior season and Elo.** `data/prior-season.json` was refetched for all 49 teams on 2026-10-04: 412
+- **Prior season and Elo.** `data/field-hockey/prior-season.json` was refetched for all 49 teams on 2026-10-04: 412
   finals, 31 of them between two EAL teams and 13 between one EAL team and another registry team
   (Pleasant Valley 4, Chico 3, Bella Vista 3, Davis 3; Corning and Lassen have none). Those 13 games
   connect the EAL to the other leagues for the Elo fit (§20); a game decided on 1 v 1s is level there,
@@ -3662,7 +3662,7 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   95 varsity rows, found none (`docs/DATA-SOURCES.md` §1.1j3; the same day's recruiting-profiles
   research ran SportsRecruits' profile probe for those rows in every sport and NCSA and FieldLevel
   probes for field hockey, but SportsRecruits' athlete search was not run for them).
-- **No school-athletics enrichment sweep for EAL rosters.** `data/rosters-enrichment.json`'s six EAL
+- **No school-athletics enrichment sweep for EAL rosters.** `data/field-hockey/rosters-enrichment.json`'s six EAL
   entries hold players' own recruiting pages only (swept 2026-10-04: 33 profiles for 29 players, none
   for Bella Vista or Corning) and say the school-athletics roster sweep (grade, height, number,
   position, coaches) has not been done. Corning has no roster or player stats at MaxPreps on
@@ -4012,7 +4012,7 @@ addition there will cross it.
 
 **Data and the build.**
 
-- **Snapshot.** `data/snapshot.json` is 2,009,846 bytes against the new caps of 3,200,000 (warn
+- **Snapshot.** `data/field-hockey/snapshot.json` is 2,009,846 bytes against the new caps of 3,200,000 (warn
   2,400,000; 63% used). It has 165 source rows against a cap of 280 (59%). Both caps were raised
   from 1.6 MB / 1.2 MB and 140 sources (`lib/pipeline/steps/assemble.ts`).
 - **Home team views.** The serialized views are 107,545 bytes for 99 teams (52,868 NorCal, 54,577
@@ -4034,7 +4034,7 @@ addition there will cross it.
 - **Cloudflare's own limit.** Its Workers limits page (developers.cloudflare.com/workers/platform/limits/,
   read 2026-10-06) sets 64 MiB uncompressed on both the Free and Paid plans, and says there is no
   compressed size limit. The Worker's 8.0 MiB raw is 13% of that.
-- **Game box scores (2026-10-24).** The game pages' box scores ride in `data/player-stats.json`
+- **Game box scores (2026-10-24).** The game pages' box scores ride in `data/field-hockey/player-stats.json`
   (`games`: 846 box scores, 4,811 player lines, 57,945 bytes of gzip -9 JSON), which the Worker
   bundles. After `pnpm build:cloudflare` the Worker was 2,486,508 bytes gzip over 246 files, over
   the 2,449,651 line; without the box scores it would have been about 2,428,000 (99%), since the
@@ -4080,14 +4080,14 @@ addition there will cross it.
   leagues; comparisons between NorCal and SoCal rest on 7 games between the regions this season and
   11 last season, so treat them as rough". Each region has its own boards and qualifying minimum. A
   team page names its place on its own region's board.
-- **Prior season.** `data/prior-season.json` was refetched over all 99 teams. It holds 896 finals:
+- **Prior season.** `data/field-hockey/prior-season.json` was refetched over all 99 teams. It holds 896 finals:
   412 NorCal (unchanged), 473 between Southern California teams and 11 between the regions. It
   excludes 113 deleted rows, 25 not final, 51 outside the registry and 1 forfeit.
 - **Rosters and stats.**
-  - `data/rosters.json`: 1,617 players across 99 entries, 84 of them with players.
-  - `data/player-stats.json`: 758 players on 62 of 99 teams.
-  - `data/jv.json`: 531 games (208 final) for 91 of 99 schools, with si.com JV ids for 98.
-  - `data/rosters-enrichment.json`: the 50 Southern California entries are unswept stubs that say so.
+  - `data/field-hockey/rosters.json`: 1,617 players across 99 entries, 84 of them with players.
+  - `data/field-hockey/player-stats.json`: 758 players on 62 of 99 teams.
+  - `data/field-hockey/jv.json`: 531 games (208 final) for 91 of 99 schools, with si.com JV ids for 98.
+  - `data/field-hockey/rosters-enrichment.json`: the 50 Southern California entries are unswept stubs that say so.
 - **History 2025-26: `unavailable`** for `sunset`, `city`, `north-county` and `metro`, checked 2026-10-06.
   - **Sunset:** no league website or standings document was found. The Southern Section holds no
     field hockey playoffs, and the Sunset table on scores.cifss.org is SBLive's.
@@ -4105,7 +4105,7 @@ addition there will cross it.
   the Section's round calendar and links its field hockey page and, once published, its brackets sheet.) The site
   states the rule, the dates and each team's playoff division. The Section seeds at its Oct 31 meeting.
   **Reversed in part on 2026-10-30 (§31.5):** a San Diego bracket IS drawn, but only the Section's PUBLISHED one,
-  transcribed by the owner into `data/sds-brackets-2026.json` after the meeting and joined to MaxPreps' results;
+  transcribed by the owner into `data/field-hockey/sds-brackets-2026.json` after the meeting and joined to MaxPreps' results;
   with the placeholder file nothing is drawn. Places print as bare numerals, never with the word "seed", and no
   place is projected.
 - **No club or commitment sweep for Southern California.** The 50 teams' rosters have no club or
@@ -4190,9 +4190,9 @@ ladder line, caption or legend.
 - `pnpm fetch-data`: `fetchedAt` 2026-10-06T05:58:34Z, 102 teams, 879 games (506 league), 539 finals, 12
   pending, all nine leagues and the independents fresh; 131 MaxPreps, 21 si.com and 8 official-host
   requests; 166 of 168 source rows ok (the CCS calendar and bracket, skipped before Oct 25). The
-  independents have 37 games, 29 final, none counted. `data/snapshot.json` is 2,034,943 bytes.
-- `data/history-2025-26.json` was regenerated offline with the independents' entry.
-  `data/rosters-enrichment.json` has three unswept stubs for them.
+  independents have 37 games, 29 final, none counted. `data/field-hockey/snapshot.json` is 2,034,943 bytes.
+- `data/field-hockey/history-2025-26.json` was regenerated offline with the independents' entry.
+  `data/field-hockey/rosters-enrichment.json` has three unswept stubs for them.
 
 **Budgets.** `pnpm assert:budgets` passes with no line raised: `/` HTML 100.2 KB of 109.8, `/teams` 44.8
 of 49.2, `/leaders` 66.2 of 74.4, `/playoffs` 37.2 of 42.2, `/standings/independents` 14.6 and
@@ -4256,7 +4256,7 @@ Bonita's two games with Chaminade), and orders them by this site's 3-1-0 points.
 
 **Data (2026-10-06, 12:00Z).** `pnpm fetch-data` again: 102 teams, 879 games (524 league), 542 finals,
 9 pending; the independents' table counts 21 games (13 final), the Sunset 15 (its 18 less Great Oak–Bonita
-and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. The per-team files
+and Bonita–Chaminade twice). `data/field-hockey/history-2025-26.json` regenerated offline. The per-team files
 (rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
 `division` rewritten, their contents unchanged.
 
@@ -4312,7 +4312,7 @@ snapshot in the same PR (the site builds from the committed file and should not 
 the pipeline no longer starts from nothing when one lands.
 
 **Data (2026-10-06).** `pnpm fetch-data`, started from the flag-based snapshot through the upgrade above: 102
-teams, 879 games (544 league, up from 524), 542 finals, 9 pending; `data/history-2025-26.json` regenerated
+teams, 879 games (544 league, up from 524), 542 finals, 9 pending; `data/field-hockey/history-2025-26.json` regenerated
 (the group's name); the per-team files' `source` strings renamed.
 
 ### 24.12 Recruiting profiles, clubs and commitments for Southern California (2026-10-06, latest)
@@ -4323,11 +4323,11 @@ Southern California location standing for a Northern California one. The method,
 gotchas are in `docs/DATA-SOURCES.md` §1.1j, §1.1j2 and §1.1j3; every candidate was re-opened by a
 checker and, separately, by a refuter, and only what both kept is in the files.
 
-- **Recruiting profiles** (`data/rosters-enrichment.json`): 267 for 202 players (134 Hudl, 64 NCSA,
+- **Recruiting profiles** (`data/field-hockey/rosters-enrichment.json`): 267 for 202 players (134 Hudl, 64 NCSA,
   55 SportsRecruits, 14 FieldLevel). The SoCal entries stop being stubs: each holds its profiles and
   per-team notes, and, like the EAL's, no coaches or sources, so a SoCal team page still says other
   public sources have not been checked. The roster shows a FieldLevel link as it shows the others.
-- **Clubs** (`data/clubs.json`): twelve club records and 76 ties for 68 players at 23 schools (one, Abigail Karlander's, on the
+- **Clubs** (`data/field-hockey/clubs.json`): twelve club records and 76 ties for 68 players at 23 schools (one, Abigail Karlander's, on the
   revised nickname rule below). Five
   club regions join `CLUB_REGIONS` after the North State, `ventura`, `los-angeles`, `orange-county`,
   `inland-empire` and `san-diego` ("Ventura County", "Los Angeles", "Orange County", "the Inland
@@ -4343,7 +4343,7 @@ checker and, separately, by a refuter, and only what both kept is in the files.
   The first section of each half takes the first section's top margin. The lede, the count line and
   `#how-matched` stay site-wide (the lede now reads "148 players from 48 schools are tied to 15 of these
   28 clubs, the most to SF Hawks (32) and HTC (30)").
-- **Commitments** (`data/commits.json`): twelve, ten in field hockey and two in lacrosse, at seven
+- **Commitments** (`data/field-hockey/commits.json`): twelve, ten in field hockey and two in lacrosse, at seven
   schools, to eight new colleges (Richmond, Johns Hopkins, Michigan, Michigan State, Muhlenberg,
   Harvard, Oregon, Columbia) and a new field hockey program at Cal. Sami Lee's (Columbia) is on the
   revised nickname rule. `/commits` was not region-scoped then: one list by
@@ -4394,7 +4394,7 @@ kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, 
 count in any league table." as its note; the chip in every list is "Tournament of Champions".
 
 **The 2025 tournament on /history/2025-26 (2026-11-03).** Owner request: "Add the 2025 Tournament of Champions
-to the historical data." `data/history-brackets-2025-26.json` gains `tournaments.toc`, drawn as `#toc` after the
+to the historical data." `data/field-hockey/history-brackets-2025-26.json` gains `tournaments.toc`, drawn as `#toc` after the
 LA independents (pill "TOC", SoCal-scoped) with the section brackets' drawer: a champion card ("Tournament of
 Champions champion · Harvard-Westlake · Beat Newport Harbor 4-0 in the final"), one bracket of three rounds
 (First round Oct 21, Semifinals Oct 23, Final Oct 25 at Ted Slavin Field), the third-place game as one line
@@ -4444,7 +4444,7 @@ just said the Section places teams, and under Redwood's card two tournament wins
 **Data.** Two rows the event exposed are excluded by config: a second Harvard-Westlake 6-0 Temecula Valley on
 Oct 23 and a scoreless Newport Harbor at Glendora on Oct 22 (the game moved to Oct 24). The third-place game is
 not on MaxPreps. Not built: a bracket (none is published), a champion line (the final is tonight), the 2025
-edition on /history (its games are in data/prior-season.json, but the Sunset is "unavailable" there and the
+edition on /history (its games are in data/field-hockey/prior-season.json, but the Sunset is "unavailable" there and the
 copy rules forbid naming a winner in an unavailable league's section).
 
 ## 25. Recruiting amendment (2026-10)
@@ -4502,7 +4502,7 @@ the latest of the clubs file, the commitments file and the roster overlay.
 
 ### 25.3a JV players' recruiting profiles (2026-11-06)
 
-The JV players' own recruiting pages (`data/jv-profiles.json`, read by `lib/jv/jv-profiles.ts`) are
+The JV players' own recruiting pages (`data/field-hockey/jv-profiles.json`, read by `lib/jv/jv-profiles.ts`) are
 linked by the varsity rule and drawn by the same `Profiles` line: on the team page, under the JV
 roster row's facts (`components/jv/TeamJvRoster.tsx`), with a footnote naming the platforms, the day
 they were looked for and that recall is partial; on `/recruiting`, after the school's varsity rows,
@@ -4894,7 +4894,7 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   (`lib/postseason/ccs-bracket.ts`): tagged `ccs` and dated from the quarterfinals, or marked published. The MaxPreps
   tournament page is read per division and positively (`playoffs.divisionsPublished`); a page it does not
   recognise carries the previous state. DATA-SOURCES §1.4 has the fields, the 2025 evidence and the rules.
-- **The seed file.** `data/ccs-bracket-2026.json` holds the sixteen seeds the owner copies from the published
+- **The seed file.** `data/field-hockey/ccs-bracket-2026.json` holds the sixteen seeds the owner copies from the published
   MaxPreps page after the Mon Nov 2 meeting: `{ "season", "retrievedOn", "source": { "label", "url" },
   "divisions": [ { "name": "Division 1", "seeds": [ { "seed": 1, "slug": "…" }, … 8 ] }, { "name": "Division 2", … } ]
   }`, each division numbered 1-8 as MaxPreps and CCS print them (the committee's 9-16 is Division 2's grouping,
@@ -4974,7 +4974,7 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
 - **The ladder's second rung is "Placed by the Section"** (badge "By selection", phrase "placed by the Section from
   its power rankings"), in place of the historical "No league route" / "Selection only" (until 2026-10-29; §24.1, §24.4). The 60-word footnote
   prints once under the three conference cards, not in each.
-- **The bracket file** `data/sds-brackets-2026.json` (placeholder `{ "season": "2026-27", "retrievedOn": null,
+- **The bracket file** `data/field-hockey/sds-brackets-2026.json` (placeholder `{ "season": "2026-27", "retrievedOn": null,
   "source": null, "divisions": [] }`) is what the owner fills after the meeting from the Section's sheet (about 20
   minutes): per division `{ "id": "open" | "division-1" | "division-2", "label", "size": 8 | 12, "rounds": [ {
   "name", "date", "time"?, "site"? } ], "seeds": [ { "seed": n, "slug" } ], "playIn"?: { "date", "forSeed": 11 |
@@ -5146,7 +5146,7 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
 
 The high school season ends in November; the club season runs from December to July. The site
 gained one page for it: `/club-calendar`, the tournaments, league days and national events Northern
-California club teams play in, from `data/club-events.json` (research by hand on 2026-11-13, read
+California club teams play in, from `data/field-hockey/club-events.json` (research by hand on 2026-11-13, read
 from the organizers' own pages; `docs/DATA-SOURCES.md` §1.9, README "Club calendar"). Nothing
 refreshes it. Everything in §1-§32 still stands.
 

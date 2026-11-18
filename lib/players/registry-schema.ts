@@ -57,15 +57,15 @@ export type PlayerLevel = (typeof PLAYER_LEVELS)[number];
 
 /** Where an observation was read. The order is the precedence a stint's fields are resolved by. */
 export const OBSERVATION_SOURCES = [
-  /** the school's MaxPreps varsity roster page (data/rosters.json) */
+  /** the school's MaxPreps varsity roster page (data/field-hockey/rosters.json) */
   'maxpreps-roster',
-  /** the school's MaxPreps JV roster page (data/jv-rosters.json) */
+  /** the school's MaxPreps JV roster page (data/field-hockey/jv-rosters.json) */
   'maxpreps-jv-roster',
-  /** another public source, recorded in data/rosters-enrichment.json; `kind` and `url` say which */
+  /** another public source, recorded in data/field-hockey/rosters-enrichment.json; `kind` and `url` say which */
   'enrichment',
-  /** the school's own JV list (data/jv-rosters-school-sites.json) */
+  /** the school's own JV list (data/field-hockey/jv-rosters-school-sites.json) */
   'school-jv-roster',
-  /** the team's MaxPreps season stat sheet (data/player-stats.json, data/prior-players.json) */
+  /** the team's MaxPreps season stat sheet (data/field-hockey/player-stats.json, data/field-hockey/prior-players.json) */
   'maxpreps-stats',
   /** a league's all-league list (data/history-<season>.json) */
   'all-league',
@@ -108,7 +108,7 @@ export const ObservationSchema = z
     derived: z.literal(true).optional(),
     /**
      * True for a statement the overlay recorded as a disagreement and did not take
-     * (data/rosters-enrichment.json `conflicts`). It never decides a field, and is always a conflict.
+     * (data/field-hockey/rosters-enrichment.json `conflicts`). It never decides a field, and is always a conflict.
      */
     rejected: z.literal(true).optional(),
   })

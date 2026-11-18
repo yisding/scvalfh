@@ -179,7 +179,7 @@ export function game(spec: GameSpec): Game {
 
 /**
  * `base` with its games replaced by `games` (and any `rest` fields, e.g. `fetchedAt` or `standings`), for a test that
- * stages a postseason scene on the committed data/snapshot.json. The counts follow the new arrays, and
+ * stages a postseason scene on the committed data/field-hockey/snapshot.json. The counts follow the new arrays, and
  * `supersededGames` keeps only the mappings the new games still satisfy (snapshot refinement 10: the target is a
  * game, the key is not). A test that drops games the daily refresh has since made the target of a mapping (a San
  * Diego `cifsds:` bracket-sheet game MaxPreps has posted, superseded by its MaxPreps playoff contest) would otherwise

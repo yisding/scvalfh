@@ -1,6 +1,6 @@
 /**
  * JV games: the si.com JV id map, the si.com JV page parser, the MaxPreps-first merge
- * (lib/jv/jv-merge.ts), the committed data/jv.json, the views, and scripts/fetch-jv.ts run offline
+ * (lib/jv/jv-merge.ts), the committed data/field-hockey/jv.json, the views, and scripts/fetch-jv.ts run offline
  * over the PCAL captures in tests/fixtures/jv (README there).
  *
  * The scheduled refresh runs this suite over the file it just wrote, so the checks on the
@@ -545,8 +545,8 @@ describe('mergeJvSchoolSites: a school’s own athletics site, after MaxPreps an
   });
 });
 
-describe('data/jv.json', () => {
-  const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'jv.json'), 'utf8')) as JvFile;
+describe('data/field-hockey/jv.json', () => {
+  const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'jv.json'), 'utf8')) as JvFile;
 
   it('validates and is what the read API serves', () => {
     const parsed = JvFileSchema.safeParse(raw);

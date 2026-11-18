@@ -17,7 +17,7 @@ const PAGE_TITLE = 'Club teams';
 /**
  * /clubs — "Which clubs do players here play for?" (DESIGN §17.1, SPEC §1.1j2).
  *
- * The youth field hockey clubs of data/clubs.json — the clubs around the Bay Area and Central Coast
+ * The youth field hockey clubs of data/field-hockey/clubs.json — the clubs around the Bay Area and Central Coast
  * schools, three clubs met near the EAL teams' schools (D-City and Roseville FHC in the Sacramento
  * area, Chico Hotshots in the North State: areas not searched for every club, DESIGN §22.9), the
  * clubs around the Southern Section and San Diego Section schools (DESIGN §24.12), plus any other

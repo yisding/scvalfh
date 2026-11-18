@@ -96,7 +96,7 @@ import { SPORT } from '../../lib/sports/current';
  *     Guidelines and the streams, word for word as before.
  *
  * SoCal (`<div id="socal" data-region-scope>`): the San Diego Section's own published brackets first
- * (`#sds-bracket`, once the owner has transcribed them into data/sds-brackets-2026.json; nothing on the
+ * (`#sds-bracket`, once the owner has transcribed them into data/field-hockey/sds-brackets-2026.json; nothing on the
  * placeholder), then the Section's rule, sources and round calendar (`#sds-playoffs`, `#sds-round-dates`) and
  * one section per conference (`#city`, `#north-county`, `#metro`: each division's leaders and each team's
  * playoff division), all in components/playoffs/SectionPlayoffs.tsx. No seed is projected: the Section, not a

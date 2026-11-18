@@ -1,8 +1,8 @@
 /**
- * data/player-stats.json: the committed file validates, joins to data/rosters.json, and the script
+ * data/field-hockey/player-stats.json: the committed file validates, joins to data/field-hockey/rosters.json, and the script
  * builds a valid file from the fixtures.
  *
- * Unlike data/rosters.json there is no byte-for-byte rebuild check: stats move after every game,
+ * Unlike data/field-hockey/rosters.json there is no byte-for-byte rebuild check: stats move after every game,
  * so the committed file is expected to be newer than the captures in tests/fixtures/maxpreps.
  *
  * The scheduled refresh (.github/workflows/update-data.yml) runs this suite over the file it just
@@ -34,9 +34,9 @@ import { pendingPlayerStats } from '../lib/sources/maxpreps-player-stats';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
 
-describe('data/player-stats.json', () => {
+describe('data/field-hockey/player-stats.json', () => {
   it('validates against the contract and is what the read API serves', () => {
     const parsed = PlayerStatsFileSchema.safeParse(raw);
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
@@ -115,7 +115,7 @@ describe('data/player-stats.json', () => {
     }
   });
 
-  it('joins every published line to the same team on data/rosters.json', () => {
+  it('joins every published line to the same team on data/field-hockey/rosters.json', () => {
     for (const t of raw.teams) {
       const roster = getRosters().teams.find((r) => r.slug === t.slug)!;
       const byCareer = new Map(roster.players.map((p) => [p.careerId, p]));
@@ -275,7 +275,7 @@ describe('scripts/fetch-player-stats.ts --fixtures', () => {
 describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team', () => {
   it('leaves a league outside the run exactly as the previous file had it', () => {
     const out = tmpOut();
-    writeFileSync(out, readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8'), 'utf8');
+    writeFileSync(out, readFileSync(path.join(REPO, 'data', 'field-hockey', 'player-stats.json'), 'utf8'), 'utf8');
     const log = buildFromFixtures(out, '2026-10-02T14:00:00.000Z');
     expect(log).toContain('BVAL  12 teams · not in this run');
     const built = read(out);
@@ -359,7 +359,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     // response's teamId is checked against it; every row is then "not on the roster".
     const leigh = TEAMS.find((t) => t.slug === 'leigh')!;
     expect(existsSync(path.join(FIXTURE_DIR, 'stats-leigh.json'))).toBe(true);
-    const rosters = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
+    const rosters = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), 'utf8')) as Rosters;
     rosters.teams[rosters.teams.findIndex((t) => t.slug === leigh.slug)] = pendingRoster(leigh);
     rosters.counts = countRosters(rosters.teams);
     expect(RostersSchema.safeParse(rosters).success).toBe(true);

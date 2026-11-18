@@ -11,7 +11,7 @@
  *
  * It is a number that played, not a known person. The roster keeps the row under "Player #4", the
  * word "null" dropped (lib/sources/maxpreps-roster.ts), and its stat lines join to it as any row's
- * do; data/rosters-enrichment.json gives it a name where another source ties one to the number. Left
+ * do; data/field-hockey/rosters-enrichment.json gives it a name where another source ties one to the number. Left
  * unnamed it is never a registry player: the number may be anyone's (Gilroy's "Player #11" and
  * "Player #12" were once joined into one person under "null Player #12").
  */

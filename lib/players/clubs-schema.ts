@@ -1,5 +1,5 @@
 /**
- * The Zod contract for data/clubs.json — the youth field hockey clubs around the 43 schools swept on
+ * The Zod contract for data/field-hockey/clubs.json — the youth field hockey clubs around the 43 schools swept on
  * 2026-10-03, plus any club a tracked player is tied to, plus three clubs met near the EAL teams'
  * schools on 2026-10-04 (notes[4]), and which players on the tracked varsity rosters a public page
  * ties to one (SPEC §1.1j2, DESIGN §17).
@@ -22,7 +22,7 @@
  *   5. every club and every affiliation has at least one source
  *   6. a quote is 1-300 characters (it is kept for maintainers and never rendered)
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
- *   8. the join to data/rosters.json — the row exists, carries the same fullName, is not JV, and
+ *   8. the join to data/field-hockey/rosters.json — the row exists, carries the same fullName, is not JV, and
  *      agrees with every stated class year — lives in lib/players/clubs.ts: this file cannot see the rosters
  *   9. `jvAffiliations` hold the same records for players on JV rows, under the same rules (1-8,
  *      except that each must join to a JV row); a player is in one list or the other, never both
@@ -130,7 +130,7 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
  * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
  * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
  * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
- * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commits.json (lib/players/commits-schema.ts),
+ * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/field-hockey/commits.json (lib/players/commits-schema.ts),
  * whose commitments are most often announced on one of them.
  */
 export const BANNED_HOSTS = [
@@ -275,7 +275,7 @@ export const AffiliationSourceSchema = z.object({
 
 export const ClubAffiliationSchema = z.object({
   teamSlug,
-  /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
+  /** The MaxPreps per-season athlete GUID: the join key to data/field-hockey/rosters.json. */
   athleteId: text,
   /**
    * The player's id in the player registry (data/players.json), written by `pnpm build-players`. It

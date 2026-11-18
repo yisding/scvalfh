@@ -1,6 +1,6 @@
 /**
  * Box scores as evidence about a game's result. Each team's coach enters a box score on MaxPreps apart from the
- * game's score (data/player-stats.json, scripts/fetch-player-stats.ts): its scorers' goals, its goalkeepers'
+ * game's score (data/field-hockey/player-stats.json, scripts/fetch-player-stats.ts): its scorers' goals, its goalkeepers'
  * goals against and overtime minutes. It is one more slightly unreliable source (about 7% of the sides with
  * goals tracked do not total the game's score), but it is entered separately, so where it agrees with another
  * source it settles a disagreement, and a goalkeeper's overtime minutes say a game went to overtime when

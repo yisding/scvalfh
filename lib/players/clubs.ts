@@ -1,5 +1,5 @@
 /**
- * The read API for data/clubs.json — the youth field hockey clubs, and which players on the
+ * The read API for data/field-hockey/clubs.json — the youth field hockey clubs, and which players on the
  * tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
@@ -27,11 +27,11 @@
  * A roster refetch can break this. If `pnpm fetch-rosters` drops a tied player's row or respells
  * the name, or a season rollover changes `season`, this module throws at import — and so `pnpm
  * test` and the build fail — naming the team, the player and the club. That is the posture of
- * data/rosters-enrichment.json, and right for research data: re-check that affiliation's sources,
+ * data/field-hockey/rosters-enrichment.json, and right for research data: re-check that affiliation's sources,
  * then edit or drop it by hand. Never prune it automatically.
  */
 
-import bundledFieldHockey from '../../data/clubs.json';
+import bundledFieldHockey from '../../data/field-hockey/clubs.json';
 import bundledBasketball from '../../data/basketball/clubs.json';
 import bundledVolleyball from '../../data/volleyball/clubs.json';
 import bundledSoccer from '../../data/soccer/clubs.json';
@@ -49,7 +49,7 @@ import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRo
 import type { TeamSlug } from '../types';
 import { HAS_RECRUITING, IS_VOLLEYBALL } from '../sports/current';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {

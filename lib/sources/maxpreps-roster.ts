@@ -188,7 +188,7 @@ export function rosterUrl(team: Team): string | null {
   return `${base.replace(/\/+$/, '')}/roster/`;
 }
 
-/** The school's JV roster page, `<team URL>jv/roster/`: read with JV_SPORT_SEASON_ID (data/jv-rosters.json). */
+/** The school's JV roster page, `<team URL>jv/roster/`: read with JV_SPORT_SEASON_ID (data/field-hockey/jv-rosters.json). */
 export function jvRosterUrl(team: Pick<Team, 'external'>): string | null {
   const base = team.external.maxprepsTeamUrl;
   if (!base) return null;
@@ -491,7 +491,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
   // Only now, after the cross-check held MaxPreps' own spelling against its own table: a name part
   // MaxPreps printed as the word "null" is dropped, so its stat-entry stand-in reads "Player #4"
   // (lib/players/placeholder-name.ts). The row stays: the number played, and a name another source
-  // gives it is filled from data/rosters-enrichment.json.
+  // gives it is filled from data/field-hockey/rosters-enrichment.json.
   const placeholders = players.filter(isPlaceholderRow);
   if (placeholders.length > 0) {
     warnings.push(

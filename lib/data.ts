@@ -10,11 +10,11 @@
  * Date.now() — so a build is reproducible and every "as of" label is honest (BUILD-BRIEF).
  */
 
-import bundledPlayerStatsFieldHockey from '../data/player-stats.json';
+import bundledPlayerStatsFieldHockey from '../data/field-hockey/player-stats.json';
 import bundledPlayerStatsBasketball from '../data/basketball/player-stats.json';
 import bundledPlayerStatsVolleyball from '../data/volleyball/player-stats.json';
 import bundledPlayerStatsSoccer from '../data/soccer/player-stats.json';
-import bundledSnapshotFieldHockey from '../data/snapshot.json';
+import bundledSnapshotFieldHockey from '../data/field-hockey/snapshot.json';
 import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
@@ -99,7 +99,7 @@ import type {
 import { compareInOrder, levelInOrder, ordersByRecord } from './standings/order';
 
 /**
- * This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball:
+ * This build's copy (data/<sport>/:
  * lib/sports/current.ts DATA_DIR). Chosen on the inlined SCVAL_SPORT itself, not on IS_FIELD_HOCKEY, so a bundler
  * folds the comparison and leaves the other sports' files out of the Worker (scripts/assert-budgets.ts).
  */
@@ -107,12 +107,12 @@ const bundledPlayerStats: unknown = process.env.SCVAL_SPORT === 'basketball' ? b
 const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 /**
- * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
+ * data/field-hockey/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
  * Turbopack for `next build`, Vite/Rolldown for vinext's Node server and its Cloudflare Worker.
  * Nothing reads data/ from disk at run time. That is what lets the Worker start at all: workerd's
  * node:fs sees only /bundle, /tmp and /dev, and this module runs as a Worker instance starts (the
  * root layout and the dynamic metadata routes import it), so the old
- * `readFileSync(path.join(process.cwd(), 'data', 'snapshot.json'))` threw before any request was
+ * `readFileSync(path.join(process.cwd(), 'data', 'field-hockey', 'snapshot.json'))` threw before any request was
  * served. A missing file is now a build error (the import does not resolve): run `pnpm fetch-data`
  * first.
  *

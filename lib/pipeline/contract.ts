@@ -36,7 +36,7 @@ export type ResourceKey =
   | { kind: 'tournament-bracket'; bracketId: string; url: string }
   /** One page of a Section's cifsshome.org listing, season start through `through` (YYYY-MM-DD). */
   | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string }
-  /** One tab of the San Diego Section's bracket sheet, as CSV (a division id of data/sds-brackets-2026.json). */
+  /** One tab of the San Diego Section's bracket sheet, as CSV (a division id of data/field-hockey/sds-brackets-2026.json). */
   | { kind: 'sds-bracket-sheet'; division: string };
 
 /**
@@ -223,7 +223,7 @@ export interface SecondaryStepResult {
 export interface PipelineSteps { official: OfficialStep; sblive: SbliveStep }
 
 /**
- * The data/snapshot.meta.json object (§7.11), written by lib/pipeline/steps/assemble.ts. Besides the
+ * The data/field-hockey/snapshot.meta.json object (§7.11), written by lib/pipeline/steps/assemble.ts. Besides the
  * tests, .github/workflows/update-data.yml reads it: `contentHash` (commit only when it changes),
  * `today`, `counts` and `commitSummary` (the commit message), so a field renamed here must be renamed
  * there too; scripts/data-issues.ts reads `fetchedAt` and the previous run's `leagues` (the issues)
@@ -274,7 +274,7 @@ export interface SnapshotMeta {
 
 export interface PipelineResult {
   snapshot: Snapshot;
-  /** The data/snapshot.meta.json object (§7.11). */
+  /** The data/field-hockey/snapshot.meta.json object (§7.11). */
   meta: SnapshotMeta;
   /** The claims file written beside the snapshot (lib/claims/file.ts claimsPathOf), stamped with the run's fetchedAt. */
   claims: ClaimsFile;

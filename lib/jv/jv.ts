@@ -1,5 +1,5 @@
 /**
- * The read API for data/jv.json — every registry school's JV games (MaxPreps, corrected by
+ * The read API for data/field-hockey/jv.json — every registry school's JV games (MaxPreps, corrected by
  * lib/jv/jv-corrections.ts and supplemented by si.com: lib/jv/jv-merge.ts, then by the school athletics
  * sites transcribed in lib/jv/jv-school-sites.ts).
  *
@@ -17,7 +17,7 @@
  * games this module serves carry that classification as `countsFor`.
  */
 
-import bundledFieldHockey from '../../data/jv.json';
+import bundledFieldHockey from '../../data/field-hockey/jv.json';
 import bundledBasketball from '../../data/basketball/jv.json';
 import bundledVolleyball from '../../data/volleyball/jv.json';
 import bundledSoccer from '../../data/soccer/jv.json';
@@ -40,7 +40,7 @@ import {
 } from './jv-standings';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): JvFile {

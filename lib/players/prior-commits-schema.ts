@@ -4,7 +4,7 @@
  * or joined a college team, in their own sport or any other, and those colleges.
  *
  * Data only, for now: no page reads these files (tests/prior-commits.test.ts holds that nothing under
- * app/ or components/ names them). They are research, written by hand like data/commits.json, under its
+ * app/ or components/ names them). They are research, written by hand like data/field-hockey/commits.json, under its
  * rules (README "College commitments"), with three differences:
  *
  *   - The players are last season's, not this season's roster rows. A commitment names its player by
@@ -13,7 +13,7 @@
  *     `grade` is the player's 2025-26 grade (10 or 11), so the class is 2028 or 2027.
  *   - A program may be at a two-year college: a California community college (CCCAA) or a junior
  *     college (NJCAA), where many of these schools' players go on to play. Their levels are
- *     PRIOR_COLLEGE_DIVISIONS; data/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
+ *     PRIOR_COLLEGE_DIVISIONS; data/field-hockey/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
  *   - A player the registry has never seen (on a team whose 2025-26 stat sheet MaxPreps does not have,
  *     and on no roster since) is named by `careerId` and the season's MaxPreps roster page instead.
  *
@@ -22,7 +22,7 @@
  *   2. every commitment names a college in colleges[] with a program in its sport
  *   3. a player (playerId) has at most one commitment
  *   4. every college and every program has a commitment, and no `asOf` is after `capturedAt`
- *   5-8. as data/commits.json's (https only, social media only as an official account's post, a source
+ *   5-8. as data/field-hockey/commits.json's (https only, social media only as an official account's post, a source
  *      for every record, quotes of 1-300 characters, `asOf` a day, month or year): the shared pieces
  *      of lib/players/commits-schema.ts
  *   9. the join (joinPriorCommits), against the registry: a player named by `careerId` and `seasonRoster`

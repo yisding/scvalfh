@@ -342,7 +342,7 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --fixtures <dir>             offline: read a manifest-driven corpus instead of the network
   --variant <dir>              apply a variant overlay on top of --fixtures (repeatable)
   --capture <dir>              live: also record every response into a new corpus at <dir>
-  --out <path>                 snapshot path (default data/snapshot.json; the meta file goes beside it)
+  --out <path>                 snapshot path (default data/<sport>/snapshot.json; the meta file goes beside it)
   --dry-run                    validate and report, write nothing (captures included)
   --fetched-at <iso>           pin the run's stamp (default: now; the corpus's stamp with --fixtures)
   --force                      run even outside the season window

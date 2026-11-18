@@ -1,9 +1,9 @@
 /**
  * Writes the bundled official fixture files (SPEC §7.8):
  *
- *   data/official/bval-2026.json   60 fixtures (Mt. Hamilton 30, Santa Teresa 30) + the 10/31 play-in event
- *   data/official/pcal-2026.json   42 fixtures
- *   data/official/mcal-2026.json   72 fixtures (post-change dates, originalDate kept for the 2 approved changes)
+ *   data/field-hockey/official/bval-2026.json   60 fixtures (Mt. Hamilton 30, Santa Teresa 30) + the 10/31 play-in event
+ *   data/field-hockey/official/pcal-2026.json   42 fixtures
+ *   data/field-hockey/official/mcal-2026.json   72 fixtures (post-change dates, originalDate kept for the 2 approved changes)
  *
  * from the research transcriptions Stage 0 copied to tests/fixtures/official/source/. There is no EAL
  * bundle: the EAL publishes no schedule document (its division's official mode is 'none'). Deterministic:
@@ -16,7 +16,7 @@
  *        BVAL fixtures/events parsed from the two docx texts (Mt. Hamilton, Santa Teresa) instead of
  *        the research JSON — the result must be identical (tests/bval-text.test.ts).
  *   --source-dir <dir>   (default tests/fixtures/official/source)
- *   --out-dir <dir>      (default data/official)
+ *   --out-dir <dir>      (default data/field-hockey/official)
  *
  * No network: the upstream documents are only ever hashed by the cron's revision check.
  */
@@ -47,7 +47,7 @@ import { runCliIfMain } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
-const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'official');
+const DEFAULT_OUT_DIR = path.join(REPO, 'data', 'field-hockey', 'official');
 
 /** The day the three sources were transcribed and re-checked (the research captures). */
 export const TRANSCRIBED_ON = '2026-10-02';

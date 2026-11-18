@@ -1,6 +1,6 @@
 /**
- * data/instagram.json — the official Instagram account of each registry team's program and of each club
- * in data/clubs.json, where we found one, keyed by slug. The team page's Elsewhere row and the club
+ * data/field-hockey/instagram.json — the official Instagram account of each registry team's program and of each club
+ * in data/field-hockey/clubs.json, where we found one, keyed by slug. The team page's Elsewhere row and the club
  * page's link row read it from here.
  *
  * Social media is never a SOURCE on this site (BANNED_HOSTS, lib/players/clubs-schema.ts): these are
@@ -16,20 +16,20 @@
  * claim that it has none.
  *
  * Invariants, checked once at module scope so a bad file fails at import:
- *   1. a team slug is a registry team; a club slug is a club in data/clubs.json
+ *   1. a team slug is a registry team; a club slug is a club in data/field-hockey/clubs.json
  *   2. no slug appears twice in its list (a team at most once per level: varsity, and JV when the JV team
  *      keeps its own account), and no handle is two records'
  *   3. a handle is an Instagram username: lower case, letters, digits, `.` and `_`, at most 30
  *   4. `foundAt`, when set, is https and not social media
  *
- * One file per sport, as data/clubs.json: data/soccer/, data/basketball/ and data/volleyball/ hold that
+ * One file per sport, as data/field-hockey/clubs.json: data/soccer/, data/basketball/ and data/volleyball/ hold that
  * build's programs' accounts (girls soccer, boys basketball, girls volleyball; an account the school's
  * boys and girls teams share counts, the other gender's alone does not).
  */
 
 import { z } from 'zod';
 
-import bundledFieldHockey from '../../data/instagram.json';
+import bundledFieldHockey from '../../data/field-hockey/instagram.json';
 import bundledBasketball from '../../data/basketball/instagram.json';
 import bundledVolleyball from '../../data/volleyball/instagram.json';
 import bundledSoccer from '../../data/soccer/instagram.json';
@@ -37,9 +37,10 @@ import { validateData } from '../data-file';
 import { getClub } from '../players/clubs';
 import { sourceUrl } from '../players/clubs-schema';
 import { calendarDateKey, slugId } from '../schema-primitives';
+import { DATA_DIR } from '../sports/current';
 import { TEAMS } from '../teams';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const text = z.string().trim().min(1);
@@ -50,7 +51,7 @@ export const instagramHandle = z
   .regex(/^[a-z0-9._]{1,30}$/, 'expected an Instagram username: lower case letters, digits, . and _, without the @');
 
 export const InstagramAccountSchema = z.strictObject({
-  /** A team slug (lib/teams.ts) or a club slug (data/clubs.json), by the list it is in. */
+  /** A team slug (lib/teams.ts) or a club slug (data/field-hockey/clubs.json), by the list it is in. */
   slug: slugId,
   handle: instagramHandle,
   /** Where the handle was found: a page that is not social media, or null when only a search or the site's owner turned it up. */
@@ -86,13 +87,13 @@ export type InstagramFile = z.infer<typeof InstagramFileSchema>;
 
 /**
  * Parse `raw` and check what the schema cannot see: invariants 1 and 2. Throws
- * `data/instagram.json: <list> <slug>: <what>` on the first failure. The tests call it on files built in memory.
+ * `data/field-hockey/instagram.json: <list> <slug>: <what>` on the first failure. The tests call it on files built in memory.
  */
 export function loadInstagram(raw: unknown): InstagramFile {
-  const file = validateData('data/instagram.json', InstagramFileSchema, raw);
+  const file = validateData(`${DATA_DIR}/instagram.json`, InstagramFileSchema, raw);
   const teamSlugs = new Set<string>(TEAMS.map((t) => t.slug));
   const fail = (list: string, slug: string, what: string): never => {
-    throw new Error(`data/instagram.json: ${list} ${slug}: ${what}`);
+    throw new Error(`${DATA_DIR}/instagram.json: ${list} ${slug}: ${what}`);
   };
   const seenTeams = new Set<string>();
   for (const a of file.teams) {
@@ -103,7 +104,7 @@ export function loadInstagram(raw: unknown): InstagramFile {
   }
   const seenClubs = new Set<string>();
   for (const a of file.clubs) {
-    if (!getClub(a.slug)) fail('clubs', a.slug, 'not a club in data/clubs.json');
+    if (!getClub(a.slug)) fail('clubs', a.slug, `not a club in ${DATA_DIR}/clubs.json`);
     if (seenClubs.has(a.slug)) fail('clubs', a.slug, 'listed twice');
     seenClubs.add(a.slug);
   }

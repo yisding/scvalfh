@@ -22,7 +22,7 @@
  * tests/game-aliases.test.ts holds every answer to a page lib/data.ts has.
  */
 
-import bundledSnapshotFieldHockey from '../data/snapshot.json';
+import bundledSnapshotFieldHockey from '../data/field-hockey/snapshot.json';
 import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';

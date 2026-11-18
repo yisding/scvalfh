@@ -27,7 +27,7 @@ export const BVAL: LeagueConfig = {
       expectedTeams: 6, gamesPerTeam: 10,
       leaguePlay: { first: '2026-09-17', last: '2026-10-30' },
       official: {
-        source: 'bval-docx', mode: 'bundled', bundledFile: 'data/official/bval-2026.json',
+        source: 'bval-docx', mode: 'bundled', bundledFile: 'data/field-hockey/official/bval-2026.json',
         scheduleUrl: 'https://docs.google.com/document/d/150BDI14JosnaB71NoTwYyLp1AFfXSVXb/edit',
         revisionCheckUrl: 'https://drive.google.com/uc?export=download&id=150BDI14JosnaB71NoTwYyLp1AFfXSVXb',
         bundledSha256: '2b0eb69347cdb0e6aa57da94213db50bd5eadeccfeed96370b5c8106ef2cb172',
@@ -44,7 +44,7 @@ export const BVAL: LeagueConfig = {
       expectedTeams: 6, gamesPerTeam: 10,
       leaguePlay: { first: '2026-09-18', last: '2026-10-30' },
       official: {
-        source: 'bval-docx', mode: 'bundled', bundledFile: 'data/official/bval-2026.json',
+        source: 'bval-docx', mode: 'bundled', bundledFile: 'data/field-hockey/official/bval-2026.json',
         scheduleUrl: 'https://docs.google.com/document/d/1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD/edit',
         revisionCheckUrl: 'https://drive.google.com/uc?export=download&id=1CrK6oOd5_Lu91rHAfpIlMtqaxMhLxSwD',
         bundledSha256: '5730fb6089f31d94abd2ebe7a3073114f3867eef731391c8dd113557b79d7303',

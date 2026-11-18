@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
- * Fetch every registry team's MaxPreps season player stats into data/player-stats.json (SPEC
- * §1.1k): all nine leagues and the three independents, 102 teams, joined to data/rosters.json on the career id.
+ * Fetch every registry team's MaxPreps season player stats into data/field-hockey/player-stats.json (SPEC
+ * §1.1k): all nine leagues and the three independents, 102 teams, joined to data/field-hockey/rosters.json on the career id.
  *
  *   pnpm fetch-player-stats                     live: one small JSON call per registry team (102)
  *   pnpm fetch-player-stats --leagues scval,bval  only these leagues; the others keep their previous rows
@@ -34,7 +34,7 @@
  *
  * Box scores (lib/sources/maxpreps-box-score.ts), for the game pages. For every team with stats the
  * run also reads MaxPreps' per-game team table (lib/sources/maxpreps-game-stats.ts): one more small
- * call per team. Each final of the team's in data/snapshot.json whose row there has a count above
+ * call per team. Each final of the team's in data/field-hockey/snapshot.json whose row there has a count above
  * zero gets the team's box score for that game in `games`, read again only when the row's digest
  * (`rowKey`) differs from the one the stored box score was read against, so a run reads the games a
  * coach entered or edited since the last run, not every game (`--all-box-scores` reads them all,
@@ -45,7 +45,7 @@
  * score the coach changed without changing any of the game's team totals (a goal moved from one
  * player to another) is not noticed until something in the row moves.
  *
- * Game notes (lib/players/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
+ * Game notes (lib/players/note-stats.ts). For a team a game note on one of its finals in data/field-hockey/snapshot.json
  * credits with goals, assists or saves (teamsCreditedByNotes), the same per-game table's totals are
  * also kept in `gameTotals`, so a noted stat the coach has also entered is not counted twice.
  * Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing capture, or a
@@ -185,12 +185,12 @@ function readPrevious(text: string): PreviousFile<TeamPlayerStats, PlayerStatsFi
 
 const NOTES = [
   `One entry per registry team, all ${LEAGUES_PROPER.length} leagues (${LEAGUES_PROPER.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
-  "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
+  "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/field-hockey/rosters.json on the career id in each row's player link.",
   'Every number is what the coach entered on MaxPreps, for all of this season\'s varsity games, league and non-league alike. Coverage is the coach\'s choice: a team MaxPreps has no stats for is status none.',
   "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
   "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), kept only for a team a game note on one of its finals credits with goals, assists or saves (lib/players/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
-  "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
+  "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/field-hockey/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
 ];
 
 /**

@@ -45,23 +45,20 @@ import type {
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
+import { bySport, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
 /**
  * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
  * Section independents, a group of schools in no league with a table of their games against each other).
  */
-export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
-  ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
-  : // The soccer build (SCVAL_SPORT=soccer), the basketball build (SCVAL_SPORT=basketball) and the volleyball build
-    // (SCVAL_SPORT=volleyball) cover SCVAL and BVAL (BVAL added to the winter builds 2026-11-13, so the ratings
-    // count SCVAL's games against BVAL schools); the soccer and volleyball builds also cover the WCAL and the WBAL
-    // (owner requests, 2026-11-14).
-    IS_BASKETBALL
-    ? [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE]
-    : IS_VOLLEYBALL
-      ? [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE]
-      : [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE];
+export const LEAGUES: readonly LeagueConfig[] = bySport<readonly LeagueConfig[]>({
+  'field-hockey': [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS],
+  // The winter builds cover SCVAL and BVAL (BVAL added 2026-11-13, so the ratings count SCVAL's games against BVAL
+  // schools); the soccer and volleyball builds also cover the WCAL and the WBAL (owner requests, 2026-11-14).
+  soccer: [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE],
+  basketball: [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE],
+  volleyball: [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE],
+});
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
@@ -794,7 +791,7 @@ export function assertLeagues(): void {
         if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
         {
           const site = ps.finalSite;
-          // The address is the site school's (data/schools.json); lib/teams.ts checks the slug is a member.
+          // The address is the site school's (data/field-hockey/schools.json); lib/teams.ts checks the slug is a member.
           if (!site.venue.trim()) fail(`${l.id}: finalSite needs a venue`);
           if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
         }

@@ -1,6 +1,6 @@
 /**
  * `components/history/history-view.ts` and `AwardsBlock` over the committed
- * data/history-2025-26.json: every award line on /history/2025-26 reads one way (player, then
+ * data/field-hockey/history-2025-26.json: every award line on /history/2025-26 reads one way (player, then
  * school · grade · position, as the roster and /leaders print a player), in the site's words, with
  * the school linked, whatever the document wrote ("St Ignatius- Olivia Van de Braak", "Leaya Cleary Los Gatos 12", "GK", "Midfiled").
  */

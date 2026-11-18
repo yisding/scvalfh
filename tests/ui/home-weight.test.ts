@@ -4,7 +4,7 @@
  * the league, is known only in the browser), so a view that grows a field grows every phone's download.
  *
  * The budget, measured 2026-10-06 (DESIGN §24.6: measured × 1.12, rounded up to whole KiB): on the
- * committed live snapshot (data/snapshot.json, fetched 2026-10-06T03:19Z, both regions' games) the 99
+ * committed live snapshot (data/field-hockey/snapshot.json, fetched 2026-10-06T03:19Z, both regions' games) the 99
  * views serialize to 107,545 bytes — 52,868 for the 49 NorCal teams and 54,577 for the 50 SoCal
  * teams. × 1.12 = 120,450, so the budget is 118 KiB = 120,832 (89 % used). Before the amendment the
  * 49 views were 50,569 bytes against 60 KB; an interim 115 KiB, set from two half-snapshots before
@@ -24,7 +24,7 @@
  *    rounded down to whole KiB (88 % used). It catches a code change that grows every view by about
  *    12 % or more. Against BUDGET it would have let views grow by 84 % unnoticed (review 2026-10-06).
  *    It cannot catch growth that only SoCal games or later-season data produce: the corpus has neither.
- *  - The LIVE check runs on the bundled data/snapshot.json (whatever the last live fetch produced,
+ *  - The LIVE check runs on the bundled data/field-hockey/snapshot.json (whatever the last live fetch produced,
  *    both regions) against BUDGET. It only FAILS where `CI_GATE` is set — ci.yml's test step — and
  *    otherwise warns past 90 %: this suite also gates update-data.yml's commit, and a view that grows
  *    with the season (link chips, form, postseason lines) must never stop the day's scores from being

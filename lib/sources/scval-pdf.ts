@@ -57,7 +57,7 @@ export const SCVAL_GRID_YEAR = 2026;
 /**
  * The 2025-26 end-of-season PDFs — the only source of prior-season data, because MaxPreps' league
  * URL year segment is cosmetic and always serves the CURRENT table (SPEC §1.1h gotcha).
- * Published once a year; `scripts/build-history.ts` turns them into data/history-2025-26.json.
+ * Published once a year; `scripts/build-history.ts` turns them into data/field-hockey/history-2025-26.json.
  */
 export const SCVAL_HISTORY_PDFS = {
   standings: 'https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf',

@@ -40,8 +40,8 @@ const ROSTER_SAMPLE = ['leigh', 'greenfield', 'del-mar', 'stevenson', 'monterey'
 const STATS_SAMPLE = ['leigh', 'stevenson', 'university-sf', 'marin-catholic', 'berkeley', 'del-mar', 'monterey'];
 
 /** The committed files: only facts that hold across refreshes are asserted against them. */
-const rostersFile = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
-const statsFile = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
+const rostersFile = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), 'utf8')) as Rosters;
+const statsFile = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
 
 const html = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');
 const statsRaw = (slug: string): unknown =>
@@ -183,7 +183,7 @@ describe('roster pages of BVAL, PCAL and MCAL teams', () => {
   });
 });
 
-describe('data/rosters.json, rebuilt from the sampled captures', () => {
+describe('data/field-hockey/rosters.json, rebuilt from the sampled captures', () => {
   it('is exactly what the parser reads: the script adds nothing and drops nothing', () => {
     for (const slug of ROSTER_SAMPLE) {
       const page = parseRoster(slug);
@@ -205,7 +205,7 @@ describe('data/rosters.json, rebuilt from the sampled captures', () => {
   });
 });
 
-describe('the committed data/rosters.json', () => {
+describe('the committed data/field-hockey/rosters.json', () => {
   it('has every other league covered: each team read at least once (ok, empty or carried forward), none pending', () => {
     for (const t of TEAMS.filter((x) => x.league !== 'scval')) {
       const row = rostersFile.teams.find((r) => r.slug === t.slug)!;
@@ -268,7 +268,7 @@ describe('player-stats rollups of BVAL, PCAL and MCAL teams', () => {
   });
 });
 
-describe('data/player-stats.json, rebuilt from the sampled captures', () => {
+describe('data/field-hockey/player-stats.json, rebuilt from the sampled captures', () => {
   it('is exactly what the parser reads, joined to the rosters the same run was given', () => {
     for (const slug of STATS_SAMPLE) {
       const page = parseStats(slug);
@@ -303,7 +303,7 @@ describe('data/player-stats.json, rebuilt from the sampled captures', () => {
   });
 });
 
-describe('the committed data/player-stats.json', () => {
+describe('the committed data/field-hockey/player-stats.json', () => {
   it('holds a row for every other league\'s team, in any status the schema allows, under the registry id', () => {
     // error (a team's first transient failure) and pending (no run covered it yet) are published
     // states, not test failures: the refresh runs this suite before it commits the file.
@@ -325,7 +325,7 @@ describe('scripts offline over a partly captured league', () => {
   it('fetch-rosters: reads the captured teams, carries forward the rest, leaves SCVAL and SoCal byte for byte', () => {
     const dir = sampleDir('roster');
     const out = tmpFile('rosters.json');
-    copyFileSync(path.join(REPO, 'data', 'rosters.json'), out);
+    copyFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), out);
     const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', dir, '--leagues', OTHERS, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
     // Teams without a capture failed this run, so the exit code says so; the file is written anyway.
     expect(res.status, res.stderr).toBe(1);
@@ -359,7 +359,7 @@ describe('scripts offline over a partly captured league', () => {
   it('fetch-player-stats: the same, joined to rosters pinned to the captures', () => {
     const dir = sampleDir('stats');
     const out = tmpFile('player-stats.json');
-    copyFileSync(path.join(REPO, 'data', 'player-stats.json'), out);
+    copyFileSync(path.join(REPO, 'data', 'field-hockey', 'player-stats.json'), out);
     const res = runScript('scripts/fetch-player-stats.ts', ['--fixtures', dir, '--leagues', OTHERS, '--rosters', pinned().rostersPath, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
     expect(res.status, res.stderr).toBe(1);
     const built = PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);

@@ -1,6 +1,6 @@
 /**
- * data/club-events.json (DESIGN §34): the committed file validates and every club it names is in
- * data/clubs.json; lib/players/club-events.ts serves it in calendar order; and a bad file — built in
+ * data/field-hockey/club-events.json (DESIGN §34): the committed file validates and every club it names is in
+ * data/field-hockey/clubs.json; lib/players/club-events.ts serves it in calendar order; and a bad file — built in
  * memory from the real one, never written to disk — is refused with a message that names what is
  * wrong.
  */
@@ -15,7 +15,7 @@ import { getClubEvents, getClubEventsFile, getClubEventsFor, getClubEventsLastCh
 import { getClub } from '../lib/players/clubs';
 import { REPO } from './helpers';
 
-const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'club-events.json'), 'utf8')) as ClubEventsFile;
+const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'club-events.json'), 'utf8')) as ClubEventsFile;
 
 function bad(edit: (f: ClubEventsFile) => void): () => ClubEventsFile {
   const copy = structuredClone(raw);
@@ -23,8 +23,8 @@ function bad(edit: (f: ClubEventsFile) => void): () => ClubEventsFile {
   return () => loadClubEvents(copy);
 }
 
-describe('data/club-events.json', () => {
-  it('validates, and every club it names is a club in data/clubs.json', () => {
+describe('data/field-hockey/club-events.json', () => {
+  it('validates, and every club it names is a club in data/field-hockey/clubs.json', () => {
     expect(ClubEventsFileSchema.safeParse(raw).success).toBe(true);
     for (const e of raw.events) {
       if (e.hostClub) expect(getClub(e.hostClub), `${e.id} host`).toBeDefined();
@@ -75,7 +75,7 @@ describe('a bad file is refused', () => {
     expect(bad((f) => f.events.push({ ...f.events[0] }))).toThrow(`duplicate event id ${first.id}`);
   });
 
-  it('names a club that is not in data/clubs.json', () => {
+  it('names a club that is not in data/field-hockey/clubs.json', () => {
     expect(bad((f) => (f.events[0].clubs = ['no-such-club']))).toThrow(`${first.id} names no-such-club`);
   });
 

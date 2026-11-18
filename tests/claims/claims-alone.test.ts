@@ -84,7 +84,7 @@ describe('a run given only the claims file publishes the games written with it',
   let fresh: { snapshot: Snapshot; claims: ClaimsFile };
   let committed: { snapshot: Snapshot; claims: ClaimsFile };
   beforeAll(() => {
-    const read = (rel: string) => readFileSync(path.join(REPO, 'data', rel), 'utf8');
+    const read = (rel: string) => readFileSync(path.join(REPO, 'data', 'field-hockey', rel), 'utf8');
     committed = { snapshot: loadSnapshot(JSON.parse(read('snapshot.json')) as unknown), claims: parseClaimsText(read('claims.json')) };
   });
 

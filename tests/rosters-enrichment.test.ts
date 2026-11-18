@@ -1,5 +1,5 @@
 /**
- * data/rosters-enrichment.json: the overlay validates, joins cleanly onto the MaxPreps file, fills
+ * data/field-hockey/rosters-enrichment.json: the overlay validates, joins cleanly onto the MaxPreps file, fills
  * only blanks, records disagreements instead of applying them, and the merged view says where each
  * value came from.
  */
@@ -54,9 +54,9 @@ const DERIVED_FROM_OTHER: Record<string, readonly string[]> = {
   'thousand-oaks': ['school-site'],
 };
 
-const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
+const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters.json'), 'utf8')) as Rosters;
 const raw = JSON.parse(
-  readFileSync(path.join(REPO, 'data', 'rosters-enrichment.json'), 'utf8'),
+  readFileSync(path.join(REPO, 'data', 'field-hockey', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
 
 /** A claimed MaxPreps career page, linked by the 2026-10-13 sweep: the only profiles on that platform. */
@@ -75,7 +75,7 @@ const fromFour1113 = (x: { note: string | null }) => x.note?.includes('Found by 
 const fromMaxfh1116 = (x: { platform: string }) => x.platform === 'maxfh';
 /**
  * A JV-list player's profile moved to her varsity row on 2026-11-13, when the re-read rosters put her on varsity
- * (data/jv-profiles.json had linked it): its note says so.
+ * (data/field-hockey/jv-profiles.json had linked it): its note says so.
  */
 const movedFromJv1113 = (x: { note: string | null }) =>
   x.note?.includes('Moved from the JV list when she joined the varsity roster (read 2026-11-13).') ?? false;
@@ -143,7 +143,7 @@ function recordFor(file: RosterEnrichment, slug: string, athleteId: string, full
   return record;
 }
 
-describe('data/rosters-enrichment.json', () => {
+describe('data/field-hockey/rosters-enrichment.json', () => {
   it('validates against the contract', () => {
     const parsed = RosterEnrichmentSchema.safeParse(raw);
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);

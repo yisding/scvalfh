@@ -6,7 +6,7 @@
  *    poll ('scval-standings-index'). A division whose grid fails or parses empty gets the previous
  *    run's annotations back from the official claims (lib/claims/sources/official.ts: each contest's
  *    last published stamp and the division's unmatched rows; per division → `carriedDivisions`).
- *  - BVAL, PCAL, MCAL (bundled divisions): data/official/<league>-2026.json loaded and validated
+ *  - BVAL, PCAL, MCAL (bundled divisions): data/field-hockey/official/<league>-2026.json loaded and validated
  *    (schema + config + assertDoubleRoundRobin). A file that fails puts its divisions in
  *    `degradedDivisions` (classified by MaxPreps' league flag this run, league `degraded`) and
  *    carries the previous annotations. Otherwise the 'two-phase' matcher runs. Revision checks

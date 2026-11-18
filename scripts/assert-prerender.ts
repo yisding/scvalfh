@@ -4,14 +4,14 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
+ * (`data/field-hockey/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
  * reads it, so a file written before a league was added is checked as the build rendered it,
- * upgraded), the league config (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through
+ * upgraded), the league config (`lib/leagues.ts`) and the clubs file (`data/field-hockey/clubs.json`, through
  * lib/players/clubs.ts). So a family that came back short, or long, or a page that lost its
  * generateStaticParams (it would render on demand instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
- *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
+ *    commits (DESIGN §21: one page from data/field-hockey/commits.json, with the root OG card);
  *  - `standings/<id>.html` and `schedule/<id>.html` for each league id (nine since the Southern
  *    California amendment), `playoffs/<id>.html` for each league-tournament league (still MCAL only:
  *    the EAL, the Sunset and the three San Diego leagues have no page of their own, only a card,
@@ -21,7 +21,7 @@
  *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
  *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
- *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
+ *  - `clubs/*.html` = the slugs of data/field-hockey/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/players/clubs.ts validates
  *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
  *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There

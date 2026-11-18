@@ -2,7 +2,7 @@
  * lib/sources/sds-bracket-sheet.ts — the San Diego Section's bracket sheet, read for its results. Run against
  * the three tabs of both sheets as their CSV exports read on 2026-11-06 (tests/fixtures/sds/sheet-2026/, the
  * live 2026 sheet with the first round and the Open quarterfinals posted; tests/fixtures/sds/sheet-2025/, last
- * season's finished sheet, whose results are checked against data/history-brackets-2025-26.json).
+ * season's finished sheet, whose results are checked against data/field-hockey/history-brackets-2025-26.json).
  */
 
 import { readFileSync } from 'node:fs';

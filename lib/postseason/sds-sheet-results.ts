@@ -13,7 +13,7 @@
  *   3. no MaxPreps contest: a new game `cifsds:<away>-at-<home>` is published from the sheet
  *      (`provenance.sectionSheet.rule 'absent-game'`). Two teams meet at most once in the Section's playoffs, so
  *      the id names the pair alone and stays the same if the Section moves the game. The team with the better
- *      place in data/sds-brackets-2026.json hosts (every round to the semifinals is "@ Higher Seed" on the
+ *      place in data/field-hockey/sds-brackets-2026.json hosts (every round to the semifinals is "@ Higher Seed" on the
  *      sheet; the first rounds' "@Highlighted Site" was the better place's field for every 2026 game MaxPreps
  *      also has); a play-in is hosted by the file's `home`. A game the sheet places elsewhere ("@ Vista High
  *      School", the finals at La Jolla High School) is at a neutral site.

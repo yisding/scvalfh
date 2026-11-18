@@ -1,5 +1,5 @@
 /**
- * data/sds-brackets-2026.json — the San Diego Section's 2026 brackets, transcribed by hand from the
+ * data/field-hockey/sds-brackets-2026.json — the San Diego Section's 2026 brackets, transcribed by hand from the
  * Section's published sheet once it is linked after the Sat Oct 31 seeding meeting — and its contract,
  * lib/postseason/sds-brackets-schema.ts (plan final-07, 2026-10-29).
  *
@@ -18,7 +18,7 @@ import { SdsBracketsSchema, sdsPlayoffWindow, type SdsBracketsFile } from '../li
 import { sds2025Schema, seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { REPO } from './helpers';
 
-const raw: unknown = JSON.parse(readFileSync(path.join(REPO, 'data', 'sds-brackets-2026.json'), 'utf8'));
+const raw: unknown = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'sds-brackets-2026.json'), 'utf8'));
 const file2025 = seedsFromHistory('sds');
 
 /** A deep copy to break one invariant in. */

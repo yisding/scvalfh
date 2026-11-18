@@ -1,5 +1,5 @@
 /**
- * The read API for data/commits.json — which players on the tracked varsity rosters a public
+ * The read API for data/field-hockey/commits.json — which players on the tracked varsity rosters a public
  * page says have committed to play a sport in college (field hockey or any other), and those
  * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
  *
@@ -22,7 +22,7 @@
  * lib/players/roster-join.ts, shared with lib/players/clubs.ts; only the no-grade half of step 3 is this module's,
  * because /commits groups players by class year (commitClassOf) and a club page shows none.
  *
- * A roster refetch can break this, as it can data/clubs.json. If `pnpm fetch-rosters` drops a
+ * A roster refetch can break this, as it can data/field-hockey/clubs.json. If `pnpm fetch-rosters` drops a
  * committed player's row or respells the name, or a season rollover changes `season`, this module
  * throws at import — and so `pnpm test` and the build fail — naming the team, the player and the
  * college. Re-check that commitment's sources, then edit or drop it by hand. Never prune it
@@ -30,7 +30,7 @@
  * season, not carried.)
  */
 
-import bundledFieldHockey from '../../data/commits.json';
+import bundledFieldHockey from '../../data/field-hockey/commits.json';
 import bundledBasketball from '../../data/basketball/commits.json';
 import bundledVolleyball from '../../data/volleyball/commits.json';
 import bundledSoccer from '../../data/soccer/commits.json';
@@ -48,7 +48,7 @@ import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type Mer
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
-/** This build's copy (data/ for field hockey, data/soccer/ for soccer, data/basketball/ for basketball: lib/sports/current.ts DATA_DIR). */
+/** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {

@@ -6,7 +6,7 @@
  */
 
 import { CCS_BRACKET_URL } from '../season';
-import { IS_BASKETBALL, IS_FIELD_HOCKEY, IS_VOLLEYBALL } from '../sports/current';
+import { bySport } from '../sports/current';
 import type { CcsKeyDates, RegionId } from '../types';
 import type { CcsConfig, OutsideTournamentConfig, RegionConfig, SectionConfig } from './shape';
 import { BASKETBALL_CCS, BASKETBALL_SECTIONS } from './basketball/sections';
@@ -20,7 +20,12 @@ const ALL_REGIONS = [
 ] as const satisfies readonly RegionConfig[];
 
 /** The regions this build covers: both for field hockey, Northern California alone for soccer, basketball and volleyball (SCVAL and BVAL). */
-export const REGIONS: readonly RegionConfig[] = IS_FIELD_HOCKEY ? ALL_REGIONS : ALL_REGIONS.slice(0, 1);
+export const REGIONS: readonly RegionConfig[] = bySport<readonly RegionConfig[]>({
+  'field-hockey': ALL_REGIONS,
+  soccer: ALL_REGIONS.slice(0, 1),
+  basketball: ALL_REGIONS.slice(0, 1),
+  volleyball: ALL_REGIONS.slice(0, 1),
+});
 
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
 export const DEFAULT_REGION: RegionId = 'norcal';
@@ -43,7 +48,7 @@ export const SDS_GREEN_BOOK_URL = 'https://docs.google.com/document/d/1JE9fAJPGJ
 /** [V] the Section's 2026 bracket sheet, "2026 CIFSDS Field Hockey Championship Bracket" (read 2026-11-03). */
 export const SDS_BRACKET_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit';
 /**
- * [V] the bracket sheet's tabs, by division id of data/sds-brackets-2026.json (the sheet's own `gid`s, read
+ * [V] the bracket sheet's tabs, by division id of data/field-hockey/sds-brackets-2026.json (the sheet's own `gid`s, read
  * 2026-11-06; the 2025 sheet used the same three). The pipeline reads each as CSV (sdsBracketSheetCsvUrl) for the
  * results MaxPreps lacks (lib/sources/sds-bracket-sheet.ts); a tab whose title is not its division's is not read.
  */
@@ -228,13 +233,12 @@ const FIELD_HOCKEY_SECTIONS = [
 ] as const satisfies readonly SectionConfig[];
 
 /** The sections this build covers (lib/sports/current.ts): field hockey's five, or soccer's, basketball's or volleyball's one. */
-export const SECTIONS: readonly SectionConfig[] = IS_FIELD_HOCKEY
-  ? FIELD_HOCKEY_SECTIONS
-  : IS_BASKETBALL
-    ? BASKETBALL_SECTIONS
-    : IS_VOLLEYBALL
-      ? VOLLEYBALL_SECTIONS
-      : SOCCER_SECTIONS;
+export const SECTIONS: readonly SectionConfig[] = bySport<readonly SectionConfig[]>({
+  'field-hockey': FIELD_HOCKEY_SECTIONS,
+  soccer: SOCCER_SECTIONS,
+  basketball: BASKETBALL_SECTIONS,
+  volleyball: VOLLEYBALL_SECTIONS,
+});
 
 // ---------- Southern California (DESIGN-socal §2.1; research-cifss.md, research-cifsds.md) ----------
 //
@@ -287,13 +291,12 @@ const FIELD_HOCKEY_CCS: CcsConfig = {
 };
 
 /** The CCS block of this build's sport. */
-export const CCS: CcsConfig = IS_FIELD_HOCKEY
-  ? FIELD_HOCKEY_CCS
-  : IS_BASKETBALL
-    ? BASKETBALL_CCS
-    : IS_VOLLEYBALL
-      ? VOLLEYBALL_CCS
-      : SOCCER_CCS;
+export const CCS: CcsConfig = bySport<CcsConfig>({
+  'field-hockey': FIELD_HOCKEY_CCS,
+  soccer: SOCCER_CCS,
+  basketball: BASKETBALL_CCS,
+  volleyball: VOLLEYBALL_CCS,
+});
 
 /**
  * A CCS round's days as copy prints them: one day ('Tue Feb 23'), or first to last where divisions play it on

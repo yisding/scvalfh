@@ -1,5 +1,5 @@
 /**
- * The bundled official-fixture files `data/official/{bval,pcal,mcal}-2026.json` (SPEC §7.8): their
+ * The bundled official-fixture files `data/field-hockey/official/{bval,pcal,mcal}-2026.json` (SPEC §7.8): their
  * Zod schema, the deterministic serializer the build script writes them with, and the loader the
  * cron and the tests read them through.
  *

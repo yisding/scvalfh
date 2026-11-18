@@ -1,7 +1,7 @@
 /**
  * scripts/copy-rules.ts: the rules scripts/assert-copy.ts holds every built page to — nothing
  * claims rosters or player stats are SCVAL-only now that they cover every league, no page shows
- * what data/clubs.json or data/commits.json keeps but never renders (a record's basis, a source's
+ * what data/field-hockey/clubs.json or data/field-hockey/commits.json keeps but never renders (a record's basis, a source's
  * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
  * Vista called Northern Section schools, Red Bluff's status overstated, "EAL school", a seed word);
  * how it reads a built page's visible text and its title, description and attribute text; and how
@@ -75,7 +75,7 @@ describe('SCVAL_ONLY_CLAIM', () => {
   });
 });
 
-describe('affiliationLeaks (data/clubs.json: quotes and bases are kept, never rendered)', () => {
+describe('affiliationLeaks (data/field-hockey/clubs.json: quotes and bases are kept, never rendered)', () => {
   const file = {
     affiliations: [
       {
@@ -169,7 +169,7 @@ describe('affiliationLeaks (data/clubs.json: quotes and bases are kept, never re
   });
 });
 
-describe('commitmentLeaks (data/commits.json: the same rule as the clubs file)', () => {
+describe('commitmentLeaks (data/field-hockey/commits.json: the same rule as the clubs file)', () => {
   const file = {
     commitments: [
       {
