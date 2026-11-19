@@ -7,14 +7,14 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "57e7303ae99685a9c9dfb199f0a34531f1eb9e14829ff2ec9660b6a61625072f",
+  "contentHash": "fe58b95bd9c5a9dd86104808cea2a5a6e2e267e4b1beeb0683d8f3cd59b69fb0",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 226,
-        "leagueGames": 157,
+        "games": 227,
+        "leagueGames": 159,
         "teams": 26
       },
       "scval": {
@@ -40,14 +40,14 @@
       }
     },
     "finals": 0,
-    "games": 458,
-    "leagueGames": 283,
+    "games": 459,
+    "leagueGames": 285,
     "mismatches": 0,
-    "pending": 0,
+    "pending": 1,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-18T22:16:01.735Z",
+  "fetchedAt": "2026-11-19T14:39:28.824Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 57,
+  "officialFixturesUnmatched": 55,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -271,7 +271,7 @@
     },
     {
       "label": "pioneer schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -341,7 +341,7 @@
     },
     {
       "label": "independence schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -351,17 +351,17 @@
     },
     {
       "label": "mt-pleasant schedule",
-      "rowCount": 10,
-      "status": "ok"
-    },
-    {
-      "label": "overfelt schedule",
       "rowCount": 11,
       "status": "ok"
     },
     {
+      "label": "overfelt schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
       "label": "prospect schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -531,12 +531,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 12,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -546,17 +546,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 157,
+      "rowCount": 236,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 14,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -570,7 +570,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-18",
+  "today": "2026-11-19",
   "warnings": 30,
   "window": {
     "firstGame": "2026-11-18T17:30:00",

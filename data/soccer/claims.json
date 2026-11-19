@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-18T22:16:01.735Z",
+  "fetchedAt": "2026-11-19T14:39:28.824Z",
   "fixtures": [
     {
       "claims": {
@@ -41,17 +41,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T12:18:07",
+              "maxprepsModifiedOn": "2026-11-19T03:02:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/los-altos-vs-westmont-campbell/11-18-2026/?c=61a0c155-ede7-462f-8f7d-685be3d077fc",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gam0df85dab9c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gam0df85dab9c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Los Altos High School-Los Altos"
@@ -658,72 +658,6 @@
       "published": [
         {
           "contestId": "5425a880-9125-4ac4-940c-6f878c548a68"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Castroville",
-              "name": "North Monterey County",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "03d12475-a2f6-44c3-9332-0f682de3a31f"
-            },
-            "contestId": "38c2fa57-9288-4236-ac81-d700e6688ecb",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-24",
-            "dateLocal": "2026-11-24T18:00:00",
-            "dateUtc": "2026-11-25T02:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Yerba Buena",
-              "result": null,
-              "score": null,
-              "slug": "yerba-buena",
-              "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T14:31:09",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/north-monterey-county-castroville-vs-yerba-buena-san-jose/11-24-2026/?c=38c2fa57-9288-4236-ac81-d700e6688ecb",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Pre-Season"
-            }
-          },
-          "ref": "38c2fa57-9288-4236-ac81-d700e6688ecb"
-        }
-      },
-      "id": "2026-11-24-name:northmontereycounty-at-yerba-buena",
-      "published": [
-        {
-          "contestId": "38c2fa57-9288-4236-ac81-d700e6688ecb"
         }
       ]
     },
@@ -3633,6 +3567,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Mt. Pleasant",
+              "result": null,
+              "score": null,
+              "slug": "mt-pleasant",
+              "teamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d"
+            },
+            "contestId": "ecd894da-ee66-49f8-aae4-211235e7972b",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-03",
+            "dateLocal": "2026-12-03T18:00:00",
+            "dateUtc": "2026-12-04T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Saratoga",
+              "name": "Prospect",
+              "result": null,
+              "score": null,
+              "slug": "prospect",
+              "teamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-19T06:30:37",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mt-pleasant-san-jose-vs-prospect-saratoga/12-3-2026/?c=ecd894da-ee66-49f8-aae4-211235e7972b",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/prospect-high-school-saratoga-ca/gam2ec5809800?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Prospect High School"
+            }
+          },
+          "ref": "ecd894da-ee66-49f8-aae4-211235e7972b"
+        },
         "official": {
           "fixture": {
             "awayName": "Mt. Pleasant",
@@ -3650,10 +3640,29 @@
             "source": "bval-docx",
             "time": "18:00"
           },
+          "lastMatch": {
+            "contestId": "ecd894da-ee66-49f8-aae4-211235e7972b",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2026-12-03:mt-pleasant@prospect",
+              "jv": {
+                "dateKey": "2026-12-03",
+                "time": "16:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2026-12-03",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2026-12-03:mt-pleasant@prospect"
         }
       },
-      "id": "2026-12-03-mt-pleasant-at-prospect"
+      "id": "2026-12-03-mt-pleasant-at-prospect~2",
+      "published": [
+        {
+          "contestId": "ecd894da-ee66-49f8-aae4-211235e7972b"
+        }
+      ]
     },
     {
       "claims": {
@@ -5963,12 +5972,12 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Campbell",
-              "name": "Westmont",
+              "city": "San Jose",
+              "name": "Pioneer",
               "result": null,
               "score": null,
-              "slug": "westmont",
-              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
+              "slug": "pioneer",
+              "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
             },
             "contestId": "0402e048-af85-4479-b038-2366c395f63b",
             "contestTypes": {
@@ -5976,9 +5985,9 @@
               "home": 2
             },
             "countsFor": null,
-            "dateKey": "2026-12-05",
-            "dateLocal": "2026-12-05T08:30:00",
-            "dateUtc": "2026-12-05T16:30:00Z",
+            "dateKey": "2026-12-03",
+            "dateLocal": "2026-12-03T14:30:00",
+            "dateUtc": "2026-12-03T22:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -5998,16 +6007,16 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T11:10:30",
+              "maxprepsModifiedOn": "2026-11-19T05:27:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
-            "site": "neutral",
+            "site": "home",
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-westmont-campbell/12-5-2026/?c=0402e048-af85-4479-b038-2366c395f63b",
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/carlmont-belmont-vs-pioneer-san-jose/12-3-2026/?c=0402e048-af85-4479-b038-2366c395f63b",
               "nfhsStream": null
             },
             "venue": {
@@ -6650,7 +6659,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T17:28:11",
+              "maxprepsModifiedOn": "2026-11-19T04:37:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -6663,7 +6672,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/aptos-high-school-aptos-ca/gamcdd3bafdcc?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Aptos High School"
             }
           },
           "ref": "991b9637-2d58-4256-a2bc-65fca5cb06ba"
@@ -14933,7 +14942,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T22:02:33",
+              "maxprepsModifiedOn": "2026-11-19T01:00:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15214,7 +15223,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T11:45:35",
+              "maxprepsModifiedOn": "2026-11-19T04:37:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16573,6 +16582,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Independence",
+              "result": null,
+              "score": null,
+              "slug": "independence",
+              "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
+            },
+            "contestId": "004c3b2e-2cab-4798-8d1e-8fdd14b836bd",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-12",
+            "dateLocal": "2027-01-12T19:00:00",
+            "dateUtc": "2027-01-13T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Overfelt",
+              "result": null,
+              "score": null,
+              "slug": "overfelt",
+              "teamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "west-valley",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-19T01:01:37",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/independence-san-jose-vs-overfelt-san-jose/1-12-2027/?c=004c3b2e-2cab-4798-8d1e-8fdd14b836bd",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Overfelt (William C.) High GONE"
+            }
+          },
+          "ref": "004c3b2e-2cab-4798-8d1e-8fdd14b836bd"
+        },
         "official": {
           "fixture": {
             "awayName": "Independence",
@@ -16590,10 +16655,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "004c3b2e-2cab-4798-8d1e-8fdd14b836bd",
+            "stamp": {
+              "division": "west-valley",
+              "fixtureId": "west-valley:2027-01-12:independence@overfelt",
+              "jv": {
+                "dateKey": "2027-01-12",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-12",
+              "source": "bval-docx"
+            }
+          },
           "ref": "west-valley:2027-01-12:independence@overfelt"
         }
       },
-      "id": "2027-01-12-independence-at-overfelt"
+      "id": "2027-01-12-independence-at-overfelt~2",
+      "published": [
+        {
+          "contestId": "004c3b2e-2cab-4798-8d1e-8fdd14b836bd"
+        }
+      ]
     },
     {
       "claims": {
@@ -18256,7 +18340,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:31:46",
+              "maxprepsModifiedOn": "2026-11-19T03:04:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18986,7 +19070,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:31:25",
+              "maxprepsModifiedOn": "2026-11-19T01:02:13",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20080,7 +20164,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-11T16:56:36",
+              "maxprepsModifiedOn": "2026-11-19T03:02:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20093,7 +20177,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/los-altos-high-school-los-altos-ca/gamca6300dfa5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Los Altos High School-Los Altos"
             }
           },
           "ref": "586684af-887d-4542-b0b7-9e8e67e91154"
@@ -23910,7 +23994,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:37:06",
+              "maxprepsModifiedOn": "2026-11-19T03:01:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29546,7 +29630,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T17:46:09",
+              "maxprepsModifiedOn": "2026-11-19T02:01:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29737,7 +29821,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T12:42:27",
+              "maxprepsModifiedOn": "2026-11-19T04:38:03",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29803,7 +29887,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T19:49:00",
+              "maxprepsModifiedOn": "2026-11-19T09:56:32",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30084,7 +30168,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T11:45:34",
+              "maxprepsModifiedOn": "2026-11-19T03:02:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30183,7 +30267,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T20:43:31",
+              "maxprepsModifiedOn": "2026-11-19T07:29:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33819,7 +33903,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T20:02:40",
+              "maxprepsModifiedOn": "2026-11-19T09:54:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
