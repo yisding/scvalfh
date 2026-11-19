@@ -7,47 +7,47 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "fe58b95bd9c5a9dd86104808cea2a5a6e2e267e4b1beeb0683d8f3cd59b69fb0",
+  "contentHash": "2823db820d5e10bcc7cdf275f0d59c908dac5846f8e8b345b590ce60f693a9f3",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 227,
-        "leagueGames": 159,
+        "games": 231,
+        "leagueGames": 161,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 160,
+        "games": 158,
         "leagueGames": 86,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 78,
+        "games": 80,
         "leagueGames": 22,
         "teams": 13
       },
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 50,
+        "games": 49,
         "leagueGames": 18,
         "teams": 6
       }
     },
     "finals": 0,
-    "games": 459,
-    "leagueGames": 285,
+    "games": 463,
+    "leagueGames": 287,
     "mismatches": 0,
     "pending": 1,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-19T14:39:28.824Z",
+  "fetchedAt": "2026-11-19T22:24:01.512Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 55,
+  "officialFixturesUnmatched": 53,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -141,7 +141,7 @@
     },
     {
       "label": "mountain-view schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -291,7 +291,7 @@
     },
     {
       "label": "evergreen-valley schedule",
-      "rowCount": 22,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -301,7 +301,7 @@
     },
     {
       "label": "live-oak schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -311,12 +311,12 @@
     },
     {
       "label": "santa-teresa schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -326,7 +326,7 @@
     },
     {
       "label": "andrew-hill schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -356,12 +356,12 @@
     },
     {
       "label": "overfelt schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
       "label": "prospect schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -496,12 +496,12 @@
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
       "label": "eastside schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -536,7 +536,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -551,7 +551,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 236,
+      "rowCount": 232,
       "status": "ok"
     },
     {
@@ -571,10 +571,10 @@
     }
   ],
   "today": "2026-11-19",
-  "warnings": 30,
+  "warnings": 31,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
-    "lastGame": "2027-02-17T18:00:00",
-    "lastLeagueGame": "2027-02-17T18:00:00"
+    "lastGame": "2027-02-17T18:30:00",
+    "lastLeagueGame": "2027-02-17T18:30:00"
   }
 }
