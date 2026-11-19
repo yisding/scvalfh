@@ -7,13 +7,13 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "bae6b58dc65d44a6062d8561b7e0e44ea2106be96da955760e35d78d311d8821",
+  "contentHash": "4369c16fc964210e31f75741392e3a5bcc74a95d8dfc32d7ab8729c746a82bdc",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 0,
-        "games": 294,
+        "finals": 1,
+        "games": 293,
         "leagueGames": 125,
         "teams": 26
       },
@@ -25,15 +25,15 @@
         "teams": 15
       }
     },
-    "finals": 0,
-    "games": 458,
+    "finals": 1,
+    "games": 457,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 10,
+    "pending": 11,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-18T22:33:41.115Z",
+  "fetchedAt": "2026-11-19T15:38:28.019Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -396,12 +396,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 1,
+      "rowCount": 7,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 20,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -411,17 +411,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 494,
+      "rowCount": 617,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 41,
+      "rowCount": 67,
       "status": "ok"
     },
     {
@@ -435,7 +435,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-18",
+  "today": "2026-11-19",
   "warnings": 12,
   "window": {
     "firstGame": "2026-11-16T18:30:00",

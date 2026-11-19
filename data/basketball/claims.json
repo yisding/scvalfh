@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-18T22:33:41.115Z",
+  "fetchedAt": "2026-11-19T15:38:28.019Z",
   "fixtures": [
     {
       "claims": {
@@ -402,72 +402,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Jose",
-              "name": "Harker",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
-            },
-            "contestId": "1cce1f87-81d3-46f2-a5dd-2d6fe2b9684e",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Leland",
-              "result": null,
-              "score": null,
-              "slug": "leland",
-              "teamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T17:56:34",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/harker-san-jose-vs-leland-san-jose/11-17-2026/?c=1cce1f87-81d3-46f2-a5dd-2d6fe2b9684e",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Leland High School"
-            }
-          },
-          "ref": "1cce1f87-81d3-46f2-a5dd-2d6fe2b9684e"
-        }
-      },
-      "id": "2026-11-17-name:harker-at-leland",
-      "published": [
-        {
-          "contestId": "1cce1f87-81d3-46f2-a5dd-2d6fe2b9684e"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Soquel",
               "name": "Soquel",
               "result": null,
@@ -707,11 +641,11 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/del-mar-san-jose-vs-oak-grove-san-jose/11-18-2026/?c=529d3728-c973-45d8-905b-c95c327081f3",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/oak-grove-high-school-san-jose-san-jose-ca/gam13627cc463?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": "Oak Grove High School"
@@ -734,8 +668,8 @@
             "away": {
               "city": "San Jose",
               "name": "Piedmont Hills",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 56,
               "slug": "piedmont-hills",
               "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
             },
@@ -748,13 +682,13 @@
             "dateKey": "2026-11-18",
             "dateLocal": "2026-11-18T19:00:00",
             "dateUtc": "2026-11-19T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Morgan Hill",
               "name": "Oakwood",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 76,
               "slug": null,
               "teamId": "907cf09d-6f40-4fab-a06e-fcfb1f185047"
             },
@@ -767,17 +701,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T09:02:29",
+              "maxprepsModifiedOn": "2026-11-19T09:56:01",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/6797654?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/6797654?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/oakwood-morgan-hill-vs-piedmont-hills-san-jose/11-18-2026/?c=57438220-2ddc-4c0a-9d67-44e5410b8685",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/oakwood-high-school-morgan-hill-ca/gam9e2987fa4a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/oakwood-high-school-morgan-hill-ca/gam9e2987fa4a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Oakwood Country School-Morgan Hill"
@@ -839,7 +773,7 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/prospect-saratoga-vs-silver-creek-san-jose/11-18-2026/?c=7640f42e-d185-481b-ab1f-5dc54c9d2f16",
@@ -1229,7 +1163,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:00:52",
+              "maxprepsModifiedOn": "2026-11-19T05:09:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1242,7 +1176,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/aragon-high-school-san-mateo-ca/gam44fdf52e47?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "Aragon High School"
+              "text": "Aragon High School (sportsmanship game)"
             }
           },
           "ref": "3dbf08a1-7361-4226-8f3e-e3b2e7d91031"
@@ -2670,7 +2604,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-18T22:33:41.115Z",
+          "builtAt": "2026-11-19T15:38:28.019Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -11361,7 +11295,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T22:02:03",
+              "maxprepsModifiedOn": "2026-11-19T09:55:01",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
