@@ -1,7 +1,7 @@
 {
   "cifssCrossCheck": null,
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "626cd6e094cca6a469d73d381321ceb382f7c38cb61243ba27211c70e36c9ea9",
+  "contentHash": "f531a4f9075046a65edb3433a36469e57326be711be6ac9ab1a25a1899077791",
   "counts": {
     "byLeague": {
       "bval": {
@@ -41,7 +41,7 @@
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-18T22:09:06.142Z",
+  "fetchedAt": "2026-11-19T15:55:24.948Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -579,7 +579,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-18",
+  "today": "2026-11-19",
   "warnings": 17,
   "window": {
     "firstGame": "2026-08-21T19:00:00",
