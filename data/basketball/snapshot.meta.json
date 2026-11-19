@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "4369c16fc964210e31f75741392e3a5bcc74a95d8dfc32d7ab8729c746a82bdc",
+  "contentHash": "ab562ac099706a2ef9ad840922db438c530a73a8004a4415ac9889484f32fbee",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 293,
+        "finals": 0,
+        "games": 292,
         "leagueGames": 125,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 207,
+        "games": 208,
         "leagueGames": 96,
         "teams": 15
       }
     },
-    "finals": 1,
+    "finals": 0,
     "games": 457,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 11,
+    "pending": 9,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-19T15:38:28.019Z",
+  "fetchedAt": "2026-11-19T22:38:39.615Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -161,7 +161,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -281,7 +281,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -401,7 +401,7 @@
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 25,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -416,12 +416,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 617,
+      "rowCount": 626,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 67,
+      "rowCount": 68,
       "status": "ok"
     },
     {
