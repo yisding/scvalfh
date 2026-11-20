@@ -6,7 +6,7 @@
     "teams": 60,
     "teamsWithStats": 38
   },
-  "fetchedAt": "2026-11-18T15:51:19.398Z",
+  "fetchedAt": "2026-11-20T15:38:29.462Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "06a44d81-ac81-4c31-a553-ff924f193c02",
@@ -6499,7 +6499,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -6520,7 +6520,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0400145a-d7ca-43a8-9890-2d5ecb8444e6",
@@ -13434,7 +13434,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "039663b4-1b15-47e3-bb45-24e2a2fde938",
@@ -19815,7 +19815,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "048cc3b5-6180-4b4e-b922-762d217b940d",
@@ -26420,7 +26420,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "074e4a06-bc89-4eee-81c8-4ba5a2c7bc00",
@@ -31879,7 +31879,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -31900,7 +31900,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "22889413-74ed-44c8-8cb1-3eda067b541d",
@@ -33050,7 +33050,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "1facc0f2-0072-44d5-bda0-7e5de69b4c39",
@@ -40632,7 +40632,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0848b490-3320-4c9c-ad95-de4e9fb5e0af",
@@ -45595,7 +45595,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -50958,7 +50958,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -57150,7 +57150,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -57171,7 +57171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "035c5900-565a-4a3d-884f-53cbfff99124",
@@ -61986,7 +61986,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "111f7795-9ec5-4812-b365-1abba628fd4d",
@@ -67132,7 +67132,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "044ae758-7a54-482e-a856-7702f8dd15c9",
@@ -73124,7 +73124,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -73145,7 +73145,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "15fa3ca6-6c1c-4c58-b7ff-25e8de8f9b7a",
@@ -78091,7 +78091,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "1f9915e5-5ed0-41b4-8547-278727b0985e",
@@ -82316,7 +82316,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "1b6b2ce4-4309-4235-b3f9-125eef2752ed",
@@ -87536,7 +87536,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "f8a2ede1-2719-4b4b-b847-d10a46fb93a2",
@@ -87730,7 +87730,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "02815173-2563-4291-a1cd-32beaeaeb2de",
@@ -93106,7 +93106,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "03992edb-0aff-4747-90b5-6fd7f3e5b51f",
@@ -97782,7 +97782,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
@@ -97803,7 +97803,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
@@ -97824,7 +97824,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -97845,7 +97845,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "86f42771-02d3-4c85-a795-142206fe84bf",
@@ -98526,7 +98526,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0183f7b6-4c0b-4e98-ba8d-58bd3d4f5143",
@@ -102770,7 +102770,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -102791,7 +102791,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -102812,7 +102812,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -102833,7 +102833,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "1bc1161e-668a-4c0e-a2ec-829423cb010c",
@@ -105458,7 +105458,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -105479,7 +105479,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
@@ -105500,7 +105500,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -105521,7 +105521,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -105542,7 +105542,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "1766c73a-a599-4749-93d4-286c98bf4d07",
@@ -106075,7 +106075,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -106096,7 +106096,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -106117,7 +106117,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
@@ -106138,7 +106138,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -106159,7 +106159,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "00ea8c39-edb2-417f-9d91-d994c8d0b831",
@@ -111836,7 +111836,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
@@ -111857,7 +111857,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
@@ -111878,7 +111878,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -111899,7 +111899,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "070022f0-84e9-4408-9e3e-771cdd2907f6",
@@ -118841,7 +118841,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0025ee78-b046-438d-80ae-a79d0df16725",
@@ -121062,6 +121062,171 @@
           "warnings": []
         },
         {
+          "contestId": "6b3860dc-f03c-497a-8c15-c492c17ca205",
+          "players": [
+            {
+              "field": {
+                "attackAttempts": 3,
+                "attackErrors": 1,
+                "digs": 2,
+                "kills": 0,
+                "setsPlayed": 4,
+                "soloBlocks": 4
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Kylie Hider"
+            },
+            {
+              "field": {
+                "aces": 2,
+                "attackAttempts": 35,
+                "attackErrors": 6,
+                "digs": 12,
+                "kills": 15,
+                "receptionErrors": 3,
+                "receptions": 27,
+                "serveAttempts": 17,
+                "serveErrors": 2,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Kennedy McCracken"
+            },
+            {
+              "field": {
+                "aces": 4,
+                "assists": 44,
+                "attackAttempts": 9,
+                "attackErrors": 1,
+                "digs": 14,
+                "kills": 3,
+                "serveAttempts": 17,
+                "serveErrors": 0,
+                "setsPlayed": 4,
+                "soloBlocks": 1
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Danielle Whitmill"
+            },
+            {
+              "field": {
+                "aces": 0,
+                "assists": 1,
+                "attackAttempts": 1,
+                "attackErrors": 0,
+                "digs": 3,
+                "kills": 1,
+                "receptionErrors": 0,
+                "receptions": 10,
+                "serveAttempts": 12,
+                "serveErrors": 0,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Penelope Griffin"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "attackAttempts": 19,
+                "attackErrors": 5,
+                "digs": 1,
+                "kills": 4,
+                "setsPlayed": 4,
+                "soloBlocks": 1
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Tatyana Borovick"
+            },
+            {
+              "field": {
+                "attackAttempts": 21,
+                "attackErrors": 4,
+                "digs": 3,
+                "kills": 11,
+                "setsPlayed": 4,
+                "soloBlocks": 2
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Grace Paedon"
+            },
+            {
+              "field": {
+                "aces": 4,
+                "assists": 0,
+                "attackAttempts": 50,
+                "attackErrors": 8,
+                "digs": 6,
+                "kills": 21,
+                "receptionErrors": 4,
+                "receptions": 24,
+                "serveAttempts": 21,
+                "serveErrors": 1,
+                "setsPlayed": 4,
+                "soloBlocks": 1
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Whitney Fleming"
+            },
+            {
+              "field": {
+                "aces": 2,
+                "assists": 1,
+                "digs": 5,
+                "receptionErrors": 1,
+                "receptions": 1,
+                "serveAttempts": 17,
+                "serveErrors": 0,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Isabella Vu"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "assists": 5,
+                "digs": 18,
+                "receptionErrors": 2,
+                "receptions": 13,
+                "serveAttempts": 14,
+                "serveErrors": 1,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Ava Benitey"
+            }
+          ],
+          "rowKey": "b6ab60fa",
+          "tracked": {
+            "field": [
+              "setsPlayed",
+              "kills",
+              "attackErrors",
+              "attackAttempts",
+              "aces",
+              "serveErrors",
+              "serveAttempts",
+              "soloBlocks",
+              "digs",
+              "assists",
+              "receptions",
+              "receptionErrors"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "6ed61fbe-f664-4106-95cf-5e7db60882d9",
           "players": [
             {
@@ -121889,6 +122054,161 @@
             }
           ],
           "rowKey": "467edc01",
+          "tracked": {
+            "field": [
+              "setsPlayed",
+              "kills",
+              "attackErrors",
+              "attackAttempts",
+              "aces",
+              "serveErrors",
+              "serveAttempts",
+              "soloBlocks",
+              "digs",
+              "assists",
+              "receptions",
+              "receptionErrors"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "88d27c97-5fba-4abf-93c8-3db8cab4f7d8",
+          "players": [
+            {
+              "field": {
+                "attackAttempts": 3,
+                "attackErrors": 0,
+                "kills": 0,
+                "setsPlayed": 3,
+                "soloBlocks": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Kylie Hider"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "attackAttempts": 39,
+                "attackErrors": 11,
+                "digs": 6,
+                "kills": 12,
+                "receptionErrors": 0,
+                "receptions": 33,
+                "serveAttempts": 13,
+                "serveErrors": 1,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "10",
+              "name": "Kennedy McCracken"
+            },
+            {
+              "field": {
+                "aces": 2,
+                "assists": 44,
+                "attackAttempts": 7,
+                "attackErrors": 0,
+                "digs": 11,
+                "kills": 4,
+                "serveAttempts": 16,
+                "serveErrors": 3,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Danielle Whitmill"
+            },
+            {
+              "field": {
+                "attackAttempts": 32,
+                "attackErrors": 3,
+                "digs": 5,
+                "kills": 9,
+                "setsPlayed": 4,
+                "soloBlocks": 5
+              },
+              "goalkeeping": null,
+              "jersey": "4",
+              "name": "Tatyana Borovick"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "attackAttempts": 21,
+                "attackErrors": 2,
+                "digs": 4,
+                "kills": 8,
+                "setsPlayed": 4,
+                "soloBlocks": 3
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Grace Paedon"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "assists": 1,
+                "attackAttempts": 41,
+                "attackErrors": 4,
+                "digs": 15,
+                "kills": 16,
+                "receptionErrors": 1,
+                "receptions": 19,
+                "serveAttempts": 13,
+                "serveErrors": 2,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Whitney Fleming"
+            },
+            {
+              "field": {
+                "aces": 0,
+                "digs": 3,
+                "serveAttempts": 13,
+                "serveErrors": 1,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Isabella Vu"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "digs": 1,
+                "receptionErrors": 1,
+                "receptions": 4,
+                "serveAttempts": 13,
+                "serveErrors": 0,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Penelope Griffin"
+            },
+            {
+              "field": {
+                "aces": 2,
+                "assists": 1,
+                "digs": 29,
+                "receptionErrors": 3,
+                "receptions": 27,
+                "serveAttempts": 15,
+                "serveErrors": 1,
+                "setsPlayed": 4
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Ava Benitey"
+            }
+          ],
+          "rowKey": "6414d4bd",
           "tracked": {
             "field": [
               "setsPlayed",
@@ -124406,7 +124726,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-12T08:46:08",
+      "lastUpdated": "2026-11-19T20:10:11",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
       "players": [
@@ -124417,17 +124737,17 @@
           "field": {
             "aces": 1,
             "assists": 2,
-            "attackAttempts": 84,
-            "attackErrors": 15,
+            "attackAttempts": 90,
+            "attackErrors": 16,
             "blockAssists": null,
-            "digs": 33,
+            "digs": 35,
             "kills": 29,
             "receptionErrors": 2,
             "receptions": 5,
             "serveAttempts": 5,
             "serveErrors": 0,
-            "setsPlayed": 91,
-            "soloBlocks": 71
+            "setsPlayed": 98,
+            "soloBlocks": 76
           },
           "fullName": "Kylie Hider",
           "goalkeeping": null,
@@ -124440,18 +124760,18 @@
           "careerId": "dcck1oat8c133",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/isabella-vu/?careerid=dcck1oat8c133",
           "field": {
-            "aces": 26,
-            "assists": 6,
+            "aces": 28,
+            "assists": 7,
             "attackAttempts": 7,
             "attackErrors": 0,
             "blockAssists": null,
-            "digs": 116,
+            "digs": 124,
             "kills": 3,
-            "receptionErrors": 22,
-            "receptions": 178,
-            "serveAttempts": 183,
-            "serveErrors": 19,
-            "setsPlayed": 66,
+            "receptionErrors": 23,
+            "receptions": 179,
+            "serveAttempts": 213,
+            "serveErrors": 20,
+            "setsPlayed": 74,
             "soloBlocks": null
           },
           "fullName": "Isabella Vu",
@@ -124490,18 +124810,18 @@
           "careerId": "dl1lngro0f1o8",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/kennedy-mccracken/?careerid=dl1lngro0f1o8",
           "field": {
-            "aces": 8,
+            "aces": 11,
             "assists": 1,
-            "attackAttempts": 381,
-            "attackErrors": 65,
+            "attackAttempts": 455,
+            "attackErrors": 82,
             "blockAssists": null,
-            "digs": 108,
-            "kills": 147,
-            "receptionErrors": 25,
-            "receptions": 261,
-            "serveAttempts": 159,
-            "serveErrors": 24,
-            "setsPlayed": 65,
+            "digs": 126,
+            "kills": 174,
+            "receptionErrors": 28,
+            "receptions": 321,
+            "serveAttempts": 189,
+            "serveErrors": 27,
+            "setsPlayed": 73,
             "soloBlocks": 6
           },
           "fullName": "Kennedy McCracken",
@@ -124515,19 +124835,19 @@
           "careerId": "n5v3r69s8krp9",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/danielle-whitmill/?careerid=n5v3r69s8krp9",
           "field": {
-            "aces": 42,
-            "assists": 963,
-            "attackAttempts": 76,
-            "attackErrors": 8,
+            "aces": 48,
+            "assists": 1051,
+            "attackAttempts": 92,
+            "attackErrors": 9,
             "blockAssists": null,
-            "digs": 171,
-            "kills": 37,
+            "digs": 196,
+            "kills": 44,
             "receptionErrors": 0,
             "receptions": 1,
-            "serveAttempts": 453,
-            "serveErrors": 21,
-            "setsPlayed": 97,
-            "soloBlocks": 16
+            "serveAttempts": 486,
+            "serveErrors": 24,
+            "setsPlayed": 105,
+            "soloBlocks": 17
           },
           "fullName": "Danielle Whitmill",
           "goalkeeping": null,
@@ -124540,18 +124860,18 @@
           "careerId": "aqh3ghju3ilue",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/penelope-griffin/?careerid=aqh3ghju3ilue",
           "field": {
-            "aces": 23,
-            "assists": 1,
-            "attackAttempts": 1,
+            "aces": 24,
+            "assists": 2,
+            "attackAttempts": 2,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 72,
-            "kills": 0,
-            "receptionErrors": 7,
-            "receptions": 30,
-            "serveAttempts": 211,
+            "digs": 76,
+            "kills": 1,
+            "receptionErrors": 8,
+            "receptions": 44,
+            "serveAttempts": 236,
             "serveErrors": 8,
-            "setsPlayed": 68,
+            "setsPlayed": 76,
             "soloBlocks": null
           },
           "fullName": "Penelope Griffin",
@@ -124591,18 +124911,18 @@
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/tatyana-borovick/?careerid=qjmevlrjfe5ue",
           "field": {
             "aces": 10,
-            "assists": 3,
-            "attackAttempts": 457,
-            "attackErrors": 89,
+            "assists": 4,
+            "attackAttempts": 508,
+            "attackErrors": 97,
             "blockAssists": null,
-            "digs": 57,
-            "kills": 208,
+            "digs": 63,
+            "kills": 221,
             "receptionErrors": 2,
             "receptions": 14,
             "serveAttempts": 84,
             "serveErrors": 13,
-            "setsPlayed": 80,
-            "soloBlocks": 31
+            "setsPlayed": 88,
+            "soloBlocks": 37
           },
           "fullName": "Tatyana Borovick",
           "goalkeeping": null,
@@ -124641,18 +124961,18 @@
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/grace-paedon/?careerid=68q3jdovuqiee",
           "field": {
             "aces": 1,
-            "assists": 2,
-            "attackAttempts": 363,
-            "attackErrors": 43,
+            "assists": 3,
+            "attackAttempts": 405,
+            "attackErrors": 49,
             "blockAssists": null,
-            "digs": 26,
-            "kills": 193,
+            "digs": 33,
+            "kills": 212,
             "receptionErrors": 2,
             "receptions": 2,
             "serveAttempts": 2,
             "serveErrors": 0,
-            "setsPlayed": 96,
-            "soloBlocks": 53
+            "setsPlayed": 104,
+            "soloBlocks": 58
           },
           "fullName": "Grace Paedon",
           "goalkeeping": null,
@@ -124665,18 +124985,18 @@
           "careerId": "fuoh8tucbt4aa",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/ava-benitey/?careerid=fuoh8tucbt4aa",
           "field": {
-            "aces": 36,
-            "assists": 33,
+            "aces": 39,
+            "assists": 39,
             "attackAttempts": 9,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 378,
+            "digs": 425,
             "kills": 1,
-            "receptionErrors": 56,
-            "receptions": 381,
-            "serveAttempts": 337,
-            "serveErrors": 17,
-            "setsPlayed": 96,
+            "receptionErrors": 61,
+            "receptions": 421,
+            "serveAttempts": 366,
+            "serveErrors": 19,
+            "setsPlayed": 104,
             "soloBlocks": null
           },
           "fullName": "Ava Benitey",
@@ -124715,19 +125035,19 @@
           "careerId": "t3gbr0schpjm6",
           "careerUrl": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/whitney-fleming/?careerid=t3gbr0schpjm6",
           "field": {
-            "aces": 49,
-            "assists": 2,
-            "attackAttempts": 869,
-            "attackErrors": 122,
+            "aces": 54,
+            "assists": 3,
+            "attackAttempts": 960,
+            "attackErrors": 134,
             "blockAssists": null,
-            "digs": 207,
-            "kills": 372,
-            "receptionErrors": 22,
-            "receptions": 350,
-            "serveAttempts": 338,
-            "serveErrors": 47,
-            "setsPlayed": 97,
-            "soloBlocks": 21
+            "digs": 228,
+            "kills": 409,
+            "receptionErrors": 27,
+            "receptions": 393,
+            "serveAttempts": 372,
+            "serveErrors": 50,
+            "setsPlayed": 105,
+            "soloBlocks": 22
           },
           "fullName": "Whitney Fleming",
           "goalkeeping": null,
@@ -124792,18 +125112,18 @@
       "teamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "totals": {
         "field": {
-          "aces": 221,
-          "assists": 1043,
-          "attackAttempts": 2558,
-          "attackErrors": 384,
-          "digs": 1270,
-          "kills": 1076,
-          "receptionErrors": 146,
-          "receptions": 1307,
-          "serveAttempts": 2078,
-          "serveErrors": 173,
-          "setsPlayed": 120,
-          "soloBlocks": 208
+          "aces": 241,
+          "assists": 1142,
+          "attackAttempts": 2839,
+          "attackErrors": 429,
+          "digs": 1408,
+          "kills": 1180,
+          "receptionErrors": 161,
+          "receptions": 1465,
+          "serveAttempts": 2259,
+          "serveErrors": 185,
+          "setsPlayed": 128,
+          "soloBlocks": 226
         },
         "goalkeeping": {}
       },
@@ -124828,7 +125148,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -130383,7 +130703,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0c3a1540-3ce0-4f21-8c96-810025470325",
@@ -136628,7 +136948,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "062d5442-b832-4baa-81fa-affece542f42",
@@ -145063,7 +145383,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0c7e902f-c889-4683-a5e6-c860ac52fa0b",
@@ -152093,7 +152413,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "02aebc69-3cfd-4527-86ac-6a197c7de9ec",
@@ -157469,7 +157789,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -163624,7 +163944,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "0c20604d-29ec-443a-b4db-b4b94b2b160f",
@@ -169704,7 +170024,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "022305b0-9ce8-49f8-bebe-5eee4710380c",
@@ -174439,7 +174759,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
@@ -174460,7 +174780,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "198531ca-0a0d-4324-b4bd-4a87c061689e",
@@ -179570,7 +179890,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "3a170a9a-1363-41bc-bee2-f834be48dcdb",
@@ -180524,7 +180844,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "4395f8f5-52c6-473e-9bdb-de997908ee11",
@@ -181181,7 +181501,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-18T15:51:19.398Z",
+      "fetchedAt": "2026-11-20T15:38:29.462Z",
       "games": [
         {
           "contestId": "10a6c432-6d17-4e8f-9a0e-321efcc053f2",
