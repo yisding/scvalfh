@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T14:18:14.552Z",
+  "fetchedAt": "2026-11-20T21:56:10.946Z",
   "fixtures": [
     {
       "claims": {
@@ -64,72 +64,6 @@
       "published": [
         {
           "contestId": "61a0c155-ede7-462f-8f7d-685be3d077fc"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Independence",
-              "result": "W",
-              "score": 10,
-              "slug": "independence",
-              "teamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6"
-            },
-            "contestId": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T18:00:00",
-            "dateUtc": "2026-11-20T02:00:00Z",
-            "decider": "REG",
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Piedmont Hills",
-              "result": "L",
-              "score": 8,
-              "slug": "piedmont-hills",
-              "teamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T04:28:34",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "final",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/independence-san-jose-vs-piedmont-hills-san-jose/11-19-2026/?c=aa930816-3cb4-4dfb-96c0-5e1f6bc80056",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/piedmont-hills-high-school-san-jose-ca/gam29d85a2f04?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Piedmont Hills HS"
-            }
-          },
-          "ref": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056"
-        }
-      },
-      "id": "2026-11-19-independence-at-piedmont-hills",
-      "published": [
-        {
-          "contestId": "aa930816-3cb4-4dfb-96c0-5e1f6bc80056"
         }
       ]
     },
@@ -767,7 +701,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-06T13:58:47",
+              "maxprepsModifiedOn": "2026-11-20T18:30:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -780,7 +714,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/cupertino-high-school-cupertino-ca/gam0b0f2ba76a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Cupertino High School"
             }
           },
           "ref": "d182ccf5-3868-4567-bc41-b8cf2c4d3939"
@@ -3143,7 +3077,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:06:26",
+              "maxprepsModifiedOn": "2026-11-20T19:29:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3153,10 +3087,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hill-san-jose-vs-james-lick-san-jose/12-3-2026/?c=be3621f7-9552-46fc-b79f-5f57056697b3",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gamad304d02b0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "be3621f7-9552-46fc-b79f-5f57056697b3"
@@ -3605,7 +3539,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T01:59:49",
+              "maxprepsModifiedOn": "2026-11-20T20:44:11",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -4696,7 +4630,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/santa-clara-vs-sequoia-redwood-city/12-4-2026/?c=5d8a7d62-e379-4612-995b-f9e6f283f787",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam597bbe3380?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -5832,6 +5766,72 @@
       "published": [
         {
           "contestId": "d9c0c114-495b-4dec-8e12-338e878ed48e"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "contestId": "5645a084-73cf-4d7b-a408-0c8328e64b78",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-05",
+            "dateLocal": "2026-12-05T11:00:00",
+            "dateUtc": "2026-12-05T19:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Harker",
+              "result": null,
+              "score": null,
+              "slug": "harker",
+              "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T15:54:12",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/harker-san-jose-vs-silver-creek-san-jose/12-5-2026/?c=5645a084-73cf-4d7b-a408-0c8328e64b78",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "@ Milpitas High School"
+            }
+          },
+          "ref": "5645a084-73cf-4d7b-a408-0c8328e64b78"
+        }
+      },
+      "id": "2026-12-05-silver-creek-at-harker",
+      "published": [
+        {
+          "contestId": "5645a084-73cf-4d7b-a408-0c8328e64b78"
         }
       ]
     },
@@ -8146,7 +8146,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:07:26",
+              "maxprepsModifiedOn": "2026-11-20T19:29:43",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8156,10 +8156,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/del-mar-san-jose-vs-james-lick-san-jose/12-10-2026/?c=75439247-0b2b-42d9-9d2c-f8be4713279c",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam15860e0d9c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "75439247-0b2b-42d9-9d2c-f8be4713279c"
@@ -8411,7 +8411,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/los-gatos-vs-sequoia-redwood-city/12-10-2026/?c=fc71ce6b-f74a-46b9-8cec-47c580ca076c",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam0018d8bfab?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -9675,7 +9675,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T12:31:48",
+              "maxprepsModifiedOn": "2026-11-20T18:29:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12889,7 +12889,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/mountain-view-vs-sequoia-redwood-city/12-31-2026/?c=38d59cfd-ad64-43a7-b8a6-5740c4249dca",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam5472c1ca4b?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -13634,7 +13634,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:10:54",
+              "maxprepsModifiedOn": "2026-11-20T19:30:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13644,10 +13644,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-overfelt-san-jose/1-5-2027/?c=26d63d46-6044-41a4-8f12-b6ddf48bc87b",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam5c2bd946cb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "26d63d46-6044-41a4-8f12-b6ddf48bc87b"
@@ -14099,6 +14099,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "contestId": "316bd4c2-5a16-4bd2-869a-9e1c69b6fdba",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-05",
+            "dateLocal": "2027-01-05T17:00:00",
+            "dateUtc": "2027-01-06T01:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Lincoln",
+              "result": null,
+              "score": null,
+              "slug": "lincoln",
+              "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:30:35",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/lincoln-san-jose-vs-silver-creek-san-jose/1-5-2027/?c=316bd4c2-5a16-4bd2-869a-9e1c69b6fdba",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "316bd4c2-5a16-4bd2-869a-9e1c69b6fdba"
+        },
         "official": {
           "fixture": {
             "awayName": "Silver Creek",
@@ -14116,10 +14172,29 @@
             "source": "bval-docx",
             "time": "17:00"
           },
+          "lastMatch": {
+            "contestId": "316bd4c2-5a16-4bd2-869a-9e1c69b6fdba",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-05:silver-creek@lincoln",
+              "jv": {
+                "dateKey": "2027-01-05",
+                "time": "19:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-05",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-05:silver-creek@lincoln"
         }
       },
-      "id": "2027-01-05-silver-creek-at-lincoln"
+      "id": "2027-01-05-silver-creek-at-lincoln~2",
+      "published": [
+        {
+          "contestId": "316bd4c2-5a16-4bd2-869a-9e1c69b6fdba"
+        }
+      ]
     },
     {
       "claims": {
@@ -15074,7 +15149,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T01:00:49",
+              "maxprepsModifiedOn": "2026-11-20T16:59:22",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15355,7 +15430,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T04:37:18",
+              "maxprepsModifiedOn": "2026-11-20T17:00:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16199,7 +16274,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:11:13",
+              "maxprepsModifiedOn": "2026-11-20T16:30:16",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16212,7 +16287,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Los Gatos High School"
             }
           },
           "ref": "53146b2d-1752-483e-9a05-a96a8f33d8b6"
@@ -16313,6 +16388,72 @@
       "published": [
         {
           "contestId": "a396bfda-22db-44e4-a1c8-b863e6a2386d"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Belmont",
+              "name": "Notre Dame Belmont",
+              "result": null,
+              "score": null,
+              "slug": "notre-dame-belmont",
+              "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+            },
+            "contestId": "3a33af55-86bb-4d81-9394-965be7d2255f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-08",
+            "dateLocal": "2027-01-08T14:30:00",
+            "dateUtc": "2027-01-08T22:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Presentation",
+              "result": null,
+              "score": null,
+              "slug": "presentation",
+              "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:00:35",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/notre-dame-belmont-vs-presentation-san-jose/1-8-2027/?c=3a33af55-86bb-4d81-9394-965be7d2255f",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Presentation High School"
+            }
+          },
+          "ref": "3a33af55-86bb-4d81-9394-965be7d2255f"
+        }
+      },
+      "id": "2027-01-08-notre-dame-belmont-at-presentation",
+      "published": [
+        {
+          "contestId": "3a33af55-86bb-4d81-9394-965be7d2255f"
         }
       ]
     },
@@ -17603,7 +17744,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:12:10",
+              "maxprepsModifiedOn": "2026-11-20T19:29:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -17613,10 +17754,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-prospect-saratoga/1-12-2027/?c=30ce5494-2fa5-4b1b-b92b-b038549a3d59",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gamf8a88c5ac4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "30ce5494-2fa5-4b1b-b92b-b038549a3d59"
@@ -17854,6 +17995,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "contestId": "1822176b-9871-4d38-ba88-62357b4c5179",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-12",
+            "dateLocal": "2027-01-12T18:00:00",
+            "dateUtc": "2027-01-13T02:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Gilroy",
+              "name": "Christopher",
+              "result": null,
+              "score": null,
+              "slug": "christopher",
+              "teamId": "773e862d-e186-44aa-b268-461b4064ce52"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:43:02",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/christopher-gilroy-vs-silver-creek-san-jose/1-12-2027/?c=1822176b-9871-4d38-ba88-62357b4c5179",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/christopher-high-school-gilroy-ca/gam9e5e982e95?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "1822176b-9871-4d38-ba88-62357b4c5179"
+        },
         "official": {
           "fixture": {
             "awayName": "Silver Creek",
@@ -17871,10 +18068,29 @@
             "source": "bval-docx",
             "time": "18:00"
           },
+          "lastMatch": {
+            "contestId": "1822176b-9871-4d38-ba88-62357b4c5179",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-12:silver-creek@christopher",
+              "jv": {
+                "dateKey": "2027-01-12",
+                "time": "16:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-12",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-12:silver-creek@christopher"
         }
       },
-      "id": "2027-01-12-silver-creek-at-christopher"
+      "id": "2027-01-12-silver-creek-at-christopher~2",
+      "published": [
+        {
+          "contestId": "1822176b-9871-4d38-ba88-62357b4c5179"
+        }
+      ]
     },
     {
       "claims": {
@@ -18174,8 +18390,8 @@
             },
             "contestId": "b165c148-a307-4bb9-aff0-27ea96ec7555",
             "contestTypes": {
-              "away": 0,
-              "home": 0
+              "away": 1,
+              "home": 1
             },
             "countsFor": null,
             "dateKey": "2027-01-12",
@@ -18193,14 +18409,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": true,
+            "isLeague": false,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "mt-hamilton",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-06T14:06:14",
+              "maxprepsModifiedOn": "2026-11-20T16:59:59",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18213,7 +18429,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/branham-high-school-san-jose-ca/gam7691eac611?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Branham  High School"
             }
           },
           "ref": "b165c148-a307-4bb9-aff0-27ea96ec7555"
@@ -18249,6 +18465,7 @@
               "source": "bval-docx"
             }
           },
+          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-01-12; MaxPreps flags it non-league",
           "ref": "mt-hamilton:2027-01-12:willow-glen@branham"
         }
       },
@@ -19421,6 +19638,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Oak Grove",
+              "result": null,
+              "score": null,
+              "slug": "oak-grove",
+              "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
+            },
+            "contestId": "a4c248c1-9e5e-4a88-859e-944fac336496",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-14",
+            "dateLocal": "2027-01-14T19:00:00",
+            "dateUtc": "2027-01-15T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:43:44",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/oak-grove-san-jose-vs-silver-creek-san-jose/1-14-2027/?c=a4c248c1-9e5e-4a88-859e-944fac336496",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "a4c248c1-9e5e-4a88-859e-944fac336496"
+        },
         "official": {
           "fixture": {
             "awayName": "Oak Grove",
@@ -19438,10 +19711,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "a4c248c1-9e5e-4a88-859e-944fac336496",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-14:oak-grove@silver-creek",
+              "jv": {
+                "dateKey": "2027-01-14",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-14",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-14:oak-grove@silver-creek"
         }
       },
-      "id": "2027-01-14-oak-grove-at-silver-creek"
+      "id": "2027-01-14-oak-grove-at-silver-creek~2",
+      "published": [
+        {
+          "contestId": "a4c248c1-9e5e-4a88-859e-944fac336496"
+        }
+      ]
     },
     {
       "claims": {
@@ -23969,7 +24261,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-08T14:38:04",
+              "maxprepsModifiedOn": "2026-11-20T19:29:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -23979,10 +24271,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-yerba-buena-san-jose/1-21-2027/?c=93755742-82a7-4e73-8f3d-256556407134",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gamc59a8879d6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "93755742-82a7-4e73-8f3d-256556407134"
@@ -27277,6 +27569,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Jose",
+              "name": "Lincoln",
+              "result": null,
+              "score": null,
+              "slug": "lincoln",
+              "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
+            },
+            "contestId": "13c34d4d-d0a5-4c63-80d3-ca7f3bbff400",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-28",
+            "dateLocal": "2027-01-28T19:00:00",
+            "dateUtc": "2027-01-29T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:46:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/lincoln-san-jose-vs-silver-creek-san-jose/1-28-2027/?c=13c34d4d-d0a5-4c63-80d3-ca7f3bbff400",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "13c34d4d-d0a5-4c63-80d3-ca7f3bbff400"
+        },
         "official": {
           "fixture": {
             "awayName": "Lincoln",
@@ -27294,10 +27642,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "13c34d4d-d0a5-4c63-80d3-ca7f3bbff400",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-01-28:lincoln@silver-creek",
+              "jv": {
+                "dateKey": "2027-01-28",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-01-28",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-01-28:lincoln@silver-creek"
         }
       },
-      "id": "2027-01-28-lincoln-at-silver-creek"
+      "id": "2027-01-28-lincoln-at-silver-creek~2",
+      "published": [
+        {
+          "contestId": "13c34d4d-d0a5-4c63-80d3-ca7f3bbff400"
+        }
+      ]
     },
     {
       "claims": {
@@ -27620,7 +27987,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:16:05",
+              "maxprepsModifiedOn": "2026-11-20T19:29:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27630,10 +27997,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-mt-pleasant-san-jose/1-28-2027/?c=e15efba4-37cb-4333-9cda-6cc8f32cc7fc",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam728c7b12bf?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "e15efba4-37cb-4333-9cda-6cc8f32cc7fc"
@@ -29635,6 +30002,62 @@
     },
     {
       "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Christopher",
+              "result": null,
+              "score": null,
+              "slug": "christopher",
+              "teamId": "773e862d-e186-44aa-b268-461b4064ce52"
+            },
+            "contestId": "e1419095-de2e-4dec-8b9d-c0f040c1dbfd",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-02",
+            "dateLocal": "2027-02-02T19:00:00",
+            "dateUtc": "2027-02-03T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Silver Creek",
+              "result": null,
+              "score": null,
+              "slug": "silver-creek",
+              "teamId": "30d65e43-1478-45b5-90de-fd69689344f8"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "santa-teresa",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T09:47:48",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/christopher-gilroy-vs-silver-creek-san-jose/2-2-2027/?c=e1419095-de2e-4dec-8b9d-c0f040c1dbfd",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "e1419095-de2e-4dec-8b9d-c0f040c1dbfd"
+        },
         "official": {
           "fixture": {
             "awayName": "Christopher",
@@ -29652,10 +30075,29 @@
             "source": "bval-docx",
             "time": "19:00"
           },
+          "lastMatch": {
+            "contestId": "e1419095-de2e-4dec-8b9d-c0f040c1dbfd",
+            "stamp": {
+              "division": "santa-teresa",
+              "fixtureId": "santa-teresa:2027-02-02:christopher@silver-creek",
+              "jv": {
+                "dateKey": "2027-02-02",
+                "time": "17:00"
+              },
+              "pass": "same-date",
+              "scheduledDate": "2027-02-02",
+              "source": "bval-docx"
+            }
+          },
           "ref": "santa-teresa:2027-02-02:christopher@silver-creek"
         }
       },
-      "id": "2027-02-02-christopher-at-silver-creek"
+      "id": "2027-02-02-christopher-at-silver-creek~2",
+      "published": [
+        {
+          "contestId": "e1419095-de2e-4dec-8b9d-c0f040c1dbfd"
+        }
+      ]
     },
     {
       "claims": {
@@ -30007,7 +30449,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:16:54",
+              "maxprepsModifiedOn": "2026-11-20T19:29:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -30017,10 +30459,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/gunderson-san-jose-vs-james-lick-san-jose/2-2-2027/?c=1c400d4f-f2d5-4532-91c8-f9e20accb2e6",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam2a2454e62c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "1c400d4f-f2d5-4532-91c8-f9e20accb2e6"
@@ -31886,7 +32328,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T03:30:00",
+              "maxprepsModifiedOn": "2026-11-20T15:05:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32662,7 +33104,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T13:59:59",
+              "maxprepsModifiedOn": "2026-11-20T18:30:07",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33017,7 +33459,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T14:31:04",
+              "maxprepsModifiedOn": "2026-11-20T17:59:28",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34831,7 +35273,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-14T11:13:09",
+              "maxprepsModifiedOn": "2026-11-20T19:29:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -34841,10 +35283,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-san-jose/2-9-2027/?c=01270114-42c4-4af2-b6d5-a01466e739af",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam4030e918df?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "01270114-42c4-4af2-b6d5-a01466e739af"
@@ -36849,8 +37291,8 @@
             },
             "contestId": "0bfdedd2-4181-4ccc-a90d-c94884620561",
             "contestTypes": {
-              "away": 1,
-              "home": 1
+              "away": 0,
+              "home": 0
             },
             "countsFor": null,
             "dateKey": "2027-02-11",
@@ -36868,14 +37310,14 @@
             },
             "isDateTba": false,
             "isForfeit": false,
-            "isLeague": false,
+            "isLeague": true,
             "isOt": false,
             "isTimeTba": false,
             "leagueDivision": "santa-teresa",
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-15T17:42:35",
+              "maxprepsModifiedOn": "2026-11-20T17:49:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -36924,7 +37366,6 @@
               "source": "bval-docx"
             }
           },
-          "leagueFlagNote": "the official BVAL schedule has this as a league game on 2027-02-11; MaxPreps flags it non-league",
           "ref": "santa-teresa:2027-02-11:sobrato@silver-creek"
         }
       },
@@ -38097,7 +38538,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-10T14:17:52",
+              "maxprepsModifiedOn": "2026-11-20T15:55:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38110,7 +38551,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Senior Night"
             }
           },
           "ref": "274b5c4d-2150-4146-953a-2753c2e1cc0c"
@@ -38408,7 +38849,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T10:19:04",
+              "maxprepsModifiedOn": "2026-11-20T19:30:05",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -38418,10 +38859,10 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/independence-san-jose-vs-james-lick-san-jose/2-16-2027/?c=2fabd34f-6072-4a35-b0cd-22a066895f23",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/james-lick-high-school-san-jose-ca/gam05b188b448?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Lick (James) High School"
             }
           },
           "ref": "2fabd34f-6072-4a35-b0cd-22a066895f23"

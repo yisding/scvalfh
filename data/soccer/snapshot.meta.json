@@ -7,14 +7,14 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "d9275f8aef7e60cbbaa152b9632926c50a13237cea2c00b7282ef92444126c61",
+  "contentHash": "b9d5e6c15cf9f1454da11180caf60d3b224aaa730cdef5494c6d308132a11559",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 233,
-        "leagueGames": 162,
+        "finals": 0,
+        "games": 238,
+        "leagueGames": 167,
         "teams": 26
       },
       "scval": {
@@ -27,8 +27,8 @@
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 83,
-        "leagueGames": 25,
+        "games": 85,
+        "leagueGames": 26,
         "teams": 13
       },
       "wcal": {
@@ -39,15 +39,15 @@
         "teams": 6
       }
     },
-    "finals": 1,
-    "games": 468,
-    "leagueGames": 292,
+    "finals": 0,
+    "games": 474,
+    "leagueGames": 298,
     "mismatches": 0,
     "pending": 4,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-20T14:18:14.552Z",
+  "fetchedAt": "2026-11-20T21:56:10.946Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 51,
+  "officialFixturesUnmatched": 46,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -286,7 +286,7 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 9,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -296,7 +296,7 @@
     },
     {
       "label": "lincoln schedule",
-      "rowCount": 11,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -306,7 +306,7 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -316,7 +316,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 11,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -486,12 +486,12 @@
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
       "label": "presentation schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -506,7 +506,7 @@
     },
     {
       "label": "harker schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -551,7 +551,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 274,
+      "rowCount": 273,
       "status": "ok"
     },
     {
