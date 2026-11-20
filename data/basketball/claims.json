@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-19T22:38:39.615Z",
+  "fetchedAt": "2026-11-20T15:18:20.478Z",
   "fixtures": [
     {
       "claims": {
@@ -64,72 +64,6 @@
       "published": [
         {
           "contestId": "ed0d0a77-5a73-459d-bc42-5623eb2781d1"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Lynbrook",
-              "result": null,
-              "score": null,
-              "slug": "lynbrook",
-              "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
-            },
-            "contestId": "42a255af-ce5f-4235-9baf-635bc10d7a08",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-16",
-            "dateLocal": "2026-11-16T19:00:00",
-            "dateUtc": "2026-11-17T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Campbell",
-              "name": "Westmont",
-              "result": null,
-              "score": null,
-              "slug": "westmont",
-              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:01:13",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lynbrook-san-jose-vs-westmont-campbell/11-16-2026/?c=42a255af-ce5f-4235-9baf-635bc10d7a08",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/westmont-high-school-san-jose-ca/gam42d9891e0a?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Westmont High School"
-            }
-          },
-          "ref": "42a255af-ce5f-4235-9baf-635bc10d7a08"
-        }
-      },
-      "id": "2026-11-16-lynbrook-at-westmont",
-      "published": [
-        {
-          "contestId": "42a255af-ce5f-4235-9baf-635bc10d7a08"
         }
       ]
     },
@@ -262,72 +196,6 @@
       "published": [
         {
           "contestId": "0a84edba-5bc4-43bb-a330-df45f945f00b"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Cupertino",
-              "name": "Monta Vista",
-              "result": null,
-              "score": null,
-              "slug": "monta-vista",
-              "teamId": "405614ad-a015-4270-b527-18e899c90824"
-            },
-            "contestId": "2ea84943-6e11-45bb-8705-fa72ebfcbd80",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Evergreen Valley",
-              "result": null,
-              "score": null,
-              "slug": "evergreen-valley",
-              "teamId": "554a6e7c-06b6-473a-9461-9f155294d249"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T08:32:28",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7086211?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/evergreen-valley-san-jose-vs-monta-vista-cupertino/11-17-2026/?c=2ea84943-6e11-45bb-8705-fa72ebfcbd80",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Evergreen Valley High School"
-            }
-          },
-          "ref": "2ea84943-6e11-45bb-8705-fa72ebfcbd80"
-        }
-      },
-      "id": "2026-11-17-monta-vista-at-evergreen-valley",
-      "published": [
-        {
-          "contestId": "2ea84943-6e11-45bb-8705-fa72ebfcbd80"
         }
       ]
     },
@@ -602,8 +470,8 @@
             "away": {
               "city": "Sunnyvale",
               "name": "Fremont",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 41,
               "slug": "fremont",
               "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
             },
@@ -616,13 +484,13 @@
             "dateKey": "2026-11-19",
             "dateLocal": "2026-11-19T19:00:00",
             "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Milpitas",
               "name": "Milpitas",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 55,
               "slug": "milpitas",
               "teamId": "8ff5a211-5896-4289-9596-760a8179c34d"
             },
@@ -635,17 +503,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T16:58:25",
+              "maxprepsModifiedOn": "2026-11-20T04:29:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7088767?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7070172?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/fremont-sunnyvale-vs-milpitas/11-19-2026/?c=88ea9aec-31fc-4547-83eb-167b7350dabe",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam32686d42e1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/milpitas-high-school-milpitas-ca/gam32686d42e1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Milpitas High School"
@@ -668,8 +536,8 @@
             "away": {
               "city": "Cupertino",
               "name": "Homestead",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 64,
               "slug": "homestead",
               "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2"
             },
@@ -682,13 +550,13 @@
             "dateKey": "2026-11-19",
             "dateLocal": "2026-11-19T19:00:00",
             "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Oak Grove",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 35,
               "slug": "oak-grove",
               "teamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a"
             },
@@ -701,17 +569,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:58:55",
+              "maxprepsModifiedOn": "2026-11-20T04:31:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
-              "goFan": "https://gofan.co/event/7088768?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7088768?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/homestead-cupertino-vs-oak-grove-san-jose/11-19-2026/?c=c164fe98-5e7c-4921-921f-5d4dc88d3ec6",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/oak-grove-high-school-san-jose-san-jose-ca/gamc4655730d1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/oak-grove-high-school-san-jose-san-jose-ca/gamc4655730d1?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Oak Grove High School"
@@ -773,7 +641,7 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leland-san-jose-vs-monte-vista-christian-watsonville/11-19-2026/?c=2e998376-0bcf-4b10-8d7e-eb71c8be817d",
@@ -790,138 +658,6 @@
       "published": [
         {
           "contestId": "2e998376-0bcf-4b10-8d7e-eb71c8be817d"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Los Altos",
-              "name": "Los Altos",
-              "result": null,
-              "score": null,
-              "slug": "los-altos",
-              "teamId": "0279f2de-d5ce-484d-b210-2286ded42058"
-            },
-            "contestId": "9435a5c1-6105-4eb4-a8c5-175107fa5d78",
-            "contestTypes": {
-              "away": 2,
-              "home": 2
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T16:50:00",
-            "dateUtc": "2026-11-20T00:50:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Lancaster",
-              "name": "Lancaster",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "c8000937-1171-4d6c-9adf-7518c4f0c43e"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-11T22:22:48",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "neutral",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lancaster-vs-los-altos/11-19-2026/?c=9435a5c1-6105-4eb4-a8c5-175107fa5d78",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "9435a5c1-6105-4eb4-a8c5-175107fa5d78"
-        }
-      },
-      "id": "2026-11-19-los-altos-at-name:lancaster",
-      "published": [
-        {
-          "contestId": "9435a5c1-6105-4eb4-a8c5-175107fa5d78"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Lynbrook",
-              "result": null,
-              "score": null,
-              "slug": "lynbrook",
-              "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
-            },
-            "contestId": "0d11ca77-5527-40d4-86be-6f11c775b93c",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T18:30:00",
-            "dateUtc": "2026-11-20T02:30:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Los Altos Hills",
-              "name": "Pinewood",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:38:44",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088770?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lynbrook-san-jose-vs-pinewood-los-altos-hills/11-19-2026/?c=0d11ca77-5527-40d4-86be-6f11c775b93c",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/pinewood-high-school-los-altos-hills-ca/gam6da7bd450c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": "Pinewood High School"
-            }
-          },
-          "ref": "0d11ca77-5527-40d4-86be-6f11c775b93c"
-        }
-      },
-      "id": "2026-11-19-lynbrook-at-name:pinewood",
-      "published": [
-        {
-          "contestId": "0d11ca77-5527-40d4-86be-6f11c775b93c"
         }
       ]
     },
@@ -971,11 +707,11 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": "https://gofan.co/event/7088754?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7088754?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aragon-san-mateo-vs-monta-vista-cupertino/11-19-2026/?c=3dbf08a1-7361-4226-8f3e-e3b2e7d91031",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/aragon-high-school-san-mateo-ca/gam44fdf52e47?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/aragon-high-school-san-mateo-ca/gam44fdf52e47?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Aragon High School (sportsmanship game)"
@@ -997,141 +733,9 @@
           "game": {
             "away": {
               "city": "Mountain View",
-              "name": "Mountain View",
-              "result": null,
-              "score": null,
-              "slug": "mountain-view",
-              "teamId": "09beba1b-240a-45b8-aa6e-281decefa275"
-            },
-            "contestId": "9d205a29-3579-4191-8c88-fe6a8e2c19b1",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Santa Teresa",
-              "result": null,
-              "score": null,
-              "slug": "santa-teresa",
-              "teamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T20:05:50",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/7092098?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/mountain-view-vs-santa-teresa-san-jose/11-19-2026/?c=9d205a29-3579-4191-8c88-fe6a8e2c19b1",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Santa Teresa High School"
-            }
-          },
-          "ref": "9d205a29-3579-4191-8c88-fe6a8e2c19b1"
-        }
-      },
-      "id": "2026-11-19-mountain-view-at-santa-teresa",
-      "published": [
-        {
-          "contestId": "9d205a29-3579-4191-8c88-fe6a8e2c19b1"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Monterey",
-              "name": "Monterey",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626"
-            },
-            "contestId": "d672c625-8742-487f-9753-1a509f33efc4",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Willow Glen",
-              "result": null,
-              "score": null,
-              "slug": "willow-glen",
-              "teamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:02:24",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088800?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/monterey-vs-willow-glen-san-jose/11-19-2026/?c=d672c625-8742-487f-9753-1a509f33efc4",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Willow Glen High School"
-            }
-          },
-          "ref": "d672c625-8742-487f-9753-1a509f33efc4"
-        }
-      },
-      "id": "2026-11-19-name:monterey-at-willow-glen",
-      "published": [
-        {
-          "contestId": "d672c625-8742-487f-9753-1a509f33efc4"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Mountain View",
               "name": "Saint Francis",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 65,
               "slug": null,
               "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0"
             },
@@ -1144,13 +748,13 @@
             "dateKey": "2026-11-19",
             "dateLocal": "2026-11-19T19:00:00",
             "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Palo Alto",
               "name": "Gunn",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 44,
               "slug": "gunn",
               "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
             },
@@ -1163,17 +767,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T18:07:28",
+              "maxprepsModifiedOn": "2026-11-20T05:06:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gunn-palo-alto-vs-saint-francis-mountain-view/11-19-2026/?c=cee41e94-d5eb-4944-a4f9-ccc32286d16e",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamcbdf92ff31?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": "https://www.nfhsnetwork.com/events/henry-m-gunn-high-school-palo-alto-ca/gamcbdf92ff31?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": "Gunn HS"
@@ -1186,72 +790,6 @@
       "published": [
         {
           "contestId": "cee41e94-d5eb-4944-a4f9-ccc32286d16e"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Mateo",
-              "name": "San Mateo",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "55853f70-2545-4bfe-a107-4142093e929a"
-            },
-            "contestId": "cbb857d6-1e6b-432c-ab91-d1a0ba767043",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Leigh",
-              "result": null,
-              "score": null,
-              "slug": "leigh",
-              "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:02:48",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088763?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-san-mateo/11-19-2026/?c=cbb857d6-1e6b-432c-ab91-d1a0ba767043",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamba2501d6b4?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
-            },
-            "venue": {
-              "text": "Leigh High School"
-            }
-          },
-          "ref": "cbb857d6-1e6b-432c-ab91-d1a0ba767043"
-        }
-      },
-      "id": "2026-11-19-name:sanmateo-at-santa-clara",
-      "published": [
-        {
-          "contestId": "cbb857d6-1e6b-432c-ab91-d1a0ba767043"
         }
       ]
     },
@@ -1301,9 +839,9 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": "https://gofan.co/event/7088795?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7088795?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/junipero-serra-san-mateo-vs-palo-alto/11-19-2026/?c=5cbbf9ce-4f0f-4cf4-bc5b-1ec6f95de35a",
               "nfhsStream": null
             },
@@ -1367,9 +905,9 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": "https://gofan.co/event/7088792?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7088792?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-pioneer-san-jose/11-19-2026/?c=e5e32e26-a8b5-490c-999b-cef18cce59e2",
               "nfhsStream": null
             },
@@ -1433,9 +971,9 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
-              "goFan": "https://gofan.co/event/7088765?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
+              "goFan": "https://gofan.co/event/7088765?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/los-altos-vs-westmont-campbell/11-19-2026/?c=56826e9b-1d0c-4648-8c96-17ea3649f603",
               "nfhsStream": null
             },
@@ -1450,72 +988,6 @@
       "published": [
         {
           "contestId": "56826e9b-1d0c-4648-8c96-17ea3649f603"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Fremont",
-              "name": "Irvington",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "30e8ab58-54ac-4a43-b5f7-91f468fd49b8"
-            },
-            "contestId": "7d86ced0-23d7-45ac-89b9-4aeae42b2e43",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-20",
-            "dateLocal": "2026-11-20T19:00:00",
-            "dateUtc": "2026-11-21T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Santa Clara",
-              "name": "Santa Clara",
-              "result": null,
-              "score": null,
-              "slug": "santa-clara",
-              "teamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T17:22:31",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/irvington-fremont-vs-santa-clara/11-20-2026/?c=7d86ced0-23d7-45ac-89b9-4aeae42b2e43",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Santa Clara High School"
-            }
-          },
-          "ref": "7d86ced0-23d7-45ac-89b9-4aeae42b2e43"
-        }
-      },
-      "id": "2026-11-20-name:irvington-at-santa-clara",
-      "published": [
-        {
-          "contestId": "7d86ced0-23d7-45ac-89b9-4aeae42b2e43"
         }
       ]
     },
@@ -2406,7 +1878,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-19T22:38:39.615Z",
+          "builtAt": "2026-11-20T15:18:20.478Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -2672,72 +2144,6 @@
       "published": [
         {
           "contestId": "f5263597-148e-46d8-90e2-bcb62e480940"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Oakland",
-              "name": "McClymonds",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "f7790f22-c556-48ae-ae8a-ccf938b68863"
-            },
-            "contestId": "1c7e30f6-8dd3-4472-b6e7-2376889e334a",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-25",
-            "dateLocal": "2026-11-25T19:30:00",
-            "dateUtc": "2026-11-26T03:30:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Branham",
-              "result": null,
-              "score": null,
-              "slug": "branham",
-              "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T18:06:28",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/branham-san-jose-vs-mcclymonds-oakland/11-25-2026/?c=1c7e30f6-8dd3-4472-b6e7-2376889e334a",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Branham  High School"
-            }
-          },
-          "ref": "1c7e30f6-8dd3-4472-b6e7-2376889e334a"
-        }
-      },
-      "id": "2026-11-25-name:mcclymonds-at-branham",
-      "published": [
-        {
-          "contestId": "1c7e30f6-8dd3-4472-b6e7-2376889e334a"
         }
       ]
     },
@@ -4388,6 +3794,72 @@
       "published": [
         {
           "contestId": "fe43de77-b242-4c40-ad60-bfcee4700ecc"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Gilroy",
+              "name": "Gilroy",
+              "result": null,
+              "score": null,
+              "slug": "gilroy",
+              "teamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3"
+            },
+            "contestId": "3889b2da-2e61-4954-907d-25b600444cf7",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-02",
+            "dateLocal": "2026-12-02T19:00:00",
+            "dateUtc": "2026-12-03T03:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Seaside",
+              "name": "Seaside",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "c8520624-627b-4936-a892-fdc7ccdefea7"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T01:18:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gilroy-vs-seaside/12-2-2026/?c=3889b2da-2e61-4954-907d-25b600444cf7",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "3889b2da-2e61-4954-907d-25b600444cf7"
+        }
+      },
+      "id": "2026-12-02-gilroy-at-name:seaside",
+      "published": [
+        {
+          "contestId": "3889b2da-2e61-4954-907d-25b600444cf7"
         }
       ]
     },
@@ -7102,6 +6574,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Atherton",
+              "name": "Menlo School",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+            },
+            "contestId": "ae6b4d7e-d82f-4209-a41b-b7ca514f2a6d",
+            "contestTypes": {
+              "away": 2,
+              "home": 2
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-08",
+            "dateLocal": "2026-12-08T17:30:00",
+            "dateUtc": "2026-12-09T01:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Leigh",
+              "result": null,
+              "score": null,
+              "slug": "leigh",
+              "teamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T05:50:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "neutral",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-menlo-school-atherton/12-8-2026/?c=ae6b4d7e-d82f-4209-a41b-b7ca514f2a6d",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Los Gatos Wildcat Shootout"
+            }
+          },
+          "ref": "ae6b4d7e-d82f-4209-a41b-b7ca514f2a6d"
+        }
+      },
+      "id": "2026-12-08-name:menloschool-at-leigh",
+      "published": [
+        {
+          "contestId": "ae6b4d7e-d82f-4209-a41b-b7ca514f2a6d"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Yerba Buena",
               "result": null,
@@ -9389,7 +8927,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098599?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-valley-christian-san-jose/12-15-2026/?c=53c6c574-ba03-4e9b-988d-18ecd5337588",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam56670c624f?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -11699,7 +11237,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098601?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-leland-san-jose/12-21-2026/?c=8d4ed055-298b-4f0e-93a9-dc950a78aa14",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam49e96b6a4d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -13085,7 +12623,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098602?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-salinas/12-28-2026/?c=912c99b9-9150-4b1f-a8e2-74d540efeb7b",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam240bb0b477?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -13481,7 +13019,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098603?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-university-prep-academy-san-jose/12-29-2026/?c=51295338-6621-4be3-acb3-09195c05c948",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamdc16d6d316?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -15032,7 +14570,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098604?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/christopher-gilroy-vs-leigh-san-jose/1-6-2027/?c=cca74bec-0e7d-4d4f-8ae9-312f690814d5",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam0754b673a6?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -16410,7 +15948,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:35:29",
+              "maxprepsModifiedOn": "2026-11-20T00:02:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18832,7 +18370,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098605?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/evergreen-valley-san-jose-vs-leigh-san-jose/1-13-2027/?c=8ba1c682-e63e-42d8-a61a-60cbdf08ab3a",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam9591243ce5?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -25164,7 +24702,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098606?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-santa-teresa-san-jose/1-22-2027/?c=0c25f0c7-f586-4ecc-b7eb-398602ba5287",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/game62ef15c12?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -27334,7 +26872,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098607?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-westmont-campbell/1-27-2027/?c=4f892d1e-b838-47b5-933f-4859be7ec767",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam3782f26918?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -29693,7 +29231,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098608?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-pioneer-san-jose/2-1-2027/?c=380c16d6-bc81-4bbf-8c77-5b809ddfead7",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gamf8f333ffd2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
@@ -35200,7 +34738,7 @@
             "site": "home",
             "status": "scheduled",
             "urls": {
-              "goFan": null,
+              "goFan": "https://gofan.co/event/7098609?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/leigh-san-jose-vs-willow-glen-san-jose/2-10-2027/?c=c0870159-c34d-45e7-a0b9-10e8f7113de8",
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam956af70690?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
