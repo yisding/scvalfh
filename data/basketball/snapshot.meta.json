@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "f111db72f2bcde2fc49c1295d9e5c7fc3cede82ba8b0e04e6ad04aa194b0cf32",
+  "contentHash": "d7b7766d1d85cade06656c14c59287cdfbd83ceac6cf09a6cf8f06f3fac887f9",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 288,
+        "finals": 0,
+        "games": 283,
         "leagueGames": 125,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
-        "finals": 3,
-        "games": 202,
+        "finals": 1,
+        "games": 198,
         "leagueGames": 96,
         "teams": 15
       }
     },
-    "finals": 3,
-    "games": 450,
+    "finals": 1,
+    "games": 444,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 12,
+    "pending": 8,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-20T15:18:20.478Z",
+  "fetchedAt": "2026-11-20T22:13:53.243Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -251,7 +251,7 @@
     },
     {
       "label": "westmont schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -286,7 +286,7 @@
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -416,7 +416,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 778,
+      "rowCount": 802,
       "status": "ok"
     },
     {
