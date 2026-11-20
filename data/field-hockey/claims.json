@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-19T21:54:49.873Z",
+  "fetchedAt": "2026-11-20T13:47:49.275Z",
   "fixtures": [
     {
       "claims": {
@@ -11796,7 +11796,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6541425"
                   },
-                  "fetchedAt": "2026-11-19T21:54:49.873Z",
+                  "fetchedAt": "2026-11-20T13:47:49.275Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -47882,7 +47882,7 @@
       "id": "2026-10-13-cupertino-at-homestead",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-13-cupertino-at-homestead"
         }
       ]
@@ -50167,7 +50167,7 @@
                     "rule": "absent-fixture",
                     "sbliveGameId": "6543418"
                   },
-                  "fetchedAt": "2026-11-19T21:54:49.873Z",
+                  "fetchedAt": "2026-11-20T13:47:49.275Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -56691,7 +56691,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-28T06:02:13",
+              "maxprepsModifiedOn": "2026-11-20T10:40:29",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -62726,7 +62726,7 @@
                     "sbliveGameId": "6906776"
                   },
                   "contentChangedAt": "2026-10-27T10:08:16.816Z",
-                  "fetchedAt": "2026-11-19T21:54:49.873Z",
+                  "fetchedAt": "2026-11-20T13:47:49.275Z",
                   "schedule": "sblive",
                   "scores": "sblive"
                 },
@@ -64104,7 +64104,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-30T18:09:51",
+              "maxprepsModifiedOn": "2026-11-20T10:32:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -66564,7 +66564,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-30T18:09:52",
+              "maxprepsModifiedOn": "2026-11-20T10:35:25",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -67090,7 +67090,7 @@
       "id": "2026-10-29-newport-harbor-at-edison",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-29-newport-harbor-at-edison"
         }
       ]
@@ -68712,7 +68712,7 @@
       "id": "2026-10-30-valley-center-at-poway",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-30-valley-center-at-poway"
         }
       ]
@@ -68745,7 +68745,7 @@
       "id": "2026-10-31-bella-vista-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-31-bella-vista-at-davis"
         }
       ]
@@ -68778,7 +68778,7 @@
       "id": "2026-10-31-bella-vista-at-lassen",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-31-bella-vista-at-lassen"
         }
       ]
@@ -68877,7 +68877,7 @@
       "id": "2026-10-31-chico-at-davis",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-31-chico-at-davis"
         }
       ]
@@ -68999,7 +68999,7 @@
       "id": "2026-10-31-corning-at-chico",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-31-corning-at-chico"
         }
       ]
@@ -69031,7 +69031,7 @@
       "id": "2026-10-31-lassen-at-corning",
       "published": [
         {
-          "builtAt": "2026-11-19T21:54:49.873Z",
+          "builtAt": "2026-11-20T13:47:49.275Z",
           "contestId": "official:2026-10-31-lassen-at-corning"
         }
       ]
@@ -69460,7 +69460,7 @@
           "published": {
             "contestId": "cifsds:mira-mesa-at-san-pasqual",
             "dateLocal": "2026-11-04T18:00:00",
-            "fetchedAt": "2026-11-19T21:54:49.873Z"
+            "fetchedAt": "2026-11-20T13:47:49.275Z"
           },
           "ref": "division-2:mira-mesa~san-pasqual",
           "result": {
@@ -70146,34 +70146,75 @@
       ]
     },
     {
+      "aliases": [
+        "2026-11-06-rancho-bernardo-at-san-dieguito-academy~2"
+      ],
       "claims": {
-        "sdsSheet": {
-          "host": "san-dieguito-academy",
-          "published": {
-            "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
-            "dateLocal": "2026-11-06T17:00:00",
-            "fetchedAt": "2026-11-19T21:54:49.873Z"
-          },
-          "ref": "division-1:rancho-bernardo~san-dieguito-academy",
-          "result": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "San Diego",
+              "name": "Rancho Bernardo",
+              "result": "L",
+              "score": 0,
+              "slug": "rancho-bernardo",
+              "teamId": "132d806e-7fa4-4bce-b92a-9db38786cf7b"
+            },
+            "contestId": "efbaf3d1-7c7d-47b2-8beb-41fd8e115d3f",
+            "contestTypes": {
+              "away": 4,
+              "home": 4
+            },
+            "countsFor": null,
             "dateKey": "2026-11-06",
-            "division": "division-1",
-            "loser": "rancho-bernardo",
-            "loserGoals": 0,
+            "dateLocal": "2026-11-06T19:00:00",
+            "dateUtc": "2026-11-07T03:00:00Z",
+            "decider": "REG",
+            "forfeitBy": null,
+            "home": {
+              "city": "Encinitas",
+              "name": "San Dieguito Academy",
+              "result": "W",
+              "score": 3,
+              "slug": "san-dieguito-academy",
+              "teamId": "a7064567-f2fe-442d-8200-34a28326d1b9"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
             "otPeriods": 0,
-            "scoreText": "3-0",
-            "shootout": false,
-            "time": "17:00",
-            "venue": null,
-            "winner": "san-dieguito-academy",
-            "winnerGoals": 3
-          }
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T01:00:55",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "final",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/rancho-bernardo-san-diego-vs-san-dieguito-academy-encinitas/11-6-2026/?c=efbaf3d1-7c7d-47b2-8beb-41fd8e115d3f",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": null
+            }
+          },
+          "ref": "efbaf3d1-7c7d-47b2-8beb-41fd8e115d3f"
         }
       },
       "id": "2026-11-06-rancho-bernardo-at-san-dieguito-academy",
       "published": [
         {
-          "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy"
+          "contestId": "cifsds:rancho-bernardo-at-san-dieguito-academy",
+          "seenAt": "2026-11-19T21:54:49.873Z"
+        },
+        {
+          "contestId": "efbaf3d1-7c7d-47b2-8beb-41fd8e115d3f"
         }
       ]
     },
@@ -70971,7 +71012,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-07T20:15:33",
+              "maxprepsModifiedOn": "2026-11-20T10:36:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
