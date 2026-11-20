@@ -7,28 +7,28 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "2823db820d5e10bcc7cdf275f0d59c908dac5846f8e8b345b590ce60f693a9f3",
+  "contentHash": "d9275f8aef7e60cbbaa152b9632926c50a13237cea2c00b7282ef92444126c61",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 0,
-        "games": 231,
-        "leagueGames": 161,
+        "finals": 1,
+        "games": 233,
+        "leagueGames": 162,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 0,
         "games": 158,
-        "leagueGames": 86,
+        "leagueGames": 87,
         "teams": 15
       },
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 80,
-        "leagueGames": 22,
+        "games": 83,
+        "leagueGames": 25,
         "teams": 13
       },
       "wcal": {
@@ -39,15 +39,15 @@
         "teams": 6
       }
     },
-    "finals": 0,
-    "games": 463,
-    "leagueGames": 287,
+    "finals": 1,
+    "games": 468,
+    "leagueGames": 292,
     "mismatches": 0,
-    "pending": 1,
+    "pending": 4,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-19T22:24:01.512Z",
+  "fetchedAt": "2026-11-20T14:18:14.552Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -86,7 +86,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 53,
+  "officialFixturesUnmatched": 51,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 77,
@@ -156,7 +156,7 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -191,7 +191,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -306,7 +306,7 @@
     },
     {
       "label": "oak-grove schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -316,7 +316,7 @@
     },
     {
       "label": "silver-creek schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -336,7 +336,7 @@
     },
     {
       "label": "gunderson schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -471,22 +471,22 @@
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 3,
+      "rowCount": 4,
       "status": "ok"
     },
     {
       "label": "kings-academy schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "menlo schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 5,
+      "rowCount": 6,
       "status": "ok"
     },
     {
@@ -506,7 +506,7 @@
     },
     {
       "label": "harker schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -521,7 +521,7 @@
     },
     {
       "label": "pinewood schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -531,12 +531,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 1,
+      "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 23,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -546,17 +546,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 6,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 232,
+      "rowCount": 274,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 27,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -570,8 +570,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-19",
-  "warnings": 31,
+  "today": "2026-11-20",
+  "warnings": 29,
   "window": {
     "firstGame": "2026-11-18T17:30:00",
     "lastGame": "2027-02-17T18:30:00",
