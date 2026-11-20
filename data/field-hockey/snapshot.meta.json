@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "74e9fee9d4d3356bf69308b690979458fff99e9bcac6333b62c218c9e9b9917a",
+  "contentHash": "dc71f779d193d44793b73ae82233edfd726d6af703f8c4cb7041fbba5c19fafb",
   "counts": {
     "byLeague": {
       "bval": {
@@ -95,7 +95,7 @@
     "conflicts": 2,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-20T13:47:49.275Z",
+  "fetchedAt": "2026-11-20T21:37:07.352Z",
   "leagues": [
     {
       "backfilled": 0,
