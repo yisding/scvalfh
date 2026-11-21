@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "17f114057dffed182728a215795000091be981089f9dbe2368bd1f395dc45912",
+  "contentHash": "b2b21535b1f7d292f4f30707cf2addb511da5547b35e3d7cab37235926c292b3",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,15 +19,15 @@
       },
       "pal": {
         "backfilled": 0,
-        "finals": 1,
-        "games": 146,
-        "leagueGames": 94,
+        "finals": 2,
+        "games": 150,
+        "leagueGames": 96,
         "teams": 16
       },
       "sccal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 76,
+        "games": 77,
         "leagueGames": 29,
         "teams": 6
       },
@@ -40,9 +40,9 @@
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 0,
-        "games": 86,
-        "leagueGames": 27,
+        "finals": 1,
+        "games": 88,
+        "leagueGames": 28,
         "teams": 13
       },
       "wcal": {
@@ -53,21 +53,21 @@
         "teams": 6
       }
     },
-    "finals": 4,
-    "games": 645,
-    "leagueGames": 422,
+    "finals": 5,
+    "games": 651,
+    "leagueGames": 425,
     "mismatches": 4,
-    "pending": 5,
+    "pending": 4,
     "teams": 82
   },
   "crossCheck": {
     "agreements": 1,
     "backfilled": 2,
-    "compared": 50,
+    "compared": 40,
     "conflicts": 0,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-21T16:37:39.451Z",
+  "fetchedAt": "2026-11-21T20:39:02.500Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 27
+    "sblive": 26
   },
   "sources": [
     {
@@ -519,12 +519,12 @@
     },
     {
       "label": "menlo schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
       "label": "notre-dame-belmont schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
@@ -534,7 +534,7 @@
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
@@ -604,7 +604,7 @@
     },
     {
       "label": "hillsdale schedule",
-      "rowCount": 16,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -614,7 +614,7 @@
     },
     {
       "label": "sequoia schedule",
-      "rowCount": 15,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -644,7 +644,7 @@
     },
     {
       "label": "mills schedule",
-      "rowCount": 12,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -704,7 +704,7 @@
     },
     {
       "label": "soquel schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -825,11 +825,6 @@
     {
       "label": "sblive scoreboard 2026-11-20",
       "rowCount": 24,
-      "status": "ok"
-    },
-    {
-      "label": "sblive hillsdale games",
-      "rowCount": 13,
       "status": "ok"
     },
     {

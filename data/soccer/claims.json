@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T16:37:39.451Z",
+  "fetchedAt": "2026-11-21T20:39:02.500Z",
   "fixtures": [
     {
       "claims": {
@@ -448,7 +448,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T00:43:11",
+              "maxprepsModifiedOn": "2026-11-21T19:29:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -672,8 +672,8 @@
             "away": {
               "city": "Burlingame",
               "name": "Mercy Burlingame",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 0,
               "slug": "mercy-burlingame",
               "teamId": "5303348f-35e0-4054-aaa0-0cb11cce3b79"
             },
@@ -686,13 +686,13 @@
             "dateKey": "2026-11-20",
             "dateLocal": "2026-11-20T18:30:00",
             "dateUtc": "2026-11-21T02:30:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Mateo",
               "name": "Hillsdale",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 4,
               "slug": "hillsdale",
               "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
             },
@@ -705,13 +705,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T09:57:20",
+              "maxprepsModifiedOn": "2026-11-21T20:14:44",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-mercy-burlingame/11-20-2026/?c=62658c50-7380-4750-b454-95f3920583d2",
@@ -1000,6 +1000,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Mateo",
+              "name": "Hillsdale",
+              "result": null,
+              "score": null,
+              "slug": "hillsdale",
+              "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
+            },
+            "contestId": "f8738b4a-28e7-4355-b9f1-31c6b0e0df4f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-11-24",
+            "dateLocal": "2026-11-24T16:30:00",
+            "dateUtc": "2026-11-25T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Millbrae",
+              "name": "Mills",
+              "result": null,
+              "score": null,
+              "slug": "mills",
+              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T10:58:43",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-mills-millbrae/11-24-2026/?c=f8738b4a-28e7-4355-b9f1-31c6b0e0df4f",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/mills-high-school-millbrae-ca/gam6c9888cb88?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Mills High School"
+            }
+          },
+          "ref": "f8738b4a-28e7-4355-b9f1-31c6b0e0df4f"
+        }
+      },
+      "id": "2026-11-24-hillsdale-at-mills",
+      "published": [
+        {
+          "contestId": "f8738b4a-28e7-4355-b9f1-31c6b0e0df4f"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Burlingame",
               "name": "Mercy Burlingame",
               "result": null,
@@ -1101,7 +1167,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T00:06:12",
+              "maxprepsModifiedOn": "2026-11-21T19:29:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1114,7 +1180,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gam1b38158ddb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "San Mateo High School"
             }
           },
           "ref": "7e44d244-0d86-457a-bd06-711b25452171"
@@ -3213,7 +3279,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-07T08:33:23",
+              "maxprepsModifiedOn": "2026-11-21T19:29:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3226,7 +3292,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Mountain View High School-Mountain View"
             }
           },
           "ref": "69be74bb-f7e5-4dc8-8f00-dc0d07a5d194"
@@ -6935,7 +7001,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T19:17:08",
+              "maxprepsModifiedOn": "2026-11-21T20:28:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -7859,7 +7925,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T05:03:04",
+              "maxprepsModifiedOn": "2026-11-21T19:29:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -7872,7 +7938,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Pioneer High"
             }
           },
           "ref": "b2806191-de17-4619-997f-16850544ce7e"
@@ -9833,7 +9899,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T15:03:19",
+              "maxprepsModifiedOn": "2026-11-21T19:29:20",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11045,7 +11111,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T23:03:23",
+              "maxprepsModifiedOn": "2026-11-21T19:29:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12034,8 +12100,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-12-10",
-            "dateLocal": "2026-12-10T16:00:00",
-            "dateUtc": "2026-12-11T00:00:00Z",
+            "dateLocal": "2026-12-10T16:30:00",
+            "dateUtc": "2026-12-11T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -12055,7 +12121,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-24T04:57:49",
+              "maxprepsModifiedOn": "2026-11-21T19:29:49",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12068,7 +12134,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Burlingame High School"
             }
           },
           "ref": "36033fe3-e89c-48d9-98f8-b3a249be97dc"
@@ -12870,6 +12936,72 @@
       "published": [
         {
           "contestId": "3d9b90d0-c3de-483e-b13f-f4f7709b3465"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Soquel",
+              "name": "Soquel",
+              "result": null,
+              "score": null,
+              "slug": "soquel",
+              "teamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a"
+            },
+            "contestId": "711988d0-27a7-4c60-8d91-ae36b4fc019f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-12",
+            "dateLocal": "2026-12-12T10:00:00",
+            "dateUtc": "2026-12-12T18:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Sacred Heart Prep",
+              "result": null,
+              "score": null,
+              "slug": "sacred-heart-prep",
+              "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T12:28:21",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/sacred-heart-prep-atherton-vs-soquel/12-12-2026/?c=711988d0-27a7-4c60-8d91-ae36b4fc019f",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sacred-heart-preparatory-atherton-ca/gama420a327da?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Sacred Heart Prep"
+            }
+          },
+          "ref": "711988d0-27a7-4c60-8d91-ae36b4fc019f"
+        }
+      },
+      "id": "2026-12-12-soquel-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "711988d0-27a7-4c60-8d91-ae36b4fc019f"
         }
       ]
     },
@@ -14121,7 +14253,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-29T17:01:06",
+              "maxprepsModifiedOn": "2026-11-21T19:30:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -14134,7 +14266,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Saint Francis HS - Mountain View"
             }
           },
           "ref": "67cf6445-2614-43b5-a207-b129bcf3b1b6"
@@ -15315,6 +15447,72 @@
       "published": [
         {
           "contestId": "60f65627-2446-40df-8061-64a6bca640a9"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Redwood City",
+              "name": "Sequoia",
+              "result": null,
+              "score": null,
+              "slug": "sequoia",
+              "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
+            },
+            "contestId": "116098cc-cdda-44f0-b68c-9896800c76af",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-17",
+            "dateLocal": "2026-12-17T17:00:00",
+            "dateUtc": "2026-12-18T01:00:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Walnut Creek",
+              "name": "Las Lomas",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "a34f251c-c120-40b8-b1ef-d17d0e8baa69"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T11:29:48",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/las-lomas-walnut-creek-vs-sequoia-redwood-city/12-17-2026/?c=116098cc-cdda-44f0-b68c-9896800c76af",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Las Lomas HS"
+            }
+          },
+          "ref": "116098cc-cdda-44f0-b68c-9896800c76af"
+        }
+      },
+      "id": "2026-12-17-sequoia-at-name:laslomas",
+      "published": [
+        {
+          "contestId": "116098cc-cdda-44f0-b68c-9896800c76af"
         }
       ]
     },
@@ -17861,7 +18059,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T19:30:16",
+              "maxprepsModifiedOn": "2026-11-21T20:28:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18409,8 +18607,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-05",
-            "dateLocal": "2027-01-05T16:00:00",
-            "dateUtc": "2027-01-06T00:00:00Z",
+            "dateLocal": "2027-01-05T16:30:00",
+            "dateUtc": "2027-01-06T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -18430,7 +18628,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T22:01:38",
+              "maxprepsModifiedOn": "2026-11-21T19:29:38",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18443,7 +18641,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gam49f6d3f82c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Woodside High School"
             }
           },
           "ref": "fbf1544a-abf8-44ff-adf5-65fd1c52fb47"
@@ -20765,7 +20963,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T13:29:45",
+              "maxprepsModifiedOn": "2026-11-21T18:58:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20942,8 +21140,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-07",
-            "dateLocal": "2027-01-07T16:00:00",
-            "dateUtc": "2027-01-08T00:00:00Z",
+            "dateLocal": "2027-01-07T16:30:00",
+            "dateUtc": "2027-01-08T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -20963,7 +21161,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T22:02:18",
+              "maxprepsModifiedOn": "2026-11-21T19:29:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -20976,7 +21174,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Hillsdale High School"
             }
           },
           "ref": "a97ece53-309f-49cc-8771-3aa2f4d2a2e0"
@@ -21830,7 +22028,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-05T11:01:11",
+              "maxprepsModifiedOn": "2026-11-21T19:29:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -21843,7 +22041,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam32210e24e7?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Sequoia HS"
             }
           },
           "ref": "39457ae5-a460-462d-92b6-c8b3959c48d6"
@@ -23093,7 +23291,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T19:29:37",
+              "maxprepsModifiedOn": "2026-11-21T20:28:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27052,7 +27250,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:36",
+              "maxprepsModifiedOn": "2026-11-21T19:29:35",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27547,7 +27745,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:31:46",
+              "maxprepsModifiedOn": "2026-11-21T19:30:09",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -31590,7 +31788,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:53",
+              "maxprepsModifiedOn": "2026-11-21T19:29:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -32729,6 +32927,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Redwood City",
+              "name": "Sequoia",
+              "result": null,
+              "score": null,
+              "slug": "sequoia",
+              "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
+            },
+            "contestId": "ed317d02-5b2a-471b-ab5f-f8e0537d9e8e",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-23",
+            "dateLocal": "2027-01-23T16:30:00",
+            "dateUtc": "2027-01-24T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Mateo",
+              "name": "Hillsdale",
+              "result": null,
+              "score": null,
+              "slug": "hillsdale",
+              "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "bay",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T11:29:28",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-sequoia-redwood-city/1-23-2027/?c=ed317d02-5b2a-471b-ab5f-f8e0537d9e8e",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Hillsdale High School"
+            }
+          },
+          "ref": "ed317d02-5b2a-471b-ab5f-f8e0537d9e8e"
+        }
+      },
+      "id": "2027-01-23-sequoia-at-hillsdale",
+      "published": [
+        {
+          "contestId": "ed317d02-5b2a-471b-ab5f-f8e0537d9e8e"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Hillsborough",
               "name": "Crystal Springs Uplands",
               "result": null,
@@ -33081,8 +33345,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-26",
-            "dateLocal": "2027-01-26T16:00:00",
-            "dateUtc": "2027-01-27T00:00:00Z",
+            "dateLocal": "2027-01-26T16:30:00",
+            "dateUtc": "2027-01-27T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -33102,7 +33366,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T22:06:05",
+              "maxprepsModifiedOn": "2026-11-21T19:29:24",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33115,7 +33379,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gama7db579021?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Woodside High School"
             }
           },
           "ref": "658b04b2-e5f6-47a0-9209-749c60d7b177"
@@ -33594,6 +33858,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Mateo",
+              "name": "Hillsdale",
+              "result": null,
+              "score": null,
+              "slug": "hillsdale",
+              "teamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6"
+            },
+            "contestId": "29f0c7a7-4967-49a3-8a7f-dd472748486b",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-26",
+            "dateLocal": "2027-01-26T16:30:00",
+            "dateUtc": "2027-01-27T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Redwood City",
+              "name": "Sequoia",
+              "result": null,
+              "score": null,
+              "slug": "sequoia",
+              "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "bay",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T11:30:00",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-sequoia-redwood-city/1-26-2027/?c=29f0c7a7-4967-49a3-8a7f-dd472748486b",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam400bc34115?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Sequoia HS"
+            }
+          },
+          "ref": "29f0c7a7-4967-49a3-8a7f-dd472748486b"
+        }
+      },
+      "id": "2027-01-26-hillsdale-at-sequoia",
+      "published": [
+        {
+          "contestId": "29f0c7a7-4967-49a3-8a7f-dd472748486b"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "James Lick",
               "result": null,
@@ -33728,7 +34058,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-19T08:55:59",
+              "maxprepsModifiedOn": "2026-11-21T18:58:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -33741,7 +34071,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Pioneer High"
             }
           },
           "ref": "51986528-1c40-4daa-adc6-f6b3f054ec77"
@@ -37288,8 +37618,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-28",
-            "dateLocal": "2027-01-28T16:00:00",
-            "dateUtc": "2027-01-29T00:00:00Z",
+            "dateLocal": "2027-01-28T16:30:00",
+            "dateUtc": "2027-01-29T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -37309,7 +37639,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T22:06:35",
+              "maxprepsModifiedOn": "2026-11-21T19:29:31",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -37322,7 +37652,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam46112436c8?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Sequoia HS"
             }
           },
           "ref": "4e1fa3e4-5b38-4903-bc4a-87c75c9dc45d"
@@ -39630,8 +39960,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-02-02",
-            "dateLocal": "2027-02-02T16:00:00",
-            "dateUtc": "2027-02-03T00:00:00Z",
+            "dateLocal": "2027-02-02T16:30:00",
+            "dateUtc": "2027-02-03T00:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -39651,7 +39981,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-23T22:07:06",
+              "maxprepsModifiedOn": "2026-11-21T19:29:21",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -39664,7 +39994,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gam00a5aec7d3?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Woodside High School"
             }
           },
           "ref": "7369a79c-9708-4a35-a0e6-9692cdee1d4e"
@@ -43296,7 +43626,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-07-05T11:04:04",
+              "maxprepsModifiedOn": "2026-11-21T19:29:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -43309,7 +43639,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Burlingame High School"
             }
           },
           "ref": "93dcef95-9e93-4234-b36c-f809b7f2b788"
@@ -48540,7 +48870,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T21:30:39",
+              "maxprepsModifiedOn": "2026-11-21T19:29:36",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -49430,6 +49760,72 @@
       "published": [
         {
           "contestId": "c3dfadfb-9c98-405b-b9ee-34f4922ab0cf"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "city": "Belmont",
+              "name": "Notre Dame Belmont",
+              "result": null,
+              "score": null,
+              "slug": "notre-dame-belmont",
+              "teamId": "6ffd5704-345e-4ec2-bfa4-0aff6800306b"
+            },
+            "contestId": "6c7e6eed-287e-4764-8afb-fd0d7859cd63",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-02-12",
+            "dateLocal": "2027-02-12T14:45:00",
+            "dateUtc": "2027-02-12T22:45:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Menlo School",
+              "result": null,
+              "score": null,
+              "slug": "menlo",
+              "teamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T08:58:24",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/menlo-school-atherton-vs-notre-dame-belmont/2-12-2027/?c=6c7e6eed-287e-4764-8afb-fd0d7859cd63",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Menlo School  DO NOT USE"
+            }
+          },
+          "ref": "6c7e6eed-287e-4764-8afb-fd0d7859cd63"
+        }
+      },
+      "id": "2027-02-12-notre-dame-belmont-at-menlo",
+      "published": [
+        {
+          "contestId": "6c7e6eed-287e-4764-8afb-fd0d7859cd63"
         }
       ]
     },

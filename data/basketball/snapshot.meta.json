@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "dad037b7786ba36fa2cb0b569b53dceb5d46552ca4809795efbd801e394262d5",
+  "contentHash": "e9b1f8353680a1c1a75113d18ef1de7f1e40f45ead2021c6252c5bfc52e29681",
   "counts": {
     "byLeague": {
       "bval": {
@@ -20,7 +20,7 @@
       "pal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 221,
+        "games": 217,
         "leagueGames": 106,
         "teams": 16
       },
@@ -41,33 +41,33 @@
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 121,
+        "games": 120,
         "leagueGames": 39,
         "teams": 8
       },
       "wcal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 112,
+        "games": 111,
         "leagueGames": 56,
         "teams": 8
       }
     },
     "finals": 4,
-    "games": 878,
+    "games": 875,
     "leagueGames": 447,
     "mismatches": 1,
-    "pending": 15,
+    "pending": 14,
     "teams": 79
   },
   "crossCheck": {
     "agreements": 4,
     "backfilled": 0,
-    "compared": 81,
+    "compared": 60,
     "conflicts": 0,
     "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-11-21T17:48:06.023Z",
+  "fetchedAt": "2026-11-21T20:52:34.419Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 102,
     "official": 6,
-    "sblive": 39
+    "sblive": 38
   },
   "sources": [
     {
@@ -329,7 +329,7 @@
     },
     {
       "label": "branham schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -723,7 +723,7 @@
       "status": "ok"
     },
     {
-      "label": "sblive 2263-pal-bay scoreboard 2026-11-17",
+      "label": "sblive 2263-pal-bay scoreboard 2026-11-16",
       "rowCount": 0,
       "status": "ok"
     },
@@ -739,12 +739,7 @@
     },
     {
       "label": "sblive 2263-pal-bay scoreboard 2026-11-21",
-      "rowCount": 4,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2264-pal-ocean scoreboard 2026-11-17",
-      "rowCount": 0,
+      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -763,6 +758,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive 2282-scval-de-anza scoreboard 2026-11-16",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive 2282-scval-de-anza scoreboard 2026-11-17",
       "rowCount": 0,
       "status": "ok"
@@ -775,6 +775,11 @@
     {
       "label": "sblive 2282-scval-de-anza scoreboard 2026-11-21",
       "rowCount": 2,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 2283-scval-el-camino scoreboard 2026-11-16",
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -810,11 +815,6 @@
     {
       "label": "sblive 2326-wbal scoreboard 2026-11-18",
       "rowCount": 1,
-      "status": "ok"
-    },
-    {
-      "label": "sblive 2326-wbal scoreboard 2026-11-19",
-      "rowCount": 3,
       "status": "ok"
     },
     {
@@ -878,11 +878,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive burlingame games",
-      "rowCount": 22,
-      "status": "ok"
-    },
-    {
       "label": "sblive los-altos games",
       "rowCount": 30,
       "status": "ok"
@@ -919,12 +914,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 901,
+      "rowCount": 909,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 106,
+      "rowCount": 107,
       "status": "ok"
     },
     {
