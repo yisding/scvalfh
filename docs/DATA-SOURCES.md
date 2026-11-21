@@ -2152,9 +2152,13 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    traps, both handled: a league with no game on the date asked for is served its nearest earlier day with
    games, with a 200 (3913-scval-el-camino asked for 2026-11-18 served 2026-02-25, last season), so a page whose
    own `scoreboardDate.date` is not the one asked for gives no rows; and si.com renumbers leagues
-   (2579-scval-deanza now redirects to 3912-scval-de-anza), so a page for another slug is refused. A game a
-   league page lists that the statewide page already gave is read once. At most `SBLIVE_LEAGUE_SCOREBOARD_CAP`
-   (30) league pages a run, newest day first; the rest are logged as waiting. On 2026-11-21 they added 32 boys
+   (2579-scval-deanza now redirects to 3912-scval-de-anza), so a page for another slug, or one that names none,
+   is refused. Only a league with a game that day the statewide rows did not give is read (a game against a school
+   outside the registry always counts). A game both pages list is kept from both, and `cleanSbliveRows` keeps the
+   better row (scored and final over not). At most `SBLIVE_LEAGUE_SCOREBOARD_CAP` (30) league pages a run, newest
+   day first, and none after `SBLIVE_LEAGUE_SCOREBOARD_FAILURES` (3) fail; the rest are logged as waiting. A day is
+   newest for two or three runs, so its pages are read then, and a game still missing a score after that is a
+   team page's (§5.2 rule 8). On 2026-11-21 they added 32 boys
    basketball and 5 girls soccer games the statewide pages did not list. **[V]** 2026-11-21.
 
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with

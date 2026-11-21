@@ -55,7 +55,7 @@ import {
   type SbliveGame,
 } from '../../sources/sblive';
 import { getLeague } from '../../leagues';
-import { getTeamBySlug, teamsInLeague } from '../../teams';
+import { getTeamBySlug, teamsInLeague, unorderedPairKey } from '../../teams';
 import type { Game, LeagueId, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
 import {
   type ResourceKey,
@@ -82,6 +82,9 @@ interface Attempt {
  * soccer day statewide runs to ~80-110 games, against the page's 24.
  */
 export const SBLIVE_LEAGUE_SCOREBOARD_CAP = 30;
+
+/** League scoreboards that may fail in one run before the rest wait for a later one (a slow or failing si.com). */
+export const SBLIVE_LEAGUE_SCOREBOARD_FAILURES = 3;
 
 export interface LeagueScoreboardPage {
   /** Our league, whose `sblive.leagueSlugs` the page is one of. */
@@ -277,15 +280,21 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
     scoreboardRows.push(...res.games);
   }
 
-  // 1b. a day the statewide page cut short: the league scoreboards of our leagues that played that day, which list
-  // every game of their members (lib/sources/sblive.ts sbliveLeagueScoresUrl). A row already read is not added
-  // again. A page the corpus does not hold is left out of the sources (a live run never skips a page), so an
+  // 1b. a day the statewide page cut short: the league scoreboards of our leagues with a game that day the statewide
+  // rows did not give, which list every game of their members (lib/sources/sblive.ts sbliveLeagueScoresUrl). A page the corpus does not hold is left out of the sources (a live run never skips a page), so an
   // offline run over a corpus captured before these pages were read is the run it always was.
+  // Only the games the statewide rows did not already give (a pair of ours there near the date): a league page is
+  // for what the cut hid. A game against a school outside the registry has no pair to look for, so it counts.
+  const statewideCovers = scoreboardCoverage(scoreboardRows);
+  const hidden = (dateKey: string, a: TeamSlug | null, b: TeamSlug | null) =>
+    !(a && b && a !== b && statewideCovers(unorderedPairKey(a, b), dateKey));
   const leagueSides = [
-    ...games.map((g) => ({ dateKey: g.dateKey, slugs: [g.home.slug, g.away.slug] })),
-    ...unmatched.map((f) => {
+    ...games.filter((g) => hidden(g.dateKey, g.home.slug, g.away.slug)).map((g) => ({ dateKey: g.dateKey, slugs: [g.home.slug, g.away.slug] })),
+    ...unmatched.flatMap((f) => {
       const played = playedFixture(f, ctx.editor?.moves);
-      return { dateKey: played.dateKey, slugs: [played.homeSlug, played.awaySlug] };
+      return hidden(played.dateKey, played.homeSlug, played.awaySlug)
+        ? [{ dateKey: played.dateKey, slugs: [played.homeSlug, played.awaySlug] }]
+        : [];
     }),
   ];
   const leaguePlan = leagueScoreboardPlan(truncatedDays, leagueSides, ctx.leaguesInRun());
@@ -298,7 +307,16 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   const seenGames = new Set(scoreboardRows.map((g) => g.sbliveGameId));
   let leagueRead = 0;
   let leagueAdded = 0;
-  for (const page of leaguePlan.pages) {
+  let leagueFailed = 0;
+  for (const [i, page] of leaguePlan.pages.entries()) {
+    if (leagueFailed >= SBLIVE_LEAGUE_SCOREBOARD_FAILURES) {
+      const rest = leaguePlan.pages.slice(i);
+      ctx.log(
+        `  sblive: ${leagueFailed} league scoreboards failed; the other ${rest.length} wait for a later run: ` +
+          rest.map((p) => `${p.date} ${p.slug}`).join(', '),
+      );
+      break;
+    }
     const base: Omit<SourceStatus, 'status'> = {
       id: 'sblive',
       kind: 'sblive-scoreboard',
@@ -312,11 +330,14 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
     );
     if (res.attempt.outcome === 'skipped') continue;
     attempts.push(res.attempt);
+    if (res.attempt.outcome === 'error') leagueFailed += 1;
     if (res.attempt.outcome === 'ok') leagueRead += 1;
+    // Every row is kept, a game the statewide page gave too included: cleanSbliveRows keeps the better of the two
+    // (scored and final over not), so a score the league page has by now is never lost to an earlier unscored row.
     for (const g of res.games) {
+      scoreboardRows.push(g);
       if (seenGames.has(g.sbliveGameId)) continue;
       seenGames.add(g.sbliveGameId);
-      scoreboardRows.push(g);
       leagueAdded += 1;
     }
   }

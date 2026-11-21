@@ -616,8 +616,9 @@ export function parseLeagueScoresPage(
 ): SbliveGame[] {
   const props = LeagueScoreboardPropsSchema.parse(requireBlock(html, 'organizations/Scores', url));
   const org = props.query.organization;
-  if (org.slug && org.slug !== leagueSlug) {
-    throw new Error(`si.com league scoreboard is for ${org.slug}, not ${leagueSlug} (${url})`);
+  // Held to the slug it names, and a page that names none is no page of this league's either.
+  if (org.slug !== leagueSlug) {
+    throw new Error(`si.com league scoreboard is for ${org.slug ?? 'no league slug'}, not ${leagueSlug} (${url})`);
   }
   if (org.scoreboardDate.date !== date) return [];
   return scoreboardDayRows(org.scoreboardDate.games, url, warn).games.filter((g) => g.dateKey === date);

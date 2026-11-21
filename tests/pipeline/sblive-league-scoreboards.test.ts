@@ -9,11 +9,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { leagueScoreboardPlan, SBLIVE_LEAGUE_SCOREBOARD_CAP, stepSblive } from '../../lib/pipeline/steps/sblive';
+import { leagueScoreboardPlan, SBLIVE_LEAGUE_SCOREBOARD_CAP, SBLIVE_LEAGUE_SCOREBOARD_FAILURES, stepSblive } from '../../lib/pipeline/steps/sblive';
 import { stepOfficial } from '../../lib/pipeline/steps/official';
 import { getLeague } from '../../lib/leagues';
 import { parseLeagueScoresPage, parseScoresDay, sbliveLeagueScoresUrl } from '../../lib/sources/sblive';
 import { teamsInLeague } from '../../lib/teams';
+import type { SourceStatus } from '../../lib/types';
 import { corpusDir, REPO } from '../helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';
 
@@ -92,8 +93,11 @@ describe('parseLeagueScoresPage', () => {
     expect(parseLeagueScoresPage(html, '3912-scval-de-anza', '2026-12-08')).toHaveLength(4);
   });
 
-  it('refuses a page for another league than the one asked for (si.com renumbers leagues)', () => {
+  it('refuses a page for another league than the one asked for (si.com renumbers leagues), and one that names none', () => {
     expect(() => parseLeagueScoresPage(html, '3913-scval-el-camino', '2026-12-08')).toThrow(/is for 3912-scval-de-anza, not 3913-scval-el-camino/);
+    const noSlug = html.replace(/&quot;slug&quot;:&quot;3912-scval-de-anza&quot;/g, '&quot;slug&quot;:null');
+    expect(noSlug).not.toBe(html);
+    expect(() => parseLeagueScoresPage(noSlug, '3912-scval-de-anza', '2026-12-08')).toThrow(/is for no league slug, not 3912-scval-de-anza/);
   });
 
   it('refuses the statewide page, and the statewide parser refuses a league page', () => {
@@ -149,6 +153,58 @@ describe('a corpus run with a statewide day cut short', () => {
     expect(rows.map((r) => [r.label, r.status, r.rowCount])).toEqual([[`sblive ${deAnza} scoreboard ${DAY}`, 'ok', moved.length]]);
     expect(rows[0].url).toBe(sbliveLeagueScoresUrl(deAnza, DAY));
     expect(run.result?.logLines.some((l) => /lists \d+ of \d+ games/.test(l))).toBe(true);
+  });
+
+  /** The statewide page of DAY with `nodes` and the cut flag set; the league page of `leagueNodes` for `slug`. */
+  const pageWith = (keep: typeof nodes) =>
+    statewide.replace(PROPS_RE, () =>
+      `data-react-props="${escape(JSON.stringify({ ...props, query: { ...props.query, scoreboardDate: { ...props.query.scoreboardDate, games: { ...props.query.scoreboardDate.games, nodes: keep, totalCount: nodes.length + 10, pageInfo: { hasNextPage: true, endCursor: 'MjQ' } } } } }))}"`,
+    );
+  const leagueWith = (slug: string, leagueNodes: unknown[]) =>
+    block('organizations/Scores', { query: { organization: { slug, scoreboardDate: { date: DAY, games: { nodes: leagueNodes, pageInfo: { hasNextPage: false } } } } } });
+  const leagueRows = (snap: { sources: readonly SourceStatus[] }) =>
+    snap.sources.filter((r) => r.kind === 'sblive-scoreboard' && r.url.includes('/leagues/'));
+
+  it('reads no league page for a cut day whose games of ours the statewide rows all gave', async () => {
+    const variant = writeTempVariant({
+      [`sblive/scores/${DAY}`]: { rel: 'scores.html', body: pageWith(nodes) },
+      [`sblive/league-scores/${deAnza}/${DAY}`]: { rel: 'league.html', body: leaguePage },
+    });
+    const { snapshot } = await snapshotOf({ variants: [variant], steps: STEPS });
+    expect(leagueRows(snapshot)).toEqual([]);
+  });
+
+  it("keeps a league page's scored row over the statewide page's unscored one of the same game", async () => {
+    const base = await snapshotOf({ steps: STEPS });
+    // One SCVAL game stays on the cut statewide page, its scores blanked; the league page has them all, as read.
+    const [first, ...others] = moved as Array<{ id: string | number; gameTeams: Array<Record<string, unknown>> }>;
+    expect(first.gameTeams.some((t) => t.scoreText !== null)).toBe(true);
+    const blanked = { ...first, statusId: 1, gameTeams: first.gameTeams.map((t) => ({ ...t, scoreText: null, isWinner: false, isLoser: false })) };
+    expect(others.length).toBeGreaterThan(0);
+    const variant = writeTempVariant({
+      [`sblive/scores/${DAY}`]: { rel: 'scores.html', body: pageWith([...kept, blanked]) },
+      [`sblive/league-scores/${deAnza}/${DAY}`]: { rel: 'league.html', body: leagueWith(deAnza, moved) },
+    });
+    const { snapshot } = await snapshotOf({ variants: [variant], steps: STEPS });
+    expect(leagueRows(snapshot).map((r) => r.status)).toEqual(['ok']);
+    expect(snapshot.games).toEqual(base.snapshot.games);
+    expect(snapshot.sbliveCrossCheck?.compared).toBe(base.snapshot.sbliveCrossCheck?.compared);
+  });
+
+  it('stops reading league pages after three fail, and says the rest wait', async () => {
+    // Every registry game off the statewide page, so every league of ours that played plans its pages; all fail.
+    const ours = new Set(parseScoresDay(statewide).games.filter((g) => g.sides.some((x) => x.slug)).map((g) => g.sbliveGameId));
+    const failing: Record<string, number | { rel: string; body: string }> = {
+      [`sblive/scores/${DAY}`]: { rel: 'scores.html', body: pageWith(nodes.filter((n) => !ours.has(String(n.id)))) },
+    };
+    for (const l of ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']) {
+      for (const slug of getLeague(l).sblive.leagueSlugs) failing[`sblive/league-scores/${slug}/${DAY}`] = 500;
+    }
+    const { snapshot, run } = await snapshotOf({ variants: [writeTempVariant(failing)], steps: STEPS });
+    const rows = leagueRows(snapshot);
+    expect(rows).toHaveLength(SBLIVE_LEAGUE_SCOREBOARD_FAILURES);
+    for (const r of rows) expect(['error', 'stale']).toContain(r.status);
+    expect(run.result?.logLines.some((l) => /3 league scoreboards failed; the other \d+ wait for a later run/.test(l))).toBe(true);
   });
 
   it('without the league page the cut day costs those games, and nothing else changes', async () => {
