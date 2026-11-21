@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T06:57:44.264Z",
+  "fetchedAt": "2026-11-21T13:40:06.965Z",
   "fixtures": [
     {
       "claims": {
@@ -124,7 +124,66 @@
             }
           },
           "ref": "61a0c155-ede7-462f-8f7d-685be3d077fc"
-        }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "61a0c155-ede7-462f-8f7d-685be3d077fc",
+              "published": {
+                "away": {
+                  "result": "L",
+                  "score": 1
+                },
+                "backfill": {
+                  "maxpreps": null,
+                  "note": "MaxPreps lists this game without a score, so the score is si.com’s.",
+                  "rule": "score-pending",
+                  "sbliveGameId": "6831628"
+                },
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "result": "W",
+                  "score": 6
+                },
+                "isForfeit": false,
+                "isOt": false,
+                "otPeriods": 0,
+                "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/games/6831628-westmont-vs-los-altos"
+              },
+              "rule": "score-pending"
+            },
+            "ref": "6831628",
+            "row": {
+              "dateIso": "2026-11-18T17:30:00.000-08:00",
+              "dateKey": "2026-11-18",
+              "gameTypeLabel": "Scrimmage",
+              "isFinal": true,
+              "isScored": true,
+              "origin": "team-games",
+              "sbliveGameId": "6831628",
+              "sides": [
+                {
+                  "name": "Los Altos",
+                  "sbliveSchoolId": null,
+                  "sbliveTeamId": "366649",
+                  "score": 6,
+                  "slug": "los-altos",
+                  "via": "team-id"
+                },
+                {
+                  "name": "Westmont",
+                  "sbliveSchoolId": "10199",
+                  "sbliveTeamId": "363452",
+                  "score": 1,
+                  "slug": "westmont",
+                  "via": "team-id"
+                }
+              ],
+              "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6831628-westmont-vs-los-altos"
+            }
+          }
+        ]
       },
       "id": "2026-11-18-westmont-at-los-altos",
       "published": [
@@ -255,7 +314,26 @@
             }
           },
           "ref": "82a396dc-f7fe-4112-89e2-e07bf86339b2"
-        }
+        },
+        "sblive": [
+          {
+            "conflict": {
+              "contestId": "82a396dc-f7fe-4112-89e2-e07bf86339b2",
+              "published": {
+                "away": null,
+                "home": null
+              },
+              "scoreConflict": {
+                "note": "si.com reports Gunderson 5, Oakwood 0; MaxPreps has not published a score, so this game stays unreported. One side is not one of our teams.",
+                "sblive": {
+                  "away": 0,
+                  "home": 5
+                }
+              }
+            },
+            "ref": "contest:82a396dc-f7fe-4112-89e2-e07bf86339b2"
+          }
+        ]
       },
       "id": "2026-11-19-name:oakwood-at-gunderson",
       "published": [
@@ -453,7 +531,66 @@
             }
           },
           "ref": "2ae249ec-7c76-45da-bfab-09a182150236"
-        }
+        },
+        "sblive": [
+          {
+            "fill": {
+              "contestId": "2ae249ec-7c76-45da-bfab-09a182150236",
+              "published": {
+                "away": {
+                  "result": "W",
+                  "score": 9
+                },
+                "backfill": {
+                  "maxpreps": null,
+                  "note": "MaxPreps lists this game without a score, so the score is si.com’s.",
+                  "rule": "score-pending",
+                  "sbliveGameId": "6662900"
+                },
+                "decider": "REG",
+                "forfeitBy": null,
+                "home": {
+                  "result": "L",
+                  "score": 0
+                },
+                "isForfeit": false,
+                "isOt": false,
+                "otPeriods": 0,
+                "sbliveUrl": "https://www.si.com/high-school/stats/california/girls-soccer/games/6662900-yerba-buena-vs-ann-sobrato"
+              },
+              "rule": "score-pending"
+            },
+            "ref": "6662900",
+            "row": {
+              "dateIso": "2026-11-19T19:00:00.000-08:00",
+              "dateKey": "2026-11-19",
+              "gameTypeLabel": "League",
+              "isFinal": true,
+              "isScored": true,
+              "origin": "team-games",
+              "sbliveGameId": "6662900",
+              "sides": [
+                {
+                  "name": "Ann Sobrato",
+                  "sbliveSchoolId": "12138",
+                  "sbliveTeamId": "366616",
+                  "score": 0,
+                  "slug": "sobrato",
+                  "via": "team-id"
+                },
+                {
+                  "name": "Yerba Buena",
+                  "sbliveSchoolId": "10752",
+                  "sbliveTeamId": "364320",
+                  "score": 9,
+                  "slug": "yerba-buena",
+                  "via": "team-id"
+                }
+              ],
+              "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6662900-yerba-buena-vs-ann-sobrato"
+            }
+          }
+        ]
       },
       "id": "2026-11-19-yerba-buena-at-sobrato",
       "published": [
@@ -4000,7 +4137,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T19:29:28",
+              "maxprepsModifiedOn": "2026-11-21T08:46:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8308,7 +8445,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T19:36:47",
+              "maxprepsModifiedOn": "2026-11-21T07:11:39",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -9993,7 +10130,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T12:31:59",
+              "maxprepsModifiedOn": "2026-11-21T07:34:03",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -10521,7 +10658,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T19:29:43",
+              "maxprepsModifiedOn": "2026-11-21T08:46:40",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11205,7 +11342,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T20:32:57",
+              "maxprepsModifiedOn": "2026-11-21T07:34:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11271,7 +11408,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T20:32:31",
+              "maxprepsModifiedOn": "2026-11-21T07:34:17",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -13852,7 +13989,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T12:33:02",
+              "maxprepsModifiedOn": "2026-11-21T07:34:00",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -15650,7 +15787,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T20:32:28",
+              "maxprepsModifiedOn": "2026-11-21T07:34:08",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16465,6 +16602,71 @@
       "published": [
         {
           "contestId": "58d7e387-8e9d-40bb-b1ac-4a2c09b29e51"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
+              "name": "Non Varsity Opponent",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "4fc9dcd1-3d2c-4d0a-998e-4340bac0ac02"
+            },
+            "contestId": "e567b5a5-70fc-4093-8d33-1aaaebdcab2d",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-21",
+            "dateLocal": "2026-12-21T14:30:00",
+            "dateUtc": "2026-12-21T22:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Woodside",
+              "name": "Woodside",
+              "result": null,
+              "score": null,
+              "slug": "woodside",
+              "teamId": "a35649f4-23d3-4986-bf27-8b517521d021"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T23:34:12",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/non-varsity-opponent-intl-vs-woodside-ca/12-21-2026/?c=e567b5a5-70fc-4093-8d33-1aaaebdcab2d",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Woodside High School"
+            }
+          },
+          "ref": "e567b5a5-70fc-4093-8d33-1aaaebdcab2d"
+        }
+      },
+      "id": "2026-12-21-name:nonvarsityopponent-at-woodside",
+      "published": [
+        {
+          "contestId": "e567b5a5-70fc-4093-8d33-1aaaebdcab2d"
         }
       ]
     },
@@ -24255,6 +24457,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "Hillsborough",
+              "name": "Crystal Springs Uplands",
+              "result": null,
+              "score": null,
+              "slug": "crystal-springs",
+              "teamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939"
+            },
+            "contestId": "99809dd5-d877-4f53-bae0-77c63084e9bb",
+            "contestTypes": {
+              "away": 0,
+              "home": 0
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-14",
+            "dateLocal": "2027-01-14T15:30:00",
+            "dateUtc": "2027-01-14T23:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Atherton",
+              "name": "Sacred Heart Prep",
+              "result": null,
+              "score": null,
+              "slug": "sacred-heart-prep",
+              "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": true,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": "foothill",
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T10:29:25",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/crystal-springs-uplands-hillsborough-vs-sacred-heart-prep-atherton/1-14-2027/?c=99809dd5-d877-4f53-bae0-77c63084e9bb",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Sacred Heart Prep"
+            }
+          },
+          "ref": "99809dd5-d877-4f53-bae0-77c63084e9bb"
+        }
+      },
+      "id": "2027-01-14-crystal-springs-at-sacred-heart-prep",
+      "published": [
+        {
+          "contestId": "99809dd5-d877-4f53-bae0-77c63084e9bb"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "Evergreen Valley",
               "result": null,
@@ -24290,7 +24558,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T17:53:08",
+              "maxprepsModifiedOn": "2026-11-21T08:34:54",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -25965,7 +26233,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T22:59:49",
+              "maxprepsModifiedOn": "2026-11-21T08:34:57",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -26627,7 +26895,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-26T08:43:29",
+              "maxprepsModifiedOn": "2026-11-21T10:28:37",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -26640,7 +26908,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Murray Field"
             }
           },
           "ref": "296b3f35-0788-4534-a895-e3627d884446"
@@ -27324,8 +27592,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-19",
-            "dateLocal": "2027-01-19T18:00:00",
-            "dateUtc": "2027-01-20T02:00:00Z",
+            "dateLocal": "2027-01-19T17:00:00",
+            "dateUtc": "2027-01-20T01:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -27345,7 +27613,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-06T08:24:28",
+              "maxprepsModifiedOn": "2026-11-21T07:46:55",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -27358,7 +27626,7 @@
               "nfhsStream": null
             },
             "venue": {
-              "text": null
+              "text": "Lynbrook HS"
             }
           },
           "ref": "f8eb31d7-7e55-431e-bf0b-a98c74720296"
@@ -27601,7 +27869,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T02:29:24",
+              "maxprepsModifiedOn": "2026-11-21T10:28:52",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29571,8 +29839,8 @@
             },
             "countsFor": null,
             "dateKey": "2027-01-21",
-            "dateLocal": "2027-01-21T19:00:00",
-            "dateUtc": "2027-01-22T03:00:00Z",
+            "dateLocal": "2027-01-21T18:00:00",
+            "dateUtc": "2027-01-22T02:00:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -29592,7 +29860,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-08-06T14:08:14",
+              "maxprepsModifiedOn": "2026-11-21T07:47:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -29605,7 +29873,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/leigh-high-school-san-jose-ca/gam6443cb2484?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Leigh High School"
             }
           },
           "ref": "df37c9b4-692e-41c4-a2c0-c5f1f25a5018"

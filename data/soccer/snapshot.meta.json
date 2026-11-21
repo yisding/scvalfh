@@ -7,12 +7,12 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "db5a6408f1df33f627e8e148e70db6e69fe979732ae5471e05d542e86210894b",
+  "contentHash": "d77083950b417131786642def335c381aa09b9c0a20df198a7cc0a83965ff1ab",
   "counts": {
     "byLeague": {
       "bval": {
-        "backfilled": 0,
-        "finals": 1,
+        "backfilled": 2,
+        "finals": 3,
         "games": 238,
         "leagueGames": 167,
         "teams": 26
@@ -20,7 +20,7 @@
       "pal": {
         "backfilled": 0,
         "finals": 1,
-        "games": 145,
+        "games": 146,
         "leagueGames": 94,
         "teams": 16
       },
@@ -32,8 +32,8 @@
         "teams": 6
       },
       "scval": {
-        "backfilled": 0,
-        "finals": 0,
+        "backfilled": 1,
+        "finals": 1,
         "games": 158,
         "leagueGames": 87,
         "teams": 15
@@ -41,8 +41,8 @@
       "wbal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 85,
-        "leagueGames": 26,
+        "games": 86,
+        "leagueGames": 27,
         "teams": 13
       },
       "wcal": {
@@ -53,15 +53,21 @@
         "teams": 6
       }
     },
-    "finals": 2,
-    "games": 643,
-    "leagueGames": 421,
-    "mismatches": 0,
-    "pending": 7,
+    "finals": 4,
+    "games": 645,
+    "leagueGames": 422,
+    "mismatches": 4,
+    "pending": 5,
     "teams": 82
   },
-  "crossCheck": null,
-  "fetchedAt": "2026-11-21T06:57:44.264Z",
+  "crossCheck": {
+    "agreements": 1,
+    "backfilled": 2,
+    "compared": 66,
+    "conflicts": 0,
+    "sbliveOnlyScored": 1
+  },
+  "fetchedAt": "2026-11-21T13:40:06.965Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -123,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 0
+    "sblive": 8
   },
   "sources": [
     {
@@ -503,7 +509,7 @@
     },
     {
       "label": "crystal-springs schedule",
-      "rowCount": 4,
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -528,7 +534,7 @@
     },
     {
       "label": "sacred-heart-prep schedule",
-      "rowCount": 6,
+      "rowCount": 7,
       "status": "ok"
     },
     {
@@ -613,7 +619,7 @@
     },
     {
       "label": "woodside schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -702,13 +708,53 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-17",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-18",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-19",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-20",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive hillsdale games",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "sblive james-lick games",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "sblive los-altos games",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "sblive sobrato games",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
       "label": "cifsshome.org Central Coast Section field hockey",
       "rowCount": 2,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -718,12 +764,12 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 275,
+      "rowCount": 276,
       "status": "ok"
     },
     {
@@ -742,8 +788,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-20",
-  "warnings": 29,
+  "today": "2026-11-21",
+  "warnings": 33,
   "window": {
     "firstGame": "2026-11-17T17:00:00",
     "lastGame": "2027-02-17T18:30:00",
