@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T05:36:44.871Z",
+  "fetchedAt": "2026-11-21T06:07:36.955Z",
   "fixtures": [
     {
       "claims": {
@@ -1482,7 +1482,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T05:36:44.871Z",
+          "builtAt": "2026-11-21T06:07:36.955Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]

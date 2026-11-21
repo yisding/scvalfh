@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "21972e07a7debe1c0112e6b5538d3f0ca3c26979a8efb17c3f44cb4b66079702",
+  "contentHash": "518c7db32ea29e111d28d6fc20e61f212ebe2c5abac77a64626f2f3f716a1792",
   "counts": {
     "byLeague": {
       "bval": {
@@ -33,7 +33,7 @@
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-21T05:36:44.871Z",
+  "fetchedAt": "2026-11-21T06:07:36.955Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -416,7 +416,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 805,
+      "rowCount": 806,
       "status": "ok"
     },
     {
