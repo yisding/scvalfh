@@ -3,16 +3,19 @@
 # basketball. It fetches the snapshot (MaxPreps, the bundled official SCVAL and BVAL fixtures, the CCS calendar
 # and MaxPreps' CCS tournament page, with the CIF State bracket pages its teams' games name; si.com and the VNN school calendars are field hockey's sources, and the
 # cifsshome.org listing is too long to read for volleyball), then the player stats and the JV games, then the
-# varsity and JV rosters (weekly, on the Monday morning run), tests them, and commits
+# varsity and JV rosters (on every run), tests them, and commits
 # data/volleyball/snapshot.json, its meta file, data/volleyball/player-stats.json, data/volleyball/jv.json,
 # data/volleyball/rosters.json and data/volleyball/jv-rosters.json only where the CONTENT changed (the same
 # contentHash rule as update-data.yml).
 #
-# Schedule: 20 minutes after field hockey's refresh (6:20 and 14:20 UTC: 11:20 PM and 7:20 AM Pacific during
-# daylight time, when most of the season is played), in the fall season's months. A league night's varsity
-# match starts at 6:45 or 7:00 and can run five sets, so the evening run is an hour later than field hockey's.
+# Schedule: once a week, 20 minutes after field hockey's weekly refresh (14:20 UTC on Saturdays: 6:20 AM Pacific
+# during standard time), in the fall season's months (owner decision, 2026-11-21: with the CIF state finals of
+# Nov 20-21 played, the one run left is Sat Nov 28). In season it ran twice a day, at 6:20 and 14:20 UTC (11:20
+# PM and 7:20 AM Pacific during daylight time; a league night's varsity match starts at 6:45 or 7:00 and can run
+# five sets, so the evening run was an hour later than field hockey's), and a new season restores those crons.
 # The scripts' own guard is the volleyball season window (lib/league-config/volleyball/sections.ts: Aug 1 –
-# Dec 1 Pacific; lib/pipeline/steps/window.ts), so a run outside it writes nothing.
+# Dec 1 Pacific; lib/pipeline/steps/window.ts), so a run outside it writes nothing. December is out of the
+# cron's months: no Saturday is left in the window by then (Dec 5 is after Dec 1).
 #
 # All four refreshes share the `update-data` concurrency group, so they never push at the same time, and each
 # rebases before it pushes. The commit messages start "data: refresh volleyball", which deploy-cloudflare.yml
@@ -25,8 +28,7 @@ name: update-data-volleyball
 
 on:
   schedule:
-    - cron: '20 14 * 8-12 *'
-    - cron: '20 6 * 8-12 *'
+    - cron: '20 14 * 8-11 6'
   workflow_dispatch:
     inputs:
       force:
@@ -116,23 +118,14 @@ jobs:
       # them in the first weeks of the season and edit them rarely, and nothing else re-reads them, so without
       # this a roster posted after the site was set up would never appear. Each script leaves its file alone
       # when nothing but its stamps would change, and keeps a team's previous rows when its page fails.
-      # Weekly (owner decision, 2026-11-13): a scheduled run reads them only on the Monday morning run (the
-      # '20 14 * 8-12 *' cron on a Monday, Pacific), so a roster edit shows within a week; a manual run always reads them.
+      # Weekly (owner decision, 2026-11-13). The refresh itself is weekly now (2026-11-21), so every run reads them:
+      # the scheduled one (the Saturday '20 14 * 8-11 6' cron) and a manual one.
       - name: Fetch rosters
         id: rosters
         continue-on-error: true
         timeout-minutes: 10
-        env:
-          EVENT: ${{ github.event_name }}
-          SCHEDULE: ${{ github.event.schedule }}
         run: |
           set -uo pipefail
-          if [ "$EVENT" = schedule ]; then
-            if [ "$SCHEDULE" != '20 14 * 8-12 *' ] || [ "$(TZ=America/Los_Angeles date +%u)" != 1 ]; then
-              echo "rosters are read on the Monday morning run only; skipped"
-              exit 0
-            fi
-          fi
           # Each script exits 1 when any team's page failed (it still writes its file, keeping that team's
           # previous rows), so the JV pages are read whatever the varsity run said.
           rc=0

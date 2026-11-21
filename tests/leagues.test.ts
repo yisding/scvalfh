@@ -231,7 +231,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       name: 'San Diego Section', shortName: 'SDS', holdsFieldHockeyChampionship: true,
       maxprepsSectionId: 'bab8c451-e991-413d-93ac-ee77067952a3',
       officialUrl: 'https://www.cifsds.org/sports/fh/index',
-      seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
+      seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
       noChampionshipNote: null,
     });
   });
@@ -399,7 +399,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leaguePlayStarts('metro')).toBe('2026-09-28');
     for (const id of ['city', 'north-county', 'metro']) expect(leaguePlayEnds(id), id).toBe('2026-10-30');
     // The Northern, Southern and San Diego Sections' windows sit inside the union.
-    expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-21' });
+    expect(seasonWindowBounds()).toEqual({ start: '2026-08-01', end: '2026-11-28' });
   });
 
   it('sets the overtime rule, the order scope and the MCAL schedule-changes page', () => {

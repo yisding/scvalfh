@@ -545,16 +545,25 @@ describe('the volleyball refresh', () => {
     expect(stepBody(updateVolleyball, 'Fetch JV games')).toContain('--no-sblive');
   });
 
-  it('runs in the fall season’s months, after field hockey’s refresh', () => {
+  it('runs once a week in the fall season’s months, after field hockey’s refresh', () => {
+    // Owner decision, 2026-11-21: weekly, Saturday mornings, with the season over.
     const crons = [...updateVolleyball.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
-    expect(crons).toEqual(['20 14 * 8-12 *', '20 6 * 8-12 *']);
+    expect(crons).toEqual(['20 14 * 8-11 6']);
+  });
+
+  it('reads the roster pages on every run, the refresh being weekly itself', () => {
+    const body = stepBody(updateVolleyball, 'Fetch rosters');
+    expect(body).not.toContain('$SCHEDULE');
+    expect(body).toContain('pnpm fetch-rosters || rc=1');
+    expect(body).toContain('pnpm fetch-rosters --level jv || rc=1');
   });
 });
 
 describe('the roster pages are read weekly', () => {
   // Owner decision, 2026-11-13: one scheduled run a week reads the roster pages (the Monday morning run,
   // Pacific); a manual run always does. The gate names a cron, so it must name one the workflow has.
-  for (const [name, text] of [['soccer', updateSoccer], ['basketball', updateBasketball], ['volleyball', updateVolleyball]] as const) {
+  // (Volleyball's refresh is itself weekly since 2026-11-21, so it reads them on every run; see above.)
+  for (const [name, text] of [['soccer', updateSoccer], ['basketball', updateBasketball]] as const) {
     it(`${name}: only the Monday morning cron reads them, and that cron exists`, () => {
       const body = stepBody(text, 'Fetch rosters');
       const gate = body.match(/"\$SCHEDULE" != '([^']+)'/);
@@ -584,8 +593,8 @@ describe('the manual fetch inputs', () => {
 });
 
 describe('the field hockey refresh stops at the season window, before it installs anything', () => {
-  // Owner decision, 2026-11-14: the window ends a week after the last final (Nov 14), and a fire outside it
-  // costs no checkout, install or test run. The `window` job has none of the repo's code, so it carries the
+  // Owner decision, 2026-11-14: the window ends after the last final (Nov 14; extended on 2026-11-21 to Nov 28,
+  // for one weekly run), and a fire outside it costs no checkout, install or test run. The `window` job has none of the repo's code, so it carries the
   // two dates itself; this holds them to the sections' windows the scripts' own guard reads.
   // The job's only step, so its body ends where the next job starts.
   const gate = stepBody(update, 'Season window').split('\n  refresh:\n')[0];
@@ -629,9 +638,9 @@ describe('the field hockey refresh stops at the season window, before it install
 
   it('is in season on the window’s two ends and out of season the day before and the day after', () => {
     expect(runGate('2026-08-01')).toBe('in_season=true');
-    expect(runGate('2026-11-21')).toBe('in_season=true');
+    expect(runGate('2026-11-28')).toBe('in_season=true');
     expect(runGate('2026-07-31')).toBe('in_season=false');
-    expect(runGate('2026-11-22')).toBe('in_season=false');
+    expect(runGate('2026-11-29')).toBe('in_season=false');
   });
 
   it('runs out of season only when a manual run forces it, the input passed through env', () => {
@@ -647,12 +656,14 @@ describe('the field hockey refresh stops at the season window, before it install
     expect(windowJob).not.toMatch(/uses: |pnpm/);
   });
 
-  it('fires in no month the window never reaches: every in-window run is August to November in UTC', () => {
+  it('fires once a week, in no month the window never reaches: every in-window run is August to November in UTC', () => {
+    // Owner decision, 2026-11-21: weekly (Saturday mornings) with the season over.
     const crons = [...update.matchAll(/cron: '([^']+)'/g)].map((m) => m[1]);
-    expect(crons).toEqual(['0 14 * 8-11 *', '0 5 * 8-11 *']);
-    // The latest fire of the window's last Pacific day is the 05:00 UTC one, the next UTC day.
-    const lastFire = new Date(`${seasonWindowBounds().end}T05:00:00Z`);
-    lastFire.setUTCDate(lastFire.getUTCDate() + 1);
+    expect(crons).toEqual(['0 14 * 8-11 6']);
+    // The window's last Pacific day is a Saturday, and its 14:00 UTC fire is the same UTC day.
+    const { end } = seasonWindowBounds();
+    const lastFire = new Date(`${end}T14:00:00Z`);
+    expect(lastFire.getUTCDay()).toBe(6);
     expect(lastFire.getUTCMonth() + 1).toBeLessThanOrEqual(11);
   });
 });

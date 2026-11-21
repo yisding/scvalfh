@@ -129,10 +129,11 @@ const FIELD_HOCKEY_SECTIONS = [
     officialUrl: 'https://cifccs.org/sports/fh/index',
     rulesSource: { name: 'CCS Field Hockey Bylaws 2026-27', url: CCS_BYLAWS_URL, format: 'PDF' },
     shootout: null,
-    // The end is OUR choice, as for the San Diego Section: one week after the Nov 14 final, so a late score
-    // or box score still lands. It is also the latest end, so it is where the data refresh stops
+    // The end is OUR choice, as for the San Diego Section: two weeks after the Nov 14 final, so a late score
+    // or box score still lands on the one weekly refresh after the daily ones stopped (owner decision,
+    // 2026-11-21: the Nov 28 run). It is also the latest end, so it is where the data refresh stops
     // (seasonWindowBounds; .github/workflows/update-data.yml's SEASON_END is held to it).
-    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
+    seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote: null,
     outsideTournament: null,
   },
@@ -147,7 +148,7 @@ const FIELD_HOCKEY_SECTIONS = [
     shootout: null,
     // The end is OUR choice: the CCS and San Diego windows' end. MCAL's tournament is over in October, and
     // nothing in the North Coast Section is played after it.
-    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
+    seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
     outsideTournament: null,
@@ -225,8 +226,9 @@ const FIELD_HOCKEY_SECTIONS = [
       // are not covered, and seven SDS-v-SDS tournament games this season are recorded level (T and T).
       coversTournaments: false,
     },
-    // The start matches the other windows; the end is one week after the Nov 14 finals (OUR choice).
-    seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
+    // The start matches the other windows; the end is two weeks after the Nov 14 finals (OUR choice), the CCS
+    // window's end: the day of the one weekly refresh after the daily ones stopped.
+    seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote: null,
     outsideTournament: null,
   },
