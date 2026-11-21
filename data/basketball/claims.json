@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T07:38:43.097Z",
+  "fetchedAt": "2026-11-21T14:32:13.329Z",
   "fixtures": [
     {
       "claims": {
@@ -965,7 +965,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T07:07:19",
+              "maxprepsModifiedOn": "2026-11-21T08:33:50",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -1394,8 +1394,8 @@
             "away": {
               "city": "Aptos",
               "name": "Aptos",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 53,
               "slug": "aptos",
               "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
             },
@@ -1408,13 +1408,13 @@
             "dateKey": "2026-11-20",
             "dateLocal": "2026-11-20T18:00:00",
             "dateUtc": "2026-11-21T02:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "San Jose",
               "name": "Harker",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 36,
               "slug": "harker",
               "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
             },
@@ -1427,13 +1427,13 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T09:01:34",
+              "maxprepsModifiedOn": "2026-11-21T14:02:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aptos-vs-harker-san-jose/11-20-2026/?c=147eff2f-313e-4bad-88de-848c5f5fb24b",
@@ -3066,7 +3066,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T07:38:43.097Z",
+          "builtAt": "2026-11-21T14:32:13.329Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -9777,7 +9777,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T14:58:00",
+              "maxprepsModifiedOn": "2026-11-21T10:29:15",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16575,7 +16575,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T23:07:41",
+              "maxprepsModifiedOn": "2026-11-21T10:26:27",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
