@@ -286,8 +286,11 @@ registry holds is that soccer seed on its basketball page (`lib/registry/basketb
 is read by membership. /history/2025-26 marks the new leagues unavailable until their documents are transcribed
 (README, "PAL and SCCAL in the winter builds").
 
-Not done yet: a refit of the rating constants on a finished basketball season; the 2025-26 standings of the PAL, the
-WBAL (basketball) and the WCAL (basketball); the CCS Basketball Bylaws'
+The PAL's 2025-26 standings (both sports) and the WCAL's and the WBAL's boys basketball standings were transcribed on
+2026-11-21 (README, "PAL, WCAL and WBAL last season in the winter builds").
+
+Not done yet: a refit of the rating constants on a finished basketball season; the new leagues' 2025-26 all-league
+teams; the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
 basketball build.
 

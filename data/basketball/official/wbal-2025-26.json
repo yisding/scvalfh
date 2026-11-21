@@ -1,0 +1,124 @@
+{
+  "season": "2025-26",
+  "sport": "Boys Basketball",
+  "league": "wbal",
+  "publisher": "hs.wbalsports.org",
+  "retrievedOn": "2026-11-21",
+  "standings": {
+    "url": "https://hs.wbalsports.org/2025-2026/bbstb.html",
+    "kind": "page",
+    "index": "https://hs.wbalsports.org/history.html"
+  },
+  "allLeague": null,
+  "transcription": "Transcribed from the page's HTML, read 2026-11-21: each row as printed, and checked against the page row by row.",
+  "notes": [
+    "The page is \"2025-26 WBAL Boys Basketball Standings\", linked from hs.wbalsports.org/history.html: one varsity table and one JV table.",
+    "The page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (Menlo and Pinewood, both 4-6, 5th).",
+    "The JV table leaves both Crystal's and Harker's places blank, below Priory's 4th; both are 1-5, so both are stored as 5th, level.",
+    "The page prints games played, a W-L record, a win percentage and games back, and no overall record, so every overallRecord is null.",
+    "Eastside College Prep and Pinewood are in no JV table.",
+    "School spellings are the page's own (\"Crystal\"); `slug` is the join key. Only standings are stored: the WBAL's all-league teams are not transcribed."
+  ],
+  "formerMembers": [],
+  "joinedSince": [],
+  "schoolSpellings": {},
+  "divisions": [
+    {
+      "division": "wbal",
+      "standings": {
+        "varsity": [
+          {
+            "place": 1,
+            "name": "The King's Academy",
+            "league": "10-0",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "Priory",
+            "league": "8-2",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "Sacred Heart Prep",
+            "league": "6-4",
+            "overall": null
+          },
+          {
+            "place": 4,
+            "name": "Crystal",
+            "league": "5-5",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "Menlo",
+            "league": "4-6",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "Pinewood",
+            "league": "4-6",
+            "overall": null
+          },
+          {
+            "place": 7,
+            "name": "Eastside College Prep",
+            "league": "3-7",
+            "overall": null
+          },
+          {
+            "place": 8,
+            "name": "Harker",
+            "league": "0-10",
+            "overall": null
+          }
+        ],
+        "jv": [
+          {
+            "place": 1,
+            "name": "The King's Academy",
+            "league": "8-0",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "Menlo",
+            "league": "5-3",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "Sacred Heart Prep",
+            "league": "5-3",
+            "overall": null
+          },
+          {
+            "place": 4,
+            "name": "Priory",
+            "league": "2-6",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "Crystal",
+            "league": "1-5",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "Harker",
+            "league": "1-5",
+            "overall": null
+          }
+        ]
+      },
+      "awards": {
+        "varsity": null,
+        "jv": null
+      }
+    }
+  ]
+}

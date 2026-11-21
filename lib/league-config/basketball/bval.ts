@@ -110,8 +110,8 @@ export const BVAL_BASKETBALL_LEAGUE: LeagueConfig = {
       official: {
         source: 'bval-docx', mode: 'bundled', bundledFile: BUNDLE,
         scheduleUrl: doc(WV), revisionCheckUrl: download(WV),
-        bundledSha256: 'abaf8f4619b0191c93def7bc32499e7c3dcd692c74a61b78e853360686bb84c9',
-        revisedOn: '10/12/26',
+        bundledSha256: 'e15451db7e3957b7459935c6ed3abf817d2e93639f7c894857c21b1f63259174',
+        revisedOn: '11/16/26',
       },
       maxprepsTeamCount: 7, maxprepsMissing: ['mt-pleasant'],
       maxprepsExtraRows: { 'b5c6ef6d-8399-41f6-99b5-2b536ea2b71a': 'Oak Grove, an Almaden Valley team in BVAL’s alignment (MaxPreps’ “West Valley”, read 2026-11-13)' },
