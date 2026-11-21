@@ -41,8 +41,9 @@ export const SCVAL_BASKETBALL: LeagueConfig = {
     { label: 'SCVAL boys basketball De Anza schedule 2026-27 (PDF)', href: DA_SCHEDULE },
     { label: 'SCVAL boys basketball El Camino schedule 2026-27 (PDF)', href: EC_SCHEDULE },
   ],
-  // si.com is not read for basketball: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['2282-scval-de-anza', '2283-scval-el-camino'], backfill: true },
   // The grids name each school in capitals; "MTN. VIEW" is Mountain View (also a registry alias).
   officialCodes: {
     GUNN: 'gunn', HOMESTEAD: 'homestead', 'LOS GATOS': 'los-gatos', LYNBROOK: 'lynbrook',

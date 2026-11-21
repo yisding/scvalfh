@@ -36,8 +36,9 @@ export const BVAL_SOCCER_LEAGUE: LeagueConfig = {
     { label: 'BVAL girls soccer', href: BVAL_SOCCER },
     { label: 'BVAL Girls Soccer By-Laws (rev. 3/10/25)', href: BVAL_SOCCER_BYLAWS },
   ],
-  // si.com is not read for soccer: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership. si.com's BVAL girls soccer buckets are not this season's divisions.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['3758-bval-hamilton', '3759-bval-santa-teresa', '3760-bval-west-valley'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

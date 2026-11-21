@@ -17,7 +17,7 @@
  */
 
 import { SBLIVE_WEB, maxprepsJvTeamUrl } from '../season';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { bySport } from '../sports/current';
 import { TEAMS } from '../teams';
 import type { Team, TeamSlug } from '../types';
 
@@ -135,8 +135,128 @@ const FIELD_HOCKEY_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = 
   'thousand-oaks': '482332-thousand-oaks-lancers-jv',
 };
 
-/** This build's paths: field hockey's JV pages; none for soccer, whose build reads no si.com page. */
-export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = IS_FIELD_HOCKEY ? FIELD_HOCKEY_JV_SBLIVE_PATHS : {};
+/**
+ * Girls soccer: each team's si.com JV team, the Junior Varsity entry of `otherTeams` on its varsity games page
+ * (lib/registry/soccer/*.ts `sbliveSlug`), read 2026-11-21. Eastside has no JV team on si.com.
+ */
+const SOCCER_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
+  gunn: '367041-gunn-titans-jv',
+  homestead: '364704-homestead-mustangs-jv',
+  'los-altos': '366648-los-altos-eagles-jv',
+  'los-gatos': '366143-los-gatos-wildcats-jv',
+  'mountain-view': '366654-mountain-view-spartans-jv',
+  'palo-alto': '367047-palo-alto-vikings-jv',
+  'santa-clara': '368142-santa-clara-bruins-jv',
+  cupertino: '364694-cupertino-pioneers-jv',
+  fremont: '364699-fremont-firebirds-jv',
+  lynbrook: '364708-lynbrook-vikings-jv',
+  macdonald: '577853-macdonald-condor-jv',
+  milpitas: '366423-milpitas-trojans-jv',
+  'monta-vista': '364714-monta-vista-matadors-jv',
+  saratoga: '366148-saratoga-falcons-jv',
+  wilcox: '368137-wilcox-chargers-jv',
+  branham: '363437-branham-bruins-jv',
+  gilroy: '364857-gilroy-mustangs-jv',
+  leigh: '363444-leigh-longhorns-jv',
+  leland: '367929-leland-chargers-jv',
+  'piedmont-hills': '364308-piedmont-hills-pirates-jv',
+  pioneer: '367933-pioneer-mustangs-jv',
+  westmont: '363453-westmont-warriors-jv',
+  'willow-glen': '367942-willow-glen-rams-jv',
+  christopher: '486102-christopher-cougars-jv',
+  'evergreen-valley': '364284-evergreen-valley-cougars-jv',
+  lincoln: '367918-lincoln-lions-jv',
+  'live-oak': '366621-live-oak-acorns-jv',
+  'oak-grove': '364304-oak-grove-eagles-jv',
+  'santa-teresa': '364312-santa-teresa-saints-jv',
+  'silver-creek': '364317-silver-creek-raiders-jv',
+  sobrato: '366617-ann-sobrato-bulldogs-jv',
+  'andrew-hill': '364281-hill-falcons-jv',
+  'del-mar': '363441-del-mar-dons-jv',
+  gunderson: '367924-gunderson-grizzlies-jv',
+  independence: '364288-independence-76ers-jv',
+  'james-lick': '364292-james-lick-comets-jv',
+  'mt-pleasant': '364300-mt-pleasant-cardinals-jv',
+  overfelt: '400930-overfelt-royals-jv',
+  prospect: '363448-prospect-panthers-jv',
+  'san-jose': '367937-san-jose-bulldogs-jv',
+  'yerba-buena': '364321-yerba-buena-aztec-warriors-jv',
+  mitty: '400412-archbishop-mitty-monarchs-jv',
+  riordan: '496908-archbishop-riordan-crusaders-jv',
+  'sacred-heart-cathedral': '354478-sacred-heart-cathedral-preparatory-fightin-irish-jv',
+  'saint-francis': '359170-saint-francis-lancers-jv',
+  'st-ignatius': '354484-st-ignatius-wildcats-jv',
+  'valley-christian': '354753-valley-christian-warriors-jv',
+  castilleja: '354701-castilleja-gators-jv',
+  'crystal-springs': '488372-crystal-springs-uplands-gryphons-jv',
+  'kings-academy': '400761-kings-academy-knights-jv',
+  menlo: '354635-menlo-school-knights-jv',
+  'notre-dame-belmont': '361556-notre-dame-tigers-jv',
+  presentation: '359175-presentation-panthers-jv',
+  'sacred-heart-prep': '354500-sacred-heart-prep-gators-jv',
+  eastside: null,
+  harker: '354601-harker-eagles-jv',
+  'mercy-burlingame': '354497-mercy-crusaders-jv',
+  'notre-dame-san-jose': '359179-notre-dame-regents-jv',
+  pinewood: '400952-pinewood-panthers-jv',
+  priory: '555761-woodside-priory-panthers-jv',
+};
+
+/**
+ * Boys basketball: each team's si.com JV team, the Junior Varsity entry of `otherTeams` on its varsity games page
+ * (lib/registry/basketball/*.ts `sbliveSlug`), read 2026-11-21.
+ */
+const BASKETBALL_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
+  gunn: '158952-gunn-titans-jv',
+  homestead: '155794-homestead-mustangs-jv',
+  'los-gatos': '157693-los-gatos-wildcats-jv',
+  lynbrook: '155799-lynbrook-vikings-jv',
+  milpitas: '158120-milpitas-trojans-jv',
+  'mountain-view': '158429-mountain-view-spartans-jv',
+  'palo-alto': '158957-palo-alto-vikings-jv',
+  cupertino: '155784-cupertino-pioneers-jv',
+  fremont: '155789-fremont-firebirds-jv',
+  'los-altos': '158425-los-altos-eagles-jv',
+  macdonald: '577851-macdonald-condor-jv',
+  'monta-vista': '155804-monta-vista-matadors-jv',
+  'santa-clara': '160361-santa-clara-bruins-jv',
+  saratoga: '157698-saratoga-falcons-jv',
+  wilcox: '160355-wilcox-chargers-jv',
+  christopher: '485309-christopher-cougars-jv',
+  'evergreen-valley': '155188-evergreen-valley-cougars-jv',
+  leigh: '153966-leigh-longhorns-jv',
+  pioneer: '160112-pioneer-mustangs-jv',
+  'santa-teresa': '155225-santa-teresa-saints-jv',
+  westmont: '153976-westmont-warriors-jv',
+  'willow-glen': '160122-willow-glen-rams-jv',
+  branham: '153958-branham-bruins-jv',
+  independence: '155193-independence-76ers-jv',
+  leland: '160106-leland-chargers-jv',
+  'live-oak': '158384-live-oak-acorns-jv',
+  'silver-creek': '155230-silver-creek-raiders-jv',
+  sobrato: '158379-ann-sobrato-bulldogs-jv',
+  gilroy: '156012-gilroy-mustangs-jv',
+  lincoln: '160095-lincoln-lions-jv',
+  'oak-grove': '155214-oak-grove-eagles-jv',
+  overfelt: '207723-overfelt-royals-jv',
+  'piedmont-hills': '155219-piedmont-hills-pirates-jv',
+  prospect: '153970-prospect-panthers-jv',
+  'andrew-hill': '155183-hill-falcons-jv',
+  'del-mar': '153962-del-mar-dons-jv',
+  gunderson: '160102-gunderson-grizzlies-jv',
+  'james-lick': '155199-james-lick-comets-jv',
+  'mt-pleasant': '155210-mt-pleasant-cardinals-jv',
+  'san-jose': '160117-san-jose-bulldogs-jv',
+  'yerba-buena': '155236-yerba-buena-aztec-warriors-jv',
+};
+
+/** This build's paths: the sport's own JV pages (si.com team ids are per sport); none for volleyball, whose build reads no si.com page. */
+export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = bySport<Readonly<Record<TeamSlug, string | null>>>({
+  'field-hockey': FIELD_HOCKEY_JV_SBLIVE_PATHS,
+  soccer: SOCCER_JV_SBLIVE_PATHS,
+  basketball: BASKETBALL_JV_SBLIVE_PATHS,
+  volleyball: {},
+});
 
 /** The numeric si.com JV team id of a registry team, or null. */
 export function jvSbliveTeamId(slug: TeamSlug): string | null {

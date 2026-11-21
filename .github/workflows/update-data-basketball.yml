@@ -1,7 +1,7 @@
 # The boys basketball site's data refresh (SCVAL_SPORT=basketball; docs/MULTI-SPORT.md): update-data.yml's job
 # for data/basketball/, narrowed to what the basketball build reads, as update-data-soccer.yml is for soccer.
-# It fetches the snapshot (MaxPreps, the bundled official SCVAL fixtures, the CCS calendar and cifsshome.org;
-# si.com and the VNN school calendars are field hockey's sources), then the player stats and the JV games,
+# It fetches the snapshot (MaxPreps, the bundled official SCVAL fixtures, the CCS calendar, cifsshome.org and si.com's
+# boys basketball scores; the VNN school calendars are field hockey's), then the player stats and the JV games,
 # then the varsity and JV rosters (weekly, on the Monday morning run), tests them, and commits data/basketball/snapshot.json, its meta file,
 # data/basketball/player-stats.json, data/basketball/jv.json, data/basketball/rosters.json and data/basketball/jv-rosters.json only where the CONTENT changed (the same contentHash rule as update-data.yml).
 #
@@ -76,7 +76,7 @@ jobs:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
         run: |
           set -euo pipefail
-          args=(--no-sblive --no-vnn)
+          args=(--no-vnn)
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-data "${args[@]}"
 
@@ -93,7 +93,7 @@ jobs:
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-player-stats "${args[@]}"
 
-      # Never fatal either. MaxPreps' JV feeds only: the basketball build reads no si.com page. The JV games the
+      # Never fatal either. MaxPreps' JV feeds and each school's si.com JV team page (lib/jv/jv-teams.ts). The JV games the
       # league's own schedule lists are not in this file: the build adds them from the snapshot (lib/jv/jv-official.ts).
       - name: Fetch JV games
         id: jv
@@ -103,7 +103,7 @@ jobs:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
         run: |
           set -euo pipefail
-          args=(--no-sblive)
+          args=()
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-jv "${args[@]}"
 

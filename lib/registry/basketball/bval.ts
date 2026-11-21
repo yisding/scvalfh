@@ -21,7 +21,10 @@
  * MaxPreps' boys basketball standings (Mt. Pleasant's, in no table, from its girls soccer row), and `maxprepsPath`
  * is that row's `teamCanonicalUrl`. Abbrs are OURS.
  *
- * No si.com or VNN ids: the basketball build reads neither.
+ * si.com ids (`sbliveTeamId`, `sbliveSlug`, `sbliveSchoolId`): each read from the team's own si.com boys basketball games page
+ * (si.com/high-school/stats/california/basketball/teams/<id>-<slug>/games, 2026-11-21: name, mascot, city, Varsity, the school
+ * id in `team.school`), found through si.com's BVAL standings pages or its team search; never guessed.
+ * No VNN site ids (the school calendars are read for field hockey only).
  */
 
 import type { Seed } from '../seed';
@@ -44,6 +47,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/gilroy/christopher-cougars/basketball/',
+    sbliveTeamId: '156007',
+    sbliveSlug: '156007-christopher-cougars',
+    sbliveSchoolId: '11088',
     aliases: [
       'Christopher', 'CHRISTOPHER', 'Christopher Cougars', 'Christopher High School',
       'Christopher (Gilroy)',
@@ -65,6 +71,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['108073', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/evergreen-valley-cougars/basketball/',
+    sbliveTeamId: '155186',
+    sbliveSlug: '155186-evergreen-valley-cougars',
+    sbliveSchoolId: '10737',
     aliases: [
       'Evergreen Valley', 'EVERGREEN VALLEY', 'Evergreen V', 'Evergreen Valley Cougars',
       'Evergreen Valley High School',
@@ -86,6 +95,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/leigh-longhorns/basketball/',
+    sbliveTeamId: '153965',
+    sbliveSlug: '153965-leigh-longhorns',
+    sbliveSchoolId: '10197',
     aliases: [
       'Leigh', 'LEIGH', 'Leigh Longhorns', 'Leigh High School',
     ],
@@ -106,6 +118,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/pioneer-mustangs/basketball/',
+    sbliveTeamId: '160110',
+    sbliveSlug: '160110-pioneer-mustangs',
+    sbliveSchoolId: '12984',
     aliases: [
       'Pioneer', 'PIONEER', 'Pioneer Mustangs', 'Pioneer High School',
       'Pioneer (San Jose)',
@@ -127,6 +142,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'CC4E10'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/santa-teresa-saints/basketball/',
+    sbliveTeamId: '155223',
+    sbliveSlug: '155223-santa-teresa-saints',
+    sbliveSchoolId: '10749',
     aliases: [
       'Santa Teresa', 'SANTA TERESA', 'Santa Teresa Saints', 'Santa Teresa High School',
     ],
@@ -147,6 +165,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', 'CC0022'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/campbell/westmont-warriors/basketball/',
+    sbliveTeamId: '153975',
+    sbliveSlug: '153975-westmont-warriors',
+    sbliveSchoolId: '10199',
     aliases: [
       'Westmont', 'WESTMONT', 'Westmont Warriors', 'Westmont High School',
       'Westmont (Campbell)',
@@ -168,6 +189,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/willow-glen-rams/basketball/',
+    sbliveTeamId: '160121',
+    sbliveSlug: '160121-willow-glen-rams',
+    sbliveSchoolId: '12989',
     aliases: [
       'Willow Glen', 'WILLOW GLEN', 'Willow Glen Rams', 'Willow Glen High School',
     ],
@@ -189,6 +213,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', '046DFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/branham-bruins/basketball/',
+    sbliveTeamId: '153956',
+    sbliveSlug: '153956-branham-bruins',
+    sbliveSchoolId: '10194',
     aliases: [
       'Branham', 'BRANHAM', 'Branham Bruins', 'Branham High School',
     ],
@@ -209,6 +236,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/independence-76ers/basketball/',
+    sbliveTeamId: '155191',
+    sbliveSlug: '155191-independence-76ers',
+    sbliveSchoolId: '10739',
     aliases: [
       'Independence', 'INDEPENDENCE', 'Independence 76ers', 'Independence High School',
       'Independence (San Jose)',
@@ -230,6 +260,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['046DFF', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/leland-chargers/basketball/',
+    sbliveTeamId: '160105',
+    sbliveSlug: '160105-leland-chargers',
+    sbliveSchoolId: '12980',
     aliases: [
       'Leland', 'LELAND', 'Leland Chargers', 'Leland High School',
     ],
@@ -250,6 +283,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/morgan-hill/live-oak-acorns/basketball/',
+    sbliveTeamId: '158382',
+    sbliveSlug: '158382-live-oak-acorns',
+    sbliveSchoolId: '12140',
     aliases: [
       'Live Oak', 'LIVE OAK', 'Live Oak Acorns', 'Live Oak High School',
       'Live Oak (Morgan Hill)',
@@ -271,6 +307,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC4E10', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/silver-creek-raiders/basketball/',
+    sbliveTeamId: '155229',
+    sbliveSlug: '155229-silver-creek-raiders',
+    sbliveSchoolId: '10750',
     aliases: [
       'Silver Creek', 'SILVER CREEK', 'Silver Creek Raiders', 'Silver Creek High School',
     ],
@@ -291,6 +330,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['8F0018', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/morgan-hill/ann-sobrato-bulldogs/basketball/',
+    sbliveTeamId: '158378',
+    sbliveSlug: '158378-ann-sobrato-bulldogs',
+    sbliveSchoolId: '12138',
     aliases: [
       'Ann Sobrato', 'Sobrato', 'SOBRATO', 'ANN SOBRATO',
       'Ann Sobrato Bulldogs', 'Sobrato Bulldogs', 'Ann Sobrato High School', 'Sobrato High School',
@@ -313,6 +355,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/gilroy/gilroy-mustangs/basketball/',
+    sbliveTeamId: '156010',
+    sbliveSlug: '156010-gilroy-mustangs',
+    sbliveSchoolId: '11090',
     aliases: [
       'Gilroy', 'GILROY', 'Gilroy Mustangs', 'Gilroy High School',
     ],
@@ -333,6 +378,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/lincoln-lions/basketball/',
+    sbliveTeamId: '160094',
+    sbliveSlug: '160094-lincoln-lions',
+    sbliveSchoolId: '12974',
     aliases: [
       'Lincoln', 'LINCOLN', 'Lincoln Lions', 'Lincoln High School',
       'Lincoln (San Jose)', 'Abraham Lincoln',
@@ -354,6 +402,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/oak-grove-eagles/basketball/',
+    sbliveTeamId: '40881',
+    sbliveSlug: '40881-oak-grove-eagles',
+    sbliveSchoolId: '10744',
     aliases: [
       'Oak Grove', 'OAK GROVE', 'Oak Grove Eagles', 'Oak Grove High School',
     ],
@@ -374,6 +425,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/overfelt-overfelt-royals/basketball/',
+    sbliveTeamId: '207722',
+    sbliveSlug: '207722-overfelt-royals',
+    sbliveSchoolId: '31951',
     aliases: [
       'Overfelt', 'OVERFELT', 'Overfelt Royals', 'Overfelt High School',
       'William C. Overfelt',
@@ -395,6 +449,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['8F0018', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/piedmont-hills-pirates/basketball/',
+    sbliveTeamId: '155217',
+    sbliveSlug: '155217-piedmont-hills-pirates',
+    sbliveSchoolId: '10747',
     aliases: [
       'Piedmont Hills', 'PIEDMONT HILLS', 'Piedmont Hills Pirates', 'Piedmont Hills High School',
     ],
@@ -415,6 +472,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/saratoga/prospect-panthers/basketball/',
+    sbliveTeamId: '153971',
+    sbliveSlug: '153971-prospect-panthers',
+    sbliveSchoolId: '10198',
     aliases: [
       'Prospect', 'PROSPECT', 'Prospect Panthers', 'Prospect High School',
       'Prospect (Saratoga)',
@@ -437,6 +497,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['C8880A', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/hill-falcons/basketball/',
+    sbliveTeamId: '155181',
+    sbliveSlug: '155181-hill-falcons',
+    sbliveSchoolId: '10734',
     aliases: [
       'Andrew Hill', 'ANDREW HILL', 'Hill', 'Andrew P. Hill',
       'Hill Falcons', 'Andrew Hill Falcons', 'Andrew Hill High School', 'Andrew P. Hill High School',
@@ -458,6 +521,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/del-mar-dons/basketball/',
+    sbliveTeamId: '153961',
+    sbliveSlug: '153961-del-mar-dons',
+    sbliveSchoolId: '10196',
     aliases: [
       'Del Mar', 'DEL MAR', 'Del Mar Dons', 'Del Mar High School',
       'Del Mar (San Jose)',
@@ -479,6 +545,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['503604', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/gunderson-grizzlies/basketball/',
+    sbliveTeamId: '160100',
+    sbliveSlug: '160100-gunderson-grizzlies',
+    sbliveSchoolId: '12978',
     aliases: [
       'Gunderson', 'GUNDERSON', 'Gunderson Grizzlies', 'Gunderson High School',
     ],
@@ -499,6 +568,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/james-lick-comets/basketball/',
+    sbliveTeamId: '155197',
+    sbliveSlug: '155197-james-lick-comets',
+    sbliveSchoolId: '10740',
     aliases: [
       'James Lick', 'JAMES LICK', 'James Lick Comets', 'James Lick High School',
     ],
@@ -519,6 +591,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/mt-pleasant-cardinals/basketball/',
+    sbliveTeamId: '155208',
+    sbliveSlug: '155208-mt-pleasant-cardinals',
+    sbliveSchoolId: '10743',
     aliases: [
       'Mt. Pleasant', 'MT. PLEASANT', 'Mt Pleasant', 'Mount Pleasant',
       'Mt. Pleasant Cardinals', 'Mt. Pleasant High School', 'Mount Pleasant High School',
@@ -540,6 +615,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['8F0018', '737272'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/san-jose-bulldogs/basketball/',
+    sbliveTeamId: '160116',
+    sbliveSlug: '160116-san-jose-bulldogs',
+    sbliveSchoolId: '12987',
     aliases: [
       'San Jose', 'SAN JOSE', 'San Jose Bulldogs', 'San Jose High School',
       'San Jose High',
@@ -561,6 +639,9 @@ export const BVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', '00824B'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/yerba-buena-warriors/basketball/',
+    sbliveTeamId: '155234',
+    sbliveSlug: '155234-yerba-buena-aztec-warriors',
+    sbliveSchoolId: '10752',
     aliases: [
       'Yerba Buena', 'YERBA BUENA', 'Yerba Buena Warriors', 'Yerba Buena High School',
     ],

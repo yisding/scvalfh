@@ -21,7 +21,7 @@ export const VOLLEYBALL = {
    * si.com page (`sblive.backfill` is off in both leagues, and the JV fetch runs with --no-sblive), and no page
    * links to it.
    */
-  sblive: { slug: 'girls-volleyball' },
+  sblive: { slug: 'girls-volleyball', replacesZeroZeroTies: false },
   /**
    * [V] "Volleyball, Girls" = 13 in the cifsshome.org widget's Sport select ("Volleyball, Boys" = 11, "Beach
    * Volleyball, Girls" = 232), read 2026-11-14. The SCVAL schedules allow no contest before Aug 27 (first

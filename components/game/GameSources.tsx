@@ -178,8 +178,8 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const leagueGame = unscheduled ? 'a league game' : 'an official league game';
   // One string, so a page outside both cases renders the same markup as before.
   const crossCheck = !READS_SBLIVE
-    ? // A build that reads no si.com page (soccer, basketball: every league's `sblive.backfill` is off) has no
-      // second score to publish; its one cross-check is the Sections' own widget, listed on /about.
+    ? // A build that reads no si.com page (volleyball: every league's `sblive.backfill` is off) has no second
+      // score to publish; its one cross-check is the Sections' own widget, listed on /about.
       'Scores come from MaxPreps. They are compared with the scores schools enter on cifsshome.org, and every difference is listed on the About page; MaxPreps’ score is the one shown.'
     : `Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for ${leagueGame}, or its row is clearly wrong, we publish si.com\u2019s score and mark it; when both have a score and disagree, we publish MaxPreps\u2019 and show the disagreement rather than choosing quietly.` +
     (shootout?.shootout
