@@ -1823,7 +1823,8 @@ finals between registry teams in 2025-26 (114 with SCVAL alone) and 335 girls so
   (`tests/fixtures/official/source/bval-{basketball-boys,soccer-girls}-*.txt`) into
   `data/<sport>/official/bval-2026.json`: 144 boys basketball fixtures and 202 girls soccer ones, each with its
   varsity time and JV game from the document's game times or the game's own note ("4p/615p", "V 5p/JV 7p"). Soccer's
-  Gunderson has no JV team, so its games have no JV game. `tests/bval-winter-fixtures.test.ts` holds both bundles
+  Gunderson has no JV team, so its games have no JV game, nor has boys basketball's James Lick since the West Valley
+  schedule's revision of 11/16/26 (re-read 2026-11-21; it changed nothing else). `tests/bval-winter-fixtures.test.ts` holds both bundles
   to their texts.
 - **Last season**: BVAL publishes its standings as Google Sheets on bval.org/standings/. The owner gave the
   2025-26 girls soccer, boys basketball and girls volleyball sheets on 2026-11-16, and /history/2025-26 shows them
@@ -1884,9 +1885,9 @@ between two members of one division inside its league play (`classification: 'me
   `2326-wbal`, `2327-wcal`) and each team's games page; si.com's PAL tables are last season's, so they serve the id
   harvest only. si.com's team search adds El Camino and Jefferson (both sports) and Serra (basketball) to the
   statewide namesakes (`STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`), which resolve by id alone.
-- **Last season**: /history/2025-26 marks each new league unavailable (`notTranscribedYet` in
-  `scripts/build-history.ts`) and links what the league published: the PAL's and the WBAL's final standings and
-  the WCAL's archive are there to transcribe; the SCCAL publishes no standings.
+- **Last season**: /history/2025-26 has the PAL's 2025-26 standings (both sports) and the WCAL's and the WBAL's boys
+  basketball standings, varsity and JV, from each league's own documents (see "PAL, WCAL and WBAL last season in the
+  winter builds"). The SCCAL's card says it publishes no standings (`sccalNoStandings` in `scripts/build-history.ts`).
 - **Snapshots written before a league was added** load through `addConfiguredLeagues`
   (`lib/snapshot/snapshot-migrate.ts`), which now also takes the CCS berth table afresh from config, so the first
   refresh after this change carries the previous snapshot instead of starting from nothing.
@@ -1981,6 +1982,23 @@ SCVAL's entry, BVAL's marked unavailable (above), and in the soccer and volleyba
   and fails on any it cannot read. The documents are laid out differently from field hockey's (basketball names
   a third team, which the schema's optional `thirdTeam` holds), and the De Anza girls soccer PDF's text comes
   out of pdftotext with letters split from their words, so no parser reads them.
+
+### PAL, WCAL and WBAL last season in the winter builds
+
+Transcribed on 2026-11-21 into `data/{soccer,basketball}/official/pal-2025-26.json` and
+`data/basketball/official/{wcal,wbal}-2025-26.json`, and built by `scripts/lib/history-league-documents.ts`, as the
+soccer and volleyball WCAL and WBAL archives are (`tests/history-league-documents.test.ts` and
+`tests/history-basketball-leagues.test.ts`). Standings only, varsity and JV: no all-league teams.
+
+- **PAL**: the varsity and JV standings PDFs linked from pal.smcoe.org/standings ("2026 GIRLS VARSITY BAY SOCCER
+  STANDINGS", "2026 BOYS JV OCEAN BASKETBALL STANDINGS", …), kept with the PDFs' own ranks (which repeat for teams
+  ranked level) and uppercase names. The divisions are 2025-26's, and Oceana, an Ocean team then and in the PSAL now,
+  is kept by name with no slug: a transcription names such a school in `leftBuild`, and any other name that keys to
+  no team still fails the build.
+- **WCAL boys basketball**: the varsity and JV tables of its 2025-2026 standings archive (wcalsports.org/standings/),
+  League and Season columns; with no place column, a row's place is its order.
+- **WBAL boys basketball**: hs.wbalsports.org/2025-2026/bbstb.html, one varsity and one JV table; a blank place takes
+  the one above it, and the JV table's two blank places below 4th (Crystal and Harker, both 1-5) are both 5th.
 
 ### WCAL and WBAL last season
 

@@ -329,19 +329,360 @@
       "status": "available"
     },
     "pal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "PAL standings",
-          "url": "https://pal.smcoe.org/standings"
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "bay",
+          "label": "Bay",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "11-0-1",
+                "name": "MENLO-ATHERTON",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "menlo-atherton",
+                "t": 1,
+                "w": 11
+              },
+              {
+                "l": 1,
+                "leagueRecord": "8-1-3",
+                "name": "WOODSIDE",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "woodside",
+                "t": 3,
+                "w": 8
+              },
+              {
+                "l": 4,
+                "leagueRecord": "6-4-2",
+                "name": "CARLMONT",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "carlmont",
+                "t": 2,
+                "w": 6
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5-2",
+                "name": "SEQUOIA",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "sequoia",
+                "t": 2,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "1-4-7",
+                "name": "BURLINGAME",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "burlingame",
+                "t": 7,
+                "w": 1
+              },
+              {
+                "l": 8,
+                "leagueRecord": "2-8-2",
+                "name": "HILLSDALE",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "hillsdale",
+                "t": 2,
+                "w": 2
+              },
+              {
+                "l": 11,
+                "leagueRecord": "0-11-1",
+                "name": "ARAGON",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "aragon",
+                "t": 1,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 2,
+                "leagueRecord": "7-2-3",
+                "name": "CARLMONT",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "carlmont",
+                "t": 3,
+                "w": 7
+              },
+              {
+                "l": 3,
+                "leagueRecord": "7-3-2",
+                "name": "WOODSIDE",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "woodside",
+                "t": 2,
+                "w": 7
+              },
+              {
+                "l": 4,
+                "leagueRecord": "5-4-3",
+                "name": "MENLO-ATHERTON",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "menlo-atherton",
+                "t": 3,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "5-4-3",
+                "name": "SEQUOIA",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "sequoia",
+                "t": 3,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "4-4-4",
+                "name": "ARAGON",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "aragon",
+                "t": 4,
+                "w": 4
+              },
+              {
+                "l": 7,
+                "leagueRecord": "4-7-1",
+                "name": "BURLINGAME",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "burlingame",
+                "t": 1,
+                "w": 4
+              },
+              {
+                "l": 7,
+                "leagueRecord": "1-7-4",
+                "name": "HILLSDALE",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "hillsdale",
+                "t": 4,
+                "w": 1
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "ocean",
+          "label": "Ocean",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "5-0-0",
+                "name": "TERRA NOVA",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "terra-nova",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 1,
+                "leagueRecord": "4-1-0",
+                "name": "HALF MOON BAY",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "half-moon-bay",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 2,
+                "leagueRecord": "2-2-1",
+                "name": "CAPUCHINO",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "capuchino",
+                "t": 1,
+                "w": 2
+              },
+              {
+                "l": 2,
+                "leagueRecord": "1-2-2",
+                "name": "MILLS",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "mills",
+                "t": 2,
+                "w": 1
+              },
+              {
+                "l": 3,
+                "leagueRecord": "1-3-1",
+                "name": "SAN MATEO",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "san-mateo",
+                "t": 1,
+                "w": 1
+              },
+              {
+                "l": 5,
+                "leagueRecord": "0-5-0",
+                "name": "SOUTH SAN FRANCISCO",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "south-san-francisco",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "9-0-0",
+                "name": "TERRA NOVA",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "terra-nova",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 1,
+                "leagueRecord": "6-1-2",
+                "name": "SAN MATEO",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "san-mateo",
+                "t": 2,
+                "w": 6
+              },
+              {
+                "l": 1,
+                "leagueRecord": "6-1-2",
+                "name": "SOUTH SAN FRANCISCO",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "south-san-francisco",
+                "t": 2,
+                "w": 6
+              },
+              {
+                "l": 4,
+                "leagueRecord": "5-4-0",
+                "name": "MILLS",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "mills",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 4,
+                "leagueRecord": "4-4-1",
+                "name": "HALF MOON BAY",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "half-moon-bay",
+                "t": 1,
+                "w": 4
+              },
+              {
+                "l": 4,
+                "leagueRecord": "4-4-0",
+                "name": "OCEANA",
+                "overallRecord": null,
+                "place": 6,
+                "slug": null,
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 4,
+                "leagueRecord": "3-4-1",
+                "name": "CAPUCHINO",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "capuchino",
+                "t": 1,
+                "w": 3
+              },
+              {
+                "l": 6,
+                "leagueRecord": "3-6-0",
+                "name": "EL CAMINO",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "el-camino-ssf",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 8,
+                "leagueRecord": "0-8-1",
+                "name": "JEFFERSON",
+                "overallRecord": null,
+                "place": 9,
+                "slug": "jefferson",
+                "t": 1,
+                "w": 0
+              },
+              {
+                "l": 8,
+                "leagueRecord": "0-8-1",
+                "name": "WESTMOOR",
+                "overallRecord": null,
+                "place": 9,
+                "slug": "westmoor",
+                "t": 1,
+                "w": 0
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://pal.smcoe.org/standings (one PDF a sport and level, for the 2025-26 season)"
-      ],
-      "checkedOn": "2026-11-21",
       "league": "Peninsula Athletic League",
-      "reason": "The PAL publishes its final standings on pal.smcoe.org. This site added PAL girls soccer on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": null,
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the pdftotext -layout text of the two PDFs, read 2026-11-21: each row as printed, and checked against the PDFs row by row.",
+        "notes": [
+          "PAL girls soccer 2025-26, from pal.smcoe.org: the standings linked from https://pal.smcoe.org/standings. Rows are in the league's own order; nothing is recomputed.",
+          "The varsity tables are the PDF linked as \"Soccer - Girls VAR\" from pal.smcoe.org/standings (\"2026 GIRLS VARSITY BAY SOCCER STANDINGS\" and \"… OCEAN …\"); the JV tables are the one linked as \"Soccer - Girls JV\" (https://drive.google.com/file/d/11CUGRBH9_09UlWeGJM5946cM7hZjshwP/view).",
+          "Each table prints Rank, School, Win, Loss and Tie: no points and no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (3, 3, 5).",
+          "Division membership is 2025-26's: Aragon, Burlingame, Carlmont, Hillsdale, Menlo-Atherton, Sequoia and Woodside in the Bay; Capuchino, El Camino, Half Moon Bay, Jefferson, Mills, Oceana, San Mateo, South San Francisco, Terra Nova and Westmoor in the Ocean.",
+          "The JV Ocean table ranks Half Moon Bay (4-1-0) 1st beside Terra Nova (5-0-0); it is kept as printed.",
+          "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+          "The JV Ocean table lists six teams; El Camino, Jefferson, Oceana and Westmoor are in none.",
+          "Only standings are stored: the PAL's all-league teams are not transcribed."
+        ],
+        "publisher": "pal.smcoe.org",
+        "retrievedOn": "2026-11-21",
+        "source": "league-documents",
+        "standings": {
+          "kind": "pdf",
+          "url": "https://drive.google.com/file/d/12HHiVv9Ut7JBa7aC9DjSylGzJbMqyJ_G/view"
+        }
+      },
+      "status": "available"
     },
     "sccal": {
       "checked": [
