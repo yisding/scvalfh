@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T17:48:06.023Z",
+  "fetchedAt": "2026-11-21T20:52:34.419Z",
   "fixtures": [
     {
       "claims": {
@@ -270,72 +270,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "San Francisco",
-              "name": "Sacred Heart Cathedral",
-              "result": null,
-              "score": null,
-              "slug": "sacred-heart-cathedral",
-              "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
-            },
-            "contestId": "1d7f7e26-ef5d-4fab-8b71-aecee4440129",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Burlingame",
-              "name": "Burlingame",
-              "result": null,
-              "score": null,
-              "slug": "burlingame",
-              "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:57:53",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/burlingame-vs-sacred-heart-cathedral-preparatory-san-francisco/11-17-2026/?c=1d7f7e26-ef5d-4fab-8b71-aecee4440129",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Burlingame High School"
-            }
-          },
-          "ref": "1d7f7e26-ef5d-4fab-8b71-aecee4440129"
-        }
-      },
-      "id": "2026-11-17-sacred-heart-cathedral-at-burlingame",
-      "published": [
-        {
-          "contestId": "1d7f7e26-ef5d-4fab-8b71-aecee4440129"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Hillsborough",
               "name": "Crystal Springs Uplands",
               "result": null,
@@ -592,72 +526,6 @@
       "published": [
         {
           "contestId": "7640f42e-d185-481b-ab1f-5dc54c9d2f16"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Burlingame",
-              "name": "Burlingame",
-              "result": null,
-              "score": null,
-              "slug": "burlingame",
-              "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
-            },
-            "contestId": "f98e5630-9422-4fa5-9786-7dfd33357fc3",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Atherton",
-              "name": "Sacred Heart Prep",
-              "result": null,
-              "score": null,
-              "slug": "sacred-heart-prep",
-              "teamId": "27d82a51-2b44-492e-b2cf-114730027de3"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T09:00:11",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088797?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/burlingame-vs-sacred-heart-prep-atherton/11-19-2026/?c=f98e5630-9422-4fa5-9786-7dfd33357fc3",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/sacred-heart-preparatory-atherton-ca/gam4b13fc85b2?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Sacred Heart Prep"
-            }
-          },
-          "ref": "f98e5630-9422-4fa5-9786-7dfd33357fc3"
-        }
-      },
-      "id": "2026-11-19-burlingame-at-sacred-heart-prep",
-      "published": [
-        {
-          "contestId": "f98e5630-9422-4fa5-9786-7dfd33357fc3"
         }
       ]
     },
@@ -1260,72 +1128,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Burlingame",
-              "name": "Burlingame",
-              "result": null,
-              "score": null,
-              "slug": "burlingame",
-              "teamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc"
-            },
-            "contestId": "19a114e9-7dd1-4fde-8048-945a0eefe331",
-            "contestTypes": {
-              "away": 0,
-              "home": 0
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-21",
-            "dateLocal": "2026-11-21T13:30:00",
-            "dateUtc": "2026-11-21T21:30:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Half Moon Bay",
-              "name": "Half Moon Bay",
-              "result": null,
-              "score": null,
-              "slug": "half-moon-bay",
-              "teamId": "700a8b1d-c836-44f0-9b24-c255c186d926"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": true,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": "bay",
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T03:40:56",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/burlingame-vs-half-moon-bay/11-21-2026/?c=19a114e9-7dd1-4fde-8048-945a0eefe331",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Half Moon Bay District Event Center"
-            }
-          },
-          "ref": "19a114e9-7dd1-4fde-8048-945a0eefe331"
-        }
-      },
-      "id": "2026-11-21-burlingame-at-half-moon-bay",
-      "published": [
-        {
-          "contestId": "19a114e9-7dd1-4fde-8048-945a0eefe331"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Salinas",
               "name": "Palma",
               "result": null,
@@ -1367,7 +1169,7 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/palma-salinas-vs-saint-francis-mountain-view/11-21-2026/?c=8e5c7dfe-8df4-4b1d-b7ba-ccdf964c1e4b",
@@ -2198,8 +2000,8 @@
             },
             "countsFor": null,
             "dateKey": "2026-11-23",
-            "dateLocal": "2026-11-23T18:00:00",
-            "dateUtc": "2026-11-24T02:00:00Z",
+            "dateLocal": "2026-11-23T17:30:00",
+            "dateUtc": "2026-11-24T01:30:00Z",
             "decider": null,
             "forfeitBy": null,
             "home": {
@@ -2219,7 +2021,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-18T17:22:44",
+              "maxprepsModifiedOn": "2026-11-21T19:30:46",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -2232,7 +2034,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/prospect-high-school-saratoga-ca/gamf91a2c53ba?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": "note start time"
+              "text": "Prospect High School"
             }
           },
           "ref": "b0c91878-f470-42cb-9910-9a2776884326"
@@ -2802,7 +2604,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T17:48:06.023Z",
+          "builtAt": "2026-11-21T20:52:34.419Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -5893,7 +5695,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/basketball/game/san-mateo-vs-the-nueva-school-san-mateo/12-1-2026/?c=4569a075-3a23-4439-b7c9-4445da44dd92",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/san-mateo-high-school-san-mateo-ca/gam8f496db5bb?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+              "nfhsStream": null
             },
             "venue": {
               "text": null
@@ -11345,12 +11147,12 @@
             "decider": null,
             "forfeitBy": null,
             "home": {
-              "city": "Pacifica",
-              "name": "Terra Nova",
+              "city": "San Jose",
+              "name": "Branham",
               "result": null,
               "score": null,
-              "slug": "terra-nova",
-              "teamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34"
+              "slug": "branham",
+              "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97"
             },
             "isDateTba": false,
             "isForfeit": false,
@@ -11361,7 +11163,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-09-15T00:31:33",
+              "maxprepsModifiedOn": "2026-11-21T19:25:48",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -11370,7 +11172,7 @@
             "status": "scheduled",
             "urls": {
               "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/san-jose-vs-terra-nova-pacifica/12-7-2026/?c=9d88e22e-8c51-4141-a5ed-324bdff8ba7f",
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/branham-san-jose-vs-san-jose/12-7-2026/?c=9d88e22e-8c51-4141-a5ed-324bdff8ba7f",
               "nfhsStream": null
             },
             "venue": {
