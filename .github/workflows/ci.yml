@@ -75,17 +75,17 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
       # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -148,17 +148,17 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
       # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -202,17 +202,17 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
       # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -286,17 +286,17 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
       # corepack shims installed for the runner's default Node are not guaranteed to still be on
       # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -390,14 +390,14 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node (see the gates job).
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -457,14 +457,14 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node (see the gates job).
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -524,14 +524,14 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # pnpm BEFORE setup-node (see the gates job).
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm

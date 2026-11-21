@@ -31,6 +31,11 @@
  * throws on any sign of positional drift, which lands here as that same per-team failure — never
  * as a wrong grade beside a name.
  *
+ * One parse failure is not a failure: a page MaxPreps serves for another sport season (the team has no
+ * page for this one, so its URL falls through to one it has; Castilleja girls JV soccer, 2026-11) is read
+ * as 'empty' with a warning naming the season served. Only when this season's players were read before
+ * is it a failure as above, so a roster already published is never emptied by it.
+ *
  * The previous file is salvaged row by row (readPreviousFile): a row that no longer validates on
  * its own (a slug gone from the registry, a changed id or division, a broken status) is dropped
  * and named in the log, and that team alone has nothing to keep — pending when out of scope, which
@@ -54,7 +59,13 @@ import {
 } from './lib/team-scope';
 import { droppedTeams, loadPreviousOrFail, prepareCapture, validateAssembled, writeIfChanged } from './lib/team-file';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { jvRosterUrl, parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
+import {
+  OtherSeasonRosterError,
+  jvRosterUrl,
+  parseRosterPage,
+  pendingRoster,
+  rosterUrl,
+} from '../lib/sources/maxpreps-roster';
 import {
   RostersPartialSchema,
   RostersSchema,
@@ -223,11 +234,31 @@ export async function main(argv: readonly string[]): Promise<number> {
         };
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
+        const prior = previous?.rows.get(team.slug);
+        // MaxPreps served another season's page: the team has no page for this one, which is what an
+        // empty roster says. Not when this season's rows were read before: losing them is a failure.
+        if (err instanceof OtherSeasonRosterError && !(prior && prior.players.length > 0)) {
+          const warning =
+            `MaxPreps has no ${jv ? 'JV ' : ''}roster page for this season ` +
+            `(the URL serves sportSeasonId ${err.servedSportSeasonId})`;
+          console.warn(`WARN ${team.slug}: ${warning}`);
+          return {
+            ...base,
+            maxprepsTeamId: err.teamId,
+            status: 'empty',
+            athleteCount: 0,
+            staffCount: null,
+            players: [],
+            deletedRows: 0,
+            warnings: [warning],
+            fetchedAt,
+            error: null,
+          };
+        }
         console.warn(
           `WARN ${team.slug}: ${error}` +
             (dropped.has(team.slug) ? ' (its previous row was dropped: nothing to carry forward)' : ''),
         );
-        const prior = previous?.rows.get(team.slug);
         // Any row that was actually read (ok, empty, or itself carried forward) is still true: an
         // empty roster stays "MaxPreps lists no players", not "could not be read".
         if (prior && prior.status !== 'error' && prior.status !== 'pending') {

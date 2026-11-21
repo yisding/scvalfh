@@ -4,7 +4,7 @@
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
 
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -332,6 +332,63 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     expect(kept.error).toMatch(/ENOENT/);
     // Nothing to carry: still an error.
     expect(built.teams.find((t) => t.slug === never.slug)!.status).toBe('error');
+  });
+
+  describe("a page MaxPreps serves for another season (Castilleja girls JV soccer, 2026-11-16 on)", () => {
+    const team = teamsInLeague('scval').find((t) => t.slug === 'palo-alto')!;
+    /** The captures, with this team's page saying it is for another sport season. */
+    function otherSeasonFixtures(): string {
+      const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-other-season-'));
+      for (const f of readdirSync(FIXTURE_DIR).filter((n) => /^roster-.*\.html$/.test(n))) {
+        copyFileSync(path.join(FIXTURE_DIR, f), path.join(dir, f));
+      }
+      const file = path.join(dir, `roster-${team.slug}.html`);
+      const html = readFileSync(file, 'utf8').replace(
+        /(<script id="__NEXT_DATA__"[^>]*>)([\s\S]*?)(<\/script>)/,
+        (_m, open: string, body: string, close: string) => {
+          const data = JSON.parse(body) as { props: { pageProps: { countData: { sportSeasonId: string } } } };
+          data.props.pageProps.countData.sportSeasonId = 'another-season';
+          return `${open}${JSON.stringify(data)}${close}`;
+        },
+      );
+      writeFileSync(file, html, 'utf8');
+      return dir;
+    }
+    function runWith(previousRow: Rosters['teams'][number]) {
+      const out = tmpOut();
+      const previous = structuredClone(golden);
+      previous.teams[previous.teams.findIndex((t) => t.slug === team.slug)] = previousRow;
+      previous.counts = countRosters(previous.teams);
+      expect(RostersSchema.safeParse(previous).success).toBe(true);
+      writeFileSync(out, JSON.stringify(previous), 'utf8');
+      const res = runScript('scripts/fetch-rosters.ts', [
+        '--fixtures', otherSeasonFixtures(), '--leagues', 'scval', '--out', out, '--fetched-at', '2026-11-21T00:00:00.000Z',
+      ]);
+      const built = read(out);
+      expect(RostersSchema.safeParse(built).success).toBe(true);
+      return { res, row: built.teams.find((t) => t.slug === team.slug)! };
+    }
+
+    it('is an empty roster with a warning, not a failure, when nothing was read for this season', () => {
+      const { res, row } = runWith(pendingRoster(team));
+      expect(res.status, res.stdout + res.stderr).toBe(0);
+      expect(row.status).toBe('empty');
+      expect(row.players).toEqual([]);
+      expect(row.error).toBeNull();
+      expect(row.maxprepsTeamId).toBe(team.id);
+      expect(row.fetchedAt).toBe('2026-11-21T00:00:00.000Z');
+      expect(row.warnings).toEqual(['MaxPreps has no roster page for this season (the URL serves sportSeasonId another-season)']);
+    });
+
+    it("still fails, carrying this season's players forward, when they were read before", () => {
+      const before = golden.teams.find((t) => t.slug === team.slug)!;
+      expect(before.players.length).toBeGreaterThan(0);
+      const { res, row } = runWith(before);
+      expect(res.status).toBe(1);
+      expect(row.status).toBe('carried-forward');
+      expect(row.players).toEqual(before.players);
+      expect(row.error).toMatch(/sportSeasonId another-season, expected/);
+    });
   });
 
   it('leaves the file as it was when only fetchedAt (and failure text) would change', () => {

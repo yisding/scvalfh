@@ -239,6 +239,35 @@ const cell = (s: string): string | null => {
 };
 const urlPath = (u: string): string => u.replace(/^https?:\/\/[^/]+/i, '');
 
+/**
+ * The table's height cell against the player's heightFeet/heightInches. The table prints `5'7"`, but a
+ * whole number of feet comes out as `6'0` with no inch mark (Mitty girls soccer, 2026-11-21: Layla
+ * Tucakovic, heightFeet 6, heightInches 0), so the mark is optional when the inches are 0 and
+ * required otherwise; feet and inches must still agree exactly.
+ */
+export function sameHeight(cell: string | null, p: Pick<RosterPlayer, 'height' | 'heightInches'>): boolean {
+  if (cell === p.height) return true;
+  if (cell === null || p.heightInches === null || p.heightInches % 12 !== 0) return false;
+  return cell === `${p.heightInches / 12}'0`;
+}
+
+/**
+ * MaxPreps served a roster page for another sport season than the one asked for: the team has no page
+ * for this season, so the URL falls through to one it does have (Castilleja girls JV soccer, 2026-11-16 on:
+ * sportSeasonId f7cf4c8f-…, not this season's c586ce8b-…). The page's ids still name the right team.
+ */
+export class OtherSeasonRosterError extends MaxPrepsError {
+  readonly teamId: string;
+  readonly servedSportSeasonId: string;
+
+  constructor(message: string, opts: { url: string; teamId: string; servedSportSeasonId: string }) {
+    super(message, { url: opts.url });
+    this.name = 'OtherSeasonRosterError';
+    this.teamId = opts.teamId;
+    this.servedSportSeasonId = opts.servedSportSeasonId;
+  }
+}
+
 // ---------------------------------------------------------------- the rendered table
 
 /**
@@ -334,7 +363,11 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     fail(`page is for team ${teamId}, expected ${opts.expectedTeamId}`);
   }
   if (countData.sportSeasonId && countData.sportSeasonId !== sportSeasonId) {
-    fail(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`);
+    throw new OtherSeasonRosterError(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`, {
+      url,
+      teamId,
+      servedSportSeasonId: countData.sportSeasonId,
+    });
   }
 
   const warnings: string[] = [];
@@ -466,7 +499,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
       if (t!.jersey !== p.jersey) mismatch('jersey', p.jersey, t!.jersey);
       if (t!.gradeClass !== p.gradeClass) mismatch('grade', p.gradeClass, t!.gradeClass);
       if (t!.position !== p.position) mismatch('position', p.position, t!.position);
-      if (t!.height !== p.height) mismatch('height', p.height, t!.height);
+      if (!sameHeight(t!.height, p)) mismatch('height', p.height, t!.height);
       // The badge is the rendered form of isClaimed, so it pins that column too (absent in the 2026-10 layout).
       const isClaimed = claimedOf.get(p) ?? false;
       if (t!.claimed !== isClaimed) {
