@@ -19,6 +19,7 @@ import {
   getJvGamesOn,
   getJvSchoolSiteDiffersNote,
   getJvTeam,
+  jvGameHref,
 } from '../../lib/jv/jv';
 import { isOfficialJvContestId } from '../../lib/jv/jv-official';
 import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
@@ -40,6 +41,8 @@ export interface JvRowView {
    * the row carries a `SCHED` tag, and the footnote says what it means.
    */
   fromSchedule: boolean;
+  /** The game's own page, `/jv/game/<slug>` (app/jv/game/[id]). */
+  href: string;
 }
 
 export interface JvListSummary {
@@ -127,6 +130,7 @@ const rowsOf = (games: readonly Game[]): JvRowView[] =>
       chips: kind !== 'uncounted',
       nonLeague: kind === 'non-league',
       fromSchedule: isOfficialJvContestId(game.contestId),
+      href: jvGameHref(game) as string,
     };
   });
 

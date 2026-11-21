@@ -222,7 +222,7 @@ async function sampleDynamicRoutes() {
   // A si.com-only game's page (its source line is its own): /about#backfills links each one, at its slug.
   const about = await fetch(`${BASE}/about`).then((r) => r.text());
   const backfilled = /href="(\/game\/[^"#?]+)"/.exec(about.slice(Math.max(0, about.indexOf('id="backfills"'))))?.[1];
-  return [first('/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub]
+  return [first('/game/'), first('/jv/game/'), first('/scores/'), first('/teams/'), backfilled, first('/clubs/'), firstEmptyClub]
     .filter((p, i, all) => p && !ROUTES.includes(p) && all.indexOf(p) === i);
 }
 

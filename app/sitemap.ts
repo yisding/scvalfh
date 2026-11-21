@@ -25,7 +25,7 @@ import {
 } from '../lib/data';
 import { gameHref } from '../lib/game-id';
 import { getHistoryLastChecked } from '../lib/history/history';
-import { getJvFetchedAt, getJvGamesOn } from '../lib/jv/jv';
+import { getJvFetchedAt, getJvGames, getJvGamesOn, jvGameHref } from '../lib/jv/jv';
 import { getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { HAS_CLUB_CALENDAR, HAS_RECRUITING } from '../lib/sports/current';
 
@@ -168,6 +168,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.4,
   }));
 
+  // Each JV game's page (app/jv/game/[id]), stamped as /jv is: its JV records and its classification are read
+  // over the whole JV file and the varsity snapshot.
+  const jvStamp = new Date(Math.max(Date.parse(getJvFetchedAt()), lastModified.getTime()));
+  const jvGameRoutes: MetadataRoute.Sitemap = getJvGames().map((game) => ({
+    url: url(jvGameHref(game) as string),
+    lastModified: jvStamp,
+    changeFrequency: 'weekly',
+    priority: 0.3,
+  }));
+
   return [
     ...staticRoutes,
     ...leagueRoutes,
@@ -176,5 +186,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...clubRoutes,
     ...dateRoutes,
     ...gameRoutes,
+    ...jvGameRoutes,
   ];
 }

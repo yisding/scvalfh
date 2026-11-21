@@ -10,6 +10,7 @@
  * Date.now() — so a build is reproducible and every "as of" label is honest (BUILD-BRIEF).
  */
 
+import { withCrossLevelNames } from './cross-level';
 import bundledPlayerStatsFieldHockey from '../data/field-hockey/player-stats.json';
 import bundledPlayerStatsBasketball from '../data/basketball/player-stats.json';
 import bundledPlayerStatsVolleyball from '../data/volleyball/player-stats.json';
@@ -139,7 +140,8 @@ const snapshot: Snapshot = (() => {
   const listed = withFixtureGames(stored.games, stored.officialFixtures ?? [], localDateKey(stored.fetchedAt), stored.fetchedAt);
   // A San Diego final's stream and tickets from the bracket file, where its game has none (lib/postseason/sds-final-links.ts).
   // Then each game's Hudl TV broadcast, where a covered school streams it (lib/streams/hudl-streams.ts).
-  const games = withHudlStreams(withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE), getHudlStreamsFile());
+  // A game against MaxPreps' "Non Varsity Opponent" names that side in words (lib/cross-level.ts).
+  const games = withCrossLevelNames(withHudlStreams(withSdsFinalLinks(listed.games, SDS_BRACKETS_FILE), getHudlStreamsFile()));
   if (listed.listed.length === 0) return { ...stored, games };
   return { ...stored, games, officialFixtures: listed.rest, counts: countsOf(listed.games, stored.standings) };
 })();

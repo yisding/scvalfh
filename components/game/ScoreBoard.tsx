@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { CROSS_LEVEL_SUB, crossLevelOpponentOf } from '../../lib/cross-level';
 import { longDate, timeOfDayPT } from '../../lib/format';
 import { gameAddress } from '../../lib/schools/venue';
 import { getTeamBySlug } from '../../lib/teams';
@@ -45,19 +46,24 @@ export interface ScoreBoardProps {
 
 function BoardSide({
   side,
+  teamId,
   which,
   meta,
   decided,
   showScore,
 }: {
   side: SideView;
+  /** The side's MaxPreps id: a cross-level placeholder (lib/cross-level.ts) gets its own line, not the non-member note. */
+  teamId: string | null;
   which: 'away' | 'home';
   meta: ScoreBoardSideMeta | undefined;
   decided: boolean;
   showScore: boolean;
 }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-  const sub = meta?.sub ?? (team ? null : NON_MEMBER_NOTE);
+  // MaxPreps' cross-level placeholder (lib/cross-level.ts) is not a school this site does not follow: it is no school.
+  const outside = crossLevelOpponentOf(teamId) ? CROSS_LEVEL_SUB : NON_MEMBER_NOTE;
+  const sub = meta?.sub ?? (team ? null : outside);
   const won = decided ? wonAttr(side) : undefined;
   const lost = decided ? lostAttr(side) : undefined;
   return (
@@ -72,7 +78,7 @@ function BoardSide({
         {team ? (
           <TeamMonogram team={team} size={56} />
         ) : (
-          <GhostMonogram name={side.name} size={56} title={NON_MEMBER_NOTE} />
+          <GhostMonogram name={side.name} size={56} title={outside} />
         )}
         <span className="min-w-0">
           {team ? (
@@ -127,8 +133,8 @@ export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
           {display.sourceMark !== null ? ` ${sourceMarkWords(display.sourceMark)}.` : ''}{' '}
         </span>
         {/* Away before home, the same order as every list on the site. */}
-        <BoardSide side={display.away} which="away" meta={away} decided={decided} showScore={showScore} />
-        <BoardSide side={display.home} which="home" meta={home} decided={decided} showScore={showScore} />
+        <BoardSide side={display.away} teamId={game.away.teamId} which="away" meta={away} decided={decided} showScore={showScore} />
+        <BoardSide side={display.home} teamId={game.home.teamId} which="home" meta={home} decided={decided} showScore={showScore} />
       </h1>
     </div>
   );
@@ -138,11 +144,13 @@ export interface GameFactsProps {
   game: Game;
   /** `<LastUpdated variant="time" … />` while the game is live or is today's; omitted on a past final. */
   stamp?: React.ReactNode;
+  /** Where the date links: `/scores/<date>` by default; a JV game on a date with no varsity game links its league's JV season. */
+  dayHref?: string;
   className?: string;
 }
 
 /** The facts under the board, one item each: when (the date links its score day), where, the score's source. */
-export function GameFacts({ game, stamp, className }: GameFactsProps) {
+export function GameFacts({ game, stamp, dayHref, className }: GameFactsProps) {
   const display = describeGame(game);
   // A game still to play has its start time as the board's status line; it is not said again here.
   const timeAbove = game.status !== 'live' && statusLabelIsTime(game, display.statusLabel);
@@ -156,6 +164,9 @@ export function GameFacts({ game, stamp, className }: GameFactsProps) {
       ? `at ${at.school.name}`
       : game.site === 'neutral'
         ? 'Neutral site'
+        : crossLevelOpponentOf(game.home.teamId)
+          ? // MaxPreps' cross-level placeholder hosts (lib/cross-level.ts): it is no school, so it has no campus.
+            'Away; MaxPreps does not name the host'
         : host
           ? // A school named for its city (Salinas, in Salinas) says the place once.
             host.name.includes(host.city)
@@ -165,7 +176,7 @@ export function GameFacts({ game, stamp, className }: GameFactsProps) {
   return (
     <ul className={['sx-metalist', className].filter(Boolean).join(' ')}>
       <li>
-        <Link href={`/scores/${game.dateKey}`} prefetch={false} className="sx-link">
+        <Link href={dayHref ?? `/scores/${game.dateKey}`} prefetch={false} className="sx-link">
           {longDate(game.dateLocal)}
         </Link>
         {timeAbove ? '' : game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}

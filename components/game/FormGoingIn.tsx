@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { crossLevelOpponentOf } from '../../lib/cross-level';
 import FormStrip, { type FormEntry } from '../ui/FormStrip';
 import GhostMonogram from '../ui/GhostMonogram';
 import SectionHeader from '../ui/SectionHeader';
@@ -82,8 +83,9 @@ export function FormGoingIn({ model, className }: FormGoingInProps) {
           </thead>
           <tbody>
             {/* Away over home, the same order as the scoreboard and every list on the site. */}
-            <FormRow side={away} memberCount={model.memberCount} />
-            <FormRow side={home} memberCount={model.memberCount} />
+            {/* MaxPreps' cross-level placeholder (lib/cross-level.ts) is no team, so it has no row. */}
+            {crossLevelOpponentOf(model.game.away.teamId) ? null : <FormRow side={away} memberCount={model.memberCount} />}
+            {crossLevelOpponentOf(model.game.home.teamId) ? null : <FormRow side={home} memberCount={model.memberCount} />}
           </tbody>
         </table>
       </div>

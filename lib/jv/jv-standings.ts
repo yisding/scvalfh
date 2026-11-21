@@ -194,6 +194,37 @@ export function classifyJvGames(
   return out;
 }
 
+/**
+ * Each JV game's varsity game: the varsity game of the same two schools nearest its date within
+ * JV_COUNTERPART_WINDOW_DAYS, by the rule classifyJvGames reads a twin by (a JV slot team plays for its
+ * school; two equally near decide nothing). Both lists read it: the JV game page names its varsity game, and
+ * the varsity game page its JV game, so the link is kept only where it is one-to-one: a varsity game two JV
+ * games point at (a JV doubleheader beside one varsity game) links neither of them back.
+ */
+export function jvVarsityTwins(
+  jvGames: readonly Game[],
+  varsityGames: readonly Game[],
+): { varsityOf: Map<ContestId, Game>; jvOf: Map<ContestId, ContestId> } {
+  const varsityByPair = new Map<string, Game[]>();
+  for (const g of varsityGames) {
+    const key = pairOf(g);
+    if (key) varsityByPair.set(key, [...(varsityByPair.get(key) ?? []), g]);
+  }
+  const varsityOf = new Map<ContestId, Game>();
+  const claims = new Map<ContestId, ContestId[]>();
+  for (const g of jvGames) {
+    const key = pairOf({ home: { slug: slotSlug(g.home) }, away: { slug: slotSlug(g.away) } });
+    if (!key) continue;
+    const twin = nearest(g.dateKey, varsityByPair.get(key) ?? []);
+    if (!twin || twin === 'ambiguous') continue;
+    varsityOf.set(g.contestId, twin);
+    claims.set(twin.contestId, [...(claims.get(twin.contestId) ?? []), g.contestId]);
+  }
+  const jvOf = new Map<ContestId, ContestId>();
+  for (const [varsity, jv] of claims) if (jv.length === 1) jvOf.set(varsity, jv[0]);
+  return { varsityOf, jvOf };
+}
+
 /** JV games with `countsFor` set from their classification (postseason stays null). */
 export function withJvClassification(games: readonly Game[], classes: ReadonlyMap<ContestId, JvClassification>): Game[] {
   return games.map((g) => {

@@ -44,7 +44,10 @@ export function JvSection({ jv }: { jv: AboutJv }) {
             JV page
           </Link>
           , which also lists each league&rsquo;s latest JV results, its next JV games and every school&rsquo;s
-          JV team, and links each league&rsquo;s whole JV season by date. MaxPreps&rsquo; JV league flags are unreliable and no
+          JV team, and links each league&rsquo;s whole JV season by date. Every JV game has a page of its own,
+          linked from each list it is in: the score, each JV team&rsquo;s record over the games listed here, what
+          the game counts for, the two JV teams&rsquo; meetings and the varsity game played beside it, whose own
+          page links back. MaxPreps&rsquo; JV league flags are unreliable and no
           league publishes a JV schedule or JV standings during the season, but every league plays its
           JV games alongside its varsity fixtures, so a JV game counts for a JV table when its varsity
           counterpart (the same two schools within three days) counts for that division&rsquo;s varsity
