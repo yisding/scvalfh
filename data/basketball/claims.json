@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T14:32:13.329Z",
+  "fetchedAt": "2026-11-21T17:48:06.023Z",
   "fixtures": [
     {
       "claims": {
@@ -262,72 +262,6 @@
       "published": [
         {
           "contestId": "875001be-1720-4f3a-b099-c73df36b39be"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Watsonville",
-              "name": "Watsonville",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "78ab1d8a-38ee-4c32-a9a5-ea05afd088a4"
-            },
-            "contestId": "6d4be38c-1dc7-4be5-bb09-d85ad3eaaa31",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-17",
-            "dateLocal": "2026-11-17T19:00:00",
-            "dateUtc": "2026-11-18T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Morgan Hill",
-              "name": "Ann Sobrato",
-              "result": null,
-              "score": null,
-              "slug": "sobrato",
-              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-17T08:57:47",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/6774783?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-watsonville/11-17-2026/?c=6d4be38c-1dc7-4be5-bb09-d85ad3eaaa31",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Ann Sobrato HS"
-            }
-          },
-          "ref": "6d4be38c-1dc7-4be5-bb09-d85ad3eaaa31"
-        }
-      },
-      "id": "2026-11-17-name:watsonville-at-sobrato",
-      "published": [
-        {
-          "contestId": "6d4be38c-1dc7-4be5-bb09-d85ad3eaaa31"
         }
       ]
     },
@@ -1194,72 +1128,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Morgan Hill",
-              "name": "Ann Sobrato",
-              "result": null,
-              "score": null,
-              "slug": "sobrato",
-              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
-            },
-            "contestId": "e5e32e26-a8b5-490c-999b-cef18cce59e2",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Pioneer",
-              "result": null,
-              "score": null,
-              "slug": "pioneer",
-              "teamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T19:43:39",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088792?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-pioneer-san-jose/11-19-2026/?c=e5e32e26-a8b5-490c-999b-cef18cce59e2",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Pioneer High"
-            }
-          },
-          "ref": "e5e32e26-a8b5-490c-999b-cef18cce59e2"
-        }
-      },
-      "id": "2026-11-19-sobrato-at-pioneer",
-      "published": [
-        {
-          "contestId": "e5e32e26-a8b5-490c-999b-cef18cce59e2"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "San Jose",
               "name": "Valley Christian",
               "result": null,
@@ -1384,72 +1252,6 @@
       "published": [
         {
           "contestId": "56826e9b-1d0c-4648-8c96-17ea3649f603"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Aptos",
-              "name": "Aptos",
-              "result": "W",
-              "score": 53,
-              "slug": "aptos",
-              "teamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2"
-            },
-            "contestId": "147eff2f-313e-4bad-88de-848c5f5fb24b",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-20",
-            "dateLocal": "2026-11-20T18:00:00",
-            "dateUtc": "2026-11-21T02:00:00Z",
-            "decider": "REG",
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Harker",
-              "result": "L",
-              "score": 36,
-              "slug": "harker",
-              "teamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T14:02:27",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "final",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aptos-vs-harker-san-jose/11-20-2026/?c=147eff2f-313e-4bad-88de-848c5f5fb24b",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/harker-high-school-san-jose-ca/gam2c5946c2b0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "The Harker School (Saratoga Campus)"
-            }
-          },
-          "ref": "147eff2f-313e-4bad-88de-848c5f5fb24b"
-        }
-      },
-      "id": "2026-11-20-aptos-at-harker",
-      "published": [
-        {
-          "contestId": "147eff2f-313e-4bad-88de-848c5f5fb24b"
         }
       ]
     },
@@ -1714,72 +1516,6 @@
       "published": [
         {
           "contestId": "3560f345-a9ab-44e1-9490-49a16a80477a"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Campbell",
-              "name": "Westmont",
-              "result": null,
-              "score": null,
-              "slug": "westmont",
-              "teamId": "1959d651-408f-4764-94a5-144cea89c499"
-            },
-            "contestId": "c7d0e9c0-8f76-4eec-a417-2977ef44f655",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-21",
-            "dateLocal": "2026-11-21T12:00:00",
-            "dateUtc": "2026-11-21T20:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Morgan Hill",
-              "name": "Ann Sobrato",
-              "result": null,
-              "score": null,
-              "slug": "sobrato",
-              "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T10:37:19",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": "https://gofan.co/event/6774820?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=pre",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/ann-sobrato-morgan-hill-vs-westmont-campbell/11-21-2026/?c=c7d0e9c0-8f76-4eec-a417-2977ef44f655",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Ann Sobrato HS"
-            }
-          },
-          "ref": "c7d0e9c0-8f76-4eec-a417-2977ef44f655"
-        }
-      },
-      "id": "2026-11-21-westmont-at-sobrato",
-      "published": [
-        {
-          "contestId": "c7d0e9c0-8f76-4eec-a417-2977ef44f655"
         }
       ]
     },
@@ -3066,7 +2802,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T14:32:13.329Z",
+          "builtAt": "2026-11-21T17:48:06.023Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -10006,72 +9742,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Millbrae",
-              "name": "Mills",
-              "result": null,
-              "score": null,
-              "slug": "mills",
-              "teamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666"
-            },
-            "contestId": "7ec3a038-6c9d-455c-bcee-9b24ead12898",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-04",
-            "dateLocal": "2026-12-04T19:00:00",
-            "dateUtc": "2026-12-05T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "Palo Alto",
-              "name": "Gunn",
-              "result": null,
-              "score": null,
-              "slug": "gunn",
-              "teamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-18T10:13:19",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/gunn-palo-alto-vs-mills-millbrae/12-4-2026/?c=7ec3a038-6c9d-455c-bcee-9b24ead12898",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Gunn HS"
-            }
-          },
-          "ref": "7ec3a038-6c9d-455c-bcee-9b24ead12898"
-        }
-      },
-      "id": "2026-12-04-name:mills-at-gunn",
-      "published": [
-        {
-          "contestId": "7ec3a038-6c9d-455c-bcee-9b24ead12898"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Morgan Hill",
               "name": "Oakwood",
               "result": null,
@@ -16730,72 +16400,6 @@
       "published": [
         {
           "contestId": "559dd419-fa9a-4d05-ad0e-e637776b009d"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "San Jose",
-              "name": "Lincoln",
-              "result": null,
-              "score": null,
-              "slug": "lincoln",
-              "teamId": "23723b27-4092-4f9b-8f32-892896c67a84"
-            },
-            "contestId": "f6213566-f16a-4591-b6a4-e3173a02afac",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-15",
-            "dateLocal": "2026-12-15T19:00:00",
-            "dateUtc": "2026-12-16T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Yerba Buena",
-              "result": null,
-              "score": null,
-              "slug": "yerba-buena",
-              "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T18:41:55",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/lincoln-san-jose-vs-yerba-buena-san-jose/12-15-2026/?c=f6213566-f16a-4591-b6a4-e3173a02afac",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": null
-            }
-          },
-          "ref": "f6213566-f16a-4591-b6a4-e3173a02afac"
-        }
-      },
-      "id": "2026-12-15-lincoln-at-yerba-buena",
-      "published": [
-        {
-          "contestId": "f6213566-f16a-4591-b6a4-e3173a02afac"
         }
       ]
     },
@@ -25945,6 +25549,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Jose",
+              "name": "Yerba Buena",
+              "result": null,
+              "score": null,
+              "slug": "yerba-buena",
+              "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
+            },
+            "contestId": "ea0dde61-469f-414c-8227-8a77c9d8557f",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2027-01-02",
+            "dateLocal": "2027-01-02T17:30:00",
+            "dateUtc": "2027-01-03T01:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "San Jose",
+              "name": "Branham",
+              "result": null,
+              "score": null,
+              "slug": "branham",
+              "teamId": "c81780c9-d396-45a1-a7f9-0aae05905a97"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-21T08:51:12",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/branham-san-jose-vs-yerba-buena-san-jose/1-2-2027/?c=ea0dde61-469f-414c-8227-8a77c9d8557f",
+              "nfhsStream": null
+            },
+            "venue": {
+              "text": "Saturday"
+            }
+          },
+          "ref": "ea0dde61-469f-414c-8227-8a77c9d8557f"
+        }
+      },
+      "id": "2027-01-02-yerba-buena-at-branham",
+      "published": [
+        {
+          "contestId": "ea0dde61-469f-414c-8227-8a77c9d8557f"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "Sunnyvale",
               "name": "The King’s Academy",
               "result": null,
@@ -27756,10 +27426,6 @@
             "homeName": "Gunderson",
             "homeSlug": "gunderson",
             "id": "west-valley:2027-01-06:james-lick@gunderson",
-            "jv": {
-              "dateKey": "2027-01-06",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -27769,10 +27435,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-01-06:james-lick@gunderson",
-              "jv": {
-                "dateKey": "2027-01-06",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-01-06",
               "source": "bval-docx"
@@ -32070,10 +31732,6 @@
             "homeName": "San Jose",
             "homeSlug": "san-jose",
             "id": "west-valley:2027-01-11:james-lick@san-jose",
-            "jv": {
-              "dateKey": "2027-01-11",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -32083,10 +31741,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-01-11:james-lick@san-jose",
-              "jv": {
-                "dateKey": "2027-01-11",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-01-11",
               "source": "bval-docx"
@@ -34428,10 +34082,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-01-13:mt-pleasant@james-lick",
-            "jv": {
-              "dateKey": "2027-01-13",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -36522,10 +36172,6 @@
             "homeName": "Yerba Buena",
             "homeSlug": "yerba-buena",
             "id": "west-valley:2027-01-15:james-lick@yerba-buena",
-            "jv": {
-              "dateKey": "2027-01-15",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -36535,10 +36181,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-01-15:james-lick@yerba-buena",
-              "jv": {
-                "dateKey": "2027-01-15",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-01-15",
               "source": "bval-docx"
@@ -40186,10 +39828,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-01-20:andrew-hill@james-lick",
-            "jv": {
-              "dateKey": "2027-01-20",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -43210,10 +42848,6 @@
             "homeName": "Del Mar",
             "homeSlug": "del-mar",
             "id": "west-valley:2027-01-22:james-lick@del-mar",
-            "jv": {
-              "dateKey": "2027-01-22",
-              "time": "18:00"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:30"
@@ -43223,10 +42857,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-01-22:james-lick@del-mar",
-              "jv": {
-                "dateKey": "2027-01-22",
-                "time": "18:00"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-01-22",
               "source": "bval-docx"
@@ -47558,10 +47188,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-01-27:gunderson@james-lick",
-            "jv": {
-              "dateKey": "2027-01-27",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -47571,10 +47197,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-01-27:gunderson@james-lick",
-              "jv": {
-                "dateKey": "2027-01-27",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-01-27",
               "source": "bval-docx"
@@ -52779,10 +52401,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-02-01:san-jose@james-lick",
-            "jv": {
-              "dateKey": "2027-02-01",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -52792,10 +52410,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-02-01:san-jose@james-lick",
-              "jv": {
-                "dateKey": "2027-02-01",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-02-01",
               "source": "bval-docx"
@@ -54595,10 +54209,6 @@
             "homeName": "Mt. Pleasant",
             "homeSlug": "mt-pleasant",
             "id": "west-valley:2027-02-03:james-lick@mt-pleasant",
-            "jv": {
-              "dateKey": "2027-02-03",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -59038,10 +58648,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-02-05:yerba-buena@james-lick",
-            "jv": {
-              "dateKey": "2027-02-05",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -59051,10 +58657,6 @@
             "stamp": {
               "division": "west-valley",
               "fixtureId": "west-valley:2027-02-05:yerba-buena@james-lick",
-              "jv": {
-                "dateKey": "2027-02-05",
-                "time": "17:30"
-              },
               "pass": "same-date",
               "scheduledDate": "2027-02-05",
               "source": "bval-docx"
@@ -60656,10 +60258,6 @@
             "homeName": "Andrew Hill",
             "homeSlug": "andrew-hill",
             "id": "west-valley:2027-02-10:james-lick@andrew-hill",
-            "jv": {
-              "dateKey": "2027-02-10",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"
@@ -62091,10 +61689,6 @@
             "homeName": "James Lick",
             "homeSlug": "james-lick",
             "id": "west-valley:2027-02-12:del-mar@james-lick",
-            "jv": {
-              "dateKey": "2027-02-12",
-              "time": "17:30"
-            },
             "league": "bval",
             "source": "bval-docx",
             "time": "19:00"

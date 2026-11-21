@@ -39,12 +39,12 @@
     "multiSeason": 1172,
     "multiSport": 62,
     "nameOnly": 593,
-    "observations": 13171,
-    "players": 6900,
+    "observations": 13172,
+    "players": 6905,
     "review": 98,
     "stintConflicts": 61,
-    "stints": 8691,
-    "withCareer": 6307
+    "stints": 8697,
+    "withCareer": 6312
   },
   "notes": [
     "One record per person across every sport and season this repository holds. Internal: no page reads this file.",
@@ -41681,6 +41681,54 @@
     },
     {
       "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p1c5d396661",
+      "identifiers": [
+        {
+          "careerId": "gq874qgt4rivf",
+          "careerProfileId": "022ef2e2-b92c-4d9f-869f-bd05b871bb2f",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Cameron Green",
+      "names": [
+        "Cameron Green"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "6'1\"",
+          "jersey": "40",
+          "level": "varsity",
+          "name": "Cameron Green",
+          "observations": [
+            {
+              "athleteId": "671e3659-dc9e-4c51-a1ac-557d06878c14",
+              "grade": 11,
+              "height": "6'1\"",
+              "jersey": "40",
+              "name": "Cameron Green",
+              "positions": [
+                "SF"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "SF"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "sobrato"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -51812,11 +51860,6 @@
                 "SF"
               ],
               "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "10",
-              "name": "L. Race",
-              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -128181,6 +128224,54 @@
     },
     {
       "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p54d1fa7f58",
+      "identifiers": [
+        {
+          "careerId": "7qqkg3e7nmgdd",
+          "careerProfileId": "9e28892a-b68a-4ac5-8f3a-e389b452a456",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Raj Saini",
+      "names": [
+        "Raj Saini"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "5'9\"",
+          "jersey": "22",
+          "level": "varsity",
+          "name": "Raj Saini",
+          "observations": [
+            {
+              "athleteId": "7c25bd50-311f-4438-9eca-eb4d417ccc25",
+              "grade": 11,
+              "height": "5'9\"",
+              "jersey": "22",
+              "name": "Raj Saini",
+              "positions": [
+                "PG"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "PG"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "sobrato"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2026,
       "classOfConflicts": [],
       "formerIds": [],
@@ -155644,11 +155735,6 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "1",
-              "name": "L. Huang",
-              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -158461,6 +158547,54 @@
           "season": "26-27",
           "sport": "field-hockey",
           "team": "santa-clara"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "p68540a8754",
+      "identifiers": [
+        {
+          "careerId": "sei3qa1o4e3bb",
+          "careerProfileId": "09699db1-a691-4f74-a216-f2b022dd8755",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Isaac Orellana",
+      "names": [
+        "Isaac Orellana"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "5'9\"",
+          "jersey": "20",
+          "level": "varsity",
+          "name": "Isaac Orellana",
+          "observations": [
+            {
+              "athleteId": "c5ae6468-2e19-4bcd-9caf-5a37f8fd9e6e",
+              "grade": 11,
+              "height": "5'9\"",
+              "jersey": "20",
+              "name": "Isaac Orellana",
+              "positions": [
+                "G"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "G"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "sobrato"
         }
       ]
     },
@@ -168739,11 +168873,6 @@
               "jersey": "13",
               "name": "Gabriel Castillo",
               "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "13",
-              "name": "G. Castillo",
-              "src": "maxpreps-stats"
             }
           ],
           "positions": [],
@@ -237073,13 +237202,43 @@
               "jersey": "34",
               "name": "Dino Plancarte",
               "positions": [
-                "C"
+                "C",
+                "PF"
               ],
               "src": "maxpreps-roster"
             }
           ],
           "positions": [
-            "C"
+            "C",
+            "PF"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "santa-clara"
+        },
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": null,
+          "height": null,
+          "jersey": "34",
+          "level": "jv",
+          "name": "Dino Plancarte",
+          "observations": [
+            {
+              "athleteId": "3a7a0d0d-0621-4eb7-be9f-4ff3eceab9a5",
+              "jersey": "34",
+              "name": "Dino Plancarte",
+              "positions": [
+                "C",
+                "PF"
+              ],
+              "src": "maxpreps-jv-roster"
+            }
+          ],
+          "positions": [
+            "C",
+            "PF"
           ],
           "season": "26-27",
           "sport": "basketball",
@@ -240056,19 +240215,24 @@
           "conflicts": [],
           "grade": 12,
           "height": null,
-          "jersey": "32",
+          "jersey": "3",
           "level": "varsity",
           "name": "Tyler Le",
           "observations": [
             {
               "athleteId": "705bdeed-113b-456b-aab5-d4f523e5c831",
               "grade": 12,
-              "jersey": "32",
+              "jersey": "3",
               "name": "Tyler Le",
+              "positions": [
+                "G"
+              ],
               "src": "maxpreps-roster"
             }
           ],
-          "positions": [],
+          "positions": [
+            "G"
+          ],
           "season": "26-27",
           "sport": "basketball",
           "team": "sobrato"
@@ -258933,6 +259097,56 @@
           "positions": [],
           "season": "26-27",
           "sport": "volleyball",
+          "team": "sobrato"
+        }
+      ]
+    },
+    {
+      "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "paeffd49fdd",
+      "identifiers": [
+        {
+          "careerId": "05085h9knde88",
+          "careerProfileId": "bf3c6cf1-690e-437f-924a-21b8f12deacc",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Napoleon Tran",
+      "names": [
+        "Napoleon Tran"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "6'0\"",
+          "jersey": "4",
+          "level": "varsity",
+          "name": "Napoleon Tran",
+          "observations": [
+            {
+              "athleteId": "4f0070e3-f1dd-432b-86dc-0e0d356dd325",
+              "grade": 11,
+              "height": "6'0\"",
+              "jersey": "4",
+              "name": "Napoleon Tran",
+              "positions": [
+                "G",
+                "SF"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "G",
+            "SF"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
           "team": "sobrato"
         }
       ]
@@ -316531,6 +316745,54 @@
     },
     {
       "aliases": [],
+      "classOf": 2028,
+      "classOfConflicts": [],
+      "formerIds": [],
+      "id": "pd8400eaaf2",
+      "identifiers": [
+        {
+          "careerId": "vdagr8p120taa",
+          "careerProfileId": "f2161533-e1fe-4065-8af6-9f3203e60f10",
+          "kind": "maxpreps-career"
+        }
+      ],
+      "name": "Michael Mendoza",
+      "names": [
+        "Michael Mendoza"
+      ],
+      "stints": [
+        {
+          "captain": false,
+          "conflicts": [],
+          "grade": 11,
+          "height": "5'8\"",
+          "jersey": "30",
+          "level": "varsity",
+          "name": "Michael Mendoza",
+          "observations": [
+            {
+              "athleteId": "ede93995-c7a1-438f-b482-a47dc1182f33",
+              "grade": 11,
+              "height": "5'8\"",
+              "jersey": "30",
+              "name": "Michael Mendoza",
+              "positions": [
+                "G"
+              ],
+              "src": "maxpreps-roster"
+            }
+          ],
+          "positions": [
+            "G"
+          ],
+          "season": "26-27",
+          "sport": "basketball",
+          "team": "sobrato"
+        }
+      ]
+    },
+    {
+      "aliases": [],
       "classOf": 2027,
       "classOfConflicts": [],
       "formerIds": [],
@@ -322114,11 +322376,6 @@
                 "PF"
               ],
               "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "21",
-              "name": "D. Mejia",
-              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -354834,11 +355091,6 @@
                 "SG"
               ],
               "src": "maxpreps-roster"
-            },
-            {
-              "jersey": "13",
-              "name": "E. Xu",
-              "src": "maxpreps-stats"
             }
           ],
           "positions": [

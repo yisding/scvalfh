@@ -306,11 +306,37 @@ describe('the basketball data files', () => {
 });
 
 describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled files)', () => {
-  it('gives every league fixture a JV slot, and every slot exactly one JV game', () => {
+  /**
+   * The bundled fixtures, and the ones whose schedule lists a JV game: a fixture with no JV slot is a school the
+   * league marks "(NO JV)" (BVAL's West Valley schedule revised 11/16/26: James Lick, so its twelve games), never a
+   * parse gap. The counts are read from the bundles, so a revised schedule changes them without touching this test.
+   */
+  const bundled = () =>
+    [...new Set(m.leagues.ALL_DIVISIONS.filter((d) => d.official.mode !== 'none').map((d) => d.leagueId))].flatMap((id) =>
+      m.official.loadBundledFixtures(id),
+    );
+
+  it('reads every bundled fixture a JV slot unless its league marks a school "(NO JV)": James Lick in West Valley', () => {
+    const fixtures = bundled();
+    // SCVAL's 98 fixtures and BVAL's 144.
+    expect(fixtures).toHaveLength(98 + 144);
+    const noJv = fixtures.filter((f) => !f.jv);
+    expect(noJv).toHaveLength(12);
+    for (const f of noJv) {
+      expect(f.division, f.id).toBe('west-valley');
+      expect([f.homeSlug, f.awaySlug], f.id).toContain('james-lick');
+    }
+    expect(fixtures.filter((f) => f.homeSlug === 'james-lick' || f.awaySlug === 'james-lick').every((f) => !f.jv)).toBe(true);
+  });
+
+  it('gives every bundled fixture with a JV slot one, and every slot exactly one JV game', () => {
     const merge = m.jv.getJvOfficialMerge();
-    // SCVAL's 98 fixtures and BVAL's 144: both leagues' schedules give every varsity game its JV game.
-    expect(merge.slots).toBe(98 + 144);
+    expect(merge.slots).toBe(bundled().filter((f) => f.jv).length);
     expect(merge.matched + merge.moved + merge.added.length).toBe(merge.slots);
+    // No JV game is added for a fixture the schedule lists without one.
+    const withoutJv = new Set(bundled().filter((f) => !f.jv).map((f) => f.id));
+    for (const id of merge.added) expect(withoutJv.has(m.jvOfficial.officialJvFixtureId(id) ?? ''), id).toBe(false);
+    for (const slot of merge.claims.values()) expect(withoutJv.has(slot.fixtureId), slot.fixtureId).toBe(false);
     // The WCAL, WBAL, PAL and SCCAL divisions (2026-11-21) are read by membership: no schedule is bundled, so none
     // has a JV slot or a JV table.
     for (const division of m.leagues.ALL_DIVISIONS) {
@@ -320,12 +346,20 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
     }
   });
 
-  it('lists a full JV league round for every school of a scheduled division: 12 games in De Anza, 14 in El Camino', () => {
+  it('lists every JV league game the schedule gives a school: 12 in De Anza, 14 in El Camino, fewer against a "(NO JV)" school', () => {
+    const fixtures = bundled().filter((f) => f.jv);
     for (const team of m.teams.TEAMS.filter((t) => m.jv.isJvScheduledDivision(t.division))) {
       const league = m.jv.getJvGamesForTeam(team.slug).filter((g) => g.countsFor !== null);
-      const expected = m.leagues.getDivision(team.division).gamesPerTeam;
-      // A coach may list a league game twice or on a day no slot claims; never fewer than the schedule's.
-      expect(league.length, team.slug).toBeGreaterThanOrEqual(expected ?? 0);
+      const expected = fixtures.filter((f) => f.homeSlug === team.slug || f.awaySlug === team.slug).length;
+      // Every school but a "(NO JV)" one plays a JV game at every varsity league game but those against one.
+      const full = m.leagues.getDivision(team.division).gamesPerTeam ?? 0;
+      if (team.slug === 'james-lick') expect(expected).toBe(0);
+      else if (team.division === 'west-valley') expect(expected, team.slug).toBe(full - 2);
+      else expect(expected, team.slug).toBe(full);
+      // A coach may list a league game twice or on a day no slot claims; never fewer than the schedule's. A school
+      // with no JV slot has none: within a scheduled division only a slot's game counts (lib/jv/jv-standings.ts rule 0).
+      if (expected === 0) expect(league.map((g) => g.contestId), team.slug).toEqual([]);
+      else expect(league.length, team.slug).toBeGreaterThanOrEqual(expected);
       expect(league.every((g) => g.countsFor === team.division), team.slug).toBe(true);
     }
   });
