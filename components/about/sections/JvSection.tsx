@@ -4,7 +4,7 @@ import { jvTableTitle } from '../../jv/jv-standings-view';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords, numberWord, plural } from '../../../lib/format';
-import { getJvOfficialMerge } from '../../../lib/jv/jv';
+import { getJvCopiedScores, getJvOfficialMerge } from '../../../lib/jv/jv';
 import { JV_SCHOOL_SITES } from '../../../lib/jv/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../../lib/jv/jv-standings';
 import { LEAGUES } from '../../../lib/leagues';
@@ -47,7 +47,11 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           JV team, and links each league&rsquo;s whole JV season by date. Every JV game has a page of its own,
           linked from each list it is in: the score, each JV team&rsquo;s record over the games listed here, what
           the game counts for, the two JV teams&rsquo; meetings and the varsity game played beside it, whose own
-          page links back. MaxPreps&rsquo; JV league flags are unreliable and no
+          page links back. A JV score on MaxPreps that is exactly the score of the same day&rsquo;s varsity game
+          between the two schools is not taken on MaxPreps&rsquo; word, since some coaches enter the varsity result
+          on the JV row: si.com&rsquo;s or the school&rsquo;s own score is shown where either has the game, and
+          otherwise the game reads &ldquo;score not reported&rdquo;, with a note saying what MaxPreps had
+          {getJvCopiedScores().size > 0 ? ` (${plural(getJvCopiedScores().size, 'game', 'games')} today)` : ''}. MaxPreps&rsquo; JV league flags are unreliable and no
           league publishes a JV schedule or JV standings during the season, but every league plays its
           JV games alongside its varsity fixtures, so a JV game counts for a JV table when its varsity
           counterpart (the same two schools within three days) counts for that division&rsquo;s varsity

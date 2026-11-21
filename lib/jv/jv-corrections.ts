@@ -18,6 +18,8 @@
  *   - scoreFixes: a final whose score the school's own athletics site gives otherwise, with si.com agreeing with
  *     the school against MaxPreps. The row takes the school's score (`provenance.scores: 'school-site'`, the †),
  *     only while MaxPreps still has the score the entry names, so a row MaxPreps fixes is left alone.
+ *   - timeFixes: a row whose start time the host school's own schedule gives otherwise, moved to that time while
+ *     MaxPreps still has the time the entry names.
  *   - opponent: a row that is a real game but names the wrong MaxPreps team for one side. The side
  *     becomes the registry school only while MaxPreps still names the wrong team id (`wrongTeamId`), so
  *     a row MaxPreps fixes is left alone and the entry is reported unused.
@@ -29,7 +31,7 @@ import { byDateThenId, toLocalTimestamp } from '../format';
 import { jvSlotTeamFor, type JvSlotTeam } from './jv-teams';
 import { getTeamBySlug } from '../teams';
 import type { ContestId, DivisionId, Game, TeamId, TeamSlug } from '../types';
-import { IS_FIELD_HOCKEY } from '../sports/current';
+import { bySport } from '../sports/current';
 
 export interface JvOpponentFix {
   side: 'home' | 'away';
@@ -44,6 +46,15 @@ export interface JvDateMove {
   /** MaxPreps' date the move applies to (YYYY-MM-DD): a row MaxPreps has since moved is left alone. */
   fromDateKey: string;
   dateKey: string;
+  /** One sentence: the source and what it says. */
+  source: string;
+}
+
+export interface JvTimeFix {
+  /** MaxPreps' start time the fix applies to (HH:MM, Pacific): a row MaxPreps has since retimed is left alone. */
+  fromTime: string;
+  /** The start time shown (HH:MM, Pacific). */
+  time: string;
   /** One sentence: the source and what it says. */
   source: string;
 }
@@ -66,6 +77,8 @@ export interface JvCorrections {
   dateMoves?: Readonly<Record<ContestId, JvDateMove>>;
   /** A final rescored from the school's own page where si.com agrees with it against MaxPreps. */
   scoreFixes?: Readonly<Record<ContestId, JvScoreFix>>;
+  /** A game the host school's own schedule starts at another time. */
+  timeFixes?: Readonly<Record<ContestId, JvTimeFix>>;
   /**
    * A JV league game the varsity-counterpart rule cannot see (lib/jv/jv-standings.ts rule 0): the division and
    * one sentence of evidence. For a JV slot team whose varsity partner's game moved and its own did not.
@@ -151,10 +164,34 @@ const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
   },
 };
 
-/** This build's JV corrections: field hockey's (each names a field hockey contest); none for soccer. */
-export const JV_CORRECTIONS: JvCorrections = IS_FIELD_HOCKEY
-  ? FIELD_HOCKEY_JV_CORRECTIONS
-  : { excludedContestIds: {}, opponentFixes: {} };
+/** Girls soccer's: Piedmont Hills' own 2026-27 schedule (its team's Instagram post, given by the owner on 2026-11-21). */
+const PIEDMONT_HILLS_SCHEDULE = 'Piedmont Hills’ 2026-2027 girls’ soccer schedule (posted by its team, given by the owner on 2026-11-21)';
+const SOCCER_JV_CORRECTIONS: JvCorrections = {
+  excludedContestIds: {
+    // MaxPreps' Piedmont Hills JV row of Nov 17 is a 0-0 "final" against its "Non JV Opponent" placeholder
+    // (lib/cross-level.ts); Piedmont Hills' schedule has that day as "Milpitas (Scrimmage) 5pm/7pm", and neither
+    // school lists a varsity game that day. A scrimmage is not a game.
+    '25928dc0-6d17-4dc5-a075-ad3f7a0d9ad0': `Piedmont Hills v “Non JV Opponent”, Nov 17, 0-0: the JV half of Piedmont Hills’ scrimmage with Milpitas (${PIEDMONT_HILLS_SCHEDULE}: “Milpitas (Scrimmage) 5pm/7pm”), not a game`,
+  },
+  opponentFixes: {},
+  timeFixes: {
+    // Leland at Piedmont Hills, Sat Jan 30: MaxPreps has the JV game at 5:30; the host's schedule has "Leland 5pm/7pm"
+    // (JV 5:00, varsity 7:00, the varsity row's 7:00 agreeing).
+    'd31f9684-2c9f-497b-b549-dd48663448e9': {
+      fromTime: '17:30',
+      time: '17:00',
+      source: `${PIEDMONT_HILLS_SCHEDULE}: “Sat, Jan 30th · Leland · 5pm/7pm”; MaxPreps has the JV game at 5:30`,
+    },
+  },
+};
+
+/** This build's JV corrections, by sport (each entry names a contest of that sport's JV file). */
+export const JV_CORRECTIONS: JvCorrections = bySport<JvCorrections>({
+  'field-hockey': FIELD_HOCKEY_JV_CORRECTIONS,
+  soccer: SOCCER_JV_CORRECTIONS,
+  basketball: { excludedContestIds: {}, opponentFixes: {} },
+  volleyball: { excludedContestIds: {}, opponentFixes: {} },
+});
 
 /**
  * A row filed under a school that fields no JV team (Santa Catalina) is its slot team's (York's): the side
@@ -177,6 +214,8 @@ export interface JvCorrectionResult {
   moved: Array<{ game: Game; source: string }>;
   /** Finals rescored from the school's own page. */
   rescored: Array<{ game: Game; source: string }>;
+  /** Games moved to the start time the host school's own schedule gives. */
+  retimed: Array<{ game: Game; source: string }>;
   /** Entries that matched no row (or a row MaxPreps has since fixed). */
   unused: ContestId[];
 }
@@ -224,6 +263,7 @@ export function applyJvCorrections(games: readonly Game[], config: JvCorrections
   const fixed: JvCorrectionResult['fixed'] = [];
   const movedRows: JvCorrectionResult['moved'] = [];
   const rescoredRows: JvCorrectionResult['rescored'] = [];
+  const retimed: JvCorrectionResult['retimed'] = [];
   const seen = new Set<ContestId>();
   const out: Game[] = [];
   for (const g of games) {
@@ -264,6 +304,21 @@ export function applyJvCorrections(games: readonly Game[], config: JvCorrections
       out.push(m);
       continue;
     }
+    const timeFix = config.timeFixes?.[g.contestId];
+    if (timeFix && !g.isTimeTba && g.dateLocal.slice(11, 16) === timeFix.fromTime) {
+      seen.add(g.contestId);
+      const dateLocal = `${g.dateKey}T${timeFix.time}:00`;
+      const t: Game = {
+        ...g,
+        dateLocal,
+        dateUtc: pacificToUtc(dateLocal),
+        // The game page says the start time is confirmed against the school's own schedule (GameDetails).
+        timeConfirmed: true,
+      };
+      retimed.push({ game: t, source: timeFix.source });
+      out.push(t);
+      continue;
+    }
     const scoreFix = config.scoreFixes?.[g.contestId];
     if (scoreFix && g.status === 'final' && g.home.score === scoreFix.maxpreps[0] && g.away.score === scoreFix.maxpreps[1]) {
       seen.add(g.contestId);
@@ -279,6 +334,7 @@ export function applyJvCorrections(games: readonly Game[], config: JvCorrections
     ...Object.keys(config.opponentFixes),
     ...Object.keys(config.dateMoves ?? {}),
     ...Object.keys(config.scoreFixes ?? {}),
+    ...Object.keys(config.timeFixes ?? {}),
   ].filter((id) => !seen.has(id));
-  return { games: out.sort(byDateThenId), excluded, fixed, moved: movedRows, rescored: rescoredRows, unused };
+  return { games: out.sort(byDateThenId), excluded, fixed, moved: movedRows, rescored: rescoredRows, retimed, unused };
 }

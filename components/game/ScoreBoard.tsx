@@ -146,11 +146,16 @@ export interface GameFactsProps {
   stamp?: React.ReactNode;
   /** Where the date links: `/scores/<date>` by default; a JV game on a date with no varsity game links its league's JV season. */
   dayHref?: string;
+  /**
+   * Leave out the status note ("We will update when MaxPreps posts it."): for a JV game whose MaxPreps score is
+   * withheld (lib/jv/jv-copied-scores.ts), MaxPreps has posted one, and the page's own note says why it is not shown.
+   */
+  omitStatusNote?: boolean;
   className?: string;
 }
 
 /** The facts under the board, one item each: when (the date links its score day), where, the score's source. */
-export function GameFacts({ game, stamp, dayHref, className }: GameFactsProps) {
+export function GameFacts({ game, stamp, dayHref, omitStatusNote = false, className }: GameFactsProps) {
   const display = describeGame(game);
   // A game still to play has its start time as the board's status line; it is not said again here.
   const timeAbove = game.status !== 'live' && statusLabelIsTime(game, display.statusLabel);
@@ -182,7 +187,7 @@ export function GameFacts({ game, stamp, dayHref, className }: GameFactsProps) {
         {timeAbove ? '' : game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}
       </li>
       <li>{where}</li>
-      {display.note ? <li>{display.note}</li> : null}
+      {display.note && !omitStatusNote ? <li>{display.note}</li> : null}
       {/* The legend for the status line's † (a footnote mark is never left unexplained). */}
       {display.sourceMark !== null ? <li>&dagger; {sourceMarkWords(display.sourceMark)}</li> : null}
       {stamp ? <li>{stamp}</li> : null}

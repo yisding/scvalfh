@@ -17,6 +17,7 @@ import { byDateThenId, dateWithYear, matchupJoiner, recordString, shortDate, sid
 import { gameHref } from '../../lib/game-id';
 import {
   getJvClassification,
+  getJvCopiedScores,
   getJvGameBySlug,
   getJvGameSlug,
   getJvGameSlugs,
@@ -81,6 +82,8 @@ export interface JvGameModel {
   series: JvSeriesMeeting[];
   /** Whose side the series rows read from: the home side's team id. */
   seriesPerspective: { teamId: string } | null;
+  /** MaxPreps' score was the varsity game's and no other source has one (lib/jv/jv-copied-scores.ts): it is withheld. */
+  scoreWithheld: boolean;
   /** The date's page: /scores/<date>#jv (or #jv-socal) when the date has varsity games, else the league's JV season at that date. */
   dayHref: string;
   /** Off-site pages for this game: MaxPreps' JV game page, si.com's, a stream. */
@@ -262,6 +265,7 @@ function buildModel(game: Game): JvGameModel {
     varsity,
     series,
     seriesPerspective: game.home.teamId ? { teamId: game.home.teamId } : null,
+    scoreWithheld: getJvCopiedScores().has(game.contestId) && game.status !== 'final',
     // The day page's JV block of the game's region: `#jv` (NorCal) or `#jv-socal` (components/schedule/ScoreDay.tsx).
     dayHref: VARSITY_DATES.has(game.dateKey) && league
       ? `/scores/${game.dateKey}#jv${regionIdSuffix(regionOf(league))}`

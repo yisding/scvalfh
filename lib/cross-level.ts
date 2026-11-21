@@ -8,7 +8,9 @@
  *   "Non Varsity Opponent"  4fc9dcd1-…  in a VARSITY schedule: the opponent was a JV, frosh-soph or club side
  *                                       (soccer: Burlingame Nov 19 at St. Ignatius, Woodside Dec 21)
  *   "Non JV Opponent"       d1bd084e-…  in a JV schedule: the opponent was a varsity, frosh-soph or club side
- *                                       (soccer: Piedmont Hills Nov 17, 0-0; field hockey: University City, La Jolla)
+ *                                       (or a scrimmage a coach entered: Piedmont Hills' Nov 17 row, its Milpitas
+ *                                       scrimmage, is left out by lib/jv/jv-corrections.ts)
+ *                                       (soccer: six JV games to come; field hockey: University City, La Jolla)
  *
  * So the game is a real game (it is played and scored; MaxPreps counts it in the school's record), but the other side
  * is not a school, and it is not the same team from one game to the next. This module is how the site says so:

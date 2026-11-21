@@ -695,8 +695,8 @@ MaxPreps files a game between one school's varsity and a team that is not a vars
 side), or one school's JV and a team that is not a JV team, against a placeholder team of its own, never against the
 other school's team at the other level: "Non Varsity Opponent" (`4fc9dcd1-…`) in a varsity schedule, "Non JV Opponent"
 (`d1bd084e-…`) in a JV one, the same ids in every sport (read 2026-11-21: Burlingame's and Woodside's varsity soccer
-games of Nov 19 and Dec 21, Piedmont Hills' 0-0 JV soccer game of Nov 17 and seven more JV games in soccer, field
-hockey and basketball). `lib/cross-level.ts` is how the site shows one:
+games of Nov 19 and Dec 21, and nine JV games in soccer, field hockey and basketball; Piedmont Hills' 0-0 JV row of
+Nov 17 against "Non JV Opponent" was its Milpitas scrimmage and is left out, see "Corrections" below). `lib/cross-level.ts` is how the site shows one:
 
 - the placeholder is named in words, "Non-varsity team" or "Non-JV team", as `lib/data.ts` and `lib/jv/jv.ts` load the
   games, so no list, title or card prints MaxPreps' placeholder as a school; on a scoreboard the line under it says
@@ -802,6 +802,23 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21, Hollister Oct 27) are left out, as MaxPreps'
   deleted rows are, instead of reading as played games with no score; and St. Ignatius at Los Altos,
   which MaxPreps still dates Sep 9, is moved to Oct 8, when St. Ignatius' schedule says it was played.
+  Girls soccer's (`SOCCER_JV_CORRECTIONS`, from Piedmont Hills' own 2026-27 schedule, given by the owner on
+  2026-11-21): Piedmont Hills' Nov 17 JV row, a 0-0 "final" against MaxPreps' "Non JV Opponent", is its scrimmage with
+  Milpitas ("Milpitas (Scrimmage) 5pm/7pm") and is left out; and its Jan 30 JV game with Leland, which MaxPreps has at
+  5:30, starts at 5:00 (`timeFixes`, "Leland 5pm/7pm"), marked confirmed. Its Nov 19 scrimmage with Independence ("JV &
+  Var combined @ 6pm") needs nothing: Piedmont Hills deleted both MaxPreps rows. Every other game on that schedule
+  (dates, hosts, the neutral Menlo game at Monta Vista, the JV-only and varsity-only days, the 5/7, 4/6 and 4/6:15
+  start times) already matched.
+- **JV scores that are the varsity score** (`lib/jv/jv-copied-scores.ts`, after the corrections and before the
+  merge): a MaxPreps JV final scored exactly like the same day's varsity final of the same two schools loses its
+  score, so si.com's JV page or a school's own site fills it where it has the game, and otherwise it reads "score
+  not reported" and counts in no JV table; a note beside it says what MaxPreps had and what is shown. Some coaches'
+  JV rows carry the varsity result: Santa Clara's own JV results and si.com have Los Gatos at Santa Clara, Sep 15,
+  12-0 where MaxPreps' JV row has the varsity 7-2. Over the 2026-11-21 files: 30 field hockey JV finals (2 now
+  si.com's different score, Canyon Hills 5-0 over Great Oak where MaxPreps had the varsity 9-0, and La Jolla 3-0 at
+  Cathedral Catholic for the varsity 1-0; 16 the same score from si.com; 12 not shown, with no other source) and
+  volleyball's KIPP San Jose Collegiate at Andrew Hill, Oct 16, a "0-0" like its varsity row. No JV table's status
+  changed; the EAL's is at 17 of 28 reported.
 - **York in Santa Catalina's JV slot** (`JV_OUTSIDE_TEAMS` in `lib/jv/jv-teams.ts`). PCAL's schedule, Note 1:
   "Santa Catalina is Varsity only. York is JV only. They are paired together in this schedule as CAT/YOR."
   So York holds the PCAL JV table row in Santa Catalina's place (name only, no page), a JV row MaxPreps or
