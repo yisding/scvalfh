@@ -65,7 +65,8 @@ export default async function Image({ params }: PageProps<'/jv/game/[id]'>) {
               color: OG.TEXT_3,
             }}
           >
-            {`${model.competition.name} · ${model.countsAs.label}`}
+            {/* The status first, as the varsity card's kicker (gameKicker): a postponed game must not read as one to come. */}
+            {`${display.statusLabel} · ${model.competition.name} · ${model.countsAs.label}`}
           </div>
           <div style={{ display: 'flex', marginTop: 10, height: 2, background: OG.RULE }} />
         </div>
@@ -94,7 +95,7 @@ export default async function Image({ params }: PageProps<'/jv/game/[id]'>) {
                     color: side.view.weight === 'loser' ? OG.TEXT_2 : OG.TEXT,
                   }}
                 >
-                  {`${side.label} JV`}
+                  {side.jvLabel}
                 </div>
                 {side.sub ? (
                   <div style={{ display: 'flex', marginTop: 8, fontSize: 26, color: OG.TEXT_3 }}>
