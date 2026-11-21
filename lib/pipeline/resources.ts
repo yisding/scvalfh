@@ -17,7 +17,7 @@ import { CIFSS_SEASON_FROM, cifssListingUrl } from '../sources/cifss';
 import type { HttpClient } from '../sources/http';
 import { maxprepsLeagueMetaUrl, maxprepsScheduleUrl, maxprepsStandingsUrl, type MaxPrepsClient } from '../sources/maxpreps';
 import { isTournamentPageUrl } from '../sources/maxpreps-tournament';
-import { sbliveScoresUrl } from '../sources/sblive';
+import { sbliveLeagueScoresUrl, sbliveScoresUrl } from '../sources/sblive';
 import { SCVAL_STANDINGS_INDEX, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
 import { getTeamBySlug } from '../teams';
@@ -167,6 +167,12 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     host: 'sblive',
     ext: '.html',
     url: (key) => sbliveScoresUrl(key.date),
+    fetch: (c, url) => httpText(c.sblive, url),
+  },
+  'sblive-league-scores': {
+    host: 'sblive',
+    ext: '.html',
+    url: (key) => sbliveLeagueScoresUrl(key.league, key.date),
     fetch: (c, url) => httpText(c.sblive, url),
   },
   'sblive-team-games': {

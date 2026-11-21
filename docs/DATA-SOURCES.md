@@ -2144,6 +2144,23 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    for a team page or waits for a later run; `lib/crosscheck/backfill.ts` `scoreboardCoverage` is positive-only),
    never a conclusion. **[V]** 2026-10-06.
 
+   A winter day statewide runs far past 24 (girls soccer 65-108, boys basketball ~280, 2026-11-17..20), so for a
+   day the statewide page cut short the run also reads each league scoreboard of ours that played that day,
+   `.../leagues/<slug>/scores?date=` (`LEAGUES[].sblive.leagueSlugs`; `parseLeagueScoresPage`). It is an
+   `organizations/Scores` block whose `query.organization.scoreboardDate.games` hold the same nodes as the
+   statewide page's, every game a member plays that day, league or not, with no cut (`hasNextPage` false). Two
+   traps, both handled: a league with no game on the date asked for is served its nearest earlier day with
+   games, with a 200 (3913-scval-el-camino asked for 2026-11-18 served 2026-02-25, last season), so a page whose
+   own `scoreboardDate.date` is not the one asked for gives no rows; and si.com renumbers leagues
+   (2579-scval-deanza now redirects to 3912-scval-de-anza), so a page for another slug, or one that names none,
+   is refused. Only a league with a game that day the statewide rows did not give is read (a game against a school
+   outside the registry always counts). A game both pages list is kept from both, and `cleanSbliveRows` keeps the
+   better row (scored and final over not). At most `SBLIVE_LEAGUE_SCOREBOARD_CAP` (30) league pages a run, newest
+   day first, and none after `SBLIVE_LEAGUE_SCOREBOARD_FAILURES` (3) fail; the rest are logged as waiting. A day is
+   newest for two or three runs, so its pages are read then, and a game still missing a score after that is a
+   team page's (§5.2 rule 8). On 2026-11-21 they added 32 boys
+   basketball and 5 girls soccer games the statewide pages did not list. **[V]** 2026-11-21.
+
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with
 timezone-correct timestamps and — under ten mechanical rules, for official league fixtures
 MaxPreps lacks, for past MaxPreps contests between two of our teams that have no score, and for
@@ -4002,7 +4019,7 @@ and shares no abort scope with the pipeline.
 | MaxPreps API | 131 | 1 bootstrap + 14 meta + 14 standings + 102 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run of 64, every host, took about 46 s; the 2026-10-06 run's duration was not recorded) |
 | scval.com | 3 | 2 schedule PDFs + the standings index |
 | drive.google.com, pcalathletics.org, mcalsports.org | 5 | revision checks (BVAL ×2, PCAL, MCAL) + the MCAL `Schedir.htm` changes check |
-| si.com | up to 15 + up to 8 | scoreboards for dates in the trailing 14 days that have a game; targeted team-games pages only for backfill candidates (§5.2 rule 8) |
+| si.com | up to 15 + up to 30 + up to 8 | statewide scoreboards for dates in the trailing 14 days that have a game; league scoreboards only for a day the statewide page cut short (§1.2 caveat 10, newest day first, `SBLIVE_LEAGUE_SCOREBOARD_CAP`); targeted team-games pages only for backfill candidates the scoreboards did not cover (§5.2 rule 8) |
 | VNN | 2 | the Palo Alto and Los Gatos calendars |
 | cifccs.org + MaxPreps HTML | 2 | only from `CCS.pollFrom` (Oct 25) |
 | cifsshome.org | ~45, growing through the season | every page of six Section listings, Aug 1 through the run's date (§1.2a); 1-2 runs a day, ≥500 ms spacing |

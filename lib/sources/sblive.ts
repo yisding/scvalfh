@@ -45,6 +45,15 @@ export function sbliveScoresUrl(date: string): string {
 }
 
 /**
+ * One si.com league's daily scoreboard (`leagueSlug` from `LEAGUES[].sblive.leagueSlugs`): every game a member of
+ * the league plays that day, league or not, with no 24-game cut (read 2026-11-21: SCVAL De Anza girls soccer on
+ * 2026-12-08, four games, `hasNextPage` false). `date` is YYYY-MM-DD.
+ */
+export function sbliveLeagueScoresUrl(leagueSlug: string, date: string): string {
+  return `${SBLIVE_WEB}/leagues/${leagueSlug}/scores?date=${date}`;
+}
+
+/**
  * A si.com game page URL from a payload's `webPath`, or null when the path is not a plain URL path
  * (whitespace, a scheme, a query, anything outside RFC 3986's unreserved set plus `%` and `/`). The result
  * always passes the snapshot schema's httpUrl, so one malformed upstream row can never fail a run.
@@ -261,29 +270,39 @@ const scoreboardGameTeam = z.looseObject({
   team: teamRef,
 });
 
+/** A scoreboard day's games: the statewide page's and a league page's are the same object. */
+const scoreboardGames = z.looseObject({
+  totalCount: z.number().nullable().optional(),
+  /** si.com serves the first 24 games of a day in the page; the rest load in the browser (see parseScoresPage). */
+  pageInfo: z
+    .looseObject({ hasNextPage: z.boolean().nullable().optional(), endCursor: z.string().nullable().optional() })
+    .nullable()
+    .optional(),
+  nodes: z.array(
+    z.looseObject({
+      id: z.union([z.string(), z.number()]),
+      date: z.string(),
+      statusId: z.number().nullable().optional(),
+      longStatusText: z.string().nullable().optional(),
+      titleText: z.string().nullable().optional(),
+      webPath: z.string().nullable().optional(),
+      gameTeams: z.array(scoreboardGameTeam),
+    }),
+  ),
+});
+
 export const ScoreboardPropsSchema = z.looseObject({
   query: z.looseObject({
-    scoreboardDate: z.looseObject({
-      date: z.string(),
-      games: z.looseObject({
-        totalCount: z.number().nullable().optional(),
-        /** si.com serves the first 24 games of a day in the page; the rest load in the browser (see parseScoresPage). */
-        pageInfo: z
-          .looseObject({ hasNextPage: z.boolean().nullable().optional(), endCursor: z.string().nullable().optional() })
-          .nullable()
-          .optional(),
-        nodes: z.array(
-          z.looseObject({
-            id: z.union([z.string(), z.number()]),
-            date: z.string(),
-            statusId: z.number().nullable().optional(),
-            longStatusText: z.string().nullable().optional(),
-            titleText: z.string().nullable().optional(),
-            webPath: z.string().nullable().optional(),
-            gameTeams: z.array(scoreboardGameTeam),
-          }),
-        ),
-      }),
+    scoreboardDate: z.looseObject({ date: z.string(), games: scoreboardGames }),
+  }),
+});
+
+/** A league's scoreboard page (`organizations/Scores`): the same day's games, under the league. */
+export const LeagueScoreboardPropsSchema = z.looseObject({
+  query: z.looseObject({
+    organization: z.looseObject({
+      slug: z.string().nullable().optional(),
+      scoreboardDate: z.looseObject({ date: z.string(), games: scoreboardGames }),
     }),
   }),
 });
@@ -566,17 +585,61 @@ export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl(''), w
  * why identity comes from the logo URL's si.com team or school id (SPEC §7.9).
  */
 export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: SbliveParseWarn): SbliveGame[] {
+  return parseScoresDay(html, url, warn).games;
+}
+
+/** The statewide scoreboard's rows, and whether si.com cut the day short (its 24-game page: see below). */
+export function parseScoresDay(
+  html: string,
+  url = sbliveScoresUrl(''),
+  warn?: SbliveParseWarn,
+): { games: SbliveGame[]; truncated: boolean } {
   const props = ScoreboardPropsSchema.parse(requireBlock(html, 'games/GenderSportIndex', url));
-  const games = props.query.scoreboardDate.games;
+  return scoreboardDayRows(props.query.scoreboardDate.games, url, warn);
+}
+
+/**
+ * Parse one si.com league's scoreboard for `date` (`sbliveLeagueScoresUrl`): the statewide page's rows, under
+ * `query.organization` of an `organizations/Scores` block. A page for another league than `leagueSlug` (si.com
+ * renumbering one, as it moved 2579-scval-deanza to 3912-scval-de-anza) is refused, never read as this one's.
+ *
+ * A league with no game on `date` is served its nearest earlier day with games instead, with a 200 and that day's
+ * own `scoreboardDate.date` (read 2026-11-21: 3913-scval-el-camino asked for 2026-11-18 served 2026-02-25, last
+ * season). Such a page says the league played nothing that day, so it gives no rows, never the other day's.
+ */
+export function parseLeagueScoresPage(
+  html: string,
+  leagueSlug: string,
+  date: string,
+  url = sbliveLeagueScoresUrl(leagueSlug, date),
+  warn?: SbliveParseWarn,
+): SbliveGame[] {
+  const props = LeagueScoreboardPropsSchema.parse(requireBlock(html, 'organizations/Scores', url));
+  const org = props.query.organization;
+  // Held to the slug it names, and a page that names none is no page of this league's either.
+  if (org.slug !== leagueSlug) {
+    throw new Error(`si.com league scoreboard is for ${org.slug ?? 'no league slug'}, not ${leagueSlug} (${url})`);
+  }
+  if (org.scoreboardDate.date !== date) return [];
+  return scoreboardDayRows(org.scoreboardDate.games, url, warn).games.filter((g) => g.dateKey === date);
+}
+
+function scoreboardDayRows(
+  games: z.output<typeof scoreboardGames>,
+  url: string,
+  warn?: SbliveParseWarn,
+): { games: SbliveGame[]; truncated: boolean } {
   // Pagination (checked 2026-10-06): the page server-renders the day's first 24 games
   // (`pageInfo: { endCursor: 'MjQ', hasNextPage: true }`, totalCount 29 that day) and the browser loads
   // the rest through si.com's own GraphQL client. The URL takes no page or cursor parameter (`&after=`,
   // `&page=2` and `&cursor=` all return the same first 24), so a later page cannot be read from here.
   // With the Southern California teams a busy day passes 24, so a truncated day is said, never silently
-  // taken for the whole day: it only lowers coverage (an uncovered game is planned for a team page, or
-  // waits for a later run; lib/crosscheck/backfill.ts scoreboardCoverage is positive-only), never a conclusion.
+  // taken for the whole day: it only lowers coverage (the run reads that day's league scoreboards, and an uncovered
+  // game is planned for a team page or waits for a later run; lib/crosscheck/backfill.ts scoreboardCoverage is
+  // positive-only), never a conclusion. A league page is never cut (DATA-SOURCES §1.2 caveat 10).
   const total = games.totalCount ?? null;
-  if (games.pageInfo?.hasNextPage || (total !== null && total > games.nodes.length)) {
+  const truncated = Boolean(games.pageInfo?.hasNextPage) || (total !== null && total > games.nodes.length);
+  if (truncated) {
     warn?.(
       `si.com scoreboard lists ${games.nodes.length} of ${total ?? 'more'} games; the rest load in the browser and are not read (${url})`,
     );
@@ -608,7 +671,7 @@ export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: 
       origin: 'scoreboard',
     });
   }
-  return out;
+  return { games: out, truncated };
 }
 
 export interface SbliveTeamRef {
