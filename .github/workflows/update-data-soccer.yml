@@ -1,7 +1,7 @@
 # The girls soccer site's data refresh (SCVAL_SPORT=soccer; docs/MULTI-SPORT.md): update-data.yml's job
 # for data/soccer/, narrowed to what the soccer build reads. It fetches the snapshot (MaxPreps, the
-# bundled official SCVAL fixtures, the CCS calendar and cifsshome.org; si.com and the VNN school calendars
-# are field hockey's sources), then the player stats, the JV games and (weekly, on the Monday morning run) the varsity and JV rosters, tests
+# bundled official SCVAL fixtures, the CCS calendar, cifsshome.org and si.com's girls soccer scores; the VNN
+# school calendars are field hockey's), then the player stats, the JV games and (weekly, on the Monday morning run) the varsity and JV rosters, tests
 # them, and commits data/soccer/snapshot.json, its meta file, data/soccer/player-stats.json,
 # data/soccer/jv.json, data/soccer/rosters.json and data/soccer/jv-rosters.json only where the CONTENT
 # changed (the same contentHash rule as update-data.yml).
@@ -78,7 +78,7 @@ jobs:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
         run: |
           set -euo pipefail
-          args=(--no-sblive --no-vnn)
+          args=(--no-vnn)
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-data "${args[@]}"
 
@@ -95,7 +95,7 @@ jobs:
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-player-stats "${args[@]}"
 
-      # Never fatal either. MaxPreps' JV feeds only: the soccer build reads no si.com page.
+      # Never fatal either. MaxPreps' JV feeds and each school's si.com JV team page (lib/jv/jv-teams.ts).
       - name: Fetch JV games
         id: jv
         continue-on-error: true
@@ -104,7 +104,7 @@ jobs:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
         run: |
           set -euo pipefail
-          args=(--no-sblive)
+          args=()
           [ -n "$FORCE" ] && args+=(--force)
           pnpm fetch-jv "${args[@]}"
 

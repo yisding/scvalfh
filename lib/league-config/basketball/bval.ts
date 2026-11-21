@@ -40,8 +40,10 @@ export const BVAL_BASKETBALL_LEAGUE: LeagueConfig = {
     { label: 'BVAL boys basketball', href: BVAL_BASKETBALL },
     { label: 'BVAL Basketball By-Laws (rev. 5/29/26)', href: BVAL_BASKETBALL_BYLAWS },
   ],
-  // si.com is not read for basketball: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership. si.com's BVAL boys basketball buckets (Mt. Hamilton, Santa Teresa North/South, West
+  // Valley; its Santa Teresa East and West are empty) are not this season's divisions.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['2125-bval-mt-hamilton', '31322-bval-santa-teresa-north', '31323-bval-santa-teresa-south', '2128-bval-west-valley'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

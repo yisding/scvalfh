@@ -14,7 +14,10 @@
  * team-context payload, the colors its `schoolColor1` / `schoolColor2` on the WCAL girls soccer standings, and
  * `maxprepsPath` the team's girls soccer page (all read 2026-11-14).
  *
- * No si.com or VNN ids: the soccer build reads neither.
+ * si.com ids (`sbliveTeamId`, `sbliveSlug`, `sbliveSchoolId`): each read from the team's own si.com girls soccer games page
+ * (si.com/high-school/stats/california/girls-soccer/teams/<id>-<slug>/games, 2026-11-21: name, mascot, city, Varsity, the school
+ * id in `team.school`), found through si.com's WCAL standings pages or its team search; never guessed.
+ * No VNN site ids (the school calendars are read for field hockey only).
  */
 
 import type { Seed } from '../seed';
@@ -36,6 +39,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/archbishop-mitty-monarchs/soccer/girls/winter/',
+    sbliveTeamId: '400413',
+    sbliveSlug: '400413-archbishop-mitty-monarchs',
+    sbliveSchoolId: '31718',
     aliases: [
       'Archbishop Mitty', 'MITTY', 'Mitty', 'Archbishop Mitty Monarchs',
       'Archbishop Mitty High School', 'Mitty High School',
@@ -57,6 +63,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['754ACC', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-francisco/archbishop-riordan-crusaders/soccer/girls/winter/',
+    sbliveTeamId: '496907',
+    sbliveSlug: '496907-archbishop-riordan-crusaders',
+    sbliveSchoolId: '159',
     aliases: [
       'Archbishop Riordan', 'RIORDAN', 'Riordan', 'Archbishop Riordan Crusaders',
       'Archbishop Riordan High School', 'Riordan High School',
@@ -78,6 +87,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['005B34', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/soccer/girls/winter/',
+    sbliveTeamId: '354479',
+    sbliveSlug: '354479-sacred-heart-cathedral-preparatory-fightin-irish',
+    sbliveSchoolId: '160',
     aliases: [
       'Sacred Heart Cathedral', 'Sacred Heart Cathedral Preparatory', 'SACRED HEART CATHEDRAL', 'Sacred Heart Cathedral Prep',
       'SHC', 'SHCP', 'Sacred Heart Cathedral Preparatory Fighting Irish', 'Sacred Heart Cathedral Fighting Irish',
@@ -99,6 +111,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['503604', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/mountain-view/saint-francis-lancers/soccer/girls/winter/',
+    sbliveTeamId: '359171',
+    sbliveSlug: '359171-saint-francis-lancers',
+    sbliveSchoolId: '2822',
     aliases: [
       'Saint Francis', 'ST. FRANCIS', 'St. Francis', 'St Francis',
       'Saint Francis Lancers', 'Saint Francis High School', 'Saint Francis (Mountain View)',
@@ -120,6 +135,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '034CB2'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-francisco/st-ignatius-college-preparatory-wildcats/soccer/girls/winter/',
+    sbliveTeamId: '354485',
+    sbliveSlug: '354485-st-ignatius-wildcats',
+    sbliveSchoolId: '161',
     aliases: [
       'St. Ignatius College Preparatory', 'ST. IGNATIUS', 'Saint Ignatius', 'St. Ignatius',
       'St Ignatius', 'SICP', 'St. Ignatius College Prep', 'St. Ignatius Wildcats',
@@ -142,6 +160,9 @@ export const WCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['022C66', '046DFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/valley-christian-warriors/soccer/girls/winter/',
+    sbliveTeamId: '354754',
+    sbliveSlug: '354754-valley-christian-warriors',
+    sbliveSchoolId: '319',
     aliases: [
       'Valley Christian', 'VALLEY CHRISTIAN', 'Valley Christian Warriors', 'Valley Christian High School',
       'Valley Christian (San Jose)',

@@ -412,6 +412,12 @@ describe('the soccer refresh', () => {
   it('tests the soccer data files it just wrote', () => {
     expect(stepBody(updateSoccer, 'Test')).toContain('vitest run tests/soccer.test.ts');
   });
+
+  it('reads si.com (scores and JV team pages) but no school calendar, which is field hockey’s', () => {
+    expect(stepBody(updateSoccer, 'Fetch data')).toContain('args=(--no-vnn)');
+    expect(stepBody(updateSoccer, 'Fetch data')).not.toContain('--no-sblive');
+    expect(stepBody(updateSoccer, 'Fetch JV games')).not.toContain('--no-sblive');
+  });
 });
 
 describe('the basketball refresh', () => {
@@ -432,9 +438,10 @@ describe('the basketball refresh', () => {
     for (const f of new Set(files)) expect(existsSync(path.join(REPO, f)), f).toBe(true);
   });
 
-  it('reads no si.com page and no school calendar: both are field hockey’s sources', () => {
-    expect(stepBody(updateBasketball, 'Fetch data')).toContain('--no-sblive --no-vnn');
-    expect(stepBody(updateBasketball, 'Fetch JV games')).toContain('--no-sblive');
+  it('reads si.com (scores and JV team pages) but no school calendar, which is field hockey’s', () => {
+    expect(stepBody(updateBasketball, 'Fetch data')).toContain('args=(--no-vnn)');
+    expect(stepBody(updateBasketball, 'Fetch data')).not.toContain('--no-sblive');
+    expect(stepBody(updateBasketball, 'Fetch JV games')).not.toContain('--no-sblive');
   });
 
   it('runs in the basketball season’s months, after the other two refreshes', () => {

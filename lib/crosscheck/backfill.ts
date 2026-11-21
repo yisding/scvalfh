@@ -45,6 +45,7 @@ import {
 import { isLevelWithWinner, mustHaveWinner } from '../postseason/level-final';
 import { excessOver } from '../results/result';
 import { postseasonTag } from '../classify';
+import { SPORT } from '../sports/current';
 import { getTeamBySlug, unorderedPairKey } from '../teams';
 import type {
   BackfillProvenance,
@@ -411,6 +412,7 @@ function phantomTieNote(short: string, noPublishedRules: boolean): string {
  * (`leagueOvertime` 'none': PCAL and MCAL by rule, the Sunset by the absence of one).
  */
 function isPhantomTieCandidate(g: Game): boolean {
+  if (!SPORT.sblive.replacesZeroZeroTies) return false;
   if (g.status !== 'final' || g.home.score !== 0 || g.away.score !== 0) return false;
   if (g.home.result !== 'T' || g.away.result !== 'T') return false;
   const league = sameLeagueOf(g);

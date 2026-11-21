@@ -32,8 +32,9 @@ export const WCAL_SOCCER_LEAGUE: LeagueConfig = {
     { label: 'WCAL by-laws (Article VII – Soccer)', href: WCAL_GOVERNANCE },
     { label: 'WCAL standings', href: WCAL_STANDINGS },
   ],
-  // si.com is not read for soccer: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership. si.com files Presentation here; it plays in the WBAL.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['3950-wcal'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

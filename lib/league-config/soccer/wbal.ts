@@ -38,8 +38,9 @@ export const WBAL_SOCCER_LEAGUE: LeagueConfig = {
     { label: 'WBAL girls soccer Skyline schedule', href: SKYLINE_SCHEDULE },
     { label: 'WBAL By-Laws Article VI – Soccer (Google Doc)', href: WBAL_SOCCER_BYLAWS },
   ],
-  // si.com is not read for soccer: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['3948-wbal-foothill', '3949-wbal-skyline'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

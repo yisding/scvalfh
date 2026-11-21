@@ -28,7 +28,7 @@ import { localDateKey } from '../format';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import { LEAGUES } from '../leagues';
 import { SBLIVE_WEB } from '../season';
-import { SPORT } from '../sports/current';
+import { SPORT, bySport } from '../sports/current';
 import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
@@ -376,14 +376,36 @@ export function sbliveIdFromWebPath(webPath: string | null | undefined): string 
  * Every other name returned one team of that name (some also list fuzzy matches under other names,
  * e.g. Bonita Vista for Bonita and Claremont for Clairemont, which are different keys).
  *
+ * Soccer and basketball (si.com team ids are per sport, and each sport has its own California teams): the same
+ * search under /girls-soccer/ and /basketball/ was run on 2026-11-21 for every registry name and the name si.com
+ * gives the team, one request at a time at least 800 ms apart. A name is listed when si.com has a second
+ * varsity team of exactly that name in the sport:
+ *   - both sports: Fremont (Oakland, Los Angeles), Independence (Bakersfield), Lincoln (Lincoln, San Francisco,
+ *     San Diego, Riverside, Stockton, Los Angeles), Live Oak (Live Oak), Los Altos (Hacienda Heights), Mountain
+ *     View (El Monte), Oak Grove (Ojai), Pioneer (Woodland, Whittier), Santa Clara (Oxnard);
+ *   - girls soccer only: Mercy (ours is Burlingame's; San Francisco and Red Bluff) and Notre Dame (two of ours,
+ *     Belmont and San Jose, and Salinas). Basketball's search found one team of each name.
+ *
  * A side with one of these names resolves ONLY by a si.com id, never by name.
  */
-export const STATEWIDE_AMBIGUOUS: ReadonlySet<string> = new Set(
-  [
+const STATEWIDE_AMBIGUOUS_NAMES: readonly string[] = bySport<readonly string[]>({
+  'field-hockey': [
     'University', 'Los Altos', 'Santa Clara', 'Davis',
     'Westview', 'Del Norte', 'Marina', 'San Marcos', 'Mission Vista', 'Granite Hills', 'Southwest',
-  ].map(normalizeTeamKey),
-);
+  ],
+  soccer: [
+    'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
+    'Santa Clara', 'Mercy', 'Notre Dame',
+  ],
+  basketball: [
+    'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
+    'Santa Clara',
+  ],
+  // The volleyball build reads no si.com page.
+  volleyball: [],
+});
+
+export const STATEWIDE_AMBIGUOUS: ReadonlySet<string> = new Set(STATEWIDE_AMBIGUOUS_NAMES.map(normalizeTeamKey));
 
 /** Everything si.com exposes about one side of a game or one standings row. */
 export interface SbliveSideRef {

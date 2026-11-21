@@ -17,11 +17,11 @@ export const BASKETBALL = {
   /** [V] a school's season list names the sport 'Basketball'; the boys' team pages sit under /basketball/. */
   maxpreps: { slug: 'basketball', sportName: 'Basketball' },
   /**
-   * si.com's boys basketball segment, by the pattern of its girls soccer one. The basketball build reads no
-   * si.com page (SCVAL basketball's `sblive.backfill` is off, and the JV fetch runs with --no-sblive), and no
-   * page links to it.
+   * [V] si.com's boys basketball segment is plain `basketball` (its scoreboard heads "Boys Basketball",
+   * genderSport key BOYS_BASKETBALL; `boys-basketball` is a 404, read 2026-11-21). The scoreboards, the team
+   * games pages and the JV team pages sit under it. A basketball game cannot end level, so rule 4c never applies.
    */
-  sblive: { slug: 'boys-basketball' },
+  sblive: { slug: 'basketball', replacesZeroZeroTies: false },
   /**
    * [V] "Basketball, Boys" = 3 in the cifsshome.org widget's Sport select ("Basketball, Girls" = 12). The SCVAL
    * boys schedules allow no contest before Nov 23 (first scrimmage Nov 16, sportsmanship games Nov 19), so the
