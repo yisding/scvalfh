@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T22:13:53.243Z",
+  "fetchedAt": "2026-11-21T05:36:44.871Z",
   "fixtures": [
     {
       "claims": {
@@ -328,72 +328,6 @@
       "published": [
         {
           "contestId": "88ea9aec-31fc-4547-83eb-167b7350dabe"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
-              "city": "Cupertino",
-              "name": "Monta Vista",
-              "result": null,
-              "score": null,
-              "slug": "monta-vista",
-              "teamId": "405614ad-a015-4270-b527-18e899c90824"
-            },
-            "contestId": "3dbf08a1-7361-4226-8f3e-e3b2e7d91031",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-11-19",
-            "dateLocal": "2026-11-19T19:00:00",
-            "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Mateo",
-              "name": "Aragon",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-11-19T05:09:25",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "score-pending",
-            "urls": {
-              "goFan": "https://gofan.co/event/7088754?utm_medium=referral&utm_source=maxpreps&utm_campaign=team-schedule-list&utm_content=post",
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/aragon-san-mateo-vs-monta-vista-cupertino/11-19-2026/?c=3dbf08a1-7361-4226-8f3e-e3b2e7d91031",
-              "nfhsStream": "https://www.nfhsnetwork.com/events/aragon-high-school-san-mateo-ca/gam44fdf52e47?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-            },
-            "venue": {
-              "text": "Aragon High School (sportsmanship game)"
-            }
-          },
-          "ref": "3dbf08a1-7361-4226-8f3e-e3b2e7d91031"
-        }
-      },
-      "id": "2026-11-19-monta-vista-at-name:aragon",
-      "published": [
-        {
-          "contestId": "3dbf08a1-7361-4226-8f3e-e3b2e7d91031"
         }
       ]
     },
@@ -1548,7 +1482,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-20T22:13:53.243Z",
+          "builtAt": "2026-11-21T05:36:44.871Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -7894,72 +7828,6 @@
         "maxpreps": {
           "game": {
             "away": {
-              "city": "Los Altos Hills",
-              "name": "Pinewood",
-              "result": null,
-              "score": null,
-              "slug": null,
-              "teamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6"
-            },
-            "contestId": "f32f1d0c-a3bb-44ab-bd70-ed9bdf489e46",
-            "contestTypes": {
-              "away": 1,
-              "home": 1
-            },
-            "countsFor": null,
-            "dateKey": "2026-12-12",
-            "dateLocal": "2026-12-12T14:00:00",
-            "dateUtc": "2026-12-12T22:00:00Z",
-            "decider": null,
-            "forfeitBy": null,
-            "home": {
-              "city": "San Jose",
-              "name": "Yerba Buena",
-              "result": null,
-              "score": null,
-              "slug": "yerba-buena",
-              "teamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d"
-            },
-            "isDateTba": false,
-            "isForfeit": false,
-            "isLeague": false,
-            "isOt": false,
-            "isTimeTba": false,
-            "leagueDivision": null,
-            "otPeriods": 0,
-            "postseason": null,
-            "provenance": {
-              "maxprepsModifiedOn": "2026-07-20T08:57:47",
-              "schedule": "maxpreps-api",
-              "scores": "maxpreps-api"
-            },
-            "shootout": null,
-            "site": "home",
-            "status": "scheduled",
-            "urls": {
-              "goFan": null,
-              "maxpreps": "https://www.maxpreps.com/ca/basketball/game/pinewood-los-altos-hills-vs-yerba-buena-san-jose/12-12-2026/?c=f32f1d0c-a3bb-44ab-bd70-ed9bdf489e46",
-              "nfhsStream": null
-            },
-            "venue": {
-              "text": "Saturday game -note start time"
-            }
-          },
-          "ref": "f32f1d0c-a3bb-44ab-bd70-ed9bdf489e46"
-        }
-      },
-      "id": "2026-12-12-name:pinewood-at-yerba-buena",
-      "published": [
-        {
-          "contestId": "f32f1d0c-a3bb-44ab-bd70-ed9bdf489e46"
-        }
-      ]
-    },
-    {
-      "claims": {
-        "maxpreps": {
-          "game": {
-            "away": {
               "city": "Daly City",
               "name": "Westmoor",
               "result": null,
@@ -8457,7 +8325,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-02T17:02:09",
+              "maxprepsModifiedOn": "2026-11-20T23:07:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8470,7 +8338,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/william-c-overfelt-high-school-san-jose-ca/gam878706c42c?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Overfelt (William C.) High School"
             }
           },
           "ref": "a95cb8f7-0d5d-49bc-9538-c7722f11f30e"

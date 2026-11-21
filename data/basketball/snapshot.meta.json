@@ -7,33 +7,33 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "d7b7766d1d85cade06656c14c59287cdfbd83ceac6cf09a6cf8f06f3fac887f9",
+  "contentHash": "21972e07a7debe1c0112e6b5538d3f0ca3c26979a8efb17c3f44cb4b66079702",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 283,
+        "games": 282,
         "leagueGames": 125,
         "teams": 26
       },
       "scval": {
         "backfilled": 0,
         "finals": 1,
-        "games": 198,
+        "games": 197,
         "leagueGames": 96,
         "teams": 15
       }
     },
     "finals": 1,
-    "games": 444,
+    "games": 442,
     "leagueGames": 221,
     "mismatches": 0,
-    "pending": 8,
+    "pending": 7,
     "teams": 41
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-20T22:13:53.243Z",
+  "fetchedAt": "2026-11-21T05:36:44.871Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -261,7 +261,7 @@
     },
     {
       "label": "branham schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -336,7 +336,7 @@
     },
     {
       "label": "james-lick schedule",
-      "rowCount": 15,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -351,7 +351,7 @@
     },
     {
       "label": "yerba-buena schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -416,7 +416,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 802,
+      "rowCount": 805,
       "status": "ok"
     },
     {
