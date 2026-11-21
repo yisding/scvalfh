@@ -117,6 +117,7 @@ import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId } from '../lib/types';
 import { runCliIfMain } from './cli';
+import { requireMaxpreps } from './lib/require-maxpreps';
 import { DATA_DIR } from '../lib/sports/current';
 
 interface Args {
@@ -312,6 +313,8 @@ function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
 }
 
 export async function main(argv: readonly string[]): Promise<number> {
+  const notMaxpreps = requireMaxpreps('fetch-player-stats');
+  if (notMaxpreps !== null) return notMaxpreps;
   const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);

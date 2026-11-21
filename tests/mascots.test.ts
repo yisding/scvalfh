@@ -20,6 +20,7 @@ import { WBAL_SOCCER_SEEDS } from '../lib/registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from '../lib/registry/soccer/wcal';
 import { BVAL_VOLLEYBALL_SEEDS } from '../lib/registry/volleyball/bval';
 import { SCVAL_VOLLEYBALL_SEEDS } from '../lib/registry/volleyball/scval';
+import { VAL_SOCCER_SEEDS } from '../lib/registry/val-soccer/val';
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/schools/mascots';
 import { TEAMS } from '../lib/teams';
 
@@ -42,6 +43,8 @@ const STEMS = [
     ...WCAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...SCVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     ...BVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
+    // The VAL's middle schools: tiles of their initials (scripts/build-initials-tiles.ts), no source giving a logo.
+    ...VAL_SOCCER_SEEDS.map((s) => s.slug),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot),
   ]),
 ];

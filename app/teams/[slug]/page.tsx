@@ -164,16 +164,21 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               Standings
             </a>
           </li>
-          <li>
-            <a href="#roster" className="sx-tab">
-              Roster
-            </a>
-          </li>
-          <li>
-            <a href="#player-stats" className="sx-tab">
-              Stats
-            </a>
-          </li>
+          {/* A build that lists no players (the VAL) has no roster or stats section to jump to. */}
+          {LISTS_PLAYERS ? (
+            <>
+              <li>
+                <a href="#roster" className="sx-tab">
+                  Roster
+                </a>
+              </li>
+              <li>
+                <a href="#player-stats" className="sx-tab">
+                  Stats
+                </a>
+              </li>
+            </>
+          ) : null}
         </ul>
       </nav>
 

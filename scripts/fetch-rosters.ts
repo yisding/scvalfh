@@ -81,6 +81,7 @@ import { JV_SPORT_SEASON_ID, SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season'
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
 import { runCliIfMain } from './cli';
+import { requireMaxpreps } from './lib/require-maxpreps';
 import { DATA_DIR } from '../lib/sports/current';
 
 type Level = 'varsity' | 'jv';
@@ -166,6 +167,8 @@ const JV_NOTES = [
 ];
 
 export async function main(argv: readonly string[]): Promise<number> {
+  const notMaxpreps = requireMaxpreps('fetch-rosters');
+  if (notMaxpreps !== null) return notMaxpreps;
   const args = parseArgs(argv);
   const jv = args.level === 'jv';
   const sportSeasonId = jv ? JV_SPORT_SEASON_ID : SPORT_SEASON_ID;
