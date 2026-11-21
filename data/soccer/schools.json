@@ -1,6 +1,6 @@
 {
-  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\". WCAL's six schools and the WBAL's thirteen were added on 2026-11-14, each from the schoolAddress, schoolCity and schoolZipCode fields of MaxPreps' team-context payload for its girls soccer team, read 2026-11-14, with \"37Th\" written \"37th\".",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06). BVAL's 26 schools were added on 2026-11-13: the twelve the field hockey registry holds copied from data/schools.json, the other fourteen from MaxPreps' school fields (address, city, state, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-13, with a ZIP+4 cut to five digits and \"24Th\" written \"24th\". WCAL's six schools and the WBAL's thirteen were added on 2026-11-14, each from the schoolAddress, schoolCity and schoolZipCode fields of MaxPreps' team-context payload for its girls soccer team, read 2026-11-14, with \"37Th\" written \"37th\". The PAL's sixteen schools and the SCCAL's six were added on 2026-11-21 from MaxPreps' school fields (address, city, zipCode) on each school's own row of its boys basketball schedule payload, read 2026-11-21.",
+  "capturedAt": "2026-11-21",
   "notes": [
     "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
   ],
@@ -11,11 +11,41 @@
       "region": "CA",
       "postalCode": "95111"
     },
+    "aptos": {
+      "street": "100 Mariner Wy",
+      "city": "Aptos",
+      "region": "CA",
+      "postalCode": "95003"
+    },
+    "aragon": {
+      "street": "900 Alameda De Las Pulgas",
+      "city": "San Mateo",
+      "region": "CA",
+      "postalCode": "94402"
+    },
     "branham": {
       "street": "1570 Branham Ln",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95118"
+    },
+    "burlingame": {
+      "street": "1 Mangini Way",
+      "city": "Burlingame",
+      "region": "CA",
+      "postalCode": "94010"
+    },
+    "capuchino": {
+      "street": "1501 Magnolia Ave",
+      "city": "San Bruno",
+      "region": "CA",
+      "postalCode": "94066"
+    },
+    "carlmont": {
+      "street": "1400 Alameda De Las Pulgas",
+      "city": "Belmont",
+      "region": "CA",
+      "postalCode": "94002"
     },
     "castilleja": {
       "street": "1310 Bryant St",
@@ -53,6 +83,12 @@
       "region": "CA",
       "postalCode": "94303"
     },
+    "el-camino-ssf": {
+      "street": "1320 Mission Rd",
+      "city": "South San Francisco",
+      "region": "CA",
+      "postalCode": "94080"
+    },
     "evergreen-valley": {
       "street": "3300 Quimby Rd",
       "city": "San Jose",
@@ -83,11 +119,29 @@
       "region": "CA",
       "postalCode": "94306"
     },
+    "half-moon-bay": {
+      "street": "Lewis Foster Dr",
+      "city": "Half Moon Bay",
+      "region": "CA",
+      "postalCode": "94019"
+    },
+    "harbor": {
+      "street": "300 La Fonda Ave",
+      "city": "Santa Cruz",
+      "region": "CA",
+      "postalCode": "95062"
+    },
     "harker": {
       "street": "500 Saratoga Ave",
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95129"
+    },
+    "hillsdale": {
+      "street": "3115 Del Monte St.",
+      "city": "San Mateo",
+      "region": "CA",
+      "postalCode": "94403"
     },
     "homestead": {
       "street": "21370 Homestead Rd",
@@ -106,6 +160,12 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95127"
+    },
+    "jefferson": {
+      "street": "6996 Mission St",
+      "city": "Daly City",
+      "region": "CA",
+      "postalCode": "94014"
     },
     "kings-academy": {
       "street": "562 Britton St",
@@ -167,11 +227,23 @@
       "region": "CA",
       "postalCode": "94027"
     },
+    "menlo-atherton": {
+      "street": "555 Middlefield Rd",
+      "city": "Atherton",
+      "region": "CA",
+      "postalCode": "94027"
+    },
     "mercy-burlingame": {
       "street": "2750 Adeline Dr",
       "city": "Burlingame",
       "region": "CA",
       "postalCode": "94010"
+    },
+    "mills": {
+      "street": "400 Murchison Dr",
+      "city": "Millbrae",
+      "region": "CA",
+      "postalCode": "94030"
     },
     "milpitas": {
       "street": "1285 Escuela Pkwy",
@@ -299,11 +371,29 @@
       "region": "CA",
       "postalCode": "95116"
     },
+    "san-lorenzo-valley": {
+      "street": "7105 Hwy 9",
+      "city": "Felton",
+      "region": "CA",
+      "postalCode": "95018"
+    },
+    "san-mateo": {
+      "street": "506 North Delaware Street",
+      "city": "San Mateo",
+      "region": "CA",
+      "postalCode": "94401"
+    },
     "santa-clara": {
       "street": "3000 Benton St",
       "city": "Santa Clara",
       "region": "CA",
       "postalCode": "95051"
+    },
+    "santa-cruz": {
+      "street": "415 Walnut Ave",
+      "city": "Santa Cruz",
+      "region": "CA",
+      "postalCode": "95060"
     },
     "santa-teresa": {
       "street": "6150 Snell Ave",
@@ -317,6 +407,18 @@
       "region": "CA",
       "postalCode": "95070"
     },
+    "scotts-valley": {
+      "street": "555 Glenwood Drive",
+      "city": "Scotts Valley",
+      "region": "CA",
+      "postalCode": "95066"
+    },
+    "sequoia": {
+      "street": "1201 Brewster Ave",
+      "city": "Redwood City",
+      "region": "CA",
+      "postalCode": "94062"
+    },
     "silver-creek": {
       "street": "3434 Silver Creek Rd",
       "city": "San Jose",
@@ -329,11 +431,29 @@
       "region": "CA",
       "postalCode": "95037"
     },
+    "soquel": {
+      "street": "401 Old San Jose Rd",
+      "city": "Soquel",
+      "region": "CA",
+      "postalCode": "95073"
+    },
+    "south-san-francisco": {
+      "street": "400 B Street",
+      "city": "South San Francisco",
+      "region": "CA",
+      "postalCode": "94080"
+    },
     "st-ignatius": {
       "street": "2001 37th Ave",
       "city": "San Francisco",
       "region": "CA",
       "postalCode": "94116"
+    },
+    "terra-nova": {
+      "street": "1450 Terra Nova Blvd",
+      "city": "Pacifica",
+      "region": "CA",
+      "postalCode": "94044"
     },
     "valley-christian": {
       "street": "100 Skyway Dr",
@@ -347,6 +467,12 @@
       "region": "CA",
       "postalCode": "95008"
     },
+    "westmoor": {
+      "street": "131 Westmoor Ave",
+      "city": "Daly City",
+      "region": "CA",
+      "postalCode": "94015"
+    },
     "wilcox": {
       "street": "3250 Monroe St",
       "city": "Santa Clara",
@@ -358,6 +484,12 @@
       "city": "San Jose",
       "region": "CA",
       "postalCode": "95125"
+    },
+    "woodside": {
+      "street": "199 Churchill Ave",
+      "city": "Woodside",
+      "region": "CA",
+      "postalCode": "94062"
     },
     "yerba-buena": {
       "street": "1855 Lucretia Ave",

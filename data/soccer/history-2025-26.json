@@ -328,6 +328,30 @@
       },
       "status": "available"
     },
+    "pal": {
+      "alsoPublished": [
+        {
+          "label": "PAL standings",
+          "url": "https://pal.smcoe.org/standings"
+        }
+      ],
+      "checked": [
+        "https://pal.smcoe.org/standings (one PDF a sport and level, for the 2025-26 season)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "Peninsula Athletic League",
+      "reason": "The PAL publishes its final standings on pal.smcoe.org. This site added PAL girls soccer on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "sccal": {
+      "checked": [
+        "https://sccal.org/ (the league’s site: its menu links schedules, by-laws and policies, and no standings)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "Santa Cruz Coast Athletic League",
+      "reason": "We found no official 2025-26 final standings for SCCAL girls soccer: sccal.org keeps no standings page or archive. This site added SCCAL girls soccer on November 21, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
     "scval": {
       "divisions": [
         {

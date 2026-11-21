@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 0,
+    "agreements": 1,
     "cifssOnlyScored": 0,
-    "compared": 0,
+    "compared": 1,
     "conflicts": 0,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0",
-  "contentHash": "21972e07a7debe1c0112e6b5538d3f0ca3c26979a8efb17c3f44cb4b66079702",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
+  "contentHash": "bdc05a8753b5b1900fdedc6113545614cc507116e75a0b49e1b19137ae0e5531",
   "counts": {
     "byLeague": {
       "bval": {
@@ -17,23 +17,51 @@
         "leagueGames": 125,
         "teams": 26
       },
+      "pal": {
+        "backfilled": 0,
+        "finals": 1,
+        "games": 222,
+        "leagueGames": 106,
+        "teams": 16
+      },
+      "sccal": {
+        "backfilled": 0,
+        "finals": 1,
+        "games": 77,
+        "leagueGames": 25,
+        "teams": 6
+      },
       "scval": {
         "backfilled": 0,
         "finals": 1,
         "games": 197,
         "leagueGames": 96,
         "teams": 15
+      },
+      "wbal": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 122,
+        "leagueGames": 39,
+        "teams": 8
+      },
+      "wcal": {
+        "backfilled": 0,
+        "finals": 1,
+        "games": 112,
+        "leagueGames": 56,
+        "teams": 8
       }
     },
-    "finals": 1,
-    "games": 442,
-    "leagueGames": 221,
-    "mismatches": 0,
-    "pending": 7,
-    "teams": 41
+    "finals": 4,
+    "games": 883,
+    "leagueGames": 447,
+    "mismatches": 1,
+    "pending": 18,
+    "teams": 79
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-21T05:36:44.871Z",
+  "fetchedAt": "2026-11-21T06:52:18.692Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -54,12 +82,48 @@
         "BVAL revised the West Valley schedule after our copy (revised 10/12/26); official dates may be out of date."
       ],
       "state": "partial"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "wcal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "wbal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "pal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "sccal",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 21,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 54,
+    "maxpreps": 102,
     "official": 6,
     "sblive": 0
   },
@@ -395,6 +459,246 @@
       "status": "stale"
     },
     {
+      "label": "wcal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "wcal reported standings",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "mitty schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "riordan schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "bellarmine schedule",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "serra schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-cathedral schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "saint-francis schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "st-ignatius schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "valley-christian schedule",
+      "rowCount": 31,
+      "status": "ok"
+    },
+    {
+      "label": "wbal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "wbal reported standings",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "crystal-springs schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "eastside schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "harker schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "kings-academy schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "menlo schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "pinewood schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "priory schedule",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
+      "label": "sacred-heart-prep schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "bay league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "ocean league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "bay reported standings",
+      "rowCount": 7,
+      "status": "ok"
+    },
+    {
+      "label": "ocean reported standings",
+      "rowCount": 9,
+      "status": "ok"
+    },
+    {
+      "label": "aragon schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "burlingame schedule",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "carlmont schedule",
+      "rowCount": 27,
+      "status": "ok"
+    },
+    {
+      "label": "half-moon-bay schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "hillsdale schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "menlo-atherton schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "sequoia schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "woodside schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
+      "label": "capuchino schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "el-camino-ssf schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "jefferson schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "mills schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "san-mateo schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "south-san-francisco schedule",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "terra-nova schedule",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "westmoor schedule",
+      "rowCount": 26,
+      "status": "ok"
+    },
+    {
+      "label": "sccal league metadata",
+      "rowCount": null,
+      "status": "ok"
+    },
+    {
+      "label": "sccal reported standings",
+      "rowCount": 6,
+      "status": "ok"
+    },
+    {
+      "label": "aptos schedule",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
+      "label": "harbor schedule",
+      "rowCount": 19,
+      "status": "ok"
+    },
+    {
+      "label": "san-lorenzo-valley schedule",
+      "rowCount": 29,
+      "status": "ok"
+    },
+    {
+      "label": "santa-cruz schedule",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
+      "label": "scotts-valley schedule",
+      "rowCount": 13,
+      "status": "ok"
+    },
+    {
+      "label": "soquel schedule",
+      "rowCount": 21,
+      "status": "ok"
+    },
+    {
       "label": "cifsshome.org Central Coast Section field hockey",
       "rowCount": 7,
       "status": "ok"
@@ -416,7 +720,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 805,
+      "rowCount": 807,
       "status": "ok"
     },
     {
@@ -439,7 +743,7 @@
   "warnings": 12,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
-    "lastGame": "2027-02-16T19:00:00",
-    "lastLeagueGame": "2027-02-16T19:00:00"
+    "lastGame": "2027-02-16T19:30:00",
+    "lastLeagueGame": "2027-02-16T19:30:00"
   }
 }

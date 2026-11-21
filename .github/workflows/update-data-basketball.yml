@@ -42,8 +42,8 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # 15 schedule feeds and two league tables, the official revision checks, the CCS calendar and the
-    # cifsshome.org listings; then 15 stats rollups (and a box score per new final) and 15 JV feeds.
+    # 79 schedule feeds and eleven league tables, the official revision checks, the CCS calendar and the
+    # cifsshome.org listings; then 79 stats rollups (and a box score per new final) and 79 JV feeds.
     timeout-minutes: 30
 
     env:

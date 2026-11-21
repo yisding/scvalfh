@@ -22,8 +22,14 @@ import { NORTH_COUNTY } from './league-config/north-county';
 import { PCAL } from './league-config/pcal';
 import { SCVAL } from './league-config/scval';
 import { BVAL_BASKETBALL_LEAGUE } from './league-config/basketball/bval';
+import { PAL_BASKETBALL_LEAGUE } from './league-config/basketball/pal';
+import { SCCAL_BASKETBALL_LEAGUE } from './league-config/basketball/sccal';
 import { SCVAL_BASKETBALL } from './league-config/basketball/scval';
+import { WBAL_BASKETBALL_LEAGUE } from './league-config/basketball/wbal';
+import { WCAL_BASKETBALL_LEAGUE } from './league-config/basketball/wcal';
 import { BVAL_SOCCER_LEAGUE } from './league-config/soccer/bval';
+import { PAL_SOCCER_LEAGUE } from './league-config/soccer/pal';
+import { SCCAL_SOCCER_LEAGUE } from './league-config/soccer/sccal';
 import { SCVAL_SOCCER } from './league-config/soccer/scval';
 import { WBAL_SOCCER_LEAGUE } from './league-config/soccer/wbal';
 import { WCAL_SOCCER_LEAGUE } from './league-config/soccer/wcal';
@@ -54,9 +60,13 @@ import { bySport, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current'
 export const LEAGUES: readonly LeagueConfig[] = bySport<readonly LeagueConfig[]>({
   'field-hockey': [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS],
   // The winter builds cover SCVAL and BVAL (BVAL added 2026-11-13, so the ratings count SCVAL's games against BVAL
-  // schools); the soccer and volleyball builds also cover the WCAL and the WBAL (owner requests, 2026-11-14).
-  soccer: [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE],
-  basketball: [SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE],
+  // schools); the soccer and volleyball builds also cover the WCAL and the WBAL (owner requests, 2026-11-14), and the
+  // soccer and basketball builds the WCAL, the WBAL, the PAL and the SCCAL (owner request, 2026-11-21).
+  soccer: [SCVAL_SOCCER, BVAL_SOCCER_LEAGUE, WCAL_SOCCER_LEAGUE, WBAL_SOCCER_LEAGUE, PAL_SOCCER_LEAGUE, SCCAL_SOCCER_LEAGUE],
+  basketball: [
+    SCVAL_BASKETBALL, BVAL_BASKETBALL_LEAGUE, WCAL_BASKETBALL_LEAGUE, WBAL_BASKETBALL_LEAGUE, PAL_BASKETBALL_LEAGUE,
+    SCCAL_BASKETBALL_LEAGUE,
+  ],
   volleyball: [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE],
 });
 

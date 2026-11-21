@@ -26,8 +26,14 @@ import { NORTH_COUNTY_SEEDS } from './registry/north-county';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import { BVAL_BASKETBALL_SEEDS } from './registry/basketball/bval';
+import { PAL_BASKETBALL_SEEDS } from './registry/basketball/pal';
+import { SCCAL_BASKETBALL_SEEDS } from './registry/basketball/sccal';
 import { SCVAL_BASKETBALL_SEEDS } from './registry/basketball/scval';
+import { WBAL_BASKETBALL_SEEDS } from './registry/basketball/wbal';
+import { WCAL_BASKETBALL_SEEDS } from './registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from './registry/soccer/bval';
+import { PAL_SOCCER_SEEDS } from './registry/soccer/pal';
+import { SCCAL_SOCCER_SEEDS } from './registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from './registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from './registry/soccer/wcal';
@@ -121,8 +127,14 @@ const SEEDS_BY_LEAGUE = bySport<Readonly<Record<LeagueId, readonly Seed[]>>>({
     metro: METRO_SEEDS,
     independents: INDEPENDENTS_SEEDS,
   },
-  soccer: { scval: SCVAL_SOCCER_SEEDS, bval: BVAL_SOCCER_SEEDS, wcal: WCAL_SOCCER_SEEDS, wbal: WBAL_SOCCER_SEEDS },
-  basketball: { scval: SCVAL_BASKETBALL_SEEDS, bval: BVAL_BASKETBALL_SEEDS },
+  soccer: {
+    scval: SCVAL_SOCCER_SEEDS, bval: BVAL_SOCCER_SEEDS, wcal: WCAL_SOCCER_SEEDS, wbal: WBAL_SOCCER_SEEDS,
+    pal: PAL_SOCCER_SEEDS, sccal: SCCAL_SOCCER_SEEDS,
+  },
+  basketball: {
+    scval: SCVAL_BASKETBALL_SEEDS, bval: BVAL_BASKETBALL_SEEDS, wcal: WCAL_BASKETBALL_SEEDS, wbal: WBAL_BASKETBALL_SEEDS,
+    pal: PAL_BASKETBALL_SEEDS, sccal: SCCAL_BASKETBALL_SEEDS,
+  },
   volleyball: { scval: SCVAL_VOLLEYBALL_SEEDS, bval: BVAL_VOLLEYBALL_SEEDS, wcal: WCAL_VOLLEYBALL_SEEDS, wbal: WBAL_VOLLEYBALL_SEEDS },
 });
 
@@ -309,22 +321,28 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
 // The soccer, basketball and volleyball registries' 41 SCVAL and BVAL schools: Mountain View and Monta Vista are both
 // MVHS; CHS (Cupertino, Christopher), GHS (Gunn, Gilroy, Gunderson), HHS (Homestead, Andrew Hill), LHS (Los Gatos,
 // Leigh, Leland, Lincoln), PHS (Prospect, Pioneer), SCHS (Santa Clara, Silver Creek) and WHS (Wilcox, Westmont). The
-// soccer and volleyball registries' WCAL and WBAL schools add Castilleja to CHS, Harker to HHS and Presentation,
-// Pinewood and Priory to PHS, and bring MHS (Milpitas, Mercy Burlingame) and NDHS (the two Notre Dames).
-const SCVAL_BVAL_COLLISIONS = ['CHS', 'GHS', 'HHS', 'LHS', 'MVHS', 'PHS', 'SCHS', 'WHS'];
+// volleyball registry's WCAL and WBAL schools (and the soccer registry's, before the PAL and the SCCAL) add
+// Castilleja to CHS, Harker to HHS and Presentation, Pinewood and Priory to PHS, and bring MHS (Milpitas, Mercy
+// Burlingame) and NDHS (the two Notre Dames).
 const WITH_WCAL_WBAL_COLLISIONS = ['CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'WHS'];
+// The PAL's and the SCCAL's schools (2026-11-21) bring AHS (Aragon, Aptos), BHS (Branham, Burlingame) and SHS
+// (Sequoia, Soquel), and add Carlmont and Capuchino to CHS, Hillsdale and Harbor to HHS, Mills to MHS, Santa
+// Cruz to SCHS and Woodside and Westmoor to WHS. The basketball registry has the soccer registry's set less NDHS (it
+// holds neither Notre Dame); Mercy Burlingame's place in MHS is taken there by Mills.
+const WITH_PAL_SCCAL_COLLISIONS = ['AHS', 'BHS', 'CHS', 'GHS', 'HHS', 'LHS', 'MHS', 'MVHS', 'NDHS', 'PHS', 'SCHS', 'SHS', 'WHS'];
 const EXPECTED_ACRONYM_COLLISIONS = bySport<readonly string[]>({
   'field-hockey': ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS'],
-  soccer: WITH_WCAL_WBAL_COLLISIONS,
-  basketball: SCVAL_BVAL_COLLISIONS,
+  soccer: WITH_PAL_SCCAL_COLLISIONS,
+  basketball: WITH_PAL_SCCAL_COLLISIONS.filter((a) => a !== 'NDHS'),
   volleyball: WITH_WCAL_WBAL_COLLISIONS,
 });
 
 /**
- * The registry's size: field hockey's 102 teams, basketball's 41 (SCVAL's 15 and BVAL's 26), or soccer's and
- * volleyball's 60 (those 41, the WCAL's 6 and the WBAL's 13).
+ * The registry's size: field hockey's 102 teams; volleyball's 60 (SCVAL's 15, BVAL's 26, the WCAL's 6 and the WBAL's
+ * 13); soccer's 82 (those 60, the PAL's 16 and the SCCAL's 6); basketball's 79 (SCVAL's 15, BVAL's 26, the WCAL's 8,
+ * the WBAL's 8, the PAL's 16 and the SCCAL's 6).
  */
-const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 60, basketball: 41, volleyball: 60 });
+const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 82, basketball: 79, volleyball: 60 });
 
 function assertRegistry(): void {
   const fail = (m: string): never => {

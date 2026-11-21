@@ -11,8 +11,9 @@
  *   pnpm fetch-mascots --dry-run       fetch and process, write nothing
  *
  * The teams are this build's registry: a school only the soccer and basketball registries hold (Gunn, Mountain
- * View, MacDonald, Milpitas, Wilcox, the fourteen BVAL schools field hockey does not have, and the fourteen WCAL
- * and WBAL schools only the soccer registry holds) is fetched with
+ * View, MacDonald, Milpitas, Wilcox, the fourteen BVAL schools field hockey does not have, the fourteen WCAL
+ * and WBAL schools only the soccer registry holds, the PAL's sixteen and the SCCAL's six, and the WCAL's Bellarmine
+ * and Serra, only the basketball registry's) is fetched with
  * `SCVAL_SPORT=soccer pnpm fetch-mascots --only <slug>` (one `--only` per slug).
  * One public/mascots/ serves every sport's build.
  *
@@ -50,7 +51,10 @@ import sharp, { type Sharp } from 'sharp';
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
 import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { WCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
+import { PAL_SOCCER_SEEDS } from '../lib/registry/soccer/pal';
+import { SCCAL_SOCCER_SEEDS } from '../lib/registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from '../lib/registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from '../lib/registry/soccer/wcal';
@@ -164,7 +168,7 @@ const SOURCE_OVERRIDES: Readonly<Record<string, MascotSource & { why: string }>>
 const WINTER_SLUGS: ReadonlySet<string> = new Set(
   [
     ...SCVAL_SOCCER_SEEDS, ...SCVAL_BASKETBALL_SEEDS, ...BVAL_SOCCER_SEEDS, ...BVAL_BASKETBALL_SEEDS,
-    ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS,
+    ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS, ...PAL_SOCCER_SEEDS, ...SCCAL_SOCCER_SEEDS, ...WCAL_BASKETBALL_SEEDS,
   ].map((s) => s.slug),
 );
 

@@ -11,7 +11,10 @@ import { describe, expect, it } from 'vitest';
 import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
 import { BVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/bval';
 import { SCVAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/scval';
+import { WCAL_BASKETBALL_SEEDS } from '../lib/registry/basketball/wcal';
 import { BVAL_SOCCER_SEEDS } from '../lib/registry/soccer/bval';
+import { PAL_SOCCER_SEEDS } from '../lib/registry/soccer/pal';
+import { SCCAL_SOCCER_SEEDS } from '../lib/registry/soccer/sccal';
 import { SCVAL_SOCCER_SEEDS } from '../lib/registry/soccer/scval';
 import { WBAL_SOCCER_SEEDS } from '../lib/registry/soccer/wbal';
 import { WCAL_SOCCER_SEEDS } from '../lib/registry/soccer/wcal';
@@ -34,6 +37,9 @@ const STEMS = [
     ...BVAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...WCAL_SOCCER_SEEDS.map((s) => s.slug),
     ...WBAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...PAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...SCCAL_SOCCER_SEEDS.map((s) => s.slug),
+    ...WCAL_BASKETBALL_SEEDS.map((s) => s.slug),
     ...SCVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     ...BVAL_VOLLEYBALL_SEEDS.map((s) => s.slug),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot),

@@ -13,19 +13,21 @@ note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site r
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
-**Girls soccer (SCVAL, BVAL, WCAL and WBAL, 2026-27).** The same code builds a second site, NorCal High School Girls Soccer,
-when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), the BVAL's 26
-(Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6 and the WBAL's 13 (Foothill 7, Skyline 6), 60 teams,
-winter 2026-27, from the data under `data/soccer/`. The WCAL and the WBAL were added on 2026-11-14 (see "WCAL and
-WBAL in the soccer build"). See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
+**Girls soccer (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL, 2026-27).** The same code builds a second site, NorCal High
+School Girls Soccer, when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), the
+BVAL's 26 (Mt. Hamilton 8, Santa Teresa 8, West Valley 10), the WCAL's 6, the WBAL's 13 (Foothill 7, Skyline 6), the
+PAL's 16 (Bay 7, Ocean 9) and the SCCAL's 6, 82 teams, winter 2026-27, from the data under `data/soccer/`. The WCAL and
+the WBAL were added on 2026-11-14 (see "WCAL and WBAL in the soccer build"), the PAL and the SCCAL on 2026-11-21 (see
+"PAL and SCCAL in the winter builds"). See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
 
-**Boys basketball (SCVAL and BVAL, 2026-27).** The same code builds a third site, NorCal High School Boys
-Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El Camino 8)
-and the BVAL's 26 (Mt. Hamilton 7, Santa Teresa 6, Almaden Valley 6, West Valley 7), winter 2026-27, from the data
-under `data/basketball/`, with tables ordered on the league record and a JV schedule read from the leagues' own
-documents. BVAL was added to both winter builds on 2026-11-13 so the ratings count SCVAL's many non-league games
-against BVAL schools (see "BVAL in the winter builds"). See "Boys basketball" under "Local development" and
-docs/MULTI-SPORT.md.
+**Boys basketball (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL, 2026-27).** The same code builds a third site, NorCal High
+School Boys Basketball, when `SCVAL_SPORT=basketball` is set: the SCVAL's 15 boys basketball teams (De Anza 7, El
+Camino 8), the BVAL's 26 (Mt. Hamilton 7, Santa Teresa 6, Almaden Valley 6, West Valley 7), the WCAL's 8, the WBAL's
+8, the PAL's 16 (Bay 8, Ocean 8) and the SCCAL's 6, 79 teams, winter 2026-27, from the data under `data/basketball/`,
+with tables ordered on the league record and a JV schedule read from SCVAL's and BVAL's own documents. BVAL was added
+to both winter builds on 2026-11-13 so the ratings count SCVAL's many non-league games against BVAL schools (see
+"BVAL in the winter builds"); the WCAL, the WBAL, the PAL and the SCCAL on 2026-11-21 (see "PAL and SCCAL in the
+winter builds"). See "Boys basketball" under "Local development" and docs/MULTI-SPORT.md.
 
 **Girls volleyball (SCVAL, BVAL, WCAL and WBAL, 2026).** The same code builds a fourth site, NorCal High School Girls
 Volleyball, when `SCVAL_SPORT=volleyball` is set: the SCVAL's 15 girls volleyball teams (De Anza 7, El Camino 8),
@@ -1419,7 +1421,7 @@ and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading
 ### Girls soccer
 
 One sport per build (docs/MULTI-SPORT.md). `SCVAL_SPORT` picks it: unset (or `field-hockey`) builds this
-site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL and WBAL) from `data/soccer/`. Every command takes it:
+site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL) from `data/soccer/`. Every command takes it:
 
 ```bash
 SCVAL_SPORT=soccer pnpm fetch-data --no-sblive --no-vnn   # data/soccer/snapshot.json (si.com and VNN are field hockey's)
@@ -1444,7 +1446,8 @@ rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sect
 
 ### Boys basketball
 
-`SCVAL_SPORT=basketball` builds the SCVAL boys basketball site from `data/basketball/`. Every command takes it:
+`SCVAL_SPORT=basketball` builds the boys basketball site (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL) from
+`data/basketball/`. Every command takes it:
 
 ```bash
 SCVAL_SPORT=basketball pnpm build-scval-basketball-fixtures     # data/basketball/official/scval-2026.json, from the two schedule texts
@@ -1830,10 +1833,56 @@ finals between registry teams in 2025-26 (114 with SCVAL alone) and 335 girls so
 - **Addresses** for the fourteen schools field hockey does not have are MaxPreps' school fields
   (`data/<sport>/schools.json`).
 
+### PAL and SCCAL in the winter builds
+
+Both winter builds cover the Peninsula Athletic League and the Santa Cruz Coast Athletic League, and the basketball
+build the WCAL and the WBAL too (owner request, 2026-11-21). The soccer registry holds 82 teams, the basketball
+registry 79. Every new league's games are read by membership, as soccer's WCAL and WBAL are: a league game is a game
+between two members of one division inside its league play (`classification: 'membership'`), and each division's
+`official.scheduleUrl` names the league's own schedule, which is not copied.
+
+- **PAL** (`lib/league-config/{soccer,basketball}/pal.ts`, `lib/registry/{soccer,basketball}/pal.ts`): sixteen San
+  Mateo County schools in a Bay and an Ocean division, from the 2027 schedules on pal.smcoe.org/current/schedules
+  (PDFs on Google Drive) and the CCS's League Placement and Classification by Sport 2026-27. Girls soccer: Bay 7 and
+  Ocean 9, double round robins of 12 and 16 games, Dec 1-8 to Feb 11; 3-1-0 points, no overtime (Soccer Bylaws
+  §8.2.1, §13.5). Boys basketball: Bay 8 and Ocean 8 (Half Moon Bay plays in the Bay here, in the Ocean in soccer),
+  14 games each, Jan 5 to Feb 12 (the Basketball Bylaws' §1 still says 7 and 10). Ties are broken head-to-head and
+  then on the record against each other team from the top down (`record-vs-placed`, §9.2-9.3 and §9.1.2-9.1.3);
+  CCS power points, coin flips and blind draws are not computed. Both sports send Bay 1-3 and Ocean 1 to the CCS.
+  MaxPreps lists Woodside in its Ocean basketball table (`maxprepsMissing`, `maxprepsExtraRows`). El Camino of
+  South San Francisco is `el-camino-ssf`, since SCVAL has an El Camino division.
+- **SCCAL** (`lib/league-config/{soccer,basketball}/sccal.ts`, `lib/registry/{soccer,basketball}/sccal.ts`): Aptos,
+  Harbor, San Lorenzo Valley, Santa Cruz, Scotts Valley and Soquel (Mount Madonna fields neither team), from the
+  2026-27 schedules and the by-laws on sccal.org. Ten games each: soccer Jan 12 to Feb 11 (3-1-0, no overtime,
+  Article XL §B.3, §E.1), basketball Jan 8 to Feb 5, then an SCCAL tournament in the week of Feb 8 (not league
+  play). Tiebreaks follow the SCCAL Policy Section "Automatic Qualifiers to CCS" §2.d. The champion is the
+  league's #1 CCS seed; in basketball the tournament decides the #2 (Article XXXII §E.3: the ladder marks places 2
+  and below `play-in`), and no SCCAL document counts the girls soccer berths, so one is marked.
+- **WCAL basketball** (`lib/league-config/basketball/wcal.ts`, `lib/registry/basketball/wcal.ts`): eight schools,
+  the soccer registry's six and two boys' schools, Bellarmine and Junípero Serra (`serra`), from the 2026-27
+  composite schedule (14 games each, Jan 5 to Feb 16) and By-Laws Article II – Basketball (two points a win, so the
+  table is ordered on wins; head-to-head, then §11.B's later steps not computed). As in volleyball, no WCAL
+  document counts the automatic berths: the champion is the league's #1 seed (§12.A).
+- **WBAL basketball** (`lib/league-config/basketball/wbal.ts`, `lib/registry/basketball/wbal.ts`): one division of
+  eight, from hs.wbalsports.org/bbstb.html and its schedule page: ten games each, Jan 12 to Feb 16, not a double
+  round robin (every team meets the other seven and three of them twice), so `gamesPerTeam` is `null`. First and
+  second place are automatic (By-Laws Article I §108.2).
+- **Seeds**: a basketball seed for a school the soccer registry holds is that school's soccer seed on its basketball
+  page (`lib/registry/basketball/from-soccer.ts`). Names, mascots, cities and addresses are MaxPreps' school fields
+  on each school's boys basketball schedule row; acronyms and colors its standings rows (read 2026-11-21). The
+  mascot tiles are MaxPreps' (`pnpm fetch-mascots --only <slug>`).
+- **Last season**: /history/2025-26 marks each new league unavailable (`notTranscribedYet` in
+  `scripts/build-history.ts`) and links what the league published: the PAL's and the WBAL's final standings and
+  the WCAL's archive are there to transcribe; the SCCAL publishes no standings.
+- **Snapshots written before a league was added** load through `addConfiguredLeagues`
+  (`lib/snapshot/snapshot-migrate.ts`), which now also takes the CCS berth table afresh from config, so the first
+  refresh after this change carries the previous snapshot instead of starting from nothing.
+
 ### WCAL and WBAL in the soccer build
 
 The soccer build also covers the West Catholic Athletic League and the West Bay Athletic League (owner request,
-2026-11-14); the basketball build does not. The registry holds 60 teams.
+2026-11-14); the basketball build has had them since 2026-11-21 (see "PAL and SCCAL in the winter builds"). The
+soccer registry held 60 teams with them, 82 with the PAL and the SCCAL.
 
 - **WCAL** (`lib/league-config/soccer/wcal.ts`, `lib/registry/soccer/wcal.ts`): six teams in one table, Archbishop
   Mitty, Archbishop Riordan, Sacred Heart Cathedral, Saint Francis, St. Ignatius and Valley Christian, the columns
