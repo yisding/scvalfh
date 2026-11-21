@@ -14,8 +14,9 @@ import {
   isCrossLevelGame,
   withCrossLevelNames,
 } from '../lib/cross-level';
+import { buildJvGameView, jvGameTitle } from '../components/jv/jv-game-view';
 import { getSnapshot } from '../lib/data';
-import { getJvClassification, getJvGames } from '../lib/jv/jv';
+import { getJvClassification, getJvGameSlug, getJvGames } from '../lib/jv/jv';
 import { ratingGames } from '../lib/ratings/ratings';
 import { TEAMS } from '../lib/teams';
 import { game } from './game-builder';
@@ -61,5 +62,15 @@ describe('over the bundled files', () => {
     for (const g of jv) expect(getJvClassification(g.contestId)?.kind).not.toBe('league');
     const rated = new Set(ratingGames(TEAMS, getSnapshot().games).map((g) => g.contestId));
     for (const g of varsity) expect(rated.has(g.contestId)).toBe(false);
+  });
+
+  it('a JV game page’s title says JV only of the JV side, never of the placeholder', () => {
+    for (const g of jv) {
+      const model = buildJvGameView(getJvGameSlug(g.contestId)!)!;
+      const title = jvGameTitle(model);
+      expect(title).not.toMatch(/Non-JV team JV/);
+      const school = model.away.team ? model.away : model.home;
+      expect(title).toContain(`${school.label} JV`);
+    }
   });
 });

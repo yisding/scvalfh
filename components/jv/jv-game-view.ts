@@ -11,7 +11,7 @@
  * SERVER-ONLY: reads lib/jv/jv and lib/data.
  */
 
-import { crossLevelNote, crossLevelSides, isCrossLevelGame } from '../../lib/cross-level';
+import { crossLevelNote, crossLevelOpponentOf, crossLevelSides, isCrossLevelGame } from '../../lib/cross-level';
 import { getGameDates } from '../../lib/data';
 import { byDateThenId, dateWithYear, matchupJoiner, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
@@ -40,6 +40,11 @@ export interface JvGameSideModel {
   name: string;
   /** The name for a `<title>` and an OG card: the short name when the full one is over 24 characters. */
   label: string;
+  /**
+   * `label` with "JV" after it (`Los Gatos JV`), for the title and the OG card; a cross-level placeholder
+   * (lib/cross-level.ts: "Non-JV team") is not a JV team and keeps its label alone.
+   */
+  jvLabel: string;
   team: Team | undefined;
   /** York for Santa Catalina's JV slot (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS): the school whose slot it plays. */
   slot: JvSlotTeam | undefined;
@@ -130,11 +135,13 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   const slot = team ? undefined : jvOutsideTeamByMaxprepsId(side.teamId);
   const name = team ? team.name : side.name;
+  const label = team && name.length > TITLE_NAME_LIMIT ? team.shortName : name;
   const tracked = team !== undefined || slot !== undefined;
   const record = tracked && side.teamId ? recordAsOf(game, side.teamId, all) : null;
   return {
     name,
-    label: team && name.length > TITLE_NAME_LIMIT ? team.shortName : name,
+    label,
+    jvLabel: crossLevelOpponentOf(side.teamId) ? label : `${label} JV`,
     team,
     slot,
     sub: tracked ? (record ? `${record} JV` : 'No JV results yet') : null,
@@ -287,11 +294,11 @@ export function jvGameTitle(model: JvGameModel): string {
   if (display.kind === 'final') {
     const [first, second] = home.view.weight === 'winner' ? [home, away] : [away, home];
     const decider = display.deciderTag ? ` (${display.deciderTag})` : '';
-    return `${first.label} JV ${first.view.glyph}, ${second.label} JV ${second.view.glyph}${decider} — ${SPORT.noun}, ${date}`;
+    return `${first.jvLabel} ${first.view.glyph}, ${second.jvLabel} ${second.view.glyph}${decider} — ${SPORT.noun}, ${date}`;
   }
   const suffix =
     display.kind === 'scheduled' ? (game.isTimeTba ? 'time TBA' : timeOfDayPT(game.dateLocal)) : display.statusLabel.toLowerCase();
-  return `${away.label} JV ${matchupJoiner(game)} ${home.label} JV ${SPORT.noun} — ${date}, ${suffix}`;
+  return `${away.jvLabel} ${matchupJoiner(game)} ${home.jvLabel} ${SPORT.noun} — ${date}, ${suffix}`;
 }
 
 /** The meta description: the game's sentence, its competition and what it counts for. */
