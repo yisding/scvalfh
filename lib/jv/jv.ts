@@ -24,6 +24,7 @@ import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
+import { withCrossLevelNames } from '../cross-level';
 import { LEDGER_VIEW } from '../fixtures/ledger';
 import { assignGameSlugs } from '../game-urls';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
@@ -84,7 +85,8 @@ const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
   JV_CORRECTIONS.leagueGames,
   { claims: official.claims, divisions: new Set(JV_SLOTS.map((s) => s.division)) },
 );
-const games: Game[] = withJvClassification(reported.games, classes);
+// A game against MaxPreps' "Non JV Opponent" names that side in words (lib/cross-level.ts), before its slug is made.
+const games: Game[] = withCrossLevelNames(withJvClassification(reported.games, classes));
 /** The divisions whose schedule schedules the JV round: a bundle carries a JV slot on every fixture or on none. */
 const JV_SCHEDULED_DIVISIONS: ReadonlySet<DivisionId> = new Set(JV_SLOTS.map((s) => s.division));
 const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt), JV_SCHEDULED_DIVISIONS);

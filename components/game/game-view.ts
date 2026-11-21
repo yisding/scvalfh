@@ -21,6 +21,7 @@
  * stay free of it.
  */
 
+import { crossLevelNote, crossLevelSides, isCrossLevelGame } from '../../lib/cross-level';
 import { orderNoun } from '../../lib/standings/order';
 import {
   getGameById,
@@ -238,6 +239,11 @@ export interface GameModel {
    * rules rule out (`overtimeInDoubt`) says the score is shown as MaxPreps has it.
    */
   scoreNote: string | null;
+  /**
+   * A game against MaxPreps' "Non Varsity Opponent" (lib/cross-level.ts): what that is and what the game counts
+   * for. Null for a game between two real teams.
+   */
+  crossLevelNote: string | null;
   /** How many teams this site follows (the non-member copy names it). */
   memberCount: number;
   /** "Thu Sep 24" — the back link to /scores/[date]. */
@@ -458,7 +464,8 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
 /** Every contest between these two schools this season, in date order. */
 function seriesGames(game: Game): Game[] {
   const anchor = game.home.slug ?? game.away.slug;
-  if (!anchor) return [game];
+  // A cross-level placeholder is a different team each time (lib/cross-level.ts): it has no series.
+  if (!anchor || isCrossLevelGame(game)) return [game];
   const keyHome = sideKey(game.home);
   const keyAway = sideKey(game.away);
   return getGames({ teamId: anchor })
@@ -1021,6 +1028,7 @@ function buildGameModel(game: Game): GameModel {
     countsAs: post?.countsAs ?? countsAsFor(game),
     postseasonNotes: post?.notes ?? [],
     scoreNote: scoreNoteFor(game, display, away, home),
+    crossLevelNote: crossLevelNote(game, (crossLevelSides(game)?.which === 'home' ? away : home).name),
     memberCount: getTeams().length,
     dayLabel: shortDate(game.dateLocal),
     whenLabel: game.isTimeTba

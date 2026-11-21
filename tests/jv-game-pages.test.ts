@@ -17,7 +17,8 @@ import {
   jvGameHref,
 } from '../lib/jv/jv';
 import { jvVarsityTwins } from '../lib/jv/jv-standings';
-import { TEAMS } from '../lib/teams';
+import { regionOf } from '../lib/leagues';
+import { TEAMS, getTeamBySlug } from '../lib/teams';
 import { game as makeGame } from './game-builder';
 
 const games = getJvGames();
@@ -54,12 +55,20 @@ describe('the JV game page model', () => {
     expect(buildJvGameView('2026-01-01-nobody-at-nowhere')).toBeUndefined();
   });
 
-  it('links the date to its score day only when the day has a varsity game', () => {
+  it('links the date to its region’s JV block on the score day only when the day has a varsity game', () => {
+    let socal = 0;
     for (const { id } of jvGameStaticParams()) {
       const model = buildJvGameView(id)!;
-      if (varsityDates.has(model.game.dateKey)) expect(model.dayHref).toBe(`/scores/${model.game.dateKey}#jv`);
+      const slug = model.game.home.slug ?? model.game.away.slug;
+      const region = slug ? regionOf(getTeamBySlug(slug)!.league) : null;
+      if (varsityDates.has(model.game.dateKey) && region) {
+        expect(model.dayHref).toBe(`/scores/${model.game.dateKey}#jv${region === 'socal' ? '-socal' : ''}`);
+        if (region === 'socal') socal += 1;
+      }
       else expect(model.dayHref).toMatch(new RegExp(`^/jv(/[a-z-]+#d-${model.game.dateKey})?$`));
     }
+    // The bundled field hockey file has SoCal JV games: the #jv-socal branch is exercised.
+    if (!process.env.SCVAL_SPORT || process.env.SCVAL_SPORT === 'field-hockey') expect(socal).toBeGreaterThan(0);
   });
 
   it('counts a final in the records under the names, and a game still to play in neither', () => {

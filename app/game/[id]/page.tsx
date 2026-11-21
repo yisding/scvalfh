@@ -123,6 +123,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
     ...(wonNote ? [wonNote] : []),
     ...model.postseasonNotes.filter((note) => note !== model.countsAs.detail),
     ...(model.scoreNote ? [model.scoreNote] : []),
+    ...(model.crossLevelNote ? [model.crossLevelNote] : []),
   ];
   // The short stamp sits with the facts while the score can still change: a live game, or one still to play today.
   const fresh =

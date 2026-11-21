@@ -689,6 +689,27 @@ game has, and kept apart from varsity the same way:
   sit beside links neither.
 - **No box score, no form strip, no bracket, no rating**: the JV feeds carry none of them.
 
+#### Games between two levels
+
+MaxPreps files a game between one school's varsity and a team that is not a varsity team (a JV, frosh-soph or club
+side), or one school's JV and a team that is not a JV team, against a placeholder team of its own, never against the
+other school's team at the other level: "Non Varsity Opponent" (`4fc9dcd1-…`) in a varsity schedule, "Non JV Opponent"
+(`d1bd084e-…`) in a JV one, the same ids in every sport (read 2026-11-21: Burlingame's and Woodside's varsity soccer
+games of Nov 19 and Dec 21, Piedmont Hills' 0-0 JV soccer game of Nov 17 and seven more JV games in soccer, field
+hockey and basketball). `lib/cross-level.ts` is how the site shows one:
+
+- the placeholder is named in words, "Non-varsity team" or "Non-JV team", as `lib/data.ts` and `lib/jv/jv.ts` load the
+  games, so no list, title or card prints MaxPreps' placeholder as a school; on a scoreboard the line under it says
+  "Not named on MaxPreps", and the game page says what the game is and what it counts for;
+- it counts in the school's overall record (varsity) or JV record, as on MaxPreps, and in nothing else: it is outside
+  the registry, so it is never a league game or a JV league game, and the ratings count only games between two
+  registry teams;
+- two such games are never one season series, and the placeholder has no "Last 5 games" row: it is a different team
+  each time.
+
+"Tournament Opponent" (`b6e1f3f8-…`) is a different placeholder, an unset tournament slot, and stays a ghost
+(`lib/league-config/data-quality.ts`).
+
 #### JV games from the league's own schedule
 
 Coaches enter JV schedules on MaxPreps far less completely than varsity ones: on 2026-11-10 the 15 SCVAL

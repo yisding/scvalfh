@@ -11,6 +11,7 @@
  * SERVER-ONLY: reads lib/jv/jv and lib/data.
  */
 
+import { crossLevelNote, crossLevelSides, isCrossLevelGame } from '../../lib/cross-level';
 import { getGameDates } from '../../lib/data';
 import { byDateThenId, dateWithYear, matchupJoiner, recordString, shortDate, sideOutcome, timeOfDayPT } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
@@ -26,10 +27,11 @@ import {
 import { isOfficialJvContestId } from '../../lib/jv/jv-official';
 import type { JvClassification } from '../../lib/jv/jv-standings';
 import { jvOutsideTeamByMaxprepsId, type JvSlotTeam } from '../../lib/jv/jv-teams';
-import { divisionHeading, getLeague, isSingleDivision, leagueOfDivision } from '../../lib/leagues';
+import { divisionHeading, getLeague, isSingleDivision, leagueOfDivision, regionOf } from '../../lib/leagues';
 import { SPORT } from '../../lib/sports/current';
 import { getTeamBySlug } from '../../lib/teams';
 import type { DivisionId, Game, GameSide, LeagueId, Outcome, Team } from '../../lib/types';
+import { regionIdSuffix } from '../leaders/scope';
 import { describeGame, type GameDisplay, type SideView } from '../ui/describe-game';
 import { jvDiffersNote } from './jv-view';
 
@@ -74,7 +76,7 @@ export interface JvGameModel {
   series: JvSeriesMeeting[];
   /** Whose side the series rows read from: the home side's team id. */
   seriesPerspective: { teamId: string } | null;
-  /** The date's page: /scores/<date>#jv when the date has varsity games, else the league's JV season at that date. */
+  /** The date's page: /scores/<date>#jv (or #jv-socal) when the date has varsity games, else the league's JV season at that date. */
   dayHref: string;
   /** Off-site pages for this game: MaxPreps' JV game page, si.com's, a stream. */
   links: Array<{ href: string; label: string }>;
@@ -159,7 +161,9 @@ function countsAsFor(c: JvClassification | undefined, game: Game): JvGameModel['
       const why = {
         'varsity-non-league': 'its varsity game is non-league.',
         'different-divisions': 'the two schools are in different divisions.',
-        'outside-registry': `${[game.away, game.home].some((s) => s.slug === null && !jvOutsideTeamByMaxprepsId(s.teamId)) ? 'one side is a school outside the leagues this site covers' : 'one side plays no league table here'}.`,
+        'outside-registry': isCrossLevelGame(game)
+          ? 'the opponent is not a JV team.'
+          : `${[game.away, game.home].some((s) => s.slug === null && !jvOutsideTeamByMaxprepsId(s.teamId)) ? 'one side is a school outside the leagues this site covers' : 'one side plays no league table here'}.`,
         'off-jv-schedule': 'it is not on the league’s own JV schedule.',
       }[c.reason];
       return { label: 'Non-league JV game', detail: `In no JV table: ${why}` };
@@ -203,6 +207,7 @@ function buildModel(game: Game): JvGameModel {
       ? ['Listed from the league’s own JV schedule; no source lists this game yet.']
       : []),
     ...(jvDiffersNote(game) ? [jvDiffersNote(game) as string] : []),
+    ...[crossLevelNote(game, (crossLevelSides(game)?.which === 'home' ? away : home).name)].filter((n): n is string => n !== null),
   ];
 
   const twin = getJvVarsityGame(game.contestId);
@@ -215,7 +220,8 @@ function buildModel(game: Game): JvGameModel {
       }
     : null;
 
-  const series = all
+  // A cross-level placeholder is a different team each time (lib/cross-level.ts): it has no series.
+  const series = (isCrossLevelGame(game) ? [game] : all)
     .filter(
       (g) =>
         (g.home.teamId === game.home.teamId && g.away.teamId === game.away.teamId) ||
@@ -249,8 +255,9 @@ function buildModel(game: Game): JvGameModel {
     varsity,
     series,
     seriesPerspective: game.home.teamId ? { teamId: game.home.teamId } : null,
-    dayHref: VARSITY_DATES.has(game.dateKey)
-      ? `/scores/${game.dateKey}#jv`
+    // The day page's JV block of the game's region: `#jv` (NorCal) or `#jv-socal` (components/schedule/ScoreDay.tsx).
+    dayHref: VARSITY_DATES.has(game.dateKey) && league
+      ? `/scores/${game.dateKey}#jv${regionIdSuffix(regionOf(league))}`
       : league
         ? `/jv/${league}#d-${game.dateKey}`
         : '/jv',
