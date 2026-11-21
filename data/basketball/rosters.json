@@ -2,14 +2,14 @@
   "counts": {
     "captains": 23,
     "errors": 0,
-    "players": 777,
+    "players": 782,
     "teams": 79,
-    "withGrade": 705,
-    "withHeight": 364,
-    "withJersey": 777,
-    "withPosition": 474
+    "withGrade": 710,
+    "withHeight": 369,
+    "withJersey": 782,
+    "withPosition": 480
   },
-  "fetchedAt": "2026-11-21T07:44:49.926Z",
+  "fetchedAt": "2026-11-21T17:55:59.327Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-rosters.ts",
@@ -28,7 +28,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "bc239f20-79b3-42db-a2f0-0a8ec0ec0821",
       "name": "Gunn",
       "players": [
@@ -313,7 +313,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
       "players": [
@@ -653,7 +653,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
       "players": [
@@ -985,7 +985,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
       "players": [
@@ -1283,7 +1283,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
       "players": [
@@ -1592,7 +1592,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "09beba1b-240a-45b8-aa6e-281decefa275",
       "name": "Mountain View",
       "players": [
@@ -1915,7 +1915,7 @@
       "deletedRows": 0,
       "division": "de-anza",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
       "players": [
@@ -2289,7 +2289,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
       "players": [
@@ -2469,7 +2469,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
       "players": [
@@ -2739,7 +2739,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
       "players": [
@@ -3029,7 +3029,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "69890515-0a8d-4a73-b798-b6ed4fe4d2ef",
       "name": "MacDonald",
       "players": [
@@ -3293,7 +3293,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
       "players": [
@@ -3609,7 +3609,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
       "players": [
@@ -3894,9 +3894,10 @@
           "isCaptain": false,
           "jersey": "34",
           "lastName": "Plancarte",
-          "position": "C",
+          "position": "C, PF",
           "positions": [
-            "C"
+            "C",
+            "PF"
           ],
           "rosterId": "34b8176c-cc90-496b-afb5-f7e488ba9e81"
         }
@@ -3913,7 +3914,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
       "players": [
@@ -4214,7 +4215,7 @@
       "deletedRows": 0,
       "division": "el-camino",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "4169ba3d-78d4-48ed-a4a4-2b79af41d3ee",
       "name": "Wilcox",
       "players": [],
@@ -4230,7 +4231,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
       "players": [
@@ -4432,7 +4433,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
       "players": [
@@ -4792,7 +4793,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
       "players": [
@@ -4932,7 +4933,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "dd1fc5bd-c075-4fe3-86dc-70112b7e6217",
       "name": "Pioneer",
       "players": [],
@@ -4948,7 +4949,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
       "players": [],
@@ -4964,7 +4965,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
       "players": [
@@ -5284,7 +5285,7 @@
       "deletedRows": 0,
       "division": "mt-hamilton",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
       "players": [
@@ -5577,7 +5578,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
       "name": "Branham",
       "players": [
@@ -5835,7 +5836,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
       "players": [],
@@ -5851,7 +5852,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
       "players": [
@@ -6250,7 +6251,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
       "players": [
@@ -6519,7 +6520,7 @@
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
       "players": [],
@@ -6531,11 +6532,11 @@
       "warnings": []
     },
     {
-      "athleteCount": 10,
+      "athleteCount": 15,
       "deletedRows": 0,
       "division": "santa-teresa",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
       "players": [
@@ -6602,6 +6603,49 @@
           "rosterId": "139aab24-d15f-4935-89c8-fb8e7bf2d359"
         },
         {
+          "athleteId": "705bdeed-113b-456b-aab5-d4f523e5c831",
+          "careerId": "nv8hj83qffj55",
+          "careerProfileId": "ac5571dd-93dd-473e-be1d-12a50295421a",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/tyler-le/?careerid=nv8hj83qffj55",
+          "createdOn": "2026-11-14T21:26:20",
+          "firstName": "Tyler",
+          "fullName": "Tyler Le",
+          "grade": 12,
+          "gradeClass": "Sr.",
+          "height": null,
+          "heightInches": null,
+          "isCaptain": false,
+          "jersey": "3",
+          "lastName": "Le",
+          "position": "G",
+          "positions": [
+            "G"
+          ],
+          "rosterId": "eafd2cf2-df12-442e-945f-43a4e202d897"
+        },
+        {
+          "athleteId": "4f0070e3-f1dd-432b-86dc-0e0d356dd325",
+          "careerId": "05085h9knde88",
+          "careerProfileId": "bf3c6cf1-690e-437f-924a-21b8f12deacc",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/napoleon-tran/?careerid=05085h9knde88",
+          "createdOn": "2026-11-21T15:22:42",
+          "firstName": "Napoleon",
+          "fullName": "Napoleon Tran",
+          "grade": 11,
+          "gradeClass": "Jr.",
+          "height": "6'0\"",
+          "heightInches": 72,
+          "isCaptain": false,
+          "jersey": "4",
+          "lastName": "Tran",
+          "position": "G, SF",
+          "positions": [
+            "G",
+            "SF"
+          ],
+          "rosterId": "553e0b03-0ba3-4997-a35f-9bb4420db77a"
+        },
+        {
           "athleteId": "9c7e961c-b83e-4c2e-b1c2-f2f0af3e404f",
           "careerId": "19ji0a3m4tb44",
           "careerProfileId": "8992b1fe-e4fc-4065-a109-027f223ff3a6",
@@ -6663,6 +6707,48 @@
           "rosterId": "c41c2daa-def5-45be-8819-9f3a7d482f84"
         },
         {
+          "athleteId": "c5ae6468-2e19-4bcd-9caf-5a37f8fd9e6e",
+          "careerId": "sei3qa1o4e3bb",
+          "careerProfileId": "09699db1-a691-4f74-a216-f2b022dd8755",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/isaac-orellana/?careerid=sei3qa1o4e3bb",
+          "createdOn": "2026-11-21T15:23:41",
+          "firstName": "Isaac",
+          "fullName": "Isaac Orellana",
+          "grade": 11,
+          "gradeClass": "Jr.",
+          "height": "5'9\"",
+          "heightInches": 69,
+          "isCaptain": false,
+          "jersey": "20",
+          "lastName": "Orellana",
+          "position": "G",
+          "positions": [
+            "G"
+          ],
+          "rosterId": "a09f4df0-47b5-4deb-aa1f-47b4b649d1d9"
+        },
+        {
+          "athleteId": "7c25bd50-311f-4438-9eca-eb4d417ccc25",
+          "careerId": "7qqkg3e7nmgdd",
+          "careerProfileId": "9e28892a-b68a-4ac5-8f3a-e389b452a456",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/raj-saini/?careerid=7qqkg3e7nmgdd",
+          "createdOn": "2026-11-21T15:24:28",
+          "firstName": "Raj",
+          "fullName": "Raj Saini",
+          "grade": 11,
+          "gradeClass": "Jr.",
+          "height": "5'9\"",
+          "heightInches": 69,
+          "isCaptain": false,
+          "jersey": "22",
+          "lastName": "Saini",
+          "position": "PG",
+          "positions": [
+            "PG"
+          ],
+          "rosterId": "fa1f4f6e-b7da-4b3e-a685-0e260aca1266"
+        },
+        {
           "athleteId": "ac32d4ac-69d9-46d4-8125-cac5b7c36f20",
           "careerId": "sb9hd6hc9ljn7",
           "careerProfileId": "5590a00d-8343-4996-afff-41a217ab5963",
@@ -6706,23 +6792,25 @@
           "rosterId": "885d5e1c-281d-4025-834c-69d4691510d3"
         },
         {
-          "athleteId": "705bdeed-113b-456b-aab5-d4f523e5c831",
-          "careerId": "nv8hj83qffj55",
-          "careerProfileId": "ac5571dd-93dd-473e-be1d-12a50295421a",
-          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/tyler-le/?careerid=nv8hj83qffj55",
-          "createdOn": "2026-11-14T21:26:20",
-          "firstName": "Tyler",
-          "fullName": "Tyler Le",
-          "grade": 12,
-          "gradeClass": "Sr.",
-          "height": null,
-          "heightInches": null,
+          "athleteId": "ede93995-c7a1-438f-b482-a47dc1182f33",
+          "careerId": "vdagr8p120taa",
+          "careerProfileId": "f2161533-e1fe-4065-8af6-9f3203e60f10",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/michael-mendoza/?careerid=vdagr8p120taa",
+          "createdOn": "2026-11-21T15:26:12",
+          "firstName": "Michael",
+          "fullName": "Michael Mendoza",
+          "grade": 11,
+          "gradeClass": "Jr.",
+          "height": "5'8\"",
+          "heightInches": 68,
           "isCaptain": false,
-          "jersey": "32",
-          "lastName": "Le",
-          "position": null,
-          "positions": [],
-          "rosterId": "eafd2cf2-df12-442e-945f-43a4e202d897"
+          "jersey": "30",
+          "lastName": "Mendoza",
+          "position": "G",
+          "positions": [
+            "G"
+          ],
+          "rosterId": "8c96ffd9-9430-4e0d-9eee-cc3facf8443a"
         },
         {
           "athleteId": "95485452-c24b-4bd9-83df-b27799709542",
@@ -6742,6 +6830,27 @@
           "position": null,
           "positions": [],
           "rosterId": "cdbfb4b8-5091-4f7e-a579-1ed0bd91f646"
+        },
+        {
+          "athleteId": "671e3659-dc9e-4c51-a1ac-557d06878c14",
+          "careerId": "gq874qgt4rivf",
+          "careerProfileId": "022ef2e2-b92c-4d9f-869f-bd05b871bb2f",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/cameron-green/?careerid=gq874qgt4rivf",
+          "createdOn": "2026-11-21T15:27:23",
+          "firstName": "Cameron",
+          "fullName": "Cameron Green",
+          "grade": 11,
+          "gradeClass": "Jr.",
+          "height": "6'1\"",
+          "heightInches": 73,
+          "isCaptain": false,
+          "jersey": "40",
+          "lastName": "Green",
+          "position": "SF",
+          "positions": [
+            "SF"
+          ],
+          "rosterId": "06edb255-9a53-453e-b238-f386ce0bce64"
         }
       ],
       "rosterUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/basketball/roster/",
@@ -6756,7 +6865,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
       "players": [],
@@ -6772,7 +6881,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
       "players": [
@@ -6917,7 +7026,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
       "players": [],
@@ -6933,7 +7042,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
       "players": [],
@@ -6949,7 +7058,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
       "players": [
@@ -7306,7 +7415,7 @@
       "deletedRows": 0,
       "division": "almaden-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
       "players": [],
@@ -7322,7 +7431,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
       "players": [],
@@ -7338,7 +7447,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
       "players": [],
@@ -7354,7 +7463,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
       "players": [],
@@ -7370,7 +7479,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
       "players": [],
@@ -7386,7 +7495,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1c9b4d85-17ea-4aa4-8665-0fb4da2d465d",
       "name": "Mt. Pleasant",
       "players": [
@@ -7650,7 +7759,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
       "players": [],
@@ -7666,7 +7775,7 @@
       "deletedRows": 0,
       "division": "west-valley",
       "error": null,
-      "fetchedAt": "2026-11-21T06:12:24.456Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
       "players": [
@@ -7949,7 +8058,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
       "players": [
@@ -8292,7 +8401,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
       "players": [
@@ -8602,7 +8711,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "032ce3ae-f13d-47f2-ad35-57d995127648",
       "name": "Bellarmine College Prep",
       "players": [
@@ -8913,7 +9022,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "16e16363-66d8-45af-b777-7820b3256850",
       "name": "Junípero Serra",
       "players": [
@@ -9275,7 +9384,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
       "players": [
@@ -9640,7 +9749,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
       "players": [
@@ -9977,7 +10086,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius",
       "players": [
@@ -10322,7 +10431,7 @@
       "deletedRows": 0,
       "division": "wcal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
       "players": [
@@ -10635,7 +10744,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
       "players": [
@@ -10946,7 +11055,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "aabdd1c5-8378-485d-91d3-75827048bf70",
       "name": "Eastside College Prep",
       "players": [],
@@ -10962,7 +11071,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "8c578d8d-b5c7-4f3a-a428-6ed79089ccaa",
       "name": "Harker",
       "players": [
@@ -11233,7 +11342,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "5e75f63f-09f0-4922-8a9d-78e239e9c1f9",
       "name": "The King’s Academy",
       "players": [
@@ -11627,7 +11736,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "f133ba52-590e-4f91-b798-d9c06fd9fc4c",
       "name": "Menlo School",
       "players": [
@@ -11791,7 +11900,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "ac9c9167-10bf-4859-bc74-7eb0f69517c6",
       "name": "Pinewood",
       "players": [
@@ -12060,7 +12169,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "b22f99e1-f106-4b39-8d64-35983d4da891",
       "name": "Priory",
       "players": [
@@ -12444,7 +12553,7 @@
       "deletedRows": 0,
       "division": "wbal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "27d82a51-2b44-492e-b2cf-114730027de3",
       "name": "Sacred Heart Prep",
       "players": [
@@ -12613,7 +12722,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "ea49685b-2ffd-4ba3-80c5-d4c1ce3a8fa9",
       "name": "Aragon",
       "players": [
@@ -12974,7 +13083,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "e7e9de5f-0d5a-4d23-9e65-def42bf5ebbc",
       "name": "Burlingame",
       "players": [
@@ -13181,7 +13290,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "74939af2-b0e3-417e-8e46-2222fbb6d0eb",
       "name": "Carlmont",
       "players": [],
@@ -13197,7 +13306,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "700a8b1d-c836-44f0-9b24-c255c186d926",
       "name": "Half Moon Bay",
       "players": [],
@@ -13213,7 +13322,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "fb747c6f-7019-4f7c-bfde-e7412e2627b6",
       "name": "Hillsdale",
       "players": [
@@ -13534,7 +13643,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1a39c6b4-e457-463a-9cfc-8dc568876c5a",
       "name": "Menlo-Atherton",
       "players": [
@@ -13893,7 +14002,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1",
       "name": "Sequoia",
       "players": [
@@ -14205,7 +14314,7 @@
       "deletedRows": 0,
       "division": "bay",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "a35649f4-23d3-4986-bf27-8b517521d021",
       "name": "Woodside",
       "players": [
@@ -14516,7 +14625,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "410b7fd0-8dfd-4912-9563-468206e7e75a",
       "name": "Capuchino",
       "players": [
@@ -14660,7 +14769,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "f78ab2a3-b319-43a1-9bc4-29b19ec87189",
       "name": "El Camino",
       "players": [
@@ -14905,7 +15014,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "c88b0d9e-48e6-4dc5-86b0-274410c5823a",
       "name": "Jefferson",
       "players": [],
@@ -14921,7 +15030,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "b15b7b84-7935-47d0-ba1d-21dcbb513666",
       "name": "Mills",
       "players": [
@@ -15223,7 +15332,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "55853f70-2545-4bfe-a107-4142093e929a",
       "name": "San Mateo",
       "players": [
@@ -15513,7 +15622,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "4bd3309b-73f2-4f94-bfc1-632440acefc3",
       "name": "South San Francisco",
       "players": [],
@@ -15529,7 +15638,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1a9eb7d4-e018-4d80-9059-2c5b6e13ec34",
       "name": "Terra Nova",
       "players": [],
@@ -15545,7 +15654,7 @@
       "deletedRows": 0,
       "division": "ocean",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "d4260a64-7216-4919-8a8f-678899199df8",
       "name": "Westmoor",
       "players": [
@@ -15860,7 +15969,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "ebb8c443-1d2c-41d8-b859-67bce76d43b2",
       "name": "Aptos",
       "players": [
@@ -16158,7 +16267,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "f0378a8c-c57d-4759-a27b-d53843f786a5",
       "name": "Harbor",
       "players": [],
@@ -16174,7 +16283,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1b3a82da-476f-4a32-9652-c238da7764c7",
       "name": "San Lorenzo Valley",
       "players": [
@@ -16466,7 +16575,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "1773c871-ed53-4aae-8f45-9fa13cb9836a",
       "name": "Santa Cruz",
       "players": [
@@ -16798,7 +16907,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "83a217c2-c6de-4103-8da0-7d4e4761e121",
       "name": "Scotts Valley",
       "players": [
@@ -16965,7 +17074,7 @@
       "deletedRows": 0,
       "division": "sccal",
       "error": null,
-      "fetchedAt": "2026-11-21T07:44:49.926Z",
+      "fetchedAt": "2026-11-21T17:55:59.327Z",
       "maxprepsTeamId": "a8cc3305-2fa6-4e76-91ea-5bea8583505a",
       "name": "Soquel",
       "players": [
