@@ -402,8 +402,8 @@ and the first whose games are not MaxPreps': none of the VAL's eleven middle sch
 - **Pages.** /about is `components/about/LeagueSiteAbout.tsx`; /playoffs shows the league's own tournament; recruiting,
   clubs and the club calendar are off; /history/2025-26 marks the league unavailable (it publishes no past standings).
 - **Deploy.** `update-data-val-soccer.yml` (Nov 21 - Feb 11), ci's `val-soccer` job, the deploy gate's matrix
-  (`SITE_URL_VAL_SOCCER`), `scripts/vercel-ignore-build.sh` and the Worker name `scvalfh-val-soccer`. The hosting project
-  and domain are the owner's to create.
+  (`SITE_URL_VAL_SOCCER`), `scripts/vercel-ignore-build.sh` and the Worker name `scvalfh-val-soccer`, served at
+  https://mssoccer.ncfh.net since 2026-11-21.
 
 Not done yet: comparing the league's own table with the computed one; the boys' season (Season #4); a smoke and axe pass
 on this build.

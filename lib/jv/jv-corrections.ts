@@ -191,6 +191,7 @@ export const JV_CORRECTIONS: JvCorrections = bySport<JvCorrections>({
   soccer: SOCCER_JV_CORRECTIONS,
   basketball: { excludedContestIds: {}, opponentFixes: {} },
   volleyball: { excludedContestIds: {}, opponentFixes: {} },
+  'val-soccer': { excludedContestIds: {}, opponentFixes: {} },
 });
 
 /**

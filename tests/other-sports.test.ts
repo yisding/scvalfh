@@ -22,6 +22,7 @@ describe('the sport sites', () => {
       { id: 'soccer', title: 'Girls Soccer', href: 'https://soccer.ncfh.net/' },
       { id: 'basketball', title: 'Boys Basketball', href: 'https://basketball.ncfh.net/' },
       { id: 'volleyball', title: 'Girls Volleyball', href: 'https://volleyball.ncfh.net/' },
+      { id: 'val-soccer', title: 'VAL Girls Soccer', href: 'https://mssoccer.ncfh.net/' },
     ]);
   });
 });
@@ -70,7 +71,7 @@ describe('in another sport’s build', () => {
     vi.resetModules();
   });
 
-  it('links field hockey and the other two, not itself', async () => {
+  it('links field hockey and the other three, not itself', async () => {
     vi.stubEnv('SCVAL_SPORT', 'basketball');
     vi.resetModules();
     const sites = await import('../lib/sports/sites');
@@ -79,6 +80,7 @@ describe('in another sport’s build', () => {
       'https://ncfh.net/',
       'https://soccer.ncfh.net/',
       'https://volleyball.ncfh.net/',
+      'https://mssoccer.ncfh.net/',
     ]);
     const gunn = others.SEEDS_BY_SPORT.basketball.find((s) => s.slug === 'gunn')!;
     // Gunn plays no field hockey in this registry: soccer and volleyball only.

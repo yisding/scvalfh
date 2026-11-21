@@ -1,9 +1,10 @@
 /**
- * The four sport sites this codebase builds, one per sport (docs/MULTI-SPORT.md, "one sport per build"), and where
+ * The five sport sites this codebase builds, one per sport (docs/MULTI-SPORT.md, "one sport per build"), and where
  * each is served, so a page of one can link to the others: the footer's "Other sports" row (components/layout/
  * Attribution.tsx) and a team page's "Other sports" block (components/teams/TeamOtherSports.tsx).
  *
- * The origins are the production domains, checked live on 2026-11-16 (each answered 200 with its own site's title).
+ * The origins are the production domains, checked live on 2026-11-16 (each answered 200 with its own site's title;
+ * the VAL's middle school soccer on 2026-11-21, the day its Worker and domain were made).
  * They are not SITE_URL: a build knows only its own origin, and a link to another sport's site must reach that
  * site wherever this one is served (a preview, localhost), so the other sports' links are always the production
  * ones.
@@ -21,15 +22,15 @@ import { VAL_SOCCER_GIRLS_2026 } from './val-soccer';
 import { VOLLEYBALL_GIRLS_2026 } from './volleyball';
 
 /**
- * Each sport's production origin, no trailing slash; null for a site with no production domain yet (the VAL's
- * middle school soccer, built 2026-11-21: its hosting is the owner's to create), which no other site links to.
+ * Each sport's production origin, no trailing slash; null for a site with no production domain yet (none today),
+ * which no other site links to.
  */
 export const SPORT_SITE_ORIGINS: Readonly<Record<SportId, string | null>> = {
   'field-hockey': 'https://ncfh.net',
   soccer: 'https://soccer.ncfh.net',
   basketball: 'https://basketball.ncfh.net',
   volleyball: 'https://volleyball.ncfh.net',
-  'val-soccer': null,
+  'val-soccer': 'https://mssoccer.ncfh.net',
 };
 
 const SEASONS: Readonly<Record<SportId, SportSeason>> = {

@@ -1559,9 +1559,8 @@ How it differs from the high school builds:
 
 The offline corpus is `tests/fixtures/corpus/val-soccer-2026-11-21/`, and the parser's fixtures are three captured
 pages under `tests/fixtures/teamsideline/`. `update-data-val-soccer.yml` refreshes the data twice a day from Nov 21 to
-Feb 11. Not done yet: comparing the league's own table with the computed one (it is read but not compared), the
-hosting project and domain (the owner's to create; `SPORT_SITE_ORIGINS['val-soccer']` is null until then, so no other
-site links to it), and the boys' season (Season #4, Feb 22 - Mar 25, the same build with the boys' schedule ids).
+Feb 11. It is served at https://mssoccer.ncfh.net by the Worker `scvalfh-val-soccer` (since 2026-11-21). Not done
+yet: comparing the league's own table with the computed one (it is read but not compared), and the boys' season (Season #4, Feb 22 - Mar 25, the same build with the boys' schedule ids).
 
 ### Boys basketball
 
