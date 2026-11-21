@@ -263,13 +263,15 @@ cifsshome.org         ──┘  (cross-check only)
 
 ### The cron
 
-`.github/workflows/update-data.yml` runs `pnpm fetch-data` on a schedule, **twice a day, only in
-season** (cron `0 14 * 8-11 *` and `0 5 * 8-11 *` — 7:00 AM and 10:00 PM Pacific during PDT,
-restricted to Aug-Nov so it rarely fires out of season; the cron's months are UTC, and the last
-in-window run, Nov 21 9:00 PM Pacific, is still November in UTC). A fire outside the window
-(Nov 22-30) stops at the workflow's own `window` job, before the checkout, the install and the
+`.github/workflows/update-data.yml` runs `pnpm fetch-data` on a schedule, **only in season**: twice
+a day through the season (cron `0 14 * 8-11 *` and `0 5 * 8-11 *` — 7:00 AM and 10:00 PM Pacific
+during PDT), and **once a week** since 2026-11-21, with the season over (cron `0 14 * 8-11 6`, Saturday
+6:00 AM Pacific; owner decision: one more run, Nov 28, then the window closes). The crons are restricted
+to Aug-Nov so they rarely fire out of season; the cron's months are UTC, and the last in-window run,
+Nov 28 6:00 AM Pacific, is still November in UTC. A new season restores the two daily crons. A fire
+outside the window stops at the workflow's own `window` job, before the checkout, the install and the
 tests; its `SEASON_START` and `SEASON_END` are held to the sections' windows by
-`tests/workflows.test.ts`. The season itself is bounded by the scripts' own Aug 1 - Nov 21 Pacific window guard
+`tests/workflows.test.ts`. The season itself is bounded by the scripts' own Aug 1 - Nov 28 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/league-config/sections.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
@@ -334,7 +336,7 @@ Flags on `fetch-data` (`pnpm fetch-data --help` prints them, as does the header 
 | `--leagues scval,bval` | fetch only these leagues; the others are carried from the previous snapshot, frozen |
 | `--accept-regression bval` | skip the finals-regression guard for these leagues, this run only |
 | `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere (the meta file and the claims file go beside it: `<name>.meta.json`, `<name>.claims.json`, or `claims.json` for a `snapshot.json`); validate and report without writing (captures included); pin the run's stamp |
-| `--force` | bypass the Aug 1 - Nov 21 season-window guard |
+| `--force` | bypass the Aug 1 - Nov 28 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
 | `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn`, `--no-cifss` | skip individual secondary sources (`--no-cifss`: the cifsshome.org cross-check) |
 
@@ -619,7 +621,7 @@ Stats change after every game, so `update-data.yml` runs this twice a day in sea
 stops the score refresh: the step may fail, and a team whose call failed keeps its previous rows
 (`carried-forward`). When nothing but the run's stamp would change, the script leaves the file
 exactly as it was, so there is nothing to commit. Like `fetch-data`, it writes nothing outside the
-Aug 1 - Nov 21 Pacific window unless given `--force`, and takes `--leagues` (a league outside the run
+Aug 1 - Nov 28 Pacific window unless given `--force`, and takes `--leagues` (a league outside the run
 keeps its previous rows; the workflow's manual `leagues` input reaches it too). Failures are scoped
 to the team: one league's outage never blocks another league's stats, and the previous file is
 salvaged row by row exactly as for rosters. The run exits 1, still writing the file, when a team it

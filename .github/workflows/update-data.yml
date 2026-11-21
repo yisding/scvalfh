@@ -1,15 +1,17 @@
-# Daily data refresh: re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
+# Data refresh (weekly since 2026-11-21; daily, twice a day, through the season): re-run the MaxPreps sweep and the secondary sources, then the MaxPreps player
 # stats (all 102 teams, all nine leagues and the independents), then the JV games (MaxPreps' JV schedules and si.com's JV
 # pages), and commit data/field-hockey/snapshot.json, data/field-hockey/player-stats.json and data/field-hockey/jv.json only where the
 # CONTENT actually changed.
 #
-# Schedule (SPEC §5.2 — one to two runs a day, never more):
-#   0 5  UTC = 10:00 PM Pacific during PDT — catches the evening's results once coaches enter them
-#   0 14 UTC =  7:00 AM Pacific during PDT — catches everything entered overnight
+# Schedule: once a week (owner decision, 2026-11-21, with the season over: the Nov 14 finals were a week
+# earlier). In season it ran twice a day (SPEC §5.2 — one to two runs a day, never more), at 0 5 UTC
+# (10:00 PM Pacific during PDT, the evening's results) and 0 14 UTC (7:00 AM, everything entered overnight);
+# a new season restores those two crons. Now it is only the morning slot, on Saturdays:
+#   0 14 * * 6 UTC = 6:00 AM Pacific during PST — the one run left in the window is Sat Nov 28.
 # The month field is UTC while the season window is PACIFIC, and Pacific is BEHIND UTC (UTC-7/-8),
-# never ahead: the last in-window evening run (Nov 21, 9:00 PM PST) is 2026-11-22T05:00Z, still
-# November, and the earliest Pacific-August instant (Aug 1 00:00 PDT) is already 2026-08-01T07:00Z.
-# Hence 8-11. A window that ends on Nov 30 would need December back, for that evening's run.
+# never ahead: the last in-window run (Nov 28, 6:00 AM PST) is 2026-11-28T14:00Z, still November,
+# and the earliest Pacific-August instant (Aug 1 00:00 PDT) is already 2026-08-01T07:00Z.
+# Hence 8-11. A window that ends on Nov 30 would need December back, for an evening run.
 #
 # The `window` job decides whether the day is in season before anything is checked out or installed:
 # a fire outside SEASON_START … SEASON_END (Pacific) skips the `refresh` job whole, where it used to
@@ -52,12 +54,11 @@ name: update-data
 
 on:
   schedule:
-    - cron: '0 14 * 8-11 *'
-    - cron: '0 5 * 8-11 *'
+    - cron: '0 14 * 8-11 6'
   workflow_dispatch:
     inputs:
       force:
-        description: 'Run even outside the Aug 1 - Nov 21 season window'
+        description: 'Run even outside the Aug 1 - Nov 28 season window'
         type: boolean
         default: false
       skip_sblive:
@@ -96,7 +97,7 @@ jobs:
         id: check
         env:
           SEASON_START: '2026-08-01'
-          SEASON_END: '2026-11-21'
+          SEASON_END: '2026-11-28'
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
         run: |
           set -euo pipefail
@@ -316,7 +317,7 @@ jobs:
           # The snapshot. `git diff --quiet` on snapshot.json can never be quiet: the run's
           # timestamp is written into the top-level `fetchedAt` AND into every game's provenance, so
           # two runs over identical upstream data differ by ~370 lines of pure stamp. Committing that
-          # would push a no-op diff and trigger a hosting rebuild twice a day for nothing, and
+          # would push a no-op diff and trigger a hosting rebuild on every run for nothing, and
           # `git log` would stop telling anyone which refresh actually moved a score.
           #
           # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every

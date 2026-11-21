@@ -15,7 +15,7 @@
  *   pnpm fetch-player-stats --out <path>        write somewhere else
  *   pnpm fetch-player-stats --dry-run           parse and report, write nothing (captures included)
  *   pnpm fetch-player-stats --fetched-at <iso>  pin the stamp (reproducible fixture builds)
- *   pnpm fetch-player-stats --force             run even outside the Aug 1 – Nov 21 season window
+ *   pnpm fetch-player-stats --force             run even outside the Aug 1 – Nov 28 season window
  *
  * Stats move after every game, so .github/workflows/update-data.yml runs this right after
  * `pnpm fetch-data`, twice a day in season; each call is 0.2–35 KB. The budget is the MaxPreps
@@ -28,7 +28,7 @@
  *
  * Two guards keep the scheduled run from churning the repository. Outside the season window
  * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/league-config/sections.ts' section windows,
- * Aug 1 – Nov 21 Pacific, on the date of `--fetched-at`) it fetches and writes nothing. And when the
+ * Aug 1 – Nov 28 Pacific, on the date of `--fetched-at`) it fetches and writes nothing. And when the
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *

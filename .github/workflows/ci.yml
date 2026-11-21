@@ -1,8 +1,8 @@
 # The build gate: the four checks every change has to pass, plus the accessibility pass that
 # DESIGN §10.9 asks for and that a headless browser is needed to run.
 #
-# This is deliberately separate from update-data.yml, which refreshes data/field-hockey/snapshot.json twice a
-# day and runs only `pnpm test` on the snapshot it just wrote. That job must stay narrow — it
+# This is deliberately separate from update-data.yml, which refreshes data/field-hockey/snapshot.json on a
+# schedule and runs only `pnpm test` on the snapshot it just wrote. That job must stay narrow — it
 # commits to the default branch — while this one must fail loudly on anything a human changed.
 #
 # The a11y job runs axe-core against the real production build over one page of every route

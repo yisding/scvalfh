@@ -11,7 +11,7 @@
  *   pnpm fetch-jv --out <path>          write somewhere else
  *   pnpm fetch-jv --dry-run             parse and report, write nothing (captures included)
  *   pnpm fetch-jv --fetched-at <iso>    pin the stamp (reproducible fixture builds)
- *   pnpm fetch-jv --force               run even outside the Aug 1 – Nov 21 season window
+ *   pnpm fetch-jv --force               run even outside the Aug 1 – Nov 28 season window
  *
  * The MaxPreps call is the varsity pipeline's own schedule-calculated read with the JV season id
  * (JV_SPORT_SEASON_ID) and the school's registry id, through the MaxPreps client's budget
