@@ -29,6 +29,8 @@ export type ResourceKey =
   | { kind: 'official-changes'; league: LeagueId }        // body = lowercase hex sha256 of the officialChanges cell text (§2.1)
   | { kind: 'sblive-scores'; date: string }               // YYYY-MM-DD
   | { kind: 'sblive-team-games'; team: TeamSlug }
+  /** One si.com league's scoreboard (`LEAGUES[].sblive.leagueSlugs`), read for a day the statewide page cut short. */
+  | { kind: 'sblive-league-scores'; league: string; date: string } // date YYYY-MM-DD
   | { kind: 'vnn-ics'; team: TeamSlug }
   | { kind: 'ccs-ical' }
   | { kind: 'ccs-bracket' }
@@ -43,6 +45,7 @@ export type ResourceKey =
  * 'maxpreps/bootstrap', 'maxpreps/league-meta/<division>', 'maxpreps/standings/<division>',
  * 'maxpreps/schedule/<slug>', 'scval/pdf-text/<division>', 'scval/standings-index',
  * 'official/revision/<division>', 'official/changes/<league>', 'sblive/scores/<date>', 'sblive/team-games/<slug>',
+ * 'sblive/league-scores/<league slug>/<date>',
  * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'maxpreps/tournament/<bracket id>', 'cifss/<section>/<page>', 'sds/bracket-sheet/<division>'
  */
 export function resourcePath(key: ResourceKey): string {
@@ -67,6 +70,8 @@ export function resourcePath(key: ResourceKey): string {
       return `sblive/scores/${key.date}`;
     case 'sblive-team-games':
       return `sblive/team-games/${key.team}`;
+    case 'sblive-league-scores':
+      return `sblive/league-scores/${key.league}/${key.date}`;
     case 'vnn-ics':
       return `vnn/${key.team}`;
     case 'ccs-ical':

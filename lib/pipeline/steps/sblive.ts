@@ -46,14 +46,17 @@ import { applyReconcile, carryCrossCheck, decideReconcile, emptyCrossCheck, with
 import { shiftDateKey } from '../../format';
 import {
   dedupeSbliveGames,
-  parseScoresPage,
+  parseLeagueScoresPage,
+  parseScoresDay,
   parseTeamGamesPage,
   SBLIVE_GAME_PATH_PREFIX,
+  sbliveLeagueScoresUrl,
   sbliveScoresUrl,
   type SbliveGame,
 } from '../../sources/sblive';
+import { getLeague } from '../../leagues';
 import { getTeamBySlug, teamsInLeague } from '../../teams';
-import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
+import type { Game, LeagueId, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
 import {
   type ResourceKey,
   type RunContext,
@@ -71,6 +74,48 @@ interface Attempt {
   httpStatus?: number;
   error?: string;
   rowCount?: number;
+}
+
+/**
+ * The most league scoreboards one run reads (lib/sources/sblive.ts sbliveLeagueScoresUrl), newest day first: one
+ * per si.com league slug of each of our leagues that played on a day the statewide scoreboard cut short. A girls
+ * soccer day statewide runs to ~80-110 games, against the page's 24.
+ */
+export const SBLIVE_LEAGUE_SCOREBOARD_CAP = 30;
+
+export interface LeagueScoreboardPage {
+  /** Our league, whose `sblive.leagueSlugs` the page is one of. */
+  league: LeagueId;
+  /** The si.com league slug. */
+  slug: string;
+  date: string;
+}
+
+/**
+ * The league scoreboards to read: for each day the statewide page cut short (newest first), each league of the run
+ * with a MaxPreps game or an official fixture of one of its teams that day, then each of its si.com league slugs,
+ * in config order, up to `cap`. The rest are `deferred` (a later run, or a team page, covers them).
+ */
+export function leagueScoreboardPlan(
+  truncatedDays: readonly string[],
+  sides: ReadonlyArray<{ dateKey: string; slugs: ReadonlyArray<TeamSlug | null> }>,
+  leaguesInRun: readonly LeagueId[],
+  cap = SBLIVE_LEAGUE_SCOREBOARD_CAP,
+): { pages: LeagueScoreboardPage[]; deferred: LeagueScoreboardPage[] } {
+  const wanted: LeagueScoreboardPage[] = [];
+  for (const date of [...new Set(truncatedDays)].sort().reverse()) {
+    const playing = new Set(
+      sides
+        .filter((g) => g.dateKey === date)
+        .flatMap((g) => g.slugs.flatMap((slug) => (slug ? [getTeamBySlug(slug)?.league] : [])))
+        .filter((l): l is LeagueId => l !== undefined),
+    );
+    for (const league of leaguesInRun) {
+      if (!playing.has(league)) continue;
+      for (const slug of getLeague(league).sblive.leagueSlugs) wanted.push({ league, slug, date });
+    }
+  }
+  return { pages: wanted.slice(0, cap), deferred: wanted.slice(cap) };
 }
 
 /** Dates in [today − 14, today] with a MaxPreps game or an official fixture, ascending. */
@@ -214,6 +259,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   const teamRows: SbliveGame[] = [];
 
   // 1. statewide scoreboards
+  const truncatedDays: string[] = [];
   for (const date of scoreboardDates(games, unmatched.map((f) => playedFixture(f, ctx.editor?.moves).dateKey), ctx.today)) {
     const base: Omit<SourceStatus, 'status'> = {
       id: 'sblive',
@@ -222,11 +268,63 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
       url: sbliveScoresUrl(date),
       fetchedAt: ctx.fetchedAt,
     };
-    const res = await read(ctx, { kind: 'sblive-scores', date }, base, (body, url) =>
-      parseScoresPage(body, url, (m) => ctx.warn(`sblive: ${m}`, base.scope)),
-    );
+    const res = await read(ctx, { kind: 'sblive-scores', date }, base, (body, url) => {
+      const day = parseScoresDay(body, url, (m) => ctx.warn(`sblive: ${m}`, base.scope));
+      if (day.truncated) truncatedDays.push(date);
+      return day.games;
+    });
     attempts.push(res.attempt);
     scoreboardRows.push(...res.games);
+  }
+
+  // 1b. a day the statewide page cut short: the league scoreboards of our leagues that played that day, which list
+  // every game of their members (lib/sources/sblive.ts sbliveLeagueScoresUrl). A row already read is not added
+  // again. A page the corpus does not hold is left out of the sources (a live run never skips a page), so an
+  // offline run over a corpus captured before these pages were read is the run it always was.
+  const leagueSides = [
+    ...games.map((g) => ({ dateKey: g.dateKey, slugs: [g.home.slug, g.away.slug] })),
+    ...unmatched.map((f) => {
+      const played = playedFixture(f, ctx.editor?.moves);
+      return { dateKey: played.dateKey, slugs: [played.homeSlug, played.awaySlug] };
+    }),
+  ];
+  const leaguePlan = leagueScoreboardPlan(truncatedDays, leagueSides, ctx.leaguesInRun());
+  if (leaguePlan.deferred.length) {
+    ctx.log(
+      `  sblive: ${leaguePlan.deferred.length} league ${leaguePlan.deferred.length === 1 ? 'scoreboard waits' : 'scoreboards wait'} ` +
+        `for a later run (cap ${SBLIVE_LEAGUE_SCOREBOARD_CAP}): ${leaguePlan.deferred.map((p) => `${p.date} ${p.slug}`).join(', ')}`,
+    );
+  }
+  const seenGames = new Set(scoreboardRows.map((g) => g.sbliveGameId));
+  let leagueRead = 0;
+  let leagueAdded = 0;
+  for (const page of leaguePlan.pages) {
+    const base: Omit<SourceStatus, 'status'> = {
+      id: 'sblive',
+      kind: 'sblive-scoreboard',
+      scope: { league: page.league },
+      label: `sblive ${page.slug} scoreboard ${page.date}`,
+      url: sbliveLeagueScoresUrl(page.slug, page.date),
+      fetchedAt: ctx.fetchedAt,
+    };
+    const res = await read(ctx, { kind: 'sblive-league-scores', league: page.slug, date: page.date }, base, (body, url) =>
+      parseLeagueScoresPage(body, page.slug, page.date, url, (m) => ctx.warn(`sblive: ${m}`, base.scope)),
+    );
+    if (res.attempt.outcome === 'skipped') continue;
+    attempts.push(res.attempt);
+    if (res.attempt.outcome === 'ok') leagueRead += 1;
+    for (const g of res.games) {
+      if (seenGames.has(g.sbliveGameId)) continue;
+      seenGames.add(g.sbliveGameId);
+      scoreboardRows.push(g);
+      leagueAdded += 1;
+    }
+  }
+  if (leagueRead > 0) {
+    ctx.log(
+      `  sblive: ${leagueRead} league ${leagueRead === 1 ? 'scoreboard' : 'scoreboards'} for ${[...new Set(truncatedDays)].length} cut-short ` +
+        `${truncatedDays.length === 1 ? 'day' : 'days'} added ${leagueAdded} ${leagueAdded === 1 ? 'game' : 'games'} the statewide pages did not list`,
+    );
   }
 
   // 2. targeted team pages (D2 rule 8)
