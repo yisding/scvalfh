@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T06:52:18.692Z",
+  "fetchedAt": "2026-11-21T07:38:43.097Z",
   "fixtures": [
     {
       "claims": {
@@ -965,7 +965,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-21T00:00:00",
+              "maxprepsModifiedOn": "2026-11-21T07:07:19",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -3066,7 +3066,7 @@
       "id": "2026-11-24-santa-teresa-at-cupertino",
       "published": [
         {
-          "builtAt": "2026-11-21T06:52:18.692Z",
+          "builtAt": "2026-11-21T07:38:43.097Z",
           "contestId": "official:2026-11-24-santa-teresa-at-cupertino"
         }
       ]
@@ -39885,7 +39885,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T08:32:12",
+              "maxprepsModifiedOn": "2026-11-21T06:59:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },

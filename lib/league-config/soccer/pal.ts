@@ -40,8 +40,10 @@ export const PAL_SOCCER_LEAGUE: LeagueConfig = {
     { label: 'PAL Soccer Bylaws (PDF)', href: PAL_SOCCER_BYLAWS },
     { label: 'PAL standings', href: PAL_STANDINGS },
   ],
-  // si.com is not read for soccer: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership. si.com's PAL tables are
+  // last season's (it files Aragon in the Ocean, and Half Moon Bay, Jefferson and Westmoor in neither).
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['3887-pal-bay', '3888-pal-ocean'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

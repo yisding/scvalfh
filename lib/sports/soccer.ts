@@ -17,11 +17,13 @@ export const SOCCER = {
   /** [V] a school's season list names the sport 'Soccer'; the state hub is maxpreps.com/ca/soccer/girls/. */
   maxpreps: { slug: 'soccer', sportName: 'Soccer' },
   /**
-   * si.com's girls soccer segment, as scval.com links the SCVAL girls tables
-   * (scorebooklive.com/girls-soccer/leagues/2579-scval-deanza). The soccer build reads no si.com page
-   * (SCVAL soccer's `sblive.backfill` is off), so this only builds the Attribution link.
+   * [V] si.com's girls soccer segment, as scval.com links the SCVAL girls tables
+   * (scorebooklive.com/girls-soccer/leagues/2579-scval-deanza, now 3912-scval-de-anza). The scoreboards, the
+   * team games pages and the JV team pages sit under it. A 0-0 draw is an everyday soccer result, so a
+   * MaxPreps 0-0 is never replaced by a si.com score with a winner (rule 4c, lib/crosscheck/backfill.ts):
+   * the disagreement is reported on /about#cross-check instead.
    */
-  sblive: { slug: 'girls-soccer' },
+  sblive: { slug: 'girls-soccer', replacesZeroZeroTies: false },
   /**
    * [V] "Soccer, Girls" = 25 in the cifsshome.org widget's Sport select ("Soccer, Boys" = 24): the select
    * numbers each program, so this is the girls' value. The SCVAL girls schedule allows no contest before

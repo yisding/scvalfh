@@ -41,8 +41,10 @@ export const PAL_BASKETBALL_LEAGUE: LeagueConfig = {
     { label: 'PAL Basketball Bylaws (PDF)', href: PAL_BASKETBALL_BYLAWS },
     { label: 'PAL standings', href: PAL_STANDINGS },
   ],
-  // si.com is not read for basketball: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership. si.com's PAL tables are
+  // last season's (Jefferson and Terra Nova in its Bay, Aragon, Hillsdale and Woodside in its Ocean, and Oceana, which the CCS now places in the PSAL).
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['2263-pal-bay', '2264-pal-ocean'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

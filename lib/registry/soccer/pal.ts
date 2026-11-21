@@ -16,7 +16,10 @@
  * the PAL girls soccer standings, and `maxprepsPath` that row's `teamCanonicalUrl` (all read 2026-11-21).
  * lib/registry/basketball/pal.ts takes each school's seed from here.
  *
- * No si.com or VNN ids: the soccer build reads neither.
+ * si.com ids (`sbliveTeamId`, `sbliveSlug`, `sbliveSchoolId`): each read from the team's own si.com girls soccer games page
+ * (si.com/high-school/stats/california/girls-soccer/teams/<id>-<slug>/games, 2026-11-21: name, mascot, Varsity, the school id
+ * in `team.school`), found through si.com's league standings pages or the league's other teams' games pages; never guessed.
+ * No VNN site ids (the school calendars are read for field hockey only).
  */
 
 import type { Seed } from '../seed';
@@ -39,6 +42,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-mateo/aragon-dons/soccer/girls/winter/',
+    sbliveTeamId: '368034',
+    sbliveSlug: '368034-aragon-dons',
+    sbliveSchoolId: '13032',
     aliases: [
       'Aragon', 'ARAGON', 'Aragon Dons', 'Aragon High School',
     ],
@@ -59,6 +65,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/burlingame/burlingame-panthers/soccer/girls/winter/',
+    sbliveTeamId: '368040',
+    sbliveSlug: '368040-burlingame-panthers',
+    sbliveSchoolId: '13033',
     aliases: [
       'Burlingame', 'BURLINGAME', 'Burlingame Panthers', 'Burlingame High School',
     ],
@@ -79,6 +88,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/belmont/carlmont-scots/soccer/girls/winter/',
+    sbliveTeamId: '368297',
+    sbliveSlug: '368297-carlmont-scots',
+    sbliveSchoolId: '13207',
     aliases: [
       'Carlmont', 'CARLMONT', 'Carlmont Scots', 'Carlmont High School',
     ],
@@ -99,6 +111,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['046DFF', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-mateo/hillsdale-fighting-knights/soccer/girls/winter/',
+    sbliveTeamId: '368050',
+    sbliveSlug: '368050-hillsdale-fighting-knights',
+    sbliveSchoolId: '13035',
     aliases: [
       'Hillsdale', 'HILLSDALE', 'Hillsdale Knights', 'Hillsdale High School', 'Hillsdale Fighting Knights',
     ],
@@ -119,6 +134,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['8F0018', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/atherton/menlo-atherton-m-a-bears/soccer/girls/winter/',
+    sbliveTeamId: '368301',
+    sbliveSlug: '368301-menloatherton-bears',
+    sbliveSchoolId: '13208',
     aliases: [
       'Menlo-Atherton', 'MENLO-ATHERTON', 'Menlo-Atherton Bears', 'Menlo-Atherton High School', 'Menlo Atherton', 'M-A', 'MENLO ATHERTON',
     ],
@@ -139,6 +157,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['754ACC', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/redwood-city/sequoia-ravens/soccer/girls/winter/',
+    sbliveTeamId: '368305',
+    sbliveSlug: '368305-sequoia-cherokee',
+    sbliveSchoolId: '13210',
     aliases: [
       'Sequoia', 'SEQUOIA', 'Sequoia Ravens', 'Sequoia High School',
     ],
@@ -159,6 +180,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC4E10', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/woodside/woodside-wildcats/soccer/girls/winter/',
+    sbliveTeamId: '368312',
+    sbliveSlug: '368312-woodside-wildcats',
+    sbliveSchoolId: '13212',
     aliases: [
       'Woodside', 'WOODSIDE', 'Woodside Wildcats', 'Woodside High School',
     ],
@@ -180,6 +204,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-bruno/capuchino-mustangs/soccer/girls/winter/',
+    sbliveTeamId: '368045',
+    sbliveSlug: '368045-capuchino-mustangs',
+    sbliveSchoolId: '13034',
     aliases: [
       'Capuchino', 'CAPUCHINO', 'Capuchino Mustangs', 'Capuchino High School',
     ],
@@ -200,6 +227,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '454444'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/south-san-francisco/el-camino-colts/soccer/girls/winter/',
+    sbliveTeamId: '368447',
+    sbliveSlug: '368447-el-camino-colts',
+    sbliveSchoolId: '13315',
     aliases: [
       'El Camino', 'EL CAMINO', 'El Camino Colts', 'El Camino High School', 'El Camino (South San Francisco)', 'El Camino (SSF)',
     ],
@@ -220,6 +250,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC4E10', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/half-moon-bay/half-moon-bay-cougars/soccer/girls/winter/',
+    sbliveTeamId: '363407',
+    sbliveSlug: '363407-half-moon-bay-cougars',
+    sbliveSchoolId: '10167',
     aliases: [
       'Half Moon Bay', 'HALF MOON BAY', 'Half Moon Bay Cougars', 'Half Moon Bay High School', 'HMB',
     ],
@@ -240,6 +273,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/daly-city/jefferson-grizzlies/soccer/girls/winter/',
+    sbliveTeamId: '365426',
+    sbliveSlug: '365426-jefferson-grizzlies',
+    sbliveSchoolId: '11412',
     aliases: [
       'Jefferson', 'JEFFERSON', 'Jefferson Grizzlies', 'Jefferson High School', 'Jefferson (Daly City)',
     ],
@@ -260,6 +296,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/millbrae/mills-vikings/soccer/girls/winter/',
+    sbliveTeamId: '368056',
+    sbliveSlug: '368056-mills-vikings',
+    sbliveSchoolId: '13036',
     aliases: [
       'Mills', 'MILLS', 'Mills Vikings', 'Mills High School',
     ],
@@ -280,6 +319,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC4E10', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-mateo/san-mateo-bearcats/soccer/girls/winter/',
+    sbliveTeamId: '368060',
+    sbliveSlug: '368060-san-mateo-bearcats',
+    sbliveSchoolId: '13038',
     aliases: [
       'San Mateo', 'SAN MATEO', 'San Mateo Bearcats', 'San Mateo High School',
     ],
@@ -300,6 +342,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/south-san-francisco/south-san-francisco-warriors/soccer/girls/winter/',
+    sbliveTeamId: '368452',
+    sbliveSlug: '368452-south-san-francisco-warriors',
+    sbliveSchoolId: '13316',
     aliases: [
       'South San Francisco', 'SOUTH SAN FRANCISCO', 'South San Francisco Warriors', 'South San Francisco High School', 'South City', 'SSF', 'South SF',
     ],
@@ -320,6 +365,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/pacifica/terra-nova-tigers/soccer/girls/winter/',
+    sbliveTeamId: '365431',
+    sbliveSlug: '365431-terra-nova-tigers',
+    sbliveSchoolId: '11414',
     aliases: [
       'Terra Nova', 'TERRA NOVA', 'Terra Nova Tigers', 'Terra Nova High School',
     ],
@@ -340,6 +388,9 @@ export const PAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['00341E', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/daly-city/westmoor-rams/soccer/girls/winter/',
+    sbliveTeamId: '365436',
+    sbliveSlug: '365436-westmoor-rams',
+    sbliveSchoolId: '11416',
     aliases: [
       'Westmoor', 'WESTMOOR', 'Westmoor Rams', 'Westmoor High School',
     ],

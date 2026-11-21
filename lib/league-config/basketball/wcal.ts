@@ -34,8 +34,9 @@ export const WCAL_BASKETBALL_LEAGUE: LeagueConfig = {
     { label: 'WCAL by-laws (Article II – Basketball)', href: WCAL_GOVERNANCE },
     { label: 'WCAL standings', href: WCAL_STANDINGS },
   ],
-  // si.com is not read for basketball: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['2327-wcal'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

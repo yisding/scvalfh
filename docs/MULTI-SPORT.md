@@ -69,9 +69,10 @@ byte-identical to the build before the seam.
 ## What is already cross-sport (keep)
 
 - **Schools.** A team id is MaxPreps' school id, so it is the same in every sport. A school's name,
-  short name, abbreviation, mascot, city, colors, address (`data/field-hockey/schools.json`), mascot tile, venue and
-  si.com and VNN site ids carry nothing sport-specific. The sport is chosen by the MaxPreps
-  `sportSeasonId`.
+  short name, abbreviation, mascot, city, colors, address (`data/field-hockey/schools.json`), mascot tile, venue,
+  si.com school id and VNN site id carry nothing sport-specific. The sport is chosen by the MaxPreps
+  `sportSeasonId`. A si.com TEAM id is per sport (Homestead, si.com school 11004 in all three: field hockey
+  458667, girls soccer 364703, boys basketball 155793), so each sport's registry records its own.
 - **Regions and sections.** `REGIONS` is fully generic. A section's id, names, region and MaxPreps
   section id are generic too.
 - **The domain types.** These are in `lib/types.ts`: ids, `Team`, `Game` and its sides, status,

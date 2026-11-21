@@ -48,6 +48,7 @@ import {
   dedupeSbliveGames,
   parseScoresPage,
   parseTeamGamesPage,
+  SBLIVE_GAME_PATH_PREFIX,
   sbliveScoresUrl,
   type SbliveGame,
 } from '../../sources/sblive';
@@ -281,7 +282,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
 
   const cleaned = cleanSbliveRows([...scoreboardRows, ...teamRows]);
   if (cleaned.junkPath.length) {
-    ctx.log(`  sblive: ignored ${cleaned.junkPath.length} rows outside /california/field-hockey/games/ (${cleaned.junkPath.map((g) => g.sbliveGameId).join(', ')})`);
+    ctx.log(`  sblive: ignored ${cleaned.junkPath.length} rows outside ${SBLIVE_GAME_PATH_PREFIX} (${cleaned.junkPath.map((g) => g.sbliveGameId).join(', ')})`);
   }
   if (cleaned.ignored.length) {
     ctx.log(`  sblive: dropped ${cleaned.ignored.length} JV-only/withdrawn rows (${cleaned.ignored.map((g) => g.sbliveGameId).join(', ')})`);

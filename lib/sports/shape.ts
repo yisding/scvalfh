@@ -129,6 +129,12 @@ export interface Sport {
   readonly sblive: {
     /** The URL segment: si.com/high-school/stats/california/<slug>. */
     readonly slug: string;
+    /**
+     * Whether rule 4c (lib/crosscheck/backfill.ts) may replace a MaxPreps 0-0 final tie with a si.com final
+     * that has a winner. Field hockey's: a 0-0 there is most often a score left unentered. Never soccer's, whose
+     * 0-0 draws are real results.
+     */
+    readonly replacesZeroZeroTies: boolean;
   };
   readonly cifss: {
     /** The cifsshome.org widget's Sport select value (one per gender for soccer: "Soccer, Girls" = 25). */

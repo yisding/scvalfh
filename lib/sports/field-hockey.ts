@@ -17,7 +17,7 @@ export const FIELD_HOCKEY = {
   abbr: 'FH',
   schemaOrgSport: 'Field hockey',
   maxpreps: { slug: 'field-hockey', sportName: 'Field Hockey' },
-  sblive: { slug: 'field-hockey' },
+  sblive: { slug: 'field-hockey', replacesZeroZeroTies: true },
   /** "Field Hockey" = 30 in the widget's Sport select; no field hockey game is played before Aug 1. */
   cifss: { sportId: 30, seasonFrom: '08-01' },
   ccs: { code: 'fh', calendar: 'Field_Hockey' },

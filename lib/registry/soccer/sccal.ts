@@ -14,7 +14,10 @@
  * that row's `teamCanonicalUrl` (all read 2026-11-21). The mascots are the ones SCCAL Constitution Article XIX
  * names. lib/registry/basketball/sccal.ts takes each school's seed from here.
  *
- * No si.com or VNN ids: the soccer build reads neither.
+ * si.com ids (`sbliveTeamId`, `sbliveSlug`, `sbliveSchoolId`): each read from the team's own si.com girls soccer games page
+ * (si.com/high-school/stats/california/girls-soccer/teams/<id>-<slug>/games, 2026-11-21: name, mascot, Varsity, the school id
+ * in `team.school`), found through si.com's league standings pages or the league's other teams' games pages; never guessed.
+ * No VNN site ids (the school calendars are read for field hockey only).
  */
 
 import type { Seed } from '../seed';
@@ -36,6 +39,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/aptos/aptos-mariners/soccer/girls/winter/',
+    sbliveTeamId: '367016',
+    sbliveSlug: '367016-aptos-mariners',
+    sbliveSchoolId: '12438',
     aliases: [
       'Aptos', 'APTOS', 'Aptos Mariners', 'Aptos High School',
     ],
@@ -56,6 +62,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/santa-cruz/harbor-pirates/soccer/girls/winter/',
+    sbliveTeamId: '368144',
+    sbliveSlug: '368144-harbor-pirates',
+    sbliveSchoolId: '13093',
     aliases: [
       'Harbor', 'HARBOR', 'Harbor Pirates', 'Harbor High School', 'Harbor (Santa Cruz)',
     ],
@@ -76,6 +85,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/felton/san-lorenzo-valley-cougars/soccer/girls/winter/',
+    sbliveTeamId: '368004',
+    sbliveSlug: '368004-san-lorenzo-valley-cougars',
+    sbliveSchoolId: '13014',
     aliases: [
       'San Lorenzo Valley', 'SAN LORENZO VALLEY', 'San Lorenzo Valley Cougars', 'San Lorenzo Valley High School', 'SLV',
     ],
@@ -96,6 +108,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/santa-cruz/santa-cruz-cardinals/soccer/girls/winter/',
+    sbliveTeamId: '368149',
+    sbliveSlug: '368149-santa-cruz-cardinals',
+    sbliveSchoolId: '13094',
     aliases: [
       'Santa Cruz', 'SANTA CRUZ', 'Santa Cruz Cardinals', 'Santa Cruz High School',
     ],
@@ -116,6 +131,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['8F0018', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/scotts-valley/scotts-valley-falcons/soccer/girls/winter/',
+    sbliveTeamId: '368264',
+    sbliveSlug: '368264-scotts-valley-falcons',
+    sbliveSchoolId: '13187',
     aliases: [
       'Scotts Valley', 'SCOTTS VALLEY', 'Scotts Valley Falcons', 'Scotts Valley High School',
     ],
@@ -136,6 +154,9 @@ export const SCCAL_SOCCER_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/soquel/soquel-knights/soccer/girls/winter/',
+    sbliveTeamId: '368152',
+    sbliveSlug: '368152-soquel-knights',
+    sbliveSchoolId: '13095',
     aliases: [
       'Soquel', 'SOQUEL', 'Soquel Knights', 'Soquel High School',
     ],

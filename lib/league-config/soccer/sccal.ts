@@ -42,8 +42,9 @@ export const SCCAL_SOCCER_LEAGUE: LeagueConfig = {
     { label: 'SCCAL soccer by-laws (Article XL, PDF)', href: SCCAL_SOCCER_BYLAWS },
     { label: 'SCCAL constitution, by-laws and policies', href: SCCAL_BYLAWS_PAGE },
   ],
-  // si.com is not read for soccer: no league slugs, no backfill.
-  sblive: { leagueSlugs: [], backfill: false },
+  // si.com's standings slugs (read 2026-11-21): used only to harvest team ids, never for membership.
+  // Its scores cross-check MaxPreps' and backfill under D2's rules (lib/crosscheck/backfill.ts).
+  sblive: { leagueSlugs: ['3911-sccal'], backfill: true },
   officialCodes: {},
   officialNames: {},
   withdrawnNames: [],

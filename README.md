@@ -1424,9 +1424,9 @@ One sport per build (docs/MULTI-SPORT.md). `SCVAL_SPORT` picks it: unset (or `fi
 site; `soccer` builds the girls soccer site (SCVAL, BVAL, WCAL, WBAL, PAL and SCCAL) from `data/soccer/`. Every command takes it:
 
 ```bash
-SCVAL_SPORT=soccer pnpm fetch-data --no-sblive --no-vnn   # data/soccer/snapshot.json (si.com and VNN are field hockey's)
+SCVAL_SPORT=soccer pnpm fetch-data --no-vnn               # data/soccer/snapshot.json (VNN is field hockey's)
 SCVAL_SPORT=soccer pnpm fetch-rosters                      # data/soccer/rosters.json
-SCVAL_SPORT=soccer pnpm fetch-jv --no-sblive               # data/soccer/jv.json
+SCVAL_SPORT=soccer pnpm fetch-jv                          # data/soccer/jv.json (MaxPreps and si.com JV pages)
 SCVAL_SPORT=soccer pnpm fetch-player-stats                 # data/soccer/player-stats.json
 SCVAL_SPORT=soccer pnpm fetch-prior-season                 # data/soccer/prior-season.json (2025-26, seeds the ratings)
 SCVAL_SPORT=soccer pnpm build                              # or pnpm build:vinext / build:cloudflare
@@ -1439,8 +1439,12 @@ CCS ladder (De Anza 1-3 and El Camino 1 are automatic), standings, schedules, sc
 leaders, JV, /playoffs and /history/2025-26 (SCVAL's 2025-26 final standings, varsity and JV, and all-league
 teams, from SCVAL's own PDFs, and the WCAL's and the WBAL's from theirs; see "Last season's standings in the soccer
 and basketball builds" and "WCAL and WBAL last season"). What it
-leaves out: /clubs, /commits and /recruiting (field hockey's research; each renders a 404), si.com, the VNN
-calendars and the region toggle. The CCS dates come
+leaves out: /clubs, /commits and /recruiting (field hockey's research; each renders a 404), the VNN
+calendars and the region toggle. It reads si.com's girls soccer pages as field hockey reads its own: the scores
+cross-check MaxPreps' and backfill a missing one under the same rules, except that a MaxPreps 0-0 is never
+replaced (a draw is a real soccer result; `SPORT.sblive.replacesZeroZeroTies`), and each school's si.com JV team
+page adds JV games. Every team's si.com ids are in `lib/registry/soccer/`, harvested from si.com's league
+standings pages and team search and checked against each team's own page (2026-11-21). The CCS dates come
 from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
 rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sections.ts`.
 
@@ -1451,10 +1455,10 @@ rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sect
 
 ```bash
 SCVAL_SPORT=basketball pnpm build-scval-basketball-fixtures     # data/basketball/official/scval-2026.json, from the two schedule texts
-SCVAL_SPORT=basketball pnpm fetch-data --no-sblive --no-vnn     # data/basketball/snapshot.json
+SCVAL_SPORT=basketball pnpm fetch-data --no-vnn                 # data/basketball/snapshot.json
 SCVAL_SPORT=basketball pnpm fetch-rosters                        # data/basketball/rosters.json
 SCVAL_SPORT=basketball pnpm fetch-rosters --level jv             # data/basketball/jv-rosters.json
-SCVAL_SPORT=basketball pnpm fetch-jv --no-sblive                 # data/basketball/jv.json
+SCVAL_SPORT=basketball pnpm fetch-jv                             # data/basketball/jv.json
 SCVAL_SPORT=basketball pnpm fetch-player-stats                   # data/basketball/player-stats.json
 SCVAL_SPORT=basketball pnpm fetch-prior-season                   # data/basketball/prior-season.json (2025-26, seeds the ratings)
 SCVAL_SPORT=basketball pnpm build                                # or pnpm build:vinext / build:cloudflare
@@ -1502,8 +1506,9 @@ What is basketball's own (each from a document read 2026-11-10, cited in
   aside.
 
 Like soccer, it has /history/2025-26 (SCVAL's 2025-26 final standings and all-league first, second and third
-teams). What it leaves out, as soccer does: /clubs, /commits and /recruiting, si.com, the VNN calendars and the
-region toggle. MaxPreps also has a freshman season for some of these schools; the SCVAL
+teams). What it leaves out, as soccer does: /clubs, /commits and /recruiting, the VNN calendars and the
+region toggle. Like soccer it reads si.com, under si.com's `basketball` segment (its boys basketball; `boys-basketball`
+is a 404), with every team's si.com ids in `lib/registry/basketball/`. MaxPreps also has a freshman season for some of these schools; the SCVAL
 fields two official boys teams, varsity and JV (By-Laws Article II), and the site covers those two.
 
 ### Girls volleyball
@@ -1582,7 +1587,8 @@ What is volleyball's own (each from a document or a live response read 2026-11-1
   for a grade, and one El Camino JV row prints "7", stored with no grade), and the WCAL's and the WBAL's from
   their own documents ("WCAL and WBAL last season"). BVAL is marked unavailable, as in the winter builds.
 
-What it leaves out, as the winter builds do: si.com, the VNN calendars, /club-calendar and the region toggle.
+What it leaves out: si.com (the winter builds read it; this one does not yet), the VNN calendars, /club-calendar
+and the region toggle.
 Not done yet: the hosting project and its domain, a refit of the rating constants, the CCS Volleyball Bylaws'
 allocation of the field, and the smoke and axe passes on this build.
 
@@ -1868,9 +1874,16 @@ between two members of one division inside its league play (`classification: 'me
   round robin (every team meets the other seven and three of them twice), so `gamesPerTeam` is `null`. First and
   second place are automatic (By-Laws Article I §108.2).
 - **Seeds**: a basketball seed for a school the soccer registry holds is that school's soccer seed on its basketball
-  page (`lib/registry/basketball/from-soccer.ts`). Names, mascots, cities and addresses are MaxPreps' school fields
+  page and its si.com boys basketball team (`lib/registry/basketball/from-soccer.ts`: si.com team ids are per sport,
+  the school id is the school's). Names, mascots, cities and addresses are MaxPreps' school fields
   on each school's boys basketball schedule row; acronyms and colors its standings rows (read 2026-11-21). The
   mascot tiles are MaxPreps' (`pnpm fetch-mascots --only <slug>`).
+- **si.com**: every new team's si.com team id, games-page slug and school id, and its JV team's page
+  (`lib/jv/jv-teams.ts`), were read on 2026-11-21 from si.com's standings pages for these leagues (`sblive.leagueSlugs`:
+  soccer `3887-pal-bay`, `3888-pal-ocean`, `3911-sccal`; basketball `2263-pal-bay`, `2264-pal-ocean`, `2284-sccal`,
+  `2326-wbal`, `2327-wcal`) and each team's games page; si.com's PAL tables are last season's, so they serve the id
+  harvest only. si.com's team search adds El Camino and Jefferson (both sports) and Serra (basketball) to the
+  statewide namesakes (`STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`), which resolve by id alone.
 - **Last season**: /history/2025-26 marks each new league unavailable (`notTranscribedYet` in
   `scripts/build-history.ts`) and links what the league published: the PAL's and the WBAL's final standings and
   the WCAL's archive are there to transcribe; the SCCAL publishes no standings.

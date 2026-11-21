@@ -16,8 +16,10 @@
  * each team's `schoolColor1` / `schoolColor2` on MaxPreps' boys basketball standings, and `maxprepsPath` is
  * that row's `teamCanonicalUrl` (a boys basketball team page is `/basketball/`, with no gender segment).
  *
- * No si.com ids (the basketball build reads no si.com page) and no VNN site ids (the school calendars are
- * read for field hockey only).
+ * si.com ids (`sbliveTeamId`, `sbliveSlug`, `sbliveSchoolId`): each read from the team's own si.com boys basketball games page
+ * (si.com/high-school/stats/california/basketball/teams/<id>-<slug>/games, 2026-11-21: name, mascot, city, Varsity, the school
+ * id in `team.school`), found through si.com's SCVAL standings pages or its team search; never guessed.
+ * No VNN site ids (the school calendars are read for field hockey only).
  */
 
 import type { Seed } from '../seed';
@@ -40,6 +42,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/palo-alto/gunn-titans/basketball/',
+    sbliveTeamId: '158950',
+    sbliveSlug: '158950-gunn-titans',
+    sbliveSchoolId: '12448',
     aliases: ['Gunn', 'GUNN', 'Gunn Titans', 'Gunn High School', 'Henry M. Gunn', 'Henry M. Gunn High School'],
   },
   {
@@ -58,6 +63,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['00824B', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/cupertino/homestead-mustangs/basketball/',
+    sbliveTeamId: '155793',
+    sbliveSlug: '155793-homestead-mustangs',
+    sbliveSchoolId: '11004',
     aliases: ['Homestead', 'HOMESTEAD', 'Homestead Mustangs', 'Homestead High School'],
   },
   {
@@ -76,6 +84,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['D5350B', '222222'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/los-gatos/los-gatos-wildcats/basketball/',
+    sbliveTeamId: '157691',
+    sbliveSlug: '157691-los-gatos-wildcats',
+    sbliveSchoolId: '11857',
     aliases: ['Los Gatos', 'LOS GATOS', 'Los Gatos Wildcats', 'Los Gatos High School'],
   },
   {
@@ -94,6 +105,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/lynbrook-vikings/basketball/',
+    sbliveTeamId: '155797',
+    sbliveSlug: '155797-lynbrook-vikings',
+    sbliveSchoolId: '11005',
     aliases: ['Lynbrook', 'LYNBROOK', 'Lynbrook Vikings', 'Lynbrook High School'],
   },
   {
@@ -112,6 +126,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/milpitas/milpitas-trojans/basketball/',
+    sbliveTeamId: '158118',
+    sbliveSlug: '158118-milpitas-trojans',
+    sbliveSchoolId: '12036',
     aliases: ['Milpitas', 'MILPITAS', 'Milpitas Trojans', 'Milpitas High School'],
   },
   {
@@ -130,6 +147,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/mountain-view/mountain-view-spartans/basketball/',
+    sbliveTeamId: '158427',
+    sbliveSlug: '158427-mountain-view-spartans',
+    sbliveSchoolId: '12175',
     aliases: ['Mountain View', 'MOUNTAIN VIEW', 'MTN. VIEW', 'Mtn. View', 'Mtn View', 'Mt. View', 'Mountain View Spartans', 'Mountain View High School'],
   },
   {
@@ -148,6 +168,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['005B34', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/palo-alto/palo-alto-vikings/basketball/',
+    sbliveTeamId: '158955',
+    sbliveSlug: '158955-palo-alto-vikings',
+    sbliveSchoolId: '12449',
     aliases: ['Palo Alto', 'PALO ALTO', 'Paly', 'Palo Alto Vikings', 'Palo Alto High School'],
   },
   // ----- El Camino (8) -----
@@ -167,6 +190,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', '454444'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/cupertino/cupertino-pioneers/basketball/',
+    sbliveTeamId: '155783',
+    sbliveSlug: '155783-cupertino-pioneers',
+    sbliveSchoolId: '11002',
     aliases: ['Cupertino', 'CUPERTINO', 'Cupertino Pioneers', 'Cupertino High School'],
   },
   {
@@ -185,6 +211,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/sunnyvale/fremont-firebirds/basketball/',
+    sbliveTeamId: '155788',
+    sbliveSlug: '155788-fremont-firebirds',
+    sbliveSchoolId: '11003',
     aliases: ['Fremont', 'FREMONT', 'Fremont Firebirds', 'Fremont High School', 'Fremont (Sunnyvale)'],
   },
   {
@@ -203,6 +232,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', '454444'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/los-altos/los-altos-eagles/basketball/',
+    sbliveTeamId: '158423',
+    sbliveSlug: '158423-los-altos-eagles',
+    sbliveSchoolId: '12174',
     aliases: ['Los Altos', 'LOS ALTOS', 'Los Altos Eagles', 'Los Altos High School'],
   },
   {
@@ -221,6 +253,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['022C66', '00824B'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/san-jose/macdonald-condor/basketball/',
+    sbliveTeamId: '590280',
+    sbliveSlug: '590280-macdonald-condor',
+    sbliveSchoolId: '42935',
     aliases: ['MacDonald', 'MACDONALD', 'MacDonald Condor', 'MacDonald High School'],
   },
   {
@@ -239,6 +274,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['754ACC', 'C8880A'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/cupertino/monta-vista-matadors/basketball/',
+    sbliveTeamId: '155803',
+    sbliveSlug: '155803-monta-vista-matadors',
+    sbliveSchoolId: '11006',
     aliases: ['Monta Vista', 'MONTA VISTA', 'Monta Vista Matadors', 'Monta Vista High School'],
   },
   {
@@ -257,6 +295,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['034CB2', 'FFC005'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/santa-clara/santa-clara-bruins/basketball/',
+    sbliveTeamId: '160359',
+    sbliveSlug: '160359-santa-clara-bruins',
+    sbliveSchoolId: '13089',
     aliases: ['Santa Clara', 'SANTA CLARA', 'Santa Clara Bruins', 'Santa Clara High School'],
   },
   {
@@ -275,6 +316,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['CC0022', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/saratoga/saratoga-falcons/basketball/',
+    sbliveTeamId: '157696',
+    sbliveSlug: '157696-saratoga-falcons',
+    sbliveSchoolId: '11858',
     aliases: ['Saratoga', 'SARATOGA', 'Saratoga Falcons', 'Saratoga High School'],
   },
   {
@@ -293,6 +337,9 @@ export const SCVAL_BASKETBALL_SEEDS: readonly Seed[] = [
     colors: ['222222', 'FFFFFF'],
     colorSource: 'maxpreps-standings',
     maxprepsPath: '/ca/santa-clara/wilcox-chargers/basketball/',
+    sbliveTeamId: '160353',
+    sbliveSlug: '160353-wilcox-chargers',
+    sbliveSchoolId: '13087',
     aliases: ['Wilcox', 'WILCOX', 'Wilcox Chargers', 'Wilcox High School', 'Adrian Wilcox', 'Adrian Wilcox High School'],
   },
 ];
