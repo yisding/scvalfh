@@ -244,6 +244,8 @@ describe('maxpreps roster: the 15 captures of 2026-10-02', () => {
       expect(() => sixFoot(6, 1, '6&#x27;1')).toThrow(/height is "6'1"" in athleteData but "6'1" in the rendered table/);
       expect(() => sixFoot(6, 0, '5&#x27;0')).toThrow(/height is "6'0"" in athleteData/);
       expect(() => sixFoot(6, 0, '6&#x27;')).toThrow(/height is "6'0"" in athleteData/);
+      // Inches out of range are never read through the total: 5'12" is not the table's 6'0.
+      expect(() => sixFoot(5, 12, '6&#x27;0')).toThrow(/height is "5'12"" in athleteData but "6'0" in the rendered table/);
     });
   });
 
@@ -371,10 +373,19 @@ describe('maxpreps roster: drift is loud', () => {
     expect(SPORT_SEASON_ID).toBe('e302eb3e-1a32-4f2d-934b-6f9d454f721e');
   });
 
-  it("another season's page throws an OtherSeasonRosterError naming the season it serves and the team", () => {
-    const drifted = withPageProps(html, (pp) => {
+  /** The page, its count and every row, for another sport season. */
+  const anotherSeason = (h: string) =>
+    withPageProps(h, (pp) => {
       (pp.countData as Record<string, unknown>).sportSeasonId = 'another-season';
+      rows(pp).forEach((r) => (r[OLD.sportSeasonId] = 'another-season'));
     });
+
+  it('keeps sportSeasonId at one index in both layouts (the other-season check reads it before the layout)', () => {
+    expect(OLD.sportSeasonId).toBe(COL.sportSeasonId);
+  });
+
+  it("another season's page throws an OtherSeasonRosterError naming the season it serves and the team", () => {
+    const drifted = anotherSeason(html);
     let thrown: unknown;
     try {
       parseIt(drifted);
@@ -387,10 +398,29 @@ describe('maxpreps roster: drift is loud', () => {
     expect((thrown as OtherSeasonRosterError).teamId).toBe(SI);
   });
 
-  it("another team's page is checked before the season: a wrong team is never read as another season", () => {
-    const drifted = withPageProps(html, (pp) => {
+  it('a page whose rows name another season than its count is drift, never another season', () => {
+    // Only the count moved: the rows are still this season's.
+    const countOnly = withPageProps(html, (pp) => {
       (pp.countData as Record<string, unknown>).sportSeasonId = 'another-season';
     });
+    let thrown: unknown;
+    try {
+      parseIt(countOnly);
+    } catch (err) {
+      thrown = err;
+    }
+    expect(thrown).toBeInstanceOf(MaxPrepsError);
+    expect(thrown).not.toBeInstanceOf(OtherSeasonRosterError);
+    expect((thrown as Error).message).toMatch(/and its athleteData rows name "e302eb3e-/);
+    // One row of a third season is the same.
+    const oneRow = withPageProps(anotherSeason(html), (pp) => {
+      rows(pp)[3][OLD.sportSeasonId] = 'a-third-season';
+    });
+    expect(() => parseIt(oneRow)).toThrow(/rows name "a-third-season" too/);
+  });
+
+  it("another team's page is checked before the season: a wrong team is never read as another season", () => {
+    const drifted = anotherSeason(html);
     let thrown: unknown;
     try {
       parseRosterPage(drifted, { expectedTeamId: 'someone-else', url: 'test' });

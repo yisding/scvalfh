@@ -33,8 +33,9 @@
  *
  * One parse failure is not a failure: a page MaxPreps serves for another sport season (the team has no
  * page for this one, so its URL falls through to one it has; Castilleja girls JV soccer, 2026-11) is read
- * as 'empty' with a warning naming the season served. Only when this season's players were read before
- * is it a failure as above, so a roster already published is never emptied by it.
+ * as 'empty' with a warning naming the season served. Only when this season's players were read before, or
+ * the previous row was dropped as invalid (so what it held is unknown), is it a failure as above, so a
+ * roster already published is never emptied by it.
  *
  * The previous file is salvaged row by row (readPreviousFile): a row that no longer validates on
  * its own (a slug gone from the registry, a changed id or division, a broken status) is dropped
@@ -236,8 +237,10 @@ export async function main(argv: readonly string[]): Promise<number> {
         const error = err instanceof Error ? err.message : String(err);
         const prior = previous?.rows.get(team.slug);
         // MaxPreps served another season's page: the team has no page for this one, which is what an
-        // empty roster says. Not when this season's rows were read before: losing them is a failure.
-        if (err instanceof OtherSeasonRosterError && !(prior && prior.players.length > 0)) {
+        // empty roster says. Not when this season's rows were read before: losing them is a failure. Nor
+        // when the previous row was dropped as invalid: what it held is unknown, so it is a failure too.
+        const readBefore = (prior !== undefined && prior.players.length > 0) || dropped.has(team.slug);
+        if (err instanceof OtherSeasonRosterError && !readBefore) {
           const warning =
             `MaxPreps has no ${jv ? 'JV ' : ''}roster page for this season ` +
             `(the URL serves sportSeasonId ${err.servedSportSeasonId})`;

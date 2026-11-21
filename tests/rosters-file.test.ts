@@ -21,6 +21,7 @@ import {
 } from '../lib/players/rosters-schema';
 import { getRosters, getTeamRoster, sortedPlayers } from '../lib/players/rosters';
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
+import { JV_SPORT_SEASON_ID, SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
@@ -336,33 +337,35 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
 
   describe("a page MaxPreps serves for another season (Castilleja girls JV soccer, 2026-11-16 on)", () => {
     const team = teamsInLeague('scval').find((t) => t.slug === 'palo-alto')!;
-    /** The captures, with this team's page saying it is for another sport season. */
-    function otherSeasonFixtures(): string {
+    /**
+     * The captures, with this team's page (its count and every row) for another sport season. For the JV
+     * level they are saved as JV captures, every other page moved to the JV season.
+     */
+    function otherSeasonFixtures(level: 'varsity' | 'jv'): string {
       const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-other-season-'));
+      const prefix = level === 'jv' ? 'jv-roster' : 'roster';
       for (const f of readdirSync(FIXTURE_DIR).filter((n) => /^roster-.*\.html$/.test(n))) {
-        copyFileSync(path.join(FIXTURE_DIR, f), path.join(dir, f));
+        const html = readFileSync(path.join(FIXTURE_DIR, f), 'utf8');
+        const out = path.join(dir, f.replace(/^roster/, prefix));
+        if (level === 'jv') writeFileSync(out, html.split(SPORT_SEASON_ID).join(JV_SPORT_SEASON_ID), 'utf8');
+        else copyFileSync(path.join(FIXTURE_DIR, f), out);
       }
-      const file = path.join(dir, `roster-${team.slug}.html`);
-      const html = readFileSync(file, 'utf8').replace(
-        /(<script id="__NEXT_DATA__"[^>]*>)([\s\S]*?)(<\/script>)/,
-        (_m, open: string, body: string, close: string) => {
-          const data = JSON.parse(body) as { props: { pageProps: { countData: { sportSeasonId: string } } } };
-          data.props.pageProps.countData.sportSeasonId = 'another-season';
-          return `${open}${JSON.stringify(data)}${close}`;
-        },
-      );
-      writeFileSync(file, html, 'utf8');
+      const file = path.join(dir, `${prefix}-${team.slug}.html`);
+      const season = level === 'jv' ? JV_SPORT_SEASON_ID : SPORT_SEASON_ID;
+      expect(readFileSync(file, 'utf8')).toContain(season);
+      writeFileSync(file, readFileSync(file, 'utf8').split(season).join('another-season'), 'utf8');
       return dir;
     }
-    function runWith(previousRow: Rosters['teams'][number]) {
+    function runWith(previousRow: unknown, level: 'varsity' | 'jv' = 'varsity') {
       const out = tmpOut();
-      const previous = structuredClone(golden);
-      previous.teams[previous.teams.findIndex((t) => t.slug === team.slug)] = previousRow;
-      previous.counts = countRosters(previous.teams);
-      expect(RostersSchema.safeParse(previous).success).toBe(true);
+      const previous = structuredClone(golden) as unknown as { teams: unknown[]; counts: unknown };
+      const teams = previous.teams as Rosters['teams'];
+      teams[teams.findIndex((t) => t.slug === team.slug)] = previousRow as Rosters['teams'][number];
+      previous.counts = countRosters(teams);
       writeFileSync(out, JSON.stringify(previous), 'utf8');
       const res = runScript('scripts/fetch-rosters.ts', [
-        '--fixtures', otherSeasonFixtures(), '--leagues', 'scval', '--out', out, '--fetched-at', '2026-11-21T00:00:00.000Z',
+        '--fixtures', otherSeasonFixtures(level), '--leagues', 'scval', '--out', out,
+        '--fetched-at', '2026-11-21T00:00:00.000Z', ...(level === 'jv' ? ['--level', 'jv'] : []),
       ]);
       const built = read(out);
       expect(RostersSchema.safeParse(built).success).toBe(true);
@@ -380,6 +383,13 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
       expect(row.warnings).toEqual(['MaxPreps has no roster page for this season (the URL serves sportSeasonId another-season)']);
     });
 
+    it('says JV in the warning on a JV run', () => {
+      const { res, row } = runWith(pendingRoster(team), 'jv');
+      expect(res.status, res.stdout + res.stderr).toBe(0);
+      expect(row.status).toBe('empty');
+      expect(row.warnings).toEqual(['MaxPreps has no JV roster page for this season (the URL serves sportSeasonId another-season)']);
+    });
+
     it("still fails, carrying this season's players forward, when they were read before", () => {
       const before = golden.teams.find((t) => t.slug === team.slug)!;
       expect(before.players.length).toBeGreaterThan(0);
@@ -387,6 +397,17 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
       expect(res.status).toBe(1);
       expect(row.status).toBe('carried-forward');
       expect(row.players).toEqual(before.players);
+      expect(row.error).toMatch(/sportSeasonId another-season, expected/);
+    });
+
+    it('still fails when the previous row was dropped as invalid: what it held is unknown', () => {
+      const before = golden.teams.find((t) => t.slug === team.slug)!;
+      // Another registry division: the row no longer validates, so the salvage drops it.
+      const stale = { ...before, division: 'santa-teresa' };
+      const { res, row } = runWith(stale);
+      expect(res.status).toBe(1);
+      expect(row.status).toBe('error');
+      expect(row.players).toEqual([]);
       expect(row.error).toMatch(/sportSeasonId another-season, expected/);
     });
   });

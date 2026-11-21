@@ -245,10 +245,11 @@ const urlPath = (u: string): string => u.replace(/^https?:\/\/[^/]+/i, '');
  * Tucakovic, heightFeet 6, heightInches 0), so the mark is optional when the inches are 0 and
  * required otherwise; feet and inches must still agree exactly.
  */
-export function sameHeight(cell: string | null, p: Pick<RosterPlayer, 'height' | 'heightInches'>): boolean {
+export function sameHeight(cell: string | null, p: Pick<RosterPlayer, 'height'>): boolean {
   if (cell === p.height) return true;
-  if (cell === null || p.heightInches === null || p.heightInches % 12 !== 0) return false;
-  return cell === `${p.heightInches / 12}'0`;
+  // The inches as athleteData gives them, never derived from the total: 5'12" is not 6'0.
+  if (cell === null || p.height === null || !/^\d+'0"$/.test(p.height)) return false;
+  return cell === p.height.slice(0, -1);
 }
 
 /**
@@ -363,6 +364,17 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     fail(`page is for team ${teamId}, expected ${opts.expectedTeamId}`);
   }
   if (countData.sportSeasonId && countData.sportSeasonId !== sportSeasonId) {
+    // Another season only when the whole page says so: a row for any other season (this one included)
+    // is a page that disagrees with itself, which is drift, never an empty roster. Every layout keeps
+    // sportSeasonId at the same index.
+    const rowSeasons = new Set(athleteData.map((row) => row[COL.sportSeasonId]));
+    rowSeasons.delete(countData.sportSeasonId);
+    if (rowSeasons.size > 0) {
+      fail(
+        `page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}, and its athleteData rows ` +
+          `name ${[...rowSeasons].map((s) => JSON.stringify(s)).join(', ')} too`,
+      );
+    }
     throw new OtherSeasonRosterError(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`, {
       url,
       teamId,
