@@ -262,21 +262,38 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
   });
 });
 
+/**
+ * The ledger lists a game reported before its day only until a feed lists it: then the feed's contest is the game
+ * (lib/pipeline/steps/assemble.ts for the varsity game, lib/jv/jv-added.ts rule 2 for its JV game) and carries the
+ * score. The refresh workflows run these tests on each day's data, so they hold in both states: one game of the two
+ * schools that day, non-league, and, while it is still the listing, at the reported start with no score.
+ */
 describe('a game the owner reported before its day (the fixture ledger’s listings, lib/fixtures/, reportedOn)', () => {
-  it('lists Santa Teresa at Cupertino, Tue Nov 24: varsity at 7:00, non-league, with no score', () => {
+  it('lists Santa Teresa at Cupertino, Tue Nov 24, once and non-league: until MaxPreps lists it, at 7:00 with no score', () => {
     const [g, ...more] = m.data.getGames({ date: '2026-11-24' }).filter((x) => x.home.slug === 'cupertino');
     expect(more).toEqual([]);
-    expect([g.contestId, g.dateLocal, g.status, g.away.slug, g.isLeague, g.countsFor]).toEqual([
-      'official:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T19:00:00', 'scheduled', 'santa-teresa', false, null,
-    ]);
-    expect([g.home.score, g.away.score]).toEqual([null, null]);
+    expect([g.away.slug, g.isLeague, g.countsFor]).toEqual(['santa-teresa', false, null]);
+    if (g.contestId.startsWith('official:')) {
+      expect([g.contestId, g.dateLocal]).toEqual(['official:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T19:00:00']);
+      expect(['scheduled', 'score-pending']).toContain(g.status);
+      expect([g.home.score, g.away.score]).toEqual([null, null]);
+    } else {
+      // MaxPreps lists it now: its contest replaced the listing (no second row, above).
+      expect(g.contestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    }
   });
 
-  it('lists its JV game at 5:30, non-league, with no score', () => {
+  it('lists its JV game once and non-league: until MaxPreps lists it, at 5:30 with no score', () => {
     const jv = m.jv.getJvGames().filter((x) => x.dateKey === '2026-11-24' && x.home.slug === 'cupertino');
-    expect(jv.map((x) => [x.contestId, x.dateLocal, x.status, x.away.slug, x.isLeague, x.countsFor])).toEqual([
-      ['added-jv:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T17:30:00', 'scheduled', 'santa-teresa', false, null],
-    ]);
+    expect(jv.map((x) => [x.away.slug, x.isLeague, x.countsFor])).toEqual([['santa-teresa', false, null]]);
     expect(m.jv.getJvClassification(jv[0].contestId)?.kind).toBe('non-league');
+    if (jv[0].contestId.startsWith('added-jv:')) {
+      expect([jv[0].contestId, jv[0].dateLocal]).toEqual(['added-jv:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T17:30:00']);
+      expect(['scheduled', 'score-pending']).toContain(jv[0].status);
+      expect([jv[0].home.score, jv[0].away.score]).toEqual([null, null]);
+    } else {
+      // MaxPreps lists it now (the 2026-11-21 refresh: 86337580-…, at 5:30): its contest is the game.
+      expect(jv[0].contestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    }
   });
 });
