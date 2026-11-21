@@ -15,10 +15,12 @@ import bundledPlayerStatsFieldHockey from '../data/field-hockey/player-stats.jso
 import bundledPlayerStatsBasketball from '../data/basketball/player-stats.json';
 import bundledPlayerStatsVolleyball from '../data/volleyball/player-stats.json';
 import bundledPlayerStatsSoccer from '../data/soccer/player-stats.json';
+import bundledPlayerStatsValSoccer from '../data/val-soccer/player-stats.json';
 import bundledSnapshotFieldHockey from '../data/field-hockey/snapshot.json';
 import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
+import bundledSnapshotValSoccer from '../data/val-soccer/snapshot.json';
 
 import { readOverride } from './data-file';
 import { gameSlug } from './game-slug';
@@ -104,8 +106,8 @@ import { compareInOrder, levelInOrder, ordersByRecord } from './standings/order'
  * lib/sports/current.ts DATA_DIR). Chosen on the inlined SCVAL_SPORT itself, not on IS_FIELD_HOCKEY, so a bundler
  * folds the comparison and leaves the other sports' files out of the Worker (scripts/assert-budgets.ts).
  */
-const bundledPlayerStats: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledPlayerStatsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledPlayerStatsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledPlayerStatsSoccer : bundledPlayerStatsFieldHockey;
-const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
+const bundledPlayerStats: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledPlayerStatsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledPlayerStatsVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledPlayerStatsValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledPlayerStatsSoccer : bundledPlayerStatsFieldHockey;
+const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledSnapshotValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 /**
  * data/field-hockey/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:

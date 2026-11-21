@@ -47,6 +47,7 @@
  * left out here (see `notBuilt`), so this assertion holds on a `.next` that has served traffic.
  */
 
+import { LISTS_PLAYERS } from '../lib/sports/current';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
@@ -108,17 +109,20 @@ const { pagesIn, allFamilies } = makeFamilyChecker(files, { cardSuffix: '/opengr
 allFamilies(expected);
 
 // Roster and Player stats on every team page, every league (the empty states count: a team
-// nothing has been collected for still says so, rather than dropping the section).
+// nothing has been collected for still says so, rather than dropping the section). A build that lists no
+// players (the VAL's middle schools: SPORT_LISTS_PLAYERS) is held to the opposite: no team page has either.
 const noSections: string[] = [];
 for (const slug of slugs) {
   const p = path.join(APP, 'teams', `${slug}.html`);
   if (!existsSync(p)) continue; // already reported by family('teams')
   const html = readFileSync(p, 'utf8');
   for (const id of ['roster', 'player-stats']) {
-    if (!html.includes(`id="${id}"`)) noSections.push(`${slug} (#${id})`);
+    if (html.includes(`id="${id}"`) !== LISTS_PLAYERS) noSections.push(`${slug} (#${id})`);
   }
 }
-if (noSections.length) fail(`teams/: ${noSections.length} team page section(s) missing: ${sample(noSections)}`);
+if (noSections.length) {
+  fail(`teams/: ${noSections.length} team page section(s) ${LISTS_PLAYERS ? 'missing' : 'present in a build that lists no players'}: ${sample(noSections)}`);
+}
 
 // Index pages' own cards (file-based, no params) stay where they are.
 for (const card of ['opengraph-image', 'standings/opengraph-image']) {

@@ -1,0 +1,15 @@
+{
+  "leagues": {
+    "val": {
+      "checked": [
+        "https://valleyal.org/ (the league’s site: its archive pages list past seasons’ titles by level, and no standings)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "Valley Athletic League",
+      "reason": "We found no official 2025-26 final standings for VAL girls soccer: valleyal.org keeps no standings for a past season. This site added VAL girls soccer on November 21, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    }
+  },
+  "season": "2025-26",
+  "sport": "Girls Soccer"
+}

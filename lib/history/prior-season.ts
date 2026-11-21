@@ -11,11 +11,12 @@ import bundledFieldHockey from '../../data/field-hockey/prior-season.json';
 import bundledBasketball from '../../data/basketball/prior-season.json';
 import bundledVolleyball from '../../data/volleyball/prior-season.json';
 import bundledSoccer from '../../data/soccer/prior-season.json';
+import bundledValSoccer from '../../data/val-soccer/prior-season.json';
 import { validateData } from '../data-file';
 import { PriorSeasonSchema, type PriorSeason } from './prior-season-schema';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): PriorSeason {
   return validateData('prior-season', PriorSeasonSchema, bundled);

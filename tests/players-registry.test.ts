@@ -24,7 +24,7 @@ import {
   type PlayersFile,
 } from '../lib/players/registry-schema';
 import { currentSeasonSightings, pastSeasonSightings } from '../lib/players/registry-sources';
-import { SPORT_IDS } from '../lib/sports/current';
+import { SPORT_IDS, SPORT_LISTS_PLAYERS } from '../lib/sports/current';
 import { stampCuratedFiles, stampIndex } from '../scripts/build-players';
 
 const NO_IDENTITY: PlayerIdentity = { notes: [], sameAs: [], rowSplits: [], distinct: [], notSame: [], names: [] };
@@ -1114,7 +1114,8 @@ describe('data/players.json', () => {
 
   it('holds players from every sport, and follows some across seasons', () => {
     const sports = new Set(file.players.flatMap((p) => p.stints.map((s) => s.sport)));
-    expect([...sports].sort()).toEqual([...SPORT_IDS].sort());
+    // Every build that lists players; the VAL's middle school build lists none (SPORT_LISTS_PLAYERS).
+    expect([...sports].sort()).toEqual(SPORT_IDS.filter((s) => SPORT_LISTS_PLAYERS[s]).sort());
     expect(file.counts.players).toBeGreaterThan(2500);
     expect(file.counts.nameOnly).toBeGreaterThan(0);
     expect(file.counts.multiSeason).toBeGreaterThan(0);

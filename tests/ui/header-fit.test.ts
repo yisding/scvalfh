@@ -178,8 +178,9 @@ describe('the measured tables cover what the header prints', () => {
     expect(labels()).toBeCloseTo(302.5, 0);
   });
 
-  it('has a measured wordmark for all four sports, and this build prints one of them', () => {
-    expect(SPORT_IDS).toHaveLength(4);
+  it('has a measured wordmark for every build, and this build prints one of them', () => {
+    // Five builds; the VAL's label is 'Girls Soccer' after its own shorter head ('VAL MS').
+    expect(SPORT_IDS).toHaveLength(5);
     for (const id of SPORT_IDS) expect(TAIL_PX[tailOf(id)], `${id}: "${tailOf(id)}"`).toBeDefined();
     expect(SHORT_PX[WORDMARK_SHORT], WORDMARK_SHORT).toBeDefined();
     expect(WORDMARK_TAIL).toBe(tailOf(SPORT_ID));

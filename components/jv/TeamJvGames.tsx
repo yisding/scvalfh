@@ -4,6 +4,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import { GAME_LOG_ROW_GRID, GameLogRowBody } from '../game-row/GameLogRow';
 import type { JvListSummary, TeamJvView } from './jv-view';
+import { SECOND_LEVEL } from '../words/level-words';
 
 /**
  * A team page's JV games (DESIGN §3.7's game log, one list): `Sep 14 (W) 4–0 vs Cupertino FINAL`.
@@ -104,7 +105,7 @@ export function JvFootnote({ summary, className }: { summary: JvListSummary; cla
         </>
       ) : null}
       <Link href="/about#jv" prefetch={false} className="sx-link inline-flex min-h-6 items-center">
-        How JV games are shown
+        How {SECOND_LEVEL.short} games are shown
       </Link>
     </p>
   );

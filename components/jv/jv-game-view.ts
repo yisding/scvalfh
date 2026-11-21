@@ -34,6 +34,7 @@ import type { DivisionId, Game, GameSide, LeagueId, Outcome, Team } from '../../
 import { regionIdSuffix } from '../leaders/scope';
 import { describeGame, type GameDisplay, type SideView } from '../ui/describe-game';
 import { jvDiffersNote } from './jv-view';
+import { MAIN_LEVEL, SECOND_LEVEL } from '../words/level-words';
 
 export interface JvGameSideModel {
   /** The school's full name, or the source's name for a side outside the registry. */
@@ -141,10 +142,10 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
   return {
     name,
     label,
-    jvLabel: crossLevelOpponentOf(side.teamId) ? label : `${label} JV`,
+    jvLabel: crossLevelOpponentOf(side.teamId) ? label : `${label} ${SECOND_LEVEL.short}`,
     team,
     slot,
-    sub: tracked ? (record ? `${record} JV` : 'No JV results yet') : null,
+    sub: tracked ? (record ? `${record} ${SECOND_LEVEL.short}` : `No ${SECOND_LEVEL.short} results yet`) : null,
     outcome: display.kind !== 'final' ? null : view.weight === 'level' ? 'T' : view.weight === 'winner' ? 'W' : 'L',
     view,
   };
@@ -152,37 +153,37 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
 
 /** What the game counts for, in words, from its classification (lib/jv/jv-standings.ts rules 0-4). */
 function countsAsFor(c: JvClassification | undefined, game: Game): JvGameModel['countsAs'] {
-  if (!c) return { label: 'JV game', detail: 'Not classified.' };
+  if (!c) return { label: `${SECOND_LEVEL.short} game`, detail: 'Not classified.' };
   switch (c.kind) {
     case 'league': {
       const table = divisionWords(c.division);
       const why =
         c.via === 'varsity-game'
-          ? 'its varsity game counts for the league table'
+          ? `its ${MAIN_LEVEL.long} game counts for the league table`
           : c.via === 'official-fixture'
             ? `it is on the ${leagueOfDivision(c.division).shortName} schedule`
             : 'a source names it a league game';
-      return { label: `JV league game · ${table}`, detail: `Counts in the ${table} JV table: ${why}.` };
+      return { label: `${SECOND_LEVEL.short} league game · ${table}`, detail: `Counts in the ${table} ${SECOND_LEVEL.short} table: ${why}.` };
     }
     case 'non-league': {
       const why = {
-        'varsity-non-league': 'its varsity game is non-league.',
+        'varsity-non-league': `its ${MAIN_LEVEL.long} game is non-league.`,
         'different-divisions': 'the two schools are in different divisions.',
         'outside-registry': isCrossLevelGame(game)
-          ? 'the opponent is not a JV team.'
+          ? `the opponent is not a ${SECOND_LEVEL.short} team.`
           : `${[game.away, game.home].some((s) => s.slug === null && !jvOutsideTeamByMaxprepsId(s.teamId)) ? 'one side is a school outside the leagues this site covers' : 'one side plays no league table here'}.`,
-        'off-jv-schedule': 'it is not on the league’s own JV schedule.',
+        'off-jv-schedule': `it is not on the league’s own ${SECOND_LEVEL.short} schedule.`,
       }[c.reason];
-      return { label: 'Non-league JV game', detail: `In no JV table: ${why}` };
+      return { label: `Non-league ${SECOND_LEVEL.short} game`, detail: `In no ${SECOND_LEVEL.short} table: ${why}` };
     }
     case 'uncounted': {
       const table = divisionWords(c.division);
       const why = {
-        'no-varsity-counterpart': 'no varsity game of the two schools is within three days of it, so this site cannot tell whether it is a league game',
-        ambiguous: 'two varsity games of the two schools are equally near it, so this site cannot tell which one it goes with',
-        'varsity-postseason': 'its varsity game is a postseason game',
+        'no-varsity-counterpart': `no ${MAIN_LEVEL.long} game of the two schools is within three days of it, so this site cannot tell whether it is a league game`,
+        ambiguous: `two ${MAIN_LEVEL.long} games of the two schools are equally near it, so this site cannot tell which one it goes with`,
+        'varsity-postseason': `its ${MAIN_LEVEL.long} game is a postseason game`,
       }[c.reason];
-      return { label: 'JV game, not counted', detail: `Two ${table} teams, but not in the JV table: ${why}.` };
+      return { label: `${SECOND_LEVEL.short} game, not counted`, detail: `Two ${table} teams, but not in the ${SECOND_LEVEL.short} table: ${why}.` };
     }
   }
 }
@@ -200,18 +201,18 @@ function buildModel(game: Game): JvGameModel {
 
   const competition: JvGameModel['competition'] =
     classification?.kind === 'league'
-      ? { name: `${divisionWords(classification.division)} JV`, href: jvTableHref(classification.division) }
+      ? { name: `${divisionWords(classification.division)} ${SECOND_LEVEL.short}`, href: jvTableHref(classification.division) }
       : league
-        ? { name: `${getLeague(league).shortName} JV`, href: `/jv/${league}` }
-        : { name: 'JV', href: '/jv' };
+        ? { name: `${getLeague(league).shortName} ${SECOND_LEVEL.short}`, href: `/jv/${league}` }
+        : { name: SECOND_LEVEL.short, href: '/jv' };
 
   const slotSide = [away, home].find((s) => s.slot);
   const notes = [
     ...(slotSide?.slot
-      ? [`${slotSide.slot.source} ${slotSide.slot.name} plays ${getTeamBySlug(slotSide.slot.jvFor)?.name ?? slotSide.slot.jvFor}’s JV slot.`]
+      ? [`${slotSide.slot.source} ${slotSide.slot.name} plays ${getTeamBySlug(slotSide.slot.jvFor)?.name ?? slotSide.slot.jvFor}’s ${SECOND_LEVEL.short} slot.`]
       : []),
     ...(isOfficialJvContestId(game.contestId)
-      ? ['Listed from the league’s own JV schedule; no source lists this game yet.']
+      ? [`Listed from the league’s own ${SECOND_LEVEL.short} schedule; no source lists this game yet.`]
       : []),
     ...(jvDiffersNote(game) ? [jvDiffersNote(game) as string] : []),
     ...[crossLevelNote(game, (crossLevelSides(game)?.which === 'home' ? away : home).name)].filter((n): n is string => n !== null),
@@ -240,7 +241,7 @@ function buildModel(game: Game): JvGameModel {
   const recordsCaption =
     tracked === 0
       ? null
-      : `${tracked === 1 ? 'JV record' : 'JV records'} over the games listed here, ${display.kind === 'final' ? 'after this game' : 'going in'}`;
+      : `${tracked === 1 ? `${SECOND_LEVEL.short} record` : `${SECOND_LEVEL.short} records`} over the games listed here, ${display.kind === 'final' ? 'after this game' : 'going in'}`;
 
   const links: JvGameModel['links'] = [];
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: game.status === 'final' ? 'MaxPreps box score' : 'MaxPreps game' });
@@ -303,5 +304,5 @@ export function jvGameTitle(model: JvGameModel): string {
 
 /** The meta description: the game's sentence, its competition and what it counts for. */
 export function jvGameDescription(model: JvGameModel): string {
-  return `JV: ${model.display.sentence} ${model.competition.name}, ${model.whenLabel}. ${model.countsAs.detail}`;
+  return `${SECOND_LEVEL.short}: ${model.display.sentence} ${model.competition.name}, ${model.whenLabel}. ${model.countsAs.detail}`;
 }

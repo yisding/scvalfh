@@ -17,6 +17,7 @@ import { regionIdSuffix } from '../../../components/leaders/scope';
 import { LEAGUE_IDS, getLeague, regionOf, standaloneName } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
 import { GENDER_NAME, SPORT } from '../../../lib/sports/current';
+import { SECOND_LEVEL } from '../../../components/words/level-words';
 
 /**
  * `/jv/<league>` — "When does our JV play, and how did it go?" Every JV game with a side in the league, by
@@ -38,7 +39,7 @@ export function generateStaticParams(): { league: string }[] {
 }
 
 function titleOf(league: string): string {
-  return `${standaloneName(league)} JV schedule and scores`;
+  return `${standaloneName(league)} ${SECOND_LEVEL.short} schedule and scores`;
 }
 
 export async function generateMetadata({ params }: PageProps<'/jv/[league]'>): Promise<Metadata> {
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps<'/jv/[league]'>): P
   if (!LEAGUE_IDS.includes(league)) return { title: 'League not found' };
   const view = buildLeagueJvScheduleView(league);
   const title = titleOf(league);
-  const description = `Every ${GENDER_NAME.toLowerCase()} junior varsity ${SPORT.noun} game of ${getLeague(league).name}, ${SEASON_DISPLAY}, by date: ${plural(view.games, 'game')} listed, ${view.finals} with a final score. Unofficial.`;
+  const description = `Every ${GENDER_NAME.toLowerCase()} ${SECOND_LEVEL.long} ${SPORT.noun} game of ${getLeague(league).name}, ${SEASON_DISPLAY}, by date: ${plural(view.games, 'game')} listed, ${view.finals} with a final score. Unofficial.`;
   return {
     title,
     description,
@@ -72,7 +73,7 @@ export default async function JvLeagueSchedulePage({ params }: PageProps<'/jv/[l
   }, []);
   return (
     <div className="pb-section-lg">
-      <PageHeader title={`${config.shortName} JV schedule`} />
+      <PageHeader title={`${config.shortName} ${SECOND_LEVEL.short} schedule`} />
       {/* The league's region only (links to the sibling leagues' JV schedules), plus All → the JV hub. */}
       <ScopeBar
         region={false}
@@ -108,7 +109,7 @@ export default async function JvLeagueSchedulePage({ params }: PageProps<'/jv/[l
       ) : null}
       <div className="mt-4">
         {view.days.length === 0 ? (
-          <EmptyState heading={`No ${config.shortName} JV games listed`} />
+          <EmptyState heading={`No ${config.shortName} ${SECOND_LEVEL.short} games listed`} />
         ) : (
           <JvSchedule view={view} varsityDates={varsityDates} dayAnchor={`jv${regionIdSuffix(region)}`} />
         )}
@@ -116,7 +117,7 @@ export default async function JvLeagueSchedulePage({ params }: PageProps<'/jv/[l
       <ul className="sx-linkrow mt-4">
         <li>
           <Link href={`/jv#${league}`} prefetch={false} className="sx-action">
-            {config.shortName} JV standings
+            {config.shortName} {SECOND_LEVEL.short} standings
           </Link>
         </li>
         <li>

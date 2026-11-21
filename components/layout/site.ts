@@ -24,6 +24,7 @@ import { TEAMS } from '../../lib/teams';
 import { OG_SIZE } from '../metadata/og-theme';
 import { bySport, SPORT, SPORT_AUDIENCE, SPORT_ID } from '../../lib/sports/current';
 import { programName } from '../../lib/sports/sites';
+import { SECOND_LEVEL } from '../words/level-words';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -47,6 +48,8 @@ const PROGRAM_TITLE = programName(SPORT_ID);
  * 'NorCal High School' ('NorCal HS', 'NorCal'), and the Valley Athletic League's middle school build's own.
  */
 const HIGH_SCHOOL_HEAD = { name: 'NorCal High School', wordmark: 'NorCal HS', short: 'NorCal' } as const;
+const HIGH_SCHOOL_SOURCE_LINE =
+  'Scores come from MaxPreps and SI.com. This is an unofficial site, not affiliated with any school, league or CIF section.';
 const SITE_HEAD = bySport<{ readonly name: string; readonly wordmark: string; readonly short: string }>({
   'field-hockey': HIGH_SCHOOL_HEAD,
   soccer: HIGH_SCHOOL_HEAD,
@@ -89,13 +92,27 @@ export const NAV_LABELS = {
   playoffs: 'Playoffs',
   teams: 'Teams',
   leaders: 'Leaders',
-  jv: 'JV',
+  // The second level: 'JV', or the VAL's '6th/7th' (components/words/level-words.ts).
+  jv: SECOND_LEVEL.short,
   history: 'History',
   about: 'About',
   report: 'Report an error',
 } as const;
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = `${SITE_HEAD.short} ${SPORT.abbr}`;
+
+/**
+ * The footer's sources sentence: every high school build's (MaxPreps, si.com, no section), and a build read from a
+ * league's own site, which names the site and no section (the VAL's middle schools belong to none).
+ */
+export const SOURCE_LINE = bySport<string>({
+  'field-hockey': HIGH_SCHOOL_SOURCE_LINE,
+  soccer: HIGH_SCHOOL_SOURCE_LINE,
+  basketball: HIGH_SCHOOL_SOURCE_LINE,
+  volleyball: HIGH_SCHOOL_SOURCE_LINE,
+  'val-soccer':
+    'Scores come from the Valley Athletic League’s own site, valleyal.org. This is an unofficial site, not affiliated with any school, school district or league.',
+});
 
 /**
  * A group of independents in a list of what is covered: `five LA independents`, from the config

@@ -77,6 +77,12 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('volleyball', basketballData, volleyballData)).toBe(BUILD);
     for (const other of ['field-hockey', 'soccer', 'basketball']) expect(decide(other, basketballData, volleyballData), other).toBe(SKIP);
     expect(decide('volleyball', soccerData, basketballData)).toBe(SKIP);
+
+    // The VAL's middle school soccer: its own folder, which a prefix test on data/soccer/ never mistakes for soccer's.
+    const valData = commit(['data/val-soccer/snapshot.json', 'data/val-soccer/jv.json']);
+    expect(decide('val-soccer', volleyballData, valData)).toBe(BUILD);
+    for (const other of ['field-hockey', 'soccer', 'basketball', 'volleyball']) expect(decide(other, volleyballData, valData), other).toBe(SKIP);
+    expect(decide('val-soccer', soccerData, basketballData)).toBe(SKIP);
   });
 
   it('builds both on a code change, even beside data', () => {
@@ -86,6 +92,7 @@ describe('scripts/vercel-ignore-build.sh', () => {
     expect(decide('soccer', base, code)).toBe(BUILD);
     expect(decide('basketball', base, code)).toBe(BUILD);
     expect(decide('volleyball', base, code)).toBe(BUILD);
+    expect(decide('val-soccer', base, code)).toBe(BUILD);
   });
 
   it('builds when it cannot decide: no previous deployment, an unknown commit, an unknown sport', () => {

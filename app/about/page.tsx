@@ -20,7 +20,8 @@ import StandingsSection from '../../components/about/sections/StandingsSection';
 import PageHeader from '../../components/layout/PageHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import ExternalLink from '../../components/ui/ExternalLink';
-import { SPORT_AUDIENCE } from '../../lib/sports/current';
+import { HAS_MAXPREPS, SPORT_AUDIENCE } from '../../lib/sports/current';
+import LeagueSiteAbout from '../../components/about/LeagueSiteAbout';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each
@@ -76,6 +77,8 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  // A build read from a league's own site (the VAL) has an About of its own: nothing here is MaxPreps' or a section's.
+  if (!HAS_MAXPREPS) return <LeagueSiteAbout />;
   const view = buildAboutView();
   const { teams, leagueWords } = view.lede;
 

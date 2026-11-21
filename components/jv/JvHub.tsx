@@ -6,6 +6,8 @@ import { shortDate } from '../../lib/format';
 import { JvGameList } from './JvDayGames';
 import { JvFootnote } from './TeamJvGames';
 import type { JvDayGroup, JvTeamCardView, LeagueJvHubView } from './jv-view';
+import { SECOND_LEVEL } from '../words/level-words';
+import { LISTS_PLAYERS } from '../../lib/sports/current';
 
 /**
  * One league's JV games on the `/jv` hub, under its tables: the latest JV results (the last week's finals,
@@ -25,7 +27,7 @@ export function JvLeagueGames({ view, leagueShort, idPrefix }: { view: LeagueJvH
       {view.latest.length > 0 || view.next.length > 0 ? <JvFootnote summary={view} /> : null}
       <p className="sx-linkrow">
         <Link href={view.scheduleHref} prefetch={false} className="sx-action">
-          {leagueShort} JV schedule
+          {leagueShort} {SECOND_LEVEL.short} schedule
         </Link>
       </p>
     </div>
@@ -62,7 +64,7 @@ export function JvTeamIndex({ teams, id, leagueShort }: { teams: readonly JvTeam
   if (teams.length === 0) return null;
   return (
     <section aria-labelledby={id} className="mt-5">
-      <SectionHeader strip id={id} kicker={`${leagueShort} JV teams`} />
+      <SectionHeader strip id={id} kicker={`${leagueShort} ${SECOND_LEVEL.short} teams`} />
       <ul className="sx-auto m-0 list-none p-0">
         {teams.map(({ team, href, record, slotName }) => (
           <li
@@ -73,12 +75,12 @@ export function JvTeamIndex({ teams, id, leagueShort }: { teams: readonly JvTeam
             <TeamMonogram team={team} size={24} />
             <Link href={href} prefetch={false} className="sx-rowlink min-w-0 truncate font-medium">
               {team.shortName}
-              <span className="sr-only"> JV games and roster</span>
+              <span className="sr-only">{LISTS_PLAYERS ? ` ${SECOND_LEVEL.short} games and roster` : ` ${SECOND_LEVEL.short} games`}</span>
             </Link>
             <span className="sx-pin-note" hidden>
               Your team
             </span>
-            <span className="sx-num ml-auto shrink-0 text-ink-2">{slotName ? `${slotName} JV` : (record ?? '')}</span>
+            <span className="sx-num ml-auto shrink-0 text-ink-2">{slotName ? `${slotName} ${SECOND_LEVEL.short}` : (record ?? '')}</span>
           </li>
         ))}
       </ul>

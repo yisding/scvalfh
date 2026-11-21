@@ -102,6 +102,22 @@ export const SPORT_FEATURES = bySport<{ readonly recruiting: boolean; readonly c
   'val-soccer': { recruiting: false, clubCalendar: false },
 });
 
+/**
+ * Whether a build lists players at all, by build: its rosters, player stats, leader boards of players, and its place
+ * in the cross-sport player registry (data/players.json, lib/players/registry-file.ts). Every high school build does;
+ * the VAL's middle school build never does, whatever a source publishes: its players are children.
+ */
+export const SPORT_LISTS_PLAYERS: Readonly<Record<SportId, boolean>> = {
+  'field-hockey': true,
+  soccer: true,
+  basketball: true,
+  volleyball: true,
+  'val-soccer': false,
+};
+
+/** Whether this build lists players (SPORT_LISTS_PLAYERS). */
+export const LISTS_PLAYERS = SPORT_LISTS_PLAYERS[SPORT_ID];
+
 /** The recruiting pages (SPORT_FEATURES.recruiting). */
 export const HAS_RECRUITING = SPORT_FEATURES.recruiting;
 

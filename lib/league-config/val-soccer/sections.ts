@@ -11,17 +11,18 @@
 
 import type { SectionConfig } from '../shape';
 
-const VAL_SITE = 'https://valleyal.org/';
 const VAL_RULES = 'https://valleyal.org/content/8308/Girls-Soccer';
 
 export const VAL_SOCCER_SECTIONS = [
   {
     id: 'none', name: 'no CIF section', shortName: 'None', briefLabel: 'middle school', region: 'norcal',
     // MaxPreps carries none of the league's schools.
-    maxprepsSectionId: '',
+    maxprepsSectionId: null,
     // No section championship: the league's own playoffs end the season (postseason 'league-tournament').
     holdsFieldHockeyChampionship: false,
-    officialUrl: VAL_SITE,
+    // There is no section to link: the league's own rules page stands in, so no page takes the league's site
+    // (valleyal.org, LeagueConfig.officialUrl) for a section's.
+    officialUrl: VAL_RULES,
     rulesSource: { name: 'VAL Soccer Rules', url: VAL_RULES, format: 'web page' },
     shootout: null,
     seasonWindow: { start: '2026-11-21', end: '2027-02-11' },

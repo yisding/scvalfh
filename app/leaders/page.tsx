@@ -12,7 +12,7 @@ import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/lay
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import { capitalized } from '../../components/words/capitalized';
 import { getFetchedAt } from '../../lib/data';
-import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
+import { SPORT, SPORT_AUDIENCE, LISTS_PLAYERS } from '../../lib/sports/current';
 
 /**
  * `/leaders` (DESIGN §16, §23, §33) — "Who leads the whole site?" Leaderboards across every covered
@@ -58,9 +58,10 @@ export default function LeadersPage() {
   // NorCal, as always, and `#schools-socal`/`#players-socal` for SoCal; the scope stylesheet shows the
   // reader's pair. With JS off all four show, so each carries its region in sr-only text ('Teams,
   // Southern California'): the same visible words go to different boards (review 2026-10-06).
+  // A build that lists no players (the VAL's middle schools) has the Teams boards alone.
   const tabs = view.regions.flatMap((region) => [
     { href: `#${region.schoolsId}`, label: 'Teams', region: region.region, srSuffix: `, ${region.name}` },
-    { href: `#${region.playersId}`, label: 'Players', region: region.region, srSuffix: `, ${region.name}` },
+    ...(LISTS_PLAYERS ? [{ href: `#${region.playersId}`, label: 'Players', region: region.region, srSuffix: `, ${region.name}` }] : []),
   ]);
 
   return (
@@ -86,13 +87,15 @@ export default function LeadersPage() {
             boards={region.schools}
             className="mt-5"
           />
-          <LeaderSection
-            id={region.playersId}
-            region={region.region}
-            title="Players"
-            label={`Player leaders, ${region.name}`}
-            boards={region.players}
-          />
+          {LISTS_PLAYERS ? (
+            <LeaderSection
+              id={region.playersId}
+              region={region.region}
+              title="Players"
+              label={`Player leaders, ${region.name}`}
+              boards={region.players}
+            />
+          ) : null}
         </Fragment>
       ))}
 

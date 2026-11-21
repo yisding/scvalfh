@@ -662,7 +662,7 @@ export function assertLeagues(): void {
     }
     if (!rules.coChampionsLabel) fail(`${l.id}: empty coChampionsLabel`);
     if (ps.kind === 'league-tournament') {
-      if (!rules.citations.stages['play-in']) fail(`${l.id}: a league tournament needs a 'play-in' citation`);
+      if (ps.lastSpot !== null && !rules.citations.stages['play-in']) fail(`${l.id}: a league tournament with a play-in needs a 'play-in' citation`);
       if (!rules.unresolvedSuffix) fail(`${l.id}: a league tournament needs an unresolvedSuffix`);
     }
     if (rules.excludeContestTypes.includes(0)) fail(`${l.id}: excludeContestTypes may not contain 0 (the league flag)`);
@@ -710,7 +710,7 @@ export function assertLeagues(): void {
         if (!((rules.classification === 'contest-type' || rules.classification === 'membership') && d.official.mode === 'none')) {
           fail(`${d.id}: gamesPerTeam null needs classification 'contest-type' or 'membership' and official mode 'none'`);
         }
-      } else if (d.gamesPerTeam !== (d.expectedTeams - 1) * 2) fail(`${d.id}: gamesPerTeam ${d.gamesPerTeam}`);
+      } else if (d.gamesPerTeam !== (d.expectedTeams - 1) * (d.meetings ?? 2)) fail(`${d.id}: gamesPerTeam ${d.gamesPerTeam}`);
       if (d.leaguePlay.first > d.leaguePlay.last) fail(`${d.id}: leaguePlay first after last`);
       if (rules.postseasonFrom !== null && !(d.leaguePlay.last < rules.postseasonFrom)) {
         fail(`${d.id}: leaguePlay.last is not before postseasonFrom`);

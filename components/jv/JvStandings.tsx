@@ -7,6 +7,8 @@ import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { JvTableView } from './jv-standings-view';
+import { SECOND_LEVEL } from '../words/level-words';
+import { LISTS_PLAYERS } from '../../lib/sports/current';
 
 /**
  * A JV slot team's name cell (York): its logo, or a letter square without one, and its name, linking the
@@ -18,7 +20,7 @@ function SlotTeamCell({ name, mascot, host }: { name: string; mascot: string | n
     <span className="sx-teamcell">
       {mascot ? <TeamMonogram team={{ slug: mascot, name }} size={24} /> : <GhostMonogram name={name} size={24} />}
       {host ? (
-        <TeamRowLink href={`/teams/${host.slug}#jv`} label={`${name}, JV games on ${host.shortName}’s page`}>
+        <TeamRowLink href={`/teams/${host.slug}#jv`} label={`${name}, ${SECOND_LEVEL.short} games on ${host.shortName}’s page`}>
           {name}
         </TeamRowLink>
       ) : (
@@ -96,7 +98,7 @@ function JvTable({ view }: { view: JvTableView }) {
                     <span className="sx-teamcell">
                       <TeamMonogram team={team} size={24} />
                       <span>
-                        <TeamRowLink href={`/teams/${team.slug}#jv`} label={`${team.name} JV games and roster`}>
+                        <TeamRowLink href={`/teams/${team.slug}#jv`} label={LISTS_PLAYERS ? `${team.name} ${SECOND_LEVEL.short} games and roster` : `${team.name} ${SECOND_LEVEL.short} games`}>
                           {team.shortName}
                         </TeamRowLink>
                         {/* The star. aria-hidden: the row link's own sentence already starts "Your team." */}

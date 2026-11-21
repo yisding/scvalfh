@@ -32,8 +32,10 @@ const updateSoccer = read('update-data-soccer.yml');
 const updateBasketball = read('update-data-basketball.yml');
 /** The volleyball site's refresh (SCVAL_SPORT=volleyball): the same job for data/volleyball/. */
 const updateVolleyball = read('update-data-volleyball.yml');
+/** The VAL middle school soccer site's refresh (SCVAL_SPORT=val-soccer): the league's own pages, no players. */
+const updateValSoccer = read('update-data-val-soccer.yml');
 const deploy = read('deploy-cloudflare.yml');
-const updates = [update, updateSoccer, updateBasketball, updateVolleyball];
+const updates = [update, updateSoccer, updateBasketball, updateVolleyball, updateValSoccer];
 
 /** Every path the refreshes stage: the arguments of their `git add` lines. */
 const committedFiles = new Set(
@@ -83,6 +85,10 @@ describe('the update-data commit and the deploy gate', () => {
       'data/soccer/rosters.json',
       'data/soccer/snapshot.json',
       'data/soccer/snapshot.meta.json',
+      'data/val-soccer/claims.json',
+      'data/val-soccer/jv.json',
+      'data/val-soccer/snapshot.json',
+      'data/val-soccer/snapshot.meta.json',
       'data/volleyball/claims.json',
       'data/volleyball/jv-rosters.json',
       'data/volleyball/jv.json',
@@ -375,6 +381,7 @@ describe('the claims file travels with the snapshot', () => {
     ['soccer', 'data/soccer', updateSoccer],
     ['basketball', 'data/basketball', updateBasketball],
     ['volleyball', 'data/volleyball', updateVolleyball],
+    ['val-soccer', 'data/val-soccer', updateValSoccer],
   ];
   const esc = (v: string) => v.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
   for (const [name, dir, text] of sports) {
@@ -392,6 +399,23 @@ describe('the claims file travels with the snapshot', () => {
       expect(text).toContain(`git checkout -- ${claims} 2>/dev/null || rm -f ${claims}`);
     });
   }
+});
+
+describe('the VAL middle school soccer refresh', () => {
+  it('builds the VAL data: SCVAL_SPORT=val-soccer for the whole job', () => {
+    expect(updateValSoccer).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: val-soccer$/m);
+  });
+
+  it('commits and restores only data/val-soccer/ files, and reads no player', () => {
+    const paths = [...updateValSoccer.matchAll(/git (?:add|checkout --) ([^\n|]+)/g)].flatMap((m) => m[1].replace(/ 2>.*$/, '').trim().split(/\s+/));
+    expect(paths.length).toBeGreaterThan(0);
+    for (const p of paths) expect(p.startsWith('data/val-soccer/'), p).toBe(true);
+    expect(updateValSoccer).not.toMatch(/fetch-rosters|fetch-player-stats|refresh-player-registry/);
+  });
+
+  it('tests the VAL data files it just wrote', () => {
+    expect(stepBody(updateValSoccer, 'Test')).toContain('vitest run tests/val-soccer.test.ts');
+  });
 });
 
 describe('the soccer refresh', () => {

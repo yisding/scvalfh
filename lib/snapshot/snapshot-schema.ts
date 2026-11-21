@@ -410,7 +410,7 @@ export const SeasonSchema = z.object({
     z.object({
       id: sectionId,
       name: z.string().min(1),
-      maxprepsSectionId: z.string().min(1),
+      maxprepsSectionId: z.string().min(1).nullable(),
       holdsFieldHockeyChampionship: z.boolean(),
     }),
   ),

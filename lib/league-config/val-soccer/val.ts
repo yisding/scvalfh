@@ -58,8 +58,11 @@ export const VAL_SOCCER_LEAGUE: LeagueConfig = {
       // own table is read with its schedule (lib/pipeline/steps/teamsideline.ts) and compared instead.
       maxprepsLeagueId: null,
       maxprepsName: null, maxprepsSlug: null,
-      expectedTeams: 11, gamesPerTeam: 10,
-      leaguePlay: { first: '2026-12-14', last: '2027-01-28' },
+      // One meeting a pair: the schedule's 55 games, ten a team.
+      expectedTeams: 11, gamesPerTeam: 10, meetings: 1,
+      // The schedule's last regular-season games are Thu Jan 28; a game the league moves later is still a league game
+      // up to the eve of the playoffs (Mon Feb 1).
+      leaguePlay: { first: '2026-12-14', last: '2027-01-31' },
       official: {
         mode: 'none', scheduleUrl: VAL_SCHEDULE,
         note: 'The VAL’s schedule page is where this site reads every game and score, so the league’s own schedule is the whole season here: every game between two VAL schools is a league game.',
@@ -67,14 +70,15 @@ export const VAL_SOCCER_LEAGUE: LeagueConfig = {
       maxprepsTeamCount: 0,
       maxprepsMissing: ['blach', 'columbia', 'crittenden', 'cupertino-ms', 'egan', 'graham', 'hyde', 'kennedy', 'lawson', 'miller', 'sunnyvale-ms'],
       maxprepsExtraRows: {}, reportedTrust: 'records-only', knownCause: null,
-      home: { miniRows: 6, lineAfter: 6, lineLabel: 'Playoff line' },
+      home: { miniRows: 7, lineAfter: 6, lineLabel: 'Playoff line' },
       ladderLine: { after: 6, label: 'Playoff line' },
     },
   ],
   rules: {
     // RULES 18: "Regular season points: Win = 3 points, Tie = 1 point".
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'table', gamesWord: 'league',
-    classification: 'membership', excludeContestTypes: [], postseasonFrom: '2027-02-01', leagueGameOverrides: [],
+    // The league's page carries no contest type (every game's is null), so the excluded types never match.
+    classification: 'membership', excludeContestTypes: [2, 4], postseasonFrom: '2027-02-01', leagueGameOverrides: [],
     matcher: 'two-phase',
     // RULES T1-T3: head to head; with three or more, the record in the games among the tied teams, the rest
     // re-evaluated by head to head; then the goal differential in those games. The rules name nothing after that,
@@ -85,7 +89,8 @@ export const VAL_SOCCER_LEAGUE: LeagueConfig = {
       points: `${RULES} 18 (“Regular season points: Win = 3 points, Tie = 1 point”)`,
       pointsShort: 'VAL Soccer Rules 18',
       order: `${RULES} 18 and the league’s schedule page, whose table is ordered by points`,
-      doubleRoundRobin: 'VAL 2026-27 girls soccer schedule (each team plays every other once: 10 league games each)',
+      // The citation key is every league's; the VAL's is a single round robin.
+      doubleRoundRobin: 'VAL 2026-27 girls soccer schedule (a single round robin: each team plays every other once, 10 league games each)',
       overtime: `${RULES} 19 (“No overtime for regular season games”)`,
       coChampions: `${RULES} T1-T3 (a tie for a playoff seed is broken; the rules name no co-champions)`,
       stages: {
@@ -101,10 +106,12 @@ export const VAL_SOCCER_LEAGUE: LeagueConfig = {
     kind: 'league-tournament', name: 'VAL playoffs', qualifiers: 6, byes: [1, 2],
     semifinals: 'fixed',
     ladder: [
-      { divisions: '*', places: [1, 2], status: 'bye', label: 'Bye to Round 2',
-        phrase: 'a bye to the second round', badge: 'Bye', legend: 'Places 1-2 — bye to Round 2, Tue Feb 2' },
+      // The league's page names the rounds Playoff Round 1, Round 2 and the Championship Round; the site's bracket names
+      // them as it names every six-team bracket's: quarterfinals, semifinals, final.
+      { divisions: '*', places: [1, 2], status: 'bye', label: 'Semifinal bye',
+        phrase: 'a semifinal bye', badge: 'Bye', legend: 'Places 1-2 — bye to the semifinals, Tue Feb 2' },
       { divisions: '*', places: [3, 6], status: 'tournament', label: 'VAL playoffs',
-        phrase: 'a VAL playoff place', badge: 'Top 6', legend: 'Places 3-6 — Round 1, Mon Feb 1 (4th hosts 5th, 3rd hosts 6th)' },
+        phrase: 'a VAL playoff place', badge: 'Top 6', legend: 'Places 3-6 — quarterfinal Mon Feb 1 (4th hosts 5th, 3rd hosts 6th)' },
       { divisions: '*', places: [7, 99], status: 'below-line', label: 'Below the playoff line',
         phrase: 'below the playoff line', badge: 'Below line', legend: '7th or lower — outside the six-team VAL playoffs' },
     ],

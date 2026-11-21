@@ -249,8 +249,3 @@ export function parseTeamsidelinePage(html: string): TeamsidelinePage {
     playoffs: gridRows(html, 'PlayoffGrid'),
   };
 }
-
-/** A TeamSideline schedule page's URL on the league's own site: `${origin}/schedule/${id}/0/1/${slug}`. */
-export function teamsidelineScheduleUrl(origin: string, scheduleId: string, slug: string): string {
-  return `${origin}/schedule/${scheduleId}/0/1/${slug}`;
-}

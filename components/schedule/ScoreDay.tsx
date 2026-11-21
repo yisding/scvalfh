@@ -31,6 +31,7 @@ import DateBar from './DayNav';
 import GameList from './GameList';
 import LiveBoard from './LiveBoard';
 import { MyTeamLine, type MyTeamLines } from './MyTeamLine';
+import { SECOND_LEVEL } from '../words/level-words';
 import ScoreRail from './ScoreRail';
 import ScoresRegionBlock, { DayGroups, MovedNote, dayWords } from './ScoresRegionBlock';
 import { dayGroups, dayRegions, gamesOfLeague } from './day-summary';
@@ -344,7 +345,7 @@ export function ScoreDay({ date, home = false, before }: ScoreDayProps) {
             >
               <SectionHeader
                 id={`jv${block.idSuffix}-heading`}
-                kicker="JV games"
+                kicker={`${SECOND_LEVEL.short} games`}
                 meta={jvBlocks.length > 1 ? block.shortName : undefined}
               />
               <JvDayGames view={block.view} />

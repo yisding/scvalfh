@@ -45,8 +45,10 @@ import {
   getLeagueTournament,
   getLeagueSummaries,
   getPlayoffs,
+  getPlayoffsOrNull,
   getToday,
   getTournamentLeagueIds,
+  type LeagueSummary,
 } from '../../lib/data';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
@@ -55,6 +57,7 @@ import {
   NO_POSTSEASON_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
+  getSection,
   sectionOf,
 } from '../../lib/leagues';
 import { ordersByRecord } from '../../lib/standings/order';
@@ -116,6 +119,16 @@ import { SPORT } from '../../lib/sports/current';
 const PAGE_TITLE = 'Playoffs';
 
 export async function generateMetadata(): Promise<Metadata> {
+  if (getPlayoffsOrNull() === null) {
+    // A build with no CCS block (the VAL): its leagues' own tournaments.
+    const description = `Every league’s postseason: ${postseasonWords()}.`;
+    return {
+      title: PAGE_TITLE,
+      description,
+      alternates: { canonical: '/playoffs' },
+      openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, description, url: '/playoffs' },
+    };
+  }
   const playoffs = getPlayoffs();
   const { keyDates } = playoffs;
   const field = getCcsField();
@@ -146,7 +159,78 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+/**
+ * One league tournament's section (MCAL's; the VAL's): the whole tournament (bracket with its play-in, seeds), the
+ * title sentence once it is won, why it is the league's postseason, and the link to its own page.
+ */
+function TournamentLeagueSection({ league }: { league: LeagueSummary }) {
+  const found = tournamentLeague(league.id);
+  if (!found) return null;
+  const { config, ps } = found;
+  const projection = getLeagueTournament(league.id);
+  const headline = tournamentHeadline(projection, config);
+  const playInRound = ps.rounds.find((r) => r.round === 'play-in');
+  // Why the tournament is the league's postseason: a section with no championship of the sport (the NCS in field
+  // hockey), or a league in no CIF section at all (the VAL), whose section says so itself.
+  const note = getSection(league.section.id).noChampionshipNote;
+  const why =
+    league.section.id === 'none' && note !== null
+      ? note
+      : `The ${league.section.name} holds no field hockey championship, so the ${ps.name} is the ${league.shortName} postseason.`;
+  return (
+    <section id={league.id} aria-labelledby={`${league.id}-heading`} className="sx-section sx-target">
+      <SectionHeader kicker={league.shortName} id={`${league.id}-heading`} meta={ps.name} />
+      <LeagueTournament
+        view={tournamentView(league, ps, config)}
+        leagueShort={league.shortName}
+        standingsHref={`/standings/${league.id}`}
+        beforeSeeds={<LeagueHealthNote leagueId={league.id} className="mb-3" />}
+        playInRule={playInRound ? `${playInRound.pairing}.` : null}
+        idPrefix={`${league.id}-`}
+        nested
+      />
+      {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
+      {headline.champion && projection.champion ? <p className="sx-note">{titleSentence(projection, ps)}</p> : null}
+      <p className="sx-note">{why}</p>
+      <p className="sx-linkrow">
+        <Link href={`/playoffs/${league.id}#how-it-works`} prefetch={false} className="sx-action">
+          {`How the ${ps.name} works`}
+        </Link>
+      </p>
+    </section>
+  );
+}
+
+/**
+ * /playoffs in a build with no CCS block (the VAL: a league in no CIF section): its leagues' own tournaments, one
+ * section each, and nothing of a section's playoffs.
+ */
+function LeagueTournamentsPage() {
+  const summaries = getLeagueSummaries();
+  const tournamentIds = new Set<LeagueId>(getTournamentLeagueIds());
+  const chips = leagueChips();
+  const hrefs: Record<string, string> = Object.fromEntries(summaries.map((s) => [s.id, `#${s.id}`]));
+  return (
+    <div className="pb-section-lg">
+      <PageHeader title={PAGE_TITLE} />
+      <ScopeBar
+        league={{ mode: 'anchor', label: 'Leagues', leagues: chips, hrefs }}
+        stamp={<LastUpdated at={getFetchedAt()} now={BUILD_INSTANT} variant="time" />}
+      />
+      <div id="norcal" data-region-scope="norcal" role="region" aria-label="Northern California">
+        {summaries
+          .filter((s) => tournamentIds.has(s.id))
+          .map((league) => (
+            <TournamentLeagueSection key={league.id} league={league} />
+          ))}
+      </div>
+    </div>
+  );
+}
+
 export default function PlayoffsPage() {
+  // A build with no CCS block (the VAL) has its leagues' own tournaments and nothing else.
+  if (getPlayoffsOrNull() === null) return <LeagueTournamentsPage />;
   const playoffs = getPlayoffs();
   const { keyDates, bracketUrl, bracketPublished } = playoffs;
   const field = getCcsField();
@@ -395,38 +479,9 @@ export default function PlayoffsPage() {
 
         {/* 6. One section per league tournament (MCAL): the whole tournament (bracket with its play-in, seeds) drawn
             here like every other league's postseason (2026-11-03), with the rules on its own page. */}
-        {tournamentLeagues.map((league) => {
-          const found = tournamentLeague(league.id);
-          if (!found) return null;
-          const { config, ps } = found;
-          const projection = getLeagueTournament(league.id);
-          const headline = tournamentHeadline(projection, config);
-          const playInRound = ps.rounds.find((r) => r.round === 'play-in');
-          return (
-            <section key={league.id} id={league.id} aria-labelledby={`${league.id}-heading`} className="sx-section sx-target">
-              <SectionHeader kicker={league.shortName} id={`${league.id}-heading`} meta={ps.name} />
-              <LeagueTournament
-                view={tournamentView(league, ps, config)}
-                leagueShort={league.shortName}
-                standingsHref={`/standings/${league.id}`}
-                beforeSeeds={<LeagueHealthNote leagueId={league.id} className="mb-3" />}
-                playInRule={playInRound ? `${playInRound.pairing}.` : null}
-                idPrefix={`${league.id}-`}
-                nested
-              />
-              {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
-              {headline.champion && projection.champion ? <p className="sx-note">{titleSentence(projection, ps)}</p> : null}
-              <p className="sx-note">
-                {`The ${league.section.name} holds no field hockey championship, so the ${ps.name} is the ${league.shortName} postseason.`}
-              </p>
-              <p className="sx-linkrow">
-                <Link href={`/playoffs/${league.id}#how-it-works`} prefetch={false} className="sx-action">
-                  {`How the ${ps.name} works`}
-                </Link>
-              </p>
-            </section>
-          );
-        })}
+        {tournamentLeagues.map((league) => (
+          <TournamentLeagueSection key={league.id} league={league} />
+        ))}
 
         {/* 7. One section per unbracketed league (EAL): its result, its games by day, then the rule, its streams
             and its source, never a bracket or a seed. Its id is the EAL tab's target. The link words are

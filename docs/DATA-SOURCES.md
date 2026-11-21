@@ -3240,6 +3240,36 @@ commitments").
   "plans to play in college" without a college; a player's own social-media post; and the seniors the searches
   turned up, which are out of scope.
 
+### 1.14 PRIMARY (the VAL build only) — the league's own TeamSideline site (`valleyal.org`)
+
+The `val-soccer` build (the Valley Athletic League's middle school girls soccer, `SCVAL_SPORT=val-soccer`) reads no
+MaxPreps data: MaxPreps carries none of the league's eleven middle schools (a school page such as
+`maxpreps.com/ca/cupertino/cupertino-bears/` answers 404, 2026-11-21). Its primary source (`lib/sports/shape.ts`
+`PrimarySourceId` 'teamsideline'; `lib/pipeline/primary.ts`) is the league's own site, valleyal.org, which runs on
+TeamSideline and publishes one schedule page a program and level:
+
+- `https://valleyal.org/schedule/731407/0/1/7th8th-grade` — girls soccer 2026-27, 7th/8th grade: the site's tables,
+  schedule and playoffs (`lib/pipeline/steps/teamsideline.ts`, resource `teamsideline-schedule` level `main`).
+- `https://valleyal.org/schedule/731408/0/1/6th7th-grade` — girls soccer 2026-27, 6th/7th grade: the second level, on
+  the /jv pages (`scripts/fetch-jv.ts`, level `second`).
+
+Each page is ASP.NET server HTML holding everything: the heading ("Girls' Soccer 26-27") and level ("7th/8th Grade"),
+the league's standings grid (Place, Team, W, L, T, GB, GP, PCT, Streak, PTS), every regular-season game (day and month,
+time, home and away team, each side's score once entered with the winner in bold, the field with a map link, and any
+comment row such as "Moved to 1/13."), and the playoff schedule (Playoff Round 1-3, game labels G1-G5, seats such as
+"4th" and "G1 Winner"). The grids are drawn twice, once for wide screens and once (`Mobile…`) for phones; the parser
+(`lib/sources/teamsideline.ts`) reads the wide copy only, by the grids' own control ids. robots.txt allows every path.
+
+What 2026-27 holds (read 2026-11-21): each level is a single round robin of the eleven schools, 55 games, ten a team,
+Mon Dec 14 to Thu Jan 28, 4:00 PM on the home school's field; the two levels play the same pairs on the same days, each
+with the other school at home (55 of 55). The playoffs are six teams: G1 4th v 5th and G2 3rd v 6th Mon Feb 1, G3 1st v
+the G1 winner and G4 2nd v the G2 winner Tue Feb 2, G5 the final Thu Feb 4, every field "TBD". The league's rules are its
+Girls Soccer rules page (`valleyal.org/content/8308/Girls-Soccer`), cited in `lib/league-config/val-soccer/val.ts`.
+
+Budget: two requests a run (one a level), twice a day in season, with the site's polite User-Agent. A page that cannot
+be read keeps the previous snapshot (the league freezes and, with one league, the run aborts); a page whose heading or
+level is not the configured one is never read as it.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF

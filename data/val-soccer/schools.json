@@ -1,0 +1,75 @@
+{
+  "builtBy": "Read on 2026-11-21 from the map links of valleyal.org's girls soccer schedule pages: each school's home field and gym link the same street address.",
+  "capturedAt": "2026-11-21",
+  "notes": [
+    "One record per VAL school, keyed by team slug: the street address the league's own schedule page links each school's field to."
+  ],
+  "schools": {
+    "blach": {
+      "city": "Los Altos",
+      "postalCode": "94024",
+      "region": "CA",
+      "street": "1120 Covington Road"
+    },
+    "columbia": {
+      "city": "Sunnyvale",
+      "postalCode": "94085",
+      "region": "CA",
+      "street": "739 Morse Avenue"
+    },
+    "crittenden": {
+      "city": "Mountain View",
+      "postalCode": "94043",
+      "region": "CA",
+      "street": "1701 Rock Street"
+    },
+    "cupertino-ms": {
+      "city": "Sunnyvale",
+      "postalCode": "94087",
+      "region": "CA",
+      "street": "1650 Bernardo Dr."
+    },
+    "egan": {
+      "city": "Los Altos",
+      "postalCode": "94022",
+      "region": "CA",
+      "street": "100 West Portola Avenue"
+    },
+    "graham": {
+      "city": "Mountain View",
+      "postalCode": "94040",
+      "region": "CA",
+      "street": "1175 Castro Street"
+    },
+    "hyde": {
+      "city": "Cupertino",
+      "postalCode": "95014",
+      "region": "CA",
+      "street": "19325 Bollinger Road"
+    },
+    "kennedy": {
+      "city": "Cupertino",
+      "postalCode": "95014",
+      "region": "CA",
+      "street": "821 Bubb Road"
+    },
+    "lawson": {
+      "city": "Cupertino",
+      "postalCode": "95014",
+      "region": "CA",
+      "street": "10401 Vista Drive"
+    },
+    "miller": {
+      "city": "San Jose",
+      "postalCode": "95129",
+      "region": "CA",
+      "street": "6151 Rainbow Drive"
+    },
+    "sunnyvale-ms": {
+      "city": "Sunnyvale",
+      "postalCode": "94087",
+      "region": "CA",
+      "street": "1080 Mango Avenue"
+    }
+  }
+}

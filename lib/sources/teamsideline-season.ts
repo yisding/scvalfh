@@ -6,7 +6,8 @@
 
 import { SPORT_SEASON } from '../sports/current';
 import type { TeamsidelineLevelPage, TeamsidelineSportSeason } from '../sports/shape';
-import { teamsidelineScheduleUrl, type TeamsidelinePage } from './teamsideline';
+import { teamsidelinePageUrl } from '../sports/league-site';
+import type { TeamsidelinePage } from './teamsideline';
 
 /** This build's TeamSideline season. Throws in a build whose primary source is not TeamSideline. */
 export function teamsidelineSeason(): TeamsidelineSportSeason {
@@ -23,8 +24,7 @@ export function teamsidelineLevel(level: 'main' | 'second'): TeamsidelineLevelPa
 /** One level's schedule page URL. */
 export function teamsidelineLevelUrl(level: 'main' | 'second'): string {
   const season = teamsidelineSeason();
-  const page = season.pages[level];
-  return teamsidelineScheduleUrl(season.origin, page.scheduleId, page.slug);
+  return teamsidelinePageUrl(season.origin, season.pages[level]);
 }
 
 /**

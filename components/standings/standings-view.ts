@@ -37,6 +37,7 @@
  *    string here.
  */
 
+import { HAS_MAXPREPS } from '../../lib/sports/current';
 import { orderHead, ordersByRecord } from '../../lib/standings/order';
 import { EMPTY_RECORD } from '../words/score-words';
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
@@ -352,6 +353,8 @@ function scheduledPerText(league: LeagueConfig, official: DivisionConfig['offici
   // The subject is the league alone, so it is its `standaloneName`: 'North publishes no schedule' could
   // be read as a direction, 'North County publishes no schedule' cannot. Every other league's is its short name.
   const subject = standaloneName(league.id);
+  // A build read from the league's own site (the VAL): its schedule page is every game this site has.
+  if (!HAS_MAXPREPS) return `League games are every game on ${subject}’s own schedule page`;
   // A league whose own schedule exists but is not transcribed here (soccer's WCAL and WBAL).
   if (official.scheduleUrl !== undefined) {
     return `League games are every game between two division members on MaxPreps’ schedules inside league play (${subject}’s own schedule is not copied here)`;

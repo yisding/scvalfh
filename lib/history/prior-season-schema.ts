@@ -32,8 +32,14 @@ export const PriorSeasonSchema = z
     season: z.string().regex(/^\d{4}-\d{2}$/),
     /** MaxPreps' own label: "25-26". */
     maxprepsYear: z.string().regex(/^\d{2}-\d{2}$/),
-    sportSeasonId: z.string().min(1),
-    source: z.literal('maxpreps-api'),
+    /** MaxPreps' id of last season's program; null where no source has last season's games ('none'). */
+    sportSeasonId: z.string().min(1).nullable(),
+    /**
+     * 'maxpreps-api': last season's games from MaxPreps (scripts/fetch-prior-season.ts). 'none': a build no source
+     * gives last season's games for (the VAL's middle schools: MaxPreps does not carry them, and the league keeps no
+     * past season's schedule), so the ratings start from no prior and the file holds no game.
+     */
+    source: z.enum(['maxpreps-api', 'none']),
     fetchedAt: z.string().min(1),
     /** What the normalization left out, by reason (the file keeps the counts). */
     excluded: z.object({
@@ -84,6 +90,12 @@ export const PriorSeasonSchema = z
         ctx.addIssue({ code: 'custom', path: at, message: `${g.date} is outside the ${file.season} season` });
       }
     });
+    if (file.source === 'none' && (file.games.length > 0 || file.sportSeasonId !== null)) {
+      ctx.addIssue({ code: 'custom', path: ['source'], message: 'a file of no source holds no game and no season id' });
+    }
+    if (file.source === 'maxpreps-api' && file.sportSeasonId === null) {
+      ctx.addIssue({ code: 'custom', path: ['sportSeasonId'], message: 'a MaxPreps file names its season id' });
+    }
     if (file.maxprepsYear !== file.season.slice(2)) {
       ctx.addIssue({ code: 'custom', path: ['maxprepsYear'], message: `${file.maxprepsYear} does not name ${file.season}` });
     }

@@ -367,16 +367,18 @@ export const SPORT_HAS_NO_TIES = process.env.SCVAL_SPORT === 'basketball' || pro
  * SCVAL_SPORT, as SPORT_HAS_NO_TIES is, so this leaf loads no sport definition; tests/sports.test.ts,
  * tests/soccer-deciders.test.ts and tests/basketball-deciders.test.ts hold these to `Sport.scoring`.
  */
-export const SPORT_TIEBREAK_WORDS = process.env.SCVAL_SPORT === 'soccer' ? 'penalty kicks' : 'a shootout';
+// The VAL's middle school soccer (`val-soccer`) is soccer too.
+const IS_SOCCER_BUILD = process.env.SCVAL_SPORT === 'soccer' || process.env.SCVAL_SPORT === 'val-soccer';
+export const SPORT_TIEBREAK_WORDS = IS_SOCCER_BUILD ? 'penalty kicks' : 'a shootout';
 /** The chip tag of a tiebreak win: 'SO', or soccer's 'PK'. The stored decider is 'SO' in every sport. */
-export const SPORT_TIEBREAK_TAG = process.env.SCVAL_SPORT === 'soccer' ? 'PK' : 'SO';
+export const SPORT_TIEBREAK_TAG = IS_SOCCER_BUILD ? 'PK' : 'SO';
 /**
  * Whether the sport's overtime ends on the first score (field hockey: sudden victory in every league rule this
  * site reads), so a game cannot come out of it more than one goal apart. false for soccer (two full periods)
  * and basketball (full periods until one team leads), and for volleyball, which has no overtime.
  */
 export const SPORT_OVERTIME_IS_SUDDEN_VICTORY =
-  process.env.SCVAL_SPORT !== 'soccer' && process.env.SCVAL_SPORT !== 'basketball' && process.env.SCVAL_SPORT !== 'volleyball';
+  !IS_SOCCER_BUILD && process.env.SCVAL_SPORT !== 'basketball' && process.env.SCVAL_SPORT !== 'volleyball';
 /**
  * Whether an overtime of the sport is counted in periods a reader names ('2 OT', 'double overtime'). false for
  * soccer: its overtime is one stage of two halves, which MaxPreps may record as 1 or 2 periods, so every soccer

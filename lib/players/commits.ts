@@ -34,6 +34,7 @@ import bundledFieldHockey from '../../data/field-hockey/commits.json';
 import bundledBasketball from '../../data/basketball/commits.json';
 import bundledVolleyball from '../../data/volleyball/commits.json';
 import bundledSoccer from '../../data/soccer/commits.json';
+import bundledValSoccer from '../../data/val-soccer/commits.json';
 import { validateData } from '../data-file';
 import {
   COLLEGE_DIVISIONS,
@@ -49,7 +50,7 @@ import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {
   College,

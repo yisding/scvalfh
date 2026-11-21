@@ -10,6 +10,7 @@ import type { Game, OfficialFixture } from '../../lib/types';
 import GameList from './GameList';
 import OfficialFixtures from './OfficialFixtures';
 import { dayGroups, gamesOfLeague, groupsByStart, type DayGroup, type DayRegion } from './day-summary';
+import { MAIN_LEVEL, SECOND_LEVEL } from '../words/level-words';
 
 /** One league's unreported official fixtures of the day (the day page's `fixtureLeagues`). */
 interface FixtureBlock {
@@ -164,8 +165,8 @@ export default function ScoresRegionBlock({
     region.idSuffix === '' ? `${groupId}-heading` : `${groupId}-heading ${headingId}`;
   const besides =
     betweenCount === 0 ? '' : ` besides the NorCal vs SoCal ${gameWord(betweenCount)} ${firstRegion ? 'below' : 'above'}`;
-  const jvNote = jvCount === 0 ? '' : `; the JV ${gameWord(jvCount)} ${jvCount === 1 ? 'is' : 'are'} below`;
-  const varsity = jvCount === 0 ? '' : 'varsity ';
+  const jvNote = jvCount === 0 ? '' : `; the ${SECOND_LEVEL.short} ${gameWord(jvCount)} ${jvCount === 1 ? 'is' : 'are'} below`;
+  const varsity = jvCount === 0 ? '' : `${MAIN_LEVEL.long} `;
   // A league's official fixture with no source behind it (the blocks at the end of this one) is still a
   // game on that day, so a region with one never reads "No … games"; none such on 2026-10-06's data.
   const fixtureCount = fixtureLeagues.reduce((n, block) => n + block.rows.length, 0);

@@ -10,12 +10,13 @@ import bundledFileFieldHockey from '../../data/field-hockey/sds-brackets-2026.js
 import bundledFileBasketball from '../../data/basketball/sds-brackets-2026.json';
 import bundledFileVolleyball from '../../data/volleyball/sds-brackets-2026.json';
 import bundledFileSoccer from '../../data/soccer/sds-brackets-2026.json';
+import bundledFileValSoccer from '../../data/val-soccer/sds-brackets-2026.json';
 import { validateData } from '../data-file';
 import type { TeamSlug } from '../types';
 import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile } from './sds-brackets-schema';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledFileVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
+const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledFileVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledFileValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
 
 function loadFile(): SdsBracketsFile {
   return validateData('sds-brackets-2026', SdsBracketsSchema, bundledFile);

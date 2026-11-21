@@ -1,5 +1,6 @@
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
+import { LEVELS_ARE_GRADES, SECOND_LEVEL } from '../words/level-words';
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
 import { NAV_LABELS } from './site';
@@ -18,7 +19,7 @@ export const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: 
   { href: '/teams', label: NAV_LABELS.teams },
   { href: '/leaders', label: NAV_LABELS.leaders },
   // The suffix is short on purpose: the nav is in every page's first-load JS.
-  { href: '/jv', label: NAV_LABELS.jv, srSuffix: ' (junior varsity)' },
+  { href: '/jv', label: NAV_LABELS.jv, ...(LEVELS_ARE_GRADES ? {} : { srSuffix: ` (${SECOND_LEVEL.long})` }) },
 ];
 
 export interface TopNavProps {

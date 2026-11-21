@@ -33,12 +33,13 @@ import bundledFieldHockey from '../../data/field-hockey/hudl-streams.json';
 import bundledBasketball from '../../data/basketball/hudl-streams.json';
 import bundledVolleyball from '../../data/volleyball/hudl-streams.json';
 import bundledSoccer from '../../data/soccer/hudl-streams.json';
+import bundledValSoccer from '../../data/val-soccer/hudl-streams.json';
 import { validateData } from '../data-file';
 import { calendarDateKey, httpsUrl } from '../schema-primitives';
 import type { Game } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const text = z.string().trim().min(1);
 

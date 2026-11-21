@@ -41,7 +41,8 @@ import { teamJsonLd } from '../../../components/metadata/structured-data';
 import { getLastLeagueResultDate, getStandings, getTeamSlugs, getTeams } from '../../../lib/data';
 import { byDateThenId, recordString } from '../../../lib/format';
 import { getLeague, regionOf } from '../../../lib/leagues';
-import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
+import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE, LISTS_PLAYERS } from '../../../lib/sports/current';
+import { SECOND_LEVEL } from '../../../components/words/level-words';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §33).
@@ -266,15 +267,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         <section id="jv" className="sx-section sx-target" aria-labelledby="jv-heading">
           <SectionHeader
             id="jv-heading"
-            kicker="JV games"
+            kicker={`${SECOND_LEVEL.short} games`}
             meta={jvStanding?.line ?? (jv.rows.length > 0 && jv.record ? jv.record.overall : undefined)}
-            action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}
+            action={jvStanding ? { href: jvStanding.href, label: `${SECOND_LEVEL.short} standings` } : undefined}
           />
           <TeamJvGames view={jv} />
         </section>
       ) : null}
 
-      {playerStats ? (
+      {/* A build that lists no players (the VAL's middle schools) has no player stats or roster section. */}
+      {playerStats && LISTS_PLAYERS ? (
         <section id="player-stats" className="sx-section sx-target" aria-labelledby="player-stats-heading">
           <SectionHeader
             id="player-stats-heading"
@@ -285,7 +287,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         </section>
       ) : null}
 
-      {roster ? (
+      {roster && LISTS_PLAYERS ? (
         <section id="roster" className="sx-section sx-target" aria-labelledby="roster-heading">
           <SectionHeader
             id="roster-heading"
@@ -298,11 +300,11 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
       ) : null}
 
       {/* The JV roster, last: only a school some source lists JV players for has the section. */}
-      {jvRoster ? (
+      {jvRoster && LISTS_PLAYERS ? (
         <section id="jv-roster" className="sx-section sx-target" aria-labelledby="jv-roster-heading">
           <SectionHeader
             id="jv-roster-heading"
-            kicker="JV roster"
+            kicker={`${SECOND_LEVEL.short} roster`}
             meta={jvRoster.rows.length > 0 ? plural(jvRoster.rows.length, 'player') : undefined}
           />
           {/* Shown in full, as the varsity roster above is: no disclosure to open. */}

@@ -86,7 +86,8 @@ export interface SeasonWindow {
 export interface SeasonSection {
   id: SectionId;
   name: string;                       // 'Central Coast Section'
-  maxprepsSectionId: string;
+  /** null for a section MaxPreps does not know ('none'). */
+  maxprepsSectionId: string | null;
   holdsFieldHockeyChampionship: boolean;
 }
 

@@ -57,7 +57,8 @@ export interface SectionConfig {
   briefLabel: string;
   /** The NorCal/SoCal half of the site this section's leagues sit in (DESIGN-socal §2.1.1). */
   region: RegionId;
-  maxprepsSectionId: string;
+  /** MaxPreps' id of the section; null for a section MaxPreps does not know ('none', the VAL's place). */
+  maxprepsSectionId: string | null;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
   /**
@@ -185,6 +186,11 @@ export interface DivisionConfig {
    * LA independents meet two or three times) and official mode 'none'.
    */
   gamesPerTeam: number | null;
+  /**
+   * How many times each pair of the division meets in league play: 2, a double round robin (every high school league
+   * here; the default when left out), or 1 (the VAL's single round robin). `gamesPerTeam` is (expectedTeams - 1) times it.
+   */
+  meetings?: 1 | 2;
   /**
    * First and last league date. From the league's official schedule where there is one; otherwise the
    * first league game on MaxPreps' schedules (the Sunset: Sep 15; each San Diego division: its earliest
