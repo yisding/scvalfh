@@ -139,6 +139,7 @@ function pick<T extends { division: string; level: string }>(
  */
 async function bvalFromSheet(args: Args): Promise<{ entry: Record<string, unknown>; problems: string[] }> {
   if (SPORT_ID === 'field-hockey') throw new Error('build-history: field hockey has no BVAL sheet history (its 2025-26 BVAL entry is the league documents)');
+  if (SPORT_ID === 'val-soccer') throw new Error('build-history: the VAL build has no BVAL');
   const sport = SPORT_ID;
   let csv: string;
   if (args.bvalFrom) {

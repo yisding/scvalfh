@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { CCS } from '../../lib/league-config/sections';
+import { requireCcs } from '../../lib/league-config/sections';
 import { splitStatusLabel } from '../playoffs/playoff-view';
 import ExternalLink from '../ui/ExternalLink';
 import type { TeamPageView } from './team-view';
@@ -67,8 +67,8 @@ export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
         </li>
         {league.postseasonKind === 'ccs-ladder' ? (
           <li>
-            <ExternalLink href={CCS.bracketUrl ?? CCS.sources.index} className="sx-action">
-              {CCS.bracketUrl ? 'Official CCS bracket' : 'CCS playoffs'}
+            <ExternalLink href={requireCcs().bracketUrl ?? requireCcs().sources.index} className="sx-action">
+              {requireCcs().bracketUrl ? 'Official CCS bracket' : 'CCS playoffs'}
             </ExternalLink>
           </li>
         ) : null}

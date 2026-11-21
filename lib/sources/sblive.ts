@@ -426,6 +426,8 @@ const STATEWIDE_AMBIGUOUS_NAMES: readonly string[] = bySport<readonly string[]>(
   ],
   // The volleyball build reads no si.com page.
   volleyball: [],
+  // si.com carries no VAL school; the build reads no si.com page.
+  'val-soccer': [],
 });
 
 export const STATEWIDE_AMBIGUOUS: ReadonlySet<string> = new Set(STATEWIDE_AMBIGUOUS_NAMES.map(normalizeTeamKey));

@@ -33,7 +33,7 @@ function unclassified(g: Game): Game {
 
 /** Step 06 before the claims: the previous snapshot's merged games carried for a feed this run did not read. */
 export function legacyMaxpreps(
-  input: Extract<StageTrace, { stage: 'maxpreps' }>['input'],
+  input: Extract<StageTrace, { stage: 'primary' }>['input'],
   previous: Snapshot | null,
   fetchedAt: string,
 ): { games: Game[]; carried: ContestId[] } {

@@ -3,9 +3,9 @@
  * by stage. Each stage applies its rule module's per-game function (`applyX`) to the game the stage before left,
  * with that stage's decision and explicit editor slices (never the ledger's defaults):
  *
- *   maxpreps   the MaxPreps claim on the editor's day and at the editor's host; for a contest or an editor's
- *              listing carried for a feed the run did not read, that game with every other source's stored claim
- *              folded in (resolveCarriedClaims)
+ *   primary    the primary source's claim: a MaxPreps claim on the editor's day and at the editor's host, or a
+ *              league's TeamSideline claim as read; for a contest or an editor's listing carried for a feed the run
+ *              did not read, that game with every other source's stored claim folded in (resolveCarriedClaims)
  *   official   the official step's stamps and notes             (lib/official/match.ts applyOfficialDecision)
  *   sblive     si.com's fill, then its disagreement             (lib/crosscheck/backfill.ts, crosscheck.ts)
  *   vnn        the school calendars' venue and start time       (lib/sources/vnn-ics.ts applyVnnStageDecision)
@@ -77,7 +77,11 @@ export function withoutClassification(g: Game): Game {
  * editor no longer lists).
  */
 export function resolveCarriedClaims(f: Fixture, editor: EditorView): Game | null {
-  const start = f.claims.maxpreps ? resolveMaxprepsClaim(f.claims.maxpreps, editor) : listedGameOf(f, editor);
+  const start = f.claims.maxpreps
+    ? resolveMaxprepsClaim(f.claims.maxpreps, editor)
+    : f.claims.teamsideline
+      ? (f.claims.teamsideline.game as Game)
+      : listedGameOf(f, editor);
   if (!start) return null;
   const id = start.contestId;
   let g = start;
@@ -116,14 +120,24 @@ function listedGameOf(f: Fixture, editor: Pick<EditorView, 'listed'>): Game | nu
   return listing ? addedGame(listing, last.builtAt) : null;
 }
 
-/** The decisions of a fixture no stage decided anything for: a MaxPreps contest from stage `maxpreps` on. */
-export const NO_DECISIONS: FixtureDecisions = { from: 'maxpreps' };
+/** The decisions of a fixture no stage decided anything for: a primary-source game from stage `primary` on. */
+export const NO_DECISIONS: FixtureDecisions = { from: 'primary' };
+
+/**
+ * The game a fixture's primary-source claim holds: a MaxPreps claim on the editor's day and host, or a TeamSideline
+ * claim as read (no editor's correction is keyed to a TeamSideline game). null where the fixture holds neither.
+ */
+export function primaryGameOf(f: Fixture, editor: EditorView): Game | null {
+  if (f.claims.maxpreps) return resolveMaxprepsClaim(f.claims.maxpreps, editor);
+  if (f.claims.teamsideline) return f.claims.teamsideline.game as Game;
+  return null;
+}
 
 /** The game a fixture enters the view with at its first stage, or null when it has none. */
 function enteringGame(f: Fixture, d: FixtureDecisions, editor: EditorView): Game | null {
   if (d.enters) return d.enters;
   if (d.carried) return resolveCarriedClaims(f, editor);
-  return d.from === 'maxpreps' && f.claims.maxpreps ? resolveMaxprepsClaim(f.claims.maxpreps, editor) : null;
+  return d.from === 'primary' ? primaryGameOf(f, editor) : null;
 }
 
 /**
@@ -135,7 +149,7 @@ export function applyStage(stage: Stage, game: Game | null, f: Fixture, d: Fixtu
   if (stage === 'guards') return d.frozen ?? g;
   if (g === null) return null;
   switch (stage) {
-    case 'maxpreps':
+    case 'primary':
       return g;
     case 'official':
       return (d.official ?? []).reduce((x, o) => applyOfficialDecision(x, o), g);

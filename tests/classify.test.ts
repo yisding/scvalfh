@@ -6,7 +6,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '../components/ui/describe-game';
-import { CCS } from '../lib/league-config/sections';
+import { requireCcs } from '../lib/league-config/sections';
 import {
   classifyGame,
   classifyGames,
@@ -92,7 +92,7 @@ describe('classify: official-fixtures leagues (BVAL, PCAL, MCAL)', () => {
     const vsCcs = game({ home: 'tamalpais', away: 'leigh', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
     expect(vsCcs.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
     expect(postseasonTagOf(vsCcs)).toBeNull();
-    // A CCS team against a non-registry opponent is still CCS.
+    // A CCS team against a non-registry opponent is still requireCcs().
     const ccsBase = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 4 } });
     const ccsOutside: Game = {
       ...ccsBase,
@@ -487,20 +487,20 @@ describe('classify: helpers', () => {
 
 describe('classify: the CCS bracket (rule 1c, the rule-2 gate and the widened 2b; 2026-10-29)', () => {
   const BRACKET: Game['bracket'] = {
-    tournamentId: CCS.tournament!.id,
-    bracketId: CCS.tournament!.division1BracketId,
+    tournamentId: requireCcs().tournament!.id,
+    bracketId: requireCcs().tournament!.division1BracketId,
     tournament: '2026 Central Coast Section Field Hockey Championship',
     name: 'Division 1',
     published: true,
     matchupId: null,
-    url: CCS.bracketUrl!,
+    url: requireCcs().bracketUrl!,
   };
 
   it('(a) tags a game whose MaxPreps row names the CCS tournament as the bracket, across two CCS leagues', () => {
     // Saint Francis (SCVAL) at Leigh (BVAL) on the quarterfinal date, typed non-league by MaxPreps.
     const g: Game = { ...game({ home: 'leigh', away: 'saint-francis', date: '2026-11-07', league: false }), bracket: BRACKET };
     expect(postseasonTag(g)).toEqual({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' });
-    // The name is the fallback for a re-created tournament under a new id; another tournament's row is not CCS.
+    // The name is the fallback for a re-created tournament under a new id; another tournament's row is not requireCcs().
     const renamed: Game = { ...g, bracket: { ...BRACKET, tournamentId: '11111111-2222-4333-8444-555555555555' } };
     expect(postseasonTag(renamed)).toEqual({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' });
     const other: Game = { ...renamed, bracket: { ...renamed.bracket!, tournament: 'Some Invitational' } };

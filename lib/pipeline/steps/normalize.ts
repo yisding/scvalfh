@@ -59,10 +59,10 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
   }
 
   ctx.view.start(m.view, m.decisions);
-  const games = ctx.view.games('maxpreps');
+  const games = ctx.view.games('primary');
   if (ctx.trace) {
     ctx.trace.push({
-      stage: 'maxpreps',
+      stage: 'primary',
       input: { rows: [...state.rows], feeds: [...state.feeds.values()].map((f) => ({ teamId: f.teamId, status: f.status })) },
       view: [...m.view],
       games,

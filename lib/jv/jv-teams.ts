@@ -320,6 +320,8 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = bySpor
   soccer: SOCCER_JV_SBLIVE_PATHS,
   basketball: BASKETBALL_JV_SBLIVE_PATHS,
   volleyball: {},
+  // si.com carries no VAL school.
+  'val-soccer': {},
 });
 
 /** The numeric si.com JV team id of a registry team, or null. */

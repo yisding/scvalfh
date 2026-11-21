@@ -59,7 +59,7 @@ import {
 } from '../../lib/leagues';
 import { ordersByRecord } from '../../lib/standings/order';
 import type { LeagueId } from '../../lib/types';
-import { CCS, ccsFirstDay, ccsLastDay, ccsRoundDays } from '../../lib/league-config/sections';
+import { ccsFirstDay, ccsLastDay, ccsRoundDays, requireCcs } from '../../lib/league-config/sections';
 import { SPORT } from '../../lib/sports/current';
 
 /**
@@ -128,7 +128,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const semis = ccsRoundDays(keyDates, 'semifinals', shortDate);
   const final = ccsRoundDays(keyDates, 'finals', shortDate);
   // The round that opens the bracket where it is not the quarterfinals (basketball's first round).
-  const opening = CCS.keyDates.firstRound ? `first round ${shortDate(CCS.keyDates.firstRound)}, ` : '';
+  const firstRound = requireCcs().keyDates.firstRound;
+  const opening = firstRound ? `first round ${shortDate(firstRound)}, ` : '';
   const fieldWords =
     field.total === null
       ? `The CCS ${SPORT.noun} field’s automatic berths: ${shares}.`
@@ -208,7 +209,7 @@ export default function PlayoffsPage() {
     return ps.kind === 'unbracketed-tournament' ? unbracketedChampion(ps.name, id, games, sectionOf(id).shootout) : null;
   };
   const officialBracket = (
-    <ExternalLink href={bracketUrl ?? CCS.sources.index} className="sx-action">
+    <ExternalLink href={bracketUrl ?? requireCcs().sources.index} className="sx-action">
       {bracketUrl ? 'Official CCS bracket' : `CCS ${SPORT.noun} page`}
     </ExternalLink>
   );
@@ -285,7 +286,7 @@ export default function PlayoffsPage() {
               <p key={name} className="sx-note">{`CCS has posted CCS ${name}; its games appear here after the next update.`}</p>
             ))}
             <p className="sx-note">
-              {/* How CCS numbers the two divisions (config CCS.ccsDivisions: each 1-8, the second the committee's
+              {/* How CCS numbers the two divisions (config requireCcs().ccsDivisions: each 1-8, the second the committee's
                   9-16) once every path's division is proven; else the honest grouping sentence of 2026-10-06. */}
               {divisionsKnown && overall
                 ? `CCS numbers each division’s eight teams 1-8; CCS ${overall.name} holds the committee’s overall seeds ${overall.seeds[0]}-${overall.seeds[1]}.`
@@ -307,7 +308,7 @@ export default function PlayoffsPage() {
             <SectionHeader
               id="ccs-playoffs"
               kicker="CCS playoffs"
-              meta={`${shortDate(ccsFirstDay(CCS.keyDates))} to ${shortDate(ccsLastDay(keyDates))}`}
+              meta={`${shortDate(ccsFirstDay(requireCcs().keyDates))} to ${shortDate(ccsLastDay(keyDates))}`}
             />
             <p className="sx-empty">
               {`Not seeded yet: CCS seeds ${ccsDivisionLabels(playoffs).length > 0 ? listWords(ccsDivisionLabels(playoffs)) : 'the field'} at the ${shortDate(keyDates.seedingMeeting)} meeting; the games appear here as MaxPreps lists them, after the next update.`}

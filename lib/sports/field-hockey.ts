@@ -8,7 +8,7 @@
  * An import-free leaf apart from types, so client modules reach it through lib/season and lib/format.
  */
 
-import type { Sport, SportSeason } from './shape';
+import type { Sport, MaxprepsSportSeason } from './shape';
 
 export const FIELD_HOCKEY = {
   id: 'field-hockey',
@@ -79,6 +79,7 @@ export const FIELD_HOCKEY_GIRLS_2026 = {
   sport: FIELD_HOCKEY,
   gender: 'girls',
   /** [V] only Varsity is verified end to end */
+  primary: 'maxpreps',
   level: 'Varsity',
   /** [V] verdict 5 */
   genderSport: 'girls,fieldhockey',
@@ -99,4 +100,4 @@ export const FIELD_HOCKEY_GIRLS_2026 = {
   /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4). */
   ccsBracketPath:
     '/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm',
-} as const satisfies SportSeason;
+} as const satisfies MaxprepsSportSeason;

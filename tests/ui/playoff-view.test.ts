@@ -716,9 +716,9 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     const snap = JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as Snapshot;
     snap.games.push(...games);
     snap.counts = { ...snap.counts, games: snap.games.length };
-    snap.playoffs.bracketPublished = true;
-    snap.playoffs.divisionsPublished = { 'Division 1': true, 'Division 2': true };
-    snap.playoffs.games = [];
+    snap.playoffs!.bracketPublished = true;
+    snap.playoffs!.divisionsPublished = { 'Division 1': true, 'Division 2': true };
+    snap.playoffs!.games = [];
     snap.fetchedAt = '2026-11-03T12:00:00.000Z';
     process.env.SCVAL_SNAPSHOT = writeTempSnapshot(snap, 'playoffs-seeded');
     vi.resetModules();

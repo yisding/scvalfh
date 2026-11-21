@@ -22,8 +22,8 @@ import { SEASON_YEARS_DISPLAY } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
 import { OG_SIZE } from '../metadata/og-theme';
-import { SPORT, SPORT_AUDIENCE, SPORT_ID } from '../../lib/sports/current';
-import { programTitle } from '../../lib/sports/sites';
+import { bySport, SPORT, SPORT_AUDIENCE, SPORT_ID } from '../../lib/sports/current';
+import { programName } from '../../lib/sports/sites';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -36,10 +36,24 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
 
 /**
  * The program as a title names it: 'Field Hockey' (a girls' sport only here, so the gender goes unsaid),
- * 'Girls Soccer' (a sport with a boys' program too). lib/sports/sites.ts programTitle, which the links to the
- * other sports' sites name them by.
+ * 'Girls Soccer' (a sport with a boys' program too). lib/sports/sites.ts programName: programTitle, which the links
+ * to the other sports' sites name them by, puts the VAL's league before it, which this build's own name says in its
+ * head instead (SITE_HEAD).
  */
-const PROGRAM_TITLE = programTitle(SPORT_ID);
+const PROGRAM_TITLE = programName(SPORT_ID);
+
+/**
+ * The words before the program in the site's name, its wordmark and its short name: every high school build's
+ * 'NorCal High School' ('NorCal HS', 'NorCal'), and the Valley Athletic League's middle school build's own.
+ */
+const HIGH_SCHOOL_HEAD = { name: 'NorCal High School', wordmark: 'NorCal HS', short: 'NorCal' } as const;
+const SITE_HEAD = bySport<{ readonly name: string; readonly wordmark: string; readonly short: string }>({
+  'field-hockey': HIGH_SCHOOL_HEAD,
+  soccer: HIGH_SCHOOL_HEAD,
+  basketball: HIGH_SCHOOL_HEAD,
+  volleyball: HIGH_SCHOOL_HEAD,
+  'val-soccer': { name: 'VAL Middle School', wordmark: 'VAL MS', short: 'VAL' },
+});
 
 /**
  * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
@@ -54,9 +68,9 @@ const PROGRAM_TITLE = programTitle(SPORT_ID);
  * region is in the words that describe the site rather than the name: SITE_DESCRIPTION names both
  * regions, NorCal first, and SITE_SCOPE_NOTE names every section and league covered.
  */
-export const SITE_NAME = `NorCal High School ${PROGRAM_TITLE}`;
+export const SITE_NAME = `${SITE_HEAD.name} ${PROGRAM_TITLE}`;
 /** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
-export const SITE_WORDMARK = `NorCal HS ${PROGRAM_TITLE}`;
+export const SITE_WORDMARK = `${SITE_HEAD.wordmark} ${PROGRAM_TITLE}`;
 /**
  * The wordmark as the header sets it (SiteHeader; tests/ui/header-fit.test.ts measures these words):
  * 'NorCal HS' in the condensed title face, then the program ('Field Hockey') as a quieter label,
@@ -81,7 +95,7 @@ export const NAV_LABELS = {
   report: 'Report an error',
 } as const;
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
-export const SITE_SHORT_NAME = `NorCal ${SPORT.abbr}`;
+export const SITE_SHORT_NAME = `${SITE_HEAD.short} ${SPORT.abbr}`;
 
 /**
  * A group of independents in a list of what is covered: `five LA independents`, from the config

@@ -16,7 +16,7 @@ import { PlayoffBracket, deciderWords } from '../../components/playoffs/PlayoffB
 import { buildBrackets, type BracketPath } from '../../components/playoffs/bracket-model';
 import { gameHref } from '../../lib/game-id';
 import { shortDate } from '../../lib/format';
-import { CCS } from '../../lib/league-config/sections';
+import { requireCcs } from '../../lib/league-config/sections';
 import type { CcsPlayoffs, Game } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025, unplayed } from '../fixtures/ccs/bracket-2025';
 import { textOf } from './html-text';
@@ -26,15 +26,15 @@ const COMPONENT = 'components/playoffs/PlayoffBracket.tsx';
 const WINNER_RULE = 'inset 2px 0 0 var(--sx-text)';
 
 const playoffs: CcsPlayoffs = {
-  keyDates: { ...CCS.keyDates },
+  keyDates: { ...requireCcs().keyDates },
   format: {
     elimination: 'single',
-    ccsDivisions: CCS.ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] })),
-    autoQualifiers: { ...CCS.autoQualifiers },
+    ccsDivisions: requireCcs().ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] })),
+    autoQualifiers: { ...requireCcs().autoQualifiers },
     highSeedHostsThrough: 'quarterfinals',
   },
   bracketPublished: true,
-  bracketUrl: CCS.bracketUrl,
+  bracketUrl: requireCcs().bracketUrl,
   games: [],
 };
 
@@ -74,9 +74,9 @@ describe('PlayoffBracket on the 2025 championship', () => {
     expect(html, COMPONENT).not.toContain('data-twin');
     expect(html.match(/class="sx-bracket/g)?.length, COMPONENT).toBe(1);
     expect([...html.matchAll(/<h3>([^<]*)<\/h3>/g)].map((m) => m[1]), COMPONENT).toEqual([
-      `Quarterfinals, ${shortDate(CCS.keyDates.quarterfinals)}`,
-      `Semifinals, ${shortDate(CCS.keyDates.semifinals)}`,
-      `Final, ${shortDate(CCS.keyDates.finals)}`,
+      `Quarterfinals, ${shortDate(requireCcs().keyDates.quarterfinals)}`,
+      `Semifinals, ${shortDate(requireCcs().keyDates.semifinals)}`,
+      `Final, ${shortDate(requireCcs().keyDates.finals)}`,
     ]);
     expect(html, COMPONENT).not.toContain('<h4');
     // Without JavaScript every round shows, stacked: the server marks them all, and the tab row is hidden.
@@ -176,7 +176,7 @@ describe('PlayoffBracket before the games exist', () => {
   });
 
   it('an unplayed game cell prints its start time in the score position, the location without "@ ", and Tickets / NFHS stream links', () => {
-    const quarters = GAMES.filter((g) => g.dateKey === CCS.keyDates.quarterfinals && g.bracket?.name === 'Division 1');
+    const quarters = GAMES.filter((g) => g.dateKey === requireCcs().keyDates.quarterfinals && g.bracket?.name === 'Division 1');
     const [first, second, ...rest] = quarters;
     const ticketed = unplayed(first, { venue: '@ St. Ignatius College Preparatory', goFan: 'https://gofan.co/app/events/1' });
     const tba = unplayed(second, { timeTba: true, venue: null, nfhsStream: 'https://www.nfhsnetwork.com/events/cifccs/gam1' });
@@ -186,7 +186,7 @@ describe('PlayoffBracket before the games exist', () => {
     const upcoming = ties(html).filter((t) => t.startsWith('" data-state="upcoming"'));
     expect(upcoming, COMPONENT).toHaveLength(2);
     // The round's heading carries the day; the cell carries the time where a score will be (never a score, never a dash).
-    expect(text, COMPONENT).toContain(`Quarterfinals, ${shortDate(CCS.keyDates.quarterfinals)}`);
+    expect(text, COMPONENT).toContain(`Quarterfinals, ${shortDate(requireCcs().keyDates.quarterfinals)}`);
     const cellOf = (g: Game) => upcoming.find((t) => t.includes(gameHref(g)))!;
     expect(cellOf(ticketed), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">4:00 PM</span>');
     expect(cellOf(tba), COMPONENT).toContain('<span class="sx-num sx-tie-time" aria-hidden="true">TBD</span>');

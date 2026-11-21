@@ -102,7 +102,7 @@ describe('MCAL 2025 field hockey tournament', () => {
     // The 2026 config's site is Redwood (the 2026 final was moved there); 2025's was Tamalpais.
     const ps = MCAL.postseason;
     if (ps.kind !== 'league-tournament') throw new Error('MCAL has no league tournament');
-    const AT_TAM: LeagueConfig = { ...MCAL, postseason: { ...ps, finalSite: { ...ps.finalSite, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' } } };
+    const AT_TAM: LeagueConfig = { ...MCAL, postseason: { ...ps, finalSite: { ...ps.finalSite!, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' } } };
     const f = finalGame([seedOf(RW), seedOf(TM)], AT_TAM);
     expect(f.site).toBe('Tamalpais');
     expect([slugsIn(f.home), slugsIn(f.away)]).toEqual([[RW], [TM]]);
@@ -133,7 +133,7 @@ describe('MCAL 2025 bracket, end to end with the 2025 results', () => {
     postseason: {
       ...ps,
       rounds: ps.rounds.map((r) => ({ ...r, date: dates[r.id] })),
-      finalSite: { ...ps.finalSite, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' },
+      finalSite: { ...ps.finalSite!, slug: TM, label: 'Tamalpais', venue: 'Tamalpais High School' },
     },
   };
 

@@ -48,7 +48,7 @@ export type ShootoutInference = (typeof SHOOTOUT_INFERENCES)[number];
 export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
-  shortName: 'CCS' | 'NCS' | 'NS' | 'SS' | 'SDS';
+  shortName: 'CCS' | 'NCS' | 'NS' | 'SS' | 'SDS' | 'None';
   /**
    * The section in a parenthesis after its leagues in short copy (SITE_DESCRIPTION): 'CCS', 'NCS',
    * and 'Northern Section', 'Southern Section' and 'San Diego Section' in full, because no reader knows
@@ -405,6 +405,11 @@ export type PostseasonConfig =
       name: string;                       // 'MCAL tournament'
       qualifiers: number;                 // 6
       byes: readonly number[];            // [1, 2]
+      /**
+       * How the semifinals are paired: 'reseeded' (MCAL: once both quarterfinals are won, the lowest-ranked remaining
+       * seed plays at 1 and the other at 2) or 'fixed' (the VAL: 1 hosts the winner of 4 v 5, 2 the winner of 3 v 6).
+       */
+      semifinals: 'reseeded' | 'fixed';
       ladder: readonly LadderRung[];
       rounds: readonly TournamentRoundConfig[];
       /**
@@ -420,10 +425,20 @@ export type PostseasonConfig =
         venue: string;
         admission: string | null;
         admissionSource: string | null;
-      };
-      lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' };
-      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string; pennant: string };
+      } | null;
+      /**
+       * The last tournament place's rule (MCAL: a play-in unless one team swept the other); null where the league's
+       * seeding rules settle every place (the VAL), so no play-in is ever drawn.
+       */
+      lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' } | null;
+      /** `lastSpot` is null exactly when the league has no last-place rule; `qualifiersConflict` only where documents disagree. */
+      citations: { format: string; seeding: string; semifinal: string; lastSpot: string | null; qualifiersConflict: string | null; pennant: string };
       titleNote: string;
+      /**
+       * Printed on a one-goal tournament result its source does not mark as overtime (`mayHideShootout`), where a
+       * shootout may hide in it: MCAL's (MaxPreps records a shootout's tally as goals), the VAL's own.
+       */
+      shootoutNote: string;
       /**
        * A sourced sentence for one tournament game's result, by contest GUID, printed where the game's
        * result is (the bracket row, the game page) in place of the generic shootout caveat: MaxPreps records

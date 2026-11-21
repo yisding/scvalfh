@@ -605,7 +605,7 @@ function seedOne(
   if (group.length === 0) return [];
   if (group.length === 1) return [[group[0]]];
   const ps = ctx.league.postseason;
-  if (!narrowing && ps.kind === 'league-tournament') {
+  if (!narrowing && ps.kind === 'league-tournament' && ps.lastSpot !== null) {
     const L = ps.lastSpot.place;
     if (place <= L && L < place + group.length - 1) return lastSpotSeed(group, place, above, ctx);
   }
@@ -622,7 +622,7 @@ const PLAY_IN_CHAIN: readonly TiebreakStage[] = ['h2h-win-pct', 'record-above-ti
 /** MCAL's last tournament place (SPEC §5.4b): a play-in decides it unless one team swept 2-0. */
 function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly TeamId[], ctx: SeedCtx): TeamId[][] {
   const ps = ctx.league.postseason;
-  if (ps.kind !== 'league-tournament') return seedOne(group, place, above, ctx);
+  if (ps.kind !== 'league-tournament' || ps.lastSpot === null) return seedOne(group, place, above, ctx);
   const L = ps.lastSpot.place;
 
   if (place < L) {
@@ -694,7 +694,7 @@ export function lastSpotOutcome(
   league: LeagueConfig,
 ): LastSpotOutcome | null {
   const ps = league.postseason;
-  if (ps.kind !== 'league-tournament') return null;
+  if (ps.kind !== 'league-tournament' || ps.lastSpot === null) return null;
   const L = ps.lastSpot.place;
   const divisionIds = new Set(league.divisions.map((d) => d.id));
   // Points order (the table's order is points first); the team(s) in place L are the L-th by points.

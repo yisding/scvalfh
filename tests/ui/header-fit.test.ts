@@ -34,6 +34,7 @@ import { SPORT_ID, SPORT_IDS, type SportId } from '../../lib/sports/current';
 import { FIELD_HOCKEY_GIRLS_2026 } from '../../lib/sports/field-hockey';
 import { SOCCER_GIRLS_2026 } from '../../lib/sports/soccer';
 import { VOLLEYBALL_GIRLS_2026 } from '../../lib/sports/volleyball';
+import { VAL_SOCCER_GIRLS_2026 } from '../../lib/sports/val-soccer';
 
 import { REPO } from '../helpers';
 
@@ -68,6 +69,7 @@ const SEASONS = {
   soccer: SOCCER_GIRLS_2026,
   basketball: BASKETBALL_BOYS_2026,
   volleyball: VOLLEYBALL_GIRLS_2026,
+  'val-soccer': VAL_SOCCER_GIRLS_2026,
 } satisfies Record<SportId, unknown>;
 
 /** The wordmark's sport label, as components/layout/site.ts builds it (PROGRAM_TITLE). */

@@ -203,7 +203,7 @@ export function norcalEvents(
         dateKey: tg.date,
         time: leagueClockPT(tg.time),
         title: `${league.shortName} ${ROUND_WORD[tg.round]}`,
-        detail: tournamentGameLine(tg, ps.finalSite.slug),
+        detail: tournamentGameLine(tg, ps.finalSite?.slug ?? null),
         href: postseasonHref(league),
         leagueId: league.id,
       });

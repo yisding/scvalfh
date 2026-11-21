@@ -9,11 +9,11 @@ import { getGames, getLeaguePairings, getLeagueTournament, getStandingFor, getTo
 import { dateSpan, leagueClock, listWords, numberWord, ordinalWord, shortDate } from '../../lib/format';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { SDS_BRACKETS_FILE, sdsDivisionTeams } from '../../lib/postseason/sds-brackets-file';
-import { CCS } from '../../lib/league-config/sections';
+import { requireCcs } from '../../lib/league-config/sections';
 import type { LeagueConfig, PairingConfig, PostseasonConfig } from '../../lib/league-config/shape';
 import { findLeague, getDivision, outsideTournamentOf, pairingWindow, sectionOf } from '../../lib/leagues';
 import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
-import { postseasonHref } from '../../lib/postseason/postseason-kind';
+import { postseasonHref, atFinalSite } from '../../lib/postseason/postseason-kind';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel } from '../../lib/standings/ladder';
 import { getTeamById, getTeamBySlug } from '../../lib/teams';
@@ -145,7 +145,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         sentence:
           `Top ${qualifiers} make the ${ps.name}: quarterfinals ${qf ? shortDate(qf.date) : ''}` +
           `${playInClause}, final ` +
-          `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
+          `${final ? shortDate(final.date) : ''}${atFinalSite(ps)}; seeds ${byes} get byes to the semifinals.`,
       };
       const words = tournamentOutcomeCopy(tournamentOutcome(projection, team.slug), team.slug, league, ladder);
       return {
@@ -206,12 +206,12 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // Once CCS has seeded the field (the seed file, data/field-hockey/ccs-bracket-2026.json, is filled), a team in none of its
       // divisions is out of the playoffs: the line says so instead of an at-large hope the committee has already
       // settled. A team in the field reads its bracket game instead (components/teams/team-view.ts bracketAwareLine).
-      const seeds = getToday() >= CCS.keyDates.seedingMeeting.slice(0, 10) ? getCcsSeeds() : null;
+      const seeds = getToday() >= requireCcs().keyDates.seedingMeeting.slice(0, 10) ? getCcsSeeds() : null;
       if (seeds && !seeds.divisions.some((d) => d.seeds.some((x) => x.slug === team.slug))) {
         const field = seeds.divisions.reduce((n, d) => n + d.seeds.length, 0);
         return {
           label: 'Not in the CCS field',
-          sentence: `CCS seeded its ${numberWord(field)}-team field on ${shortDate(CCS.keyDates.seedingMeeting)} without ${team.name}, so its season ended with its last game.`,
+          sentence: `CCS seeded its ${numberWord(field)}-team field on ${shortDate(requireCcs().keyDates.seedingMeeting)} without ${team.name}, so its season ended with its last game.`,
           href: postseasonHref(league),
           linkText: 'CCS playoffs',
           caveat: null,
@@ -238,7 +238,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         sentence = 'No automatic berth; at-large berths are the CCS committee’s call.';
       } else {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
-        sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
+        sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(requireCcs().keyDates.seedingMeeting)}.`;
       }
       return {
         label,

@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 import { sideOutcome } from '../lib/format';
 import { ccsBracketGames } from '../lib/postseason/ccs-bracket';
 import { isUnsettledLevelFinal, settleLevelFinal } from '../lib/postseason/level-final';
-import { CCS } from '../lib/league-config/sections';
+import { requireCcs } from '../lib/league-config/sections';
 import { LEAGUES, leaguesInRegion } from '../lib/leagues';
 import { buildSeason } from '../lib/snapshot/season-build';
 import {
@@ -165,14 +165,14 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
   });
 
   it('rebuilds the CCS block from config', () => {
-    expect(migrated.playoffs.keyDates.endOfLeagueSeason).toBe('2026-10-31');
-    expect('crossover' in migrated.playoffs.keyDates).toBe(false);
-    expect(migrated.playoffs.format.ccsDivisions).toEqual([
+    expect(migrated.playoffs!.keyDates.endOfLeagueSeason).toBe('2026-10-31');
+    expect('crossover' in migrated.playoffs!.keyDates).toBe(false);
+    expect(migrated.playoffs!.format.ccsDivisions).toEqual([
       { name: 'Division 1', seeds: [1, 8] },
       { name: 'Division 2', seeds: [9, 16] },
     ]);
-    expect(migrated.playoffs.format.autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
-    expect(migrated.playoffs.bracketPublished).toBe(false);
+    expect(migrated.playoffs!.format.autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
+    expect(migrated.playoffs!.bracketPublished).toBe(false);
   });
 
   it('gives SCVAL a fresh health row with real counted finals; the others degraded with the reason', () => {
@@ -240,7 +240,7 @@ function withoutEal(full: Snapshot): Snapshot {
     teams: s.teams.filter((t) => t.league !== 'eal'),
     games: s.games.map(unslug),
     standings: s.standings.filter((r) => r.division !== 'eal'),
-    playoffs: { ...s.playoffs, games: s.playoffs.games.map(unslug) },
+    playoffs: { ...s.playoffs!, games: s.playoffs!.games.map(unslug) },
     leagueHealth: s.leagueHealth.filter((h) => h.leagueId !== 'eal'),
     crossCheck: s.crossCheck.filter((r) => !EAL_SLUGS.has(r.slug)),
     counts: { ...s.counts, teams: s.teams.length - EAL_SLUGS.size, byLeague },
@@ -291,11 +291,11 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
   it('takes the CCS berth table afresh from config, so a CCS league added since the file was written has its key', () => {
     // A file written before a CCS league joined the config holds no berth count for it (the winter builds' snapshots
     // before the PAL and the SCCAL, 2026-11-21): simulated here by dropping BVAL's key as well as the EAL.
-    const olderTable = Object.fromEntries(Object.entries(stripped.playoffs.format.autoQualifiers).filter(([k]) => k !== 'bval'));
-    const older = { ...stripped, playoffs: { ...stripped.playoffs, format: { ...stripped.playoffs.format, autoQualifiers: olderTable } } };
+    const olderTable = Object.fromEntries(Object.entries(stripped.playoffs!.format.autoQualifiers).filter(([k]) => k !== 'bval'));
+    const older = { ...stripped, playoffs: { ...stripped.playoffs!, format: { ...stripped.playoffs!.format, autoQualifiers: olderTable } } };
     expect(() => parseSnapshot(older)).toThrow(/autoQualifiers keys/);
     const upgraded = addConfiguredLeagues(older) as Snapshot;
-    expect(upgraded.playoffs.format.autoQualifiers).toEqual(CCS.autoQualifiers);
+    expect(upgraded.playoffs!.format.autoQualifiers).toEqual(requireCcs().autoQualifiers);
     expect(stableStringify(loadSnapshot(older))).toBe(stableStringify(loadSnapshot(full)));
   });
 
@@ -352,7 +352,7 @@ function withoutSoCal(full: Snapshot): Snapshot {
     teams: s.teams.filter((t) => !SOCAL_LEAGUES.includes(t.league)),
     games: s.games.map(unslug),
     standings: s.standings.filter((r) => !SOCAL_DIVISIONS.has(r.division)),
-    playoffs: { ...s.playoffs, games: s.playoffs.games.map(unslug) },
+    playoffs: { ...s.playoffs!, games: s.playoffs!.games.map(unslug) },
     leagueHealth: s.leagueHealth.filter((h) => !SOCAL_LEAGUES.includes(h.leagueId)),
     crossCheck: s.crossCheck.filter((r) => !SOCAL_SLUGS.has(r.slug)),
     counts: { ...s.counts, teams: s.teams.length - SOCAL_SLUGS.size, byLeague },
@@ -554,7 +554,7 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
       games,
       supersededGames,
       season: buildSeason(games),
-      playoffs: { ...COMMITTED.playoffs, games: [] },
+      playoffs: { ...COMMITTED.playoffs!, games: [] },
       counts: countsOf(games, COMMITTED.standings),
     };
   })();
@@ -588,21 +588,21 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
     const before = JSON.stringify(stale);
     const rebuilt = rebuildPlayoffGames(stale) as Snapshot;
     expect(JSON.stringify(stale)).toBe(before);
-    expect(rebuilt.playoffs.games).toHaveLength(1);
-    expect(rebuilt.playoffs.games[0]).toBe(rebuilt.games[rebuilt.games.length - 1]);
-    expect(rebuilt.playoffs.games[0].contestId).toBe(extra.contestId);
-    expect(stableStringify({ ...rebuilt, playoffs: { ...rebuilt.playoffs, games: [] } })).toBe(stableStringify(stale));
+    expect(rebuilt.playoffs!.games).toHaveLength(1);
+    expect(rebuilt.playoffs!.games[0]).toBe(rebuilt.games[rebuilt.games.length - 1]);
+    expect(rebuilt.playoffs!.games[0].contestId).toBe(extra.contestId);
+    expect(stableStringify({ ...rebuilt, playoffs: { ...rebuilt.playoffs!, games: [] } })).toBe(stableStringify(stale));
     const loaded = loadSnapshot(stale);
-    expect(loaded.playoffs.games.map((g) => g.contestId)).toEqual([extra.contestId]);
-    expect(ccsBracketGames(loaded.games, CCS.keyDates).map((g) => g.contestId)).toEqual([extra.contestId]);
+    expect(loaded.playoffs!.games.map((g) => g.contestId)).toEqual([extra.contestId]);
+    expect(ccsBracketGames(loaded.games, requireCcs().keyDates).map((g) => g.contestId)).toEqual([extra.contestId]);
   });
 
   it('leaves a file with no bracket game alone, and the committed file too: loadSnapshot is a round trip', () => {
-    expect(UNBRACKETED.playoffs.games).toEqual([]);
+    expect(UNBRACKETED.playoffs!.games).toEqual([]);
     expect(needsPlayoffGames(UNBRACKETED)).toBe(false);
     // Loading records each final's result once and is a fixed point after that; no bracket game appears.
     const unbracketed = loadSnapshot(UNBRACKETED);
-    expect(unbracketed.playoffs.games).toEqual([]);
+    expect(unbracketed.playoffs!.games).toEqual([]);
     expect(stableStringify(loadSnapshot(unbracketed))).toBe(stableStringify(unbracketed));
     // The committed file's playoffs.games is already the derivation, whatever bracket games it lists. Loading
     // it is a fixed point, and every final comes out with its recorded result (the "recorded results" upgrade).
@@ -647,7 +647,7 @@ describe('the "recorded results" upgrade: a level postseason final marked W and 
   const STALE = {
     ...base,
     games: base.games.map((g) => (g.contestId === staleGame.contestId ? staleGame : g)),
-    playoffs: { ...base.playoffs, games: base.playoffs.games.map((g) => (g.contestId === staleGame.contestId ? staleGame : g)) },
+    playoffs: { ...base.playoffs!, games: base.playoffs!.games.map((g) => (g.contestId === staleGame.contestId ? staleGame : g)) },
   };
 
   it('settles the game, in games and in playoffs.games, and drops the flag contradiction', () => {
@@ -660,7 +660,7 @@ describe('the "recorded results" upgrade: a level postseason final marked W and 
     expect([game.home.score, game.away.score]).toEqual([1, 1]);
     expect(sideOutcome(game, 'home')).toBe('W');
     expect(sideOutcome(game, 'away')).toBe('L');
-    expect(loaded.playoffs.games.find((g) => g.contestId === staleGame.contestId)?.decider).toBe('SO');
+    expect(loaded.playoffs!.games.find((g) => g.contestId === staleGame.contestId)?.decider).toBe('SO');
     expect(needsRecordedResults(loaded)).toBe(false);
   });
 

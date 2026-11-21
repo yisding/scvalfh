@@ -41,6 +41,7 @@ import { BVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/bval';
 import { SCVAL_VOLLEYBALL_SEEDS } from './registry/volleyball/scval';
 import { WBAL_VOLLEYBALL_SEEDS } from './registry/volleyball/wbal';
 import { WCAL_VOLLEYBALL_SEEDS } from './registry/volleyball/wcal';
+import { VAL_SOCCER_SEEDS } from './registry/val-soccer/val';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
@@ -136,6 +137,7 @@ const SEEDS_BY_LEAGUE = bySport<Readonly<Record<LeagueId, readonly Seed[]>>>({
     pal: PAL_BASKETBALL_SEEDS, sccal: SCCAL_BASKETBALL_SEEDS,
   },
   volleyball: { scval: SCVAL_VOLLEYBALL_SEEDS, bval: BVAL_VOLLEYBALL_SEEDS, wcal: WCAL_VOLLEYBALL_SEEDS, wbal: WBAL_VOLLEYBALL_SEEDS },
+  'val-soccer': { val: VAL_SOCCER_SEEDS },
 });
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
@@ -335,14 +337,16 @@ const EXPECTED_ACRONYM_COLLISIONS = bySport<readonly string[]>({
   soccer: WITH_PAL_SCCAL_COLLISIONS,
   basketball: WITH_PAL_SCCAL_COLLISIONS.filter((a) => a !== 'NDHS'),
   volleyball: WITH_WCAL_WBAL_COLLISIONS,
+  // The VAL's Columbia, Crittenden and Cupertino Middle Schools are all CMS.
+  'val-soccer': ['CMS'],
 });
 
 /**
  * The registry's size: field hockey's 102 teams; volleyball's 60 (SCVAL's 15, BVAL's 26, the WCAL's 6 and the WBAL's
  * 13); soccer's 82 (those 60, the PAL's 16 and the SCCAL's 6); basketball's 79 (SCVAL's 15, BVAL's 26, the WCAL's 8,
- * the WBAL's 8, the PAL's 16 and the SCCAL's 6).
+ * the WBAL's 8, the PAL's 16 and the SCCAL's 6); the VAL's 11 middle schools.
  */
-const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 82, basketball: 79, volleyball: 60 });
+const EXPECTED_TEAMS = bySport({ 'field-hockey': 102, soccer: 82, basketball: 79, volleyball: 60, 'val-soccer': 11 });
 
 function assertRegistry(): void {
   const fail = (m: string): never => {
@@ -411,8 +415,9 @@ function assertRegistry(): void {
       const keys = Object.keys(draw).sort();
       if (keys.join() !== [...slugs].sort().join()) fail(`${l.id}.drawNumbers keys do not equal its slugs`);
     }
-    if (l.postseason.kind === 'league-tournament' && !slugs.has(l.postseason.finalSite.slug)) {
-      fail(`${l.id}: finalSite ${l.postseason.finalSite.slug} is not a ${l.id} slug`);
+    const site = l.postseason.kind === 'league-tournament' ? l.postseason.finalSite : null;
+    if (site !== null && !slugs.has(site.slug)) {
+      fail(`${l.id}: finalSite ${site.slug} is not a ${l.id} slug`);
     }
     for (const d of l.divisions) {
       for (const slug of d.maxprepsMissing) {

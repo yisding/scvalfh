@@ -135,7 +135,9 @@ const NO_PLAY_IN: SixthPlaceDecision = { playInNeeded: 'no', contenders: [], hos
  * draw number, or in the three-way 5-7 case the winner of the pair's earlier meeting) and the notes.
  */
 export function sixthPlaceRule(rows: readonly Standing[], games: readonly Game[], league: LeagueConfig): SixthPlaceDecision {
-  const L = tournamentOf(league).lastSpot.place;
+  const lastSpot = tournamentOf(league).lastSpot;
+  if (lastSpot === null) return NO_PLAY_IN;
+  const L = lastSpot.place;
   const outcome = lastSpotOutcome(rows, games, league);
   if (outcome === null) return NO_PLAY_IN;
 
@@ -198,10 +200,14 @@ function refOf(slug: TeamSlug, seeds?: Seeds): { teamId: TeamId; slug: TeamSlug 
   return { teamId: getTeamBySlug(slug)?.id ?? slug, slug };
 }
 
-/** qf-1: 5 at 4; qf-2: 6 at 3 (home = the higher seed's field). An undecided 6th seat waits for the play-in. */
+/**
+ * qf-1: 5 at 4; qf-2: 6 at 3 (home = the higher seed's field). An undecided last seat waits for the play-in, where
+ * the league has one (`lastSpot`); without one a shared seat is drawn as it stands.
+ */
 export function quarterfinals(seeds: Seeds, league: LeagueConfig): [TournamentGame, TournamentGame] {
-  const L = tournamentOf(league).lastSpot.place;
-  const sixth: TournamentSlot = seatFor(seeds, L).length > 1
+  const lastSpot = tournamentOf(league).lastSpot;
+  const L = lastSpot?.place ?? 6;
+  const sixth: TournamentSlot = lastSpot !== null && seatFor(seeds, L).length > 1
     ? { kind: 'winner-of', gameId: 'play-in', label: 'Play-in winner' }
     : seedSlot(seeds, L);
   return [
@@ -211,12 +217,14 @@ export function quarterfinals(seeds: Seeds, league: LeagueConfig): [TournamentGa
 }
 
 /**
- * Re-seeded semifinals: once both quarterfinal winners are known, the LARGER seed number plays at #1 (sf-1)
- * and the smaller at #2 (sf-2). Before that the away slots are the written rules.
+ * Re-seeded semifinals (MCAL): once both quarterfinal winners are known, the LARGER seed number plays at #1 (sf-1)
+ * and the smaller at #2 (sf-2). Before that the away slots are the written rules. A fixed bracket (the VAL) is
+ * fixedSemifinals.
  */
 export function semifinals(
   seeds: Seeds, qfWinners: ReadonlyArray<{ seed: number; slug: TeamSlug }> | null, league: LeagueConfig,
 ): [TournamentGame, TournamentGame] {
+  if (tournamentOf(league).semifinals === 'fixed') return fixedSemifinals(seeds, qfWinners, league);
   let toOne: TournamentSlot = { kind: 'rule', text: 'Lowest-ranked remaining seed' };
   let toTwo: TournamentSlot = { kind: 'rule', text: 'Highest-ranked remaining seed of 3-6' };
   if (qfWinners !== null) {
@@ -233,9 +241,31 @@ export function semifinals(
   ];
 }
 
-/** The final, at the league's fixed site (Tamalpais) whoever the finalists are; better seed listed first. */
+/**
+ * A fixed bracket's semifinals (the VAL): sf-1 is the winner of qf-1 (4 v 5) at 1, sf-2 the winner of qf-2 (3 v 6)
+ * at 2. `qfWinners` are in quarterfinal order; before both are known, each away slot names its game's winner.
+ */
+function fixedSemifinals(
+  seeds: Seeds, qfWinners: ReadonlyArray<{ seed: number; slug: TeamSlug }> | null, league: LeagueConfig,
+): [TournamentGame, TournamentGame] {
+  const away = (i: 0 | 1): TournamentSlot => {
+    const w = qfWinners?.[i];
+    return w
+      ? { kind: 'seed', seed: w.seed, seat: [refOf(w.slug, seeds)] }
+      : { kind: 'winner-of', gameId: i === 0 ? 'qf-1' : 'qf-2', label: i === 0 ? 'Winner of 4 v 5' : 'Winner of 3 v 6' };
+  };
+  return [
+    makeGame(league, 'sf-1', seedSlot(seeds, 1), away(0), null),
+    makeGame(league, 'sf-2', seedSlot(seeds, 2), away(1), null),
+  ];
+}
+
+/**
+ * The final, at the league's fixed site (Tamalpais) whoever the finalists are, or at a site still to be set (the
+ * VAL: null); better seed listed first.
+ */
 export function finalGame(sfWinners: ReadonlyArray<{ seed: number; slug: TeamSlug }> | null, league: LeagueConfig): TournamentGame {
-  const site = tournamentOf(league).finalSite.label;
+  const site = tournamentOf(league).finalSite?.label ?? null;
   if (sfWinners === null) {
     return makeGame(
       league, 'final',
@@ -272,6 +302,7 @@ export function matchTournamentGames(
   games: readonly Game[],
   bracket: readonly TournamentGame[],
   resultNotes: Readonly<Record<string, string>> = {},
+  shootoutNote: string = SHOOTOUT_NOTE,
 ): TournamentGame[] {
   const used = new Set<string>();
   const candidates = games
@@ -289,7 +320,7 @@ export function matchTournamentGames(
     if (!match) return { ...tg };
     used.add(match.contestId);
     const sourced = resultNotes[match.contestId];
-    return { ...tg, game: match, note: sourced ?? (mayHideShootout(match) ? SHOOTOUT_NOTE : tg.note) };
+    return { ...tg, game: match, note: sourced ?? (mayHideShootout(match) ? shootoutNote : tg.note) };
   });
 }
 
@@ -325,12 +356,23 @@ function winnerWithSeed(tg: TournamentGame): { seed: number; slug: TeamSlug } | 
   return seed === null ? null : { seed, slug: w };
 }
 
-/** The whole MCAL tournament picture (SPEC §6.2), resolved round by round from the matched results. */
+/**
+ * The quarterfinal winners a semifinal builder takes: a reseeded bracket waits for both; a fixed one takes each as it
+ * is known (null where its game is not won yet), in quarterfinal order.
+ */
+function fixedOrBoth(
+  ps: TournamentConfig, qfWinners: ReadonlyArray<{ seed: number; slug: TeamSlug } | null>,
+): Array<{ seed: number; slug: TeamSlug }> | null {
+  if (ps.semifinals === 'fixed') return qfWinners.some((w) => w !== null) ? (qfWinners as Array<{ seed: number; slug: TeamSlug }>) : null;
+  return qfWinners.every((w) => w !== null) ? (qfWinners as Array<{ seed: number; slug: TeamSlug }>) : null;
+}
+
+/** The whole league tournament picture (SPEC §6.2), resolved round by round from the matched results. */
 export function buildLeagueTournament(
   league: LeagueConfig, rows: readonly Standing[], games: readonly Game[], phase: SeasonPhase, asOf: string,
 ): LeagueTournamentProjection {
   const ps = tournamentOf(league);
-  const L = ps.lastSpot.place;
+  const L = ps.lastSpot?.place ?? ps.qualifiers;
   const divisionIds = new Set(league.divisions.map((d) => d.id));
   const own = rows.filter((r) => divisionIds.has(r.division));
   const decision = sixthPlaceRule(own, games, league);
@@ -351,7 +393,7 @@ export function buildLeagueTournament(
       { kind: 'seed', seed: L, seat: [refOf(visitor, seeds)] },
       null,
     );
-    [playIn] = matchTournamentGames(games, [playIn], ps.resultNotes);
+    [playIn] = matchTournamentGames(games, [playIn], ps.resultNotes, ps.shootoutNote);
     const winner = tournamentGameWinner(playIn);
     if (winner !== null) {
       const idx = seeds.findIndex((s) => s.seed === L);
@@ -359,18 +401,20 @@ export function buildLeagueTournament(
     }
   }
 
-  const qfs = matchTournamentGames(games, quarterfinals(seeds, league), ps.resultNotes);
+  const qfs = matchTournamentGames(games, quarterfinals(seeds, league), ps.resultNotes, ps.shootoutNote);
   const qfWinners = qfs.map(winnerWithSeed);
   const sfs = matchTournamentGames(
     games,
-    semifinals(seeds, qfWinners.every((w) => w !== null) ? (qfWinners as Array<{ seed: number; slug: TeamSlug }>) : null, league),
+    semifinals(seeds, fixedOrBoth(ps, qfWinners), league),
     ps.resultNotes,
+    ps.shootoutNote,
   );
   const sfWinners = sfs.map(winnerWithSeed);
   const [final] = matchTournamentGames(
     games,
     [finalGame(sfWinners.every((w) => w !== null) ? (sfWinners as Array<{ seed: number; slug: TeamSlug }>) : null, league)],
     ps.resultNotes,
+    ps.shootoutNote,
   );
 
   const all = [...(playIn ? [playIn] : []), ...qfs, ...sfs, final];
@@ -580,7 +624,7 @@ export function tournamentHeadline(p: LeagueTournamentProjection, league: League
   const round = all.filter((tg) => tg.round === nextGame.round && !hasResult(tg.game));
   const title = nextGame.round === 'play-in' ? 'Play-in' : nextGame.round === 'final' ? 'Final' : `${ROUND_WORDS[nextGame.round][0].toUpperCase()}${ROUND_WORDS[nextGame.round].slice(1)}s`;
   const where = nextGame.site ? ` at ${nextGame.site}` : '';
-  return { champion: null, next: `${title} ${shortDate(nextGame.date)}, ${leagueClockPT(nextGame.time)}${where}: ${round.map((tg) => tournamentGameLine(tg, ps.finalSite.slug)).join('; ')}` };
+  return { champion: null, next: `${title} ${shortDate(nextGame.date)}, ${leagueClockPT(nextGame.time)}${where}: ${round.map((tg) => tournamentGameLine(tg, ps.finalSite?.slug ?? null)).join('; ')}` };
 }
 
 /** The other slot's written rule or contenders ('winner of the play-in', 'lowest-ranked remaining seed'). */

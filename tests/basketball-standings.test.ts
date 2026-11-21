@@ -297,11 +297,11 @@ const BASKETBALL_FEED: ReadonlyArray<[string, string]> = [
 
 describe('basketball: the CCS bracket opens with a first round', () => {
   it('the first CCS day is the first round, and the last the Division 1-5 finals', () => {
-    const { CCS, ccsFirstDay, ccsLastDay } = m.sections;
-    expect(CCS.keyDates.firstRound).toBe('2027-02-19');
-    expect(CCS.keyDates.secondRound).toBe('2027-02-20');
-    expect(ccsFirstDay(CCS.keyDates)).toBe('2027-02-19');
-    expect(ccsLastDay(CCS.keyDates)).toBe('2027-02-27');
+    const { requireCcs, ccsFirstDay, ccsLastDay } = m.sections;
+    expect(requireCcs().keyDates.firstRound).toBe('2027-02-19');
+    expect(requireCcs().keyDates.secondRound).toBe('2027-02-20');
+    expect(ccsFirstDay(requireCcs().keyDates)).toBe('2027-02-19');
+    expect(ccsLastDay(requireCcs().keyDates)).toBe('2027-02-27');
     // A sport with no first round opens at the quarterfinals.
     expect(ccsFirstDay({ quarterfinals: '2026-11-07' })).toBe('2026-11-07');
   });

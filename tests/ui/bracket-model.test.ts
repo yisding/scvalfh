@@ -22,7 +22,7 @@ import {
   type BracketCard,
   type BracketPath,
 } from '../../components/playoffs/bracket-model';
-import { CCS } from '../../lib/league-config/sections';
+import { CCS, requireCcs } from '../../lib/league-config/sections';
 import { resolveTeam } from '../../lib/teams';
 import type { CcsPlayoffs, Game } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025, unplayed } from '../fixtures/ccs/bracket-2025';
@@ -31,15 +31,15 @@ import { game } from '../game-builder';
 const MODEL = 'components/playoffs/bracket-model.ts';
 
 const playoffs: CcsPlayoffs = {
-  keyDates: { ...CCS.keyDates },
+  keyDates: { ...CCS!.keyDates },
   format: {
     elimination: 'single',
-    ccsDivisions: CCS.ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] })),
-    autoQualifiers: { ...CCS.autoQualifiers },
+    ccsDivisions: requireCcs().ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] })),
+    autoQualifiers: { ...CCS!.autoQualifiers },
     highSeedHostsThrough: 'quarterfinals',
   },
   bracketPublished: false,
-  bracketUrl: CCS.bracketUrl!,
+  bracketUrl: requireCcs().bracketUrl!,
   games: [],
 };
 const QF = playoffs.keyDates.quarterfinals.slice(0, 10);
@@ -93,7 +93,7 @@ describe('the 2025 CCS championship on 2026’s dates (tests/fixtures/ccs/bracke
     expect(GAMES_2025.filter((g) => g.dateKey === QF), 'quarterfinals').toHaveLength(8);
     expect(GAMES_2025.filter((g) => g.dateKey === SF), 'semifinals').toHaveLength(4);
     expect(GAMES_2025.filter((g) => g.dateKey === F), 'finals').toHaveLength(2);
-    expect(GAMES_2025.every((g) => g.postseason?.kind === 'ccs' && g.bracket?.published === true && g.bracket.tournamentId === CCS.tournament!.id)).toBe(true);
+    expect(GAMES_2025.every((g) => g.postseason?.kind === 'ccs' && g.bracket?.published === true && g.bracket.tournamentId === requireCcs().tournament!.id)).toBe(true);
     expect(new Set(GAMES_2025.map((g) => g.bracket?.name))).toEqual(new Set(['Division 1', 'Division 2']));
     expect(SEEDS_2025.divisions.map((d) => d.seeds.length)).toEqual([8, 8]);
   });

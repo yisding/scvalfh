@@ -29,7 +29,7 @@ import {
   sideOutcome,
 } from './format';
 import { DATA_QUALITY } from './league-config/data-quality';
-import { CCS, REGIONS, SECTIONS } from './league-config/sections';
+import { requireCcs, REGIONS, SECTIONS } from './league-config/sections';
 import type {
   LeagueConfig,
   RegionConfig,
@@ -220,12 +220,12 @@ export function getOfficialStandingsPdfUrl(): string | null | undefined {
 
 /** The CCS iCal events, once the season gate has opened. */
 export function getCcsCalendar(): readonly CcsCalendarEvent[] | undefined {
-  return snapshot.playoffs.ccsCalendar;
+  return snapshot.playoffs?.ccsCalendar;
 }
 
 /** true when the CCS calendar corroborated every published key date. undefined if not yet polled. */
 export function areKeyDatesConfirmed(): boolean | undefined {
-  return snapshot.playoffs.keyDatesConfirmed;
+  return snapshot.playoffs?.keyDatesConfirmed;
 }
 
 /** Contests that left a date this season (Snapshot.contentRemovals), for the sitemap's `lastmod`. */
@@ -943,7 +943,14 @@ export function getTeamForm(ref: string): TeamForm | undefined {
 
 // ---------------------------------------------------------------- postseason
 
+/** The CCS block. Throws in a build with no CCS block (the VAL), where no CCS page or card is built. */
 export function getPlayoffs(): CcsPlayoffs {
+  if (snapshot.playoffs === null) throw new Error('lib/data.ts: this build has no CCS block (snapshot.playoffs is null)');
+  return snapshot.playoffs;
+}
+
+/** The CCS block, or null in a build with no CCS block (the VAL). */
+export function getPlayoffsOrNull(): CcsPlayoffs | null {
   return snapshot.playoffs;
 }
 
@@ -974,7 +981,7 @@ export function getPlayoffProjection(leagueId: LeagueId, asOf: string = snapshot
       };
     });
   }
-  const aq = snapshot.playoffs.format.autoQualifiers;
+  const aq = getPlayoffs().format.autoQualifiers;
   return {
     asOf,
     leagueId,
@@ -996,14 +1003,15 @@ export function getCcsField(): {
   atLarge: number | null;
   total: number | null;
 } {
+  const block = requireCcs();
   return {
     byLeague: CCS_LEAGUE_IDS.map((id) => ({
       leagueId: id,
       shortName: getLeague(id).shortName,
-      auto: CCS.autoQualifiers[id] ?? 0,
+      auto: block.autoQualifiers[id] ?? 0,
     })),
-    atLarge: CCS.autoQualifiers.atLarge,
-    total: CCS.autoQualifiers.total,
+    atLarge: block.autoQualifiers.atLarge,
+    total: block.autoQualifiers.total,
   };
 }
 

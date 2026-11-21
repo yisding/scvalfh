@@ -56,11 +56,11 @@ beforeAll(async () => {
 
 describe('the basketball sport switch', () => {
   it('is boys varsity basketball, winter 2026-27, with its data under data/basketball/', () => {
-    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING } = m.current;
+    const { SPORT, MAXPREPS_SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING } = m.current;
     expect(SPORT.id).toBe('basketball');
-    expect(SPORT_SEASON.sportSeasonId).toBe('a5dadf08-21fb-4889-bd84-1d0c6816e29a');
-    expect(SPORT_SEASON.jvSportSeasonId).toBe('d0f0932b-e598-4b10-ba5a-f790f3fff4c3');
-    expect(SPORT_SEASON.genderSport).toBe('boys,basketball');
+    expect(MAXPREPS_SPORT_SEASON?.sportSeasonId).toBe('a5dadf08-21fb-4889-bd84-1d0c6816e29a');
+    expect(MAXPREPS_SPORT_SEASON?.jvSportSeasonId).toBe('d0f0932b-e598-4b10-ba5a-f790f3fff4c3');
+    expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe('boys,basketball');
     expect(SPORT_AUDIENCE).toBe('boys varsity basketball');
     expect(DATA_DIR).toBe('data/basketball');
     expect([IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING]).toEqual([false, true, false]);
@@ -80,7 +80,7 @@ describe('the basketball sport switch', () => {
   it('derives the season words and source links from the basketball definition', () => {
     expect(m.season.SEASON_DISPLAY).toBe('Winter 2026-27');
     expect(m.season.BOOTSTRAP_URL).toBe('https://www.maxpreps.com/ca/basketball/');
-    expect(m.season.HUB_SPORT_SEASON_ID).toBe(m.current.SPORT_SEASON.sportSeasonId);
+    expect(m.season.HUB_SPORT_SEASON_ID).toBe(m.current.MAXPREPS_SPORT_SEASON?.sportSeasonId);
     expect(m.season.CCS_BRACKET_URL).toBeNull();
     // cifccs.org's sport pages were never read (405 to scripts): the section link is the calendar page.
     expect(m.season.SOURCE_LINKS.ccs).toBe('https://cifccs.org/calendar/Basketball');
@@ -224,9 +224,9 @@ describe('SCVAL boys basketball', () => {
   });
 
   it('dates the CCS rounds from the CCS calendar: a first round before the quarterfinals, the Open final a day early', () => {
-    const { CCS, ccsFirstDay, ccsLastDay, ccsRoundDays } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 2, pal: 4, sccal: 2, atLarge: null, total: null });
-    expect(CCS.keyDates).toMatchObject({
+    const { requireCcs, ccsFirstDay, ccsLastDay, ccsRoundDays } = m.sections;
+    expect(requireCcs().autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 2, pal: 4, sccal: 2, atLarge: null, total: null });
+    expect(requireCcs().keyDates).toMatchObject({
       entriesDue: '2027-02-17T10:00:00',
       seedingMeeting: '2027-02-17T12:00:00',
       firstRound: '2027-02-19',
@@ -236,11 +236,11 @@ describe('SCVAL boys basketball', () => {
       finalsLast: '2027-02-27',
       evaluationMeeting: '2027-03-11T16:00:00',
     });
-    expect(ccsFirstDay(CCS.keyDates)).toBe('2027-02-19');
-    expect(ccsLastDay(CCS.keyDates)).toBe('2027-02-27');
-    expect(ccsRoundDays(CCS.keyDates, 'finals', (d) => d)).toBe('2027-02-26 to 2027-02-27');
-    expect(CCS.highSeedHostsThrough).toBe('semifinals');
-    expect(CCS.tournament).toBeNull();
+    expect(ccsFirstDay(requireCcs().keyDates)).toBe('2027-02-19');
+    expect(ccsLastDay(requireCcs().keyDates)).toBe('2027-02-27');
+    expect(ccsRoundDays(requireCcs().keyDates, 'finals', (d) => d)).toBe('2027-02-26 to 2027-02-27');
+    expect(requireCcs().highSeedHostsThrough).toBe('semifinals');
+    expect(requireCcs().tournament).toBeNull();
   });
 });
 
@@ -292,7 +292,7 @@ describe('the basketball data files', () => {
   it('bundles a basketball snapshot of the registry’s teams', () => {
     const snapshot = m.data.getSnapshot();
     expect(snapshot.season.genderSport).toBe('boys,basketball');
-    expect(snapshot.season.sportSeasonId).toBe(m.current.SPORT_SEASON.sportSeasonId);
+    expect(snapshot.season.sportSeasonId).toBe(m.current.MAXPREPS_SPORT_SEASON?.sportSeasonId);
     expect(snapshot.teams.map((t) => t.slug)).toEqual(m.teams.TEAMS.map((t) => t.slug));
   });
 
@@ -301,7 +301,7 @@ describe('the basketball data files', () => {
     expect(m.playerStats.getPlayerStats().teams.map((t) => t.slug).sort()).toEqual(slugs);
     expect(m.jv.getJvFile().teams.map((t) => t.slug).sort()).toEqual(slugs);
     expect(m.rosters.getRosters().teams.map((t) => t.slug).sort()).toEqual(slugs);
-    expect(m.jv.getJvFile().sportSeasonId).toBe(m.current.SPORT_SEASON.jvSportSeasonId);
+    expect(m.jv.getJvFile().sportSeasonId).toBe(m.current.MAXPREPS_SPORT_SEASON?.jvSportSeasonId);
   });
 });
 

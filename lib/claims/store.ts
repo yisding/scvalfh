@@ -23,7 +23,7 @@ import {
   type FixtureId,
 } from './types';
 
-const SOURCE_KEYS: readonly ClaimSource[] = ['maxpreps', 'editor', 'official', 'sblive', 'cifss', 'sdsSheet', 'vnn', 'box'];
+const SOURCE_KEYS: readonly ClaimSource[] = ['maxpreps', 'teamsideline', 'editor', 'official', 'sblive', 'cifss', 'sdsSheet', 'vnn', 'box'];
 
 const indexKey = (source: ClaimSource, ref: string): string => `${source}\u0000${ref}`;
 

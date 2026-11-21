@@ -43,13 +43,13 @@ beforeAll(async () => {
 
 describe('the soccer sport switch', () => {
   it('is girls varsity soccer, winter 2026-27, with its data under data/soccer/', () => {
-    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, HAS_RECRUITING } = m.current;
+    const { SPORT, SPORT_SEASON, MAXPREPS_SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, HAS_RECRUITING } = m.current;
     expect(SPORT.id).toBe('soccer');
-    expect(SPORT_SEASON.sportSeasonId).toBe('893e6888-5e0c-48eb-b952-16ac29e0ae0a');
+    expect(MAXPREPS_SPORT_SEASON?.sportSeasonId).toBe('893e6888-5e0c-48eb-b952-16ac29e0ae0a');
     expect(SPORT_SEASON.label).toBe(
       `Girls ${SPORT_SEASON.level} ${SPORT.maxpreps.sportName} ${SPORT_SEASON.term} ${SPORT_SEASON.year}`,
     );
-    expect(SPORT_SEASON.genderSport).toBe('girls,soccer');
+    expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe('girls,soccer');
     expect(SPORT_AUDIENCE).toBe('girls varsity soccer');
     expect(DATA_DIR).toBe('data/soccer');
     expect([IS_FIELD_HOCKEY, HAS_RECRUITING]).toEqual([false, false]);
@@ -174,9 +174,9 @@ describe('SCVAL girls soccer', () => {
   });
 
   it('dates the CCS rounds from the CCS calendar, and leaves the field size and hosting null', () => {
-    const { CCS, ccsRoundDays, ccsLastDay } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 2, wbal: 4, pal: 4, sccal: 1, atLarge: null, total: null });
-    expect(CCS.keyDates).toMatchObject({
+    const { requireCcs, ccsRoundDays, ccsLastDay } = m.sections;
+    expect(requireCcs().autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 2, wbal: 4, pal: 4, sccal: 1, atLarge: null, total: null });
+    expect(requireCcs().keyDates).toMatchObject({
       seedingMeeting: '2027-02-18T15:00:00',
       quarterfinals: '2027-02-20',
       semifinals: '2027-02-23',
@@ -185,10 +185,10 @@ describe('SCVAL girls soccer', () => {
       finalsLast: '2027-02-27',
       evaluationMeeting: '2027-03-10T16:00:00',
     });
-    expect(ccsRoundDays(CCS.keyDates, 'semifinals', (d) => d)).toBe('2027-02-23 to 2027-02-24');
-    expect(ccsLastDay(CCS.keyDates)).toBe('2027-02-27');
-    expect(CCS.highSeedHostsThrough).toBeNull();
-    expect(CCS.tournament).toBeNull();
+    expect(ccsRoundDays(requireCcs().keyDates, 'semifinals', (d) => d)).toBe('2027-02-23 to 2027-02-24');
+    expect(ccsLastDay(requireCcs().keyDates)).toBe('2027-02-27');
+    expect(requireCcs().highSeedHostsThrough).toBeNull();
+    expect(requireCcs().tournament).toBeNull();
   });
 });
 
@@ -196,7 +196,7 @@ describe('the soccer data files', () => {
   it('bundles a soccer snapshot of the registry’s teams', () => {
     const snapshot = m.data.getSnapshot();
     expect(snapshot.season.genderSport).toBe('girls,soccer');
-    expect(snapshot.season.sportSeasonId).toBe(m.current.SPORT_SEASON.sportSeasonId);
+    expect(snapshot.season.sportSeasonId).toBe(m.current.MAXPREPS_SPORT_SEASON?.sportSeasonId);
     expect(snapshot.teams.map((t) => t.slug)).toEqual(m.teams.TEAMS.map((t) => t.slug));
   });
 

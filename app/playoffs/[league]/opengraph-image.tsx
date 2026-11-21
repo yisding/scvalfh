@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { atFinalSite } from '../../../lib/postseason/postseason-kind';
 import { notFound } from 'next/navigation';
 
 import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
@@ -49,7 +50,7 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
       if (r.round !== 'play-in' && !out.some((o) => o.round === r.round)) out.push({ round: r.round, date: r.date });
       return out;
     }, [])
-    .map((r) => `${ROUND_TITLES[r.round]} ${shortDate(r.date)}${r.round === 'final' ? ` at ${ps.finalSite.label}` : ''}`);
+    .map((r) => `${ROUND_TITLES[r.round]} ${shortDate(r.date)}${r.round === 'final' ? `${atFinalSite(ps)}` : ''}`);
   // The champion or the next round first (lib/postseason/postseason.ts tournamentHeadline), else the seeds' caption.
   const headline = tournamentHeadline(projection, getLeague(summary.id));
   const sub = headline.champion

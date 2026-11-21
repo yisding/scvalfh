@@ -11,7 +11,7 @@
 
 import { z } from 'zod';
 
-import { GUID_RE } from '../game-id';
+import { GUID_RE, TEAMSIDELINE_ID_RE } from '../game-id';
 import { formatIssues } from '../schema-primitives';
 import { GameSchema, OfficialFixtureSchema, OfficialStampSchema, SBLIVE_ID_RE } from '../snapshot/snapshot-schema';
 import { SPORT_IDS } from '../sports/current';
@@ -39,6 +39,15 @@ const MaxprepsClaimSchema = z
     // Checked whole in the file's refinement, against GameSchema with the claim's seenAt as provenance.fetchedAt.
     game: z.looseObject({ contestId: z.string(), provenance: z.looseObject({}) }),
     reconstructed: z.array(z.enum(RECONSTRUCTED_FIELDS as [string, ...string[]])).optional(),
+  })
+  .strict();
+
+/** A TeamSideline claim (lib/claims/types.ts): its game is stored whole and checked against GameSchema in the file's refinement. */
+const TeamsidelineClaimSchema = z
+  .object({
+    ref: ref.regex(TEAMSIDELINE_ID_RE, 'a TeamSideline claim is keyed by its teamsideline: contest id'),
+    seenAt,
+    game: z.looseObject({ contestId: z.string(), provenance: z.looseObject({}) }),
   })
   .strict();
 
@@ -183,6 +192,7 @@ const BoxClaimSchema = z.object({ ref, seenAt, sides: z.record(z.string(), boxSi
 const FixtureClaimsSchema = z
   .object({
     maxpreps: MaxprepsClaimSchema.optional(),
+    teamsideline: TeamsidelineClaimSchema.optional(),
     editor: EditorClaimSchema.optional(),
     official: OfficialClaimSchema.optional(),
     sblive: z.array(SbliveClaimSchema).optional(),
@@ -261,6 +271,17 @@ export const ClaimsFileSchema = z
         }
         if ('fetchedAt' in game.provenance && game.provenance.fetchedAt !== seen) issue(where, `${f.id}: provenance.fetchedAt is not the claim's seenAt`);
         const parsed = GameSchema.safeParse({ ...game, provenance: { ...game.provenance, fetchedAt: seen } });
+        if (!parsed.success) issue(where, `${f.id}: ${formatIssues(parsed.error.issues)}`);
+      }
+
+      const ts = f.claims.teamsideline;
+      if (ts) {
+        const where = [...at, 'claims', 'teamsideline'];
+        const game = ts.game as Record<string, unknown>;
+        if (game.contestId !== ts.ref) issue(where, `${f.id}: teamsideline game.contestId ${String(game.contestId)} is not its ref ${ts.ref}`);
+        for (const key of MAXPREPS_GAME_OMITTED) if (key in game) issue(where, `${f.id}: a TeamSideline claim holds no ${key}`);
+        if (game.countsFor !== null || game.postseason !== null) issue(where, `${f.id}: a TeamSideline claim's countsFor and postseason are null`);
+        const parsed = GameSchema.safeParse(game);
         if (!parsed.success) issue(where, `${f.id}: ${formatIssues(parsed.error.issues)}`);
       }
 

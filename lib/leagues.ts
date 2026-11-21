@@ -44,6 +44,7 @@ import {
   type PostseasonConfig, type RegionConfig, type SectionConfig,
 } from './league-config/shape';
 import { SUNSET } from './league-config/sunset';
+import { VAL_SOCCER_LEAGUE } from './league-config/val-soccer/val';
 import type {
   DivisionId, LeagueId, PlayoffStatus, RegionId, SectionId, TeamSlug, TiebreakStage,
 } from './types';
@@ -68,6 +69,8 @@ export const LEAGUES: readonly LeagueConfig[] = bySport<readonly LeagueConfig[]>
     SCCAL_BASKETBALL_LEAGUE,
   ],
   volleyball: [SCVAL_VOLLEYBALL, BVAL_VOLLEYBALL_LEAGUE, WCAL_VOLLEYBALL_LEAGUE, WBAL_VOLLEYBALL_LEAGUE],
+  // The Valley Athletic League's middle schools (owner request, 2026-11-21), read from the league's own site.
+  'val-soccer': [VAL_SOCCER_LEAGUE],
 });
 
 /**
@@ -802,8 +805,13 @@ export function assertLeagues(): void {
         {
           const site = ps.finalSite;
           // The address is the site school's (data/field-hockey/schools.json); lib/teams.ts checks the slug is a member.
-          if (!site.venue.trim()) fail(`${l.id}: finalSite needs a venue`);
-          if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
+          // null: the league has published no site yet (the VAL's "TBD Field").
+          if (site !== null) {
+            if (!site.venue.trim()) fail(`${l.id}: finalSite needs a venue`);
+            if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
+          }
+          if ((ps.lastSpot === null) !== (ps.citations.lastSpot === null)) fail(`${l.id}: lastSpot and citations.lastSpot are set together`);
+          if (!ps.shootoutNote.trim()) fail(`${l.id}: a league tournament needs its shootout note`);
         }
         break;
       case 'unbracketed-tournament':
@@ -842,34 +850,39 @@ export function assertLeagues(): void {
     }
   }
 
-  // 3. the CCS field
-  const aqKeys = Object.keys(CCS.autoQualifiers).sort();
-  const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort();
-  if (aqKeys.join() !== expectedKeys.join()) {
-    fail(`CCS.autoQualifiers keys ${aqKeys.join(', ')} != ${expectedKeys.join(', ')}`);
-  }
-  // atLarge and total are known together or not at all (soccer: the CCS bylaws are unread).
-  if ((CCS.autoQualifiers.atLarge === null) !== (CCS.autoQualifiers.total === null)) {
-    fail('CCS.autoQualifiers: atLarge and total must both be numbers or both be null');
-  }
-  let sum = CCS.autoQualifiers.atLarge ?? 0;
-  for (const l of LEAGUES) {
-    if (l.postseason.kind !== 'ccs-ladder') continue;
-    if (l.postseason.autoBerths !== CCS.autoQualifiers[l.id]) {
-      fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${CCS.autoQualifiers[l.id]}`);
+  // 3. the CCS field. A build with no CCS block (the VAL) may have no league that goes to the CCS.
+  const block = CCS;
+  if (block === null) {
+    for (const l of LEAGUES) if (l.postseason.kind === 'ccs-ladder' || l.sectionId === 'ccs') fail(`${l.id}: a CCS league in a build with no CCS block`);
+  } else {
+    const aqKeys = Object.keys(block.autoQualifiers).sort();
+    const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort();
+    if (aqKeys.join() !== expectedKeys.join()) {
+      fail(`CCS.autoQualifiers keys ${aqKeys.join(', ')} != ${expectedKeys.join(', ')}`);
     }
-    if (l.sectionId !== 'ccs') fail(`${l.id}: a CCS ladder league outside the CCS`);
-    sum += l.postseason.autoBerths;
-  }
-  if (CCS.autoQualifiers.total !== null && sum !== CCS.autoQualifiers.total) {
-    fail(`CCS field sums to ${sum}, not ${CCS.autoQualifiers.total}`);
-  }
-  const ccs = SECTION_BY_ID.get('ccs');
-  if (ccs) {
-    for (const [k, v] of Object.entries(CCS.keyDates)) {
-      if (v === null || v === undefined) continue; // a date only the CCS's own bylaws give (soccer)
-      const day = v.slice(0, 10);
-      if (day < ccs.seasonWindow.start || day > ccs.seasonWindow.end) fail(`CCS.keyDates.${k} outside the CCS season window`);
+    // atLarge and total are known together or not at all (soccer: the CCS bylaws are unread).
+    if ((block.autoQualifiers.atLarge === null) !== (block.autoQualifiers.total === null)) {
+      fail('CCS.autoQualifiers: atLarge and total must both be numbers or both be null');
+    }
+    let sum = block.autoQualifiers.atLarge ?? 0;
+    for (const l of LEAGUES) {
+      if (l.postseason.kind !== 'ccs-ladder') continue;
+      if (l.postseason.autoBerths !== block.autoQualifiers[l.id]) {
+        fail(`${l.id}: autoBerths ${l.postseason.autoBerths} != CCS ${block.autoQualifiers[l.id]}`);
+      }
+      if (l.sectionId !== 'ccs') fail(`${l.id}: a CCS ladder league outside the CCS`);
+      sum += l.postseason.autoBerths;
+    }
+    if (block.autoQualifiers.total !== null && sum !== block.autoQualifiers.total) {
+      fail(`CCS field sums to ${sum}, not ${block.autoQualifiers.total}`);
+    }
+    const ccs = SECTION_BY_ID.get('ccs');
+    if (ccs) {
+      for (const [k, v] of Object.entries(block.keyDates)) {
+        if (v === null || v === undefined) continue; // a date only the CCS's own bylaws give (soccer)
+        const day = v.slice(0, 10);
+        if (day < ccs.seasonWindow.start || day > ccs.seasonWindow.end) fail(`CCS.keyDates.${k} outside the CCS season window`);
+      }
     }
   }
 

@@ -35,3 +35,11 @@ export function postseasonCitation(league: LeagueConfig): string {
       return ps.citations.qualification;
   }
 }
+
+/**
+ * Where a league tournament's final is played, as the words after a date: ' at Redwood' for a fixed site (MCAL), or
+ * ' (site to be set)' where the league has published none (the VAL's "TBD Field").
+ */
+export function atFinalSite(ps: Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>): string {
+  return ps.finalSite === null ? ' (site to be set)' : ` at ${ps.finalSite.label}`;
+}
