@@ -4,8 +4,10 @@
  * data/<sport>/history-2025-26.json instead: SCVAL from its standings PDF and the hand transcription of the sport's
  * all-league PDFs (scripts/lib/history-scval-documents.ts; `--from tests/fixtures/<sport>/scval-history` rebuilds it
  * offline), BVAL from its 2025-26 standings sheet for the sport (scripts/lib/history-bval-sheet.ts;
- * `--bval-from tests/fixtures/<sport>/bval-history --retrieved-on 2026-11-16` offline), and in the soccer and
- * volleyball builds the WCAL and the WBAL from their own documents (scripts/lib/history-league-documents.ts).
+ * `--bval-from tests/fixtures/<sport>/bval-history --retrieved-on 2026-11-16` offline), the WCAL and the WBAL from their
+ * own documents in the soccer, basketball and volleyball builds, and the PAL from its own in the soccer and basketball
+ * builds (scripts/lib/history-league-documents.ts); the SCCAL, in the soccer and basketball builds, publishes no
+ * standings and is 'unavailable' (sccalNoStandings).
  *
  *   SCVAL  the two official scval.com end-of-season PDFs (standings, all-league)
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked

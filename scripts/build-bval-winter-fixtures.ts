@@ -63,7 +63,7 @@ export interface WinterSource {
 
 interface WinterSport {
   out: string;
-  /** The day the documents were read, where it is not TRANSCRIBED_ON (volleyball: 2026-11-14). */
+  /** The day the documents were read, where it is not TRANSCRIBED_ON (volleyball: 2026-11-14; basketball: 2026-11-21). */
   transcribedOn?: string;
   /** The document's GAME TIMES line, 24h. */
   defaults: { varsity: string; jv: string };
@@ -73,6 +73,8 @@ interface WinterSport {
 export const WINTER: Readonly<Record<'basketball' | 'soccer' | 'volleyball', WinterSport>> = {
   basketball: {
     out: 'data/basketball/official/bval-2026.json',
+    // All four documents were read again on 2026-11-21, when West Valley's revision of 11/16/26 was transcribed.
+    transcribedOn: '2026-11-21',
     // "GAME TIMES: JV @ 5:30pm / Varsity @ 7:00pm"
     defaults: { varsity: '19:00', jv: '17:30' },
     sources: [

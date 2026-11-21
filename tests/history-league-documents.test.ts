@@ -182,6 +182,10 @@ describe('scripts/lib/history-league-documents.ts', () => {
     expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANA', 'MILLS'] }, '2025-26').problems).toEqual([
       'pal: "MILLS" (leftBuild) is a team of this build',
     ]);
+    // A listed name that no row prints (a typo, a stale entry) is an error too.
+    expect(m.documents.buildLeagueDocumentsHistory('pal', { ...tr, leftBuild: ['OCEANA', 'OCEANNA'] }, '2025-26').problems).toEqual([
+      'pal: "OCEANNA" (leftBuild) is in no standings table',
+    ]);
   });
 
   it('keys a school of another league only when the transcription names it a former member', () => {

@@ -2,7 +2,7 @@
   "schema": "scvalfh-official-fixtures/1",
   "league": "bval",
   "source": "bval-docx",
-  "transcribedOn": "2026-11-13",
+  "transcribedOn": "2026-11-21",
   "documents": [
     {"division":"mt-hamilton","url":"https://drive.google.com/uc?export=download&id=1XR_3ocg9pQmhe7OByIuf1lE3jyCXXuXI","sha256":"6c24b33883200a28ac55acdd0a758ec0ee0eed07d0db80e8b18f918683629b26","revisionMarker":"Revised 10/12/26"},
     {"division":"santa-teresa","url":"https://drive.google.com/uc?export=download&id=1mOt9YVvhlMTpD-2_RTg1GhweTxANtcxe","sha256":"9c9afaa021a3fea7002d09fe73a3cd5cd1f62e2dae038ee92cd73011e2260506","revisionMarker":"Revised 10/12/26"},

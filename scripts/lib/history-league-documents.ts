@@ -181,6 +181,13 @@ export function buildLeagueDocumentsHistory(
     };
   };
 
+  // A school named in `leftBuild` must be a row of the tables: the list declares the rows that keep no slug, so a
+  // name no row prints (a typo, a stale entry) is an error, not a silent exception.
+  const printed = new Set(tr.divisions.flatMap((d) => [...d.standings.varsity, ...d.standings.jv].map((r) => r.name)));
+  for (const name of left) {
+    if (!printed.has(name)) say(`"${name}" (leftBuild) is in no standings table`);
+  }
+
   const divisions = divisionsOf(leagueId).map(({ id: division, label }) => {
     const d = tr.divisions.find((x) => x.division === division);
     return {
