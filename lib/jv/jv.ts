@@ -29,6 +29,7 @@ import { withCrossLevelNames } from '../cross-level';
 import { LEDGER_VIEW } from '../fixtures/ledger';
 import { assignGameSlugs } from '../game-urls';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
+import { jvCopiedScoreNote, withholdCopiedScores, type JvCopiedScore } from './jv-copied-scores';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
 import { mergeJvAdded, type JvAddedMergeResult } from './jv-added';
@@ -53,8 +54,11 @@ function load(): JvFile {
 
 const file = load();
 const corrections: JvCorrectionResult = applyJvCorrections(file.games);
+// A MaxPreps JV final scored exactly like the same day's varsity game loses its score here, so the sources merged
+// below fill it where they have the game (lib/jv/jv-copied-scores.ts).
+const copied = withholdCopiedScores(corrections.games, getSnapshot().games);
 const merged: JvMergeResult = mergeJv({
-  games: corrections.games,
+  games: copied.games,
   sblive: file.sblive,
   today: localDateKey(file.fetchedAt),
   fetchedAt: file.fetchedAt,
@@ -147,6 +151,17 @@ export function getJvSchoolSiteMerge(): JvSchoolSiteMergeResult {
 /** The sentence under a JV final a school's own page scores differently, or null. */
 export function getJvSchoolSiteDiffersNote(contestId: ContestId): string | null {
   return SCHOOL_SITE_DIFFERS.get(contestId) ?? null;
+}
+
+/** The MaxPreps JV finals scored exactly like their varsity game, withheld before the merge (lib/jv/jv-copied-scores.ts). */
+export function getJvCopiedScores(): ReadonlyMap<ContestId, JvCopiedScore> {
+  return copied.withheld;
+}
+
+/** The sentence beside a JV game whose MaxPreps score was its varsity game's: what MaxPreps had and what is shown. */
+export function getJvCopiedScoreNote(game: Game): string | null {
+  const entry = copied.withheld.get(game.contestId);
+  return entry ? jvCopiedScoreNote(game, entry) : null;
 }
 
 /** One school's JV entry (its two sources' status and pages); undefined only for a non-registry slug. */

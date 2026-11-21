@@ -61,7 +61,7 @@ export default async function JvGamePage({ params }: PageProps<'/jv/game/[id]'>)
           </p>
           <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
           {model.recordsCaption ? <p className="sx-note mt-1">{model.recordsCaption}</p> : null}
-          <GameFacts game={game} dayHref={model.dayHref} />
+          <GameFacts game={game} dayHref={model.dayHref} omitStatusNote={model.scoreWithheld} />
           {model.notes.map((note) => (
             <p key={note} className="sx-note">
               {note}

@@ -12,6 +12,7 @@
 import { byDateThenId, localDateKey, recordString, shiftDateKey, shortDate, sideOutcome } from '../../lib/format';
 import {
   getJvClassification,
+  getJvCopiedScoreNote,
   getJvFetchedAt,
   getJvGames,
   getJvGamesForOutsideTeam,
@@ -106,6 +107,9 @@ function shortName(side: GameSide): string {
 
 /** The sentence beside a MaxPreps JV final si.com, or a school's own site, reports differently, or null. */
 export function jvDiffersNote(game: Game): string | null {
+  // A MaxPreps score that was the varsity game's (lib/jv/jv-copied-scores.ts): what it was and what is shown.
+  const copied = getJvCopiedScoreNote(game);
+  if (copied) return copied;
   const conflict = game.provenance.scoreConflict;
   if (!conflict || game.provenance.scores === 'sblive') return getJvSchoolSiteDiffersNote(game.contestId);
   return (
