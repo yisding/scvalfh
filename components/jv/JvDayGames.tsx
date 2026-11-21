@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { JV_SCHEDULE_TAG, JvFootnote } from './TeamJvGames';
 import type { JvListSummary, JvRowView } from './jv-view';
 import { GameStatus, SideCrest, lostAttr, rowState, wonAttr } from '../game-row/summary';
@@ -6,8 +8,9 @@ import { WIDE_SCORES } from '../words/score-words';
 
 /**
  * A day's JV games: the site's one game row (`.sx-game`: the status slot, away over home with their
- * logos, the scores flush right) under the varsity slate and never mixed into it. The rows are not
- * links: a JV game has no page of its own. The note under the names says what the game is: its
+ * logos, the scores flush right) under the varsity slate and never mixed into it. Each row is covered by
+ * one link to the JV game's own page (app/jv/game/[id]), named by the game's sentence, as a varsity row is
+ * (`.sx-game-link`). The note under the names says what the game is: its
  * league's name for a JV league game, `Non-league` for one that is not (lib/jv/jv-standings.ts),
  * nothing for a same-division game no varsity game matched (it counts nowhere and we do not
  * guess), `League schedule` for a game listed from the league's own schedule, and one sentence
@@ -56,7 +59,7 @@ export function JvGameList({ rows, showDate = false }: { rows: readonly JvRowVie
   return (
     <div className="sx-gamelist">
       <ul className={WIDE_SCORES ? 'sx-games sx-games-wide' : 'sx-games'}>
-        {rows.map(({ game, differsNote, chips, fromSchedule }) => {
+        {rows.map(({ game, differsNote, chips, fromSchedule, href }) => {
           const display = describeGame(game);
           const state = rowState(game, display);
           const decided = state === 'final';
@@ -72,10 +75,12 @@ export function JvGameList({ rows, showDate = false }: { rows: readonly JvRowVie
               data-off={state === 'off' && display.kind !== 'unreported' ? '' : undefined}
             >
               <div className="sx-game-grid">
-                <span className="sr-only">
-                  {display.sentence}
-                  {fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}
-                </span>
+                <Link
+                  href={href}
+                  prefetch={false}
+                  className="sx-game-link"
+                  aria-label={`JV: ${display.sentence}${fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}`}
+                />
                 <GameStatus game={game} display={display} showDate={showDate} />
                 <span className="contents" aria-hidden="true">
                   <Side side={display.away} which="away" decided={decided} showScore={showScore} />

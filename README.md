@@ -161,6 +161,7 @@ Per-league pages show their own region's league chips.
 | `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points a team can finish with (the Sunset and the independents, with no fixed schedule, show GP alone); a pill links its JV tables on `/jv`. `/standings/independents` is the group's table of their games against each other, with the group's note and the no-postseason card |
 | `/jv` | The JV hub: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each ranking its teams once enough of its JV league games have a score (before that it lists them unranked); under each league's tables its latest JV results, its next JV games, a link to its whole JV season and every school's JV team |
 | `/jv/[league]` | One league's whole JV season by date (one page per league): results, games with no score reported and games to come, a group per date (`#d-<date>`), including the dates only JV teams play |
+| `/jv/game/[id]` | One JV game's page (one static page per listed JV game; OG card per game), at the slug a varsity game of the same facts would have: `/jv/game/2026-09-15-los-gatos-at-santa-clara`. The JV competition (its JV table on `/jv`, or the league's JV season), the scoreboard with each JV team's record over its listed JV finals as of the game, the date (linking the day's `#jv` block, or the league's JV season on a JV-only date), what it counts for in words, the varsity game played beside it, the two JV teams' season series, and the Details rail. See "JV game pages" under "JV games" |
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
@@ -664,6 +665,29 @@ league's JV week at once:
 - **A team page's JV header** gives the JV team's record over the finals listed, beside the counts.
 - **A JV table lists its teams before any league game is played**, unranked and without a record
   (`JvTableView.preseason`), instead of an empty box; it ranks them once the 60% rule below is met.
+
+#### JV game pages
+
+Added 2026-11-21. Every listed JV game (after every merge layer below, so a game listed from a league's
+schedule or a school's own site has one too) has a page, `/jv/game/<slug>` (`app/jv/game/[id]/page.tsx` and its
+`opengraph-image.tsx`, built by `components/jv/jv-game-view.ts`), and every JV row links it: a team page's JV
+games, a day page's JV block, the `/jv` hub and `/jv/<league>`. It is the varsity game page cut to what a JV
+game has, and kept apart from varsity the same way:
+
+- **The slug** is the varsity rule's (`lib/game-slug.ts`, `assignGameSlugs` in `lib/game-urls.ts`): the date,
+  then away `at` home, `-2` on a same-day pair's second game by start time then contest id. The JV file stores
+  no slugs, so a JV game has no aliases: one moved to another day is at its new date's URL and the old one 404s.
+  A JV page is under `/jv/game/`, so a JV game and the varsity game of the same pair and day never share a URL.
+- **The records under the names** are each JV team's record over its listed JV finals, after this game on a
+  final and going in otherwise (the team page's JV header counts the same rows). York, in Santa Catalina's
+  PCAL JV slot, has its own record and a line saying whose slot it plays.
+- **What it counts for** is lib/jv/jv-standings.ts' classification in words (a JV league game and the JV
+  table it counts in, linked; non-league and why; or not counted and why).
+- **The varsity game played beside it** (`jvVarsityTwins`: the same two schools' varsity game nearest the JV
+  date within three days, the counterpart rule the JV tables use) is named and linked, and that varsity game's
+  page links back to the JV game ("JV game"). Only a one-to-one pair links back: a varsity game two JV games
+  sit beside links neither.
+- **No box score, no form strip, no bracket, no rating**: the JV feeds carry none of them.
 
 #### JV games from the league's own schedule
 

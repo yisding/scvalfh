@@ -25,6 +25,7 @@ import { getOfficialFixtures, getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import { byDateThenId, localDateKey } from '../format';
 import { LEDGER_VIEW } from '../fixtures/ledger';
+import { assignGameSlugs } from '../game-urls';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { jvSlotsOf, mergeJvOfficial, type JvOfficialMergeResult, type JvSlot } from './jv-official';
@@ -34,6 +35,7 @@ import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
   classifyJvGames,
   computeJvStandings,
+  jvVarsityTwins,
   withJvClassification,
   type JvClassification,
   type JvDivisionTable,
@@ -87,6 +89,13 @@ const games: Game[] = withJvClassification(reported.games, classes);
 const JV_SCHEDULED_DIVISIONS: ReadonlySet<DivisionId> = new Set(JV_SLOTS.map((s) => s.division));
 const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt), JV_SCHEDULED_DIVISIONS);
 const TEAM_BY_SLUG = new Map<string, JvTeam>(file.teams.map((t) => [t.slug, t]));
+
+// Every JV game's page, `/jv/game/<slug>`: the slug a varsity game of the same facts would have (lib/game-slug.ts),
+// `-2` on the second game of a same-day pair, by start time then contest id (lib/game-urls.ts rule 1, with no history:
+// the JV file stores no slugs, so a JV game moved to another day is at its new date's URL and the old one is gone).
+const JV_SLUG_BY_ID: ReadonlyMap<ContestId, string> = assignGameSlugs(games, () => undefined);
+const JV_GAME_BY_SLUG = new Map<string, Game>(games.map((g) => [JV_SLUG_BY_ID.get(g.contestId) as string, g]));
+const TWINS = jvVarsityTwins(games, getSnapshot().games);
 
 export function getJvFile(): JvFile {
   return file;
@@ -175,6 +184,38 @@ export function getJvTable(division: DivisionId): JvDivisionTable | undefined {
 /** A league's JV tables, in division order. */
 export function getJvTables(league: LeagueId): JvDivisionTable[] {
   return tables.filter((t) => t.league === league);
+}
+
+/** A JV game's URL segment (`/jv/game/<slug>`); undefined only for a contest id that is not a listed JV game. */
+export function getJvGameSlug(contestId: ContestId): string | undefined {
+  return JV_SLUG_BY_ID.get(contestId);
+}
+
+/** `/jv/game/<slug>`: the one way a JV game's page is linked. Undefined only for a contest that is not listed. */
+export function jvGameHref(game: Pick<Game, 'contestId'>): string | undefined {
+  const slug = JV_SLUG_BY_ID.get(game.contestId);
+  return slug === undefined ? undefined : `/jv/game/${slug}`;
+}
+
+/** The JV game at a slug, classified; undefined for any other segment. */
+export function getJvGameBySlug(slug: string): Game | undefined {
+  return JV_GAME_BY_SLUG.get(slug);
+}
+
+/** Every JV game's slug, in date order: the /jv/game/[id] pages' params. */
+export function getJvGameSlugs(): string[] {
+  return getJvGames().map((g) => JV_SLUG_BY_ID.get(g.contestId) as string);
+}
+
+/** The varsity game a JV game is played beside (lib/jv/jv-standings.ts jvVarsityTwins), or undefined. */
+export function getJvVarsityGame(contestId: ContestId): Game | undefined {
+  return TWINS.varsityOf.get(contestId);
+}
+
+/** The one JV game played beside a varsity game, or undefined (none, or more than one). */
+export function getJvGameForVarsity(varsityContestId: ContestId): Game | undefined {
+  const id = TWINS.jvOf.get(varsityContestId);
+  return id === undefined ? undefined : games.find((g) => g.contestId === id);
 }
 
 /** When the JV file was read (ISO UTC). */

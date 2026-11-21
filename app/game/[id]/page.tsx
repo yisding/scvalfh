@@ -7,6 +7,7 @@ import GameDetails from '../../../components/game/GameDetails';
 import GameStats from '../../../components/game/GameStats';
 import { GameSourceLine, ResultFlagConflict, SourceDisagreement } from '../../../components/game/GameSources';
 import SeasonSeries from '../../../components/game/SeasonSeries';
+import { VarsityJvGame } from '../../../components/jv/JvGameSections';
 import {
   buildGameView,
   gameDescription,
@@ -33,7 +34,7 @@ import { localDateKey } from '../../../lib/format';
  * the facts under it (GameFacts: the date as the link back to that score day, the place, the
  * score's source), the notes a reader must not miss (a score from another source, a disagreement
  * between sources, what a postseason game does not count for), then the main column (next round,
- * season series, last 5 games, game stats) beside the Details rail (address, off-site links, what
+ * season series, the JV game played beside it (its own page, app/jv/game/[id]), last 5 games, game stats) beside the Details rail (address, off-site links, what
  * the game counts for, Report an error) — plus a text-only OG card so a link pasted into a group
  * text previews the score itself. List rows no longer expand, so every off-site link a row used
  * to offer (Directions, Stream, Tickets, the MaxPreps game) is in Details.
@@ -174,6 +175,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
             </section>
           ) : null}
           <SeasonSeries model={model} className="sx-section" />
+          <VarsityJvGame contestId={game.contestId} dateKey={game.dateKey} className="sx-section" />
           <FormGoingIn model={model} className="sx-section" />
           <GameStats model={model} className="sx-section" />
         </div>

@@ -138,11 +138,13 @@ export interface GameFactsProps {
   game: Game;
   /** `<LastUpdated variant="time" … />` while the game is live or is today's; omitted on a past final. */
   stamp?: React.ReactNode;
+  /** Where the date links: `/scores/<date>` by default; a JV game on a date with no varsity game links its league's JV season. */
+  dayHref?: string;
   className?: string;
 }
 
 /** The facts under the board, one item each: when (the date links its score day), where, the score's source. */
-export function GameFacts({ game, stamp, className }: GameFactsProps) {
+export function GameFacts({ game, stamp, dayHref, className }: GameFactsProps) {
   const display = describeGame(game);
   // A game still to play has its start time as the board's status line; it is not said again here.
   const timeAbove = game.status !== 'live' && statusLabelIsTime(game, display.statusLabel);
@@ -165,7 +167,7 @@ export function GameFacts({ game, stamp, className }: GameFactsProps) {
   return (
     <ul className={['sx-metalist', className].filter(Boolean).join(' ')}>
       <li>
-        <Link href={`/scores/${game.dateKey}`} prefetch={false} className="sx-link">
+        <Link href={dayHref ?? `/scores/${game.dateKey}`} prefetch={false} className="sx-link">
           {longDate(game.dateLocal)}
         </Link>
         {timeAbove ? '' : game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}

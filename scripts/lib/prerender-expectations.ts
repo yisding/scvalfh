@@ -18,6 +18,7 @@
 import { getClubSlugs } from '../../lib/players/clubs';
 import { gameSlug } from '../../lib/game-slug';
 import { gameAliasTable } from '../../lib/game-urls';
+import { getJvGameSlugs } from '../../lib/jv/jv';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
 import { HAS_CLUB_CALENDAR, HAS_RECRUITING, IS_FIELD_HOCKEY } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
@@ -83,6 +84,8 @@ export interface ExpectedFamilies {
   dates: readonly string[];
   slugs: readonly string[];
   clubSlugs: readonly string[];
+  /** Every listed JV game's slug (lib/jv/jv.ts): the /jv/game/[id] family. */
+  jvGameParams: readonly string[];
 }
 
 /** The items of `a` not in `b`. */
@@ -145,6 +148,7 @@ export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void
     dates: [...new Set(snapshot.games.map((g) => g.dateKey))].sort(),
     slugs,
     clubSlugs: getClubSlugs(),
+    jvGameParams: getJvGameSlugs(),
   };
 }
 
@@ -205,6 +209,8 @@ export function makeFamilyChecker(
     family('teams', expected.slugs, { og: true });
     // One JV calendar per league (app/jv/[league]); it takes the root OG card.
     family('jv', expected.leagueIds, { og: false });
+    // One page per listed JV game (app/jv/game/[id]), each with its OG card.
+    family('jv/game', expected.jvGameParams, { og: true });
     family('history', ['2025-26'], { og: false });
     // One page per club of data/field-hockey/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.

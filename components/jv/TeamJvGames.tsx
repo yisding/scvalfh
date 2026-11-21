@@ -8,8 +8,8 @@ import type { JvListSummary, TeamJvView } from './jv-view';
 /**
  * A team page's JV games (DESIGN §3.7's game log, one list): `Sep 14 (W) 4–0 vs Cupertino FINAL`.
  *
- * The rows are the varsity log's rows (GameLogRowBody, the same four columns) without the link —
- * a JV game has no page of its own. A JV league game (one whose varsity counterpart counts,
+ * The rows are the varsity log's rows (GameLogRowBody, the same four columns), each a link to the JV
+ * game's own page (app/jv/game/[id]), as a varsity row links its game's. A JV league game (one whose varsity counterpart counts,
  * lib/jv/jv-standings.ts) carries its league chip, a non-league one the NL chip and rule, and a
  * same-division game no varsity game matched carries neither: it counts nowhere and we do not
  * guess. A score from si.com carries the †, as everywhere else; a MaxPreps score si.com reports
@@ -36,16 +36,21 @@ export function TeamJvGames({ view }: { view: TeamJvView }) {
       {view.slot ? <p className="sx-note mt-0 mb-2">{view.slot.note}</p> : null}
       {/* The section spans the page from 1024: two columns of rows, read down then across. */}
       <ol className="sx-list lg:columns-2 lg:gap-x-10 [&>li]:break-inside-avoid">
-        {view.rows.map(({ game, differsNote, chips, nonLeague, fromSchedule }) => (
+        {view.rows.map(({ game, differsNote, chips, nonLeague, fromSchedule, href }) => (
           <li key={game.contestId}>
-            <div className={nonLeague ? `${GAME_LOG_ROW_GRID} sx-nonleague` : GAME_LOG_ROW_GRID}>
+            {/* The whole row is one link to the JV game's page, as a varsity log row is to its game's. */}
+            <Link
+              href={href}
+              prefetch={false}
+              className={`sx-tap no-underline ${nonLeague ? `${GAME_LOG_ROW_GRID} sx-nonleague` : GAME_LOG_ROW_GRID}`}
+            >
               <GameLogRowBody
                 game={game}
                 perspective={perspective}
                 showChips={chips}
                 extraTag={fromSchedule ? JV_SCHEDULE_TAG : undefined}
               />
-            </div>
+            </Link>
             {differsNote ? <p className="sx-note mt-0 px-2 pb-2">{differsNote}</p> : null}
           </li>
         ))}

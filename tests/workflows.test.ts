@@ -19,6 +19,7 @@ import { localDateKey } from '../lib/format';
 import { withFixtureGames } from '../lib/results/fixture-games';
 
 import { getClubSlugs } from '../lib/players/clubs';
+import { getJvGameSlugs } from '../lib/jv/jv';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, seasonWindowBounds } from '../lib/leagues';
 import { loadSnapshot } from '../lib/snapshot/snapshot-load';
 import { REPO, runScript } from './helpers';
@@ -717,6 +718,8 @@ describe('assert:prerender on a .next that has served traffic', () => {
       game: snapshot.games.map((g) => g.slug!),
       scores: [...new Set(snapshot.games.map((g) => g.dateKey))],
       teams: snapshot.teams.map((t) => t.slug),
+      // One page per listed JV game (app/jv/game/[id]), each with its OG card.
+      'jv/game': getJvGameSlugs(),
     };
     // A team page carries both sections on every team, in every league.
     const body = (family: string) =>

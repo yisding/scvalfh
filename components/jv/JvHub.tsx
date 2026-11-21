@@ -11,8 +11,8 @@ import type { JvDayGroup, JvTeamCardView, LeagueJvHubView } from './jv-view';
  * One league's JV games on the `/jv` hub, under its tables: the latest JV results (the last week's finals,
  * or the latest day with one) and the next JV games (the coming week's, or the next day with one), each
  * day's rows under a date strip, then one link to the league's whole JV season (`/jv/<league>`). Nothing
- * renders for a league with no listed JV game. The rows are the day view's JV rows (JvGameList), never
- * links: a JV game has no page of its own.
+ * renders for a league with no listed JV game. The rows are the day view's JV rows (JvGameList), each a link
+ * to the JV game's own page (app/jv/game/[id]).
  */
 export function JvLeagueGames({ view, leagueShort, idPrefix }: { view: LeagueJvHubView; leagueShort: string; idPrefix: string }) {
   if (view.games === 0) return null;
