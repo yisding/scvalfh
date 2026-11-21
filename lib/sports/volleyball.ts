@@ -6,7 +6,7 @@
  * An import-free leaf apart from types, so client modules may reach it through lib/sports/current.
  */
 
-import type { Sport, SportSeason } from './shape';
+import type { Sport, MaxprepsSportSeason } from './shape';
 
 export const VOLLEYBALL = {
   id: 'volleyball',
@@ -103,6 +103,7 @@ export const VOLLEYBALL = {
 export const VOLLEYBALL_GIRLS_2026 = {
   sport: VOLLEYBALL,
   gender: 'girls',
+  primary: 'maxpreps',
   level: 'Varsity',
   /** [V] the hub's `__NEXT_DATA__.query.gendersport` */
   genderSport: 'girls,volleyball',
@@ -122,4 +123,4 @@ export const VOLLEYBALL_GIRLS_2026 = {
   jvSportSeasonId: 'd23401c4-759f-41af-b044-94497d049dd1',
   /** [V] the tournament page every CCS playoff team's schedule names (lib/league-config/volleyball/sections.ts). */
   ccsBracketPath: '/tournament/TPozgxV2DkGkNEbD5cAlqA/volleyball-26/2026-central-coast-section-girls-volleyball-championship.htm',
-} as const satisfies SportSeason;
+} as const satisfies MaxprepsSportSeason;

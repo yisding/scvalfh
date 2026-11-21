@@ -443,23 +443,23 @@ describe('buildLeagueTournament', () => {
     const short = (slug: string) => getTeamBySlug(slug)!.shortName;
     // The site team in the home slot: 1 Redwood and 3 Tamalpais at Redwood — the game page's "Tamalpais at Redwood".
     const siteHome = finalGame([{ seed: 1, slug: RW }, { seed: 3, slug: TM }], MCAL);
-    expect(fixedSiteHost(siteHome, ps.finalSite.slug)).toBe('home');
-    expect(tournamentGameLine(siteHome, ps.finalSite.slug)).toBe(`3 ${short(TM)} at 1 ${short(RW)}`);
+    expect(fixedSiteHost(siteHome, ps.finalSite!.slug)).toBe('home');
+    expect(tournamentGameLine(siteHome, ps.finalSite!.slug)).toBe(`3 ${short(TM)} at 1 ${short(RW)}`);
     // The site team as the worse seed still hosts: it is listed last (2026: 1 Tamalpais and 3 Redwood, at Redwood).
     const siteAway = finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL);
-    expect(fixedSiteHost(siteAway, ps.finalSite.slug)).toBe('away');
-    expect(tournamentGameLine(siteAway, ps.finalSite.slug)).toBe(`1 ${short(TM)} at 3 ${short(RW)}`);
+    expect(fixedSiteHost(siteAway, ps.finalSite!.slug)).toBe('away');
+    expect(tournamentGameLine(siteAway, ps.finalSite!.slug)).toBe(`1 ${short(TM)} at 3 ${short(RW)}`);
     // Neither finalist is the host: a neutral fixed site, better seed first, "vs".
     const neutral = finalGame([{ seed: 1, slug: AW }, { seed: 2, slug: TM }], MCAL);
-    expect(fixedSiteHost(neutral, ps.finalSite.slug)).toBeNull();
-    expect(tournamentGameLine(neutral, ps.finalSite.slug)).toBe(`1 ${short(AW)} vs 2 ${short(TM)}`);
+    expect(fixedSiteHost(neutral, ps.finalSite!.slug)).toBeNull();
+    expect(tournamentGameLine(neutral, ps.finalSite!.slug)).toBe(`1 ${short(AW)} vs 2 ${short(TM)}`);
     // Finalists not known yet: the written slots, "vs"; no site slug passed: "vs" as well (no host known).
-    expect(tournamentGameLine(finalGame(null, MCAL), ps.finalSite.slug)).toBe('Semifinal 1 winner vs Semifinal 2 winner');
+    expect(tournamentGameLine(finalGame(null, MCAL), ps.finalSite!.slug)).toBe('Semifinal 1 winner vs Semifinal 2 winner');
     expect(tournamentGameLine(siteHome)).toBe(`1 ${short(RW)} vs 3 ${short(TM)}`);
     // A round at the higher seed's field has no fixed site: visitor at host whatever the slug.
     const [qf1] = quarterfinals(seedsFromStandings(rows, MCAL), MCAL);
-    expect(fixedSiteHost(qf1, ps.finalSite.slug)).toBeNull();
-    expect(tournamentGameLine(qf1, ps.finalSite.slug)).toMatch(/^5 .+ at 4 .+$/);
+    expect(fixedSiteHost(qf1, ps.finalSite!.slug)).toBeNull();
+    expect(tournamentGameLine(qf1, ps.finalSite!.slug)).toMatch(/^5 .+ at 4 .+$/);
   });
 
   it('names the winner of a matched game by score, else by the W flag MaxPreps sets (tournamentGameWinner)', () => {

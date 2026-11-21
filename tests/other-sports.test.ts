@@ -13,7 +13,7 @@ import { TEAMS } from '../lib/teams';
 
 describe('the sport sites', () => {
   it('names each program as its site does', () => {
-    expect(SPORT_IDS.map(programTitle)).toEqual(['Field Hockey', 'Girls Soccer', 'Boys Basketball', 'Girls Volleyball']);
+    expect(SPORT_IDS.map(programTitle)).toEqual(['Field Hockey', 'Girls Soccer', 'Boys Basketball', 'Girls Volleyball', 'VAL Girls Soccer']);
     expect(SITE_NAME).toBe('NorCal High School Field Hockey');
   });
 

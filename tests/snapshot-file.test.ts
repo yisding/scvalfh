@@ -266,27 +266,27 @@ describeIfPresent('the committed snapshot: official fixtures', () => {
 
 describeIfPresent('the committed snapshot: CCS playoffs', () => {
   it('keeps the CCS dates and does not claim a published bracket without evidence', () => {
-    expect(snapshot.playoffs.keyDates.quarterfinals).toBe('2026-11-07');
-    expect(snapshot.playoffs.keyDates.endOfLeagueSeason).toBe('2026-10-31');
-    expect(snapshot.playoffs.format.autoQualifiers.scval).toBe(7);
-    expect(snapshot.playoffs.format.autoQualifiers.total).toBe(16);
+    expect(snapshot.playoffs!.keyDates.quarterfinals).toBe('2026-11-07');
+    expect(snapshot.playoffs!.keyDates.endOfLeagueSeason).toBe('2026-10-31');
+    expect(snapshot.playoffs!.format.autoQualifiers.scval).toBe(7);
+    expect(snapshot.playoffs!.format.autoQualifiers.total).toBe(16);
     // `divisionsPublished`, when the file carries it, is the per-division answer behind `bracketPublished`.
-    if (snapshot.playoffs.divisionsPublished) {
-      expect(Object.values(snapshot.playoffs.divisionsPublished).some(Boolean)).toBe(snapshot.playoffs.bracketPublished);
+    if (snapshot.playoffs!.divisionsPublished) {
+      expect(Object.values(snapshot.playoffs!.divisionsPublished).some(Boolean)).toBe(snapshot.playoffs!.bracketPublished);
     }
   });
 
   it('holds playoffs.games to its one derivation (lib/postseason/ccs-bracket.ts), every entry a game of the snapshot', () => {
     // Empty today (2026-10-29): no game is tagged 'ccs' before the committee enters the bracket.
-    const derived = ccsBracketGames(snapshot.games, snapshot.playoffs.keyDates).map((g) => g.contestId);
-    expect(snapshot.playoffs.games.map((g) => g.contestId)).toEqual(derived);
+    const derived = ccsBracketGames(snapshot.games, snapshot.playoffs!.keyDates).map((g) => g.contestId);
+    expect(snapshot.playoffs!.games.map((g) => g.contestId)).toEqual(derived);
     const ids = new Set(snapshot.games.map((g) => g.contestId));
-    for (const g of snapshot.playoffs.games) expect(ids.has(g.contestId), g.contestId).toBe(true);
+    for (const g of snapshot.playoffs!.games) expect(ids.has(g.contestId), g.contestId).toBe(true);
   });
 
   it('only carries a CCS calendar once the season gate has opened', () => {
-    if (!snapshot.playoffs.ccsCalendar) return;
-    expect(snapshot.playoffs.ccsCalendar.length).toBeGreaterThan(0);
-    expect(snapshot.playoffs.ccsCalendar.every((e) => /^2026-\d{2}-\d{2}$/.test(e.date))).toBe(true);
+    if (!snapshot.playoffs!.ccsCalendar) return;
+    expect(snapshot.playoffs!.ccsCalendar.length).toBeGreaterThan(0);
+    expect(snapshot.playoffs!.ccsCalendar.every((e) => /^2026-\d{2}-\d{2}$/.test(e.date))).toBe(true);
   });
 });

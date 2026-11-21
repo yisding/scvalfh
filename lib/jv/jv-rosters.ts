@@ -40,9 +40,11 @@ import bundledSitesFieldHockey from '../../data/field-hockey/jv-rosters-school-s
 import bundledMaxPrepsBasketball from '../../data/basketball/jv-rosters.json';
 import bundledMaxPrepsVolleyball from '../../data/volleyball/jv-rosters.json';
 import bundledMaxPrepsSoccer from '../../data/soccer/jv-rosters.json';
+import bundledMaxPrepsValSoccer from '../../data/val-soccer/jv-rosters.json';
 import bundledSitesBasketball from '../../data/basketball/jv-rosters-school-sites.json';
 import bundledSitesVolleyball from '../../data/volleyball/jv-rosters-school-sites.json';
 import bundledSitesSoccer from '../../data/soccer/jv-rosters-school-sites.json';
+import bundledSitesValSoccer from '../../data/val-soccer/jv-rosters-school-sites.json';
 import { readOverride, validateData } from '../data-file';
 import { getEnrichedTeamRoster } from '../players/rosters';
 import { RostersSchema, type Rosters, type TeamRoster } from '../players/rosters-schema';
@@ -51,8 +53,8 @@ import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 
 /** This build's copies (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundledMaxPreps = process.env.SCVAL_SPORT === 'basketball' ? bundledMaxPrepsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledMaxPrepsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledMaxPrepsSoccer : bundledMaxPrepsFieldHockey;
-const bundledSites = process.env.SCVAL_SPORT === 'basketball' ? bundledSitesBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSitesVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSitesSoccer : bundledSitesFieldHockey;
+const bundledMaxPreps = process.env.SCVAL_SPORT === 'basketball' ? bundledMaxPrepsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledMaxPrepsVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledMaxPrepsValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledMaxPrepsSoccer : bundledMaxPrepsFieldHockey;
+const bundledSites = process.env.SCVAL_SPORT === 'basketball' ? bundledSitesBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSitesVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledSitesValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSitesSoccer : bundledSitesFieldHockey;
 
 export const JvSiteRosterPlayerSchema = z
   .object({

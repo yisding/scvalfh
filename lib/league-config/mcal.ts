@@ -77,6 +77,8 @@ export const MCAL: LeagueConfig = {
   },
   postseason: {
     kind: 'league-tournament', name: 'MCAL tournament', qualifiers: 6, byes: [1, 2],
+    // The 2026 play-off sheet: "(lowest seed (3-6) left in the tournament) at (1st)" (lib/postseason/postseason.ts).
+    semifinals: 'reseeded',
     ladder: [
       { divisions: '*', places: [1, 2], status: 'bye', label: 'Semifinal bye',
         phrase: 'a semifinal bye', badge: 'Bye', legend: 'Places 1-2 — bye to the semifinals, Wed Oct 28' },
@@ -125,6 +127,8 @@ export const MCAL: LeagueConfig = {
     // Redwood Bark (Nov 1, 2026, "Varsity field hockey defeats Tamalpais 2-1 to claim MCAL championship") times all three
     // goals in play, the winner "with just four minutes remaining in the fourth quarter", so it was decided in regulation
     // and MaxPreps' 2-1 stands.
+    // lib/postseason/postseason.ts SHOOTOUT_NOTE, the same sentence.
+    shootoutNote: 'MCAL tournament games tied after overtime are decided by a shootout, and MaxPreps may record the shootout as goals.',
     resultNotes: {
       '7bb048ba-9e33-4ad1-a743-2348c6637602':
         'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1 (Marin Independent Journal, Oct 28, 2026). MaxPreps records the shootout tally, 3–1, as the score.',

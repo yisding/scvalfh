@@ -45,6 +45,7 @@ import {
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Team } from '../lib/types';
 import { runCliIfMain } from './cli';
+import { requireMaxpreps } from './lib/require-maxpreps';
 
 const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]
 
@@ -109,6 +110,8 @@ function compare(label: string, ours: string | null, theirs: string | null | und
 }
 
 export async function main(argv: readonly string[]): Promise<number> {
+  const notMaxpreps = requireMaxpreps('discover-season');
+  if (notMaxpreps !== null) return notMaxpreps;
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);

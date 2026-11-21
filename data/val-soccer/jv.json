@@ -1,0 +1,3543 @@
+{
+  "counts": {
+    "errors": 0,
+    "finals": 0,
+    "games": 55,
+    "sbliveRows": 0,
+    "teams": 11,
+    "teamsWithGames": 11
+  },
+  "fetchedAt": "2026-11-21T21:33:39.247Z",
+  "games": [
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "contestId": "teamsideline:731408-lawson-at-sunnyvale-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-14",
+      "dateLocal": "2026-12-14T16:00:00",
+      "dateUtc": "2026-12-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1080 Mango Avenue"
+        },
+        "name": "Sunnyvale Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "contestId": "teamsideline:731408-columbia-at-lawson",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T16:00:00",
+      "dateUtc": "2026-12-16T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "10401 Vista Drive"
+        },
+        "name": "Lawson Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "contestId": "teamsideline:731408-graham-at-hyde",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T16:00:00",
+      "dateUtc": "2026-12-16T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "19325 Bollinger Road"
+        },
+        "name": "Hyde Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "contestId": "teamsideline:731408-kennedy-at-blach",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T16:00:00",
+      "dateUtc": "2026-12-16T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94024",
+          "region": "CA",
+          "street": "1120 Covington Road"
+        },
+        "name": "Blach Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "contestId": "teamsideline:731408-miller-at-egan",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-15",
+      "dateLocal": "2026-12-15T16:00:00",
+      "dateUtc": "2026-12-16T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94022",
+          "region": "CA",
+          "street": "100 West Portola Avenue"
+        },
+        "name": "Egan Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "contestId": "teamsideline:731408-graham-at-cupertino-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-16",
+      "dateLocal": "2026-12-16T16:00:00",
+      "dateUtc": "2026-12-17T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1650 Bernardo Dr."
+        },
+        "name": "Cupertino Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "contestId": "teamsideline:731408-crittenden-at-miller",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "San Jose",
+          "postalCode": "95129",
+          "region": "CA",
+          "street": "6151 Rainbow Drive"
+        },
+        "name": "Miller Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "contestId": "teamsideline:731408-cupertino-ms-at-egan",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94022",
+          "region": "CA",
+          "street": "100 West Portola Avenue"
+        },
+        "name": "Egan Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "contestId": "teamsideline:731408-hyde-at-columbia",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94085",
+          "region": "CA",
+          "street": "739 Morse Avenue"
+        },
+        "name": "Columbia Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "contestId": "teamsideline:731408-kennedy-at-sunnyvale-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1080 Mango Avenue"
+        },
+        "name": "Sunnyvale Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "contestId": "teamsideline:731408-lawson-at-blach",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2026-12-17",
+      "dateLocal": "2026-12-17T16:00:00",
+      "dateUtc": "2026-12-18T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94024",
+          "region": "CA",
+          "street": "1120 Covington Road"
+        },
+        "name": "Blach Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "contestId": "teamsideline:731408-lawson-at-hyde",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-04",
+      "dateLocal": "2027-01-04T16:00:00",
+      "dateUtc": "2027-01-05T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "19325 Bollinger Road"
+        },
+        "name": "Hyde Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "contestId": "teamsideline:731408-blach-at-crittenden",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T16:00:00",
+      "dateUtc": "2027-01-06T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94043",
+          "region": "CA",
+          "street": "1701 Rock Street"
+        },
+        "name": "Critt.. Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "contestId": "teamsideline:731408-columbia-at-kennedy",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T16:00:00",
+      "dateUtc": "2027-01-06T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "821 Bubb Road"
+        },
+        "name": "Kennedy Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "contestId": "teamsideline:731408-cupertino-ms-at-sunnyvale-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T16:00:00",
+      "dateUtc": "2027-01-06T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1080 Mango Avenue"
+        },
+        "name": "Sunnyvale Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "contestId": "teamsideline:731408-graham-at-lawson",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-05",
+      "dateLocal": "2027-01-05T16:00:00",
+      "dateUtc": "2027-01-06T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "10401 Vista Drive"
+        },
+        "name": "Lawson Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "contestId": "teamsideline:731408-crittenden-at-egan",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-06",
+      "dateLocal": "2027-01-06T16:00:00",
+      "dateUtc": "2027-01-07T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94022",
+          "region": "CA",
+          "street": "100 West Portola Avenue"
+        },
+        "name": "Egan Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "contestId": "teamsideline:731408-sunnyvale-ms-at-miller",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-06",
+      "dateLocal": "2027-01-06T16:00:00",
+      "dateUtc": "2027-01-07T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "San Jose",
+          "postalCode": "95129",
+          "region": "CA",
+          "street": "6151 Rainbow Drive"
+        },
+        "name": "Miller Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "contestId": "teamsideline:731408-blach-at-hyde",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "19325 Bollinger Road"
+        },
+        "name": "Hyde Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "contestId": "teamsideline:731408-crittenden-at-kennedy",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "821 Bubb Road"
+        },
+        "name": "Kennedy Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "contestId": "teamsideline:731408-egan-at-columbia",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94085",
+          "region": "CA",
+          "street": "739 Morse Avenue"
+        },
+        "name": "Columbia Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "contestId": "teamsideline:731408-miller-at-graham",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-07",
+      "dateLocal": "2027-01-07T16:00:00",
+      "dateUtc": "2027-01-08T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94040",
+          "region": "CA",
+          "street": "1175 Castro Street"
+        },
+        "name": "Graham Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "contestId": "teamsideline:731408-cupertino-ms-at-crittenden",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:00:00",
+      "dateUtc": "2027-01-13T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94043",
+          "region": "CA",
+          "street": "1701 Rock Street"
+        },
+        "name": "Critt.. Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "contestId": "teamsideline:731408-egan-at-kennedy",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:00:00",
+      "dateUtc": "2027-01-13T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "821 Bubb Road"
+        },
+        "name": "Kennedy Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "contestId": "teamsideline:731408-graham-at-columbia",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:00:00",
+      "dateUtc": "2027-01-13T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94085",
+          "region": "CA",
+          "street": "739 Morse Avenue"
+        },
+        "name": "Columbia Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "contestId": "teamsideline:731408-lawson-at-miller",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:00:00",
+      "dateUtc": "2027-01-13T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "San Jose",
+          "postalCode": "95129",
+          "region": "CA",
+          "street": "6151 Rainbow Drive"
+        },
+        "name": "Miller Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "contestId": "teamsideline:731408-sunnyvale-ms-at-hyde",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-12",
+      "dateLocal": "2027-01-12T16:00:00",
+      "dateUtc": "2027-01-13T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "19325 Bollinger Road"
+        },
+        "name": "Hyde Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "contestId": "teamsideline:731408-columbia-at-blach",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-13",
+      "dateLocal": "2027-01-13T16:00:00",
+      "dateUtc": "2027-01-14T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94024",
+          "region": "CA",
+          "street": "1120 Covington Road"
+        },
+        "name": "Blach Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "contestId": "teamsideline:731408-cupertino-ms-at-lawson",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-13",
+      "dateLocal": "2027-01-13T16:00:00",
+      "dateUtc": "2027-01-14T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "10401 Vista Drive"
+        },
+        "name": "Lawson Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "contestId": "teamsideline:731408-egan-at-graham",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:00:00",
+      "dateUtc": "2027-01-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94040",
+          "region": "CA",
+          "street": "1175 Castro Street"
+        },
+        "name": "Graham Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "contestId": "teamsideline:731408-hyde-at-crittenden",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:00:00",
+      "dateUtc": "2027-01-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94043",
+          "region": "CA",
+          "street": "1701 Rock Street"
+        },
+        "name": "Critt.. Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "contestId": "teamsideline:731408-kennedy-at-lawson",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:00:00",
+      "dateUtc": "2027-01-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "10401 Vista Drive"
+        },
+        "name": "Lawson Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "contestId": "teamsideline:731408-miller-at-cupertino-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:00:00",
+      "dateUtc": "2027-01-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1650 Bernardo Dr."
+        },
+        "name": "Cupertino Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "contestId": "teamsideline:731408-sunnyvale-ms-at-blach",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-14",
+      "dateLocal": "2027-01-14T16:00:00",
+      "dateUtc": "2027-01-15T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94024",
+          "region": "CA",
+          "street": "1120 Covington Road"
+        },
+        "name": "Blach Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "contestId": "teamsideline:731408-hyde-at-kennedy",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-19",
+      "dateLocal": "2027-01-19T16:00:00",
+      "dateUtc": "2027-01-20T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "821 Bubb Road"
+        },
+        "name": "Kennedy Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "contestId": "teamsideline:731408-lawson-at-crittenden",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-19",
+      "dateLocal": "2027-01-19T16:00:00",
+      "dateUtc": "2027-01-20T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94043",
+          "region": "CA",
+          "street": "1701 Rock Street"
+        },
+        "name": "Critt.. Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "contestId": "teamsideline:731408-blach-at-cupertino-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-20",
+      "dateLocal": "2027-01-20T16:00:00",
+      "dateUtc": "2027-01-21T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1650 Bernardo Dr."
+        },
+        "name": "Cupertino Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "contestId": "teamsideline:731408-hyde-at-egan",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-20",
+      "dateLocal": "2027-01-20T16:00:00",
+      "dateUtc": "2027-01-21T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94022",
+          "region": "CA",
+          "street": "100 West Portola Avenue"
+        },
+        "name": "Egan Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "contestId": "teamsideline:731408-miller-at-columbia",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-20",
+      "dateLocal": "2027-01-20T16:00:00",
+      "dateUtc": "2027-01-21T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94085",
+          "region": "CA",
+          "street": "739 Morse Avenue"
+        },
+        "name": "Columbia Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "contestId": "teamsideline:731408-sunnyvale-ms-at-graham",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-20",
+      "dateLocal": "2027-01-20T16:00:00",
+      "dateUtc": "2027-01-21T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94040",
+          "region": "CA",
+          "street": "1175 Castro Street"
+        },
+        "name": "Graham Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "contestId": "teamsideline:731408-blach-at-miller",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "San Jose",
+          "postalCode": "95129",
+          "region": "CA",
+          "street": "6151 Rainbow Drive"
+        },
+        "name": "Miller Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "contestId": "teamsideline:731408-columbia-at-cupertino-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1650 Bernardo Dr."
+        },
+        "name": "Cupertino Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "contestId": "teamsideline:731408-crittenden-at-sunnyvale-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1080 Mango Avenue"
+        },
+        "name": "Sunnyvale Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "contestId": "teamsideline:731408-egan-at-lawson",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Lawson",
+        "result": null,
+        "score": null,
+        "slug": "lawson",
+        "teamId": "val-lawson"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "10401 Vista Drive"
+        },
+        "name": "Lawson Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "contestId": "teamsideline:731408-kennedy-at-graham",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-21",
+      "dateLocal": "2027-01-21T16:00:00",
+      "dateUtc": "2027-01-22T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94040",
+          "region": "CA",
+          "street": "1175 Castro Street"
+        },
+        "name": "Graham Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "contestId": "teamsideline:731408-columbia-at-crittenden",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T16:00:00",
+      "dateUtc": "2027-01-27T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94043",
+          "region": "CA",
+          "street": "1701 Rock Street"
+        },
+        "name": "Critt.. Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "contestId": "teamsideline:731408-egan-at-sunnyvale-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T16:00:00",
+      "dateUtc": "2027-01-27T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1080 Mango Avenue"
+        },
+        "name": "Sunnyvale Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "contestId": "teamsideline:731408-graham-at-blach",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T16:00:00",
+      "dateUtc": "2027-01-27T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94024",
+          "region": "CA",
+          "street": "1120 Covington Road"
+        },
+        "name": "Blach Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "contestId": "teamsideline:731408-hyde-at-cupertino-ms",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T16:00:00",
+      "dateUtc": "2027-01-27T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94087",
+          "region": "CA",
+          "street": "1650 Bernardo Dr."
+        },
+        "name": "Cupertino Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "contestId": "teamsideline:731408-kennedy-at-miller",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-26",
+      "dateLocal": "2027-01-26T16:00:00",
+      "dateUtc": "2027-01-27T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "San Jose",
+          "postalCode": "95129",
+          "region": "CA",
+          "street": "6151 Rainbow Drive"
+        },
+        "name": "Miller Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Los Altos",
+        "name": "Blach",
+        "result": null,
+        "score": null,
+        "slug": "blach",
+        "teamId": "val-blach"
+      },
+      "contestId": "teamsideline:731408-blach-at-egan",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T16:00:00",
+      "dateUtc": "2027-01-29T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Los Altos",
+        "name": "Egan",
+        "result": null,
+        "score": null,
+        "slug": "egan",
+        "teamId": "val-egan"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Los Altos",
+          "postalCode": "94022",
+          "region": "CA",
+          "street": "100 West Portola Avenue"
+        },
+        "name": "Egan Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Mountain View",
+        "name": "Crittenden",
+        "result": null,
+        "score": null,
+        "slug": "crittenden",
+        "teamId": "val-crittenden"
+      },
+      "contestId": "teamsideline:731408-crittenden-at-graham",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T16:00:00",
+      "dateUtc": "2027-01-29T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Mountain View",
+        "name": "Graham",
+        "result": null,
+        "score": null,
+        "slug": "graham",
+        "teamId": "val-graham"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Mountain View",
+          "postalCode": "94040",
+          "region": "CA",
+          "street": "1175 Castro Street"
+        },
+        "name": "Graham Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Cupertino",
+        "result": null,
+        "score": null,
+        "slug": "cupertino-ms",
+        "teamId": "val-cupertino-ms"
+      },
+      "contestId": "teamsideline:731408-cupertino-ms-at-kennedy",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T16:00:00",
+      "dateUtc": "2027-01-29T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Kennedy",
+        "result": null,
+        "score": null,
+        "slug": "kennedy",
+        "teamId": "val-kennedy"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "821 Bubb Road"
+        },
+        "name": "Kennedy Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "San Jose",
+        "name": "Miller",
+        "result": null,
+        "score": null,
+        "slug": "miller",
+        "teamId": "val-miller"
+      },
+      "contestId": "teamsideline:731408-miller-at-hyde",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T16:00:00",
+      "dateUtc": "2027-01-29T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Cupertino",
+        "name": "Hyde",
+        "result": null,
+        "score": null,
+        "slug": "hyde",
+        "teamId": "val-hyde"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Cupertino",
+          "postalCode": "95014",
+          "region": "CA",
+          "street": "19325 Bollinger Road"
+        },
+        "name": "Hyde Field",
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Sunnyvale",
+        "name": "Sunnyvale",
+        "result": null,
+        "score": null,
+        "slug": "sunnyvale-ms",
+        "teamId": "val-sunnyvale-ms"
+      },
+      "contestId": "teamsideline:731408-sunnyvale-ms-at-columbia",
+      "contestTypes": {
+        "away": null,
+        "home": null
+      },
+      "countsFor": null,
+      "dateKey": "2027-01-28",
+      "dateLocal": "2027-01-28T16:00:00",
+      "dateUtc": "2027-01-29T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Sunnyvale",
+        "name": "Columbia",
+        "result": null,
+        "score": null,
+        "slug": "columbia",
+        "teamId": "val-columbia"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": true,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "val",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-11-21T21:33:39.247Z",
+        "schedule": "teamsideline",
+        "scores": "teamsideline"
+      },
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": null,
+        "nfhsStream": null
+      },
+      "venue": {
+        "address": {
+          "city": "Sunnyvale",
+          "postalCode": "94085",
+          "region": "CA",
+          "street": "739 Morse Avenue"
+        },
+        "name": "Columbia Field",
+        "text": null
+      }
+    }
+  ],
+  "league": {
+    "error": null,
+    "fetchedAt": "2026-11-21T21:33:39.247Z",
+    "rowCount": 60,
+    "status": "ok",
+    "url": "https://valleyal.org/schedule/731408/0/1/6th7th-grade"
+  },
+  "sblive": [],
+  "season": "26-27",
+  "source": {
+    "builtBy": "scripts/fetch-jv.ts",
+    "notes": [
+      "One entry per registry school. games are the league’s own second-level schedule page (lib/sports/shape.ts TeamsidelineSportSeason.pages.second), read as the varsity build reads its main page (lib/sources/teamsideline-games.ts); league says whether it was read this run.",
+      "MaxPreps and si.com carry none of these schools, so both are unavailable for every team.",
+      "JV games are kept apart from the main level: no table, leader board, rating or playoff picture of the main level reads them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which second-level table each counts for, from its main-level counterpart.",
+      "A league page that cannot be read keeps the previous file’s games (league status carried-forward, with the previous read’s fetchedAt)."
+    ]
+  },
+  "sportSeasonId": null,
+  "teams": [
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Blach",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "blach",
+      "teamId": "val-blach"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Columbia",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "columbia",
+      "teamId": "val-columbia"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Crittenden",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "crittenden",
+      "teamId": "val-crittenden"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Cupertino",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "cupertino-ms",
+      "teamId": "val-cupertino-ms"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Egan",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "egan",
+      "teamId": "val-egan"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Graham",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "graham",
+      "teamId": "val-graham"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Hyde",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "hyde",
+      "teamId": "val-hyde"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Kennedy",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "kennedy",
+      "teamId": "val-kennedy"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Lawson",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "lawson",
+      "teamId": "val-lawson"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Miller",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "miller",
+      "teamId": "val-miller"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "maxprepsScheduleUrl": null,
+      "name": "Sunnyvale",
+      "sblive": {
+        "error": null,
+        "fetchedAt": null,
+        "rowCount": null,
+        "status": "unavailable"
+      },
+      "sbliveUrl": null,
+      "slug": "sunnyvale-ms",
+      "teamId": "val-sunnyvale-ms"
+    }
+  ]
+}

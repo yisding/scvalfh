@@ -40,6 +40,15 @@ state final), then the CCS's Open Division and Divisions 1-3. It has field hocke
 /commits, /recruiting), from research of 2026-11-13 and 2026-11-14. See "Girls volleyball" and "Girls volleyball: recruiting"
 under "Local development" and docs/MULTI-SPORT.md.
 
+**Middle school girls soccer: the Valley Athletic League (VAL, 2026-27).** The same code builds a fifth site, VAL Middle
+School Girls Soccer, when `SCVAL_SPORT=val-soccer` is set: the eleven middle schools of the Cupertino Union, Los Altos,
+Mountain View Whisman and Sunnyvale school districts, winter 2026-27 (Dec 14 - Feb 4), from the data under
+`data/val-soccer/`. It is the first build whose games do not come from MaxPreps, which carries none of these schools:
+its pipeline's primary source is the league's own site, valleyal.org (TeamSideline), whose 7th/8th grade schedule
+page is the site's tables, schedule and playoffs, and whose 6th/7th grade page is its second level, on the pages the
+high school sites use for JV. The site names no player. See "Middle school girls soccer: the VAL" under "Local
+development" and docs/MULTI-SPORT.md.
+
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
 Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture" below.
@@ -1494,6 +1503,48 @@ page adds JV games. Every team's si.com ids are in `lib/registry/soccer/`, harve
 standings pages and team search and checked against each team's own page (2026-11-21). The CCS dates come
 from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
 rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sections.ts`.
+
+### Middle school girls soccer: the VAL
+
+`SCVAL_SPORT=val-soccer` builds the Valley Athletic League's girls soccer site from `data/val-soccer/` (owner request,
+2026-11-21). Its primary source is the league's own TeamSideline site (`lib/sports/val-soccer.ts`: `primary:
+'teamsideline'`), so `fetch-data` reads two pages and nothing else:
+
+```bash
+SCVAL_SPORT=val-soccer pnpm fetch-data      # data/val-soccer/snapshot.json from the 7th/8th grade page (one request)
+SCVAL_SPORT=val-soccer pnpm fetch-jv        # data/val-soccer/jv.json from the 6th/7th grade page (one request)
+SCVAL_SPORT=val-soccer pnpm build           # or pnpm build:vinext / build:cloudflare
+SCVAL_SPORT=val-soccer pnpm assert:prerender   # and assert:budgets, assert:copy
+```
+
+How it differs from the high school builds:
+
+- **The pipeline's primary stage reads the league's page** (`lib/pipeline/primary.ts`, `lib/pipeline/steps/teamsideline.ts`):
+  the page is parsed whole (`lib/sources/teamsideline.ts`), checked to be the configured program and level, and read
+  as games (`lib/sources/teamsideline-games.ts`) whose contest ids are `teamsideline:<schedule id>-<away>-at-<home>`
+  (one meeting a pair, so a moved game keeps its id) and `teamsideline:<schedule id>-g<n>` for a playoff game. A page
+  that cannot be read, or is another program's or level's, freezes the league, which with one league aborts the run:
+  the previous snapshot stays. si.com, cifsshome.org, the VNN calendars and the CCS are never read.
+- **The league** (`lib/league-config/val-soccer/val.ts`): one table of eleven, a single round robin (ten games each,
+  `meetings: 1`), 3-1-0 points and the league's playoff seeding tiebreakers (VAL Soccer Rules 18 and T1-T3), and a
+  six-team league tournament with byes for 1st and 2nd and a fixed bracket (`semifinals: 'fixed'`: 1st hosts the
+  winner of 4th v 5th, 2nd the winner of 3rd v 6th), its final at a field still to be set (`finalSite: null`).
+- **No section and no CCS**: the league's section is `none` (`lib/league-config/val-soccer/sections.ts`),
+  `CCS` is null and the snapshot's `playoffs` is null; /playoffs shows the league's own tournament.
+- **The levels are grades** (`components/words/level-words.ts`): 7th/8th grade is the main level and 6th/7th grade
+  the second, on the /jv pages, which print "6th/7th" wherever a high school build prints "JV".
+- **No players**: the build lists no roster, player or player statistic (`SPORT_LISTS_PLAYERS`), and is never read
+  into `data/players.json`. Its roster and stats files are placeholders with every team `pending`.
+- **Its own About page** (`components/about/LeagueSiteAbout.tsx`): the sources, rules and playoffs as they are for this
+  build, under the anchors the other pages link to.
+- **Ids of our own**: a school's id is `val-<slug>`; Cupertino and Sunnyvale Middle School are `cupertino-ms` and
+  `sunnyvale-ms`. The league publishes no school colors, so every badge has one neutral pair.
+
+The offline corpus is `tests/fixtures/corpus/val-soccer-2026-11-21/`, and the parser's fixtures are three captured
+pages under `tests/fixtures/teamsideline/`. `update-data-val-soccer.yml` refreshes the data twice a day from Nov 21 to
+Feb 11. Not done yet: comparing the league's own table with the computed one (it is read but not compared), the
+hosting project and domain (the owner's to create; `SPORT_SITE_ORIGINS['val-soccer']` is null until then, so no other
+site links to it), and the boys' season (Season #4, Feb 22 - Mar 25, the same build with the boys' schedule ids).
 
 ### Boys basketball
 

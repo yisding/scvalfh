@@ -156,10 +156,10 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
   it('computes the season window and the CCS key dates', () => {
     expect(snapshot.season.year).toBe('26-27');
     expect(snapshot.season.window.firstGame).toMatch(/^2026-08-24/);
-    expect(snapshot.playoffs.keyDates.endOfLeagueSeason).toBe('2026-10-31');
-    expect(snapshot.playoffs.keyDates.quarterfinals).toBe('2026-11-07');
-    expect(snapshot.playoffs.format.autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
-    expect(snapshot.playoffs.bracketPublished).toBe(false);
+    expect(snapshot.playoffs!.keyDates.endOfLeagueSeason).toBe('2026-10-31');
+    expect(snapshot.playoffs!.keyDates.quarterfinals).toBe('2026-11-07');
+    expect(snapshot.playoffs!.format.autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
+    expect(snapshot.playoffs!.bracketPublished).toBe(false);
   });
 });
 

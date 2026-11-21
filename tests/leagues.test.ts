@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 
 import { LEDGER_VIEW } from '../lib/fixtures/ledger';
 import { DATA_QUALITY } from '../lib/league-config/data-quality';
-import { CCS, DEFAULT_REGION, REGIONS, SECTIONS } from '../lib/league-config/sections';
+import { DEFAULT_REGION, REGIONS, SECTIONS, requireCcs } from '../lib/league-config/sections';
 import type { LeagueConfig, SectionConfig } from '../lib/league-config/shape';
 import {
   ALL_DIVISIONS,
@@ -94,7 +94,7 @@ function renderedStrings(l: LeagueConfig): string[] {
       for (const p of ps.pairings) out.push(p.label, ...p.seatLabels);
       break;
     case 'league-tournament':
-      out.push(ps.name, ps.titleNote, ps.finalSite.label, ...Object.values(ps.citations), ...ps.rounds.map((x) => x.pairing));
+      out.push(ps.name, ps.titleNote, ps.finalSite?.label ?? '', ...Object.values(ps.citations).filter((c): c is string => c !== null), ...ps.rounds.map((x) => x.pairing));
       break;
     case 'unbracketed-tournament':
       out.push(ps.name, ps.note, ...Object.values(ps.citations));
@@ -190,7 +190,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       ['ss', 'CIF-SS Blue Book 2026-27, Article 200 (Field Hockey)', 'PDF'],
       ['sds', 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Field Hockey)', 'Google Doc'],
     ]);
-    expect(getSection('ccs').rulesSource.url).toBe(CCS.sources.bylaws);
+    expect(getSection('ccs').rulesSource.url).toBe(requireCcs().sources.bylaws);
     expect(getSection('ns').rulesSource.url).toBe((getLeague('eal').postseason as { sourceUrl: string }).sourceUrl);
     expect(getSection('ss').rulesSource.url).toBe('https://cifss.org/wp-content/uploads/2026/07/Field-Hockey-2026-27-Blue-Book.pdf');
     expect(getSection('sds').rulesSource.url).toBe('https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit');
@@ -275,7 +275,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     });
     // The address is the site school's own record (data/field-hockey/schools.json), as the HomeCampus calendars give it.
-    expect(schoolAddress(mcal.postseason.finalSite.slug)).toEqual({
+    expect(schoolAddress(mcal.postseason.finalSite!.slug)).toEqual({
       street: '395 Doherty Dr', city: 'Larkspur', region: 'CA', postalCode: '94939',
     });
     expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
@@ -441,7 +441,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       sha256: 'b1e5c523b251021522a77ed459d5d7035fe0c9100cb2b727f1ea63c467566b76',
     });
     for (const id of ['scval', 'bval', 'pcal', 'eal', ...SOCAL_IDS]) expect(getLeague(id).officialChanges).toBeNull();
-    expect(CCS.bracketUrl).toBe(CCS_BRACKET_URL);
+    expect(requireCcs().bracketUrl).toBe(CCS_BRACKET_URL);
   });
 });
 
@@ -497,8 +497,8 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
   });
 
   it('keeps the CCS field and key dates', () => {
-    expect(CCS.autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
-    expect(CCS.keyDates).toEqual({
+    expect(requireCcs().autoQualifiers).toEqual({ scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 });
+    expect(requireCcs().keyDates).toEqual({
       entriesDue: '2026-11-02T12:00:00', seedingMeeting: '2026-11-02T13:00:00',
       quarterfinals: '2026-11-07', semifinals: '2026-11-11', finals: '2026-11-14',
       evaluationMeeting: '2026-11-19T16:00:00', endOfLeagueSeason: '2026-10-31',
@@ -681,13 +681,13 @@ describe('leagues: assertLeagues invariants (SPEC §2.4)', () => {
   });
 
   it('3. the CCS field: keys, per-league berths, 7 + 4 + 2 + 3 === 16', () => {
-    expect(Object.keys(CCS.autoQualifiers).sort()).toEqual([...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort());
+    expect(Object.keys(requireCcs().autoQualifiers).sort()).toEqual([...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort());
     for (const l of LEAGUES) {
       if (l.postseason.kind === 'ccs-ladder') {
-        expect(l.postseason.autoBerths).toBe(CCS.autoQualifiers[l.id]);
+        expect(l.postseason.autoBerths).toBe(requireCcs().autoQualifiers[l.id]);
       }
     }
-    expect(7 + 4 + 2 + 3).toBe(CCS.autoQualifiers.total);
+    expect(7 + 4 + 2 + 3).toBe(requireCcs().autoQualifiers.total);
     expectViolation(() => {
       const ps = getLeague('pcal').postseason as { autoBerths: number };
       ps.autoBerths = 3;

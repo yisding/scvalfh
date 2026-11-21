@@ -47,20 +47,20 @@ function sansHistory(g: Game): Game {
 }
 
 /** The maxpreps stage agrees with legacy step 06, game for game and in order. Returns the stage. */
-function expectMaxprepsAgrees(ctx: PipelineContext, label: string): Extract<StageTrace, { stage: 'maxpreps' }> {
-  const s = traceOf(ctx, 'maxpreps');
+function expectMaxprepsAgrees(ctx: PipelineContext, label: string): Extract<StageTrace, { stage: 'primary' }> {
+  const s = traceOf(ctx, 'primary');
   const legacy = legacyMaxpreps(s.input, ctx.previous, ctx.fetchedAt);
   expect(s.games.map((g) => g.contestId), `${label}: order`).toEqual(legacy.games.map((g) => g.contestId));
   expect(s.view, `${label}: one fixture per game`).toHaveLength(new Set(s.view).size);
   expect([...s.carried].sort(), `${label}: carried`).toEqual([...legacy.carried].sort());
   legacy.games.forEach((g, i) => expect(sansHistory(s.games[i]), `${label}: ${g.contestId}`).toEqual(sansHistory(g)));
-  expectViewIs(ctx, 'maxpreps', s.games, label);
+  expectViewIs(ctx, 'primary', s.games, label);
   return s;
 }
 
 /** The claims' stage agrees with the legacy rule over the same input. Returns the stage's record. */
 export function expectTraceAgrees<S extends Stage>(ctx: PipelineContext, stage: S, label: string): Extract<StageTrace, { stage: S }> {
-  if (stage === 'maxpreps') return expectMaxprepsAgrees(ctx, label) as Extract<StageTrace, { stage: S }>;
+  if (stage === 'primary') return expectMaxprepsAgrees(ctx, label) as Extract<StageTrace, { stage: S }>;
   if (stage === 'official') {
     const records = (ctx.trace ?? []).filter((r): r is Extract<StageTrace, { stage: 'official' }> => r.stage === 'official');
     for (const r of records) {

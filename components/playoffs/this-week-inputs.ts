@@ -21,7 +21,7 @@ import {
   getLeaguePairings,
   getLeagueSummaries,
   getLeagueTournament,
-  getPlayoffs,
+  getPlayoffsOrNull,
   getStandingFor,
   getTeamById,
   getTournamentLeagueIds,
@@ -93,14 +93,15 @@ const CCS_ROUND_WORD = { quarterfinals: 'quarterfinal', semifinals: 'semifinal',
  */
 export function postseasonLabels(
   games: readonly Game[],
-  keyDates: CcsPlayoffs['keyDates'],
+  /** null in a build with no CCS block (the VAL), which has no CCS game to label. */
+  keyDates: CcsPlayoffs['keyDates'] | null,
   blocks: readonly CcsPairingBlock[],
   autoBerths: ReadonlyMap<LeagueId, number>,
 ): Map<ContestId, string> {
   const labels = new Map<ContestId, string>();
   for (const g of games) {
     const tag = g.postseason;
-    if (tag?.kind === 'ccs') {
+    if (tag?.kind === 'ccs' && keyDates !== null) {
       const round = roundKeyFor(g.dateKey, keyDates);
       labels.set(g.contestId, round === 'other' ? 'CCS' : `CCS ${CCS_ROUND_WORD[round]}`);
     } else if (tag?.kind === 'league-postseason' && tag.leagueId) {
@@ -203,7 +204,7 @@ export function norcalEvents(
         dateKey: tg.date,
         time: leagueClockPT(tg.time),
         title: `${league.shortName} ${ROUND_WORD[tg.round]}`,
-        detail: tournamentGameLine(tg, ps.finalSite.slug),
+        detail: tournamentGameLine(tg, ps.finalSite?.slug ?? null),
         href: postseasonHref(league),
         leagueId: league.id,
       });
@@ -266,23 +267,24 @@ export function thisWeekByRegion(input: {
   bracketLinks?: boolean;
 }): Record<RegionId, ThisWeekView> {
   const { games, today, cap, bracketLinks = true } = input;
-  const playoffs = getPlayoffs();
-  const field = getCcsField();
-  const ccsIds = new Set<LeagueId>(field.byLeague.map((l) => l.leagueId));
+  // A build with no CCS block (the VAL) has no CCS label, pairing, key date or bracket: its league tournament alone.
+  const playoffs = getPlayoffsOrNull();
+  const field = playoffs === null ? null : getCcsField();
+  const ccsIds = new Set<LeagueId>((field?.byLeague ?? []).map((l) => l.leagueId));
   const blocks: CcsPairingBlock[] = getLeagueSummaries()
     .filter((s) => ccsIds.has(s.id))
     .map((summary) => ({ summary, pairings: pairingViewsFor(summary.id) }));
   const labels = postseasonLabels(
     games,
-    playoffs.keyDates,
+    playoffs?.keyDates ?? null,
     blocks,
-    new Map(field.byLeague.map((l) => [l.leagueId, l.auto])),
+    new Map((field?.byLeague ?? []).map((l) => [l.leagueId, l.auto])),
   );
   const sds = sectionPlayoffs();
   // Each game row's badge links its place on /playoffs (bracket-link.ts).
   const bracketOf = (game: Game) => (bracketLinks ? (getBracketLink(game)?.href.replace(/^\/playoffs#/, '') ?? null) : null);
   // The page's own test for "seeded": a CCS bracket path to draw, from the bracket games or the seed file.
-  const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
+  const seeded = playoffs !== null && buildBrackets(playoffs, getCcsSeeds()).length > 0;
   // The games a pairing or a bracket slot has joined: an event gives way only to a game of its league no slot claims.
   const claimed = new Set<ContestId>([
     ...blocks.flatMap((b) => b.pairings.flatMap((p) => (p.game ? [p.game.contestId] : []))),
@@ -292,7 +294,7 @@ export function thisWeekByRegion(input: {
     }),
   ]);
   return {
-    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today, seeded), claimed, cap, bracketOf }),
+    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: playoffs === null ? [] : norcalEvents(blocks, playoffs, today, seeded), claimed, cap, bracketOf }),
     socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds, today) : [], claimed, cap, bracketOf }),
   };
 }

@@ -95,6 +95,7 @@ import { gameSentence } from '../components/history/bracket-view';
 import { getHistoryBrackets, getHistoryLeagues, getHistoryTournaments, type HistoryBracketDivision } from '../lib/history/history';
 import { getPlayerStats } from '../lib/players/player-stats';
 import {
+  ALL_DIVISIONS,
   LEAGUES,
   NO_POSTSEASON_LEAGUE_IDS,
   SECTION_PLAYOFFS_LEAGUE_IDS,
@@ -129,7 +130,7 @@ import {
   withoutLink,
 } from './copy-rules';
 import { ARCHIVE_LINES, PUBLIC_TERMS } from './public-terms';
-import { HAS_RECRUITING, SPORT } from '../lib/sports/current';
+import { HAS_RECRUITING, SPORT, LISTS_PLAYERS } from '../lib/sports/current';
 
 const APP = '.next/server/app';
 
@@ -438,9 +439,13 @@ if (!existsSync(historyPath)) {
     // board ids, SoCal repeats them with the `-socal` suffix (the view model says which: playersId,
     // schoolsId and each board's id).
     for (const region of buildLeadersView().regions) {
-      for (const id of [region.playersId, region.schoolsId, ...[...region.players, ...region.schools].map((b) => b.id)]) {
+      // A build that lists no players (the VAL) has no Players section at all, and nothing to say about one below.
+      const playersIds = LISTS_PLAYERS ? [region.playersId] : [];
+      if (!LISTS_PLAYERS && main.includes(`id="${region.playersId}"`)) fail(file, `a Players section in a build that lists no players`);
+      for (const id of [...playersIds, region.schoolsId, ...[...region.players, ...region.schools].map((b) => b.id)]) {
         if (!main.includes(`id="${id}"`)) fail(file, `no id="${id}" (anchor /leaders#${id})`);
       }
+      if (!LISTS_PLAYERS) continue;
       // Teams (`schoolsId`) first, then Players.
       const players = sectionById(main, region.playersId);
       const schools = sectionById(main, region.schoolsId);
@@ -462,7 +467,8 @@ if (!existsSync(historyPath)) {
       // `&amp;` last, so an escaped `&amp;#39;` decodes once (to `&#39;`), never twice.
       const ratingsText = ratings.replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, '&');
       const statSlugs = new Set(getPlayerStats().teams.filter((t) => t.players.length > 0).map((t) => t.slug));
-      for (const region of buildLeadersView().regions) {
+      // Only a build that lists players has player boards to be missing from.
+      for (const region of LISTS_PLAYERS ? buildLeadersView().regions : []) {
         for (const team of snapshot.teams) {
           if (regionOf(team.league) !== region.region || statSlugs.has(team.slug)) continue;
           if (!ratingsText.includes(team.name)) {
@@ -476,7 +482,8 @@ if (!existsSync(historyPath)) {
 
 // ---------------------------------------------------------------- old anchors
 const standings = existsSync(path.join(APP, 'standings.html')) ? readFileSync(path.join(APP, 'standings.html'), 'utf8') : '';
-for (const id of ['de-anza', 'el-camino']) {
+// SCVAL's two divisions, in every build that has them (the VAL's middle school build has neither).
+for (const id of ['de-anza', 'el-camino'].filter((d) => ALL_DIVISIONS.some((x) => x.id === d))) {
   if (!standings.includes(`id="${id}"`)) fail('standings.html', `no id="${id}" (old /standings#${id} links must resolve)`);
 }
 

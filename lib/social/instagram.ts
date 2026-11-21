@@ -33,6 +33,7 @@ import bundledFieldHockey from '../../data/field-hockey/instagram.json';
 import bundledBasketball from '../../data/basketball/instagram.json';
 import bundledVolleyball from '../../data/volleyball/instagram.json';
 import bundledSoccer from '../../data/soccer/instagram.json';
+import bundledValSoccer from '../../data/val-soccer/instagram.json';
 import { validateData } from '../data-file';
 import { getClub } from '../players/clubs';
 import { sourceUrl } from '../players/clubs-schema';
@@ -41,7 +42,7 @@ import { DATA_DIR } from '../sports/current';
 import { TEAMS } from '../teams';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const text = z.string().trim().min(1);
 

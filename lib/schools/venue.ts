@@ -40,7 +40,8 @@ function fixedFinalSite(game: Game): Team | null {
   if (league.postseason.kind !== 'league-tournament') return null;
   const final = getLeagueTournament(league.id).games.find((tg) => tg.round === 'final');
   if (final?.game?.contestId !== game.contestId) return null;
-  return getTeamBySlug(league.postseason.finalSite.slug) ?? null;
+  const site = league.postseason.finalSite;
+  return site === null ? null : (getTeamBySlug(site.slug) ?? null);
 }
 
 export function gameAddress(game: Game): GameAddress | null {

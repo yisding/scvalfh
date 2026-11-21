@@ -41,7 +41,7 @@ import {
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
-import { CCS } from '../../lib/league-config/sections';
+import { CCS, requireCcs } from '../../lib/league-config/sections';
 import { SPORT } from '../../lib/sports/current';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import { fixedSiteHost, tournamentGameWinner } from '../../lib/postseason/postseason';
@@ -121,7 +121,7 @@ type CcsRound = 'quarterfinals' | 'semifinals' | 'finals';
 const CCS_ROUNDS: readonly CcsRound[] = ['quarterfinals', 'semifinals', 'finals'];
 
 /** Where a CCS round is played, from config: the higher seed's field through `highSeedHostsThrough`, neutral after. */
-export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): 'home' | 'neutral' | null {
+export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = requireCcs().highSeedHostsThrough): 'home' | 'neutral' | null {
   // null: the config does not say who hosts (soccer: the CCS bylaws are unread).
   if (hostsThrough === null) return null;
   return CCS_ROUNDS.indexOf(round) <= CCS_ROUNDS.indexOf(hostsThrough) ? 'home' : 'neutral';
@@ -133,7 +133,7 @@ export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedH
  */
 /** A round's detail, led by the later divisions' day where some play it later (soccer: CcsConfig.laterDivisions). */
 function laterDays(last: string | undefined, detail: string): string {
-  return last === undefined || CCS.laterDivisions === null ? detail : `${CCS.laterDivisions} play it ${shortDate(last)}. ${detail}`;
+  return last === undefined || requireCcs().laterDivisions === null ? detail : `${requireCcs().laterDivisions} play it ${shortDate(last)}. ${detail}`;
 }
 
 function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough']): string {
@@ -150,7 +150,7 @@ function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHosts
  * and the final are at neutral sites set by CCS (the CIF-CCS field hockey calendar).' In 2025 the semifinals were in
  * fact at the higher seed's field, so the sentence says what the calendar says and no more.
  */
-export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): string {
+export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough'] = requireCcs().highSeedHostsThrough): string {
   const home = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'home');
   const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
   const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
@@ -161,7 +161,8 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
 }
 
 /** The seeding meeting's detail before the bracket exists, and once its games (or seeds) are drawn above. */
-const SEEDED_DIVISIONS = CCS.keyDates.firstRound ? 'every CCS division' : 'both CCS divisions';
+// Read at import, so a build with no CCS block (the VAL) must not reach requireCcs here.
+const SEEDED_DIVISIONS = CCS?.keyDates.firstRound ? 'every CCS division' : 'both CCS divisions';
 export const SEEDING_AHEAD_DETAIL = `The committee seeds ${SEEDED_DIVISIONS}; the games appear here as MaxPreps lists them, after the next update.`;
 export const SEEDING_DONE_DETAIL = `The committee seeded ${SEEDED_DIVISIONS}; the bracket above is drawn from the games MaxPreps lists.`;
 
@@ -175,7 +176,7 @@ export const SEEDING_DONE_DETAIL = `The committee seeded ${SEEDED_DIVISIONS}; th
 export function keyDateRows(
   k: CcsKeyDates,
   leagueDates: readonly LeagueKeyDate[] = [],
-  hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough,
+  hostsThrough: CcsConfig['highSeedHostsThrough'] = requireCcs().highSeedHostsThrough,
   seeded = false,
 ): KeyDateRow[] {
   const ccs = (
@@ -194,17 +195,18 @@ export function keyDateRows(
     detail,
     isRound: opts.isRound ?? false,
   });
+  const block = requireCcs();
   const rows: KeyDateRow[] = [
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
     ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', seeded ? SEEDING_DONE_DETAIL : SEEDING_AHEAD_DETAIL, { time: true }),
     // The rounds before the quarterfinals, where the bracket has them (basketball; the config's, so a snapshot
     // written before the key was added still lists them). They are played where the quarterfinals are.
-    ...(CCS.keyDates.firstRound
-      ? [ccs('first-round', CCS.keyDates.firstRound, 'First round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
+    ...(block.keyDates.firstRound
+      ? [ccs('first-round', block.keyDates.firstRound, 'First round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
       : []),
-    ...(CCS.keyDates.secondRound
-      ? [ccs('second-round', CCS.keyDates.secondRound, 'Second round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
+    ...(block.keyDates.secondRound
+      ? [ccs('second-round', block.keyDates.secondRound, 'Second round', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
       : []),
     ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
     ccs('semifinals', k.semifinals, 'Semifinals', laterDays(k.semifinalsLast, roundSiteDetail('semifinals', hostsThrough)), { isRound: true }),

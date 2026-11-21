@@ -5,6 +5,7 @@ import type { JvListSummary, JvRowView } from './jv-view';
 import { GameStatus, SideCrest, lostAttr, rowState, wonAttr } from '../game-row/summary';
 import { describeGame, type GameDisplay, type SideView } from '../ui/describe-game';
 import { WIDE_SCORES } from '../words/score-words';
+import { SECOND_LEVEL } from '../words/level-words';
 
 /**
  * A day's JV games: the site's one game row (`.sx-game`: the status slot, away over home with their
@@ -79,7 +80,7 @@ export function JvGameList({ rows, showDate = false }: { rows: readonly JvRowVie
                   href={href}
                   prefetch={false}
                   className="sx-game-link"
-                  aria-label={`JV: ${display.sentence}${fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}`}
+                  aria-label={`${SECOND_LEVEL.short}: ${display.sentence}${fromSchedule ? ` ${JV_SCHEDULE_TAG.label}` : ''}`}
                 />
                 <GameStatus game={game} display={display} showDate={showDate} />
                 <span className="contents" aria-hidden="true">

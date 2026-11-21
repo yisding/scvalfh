@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SECOND_LEVEL } from '../../../components/words/level-words';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -205,7 +206,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           ) : null}
           <li>
             <Link href={`/jv#${summary.id}`} prefetch={false} className="sx-action">
-              {summary.shortName} JV standings
+              {`${summary.shortName} ${SECOND_LEVEL.short} standings`}
             </Link>
           </li>
           {/* Only a league with published 2025-26 standings (`hasHistory` decides) has a finished

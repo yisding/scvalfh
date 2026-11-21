@@ -31,6 +31,7 @@ import { JV_SLUG_BY_SBLIVE_ID } from './jv-teams';
 import { dateKey, httpUrl, slugId } from '../schema-primitives';
 import { GameSchema } from '../snapshot/snapshot-schema';
 import { contentKey } from '../stable-json';
+import { HAS_MAXPREPS } from '../sports/current';
 import { TEAMS, getTeamBySlug } from '../teams';
 
 const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
@@ -80,7 +81,8 @@ export const JvTeamSchema = z
     sblive: sourceState,
   })
   .refine((t) => getTeamBySlug(t.slug)?.id === t.teamId, "teamId is not the registry team's")
-  .refine((t) => t.maxpreps.status !== 'unavailable', 'MaxPreps is never unavailable: every school has a JV feed')
+  // Every school MaxPreps carries has a JV feed; in a build MaxPreps does not carry (the VAL) it is unavailable for all.
+  .refine((t) => (t.maxpreps.status === 'unavailable') === !HAS_MAXPREPS, 'MaxPreps is unavailable exactly in a build MaxPreps does not carry')
   .refine((t) => (t.sblive.status === 'unavailable') === (t.sbliveUrl === null), 'si.com is unavailable exactly when there is no JV page');
 
 const sbliveSide = z.object({
@@ -135,8 +137,15 @@ const JvShape = z.object({
   season: z.string().min(1),
   /** ISO UTC, when the run started. "Today" for the merge is this stamp's Pacific date. */
   fetchedAt: z.string().min(1),
-  /** The MaxPreps JV season id the games were read with. */
-  sportSeasonId: z.string().min(1),
+  /** The MaxPreps JV season id the games were read with; null in a build MaxPreps does not carry (the VAL). */
+  sportSeasonId: z.string().min(1).nullable(),
+  /**
+   * The league's own schedule page for the second level, where it is the source of the games (a build whose primary
+   * source is TeamSideline: the VAL's 6th/7th grade page, scripts/fetch-jv.ts); absent everywhere else.
+   */
+  league: z
+    .object({ url: httpUrl, status: JvSourceStatus, rowCount: z.number().int().min(0).nullable(), fetchedAt: z.string().nullable(), error: z.string().nullable() })
+    .optional(),
   source: z.object({ builtBy: z.string().min(1), notes: z.array(z.string()) }),
   teams: z.array(JvTeamSchema),
   games: z.array(JvGameSchema),
@@ -150,6 +159,8 @@ export const JvFileSchema = JvShape.refine(
   `expected one entry per registry team (${JV_TEAM_COUNT}), in registry order`,
 )
   .refine((f) => new Set(f.games.map((g) => g.contestId)).size === f.games.length, 'game contest ids are not unique')
+  .refine((f) => (f.league !== undefined) === !HAS_MAXPREPS, 'the league page block is there exactly in a build MaxPreps does not carry')
+  .refine((f) => (f.sportSeasonId === null) === !HAS_MAXPREPS, 'the MaxPreps JV season id is null exactly in a build MaxPreps does not carry')
   .refine((f) => new Set(f.sblive.map((r) => r.sbliveGameId)).size === f.sblive.length, 'si.com game ids are not unique')
   .refine((f) => {
     const c = countJv(f.teams, f.games, f.sblive);

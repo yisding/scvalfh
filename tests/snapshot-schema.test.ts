@@ -415,10 +415,10 @@ describe('snapshot schema: checkAgainstConfig', () => {
 
   it('7. the CCS field adds up and matches config', () => {
     const s = baseSnapshot();
-    s.playoffs.format.autoQualifiers = { ...s.playoffs.format.autoQualifiers, atLarge: 4 };
+    s.playoffs!.format.autoQualifiers = { ...s.playoffs!.format.autoQualifiers, atLarge: 4 };
     expect(issuesOf(s)).toMatch(/autoQualifiers sum 17 != total 16/);
     const t = baseSnapshot();
-    t.playoffs.format.autoQualifiers = { ...t.playoffs.format.autoQualifiers, mcal: 6 };
+    t.playoffs!.format.autoQualifiers = { ...t.playoffs!.format.autoQualifiers, mcal: 6 };
     expect(issuesOf(t)).toMatch(/autoQualifiers keys/);
   });
 

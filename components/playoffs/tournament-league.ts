@@ -103,10 +103,11 @@ export function tournamentView(summary: LeagueSummary, ps: TournamentConfig, con
     projection,
     rows,
     teamOf: (slug): Team | undefined => getTeamBySlug(slug),
-    lastPlace: ps.lastSpot.place,
+    lastPlace: ps.lastSpot?.place ?? ps.qualifiers,
     ladderLine: division.ladderLine,
-    // The site school's own address (data/field-hockey/schools.json); lib/teams.ts checks the slug is a member.
-    finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
+    // The site school's own address (data/field-hockey/schools.json); lib/teams.ts checks the slug is a member. None
+    // where the league has published no site (the VAL).
+    ...(ps.finalSite ? { finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) } } : {}),
   });
 }
 

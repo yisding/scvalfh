@@ -11,7 +11,15 @@
  * rather than publishing a half-migrated season if they ever change (SPEC §1.1h, §5.2).
  */
 
-import { SPORT, SPORT_SEASON } from './sports/current';
+import { MAXPREPS_SPORT_SEASON, SPORT, SPORT_SEASON } from './sports/current';
+
+/**
+ * The season's MaxPreps ids, or null in a build MaxPreps does not carry (the VAL's middle school soccer, read from
+ * the league's own site: lib/sports/val-soccer.ts). The MaxPreps constants below are '' there: only MaxPreps'
+ * readers use them, and no MaxPreps step or fetcher runs in such a build (lib/pipeline/primary.ts, and each
+ * MaxPreps-only script's requireMaxpreps).
+ */
+const MAXPREPS_SEASON = MAXPREPS_SPORT_SEASON;
 
 export const MAXPREPS_API = 'https://production.api.maxpreps.com';
 export const MAXPREPS_WEB = 'https://www.maxpreps.com';
@@ -21,9 +29,9 @@ export const MAXPREPS_SPORT_WEB = `${MAXPREPS_WEB}/ca/${SPORT.maxpreps.slug}`;
 export const SBLIVE_WEB = `https://www.si.com/high-school/stats/california/${SPORT.sblive.slug}`;
 
 /** The bootstrap page whose __NEXT_DATA__ carries ssid + allSeasonId (SPEC §1.1h, verdict 5). */
-export const BOOTSTRAP_URL = `${MAXPREPS_WEB}${SPORT_SEASON.hubPath}`;
+export const BOOTSTRAP_URL = MAXPREPS_SEASON ? `${MAXPREPS_WEB}${MAXPREPS_SEASON.hubPath}` : '';
 /** The ssid the bootstrap page serves for this season (SportSeason.hubSportSeasonId, else the season's own). */
-export const HUB_SPORT_SEASON_ID: string = SPORT_SEASON.hubSportSeasonId ?? SPORT_SEASON.sportSeasonId;
+export const HUB_SPORT_SEASON_ID: string = MAXPREPS_SEASON ? (MAXPREPS_SEASON.hubSportSeasonId ?? MAXPREPS_SEASON.sportSeasonId) : '';
 
 /** [V] leagues/{id}/v1 .year; team-context .year */
 export const SEASON_YEAR: string = SPORT_SEASON.year;
@@ -40,10 +48,10 @@ export const SEASON_YEARS_DISPLAY =
 /** 'Fall 2026', 'Winter 2026-27': the season as the site's own copy names it. Derived from SEASON_YEAR, not read. */
 export const SEASON_DISPLAY = `${SPORT_SEASON.term} ${SEASON_YEARS_DISPLAY}`;
 /** [V] verdicts 25/28/33/36/37/52 */
-export const SPORT_SEASON_ID: string = SPORT_SEASON.sportSeasonId;
+export const SPORT_SEASON_ID: string = MAXPREPS_SEASON?.sportSeasonId ?? '';
 /** [V] verdicts 5, 33 */
-export const ALL_SEASON_ID: string = SPORT_SEASON.allSeasonId;
-/** [V] verdict 5 */
+export const ALL_SEASON_ID: string = MAXPREPS_SEASON?.allSeasonId ?? '';
+/** [V] verdict 5. A season read elsewhere names its program the same way: 'girls,soccer'. */
 export const GENDER_SPORT = SPORT_SEASON.genderSport;
 /** [V] only Varsity is verified end to end */
 export const TEAM_LEVEL = SPORT_SEASON.level;
@@ -52,11 +60,11 @@ export const TEAM_LEVEL = SPORT_SEASON.level;
  * (teamLevel 'JV', read 2026-10-05). Each team's JV games come from the same schedule-calculated
  * call with this id; the team id stays the school's own (the registry id). scripts/fetch-jv.ts only.
  */
-export const JV_SPORT_SEASON_ID: string = SPORT_SEASON.jvSportSeasonId;
+export const JV_SPORT_SEASON_ID: string = MAXPREPS_SEASON?.jvSportSeasonId ?? '';
 
 /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4); null before MaxPreps makes one. */
 export const CCS_BRACKET_URL: string | null =
-  SPORT_SEASON.ccsBracketPath === null ? null : `${MAXPREPS_WEB}${SPORT_SEASON.ccsBracketPath}`;
+  MAXPREPS_SEASON?.ccsBracketPath == null ? null : `${MAXPREPS_WEB}${MAXPREPS_SEASON.ccsBracketPath}`;
 
 /** Section-wide deep links rendered by the Attribution component. League links live in lib/league-config/. */
 export const SOURCE_LINKS = {

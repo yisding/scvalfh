@@ -177,7 +177,8 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     .map((t) => leagueById(t.league)?.sectionId ?? null);
   const ccsPair = sections.length > 0 && sections.every((s) => s === 'ccs');
   // From the bracket's first day: the quarterfinals, or the first round where it opens earlier (basketball).
-  const inCcsWindow = game.dateKey >= ccsFirstDay(CCS.keyDates);
+  // A build with no CCS block (the VAL: no league in a CIF section) has no CCS window and no CCS bracket.
+  const inCcsWindow = CCS !== null && game.dateKey >= ccsFirstDay(CCS.keyDates);
 
   // 1c. MaxPreps' own bracket fields name the CCS championship (the GUID is the exact test; the name is the
   //     fallback for a re-created tournament). Ahead of the flag: the feed says which bracket, not just "playoff".
@@ -185,6 +186,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   if (
     bracket &&
     ccsPair &&
+    CCS !== null &&
     ((CCS.tournament !== null && bracket.tournamentId === CCS.tournament.id) || /central coast section/i.test(bracket.tournament ?? ''))
   ) {
     return { kind: 'ccs', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };

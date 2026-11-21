@@ -36,7 +36,7 @@ import type { SportId } from '../sports/current';
 
 export const CLAIMS_SCHEMA_VERSION = 1 as const;
 
-export type ClaimSource = 'maxpreps' | 'official' | 'sblive' | 'cifss' | 'sdsSheet' | 'vnn' | 'box' | 'editor';
+export type ClaimSource = 'maxpreps' | 'teamsideline' | 'official' | 'sblive' | 'cifss' | 'sdsSheet' | 'vnn' | 'box' | 'editor';
 
 /** Our own id: `${dateKey}-${awayKey}-at-${homeKey}` (+ `~2`, `~3` … on collision). Never published; never re-minted. */
 export type FixtureId = string;
@@ -86,6 +86,22 @@ export interface MaxprepsClaim extends ClaimBase<ContestId> {
   game: MaxprepsGame;
   /** Set only on a claim seeded from a snapshot. */
   reconstructed?: Reconstructed[];
+}
+
+// ---------------------------------------------------------------- teamsideline (a league's own site, the primary source of a build MaxPreps does not carry)
+
+/**
+ * A game as lib/pipeline/steps/teamsideline.ts builds it from one row of a league's TeamSideline schedule page: the
+ * same fields a MaxPreps claim's game holds (`MaxprepsGame`'s omissions and null placeholders), with the page as its
+ * provenance. `provenance.fetchedAt` equals the claim's `seenAt`.
+ */
+export type TeamsidelineGame = Omit<
+  Game,
+  'slug' | 'aliases' | 'official' | 'result' | 'timeConfirmed' | 'countsFor' | 'postseason'
+> & { countsFor: null; postseason: null };
+
+export interface TeamsidelineClaim extends ClaimBase<ContestId /* `teamsideline:<schedule id>-<away>-at-<home>` or `…-g<n>` */> {
+  game: TeamsidelineGame;
 }
 
 // ---------------------------------------------------------------- editor (lib/fixtures, never carried: rebuilt every run)
@@ -197,6 +213,7 @@ export interface BoxClaim extends ClaimBase<ContestId> {
 
 export interface FixtureClaims {
   maxpreps?: MaxprepsClaim;
+  teamsideline?: TeamsidelineClaim;
   editor?: EditorClaim;
   official?: OfficialClaim;
   sblive?: SbliveClaim[];   // sorted by ref
@@ -209,6 +226,7 @@ export interface FixtureClaims {
 /** The claim type each source keeps. */
 export interface ClaimBySource {
   maxpreps: MaxprepsClaim;
+  teamsideline: TeamsidelineClaim;
   editor: EditorClaim;
   official: OfficialClaim;
   sblive: SbliveClaim;
@@ -259,10 +277,12 @@ export interface ClaimsFile {
 
 /**
  * The stages of a run, in order: the view (lib/claims/view.ts) is resolved through each in turn, and a fixture's game
- * is folded through them (lib/claims/resolve.ts). `guards` is step 11's frozen-league substitution.
+ * is folded through them (lib/claims/resolve.ts). `primary` is where the build's primary source (lib/sports/shape.ts
+ * PrimarySourceId: MaxPreps, or a league's TeamSideline site) starts the view; `guards` is step 11's frozen-league
+ * substitution.
  */
-export type Stage = 'maxpreps' | 'official' | 'sblive' | 'vnn' | 'sdsSheet' | 'classify' | 'guards' | 'results';
-export const STAGES: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'vnn', 'sdsSheet', 'classify', 'guards', 'results'];
+export type Stage = 'primary' | 'official' | 'sblive' | 'vnn' | 'sdsSheet' | 'classify' | 'guards' | 'results';
+export const STAGES: readonly Stage[] = ['primary', 'official', 'sblive', 'vnn', 'sdsSheet', 'classify', 'guards', 'results'];
 
 /** The run-level facts resolve reads: the divisions the official step degraded, which classification falls back on. */
 export interface RunFacts {
@@ -318,7 +338,7 @@ export interface FeedRead {
  */
 export type StageTrace =
   | {
-      stage: 'maxpreps';
+      stage: 'primary';
       /** Step 06's input: the rows read, and each feed's read. */
       input: { rows: readonly ScheduleRow[]; feeds: readonly FeedRead[] };
       /** The view's fixture ids, in order. */

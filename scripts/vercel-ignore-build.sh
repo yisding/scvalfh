@@ -27,7 +27,7 @@ build() { echo "vercel-ignore-build ($sport): build — $1"; exit 1; }
 skip() { echo "vercel-ignore-build ($sport): skip — $1"; exit 0; }
 
 case "$sport" in
-  field-hockey | soccer | basketball | volleyball) ;;
+  field-hockey | soccer | basketball | volleyball | val-soccer) ;;
   *) build "unknown sport '$sport'" ;;
 esac
 

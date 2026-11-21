@@ -23,6 +23,7 @@ import bundledFileFieldHockey from '../../data/field-hockey/ccs-bracket-2026.jso
 import bundledFileBasketball from '../../data/basketball/ccs-bracket-2026.json';
 import bundledFileVolleyball from '../../data/volleyball/ccs-bracket-2026.json';
 import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
+import bundledFileValSoccer from '../../data/val-soccer/ccs-bracket-2026.json';
 import { CcsSeedFileSchema, type CcsSeedFile, type CcsSeeds } from './ccs-bracket-schema';
 import { validateData } from '../data-file';
 import { byDateThenId } from '../format';
@@ -31,7 +32,7 @@ import type { SectionBracket } from '../history/history-brackets-schema';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledFileVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
+const bundledFile = process.env.SCVAL_SPORT === 'basketball' ? bundledFileBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledFileVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledFileValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledFileSoccer : bundledFileFieldHockey;
 
 /**
  * The CCS bracket games among `games`: tagged 'ccs' and (dated on or after the quarterfinals, or marked

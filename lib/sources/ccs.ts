@@ -15,7 +15,7 @@
  * pages (rendered client-side; no bracket content in the server HTML at all).
  */
 
-import { CCS } from '../league-config/sections';
+import { CCS, requireCcs } from '../league-config/sections';
 import { SOURCE_LINKS } from '../season';
 import { SPORT } from '../sports/current';
 import type { CcsCalendarEvent, CcsEventKind } from '../types';
@@ -29,7 +29,7 @@ export const CCS_ICAL_URL = SOURCE_LINKS.ccsCalendar;
  * `CCS.pollFrom` (lib/league-config/sections.ts): it opens before the last league games (BVAL Oct 30), the BVAL
  * play-in (Oct 31) and CCS entries (Nov 2).
  */
-export const CCS_POLL_FROM: string = CCS.pollFrom;
+export const CCS_POLL_FROM: string = CCS?.pollFrom ?? '';
 
 export function ccsPollingOpen(todayKey: string, from = CCS_POLL_FROM): boolean {
   return todayKey >= from;
@@ -141,7 +141,7 @@ export function calendarSiteOf(summary: string): 'home' | 'neutral' | null {
 }
 
 /** Where config says a round is played: the higher seed's field through `highSeedHostsThrough`, neutral after. */
-export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough = CCS.highSeedHostsThrough): 'home' | 'neutral' | null {
+export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough = requireCcs().highSeedHostsThrough): 'home' | 'neutral' | null {
   // null: the config does not say who hosts (soccer: the CCS bylaws are unread).
   if (hostsThrough === null) return null;
   return ROUND_KINDS.indexOf(round) <= ROUND_KINDS.indexOf(hostsThrough) ? 'home' : 'neutral';
@@ -154,8 +154,8 @@ export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough =
  */
 export function confirmKeyDates(
   events: readonly CcsCalendarEvent[],
-  expected = CCS.keyDates,
-  hostsThrough = CCS.highSeedHostsThrough,
+  expected = requireCcs().keyDates,
+  hostsThrough = requireCcs().highSeedHostsThrough,
 ): KeyDateCheck {
   const byKind = new Map<CcsEventKind, string>();
   const summaryByKind = new Map<CcsEventKind, string>();
@@ -229,7 +229,7 @@ export interface TournamentPageRead {
  * pipeline (lib/pipeline/steps/secondary.ts) treats the bracket part as not read and carries the previous
  * snapshot's state.
  */
-export function readTournamentPage(html: string, tournament = CCS.tournament): TournamentPageRead {
+export function readTournamentPage(html: string, tournament = requireCcs().tournament): TournamentPageRead {
   if (html.length < 2000) {
     return { recognised: false, divisions: [], reason: `page body is only ${html.length} bytes — not recognised` };
   }

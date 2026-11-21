@@ -35,6 +35,7 @@ import bundledFieldHockey from '../../data/field-hockey/clubs.json';
 import bundledBasketball from '../../data/basketball/clubs.json';
 import bundledVolleyball from '../../data/volleyball/clubs.json';
 import bundledSoccer from '../../data/soccer/clubs.json';
+import bundledValSoccer from '../../data/val-soccer/clubs.json';
 import { validateData } from '../data-file';
 import {
   CLUB_REGIONS,
@@ -50,7 +51,7 @@ import type { TeamSlug } from '../types';
 import { HAS_RECRUITING, IS_VOLLEYBALL } from '../sports/current';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 export type {
   AffiliationConfidence,

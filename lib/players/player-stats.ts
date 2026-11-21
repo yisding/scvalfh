@@ -16,6 +16,7 @@ import bundledFieldHockey from '../../data/field-hockey/player-stats.json';
 import bundledBasketball from '../../data/basketball/player-stats.json';
 import bundledVolleyball from '../../data/volleyball/player-stats.json';
 import bundledSoccer from '../../data/soccer/player-stats.json';
+import bundledValSoccer from '../../data/val-soccer/player-stats.json';
 import { getSnapshot } from '../data';
 import { readOverride, validateData } from '../data-file';
 import {
@@ -35,7 +36,7 @@ import { getTeamRoster, placeholderNames } from './rosters';
 import type { TeamSlug } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 function load(): PlayerStatsFile {
   return validateData(

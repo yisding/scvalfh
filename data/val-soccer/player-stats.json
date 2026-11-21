@@ -1,0 +1,251 @@
+{
+  "counts": {
+    "errors": 0,
+    "goalkeepers": 0,
+    "players": 0,
+    "teams": 11,
+    "teamsWithStats": 0
+  },
+  "fetchedAt": "2026-11-21T00:00:00.000Z",
+  "season": "26-27",
+  "source": {
+    "builtBy": "Nothing: no VAL player statistics are read (scripts/fetch-player-stats.ts reads MaxPreps, which does not carry these schools).",
+    "id": "maxpreps-api",
+    "notes": [
+      "MaxPreps carries none of the VAL’s middle schools and the league publishes no rosters, so every team is pending: nothing is read and nothing is claimed. The site lists no player of a middle school team."
+    ]
+  },
+  "teams": [
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Blach",
+      "players": [],
+      "slug": "blach",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-blach",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Columbia",
+      "players": [],
+      "slug": "columbia",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-columbia",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Crittenden",
+      "players": [],
+      "slug": "crittenden",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-crittenden",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Cupertino",
+      "players": [],
+      "slug": "cupertino-ms",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-cupertino-ms",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Egan",
+      "players": [],
+      "slug": "egan",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-egan",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Graham",
+      "players": [],
+      "slug": "graham",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-graham",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Hyde",
+      "players": [],
+      "slug": "hyde",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-hyde",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Kennedy",
+      "players": [],
+      "slug": "kennedy",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-kennedy",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Lawson",
+      "players": [],
+      "slug": "lawson",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-lawson",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Miller",
+      "players": [],
+      "slug": "miller",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-miller",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": null,
+      "lastUpdated": null,
+      "maxprepsTeamId": null,
+      "name": "Sunnyvale",
+      "players": [],
+      "slug": "sunnyvale-ms",
+      "statsUrl": null,
+      "status": "pending",
+      "teamId": "val-sunnyvale-ms",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    }
+  ]
+}

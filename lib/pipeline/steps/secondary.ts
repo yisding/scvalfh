@@ -32,7 +32,7 @@
  */
 
 import { CIF_STATE_RE } from '../../classify';
-import { CCS } from '../../league-config/sections';
+import { CCS, requireCcs } from '../../league-config/sections';
 import { getLeague } from '../../leagues';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readTournamentPage } from '../../sources/ccs';
 import { isTournamentPageUrl, parseTournamentBrackets } from '../../sources/maxpreps-tournament';
@@ -194,7 +194,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsStepResult> {
     kind: 'ccs-bracket' as const,
     scope: { section: 'ccs' as const },
     label: 'ccs bracket',
-    url: CCS.bracketUrl ?? CCS.sources.index,
+    url: requireCcs().bracketUrl ?? requireCcs().sources.index,
     fetchedAt: ctx.fetchedAt,
   };
   // No CCS league in the run, or the season gate is closed: nothing to poll.
@@ -202,7 +202,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsStepResult> {
   if (!ccsInRun || !ccsPollingOpen(ctx.today)) {
     const reason = !ccsInRun
       ? 'no CCS league in this run'
-      : `season gate: polling opens ${CCS.pollFrom} (today ${ctx.today})`;
+      : `season gate: polling opens ${requireCcs().pollFrom} (today ${ctx.today})`;
     ctx.source({ ...calendarBase, status: 'skipped', error: reason });
     ctx.source({ ...bracketBase, status: 'skipped', error: reason });
     return { state: ccsState(ctx, nothingRead, `skipped (${reason})`), polled: false, page: null };
@@ -225,7 +225,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsStepResult> {
     ctx.source({ ...calendarBase, ...failed });
     missed.push(failed.status === 'skipped' ? 'calendar not in corpus' : 'calendar failed');
   }
-  if (CCS.bracketUrl === null) {
+  if (requireCcs().bracketUrl === null) {
     // No MaxPreps tournament page exists for the season yet (soccer, 2026-11-06): nothing to read.
     ctx.source({ ...bracketBase, status: 'skipped', error: 'no MaxPreps CCS tournament page for this season yet' });
   } else try {
@@ -240,17 +240,17 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsStepResult> {
       missed.push('bracket page not recognised');
     } else {
       // A division whose block is missing from an otherwise recognised page keeps its previous answer, else false.
-      const prev = ctx.previous?.playoffs.divisionsPublished;
+      const prev = ctx.previous?.playoffs?.divisionsPublished;
       const divisionsPublished = Object.fromEntries(
-        CCS.ccsDivisions.map((d) => [d.name, page.divisions.find((p) => p.name === d.name)?.published ?? prev?.[d.name] ?? false]),
+        requireCcs().ccsDivisions.map((d) => [d.name, page.divisions.find((p) => p.name === d.name)?.published ?? prev?.[d.name] ?? false]),
       ) as Record<CcsDivisionName, boolean>;
       // A championship whose divisions this site does not name (CCS.ccsDivisions empty: volleyball's Open Division
       // and Divisions 1-5) is published once any of its bracket blocks is.
-      const bracketPublished = CCS.ccsDivisions.length === 0
+      const bracketPublished = requireCcs().ccsDivisions.length === 0
         ? page.divisions.some((d) => d.published)
         : Object.values(divisionsPublished).some(Boolean);
       // No per-division answer is stored where this site names no division: the schema's two keys are field hockey's.
-      read.bracket = CCS.ccsDivisions.length === 0 ? { bracketPublished } : { bracketPublished, divisionsPublished };
+      read.bracket = requireCcs().ccsDivisions.length === 0 ? { bracketPublished } : { bracketPublished, divisionsPublished };
       pageBody = res.body;
       ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus, rowCount: page.divisions.filter((d) => d.published).length });
       ctx.log(`  ccs bracket: ${page.reason}`);
@@ -286,8 +286,8 @@ async function stepBrackets(
   polled: boolean,
   ccsPage: string | null,
 ): Promise<TournamentBracket[] | undefined> {
-  if (CCS.ccsDivisions.length > 0) return undefined;
-  const previous = ctx.previous?.playoffs.brackets ?? [];
+  if (requireCcs().ccsDivisions.length > 0) return undefined;
+  const previous = ctx.previous?.playoffs?.brackets ?? [];
   const carry = (list: readonly TournamentBracket[]): TournamentBracket[] => list.map((b) => structuredClone(b));
   // The CCS sources were not polled (--no-ccs, no CCS league in the run, the season gate): everything stays.
   if (!polled) return previous.length > 0 ? carry(previous) : undefined;
@@ -297,12 +297,12 @@ async function stepBrackets(
 
   // 1. The CCS divisions, in page order; one the page no longer gives whole keeps its previous copy, in place.
   const previousCcs = previous.filter((b) => b.event === 'ccs');
-  if (ccsPage === null || CCS.bracketUrl === null) {
+  if (ccsPage === null || requireCcs().bracketUrl === null) {
     out.push(...carry(previousCcs));
     carried.push(...previousCcs.map((b) => `CCS ${b.name}`));
   } else {
     const page = parseTournamentBrackets(ccsPage);
-    const read = page.brackets.map((b): TournamentBracket => ({ event: 'ccs', url: CCS.bracketUrl as string, ...b }));
+    const read = page.brackets.map((b): TournamentBracket => ({ event: 'ccs', url: requireCcs().bracketUrl as string, ...b }));
     const kept = previousCcs.filter((b) => !read.some((r) => r.bracketId === b.bracketId));
     out.push(...[...read, ...carry(kept)].sort((a, b) => divisionRank(a.name) - divisionRank(b.name) || a.name.localeCompare(b.name)));
     carried.push(...kept.map((b) => `CCS ${b.name}`));
@@ -363,8 +363,10 @@ async function stepBrackets(
 
 /** Step 09's CCS part: the calendar and bracket state, then the brackets read whole over `games` (the view through VNN). */
 export async function stepCcsBrackets(ctx: PipelineContext, games: readonly Game[]): Promise<Omit<SecondaryStepResult, 'games'>> {
-  const ccs = await stepCcs(ctx);
-  const brackets = await stepBrackets(ctx, games, ccs.polled, ccs.page);
-  return { ...ccs.state, ...(brackets ? { brackets } : {}) };
+  // A build with no CCS block (the VAL: no league in a CIF section) has no CCS source to read and no bracket.
+  if (CCS === null) return { bracketPublished: false };
+  const polled = await stepCcs(ctx);
+  const brackets = await stepBrackets(ctx, games, polled.polled, polled.page);
+  return { ...polled.state, ...(brackets ? { brackets } : {}) };
 }
 

@@ -35,7 +35,8 @@ import {
 import { pairingViewsFor } from './this-week-inputs';
 
 /** SPEC §10.7 item 8, verbatim for field hockey: the sport's CCS config holds it (CcsConfig.atLargeParagraph). */
-export const AT_LARGE_PARAGRAPH = CCS.atLargeParagraph;
+// Read at import: '' in a build with no CCS block (the VAL), whose /playoffs prints no at-large paragraph.
+export const AT_LARGE_PARAGRAPH = CCS?.atLargeParagraph ?? '';
 
 /** "through Sep 29" / "so far", from the last day a LEAGUE result was reported (never getToday()). */
 export function asOfPhrase(lastResult: string | null): string {

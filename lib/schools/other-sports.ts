@@ -29,6 +29,7 @@ import { SCVAL_VOLLEYBALL_SEEDS } from '../registry/volleyball/scval';
 import { WBAL_VOLLEYBALL_SEEDS } from '../registry/volleyball/wbal';
 import { WCAL_VOLLEYBALL_SEEDS } from '../registry/volleyball/wcal';
 import type { Seed } from '../registry/seed';
+import { VAL_SOCCER_SEEDS } from '../registry/val-soccer/val';
 import { SPORT_ID, SPORT_IDS, type SportId } from '../sports/current';
 import { SPORT_SITE_ORIGINS, programTitle } from '../sports/sites';
 import type { TeamId, TeamSlug } from '../types';
@@ -50,6 +51,8 @@ export const SEEDS_BY_SPORT: Readonly<Record<SportId, readonly Seed[]>> = {
   soccer: [...SCVAL_SOCCER_SEEDS, ...BVAL_SOCCER_SEEDS, ...WCAL_SOCCER_SEEDS, ...WBAL_SOCCER_SEEDS],
   basketball: [...SCVAL_BASKETBALL_SEEDS, ...BVAL_BASKETBALL_SEEDS],
   volleyball: [...SCVAL_VOLLEYBALL_SEEDS, ...BVAL_VOLLEYBALL_SEEDS, ...WCAL_VOLLEYBALL_SEEDS, ...WBAL_VOLLEYBALL_SEEDS],
+  // Middle schools: ids of our own (`val-<slug>`), so no high school site's team is ever taken for one of them.
+  'val-soccer': VAL_SOCCER_SEEDS,
 };
 
 const SLUG_BY_SPORT: ReadonlyMap<SportId, ReadonlyMap<TeamId, TeamSlug>> = new Map(
@@ -67,8 +70,9 @@ export interface OtherSportTeam {
 /** The school's team pages on the other sport sites, in SPORT_IDS order; empty when no other sport covers it. */
 export function otherSportTeams(teamId: TeamId): OtherSportTeam[] {
   return SPORT_IDS.flatMap((sport) => {
-    if (sport === SPORT_ID) return [];
+    const origin = SPORT_SITE_ORIGINS[sport];
+    if (sport === SPORT_ID || origin === null) return [];
     const slug = SLUG_BY_SPORT.get(sport)?.get(teamId);
-    return slug ? [{ sport, title: programTitle(sport), href: `${SPORT_SITE_ORIGINS[sport]}/teams/${slug}` }] : [];
+    return slug ? [{ sport, title: programTitle(sport), href: `${origin}/teams/${slug}` }] : [];
   });
 }

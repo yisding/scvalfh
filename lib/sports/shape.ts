@@ -6,8 +6,8 @@
  *  - `Sport`: the sport's words, its source identifiers (MaxPreps, si.com, cifsshome.org, the CIF-CCS
  *    site), its rating constants and its player-stat lines. The same for the girls' and the boys'
  *    programs of a sport.
- *  - `SportSeason`: one program's season (girls varsity field hockey, fall 2026), with the ids MaxPreps
- *    reads it by.
+ *  - `SportSeason`: one program's season (girls varsity field hockey, fall 2026), with the source its games are
+ *    read from first and that source's ids for it (MaxPreps' season ids, or a league site's pages).
  *
  * Everything league-shaped (divisions, tiebreak chains, berths, postseason ladders, official sources,
  * data-quality lists) stays in lib/league-config/ and the team registries in lib/registry/: those are a
@@ -157,21 +157,40 @@ export interface Sport {
 }
 
 /**
- * One program's season. Every id here is read from a live MaxPreps response (SPEC §1.1h, §5.2) and
- * re-checked by scripts/discover-season.ts: the stored values are what MaxPreps serves, not derived.
+ * Where a season's games, scores and the league's own table are read first: the source the pipeline's first stage
+ * builds its game list from (lib/pipeline/primary.ts). Every other source is read against what this one lists.
+ *  - 'maxpreps': MaxPreps' team schedules and league tables (every high school build).
+ *  - 'teamsideline': the league's own TeamSideline site, one schedule page a level (lib/sources/teamsideline.ts), for
+ *    a league MaxPreps does not carry (the Valley Athletic League's middle schools).
  */
-export interface SportSeason {
+export type PrimarySourceId = 'maxpreps' | 'teamsideline';
+
+/** What every program's season has, whatever it is read from. */
+interface SportSeasonBase {
   readonly sport: Sport;
   readonly gender: SportGender;
+  /** The source the season's games are read from first (PrimarySourceId). */
+  readonly primary: PrimarySourceId;
+  /**
+   * The program as MaxPreps' `genderSport` names it ('girls,fieldhockey'); a season read elsewhere names its program
+   * the same way ('girls,soccer'), so the snapshot's season record reads alike in every build.
+   */
+  readonly genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball' | 'girls,volleyball';
+  /** The season's years as MaxPreps and the league sites print them ('26-27'). */
+  readonly year: string;
+  readonly term: SportTerm;
+}
+
+/**
+ * One program's season, read from MaxPreps. Every id here is read from a live MaxPreps response (SPEC §1.1h, §5.2)
+ * and re-checked by scripts/discover-season.ts: the stored values are what MaxPreps serves, not derived.
+ */
+export interface MaxprepsSportSeason extends SportSeasonBase {
+  readonly primary: 'maxpreps';
   /** Only varsity is verified end to end. */
   readonly level: 'Varsity';
-  /** MaxPreps' `genderSport` ('girls,fieldhockey'). */
-  readonly genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball' | 'girls,volleyball';
-  /** MaxPreps' `year` ('26-27'). */
-  readonly year: string;
   /** MaxPreps' `sportSeasonName` ('Girls Varsity Field Hockey Fall 26-27'). */
   readonly label: string;
-  readonly term: SportTerm;
   readonly sportSeasonId: string;
   readonly allSeasonId: string;
   /** MaxPreps' California hub for the program, under maxpreps.com: the bootstrap page (SPEC §1.1h). */
@@ -186,3 +205,30 @@ export interface SportSeason {
   /** MaxPreps' CCS tournament page, its path under maxpreps.com; null until MaxPreps creates it. */
   readonly ccsBracketPath: string | null;
 }
+
+/** One level's schedule page on a TeamSideline site: `${origin}/schedule/${scheduleId}/0/1/${slug}`. */
+export interface TeamsidelineLevelPage {
+  readonly scheduleId: string;
+  readonly slug: string;
+  /** The level as the page's subtitle prints it ('7th/8th Grade'); a page that prints another is not read. */
+  readonly subtitle: string;
+}
+
+/**
+ * One program's season, read from the league's own TeamSideline site (lib/sources/teamsideline.ts). The pages'
+ * ids are read from the league site's own links; the run checks each page's heading and level against these, as
+ * the MaxPreps bootstrap checks the season ids, and reads nothing from a page that does not match.
+ */
+export interface TeamsidelineSportSeason extends SportSeasonBase {
+  readonly primary: 'teamsideline';
+  /** The level the site is about, as a heading names it ('7th/8th Grade'). */
+  readonly level: string;
+  /** The program's heading on every page of the season ("Girls' Soccer 26-27"). */
+  readonly label: string;
+  /** The league site's origin, no trailing slash ('https://valleyal.org'). */
+  readonly origin: string;
+  /** The main level's page (the site's tables and games), and the second level's (the site's /jv pages). */
+  readonly pages: { readonly main: TeamsidelineLevelPage; readonly second: TeamsidelineLevelPage };
+}
+
+export type SportSeason = MaxprepsSportSeason | TeamsidelineSportSeason;

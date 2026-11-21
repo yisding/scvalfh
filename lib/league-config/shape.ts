@@ -48,7 +48,7 @@ export type ShootoutInference = (typeof SHOOTOUT_INFERENCES)[number];
 export interface SectionConfig {
   id: SectionId;
   name: string;                         // 'Central Coast Section'
-  shortName: 'CCS' | 'NCS' | 'NS' | 'SS' | 'SDS';
+  shortName: 'CCS' | 'NCS' | 'NS' | 'SS' | 'SDS' | 'None';
   /**
    * The section in a parenthesis after its leagues in short copy (SITE_DESCRIPTION): 'CCS', 'NCS',
    * and 'Northern Section', 'Southern Section' and 'San Diego Section' in full, because no reader knows
@@ -57,7 +57,8 @@ export interface SectionConfig {
   briefLabel: string;
   /** The NorCal/SoCal half of the site this section's leagues sit in (DESIGN-socal §2.1.1). */
   region: RegionId;
-  maxprepsSectionId: string;
+  /** MaxPreps' id of the section; null for a section MaxPreps does not know ('none', the VAL's place). */
+  maxprepsSectionId: string | null;
   holdsFieldHockeyChampionship: boolean;
   officialUrl: string;
   /**
@@ -185,6 +186,11 @@ export interface DivisionConfig {
    * LA independents meet two or three times) and official mode 'none'.
    */
   gamesPerTeam: number | null;
+  /**
+   * How many times each pair of the division meets in league play: 2, a double round robin (every high school league
+   * here; the default when left out), or 1 (the VAL's single round robin). `gamesPerTeam` is (expectedTeams - 1) times it.
+   */
+  meetings?: 1 | 2;
   /**
    * First and last league date. From the league's official schedule where there is one; otherwise the
    * first league game on MaxPreps' schedules (the Sunset: Sep 15; each San Diego division: its earliest
@@ -405,6 +411,11 @@ export type PostseasonConfig =
       name: string;                       // 'MCAL tournament'
       qualifiers: number;                 // 6
       byes: readonly number[];            // [1, 2]
+      /**
+       * How the semifinals are paired: 'reseeded' (MCAL: once both quarterfinals are won, the lowest-ranked remaining
+       * seed plays at 1 and the other at 2) or 'fixed' (the VAL: 1 hosts the winner of 4 v 5, 2 the winner of 3 v 6).
+       */
+      semifinals: 'reseeded' | 'fixed';
       ladder: readonly LadderRung[];
       rounds: readonly TournamentRoundConfig[];
       /**
@@ -420,10 +431,20 @@ export type PostseasonConfig =
         venue: string;
         admission: string | null;
         admissionSource: string | null;
-      };
-      lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' };
-      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string; pennant: string };
+      } | null;
+      /**
+       * The last tournament place's rule (MCAL: a play-in unless one team swept the other); null where the league's
+       * seeding rules settle every place (the VAL), so no play-in is ever drawn.
+       */
+      lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' } | null;
+      /** `lastSpot` is null exactly when the league has no last-place rule; `qualifiersConflict` only where documents disagree. */
+      citations: { format: string; seeding: string; semifinal: string; lastSpot: string | null; qualifiersConflict: string | null; pennant: string };
       titleNote: string;
+      /**
+       * Printed on a one-goal tournament result its source does not mark as overtime (`mayHideShootout`), where a
+       * shootout may hide in it: MCAL's (MaxPreps records a shootout's tally as goals), the VAL's own.
+       */
+      shootoutNote: string;
       /**
        * A sourced sentence for one tournament game's result, by contest GUID, printed where the game's
        * result is (the bracket row, the game page) in place of the generic shootout caveat: MaxPreps records

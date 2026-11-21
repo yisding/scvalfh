@@ -66,8 +66,8 @@ export const CcsSeedFileSchema = z
     divisions: z.array(division),
   })
   .refine(
-    (f) => f.divisions.length === 0 || f.divisions.map((d) => d.name).join('|') === CCS.ccsDivisions.map((d) => d.name).join('|'),
-    `divisions must be empty or exactly ${CCS.ccsDivisions.map((d) => `'${d.name}'`).join(', ')} in that order`,
+    (f) => f.divisions.length === 0 || f.divisions.map((d) => d.name).join('|') === (CCS?.ccsDivisions ?? []).map((d) => d.name).join('|'),
+    `divisions must be empty or exactly ${(CCS?.ccsDivisions ?? []).map((d) => `'${d.name}'`).join(', ')} in that order`,
   )
   .refine((f) => f.divisions.length === 0 || (f.retrievedOn !== null && f.source !== null), 'retrievedOn and source are required once a division is filled')
   .superRefine((f, ctx) => {

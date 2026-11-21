@@ -238,7 +238,8 @@ export function stepAssemble(
     teams: TEAMS.map((t) => ({ ...t })),
     games,
     standings: table.standings,
-    playoffs: {
+    // The CCS block; null in a build with no CCS block (the VAL: no league in a CIF section).
+    playoffs: CCS === null ? null : {
       keyDates: { ...CCS.keyDates },
       ...(secondary.ccsCalendar ? { ccsCalendar: secondary.ccsCalendar } : {}),
       ...(secondary.keyDatesConfirmed === undefined ? {} : { keyDatesConfirmed: secondary.keyDatesConfirmed }),

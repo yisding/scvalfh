@@ -17,7 +17,7 @@ import { POLITE_USER_AGENT } from '../lib/sources/http';
 import { SBLIVE_GAME_PATH_PREFIX } from '../lib/sources/sblive';
 import { VNN_SUMMARY_RE } from '../lib/sources/vnn-ics';
 import { FIELD_HOCKEY, FIELD_HOCKEY_GIRLS_2026 } from '../lib/sports/field-hockey';
-import { GENDER_NAME, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE, SPORT_SEASON } from '../lib/sports/current';
+import { GENDER_NAME, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE, SPORT_SEASON, MAXPREPS_SPORT_SEASON } from '../lib/sports/current';
 import { SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } from '../components/layout/site';
 
 describe('the current sport', () => {
@@ -34,7 +34,7 @@ describe('the current sport', () => {
     expect(SPORT_SEASON.label).toBe(
       `${GENDER_NAME} ${SPORT_SEASON.level} ${SPORT.maxpreps.sportName} ${SPORT_SEASON.term} ${SPORT_SEASON.year}`,
     );
-    expect(SPORT_SEASON.genderSport).toBe(`${SPORT_SEASON.gender},${SPORT.id.replace(/-/g, '')}`);
+    expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe(`${SPORT_SEASON.gender},${SPORT.id.replace(/-/g, '')}`);
   });
 });
 

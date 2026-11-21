@@ -4,9 +4,10 @@
  * the section playoffs' or no postseason's one line and note. Built on the server by home-view.ts buildHomeView.
  */
 
+import { atFinalSite } from '../../lib/postseason/postseason-kind';
 import { getLeagueTournament, getPlayoffs, getToday } from '../../lib/data';
 import { dateSpan, leagueClock, listWords, monthDay, numberWord, shortDate } from '../../lib/format';
-import { CCS } from '../../lib/league-config/sections';
+import { requireCcs } from '../../lib/league-config/sections';
 import type { LeagueConfig, PostseasonConfig, TournamentConfig } from '../../lib/league-config/shape';
 import { getDivision, sectionOf } from '../../lib/leagues';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
@@ -130,7 +131,7 @@ function leagueTournamentView(
   else {
     if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
     if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
-    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+    if (final) parts.push(`Final ${shortDate(final.date)}${atFinalSite(ps)}`);
   }
   return {
     kind: 'league-tournament',
@@ -149,9 +150,9 @@ function leagueTournamentView(
  * assigned yet. `today` is getToday(), never Date.now().
  */
 export function ccsOfficialSentence(today: string): string {
-  const seedingDay = CCS.keyDates.seedingMeeting.slice(0, 10);
+  const seedingDay = requireCcs().keyDates.seedingMeeting.slice(0, 10);
   return today > seedingDay
-    ? `Berths were assigned by the CCS committee on ${shortDate(CCS.keyDates.seedingMeeting)}; results update twice a day.`
+    ? `Berths were assigned by the CCS committee on ${shortDate(requireCcs().keyDates.seedingMeeting)}; results update twice a day.`
     : 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
 }
 
@@ -161,7 +162,7 @@ function ccsLadderView(
   phase: SeasonPhase,
 ): PostseasonView {
   const short = league.shortName;
-  const total = CCS.autoQualifiers.total;
+  const total = requireCcs().autoQualifiers.total;
   const aqRung = ps.ladder.find((r) => r.status === 'aq');
   const aqTop = aqRung ? aqRung.places[1] : 0;
   const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
@@ -195,7 +196,7 @@ function ccsLadderView(
     )} of the final standings.`;
   }
 
-  const seeding = shortDate(CCS.keyDates.seedingMeeting);
+  const seeding = shortDate(requireCcs().keyDates.seedingMeeting);
   const beforeLeagueGames = phase === 'preseason' || phase === 'regular';
   let intro: string;
   if (crossover && beforeLeagueGames) {
@@ -211,6 +212,7 @@ function ccsLadderView(
   const official = ccsOfficialSentence(getToday());
 
   const playoffs = getPlayoffs();
+  const { keyDates } = requireCcs();
   return {
     kind: 'ccs-ladder',
     leagueId: league.id,
@@ -218,12 +220,12 @@ function ccsLadderView(
     meter: { claimed: ps.autoBerths, total, label },
     // Each round's first day: where divisions play a round on different days (soccer), the earliest.
     dates: [
-      ...(CCS.keyDates.firstRound ? [{ term: 'First round', date: CCS.keyDates.firstRound }] : []),
-      { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
-      { term: 'Semifinals', date: CCS.keyDates.semifinals },
-      { term: 'Final', date: CCS.keyDates.finals },
+      ...(keyDates.firstRound ? [{ term: 'First round', date: keyDates.firstRound }] : []),
+      { term: 'Quarterfinals', date: keyDates.quarterfinals },
+      { term: 'Semifinals', date: keyDates.semifinals },
+      { term: 'Final', date: keyDates.finals },
     ],
-    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl ?? CCS.sources.index },
+    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl ?? requireCcs().sources.index },
     official,
     link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
   };

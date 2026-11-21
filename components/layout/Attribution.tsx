@@ -6,7 +6,7 @@ import { RegionSwitcher } from '../prefs/LeagueSwitcher';
 import ThemeToggle from '../prefs/ThemeToggle';
 
 import LastUpdated from './LastUpdated';
-import { DATA_CORRECTIONS_URL, NAV_LABELS } from './site';
+import { DATA_CORRECTIONS_URL, NAV_LABELS, SOURCE_LINE } from './site';
 import { OTHER_SPORT_SITES } from '../../lib/sports/sites';
 
 /**
@@ -80,10 +80,7 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
           <LastUpdated variant="stamp" at={snapshotAt} now={now} seasonComplete={getSitePhase() === 'complete'} />. All
           times Pacific.
         </p>
-        <p className="sx-foot-line">
-          Scores come from MaxPreps and SI.com. This is an unofficial site, not affiliated with any school, league or
-          CIF section.
-        </p>
+        <p className="sx-foot-line">{SOURCE_LINE}</p>
       </div>
     </footer>
   );

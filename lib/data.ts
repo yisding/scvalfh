@@ -15,10 +15,12 @@ import bundledPlayerStatsFieldHockey from '../data/field-hockey/player-stats.jso
 import bundledPlayerStatsBasketball from '../data/basketball/player-stats.json';
 import bundledPlayerStatsVolleyball from '../data/volleyball/player-stats.json';
 import bundledPlayerStatsSoccer from '../data/soccer/player-stats.json';
+import bundledPlayerStatsValSoccer from '../data/val-soccer/player-stats.json';
 import bundledSnapshotFieldHockey from '../data/field-hockey/snapshot.json';
 import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
+import bundledSnapshotValSoccer from '../data/val-soccer/snapshot.json';
 
 import { readOverride } from './data-file';
 import { gameSlug } from './game-slug';
@@ -29,7 +31,7 @@ import {
   sideOutcome,
 } from './format';
 import { DATA_QUALITY } from './league-config/data-quality';
-import { CCS, REGIONS, SECTIONS } from './league-config/sections';
+import { requireCcs, REGIONS, SECTIONS } from './league-config/sections';
 import type {
   LeagueConfig,
   RegionConfig,
@@ -104,8 +106,8 @@ import { compareInOrder, levelInOrder, ordersByRecord } from './standings/order'
  * lib/sports/current.ts DATA_DIR). Chosen on the inlined SCVAL_SPORT itself, not on IS_FIELD_HOCKEY, so a bundler
  * folds the comparison and leaves the other sports' files out of the Worker (scripts/assert-budgets.ts).
  */
-const bundledPlayerStats: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledPlayerStatsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledPlayerStatsVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledPlayerStatsSoccer : bundledPlayerStatsFieldHockey;
-const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
+const bundledPlayerStats: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledPlayerStatsBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledPlayerStatsVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledPlayerStatsValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledPlayerStatsSoccer : bundledPlayerStatsFieldHockey;
+const bundledSnapshot = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledSnapshotValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 /**
  * data/field-hockey/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -220,12 +222,12 @@ export function getOfficialStandingsPdfUrl(): string | null | undefined {
 
 /** The CCS iCal events, once the season gate has opened. */
 export function getCcsCalendar(): readonly CcsCalendarEvent[] | undefined {
-  return snapshot.playoffs.ccsCalendar;
+  return snapshot.playoffs?.ccsCalendar;
 }
 
 /** true when the CCS calendar corroborated every published key date. undefined if not yet polled. */
 export function areKeyDatesConfirmed(): boolean | undefined {
-  return snapshot.playoffs.keyDatesConfirmed;
+  return snapshot.playoffs?.keyDatesConfirmed;
 }
 
 /** Contests that left a date this season (Snapshot.contentRemovals), for the sitemap's `lastmod`. */
@@ -943,7 +945,14 @@ export function getTeamForm(ref: string): TeamForm | undefined {
 
 // ---------------------------------------------------------------- postseason
 
+/** The CCS block. Throws in a build with no CCS block (the VAL), where no CCS page or card is built. */
 export function getPlayoffs(): CcsPlayoffs {
+  if (snapshot.playoffs === null) throw new Error('lib/data.ts: this build has no CCS block (snapshot.playoffs is null)');
+  return snapshot.playoffs;
+}
+
+/** The CCS block, or null in a build with no CCS block (the VAL). */
+export function getPlayoffsOrNull(): CcsPlayoffs | null {
   return snapshot.playoffs;
 }
 
@@ -974,7 +983,7 @@ export function getPlayoffProjection(leagueId: LeagueId, asOf: string = snapshot
       };
     });
   }
-  const aq = snapshot.playoffs.format.autoQualifiers;
+  const aq = getPlayoffs().format.autoQualifiers;
   return {
     asOf,
     leagueId,
@@ -996,14 +1005,15 @@ export function getCcsField(): {
   atLarge: number | null;
   total: number | null;
 } {
+  const block = requireCcs();
   return {
     byLeague: CCS_LEAGUE_IDS.map((id) => ({
       leagueId: id,
       shortName: getLeague(id).shortName,
-      auto: CCS.autoQualifiers[id] ?? 0,
+      auto: block.autoQualifiers[id] ?? 0,
     })),
-    atLarge: CCS.autoQualifiers.atLarge,
-    total: CCS.autoQualifiers.total,
+    atLarge: block.autoQualifiers.atLarge,
+    total: block.autoQualifiers.total,
   };
 }
 

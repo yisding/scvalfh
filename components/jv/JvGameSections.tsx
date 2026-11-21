@@ -10,6 +10,7 @@ import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
 import type { JvGameModel } from './jv-game-view';
+import { MAIN_LEVEL, SECOND_LEVEL } from '../words/level-words';
 
 /**
  * The sections of a JV game's page (app/jv/game/[id]) under its scoreboard: the varsity game played beside it, the
@@ -23,7 +24,7 @@ export function JvVarsityGame({ model, className }: { model: JvGameModel; classN
   if (!varsity) return null;
   return (
     <section className={className} aria-labelledby="jv-game-varsity-kicker">
-      <SectionHeader kicker="Varsity game" as="h2" id="jv-game-varsity-kicker" action={{ href: varsity.href, label: 'Game page' }} />
+      <SectionHeader kicker={`${MAIN_LEVEL.short} game`} as="h2" id="jv-game-varsity-kicker" action={{ href: varsity.href, label: 'Game page' }} />
       <p className="m-0 text-body text-ink">
         {varsity.sameDay ? '' : `${varsity.dateLabel}: `}
         {varsity.sentence}
@@ -42,7 +43,7 @@ export function VarsityJvGame({ contestId, dateKey, className }: { contestId: st
   if (!jv || !href) return null;
   return (
     <section className={className} aria-labelledby="game-jv-kicker">
-      <SectionHeader kicker="JV game" as="h2" id="game-jv-kicker" action={{ href, label: 'JV game page' }} />
+      <SectionHeader kicker={`${SECOND_LEVEL.short} game`} as="h2" id="game-jv-kicker" action={{ href, label: `${SECOND_LEVEL.short} game page` }} />
       <p className="m-0 text-body text-ink">
         {jv.dateKey === dateKey ? '' : `${shortDate(jv.dateLocal)}: `}
         {describeGame(jv).sentence}
@@ -57,7 +58,7 @@ export function JvSeasonSeries({ model, className }: { model: JvGameModel; class
   const perspective = model.seriesPerspective;
   return (
     <section className={className} aria-labelledby="jv-game-series-kicker">
-      <SectionHeader kicker="JV season series" as="h2" id="jv-game-series-kicker" meta={`${model.home.label}’s results`} />
+      <SectionHeader kicker={`${SECOND_LEVEL.short} season series`} as="h2" id="jv-game-series-kicker" meta={`${model.home.label}’s results`} />
       <ol className="sx-list">
         {model.series.map(({ game, href, isThisGame }) => (
           <li key={game.contestId}>
@@ -87,7 +88,7 @@ export function JvGameDetails({ model, className }: { model: JvGameModel; classN
   const buttons = links.filter((l) => BUTTONS.has(l.label));
   const pages = links.filter((l) => !BUTTONS.has(l.label));
   const teamPages = [model.away, model.home].flatMap((side) =>
-    side.team ? [{ href: `/teams/${side.team.slug}#jv`, label: `${side.team.shortName} JV games` }] : [],
+    side.team ? [{ href: `/teams/${side.team.slug}#jv`, label: `${side.team.shortName} ${SECOND_LEVEL.short} games` }] : [],
   );
   return (
     <section className={className} aria-labelledby="jv-game-details-kicker">
@@ -148,7 +149,7 @@ export function JvGameDetails({ model, className }: { model: JvGameModel; classN
         </li>
         <li>
           <Link href="/about#jv" prefetch={false} className="sx-action">
-            How JV games are shown
+            How {SECOND_LEVEL.short} games are shown
           </Link>
         </li>
       </ul>

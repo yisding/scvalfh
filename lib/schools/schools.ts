@@ -21,13 +21,14 @@ import bundledFieldHockey from '../../data/field-hockey/schools.json';
 import bundledBasketball from '../../data/basketball/schools.json';
 import bundledVolleyball from '../../data/volleyball/schools.json';
 import bundledSoccer from '../../data/soccer/schools.json';
+import bundledValSoccer from '../../data/val-soccer/schools.json';
 import { validateData } from '../data-file';
 import { dateKey, isCalendarDate, slugId } from '../schema-primitives';
 import { DATA_DIR } from '../sports/current';
 import type { StreetAddress, TeamSlug } from '../types';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
+const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
 
 const nonEmpty = z.string().trim().min(1);
 

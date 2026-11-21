@@ -89,7 +89,10 @@ import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId, Team } from '../lib/types';
 import { runCliIfMain } from './cli';
-import { DATA_DIR } from '../lib/sports/current';
+import { DATA_DIR, PRIMARY_SOURCE } from '../lib/sports/current';
+import { parseTeamsidelinePage } from '../lib/sources/teamsideline';
+import { fallYearOf, teamsidelineGames } from '../lib/sources/teamsideline-games';
+import { teamsidelineLevel, teamsidelineLevelUrl, teamsidelinePageMismatch } from '../lib/sources/teamsideline-season';
 
 interface Args {
   fixtures: string | null;
@@ -234,6 +237,100 @@ const UNAVAILABLE: JvSourceState = { status: 'unavailable', rowCount: null, fetc
 
 const involves = (g: Pick<Game, 'home' | 'away'>, slug: string) => g.home.slug === slug || g.away.slug === slug;
 
+/** The capture and fixture file name of the second level's TeamSideline page. */
+export const TEAMSIDELINE_JV_FILE = 'jv-teamsideline-second.html';
+
+const TEAMSIDELINE_NOTES = [
+  'One entry per registry school. games are the league\u2019s own second-level schedule page (lib/sports/shape.ts TeamsidelineSportSeason.pages.second), read as the varsity build reads its main page (lib/sources/teamsideline-games.ts); league says whether it was read this run.',
+  'MaxPreps and si.com carry none of these schools, so both are unavailable for every team.',
+  'JV games are kept apart from the main level: no table, leader board, rating or playoff picture of the main level reads them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which second-level table each counts for, from its main-level counterpart.',
+  'A league page that cannot be read keeps the previous file\u2019s games (league status carried-forward, with the previous read\u2019s fetchedAt).',
+];
+
+/**
+ * The second level of a build whose primary source is the league's TeamSideline site (the VAL's 6th/7th grade): one
+ * page, read whole, instead of a MaxPreps feed and a si.com page per school. The page must be the configured program
+ * and level (teamsidelinePageMismatch); one that cannot be read, or is another, keeps the previous file's games.
+ */
+async function fetchJvFromTeamsideline(args: Args, fetchedAt: string): Promise<number> {
+  const level = teamsidelineLevel('second');
+  const url = teamsidelineLevelUrl('second');
+  let previous: JvFile | null = null;
+  try {
+    const parsed = JvFileSchema.safeParse(JSON.parse(readFileSync(args.out, 'utf8')) as unknown);
+    if (parsed.success && parsed.data.season === SEASON_YEAR) previous = parsed.data;
+    else console.log(`previous ${path.relative(process.cwd(), args.out)}: not this season's valid file; nothing is carried`);
+  } catch {
+    console.log(`previous ${path.relative(process.cwd(), args.out)}: none; nothing is carried`);
+  }
+
+  let games: Game[] = [];
+  let league: NonNullable<JvFile['league']>;
+  try {
+    let body: string;
+    if (args.fixtures) {
+      body = readFileSync(path.join(args.fixtures, TEAMSIDELINE_JV_FILE), 'utf8');
+    } else {
+      body = (await new HttpClient({ onLog: (l) => console.log(`  ${l}`) }).text(url)).body;
+      const capture = prepareCapture(args);
+      if (capture) saveCapture(capture, TEAMSIDELINE_JV_FILE, body);
+    }
+    const page = parseTeamsidelinePage(body);
+    const mismatch = teamsidelinePageMismatch(page, 'second');
+    if (mismatch !== null) throw new Error(`not the configured page: ${mismatch}`);
+    const read = teamsidelineGames({ page, scheduleId: level.scheduleId, fallYear: fallYearOf(SEASON_YEAR), fetchedAt });
+    for (const name of read.unknownNames) console.log(`  WARN "${name}" is no registry team's name; its games keep a side that is not ours`);
+    games = read.games.map((g) => ({ ...g }) as Game);
+    league = { url, status: 'ok', rowCount: page.games.length + page.playoffs.length, fetchedAt, error: null };
+    console.log(`fetch-jv: ${page.title} · ${page.subtitle} · ${games.length} games (${games.filter((g) => g.status === 'final').length} final)`);
+  } catch (err) {
+    const error = (err as Error).message;
+    const prior = previous?.league;
+    if (previous && prior && (prior.status === 'ok' || prior.status === 'carried-forward')) {
+      games = previous.games;
+      league = { url, status: 'carried-forward', rowCount: prior.rowCount, fetchedAt: prior.fetchedAt, error };
+    } else {
+      league = { url, status: 'error', rowCount: null, fetchedAt: null, error };
+    }
+    console.log(`fetch-jv: the league's ${level.subtitle} page could not be read (${error}); ${league.status}`);
+  }
+
+  games.sort(byDateThenId);
+  const teams: JvTeam[] = TEAMS.map((team) => ({
+    slug: team.slug,
+    teamId: team.id,
+    name: team.name,
+    maxprepsScheduleUrl: null,
+    sbliveUrl: null,
+    maxpreps: UNAVAILABLE,
+    sblive: UNAVAILABLE,
+  }));
+  const file: JvFile = {
+    season: SEASON_YEAR,
+    fetchedAt,
+    sportSeasonId: null,
+    league,
+    source: { builtBy: 'scripts/fetch-jv.ts', notes: TEAMSIDELINE_NOTES },
+    teams,
+    games,
+    sblive: [],
+    counts: countJv(teams, games, []),
+  };
+  const validated = validateAssembled(JvFileSchema, file);
+  if (!validated) return 1;
+  let whole: JvFile | undefined;
+  if (previous) whole = previous;
+  return writeIfChanged({
+    out: args.out,
+    dryRun: args.dryRun,
+    whole,
+    contentKey: jvContentKey,
+    validated,
+    file,
+    exitCode: league.status === 'ok' ? 0 : 1,
+  });
+}
+
 export async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
@@ -246,6 +343,8 @@ export async function main(argv: readonly string[]): Promise<number> {
     );
     return 0;
   }
+  // A build whose primary source is the league's own site reads its second level from there (the VAL).
+  if (PRIMARY_SOURCE === 'teamsideline') return fetchJvFromTeamsideline(args, fetchedAt);
   const loaded = loadPreviousOrFail(args.out, readPrevious, 'Nothing written.', (p) => p.log);
   if (!loaded.ok) return 1;
   const previous = loaded.previous;

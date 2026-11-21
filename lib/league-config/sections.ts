@@ -11,6 +11,7 @@ import type { CcsKeyDates, RegionId } from '../types';
 import type { CcsConfig, OutsideTournamentConfig, RegionConfig, SectionConfig } from './shape';
 import { BASKETBALL_CCS, BASKETBALL_SECTIONS } from './basketball/sections';
 import { SOCCER_CCS, SOCCER_SECTIONS } from './soccer/sections';
+import { VAL_SOCCER_SECTIONS } from './val-soccer/sections';
 import { VOLLEYBALL_CCS, VOLLEYBALL_SECTIONS } from './volleyball/sections';
 
 /** NorCal first: it is the default view (DEFAULT_REGION) and the reading order with JavaScript off. */
@@ -25,6 +26,7 @@ export const REGIONS: readonly RegionConfig[] = bySport<readonly RegionConfig[]>
   soccer: ALL_REGIONS.slice(0, 1),
   basketball: ALL_REGIONS.slice(0, 1),
   volleyball: ALL_REGIONS.slice(0, 1),
+  'val-soccer': ALL_REGIONS.slice(0, 1),
 });
 
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
@@ -240,6 +242,7 @@ export const SECTIONS: readonly SectionConfig[] = bySport<readonly SectionConfig
   soccer: SOCCER_SECTIONS,
   basketball: BASKETBALL_SECTIONS,
   volleyball: VOLLEYBALL_SECTIONS,
+  'val-soccer': VAL_SOCCER_SECTIONS,
 });
 
 // ---------- Southern California (DESIGN-socal §2.1; research-cifss.md, research-cifsds.md) ----------
@@ -292,13 +295,26 @@ const FIELD_HOCKEY_CCS: CcsConfig = {
   },
 };
 
-/** The CCS block of this build's sport. */
-export const CCS: CcsConfig = bySport<CcsConfig>({
+/**
+ * The CCS block of this build's sport, or null in a build none of whose leagues is in the CCS (the VAL's middle
+ * schools belong to no CIF section): nothing CCS is read, fetched or drawn there.
+ */
+export const CCS: CcsConfig | null = bySport<CcsConfig | null>({
   'field-hockey': FIELD_HOCKEY_CCS,
   soccer: SOCCER_CCS,
   basketball: BASKETBALL_CCS,
   volleyball: VOLLEYBALL_CCS,
+  'val-soccer': null,
 });
+
+/**
+ * The CCS block, for code that runs only where a league of the build goes to the CCS (a 'ccs-ladder' league, the CCS
+ * bracket and calendar steps, the CCS cards). Throws in a build with no CCS block: reaching it there is a bug.
+ */
+export function requireCcs(): CcsConfig {
+  if (CCS === null) throw new Error('lib/league-config/sections.ts: this build has no CCS block (no league of it is in the CCS)');
+  return CCS;
+}
 
 /**
  * A CCS round's days as copy prints them: one day ('Tue Feb 23'), or first to last where divisions play it on

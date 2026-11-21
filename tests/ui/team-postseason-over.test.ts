@@ -52,7 +52,7 @@ function postseasonLastDay(leagueId: string): string {
   const ps = league.postseason;
   switch (ps.kind) {
     case 'ccs-ladder':
-      return sections.ccsLastDay(sections.CCS.keyDates);
+      return sections.ccsLastDay(sections.CCS!.keyDates);
     case 'league-tournament':
       return [...ps.rounds].map((r) => r.date).sort().at(-1)!;
     case 'unbracketed-tournament':

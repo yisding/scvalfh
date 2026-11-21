@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { CcsSeedFileSchema, type CcsSeedFile } from '../lib/postseason/ccs-bracket-schema';
 import { ccsSeedOf, getCcsSeeds, seedsFromHistory } from '../lib/postseason/ccs-bracket';
 import { HistoryBracketsSchema } from '../lib/history/history-brackets-schema';
-import { CCS } from '../lib/league-config/sections';
+import { requireCcs } from '../lib/league-config/sections';
 import { REPO } from './helpers';
 
 const committed = JSON.parse(readFileSync(path.join(REPO, 'data', 'field-hockey', 'ccs-bracket-2026.json'), 'utf8')) as unknown;
@@ -53,7 +53,7 @@ describe('the committed seed file', () => {
 describe('the contract, against the real 2025 field', () => {
   it('accepts the 2025 bracket’s sixteen seeds converted from data/field-hockey/history-brackets-2025-26.json', () => {
     const parsed = CcsSeedFileSchema.parse(seeds2025);
-    expect(parsed.divisions.map((d) => d.name)).toEqual(CCS.ccsDivisions.map((d) => d.name));
+    expect(parsed.divisions.map((d) => d.name)).toEqual(requireCcs().ccsDivisions.map((d) => d.name));
     expect(parsed.divisions.map((d) => d.seeds.length)).toEqual([8, 8]);
     // The 2025 seeds, as the CCS bracket pages printed them (tests/history-brackets.test.ts holds the file to them).
     expect(parsed.divisions[0].seeds.map((s) => s.slug)).toEqual([

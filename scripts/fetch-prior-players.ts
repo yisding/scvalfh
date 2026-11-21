@@ -52,6 +52,7 @@ import { DATA_DIR, SPORT_ID } from '../lib/sports/current';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import { runCliIfMain } from './cli';
+import { requireMaxpreps } from './lib/require-maxpreps';
 
 const USAGE =
   'Usage: pnpm fetch-prior-players [--year <yy-yy>] [--ssid <sportSeasonId>] [--fixtures <dir> | --capture <dir>] ' +
@@ -131,6 +132,8 @@ const NOTES = [
 ];
 
 export async function main(argv: readonly string[]): Promise<number> {
+  const notMaxpreps = requireMaxpreps('fetch-prior-players');
+  if (notMaxpreps !== null) return notMaxpreps;
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);

@@ -73,6 +73,7 @@ const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
   NS: 'Northern Section',
   SS: 'Southern Section',
   SDS: 'San Diego Section',
+  None: 'no CIF section',
 };
 
 /**

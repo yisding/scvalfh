@@ -18,6 +18,7 @@
  * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  */
 
+import { LISTS_PLAYERS } from '../../lib/sports/current';
 import { HAS_ADJUSTED_SCORING, computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { getSnapshot } from '../../lib/data';
 import { shortDate } from '../../lib/format';
@@ -95,10 +96,11 @@ function buildRegion(input: RegionInput): RegionLeadersView {
     leagueCount: scope.leagues,
     independentCount: scope.independents,
     scopeWords: scope.sectionWords,
-    players: players.boards,
+    // A build that lists no players (the VAL's middle schools) has no player board and no note about one.
+    players: LISTS_PLAYERS ? players.boards : [],
     schools: schools.boards,
-    playerNotes: players.notes,
-    lagging: players.lagging,
+    playerNotes: LISTS_PLAYERS ? players.notes : [],
+    lagging: LISTS_PLAYERS ? players.lagging : null,
     schoolNotes: schools.notes,
     statTeams: players.statTeams,
     teamCount: teams.length,

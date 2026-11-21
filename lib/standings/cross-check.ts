@@ -4,6 +4,7 @@
  * /about#cross-check, and why a division has no comparison at all.
  */
 
+import { HAS_MAXPREPS } from '../sports/current';
 import { SPORT } from '../sports/current';
 import { recordString } from '../format';
 import { getDivision, getLeague, leagueStandingsUrl } from '../leagues';
@@ -52,7 +53,12 @@ export function compareToReported(
  * NO_MAXPREPS_TABLE_REASON), so /about and the health card say one thing. null for every other division.
  */
 export function crossCheckSkipReason(division: DivisionId): string | null {
-  return leagueStandingsUrl(division) === null ? 'MaxPreps publishes no table for this division' : null;
+  if (leagueStandingsUrl(division) !== null) return null;
+  // A build read from the league's own site (the VAL): MaxPreps carries none of its schools, and the league's own
+  // table is read with its schedule but not compared yet (lib/pipeline/steps/teamsideline.ts).
+  return HAS_MAXPREPS
+    ? 'MaxPreps publishes no table for this division'
+    : 'MaxPreps carries none of these schools, and the league’s own table is not compared here yet';
 }
 
 /**

@@ -54,6 +54,7 @@ export const LEDGER: FixtureLedger = bySport<FixtureLedger>({
   soccer: EMPTY_LEDGER,
   basketball: BASKETBALL_LEDGER,
   volleyball: EMPTY_LEDGER,
+  'val-soccer': EMPTY_LEDGER,
 });
 
 /** A fixture's day where its MaxPreps contest is dated otherwise, and the citation. */

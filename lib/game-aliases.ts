@@ -26,11 +26,12 @@ import bundledSnapshotFieldHockey from '../data/field-hockey/snapshot.json';
 import bundledSnapshotBasketball from '../data/basketball/snapshot.json';
 import bundledSnapshotVolleyball from '../data/volleyball/snapshot.json';
 import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
+import bundledSnapshotValSoccer from '../data/val-soccer/snapshot.json';
 import { GAME_SLUG_RE } from './game-slug';
 import { addGameUrls, gameAliasTable, isLegacyGameParam, needsGameUrls, type UrlGame } from './game-urls';
 
 /** This build's copy, chosen on the inlined SCVAL_SPORT itself so a bundler leaves the other sports' files out (lib/data.ts). */
-const bundledSnapshot: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
+const bundledSnapshot: unknown = process.env.SCVAL_SPORT === 'basketball' ? bundledSnapshotBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledSnapshotVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledSnapshotValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSnapshotSoccer : bundledSnapshotFieldHockey;
 
 export interface GameRedirect {
   source: string;

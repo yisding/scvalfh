@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { dateSpan, longDate, monthDay, parseLocal } from '../../lib/format';
-import { CCS, ccsFirstDay, ccsLastDay } from '../../lib/league-config/sections';
+import { ccsFirstDay, ccsLastDay, requireCcs } from '../../lib/league-config/sections';
 import { getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
@@ -179,9 +179,9 @@ function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: 
       };
     case 'ccs-ladder':
       return {
-        label: `CCS ${span(ccsFirstDay(CCS.keyDates), ccsLastDay(CCS.keyDates))}`,
+        label: `CCS ${span(ccsFirstDay(requireCcs().keyDates), ccsLastDay(requireCcs().keyDates))}`,
         href: `/playoffs#${league.id}`,
-        sr: `CCS playoffs, ${longDate(ccsFirstDay(CCS.keyDates))} to ${longDate(ccsLastDay(CCS.keyDates))}`,
+        sr: `CCS playoffs, ${longDate(ccsFirstDay(requireCcs().keyDates))} to ${longDate(ccsLastDay(requireCcs().keyDates))}`,
       };
     case 'section-playoffs':
       // 'Section playoffs Nov 2–14' (DESIGN-socal §2.4): short enough for the rail; the spoken form names it in full.

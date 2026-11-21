@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
 import { dateWithYear, monthDay, timeOfDayPT } from '../../../lib/format';
-import { CCS, ccsRoundDays } from '../../../lib/league-config/sections';
+import { ccsRoundDays, requireCcs } from '../../../lib/league-config/sections';
 import { getLeague, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
 import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
@@ -15,14 +15,15 @@ import type { AboutPostseason } from '../about-view';
  */
 export function PostseasonSection({ postseason }: { postseason: AboutPostseason }) {
   const { field, leagues, tournamentIds, sections, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed } = postseason;
+  const configKeyDates = requireCcs().keyDates;
   return (
     <section id="playoffs" className="sx-section">
       <SectionHeader kicker="Postseason" />
       <div className="sx-prose">
         <p>
           {field.total === null
-            ? `Automatic CCS berths: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} (${CCS.citations.allocation}; ${CCS.citations.change}).`
-            : `The CCS field is ${field.total} teams: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} and ${field.atLarge} at-large (${CCS.citations.allocation}; ${CCS.citations.change}).`}{' '}
+            ? `Automatic CCS berths: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} (${requireCcs().citations.allocation}; ${requireCcs().citations.change}).`
+            : `The CCS field is ${field.total} teams: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} and ${field.atLarge} at-large (${requireCcs().citations.allocation}; ${requireCcs().citations.change}).`}{' '}
           Each
           league&rsquo;s own route to its automatic berths is under its rules above; the live,
           team-by-team picture is on the{' '}
@@ -88,14 +89,14 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             </span>{' '}
             / <span className="tabular-nums">{timeOfDayPT(playoffs.keyDates.seedingMeeting)}</span>
           </li>
-          {CCS.keyDates.firstRound ? (
+          {configKeyDates.firstRound ? (
             <li>
-              First round: <span className="tabular-nums">{dateWithYear(CCS.keyDates.firstRound)}</span>
+              First round: <span className="tabular-nums">{dateWithYear(configKeyDates.firstRound)}</span>
             </li>
           ) : null}
-          {CCS.keyDates.secondRound ? (
+          {configKeyDates.secondRound ? (
             <li>
-              Second round: <span className="tabular-nums">{dateWithYear(CCS.keyDates.secondRound)}</span>
+              Second round: <span className="tabular-nums">{dateWithYear(configKeyDates.secondRound)}</span>
             </li>
           ) : null}
           <li>
@@ -114,10 +115,10 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             </span>
           </li>
         </ul>
-        {CCS.roundDaysNote ? <p>{CCS.roundDaysNote}</p> : null}
+        {requireCcs().roundDaysNote ? <p>{requireCcs().roundDaysNote}</p> : null}
         <p className="text-cell text-ink-2">
           {ccsCalendar === undefined
-            ? `The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it ${IS_FIELD_HOCKEY ? 'in late October' : `on ${monthDay(CCS.pollFrom)}`} and will note here whether it confirms the dates above.`
+            ? `The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it ${IS_FIELD_HOCKEY ? 'in late October' : `on ${monthDay(requireCcs().pollFrom)}`} and will note here whether it confirms the dates above.`
             : keyDatesConfirmed
               ? "The CCS office's own calendar confirms every date above."
               : "The CCS office's own calendar shows at least one difference from the dates above — check it directly."}{' '}

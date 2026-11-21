@@ -5,7 +5,8 @@ This note records how the code divides between sports (an audit of every layer, 
 order of work. The first step, the sport seam in `lib/sports/`, has landed, and so have a soccer
 build, SCVAL girls soccer, 2026-27 ("Girls soccer: SCVAL" below), and a basketball build, SCVAL boys
 basketball, 2026-27 ("Boys basketball: SCVAL" below), and a volleyball build, SCVAL and BVAL girls
-volleyball, 2026 ("Girls volleyball: SCVAL and BVAL" below). The rest is a plan.
+volleyball, 2026 ("Girls volleyball: SCVAL and BVAL" below), and a middle school build read from a league's own site,
+the VAL's girls soccer, 2026-27 ("Middle school girls soccer: the VAL" below). The rest is a plan.
 
 ## Decision: one sport per build
 
@@ -375,6 +376,37 @@ Not done yet: a refit of the rating constants on finished seasons; the CCS Volle
 BVAL's 2025-26 standings; "match" for "game" in the site's own copy; the
 smoke and axe passes on the volleyball build; a volleyball club calendar; the volleyball programs' own Instagram
 accounts.
+
+## Middle school girls soccer: the VAL (2026-11-21)
+
+The owner asked for a middle school soccer site covering the Valley Athletic League's season (valleyal.org), girls,
+both levels, with MaxPreps no longer forced to be the primary source. It is the fifth build (`SCVAL_SPORT=val-soccer`),
+and the first whose games are not MaxPreps': none of the VAL's eleven middle schools is on MaxPreps.
+
+- **The primary source is the build's choice.** `SportSeason` is a union on `primary` (`lib/sports/shape.ts`): a
+  `MaxprepsSportSeason` carries MaxPreps' season ids, a `TeamsidelineSportSeason` the league site's origin and its
+  two levels' page ids. `lib/season.ts` derives the MaxPreps constants only for a MaxPreps season (`''` otherwise,
+  read by no step that runs). The pipeline's first stage is `primary` (renamed from `maxpreps`): `lib/pipeline/primary.ts`
+  runs MaxPreps' steps 02-06 unchanged, or `lib/pipeline/steps/teamsideline.ts`, which keeps one `teamsideline`
+  claim a game (`lib/claims/types.ts`) and starts the view from them. Every later stage reads what `primary` published,
+  whatever the source. The high school builds' pipeline output is unchanged (the pipeline, claims and golden suites).
+- **The sport is soccer itself** (`lib/sports/val-soccer.ts` reuses `SOCCER`); what differs is league-shaped:
+  `lib/league-config/val-soccer/{val,sections}.ts` and `lib/registry/val-soccer/val.ts`.
+- **Config that was high-school-only became optional.** A section may be `none` (no CIF section, `maxprepsSectionId`
+  null); `CCS` and the snapshot's `playoffs` are null in a build with no CCS block (`requireCcs()` for code that runs only
+  for a CCS league); a division may meet once (`meetings: 1`); a league tournament may have a fixed bracket
+  (`semifinals: 'fixed'`), no play-in (`lastSpot: null`), no fixed final site (`finalSite: null`) and its own shootout note.
+- **Levels and players.** `components/words/level-words.ts` names the two levels ('JV'/'varsity' in every high school
+  build, '6th/7th'/'7th/8th' here); `SPORT_LISTS_PLAYERS` keeps every player surface (rosters, stats, player boards, the
+  cross-sport registry) out of the build.
+- **Pages.** /about is `components/about/LeagueSiteAbout.tsx`; /playoffs shows the league's own tournament; recruiting,
+  clubs and the club calendar are off; /history/2025-26 marks the league unavailable (it publishes no past standings).
+- **Deploy.** `update-data-val-soccer.yml` (Nov 21 - Feb 11), ci's `val-soccer` job, the deploy gate's matrix
+  (`SITE_URL_VAL_SOCCER`), `scripts/vercel-ignore-build.sh` and the Worker name `scvalfh-val-soccer`. The hosting project
+  and domain are the owner's to create.
+
+Not done yet: comparing the league's own table with the computed one; the boys' season (Season #4); a smoke and axe pass
+on this build.
 
 ## Guards that must keep passing
 

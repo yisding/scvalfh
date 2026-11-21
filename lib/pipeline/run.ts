@@ -5,6 +5,8 @@
  * the claims file beside it, and writing the three output files.
  *
  *   01 window      out of season → log, write nothing, exit 0 (unless --force)
+ *   02-06 primary  the build's primary source (lib/pipeline/primary.ts): MaxPreps' steps 02-06 below, or a league's
+ *                  own TeamSideline schedule page (steps/teamsideline.ts) in a build MaxPreps does not carry
  *   02 bootstrap   season ids ≠ config → RUN ABORT
  *   03 metas       wrong season/year/section → LEAGUE FREEZE (a)
  *   04 reported    unreadable table → SOURCE STALE (carried)
@@ -23,7 +25,7 @@
  * The stage driver (docs/DATA-SOURCES.md §4.2). Every source's rows are claims, kept per fixture in the claim store
  * (lib/claims/store.ts, read from the claims file the previous run wrote, else seeded from its snapshot). The run
  * publishes a view (lib/claims/view.ts): the fixtures in order and the decisions each stage takes about them. At each
- * game stage, in order (maxpreps, official, sblive, vnn, sdsSheet, classify, guards, results):
+ * game stage, in order (primary, official, sblive, vnn, sdsSheet, classify, guards, results):
  *
  *   COLLECT  the step reads its source (a source not read this run is carried from its stored claims);
  *   MATCH    the step decides over `state.games`, the view resolved through the stage before: decisions about
@@ -76,18 +78,14 @@ import {
 } from './contract';
 import { loadCorpus, type Corpus } from './corpus';
 import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink } from './ledger';
+import { runPrimary } from './primary';
 import { stepAssemble } from './steps/assemble';
-import { stepBootstrap } from './steps/bootstrap';
 import { stepCifss } from './steps/cifss';
 import { logClassification } from './steps/classify';
 import { applyFrozenLeagues, checkFinalsRegression, checkSystemic, fillClassification, markLeaguesNotInRun } from './steps/guards';
-import { stepLeagueMeta } from './steps/league-meta';
-import { stepNormalize } from './steps/normalize';
 import { notAppliedReason } from './steps/official';
-import { stepReported } from './steps/reported';
 import { decideResults, logResults } from './steps/results';
 import { boxEvidenceFrom, type BoxEvidence } from '../results/box-evidence';
-import { stepSchedules } from './steps/schedules';
 import { stepCcsBrackets, stepVnn } from './steps/secondary';
 import { stepSdsSheet } from './steps/sds-sheet';
 import { stepStandings } from './steps/standings';
@@ -99,7 +97,7 @@ import {
   RecordingTransport,
   type RequestCounts,
 } from './transport';
-import { DATA_DIR, SPORT_ID } from '../sports/current';
+import { DATA_DIR, HAS_MAXPREPS, SPORT_ID } from '../sports/current';
 
 export { claimsPathOf } from '../claims/file';
 
@@ -213,12 +211,10 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
     return state.games;
   };
 
-  await stepBootstrap(ctx); // 02
-  await stepLeagueMeta(ctx, state); // 03
-  await stepReported(ctx, state); // 04
-  await stepSchedules(ctx, state); // 05
-  stepNormalize(ctx, state); // 06: the view starts from the MaxPreps claims
-  publish('maxpreps');
+  // 02-06: the build's primary source starts the view (lib/pipeline/primary.ts): MaxPreps' bootstrap, league metas,
+  // reported tables, team feeds and their normalization, or a league's own TeamSideline schedule page.
+  await runPrimary(ctx, state);
+  publish('primary');
 
   // 07 official (the injectable official step): its decisions, by contest, onto the view; the rows it read are kept
   // for the official claims.
@@ -385,12 +381,14 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
     force: false,
     leagues: null,
     acceptRegression: [],
-    sblive: true,
+    // si.com and cifsshome.org cover high schools only: a build MaxPreps does not carry (the VAL's middle schools)
+    // reads neither, whatever the flags say (below).
+    sblive: HAS_MAXPREPS,
     sbliveFull: false,
     official: true,
     ccs: true,
     vnn: true,
-    cifss: true,
+    cifss: HAS_MAXPREPS,
     help: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
@@ -422,6 +420,11 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
       case '-h': args.help = true; break;
       default: throw new Error(`unknown flag: ${arg}`);
     }
+  }
+  if (!HAS_MAXPREPS) {
+    args.sblive = false;
+    args.sbliveFull = false;
+    args.cifss = false;
   }
   if (args.variants.length > 0 && args.fixtures === null) throw new Error('--variant needs --fixtures');
   if (args.capture !== null && args.fixtures !== null) throw new Error('--capture records a live run; it cannot be combined with --fixtures');

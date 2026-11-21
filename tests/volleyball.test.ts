@@ -91,12 +91,12 @@ beforeAll(async () => {
 
 describe('the volleyball sport switch', () => {
   it('is girls varsity volleyball, fall 2026, with its data under data/volleyball/', () => {
-    const { SPORT, SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING } = m.current;
+    const { SPORT, MAXPREPS_SPORT_SEASON, SPORT_AUDIENCE, DATA_DIR, IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING } = m.current;
     expect(SPORT.id).toBe('volleyball');
-    expect(SPORT_SEASON.sportSeasonId).toBe('9f2e0dd1-c299-4f3e-8e0e-744d108b6db7');
-    expect(SPORT_SEASON.allSeasonId).toBe('2059473e-9a9c-400b-b1e2-9a119e64e597');
-    expect(SPORT_SEASON.jvSportSeasonId).toBe('d23401c4-759f-41af-b044-94497d049dd1');
-    expect(SPORT_SEASON.genderSport).toBe('girls,volleyball');
+    expect(MAXPREPS_SPORT_SEASON?.sportSeasonId).toBe('9f2e0dd1-c299-4f3e-8e0e-744d108b6db7');
+    expect(MAXPREPS_SPORT_SEASON?.allSeasonId).toBe('2059473e-9a9c-400b-b1e2-9a119e64e597');
+    expect(MAXPREPS_SPORT_SEASON?.jvSportSeasonId).toBe('d23401c4-759f-41af-b044-94497d049dd1');
+    expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe('girls,volleyball');
     expect(SPORT_AUDIENCE).toBe('girls varsity volleyball');
     expect(DATA_DIR).toBe('data/volleyball');
     expect([IS_FIELD_HOCKEY, IS_BASKETBALL, IS_VOLLEYBALL, HAS_RECRUITING]).toEqual([false, false, true, true]);
@@ -219,15 +219,15 @@ describe('SCVAL and BVAL girls volleyball', () => {
       date: '2026-10-28', tag: 'bval-play-in', host: 0, isPlayIn: true,
       seats: [{ division: 'west-valley', place: 1 }, { division: 'santa-teresa', place: 2 }],
     });
-    expect(m.sections.CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 4, atLarge: null, total: null });
+    expect(m.sections.CCS!.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 4, atLarge: null, total: null });
   });
 
   it('opens the CCS bracket with a first round and names all six MaxPreps brackets', () => {
-    const { CCS, ccsFirstDay, ccsLastDay } = m.sections;
-    expect(ccsFirstDay(CCS.keyDates)).toBe('2026-10-31');
-    expect(ccsLastDay(CCS.keyDates)).toBe('2026-11-07');
-    expect(CCS.ccsDivisions).toEqual([]);
-    expect(CCS.tournament?.otherBrackets?.map((b) => b.name)).toEqual(['Open Division', 'Division 3', 'Division 4', 'Division 5']);
+    const { requireCcs, ccsFirstDay, ccsLastDay } = m.sections;
+    expect(ccsFirstDay(requireCcs().keyDates)).toBe('2026-10-31');
+    expect(ccsLastDay(requireCcs().keyDates)).toBe('2026-11-07');
+    expect(requireCcs().ccsDivisions).toEqual([]);
+    expect(requireCcs().tournament?.otherBrackets?.map((b) => b.name)).toEqual(['Open Division', 'Division 3', 'Division 4', 'Division 5']);
     const page = m.ccs.readTournamentPage(readFileSync(path.join(REPO, 'tests/fixtures/corpus/volleyball-2026-11-14/ccs/bracket.html'), 'utf8'));
     expect(page.recognised).toBe(true);
     expect(page.divisions.map((d) => [d.name, d.published])).toEqual([
@@ -311,7 +311,7 @@ describe('the bundled volleyball data', () => {
   // brackets are whole, every one drawn holds a team of ours, and every bracket game of ours has its card.
   it('holds the published brackets whole, and draws one per division our teams are in', () => {
     const snapshot = m.data.getSnapshot();
-    const brackets = snapshot.playoffs.brackets ?? [];
+    const brackets = snapshot.playoffs!.brackets ?? [];
     expect(brackets.length).toBeGreaterThan(0);
     expect(new Set(brackets.map((b) => b.bracketId)).size).toBe(brackets.length);
     const drawn = m.bracketsView.tournamentBracketsView(brackets, snapshot.games, m.data.getToday());
@@ -333,9 +333,9 @@ describe('the bundled volleyball data', () => {
 
   it('links every published bracket game of ours to its card on /playoffs', () => {
     const snapshot = m.data.getSnapshot();
-    const drawn = m.bracketsView.tournamentBracketsView(snapshot.playoffs.brackets, snapshot.games, m.data.getToday());
+    const drawn = m.bracketsView.tournamentBracketsView(snapshot.playoffs!.brackets, snapshot.games, m.data.getToday());
     const cards = new Map(drawn.brackets.flatMap((b) => b.rounds.flatMap((r) => r.ties.map((t) => [t.contestId, { id: t.id, event: b.event }] as const))));
-    const inBrackets = new Set((snapshot.playoffs.brackets ?? []).flatMap((b) => b.matchups.map((x) => x.contestId)));
+    const inBrackets = new Set((snapshot.playoffs!.brackets ?? []).flatMap((b) => b.matchups.map((x) => x.contestId)));
     const ours = snapshot.games.filter((g) => g.bracket?.published && inBrackets.has(g.contestId));
     expect(ours.length).toBeGreaterThan(0);
     for (const g of ours) {

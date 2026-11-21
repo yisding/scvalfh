@@ -116,4 +116,6 @@ export const DATA_QUALITY: DataQualityConfig = bySport<DataQualityConfig>({
   soccer: SOCCER_DATA_QUALITY,
   basketball: BASKETBALL_DATA_QUALITY,
   volleyball: VOLLEYBALL_DATA_QUALITY,
+  // The VAL's schedule page lists only its own eleven schools: nothing to exclude.
+  'val-soccer': { ghostTeamIds: {}, sbliveIgnoredTeamIds: {}, ignoredMaxprepsLeagueIds: {}, notCovered: [] },
 });

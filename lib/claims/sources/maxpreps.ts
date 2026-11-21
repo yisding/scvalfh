@@ -135,7 +135,7 @@ export function matchMaxpreps(input: {
   const view = games.map((g) => {
     const carry = carriedGames.get(g.contestId);
     const id = carry?.id ?? (store.fixtureOf('maxpreps', g.contestId) as FixtureId);
-    if (carry) decisions.set(id, { from: 'maxpreps', carried: true });
+    if (carry) decisions.set(id, { from: 'primary', carried: true });
     return id;
   });
   return { view, decisions, dropped, unusedExclusions: excluded.unused, droppedByConfig: excluded.dropped.length + deduped.dropped.length, carried: carried.map((g) => g.contestId), games };

@@ -27,6 +27,13 @@ import { getLeague, regionOf } from '../../lib/leagues';
 import { getTeamBySlug, teamsInLeague } from '../../lib/teams';
 import type { Game, GameSide, LeagueId, RegionId, Team, TeamSlug } from '../../lib/types';
 import type { Perspective } from '../ui/describe-game';
+import { SECOND_LEVEL } from '../words/level-words';
+import { HAS_MAXPREPS } from '../../lib/sports/current';
+
+/** Where a build's second-level games come from, as a sentence names it: MaxPreps, or the league's own page (the VAL). */
+const JV_SOURCE = HAS_MAXPREPS ? 'MaxPreps' : 'The league’s page';
+/** The same, mid-sentence. */
+const JV_SOURCE_LOWER = HAS_MAXPREPS ? 'MaxPreps' : 'the league’s page';
 
 export interface JvRowView {
   game: Game;
@@ -149,25 +156,25 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
   const today = localDateKey(getJvFetchedAt());
   const status = entry.maxpreps.status === 'unavailable' ? 'ok' : entry.maxpreps.status;
   const emptyHeading = slot
-    ? `${team.name} fields no JV team, and no ${slot.name} JV game is listed yet.`
+    ? `${team.name} fields no ${SECOND_LEVEL.short} team, and no ${slot.name} ${SECOND_LEVEL.short} game is listed yet.`
     : status === 'error'
-      ? `${team.name}’s JV games could not be read.`
+      ? `${team.name}’s ${SECOND_LEVEL.short} games could not be read.`
       : status === 'pending'
-        ? `${team.name}’s JV games have not been read yet.`
-        : `MaxPreps lists no JV games for ${team.name}.`;
+        ? `${team.name}’s ${SECOND_LEVEL.short} games have not been read yet.`
+        : `${JV_SOURCE} lists no ${SECOND_LEVEL.short} games for ${team.name}.`;
   const emptyBody = slot
     ? slot.source
     : status === 'error'
-      ? 'The last update could not reach MaxPreps for them and had nothing earlier to fall back on.'
+      ? `The last update could not reach ${JV_SOURCE_LOWER} for them and had nothing earlier to fall back on.`
       : status === 'pending'
-        ? 'No update has covered this team’s JV schedule yet.'
-        : 'The school may not field a JV team this season, or no JV schedule has been entered.';
+        ? `No update has covered this team’s ${SECOND_LEVEL.short} schedule yet.`
+        : `The school may not field a ${SECOND_LEVEL.short} team this season, or no ${SECOND_LEVEL.short} schedule has been entered.`;
   return {
     teamName: team.name,
     slot: slot
       ? {
           name: slot.name,
-          note: `${slot.source} These are ${slot.name}’s JV games, each result from ${slot.name}’s side.`,
+          note: `${slot.source} These are ${slot.name}’s ${SECOND_LEVEL.short} games, each result from ${slot.name}’s side.`,
         }
       : null,
     perspective: slot ? { teamId: slot.maxprepsTeamId } : slug,

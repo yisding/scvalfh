@@ -4,10 +4,11 @@
  * "today" is getToday(), never the clock. Reads the snapshot only through lib/data.
  */
 
+import { atFinalSite } from '../../lib/postseason/postseason-kind';
 import { getLeagueTournament, getNonLeagueFinalsPlayed } from '../../lib/data';
 import { dateSpan, ordinalWord, shortDate } from '../../lib/format';
 import { hasHistory } from '../../lib/history/history';
-import { CCS, ccsFirstDay, ccsRoundDays } from '../../lib/league-config/sections';
+import { ccsFirstDay, ccsRoundDays, requireCcs } from '../../lib/league-config/sections';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import { leaguePlayStarts, standaloneName } from '../../lib/leagues';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
@@ -29,7 +30,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   const short = league.shortName;
   const firstLeague = leaguePlayStarts(league.id);
   const ps = league.postseason;
-  const keyDates = CCS.keyDates;
+  const keyDates = requireCcs().keyDates;
 
 
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
@@ -103,7 +104,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
       lead: `${short} league play is over.`,
       body: `Quarterfinals are ${qf ? shortDate(qf.date) : 'to be set'}${
         playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''
-      }; the final is ${final ? shortDate(final.date) : 'to be set'} at ${ps.finalSite.label}.`,
+      }; the final is ${final ? shortDate(final.date) : 'to be set'}${atFinalSite(ps)}.`,
       link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
     };
   }
@@ -138,10 +139,10 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
   if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
     // The bracket's first day: the quarterfinals, or a first round before them (basketball).
-    const firstRound = CCS.keyDates.firstRound;
-    if (today < ccsFirstDay(CCS.keyDates)) {
+    const firstRound = requireCcs().keyDates.firstRound;
+    if (today < ccsFirstDay(requireCcs().keyDates)) {
       // A field the config does not size (soccer: the CCS allocation is not transcribed) is not counted.
-      const seeds = CCS.autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${CCS.autoQualifiers.total}-team field`;
+      const seeds = requireCcs().autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${requireCcs().autoQualifiers.total}-team field`;
       return {
         lead: `${short} league play is over.`,
         body: firstRound

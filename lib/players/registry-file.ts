@@ -32,7 +32,7 @@ import {
   pastSeasonSightings,
   seasonYearOf,
 } from './registry-sources';
-import { SPORT_IDS, type SportId } from '../sports/current';
+import { SPORT_IDS, type SportId, SPORT_LISTS_PLAYERS } from '../sports/current';
 
 export const PLAYERS_FILE = 'data/players.json';
 export const PLAYER_IDENTITY_FILE = 'data/player-identity.json';
@@ -78,7 +78,8 @@ export function readBuildInput(root: string, builtBy: string): BuildInput & { sk
   const sightings: Sighting[] = [];
   const skipped: string[] = [];
 
-  for (const sport of SPORT_IDS) {
+  // A build that lists no players (the VAL's middle schools) is never read into the registry.
+  for (const sport of SPORT_IDS.filter((s) => SPORT_LISTS_PLAYERS[s])) {
     const dir = sportDataDir(sport);
     const rosters = readJson(root, `${dir}/rosters.json`, RostersInput);
     let current: string | null = null;

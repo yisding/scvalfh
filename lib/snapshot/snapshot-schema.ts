@@ -17,7 +17,7 @@
 
 import { z } from 'zod';
 
-import { GUID_RE } from '../game-id';
+import { GUID_RE, TEAMSIDELINE_ID_RE } from '../game-id';
 import { GAME_SLUG_RE } from '../game-slug';
 import { isGameUrlSegment } from '../game-urls';
 import { dateKey, httpUrl, slugId } from '../schema-primitives';
@@ -37,12 +37,15 @@ export const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a
  * feed lists it).
  */
 export const OFFICIAL_ID_RE = /^official:\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
-/** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
+/**
+ * A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2), `cifsds:<away>-at-<home>`, `official:…`, or
+ * a TeamSideline game's `teamsideline:<schedule id>-…` (a build whose primary source is a league's own site).
+ */
 const contestId = z
   .string()
   .refine(
-    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v) || OFFICIAL_ID_RE.test(v),
-    'expected a contest GUID, sblive:<digits>, cifsds:<away>-at-<home> or official:<date>-<away>-at-<home>',
+    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v) || OFFICIAL_ID_RE.test(v) || TEAMSIDELINE_ID_RE.test(v),
+    'expected a contest GUID, sblive:<digits>, cifsds:<away>-at-<home>, official:<date>-<away>-at-<home> or teamsideline:<schedule id>-…',
   );
 const outcome = z.enum(['W', 'L', 'T']);
 /** One team's box score of a game, as far as it bears on the result (lib/types.ts BoxSide). */
@@ -52,7 +55,7 @@ const boxSide = z.object({
   overtimeMinutes: z.number().min(0).optional(),
 });
 // SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
-const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds', 'none']);
 const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
 const sourceId = z.enum([
   'maxpreps-api',
@@ -66,6 +69,7 @@ const sourceId = z.enum([
   'derived',
   'school-site',
   'cifsds-sheet',
+  'teamsideline',
 ]);
 const gameStatus = z.enum(['scheduled', 'live', 'final', 'score-pending', 'postponed']);
 const decider = z.enum(['REG', 'OT', '2OT', 'SO', 'FORFEIT']);
@@ -401,12 +405,12 @@ export const SeasonSchema = z.object({
   sportSeasonId: z.string(),
   allSeasonId: z.string(),
   genderSport: z.enum(['girls,fieldhockey', 'girls,soccer', 'boys,basketball', 'girls,volleyball']),
-  teamLevel: z.enum(['Varsity', 'JV']),
+  teamLevel: z.enum(['Varsity', 'JV', '7th/8th Grade']),
   sections: z.array(
     z.object({
       id: sectionId,
       name: z.string().min(1),
-      maxprepsSectionId: z.string().min(1),
+      maxprepsSectionId: z.string().min(1).nullable(),
       holdsFieldHockeyChampionship: z.boolean(),
     }),
   ),
@@ -555,6 +559,7 @@ export const SourceStatusSchema = z.object({
       'school-calendar',
       'cifss-scores',
       'sds-bracket-sheet',
+      'league-schedule',
     ])
     .optional(),
   scope: z
@@ -741,7 +746,7 @@ export const SnapshotObject = z.object({
   teams: z.array(TeamSchema),
   games: z.array(GameSchema),
   standings: z.array(StandingSchema),
-  playoffs: PlayoffsSchema,
+  playoffs: PlayoffsSchema.nullable(),
   sources: z.array(SourceStatusSchema),
   leagueHealth: z.array(LeagueHealthSchema),
   dropped: z.array(DroppedContestSchema),

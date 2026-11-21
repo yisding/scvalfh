@@ -15,11 +15,11 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import TeamMonogram from '../../../components/ui/TeamMonogram';
-import { getCcsField, getLeagueTournament, getSections, getTeamBySlug } from '../../../lib/data';
+import { getLeagueTournament, getSections, getTeamBySlug } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import type { LeagueConfig, TournamentConfig } from '../../../lib/league-config/shape';
-import { getLeague } from '../../../lib/leagues';
+import { CCS_LEAGUE_IDS, getLeague } from '../../../lib/leagues';
 import { tournamentHeadline } from '../../../lib/postseason/postseason';
 
 /**
@@ -94,7 +94,8 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
   const view = tournamentView(summary, ps, config);
   const headline = tournamentHeadline(getLeagueTournament(summary.id), config);
   const projection = getLeagueTournament(summary.id);
-  const ccsLeagues = getCcsField().byLeague.map((l) => l.shortName);
+  // The leagues that go to the CCS: none in a build with no CCS block (the VAL).
+  const ccsLeagues = CCS_LEAGUE_IDS.map((id) => getLeague(id).shortName);
   const playInRound = ps.rounds.find((r) => r.round === 'play-in');
 
   const champion = projection.champion ? getTeamBySlug(projection.champion.slug) : undefined;
@@ -145,9 +146,9 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
             <li>Format: {ps.citations.format}.</li>
             <li>Seeding: {ps.citations.seeding}.</li>
             <li>Semifinals: {ps.citations.semifinal}.</li>
-            <li>Last place: {ps.citations.lastSpot}.</li>
+            {ps.citations.lastSpot !== null ? <li>Last place: {ps.citations.lastSpot}.</li> : null}
           </ul>
-          <p>{ps.citations.qualifiersConflict}</p>
+          {ps.citations.qualifiersConflict !== null ? <p>{ps.citations.qualifiersConflict}</p> : null}
           <p>{`${ps.titleNote} Source: ${ps.citations.pennant}.`}</p>
           {config.rules.citations.incomplete ? (
             <p>
@@ -157,7 +158,9 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
           ) : null}
         </div>
         <p className="sx-linkrow">
-          <ExternalLink href={ps.sourceUrl} className="sx-action">{`${ps.name} play-off sheet (PDF)`}</ExternalLink>
+          <ExternalLink href={ps.sourceUrl} className="sx-action">
+            {/\.pdf$/i.test(ps.sourceUrl) ? `${ps.name} play-off sheet (PDF)` : `${ps.name} schedule`}
+          </ExternalLink>
           {config.links
             .filter((l) => l.href !== ps.sourceUrl)
             .map((l) => (

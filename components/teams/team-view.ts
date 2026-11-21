@@ -40,7 +40,7 @@ import {
   noMoreGamesSentence,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { CCS, ccsLastDay } from '../../lib/league-config/sections';
+import { ccsLastDay, requireCcs } from '../../lib/league-config/sections';
 import { SDS_BRACKETS_FILE } from '../../lib/postseason/sds-brackets-file';
 import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
@@ -420,10 +420,10 @@ export function leagueCopy(
       else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in ${be} ${shortDate(first.date)}`;
       // When the next game comes: the CCS seeding meeting's date, in the day's tense (never "as soon as CCS publishes
       // the bracket", which named no day).
-      const seeding = CCS.keyDates.seedingMeeting.slice(0, 10);
+      const seeding = requireCcs().keyDates.seedingMeeting.slice(0, 10);
       const seeded = today !== undefined && today >= seeding;
       // Once the last finals day has passed there is no CCS game left to list: the sentence points to the bracket.
-      const finals = ccsLastDay(CCS.keyDates);
+      const finals = ccsLastDay(requireCcs().keyDates);
       const over = today !== undefined && today > finals;
       return {
         ...base,

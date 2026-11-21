@@ -47,6 +47,7 @@ import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { TeamSlug } from '../lib/types';
 import { runCliIfMain } from './cli';
+import { requireMaxpreps } from './lib/require-maxpreps';
 
 const USAGE =
   'Usage: pnpm fetch-prior-season [--year <yy-yy>] [--ssid <sportSeasonId>] [--out <path>] [--dry-run]';
@@ -120,6 +121,8 @@ function render(file: PriorSeason): string {
 
 /** Fetch every registry team's feed for the season, normalize, validate, write (all or nothing). */
 export async function main(argv: readonly string[]): Promise<number> {
+  const notMaxpreps = requireMaxpreps('fetch-prior-season');
+  if (notMaxpreps !== null) return notMaxpreps;
   const args = parseArgs(argv);
   if (args.help) {
     console.log(USAGE);

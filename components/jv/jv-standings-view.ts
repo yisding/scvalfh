@@ -25,6 +25,11 @@ import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { getTeamBySlug, teamsInDivision } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
 import { shortNameOf } from '../words/team-short-name';
+import { MAIN_LEVEL, SECOND_LEVEL } from '../words/level-words';
+import { HAS_MAXPREPS } from '../../lib/sports/current';
+
+/** Where a second-level game is listed, as a sentence ends: on MaxPreps or si.com, or the league's own page (the VAL). */
+const JV_SOURCES = HAS_MAXPREPS ? 'on MaxPreps or si.com' : 'on the league’s page';
 
 export interface JvTableView {
   division: DivisionId;
@@ -82,9 +87,9 @@ export interface JvTableView {
 
 /** Why an uncounted JV game is not counted, in words, for each reason lib/jv/jv-standings.ts gives. */
 export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> = {
-  'no-varsity-counterpart': 'no varsity game matches it',
-  ambiguous: 'two varsity games are equally near it',
-  'varsity-postseason': 'its varsity game is a postseason game',
+  'no-varsity-counterpart': `no ${MAIN_LEVEL.long} game matches it`,
+  ambiguous: `two ${MAIN_LEVEL.long} games are equally near it`,
+  'varsity-postseason': `its ${MAIN_LEVEL.long} game is a postseason game`,
 };
 
 type UncountedReason = Extract<JvClassification, { kind: 'uncounted' }>['reason'];
@@ -94,7 +99,7 @@ const SHARE_WORDS = `${Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}%`;
 /** `De Anza JV` | `MCAL JV`. */
 export function jvTableTitle(division: DivisionId): string {
   const heading = divisionHeading(division);
-  return `${heading ?? getLeague(getDivision(division).leagueId).shortName} JV`;
+  return `${heading ?? getLeague(getDivision(division).leagueId).shortName} ${SECOND_LEVEL.short}`;
 }
 
 function viewOf(t: JvDivisionTable): JvTableView {
@@ -134,16 +139,16 @@ function viewOf(t: JvDivisionTable): JvTableView {
       scoredAgainstTitle: capitalized(AGAINST_WORDS),
       gpTitle:
         t.gamesPerTeam === null
-          ? 'JV league games counted'
-          : `JV league games counted, of the ${t.gamesPerTeam} each team plays`,
+          ? `${SECOND_LEVEL.short} league games counted`
+          : `${SECOND_LEVEL.short} league games counted, of the ${t.gamesPerTeam} each team plays`,
     },
     preseason: t.status === 'none-played' && t.rows.length > 0,
     orderNote: ordersByRecord(rules)
-      ? `Ordered on the ${orderNoun(rules)}, as ${league.shortName}’s varsity tables are; teams level on it share a place.`
+      ? `Ordered on the ${orderNoun(rules)}, as ${league.shortName}’s ${MAIN_LEVEL.long} tables are; teams level on it share a place.`
       : `Ordered on points (${rules.points.win} a win, ${rules.points.tie} a tie); teams level on points share a place.`,
     scheduleNote:
       t.fromSchedule > 0
-        ? `${t.fromSchedule} of the ${plural(listed, 'listed game')} ${t.fromSchedule === 1 ? 'is' : 'are'} from ${league.shortName}’s own schedule, which sets the JV round too: MaxPreps does not list ${t.fromSchedule === 1 ? 'it' : 'them'} yet.`
+        ? `${t.fromSchedule} of the ${plural(listed, 'listed game')} ${t.fromSchedule === 1 ? 'is' : 'are'} from ${league.shortName}’s own schedule, which sets the ${SECOND_LEVEL.short} round too: MaxPreps does not list ${t.fromSchedule === 1 ? 'it' : 'them'} yet.`
         : null,
     division: t.division,
     anchor: isSingleDivision(t.league) ? null : t.division,
@@ -158,7 +163,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
     })),
     slotNote: slotNoteOf(t),
     coverage: noneListed
-      ? `No ${title.replace(/ JV$/, '')} school has a JV league game on MaxPreps or si.com.`
+      ? `No ${title.endsWith(` ${SECOND_LEVEL.short}`) ? title.slice(0, -(SECOND_LEVEL.short.length + 1)) : title} school has a ${SECOND_LEVEL.short} league game ${JV_SOURCES}.`
       : t.status === 'too-few'
         ? `${coverage} A table needs ${SHARE_WORDS}.`
         : coverage,
@@ -166,7 +171,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
     emptyHeading,
     absentNote:
       absent.length && !noneListed
-        ? `${listWords(absent)} ${absent.length === 1 ? 'has' : 'have'} no JV league game on MaxPreps or si.com, so ${absent.length === 1 ? 'is' : 'are'} not in the table.`
+        ? `${listWords(absent)} ${absent.length === 1 ? 'has' : 'have'} no ${SECOND_LEVEL.short} league game ${JV_SOURCES}, so ${absent.length === 1 ? 'is' : 'are'} not in the table.`
         : null,
     uncountedNote: t.uncounted.length
       ? `Not counted: ${t.uncounted
@@ -185,7 +190,7 @@ function slotNoteOf(t: JvDivisionTable): string | null {
   const notes = teamsInDivision(t.division).flatMap((school) => {
     const slot = jvSlotTeamFor(school.slug);
     return slot
-      ? [`${slot.name}, which fields JV only, plays the JV games of ${school.shortName}, which fields varsity only, in its place on ${getLeague(t.league).shortName}’s schedule.`]
+      ? [`${slot.name}, which fields ${SECOND_LEVEL.short} only, plays the ${SECOND_LEVEL.short} games of ${school.shortName}, which fields ${MAIN_LEVEL.long} only, in its place on ${getLeague(t.league).shortName}’s schedule.`]
       : [];
   });
   return notes.length ? notes.join(' ') : null;

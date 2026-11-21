@@ -26,7 +26,7 @@ import { snapshotOf, writeTempVariant, type RunCorpusOptions } from '../pipeline
 import { expectTraceAgrees, traceOf } from './support/shadow';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
-const STAGES_CHECKED: readonly Stage[] = ['maxpreps', 'official', 'sblive', 'sdsSheet', 'classify'];
+const STAGES_CHECKED: readonly Stage[] = ['primary', 'official', 'sblive', 'sdsSheet', 'classify'];
 const CORPORA: readonly CorpusName[] = ['all-2026-10-02', 'eal-2026-10-04', 'socal-2026-10-06'];
 const VARIANTS = ['bval-meta-wrong-season', 'bval-revised', 'finals-regression', 'leland-feed-503', 'mcal-postseason', 'pcal-standings-empty'];
 
@@ -42,7 +42,7 @@ async function shadowRun(label: string, opts: RunCorpusOptions): Promise<{ snaps
   const { snapshot, run } = await snapshotOf({ steps: STEPS, ...opts });
   let carried = 0;
   for (const stage of STAGES_CHECKED) expectTraceAgrees(run.ctx, stage, label);
-  carried += traceOf(run.ctx, 'maxpreps').carried.length;
+  carried += traceOf(run.ctx, 'primary').carried.length;
   return { snapshot, claims: run.result!.claims, carried };
 }
 

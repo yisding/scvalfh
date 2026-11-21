@@ -8,7 +8,7 @@
  * The corpus path stays in contract.ts (resourcePath), which must not load lib/sources at runtime.
  */
 
-import { CCS, sdsBracketSheetCsvUrl } from '../league-config/sections';
+import { requireCcs, sdsBracketSheetCsvUrl } from '../league-config/sections';
 import { getDivision, getLeague } from '../leagues';
 import { officialChangesCellText, sha256Hex } from '../official/validate';
 import { BOOTSTRAP_URL } from '../season';
@@ -21,6 +21,7 @@ import { sbliveLeagueScoresUrl, sbliveScoresUrl } from '../sources/sblive';
 import { SCVAL_STANDINGS_INDEX, scvalScheduleUrl } from '../sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
 import { getTeamBySlug } from '../teams';
+import { teamsidelineLevelUrl } from '../sources/teamsideline-season';
 import type { DivisionId, TeamSlug } from '../types';
 import type { RawResponse } from '../sources/http';
 import { TransportError, type ResourceKey } from './contract';
@@ -207,8 +208,9 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     host: 'other',
     ext: '.html',
     url: () => {
-      if (CCS.bracketUrl === null) throw new Error('no MaxPreps CCS tournament page is configured for this season');
-      return CCS.bracketUrl;
+      const { bracketUrl } = requireCcs();
+      if (bracketUrl === null) throw new Error('no MaxPreps CCS tournament page is configured for this season');
+      return bracketUrl;
     },
     fetch: (c, url) => httpText(c.http, url),
   },
@@ -233,6 +235,13 @@ export const RESOURCES: { [K in ResourceKind]: ResourceSpec<KeyOf<K>> } = {
     ext: '.csv',
     url: (key) => sdsBracketSheetCsvUrl(key.division),
     fetch: (c, url) => httpText(c.http, url, 'text/csv,text/plain,*/*'),
+  },
+  'teamsideline-schedule': {
+    // The league's own site: its schedule pages count against the official (league documents) budget.
+    host: 'official',
+    ext: '.html',
+    url: (key) => teamsidelineLevelUrl(key.level),
+    fetch: (c, url) => httpText(c.http, url),
   },
 };
 

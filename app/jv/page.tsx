@@ -14,7 +14,8 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getFetchedAt } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES, LEAGUES_PROPER, regionOf } from '../../lib/leagues';
-import { GENDER_NAME, SPORT } from '../../lib/sports/current';
+import { GENDER_NAME, HAS_MAXPREPS, SPORT } from '../../lib/sports/current';
+import { MAIN_LEVEL, SECOND_LEVEL } from '../../components/words/level-words';
 
 /**
  * `/jv` — "Where does our JV stand, how did it do, and when does it play?" The JV hub: every league's JV
@@ -37,11 +38,11 @@ import { GENDER_NAME, SPORT } from '../../lib/sports/current';
  */
 
 const SHORT_NAMES = listWords(LEAGUES_PROPER.map((l) => l.shortName));
-const PAGE_TITLE = 'JV standings and scores';
+const PAGE_TITLE = `${SECOND_LEVEL.short} standings and scores`;
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `${GENDER_NAME} junior varsity ${SPORT.noun} for ${SHORT_NAMES}: unofficial JV standings computed from MaxPreps’ JV results, the latest JV scores, the next JV games and every school’s JV team.`,
+  description: `${GENDER_NAME} ${SECOND_LEVEL.long} ${SPORT.noun} for ${SHORT_NAMES}: unofficial ${SECOND_LEVEL.short} standings computed from ${HAS_MAXPREPS ? 'MaxPreps’' : 'the league’s own'} ${SECOND_LEVEL.short} results, the latest ${SECOND_LEVEL.short} scores, the next ${SECOND_LEVEL.short} games and every school’s ${SECOND_LEVEL.short} team.`,
   alternates: { canonical: '/jv' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/jv' },
 };
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
 export default function JvStandingsPage() {
   return (
     <div className="pb-section-lg">
-      <PageHeader title="JV" />
+      <PageHeader title={SECOND_LEVEL.short} />
       {/* The league row: anchors to each league's section, the region switch and the short stamp. Each league's
           section is region-scoped (DESIGN-socal §2.4). */}
       <ScopeBar
@@ -69,7 +70,7 @@ export default function JvStandingsPage() {
           <SectionHeader
             id={`${league.id}-heading`}
             kicker={league.shortName}
-            action={{ href: `/standings/${league.id}`, label: 'Varsity standings' }}
+            action={{ href: `/standings/${league.id}`, label: `${MAIN_LEVEL.short} standings` }}
           />
           <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
           <JvLeagueGames view={buildLeagueJvHubView(league.id)} leagueShort={league.shortName} idPrefix={`${league.id}-jv`} />

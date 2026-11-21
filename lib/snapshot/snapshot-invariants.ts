@@ -269,19 +269,25 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
   });
 
-  // 7. the CCS field.
-  const aq = s.playoffs.format.autoQualifiers;
-  const keys = Object.keys(aq).sort().join('|');
-  const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
-  if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
-  let sum = aq.atLarge ?? 0;
-  for (const leagueId of CCS_LEAGUE_IDS) {
-    if (aq[leagueId] !== CCS.autoQualifiers[leagueId]) {
-      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
+  // 7. the CCS field: none in a build with no CCS block (the VAL), whose snapshot has no playoffs block.
+  const block = CCS;
+  const playoffs = s.playoffs;
+  if (block === null || playoffs === null) {
+    if ((block === null) !== (playoffs === null)) issue(ctx, ['playoffs'], block === null ? 'a playoffs block in a build with no CCS block' : 'no playoffs block in a build with a CCS block');
+  } else {
+    const aq = playoffs.format.autoQualifiers;
+    const keys = Object.keys(aq).sort().join('|');
+    const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
+    if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
+    let sum = aq.atLarge ?? 0;
+    for (const leagueId of CCS_LEAGUE_IDS) {
+      if (aq[leagueId] !== block.autoQualifiers[leagueId]) {
+        issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${block.autoQualifiers[leagueId]}`);
+      }
+      sum += aq[leagueId] ?? 0;
     }
-    sum += aq[leagueId] ?? 0;
+    if (aq.total !== null && sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
   }
-  if (aq.total !== null && sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
 
   // 8. one leagueHealth row per league, config order, with that league's divisions.
   if (s.leagueHealth.map((h) => h.leagueId).join('|') !== LEAGUES.map((l) => l.id).join('|')) {

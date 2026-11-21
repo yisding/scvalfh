@@ -27,10 +27,12 @@ import bundledEnrichmentFieldHockey from '../../data/field-hockey/rosters-enrich
 import bundledEnrichmentBasketball from '../../data/basketball/rosters-enrichment.json';
 import bundledEnrichmentVolleyball from '../../data/volleyball/rosters-enrichment.json';
 import bundledEnrichmentSoccer from '../../data/soccer/rosters-enrichment.json';
+import bundledEnrichmentValSoccer from '../../data/val-soccer/rosters-enrichment.json';
 import bundledRostersFieldHockey from '../../data/field-hockey/rosters.json';
 import bundledRostersBasketball from '../../data/basketball/rosters.json';
 import bundledRostersVolleyball from '../../data/volleyball/rosters.json';
 import bundledRostersSoccer from '../../data/soccer/rosters.json';
+import bundledRostersValSoccer from '../../data/val-soccer/rosters.json';
 import { readOverride, validateData } from '../data-file';
 import {
   RosterEnrichmentSchema,
@@ -59,9 +61,9 @@ import type { TeamSlug } from '../types';
 const MODULE = 'lib/players/rosters.ts';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledEnrichmentVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
+const bundledEnrichment = process.env.SCVAL_SPORT === 'basketball' ? bundledEnrichmentBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledEnrichmentVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledEnrichmentValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledEnrichmentSoccer : bundledEnrichmentFieldHockey;
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
-const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledRostersVolleyball : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
+const bundledRosters = process.env.SCVAL_SPORT === 'basketball' ? bundledRostersBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledRostersVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledRostersValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledRostersSoccer : bundledRostersFieldHockey;
 
 export type {
   EnrichedGrade,

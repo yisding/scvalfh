@@ -19,10 +19,11 @@ export type ContestId = string;
 
 /**
  * The five CIF sections with a covered league: three in Northern California (CCS, NCS, NS) and two in
- * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'). The snapshot
+ * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'); and 'none', the place of a
+ * league in no CIF section (the Valley Athletic League's middle schools, lib/league-config/val-soccer/sections.ts). The snapshot
  * schema's `sectionId` enum is this list (lib/snapshot/snapshot-schema.ts proves the two agree at compile time).
  */
-export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
+export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds' | 'none';
 
 /**
  * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
@@ -64,7 +65,9 @@ export type SourceId =
   /** A JV result transcribed from a school's own athletics site (lib/jv/jv-school-sites.ts); JV only. */
   | 'school-site'
   /** The CIF San Diego Section's bracket sheet: a playoff result MaxPreps lacks (lib/postseason/sds-sheet-results.ts). */
-  | 'cifsds-sheet';
+  | 'cifsds-sheet'
+  /** A league's own TeamSideline schedule page, the primary source of a build MaxPreps does not carry (the VAL). */
+  | 'teamsideline';
 
 // ---------- season ----------
 
@@ -83,7 +86,8 @@ export interface SeasonWindow {
 export interface SeasonSection {
   id: SectionId;
   name: string;                       // 'Central Coast Section'
-  maxprepsSectionId: string;
+  /** null for a section MaxPreps does not know ('none'). */
+  maxprepsSectionId: string | null;
   holdsFieldHockeyChampionship: boolean;
 }
 
@@ -130,7 +134,8 @@ export interface Season {
   sportSeasonId: string;
   allSeasonId: string;
   genderSport: 'girls,fieldhockey' | 'girls,soccer' | 'boys,basketball' | 'girls,volleyball';
-  teamLevel: 'Varsity' | 'JV';
+  /** The level the site is about: 'Varsity', or a middle school league's grade level ('7th/8th Grade'). */
+  teamLevel: 'Varsity' | 'JV' | '7th/8th Grade';
   /** Config order: ccs, ncs, ns, ss, sds. */
   sections: SeasonSection[];
   /** Config order: scval, bval, pcal, mcal, eal, sunset, city, north-county, metro. */
@@ -1034,7 +1039,9 @@ export type SourceKind =
   | 'bootstrap' | 'league-meta' | 'reported-standings' | 'team-schedule'
   | 'official-schedule' | 'official-revision-check' | 'standings-index'
   | 'sblive-scoreboard' | 'sblive-team-games'
-  | 'ccs-calendar' | 'ccs-bracket' | 'tournament-bracket' | 'school-calendar' | 'cifss-scores' | 'sds-bracket-sheet';
+  | 'ccs-calendar' | 'ccs-bracket' | 'tournament-bracket' | 'school-calendar' | 'cifss-scores' | 'sds-bracket-sheet'
+  /** A league's own schedule page read as the primary source (TeamSideline): its games, scores and table. */
+  | 'league-schedule';
 
 export interface SourceStatus {
   id: SourceId;
@@ -1268,7 +1275,8 @@ export interface Snapshot {
   /** One row per registry team, in LEAGUES order then division order then place. */
   standings: Standing[];
   /** The CCS section block. */
-  playoffs: CcsPlayoffs;
+  /** The CCS block; null in a build none of whose leagues is in the CCS (the VAL: lib/league-config/sections.ts CCS). */
+  playoffs: CcsPlayoffs | null;
   /** One row per request; deterministic order (§7.12). */
   sources: SourceStatus[];
   /** NEW. One row per configured league, config order. */

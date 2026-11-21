@@ -48,13 +48,14 @@ import { applyHostCorrection } from '../results/host-correction';
 import { excessOver, finalizeResult, withAddedGames } from '../results/result';
 import { stableStringify } from '../stable-json';
 import { EXCLUSIONS } from '../fixtures/ledger';
-import { CCS } from '../league-config/sections';
+import { CCS, requireCcs } from '../league-config/sections';
 import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
 import { buildCrossCheck } from '../standings/cross-check';
 import { assertFullTable, computeStandings, divisionGames } from '../standings/engine';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '../teams';
 import type {
+  CcsPlayoffs,
   CifssConflictRow,
   DivisionHealth,
   DivisionId,
@@ -258,19 +259,21 @@ export function migrateV1ToV2(raw: unknown): unknown {
   assertFullTable(standings);
 
   // 7. CCS playoffs: section config copies, v1's observed fields kept.
+  // A v1 file is field hockey's (the only build that wrote one), so the CCS block is there.
   const p = (v1.playoffs as Json) ?? {};
-  const playoffs: Snapshot['playoffs'] = {
-    keyDates: { ...CCS.keyDates },
-    ...(p.ccsCalendar !== undefined ? { ccsCalendar: p.ccsCalendar as Snapshot['playoffs']['ccsCalendar'] } : {}),
+  const block = requireCcs();
+  const playoffs: CcsPlayoffs = {
+    keyDates: { ...block.keyDates },
+    ...(p.ccsCalendar !== undefined ? { ccsCalendar: p.ccsCalendar as CcsPlayoffs['ccsCalendar'] } : {}),
     ...(p.keyDatesConfirmed !== undefined ? { keyDatesConfirmed: p.keyDatesConfirmed as boolean } : {}),
     format: {
       elimination: 'single',
-      ccsDivisions: CCS.ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] as [number, number] })),
-      autoQualifiers: { ...CCS.autoQualifiers },
-      highSeedHostsThrough: CCS.highSeedHostsThrough,
+      ccsDivisions: block.ccsDivisions.map((d) => ({ name: d.name, seeds: [d.seeds[0], d.seeds[1]] as [number, number] })),
+      autoQualifiers: { ...block.autoQualifiers },
+      highSeedHostsThrough: block.highSeedHostsThrough,
     },
     bracketPublished: Boolean(p.bracketPublished),
-    bracketUrl: typeof p.bracketUrl === 'string' ? p.bracketUrl : CCS.bracketUrl,
+    bracketUrl: typeof p.bracketUrl === 'string' ? p.bracketUrl : block.bracketUrl,
     games: classifyGames(((p.games as Json[]) ?? []).map(upgradeGame)),
   };
 
@@ -350,7 +353,8 @@ export function addConfiguredLeagues(raw: unknown): unknown {
   const games = v2.games.map(upgradeSides);
   // The CCS berth table is the section config's copy, keyed by league: a league added to the config adds its key
   // (the PAL and the SCCAL to both winter builds, 2026-11-21), so the copy is taken afresh, as migrateV1ToV2 does.
-  const playoffs: Snapshot['playoffs'] = {
+  // A build with no CCS block (the VAL) writes none.
+  const playoffs: Snapshot['playoffs'] = v2.playoffs === null || CCS === null ? null : {
     ...v2.playoffs,
     format: { ...v2.playoffs.format, autoQualifiers: { ...CCS.autoQualifiers } },
     games: v2.playoffs.games.map(upgradeSides),
@@ -742,7 +746,7 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
     ...(changed.size > 0 ? { crossCheck: buildCrossCheck(standings) } : {}),
     ...(sbliveCrossCheck ? { sbliveCrossCheck } : {}),
     counts: countsOf(games, standings),
-    playoffs: { ...v2.playoffs, games: ccsBracketGames(games, CCS.keyDates) },
+    playoffs: v2.playoffs === null || CCS === null ? null : { ...v2.playoffs, games: ccsBracketGames(games, CCS.keyDates) },
   };
   return out;
 }
@@ -758,7 +762,7 @@ export function recordStoredResults(raw: unknown, box?: BoxEvidence): unknown {
 export function needsPlayoffGames(raw: unknown): boolean {
   if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !isObject(raw.playoffs) || !Array.isArray(raw.playoffs.games)) return false;
   try {
-    return playoffGamesStale(raw.games as Game[], raw.playoffs.games as Game[], CCS.keyDates);
+    return playoffGamesStale(raw.games as Game[], raw.playoffs.games as Game[], requireCcs().keyDates);
   } catch {
     return false;
   }
@@ -771,6 +775,6 @@ export function needsPlayoffGames(raw: unknown): boolean {
  */
 export function rebuildPlayoffGames(raw: unknown): unknown {
   if (!needsPlayoffGames(raw)) throw new Error('lib/snapshot/snapshot-migrate.ts: not a v2 snapshot whose playoffs.games need rebuilding');
-  const v2 = raw as unknown as Snapshot;
-  return { ...v2, playoffs: { ...v2.playoffs, games: ccsBracketGames(v2.games, CCS.keyDates) } };
+  const v2 = raw as unknown as Snapshot & { playoffs: CcsPlayoffs };
+  return { ...v2, playoffs: { ...v2.playoffs, games: ccsBracketGames(v2.games, requireCcs().keyDates) } };
 }

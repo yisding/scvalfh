@@ -1,0 +1,183 @@
+# The Valley Athletic League's middle school girls soccer site's data refresh (SCVAL_SPORT=val-soccer;
+# docs/MULTI-SPORT.md): update-data-soccer.yml's job for data/val-soccer/, narrowed to what this build reads. Its
+# primary source is the league's own TeamSideline site (lib/pipeline/primary.ts), not MaxPreps: the snapshot is the
+# 7th/8th grade schedule page (one request), and the JV file the 6th/7th grade page (one more). MaxPreps, si.com and
+# cifsshome.org carry none of these schools, and the build lists no players, so there is no stats, roster or player
+# registry step. It tests them, and commits data/val-soccer/snapshot.json, its meta and claims files and
+# data/val-soccer/jv.json only where the CONTENT changed (the same contentHash rule as update-data.yml).
+#
+# Schedule: an hour after each soccer run (6:30 and 15:30 UTC, 10:30 PM and 7:30 AM Pacific during PST), in the
+# season's months. The scripts' own guard is the season window (lib/league-config/val-soccer/sections.ts: Nov 21 -
+# Feb 11 Pacific; lib/pipeline/steps/window.ts), so a run outside it writes nothing.
+#
+# It shares the `update-data` concurrency group with the other refreshes, so they never push at the same time, and it
+# rebases before it pushes. The commit messages start "data: refresh val-soccer", which deploy-cloudflare.yml accepts
+# as a data commit (tests/workflows.test.ts holds the files and messages to the gate).
+
+name: update-data-val-soccer
+
+on:
+  schedule:
+    - cron: '30 15 * 1-2,11-12 *'
+    - cron: '30 6 * 1-2,11-12 *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Run even outside the Nov 21 - Feb 11 season window'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Shared with the other refreshes: one refresh at a time on main, whichever build.
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # Two pages of the league's own site.
+    timeout-minutes: 15
+
+    env:
+      SCVAL_SPORT: val-soccer
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # pnpm BEFORE setup-node (see update-data.yml).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Exit 1 only on a run abort (nothing written, the previous snapshot stays): a page that cannot be read, or is
+      # not the configured program and level, freezes the league, and with one league that aborts the run.
+      - name: Fetch data
+        timeout-minutes: 5
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-data "${args[@]}"
+
+      # Never fatal: the 6th/7th grade page (scripts/fetch-jv.ts); a failure keeps the previous file's games.
+      - name: Fetch JV games
+        id: jv
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          set -euo pipefail
+          args=()
+          [ -n "$FORCE" ] && args+=(--force)
+          pnpm fetch-jv "${args[@]}"
+
+      # tests/val-soccer.test.ts loads every data file of the build through its validating loader, and
+      # tests/jv-hub.test.ts (which reads the job's SCVAL_SPORT) holds the 6th/7th pages to the games just fetched. When
+      # they fail and the JV file changed in this run, it goes back to the committed one and they run again, so only a
+      # bad snapshot blocks the commit. tests/game-aliases.test.ts follows every old game URL of the snapshot to its page.
+      - name: Test
+        id: test
+        run: |
+          set -uo pipefail
+          run() { pnpm exec vitest run tests/val-soccer.test.ts tests/jv-hub.test.ts tests/game-aliases.test.ts; }
+          if run; then exit 0; fi
+          if git diff --quiet -- data/val-soccer/jv.json; then
+            echo "::error::tests/val-soccer.test.ts failed and the JV file did not change in this run"
+            exit 1
+          fi
+          echo "::warning::tests/val-soccer.test.ts failed; testing again with the committed JV file"
+          git checkout -- data/val-soccer/jv.json
+          echo "restored=true" >> "$GITHUB_OUTPUT"
+          run
+
+      - name: Commit the data that changed
+        id: commit
+        run: |
+          set -euo pipefail
+          # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff never is quiet).
+          PREV="${RUNNER_TEMP:-/tmp}/previous-val-soccer-meta.json"
+          git show HEAD:data/val-soccer/snapshot.meta.json > "$PREV" 2>/dev/null || true
+          SNAPSHOT=$(node -e '
+            const fs = require("node:fs");
+            const hashOf = (p) => {
+              try { return JSON.parse(fs.readFileSync(p, "utf8")).contentHash ?? null; }
+              catch { return null; }
+            };
+            const next = hashOf("data/val-soccer/snapshot.meta.json");
+            const prev = hashOf(process.argv[1]);
+            process.stdout.write(next === null || prev === null || next !== prev ? "true" : "false");
+          ' "$PREV")
+          if [ "$SNAPSHOT" != "true" ]; then
+            echo "no snapshot change — only the run timestamp moved"
+            git checkout -- data/val-soccer/snapshot.json data/val-soccer/snapshot.meta.json
+            # The claims file rides with the snapshot; it may be new and untracked, so remove it then.
+            git checkout -- data/val-soccer/claims.json 2>/dev/null || rm -f data/val-soccer/claims.json
+          fi
+          if git diff --quiet -- data/val-soccer/jv.json; then JV=false; else JV=true; fi
+          echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
+          echo "jv=$JV" >> "$GITHUB_OUTPUT"
+          if [ "$SNAPSHOT" != "true" ] && [ "$JV" != "true" ]; then
+            echo "nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAY=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()))')
+          SUMMARY=$(node -e '
+            const meta = require("./data/val-soccer/snapshot.meta.json");
+            const j = require("./data/val-soccer/jv.json").counts;
+            const c = meta.counts;
+            process.stdout.write(`7th/8th ${c.games} games, ${c.finals} finals · 6th/7th ${j.games} games, ${j.finals} final`);
+          ')
+          # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one: author
+          # github-actions[bot], one parent, a message starting "data: refresh val-soccer", nothing but the files below
+          # (tests/workflows.test.ts).
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ "$SNAPSHOT" = "true" ]; then
+            git add data/val-soccer/snapshot.json data/val-soccer/snapshot.meta.json
+            if [ -e data/val-soccer/claims.json ]; then
+              git add data/val-soccer/claims.json
+            fi
+          fi
+          if [ "$JV" = "true" ]; then
+            git add data/val-soccer/jv.json
+          fi
+          git commit -m "data: refresh val-soccer ${DAY} · ${SUMMARY}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Rebase-then-push so a commit landed in between (another refresh, a human) is not clobbered.
+      - name: Push
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### update-data-val-soccer"
+            echo ""
+            echo "- snapshot changed: \`${{ steps.commit.outputs.snapshot || 'false' }}\`"
+            echo "- 6th/7th games changed: \`${{ steps.commit.outputs.jv || 'false' }}\`"
+            echo "- 6th/7th games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
+            echo "- 6th/7th file restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

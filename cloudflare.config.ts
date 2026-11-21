@@ -26,6 +26,7 @@ const WORKER_NAMES: Record<string, string> = {
   soccer: 'scvalfh-soccer',
   basketball: 'scvalfh-basketball',
   volleyball: 'scvalfh-volleyball',
+  'val-soccer': 'scvalfh-val-soccer',
 };
 const sport = process.env.SCVAL_SPORT || 'field-hockey';
 const name = WORKER_NAMES[sport];

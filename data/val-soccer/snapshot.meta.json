@@ -1,0 +1,56 @@
+{
+  "cifssCrossCheck": null,
+  "commitSummary": "VAL +0 finals",
+  "contentHash": "3dc61b933df2bc6a25dbf60b523bd38dc87c65364c20e7ab32dfb84fbfaef838",
+  "counts": {
+    "byLeague": {
+      "val": {
+        "backfilled": 0,
+        "finals": 0,
+        "games": 55,
+        "leagueGames": 55,
+        "teams": 11
+      }
+    },
+    "finals": 0,
+    "games": 55,
+    "leagueGames": 55,
+    "mismatches": 0,
+    "pending": 0,
+    "teams": 11
+  },
+  "crossCheck": null,
+  "fetchedAt": "2026-11-21T21:33:30.864Z",
+  "leagues": [
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "val",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    }
+  ],
+  "officialFixturesUnmatched": null,
+  "officialStandingsPdfUrl": null,
+  "requests": {
+    "maxpreps": 0,
+    "official": 1,
+    "sblive": 0
+  },
+  "sources": [
+    {
+      "label": "league schedule 7th/8th Grade",
+      "rowCount": 60,
+      "status": "ok"
+    }
+  ],
+  "today": "2026-11-21",
+  "warnings": 0,
+  "window": {
+    "firstGame": "2026-12-14T16:00:00",
+    "lastGame": "2027-01-28T16:00:00",
+    "lastLeagueGame": "2027-01-28T16:00:00"
+  }
+}

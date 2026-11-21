@@ -6,7 +6,7 @@
  * is the whole reason the classifier matches `sem[i]?final`.
  *
  * `tests/fixtures/ccs/tournament-2026-10-29-unpublished.html` is the REAL MaxPreps tournament page
- * (CCS.bracketUrl, GET 2026-10-29 21:41Z, 111,799 bytes): two `<li id="bracket_<GUID>">` blocks, one per
+ * (requireCcs().bracketUrl, GET 2026-10-29 21:41Z, 111,799 bytes): two `<li id="bracket_<GUID>">` blocks, one per
  * CCS division, each still carrying `<div class="not-published">`. `tournament-403.html` is MaxPreps'
  * WAF body (6,967 bytes), which the same URL answered a minute later from this sandbox.
  */
@@ -27,7 +27,7 @@ import {
   parseCcsIcal,
   readTournamentPage,
 } from '../lib/sources/ccs';
-import { CCS } from '../lib/league-config/sections';
+import { requireCcs } from '../lib/league-config/sections';
 import { CcsCalendarEventSchema } from '../lib/snapshot/snapshot-schema';
 import { REPO } from './helpers';
 
@@ -127,9 +127,9 @@ describe('ccs: key-date confirmation', () => {
     const check = confirmKeyDates(events);
     expect(check.differences).toEqual([]);
     expect(check.confirmed).toBe(true);
-    expect(CCS.keyDates.quarterfinals).toBe('2026-11-07');
-    expect(CCS.keyDates.semifinals).toBe('2026-11-11');
-    expect(CCS.keyDates.finals).toBe('2026-11-14');
+    expect(requireCcs().keyDates.quarterfinals).toBe('2026-11-07');
+    expect(requireCcs().keyDates.semifinals).toBe('2026-11-11');
+    expect(requireCcs().keyDates.finals).toBe('2026-11-14');
   });
 
   it('reports a difference instead of silently adopting the feed', () => {
@@ -145,12 +145,12 @@ describe('ccs: key-date confirmation', () => {
   });
 
   it('checks where each round is played against the calendar’s own words (home sites through the quarterfinals, neutral after)', () => {
-    expect(CCS.highSeedHostsThrough).toBe('quarterfinals');
+    expect(requireCcs().highSeedHostsThrough).toBe('quarterfinals');
     expect(events.filter((e) => e.kind === 'quarterfinals' || e.kind === 'semifinals' || e.kind === 'finals').map((e) => calendarSiteOf(e.summary)))
       .toEqual(['home', 'neutral', 'neutral']);
     expect(['quarterfinals', 'semifinals', 'finals'].map((r) => configSiteOf(r as 'quarterfinals', 'quarterfinals'))).toEqual(['home', 'neutral', 'neutral']);
     // The site's former wording, "the higher seed hosts through the semifinals", would now be reported as a difference.
-    const check = confirmKeyDates(events, CCS.keyDates, 'semifinals');
+    const check = confirmKeyDates(events, requireCcs().keyDates, 'semifinals');
     expect(check.confirmed).toBe(false);
     expect(check.differences).toEqual(['semifinals: we say the higher seed hosts, CCS calendar says "CCS Semfinals at Neutral Sites"']);
     // A summary that names no site (a future rewording) is not a difference.
@@ -171,8 +171,8 @@ describe('ccs: the tournament page, read per division and positively', () => {
     const read = readTournamentPage(live);
     expect(read.recognised).toBe(true);
     expect(read.divisions).toEqual([
-      { name: 'Division 1', bracketId: CCS.tournament!.division1BracketId, published: false },
-      { name: 'Division 2', bracketId: CCS.tournament!.division2BracketId, published: false },
+      { name: 'Division 1', bracketId: requireCcs().tournament!.division1BracketId, published: false },
+      { name: 'Division 2', bracketId: requireCcs().tournament!.division2BracketId, published: false },
     ]);
     expect(read.reason).toBe('Division 1 not published · Division 2 not published');
   });
@@ -187,7 +187,7 @@ describe('ccs: the tournament page, read per division and positively', () => {
 
   it('is not fooled by the links list inside each block’s header (the first </ul> is not the block’s end)', () => {
     // Division 1's block holds `<ul class="links">…</ul>` ahead of its marker: cutting there would call it published.
-    const start = live.indexOf(`<li id="bracket_${CCS.tournament!.division1BracketId}"`);
+    const start = live.indexOf(`<li id="bracket_${requireCcs().tournament!.division1BracketId}"`);
     const firstUlClose = live.indexOf('</ul>', start);
     const marker = live.indexOf('not-published', start);
     expect(firstUlClose).toBeLessThan(marker);
@@ -223,7 +223,7 @@ describe('ccs: the tournament page, read per division and positively', () => {
   });
 
   it('reports a division whose block is missing as missing, and still recognises the page', () => {
-    const d2 = live.indexOf(`<li id="bracket_${CCS.tournament!.division2BracketId}"`);
+    const d2 = live.indexOf(`<li id="bracket_${requireCcs().tournament!.division2BracketId}"`);
     const withoutD2 = live.slice(0, d2) + live.slice(live.indexOf('</ul>', live.indexOf('</li>', d2)));
     const read = readTournamentPage(withoutD2);
     expect(read.recognised).toBe(true);
