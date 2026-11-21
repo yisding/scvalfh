@@ -419,6 +419,18 @@ describe('the soccer refresh', () => {
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     // A Test failure that restores the rosters restores the registry rebuilt from them.
     expect(stepBody(updateSoccer, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateSoccer, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateSoccer, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the soccer data files it just wrote', () => {
@@ -452,6 +464,18 @@ describe('the basketball refresh', () => {
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     // A Test failure that restores the rosters restores the registry rebuilt from them.
     expect(stepBody(updateBasketball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateBasketball, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/basketball/rosters.json data/basketball/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateBasketball, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the basketball data files it just wrote, with test files that exist', () => {
@@ -493,6 +517,18 @@ describe('the volleyball refresh', () => {
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     // A Test failure that restores the rosters restores the registry rebuilt from them.
     expect(stepBody(updateVolleyball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateVolleyball, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/volleyball/rosters.json data/volleyball/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateVolleyball, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the volleyball data files it just wrote, with test files that exist', () => {

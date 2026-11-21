@@ -103,3 +103,79 @@ describe('scripts/refresh-player-registry.sh', () => {
     expect(errors[0]).toContain("Mic Borgonia's career dkfpoh6hcdatd");
   });
 });
+
+describe("the refresh's Push step: a registry rebuilt before the rebase", () => {
+  /** update-data-soccer.yml's Push step script, as the runner gets it. */
+  const pushScript = (() => {
+    const yml = readFileSync(path.join(REPO, '.github', 'workflows', 'update-data-soccer.yml'), 'utf8');
+    const step = yml.slice(yml.indexOf('      - name: Push\n'));
+    const run = step.slice(step.indexOf('run: |\n') + 'run: |\n'.length).split('\n');
+    const end = run.findIndex((l) => l.trim() !== '' && !l.startsWith(' '.repeat(10)));
+    return run.slice(0, end).map((l) => l.slice(10)).join('\n');
+  })();
+
+  /**
+   * A remote with one commit, a clone that commits a rebuilt data/players.json (the refresh), and a second commit
+   * on the remote meanwhile touching `upstreamFile`; then the Push step runs in the clone.
+   */
+  function race(upstreamFile: string, build: 'ok' | 'fail') {
+    const root = mkdtempSync(path.join(tmpdir(), 'refresh-push-'));
+    const remote = path.join(root, 'remote.git');
+    const seed = path.join(root, 'seed');
+    const clone = path.join(root, 'clone');
+    const bin = path.join(root, 'bin');
+    mkdirSync(bin);
+    writeFileSync(path.join(bin, 'pnpm'), FAKE_PNPM);
+    chmodSync(path.join(bin, 'pnpm'), 0o755);
+    const id = ['-c', 'user.email=t@example.com', '-c', 'user.name=t'];
+    spawnSync('git', ['init', '-q', '--bare', '-b', 'main', remote]);
+    mkdirSync(path.join(seed, 'data', 'soccer'), { recursive: true });
+    git(seed, 'init', '-q', '-b', 'main');
+    for (const f of ['data/players.json', 'data/player-identity.json', 'data/soccer/player-stats.json']) writeFileSync(path.join(seed, f), '{"v":1}\n');
+    git(seed, 'add', '.');
+    git(seed, ...id, 'commit', '-q', '-m', 'base');
+    git(seed, 'remote', 'add', 'origin', remote);
+    git(seed, 'push', '-q', 'origin', 'main');
+    git(root, 'clone', '-q', remote, clone);
+    git(clone, 'config', 'user.email', 'bot@example.com');
+    git(clone, 'config', 'user.name', 'bot');
+    writeFileSync(path.join(clone, 'data', 'players.json'), '{"v":"refresh"}\n');
+    git(clone, 'commit', '-q', '-am', 'data: refresh soccer');
+    writeFileSync(path.join(seed, upstreamFile), '{"v":"upstream"}\n');
+    git(seed, ...id, 'commit', '-q', '-am', 'meanwhile');
+    git(seed, 'push', '-q', 'origin', 'main');
+    const calls = path.join(root, 'calls');
+    writeFileSync(calls, '');
+    const res = spawnSync('bash', ['-c', pushScript], {
+      cwd: clone,
+      encoding: 'utf8',
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, CALLS: calls, FAKE_BUILD: build, FAKE_TEST: 'ok', GITHUB_REF_NAME: 'main' },
+    });
+    const pushed = git(remote, 'log', '--format=%s', 'main').trim().split('\n');
+    const remotePlayers = spawnSync('git', ['show', 'main:data/players.json'], { cwd: remote, encoding: 'utf8' }).stdout;
+    return { ...res, pushed, remotePlayers, calls: readFileSync(calls, 'utf8').trim().split('\n').filter(Boolean) };
+  }
+
+  it('pushes as it is when the commits it was rebased onto left the curation alone (a stats refresh meanwhile)', () => {
+    const r = race('data/soccer/player-stats.json', 'ok');
+    expect(r.status, r.stdout + r.stderr).toBe(0);
+    expect(r.calls).toEqual([]);
+    expect(r.pushed).toEqual(['data: refresh soccer', 'meanwhile', 'base']);
+    expect(r.remotePlayers).toBe('{"v":"refresh"}\n');
+  });
+
+  it('rebuilds and retests the registry over the rebased files when the curation changed meanwhile, then pushes', () => {
+    const r = race('data/player-identity.json', 'ok');
+    expect(r.status, r.stdout + r.stderr).toBe(0);
+    expect(r.calls).toEqual(['pnpm -s build-players --no-stamp', 'pnpm exec vitest run tests/players-registry.test.ts']);
+    expect(r.pushed).toEqual(['data: refresh soccer', 'meanwhile', 'base']);
+    expect(r.remotePlayers).toBe('{"rebuilt":true}\n');
+  });
+
+  it('pushes nothing when the registry no longer rebuilds over the changed curation', () => {
+    const r = race('data/player-identity.json', 'fail');
+    expect(r.status).toBe(1);
+    expect(r.stdout).toMatch(/^::error title=Player registry::main changed the registry's curation/m);
+    expect(r.pushed).toEqual(['meanwhile', 'base']);
+  });
+});

@@ -166,8 +166,15 @@ jobs:
 
       - name: Commit the data that changed
         id: commit
+        env:
+          REGISTRY: ${{ steps.registry.outcome }}
         run: |
           set -euo pipefail
+          # A registry step that did not succeed commits no rosters and no registry: one that failed has restored them
+          # already, and one its timeout killed could not (scripts/refresh-player-registry.sh).
+          if [ "$REGISTRY" != "success" ]; then
+            git checkout -- data/basketball/rosters.json data/basketball/jv-rosters.json data/players.json
+          fi
           # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff
           # never is quiet).
           PREV="${RUNNER_TEMP:-/tmp}/previous-basketball-meta.json"
@@ -242,7 +249,21 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         run: |
           set -euo pipefail
+          before="$(git rev-parse HEAD~1)"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          # The registry this commit carries was built before the rebase. When a commit it was rebased onto changed the
+          # registry's curation (a person editing data/player-identity.json meanwhile), rebuild it over the rebased files
+          # and hold it to its tests again; push nothing rather than a registry its inputs no longer support.
+          if git show --name-only --format= HEAD | grep -qx 'data/players.json' \
+            && ! git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json; then
+            if pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts; then
+              git add data/players.json
+              git commit --amend --no-edit
+            else
+              echo "::error title=Player registry::main changed the registry's curation under this refresh and the registry no longer rebuilds over it; nothing pushed, the next run rebuilds it"
+              exit 1
+            fi
+          fi
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Summary
