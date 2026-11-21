@@ -239,6 +239,36 @@ const cell = (s: string): string | null => {
 };
 const urlPath = (u: string): string => u.replace(/^https?:\/\/[^/]+/i, '');
 
+/**
+ * The table's height cell against the player's heightFeet/heightInches. The table prints `5'7"`, but a
+ * whole number of feet comes out as `6'0` with no inch mark (Mitty girls soccer, 2026-11-21: Layla
+ * Tucakovic, heightFeet 6, heightInches 0), so the mark is optional when the inches are 0 and
+ * required otherwise; feet and inches must still agree exactly.
+ */
+export function sameHeight(cell: string | null, p: Pick<RosterPlayer, 'height'>): boolean {
+  if (cell === p.height) return true;
+  // The inches as athleteData gives them, never derived from the total: 5'12" is not 6'0.
+  if (cell === null || p.height === null || !/^\d+'0"$/.test(p.height)) return false;
+  return cell === p.height.slice(0, -1);
+}
+
+/**
+ * MaxPreps served a roster page for another sport season than the one asked for: the team has no page
+ * for this season, so the URL falls through to one it does have (Castilleja girls JV soccer, 2026-11-16 on:
+ * sportSeasonId f7cf4c8f-…, not this season's c586ce8b-…). The page's ids still name the right team.
+ */
+export class OtherSeasonRosterError extends MaxPrepsError {
+  readonly teamId: string;
+  readonly servedSportSeasonId: string;
+
+  constructor(message: string, opts: { url: string; teamId: string; servedSportSeasonId: string }) {
+    super(message, { url: opts.url });
+    this.name = 'OtherSeasonRosterError';
+    this.teamId = opts.teamId;
+    this.servedSportSeasonId = opts.servedSportSeasonId;
+  }
+}
+
 // ---------------------------------------------------------------- the rendered table
 
 /**
@@ -334,7 +364,22 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     fail(`page is for team ${teamId}, expected ${opts.expectedTeamId}`);
   }
   if (countData.sportSeasonId && countData.sportSeasonId !== sportSeasonId) {
-    fail(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`);
+    // Another season only when the whole page says so: a row for any other season (this one included)
+    // is a page that disagrees with itself, which is drift, never an empty roster. Every layout keeps
+    // sportSeasonId at the same index.
+    const rowSeasons = new Set(athleteData.map((row) => row[COL.sportSeasonId]));
+    rowSeasons.delete(countData.sportSeasonId);
+    if (rowSeasons.size > 0) {
+      fail(
+        `page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}, and its athleteData rows ` +
+          `name ${[...rowSeasons].map((s) => JSON.stringify(s)).join(', ')} too`,
+      );
+    }
+    throw new OtherSeasonRosterError(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`, {
+      url,
+      teamId,
+      servedSportSeasonId: countData.sportSeasonId,
+    });
   }
 
   const warnings: string[] = [];
@@ -466,7 +511,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
       if (t!.jersey !== p.jersey) mismatch('jersey', p.jersey, t!.jersey);
       if (t!.gradeClass !== p.gradeClass) mismatch('grade', p.gradeClass, t!.gradeClass);
       if (t!.position !== p.position) mismatch('position', p.position, t!.position);
-      if (t!.height !== p.height) mismatch('height', p.height, t!.height);
+      if (!sameHeight(t!.height, p)) mismatch('height', p.height, t!.height);
       // The badge is the rendered form of isClaimed, so it pins that column too (absent in the 2026-10 layout).
       const isClaimed = claimedOf.get(p) ?? false;
       if (t!.claimed !== isClaimed) {

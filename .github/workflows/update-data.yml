@@ -127,7 +127,7 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # A shallow clone is enough; we only ever add one commit on top of the default branch.
           fetch-depth: 1
@@ -147,12 +147,12 @@ jobs:
       # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
       # package.json, so the pnpm version is still pinned by the repo.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       # Pinned in .nvmrc to the version this repo is developed and tested on, so a CI-only Node
       # difference cannot be the reason a snapshot fails to build.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: pnpm

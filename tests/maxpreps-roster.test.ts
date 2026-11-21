@@ -17,6 +17,7 @@ import {
   ROSTER_KEYS,
   ROSTER_KEYS_2026_10,
   ROSTER_LAYOUTS,
+  OtherSeasonRosterError,
   ROSTER_ROW_LENGTH,
   careerIdFromUrl,
   parseRosterPage,
@@ -201,6 +202,53 @@ describe('maxpreps roster: the 15 captures of 2026-10-02', () => {
     expect(parse('los-altos').players.every((p) => p.height === null && p.heightInches === null)).toBe(true);
   });
 
+  describe('a whole number of feet (Mitty girls soccer, 2026-11-21: the table prints 6\'0 with no inch mark)', () => {
+    const OLD = ROSTER_LAYOUTS.get(ROSTER_KEYS_2026_10.length)!;
+    const SF = getTeamBySlug('saint-francis')!.id;
+    const path0 = (u: string) => u.replace(/^https?:\/\/[^/]+/i, '');
+    /** Saint Francis with its first player made `feet`'`inches`" in athleteData and `cell` in the table. */
+    function sixFoot(feet: number, inches: number, cell: string) {
+      let href = '';
+      const edited = withPageProps(fixture('saint-francis'), (pp) => {
+        const r = rows(pp)[0];
+        r[OLD.heightFeet] = feet;
+        r[OLD.heightInches] = inches;
+        if (r[OLD.calculatedHeight] !== null) r[OLD.calculatedHeight] = feet * 12 + inches;
+        href = path0(String(r[OLD.canonicalUrl]));
+      });
+      const at = parseRosterTable(edited)!.findIndex((t) => t.href !== null && path0(t.href) === href);
+      expect(at).toBeGreaterThanOrEqual(0);
+      let n = -1;
+      const html = edited.replace(/<tbody[^>]*>[\s\S]*?<\/tbody>/, (body) =>
+        body.replace(/<tr[^>]*>[\s\S]*?<\/tr>/g, (tr) => {
+          n += 1;
+          if (n !== at) return tr;
+          let td = -1;
+          return tr.replace(/(<td[^>]*>)([\s\S]*?)(<\/td>)/g, (m, open: string, _inner: string, close: string) => {
+            td += 1;
+            return td === 4 ? `${open}${cell}${close}` : m;
+          });
+        }),
+      );
+      return parseRosterPage(html, { expectedTeamId: SF, url: 'test' });
+    }
+
+    it('reads 6\'0 in the table as the 6\'0" athleteData gives, and stores 6\'0"', () => {
+      const p = sixFoot(6, 0, '6&#x27;0').players[0];
+      expect(p.height).toBe('6\'0"');
+      expect(p.heightInches).toBe(72);
+      expect(sixFoot(6, 0, '6&#x27;0&quot;').players[0].height).toBe('6\'0"');
+    });
+
+    it('still throws when the inch mark is missing on any other height, or the numbers disagree', () => {
+      expect(() => sixFoot(6, 1, '6&#x27;1')).toThrow(/height is "6'1"" in athleteData but "6'1" in the rendered table/);
+      expect(() => sixFoot(6, 0, '5&#x27;0')).toThrow(/height is "6'0"" in athleteData/);
+      expect(() => sixFoot(6, 0, '6&#x27;')).toThrow(/height is "6'0"" in athleteData/);
+      // Inches out of range are never read through the total: 5'12" is not the table's 6'0.
+      expect(() => sixFoot(5, 12, '6&#x27;0')).toThrow(/height is "5'12"" in athleteData but "6'0" in the rendered table/);
+    });
+  });
+
   it('keeps the jersey a string, so "00" and "21/88" survive', () => {
     const vc = parse('valley-christian');
     expect(vc.players.some((p) => p.jersey === '21/88')).toBe(true);
@@ -323,6 +371,65 @@ describe('maxpreps roster: drift is loud', () => {
     });
     expect(() => parseIt(driftedRow)).toThrow(/not the page's sportSeasonId/);
     expect(SPORT_SEASON_ID).toBe('e302eb3e-1a32-4f2d-934b-6f9d454f721e');
+  });
+
+  /** The page, its count and every row, for another sport season. */
+  const anotherSeason = (h: string) =>
+    withPageProps(h, (pp) => {
+      (pp.countData as Record<string, unknown>).sportSeasonId = 'another-season';
+      rows(pp).forEach((r) => (r[OLD.sportSeasonId] = 'another-season'));
+    });
+
+  it('keeps sportSeasonId at one index in both layouts (the other-season check reads it before the layout)', () => {
+    expect(OLD.sportSeasonId).toBe(COL.sportSeasonId);
+  });
+
+  it("another season's page throws an OtherSeasonRosterError naming the season it serves and the team", () => {
+    const drifted = anotherSeason(html);
+    let thrown: unknown;
+    try {
+      parseIt(drifted);
+    } catch (err) {
+      thrown = err;
+    }
+    expect(thrown).toBeInstanceOf(OtherSeasonRosterError);
+    expect(thrown).toBeInstanceOf(MaxPrepsError);
+    expect((thrown as OtherSeasonRosterError).servedSportSeasonId).toBe('another-season');
+    expect((thrown as OtherSeasonRosterError).teamId).toBe(SI);
+  });
+
+  it('a page whose rows name another season than its count is drift, never another season', () => {
+    // Only the count moved: the rows are still this season's.
+    const countOnly = withPageProps(html, (pp) => {
+      (pp.countData as Record<string, unknown>).sportSeasonId = 'another-season';
+    });
+    let thrown: unknown;
+    try {
+      parseIt(countOnly);
+    } catch (err) {
+      thrown = err;
+    }
+    expect(thrown).toBeInstanceOf(MaxPrepsError);
+    expect(thrown).not.toBeInstanceOf(OtherSeasonRosterError);
+    expect((thrown as Error).message).toMatch(/and its athleteData rows name "e302eb3e-/);
+    // One row of a third season is the same.
+    const oneRow = withPageProps(anotherSeason(html), (pp) => {
+      rows(pp)[3][OLD.sportSeasonId] = 'a-third-season';
+    });
+    expect(() => parseIt(oneRow)).toThrow(/rows name "a-third-season" too/);
+  });
+
+  it("another team's page is checked before the season: a wrong team is never read as another season", () => {
+    const drifted = anotherSeason(html);
+    let thrown: unknown;
+    try {
+      parseRosterPage(drifted, { expectedTeamId: 'someone-else', url: 'test' });
+    } catch (err) {
+      thrown = err;
+    }
+    expect(thrown).toBeInstanceOf(MaxPrepsError);
+    expect(thrown).not.toBeInstanceOf(OtherSeasonRosterError);
+    expect((thrown as Error).message).toMatch(/expected someone-else/);
   });
 
   it("another team's page throws (the Presentation URL once served Los Gatos)", () => {
