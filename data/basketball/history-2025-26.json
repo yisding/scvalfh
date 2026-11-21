@@ -599,19 +599,399 @@
       "status": "available"
     },
     "pal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "PAL standings",
-          "url": "https://pal.smcoe.org/standings"
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "bay",
+          "label": "Bay",
+          "standings": {
+            "jv": [
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "BURLINGAME",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "burlingame",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "MENLO-ATHERTON",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "menlo-atherton",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "CARLMONT",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "carlmont",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "HALF MOON BAY",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "half-moon-bay",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "TERRA NOVA",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "terra-nova",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "SEQUOIA",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "sequoia",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "JEFFERSON",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "jefferson",
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "12-0",
+                "name": "MENLO-ATHERTON",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "menlo-atherton",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "CARLMONT",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "carlmont",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "HALF MOON BAY",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "half-moon-bay",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "BURLINGAME",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "burlingame",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "5-7",
+                "name": "SEQUOIA",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "sequoia",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "JEFFERSON",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "jefferson",
+                "t": 0,
+                "w": 1
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "TERRA NOVA",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "terra-nova",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
+        },
+        {
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "ocean",
+          "label": "Ocean",
+          "standings": {
+            "jv": [
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "MILLS",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "mills",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "WOODSIDE",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "woodside",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "HILLSDALE",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "hillsdale",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "ARAGON",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "aragon",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "WESTMOOR",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "westmoor",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 5,
+                "leagueRecord": "6-5",
+                "name": "CAPUCHINO",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "capuchino",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "EL CAMINO",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "el-camino-ssf",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "SOUTH SAN FRANCISCO",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "south-san-francisco",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 11,
+                "leagueRecord": "1-11",
+                "name": "SAN MATEO",
+                "overallRecord": null,
+                "place": 9,
+                "slug": "san-mateo",
+                "t": 0,
+                "w": 1
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "OCEANA",
+                "overallRecord": null,
+                "place": 10,
+                "slug": null,
+                "t": 0,
+                "w": 0
+              }
+            ],
+            "varsity": [
+              {
+                "l": 1,
+                "leagueRecord": "11-1",
+                "name": "ARAGON",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "aragon",
+                "t": 0,
+                "w": 11
+              },
+              {
+                "l": 2,
+                "leagueRecord": "10-2",
+                "name": "HILLSDALE",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "hillsdale",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 3,
+                "leagueRecord": "9-3",
+                "name": "WOODSIDE",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "woodside",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 4,
+                "leagueRecord": "8-4",
+                "name": "EL CAMINO",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "el-camino-ssf",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 5,
+                "leagueRecord": "7-5",
+                "name": "MILLS",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "mills",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "CAPUCHINO",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "capuchino",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "SAN MATEO",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "san-mateo",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 8,
+                "leagueRecord": "4-8",
+                "name": "SOUTH SAN FRANCISCO",
+                "overallRecord": null,
+                "place": 6,
+                "slug": "south-san-francisco",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 9,
+                "leagueRecord": "3-9",
+                "name": "WESTMOOR",
+                "overallRecord": null,
+                "place": 9,
+                "slug": "westmoor",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 12,
+                "leagueRecord": "0-12",
+                "name": "OCEANA",
+                "overallRecord": null,
+                "place": 10,
+                "slug": null,
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://pal.smcoe.org/standings (one PDF a sport and level, for the 2025-26 season)"
-      ],
-      "checkedOn": "2026-11-21",
       "league": "Peninsula Athletic League",
-      "reason": "The PAL publishes its final standings on pal.smcoe.org. This site added PAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": null,
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the pdftotext -layout text of the two PDFs, read 2026-11-21: each row as printed, and checked against the PDFs row by row.",
+        "notes": [
+          "PAL boys basketball 2025-26, from pal.smcoe.org: the standings linked from https://pal.smcoe.org/standings. Rows are in the league's own order; nothing is recomputed.",
+          "The varsity tables are the PDF linked as \"Basketball - Boys VAR\" from pal.smcoe.org/standings (\"2026 BOYS VARSITY BAY BASKETBALL STANDINGS\" and \"… OCEAN …\"); the JV tables are the one linked as \"Basketball - Boys JV\" (https://drive.google.com/file/d/11SLkmEObL7BEzu2UjY1JEr4aOG0EEqGq/view).",
+          "Each table prints Rank, School, Win and Loss: no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (2, 2, 4).",
+          "Division membership is 2025-26's: Burlingame, Carlmont, Half Moon Bay, Jefferson, Menlo-Atherton, Sequoia and Terra Nova in the Bay; Aragon, Capuchino, El Camino, Hillsdale, Mills, Oceana, San Mateo, South San Francisco, Westmoor and Woodside in the Ocean. In 2026-27 Aragon, Hillsdale and Woodside play in the Bay, and Jefferson and Terra Nova in the Ocean.",
+          "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+          "The JV Ocean table prints Capuchino at 6-5, eleven games where every other team played twelve; it is kept as printed.",
+          "Only standings are stored: the PAL's all-league teams are not transcribed."
+        ],
+        "publisher": "pal.smcoe.org",
+        "retrievedOn": "2026-11-21",
+        "source": "league-documents",
+        "standings": {
+          "kind": "pdf",
+          "url": "https://drive.google.com/file/d/1KhAnjeyFUWOqleWP-FyJ1MXLMPXeDCaX/view"
+        }
+      },
+      "status": "available"
     },
     "sccal": {
       "checked": [
@@ -1672,39 +2052,385 @@
       "status": "available"
     },
     "wbal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WBAL 2025-26 boys basketball standings",
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "wbal",
+          "label": "WBAL",
+          "standings": {
+            "jv": [
+              {
+                "l": 0,
+                "leagueRecord": "8-0",
+                "name": "The King's Academy",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "kings-academy",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 3,
+                "leagueRecord": "5-3",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "menlo",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 3,
+                "leagueRecord": "5-3",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "sacred-heart-prep",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 6,
+                "leagueRecord": "2-6",
+                "name": "Priory",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "priory",
+                "t": 0,
+                "w": 2
+              },
+              {
+                "l": 5,
+                "leagueRecord": "1-5",
+                "name": "Crystal",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "crystal-springs",
+                "t": 0,
+                "w": 1
+              },
+              {
+                "l": 5,
+                "leagueRecord": "1-5",
+                "name": "Harker",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "harker",
+                "t": 0,
+                "w": 1
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "10-0",
+                "name": "The King's Academy",
+                "overallRecord": null,
+                "place": 1,
+                "slug": "kings-academy",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 2,
+                "leagueRecord": "8-2",
+                "name": "Priory",
+                "overallRecord": null,
+                "place": 2,
+                "slug": "priory",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 4,
+                "leagueRecord": "6-4",
+                "name": "Sacred Heart Prep",
+                "overallRecord": null,
+                "place": 3,
+                "slug": "sacred-heart-prep",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 5,
+                "leagueRecord": "5-5",
+                "name": "Crystal",
+                "overallRecord": null,
+                "place": 4,
+                "slug": "crystal-springs",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 6,
+                "leagueRecord": "4-6",
+                "name": "Menlo",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "menlo",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 6,
+                "leagueRecord": "4-6",
+                "name": "Pinewood",
+                "overallRecord": null,
+                "place": 5,
+                "slug": "pinewood",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 7,
+                "leagueRecord": "3-7",
+                "name": "Eastside College Prep",
+                "overallRecord": null,
+                "place": 7,
+                "slug": "eastside",
+                "t": 0,
+                "w": 3
+              },
+              {
+                "l": 10,
+                "leagueRecord": "0-10",
+                "name": "Harker",
+                "overallRecord": null,
+                "place": 8,
+                "slug": "harker",
+                "t": 0,
+                "w": 0
+              }
+            ]
+          }
+        }
+      ],
+      "league": "West Bay Athletic League",
+      "provenance": {
+        "allLeague": null,
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the page's HTML, read 2026-11-21: each row as printed, and checked against the page row by row.",
+        "notes": [
+          "WBAL boys basketball 2025-26, from hs.wbalsports.org: the standings linked from https://hs.wbalsports.org/history.html. Rows are in the league's own order; nothing is recomputed.",
+          "The page is \"2025-26 WBAL Boys Basketball Standings\", linked from hs.wbalsports.org/history.html: one varsity table and one JV table.",
+          "The page prints a place for the first of two teams ranked level and leaves the next row's blank; the blank row takes the place above it (Menlo and Pinewood, both 4-6, 5th).",
+          "The JV table leaves both Crystal's and Harker's places blank, below Priory's 4th; both are 1-5, so both are stored as 5th, level.",
+          "The page prints games played, a W-L record, a win percentage and games back, and no overall record, so every overallRecord is null.",
+          "Eastside College Prep and Pinewood are in no JV table.",
+          "School spellings are the page's own (\"Crystal\"); `slug` is the join key. Only standings are stored: the WBAL's all-league teams are not transcribed."
+        ],
+        "publisher": "hs.wbalsports.org",
+        "retrievedOn": "2026-11-21",
+        "source": "league-documents",
+        "standings": {
+          "kind": "page",
           "url": "https://hs.wbalsports.org/2025-2026/bbstb.html"
         }
-      ],
-      "checked": [
-        "https://hs.wbalsports.org/history.html (links each past season’s standings pages, 2025-2026 among them)"
-      ],
-      "checkedOn": "2026-11-21",
-      "league": "West Bay Athletic League",
-      "reason": "The WBAL publishes each season’s final standings on hs.wbalsports.org. This site added WBAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      },
+      "status": "available"
     },
     "wcal": {
-      "alsoPublished": [
+      "divisions": [
         {
-          "label": "WCAL standings",
-          "url": "https://wcalsports.org/standings/"
-        },
-        {
-          "label": "WCAL awards and records",
-          "url": "https://wcalsports.org/awardsrecords/"
+          "awards": {
+            "jv": null,
+            "varsity": null
+          },
+          "division": "wcal",
+          "label": "WCAL",
+          "standings": {
+            "jv": [
+              {
+                "l": 2,
+                "leagueRecord": "12-2",
+                "name": "Saint Ignatius",
+                "overallRecord": "22-2",
+                "place": 1,
+                "slug": "st-ignatius",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 4,
+                "leagueRecord": "10-4",
+                "name": "Archbishop Mitty",
+                "overallRecord": "16-8",
+                "place": 2,
+                "slug": "mitty",
+                "t": 0,
+                "w": 10
+              },
+              {
+                "l": 6,
+                "leagueRecord": "7-6",
+                "name": "Bellarmine",
+                "overallRecord": "16-7",
+                "place": 3,
+                "slug": "bellarmine",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 7,
+                "leagueRecord": "7-7",
+                "name": "Junipero Serra",
+                "overallRecord": "12-11",
+                "place": 4,
+                "slug": "serra",
+                "t": 0,
+                "w": 7
+              },
+              {
+                "l": 4,
+                "leagueRecord": "6-4",
+                "name": "Archbishop Riordan",
+                "overallRecord": "13-6",
+                "place": 5,
+                "slug": "riordan",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 7,
+                "leagueRecord": "6-7",
+                "name": "Saint Francis",
+                "overallRecord": "14-8",
+                "place": 6,
+                "slug": "saint-francis",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 10,
+                "leagueRecord": "4-10",
+                "name": "Valley Christian",
+                "overallRecord": "13-12",
+                "place": 7,
+                "slug": "valley-christian",
+                "t": 0,
+                "w": 4
+              },
+              {
+                "l": 12,
+                "leagueRecord": "1-12",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "5-17",
+                "place": 8,
+                "slug": "sacred-heart-cathedral",
+                "t": 0,
+                "w": 1
+              }
+            ],
+            "varsity": [
+              {
+                "l": 0,
+                "leagueRecord": "14-0",
+                "name": "Archbishop Riordan",
+                "overallRecord": "23-1",
+                "place": 1,
+                "slug": "riordan",
+                "t": 0,
+                "w": 14
+              },
+              {
+                "l": 2,
+                "leagueRecord": "12-2",
+                "name": "Saint Ignatius",
+                "overallRecord": "21-3",
+                "place": 2,
+                "slug": "st-ignatius",
+                "t": 0,
+                "w": 12
+              },
+              {
+                "l": 5,
+                "leagueRecord": "9-5",
+                "name": "Archbishop Mitty",
+                "overallRecord": "15-9",
+                "place": 3,
+                "slug": "mitty",
+                "t": 0,
+                "w": 9
+              },
+              {
+                "l": 6,
+                "leagueRecord": "8-6",
+                "name": "Bellarmine",
+                "overallRecord": "16-8",
+                "place": 4,
+                "slug": "bellarmine",
+                "t": 0,
+                "w": 8
+              },
+              {
+                "l": 8,
+                "leagueRecord": "6-8",
+                "name": "Valley Christian",
+                "overallRecord": "14-10",
+                "place": 5,
+                "slug": "valley-christian",
+                "t": 0,
+                "w": 6
+              },
+              {
+                "l": 9,
+                "leagueRecord": "5-9",
+                "name": "Junipero Serra",
+                "overallRecord": "13-11",
+                "place": 6,
+                "slug": "serra",
+                "t": 0,
+                "w": 5
+              },
+              {
+                "l": 13,
+                "leagueRecord": "1-13",
+                "name": "Sacred Heart Cathedral",
+                "overallRecord": "8-16",
+                "place": 7,
+                "slug": "sacred-heart-cathedral",
+                "t": 0,
+                "w": 1
+              },
+              {
+                "l": 13,
+                "leagueRecord": "1-13",
+                "name": "Saint Francis",
+                "overallRecord": "8-16",
+                "place": 8,
+                "slug": "saint-francis",
+                "t": 0,
+                "w": 1
+              }
+            ]
+          }
         }
       ],
-      "checked": [
-        "https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)",
-        "https://wcalsports.org/awardsrecords/ (its season honors)"
-      ],
-      "checkedOn": "2026-11-21",
       "league": "West Catholic Athletic League",
-      "reason": "The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
-      "status": "unavailable"
+      "provenance": {
+        "allLeague": null,
+        "builtBy": "scripts/build-history.ts",
+        "extraction": "Transcribed from the pdftotext -layout text of the PDF, read 2026-11-21: each row as printed, and checked against the PDF row by row.",
+        "notes": [
+          "WCAL boys basketball 2025-26, from wcalsports.org: the standings linked from https://wcalsports.org/standings/. Rows are in the league's own order; nothing is recomputed.",
+          "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/: \"WCAL MEN'S BASKETBALL FINAL STANDINGS\", varsity of February 17, 2026 (\"WCAL CHAMPION – ARCHBISHOP RIORDAN\") and junior varsity of February 18, 2026 (\"WCAL CHAMPION – SAINT IGNATIUS\").",
+          "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it. Sacred Heart Cathedral and Saint Francis are both 1-13 in the varsity table, in that order, so they are 7th and 8th.",
+          "League is the PDF's League Wins and Losses columns, overall its Season columns.",
+          "The JV table prints Archbishop Riordan at 6-4, Bellarmine at 7-6, Saint Francis at 6-7 and Sacred Heart Cathedral at 1-12, fewer than fourteen league games; each is kept as printed.",
+          "The PDF's freshman tables are not stored: the archive has varsity and JV only. Only standings are stored: the WCAL's all-league teams are not transcribed."
+        ],
+        "publisher": "wcalsports.org",
+        "retrievedOn": "2026-11-21",
+        "source": "league-documents",
+        "standings": {
+          "kind": "pdf",
+          "url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf"
+        }
+      },
+      "status": "available"
     }
   },
   "season": "2025-26",

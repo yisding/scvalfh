@@ -136,6 +136,16 @@ jobs:
           pnpm fetch-rosters --level jv || rc=1
           exit "$rc"
 
+      # Never fatal. When the roster fetch changed a roster file, rebuild data/players.json from the new rosters and
+      # hold it to tests/players-registry.test.ts (scripts/refresh-player-registry.sh). When either fails (a hand-curated
+      # data/player-identity.json entry the new rosters no longer support), the rosters and the registry go back to the
+      # committed ones and an error annotation names the entry, so main never holds rosters its registry refuses.
+      - name: Rebuild the player registry
+        id: registry
+        continue-on-error: true
+        timeout-minutes: 10
+        run: scripts/refresh-player-registry.sh soccer
+
       # tests/soccer.test.ts loads every soccer data file through its validating loader, and tests/jv-hub.test.ts
       # (which reads the job's SCVAL_SPORT) holds the JV pages to the JV games just fetched. When they fail
       # and the stats or JV file changed in this run, both go back to the committed ones and it runs
@@ -152,14 +162,21 @@ jobs:
             exit 1
           fi
           echo "::warning::tests/soccer.test.ts failed; testing again with the committed stats and JV files"
-          git checkout -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json
+          git checkout -- data/soccer/player-stats.json data/soccer/jv.json data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json
           echo "restored=true" >> "$GITHUB_OUTPUT"
           run
 
       - name: Commit the data that changed
         id: commit
+        env:
+          REGISTRY: ${{ steps.registry.outcome }}
         run: |
           set -euo pipefail
+          # A registry step that did not succeed commits no rosters and no registry: one that failed has restored them
+          # already, and one its timeout killed could not (scripts/refresh-player-registry.sh).
+          if [ "$REGISTRY" != "success" ]; then
+            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json
+          fi
           # The snapshot changed when its contentHash did (update-data.yml explains why a plain diff
           # never is quiet).
           PREV="${RUNNER_TEMP:-/tmp}/previous-soccer-meta.json"
@@ -202,8 +219,9 @@ jobs:
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh soccer", nothing but
-          # the seven files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
-          # player-stats.json, jv.json, rosters.json and jv-rosters.json (tests/workflows.test.ts).
+          # the files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
+          # player-stats.json, jv.json, rosters.json and jv-rosters.json, and data/players.json rebuilt from the rosters
+          # (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then
@@ -220,6 +238,10 @@ jobs:
           fi
           if [ "$ROSTERS" = "true" ]; then
             git add data/soccer/rosters.json data/soccer/jv-rosters.json
+            # The registry rebuilt from them (the Rebuild the player registry step), when it changed.
+            if ! git diff --quiet -- data/players.json; then
+              git add data/players.json
+            fi
           fi
           git commit -m "data: refresh soccer ${DAY} · ${SUMMARY}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -229,7 +251,21 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         run: |
           set -euo pipefail
+          before="$(git rev-parse HEAD~1)"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          # The registry this commit carries was built before the rebase. When a commit it was rebased onto changed the
+          # registry's curation (a person editing data/player-identity.json meanwhile), rebuild it over the rebased files
+          # and hold it to its tests again; push nothing rather than a registry its inputs no longer support.
+          if git show --name-only --format= HEAD | grep -qx 'data/players.json' \
+            && ! git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json; then
+            if pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts; then
+              git add data/players.json
+              git commit --amend --no-edit
+            else
+              echo "::error title=Player registry::main changed the registry's curation under this refresh and the registry no longer rebuilds over it; nothing pushed, the next run rebuilds it"
+              exit 1
+            fi
+          fi
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Summary
@@ -245,5 +281,6 @@ jobs:
             echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
             echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
             echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
+            echo "- player registry: \`${{ steps.registry.outcome || 'skipped' }}\`"
             echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

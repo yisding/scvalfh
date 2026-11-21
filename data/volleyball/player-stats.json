@@ -6,7 +6,7 @@
     "teams": 60,
     "teamsWithStats": 38
   },
-  "fetchedAt": "2026-11-20T15:38:29.462Z",
+  "fetchedAt": "2026-11-21T14:48:27.556Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "06a44d81-ac81-4c31-a553-ff924f193c02",
@@ -6499,7 +6499,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "738a2432-7acb-4ad6-b041-115ec0f331c2",
       "name": "Homestead",
@@ -6520,7 +6520,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0400145a-d7ca-43a8-9890-2d5ecb8444e6",
@@ -13434,7 +13434,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "039663b4-1b15-47e3-bb45-24e2a2fde938",
@@ -19815,7 +19815,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "048cc3b5-6180-4b4e-b922-762d217b940d",
@@ -22967,6 +22967,158 @@
           "warnings": []
         },
         {
+          "contestId": "75b7aa70-ab2b-4f9d-a199-342808aa9b82",
+          "players": [
+            {
+              "field": {
+                "assists": 0,
+                "attackAttempts": 7,
+                "attackErrors": 1,
+                "blockAssists": 2,
+                "digs": 2,
+                "kills": 2,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Sanjana Balineni"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "attackAttempts": 30,
+                "attackErrors": 4,
+                "digs": 10,
+                "kills": 14,
+                "receptionErrors": 2,
+                "receptions": 12,
+                "serveAttempts": 8,
+                "serveErrors": 0,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "5",
+              "name": "Audrie Huang"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "assists": 1,
+                "attackAttempts": 20,
+                "attackErrors": 4,
+                "blockAssists": 1,
+                "digs": 6,
+                "kills": 2,
+                "receptionErrors": 8,
+                "receptions": 15,
+                "serveAttempts": 10,
+                "serveErrors": 3,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Isabella Lee"
+            },
+            {
+              "field": {
+                "aces": 1,
+                "attackAttempts": 16,
+                "attackErrors": 4,
+                "blockAssists": 3,
+                "digs": 4,
+                "kills": 6,
+                "receptionErrors": 0,
+                "receptions": 2,
+                "serveAttempts": 9,
+                "serveErrors": 1,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "18",
+              "name": "Swathi Hegde"
+            },
+            {
+              "field": {
+                "aces": 0,
+                "attackAttempts": 11,
+                "attackErrors": 2,
+                "kills": 3,
+                "serveAttempts": 4,
+                "serveErrors": 0,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "2",
+              "name": "Inaaya Dominguez"
+            },
+            {
+              "field": {
+                "aces": 0,
+                "assists": 21,
+                "attackAttempts": 2,
+                "attackErrors": 0,
+                "digs": 5,
+                "kills": 0,
+                "serveAttempts": 7,
+                "serveErrors": 0,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Ashley Chen"
+            },
+            {
+              "field": {
+                "aces": 2,
+                "assists": 2,
+                "digs": 14,
+                "receptionErrors": 4,
+                "receptions": 19,
+                "serveAttempts": 9,
+                "serveErrors": 2,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Ellie Chu"
+            },
+            {
+              "field": {
+                "aces": 0,
+                "assists": 2,
+                "digs": 11,
+                "receptionErrors": 1,
+                "receptions": 6,
+                "serveAttempts": 8,
+                "serveErrors": 2,
+                "setsPlayed": 3
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Katie Cao"
+            }
+          ],
+          "rowKey": "a4c555bc",
+          "tracked": {
+            "field": [
+              "setsPlayed",
+              "kills",
+              "attackErrors",
+              "attackAttempts",
+              "aces",
+              "serveErrors",
+              "serveAttempts",
+              "blockAssists",
+              "digs",
+              "assists",
+              "receptions",
+              "receptionErrors"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "86badc4b-930b-4353-83fc-62033a392541",
           "players": [
             {
@@ -25869,7 +26021,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-08T23:53:08",
+      "lastUpdated": "2026-11-21T00:13:11",
       "maxprepsTeamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "name": "Milpitas",
       "players": [
@@ -25905,16 +26057,16 @@
           "field": {
             "aces": 5,
             "assists": 1,
-            "attackAttempts": 355,
-            "attackErrors": 53,
-            "blockAssists": 24,
-            "digs": 85,
-            "kills": 91,
+            "attackAttempts": 362,
+            "attackErrors": 54,
+            "blockAssists": 26,
+            "digs": 87,
+            "kills": 93,
             "receptionErrors": 3,
             "receptions": 10,
             "serveAttempts": 56,
             "serveErrors": 9,
-            "setsPlayed": 115,
+            "setsPlayed": 118,
             "soloBlocks": 1
           },
           "fullName": "Sanjana Balineni",
@@ -25928,18 +26080,18 @@
           "careerId": "1rfqvupsg0300",
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/ellie-chu/?careerid=1rfqvupsg0300",
           "field": {
-            "aces": 49,
-            "assists": 51,
+            "aces": 51,
+            "assists": 53,
             "attackAttempts": 4,
             "attackErrors": 0,
             "blockAssists": null,
-            "digs": 660,
+            "digs": 674,
             "kills": 3,
-            "receptionErrors": 62,
-            "receptions": 756,
-            "serveAttempts": 374,
-            "serveErrors": 55,
-            "setsPlayed": 118,
+            "receptionErrors": 66,
+            "receptions": 775,
+            "serveAttempts": 383,
+            "serveErrors": 57,
+            "setsPlayed": 121,
             "soloBlocks": null
           },
           "fullName": "Ellie Chu",
@@ -25953,18 +26105,18 @@
           "careerId": "oujgtvele3see",
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/audrie-huang/?careerid=oujgtvele3see",
           "field": {
-            "aces": 58,
+            "aces": 59,
             "assists": 21,
-            "attackAttempts": 1058,
-            "attackErrors": 157,
+            "attackAttempts": 1088,
+            "attackErrors": 161,
             "blockAssists": 25,
-            "digs": 351,
-            "kills": 396,
-            "receptionErrors": 17,
-            "receptions": 397,
-            "serveAttempts": 435,
+            "digs": 361,
+            "kills": 410,
+            "receptionErrors": 19,
+            "receptions": 409,
+            "serveAttempts": 443,
             "serveErrors": 39,
-            "setsPlayed": 115,
+            "setsPlayed": 118,
             "soloBlocks": 14
           },
           "fullName": "Audrie Huang",
@@ -25989,7 +26141,7 @@
             "receptions": 1,
             "serveAttempts": null,
             "serveErrors": null,
-            "setsPlayed": 32,
+            "setsPlayed": 33,
             "soloBlocks": 2
           },
           "fullName": "Kaitlyn Nguyen",
@@ -26029,17 +26181,17 @@
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/katie-cao/?careerid=jja8vo9nkn1rb",
           "field": {
             "aces": 19,
-            "assists": 5,
+            "assists": 7,
             "attackAttempts": 5,
             "attackErrors": 1,
             "blockAssists": null,
-            "digs": 164,
+            "digs": 175,
             "kills": 0,
-            "receptionErrors": 18,
-            "receptions": 167,
-            "serveAttempts": 152,
-            "serveErrors": 22,
-            "setsPlayed": 68,
+            "receptionErrors": 19,
+            "receptions": 173,
+            "serveAttempts": 160,
+            "serveErrors": 24,
+            "setsPlayed": 71,
             "soloBlocks": null
           },
           "fullName": "Katie Cao",
@@ -26053,18 +26205,18 @@
           "careerId": "5rqdc1hjsrlo8",
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/isabella-lee/?careerid=5rqdc1hjsrlo8",
           "field": {
-            "aces": 42,
-            "assists": 3,
-            "attackAttempts": 1033,
-            "attackErrors": 139,
-            "blockAssists": 16,
-            "digs": 250,
-            "kills": 317,
-            "receptionErrors": 62,
-            "receptions": 436,
-            "serveAttempts": 345,
-            "serveErrors": 39,
-            "setsPlayed": 112,
+            "aces": 43,
+            "assists": 4,
+            "attackAttempts": 1053,
+            "attackErrors": 143,
+            "blockAssists": 17,
+            "digs": 256,
+            "kills": 319,
+            "receptionErrors": 70,
+            "receptions": 451,
+            "serveAttempts": 355,
+            "serveErrors": 42,
+            "setsPlayed": 115,
             "soloBlocks": 9
           },
           "fullName": "Isabella Lee",
@@ -26103,18 +26255,18 @@
           "careerId": "68nrs8pq86oaa",
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/swathi-hegde/?careerid=68nrs8pq86oaa",
           "field": {
-            "aces": 18,
+            "aces": 19,
             "assists": 7,
-            "attackAttempts": 609,
-            "attackErrors": 60,
-            "blockAssists": 60,
-            "digs": 53,
-            "kills": 283,
+            "attackAttempts": 625,
+            "attackErrors": 64,
+            "blockAssists": 63,
+            "digs": 57,
+            "kills": 289,
             "receptionErrors": 1,
-            "receptions": 8,
-            "serveAttempts": 124,
-            "serveErrors": 7,
-            "setsPlayed": 119,
+            "receptions": 10,
+            "serveAttempts": 133,
+            "serveErrors": 8,
+            "setsPlayed": 122,
             "soloBlocks": 45
           },
           "fullName": "Swathi Hegde",
@@ -26230,16 +26382,16 @@
           "field": {
             "aces": 28,
             "assists": 8,
-            "attackAttempts": 261,
-            "attackErrors": 33,
+            "attackAttempts": 272,
+            "attackErrors": 35,
             "blockAssists": 13,
             "digs": 64,
-            "kills": 102,
+            "kills": 105,
             "receptionErrors": 0,
             "receptions": 8,
-            "serveAttempts": 285,
+            "serveAttempts": 289,
             "serveErrors": 11,
-            "setsPlayed": 109,
+            "setsPlayed": 112,
             "soloBlocks": 16
           },
           "fullName": "Inaaya Dominguez",
@@ -26254,17 +26406,17 @@
           "careerUrl": "https://www.maxpreps.com/ca/milpitas/milpitas-trojans/athletes/ashley-chen/?careerid=fh4q2v94imqj3",
           "field": {
             "aces": 65,
-            "assists": 907,
-            "attackAttempts": 61,
+            "assists": 928,
+            "attackAttempts": 63,
             "attackErrors": 11,
             "blockAssists": 4,
-            "digs": 295,
+            "digs": 300,
             "kills": 17,
             "receptionErrors": 0,
             "receptions": 4,
-            "serveAttempts": 522,
+            "serveAttempts": 529,
             "serveErrors": 16,
-            "setsPlayed": 106,
+            "setsPlayed": 109,
             "soloBlocks": 0
           },
           "fullName": "Ashley Chen",
@@ -26289,7 +26441,7 @@
             "receptions": 12,
             "serveAttempts": 5,
             "serveErrors": 2,
-            "setsPlayed": 6,
+            "setsPlayed": 7,
             "soloBlocks": null
           },
           "fullName": "Mia Tam",
@@ -26380,18 +26532,18 @@
       "teamId": "8ff5a211-5896-4289-9596-760a8179c34d",
       "totals": {
         "field": {
-          "aces": 333,
-          "assists": 1208,
-          "attackAttempts": 3639,
-          "attackErrors": 497,
-          "blockAssists": 150,
-          "digs": 2111,
-          "kills": 1284,
-          "receptionErrors": 179,
-          "receptions": 1907,
-          "serveAttempts": 2648,
-          "serveErrors": 231,
-          "setsPlayed": 145,
+          "aces": 338,
+          "assists": 1234,
+          "attackAttempts": 3725,
+          "attackErrors": 512,
+          "blockAssists": 156,
+          "digs": 2163,
+          "kills": 1311,
+          "receptionErrors": 194,
+          "receptions": 1961,
+          "serveAttempts": 2703,
+          "serveErrors": 239,
+          "setsPlayed": 148,
           "soloBlocks": 87
         },
         "goalkeeping": {}
@@ -26415,12 +26567,12 @@
         "goalkeeping": []
       },
       "warnings": [
-        "field assists: players add up to 1210, above MaxPreps' team total of 1208; both as published"
+        "field assists: players add up to 1236, above MaxPreps' team total of 1234; both as published"
       ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "074e4a06-bc89-4eee-81c8-4ba5a2c7bc00",
@@ -31879,7 +32031,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -31900,7 +32052,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "22889413-74ed-44c8-8cb1-3eda067b541d",
@@ -33050,7 +33202,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "1facc0f2-0072-44d5-bda0-7e5de69b4c39",
@@ -40632,7 +40784,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0848b490-3320-4c9c-ad95-de4e9fb5e0af",
@@ -45595,7 +45747,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -50958,7 +51110,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "013c3ebd-b852-4814-b2b8-770690cec229",
@@ -57150,7 +57302,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -57171,7 +57323,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "035c5900-565a-4a3d-884f-53cbfff99124",
@@ -61986,7 +62138,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "111f7795-9ec5-4812-b365-1abba628fd4d",
@@ -67132,7 +67284,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "044ae758-7a54-482e-a856-7702f8dd15c9",
@@ -73124,7 +73276,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "554a6e7c-06b6-473a-9461-9f155294d249",
       "name": "Evergreen Valley",
@@ -73145,7 +73297,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "15fa3ca6-6c1c-4c58-b7ff-25e8de8f9b7a",
@@ -78091,7 +78243,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "1f9915e5-5ed0-41b4-8547-278727b0985e",
@@ -82316,7 +82468,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "1b6b2ce4-4309-4235-b3f9-125eef2752ed",
@@ -87536,7 +87688,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "f8a2ede1-2719-4b4b-b847-d10a46fb93a2",
@@ -87730,7 +87882,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "02815173-2563-4291-a1cd-32beaeaeb2de",
@@ -93106,7 +93258,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "03992edb-0aff-4747-90b5-6fd7f3e5b51f",
@@ -97782,7 +97934,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "2bbd7758-7073-4238-9aaf-8d4d7360b6b1",
       "name": "Piedmont Hills",
@@ -97803,7 +97955,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "fa386930-cf18-4a7d-8b90-1dbddfd399da",
       "name": "Santa Teresa",
@@ -97824,7 +97976,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -97845,7 +97997,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "86f42771-02d3-4c85-a795-142206fe84bf",
@@ -98526,7 +98678,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0183f7b6-4c0b-4e98-ba8d-58bd3d4f5143",
@@ -102770,7 +102922,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa94942a-3659-42ea-8c1a-463de8693f1f",
       "name": "Gunderson",
@@ -102791,7 +102943,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "23723b27-4092-4f9b-8f32-892896c67a84",
       "name": "Lincoln",
@@ -102812,7 +102964,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -102833,7 +102985,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "1bc1161e-668a-4c0e-a2ec-829423cb010c",
@@ -105458,7 +105610,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -105479,7 +105631,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "847b67d2-64a0-459a-b726-484e88392ba6",
       "name": "Andrew Hill",
@@ -105500,7 +105652,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "177cef60-d6fd-4dd6-ace9-59ff72a4e0e6",
       "name": "Independence",
@@ -105521,7 +105673,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f0fce34f-ad2a-43af-9d22-3672ae34f237",
       "name": "James Lick",
@@ -105542,7 +105694,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "1766c73a-a599-4749-93d4-286c98bf4d07",
@@ -106075,7 +106227,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "b5c6ef6d-8399-41f6-99b5-2b536ea2b71a",
       "name": "Oak Grove",
@@ -106096,7 +106248,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e1adcbbb-7b19-4e93-976e-5b963ed5f866",
       "name": "Overfelt",
@@ -106117,7 +106269,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62",
       "name": "San Jose",
@@ -106138,7 +106290,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9c5e65a2-4b73-4672-a5da-a9c61745d19d",
       "name": "Yerba Buena",
@@ -106159,7 +106311,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "00ea8c39-edb2-417f-9d91-d994c8d0b831",
@@ -111836,7 +111988,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "ea81d3e5-b4ae-4673-afda-207b10865ffe",
       "name": "Archbishop Riordan",
@@ -111857,7 +112009,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1806a4eb-3371-4e7c-a755-835229bc515e",
       "name": "Sacred Heart Cathedral",
@@ -111878,7 +112030,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -111899,7 +112051,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "070022f0-84e9-4408-9e3e-771cdd2907f6",
@@ -118841,7 +118993,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0025ee78-b046-438d-80ae-a79d0df16725",
@@ -125148,7 +125300,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -130703,7 +130855,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0c3a1540-3ce0-4f21-8c96-810025470325",
@@ -136948,7 +137100,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "062d5442-b832-4baa-81fa-affece542f42",
@@ -145383,7 +145535,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0c7e902f-c889-4683-a5e6-c860ac52fa0b",
@@ -152413,7 +152565,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "02aebc69-3cfd-4527-86ac-6a197c7de9ec",
@@ -157789,7 +157941,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "008272c1-8ecf-4288-a7aa-e4624ef15f67",
@@ -163944,7 +164096,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "0c20604d-29ec-443a-b4db-b4b94b2b160f",
@@ -170024,7 +170176,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "022305b0-9ce8-49f8-bebe-5eee4710380c",
@@ -174759,7 +174911,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "lastUpdated": null,
       "maxprepsTeamId": "67c08b6d-5f06-432a-a783-aee8b2a7a939",
       "name": "Crystal Springs Uplands",
@@ -174780,7 +174932,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "198531ca-0a0d-4324-b4bd-4a87c061689e",
@@ -179890,7 +180042,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "3a170a9a-1363-41bc-bee2-f834be48dcdb",
@@ -180844,7 +180996,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "4395f8f5-52c6-473e-9bdb-de997908ee11",
@@ -181501,7 +181653,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-20T15:38:29.462Z",
+      "fetchedAt": "2026-11-21T14:48:27.556Z",
       "games": [
         {
           "contestId": "10a6c432-6d17-4e8f-9a0e-321efcc053f2",

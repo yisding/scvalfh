@@ -1,11 +1,13 @@
 /**
  * A league's entry of data/<sport>/history-2025-26.json built from that league's own end-of-season documents, as
  * it publishes them, transcribed into data/<sport>/official/<league>-2025-26.json (scripts/build-history.ts calls
- * this for the WCAL and the WBAL in the soccer and volleyball builds, added 2026-11-16):
+ * this for the WCAL and the WBAL in the soccer and volleyball builds, added 2026-11-16, and for the PAL in the soccer
+ * and basketball builds and the WCAL and the WBAL in basketball, added 2026-11-21):
  *
  *   WCAL  wcalsports.org: the 2025-2026 standings archive PDF (wcalsports.org/standings/) and the 2025-26
  *         all-league PDF (wcalsports.org/awardsrecords/)
  *   WBAL  hs.wbalsports.org: last season's standings page and all-league page, linked from its history page
+ *   PAL   pal.smcoe.org/standings: one PDF a sport and level (on Google Drive), standings only
  *
  * Neither league's documents follow a layout another league's parser reads, and both are published once a year, so
  * the file keeps each row as printed and this module only reads the record, turns the year into a grade and the
@@ -69,6 +71,12 @@ export interface LeagueTranscription {
   formerMembers: string[];
   /** Schools of this league now that were in none of its 2025-26 tables (Presentation, in the WBAL). */
   joinedSince: string[];
+  /**
+   * Schools in this league's 2025-26 tables that are in no league of this build now, by the name the tables print
+   * (the PAL's Oceana, in the PSAL since 2026-27). Their rows are kept, with no slug; nothing else unresolved is let
+   * through.
+   */
+  leftBuild?: string[];
   /** A school a document spells past what the registry resolves ("Mercy"), and the school it is. */
   schoolSpellings: Readonly<Record<string, string>>;
   divisions: Array<{
@@ -106,6 +114,10 @@ export function buildLeagueDocumentsHistory(
   for (const slug of tr.joinedSince) {
     if (!own.has(slug)) say(`"${slug}" (joinedSince) is no team of this league`);
   }
+  const left = new Set(tr.leftBuild ?? []);
+  for (const name of left) {
+    if (resolveTeam(tr.schoolSpellings[name] ?? name)) say(`"${name}" (leftBuild) is a team of this build`);
+  }
   const allowed = new Set([...own, ...tr.formerMembers]);
   const slugOf = (name: string): string | null => {
     const team = resolveTeam(tr.schoolSpellings[name] ?? name);
@@ -118,7 +130,7 @@ export function buildLeagueDocumentsHistory(
 
   const row = (r: TranscribedRow, where: string) => {
     const slug = slugOf(r.name);
-    if (!slug) say(`standings name "${r.name}" (${where}) resolves to no team of the league or its former members`);
+    if (!slug && !left.has(r.name)) say(`standings name "${r.name}" (${where}) resolves to no team of the league or its former members`);
     const m = RECORD.exec(r.league);
     if (!m) say(`league record "${r.league}" of ${r.name} (${where}) is not W-L or W-L-T`);
     if (r.overall !== null && !RECORD.test(r.overall)) say(`overall record "${r.overall}" of ${r.name} (${where}) is not a record`);
@@ -168,6 +180,13 @@ export function buildLeagueDocumentsHistory(
       honorableMention: a.honorableMention.map((p) => player(p, where)),
     };
   };
+
+  // A school named in `leftBuild` must be a row of the tables: the list declares the rows that keep no slug, so a
+  // name no row prints (a typo, a stale entry) is an error, not a silent exception.
+  const printed = new Set(tr.divisions.flatMap((d) => [...d.standings.varsity, ...d.standings.jv].map((r) => r.name)));
+  for (const name of left) {
+    if (!printed.has(name)) say(`"${name}" (leftBuild) is in no standings table`);
+  }
 
   const divisions = divisionsOf(leagueId).map(({ id: division, label }) => {
     const d = tr.divisions.find((x) => x.division === division);

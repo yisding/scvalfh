@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "b3b3395dbac8205520e3839b2d41e46499a2aa8d9949e824f0435c1f62ce8200",
+  "contentHash": "9bb0cf44116c4167b3c995c824d5b91ae4ca0d7bc2ba61a29313158e0310fddc",
   "counts": {
     "byLeague": {
       "bval": {
@@ -26,7 +26,7 @@
       },
       "sccal": {
         "backfilled": 0,
-        "finals": 1,
+        "finals": 2,
         "games": 77,
         "leagueGames": 25,
         "teams": 6
@@ -40,7 +40,7 @@
       },
       "wbal": {
         "backfilled": 0,
-        "finals": 0,
+        "finals": 1,
         "games": 122,
         "leagueGames": 39,
         "teams": 8
@@ -53,15 +53,21 @@
         "teams": 8
       }
     },
-    "finals": 4,
+    "finals": 5,
     "games": 883,
     "leagueGames": 447,
     "mismatches": 1,
-    "pending": 18,
+    "pending": 17,
     "teams": 79
   },
-  "crossCheck": null,
-  "fetchedAt": "2026-11-21T07:38:43.097Z",
+  "crossCheck": {
+    "agreements": 0,
+    "backfilled": 0,
+    "compared": 138,
+    "conflicts": 0,
+    "sbliveOnlyScored": 1
+  },
+  "fetchedAt": "2026-11-21T14:32:13.329Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -125,7 +131,7 @@
   "requests": {
     "maxpreps": 102,
     "official": 6,
-    "sblive": 0
+    "sblive": 14
   },
   "sources": [
     {
@@ -699,13 +705,83 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-16",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-17",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-18",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-19",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-20",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-21",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
+      "label": "sblive burlingame games",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "sblive crystal-springs games",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "sblive el-camino-ssf games",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive jefferson games",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "sblive los-altos games",
+      "rowCount": 30,
+      "status": "ok"
+    },
+    {
+      "label": "sblive menlo-atherton games",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
+      "label": "sblive palo-alto games",
+      "rowCount": 22,
+      "status": "ok"
+    },
+    {
+      "label": "sblive pioneer games",
+      "rowCount": 28,
+      "status": "ok"
+    },
+    {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 41,
+      "rowCount": 52,
       "status": "ok"
     },
     {
@@ -715,17 +791,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 44,
+      "rowCount": 53,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 807,
+      "rowCount": 893,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 88,
+      "rowCount": 106,
       "status": "ok"
     },
     {
@@ -739,8 +815,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-11-20",
-  "warnings": 12,
+  "today": "2026-11-21",
+  "warnings": 18,
   "window": {
     "firstGame": "2026-11-16T18:30:00",
     "lastGame": "2027-02-16T19:30:00",

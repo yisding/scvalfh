@@ -24,8 +24,9 @@
 # "data: refresh JV games ...", update-data-soccer.yml's "data: refresh soccer ..." or
 # update-data-basketball.yml's "data: refresh basketball ..." or update-data-volleyball.yml's "data: refresh volleyball ...") to the newest
 # other commit, the one whose code ships, requires a successful ci run on main for exactly that commit,
-# and requires that nothing but those data files (the four of data/field-hockey/, and the same four plus the two roster
-# files of data/soccer/ and of data/basketball/) changed above it. A soccer or basketball data commit changes nothing this Worker
+# and requires that nothing but those data files (the four of data/field-hockey/, the same four plus the two roster
+# files of data/soccer/, data/basketball/ and data/volleyball/, and data/players.json, the player registry a roster
+# refresh rebuilds, which no site reads) changed above it. A soccer or basketball data commit changes nothing this Worker
 # serves; it is let through so that it never holds back the next field hockey deploy. Otherwise it
 # skips: the ci run of that commit deploys main once it passes, and a red one never ships,
 # whichever workflow happened to finish first. Thus:
@@ -234,7 +235,7 @@ jobs:
           # base's tree with newer data.
           others=$(gh api "repos/$GITHUB_REPOSITORY/compare/$base...$tip" --jq '
             if .status == "identical" or .status == "ahead"
-            then [.files[]?.filename] - ["data/field-hockey/snapshot.json", "data/field-hockey/snapshot.meta.json", "data/field-hockey/claims.json", "data/field-hockey/player-stats.json", "data/field-hockey/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json"] | join(" ")
+            then [.files[]?.filename] - ["data/field-hockey/snapshot.json", "data/field-hockey/snapshot.meta.json", "data/field-hockey/claims.json", "data/field-hockey/player-stats.json", "data/field-hockey/jv.json", "data/soccer/snapshot.json", "data/soccer/snapshot.meta.json", "data/soccer/claims.json", "data/soccer/player-stats.json", "data/soccer/jv.json", "data/soccer/rosters.json", "data/soccer/jv-rosters.json", "data/basketball/snapshot.json", "data/basketball/snapshot.meta.json", "data/basketball/claims.json", "data/basketball/player-stats.json", "data/basketball/jv.json", "data/basketball/rosters.json", "data/basketball/jv-rosters.json", "data/volleyball/snapshot.json", "data/volleyball/snapshot.meta.json", "data/volleyball/claims.json", "data/volleyball/player-stats.json", "data/volleyball/jv.json", "data/volleyball/rosters.json", "data/volleyball/jv-rosters.json", "data/players.json"] | join(" ")
             else "(main is \(.status), not ahead)" end' 2>/dev/null || echo '(the compare failed)')
           [ -z "$others" ] || refuse "main ($tip) changes more than the data above $base: $others"
           # And base must have passed ci on main: a successful ci run for that exact commit, other

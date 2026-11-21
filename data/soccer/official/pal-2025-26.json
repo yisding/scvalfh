@@ -1,0 +1,237 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Soccer",
+  "league": "pal",
+  "publisher": "pal.smcoe.org",
+  "retrievedOn": "2026-11-21",
+  "standings": {
+    "url": "https://drive.google.com/file/d/12HHiVv9Ut7JBa7aC9DjSylGzJbMqyJ_G/view",
+    "kind": "pdf",
+    "index": "https://pal.smcoe.org/standings"
+  },
+  "allLeague": null,
+  "transcription": "Transcribed from the pdftotext -layout text of the two PDFs, read 2026-11-21: each row as printed, and checked against the PDFs row by row.",
+  "notes": [
+    "The varsity tables are the PDF linked as \"Soccer - Girls VAR\" from pal.smcoe.org/standings (\"2026 GIRLS VARSITY BAY SOCCER STANDINGS\" and \"… OCEAN …\"); the JV tables are the one linked as \"Soccer - Girls JV\" (https://drive.google.com/file/d/11CUGRBH9_09UlWeGJM5946cM7hZjshwP/view).",
+    "Each table prints Rank, School, Win, Loss and Tie: no points and no overall record, so every overallRecord is null. Rows keep the PDF's rank, which repeats for teams ranked level (3, 3, 5).",
+    "Division membership is 2025-26's: Aragon, Burlingame, Carlmont, Hillsdale, Menlo-Atherton, Sequoia and Woodside in the Bay; Capuchino, El Camino, Half Moon Bay, Jefferson, Mills, Oceana, San Mateo, South San Francisco, Terra Nova and Westmoor in the Ocean.",
+    "The JV Ocean table ranks Half Moon Bay (4-1-0) 1st beside Terra Nova (5-0-0); it is kept as printed.",
+    "Oceana played in the PAL's Ocean in 2025-26 and is in none of this build's leagues now (the CCS places it in the PSAL for 2026-27): its rows keep its name and have no slug (`leftBuild`).",
+    "The JV Ocean table lists six teams; El Camino, Jefferson, Oceana and Westmoor are in none.",
+    "Only standings are stored: the PAL's all-league teams are not transcribed."
+  ],
+  "formerMembers": [],
+  "joinedSince": [],
+  "leftBuild": [
+    "OCEANA"
+  ],
+  "schoolSpellings": {},
+  "divisions": [
+    {
+      "division": "bay",
+      "standings": {
+        "varsity": [
+          {
+            "place": 1,
+            "name": "CARLMONT",
+            "league": "7-2-3",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "WOODSIDE",
+            "league": "7-3-2",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "MENLO-ATHERTON",
+            "league": "5-4-3",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "SEQUOIA",
+            "league": "5-4-3",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "ARAGON",
+            "league": "4-4-4",
+            "overall": null
+          },
+          {
+            "place": 6,
+            "name": "BURLINGAME",
+            "league": "4-7-1",
+            "overall": null
+          },
+          {
+            "place": 7,
+            "name": "HILLSDALE",
+            "league": "1-7-4",
+            "overall": null
+          }
+        ],
+        "jv": [
+          {
+            "place": 1,
+            "name": "MENLO-ATHERTON",
+            "league": "11-0-1",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "WOODSIDE",
+            "league": "8-1-3",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "CARLMONT",
+            "league": "6-4-2",
+            "overall": null
+          },
+          {
+            "place": 4,
+            "name": "SEQUOIA",
+            "league": "5-5-2",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "BURLINGAME",
+            "league": "1-4-7",
+            "overall": null
+          },
+          {
+            "place": 6,
+            "name": "HILLSDALE",
+            "league": "2-8-2",
+            "overall": null
+          },
+          {
+            "place": 7,
+            "name": "ARAGON",
+            "league": "0-11-1",
+            "overall": null
+          }
+        ]
+      },
+      "awards": {
+        "varsity": null,
+        "jv": null
+      }
+    },
+    {
+      "division": "ocean",
+      "standings": {
+        "varsity": [
+          {
+            "place": 1,
+            "name": "TERRA NOVA",
+            "league": "9-0-0",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "SAN MATEO",
+            "league": "6-1-2",
+            "overall": null
+          },
+          {
+            "place": 2,
+            "name": "SOUTH SAN FRANCISCO",
+            "league": "6-1-2",
+            "overall": null
+          },
+          {
+            "place": 4,
+            "name": "MILLS",
+            "league": "5-4-0",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "HALF MOON BAY",
+            "league": "4-4-1",
+            "overall": null
+          },
+          {
+            "place": 6,
+            "name": "OCEANA",
+            "league": "4-4-0",
+            "overall": null
+          },
+          {
+            "place": 7,
+            "name": "CAPUCHINO",
+            "league": "3-4-1",
+            "overall": null
+          },
+          {
+            "place": 8,
+            "name": "EL CAMINO",
+            "league": "3-6-0",
+            "overall": null
+          },
+          {
+            "place": 9,
+            "name": "JEFFERSON",
+            "league": "0-8-1",
+            "overall": null
+          },
+          {
+            "place": 9,
+            "name": "WESTMOOR",
+            "league": "0-8-1",
+            "overall": null
+          }
+        ],
+        "jv": [
+          {
+            "place": 1,
+            "name": "TERRA NOVA",
+            "league": "5-0-0",
+            "overall": null
+          },
+          {
+            "place": 1,
+            "name": "HALF MOON BAY",
+            "league": "4-1-0",
+            "overall": null
+          },
+          {
+            "place": 3,
+            "name": "CAPUCHINO",
+            "league": "2-2-1",
+            "overall": null
+          },
+          {
+            "place": 4,
+            "name": "MILLS",
+            "league": "1-2-2",
+            "overall": null
+          },
+          {
+            "place": 5,
+            "name": "SAN MATEO",
+            "league": "1-3-1",
+            "overall": null
+          },
+          {
+            "place": 6,
+            "name": "SOUTH SAN FRANCISCO",
+            "league": "0-5-0",
+            "overall": null
+          }
+        ]
+      },
+      "awards": {
+        "varsity": null,
+        "jv": null
+      }
+    }
+  ]
+}
