@@ -350,10 +350,17 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
  * schools that day, non-league, and, while it is still the listing, at the reported start with no score.
  */
 describe('a game the owner reported before its day (the fixture ledger’s listings, lib/fixtures/, reportedOn)', () => {
+  // The pair's game within the window MaxPreps may move it in (lib/jv/jv-added.ts rule 2's JV_OFFICIAL_WINDOW_DAYS), with
+  // either school at home: a game MaxPreps lists a day early or the other way round is still this one.
+  const isThePair = (x: { dateKey: string; home: { slug: string | null }; away: { slug: string | null } }) =>
+    [x.home.slug, x.away.slug].sort().join('~') === 'cupertino~santa-teresa' &&
+    Math.abs(m.format.dayDiff(x.dateKey, '2026-11-24')) <= m.jvOfficial.JV_OFFICIAL_WINDOW_DAYS;
+
   it('lists Santa Teresa at Cupertino, Tue Nov 24, once and non-league: until MaxPreps lists it, at 7:00 with no score', () => {
-    const [g, ...more] = m.data.getGames({ date: '2026-11-24' }).filter((x) => x.home.slug === 'cupertino');
+    const [g, ...more] = m.data.getGames().filter(isThePair);
     expect(more).toEqual([]);
-    expect([g.away.slug, g.isLeague, g.countsFor]).toEqual(['santa-teresa', false, null]);
+    expect(g, 'no game of Santa Teresa and Cupertino near Nov 24').toBeDefined();
+    expect([g.isLeague, g.countsFor]).toEqual([false, null]);
     if (g.contestId.startsWith('official:')) {
       expect([g.contestId, g.dateLocal]).toEqual(['official:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T19:00:00']);
       expect(['scheduled', 'score-pending']).toContain(g.status);
@@ -365,8 +372,8 @@ describe('a game the owner reported before its day (the fixture ledger’s listi
   });
 
   it('lists its JV game once and non-league: until MaxPreps lists it, at 5:30 with no score', () => {
-    const jv = m.jv.getJvGames().filter((x) => x.dateKey === '2026-11-24' && x.home.slug === 'cupertino');
-    expect(jv.map((x) => [x.away.slug, x.isLeague, x.countsFor])).toEqual([['santa-teresa', false, null]]);
+    const jv = m.jv.getJvGames().filter(isThePair);
+    expect(jv.map((x) => [x.isLeague, x.countsFor])).toEqual([[false, null]]);
     expect(m.jv.getJvClassification(jv[0].contestId)?.kind).toBe('non-league');
     if (jv[0].contestId.startsWith('added-jv:')) {
       expect([jv[0].contestId, jv[0].dateLocal]).toEqual(['added-jv:2026-11-24-santa-teresa-at-cupertino', '2026-11-24T17:30:00']);
