@@ -10,7 +10,7 @@
  */
 
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
-import { getPlayoffs } from '../../lib/data';
+import { getPlayoffsOrNull } from '../../lib/data';
 import { shortDate } from '../../lib/format';
 import { winnerOf } from '../../lib/postseason/game-winner';
 import { getSdsBrackets, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
@@ -64,7 +64,10 @@ function ccsSideWords(side: PairingSide): string | null {
 }
 
 function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
-  for (const path of buildBrackets(getPlayoffs(), getCcsSeeds())) {
+  // A build with no CCS block (the VAL) has no CCS bracket to place a game in.
+  const playoffs = getPlayoffsOrNull();
+  if (playoffs === null) return null;
+  for (const path of buildBrackets(playoffs, getCcsSeeds())) {
     const r = path.rounds.findIndex((round) => round.cards.some((c) => c.kind === 'game' && c.game.contestId === game.contestId));
     if (r < 0) continue;
     const round = path.rounds[r];

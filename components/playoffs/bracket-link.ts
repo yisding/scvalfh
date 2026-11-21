@@ -29,7 +29,7 @@
  */
 
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
-import { getGames, getLeaguePairings, getLeagueTournament, getPlayoffs, getToday, getTournamentLeagueIds } from '../../lib/data';
+import { getGames, getLeaguePairings, getLeagueTournament, getPlayoffsOrNull, getToday, getTournamentLeagueIds } from '../../lib/data';
 import { CCS_LEAGUE_IDS, getLeague, getSection } from '../../lib/leagues';
 import { getSdsBrackets } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
@@ -55,35 +55,40 @@ let index: Map<ContestId, BracketLink> | null = null;
 
 function buildIndex(): Map<ContestId, BracketLink> {
   const out = new Map<ContestId, BracketLink>();
-  // The paths /playoffs draws: the CCS games no stored bracket holds (tournament-brackets-view.ts).
-  for (const path of buildBrackets({ ...getPlayoffs(), games: uncoveredBracketGames(getPlayoffs()) }, getCcsSeeds())) {
-    for (const round of path.rounds) {
-      for (const card of round.cards) {
-        if (card.kind === 'game') {
-          out.set(card.game.contestId, {
-            href: `/playoffs#${path.id}`,
-            label: 'CCS bracket',
-            division: path.name,
-            round: round.key === 'other' ? undefined : round.name,
-            seeds: card.seeds,
-          });
+  // A build with no CCS block (the VAL: snapshot.playoffs null) has no CCS path or stored bracket to index; its league
+  // tournament's games are indexed below like every league's.
+  const playoffs = getPlayoffsOrNull();
+  if (playoffs !== null) {
+    // The paths /playoffs draws: the CCS games no stored bracket holds (tournament-brackets-view.ts).
+    for (const path of buildBrackets({ ...playoffs, games: uncoveredBracketGames(playoffs) }, getCcsSeeds())) {
+      for (const round of path.rounds) {
+        for (const card of round.cards) {
+          if (card.kind === 'game') {
+            out.set(card.game.contestId, {
+              href: `/playoffs#${path.id}`,
+              label: 'CCS bracket',
+              division: path.name,
+              round: round.key === 'other' ? undefined : round.name,
+              seeds: card.seeds,
+            });
+          }
         }
       }
     }
-  }
-  // A championship MaxPreps publishes whole (volleyball): the game's own card in its division's bracket, which
-  // replaces the by-round path above. A CIF State game ('other': no bracket of the CCS's) is found only here.
-  for (const bracket of tournamentBracketsView(getPlayoffs().brackets, getGames(), getToday()).brackets) {
-    for (const round of bracket.rounds) {
-      for (const tie of round.ties) {
-        if (tie.contestId === null) continue;
-        out.set(tie.contestId, {
-          href: `/playoffs#${tie.id}`,
-          label: bracketLinkLabel(bracket.event),
-          division: bracket.name,
-          round: round.name,
-          ...(tie.gameSeeds ? { seeds: tie.gameSeeds } : {}),
-        });
+    // A championship MaxPreps publishes whole (volleyball): the game's own card in its division's bracket, which
+    // replaces the by-round path above. A CIF State game ('other': no bracket of the CCS's) is found only here.
+    for (const bracket of tournamentBracketsView(playoffs.brackets, getGames(), getToday()).brackets) {
+      for (const round of bracket.rounds) {
+        for (const tie of round.ties) {
+          if (tie.contestId === null) continue;
+          out.set(tie.contestId, {
+            href: `/playoffs#${tie.id}`,
+            label: bracketLinkLabel(bracket.event),
+            division: bracket.name,
+            round: round.name,
+            ...(tie.gameSeeds ? { seeds: tie.gameSeeds } : {}),
+          });
+        }
       }
     }
   }

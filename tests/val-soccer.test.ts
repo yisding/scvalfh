@@ -117,28 +117,42 @@ describe('the league and its registry', () => {
   });
 });
 
+/**
+ * The committed files are rewritten by every refresh (update-data-val-soccer.yml runs this file on what it just
+ * fetched), so they are held to the season's invariants, never to one day's schedule: the league moves games and
+ * fills its playoff seats through the season. One day's exact schedule is the corpus's, below.
+ */
 describe('the data files', () => {
-  it('bundles a snapshot of the 55 league games of the 7th/8th grade page, and no CCS block', () => {
-    const snapshot = m.data.getSnapshot();
-    expect(snapshot.teams.map((t) => t.slug)).toEqual(SLUGS);
-    expect(snapshot.games).toHaveLength(55);
-    for (const g of snapshot.games) {
-      expect(g.contestId).toMatch(/^teamsideline:731407-/);
-      expect(g.countsFor).toBe('val');
+  /** At most one league game a pair (a single round robin), and at most the page's five playoff games. */
+  function holdsTheSeason(games: readonly import('../lib/types').Game[], scheduleId: string): void {
+    const regular = games.filter((g) => !/-g\d+$/.test(g.contestId));
+    const playoffs = games.filter((g) => /-g\d+$/.test(g.contestId));
+    for (const g of games) {
+      expect(g.contestId.startsWith(`teamsideline:${scheduleId}-`), g.contestId).toBe(true);
       expect(g.provenance.scores).toBe('teamsideline');
     }
+    const pairs = regular.map((g) => [g.home.slug, g.away.slug].sort().join('~'));
+    expect(new Set(pairs).size).toBe(pairs.length);
+    expect(regular.length).toBeLessThanOrEqual(55);
+    expect(playoffs.length).toBeLessThanOrEqual(5);
+  }
+
+  it('bundles the 7th/8th grade page’s games, its league games counted, and no CCS block', () => {
+    const snapshot = m.data.getSnapshot();
+    expect(snapshot.teams.map((t) => t.slug)).toEqual(SLUGS);
+    holdsTheSeason(snapshot.games, '731407');
+    // Every game between two VAL schools before the playoffs is a league game; a playoff game counts for no table.
+    for (const g of snapshot.games) expect(g.countsFor).toBe(g.postseason === null ? 'val' : null);
     expect(snapshot.playoffs).toBeNull();
     expect(snapshot.season.sections.map((s) => [s.id, s.maxprepsSectionId])).toEqual([['none', null]]);
-    expect(snapshot.sources.map((s) => [s.id, s.kind, s.status])).toEqual([['teamsideline', 'league-schedule', 'ok']]);
+    expect(snapshot.sources.map((s) => [s.id, s.kind])).toEqual([['teamsideline', 'league-schedule']]);
   });
 
   it('bundles the 6th/7th grade page’s games as the second level, read from the same site', () => {
     const file = m.jv.getJvFile();
     expect(file.sportSeasonId).toBeNull();
-    expect(file.league?.status).toBe('ok');
     expect(file.league?.url).toBe('https://valleyal.org/schedule/731408/0/1/6th7th-grade');
-    expect(file.games).toHaveLength(55);
-    for (const g of file.games) expect(g.contestId).toMatch(/^teamsideline:731408-/);
+    holdsTheSeason(file.games, '731408');
     for (const t of file.teams) expect([t.maxpreps.status, t.sblive.status]).toEqual(['unavailable', 'unavailable']);
   });
 
@@ -157,10 +171,17 @@ describe('the pipeline, offline from the corpus', () => {
   it('reads the league’s page as its primary source, and asks MaxPreps and si.com for nothing', async () => {
     const { snapshot, run } = await m.support.snapshotOf({ corpus: CORPUS });
     expect(run.result?.meta.requests).toMatchObject({ maxpreps: 0, sblive: 0, official: 1 });
-    const committed = JSON.parse(readFileSync(path.join(REPO, 'data/val-soccer/snapshot.json'), 'utf8')) as typeof snapshot;
-    expect(snapshot.games.map((g) => [g.contestId, g.dateKey, g.home.slug, g.away.slug])).toEqual(
-      committed.games.map((g) => [g.contestId, g.dateKey, g.home.slug, g.away.slug]),
-    );
+    // The page as read on 2026-11-21: the single round robin's 55 league games, no playoff seat filled yet.
+    expect(snapshot.games).toHaveLength(55);
+    expect(snapshot.games.every((g) => g.countsFor === 'val' && /^teamsideline:731407-[a-z-]+-at-[a-z-]+$/.test(g.contestId))).toBe(true);
+    expect(new Set(snapshot.games.map((g) => [g.home.slug, g.away.slug].sort().join('~'))).size).toBe(55);
+    expect([snapshot.games[0].dateKey, snapshot.games.at(-1)?.dateKey]).toEqual(['2026-12-14', '2027-01-28']);
+    expect(snapshot.games.find((g) => g.contestId === 'teamsideline:731407-sunnyvale-ms-at-lawson')).toMatchObject({
+      dateLocal: '2026-12-14T16:00:00',
+      venue: { name: 'Lawson Field', address: { street: '10401 Vista Drive', city: 'Cupertino', region: 'CA', postalCode: '95014' } },
+      status: 'scheduled',
+    });
+    expect(snapshot.sources.map((s) => [s.id, s.status, s.rowCount])).toEqual([['teamsideline', 'ok', 60]]);
   }, 120_000);
 
   it('publishes nothing when the page cannot be read: the league freezes and the run aborts', async () => {
