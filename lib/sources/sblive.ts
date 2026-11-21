@@ -385,6 +385,10 @@ export function sbliveIdFromWebPath(webPath: string | null | undefined): string 
  *     View (El Monte), Oak Grove (Ojai), Pioneer (Woodland, Whittier), Santa Clara (Oxnard);
  *   - girls soccer only: Mercy (ours is Burlingame's; San Francisco and Red Bluff) and Notre Dame (two of ours,
  *     Belmont and San Jose, and Salinas). Basketball's search found one team of each name.
+ * The same search for the PAL's, the SCCAL's and (basketball) the WCAL's and the WBAL's names, 2026-11-21:
+ *   - both sports: El Camino (ours is South San Francisco's; Sacramento and Oceanside) and Jefferson (ours is Daly
+ *     City's; Los Angeles);
+ *   - boys basketball only: Serra (ours is San Mateo's Junípero Serra, which si.com names "Serra"; Gardena's).
  *
  * A side with one of these names resolves ONLY by a si.com id, never by name.
  */
@@ -395,11 +399,11 @@ const STATEWIDE_AMBIGUOUS_NAMES: readonly string[] = bySport<readonly string[]>(
   ],
   soccer: [
     'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
-    'Santa Clara', 'Mercy', 'Notre Dame',
+    'Santa Clara', 'Mercy', 'Notre Dame', 'El Camino', 'Jefferson',
   ],
   basketball: [
     'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
-    'Santa Clara',
+    'Santa Clara', 'El Camino', 'Jefferson', 'Serra',
   ],
   // The volleyball build reads no si.com page.
   volleyball: [],

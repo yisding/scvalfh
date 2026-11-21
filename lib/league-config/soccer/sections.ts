@@ -1,6 +1,6 @@
 /**
  * The soccer build's sections and CCS block (lib/league-config/sections.ts picks these when
- * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL, BVAL, the WCAL and the WBAL.
+ * `SCVAL_SPORT=soccer`). One section, the CCS, in one region: the build covers SCVAL, BVAL, the WCAL, the WBAL, the PAL and the SCCAL.
  *
  * Sources (the three CCS documents read 2026-11-06 from the links on cifccs.org's soccer page):
  *  - The CCS 2026-27 Playoff Calendar ("Updated 5/28/26"; sha256 28557c36…;
@@ -15,6 +15,8 @@
  *    https://d2o2figo6ddd0g.cloudfront.net/x/6/oveyqe9ewyzm4m/League_Alignments_2026-27.pdf): SCVAL girls soccer is De Anza (A) and
  *    El Camino (B), the same 15 schools as lib/registry/soccer/scval.ts.
  *  - SCVAL Soccer By-Laws Article V §2: SCVAL's automatic berths (De Anza 1-3, El Camino 1).
+ *  - PAL Soccer Bylaws §8.1 (Bay 1-3, Ocean 1) and SCCAL Article XL §E.2 (the champion is the league's #1 seed; no
+ *    SCCAL document gives the girls soccer count, so one is marked), read 2026-11-21.
  *
  * Still null, because none of these documents says it: the field's size and at-large count (the CCS Soccer
  * Bylaws' allocation), who hosts which round, and MaxPreps' tournament page and bracket ids.
@@ -43,7 +45,7 @@ export const SOCCER_SECTIONS = [
 ] as const satisfies readonly SectionConfig[];
 
 export const SOCCER_CCS: CcsConfig = {
-  autoQualifiers: { scval: 4, bval: 6, wcal: 2, wbal: 4, atLarge: null, total: null },
+  autoQualifiers: { scval: 4, bval: 6, wcal: 2, wbal: 4, pal: 4, sccal: 1, atLarge: null, total: null },
   // Five divisions (CCS_SOCCER_REPORT), each seeded on its own: CcsDivisionName names field hockey's two, so none
   // is named here, and the bracket is drawn by round until MaxPreps' feed names a division.
   ccsDivisions: [],
@@ -59,14 +61,14 @@ export const SOCCER_CCS: CcsConfig = {
   tournament: null,
   pollFrom: '2027-02-10',
   citations: {
-    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team) BVAL Girls Soccer By-Laws §10 (Mt. Hamilton’s top three, Santa Teresa’s top two and the West Valley champion), WCAL By-Laws Article VII §14.A (the round robin’s first two) and WBAL By-Laws §607.2 (Foothill’s first three, and the winner of a playoff between Foothill’s fourth and the Skyline winner); the CCS’s own allocation of the field is in its Soccer Bylaws, not transcribed here',
+    allocation: 'SCVAL Soccer By-Laws Article V §2 (De Anza’s first three and El Camino’s first-place team) BVAL Girls Soccer By-Laws §10 (Mt. Hamilton’s top three, Santa Teresa’s top two and the West Valley champion), WCAL By-Laws Article VII §14.A (the round robin’s first two) WBAL By-Laws §607.2 (Foothill’s first three, and the winner of a playoff between Foothill’s fourth and the Skyline winner), PAL Soccer Bylaws §8.1 (Bay #1-3 and Ocean #1) and SCCAL Article XL §E.2 (the champion is the league’s #1 seed; no SCCAL document gives a count); the CCS’s own allocation of the field is in its Soccer Bylaws, not transcribed here',
     change: 'SCVAL Soccer By-Laws Article V §4 (a team at .500 or better may apply for an at-large berth)',
   },
   laterDivisions: 'Divisions 2-5',
   roundDaysNote:
     'Division 1 plays its semifinals on Tue Feb 23 and its final on Fri Feb 26; Divisions 2-5 play theirs on Wed Feb 24 and Sat Feb 27 (the CCS 2026-27 Playoff Calendar).',
   atLargeParagraph:
-    'At-large berths are the CCS committee’s call. Any SCVAL team at .500 or better in league or overall may apply, and CCS orders the applicants by its power points (SCVAL Soccer By-Laws Article V §4); a BVAL, WCAL or WBAL team applies under the CCS’s own rules.',
+    'At-large berths are the CCS committee’s call. Any SCVAL team at .500 or better in league or overall may apply, and CCS orders the applicants by its power points (SCVAL Soccer By-Laws Article V §4); a BVAL, WCAL, WBAL, PAL or SCCAL team applies under the CCS’s own rules.',
   sources: {
     bylaws: CCS_SOCCER_REPORT,
     index: CCS_SOCCER_INDEX,

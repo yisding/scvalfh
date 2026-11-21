@@ -598,6 +598,30 @@
       },
       "status": "available"
     },
+    "pal": {
+      "alsoPublished": [
+        {
+          "label": "PAL standings",
+          "url": "https://pal.smcoe.org/standings"
+        }
+      ],
+      "checked": [
+        "https://pal.smcoe.org/standings (one PDF a sport and level, for the 2025-26 season)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "Peninsula Athletic League",
+      "reason": "The PAL publishes its final standings on pal.smcoe.org. This site added PAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "sccal": {
+      "checked": [
+        "https://sccal.org/ (the league’s site: its menu links schedules, by-laws and policies, and no standings)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "Santa Cruz Coast Athletic League",
+      "reason": "We found no official 2025-26 final standings for SCCAL boys basketball: sccal.org keeps no standings page or archive. This site added SCCAL boys basketball on November 21, 2026. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
     "scval": {
       "divisions": [
         {
@@ -1646,6 +1670,41 @@
         "standingsPdf": "https://www.scval.com/standings/SCVAL%202025-26%20Boys%27%20Basketball%20standings.pdf"
       },
       "status": "available"
+    },
+    "wbal": {
+      "alsoPublished": [
+        {
+          "label": "WBAL 2025-26 boys basketball standings",
+          "url": "https://hs.wbalsports.org/2025-2026/bbstb.html"
+        }
+      ],
+      "checked": [
+        "https://hs.wbalsports.org/history.html (links each past season’s standings pages, 2025-2026 among them)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "West Bay Athletic League",
+      "reason": "The WBAL publishes each season’s final standings on hs.wbalsports.org. This site added WBAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
+    },
+    "wcal": {
+      "alsoPublished": [
+        {
+          "label": "WCAL standings",
+          "url": "https://wcalsports.org/standings/"
+        },
+        {
+          "label": "WCAL awards and records",
+          "url": "https://wcalsports.org/awardsrecords/"
+        }
+      ],
+      "checked": [
+        "https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)",
+        "https://wcalsports.org/awardsrecords/ (its season honors)"
+      ],
+      "checkedOn": "2026-11-21",
+      "league": "West Catholic Athletic League",
+      "reason": "The WCAL publishes its final standings and its season honors on wcalsports.org. This site added WCAL boys basketball on November 21, 2026 and has not transcribed its 2025-26 final standings yet. We do not show standings or awards from third-party sources.",
+      "status": "unavailable"
     }
   },
   "season": "2025-26",

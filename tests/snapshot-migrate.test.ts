@@ -288,6 +288,17 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
     ]);
   });
 
+  it('takes the CCS berth table afresh from config, so a CCS league added since the file was written has its key', () => {
+    // A file written before a CCS league joined the config holds no berth count for it (the winter builds' snapshots
+    // before the PAL and the SCCAL, 2026-11-21): simulated here by dropping BVAL's key as well as the EAL.
+    const olderTable = Object.fromEntries(Object.entries(stripped.playoffs.format.autoQualifiers).filter(([k]) => k !== 'bval'));
+    const older = { ...stripped, playoffs: { ...stripped.playoffs, format: { ...stripped.playoffs.format, autoQualifiers: olderTable } } };
+    expect(() => parseSnapshot(older)).toThrow(/autoQualifiers keys/);
+    const upgraded = addConfiguredLeagues(older) as Snapshot;
+    expect(upgraded.playoffs.format.autoQualifiers).toEqual(CCS.autoQualifiers);
+    expect(stableStringify(loadSnapshot(older))).toBe(stableStringify(loadSnapshot(full)));
+  });
+
   it('loads the frozen four-league finals-regression snapshot with a degraded EAL row', () => {
     const file = path.join(VARIANTS_DIR, 'finals-regression', 'previous-snapshot.json');
     const raw = JSON.parse(readFileSync(file, 'utf8')) as Snapshot;

@@ -278,7 +278,16 @@ a document that holds still (README, "WCAL and WBAL in the soccer build"). /hist
 final standings and all-league teams from their own documents, transcribed 2026-11-16 (README, "WCAL and WBAL last
 season").
 
-Not done yet: a refit of the rating constants on a finished basketball season; the CCS Basketball Bylaws'
+**PAL and SCCAL in both winter builds; WCAL and WBAL in basketball (2026-11-21).** The owner asked for the Peninsula
+Athletic League and the Santa Cruz Coast Athletic League on both winter sites, and the WCAL and the WBAL on the
+basketball site too. `lib/league-config/{soccer,basketball}/{pal,sccal}.ts`, `lib/league-config/basketball/{wcal,wbal}.ts`
+and their registries add 22 soccer teams (82) and 38 basketball teams (79); a basketball seed for a school the soccer
+registry holds is that soccer seed on its basketball page (`lib/registry/basketball/from-soccer.ts`). Every new league
+is read by membership. /history/2025-26 marks the new leagues unavailable until their documents are transcribed
+(README, "PAL and SCCAL in the winter builds").
+
+Not done yet: a refit of the rating constants on a finished basketball season; the 2025-26 standings of the PAL, the
+WBAL (basketball) and the WCAL (basketball); the CCS Basketball Bylaws'
 allocation and MaxPreps' 2027 tournament page; MaxPreps' freshman season; the smoke and axe passes on the
 basketball build.
 

@@ -348,7 +348,13 @@ export function addConfiguredLeagues(raw: unknown): unknown {
   // 1. game sides
   const upgradeSides = (g: Game): Game => ({ ...g, home: upgradeSide(g.home), away: upgradeSide(g.away) });
   const games = v2.games.map(upgradeSides);
-  const playoffs: Snapshot['playoffs'] = { ...v2.playoffs, games: v2.playoffs.games.map(upgradeSides) };
+  // The CCS berth table is the section config's copy, keyed by league: a league added to the config adds its key
+  // (the PAL and the SCCAL to both winter builds, 2026-11-21), so the copy is taken afresh, as migrateV1ToV2 does.
+  const playoffs: Snapshot['playoffs'] = {
+    ...v2.playoffs,
+    format: { ...v2.playoffs.format, autoQualifiers: { ...CCS.autoQualifiers } },
+    games: v2.playoffs.games.map(upgradeSides),
+  };
 
   // 3. season: sections and leagues from config, existing entries kept as written
   const built = buildSeason(games);

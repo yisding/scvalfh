@@ -4,11 +4,11 @@ import { describeWinterSblive } from './sblive-winter';
 describeWinterSblive({
   sport: 'soccer',
   segment: 'girls-soccer',
-  teamCount: 60,
+  teamCount: 82,
   noJv: ['eastside'],
   namesakes: [
     'Fremont', 'Independence', 'Lincoln', 'Live Oak', 'Los Altos', 'Mountain View', 'Oak Grove', 'Pioneer',
-    'Santa Clara', 'Mercy', 'Notre Dame',
+    'Santa Clara', 'Mercy', 'Notre Dame', 'El Camino', 'Jefferson',
   ],
   page: { file: 'girls-soccer-team-364703-homestead-mustangs.html', slug: 'homestead', sbliveTeamId: '364703' },
 });

@@ -19,7 +19,7 @@ const ALL_REGIONS = [
   { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
 ] as const satisfies readonly RegionConfig[];
 
-/** The regions this build covers: both for field hockey, Northern California alone for soccer, basketball and volleyball (SCVAL and BVAL). */
+/** The regions this build covers: both for field hockey, Northern California alone for soccer, basketball and volleyball (all CCS leagues). */
 export const REGIONS: readonly RegionConfig[] = bySport<readonly RegionConfig[]>({
   'field-hockey': ALL_REGIONS,
   soccer: ALL_REGIONS.slice(0, 1),

@@ -25,6 +25,7 @@ type Modules = {
   jvOfficial: typeof import('../lib/jv/jv-official');
   rosters: typeof import('../lib/players/rosters');
   order: typeof import('../lib/standings/order');
+  classify: typeof import('../lib/classify');
 };
 
 let m: Modules;
@@ -49,6 +50,7 @@ beforeAll(async () => {
     jvOfficial: await import('../lib/jv/jv-official'),
     rosters: await import('../lib/players/rosters'),
     order: await import('../lib/standings/order'),
+    classify: await import('../lib/classify'),
   };
 });
 
@@ -90,8 +92,8 @@ describe('the basketball sport switch', () => {
 });
 
 describe('SCVAL boys basketball', () => {
-  it('covers SCVAL and BVAL, in one section and one region', () => {
-    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval']);
+  it('covers SCVAL, BVAL, the WCAL, the WBAL, the PAL and the SCCAL, in one section and one region', () => {
+    expect(m.leagues.LEAGUE_IDS).toEqual(['scval', 'bval', 'wcal', 'wbal', 'pal', 'sccal']);
     expect(m.sections.SECTIONS.map((s) => s.id)).toEqual(['ccs']);
     expect(m.sections.REGIONS.map((r) => r.id)).toEqual(['norcal']);
   });
@@ -103,7 +105,7 @@ describe('SCVAL boys basketball', () => {
       'cupertino', 'fremont', 'los-altos', 'macdonald', 'monta-vista', 'santa-clara', 'saratoga', 'wilcox',
     ]);
     expect(m.teams.teamsInLeague('scval')).toHaveLength(15);
-    expect(m.teams.TEAMS).toHaveLength(41);
+    expect(m.teams.TEAMS).toHaveLength(79);
     for (const team of m.teams.TEAMS) expect(team.external.maxprepsTeamUrl).toMatch(/\/basketball\/$/);
   });
 
@@ -114,6 +116,82 @@ describe('SCVAL boys basketball', () => {
     expect(slugs('almaden-valley')).toEqual(['gilroy', 'lincoln', 'oak-grove', 'overfelt', 'piedmont-hills', 'prospect']);
     expect(slugs('west-valley')).toEqual(['andrew-hill', 'del-mar', 'gunderson', 'james-lick', 'mt-pleasant', 'san-jose', 'yerba-buena']);
     expect(m.teams.teamsInLeague('bval')).toHaveLength(26);
+  });
+
+  it('aligns the WCAL’s eight schools as its composite schedule does, its champion the league’s #1 CCS seed', () => {
+    expect(m.teams.teamsInDivision('wcal').map((t) => t.slug)).toEqual([
+      'mitty', 'riordan', 'bellarmine', 'serra', 'sacred-heart-cathedral', 'saint-francis', 'st-ignatius', 'valley-christian',
+    ]);
+    const { rules, postseason, divisions } = m.leagues.getLeague('wcal');
+    expect([rules.orderBy, rules.classification, rules.leagueOvertime]).toEqual(['win-pct', 'membership', 'until-decided']);
+    expect(divisions.map((d) => [d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      [8, 14, { first: '2027-01-05', last: '2027-02-16' }],
+    ]);
+    expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(1);
+  });
+
+  it('aligns the WBAL’s eight schools as its standings do, with two automatic berths (By-Laws §108.2)', () => {
+    expect(m.teams.teamsInDivision('wbal').map((t) => t.slug)).toEqual([
+      'crystal-springs', 'eastside', 'harker', 'kings-academy', 'menlo', 'pinewood', 'priory', 'sacred-heart-prep',
+    ]);
+    const { rules, postseason, divisions } = m.leagues.getLeague('wbal');
+    expect([rules.orderBy, rules.classification, rules.leagueOvertime]).toEqual(['win-pct', 'membership', 'until-decided']);
+    // Ten games a team, not a double round robin: no fixed count.
+    expect(divisions.map((d) => [d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      [8, null, { first: '2027-01-12', last: '2027-02-16' }],
+    ]);
+    expect(postseason.kind === 'ccs-ladder' && postseason.autoBerths).toBe(2);
+  });
+
+  it('aligns the PAL’s 16 schools as its Bay and Ocean schedules do, with four automatic berths (Bylaws §10.3)', () => {
+    const slugs = (division: string) => m.teams.teamsInDivision(division).map((t) => t.slug).sort();
+    expect(slugs('bay')).toEqual([
+      'aragon', 'burlingame', 'carlmont', 'half-moon-bay', 'hillsdale', 'menlo-atherton', 'sequoia', 'woodside',
+    ]);
+    expect(slugs('ocean')).toEqual([
+      'capuchino', 'el-camino-ssf', 'jefferson', 'mills', 'san-mateo', 'south-san-francisco', 'terra-nova', 'westmoor',
+    ]);
+    const pal = m.leagues.getLeague('pal');
+    expect(pal.rules.tiebreaks.default).toEqual(['head-to-head', 'record-vs-placed', 'coin-flip']);
+    expect(pal.divisions.map((d) => [d.id, d.expectedTeams, d.gamesPerTeam])).toEqual([['bay', 8, 14], ['ocean', 8, 14]]);
+    // MaxPreps lists Woodside in its Ocean table.
+    expect(pal.divisions.map((d) => [d.maxprepsTeamCount, d.maxprepsMissing])).toEqual([[7, ['woodside']], [9, []]]);
+    if (pal.postseason.kind !== 'ccs-ladder') throw new Error('PAL: not a CCS ladder');
+    expect(pal.postseason.autoBerths).toBe(4);
+  });
+
+  it('aligns the SCCAL’s six schools, its champion the #1 seed and its tournament deciding the #2', () => {
+    expect(m.teams.teamsInDivision('sccal').map((t) => t.slug).sort()).toEqual([
+      'aptos', 'harbor', 'san-lorenzo-valley', 'santa-cruz', 'scotts-valley', 'soquel',
+    ]);
+    const sccal = m.leagues.getLeague('sccal');
+    expect(sccal.divisions.map((d) => [d.expectedTeams, d.gamesPerTeam, d.leaguePlay])).toEqual([
+      [6, 10, { first: '2027-01-08', last: '2027-02-05' }],
+    ]);
+    if (sccal.postseason.kind !== 'ccs-ladder') throw new Error('SCCAL: not a CCS ladder');
+    expect(sccal.postseason.autoBerths).toBe(2);
+    expect(sccal.postseason.ladder.map((r) => [r.places, r.status])).toEqual([[[1, 1], 'aq'], [[2, 99], 'play-in']]);
+    // The SCCAL tournament (week of Feb 8) is the league's postseason, not non-league play.
+    expect(sccal.rules.postseasonFrom).toBe('2027-02-08');
+    const [aptos, harbor] = ['aptos', 'harbor'].map((slug) => m.teams.getTeamBySlug(slug)!);
+    const side = (t: typeof aptos) => ({ teamId: t.id, slug: t.slug, name: t.name });
+    const tournamentGame = { home: side(aptos), away: side(harbor), dateKey: '2027-02-10', contestId: 'sccal-tournament-test',
+      contestTypes: { home: 1, away: 1 } } as unknown as Parameters<typeof m.classify.postseasonTag>[0];
+    expect(m.classify.postseasonTag(tournamentGame)).toMatchObject({ kind: 'league-postseason', leagueId: 'sccal' });
+  });
+
+  it('gives each school the soccer registry also holds its soccer seed, on its MaxPreps basketball page', () => {
+    // The paths are each team's teamCanonicalUrl on its league's MaxPreps boys basketball standings (2026-11-21).
+    const path = (slug: string) => m.teams.getTeamBySlug(slug)?.external.maxprepsTeamUrl?.replace('https://www.maxpreps.com', '');
+    expect(['sacred-heart-cathedral', 'st-ignatius', 'kings-academy', 'menlo', 'priory', 'menlo-atherton', 'el-camino-ssf'].map(path)).toEqual([
+      '/ca/san-francisco/sacred-heart-cathedral-preparatory-fighting-irish/basketball/',
+      '/ca/san-francisco/st-ignatius-college-preparatory-wildcats/basketball/',
+      '/ca/sunnyvale/kings-academy-knights/basketball/',
+      '/ca/atherton/menlo-school-knights/basketball/',
+      '/ca/portola-valley/priory-panthers/basketball/',
+      '/ca/atherton/menlo-atherton-m-a-bears/basketball/',
+      '/ca/south-san-francisco/el-camino-colts/basketball/',
+    ]);
   });
 
   it('orders BVAL’s tables on wins, with its automatic-berth tiebreak, and gives it six berths (By-Laws §9, §10)', () => {
@@ -147,7 +225,7 @@ describe('SCVAL boys basketball', () => {
 
   it('dates the CCS rounds from the CCS calendar: a first round before the quarterfinals, the Open final a day early', () => {
     const { CCS, ccsFirstDay, ccsLastDay, ccsRoundDays } = m.sections;
-    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, atLarge: null, total: null });
+    expect(CCS.autoQualifiers).toEqual({ scval: 4, bval: 6, wcal: 1, wbal: 2, pal: 4, sccal: 2, atLarge: null, total: null });
     expect(CCS.keyDates).toMatchObject({
       entriesDue: '2027-02-17T10:00:00',
       seedingMeeting: '2027-02-17T12:00:00',
@@ -211,14 +289,14 @@ describe('the SCVAL boys basketball official schedules', () => {
 });
 
 describe('the basketball data files', () => {
-  it('bundles a basketball snapshot of the 15 teams', () => {
+  it('bundles a basketball snapshot of the registry’s teams', () => {
     const snapshot = m.data.getSnapshot();
     expect(snapshot.season.genderSport).toBe('boys,basketball');
     expect(snapshot.season.sportSeasonId).toBe(m.current.SPORT_SEASON.sportSeasonId);
     expect(snapshot.teams.map((t) => t.slug)).toEqual(m.teams.TEAMS.map((t) => t.slug));
   });
 
-  it('loads the player stats, JV games and rosters of the same 15 teams', () => {
+  it('loads the player stats, JV games and rosters of the same teams', () => {
     const slugs = m.teams.TEAMS.map((t) => t.slug).sort();
     expect(m.playerStats.getPlayerStats().teams.map((t) => t.slug).sort()).toEqual(slugs);
     expect(m.jv.getJvFile().teams.map((t) => t.slug).sort()).toEqual(slugs);
@@ -233,14 +311,17 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
     // SCVAL's 98 fixtures and BVAL's 144: both leagues' schedules give every varsity game its JV game.
     expect(merge.slots).toBe(98 + 144);
     expect(merge.matched + merge.moved + merge.added.length).toBe(merge.slots);
+    // The WCAL, WBAL, PAL and SCCAL divisions (2026-11-21) are read by membership: no schedule is bundled, so none
+    // has a JV slot or a JV table.
     for (const division of m.leagues.ALL_DIVISIONS) {
-      expect(m.jv.isJvScheduledDivision(division.id)).toBe(true);
-      expect(m.jv.getJvTable(division.id)?.gamesPerTeam).toBe(division.gamesPerTeam);
+      const bundled = division.official.mode !== 'none';
+      expect(m.jv.isJvScheduledDivision(division.id), division.id).toBe(bundled);
+      if (bundled) expect(m.jv.getJvTable(division.id)?.gamesPerTeam).toBe(division.gamesPerTeam);
     }
   });
 
-  it('lists a full JV league round for every school: 12 games in De Anza, 14 in El Camino', () => {
-    for (const team of m.teams.TEAMS) {
+  it('lists a full JV league round for every school of a scheduled division: 12 games in De Anza, 14 in El Camino', () => {
+    for (const team of m.teams.TEAMS.filter((t) => m.jv.isJvScheduledDivision(t.division))) {
       const league = m.jv.getJvGamesForTeam(team.slug).filter((g) => g.countsFor !== null);
       const expected = m.leagues.getDivision(team.division).gamesPerTeam;
       // A coach may list a league game twice or on a day no slot claims; never fewer than the schedule's.

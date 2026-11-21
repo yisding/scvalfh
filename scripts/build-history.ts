@@ -149,6 +149,54 @@ async function bvalFromSheet(args: Args): Promise<{ entry: Record<string, unknow
   return buildBvalSheetHistory({ sport, csv, retrievedOn: args.retrievedOn });
 }
 
+/**
+ * The leagues added to the soccer and basketball builds on 2026-11-21 (the PAL and the SCCAL in both, the WCAL and the
+ * WBAL in basketball), whose 2025-26 seasons are not transcribed yet: each card says so and links what the league
+ * published (checked 2026-11-21). The PAL's and the WBAL's final standings and the WCAL's archive are official
+ * documents a later transcription can read; the SCCAL publishes no standings.
+ */
+function notTranscribedYet(leagueId: 'wcal' | 'wbal' | 'pal' | 'sccal') {
+  const sport = IS_BASKETBALL ? 'boys basketball' : 'girls soccer';
+  const added = `This site added ${getLeague(leagueId).shortName} ${sport} on November 21, 2026`;
+  const noThirdParty = 'We do not show standings or awards from third-party sources.';
+  const base = { status: 'unavailable' as const, league: getLeague(leagueId).name, checkedOn: '2026-11-21' };
+  switch (leagueId) {
+    case 'wcal':
+      return {
+        ...base,
+        reason: `The WCAL publishes its final standings and its season honors on wcalsports.org. ${added} and has not transcribed its 2025-26 final standings yet. ${noThirdParty}`,
+        checked: [
+          'https://wcalsports.org/standings/ (the league’s standings archives, one PDF a school year)',
+          'https://wcalsports.org/awardsrecords/ (its season honors)',
+        ],
+        alsoPublished: [
+          { label: 'WCAL standings', url: 'https://wcalsports.org/standings/' },
+          { label: 'WCAL awards and records', url: 'https://wcalsports.org/awardsrecords/' },
+        ],
+      };
+    case 'wbal':
+      return {
+        ...base,
+        reason: `The WBAL publishes each season’s final standings on hs.wbalsports.org. ${added} and has not transcribed its 2025-26 final standings yet. ${noThirdParty}`,
+        checked: ['https://hs.wbalsports.org/history.html (links each past season’s standings pages, 2025-2026 among them)'],
+        alsoPublished: [{ label: 'WBAL 2025-26 boys basketball standings', url: 'https://hs.wbalsports.org/2025-2026/bbstb.html' }],
+      };
+    case 'pal':
+      return {
+        ...base,
+        reason: `The PAL publishes its final standings on pal.smcoe.org. ${added} and has not transcribed its 2025-26 final standings yet. ${noThirdParty}`,
+        checked: ['https://pal.smcoe.org/standings (one PDF a sport and level, for the 2025-26 season)'],
+        alsoPublished: [{ label: 'PAL standings', url: 'https://pal.smcoe.org/standings' }],
+      };
+    case 'sccal':
+      return {
+        ...base,
+        reason: `We found no official 2025-26 final standings for SCCAL ${sport}: sccal.org keeps no standings page or archive. ${added}. ${noThirdParty}`,
+        checked: ['https://sccal.org/ (the league’s site: its menu links schedules, by-laws and policies, and no standings)'],
+      };
+  }
+}
+
 async function mainOtherSport(args: Args): Promise<number> {
   const transcription = JSON.parse(readFileSync(transcriptionPath(DATA_DIR), 'utf8')) as Transcription;
   let built: Awaited<ReturnType<typeof buildScvalDocumentsHistory>>;
@@ -169,8 +217,16 @@ async function mainOtherSport(args: Args): Promise<number> {
     return res.entry;
   };
   const leagues = IS_BASKETBALL
-    ? { scval: entry, bval: bval.entry }
-    : { scval: entry, bval: bval.entry, wcal: documented('wcal'), wbal: documented('wbal') };
+    ? {
+        scval: entry, bval: bval.entry,
+        wcal: notTranscribedYet('wcal'), wbal: notTranscribedYet('wbal'), pal: notTranscribedYet('pal'), sccal: notTranscribedYet('sccal'),
+      }
+    : SPORT_ID === 'soccer'
+      ? {
+          scval: entry, bval: bval.entry, wcal: documented('wcal'), wbal: documented('wbal'),
+          pal: notTranscribedYet('pal'), sccal: notTranscribedYet('sccal'),
+        }
+      : { scval: entry, bval: bval.entry, wcal: documented('wcal'), wbal: documented('wbal') };
   const history = { season: transcription.season, sport: transcription.sport, leagues };
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));

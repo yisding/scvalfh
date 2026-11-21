@@ -137,7 +137,8 @@ const FIELD_HOCKEY_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = 
 
 /**
  * Girls soccer: each team's si.com JV team, the Junior Varsity entry of `otherTeams` on its varsity games page
- * (lib/registry/soccer/*.ts `sbliveSlug`), read 2026-11-21. Eastside has no JV team on si.com.
+ * (lib/registry/soccer/*.ts `sbliveSlug`), read 2026-11-21 (the PAL's and the SCCAL's later the same day). Eastside has
+ * no JV team on si.com.
  */
 const SOCCER_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   gunn: '367041-gunn-titans-jv',
@@ -200,6 +201,30 @@ const SOCCER_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'notre-dame-san-jose': '359179-notre-dame-regents-jv',
   pinewood: '400952-pinewood-panthers-jv',
   priory: '555761-woodside-priory-panthers-jv',
+  // The PAL and the SCCAL (2026-11-21); si.com lists a JV team for El Camino, Jefferson and Westmoor, which the PAL
+  // schedules play as varsity only.
+  aragon: '368035-aragon-dons-jv',
+  burlingame: '368039-burlingame-panthers-jv',
+  carlmont: '368298-carlmont-scots-jv',
+  hillsdale: '368049-hillsdale-fighting-knights-jv',
+  'menlo-atherton': '368302-menloatherton-bears-jv',
+  sequoia: '368307-sequoia-cherokee-jv',
+  woodside: '368311-woodside-wildcats-jv',
+  capuchino: '368044-capuchino-mustangs-jv',
+  'el-camino-ssf': '368446-el-camino-colts-jv',
+  'half-moon-bay': '363406-half-moon-bay-cougars-jv',
+  jefferson: '365427-jefferson-grizzlies-jv',
+  mills: '368055-mills-vikings-jv',
+  'san-mateo': '368061-san-mateo-bearcats-jv',
+  'south-san-francisco': '368453-south-san-francisco-warriors-jv',
+  'terra-nova': '365433-terra-nova-tigers-jv',
+  westmoor: '365437-westmoor-rams-jv',
+  aptos: '367015-aptos-mariners-jv',
+  harbor: '368145-harbor-pirates-jv',
+  'san-lorenzo-valley': '368005-san-lorenzo-valley-cougars-jv',
+  'santa-cruz': '368150-santa-cruz-cardinals-jv',
+  'scotts-valley': '368265-scotts-valley-falcons-jv',
+  soquel: '368153-soquel-knights-jv',
 };
 
 /**
@@ -248,6 +273,45 @@ const BASKETBALL_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'mt-pleasant': '155210-mt-pleasant-cardinals-jv',
   'san-jose': '160117-san-jose-bulldogs-jv',
   'yerba-buena': '155236-yerba-buena-aztec-warriors-jv',
+  // The WCAL, the WBAL, the PAL and the SCCAL (2026-11-21).
+  mitty: '206988-archbishop-mitty-monarchs-jv',
+  riordan: '141031-archbishop-riordan-crusaders-jv',
+  bellarmine: '147279-bellarmine-college-prep-bells-jv',
+  serra: '141045-serra-padres-jv',
+  'sacred-heart-cathedral': '141035-sacred-heart-cathedral-preparatory-fightin-irish-jv',
+  'saint-francis': '147266-saint-francis-lancers-jv',
+  'st-ignatius': '141041-st-ignatius-wildcats-jv',
+  'valley-christian': '141412-valley-christian-warriors-jv',
+  'crystal-springs': '207227-crystal-springs-uplands-gryphons-jv',
+  eastside: '152015-eastside-college-prep-panthers-jv',
+  harker: '141194-harker-eagles-jv',
+  'kings-academy': '207499-kings-academy-knights-jv',
+  menlo: '141239-menlo-school-knights-jv',
+  pinewood: '207759-pinewood-panthers-jv',
+  priory: '141022-woodside-priory-panthers-jv',
+  'sacred-heart-prep': '141059-sacred-heart-prep-gators-jv',
+  aragon: '160229-aragon-dons-jv',
+  burlingame: '160235-burlingame-panthers-jv',
+  carlmont: '160612-carlmont-scots-jv',
+  'half-moon-bay': '153889-half-moon-bay-cougars-jv',
+  hillsdale: '160247-hillsdale-fighting-knights-jv',
+  'menlo-atherton': '160618-menloatherton-bears-jv',
+  sequoia: '160624-sequoia-cherokee-jv',
+  woodside: '160630-woodside-wildcats-jv',
+  capuchino: '160241-capuchino-mustangs-jv',
+  'el-camino-ssf': '160845-el-camino-colts-jv',
+  jefferson: '156820-jefferson-grizzlies-jv',
+  mills: '160253-mills-vikings-jv',
+  'san-mateo': '160259-san-mateo-bearcats-jv',
+  'south-san-francisco': '160850-south-san-francisco-warriors-jv',
+  'terra-nova': '156830-terra-nova-tigers-jv',
+  westmoor: '156836-westmoor-rams-jv',
+  aptos: '158917-aptos-mariners-jv',
+  harbor: '160366-harbor-pirates-jv',
+  'san-lorenzo-valley': '160197-san-lorenzo-valley-cougars-jv',
+  'santa-cruz': '160371-santa-cruz-cardinals-jv',
+  'scotts-valley': '160557-scotts-valley-falcons-jv',
+  soquel: '160376-soquel-knights-jv',
 };
 
 /** This build's paths: the sport's own JV pages (si.com team ids are per sport); none for volleyball, whose build reads no si.com page. */

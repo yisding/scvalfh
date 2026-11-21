@@ -51,7 +51,8 @@ describe('data/soccer/history-2025-26.json: the WCAL and the WBAL', () => {
   it('has both leagues available, from their own documents, beside SCVAL and BVAL', () => {
     // BVAL from its standings sheet (2026-11-16: tests/history-other-sports.test.ts).
     expect(m.history.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval', 'wcal', 'wbal']);
-    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([]);
+    // The PAL and the SCCAL, added 2026-11-21, are not transcribed yet.
+    expect(m.history.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pal', 'sccal']);
     const f = readFile('soccer');
     expect([f.leagues.wcal.provenance, f.leagues.wbal.provenance].map((p) => [p.source, p.publisher])).toEqual([
       ['league-documents', 'wcalsports.org'],
