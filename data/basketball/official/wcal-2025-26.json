@@ -1,0 +1,135 @@
+{
+  "season": "2025-26",
+  "sport": "Boys Basketball",
+  "league": "wcal",
+  "publisher": "wcalsports.org",
+  "retrievedOn": "2026-11-21",
+  "standings": {
+    "url": "https://wcalsports.org/__static/jdj5jdewjevcckvpzxfwrmgvmunjq0tb/2025-2026.pdf",
+    "kind": "pdf",
+    "index": "https://wcalsports.org/standings/"
+  },
+  "allLeague": null,
+  "transcription": "Transcribed from the pdftotext -layout text of the PDF, read 2026-11-21: each row as printed, and checked against the PDF row by row.",
+  "notes": [
+    "The standings PDF is the WCAL's 2025-2026 archive, linked as \"2025-2026\" from wcalsports.org/standings/: \"WCAL MEN'S BASKETBALL FINAL STANDINGS\", varsity of February 17, 2026 (\"WCAL CHAMPION – ARCHBISHOP RIORDAN\") and junior varsity of February 18, 2026 (\"WCAL CHAMPION – SAINT IGNATIUS\").",
+    "The PDF prints no place column: each table is in its own order, and `place` is the row's position in it. Sacred Heart Cathedral and Saint Francis are both 1-13 in the varsity table, in that order, so they are 7th and 8th.",
+    "League is the PDF's League Wins and Losses columns, overall its Season columns.",
+    "The JV table prints Archbishop Riordan at 6-4, Bellarmine at 7-6, Saint Francis at 6-7 and Sacred Heart Cathedral at 1-12, fewer than fourteen league games; each is kept as printed.",
+    "The PDF's freshman tables are not stored: the archive has varsity and JV only. Only standings are stored: the WCAL's all-league teams are not transcribed."
+  ],
+  "formerMembers": [],
+  "joinedSince": [],
+  "schoolSpellings": {},
+  "divisions": [
+    {
+      "division": "wcal",
+      "standings": {
+        "varsity": [
+          {
+            "place": 1,
+            "name": "Archbishop Riordan",
+            "league": "14-0",
+            "overall": "23-1"
+          },
+          {
+            "place": 2,
+            "name": "Saint Ignatius",
+            "league": "12-2",
+            "overall": "21-3"
+          },
+          {
+            "place": 3,
+            "name": "Archbishop Mitty",
+            "league": "9-5",
+            "overall": "15-9"
+          },
+          {
+            "place": 4,
+            "name": "Bellarmine",
+            "league": "8-6",
+            "overall": "16-8"
+          },
+          {
+            "place": 5,
+            "name": "Valley Christian",
+            "league": "6-8",
+            "overall": "14-10"
+          },
+          {
+            "place": 6,
+            "name": "Junipero Serra",
+            "league": "5-9",
+            "overall": "13-11"
+          },
+          {
+            "place": 7,
+            "name": "Sacred Heart Cathedral",
+            "league": "1-13",
+            "overall": "8-16"
+          },
+          {
+            "place": 8,
+            "name": "Saint Francis",
+            "league": "1-13",
+            "overall": "8-16"
+          }
+        ],
+        "jv": [
+          {
+            "place": 1,
+            "name": "Saint Ignatius",
+            "league": "12-2",
+            "overall": "22-2"
+          },
+          {
+            "place": 2,
+            "name": "Archbishop Mitty",
+            "league": "10-4",
+            "overall": "16-8"
+          },
+          {
+            "place": 3,
+            "name": "Bellarmine",
+            "league": "7-6",
+            "overall": "16-7"
+          },
+          {
+            "place": 4,
+            "name": "Junipero Serra",
+            "league": "7-7",
+            "overall": "12-11"
+          },
+          {
+            "place": 5,
+            "name": "Archbishop Riordan",
+            "league": "6-4",
+            "overall": "13-6"
+          },
+          {
+            "place": 6,
+            "name": "Saint Francis",
+            "league": "6-7",
+            "overall": "14-8"
+          },
+          {
+            "place": 7,
+            "name": "Valley Christian",
+            "league": "4-10",
+            "overall": "13-12"
+          },
+          {
+            "place": 8,
+            "name": "Sacred Heart Cathedral",
+            "league": "1-12",
+            "overall": "5-17"
+          }
+        ]
+      },
+      "awards": {
+        "varsity": null,
+        "jv": null
+      }
+    }
+  ]
+}

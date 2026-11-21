@@ -63,7 +63,7 @@ export interface WinterSource {
 
 interface WinterSport {
   out: string;
-  /** The day the documents were read, where it is not TRANSCRIBED_ON (volleyball: 2026-11-14). */
+  /** The day the documents were read, where it is not TRANSCRIBED_ON (volleyball: 2026-11-14; basketball: 2026-11-21). */
   transcribedOn?: string;
   /** The document's GAME TIMES line, 24h. */
   defaults: { varsity: string; jv: string };
@@ -73,13 +73,15 @@ interface WinterSport {
 export const WINTER: Readonly<Record<'basketball' | 'soccer' | 'volleyball', WinterSport>> = {
   basketball: {
     out: 'data/basketball/official/bval-2026.json',
+    // All four documents were read again on 2026-11-21, when West Valley's revision of 11/16/26 was transcribed.
+    transcribedOn: '2026-11-21',
     // "GAME TIMES: JV @ 5:30pm / Varsity @ 7:00pm"
     defaults: { varsity: '19:00', jv: '17:30' },
     sources: [
       { division: 'mt-hamilton', file: 'bval-basketball-boys-mt-hamilton-2026.txt', sha256: '6c24b33883200a28ac55acdd0a758ec0ee0eed07d0db80e8b18f918683629b26' },
       { division: 'santa-teresa', file: 'bval-basketball-boys-santa-teresa-2026.txt', sha256: '9c9afaa021a3fea7002d09fe73a3cd5cd1f62e2dae038ee92cd73011e2260506' },
       { division: 'almaden-valley', file: 'bval-basketball-boys-almaden-valley-2026.txt', sha256: '16c96915204856d9f27705ca50b3486dd29528e749e0f22c190ffb83004131df' },
-      { division: 'west-valley', file: 'bval-basketball-boys-west-valley-2026.txt', sha256: 'abaf8f4619b0191c93def7bc32499e7c3dcd692c74a61b78e853360686bb84c9' },
+      { division: 'west-valley', file: 'bval-basketball-boys-west-valley-2026.txt', sha256: 'e15451db7e3957b7459935c6ed3abf817d2e93639f7c894857c21b1f63259174' },
     ],
   },
   soccer: {
