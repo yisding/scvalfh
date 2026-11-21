@@ -7,12 +7,12 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0",
-  "contentHash": "b9d5e6c15cf9f1454da11180caf60d3b224aaa730cdef5494c6d308132a11559",
+  "contentHash": "8a44257a46d5bb036ed151e7499c0b17363133be2f35c79e16927b2c1707844c",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 0,
+        "finals": 1,
         "games": 238,
         "leagueGames": 167,
         "teams": 26
@@ -34,20 +34,20 @@
       "wcal": {
         "backfilled": 0,
         "finals": 0,
-        "games": 49,
+        "games": 50,
         "leagueGames": 18,
         "teams": 6
       }
     },
-    "finals": 0,
-    "games": 474,
+    "finals": 1,
+    "games": 475,
     "leagueGames": 298,
     "mismatches": 0,
-    "pending": 4,
+    "pending": 5,
     "teams": 60
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-20T21:56:10.946Z",
+  "fetchedAt": "2026-11-21T05:33:43.255Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -426,7 +426,7 @@
     },
     {
       "label": "sacred-heart-cathedral schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -551,7 +551,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 273,
+      "rowCount": 275,
       "status": "ok"
     },
     {

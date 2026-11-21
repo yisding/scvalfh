@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T21:56:10.946Z",
+  "fetchedAt": "2026-11-21T05:33:43.255Z",
   "fixtures": [
     {
       "claims": {
@@ -140,8 +140,8 @@
             "away": {
               "city": "San Jose",
               "name": "San Jose",
-              "result": null,
-              "score": null,
+              "result": "L",
+              "score": 1,
               "slug": "san-jose",
               "teamId": "aede8bb3-d592-4aaf-949a-dd3f8fbe3b62"
             },
@@ -154,13 +154,13 @@
             "dateKey": "2026-11-19",
             "dateLocal": "2026-11-19T19:00:00",
             "dateUtc": "2026-11-20T03:00:00Z",
-            "decider": null,
+            "decider": "REG",
             "forfeitBy": null,
             "home": {
               "city": "Hayward",
               "name": "Hayward",
-              "result": null,
-              "score": null,
+              "result": "W",
+              "score": 3,
               "slug": null,
               "teamId": "84de01c0-5f03-4a3e-98ee-4f985e7137a6"
             },
@@ -173,17 +173,17 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-29T21:25:03",
+              "maxprepsModifiedOn": "2026-11-21T00:37:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
             "shootout": null,
             "site": "home",
-            "status": "score-pending",
+            "status": "final",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hayward-vs-san-jose/11-19-2026/?c=089966ba-455b-4c1d-81a8-d595e27aa4aa",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/hayward-high-school-hayward-ca/gam254efaef54?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
             },
             "venue": {
               "text": null
@@ -311,7 +311,7 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/james-lick-san-jose-vs-macdonald-san-jose/11-20-2026/?c=a316e0a7-10bd-43e1-92c6-29df9fa87fc3",
@@ -377,7 +377,7 @@
             },
             "shootout": null,
             "site": "home",
-            "status": "scheduled",
+            "status": "score-pending",
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/hillsdale-fighting-knights-san-mateo-vs-mercy-burlingame/11-20-2026/?c=62658c50-7380-4750-b454-95f3920583d2",
@@ -777,7 +777,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/homestead-cupertino-vs-woodside/11-30-2026/?c=99773bdc-dae5-4010-bfc9-85c97c4e76b1",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gama913712a0d?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -7616,6 +7616,72 @@
         "maxpreps": {
           "game": {
             "away": {
+              "city": "San Francisco",
+              "name": "Sacred Heart Cathedral",
+              "result": null,
+              "score": null,
+              "slug": "sacred-heart-cathedral",
+              "teamId": "1806a4eb-3371-4e7c-a755-835229bc515e"
+            },
+            "contestId": "34a89233-d24b-4cb2-98fe-95cdfa9d19be",
+            "contestTypes": {
+              "away": 1,
+              "home": 1
+            },
+            "countsFor": null,
+            "dateKey": "2026-12-08",
+            "dateLocal": "2026-12-08T16:30:00",
+            "dateUtc": "2026-12-09T00:30:00Z",
+            "decider": null,
+            "forfeitBy": null,
+            "home": {
+              "city": "Redwood City",
+              "name": "Sequoia",
+              "result": null,
+              "score": null,
+              "slug": null,
+              "teamId": "2f946069-e32d-4680-8027-3a77cdb0f2a1"
+            },
+            "isDateTba": false,
+            "isForfeit": false,
+            "isLeague": false,
+            "isOt": false,
+            "isTimeTba": false,
+            "leagueDivision": null,
+            "otPeriods": 0,
+            "postseason": null,
+            "provenance": {
+              "maxprepsModifiedOn": "2026-11-20T15:03:19",
+              "schedule": "maxpreps-api",
+              "scores": "maxpreps-api"
+            },
+            "shootout": null,
+            "site": "home",
+            "status": "scheduled",
+            "urls": {
+              "goFan": null,
+              "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/sacred-heart-cathedral-preparatory-san-francisco-vs-sequoia-redwood-city/12-8-2026/?c=34a89233-d24b-4cb2-98fe-95cdfa9d19be",
+              "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/game25a507c59?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
+            },
+            "venue": {
+              "text": "Sequoia HS"
+            }
+          },
+          "ref": "34a89233-d24b-4cb2-98fe-95cdfa9d19be"
+        }
+      },
+      "id": "2026-12-08-sacred-heart-cathedral-at-name:sequoia",
+      "published": [
+        {
+          "contestId": "34a89233-d24b-4cb2-98fe-95cdfa9d19be"
+        }
+      ]
+    },
+    {
+      "claims": {
+        "maxpreps": {
+          "game": {
+            "away": {
               "city": "San Jose",
               "name": "San Jose",
               "result": null,
@@ -8401,7 +8467,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-10-06T08:10:49",
+              "maxprepsModifiedOn": "2026-11-20T23:03:23",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -8414,7 +8480,7 @@
               "nfhsStream": "https://www.nfhsnetwork.com/events/sequoia-high-school-redwood-city-ca/gam0018d8bfab?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
-              "text": null
+              "text": "Sequoia HS"
             }
           },
           "ref": "fc71ce6b-f74a-46b9-8cec-47c580ca076c"
@@ -9675,7 +9741,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T18:29:41",
+              "maxprepsModifiedOn": "2026-11-20T23:06:41",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -12757,7 +12823,7 @@
             "urls": {
               "goFan": null,
               "maxpreps": "https://www.maxpreps.com/ca/soccer/girls/match/sacred-heart-cathedral-preparatory-san-francisco-vs-woodside/12-21-2026/?c=e5025fb8-0d05-47c1-bb99-d1d1498e8550",
-              "nfhsStream": null
+              "nfhsStream": "https://www.nfhsnetwork.com/events/woodside-high-school-woodside-ca/gambaa96b51d0?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=pre"
             },
             "venue": {
               "text": null
@@ -15149,7 +15215,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T16:59:22",
+              "maxprepsModifiedOn": "2026-11-20T22:49:12",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -16274,7 +16340,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T16:30:16",
+              "maxprepsModifiedOn": "2026-11-20T23:03:18",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
@@ -18416,7 +18482,7 @@
             "otPeriods": 0,
             "postseason": null,
             "provenance": {
-              "maxprepsModifiedOn": "2026-11-20T16:59:59",
+              "maxprepsModifiedOn": "2026-11-20T23:03:30",
               "schedule": "maxpreps-api",
               "scores": "maxpreps-api"
             },
