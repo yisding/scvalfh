@@ -35,23 +35,9 @@
     {
       "sport": "basketball",
       "team": "macdonald",
-      "name": "Jhayde Domingo",
-      "careerId": "36jirp6p2fr44",
-      "basis": "One player. \"Jhayde Domingo\": basketball 25-26 varsity #23 grade 11 (MaxPreps stat sheet). \"Domingo Jhayde\": basketball 26-27 varsity #5 grade 12 (MaxPreps roster). Same school, both class of 2027. MaxPreps' career pages give both as a guard, class of 2027; the 26-27 row was entered with the first and last names in each other's fields (it sorts under D). Decided 2026-11-14."
-    },
-    {
-      "sport": "basketball",
-      "team": "macdonald",
-      "name": "Jhaylen Richards",
-      "careerId": "nsdf6je7kot00",
-      "basis": "One player. \"Jhaylen Richards\": basketball 25-26 varsity #25 grade 10 (MaxPreps stat sheet). \"Jhaylen Roy-Richard\": basketball 26-27 varsity #12 grade 11 (MaxPreps roster). Same school, both class of 2028. MaxPreps' 25-26 roster has Jhaylen Richards #25 So. and its 26-27 roster Jhaylen Roy-Richard #12 Jr., both class of 2028, with no Richards left on the 26-27 roster; MacDonald's 26-27 football roster lists a \"jhalen Richard\" #12 Jr. No source states the change of surname. Decided 2026-11-14."
-    },
-    {
-      "sport": "basketball",
-      "team": "macdonald",
       "name": "Mic Borgonia",
-      "careerId": "r3b2f4885nl22",
-      "basis": "One player. \"Mic Borgonia\": basketball 25-26 varsity #0 grade 11 (MaxPreps stat sheet). \"Mic Nicolas Bergonia\": basketball 26-27 varsity #1 grade 12 (MaxPreps roster). Same school, both class of 2027. MaxPreps' career pages give both as a guard, class of 2027; only one of the two is on each season's roster. Which surname spelling is right is not established. Decided 2026-11-14."
+      "careerId": "dkfpoh6hcdatd",
+      "basis": "One player. \"Mic Borgonia\": basketball 25-26 varsity #0 grade 11 (MaxPreps stat sheet). \"Mic Nicolas Bergonia\": basketball 26-27 varsity #1 grade 12 (MaxPreps roster). Same school, both class of 2027. MaxPreps' career pages give both as a guard, class of 2027; only one of the two is on each season's roster. Which surname spelling is right is not established. Decided 2026-11-14. Re-pointed 2026-11-21: MaxPreps re-entered MacDonald's 26-27 roster (read 2026-11-21), dropping the \"Mic Nicolas Bergonia\" row (career r3b2f4885nl22) for \"Mic Nicolas Borgonia\" #3 grade 12 under career dkfpoh6hcdatd; the same player, now spelled as on the 25-26 stat sheet."
     },
     {
       "sport": "basketball",
@@ -822,13 +808,6 @@
     }
   ],
   "names": [
-    {
-      "sport": "basketball",
-      "team": "macdonald",
-      "name": "Domingo Jhayde",
-      "official": "Jhayde Domingo",
-      "basis": "MaxPreps' 26-27 roster row has the first and last names in each other's fields (it sorts under D); the 25-26 stat sheet and both career pages give Jhayde Domingo, a guard, class of 2027 (see sameAs, decided 2026-11-14). Decided 2026-11-16."
-    },
     {
       "sport": "volleyball",
       "team": "fremont",
