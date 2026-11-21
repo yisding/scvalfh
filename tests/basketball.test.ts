@@ -25,6 +25,7 @@ type Modules = {
   jvOfficial: typeof import('../lib/jv/jv-official');
   rosters: typeof import('../lib/players/rosters');
   order: typeof import('../lib/standings/order');
+  classify: typeof import('../lib/classify');
 };
 
 let m: Modules;
@@ -49,6 +50,7 @@ beforeAll(async () => {
     jvOfficial: await import('../lib/jv/jv-official'),
     rosters: await import('../lib/players/rosters'),
     order: await import('../lib/standings/order'),
+    classify: await import('../lib/classify'),
   };
 });
 
@@ -169,6 +171,13 @@ describe('SCVAL boys basketball', () => {
     if (sccal.postseason.kind !== 'ccs-ladder') throw new Error('SCCAL: not a CCS ladder');
     expect(sccal.postseason.autoBerths).toBe(2);
     expect(sccal.postseason.ladder.map((r) => [r.places, r.status])).toEqual([[[1, 1], 'aq'], [[2, 99], 'play-in']]);
+    // The SCCAL tournament (week of Feb 8) is the league's postseason, not non-league play.
+    expect(sccal.rules.postseasonFrom).toBe('2027-02-08');
+    const [aptos, harbor] = ['aptos', 'harbor'].map((slug) => m.teams.getTeamBySlug(slug)!);
+    const side = (t: typeof aptos) => ({ teamId: t.id, slug: t.slug, name: t.name });
+    const tournamentGame = { home: side(aptos), away: side(harbor), dateKey: '2027-02-10', contestId: 'sccal-tournament-test',
+      contestTypes: { home: 1, away: 1 } } as unknown as Parameters<typeof m.classify.postseasonTag>[0];
+    expect(m.classify.postseasonTag(tournamentGame)).toMatchObject({ kind: 'league-postseason', leagueId: 'sccal' });
   });
 
   it('gives each school the soccer registry also holds its soccer seed, on its MaxPreps basketball page', () => {

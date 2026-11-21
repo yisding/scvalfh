@@ -68,7 +68,9 @@ export const SCCAL_BASKETBALL_LEAGUE: LeagueConfig = {
     points: { win: 1, tie: 0, loss: 0 }, orderBy: 'win-pct', orderScope: 'table', gamesWord: 'league',
     // A game between two of the six inside league play counts; members also meet in preseason tournaments, which
     // MaxPreps types 2 (tournament).
-    classification: 'membership', excludeContestTypes: [2, 4], postseasonFrom: '2027-02-17', leagueGameOverrides: [],
+    // The postseason opens with the SCCAL tournament (the schedule's "Week of Feb. 8"): a game between two members from
+    // then on is the league's postseason, not a non-league game.
+    classification: 'membership', excludeContestTypes: [2, 4], postseasonFrom: '2027-02-08', leagueGameOverrides: [],
     matcher: 'two-phase',
     // POLICY §2.d, as in the soccer build; the coin toss is not computed, so a tie that reaches it stays level.
     tiebreaks: { default: ['head-to-head', 'record-vs-placed', 'coin-flip'] },
