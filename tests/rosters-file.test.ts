@@ -23,6 +23,7 @@ import { getRosters, getTeamRoster, sortedPlayers } from '../lib/players/rosters
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { JV_SPORT_SEASON_ID, SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS, teamsInLeague } from '../lib/teams';
+import { rosterFailureAnnotations } from '../scripts/fetch-rosters';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const FILE = path.join(REPO, 'data', 'field-hockey', 'rosters.json');
@@ -556,5 +557,49 @@ describe('lib/players/rosters.ts', () => {
     expect(mitty[0].jersey).not.toBeNull();
     const lg = sortedPlayers(getTeamRoster('los-gatos')!).map((p) => p.lastName ?? p.fullName);
     expect([...lg].sort((a, b) => a.localeCompare(b))).toEqual(lg);
+  });
+});
+
+describe('scripts/fetch-rosters.ts in a GitHub Actions run: one warning annotation per team that failed', () => {
+  const team = (slug: string) => TEAMS.find((t) => t.slug === slug)!;
+  const row = (slug: string, status: 'ok' | 'carried-forward' | 'error', error: string | null) => ({
+    ...pendingRoster(team(slug)),
+    status,
+    error,
+  });
+
+  it('names each failed team the run covered, escaped as a workflow command, and nothing else', () => {
+    const scval = teamsInLeague('scval');
+    const other = TEAMS.find((t) => t.league !== 'scval')!;
+    const lines = rosterFailureAnnotations(
+      [
+        row(scval[0].slug, 'carried-forward', 'Layla T: height is "6\'0"" in athleteData:\nbut "6\'0" in the table'),
+        row(scval[1].slug, 'error', 'HTTP 403 (100%)'),
+        row(scval[2].slug, 'ok', null),
+        // Outside a --leagues run: its previous failure is not this run's.
+        row(other.slug, 'error', 'an earlier failure'),
+      ] as never,
+      ['scval'],
+      false,
+    );
+    expect(lines).toEqual([
+      `::warning title=${scval[0].name} roster not read::${scval[0].slug}: Layla T: height is "6'0"" in athleteData:%0Abut "6'0" in the table (its previous rows are kept)`,
+      `::warning title=${scval[1].name} roster not read::${scval[1].slug}: HTTP 403 (100%25) (it has no roster)`,
+    ]);
+    expect(rosterFailureAnnotations([row(scval[1].slug, 'error', 'x')] as never, null, true)[0]).toContain('JV roster not read');
+  });
+
+  it('prints them only under GITHUB_ACTIONS, one per failed team', () => {
+    const out = tmpOut();
+    writeFileSync(out, JSON.stringify(golden), 'utf8');
+    // An empty fixtures directory: every PCAL team fails to read.
+    const none = mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
+    const args = ['--fixtures', none, '--leagues', 'pcal', '--out', out, '--fetched-at', '2026-11-21T00:00:00.000Z', '--dry-run'];
+    const inActions = runScript('scripts/fetch-rosters.ts', args, { env: { ...process.env, GITHUB_ACTIONS: 'true' } });
+    const warnings = inActions.stdout.split('\n').filter((l) => l.startsWith('::warning '));
+    expect(warnings).toHaveLength(teamsInLeague('pcal').length);
+    for (const w of warnings) expect(w).toMatch(/^::warning title=[^:]+ roster not read::[a-z0-9-]+: /);
+    const local = runScript('scripts/fetch-rosters.ts', args, { env: { ...process.env, GITHUB_ACTIONS: '' } });
+    expect(local.stdout).not.toContain('::warning');
   });
 });

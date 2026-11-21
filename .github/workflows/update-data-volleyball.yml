@@ -140,6 +140,16 @@ jobs:
           pnpm fetch-rosters --level jv || rc=1
           exit "$rc"
 
+      # Never fatal. When the roster fetch changed a roster file, rebuild data/players.json from the new rosters and
+      # hold it to tests/players-registry.test.ts (scripts/refresh-player-registry.sh). When either fails (a hand-curated
+      # data/player-identity.json entry the new rosters no longer support), the rosters and the registry go back to the
+      # committed ones and an error annotation names the entry, so main never holds rosters its registry refuses.
+      - name: Rebuild the player registry
+        id: registry
+        continue-on-error: true
+        timeout-minutes: 10
+        run: scripts/refresh-player-registry.sh volleyball
+
       # tests/volleyball.test.ts loads every volleyball data file through its validating loader. When they fail and the stats or JV file changed in this
       # run, both go back to the committed ones and they run again, so only a bad snapshot blocks the commit.
       # tests/game-aliases.test.ts follows every old game URL of the snapshot (lib/game-urls.ts aliases) to its page.
@@ -154,7 +164,7 @@ jobs:
             exit 1
           fi
           echo "::warning::the volleyball tests failed; testing again with the committed stats and JV files"
-          git checkout -- data/volleyball/player-stats.json data/volleyball/jv.json data/volleyball/rosters.json data/volleyball/jv-rosters.json
+          git checkout -- data/volleyball/player-stats.json data/volleyball/jv.json data/volleyball/rosters.json data/volleyball/jv-rosters.json data/players.json
           echo "restored=true" >> "$GITHUB_OUTPUT"
           run
 
@@ -204,8 +214,9 @@ jobs:
           ')
           # deploy-cloudflare.yml accepts this commit as data only because it is recognisably this one:
           # author github-actions[bot], one parent, a message starting "data: refresh volleyball", nothing but
-          # the seven files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
-          # player-stats.json, jv.json, rosters.json and jv-rosters.json (tests/workflows.test.ts).
+          # the files below: snapshot.json, snapshot.meta.json and claims.json (which rides with the snapshot),
+          # player-stats.json, jv.json, rosters.json and jv-rosters.json, and data/players.json rebuilt from the rosters
+          # (tests/workflows.test.ts).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "$SNAPSHOT" = "true" ]; then
@@ -222,6 +233,10 @@ jobs:
           fi
           if [ "$ROSTERS" = "true" ]; then
             git add data/volleyball/rosters.json data/volleyball/jv-rosters.json
+            # The registry rebuilt from them (the Rebuild the player registry step), when it changed.
+            if ! git diff --quiet -- data/players.json; then
+              git add data/players.json
+            fi
           fi
           git commit -m "data: refresh volleyball ${DAY} · ${SUMMARY}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -247,5 +262,6 @@ jobs:
             echo "- JV games fetch: \`${{ steps.jv.outcome || 'skipped' }}\`"
             echo "- rosters changed: \`${{ steps.commit.outputs.rosters || 'false' }}\`"
             echo "- rosters fetch: \`${{ steps.rosters.outcome || 'skipped' }}\`"
+            echo "- player registry: \`${{ steps.registry.outcome || 'skipped' }}\`"
             echo "- stats and JV restored after failing the tests: \`${{ steps.test.outputs.restored || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
