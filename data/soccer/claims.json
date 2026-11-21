@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T13:40:06.965Z",
+  "fetchedAt": "2026-11-21T16:37:39.451Z",
   "fixtures": [
     {
       "claims": {
@@ -564,27 +564,27 @@
             "row": {
               "dateIso": "2026-11-19T19:00:00.000-08:00",
               "dateKey": "2026-11-19",
-              "gameTypeLabel": "League",
+              "gameTypeLabel": null,
               "isFinal": true,
               "isScored": true,
-              "origin": "team-games",
+              "origin": "scoreboard",
               "sbliveGameId": "6662900",
               "sides": [
                 {
                   "name": "Ann Sobrato",
                   "sbliveSchoolId": "12138",
-                  "sbliveTeamId": "366616",
+                  "sbliveTeamId": null,
                   "score": 0,
                   "slug": "sobrato",
-                  "via": "team-id"
+                  "via": "school-id"
                 },
                 {
                   "name": "Yerba Buena",
                   "sbliveSchoolId": "10752",
-                  "sbliveTeamId": "364320",
+                  "sbliveTeamId": null,
                   "score": 9,
                   "slug": "yerba-buena",
-                  "via": "team-id"
+                  "via": "school-id"
                 }
               ],
               "url": "https://www.si.com/high-school/stats/california/girls-soccer/games/6662900-yerba-buena-vs-ann-sobrato"

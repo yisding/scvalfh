@@ -7,7 +7,7 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · WCAL +0 · WBAL +0 · PAL +0 · SCCAL +0",
-  "contentHash": "d77083950b417131786642def335c381aa09b9c0a20df198a7cc0a83965ff1ab",
+  "contentHash": "17f114057dffed182728a215795000091be981089f9dbe2368bd1f395dc45912",
   "counts": {
     "byLeague": {
       "bval": {
@@ -63,11 +63,11 @@
   "crossCheck": {
     "agreements": 1,
     "backfilled": 2,
-    "compared": 66,
+    "compared": 50,
     "conflicts": 0,
-    "sbliveOnlyScored": 1
+    "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-11-21T13:40:06.965Z",
+  "fetchedAt": "2026-11-21T16:37:39.451Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -129,7 +129,7 @@
   "requests": {
     "maxpreps": 105,
     "official": 5,
-    "sblive": 8
+    "sblive": 27
   },
   "sources": [
     {
@@ -708,6 +708,106 @@
       "status": "ok"
     },
     {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-19",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3758-bval-hamilton scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-19",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3759-bval-santa-teresa scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-18",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-19",
+      "rowCount": 4,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3760-bval-west-valley scoreboard 2026-11-20",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3887-pal-bay scoreboard 2026-11-19",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3887-pal-bay scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3888-pal-ocean scoreboard 2026-11-19",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3888-pal-ocean scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3911-sccal scoreboard 2026-11-17",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3912-scval-de-anza scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3912-scval-de-anza scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3913-scval-el-camino scoreboard 2026-11-18",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3913-scval-el-camino scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3948-wbal-foothill scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
+      "label": "sblive 3949-wbal-skyline scoreboard 2026-11-20",
+      "rowCount": 0,
+      "status": "ok"
+    },
+    {
       "label": "sblive scoreboard 2026-11-17",
       "rowCount": 24,
       "status": "ok"
@@ -740,11 +840,6 @@
     {
       "label": "sblive los-altos games",
       "rowCount": 22,
-      "status": "ok"
-    },
-    {
-      "label": "sblive sobrato games",
-      "rowCount": 20,
       "status": "ok"
     },
     {
