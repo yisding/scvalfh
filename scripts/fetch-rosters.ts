@@ -320,6 +320,12 @@ export async function main(argv: readonly string[]): Promise<number> {
   const byLeague = summarizeByLeague(teams, args.leagues, dropped);
   console.log('');
   for (const l of byLeague) console.log(formatLeagueSummary(l));
+  // In a GitHub Actions run, one warning annotation per team whose page failed this run: the refresh's roster step
+  // never fails the job (a roster outage must not cost the day's scores), so without these a failure is seen only by
+  // whoever opens the step's log (Mitty's and Castilleja's went a week unseen, 2026-11).
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    for (const line of rosterFailureAnnotations(teams, args.leagues, jv)) console.log(line);
+  }
   // A covered team that failed decides the exit code, and so does an uncovered one whose previous
   // row was dropped (it is pending now); a league left out of the run is otherwise not a failure.
   const failed = byLeague.reduce((n, l) => n + l.failed, 0);
@@ -342,6 +348,27 @@ export async function main(argv: readonly string[]): Promise<number> {
     file: rosters,
     exitCode,
   });
+}
+
+/**
+ * GitHub Actions `::warning` lines, one per team the run covered whose page failed (status carried-forward or error
+ * with this run's error): a team outside a `--leagues` run keeps its previous row and is not this run's failure.
+ */
+export function rosterFailureAnnotations(
+  teams: readonly TeamRoster[],
+  leagues: Parameters<typeof inScope>[1],
+  jv: boolean,
+): string[] {
+  const escape = (text: string) => text.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+  const property = (text: string) => escape(text).replace(/:/g, '%3A').replace(/,/g, '%2C');
+  const level = jv ? 'JV roster' : 'roster';
+  return teams
+    .filter((t) => (t.status === 'carried-forward' || t.status === 'error') && t.error !== null)
+    .filter((t) => inScope(TEAMS.find((x) => x.slug === t.slug)!, leagues))
+    .map((t) => {
+      const kept = t.status === 'carried-forward' ? 'its previous rows are kept' : 'it has no roster';
+      return `::warning title=${property(`${t.name} ${level} not read`)}::${escape(`${t.slug}: ${t.error} (${kept})`)}`;
+    });
 }
 
 runCliIfMain(import.meta.url, main);

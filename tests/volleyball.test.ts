@@ -395,12 +395,23 @@ describe('the bundled volleyball data', () => {
         expect(p.name, t.slug).not.toBe(p.name.toUpperCase());
       }
     }
-    // MaxPreps' JV pages list nobody for Cupertino and Willow Glen, and two players for Leland.
-    expect(m.jvRosters.getJvRoster('cupertino')).toMatchObject({ source: 'school-site', other: null });
-    expect(m.jvRosters.getJvRoster('willow-glen')).toMatchObject({ source: 'school-site', other: null });
-    expect(m.jvRosters.getJvRoster('leland')).toMatchObject({ source: 'school-site', other: { source: 'maxpreps' } });
-    // 27 SCVAL and BVAL teams, and seven WCAL and WBAL teams with a JV roster on MaxPreps.
-    expect(m.teams.TEAMS.filter((t) => m.jvRosters.getJvRoster(t.slug) !== null)).toHaveLength(34);
+    // Held as a rule, not as the MaxPreps JV pages of one day (the weekly roster refresh rewrites them): a school's own
+    // list is always shown or offered, MaxPreps' is the other source exactly when its page lists anyone, the fuller
+    // list is the one shown, and a team has a JV roster exactly when either source lists its players.
+    const listedOnMaxPreps = (slug: string) => {
+      const e = m.jvRosters.getJvRostersFile().teams.find((t) => t.slug === slug);
+      return !!e && (e.status === 'ok' || e.status === 'carried-forward') && e.players.length > 0 && !!e.rosterUrl && !!e.fetchedAt;
+    };
+    const site = new Set(file.teams.map((t) => t.slug));
+    for (const slug of site) {
+      const r = m.jvRosters.getJvRoster(slug as never)!;
+      expect(r, slug).not.toBeNull();
+      expect([r.source, r.other?.source ?? 'none'].sort(), slug).toEqual(listedOnMaxPreps(slug) ? ['maxpreps', 'school-site'] : ['none', 'school-site']);
+      if (r.other) expect(r.players.length >= r.other.count, slug).toBe(true);
+    }
+    for (const t of m.teams.TEAMS) {
+      expect(m.jvRosters.getJvRoster(t.slug) !== null, t.slug).toBe(site.has(t.slug) || listedOnMaxPreps(t.slug));
+    }
   });
 });
 
@@ -610,26 +621,37 @@ describe('MaxPreps\' "Player #N" stand-ins (lib/players/placeholder-name.ts)', (
   });
 
   it("names Gilroy's #11 and #12 from the team's own Hudl roster, on the roster, its sources, the stats and the box score", () => {
+    // The Hudl names apply while MaxPreps' own rows are still "Player #N" stand-ins (they were on 2026-11-14); a weekly
+    // roster refresh may bring MaxPreps' names, and then MaxPreps' row is the roster's. Held per row, whichever it is.
+    const hudl: Record<string, [string, number | null, string | null]> = {
+      '11': ['Anjelica Llamas', null, null],
+      '12': ['Grace Gnagne', 9, 'MH'],
+    };
+    const raw = m.rosters.getTeamRoster('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
+    const standIns = raw.filter((p) => p.firstName === null).map((p) => p.jersey!);
     const named = m.rosters.getEnrichedTeamRoster('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
-    expect(named.map((p) => [p.jersey, p.fullName, p.grade, p.position])).toEqual([
-      ['11', 'Anjelica Llamas', null, null],
-      ['12', 'Grace Gnagne', 9, 'MH'],
-    ]);
+    for (const p of named) {
+      if (standIns.includes(p.jersey!)) expect([p.fullName, p.grade, p.position], p.jersey!).toEqual(hudl[p.jersey!]);
+      else expect(p.fullName, p.jersey!).toBe(raw.find((r) => r.jersey === p.jersey)!.fullName);
+    }
     const view = m.rosterView.buildRosterView('gilroy' as never)!;
-    expect(view.rows.filter((r) => r.nameElsewhere).map((r) => r.name).sort()).toEqual(['Anjelica Llamas', 'Grace Gnagne']);
+    expect(view.rows.filter((r) => r.nameElsewhere).map((r) => r.name).sort()).toEqual(standIns.map((j) => hudl[j][0]).sort());
     expect(view.rows.filter((r) => !r.nameElsewhere).every((r) => !/^Player #/.test(r.name))).toBe(true);
-    const lines = m.playerStats.getTeamPlayerStats('gilroy' as never)!.players.filter((p) => p.jersey === '11' || p.jersey === '12');
-    expect(lines.map((p) => [p.fullName, p.onRoster]).sort()).toEqual([['Anjelica Llamas', true], ['Grace Gnagne', true]]);
-    const box = m.playerStats.getTeamPlayerStats('gilroy' as never)!.games!.flatMap((g) => g.players.filter((l) => l.jersey === '11' || l.jersey === '12'));
-    expect(box.map((l) => l.jersey).sort()).toEqual(['11', '12']);
-    for (const l of box) expect(l.name, l.jersey ?? '').toBe(l.jersey === '11' ? 'Anjelica Llamas' : 'Grace Gnagne');
+    const stats = m.playerStats.getTeamPlayerStats('gilroy' as never)!;
+    for (const p of stats.players.filter((l) => standIns.includes(l.jersey!))) {
+      expect([p.fullName, p.onRoster], p.jersey!).toEqual([hudl[p.jersey!][0], true]);
+    }
+    const box = stats.games!.flatMap((g) => g.players.filter((l) => standIns.includes(l.jersey!)));
+    for (const l of box) expect(l.name, l.jersey ?? '').toBe(hudl[l.jersey!][0]);
   });
 
   it('leaves the stand-ins no source names as "Player #N", on the roster and on their stat lines', () => {
+    // Mitty had five on 2026-11-14 (#4, #5, #9, #11, #18); which remain is the weekly roster refresh's to say. No overlay
+    // names any of them, so every one MaxPreps still leaves unnamed reads "Player #N", here and on its stat lines.
+    expect(m.rosters.placeholderNames('mitty' as never).size).toBe(0);
     const mitty = m.rosters.getEnrichedTeamRoster('mitty' as never)!.players.filter((p) => p.firstName === null);
-    expect(mitty.map((p) => p.fullName)).toEqual(['Player #4', 'Player #5', 'Player #9', 'Player #11', 'Player #18']);
+    for (const p of mitty) expect(p.fullName).toBe(`Player #${p.jersey}`);
     const lines = m.playerStats.getTeamPlayerStats('mitty' as never)!.players.filter((p) => /^Player #/.test(p.fullName));
-    expect(lines.length).toBeGreaterThan(0);
     expect(lines.every((p) => p.onRoster)).toBe(true);
   });
 });

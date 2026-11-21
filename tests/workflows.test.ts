@@ -74,6 +74,7 @@ describe('the update-data commit and the deploy gate', () => {
       'data/field-hockey/player-stats.json',
       'data/field-hockey/snapshot.json',
       'data/field-hockey/snapshot.meta.json',
+      'data/players.json',
       'data/soccer/claims.json',
       'data/soccer/jv-rosters.json',
       'data/soccer/jv.json',
@@ -403,10 +404,33 @@ describe('the soccer refresh', () => {
     }
   });
 
-  it('commits and restores only data/soccer/ files', () => {
+  it('commits and restores only data/soccer/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateSoccer.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/soccer/'), p).toBe(true);
+    for (const p of paths) expect(p.startsWith('data/soccer/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+  });
+
+  it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
+    const body = stepBody(updateSoccer, 'Rebuild the player registry');
+    expect(body).toContain('run: scripts/refresh-player-registry.sh soccer');
+    expect(body).toContain('continue-on-error: true');
+    const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateSoccer.indexOf(`- name: ${n}\n`));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // A Test failure that restores the rosters restores the registry rebuilt from them.
+    expect(stepBody(updateSoccer, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateSoccer, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/soccer/rosters.json data/soccer/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateSoccer, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the soccer data files it just wrote', () => {
@@ -425,10 +449,33 @@ describe('the basketball refresh', () => {
     expect(updateBasketball).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: basketball$/m);
   });
 
-  it('commits and restores only data/basketball/ files', () => {
+  it('commits and restores only data/basketball/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateBasketball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/basketball/'), p).toBe(true);
+    for (const p of paths) expect(p.startsWith('data/basketball/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+  });
+
+  it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
+    const body = stepBody(updateBasketball, 'Rebuild the player registry');
+    expect(body).toContain('run: scripts/refresh-player-registry.sh basketball');
+    expect(body).toContain('continue-on-error: true');
+    const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateBasketball.indexOf(`- name: ${n}\n`));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // A Test failure that restores the rosters restores the registry rebuilt from them.
+    expect(stepBody(updateBasketball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateBasketball, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/basketball/rosters.json data/basketball/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateBasketball, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the basketball data files it just wrote, with test files that exist', () => {
@@ -455,10 +502,33 @@ describe('the volleyball refresh', () => {
     expect(updateVolleyball).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: volleyball$/m);
   });
 
-  it('commits and restores only data/volleyball/ files', () => {
+  it('commits and restores only data/volleyball/ files, and the player registry its rosters rebuild', () => {
     const paths = [...updateVolleyball.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
     expect(paths.length).toBeGreaterThan(0);
-    for (const p of paths) expect(p.startsWith('data/volleyball/'), p).toBe(true);
+    for (const p of paths) expect(p.startsWith('data/volleyball/') || p === 'data/players.json' || p === 'data/player-identity.json', p).toBe(true);
+  });
+
+  it('rebuilds and tests the player registry after the roster fetch, and never fails the refresh over it', () => {
+    const body = stepBody(updateVolleyball, 'Rebuild the player registry');
+    expect(body).toContain('run: scripts/refresh-player-registry.sh volleyball');
+    expect(body).toContain('continue-on-error: true');
+    const order = ['Fetch rosters', 'Rebuild the player registry', 'Test'].map((n) => updateVolleyball.indexOf(`- name: ${n}\n`));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    // A Test failure that restores the rosters restores the registry rebuilt from them.
+    expect(stepBody(updateVolleyball, 'Test')).toMatch(/git checkout -- [^\n]*rosters\.json[^\n]* data\/players\.json/);
+    // A registry step that did not succeed, its timeout included (which kills the script before it restores),
+    // commits neither rosters nor registry.
+    const commit = stepBody(updateVolleyball, 'Commit the data that changed');
+    expect(commit).toContain('REGISTRY: ${{ steps.registry.outcome }}');
+    expect(commit).toContain('if [ "$REGISTRY" != "success" ]; then\n            git checkout -- data/volleyball/rosters.json data/volleyball/jv-rosters.json data/players.json');
+    expect(commit.indexOf('"$REGISTRY" != "success"')).toBeLessThan(commit.indexOf('git add'));
+    // A rebase onto a commit that changed the registry's curation rebuilds and retests it before pushing, or pushes nothing.
+    const push = stepBody(updateVolleyball, 'Push');
+    expect(push).toContain('git diff --quiet "$before" HEAD~1 -- data/player-identity.json data/players.json');
+    expect(push).toContain('pnpm -s build-players --no-stamp && pnpm exec vitest run tests/players-registry.test.ts');
+    expect(push.indexOf('git pull --rebase')).toBeLessThan(push.indexOf('build-players'));
+    expect(push.indexOf('build-players')).toBeLessThan(push.indexOf('git push'));
   });
 
   it('tests the volleyball data files it just wrote, with test files that exist', () => {
