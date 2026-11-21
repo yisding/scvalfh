@@ -356,8 +356,10 @@ describe('the basketball JV schedule (lib/jv/jv-official.ts over the bundled fil
       if (team.slug === 'james-lick') expect(expected).toBe(0);
       else if (team.division === 'west-valley') expect(expected, team.slug).toBe(full - 2);
       else expect(expected, team.slug).toBe(full);
-      // A coach may list a league game twice or on a day no slot claims; never fewer than the schedule's.
-      expect(league.length, team.slug).toBeGreaterThanOrEqual(expected);
+      // A coach may list a league game twice or on a day no slot claims; never fewer than the schedule's. A school
+      // with no JV slot has none: within a scheduled division only a slot's game counts (lib/jv/jv-standings.ts rule 0).
+      if (expected === 0) expect(league.map((g) => g.contestId), team.slug).toEqual([]);
+      else expect(league.length, team.slug).toBeGreaterThanOrEqual(expected);
       expect(league.every((g) => g.countsFor === team.division), team.slug).toBe(true);
     }
   });
