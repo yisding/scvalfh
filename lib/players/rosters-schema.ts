@@ -227,6 +227,20 @@ export const ENRICHMENT_KINDS = [
 const enrichmentKind = z.enum(ENRICHMENT_KINDS);
 
 /**
+ * The kinds a recorded conflict may cite: every enrichment kind, and two that may only ever say a
+ * value disagrees — never fill one, nor list a team's sources. Both name a page about one player that
+ * states a class year, which is how a stale MaxPreps grade shows (`rosterBehind` below).
+ */
+export const CONFLICT_KINDS = [
+  ...ENRICHMENT_KINDS,
+  /** a player's own recruiting profile: NCSA, SportsRecruits, FieldLevel, Captain U or the like (a Hudl profile is `hudl`) */
+  'recruiting-profile',
+  /** a scouting or recruiting-news service's page for the player: Prep Hoops, On3 and the like */
+  'scouting-site',
+] as const;
+const conflictKind = z.enum(CONFLICT_KINDS);
+
+/**
  * high   an official 2026-27 school roster, or MaxPreps' own data for the same career
  * medium a school-site profile field that is not season-dated, a school-paper statement, or a
  *        derived grade
@@ -370,15 +384,40 @@ export const PlayerProfileSchema = z
 /** A profile's uniqueness key, platform and sport (the build's own when it names none): one profile per pair. */
 export const profileSportKey = (p: { platform: string; sport?: string }): string => `${p.platform} ${p.sport ?? SPORT_ID}`;
 
-/** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
-export const RosterConflictSchema = z.object({
-  field: z.enum(['jersey', 'grade', 'position', 'height']),
-  kept: z.string().min(1).nullable(),
-  other: z.string().min(1),
-  kind: enrichmentKind,
-  source: httpUrl,
-  note: z.string().min(1).nullable(),
-});
+/** A grade as a conflict records it: "9" to "12". */
+const GRADE_TEXT = /^(9|1[0-2])$/;
+
+/**
+ * A source that disagrees with MaxPreps. `kept` is what the merged roster shows.
+ *
+ * `rosterBehind` (since 2026-11-21, grade conflicts only): the cited page shows that MaxPreps' roster
+ * still carries LAST season's grade for this row — the player is one grade above `kept`, so `other`
+ * is exactly kept + 1. The roster keeps MaxPreps' grade (rule 2 of the overlay), but a class year a
+ * profile, club-tie or commitment source states may then be either grade's, and the recruiting pages
+ * group the player by the corrected class (lib/players/rosters.ts effectiveGrade). lib/players/rosters.ts
+ * checks at load that `kept` is MaxPreps' own grade, not one the overlay filled.
+ */
+export const RosterConflictSchema = z
+  .object({
+    field: z.enum(['jersey', 'grade', 'position', 'height']),
+    kept: z.string().min(1).nullable(),
+    other: z.string().min(1),
+    kind: conflictKind,
+    source: httpUrl,
+    note: z.string().min(1).nullable(),
+    rosterBehind: z.literal(true).optional(),
+  })
+  .refine(
+    (c) =>
+      c.rosterBehind === undefined ||
+      (c.field === 'grade' && c.kept !== null && GRADE_TEXT.test(c.kept) && GRADE_TEXT.test(c.other) &&
+        Number(c.other) === Number(c.kept) + 1),
+    { message: 'rosterBehind is only for a grade conflict whose other grade is exactly kept + 1', path: ['rosterBehind'] },
+  )
+  .refine(
+    (c) => (c.kind !== 'recruiting-profile' && c.kind !== 'scouting-site') || c.field === 'grade',
+    { message: 'a recruiting profile or scouting page is cited only for a grade', path: ['kind'] },
+  );
 
 export const EnrichedPlayerSchema = z
   .object({
@@ -417,6 +456,10 @@ export const EnrichedPlayerSchema = z
   .refine(
     (p) => new Set(p.profiles.map(profileSportKey)).size === p.profiles.length,
     'one profile per platform in each sport',
+  )
+  .refine(
+    (p) => p.conflicts.filter((c) => c.rosterBehind).length <= 1,
+    'at most one rosterBehind grade conflict per player',
   );
 
 export const RosterCoachSchema = z.object({

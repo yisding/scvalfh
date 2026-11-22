@@ -89,6 +89,7 @@ import { getClubsFile } from '../lib/players/clubs';
 import { getRosterEnrichment } from '../lib/players/rosters';
 import { getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { profileLabel } from '../components/teams/roster-view';
+import { SPORT_WORDS } from '../components/commits/commit-view';
 import { getCommitsFile } from '../lib/players/commits';
 import { getSnapshot } from '../lib/data';
 import { gameSentence } from '../components/history/bracket-view';
@@ -156,7 +157,7 @@ function mainOf(file: string, html: string): string {
 const files = (readdirSync(APP, { recursive: true }) as string[])
   .map((f) => f.split(path.sep).join('/'))
   .filter((f) => f.endsWith('.html'))
-  // A route only field hockey has (lib/sports/current.ts) is a 404 in another sport's build: nothing to check.
+  // A recruiting route is a 404 in a build without them (lib/sports/current.ts HAS_RECRUITING: the VAL's): nothing to check.
   .filter((f) => HAS_RECRUITING || !/^(clubs|commits|recruiting)(\.html$|\/)/.test(f));
 
 // The single-division labels that must never be printed ("PCAL Division", "Marin County Division").
@@ -217,6 +218,10 @@ const PROPER_NOUNS: string[] = [
   ]
     .filter((x) => x.sport !== undefined)
     .map((x) => profileLabel(x)),
+  // A player's commitment in another sport (commits.json `sport`: a basketball player's soccer commitment) is a fact
+  // about the player, printed as the sport's word on /commits, the roster line and /recruiting, not this site naming
+  // another build's program.
+  ...[...new Set(commitsFile.commitments.filter((c) => c.sport !== SPORT.id).map((c) => SPORT_WORDS[c.sport]))],
 ];
 
 for (const file of files) {

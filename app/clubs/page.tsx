@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 };
 
 export default function ClubsPage() {
-  // Field hockey's and volleyball's (club teams): another build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  // Every high school build's (club teams): the VAL's middle school build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
   if (!HAS_RECRUITING) notFound();
   const view = buildClubsIndexView();
 
@@ -71,6 +71,9 @@ export default function ClubsPage() {
           </li>
         </ul>
       ) : null}
+
+      {/* A build whose clubs file holds no club yet (lib/schema-primitives.ts isResearched): one plain line, as /commits has. */}
+      {view.clubCount === 0 ? <p className="sx-empty mt-4">No club is listed yet.</p> : null}
 
       {view.regions.map((region, i) => (
         <section

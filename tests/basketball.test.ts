@@ -24,6 +24,15 @@ type Modules = {
   jv: typeof import('../lib/jv/jv');
   jvOfficial: typeof import('../lib/jv/jv-official');
   rosters: typeof import('../lib/players/rosters');
+  clubs: typeof import('../lib/players/clubs');
+  clubsSchema: typeof import('../lib/players/clubs-schema');
+  commits: typeof import('../lib/players/commits');
+  jvProfiles: typeof import('../lib/jv/jv-profiles');
+  clubView: typeof import('../components/clubs/club-view');
+  commitView: typeof import('../components/commits/commit-view');
+  recruitingView: typeof import('../components/recruiting/recruiting-view');
+  expectations: typeof import('../scripts/lib/prerender-expectations');
+  copyRules: typeof import('../scripts/copy-rules');
   order: typeof import('../lib/standings/order');
   classify: typeof import('../lib/classify');
 };
@@ -49,6 +58,15 @@ beforeAll(async () => {
     jv: await import('../lib/jv/jv'),
     jvOfficial: await import('../lib/jv/jv-official'),
     rosters: await import('../lib/players/rosters'),
+    clubs: await import('../lib/players/clubs'),
+    clubsSchema: await import('../lib/players/clubs-schema'),
+    commits: await import('../lib/players/commits'),
+    jvProfiles: await import('../lib/jv/jv-profiles'),
+    clubView: await import('../components/clubs/club-view'),
+    commitView: await import('../components/commits/commit-view'),
+    recruitingView: await import('../components/recruiting/recruiting-view'),
+    expectations: await import('../scripts/lib/prerender-expectations'),
+    copyRules: await import('../scripts/copy-rules'),
     order: await import('../lib/standings/order'),
     classify: await import('../lib/classify'),
   };
@@ -63,7 +81,7 @@ describe('the basketball sport switch', () => {
     expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe('boys,basketball');
     expect(SPORT_AUDIENCE).toBe('boys varsity basketball');
     expect(DATA_DIR).toBe('data/basketball');
-    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING]).toEqual([false, true, false]);
+    expect([IS_FIELD_HOCKEY, IS_BASKETBALL, HAS_RECRUITING]).toEqual([false, true, true]);
   });
 
   it('scores points, never ends level, and prints a record as W-L', () => {
@@ -417,5 +435,70 @@ describe('a game the owner reported before its day (the fixture ledger’s listi
       // MaxPreps lists it now (the 2026-11-21 refresh: 86337580-…, at 5:30): its contest is the game.
       expect(jv[0].contestId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     }
+  });
+});
+
+describe('the basketball recruiting pages (data/basketball/{clubs,commits,rosters-enrichment,jv-profiles}.json; switched on 2026-11-21)', () => {
+  // Written to hold both while the files are placeholders and after the 2026-11-21 round fills them: no counts.
+  it('has the recruiting pages and no club calendar', () => {
+    expect([m.current.HAS_RECRUITING, m.current.HAS_CLUB_CALENDAR]).toEqual([true, false]);
+    expect(m.expectations.FIXED_PAGES).toEqual(expect.arrayContaining(['clubs', 'commits', 'recruiting']));
+    expect(m.expectations.FIXED_PAGES).not.toContain('club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).toContain('/club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs');
+    expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs/:slug');
+  });
+
+  it('loads the clubs through the validating loader: every tie joins a varsity row of a club in the file', () => {
+    const file = m.clubs.getClubsFile();
+    expect(file.season).toBe(m.rosters.getRosters().season);
+    for (const a of [...file.affiliations, ...file.jvAffiliations]) {
+      expect(m.clubs.getClub(a.club), a.club).toBeDefined();
+      expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
+    }
+    // No area was searched for every club in the 2026-11-21 round (lib/players/clubs.ts): no directory lists them.
+    expect(m.clubs.SEARCHED_REGIONS).toEqual([]);
+    for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);
+  });
+
+  it('names no area as searched, and dates nothing, while the clubs file is a placeholder', () => {
+    const view = m.clubView.buildClubsIndexView();
+    expect(view.researched).toBe(m.clubs.getClubsFile().notes.length > 0 || view.clubCount > 0);
+    if (!view.researched) {
+      expect(view.regionsWithoutClubsSentence).toBeNull();
+      expect(view.regionsNotSearchedSentence).toBeNull();
+      expect(view.lede).toMatch(/No club is listed yet\.$/);
+    }
+    if (view.clubCount === 0) expect(view.regions).toEqual([]);
+  });
+
+  it('names a sport on a commitment or a profile only when it is not basketball', () => {
+    expect(m.commitView.ledeWords(41, [])).toContain('basketball or any other');
+    for (const c of m.commits.getCommitments()) {
+      expect(m.commitView.playerCommitLine(c.teamSlug, c.athleteId)!.sport).toBe(c.sport === 'basketball' ? null : m.commitView.SPORT_WORDS[c.sport]);
+    }
+    const profiles = [
+      ...m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+      ...m.jvProfiles.getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+    ];
+    expect(profiles.every((p) => p.sport !== 'basketball')).toBe(true);
+  });
+
+  it('lists only players the files tie to a club, a commitment or a profile on /recruiting', () => {
+    const view = m.recruitingView.buildRecruitingView();
+    for (const region of view.regions) {
+      for (const league of region.leagues) for (const school of league.schools) expect(school.rows.length).toBeGreaterThan(0);
+      if (region.leagues.length === 0) expect(region.summary).toMatch(/no player is listed yet\.$/);
+    }
+  });
+
+  it('prints no tied game or other program in the recruiting pages’ own words (assert-copy reads the built pages too)', () => {
+    const words = [
+      m.clubView.buildClubsIndexView().lede,
+      m.commitView.buildCommitsView().lede,
+      m.recruitingView.buildRecruitingView().lede,
+      ...m.recruitingView.buildRecruitingView().regions.map((r) => r.summary),
+    ].join(' ');
+    expect(m.copyRules.noTiesSportClaims(words)).toEqual([]);
   });
 });

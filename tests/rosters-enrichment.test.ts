@@ -11,7 +11,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  EnrichedGradeSchema,
   EnrichedNameSchema,
+  EnrichedPlayerSchema,
+  RosterConflictSchema,
   RosterEnrichmentSchema,
   countRosters,
   type RosterEnrichment,
@@ -19,11 +22,15 @@ import {
 } from '../lib/players/rosters-schema';
 import {
   classOf,
+  classYearAgrees,
+  effectiveClassOf,
+  effectiveGrade,
   getAllEnrichedRosters,
   getEnrichedTeamRoster,
   getRosterEnrichment,
   getRosters,
   getTeamRoster,
+  rosterBehindGrade,
 } from '../lib/players/rosters';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { REPO, runScript } from './helpers';
@@ -393,7 +400,8 @@ describe('recruiting profiles', () => {
       for (const p of t.players) {
         for (const x of p.profiles) {
           if (x.classOf === null || p.grade === null) continue;
-          expect(x.classOf, `${t.slug} / ${p.fullName}`).toBe(classOf(base.season, p.grade));
+          // The grade's class, or a rosterBehind conflict's corrected one (classYearAgrees).
+          expect(classYearAgrees(base.season, p, x.classOf), `${t.slug} / ${p.fullName}: class of ${x.classOf}`).toBe(true);
         }
       }
     }
@@ -1111,5 +1119,124 @@ describe('lib/players/rosters.ts merged view', () => {
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);
     // Every team of every league has a merged view, whatever was found for it.
     expect(getAllEnrichedRosters()).toHaveLength(TEAMS.length);
+  });
+});
+
+describe('a rosterBehind grade conflict (MaxPreps\' roster still shows last season\'s grade)', () => {
+  const behind = (over: Record<string, unknown> = {}) => ({
+    field: 'grade',
+    kept: '11',
+    other: '12',
+    kind: 'recruiting-profile',
+    source: 'https://www.ncsasports.org/field-hockey-recruiting/california/x/y/jane-doe',
+    note: 'The profile says class of 2027; MaxPreps\' 2026-27 roster still shows her 2025-26 grade.',
+    rosterBehind: true,
+    ...over,
+  });
+  const ok = (c: unknown) => RosterConflictSchema.safeParse(c).success;
+
+  it('is allowed only on a grade conflict whose other grade is exactly kept + 1', () => {
+    expect(ok(behind())).toBe(true);
+    expect(ok(behind({ kept: '9', other: '10' }))).toBe(true);
+    expect(ok(behind({ other: '13', kept: '12' }))).toBe(false);
+    expect(ok(behind({ other: '10' }))).toBe(false);
+    expect(ok(behind({ other: '11' }))).toBe(false);
+    expect(ok(behind({ other: '12th' }))).toBe(false);
+    expect(ok(behind({ kept: null }))).toBe(false);
+    expect(ok(behind({ field: 'jersey', kept: '11', other: '12', kind: 'hudl' }))).toBe(false);
+    expect(ok(behind({ rosterBehind: false }))).toBe(false);
+    // Without the marker, a grade conflict is what it always was: any two grades.
+    expect(ok(behind({ other: '9', kind: 'news', rosterBehind: undefined }))).toBe(true);
+  });
+
+  it('cites a Hudl profile, a recruiting profile, a scouting page or a news story', () => {
+    expect(ok(behind({ kind: 'hudl', source: 'https://www.hudl.com/profile/123456/Jane-Doe' }))).toBe(true);
+    expect(ok(behind({ kind: 'recruiting-profile', source: 'https://my.sportsrecruits.com/athlete/jane_doe' }))).toBe(true);
+    expect(ok(behind({ kind: 'scouting-site', source: 'https://prephoops.com/player/jane-doe/' }))).toBe(true);
+    expect(ok(behind({ kind: 'news', source: 'https://example-student-paper.org/2026/11/story' }))).toBe(true);
+    // The two new kinds only ever say a grade disagrees: never another field, never a filled value.
+    expect(ok({ field: 'height', kept: null, other: '5\'9"', kind: 'scouting-site', source: 'https://prephoops.com/p', note: null })).toBe(false);
+    const fill = { value: 12, derived: false, kind: 'recruiting-profile', source: 'https://www.ncsasports.org/a', confidence: 'low', note: null };
+    expect(EnrichedGradeSchema.safeParse(fill).success).toBe(false);
+  });
+
+  it('is recorded at most once per player', () => {
+    const record = {
+      athleteId: 'x', fullName: 'Jane Doe', sourceName: null, level: null, levelSource: null, grade: null,
+      positions: null, jersey: null, height: null, profiles: [], note: null,
+    };
+    expect(EnrichedPlayerSchema.safeParse({ ...record, conflicts: [behind()] }).success).toBe(true);
+    expect(EnrichedPlayerSchema.safeParse({ ...record, conflicts: [behind(), behind({ kind: 'news' })] }).success).toBe(false);
+  });
+
+  it('gives the corrected grade and class to the helpers, and lets a stated class year be either grade\'s', () => {
+    const plain = { grade: 11, conflicts: [] };
+    const marked = { grade: 11, conflicts: [RosterConflictSchema.parse(behind())] };
+    const unmarked = { grade: 11, conflicts: [RosterConflictSchema.parse({ ...behind(), rosterBehind: undefined })] };
+    expect([rosterBehindGrade(plain), rosterBehindGrade(marked), rosterBehindGrade(unmarked)]).toEqual([null, 12, null]);
+    expect([effectiveGrade(plain), effectiveGrade(marked), effectiveGrade(unmarked)]).toEqual([11, 12, 11]);
+    expect(effectiveClassOf('26-27', marked)).toBe(2027);
+    expect(effectiveClassOf('26-27', plain)).toBe(2028);
+    expect(effectiveClassOf('26-27', { grade: null, conflicts: [] })).toBeNull();
+    expect([2026, 2027, 2028, 2029].map((y) => classYearAgrees('26-27', marked, y))).toEqual([false, true, true, false]);
+    expect([2027, 2028].map((y) => classYearAgrees('26-27', plain, y))).toEqual([false, true]);
+    expect([2027, 2028].map((y) => classYearAgrees('26-27', unmarked, y))).toEqual([false, true]);
+  });
+
+  it('keeps every existing grade conflict unmarked: the field hockey file\'s 38 change nothing', () => {
+    const grade = raw.teams.flatMap((t) => t.players.flatMap((p) => p.conflicts.filter((c) => c.field === 'grade')));
+    expect(grade.length).toBe(38);
+    expect(grade.some((c) => c.rosterBehind)).toBe(false);
+    for (const t of getAllEnrichedRosters()) for (const p of t.players) expect(effectiveGrade(p), p.fullName).toBe(p.grade);
+  });
+
+  it('lets a profile one class year ahead load only with the marker, and only for MaxPreps\' own grade', () => {
+    const rec = new Set(raw.teams.flatMap((t) => t.players.map((p) => `${t.slug} ${p.athleteId}`)));
+    let junior: { slug: string; athleteId: string; fullName: string } | undefined;
+    for (const t of base.teams) {
+      const p = t.players.find((x) => x.grade === 11 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`));
+      if (p) {
+        junior = { slug: t.slug, athleteId: p.athleteId!, fullName: p.fullName };
+        break;
+      }
+    }
+    expect(junior).toBeDefined();
+    const url = 'https://www.ncsasports.org/field-hockey-recruiting/california/x/y/behind-test';
+    const withProfile = (classYear: number, marked: boolean) => {
+      const f = structuredClone(raw);
+      const r = recordFor(f, junior!.slug, junior!.athleteId, junior!.fullName);
+      r.profiles.push({ platform: 'ncsa', url, classOf: classYear, note: null });
+      if (marked) r.conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
+      return f;
+    };
+    // One class year ahead (a senior on a roster still showing grade 11): refused without the marker,
+    // accepted with it; two ahead is refused either way.
+    expect(loadError(withProfile(classOf(base.season, 12), false))).toMatch(/ncsa profile says class of 2027, the roster shows grade 11/);
+    expect(loadError(withProfile(classOf(base.season, 12), true))).toBe('');
+    expect(loadError(withProfile(classOf(base.season, 13), true))).toMatch(/ncsa profile says class of 2026, the roster shows grade 11/);
+
+    // MaxPreps catching up: on a row that now shows the conflict's corrected grade, the conflict is settled and the
+    // file still loads (the refresh that brings the grade needs no hand edit).
+    let senior: { slug: string; athleteId: string; fullName: string } | undefined;
+    for (const t of base.teams) {
+      const p = t.players.find((x) => x.grade === 12 && x.athleteId !== null && !rec.has(`${t.slug} ${x.athleteId}`));
+      if (p) {
+        senior = { slug: t.slug, athleteId: p.athleteId!, fullName: p.fullName };
+        break;
+      }
+    }
+    expect(senior).toBeDefined();
+    const caughtUp = structuredClone(raw);
+    const settled = recordFor(caughtUp, senior!.slug, senior!.athleteId, senior!.fullName);
+    settled.profiles.push({ platform: 'ncsa', url, classOf: classOf(base.season, 12), note: null });
+    settled.conflicts.push(RosterConflictSchema.parse(behind({ source: url })));
+    expect(loadError(caughtUp)).toBe('');
+
+    // A grade the overlay filled is not MaxPreps' stale grade.
+    const filled = structuredClone(raw);
+    const team = filled.teams.find((t) => t.players.some((p) => p.grade !== null && p.grade.value < 12))!;
+    const p = team.players.find((x) => x.grade !== null && x.grade.value < 12)!;
+    p.conflicts.push(RosterConflictSchema.parse(behind({ kept: String(p.grade!.value), other: String(p.grade!.value + 1) })));
+    expect(loadError(filled)).toMatch(/rosterBehind says MaxPreps shows last season's grade, but MaxPreps shows no grade/);
   });
 });

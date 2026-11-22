@@ -1,9 +1,1884 @@
 {
-  "builtBy": "Nothing yet: club basketball affiliations are not researched for the basketball build.",
-  "capturedAt": "2026-11-10",
+  "builtBy": "Research by hand, 2026-11-21: the club records from each club's own website (and the adidas 3SSB program directory); the ties from the players' Prep Hoops pages and articles, their Hudl, NCSA, SportsRecruits and MaxPreps career pages. Every tie's every source was re-read at assembly; no script rebuilds this file.",
+  "capturedAt": "2026-11-21",
   "season": "26-27",
-  "notes": [],
-  "clubs": [],
+  "notes": [
+    "The travel (AAU) basketball clubs that players on the 58 boys basketball rosters MaxPreps lists so far are tied to. The linking rule is field hockey's (README, \"Clubs\"): a public page must name the player and a basketball club or program, and either name the player's high school (with the right city where a school of the name exists elsewhere), or give the roster's class year with a hometown in the school's own area. A name alone never counts, a class year that disagrees with the roster rules a match out (except one a year ahead of a roster grade that is last season's: see data/basketball/rosters-enrichment.json), and social media is never a source.",
+    "Club records (13): written from each club's own site, or the adidas 3SSB program directory, for the clubs our players' pages name, the programs the circuits list near the schools, and those met on the way. No public directory lists the boys' travel programs of any area (the Nike EYBL team list is an image, Puma's and others are drawn by script or refuse automated reads), so no area was searched for every club: the Peninsula and the South Bay most, San Francisco, the East Bay and Marin only for clubs a player's page names. No club based in Santa Cruz County was found. No record names a coach.",
+    "Ties: 50 for 47 players at 27 schools. Sources: Prep Hoops player pages (\"attends <school> ... and plays club basketball for <club>\", the school linked to its Prep Hoops team page, whose title gives the city) and the evaluation cards in its articles; Hudl profiles' team lists (on the school's own team); NCSA profiles' dated Club Information lines; SportsRecruits profiles' club block (read twice through the page's JSON); MaxPreps career pages' club-teams block. Club names are mapped to a record by hand: Esface to Team Esface; SV Soldiers to Silicon Valley Soldiers; Bay City Warriors to Bay City Basketball (its high school boys' program, by the club's own site); Oakland Soldiers E16 EYBL to Oakland Soldiers; San Jose Spartans 300 Elite to San Jose Spartans; NBBA to North Bay Basketball Academy; Hudl's 'Gold Basketball' to Peninsula Gold; HoopRight and Hoop Right to HoopRight; Oakland Soldiers Navy (an NCSA team label) to Oakland Soldiers.",
+    "Status. current: a source dated 2026 (a Prep Hoops article's 2026 session roster naming the club team, a Hudl entry reaching 2026, an NCSA Club Information line for 2026, a MaxPreps entry joined or edited in 2026). past: a Hudl entry ending in 2024 or earlier, an older NCSA line when a newer one names another club, or a MaxPreps entry last edited before 2025. unknown: everything else, including every Prep Hoops player page (undated; the date shown is the profile's creation). Where sources differ, current is shown before unknown, and unknown before past.",
+    "Left out: Serra players' Prep Hoops pages, which say 'Junipero Serra-San Mateo' but link the Gardena school's team page (not the right school); pages giving a school with no city where a namesake exists (a St. Ignatius card with no city; a Willow Glen page placed in Nevada); a Hudl 'AmFb Combine' entry (an event in Lincoln, NE, not a club); club entries for teams before sixth grade; JV players' ties (jvAffiliations is empty).",
+    "No record, so no tie shown, although a page ties a rostered player to the club: Team California (2), Seattle Rotary (2), Roadrunners Sports Club (2), Seattle Rotary (EYBL) (2), All In Elite (5), South Bay Snipers (1), San Jose Ninjas (1), Team elite (1), Team Evolution (1), Bay Area Sonics (1), RBA Waves (1), Flight Academy (2), Santa Cruz Premier (2), Silicon Valley Basketball Club (2), Wce Silicon Valley 14ua (1), Fierce (1), All In (2), AYB 14u-Liu (2), Top Flight Elite (2), South Bay Reapers (1), HoopSphere Academy (1), Genesis Basketball (1), Prodigy (1), Work Hard Play Hard (1), AAU Bulldawgs (1), Roadrunners (1), RBA waves (2), Wolfpack Elite (1), Bay Area impact (2), BAAS Dragons (1), San Francisco Cyclones (1), Evolution Adidas Gold (1), WCE East Bay (1), Bay Area Rebels (1). No club-owned site or circuit directory entry was found for these (All In Elite, Team California, Seattle Rotary and Roadrunners Sports Club are named on Prep Hoops pages; the rest on MaxPreps career pages or NCSA Club Information lines; an NCSA line's KOPA entries were left out as unclear).",
+    "Every source of every tie was re-read at assembly on 2026-11-21 by a separate script and its quote found on the page as served (Hudl and MaxPreps: the page's own data fields; SportsRecruits: the profile JSON, twice; NCSA: the page re-read once more)."
+  ],
+  "clubs": [
+    {
+      "slug": "team-esface",
+      "name": "Team Esface Basketball Academy",
+      "shortName": "Team Esface",
+      "aliases": [
+        "Team Esface",
+        "Esface",
+        "Esface Club Basketball"
+      ],
+      "website": "https://www.teamesface.com/",
+      "city": "Redwood City",
+      "region": "peninsula",
+      "youth": true,
+      "description": "A year-round basketball academy founded on the Peninsula in 2004 for players ages five through 18, with teams, camps, training and holiday clinics at its Edison Way facility in Redwood City.",
+      "founded": 2004,
+      "programs": [
+        {
+          "name": "Competitive teams, camps and training (grades 1-12)",
+          "detail": "\"Youth Basketball Academy for Grades 1 – 12, Beginner to Elite, in Redwood City, California.\"",
+          "source": "https://www.teamesface.com/"
+        },
+        {
+          "name": "2026-27 Holiday Hoop Clinics",
+          "detail": "Thanksgiving, Christmas and New Year's clinics for grades 3-8 at 3151 Edison Way, Redwood City",
+          "source": "https://www.teamesface.com/holiday-camps"
+        }
+      ],
+      "rosterPages": [
+        "https://www.teamesface.com/alumni"
+      ],
+      "sources": [
+        {
+          "url": "https://www.teamesface.com/",
+          "what": "Home page: youth basketball academy for grades 1-12 in Redwood City, California"
+        },
+        {
+          "url": "https://www.teamesface.com/about-us",
+          "what": "About page: \"Founded in 2004 on the Peninsula, Team Esface is a basketball academy for players ages five through 18\"; address 3151 Edison Way, Redwood City, CA 94063"
+        },
+        {
+          "url": "https://www.teamesface.com/alumni",
+          "what": "Alumni list by high school and class year (classes of 2024 and earlier on the page)"
+        },
+        {
+          "url": "https://www.teamesface.com/holiday-camps",
+          "what": "2026-27 holiday clinics"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "norcal-rush",
+      "name": "NorCal Rush Basketball",
+      "shortName": "NorCal Rush",
+      "aliases": [
+        "NorCal Rush",
+        "Underdogs Basketball (Peninsula Division)"
+      ],
+      "website": "https://www.norcalrushbasketball.com/",
+      "city": "Belmont",
+      "region": "peninsula",
+      "youth": true,
+      "description": "A Peninsula club founded in 2017 that is now the Peninsula division of Underdogs Basketball, fielding competitive and developmental teams including 15U, 16U and 17U (frosh, JV and varsity age) teams that practise in Belmont.",
+      "founded": 2017,
+      "programs": [
+        {
+          "name": "Fall 2026 club teams incl. 15u, 16u and 17u",
+          "detail": "Tryouts August 8-9 at Notre Dame de Namur University, Belmont; teams play 5-7 tournaments in the fall",
+          "source": "https://www.norcalrushbasketball.com/club-season"
+        },
+        {
+          "name": "San Francisco teams, Fall 2026",
+          "detail": "Tryouts August 8, 2026 in San Francisco",
+          "source": "https://www.norcalrushbasketball.com/fall-2026"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.norcalrushbasketball.com/",
+          "what": "Home page: Peninsula teams, SF teams, Hardwood League; players placed on high school teams across the Peninsula, South Bay, San Francisco and the WCAL"
+        },
+        {
+          "url": "https://www.norcalrushbasketball.com/about-us",
+          "what": "About: \"Founded in 2017 by Zac Levine with just one team, NorCal Rush has grown into one of the Peninsula's premier basketball clubs\"; Peninsula Division of Underdogs Basketball"
+        },
+        {
+          "url": "https://www.norcalrushbasketball.com/club-season",
+          "what": "Fall 2026 tryouts at Notre Dame de Namur University (1500 Ralston Ave, Belmont); 15u, 16u & 17u teams"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "peninsula-gold",
+      "name": "Peninsula Gold Basketball (Team12 Sports)",
+      "shortName": "Peninsula Gold",
+      "aliases": [
+        "Peninsula Gold",
+        "Team12 Sports",
+        "Team12Sports",
+        "Gold Basketball"
+      ],
+      "website": "https://www.team12sports.com/",
+      "city": "San Mateo",
+      "region": "peninsula",
+      "youth": true,
+      "description": "The AAU teams of Team12 Sports, founded in 2012 and based in San Mateo; some of its high school teams play on the Under Armour Rise circuit, and its boys practise in Burlingame, Belmont and San Mateo.",
+      "founded": 2012,
+      "programs": [
+        {
+          "name": "Gold AAU Basketball",
+          "detail": "Regional teams plus Under Armour circuit teams",
+          "source": "https://www.team12sports.com/gold-basketball"
+        },
+        {
+          "name": "Under Armour Rise (high school) and Under Armour Future (5th-8th grade)",
+          "detail": "\"Some of our high school teams participate on Under Armour Rise and some of our 5th-8th grade teams participate on Under Armour Future.\"",
+          "source": "https://www.team12sports.com/contact-us"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.team12sports.com/",
+          "what": "Home page: 3X3 Skills League, training camps, team trips and Peninsula Gold AAU basketball teams"
+        },
+        {
+          "url": "https://www.team12sports.com/about",
+          "what": "About: Team12Sports was founded in 2012"
+        },
+        {
+          "url": "https://www.team12sports.com/gold-basketball",
+          "what": "\"Peninsula Gold proudly competes on the Under Armour basketball circuit\""
+        },
+        {
+          "url": "https://www.team12sports.com/contact-us",
+          "what": "Address 200 North Quebec Street San Mateo, CA 94401; boys practice in Burlingame, Belmont and San Mateo; UA Rise and UA Future"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "san-jose-spartans",
+      "name": "San Jose Spartans Basketball",
+      "shortName": "San Jose Spartans",
+      "aliases": [
+        "San Jose Spartans",
+        "Spartans",
+        "SJ Spartans",
+        "Spartans Club Basketball"
+      ],
+      "website": "https://www.sanjosespartans.com/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "A San Jose club whose boys high school teams (15u, 16u and 17u) have played the Adidas 3 Stripes Gold circuit since spring 2026, with middle school teams entering the Junior 3 Stripes Select circuit from fall 2026.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "15u, 16u and 17u boys, adidas 3 Stripes Gold",
+          "detail": "\"Since Spring 2026, Spartans boys high school teams (15u, 16u, and 17u) have been selected to participate in 3 Stripes Gold\"; again in spring 2027",
+          "source": "https://www.sanjosespartans.com/"
+        },
+        {
+          "name": "Junior adidas teams (6th-8th grade), Junior 3 Stripes Select",
+          "detail": "Starting fall 2026",
+          "source": "https://www.sanjosespartans.com/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.sanjosespartans.com/",
+          "what": "Home page: adidas programs, spring 2026 results by team with player honours (15u, 16u, 17u), West San Jose NJB link"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "shark-city-hoops",
+      "name": "Shark City Hoops",
+      "shortName": null,
+      "aliases": [
+        "Shark City"
+      ],
+      "website": "https://www.sharkcityhoops.com/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "A San Jose AAU program established in 2011 on the East Side and in Evergreen, with boys and girls teams from grade 3 to 12 that play AAU-sanctioned tournaments in the Bay Area and Northern California.",
+      "founded": 2011,
+      "programs": [
+        {
+          "name": "Competitive AAU teams, grades 3-12, boys and girls",
+          "detail": "Fall 2026 tryouts August 8 and 15 (7th-HS 10:30 AM-12 PM)",
+          "source": "https://www.sharkcityhoops.com/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.sharkcityhoops.com/",
+          "what": "Home page: \"San Jose AAU Basketball — Competitive Youth Program\", \"East Side & Evergreen, San Jose\", \"GRADES 3–12\", \"EST. 2011\""
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "lakeshow",
+      "name": "Lakeshow",
+      "shortName": null,
+      "aliases": [
+        "Lakeshow Basketball",
+        "Lakeshow Hoops",
+        "Lakeshow AAU"
+      ],
+      "website": "https://www.lakeshowhoops.com/",
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "A non-profit Bay Area AAU program that has fielded boys teams since 2005, now more than 240 boys ages 8 to 18 on 26 teams in Oakland and Danville; it is one of the boys programs of the adidas 3SSB circuit.",
+      "founded": 2005,
+      "programs": [
+        {
+          "name": "Boys teams, ages 8-18, Oakland and Danville",
+          "detail": "\"more than 240 boys ages 8 to 18 playing across 26 teams in Oakland and Danville\"",
+          "source": "https://www.lakeshowhoops.com/boys"
+        },
+        {
+          "name": "adidas 3SSB boys program",
+          "detail": "Listed among 3SSB Boys Programs as \"Lakeshow, Danville, CA\"",
+          "source": "https://adidas3ssb.com/programs/"
+        }
+      ],
+      "rosterPages": [
+        "https://www.lakeshowhoops.com/fall26-rosters"
+      ],
+      "sources": [
+        {
+          "url": "https://www.lakeshowhoops.com/",
+          "what": "Home page: \"LAKESHOW | BAY AREA AAU\"; \"Lakeshow is a non-profit AAU basketball program\"; 2026-2027 Oakland boys schedule, Danville boys fall"
+        },
+        {
+          "url": "https://www.lakeshowhoops.com/boys",
+          "what": "Boys program since 2005, 26 teams in Oakland and Danville"
+        },
+        {
+          "url": "https://www.lakeshowhoops.com/fall26-rosters",
+          "what": "Fall 2026 rosters (14U and younger teams)"
+        },
+        {
+          "url": "https://adidas3ssb.com/programs/",
+          "what": "adidas 3SSB program directory: Lakeshow, Danville, CA (boys)"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "team-lillard",
+      "name": "Team Lillard",
+      "shortName": null,
+      "aliases": [
+        "Team Lillard Basketball",
+        "Oakland Rebels"
+      ],
+      "website": "https://www.teamlillardbasketball.com/",
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "An Oakland boys program on the adidas 3SSB circuit, whose 16U team won the 2025 3SSB championship.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "adidas 3SSB boys program",
+          "detail": "Listed among 3SSB Boys Programs as \"Team Lillard, Oakland, CA\"",
+          "source": "https://adidas3ssb.com/programs/"
+        },
+        {
+          "name": "16U",
+          "detail": "\"TEAM LILLARD 16U WINS 2025 3SSB CHAMPIONSHIP\"",
+          "source": "https://www.teamlillardbasketball.com/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.teamlillardbasketball.com/",
+          "what": "Home page: 2025 3SSB 16U championship, alumni signings, \"Oakland Rebels Alumni\""
+        },
+        {
+          "url": "https://adidas3ssb.com/programs/",
+          "what": "adidas 3SSB program directory: Team Lillard, Oakland, CA (boys)"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "oakland-soldiers",
+      "name": "Oakland Soldiers",
+      "shortName": null,
+      "aliases": [
+        "Soldiers",
+        "Oakland Soldiers EYBL"
+      ],
+      "website": "https://oaklandsoldiers.squarespace.com/",
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "The travel teams of Scholar Athletes, Inc., an Oakland nonprofit established in 1990; its site lists 15U, 16U and 17U Nike EYBL teams.",
+      "founded": 1990,
+      "programs": [
+        {
+          "name": "15U, 16U and 17U EYBL",
+          "detail": "Team pages titled \"15U EYBL\", \"16U EYBL\" and \"17U EYBL\" (staff only, no player list)",
+          "source": "https://oaklandsoldiers.squarespace.com/17u-eybl"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://oaklandsoldiers.squarespace.com/",
+          "what": "Home page: Oakland Soldiers, Scholar Athletes Inc 501(c)(3)"
+        },
+        {
+          "url": "https://oaklandsoldiers.squarespace.com/about-us",
+          "what": "About: SAI is the parent organization for the Soldiers; \"Established in 1990\"; Soldiers All-Star Traveling Teams"
+        },
+        {
+          "url": "https://oaklandsoldiers.squarespace.com/17u-eybl",
+          "what": "17U EYBL team page"
+        },
+        {
+          "url": "https://oaklandsoldiers.squarespace.com/16u-eybl-1",
+          "what": "16U EYBL team page"
+        },
+        {
+          "url": "https://oaklandsoldiers.squarespace.com/15u-ebyl",
+          "what": "15U EYBL team page"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "silicon-valley-soldiers",
+      "name": "Silicon Valley Soldiers",
+      "shortName": "SV Soldiers",
+      "aliases": [
+        "SV Soldiers",
+        "Silicon Valley Soldiers Basketball",
+        "Soldiers Basketball Academy",
+        "BMG Basketball Academy",
+        "BMG Soldiers"
+      ],
+      "website": "https://www.siliconvalleysoldiers.org/",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "A San Jose program formed in March 2021 when BMG Basketball Academy (founded in San Jose in 2015) merged with the Oakland Soldiers organization; it runs youth and high school travel teams and training.",
+      "founded": 2015,
+      "programs": [
+        {
+          "name": "High school and youth travel teams",
+          "detail": "Teams page lists a high school tryout, middle school teams and a 2030 Oakland Soldiers Camo Jr EYBL team; San Jose, 95128",
+          "source": "https://www.siliconvalleysoldiers.org/collections/teams"
+        }
+      ],
+      "rosterPages": [
+        "https://www.siliconvalleysoldiers.org/pages/college-recruiting"
+      ],
+      "sources": [
+        {
+          "url": "https://www.siliconvalleysoldiers.org/",
+          "what": "Home page: \"Silicon Valley Soldiers Basketball – Soldiers Basketball Academy\"; BMG called the most competitive program in the South Bay"
+        },
+        {
+          "url": "https://www.siliconvalleysoldiers.org/pages/about-us",
+          "what": "About: \"Born October 2015 in San Jose, CA\"; \"In March, 2021 BMG Academy merged with the Nike EYBL Oakland Soldiers organization, forming the Silicon Valley Soldiers.\""
+        },
+        {
+          "url": "https://www.siliconvalleysoldiers.org/collections/teams",
+          "what": "Teams: high school tryout, youth teams, San Jose 95128"
+        },
+        {
+          "url": "https://www.siliconvalleysoldiers.org/pages/college-recruiting",
+          "what": "College recruiting: class of 2023 players with high schools; college choices of 2023-2026 graduates"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "hoopright",
+      "name": "HoopRight",
+      "shortName": null,
+      "aliases": [
+        "HoopRight Basketball",
+        "Bay Area HoopRight",
+        "HoopRight Basketball Academy"
+      ],
+      "website": "https://www.hoopright.com/bay-area",
+      "city": "San Jose",
+      "region": "south-bay",
+      "youth": true,
+      "description": "A San Jose youth basketball academy with skill clinics and travel teams, including high school boys teams (15U to 17U) that hold tryouts at Stratford Preparatory on Blackford Ave, San Jose.",
+      "founded": 2017,
+      "programs": [
+        {
+          "name": "High School Boys Teams",
+          "detail": "Seasons March to end of July and August to October; tryouts at Stratford Preparatory, Blackford Ave, San Jose, CA 95117",
+          "source": "https://www.hoopright.com/hsteams"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.hoopright.com/",
+          "what": "Title: \"HoopRight | youth basketball academy bay area | San Jose, CA, USA\""
+        },
+        {
+          "url": "https://www.hoopright.com/bay-area",
+          "what": "Bay Area programs: clinics, high school boys and girls teams, elementary/middle school teams"
+        },
+        {
+          "url": "https://www.hoopright.com/hsteams",
+          "what": "High School Boys Teams: seasons and tryouts in San Jose"
+        },
+        {
+          "url": "https://www.hoopright.com/about-us",
+          "what": "About Us (served as the Bay Area Staff page): Bay Area HoopRight run since 2017; coaches of its 15U, 16U and 17U teams"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "bay-city-basketball",
+      "name": "Bay City Basketball",
+      "shortName": "Bay City",
+      "aliases": [
+        "Bay City",
+        "Bay City Warriors",
+        "BCB"
+      ],
+      "website": "https://www.baycitybasketball.com/",
+      "city": "San Francisco",
+      "region": "san-francisco",
+      "youth": true,
+      "description": "A San Francisco non-profit founded in 2010 with travel and club teams, camps, leagues and tournaments; its Bay City Warriors teams are for high school boys who want to play in college, and its headquarters gym is at 4550 Geary Blvd.",
+      "founded": 2010,
+      "programs": [
+        {
+          "name": "Bay City Warriors (high school boys)",
+          "detail": "\"Our Bay City Warriors Teams are for experienced high school basketball players who want to play college basketball\"; 2026 college viewing schedules and an adidas Gold tournament schedule",
+          "source": "https://www.baycitybasketball.com/team-program/bay-city-warriors/"
+        },
+        {
+          "name": "Club and travel teams, grades 2-11",
+          "detail": "Practices in San Francisco; an East Bay (Albany) program",
+          "source": "https://www.baycitybasketball.com/"
+        },
+        {
+          "name": "adidas 3SSB (girls)",
+          "detail": "3SSB Girls Programs list \"Bay City, San Francisco, CA\"",
+          "source": "https://adidas3ssb.com/programs/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.baycitybasketball.com/",
+          "what": "Home page: \"AAU Basketball Club | Bay City Basketball San Francisco\"; \"Official Adidas 3SSB Program\"; teams for grades 2nd-11th with practices in San Francisco"
+        },
+        {
+          "url": "https://www.baycitybasketball.com/about-us/",
+          "what": "\"Bay City Basketball was founded in 2010 in San Francisco, CA.\"; non-profit 501(c)(3)"
+        },
+        {
+          "url": "https://www.baycitybasketball.com/team-program/bay-city-warriors/",
+          "what": "Bay City Warriors high school teams; adidas Gold tournament schedule"
+        },
+        {
+          "url": "https://www.baycitybasketball.com/headquarters/",
+          "what": "Headquarters at 4550 Geary Blvd, inner Richmond District, San Francisco"
+        },
+        {
+          "url": "https://adidas3ssb.com/programs/",
+          "what": "adidas 3SSB girls program directory: Bay City, San Francisco, CA"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "north-bay-basketball-academy",
+      "name": "North Bay Basketball Academy",
+      "shortName": "NBBA",
+      "aliases": [
+        "NBBA",
+        "North Bay Basketball"
+      ],
+      "website": "https://www.northbaybasketball.com/",
+      "city": "San Rafael",
+      "region": "marin",
+      "youth": true,
+      "description": "A San Rafael program with Marin County and Sonoma County teams whose boys teams play the Under Armour UAA, UA Rise and UA Future circuits; it also runs the girls Cal Stars North Bay.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "Boys UAA / UA Rise / UA Future",
+          "detail": "Listed in the site's menu as \"Boys UAA/UA Rise & UA Future\"",
+          "source": "https://www.northbaybasketball.com/"
+        },
+        {
+          "name": "Marin Spring Travel Season",
+          "detail": null,
+          "source": "https://www.northbaybasketball.com/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://www.northbaybasketball.com/",
+          "what": "Home page: \"THE NORTH BAY's PREMIER BASKETBALL PROGRAM\"; Marin County and Sonoma County programs; Boys UAA/UA Rise & UA Future; 50 Lisbon St., San Rafael, CA 94901"
+        },
+        {
+          "url": "https://www.northbaybasketball.com/about-nbba",
+          "what": "About: \"North Bay Basketball Academy (NBBA) is committed to providing quality instruction\"; pursuing college scholarships"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    },
+    {
+      "slug": "bay-area-wildcats",
+      "name": "Bay Area Wildcats Basketball",
+      "shortName": "Bay Area Wildcats",
+      "aliases": [
+        "Bay Area Wildcats",
+        "Wildcats",
+        "East Bay Wildcats"
+      ],
+      "website": "https://bayareawildcats.org/",
+      "city": "Oakland",
+      "region": "east-bay",
+      "youth": true,
+      "description": "A non-profit Oakland-area AAU program with boys and girls teams from 3rd grade (9U) to 11th grade (17U); its high school teams compete on the adidas Gold / 3 Stripes circuit.",
+      "founded": null,
+      "programs": [
+        {
+          "name": "High school teams, adidas Gold / 3Stripes circuit",
+          "detail": "\"our high school teams competing on the Adidas Gold / 3Stripes Circuit\"",
+          "source": "https://bayareawildcats.org/"
+        },
+        {
+          "name": "Teams grades 3-11",
+          "detail": "Year-round and seasonal fall and spring programs; about two tournaments a month",
+          "source": "https://bayareawildcats.org/teams/"
+        }
+      ],
+      "rosterPages": [],
+      "sources": [
+        {
+          "url": "https://bayareawildcats.org/",
+          "what": "Home page: AAU program; Grades 3-8 youth program feeding high school teams on the Adidas Gold / 3Stripes Circuit"
+        },
+        {
+          "url": "https://bayareawildcats.org/about-us/",
+          "what": "About: non-profit; \"boys' and girls' teams from 3rd grade (9U) to 11th grade (17U) in the Oakland/Bay Area\""
+        },
+        {
+          "url": "https://bayareawildcats.org/teams/",
+          "what": "Teams and registration overview"
+        }
+      ],
+      "checkedOn": "2026-11-21"
+    }
+  ],
   "jvAffiliations": [],
-  "affiliations": []
+  "affiliations": [
+    {
+      "teamSlug": "homestead",
+      "athleteId": "0008989b-829b-4464-a4d3-b193d1c6ea28",
+      "playerId": "p1312c5fc25",
+      "fullName": "Camden Maylard",
+      "club": "san-jose-spartans",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/camden-maylard/",
+          "kind": "other",
+          "quote": "Camden Maylard is a 6'6\" Power Forward in the 2028 class. Maylard attends Homestead in Northern California and plays club basketball for San Jose Spartans.",
+          "statedSchool": "Homestead",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Camden Maylard, class of 2028, who attends Homestead (linked to the Prep Hoops team page titled \"Homestead High School Basketball | Cupertino, CA | Prep Hoops\", the right city) and \"plays club basketball for San Jose Spartans\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Homestead … and plays club basketball for San Jose Spartans'; the school is confirmed by the page's team link (Cupertino, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "ea7b1625-2a03-43e0-9afb-6f6c2a4017e9",
+      "playerId": "pdd52a98c07",
+      "fullName": "Milos Grabovac",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": "Soldiers",
+      "status": "unknown",
+      "asOf": "2025-12-07",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/milos-grabovac/?careerid=cser60g5m7qsc",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Silicon Valley Soldiers\",\"organizationTeamName\":\"Soldiers\",\"sport\":\"Basketball\",\"ageGroup\":\"9th Grade\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2022,\"season\":\"\",\"modifiedOn\":\"2025-12-07T13:09:07\"",
+          "statedSchool": "Los Gatos (CA)",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-07"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Gatos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date. The page is not claimed, though the block is filled in."
+    },
+    {
+      "teamSlug": "los-gatos",
+      "athleteId": "9eec6156-fafe-4c6e-9a1a-24d897d23291",
+      "playerId": "p66088c7d89",
+      "fullName": "Q Zhao",
+      "club": "oakland-soldiers",
+      "clubTeam": "Soldiers",
+      "status": "unknown",
+      "asOf": "2025-10-28",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/q-zhao/?careerid=2al2r92q60jaa",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Oakland Soldiers E16 EYBL\",\"organizationTeamName\":\"Soldiers\",\"sport\":\"Basketball\",\"ageGroup\":\"10th Grade\",\"clubOrganizationCity\":\"Oakland\",\"yearJoined\":2025,\"season\":\"\",\"modifiedOn\":\"2025-10-28T19:00:28\"",
+          "statedSchool": "Los Gatos (CA)",
+          "statedClassYear": 2028,
+          "sourceDate": "2025-10-28"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Gatos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
+    },
+    {
+      "teamSlug": "milpitas",
+      "athleteId": "c43b5806-8635-42dc-9cf8-91d4b9417cff",
+      "playerId": "pe767da4f0e",
+      "fullName": "Pranav Krishnan",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/pranav-krishnan/",
+          "kind": "other",
+          "quote": "Pranav Krishnan is a 6'5\" Small Forward in the 2027 class. Krishnan attends Milpitas in Northern California and plays club basketball for SV Soldiers.",
+          "statedSchool": "Milpitas",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/02/2027-post-season-prospects-ii/",
+          "kind": "other",
+          "quote": "Pranav Krishnan State: Northern California School: Milpitas Club: SV Soldiers",
+          "statedSchool": "Milpitas",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-27"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Pranav Krishnan, class of 2027, who attends Milpitas (linked to the Prep Hoops team page titled \"Milpitas High School Basketball | Milpitas, CA | Prep Hoops\", the right city) and \"plays club basketball for SV Soldiers\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Milpitas … and plays club basketball for SV Soldiers'; the school is confirmed by the page's team link (Milpitas, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "mountain-view",
+      "athleteId": "989094b8-6117-418c-a377-195d808faa78",
+      "playerId": "p9decd43dcc",
+      "fullName": "Diego Inocencio",
+      "club": "san-jose-spartans",
+      "clubTeam": "2027",
+      "status": "past",
+      "asOf": "2024-06-14",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/mountain-view/mountain-view-spartans/athletes/diego-inocencio/?careerid=r4bsm2suualbb",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"San Jose Spartans 300 Elite \",\"organizationTeamName\":\"2027\",\"sport\":\"Basketball\",\"ageGroup\":\"10th Grade\",\"clubOrganizationCity\":\"San Jose \",\"yearJoined\":2015,\"season\":\"\",\"modifiedOn\":\"2024-06-14T01:17:14\"",
+          "statedSchool": "Mountain View (CA)",
+          "statedClassYear": 2027,
+          "sourceDate": "2024-06-14"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Mountain View (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season. The page is not claimed, though the block is filled in."
+    },
+    {
+      "teamSlug": "mountain-view",
+      "athleteId": "7a28bb46-3336-4b88-b17b-bea3e1b385a0",
+      "playerId": "pe170f45992",
+      "fullName": "Silas Yamaguma",
+      "club": "san-jose-spartans",
+      "clubTeam": "CA) (16U",
+      "status": "unknown",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/mountain-view/mountain-view-high-school30/silas-yamaguma1",
+          "kind": "ncsa",
+          "quote": "2024 San Jose Spartans (CA) (16U)",
+          "statedSchool": "Mountain View High School (Mountain View)",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "fremont",
+      "athleteId": "f57b35ee-42f0-4491-8975-90886bcc4f39",
+      "playerId": "p568c187adf",
+      "fullName": "Roy Freikorn",
+      "club": "hoopright",
+      "clubTeam": "Black",
+      "status": "unknown",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/sunnyvale/fremont-high-school6/roy-freikorn",
+          "kind": "ncsa",
+          "quote": "2024 HoopRight (Black)",
+          "statedSchool": "Fremont High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "los-altos",
+      "athleteId": "7cd705ac-14f1-4c2b-925a-c60b2784f9ea",
+      "playerId": "p558a2bc50e",
+      "fullName": "Daren Frei",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": "Soldiers",
+      "status": "unknown",
+      "asOf": "2025-11-15",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/los-altos/los-altos-eagles/athletes/daren-frei/?careerid=vtokgq16kag00",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Silicon Valley Soldiers\",\"organizationTeamName\":\"Soldiers\",\"sport\":\"Basketball\",\"ageGroup\":\"9th Grade\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2024,\"season\":\"\",\"modifiedOn\":\"2025-11-15T22:59:01\"",
+          "statedSchool": "Los Altos (CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2025-11-15"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Los Altos (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
+    },
+    {
+      "teamSlug": "santa-clara",
+      "athleteId": "fd077c8c-dfc1-47ed-95eb-c9e85527d0c5",
+      "playerId": "p8f882bd7eb",
+      "fullName": "Ibrahim Abdelrahman",
+      "club": "oakland-soldiers",
+      "clubTeam": "Oakland joined",
+      "status": "unknown",
+      "asOf": "2025-12-10",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/santa-clara/santa-clara-bruins/athletes/ibrahim-abdelrahman/?careerid=lmlsvdq8rsbg0",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Oakland Soldiers \",\"organizationTeamName\":\"Oakland joined\",\"sport\":\"Basketball\",\"ageGroup\":\"9th Grade\",\"clubOrganizationCity\":\"Oakland \",\"yearJoined\":2025,\"season\":\"\",\"modifiedOn\":\"2025-12-10T21:20:17\"",
+          "statedSchool": "Santa Clara (CA)",
+          "statedClassYear": null,
+          "sourceDate": "2025-12-10"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Santa Clara (CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status unknown: the entry was last modified in 2025 and the page gives no later date."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "43ba5278-dc64-49d4-b380-d474d14187f8",
+      "playerId": "pce3f3ff554",
+      "fullName": "Bodie Kay",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": "Silicon Valley Soldiers",
+      "status": "current",
+      "asOf": "2026-01-08",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/gilroy/christopher-cougars/athletes/bodie-kay/?careerid=fijsa0647dfqa",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Silicon Valley Soldiers\",\"organizationTeamName\":\"Silicon Valley Soldiers\",\"sport\":\"Basketball\",\"ageGroup\":\"10th Grade\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2024,\"season\":\"\",\"modifiedOn\":\"2026-01-08T22:22:35\"",
+          "statedSchool": "Christopher (Gilroy, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-01-08"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Christopher (Gilroy, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026. The page is not claimed, though the block is filled in."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "43ba5278-dc64-49d4-b380-d474d14187f8",
+      "playerId": "pce3f3ff554",
+      "fullName": "Bodie Kay",
+      "club": "team-esface",
+      "clubTeam": "College Prep Elite",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/brodie-kay/",
+          "kind": "other",
+          "quote": "Bodie Kay is a 6'6\" Power Forward/Center in the 2028 class. Kay attends Christopher in Northern California and plays club basketball for Team Esface.",
+          "statedSchool": "Christopher",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/11/class-of-2028-rankings-update/",
+          "kind": "other",
+          "quote": "Bodie Kay State: Northern California School: Christopher Club: Team Esface",
+          "statedSchool": "Christopher",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-11-18"
+        },
+        {
+          "url": "https://www.hudl.com/profile/26634827",
+          "kind": "hudl",
+          "quote": "College Prep Elite / Team Esface Basketball / Basketball / 2025",
+          "statedSchool": "Christopher High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on the school's own basketball team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Redwood City, CA. Prep Hoops player page (server HTML) names Bodie Kay, class of 2028, who attends Christopher (linked to the Prep Hoops team page titled \"Christopher High School Basketball | Gilroy, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Esface\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
+    },
+    {
+      "teamSlug": "christopher",
+      "athleteId": "2f99c9e4-8244-4e70-a0c9-49591c39975b",
+      "playerId": "p0363167df7",
+      "fullName": "Colton Dirks",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/colton-dirks/",
+          "kind": "other",
+          "quote": "Colton Dirks is a 6'4\" Shooting Guard/Small Forward in the 2029 class. Dirks attends Christopher in Northern California and plays club basketball for Silicon Valley Soldiers.",
+          "statedSchool": "Christopher",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Colton Dirks, class of 2029, who attends Christopher (linked to the Prep Hoops team page titled \"Christopher High School Basketball | Gilroy, CA | Prep Hoops\", the right city) and \"plays club basketball for Silicon Valley Soldiers\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Christopher … and plays club basketball for Silicon Valley Soldiers'; the school is confirmed by the page's team link (Gilroy, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "c5458216-5ab8-46ab-9c57-48da55448995",
+      "playerId": "pe850549b6c",
+      "fullName": "Deniz Dikici",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/deniz-dikici/",
+          "kind": "other",
+          "quote": "Deniz Dikici is a 6'4\" Shooting Guard/Point Guard in the 2028 class. Dikici attends Leigh in Northern California and plays club basketball for Silicon Valley Soldiers.",
+          "statedSchool": "Leigh (team page \"Leigh High School Basketball | San Jose, CA | Prep Hoops\")",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/leigh-longhorns/athletes/deniz-dikici/?careerid=10d7qpaoh9m66",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"Silicon Valley Soldiers\",\"organizationTeamName\":\"Soldiers\",\"sport\":\"Basketball\",\"ageGroup\":\"9th Grade\",\"clubOrganizationCity\":\"San Jose\",\"yearJoined\":2023,\"season\":\"Summer,Spring,Fall\",\"modifiedOn\":\"2024-12-04T22:32:42\"",
+          "statedSchool": "Leigh (San Jose, CA)",
+          "statedClassYear": 2029,
+          "sourceDate": "2024-12-04"
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Deniz Dikici, class of 2028, who attends Leigh (team page \"Leigh High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown. The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Leigh (San Jose, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season."
+    },
+    {
+      "teamSlug": "piedmont-hills",
+      "athleteId": "4a49fe30-e740-4c7e-8433-c4bd1118d0be",
+      "playerId": "p99b0e9e7ff",
+      "fullName": "Theoren Djurovic",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": "Grassroots365 Silver Division",
+      "status": "unknown",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-jose/piedmont-hills-high-school/theoren-djurovic",
+          "kind": "ncsa",
+          "quote": "2023 Silicon Valley Soldiers (Grassroots365 Silver Division)",
+          "statedSchool": "Piedmont Hills High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "07b6b1cf-6339-4b1f-abfc-80e70377b186",
+      "playerId": "pfa282ef7df",
+      "fullName": "Brady Clugage",
+      "club": "team-esface",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/2026/01/2027-rankings-update-top-risers-in-the-class/",
+          "kind": "other",
+          "quote": "Brady Clugage Twitter State: Northern California School: Archbishop Mitty Club: Team Esface",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-01-19"
+        }
+      ],
+      "basis": "A Prep Hoops article of 2026-01-19 lists him in the class of 2027 and its evaluation card reads \"School: Archbishop Mitty Club: Team Esface\" (served HTML). The class is a grade above the one MaxPreps' 2026-27 roster still shows: accepted on the row's stale-grade conflict. An article's date does not date the club line, so status unknown."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "5b8a9202-72da-4913-b3ca-da659793e9d5",
+      "playerId": "p6a5bbbd3d4",
+      "fullName": "Isaac Turner",
+      "club": "team-esface",
+      "clubTeam": "College Prep Elite",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/19891525",
+          "kind": "hudl",
+          "quote": "College Prep Elite / Team Esface Basketball / Basketball / 2025",
+          "statedSchool": "Archbishop Mitty High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on Archbishop Mitty High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "3cdd4460-8116-43c2-8f2f-1e94f40e1797",
+      "playerId": "pcb2347bb67",
+      "fullName": "Joey Jennings",
+      "club": "team-esface",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/joey-jennings/",
+          "kind": "other",
+          "quote": "Joey Jennings is a 6'4\" Small Forward in the 2028 class. Jennings attends Archbishop Mitty in Northern California and plays club basketball for Esface.",
+          "statedSchool": "Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\")",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Joey Jennings, class of 2028, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "49b1fb04-a6a7-4ff1-a6da-63d51f6f4e8a",
+      "playerId": "p649647eae1",
+      "fullName": "Joshua Chin-Wong",
+      "club": "san-jose-spartans",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/joshua-chin-wong/",
+          "kind": "other",
+          "quote": "Joshua Chin-wong is a 6'4\" Small Forward/Power Forward in the 2027 class. Chin-wong attends Archbishop Mitty in Northern California and plays club basketball for San Jose Spartans.",
+          "statedSchool": "Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\")",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Joshua Chin-Wong, class of 2027, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "a45e7646-da8a-4f82-b2e3-27cd407615d6",
+      "playerId": "p67d1e0dc47",
+      "fullName": "Silas Brizard",
+      "club": "team-esface",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/silas-brizard/",
+          "kind": "other",
+          "quote": "Silas Brizard is a 6'5\" Small Forward/Shooting Guard in the 2028 class. Brizard attends Archbishop Mitty in Northern California and plays club basketball for Team Esface",
+          "statedSchool": "Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\")",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Silas Brizard, class of 2028, who attends Archbishop Mitty (team page \"Archbishop Mitty High School Basketball | San Jose, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "4c98f5dd-eac9-4610-aa7e-66c0c886ae37",
+      "playerId": "p0b8e252f03",
+      "fullName": "Blake Poole",
+      "club": "lakeshow",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/blake-poole/",
+          "kind": "other",
+          "quote": "Blake Poole is a 6'7\" Power Forward in the 2029 class. Poole attends Archbishop Riordan in Northern California and plays club basketball for Lakeshow.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/04/2029-rankings-update-stock-risers/",
+          "kind": "other",
+          "quote": "Blake Poole State: Northern California School: Archbishop Riordan Club: Lakeshow",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-04-17"
+        },
+        {
+          "url": "https://prephoops.com/2026/07/2029-rankings-players-in-the-top-40-with-impact/",
+          "kind": "other",
+          "quote": "Blake Poole State: Northern California School: Archbishop Riordan Club: Lakeshow",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-29"
+        },
+        {
+          "url": "https://prephoops.com/2026/09/pangos-frosh-soph-top-30-f-c-standouts/",
+          "kind": "other",
+          "quote": "Blake Poole State: Northern California School: Archbishop Riordan Club: Lakeshow",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-09-21"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Blake Poole, class of 2029, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Lakeshow\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Lakeshow'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "4c98f5dd-eac9-4610-aa7e-66c0c886ae37",
+      "playerId": "p0b8e252f03",
+      "fullName": "Blake Poole",
+      "club": "team-lillard",
+      "clubTeam": "CA) (ADDIDAS 3SSB",
+      "status": "current",
+      "asOf": "2026",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-francisco/archbishop-riordan-high-school/blake-poole9",
+          "kind": "ncsa",
+          "quote": "2026 Team Lillard (CA) (ADDIDAS 3SSB)",
+          "statedSchool": "Archbishop Riordan High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "90767b4a-e7a5-4c76-823b-49f80c14ca31",
+      "playerId": "p57cdad94e7",
+      "fullName": "Cole White",
+      "club": "team-lillard",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/cole-white-4/",
+          "kind": "other",
+          "quote": "Cole White is a 6'1\" Point Guard in the 2027 class. White attends Archbishop Riordan in Northern California and plays club basketball for Team Lillard.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/02/2027-post-season-prospects-ii/",
+          "kind": "other",
+          "quote": "Cole White State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-27"
+        },
+        {
+          "url": "https://prephoops.com/2026/06/cali-live-2027-standouts-at-whitney/",
+          "kind": "other",
+          "quote": "Cole White State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-06-28"
+        },
+        {
+          "url": "https://prephoops.com/2026/07/california-live-a-look-back-standout-2027-guards/",
+          "kind": "other",
+          "quote": "Cole White State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-07-23"
+        },
+        {
+          "url": "https://prephoops.com/2026/10/fall-basketball-standout-prospects/",
+          "kind": "other",
+          "quote": "Cole White State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-10-02"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Cole White, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 4 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "42342be0-7332-49d1-9f65-7929de077ff4",
+      "playerId": "pe0d69e1abd",
+      "fullName": "Emmanuel Ahamefule",
+      "club": "team-lillard",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/emmanuel-ahamefule/",
+          "kind": "other",
+          "quote": "Emmanuel Ahamefule is a 6'9\" Power Forward in the 2027 class. Ahamefule attends Archbishop Riordan in Northern California and plays club basketball for Team Lillard.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/02/2027-post-season-prospects-ii/",
+          "kind": "other",
+          "quote": "Emmanuel Ahamefule State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-02-27"
+        },
+        {
+          "url": "https://prephoops.com/2026/07/adidas-3ssb-bryan-takeover-prospects-out-west-dominate/",
+          "kind": "other",
+          "quote": "Emmanuel Ahamefule State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-07-16"
+        },
+        {
+          "url": "https://prephoops.com/2026/08/summer-recap-5-pf-c-standouts/",
+          "kind": "other",
+          "quote": "Emmanuel Ahamefule State: Northern California School: Archbishop Riordan Club: Team Lillard",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-08-07"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Emmanuel Ahamefule, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "04ae6dbd-bd5b-48ed-a33f-86494accfd3b",
+      "playerId": "p46ece5c770",
+      "fullName": "Isaiah Howard",
+      "club": "bay-city-basketball",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/isaiah-howard-2/",
+          "kind": "other",
+          "quote": "Isaiah Howard is a 6'4\" Small Forward in the 2029 class. Howard attends Archbishop Riordan in Northern California and plays club basketball for Bay City.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/07/2029-updated-rankings-new-additions/",
+          "kind": "other",
+          "quote": "Isaiah Howard State: Northern California School: Archbishop Riordan Club: Bay City",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-17"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Isaiah Howard, class of 2029, who attends Archbishop Riordan (not linked to a team page) and \"plays club basketball for Bay City\". The class year agrees with the roster (2029). The school is named in the sentence but not linked to a team page, so the city is not on this page; Prep Hoops' 2026 article evaluation cards for him read \"State: Northern California School: Archbishop Riordan\". Archbishop Riordan has namesakes elsewhere, hence medium. The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "a34ae929-a782-4ac4-80d4-11062b2c95bb",
+      "playerId": "pb80d47983a",
+      "fullName": "Judah Van Ewjik",
+      "club": "oakland-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/judah-van-ewik/",
+          "kind": "other",
+          "quote": "Judah Van Ewijk is a 6'1\" Combo Guard in the 2029 class. Van Ewijk attends Archbishop Riordan in Northern California and plays club basketball for Oakland Soldiers.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Judah Van Ewijk, class of 2029, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Oakland Soldiers\". The class year agrees with the roster (2029). The page spells the name 'Judah Van Ewijk'; the roster has 'Judah Van Ewjik': kept because school, class year and team page agree (medium on this page alone). The page gives no date for the club line (only the profile's creation date), so the status is unknown."
+    },
+    {
+      "teamSlug": "riordan",
+      "athleteId": "d8199c47-1df8-4e5d-ad6f-1e161114db90",
+      "playerId": "p1e61227e3d",
+      "fullName": "Sean Porter",
+      "club": "bay-city-basketball",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/sean-porter/",
+          "kind": "other",
+          "quote": "Sean Porter is a 6'7\" Power Forward in the 2027 class. Porter attends Archbishop Riordan in Northern California and plays club basketball for Bay City.",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/06/norcal-2027-rankings-update-more-top-100/",
+          "kind": "other",
+          "quote": "Sean Porter State: Northern California School: Archbishop Riordan Club: Bay City",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-06-19"
+        },
+        {
+          "url": "https://prephoops.com/2026/10/fall-basketball-season-standouts/",
+          "kind": "other",
+          "quote": "Sean Porter State: Northern California School: Archbishop Riordan Club: Bay City",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-10-23"
+        },
+        {
+          "url": "https://prephoops.com/2026/11/updated-class-of-2027-rankings/",
+          "kind": "other",
+          "quote": "Sean Porter State: Northern California School: Archbishop Riordan Club: Bay City",
+          "statedSchool": "Archbishop Riordan",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-11-09"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Sean Porter, class of 2027, who attends Archbishop Riordan (linked to the Prep Hoops team page titled \"Archbishop Riordan High School Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Bay City\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 3 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Archbishop Riordan … and plays club basketball for Bay City'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "bellarmine",
+      "athleteId": "e893032d-639a-41b5-a151-834257346e49",
+      "playerId": "p6efd88a183",
+      "fullName": "Benjamin Vo",
+      "club": "san-jose-spartans",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/benjamin-vo/",
+          "kind": "other",
+          "quote": "Benjamin Vo is a 6'0\" Point Guard/Shooting Guard in the 2027 class. Vo attends Bellarmine College Prep in Northern California and plays club basketball for san jose spartans.",
+          "statedSchool": "Bellarmine College Prep",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Benjamin Vo, class of 2027, who attends Bellarmine College Prep (linked to the Prep Hoops team page titled \"Bellarmine College Prep Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for san jose spartans\". The class year agrees with the roster (2027). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops (prephoops.com) player page says he 'attends Bellarmine College Prep … and plays club basketball for san jose spartans'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "bellarmine",
+      "athleteId": "9d7cbcb9-bfc8-4ef9-b7ae-5403f01106b4",
+      "playerId": "p93ff2ac4c9",
+      "fullName": "Caleb Clay",
+      "club": "san-jose-spartans",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/caleb-clay-2/",
+          "kind": "other",
+          "quote": "Caleb Clay is a 6'3\" Shooting Guard/Combo Guard in the 2028 class. Clay attends Bellarmine College Prep in Northern California and plays club basketball for San Jose Spartans.",
+          "statedSchool": "Bellarmine College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/07/class-of-2028-rankings-update-top-newcomers/",
+          "kind": "other",
+          "quote": "Caleb Clay State: Northern California School: Bellarmine College Prep Club: San Jose Spartans",
+          "statedSchool": "Bellarmine College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-01"
+        },
+        {
+          "url": "https://prephoops.com/2026/10/fall-basketball-season-newcomers-and-standouts/",
+          "kind": "other",
+          "quote": "Caleb Clay State: Northern California School: Bellarmine College Prep Club: San Jose Spartans",
+          "statedSchool": "Bellarmine College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-10-09"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Caleb Clay, class of 2028, who attends Bellarmine College Prep (linked to the Prep Hoops team page titled \"Bellarmine College Prep Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for San Jose Spartans\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 2 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Bellarmine College Prep … and plays club basketball for San Jose Spartans'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "serra",
+      "athleteId": "c1542f49-eb72-4bd1-bb90-f3b337d31239",
+      "playerId": "pabb1983d07",
+      "fullName": "Jace Cannon",
+      "club": "team-esface",
+      "clubTeam": "2028 16U College Prep",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/19847898",
+          "kind": "hudl",
+          "quote": "2028 16U College Prep / Team Esface Basketball / Basketball / 2024 - 2025",
+          "statedSchool": "Junipero Serra High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
+    },
+    {
+      "teamSlug": "serra",
+      "athleteId": "06eb7841-957a-4756-ac64-99a90305951d",
+      "playerId": "p1c198e2f15",
+      "fullName": "Sam McReynolds",
+      "club": "team-esface",
+      "clubTeam": "College Prep Elite",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/22613270",
+          "kind": "hudl",
+          "quote": "College Prep Elite / Team Esface Basketball / Basketball / 2025",
+          "statedSchool": "Junipero Serra High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on Junipero Serra High School's own boys basketball team, so it names the school and the sport; class of 2028, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
+    },
+    {
+      "teamSlug": "serra",
+      "athleteId": "7859192b-46dd-45e5-9118-06c80de62097",
+      "playerId": "pdb450c0ae0",
+      "fullName": "Wyatt Vonblanco",
+      "club": "team-esface",
+      "clubTeam": "College Prep",
+      "status": "past",
+      "asOf": "2024-09-06",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/san-mateo/junipero-serra-padres/athletes/wyatt-vonblanco/?careerid=raej0ep31epee",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"esface\",\"organizationTeamName\":\"College Prep\",\"sport\":\"Basketball\",\"ageGroup\":\"12th Grade\",\"clubOrganizationCity\":\"Palo Alto\",\"yearJoined\":2024,\"season\":\"\",\"modifiedOn\":\"2024-09-06T00:39:10\"",
+          "statedSchool": "Junipero Serra (San Mateo, CA)",
+          "statedClassYear": 2027,
+          "sourceDate": "2024-09-06"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Junipero Serra (San Mateo, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status past: the entry was last modified before 2025, an old club season."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "88363504-d724-4789-a80c-ca4e32e89e60",
+      "playerId": "p11eca4442b",
+      "fullName": "Beckett Williams",
+      "club": "team-esface",
+      "clubTeam": "College Prep Elite",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/25200274",
+          "kind": "hudl",
+          "quote": "College Prep Elite / Team Esface Basketball / Basketball / 2025",
+          "statedSchool": "Saint Francis High School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on the school's own basketball team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Redwood City, CA."
+    },
+    {
+      "teamSlug": "saint-francis",
+      "athleteId": "40210769-5976-49d7-b34e-2a8106bc8f41",
+      "playerId": "p9ed7c4441f",
+      "fullName": "Kingston Ng",
+      "club": "san-jose-spartans",
+      "clubTeam": "San Jose Spartans 300 Elite",
+      "status": "current",
+      "asOf": "2026-02-04",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/athletes/kingston-ng/?careerid=nvt92r89tk099",
+          "kind": "maxpreps-career",
+          "quote": "\"clubOrganizationName\":\"San Jose Spartans 300 Elite \",\"organizationTeamName\":\"San Jose Spartans 300 Elite\",\"sport\":\"Basketball\",\"ageGroup\":\"10th Grade\",\"clubOrganizationCity\":\"San Jose \",\"yearJoined\":2024,\"season\":\"Spring,Winter,Fall\",\"modifiedOn\":\"2026-02-04T06:10:41\"",
+          "statedSchool": "Saint Francis (Mountain View, CA)",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-02-04"
+        }
+      ],
+      "basis": "The club-teams block (careerClubTeamsData) of the player's own MaxPreps career bio page, the page his Saint Francis (Mountain View, CA) roster row links, lists this club; the quote is the entry's fields as embedded in the page, read twice on 2026-11-21 (two separate runs, entries identical). Status current: the entry is marked year joined 2026 or later, or was last modified in 2026."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "073dcdba-d1fa-4b8e-99df-074a7bab49cc",
+      "playerId": "pba027e72a7",
+      "fullName": "Anthony Otis",
+      "club": "bay-city-basketball",
+      "clubTeam": "Bay City Warriors",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/anthony_otis",
+          "kind": "sportsrecruits",
+          "quote": "Bay City Warriors, Bay City Warriors",
+          "statedSchool": "St. Ignatius College Preparatory Boys Basketball",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "His own SportsRecruits basketball profile (The page names St. Ignatius College Preparatory and class of 2027, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "ba706b57-fcb7-4977-94b3-389fe6247ad8",
+      "playerId": "pd162194829",
+      "fullName": "Jack Loevner",
+      "club": "peninsula-gold",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/jack-loevner/",
+          "kind": "other",
+          "quote": "Jack Loevner is a 6'6\" Small Forward/Point Guard in the 2028 class. Loevner attends St. Ignatius College Prep in Northern California and plays club basketball for Peninsula Gold.",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/07/class-of-2028-stock-risers-top-50/",
+          "kind": "other",
+          "quote": "Jack Loevner Instagram Twitter State: Northern California School: St. Ignatius College Prep Club: Peninsula Gold",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": "2026-07-14"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Jack Loevner, class of 2028, who attends St. Ignatius College Prep (linked to the Prep Hoops team page titled \"St. Ignatius College Prep Basketball | San Francisco, CA | Prep Hoops\", the right city) and \"plays club basketball for Peninsula Gold\". The class year agrees with the roster (2028). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends St. Ignatius College Prep … and plays club basketball for Peninsula Gold'; the school is confirmed by the page's team link (San Francisco, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "9c5b09ab-2c0c-4fe2-8b0c-2cc46bee5bbb",
+      "playerId": "pa030edc60b",
+      "fullName": "Pedro Silva",
+      "club": "north-bay-basketball-academy",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/pedro-silva/",
+          "kind": "other",
+          "quote": "Pedro Silva is a 6'6\" Small Forward in the 2029 class. Silva attends St. Ignatius College Prep in Northern California and plays club basketball for NBBA.",
+          "statedSchool": "St. Ignatius College Prep (team page \"St. Ignatius College Prep Basketball | San Francisco, CA | Prep Hoops\")",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Pedro Silva, class of 2029, who attends St. Ignatius College Prep (team page \"St. Ignatius College Prep Basketball | San Francisco, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "5aab7cac-0f91-46d8-8fe3-ad7d6b177125",
+      "playerId": "p0a34f772d2",
+      "fullName": "Danny Rangel",
+      "club": "hoopright",
+      "clubTeam": "D1",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-jose/valley-christian-high-school10/danny-rangel1",
+          "kind": "ncsa",
+          "quote": "2029 Hoop Right (D1)",
+          "statedSchool": "Valley Christian High School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "32458cc7-8a7c-411a-8f7c-85ef80227ed5",
+      "playerId": "p0c9e313ae0",
+      "fullName": "Teniola Bamisebi",
+      "club": "team-lillard",
+      "clubTeam": "17u",
+      "status": "current",
+      "asOf": "2026-04-27",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/teniola-bamisebi/",
+          "kind": "other",
+          "quote": "Teni Bamisebi is a 6'9\" Center in the 2027 class. Bamisebi attends Valley Christian-San Jose in Northern California and plays club basketball for Team Lillard.",
+          "statedSchool": "Valley Christian-San Jose",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/04/under-the-radar-8-ca-w-f-c-at-3ssb-session-1/",
+          "kind": "event",
+          "quote": "Teniola Bamisebi | 2027 | Team Lillard 17u",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "2026-04-27"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Teni Bamisebi, class of 2027, who attends Valley Christian-San Jose (linked to the Prep Hoops team page titled \"Valley Christian-San Jose High School Basketball | San Jose, CA | Prep Hoops\", the right city) and \"plays club basketball for Team Lillard\". The class year agrees with the roster (2027). The page spells the name 'Teni Bamisebi'; the roster has 'Teniola Bamisebi': kept because school, class year and team page agree (medium on this page alone). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Prep Hoops' own report from adidas 3SSB Session 1 (Ladera Ranch; article dated April 27, 2026) heads its write-up \"Teniola Bamisebi | 2027 | Team Lillard 17u\": his full name, the roster's class year and the club team, in the article's own text. Two pages agree, so high; dated 2026 for the 2026 spring club season, so current. Prep Hoops (prephoops.com) player page says he 'attends Valley Christian-San Jose … and plays club basketball for Team Lillard'; the school is confirmed by the page's team link (San Jose, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "kings-academy",
+      "athleteId": "4f99f4d9-7f20-4b8f-8d0e-8474a19eba30",
+      "playerId": "p9b93c97827",
+      "fullName": "Boss Mhoon",
+      "club": "oakland-soldiers",
+      "clubTeam": "Oakland Soldiers 15u EYBL",
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://my.sportsrecruits.com/athlete/boss_mhoon",
+          "kind": "sportsrecruits",
+          "quote": "Oakland Soldiers 15u EYBL, Oakland Soldiers",
+          "statedSchool": "The King's Academy- Boys Basketball",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "His own SportsRecruits basketball profile (The page names The King’s Academy and class of 2028, which agrees with the roster.) lists the club in its CLUB/TEAMS block, a club and team entered by the athlete. Script-drawn content, read from the profile JSON in three separate fetches that agree; the page gives no season or date, so the status is unknown."
+    },
+    {
+      "teamSlug": "menlo",
+      "athleteId": "95dfab8e-99ae-4926-a550-f003ccb251fb",
+      "playerId": "pcc85292ebc",
+      "fullName": "Ethan Love",
+      "club": "oakland-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/ethan-love/",
+          "kind": "other",
+          "quote": "Ethan Love is a 6'1\" Shooting Guard in the 2029 class. Love attends Menlo School in Northern California and plays club basketball for Oakland Soldiers.",
+          "statedSchool": "Menlo School",
+          "statedClassYear": 2029,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/07/class-of-2029-top-newcomers/",
+          "kind": "other",
+          "quote": "Ethan Love State: Northern California School: Menlo School Club: Oakland Soldiers",
+          "statedSchool": "Menlo School",
+          "statedClassYear": 2029,
+          "sourceDate": "2026-07-15"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Ethan Love, class of 2029, who attends Menlo School (linked to the Prep Hoops team page titled \"Menlo School Basketball | Atherton, CA | Prep Hoops\", the right city) and \"plays club basketball for Oakland Soldiers\". The class year agrees with the roster (2029). The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date. Prep Hoops (prephoops.com) player page says he 'attends Menlo School … and plays club basketball for Oakland Soldiers'; the school is confirmed by the page's team link (Atherton, CA). Undated, so status unknown. The club name is as Prep Hoops writes it; no club record was checked."
+    },
+    {
+      "teamSlug": "menlo",
+      "athleteId": "9b95f39f-f4f7-4084-8fb0-7a28a44d1125",
+      "playerId": "p173eecd318",
+      "fullName": "William Lenihan",
+      "club": "peninsula-gold",
+      "clubTeam": "Under Armor Rise",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/atherton/menlo-school/william-lenihan",
+          "kind": "ncsa",
+          "quote": "2025 Peninsula Gold (Under Armor Rise)",
+          "statedSchool": "Menlo School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "pinewood",
+      "athleteId": "ef6db2cf-6e76-40c6-8aa3-b96e19f6f2ee",
+      "playerId": "p1fef8869c1",
+      "fullName": "Christian Arcangel",
+      "club": "oakland-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/los-altos-hills/pinewood-school/christian-arcangel",
+          "kind": "ncsa",
+          "quote": "2028 Oakland Soldiers",
+          "statedSchool": "Pinewood School",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "priory",
+      "athleteId": "e4580195-6ce5-4bb5-9b00-741823d8da70",
+      "playerId": "p7c9eadf455",
+      "fullName": "Teddy Xanthopoulos",
+      "club": "peninsula-gold",
+      "clubTeam": "17U UA Rise",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/21369720",
+          "kind": "hudl",
+          "quote": "17U UA Rise / Gold Basketball / Basketball / 2024",
+          "statedSchool": "Woodside Priory School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on Woodside Priory School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as San Mateo, CA."
+    },
+    {
+      "teamSlug": "sacred-heart-prep",
+      "athleteId": "7c4302aa-dbad-4447-8530-f8b9e8536dce",
+      "playerId": "p6e2388238d",
+      "fullName": "Pat Bala",
+      "club": "peninsula-gold",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/pat-bala/",
+          "kind": "other",
+          "quote": "Pat Bala is a 6'0\" Combo Guard/Point Guard in the 2028 class. Bala attends Sacred Heart Prep in Northern California and plays club basketball for Peninsula Gold",
+          "statedSchool": "Sacred Heart Prep (team page \"Sacred Heart Prep Basketball | Atherton, CA | Prep Hoops\")",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Prep Hoops player page (served HTML) names Pat Bala, class of 2028, who attends Sacred Heart Prep (team page \"Sacred Heart Prep Basketball | Atherton, CA | Prep Hoops\"), and the club. The class is a grade above the one MaxPreps' 2026-27 roster still shows (last season's): accepted on the row's stale-grade conflict, the page re-fetched at assembly on 2026-11-21. Undated, so status unknown."
+    },
+    {
+      "teamSlug": "mills",
+      "athleteId": "cc8314a7-9b1b-487b-b21b-2f8cfd39ce04",
+      "playerId": "p245cbeb3ca",
+      "fullName": "Brayden Beliso",
+      "club": "norcal-rush",
+      "clubTeam": "D1 - D3",
+      "status": "past",
+      "asOf": "2024",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/millbrae/mills-high-school/brayden-beliso",
+          "kind": "ncsa",
+          "quote": "2024 NorCal Rush (D1 - D3)",
+          "statedSchool": "Mills High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "san-mateo",
+      "athleteId": "bd2bebf2-9490-4936-a557-b6299ed75881",
+      "playerId": "pfd0069934c",
+      "fullName": "Daniel Villeda",
+      "club": "oakland-soldiers",
+      "clubTeam": "14u",
+      "status": "past",
+      "asOf": "2022",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-mateo/san-mateo-high-school1/daniel-villeda2",
+          "kind": "ncsa",
+          "quote": "2022 Oakland Soldiers Navy (14u)",
+          "statedSchool": "San Mateo High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "san-mateo",
+      "athleteId": "bd2bebf2-9490-4936-a557-b6299ed75881",
+      "playerId": "pfd0069934c",
+      "fullName": "Daniel Villeda",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": "D1",
+      "status": "past",
+      "asOf": "2023",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.ncsasports.org/mens-basketball-recruiting/california/san-mateo/san-mateo-high-school1/daniel-villeda2",
+          "kind": "ncsa",
+          "quote": "2023 Silicon Valley Soldiers (D1)",
+          "statedSchool": "San Mateo High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's NCSA recruiting page (same sport as this build) names the school and its city, so it is linked under rule (a); its dated 'Club Information' line is quoted. Status from that line's year: 2026 current, 2025 and earlier past or unknown when it is the newest line, years after 2026 unknown. Two separate loads agreed. The parenthetical is the league or tier the page gives, not a team label."
+    },
+    {
+      "teamSlug": "aptos",
+      "athleteId": "9b322f09-6a3c-4a5e-bbc3-f28eb0996fcd",
+      "playerId": "p2345d5c7c2",
+      "fullName": "Levi Race",
+      "club": "team-esface",
+      "clubTeam": "2028 16U College Prep",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/19515164",
+          "kind": "hudl",
+          "quote": "2028 16U College Prep / Team Esface Basketball / Basketball / 2024 - 2025",
+          "statedSchool": "Aptos High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on Aptos High School's own boys basketball team, so it names the school and the sport; class of 2027, accepted on the row's stale-grade conflict) lists this club team; re-read at assembly on 2026-11-21. Hudl gives the organization's location as Redwood City, CA."
+    },
+    {
+      "teamSlug": "santa-cruz",
+      "athleteId": "38c3a19c-14aa-4f9e-b22c-377c475b7253",
+      "playerId": "pe336cc71d5",
+      "fullName": "Kaden Miritz",
+      "club": "silicon-valley-soldiers",
+      "clubTeam": null,
+      "status": "unknown",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://prephoops.com/player/kaden-mertz/",
+          "kind": "other",
+          "quote": "Kaden Miritz is a 6'5\" Small Forward/Shooting Guard in the 2027 class. Miritz attends Santa Cruz in Northern California and plays club basketball for Silicon Valley soldiers.",
+          "statedSchool": "Santa Cruz",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prephoops.com/2026/01/2027-rankings-update-top-risers-in-the-class/",
+          "kind": "other",
+          "quote": "Kaden Miritz Instagram Twitter State: Northern California School: Santa Cruz Club: Silicon Valley soldiers",
+          "statedSchool": "Santa Cruz",
+          "statedClassYear": 2027,
+          "sourceDate": "2026-01-19"
+        }
+      ],
+      "basis": "Prep Hoops player page (server HTML) names Kaden Miritz, class of 2027, who attends Santa Cruz (not linked to a team page) and \"plays club basketball for Silicon Valley soldiers\". The class year agrees with the roster (2027). The school (\"Santa Cruz\", in Northern California) is named in the sentence but not linked to a team page; reached from a 2026 Prep Hoops article card whose slug differs from his name. Medium: no city link. The page gives no date for the club line (only the profile's creation date), so the status is unknown. Also 1 Prep Hoops article(s) dated 2026 whose served HTML carries the player's evaluation card (\"State: ... School: ... Club: ...\") naming the same school and club; the card is drawn from the same Prep Hoops profile, so it is not independent and the article date is not used as the club's date."
+    },
+    {
+      "teamSlug": "soquel",
+      "athleteId": "2f3fdd03-dafa-44be-a09e-b4bb046eb7f8",
+      "playerId": "p83a4ec6e75",
+      "fullName": "Ryan Grilli",
+      "club": "team-esface",
+      "clubTeam": "2028 16U College Prep",
+      "status": "unknown",
+      "asOf": "2025",
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://www.hudl.com/profile/24812679",
+          "kind": "hudl",
+          "quote": "2028 16U College Prep / Team Esface Basketball / Basketball / 2024 - 2025",
+          "statedSchool": "Soquel High School",
+          "statedClassYear": 2027,
+          "sourceDate": null
+        }
+      ],
+      "basis": "The player's Hudl profile (on the school's own basketball team, so it names the school and the sport) lists this club team in its team list; the quote joins that entry's team name, organization, sport and years with ' / '. 1 team entry for this club on the page; the latest is used. Hudl gives the organization's location as Redwood City, CA."
+    }
+  ]
 }

@@ -43,8 +43,9 @@ import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '../../lib
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
 import { regionOf } from '../../lib/leagues';
-import { getRosters } from '../../lib/players/rosters';
+import { effectiveGrade, getRosters } from '../../lib/players/rosters';
 import { SPORT, SPORT_ID } from '../../lib/sports/current';
+import { isResearched } from '../../lib/schema-primitives';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { capitalized } from '../words/capitalized';
@@ -59,6 +60,8 @@ export const DIVISION_WORDS: Record<CollegeDivision, string> = {
   'ncaa-d2': 'NCAA Division II',
   'ncaa-d3': 'NCAA Division III',
   naia: 'NAIA',
+  njcaa: 'NJCAA',
+  cccaa: 'CCCAA',
 };
 
 /**
@@ -350,10 +353,16 @@ export interface CommitsView {
   collegeCount: number;
   /** "Oct 3, 2026": when the research was done. */
   capturedOn: string;
+  /**
+   * Whether the commits file holds research (lib/schema-primitives.ts isResearched): false for a placeholder no round
+   * has filled yet, which no page dates.
+   */
+  researched: boolean;
 }
 
 function commitRow(c: Commitment): CommitRow {
   const row = getCommittedPlayer(c);
+  const grade = effectiveGrade(row);
   const { college, program } = commitProgram(c);
   const seen = new Set<string>();
   const sources = c.sources.filter((s) => (seen.has(s.url) ? false : (seen.add(s.url), true)));
@@ -362,7 +371,8 @@ function commitRow(c: Commitment): CommitRow {
     anchor: commitAnchor(c),
     name: row.fullName,
     school: { name: schoolName(c.teamSlug), href: `/teams/${c.teamSlug}#roster`, slug: c.teamSlug },
-    facts: row.grade !== null ? [gradeWord(row.grade)] : [],
+    // The grade the class heading is read from (commitClassOf): a stale MaxPreps grade corrected.
+    facts: grade !== null ? [gradeWord(grade)] : [],
     college: {
       name: collegeDisplayName(college),
       fullName: college.shortName !== null ? college.name : null,
@@ -477,6 +487,7 @@ export function buildCommitsView(): CommitsView {
     schoolCount: new Set(commitments.map((c) => c.teamSlug)).size,
     collegeCount: new Set(commitments.map((c) => c.college)).size,
     capturedOn: dateWithYear(file.capturedAt),
+    researched: isResearched(file.notes, file.commitments.length),
   };
 }
 
@@ -525,8 +536,8 @@ function countWords(commitments: readonly CommitPick[]): string {
     const programs = new Set(here.map((c) => `${c.college} ${c.sport}`)).size;
     return here.length === 0 ? [] : [{ n: here.length, programs, words: `${DIVISION_WORDS[d]}${oneSport}` }];
   });
-  // Every level's words start with "N" ("NCAA", "NAIA"), so the article is always "an".
-  const programWords = (k: number, words: string) => (k === 1 ? `an ${words} program` : `${words} programs`);
+  // The levels' words start with a spoken vowel ("NCAA", "NAIA", "NJCAA": "an") but for "CCCAA" ("a").
+  const programWords = (k: number, words: string) => (k === 1 ? `${words.startsWith('C') ? 'a' : 'an'} ${words} program` : `${words} programs`);
   const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'has' : 'have'} committed to ${plural(colleges, 'college')}`;
   const bySport =
     sports.length > 1 ? ` By sport, ${listWords(sports.map(({ sport, n }) => `${n} in ${SPORT_WORDS[sport]}`))}.` : '';

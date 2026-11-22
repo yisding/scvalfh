@@ -90,3 +90,13 @@ export function failValidation(
  * players carry this id beside their per-season MaxPreps key, so the primitive lives here.
  */
 export const playerId = z.string().regex(/^p[0-9a-f]{10,}$/, 'expected a player id (p + hex)');
+
+/**
+ * Whether a hand-researched file (clubs, commits, the roster overlay's profiles, the JV profiles) holds research:
+ * its `notes` say how it was made, or it holds a record. A placeholder that no research round has filled yet (a
+ * sport's files before its first round: `notes` empty, no records) holds none, and a page built from it says that
+ * nothing is listed yet, never dating a search, naming an area as searched or reporting a finding no one made.
+ */
+export function isResearched(notes: readonly string[], records: number): boolean {
+  return notes.length > 0 || records > 0;
+}

@@ -39,8 +39,8 @@ import {
   loadClubs,
 } from '../lib/players/clubs';
 import { LEAGUES } from '../lib/leagues';
-import { classOf, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
-import { isHttpsUrl } from '../lib/schema-primitives';
+import { classOf, classYearAgrees, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
+import { isHttpsUrl, isResearched } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
@@ -137,10 +137,11 @@ describe('data/field-hockey/clubs.json', () => {
   it('agrees with the roster grade wherever a source states a class year', () => {
     let checked = 0;
     for (const a of raw.affiliations) {
-      const grade = rowOf(a)!.grade;
+      const row = rowOf(a)!;
       for (const s of a.sources) {
-        if (s.statedClassYear === null || grade === null) continue;
-        expect(s.statedClassYear, `${a.fullName} (${a.club}) ${s.url}`).toBe(classOf(season, grade));
+        if (s.statedClassYear === null || row.grade === null) continue;
+        // The grade's class, or a rosterBehind conflict's corrected one (classYearAgrees).
+        expect(classYearAgrees(season, row, s.statedClassYear), `${a.fullName} (${a.club}) ${s.url}`).toBe(true);
         checked += 1;
       }
     }
@@ -734,6 +735,14 @@ describe('lib/players/clubs-schema.ts helpers', () => {
 describe('a bad file is refused at load', () => {
   it('loads the untouched file', () => {
     expect(loadError(structuredClone(raw))).toBe('');
+  });
+
+  it('loads a placeholder with no club, which isResearched reads as no research (a recruiting build before its first round)', () => {
+    const placeholder = { ...structuredClone(raw), notes: [], clubs: [], affiliations: [], jvAffiliations: [] };
+    expect(loadError(placeholder)).toBe('');
+    expect(isResearched(placeholder.notes, placeholder.clubs.length)).toBe(false);
+    expect(isResearched(raw.notes, raw.clubs.length)).toBe(true);
+    expect(isResearched([], 1)).toBe(true);
   });
 
   it('refuses a class year that disagrees with a MaxPreps grade, naming the player', () => {

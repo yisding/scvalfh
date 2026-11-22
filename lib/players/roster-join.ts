@@ -3,14 +3,16 @@
  * §21: commitments follow the clubs' matching rule), on team slug + MaxPreps athleteId.
  *
  * Every record must join to a row of its team under the row's own fullName, the row must be at the
- * level the caller asks for (varsity, unless `level: 'jv'`), and, when the row has a grade, every class year a source states must be that grade's. A
+ * level the caller asks for (varsity, unless `level: 'jv'`), and, when the row has a grade, every class year a source states must be that grade's
+ * (or, where the overlay records that MaxPreps' roster shows last season's grade — a `rosterBehind`
+ * conflict — the corrected grade's: lib/players/rosters.ts classYearAgrees). A
  * failure throws `<label>: <team> / <player> (<subject>): <what>`, naming the club or the college.
  * What a file asks beyond that stays in its own loader: lib/players/commits.ts also settles a class year
  * for a player with no grade, because /commits groups players by class year; clubs never show
  * one (lib/players/clubs.ts).
  */
 
-import { classOf, type MergedPlayer, type MergedTeamRoster } from './rosters';
+import { classYearAgrees, type MergedPlayer, type MergedTeamRoster } from './rosters';
 
 /** The key a joined row is found by: team slug and MaxPreps athleteId. */
 export function playerKey(teamSlug: string, athleteId: string): string {
@@ -60,12 +62,9 @@ export function joinToRoster<R extends RosterJoinRecord>(
     if (r.fullName !== row.fullName) throw failure(r, `MaxPreps spells this player "${row.fullName}"`);
     if (level === 'varsity' && row.level === 'jv') throw failure(r, `a JV row: ${noun} list varsity rows only`);
     if (level === 'jv' && row.level !== 'jv') throw failure(r, `not a JV row: ${noun} list JV rows only`);
-    const grade = row.grade;
-    if (grade !== null) {
-      for (const s of r.sources) {
-        if (s.statedClassYear !== null && s.statedClassYear !== classOf(season, grade)) {
-          throw failure(r, `${s.kind} source says class of ${s.statedClassYear}, the roster shows grade ${grade}`);
-        }
+    for (const s of r.sources) {
+      if (s.statedClassYear !== null && !classYearAgrees(season, row, s.statedClassYear)) {
+        throw failure(r, `${s.kind} source says class of ${s.statedClassYear}, the roster shows grade ${row.grade}`);
       }
     }
     rows.set(playerKey(r.teamSlug, r.athleteId), row);

@@ -318,7 +318,8 @@ export function TeamRoster({ view }: TeamRosterProps) {
                 <ExternalLink href={c.sourceUrl} className="sx-link">
                   {c.sourceLabel}
                 </ExternalLink>
-                {c.now ? `, so ${c.now} now` : ''}.
+                {c.now ? `, so ${c.now} now` : ''}
+                {c.rosterBehind ? '; MaxPreps’ roster still shows last season’s grade' : ''}.
               </li>
             ))}
           </ul>

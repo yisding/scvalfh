@@ -44,7 +44,7 @@ const ALL_FIXED_PAGES = [
 
 /**
  * The fixed pages this build prerenders: a route this sport's build does not have (lib/sports/current.ts
- * HAS_RECRUITING: field hockey and volleyball; HAS_CLUB_CALENDAR: field hockey; app/draft/awards: field hockey) is
+ * HAS_RECRUITING: every high school build, not the VAL's; HAS_CLUB_CALENDAR: field hockey; app/draft/awards: field hockey) is
  * a 404 there, which `next build` writes as a not-found page and vinext skips, so it is not expected.
  */
 export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
@@ -60,7 +60,7 @@ export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
  */
 export const UNLISTED_PAGES: readonly string[] = ['draft/awards'];
 
-/** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
+/** vinext route patterns a build skips because they render a 404 there or have no params (no tournament league). */
 export const SKIPPED_ROUTES: readonly string[] = [
   ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
   ...(HAS_CLUB_CALENDAR ? [] : ['/club-calendar']),

@@ -3,17 +3,16 @@
  * LAST season's (2025-26) varsity sophomores and juniors a public page says have committed to, signed with
  * or joined a college team, in their own sport or any other, and those colleges.
  *
- * Data only, for now: no page reads these files (tests/prior-commits.test.ts holds that nothing under
- * app/ or components/ names them). They are research, written by hand like data/field-hockey/commits.json, under its
- * rules (README "College commitments"), with three differences:
+ * The files are the 2026-11-18 research record. The commitments of their players who are on a 2026-27 roster were
+ * copied into data/soccer/commits.json on 2026-11-21 as ordinary commitments, and the pages read that file, not
+ * these. They are research, written by hand like data/field-hockey/commits.json, under its rules (README "College
+ * commitments"), with two differences:
  *
  *   - The players are last season's, not this season's roster rows. A commitment names its player by
  *     the player registry's id (data/players.json, `playerId`), which outlasts MaxPreps' per-season
  *     athlete ids and is the one key that follows a player from last season's rows into this season's.
  *     `grade` is the player's 2025-26 grade (10 or 11), so the class is 2028 or 2027.
- *   - A program may be at a two-year college: a California community college (CCCAA) or a junior
- *     college (NJCAA), where many of these schools' players go on to play. Their levels are
- *     PRIOR_COLLEGE_DIVISIONS; data/field-hockey/commits.json's stay COLLEGE_DIVISIONS, whose words the pages have.
+ *   - (Until 2026-11-21 only these files took a two-year college's level; COLLEGE_DIVISIONS has njcaa and cccaa now.)
  *   - A player the registry has never seen (on a team whose 2025-26 stat sheet MaxPreps does not have,
  *     and on no roster since) is named by `careerId` and the season's MaxPreps roster page instead.
  *
@@ -53,12 +52,8 @@ import type { PlayersFile } from './registry-schema';
 import { sourceUrl } from './clubs-schema';
 import { calendarDateKey, playerId, slugId } from '../schema-primitives';
 
-/**
- * COLLEGE_DIVISIONS, then the two-year colleges:
- *   njcaa  a junior college in the National Junior College Athletic Association
- *   cccaa  a California community college (California Community College Athletic Association)
- */
-export const PRIOR_COLLEGE_DIVISIONS = [...COLLEGE_DIVISIONS, 'njcaa', 'cccaa'] as const;
+/** COLLEGE_DIVISIONS, which has held the two-year colleges' levels (njcaa, cccaa) itself since 2026-11-21. */
+export const PRIOR_COLLEGE_DIVISIONS = COLLEGE_DIVISIONS;
 export type PriorCollegeDivision = (typeof PRIOR_COLLEGE_DIVISIONS)[number];
 
 /** The sports whose builds have a prior-commits file, and the season its players played. */

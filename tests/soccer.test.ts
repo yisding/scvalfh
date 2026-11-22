@@ -19,6 +19,15 @@ type Modules = {
   playerStats: typeof import('../lib/players/player-stats');
   jv: typeof import('../lib/jv/jv');
   rosters: typeof import('../lib/players/rosters');
+  clubs: typeof import('../lib/players/clubs');
+  clubsSchema: typeof import('../lib/players/clubs-schema');
+  commits: typeof import('../lib/players/commits');
+  jvProfiles: typeof import('../lib/jv/jv-profiles');
+  clubView: typeof import('../components/clubs/club-view');
+  commitView: typeof import('../components/commits/commit-view');
+  recruitingView: typeof import('../components/recruiting/recruiting-view');
+  expectations: typeof import('../scripts/lib/prerender-expectations');
+  copyRules: typeof import('../scripts/copy-rules');
 };
 
 let m: Modules;
@@ -38,6 +47,15 @@ beforeAll(async () => {
     playerStats: await import('../lib/players/player-stats'),
     jv: await import('../lib/jv/jv'),
     rosters: await import('../lib/players/rosters'),
+    clubs: await import('../lib/players/clubs'),
+    clubsSchema: await import('../lib/players/clubs-schema'),
+    commits: await import('../lib/players/commits'),
+    jvProfiles: await import('../lib/jv/jv-profiles'),
+    clubView: await import('../components/clubs/club-view'),
+    commitView: await import('../components/commits/commit-view'),
+    recruitingView: await import('../components/recruiting/recruiting-view'),
+    expectations: await import('../scripts/lib/prerender-expectations'),
+    copyRules: await import('../scripts/copy-rules'),
   };
 });
 
@@ -52,7 +70,7 @@ describe('the soccer sport switch', () => {
     expect(MAXPREPS_SPORT_SEASON?.genderSport).toBe('girls,soccer');
     expect(SPORT_AUDIENCE).toBe('girls varsity soccer');
     expect(DATA_DIR).toBe('data/soccer');
-    expect([IS_FIELD_HOCKEY, HAS_RECRUITING]).toEqual([false, false]);
+    expect([IS_FIELD_HOCKEY, HAS_RECRUITING]).toEqual([false, true]);
   });
 
   it('derives the season words and source links from the soccer definition', () => {
@@ -225,6 +243,61 @@ describe('the soccer data files', () => {
       if (division.official.mode === 'bundled') {
         expect(bundle.documents.find((d) => d.division === division.id)?.sha256).toBe(division.official.bundledSha256);
       }
+    }
+  });
+});
+
+describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrichment,jv-profiles}.json; switched on 2026-11-21)', () => {
+  // Written to hold both while the files are placeholders and after the 2026-11-21 round fills them: no counts.
+  it('has the recruiting pages and no club calendar', () => {
+    expect([m.current.HAS_RECRUITING, m.current.HAS_CLUB_CALENDAR]).toEqual([true, false]);
+    expect(m.expectations.FIXED_PAGES).toEqual(expect.arrayContaining(['clubs', 'commits', 'recruiting']));
+    expect(m.expectations.FIXED_PAGES).not.toContain('club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).toContain('/club-calendar');
+    expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs');
+    expect(m.expectations.SKIPPED_ROUTES).not.toContain('/clubs/:slug');
+  });
+
+  it('loads the clubs through the validating loader: every tie joins a varsity row of a club in the file', () => {
+    const file = m.clubs.getClubsFile();
+    expect(file.season).toBe(m.rosters.getRosters().season);
+    for (const a of [...file.affiliations, ...file.jvAffiliations]) {
+      expect(m.clubs.getClub(a.club), a.club).toBeDefined();
+      expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
+    }
+    // The areas searched for every club in the 2026-11-21 round (lib/players/clubs.ts): not the Central Coast.
+    expect(m.clubs.SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay']);
+    for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);
+  });
+
+  it('names no area as searched, and dates nothing, while the clubs file is a placeholder', () => {
+    const view = m.clubView.buildClubsIndexView();
+    expect(view.researched).toBe(m.clubs.getClubsFile().notes.length > 0 || view.clubCount > 0);
+    if (!view.researched) {
+      expect(view.regionsWithoutClubsSentence).toBeNull();
+      expect(view.regionsNotSearchedSentence).toBeNull();
+      expect(view.lede).toMatch(/No club is listed yet\.$/);
+    }
+    if (view.clubCount === 0) expect(view.regions).toEqual([]);
+  });
+
+  it('names a sport on a commitment or a profile only when it is not soccer', () => {
+    expect(m.commitView.ledeWords(41, [])).toContain('soccer or any other');
+    for (const c of m.commits.getCommitments()) {
+      expect(m.commitView.playerCommitLine(c.teamSlug, c.athleteId)!.sport).toBe(c.sport === 'soccer' ? null : m.commitView.SPORT_WORDS[c.sport]);
+    }
+    const profiles = [
+      ...m.rosters.getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+      ...m.jvProfiles.getJvProfilesFile().teams.flatMap((t) => t.players.flatMap((p) => p.profiles)),
+    ];
+    expect(profiles.every((p) => p.sport !== 'soccer')).toBe(true);
+  });
+
+  it('lists only players the files tie to a club, a commitment or a profile on /recruiting', () => {
+    const view = m.recruitingView.buildRecruitingView();
+    for (const region of view.regions) {
+      for (const league of region.leagues) for (const school of league.schools) expect(school.rows.length).toBeGreaterThan(0);
+      if (region.leagues.length === 0) expect(region.summary).toMatch(/no player is listed yet\.$/);
     }
   });
 });

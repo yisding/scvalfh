@@ -41,7 +41,8 @@ import {
   getTeamCommitments,
   loadCommits,
 } from '../lib/players/commits';
-import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer } from '../lib/players/rosters';
+import { joinToRoster } from '../lib/players/roster-join';
+import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type RosterConflict } from '../lib/players/rosters';
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
@@ -628,5 +629,64 @@ describe('the join to the rosters refuses, naming team, player and college', () 
     const c = commitmentFor(noGrade);
     const f = fileWith([{ ...c, sources: [{ ...c.sources[0], statedClassYear: 2027 }] }]);
     expect(load(f)).not.toThrow();
+  });
+});
+
+describe('a roster row whose MaxPreps grade is last season\'s (a rosterBehind grade conflict)', () => {
+  const behind = (row: MergedPlayer, marked: boolean): RosterConflict => ({
+    field: 'grade',
+    kept: String(row.grade),
+    other: String(row.grade! + 1),
+    kind: 'hudl',
+    source: 'https://www.hudl.com/profile/123456/Example-Player',
+    note: null,
+    ...(marked ? { rosterBehind: true as const } : {}),
+  });
+  /** The merged rosters with `junior`'s row carrying `conflict`. */
+  const teamsWith = (conflict: RosterConflict) =>
+    teams.map((t) =>
+      t.slug !== junior.teamSlug
+        ? t
+        : { ...t, players: t.players.map((p) => (p.athleteId === junior.row.athleteId ? { ...p, conflicts: [...p.conflicts, conflict] } : p)) },
+    );
+  const stating = (year: number) => {
+    const c = commitmentFor(junior);
+    return { ...c, sources: [{ ...c.sources[0], statedClassYear: year }] };
+  };
+  const marked = teamsWith(behind(junior.row, true));
+  const unmarked = teamsWith(behind(junior.row, false));
+
+  it('takes a commitment source one class year ahead only with the marker', () => {
+    const senior = stating(classOf(season, 12));
+    expect(() => loadCommits(fileWith([senior]), marked, season)).not.toThrow();
+    expect(() => loadCommits(fileWith([senior]), unmarked, season)).toThrow(
+      `sportsrecruits source says class of ${classOf(season, 12)}, the roster shows grade 11`,
+    );
+    // The roster grade's own class still passes; a class year two off still fails.
+    expect(() => loadCommits(fileWith([stating(classOf(season, 11))]), marked, season)).not.toThrow();
+    expect(() => loadCommits(fileWith([stating(classOf(season, 10))]), marked, season)).toThrow(
+      `sportsrecruits source says class of ${classOf(season, 10)}, the roster shows grade 11`,
+    );
+  });
+
+  it('takes a club-tie source one class year ahead only with the marker (the same join)', () => {
+    const tie = { teamSlug: junior.teamSlug, athleteId: junior.row.athleteId!, fullName: junior.row.fullName, club: 'x' };
+    const join = (t: typeof teams, year: number) => () =>
+      joinToRoster([{ ...tie, sources: [{ kind: 'event', statedClassYear: year }] }], t, season, {
+        label: 'clubs',
+        noun: 'clubs',
+        subject: (r) => r.club,
+      });
+    expect(join(marked, classOf(season, 12))).not.toThrow();
+    expect(join(unmarked, classOf(season, 12))).toThrow(`event source says class of ${classOf(season, 12)}, the roster shows grade 11`);
+    expect(join(marked, classOf(season, 13))).toThrow(`event source says class of ${classOf(season, 13)}, the roster shows grade 11`);
+  });
+
+  it('lists the player under the corrected class: commitClassOf reads the grade the conflict gives', () => {
+    const c = commitmentFor(junior);
+    const row = (t: typeof teams) => t.find((x) => x.slug === junior.teamSlug)!.players.find((p) => p.athleteId === junior.row.athleteId)!;
+    expect(commitClassOf(c, row(marked))).toBe(classOf(season, 12));
+    expect(commitClassOf(c, row(unmarked))).toBe(classOf(season, 11));
+    expect(commitClassOf(c, junior.row)).toBe(classOf(season, 11));
   });
 });
