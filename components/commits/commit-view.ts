@@ -60,6 +60,8 @@ export const DIVISION_WORDS: Record<CollegeDivision, string> = {
   'ncaa-d2': 'NCAA Division II',
   'ncaa-d3': 'NCAA Division III',
   naia: 'NAIA',
+  njcaa: 'NJCAA',
+  cccaa: 'CCCAA',
 };
 
 /**
@@ -532,8 +534,8 @@ function countWords(commitments: readonly CommitPick[]): string {
     const programs = new Set(here.map((c) => `${c.college} ${c.sport}`)).size;
     return here.length === 0 ? [] : [{ n: here.length, programs, words: `${DIVISION_WORDS[d]}${oneSport}` }];
   });
-  // Every level's words start with "N" ("NCAA", "NAIA"), so the article is always "an".
-  const programWords = (k: number, words: string) => (k === 1 ? `an ${words} program` : `${words} programs`);
+  // The levels' words start with a spoken vowel ("NCAA", "NAIA", "NJCAA": "an") but for "CCCAA" ("a").
+  const programWords = (k: number, words: string) => (k === 1 ? `${words.startsWith('C') ? 'a' : 'an'} ${words} program` : `${words} programs`);
   const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'has' : 'have'} committed to ${plural(colleges, 'college')}`;
   const bySport =
     sports.length > 1 ? ` By sport, ${listWords(sports.map(({ sport, n }) => `${n} in ${SPORT_WORDS[sport]}`))}.` : '';

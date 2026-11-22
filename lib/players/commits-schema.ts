@@ -109,8 +109,13 @@ export const COMMIT_SPORTS = [
 ] as const;
 export type CommitSport = (typeof COMMIT_SPORTS)[number];
 
-/** The level a college's team in one sport plays at. Also the order /commits counts them in. */
-export const COLLEGE_DIVISIONS = ['ncaa-d1', 'ncaa-d2', 'ncaa-d3', 'naia'] as const;
+/**
+ * The level a college's team in one sport plays at. Also the order /commits counts them in. The last two are the
+ * two-year colleges (since 2026-11-21, for the winter builds, whose players often go on to one):
+ *   njcaa  a junior college in the National Junior College Athletic Association
+ *   cccaa  a California community college (California Community College Athletic Association)
+ */
+export const COLLEGE_DIVISIONS = ['ncaa-d1', 'ncaa-d2', 'ncaa-d3', 'naia', 'njcaa', 'cccaa'] as const;
 export type CollegeDivision = (typeof COLLEGE_DIVISIONS)[number];
 
 export const COMMIT_SOURCE_KINDS = [

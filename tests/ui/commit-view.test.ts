@@ -329,8 +329,13 @@ describe('buildCommitsView (/commits)', () => {
     }
   });
 
+  it('has the two-year colleges\' levels, last', () => {
+    expect(COLLEGE_DIVISIONS.slice(-2)).toEqual(['njcaa', 'cccaa']);
+    expect([DIVISION_WORDS.njcaa, DIVISION_WORDS.cccaa]).toEqual(['NJCAA', 'CCCAA']);
+  });
+
   it('words every level the schema allows', () => {
-    for (const d of COLLEGE_DIVISIONS) expect(DIVISION_WORDS[d]).toMatch(/^(NCAA Division I{1,3}|NAIA)$/);
+    for (const d of COLLEGE_DIVISIONS) expect(DIVISION_WORDS[d]).toMatch(/^(NCAA Division I{1,3}|NAIA|NJCAA|CCCAA)$/);
   });
 });
 

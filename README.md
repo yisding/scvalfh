@@ -1796,7 +1796,7 @@ They follow `data/field-hockey/commits.json`'s rules ("College commitments") and
 - `joinPriorCommits` checks every commitment against the registry: the player exists, has a varsity stint in
   the file's sport at that team in 2025-26 or 2026-27, is known under `fullName`, and agrees with `grade` (each
   season's stint grade, the registry's class year and every class year a source states).
-- A program's level may also be `njcaa` or `cccaa` (two-year colleges), which `data/field-hockey/commits.json` does not take.
+- A program's level may also be `njcaa` or `cccaa` (two-year colleges); since 2026-11-21 every sport's `commits.json` takes them too, and /commits words them "NJCAA" and "CCCAA".
 
 Coverage, researched 2026-11-18 (the method is DATA-SOURCES §1.13): **soccer, 8 commitments**, all in soccer, at
 four schools. Saara Lahtela (Homestead) and Teagan Kaefer (Los Gatos) signed with Santa Clara, whose release of
