@@ -456,8 +456,8 @@ describe('the basketball recruiting pages (data/basketball/{clubs,commits,roster
       expect(m.clubs.getClub(a.club), a.club).toBeDefined();
       expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
     }
-    // The areas searched for every club: the SCVAL and BVAL schools' two at least (lib/players/clubs.ts).
-    expect(m.clubs.SEARCHED_REGIONS).toEqual(expect.arrayContaining(['peninsula', 'south-bay']));
+    // No area was searched for every club in the 2026-11-21 round (lib/players/clubs.ts): no directory lists them.
+    expect(m.clubs.SEARCHED_REGIONS).toEqual([]);
     for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);
   });
 

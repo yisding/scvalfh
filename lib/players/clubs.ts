@@ -236,14 +236,13 @@ export const SEARCHED_REGIONS: readonly ClubRegion[] = bySport<readonly ClubRegi
     'inland-empire',
     'san-diego',
   ],
-  // 2026-11-21 round: girls soccer and boys basketball, provisional. The research round of 2026-11-21 fills
-  // data/soccer/clubs.json and data/basketball/clubs.json; until its report says which areas it swept for every
-  // club, these are the volleyball round's two (the SCVAL and BVAL schools' area). Both builds also hold the WCAL
-  // (San Francisco schools among them), the PAL (San Mateo County) and the SCCAL (Santa Cruz County): add
-  // 'san-francisco' and 'central-coast' here if the round searched them, or a club based there is said to be in an
-  // area not searched for every club.
-  soccer: ['peninsula', 'south-bay'],
-  basketball: ['peninsula', 'south-bay'],
+  // The 2026-11-21 round. Soccer: every club of NorCal Premier's directory, Girls Academy's member lists and Cal
+  // North District 2's list in San Francisco, San Mateo and Santa Clara counties was looked at; Santa Cruz County was
+  // too, but not the rest of the Central Coast, so 'central-coast' is not here.
+  soccer: ['san-francisco', 'peninsula', 'south-bay'],
+  // Basketball: no public directory lists the boys' travel programs (the circuits' team lists are images, drawn by
+  // script or refuse automated reads), so no area was searched for every club and /clubs claims none.
+  basketball: [],
   volleyball: ['peninsula', 'south-bay'],
   // No recruiting pages (lib/sports/current.ts SPORT_FEATURES): nothing reads this.
   'val-soccer': [],

@@ -265,8 +265,8 @@ describe('the soccer recruiting pages (data/soccer/{clubs,commits,rosters-enrich
       expect(m.clubs.getClub(a.club), a.club).toBeDefined();
       expect(m.clubs.getAffiliatedPlayer(a).fullName).toBe(a.fullName);
     }
-    // The areas searched for every club: the SCVAL and BVAL schools' two at least (lib/players/clubs.ts).
-    expect(m.clubs.SEARCHED_REGIONS).toEqual(expect.arrayContaining(['peninsula', 'south-bay']));
+    // The areas searched for every club in the 2026-11-21 round (lib/players/clubs.ts): not the Central Coast.
+    expect(m.clubs.SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay']);
     for (const r of m.clubs.SEARCHED_REGIONS) expect(m.clubsSchema.CLUB_REGIONS).toContain(r);
   });
 
