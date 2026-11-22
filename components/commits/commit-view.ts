@@ -45,6 +45,7 @@ import { REGIONS } from '../../lib/league-config/sections';
 import { regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/players/rosters';
 import { SPORT, SPORT_ID } from '../../lib/sports/current';
+import { isResearched } from '../../lib/schema-primitives';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { capitalized } from '../words/capitalized';
@@ -350,6 +351,11 @@ export interface CommitsView {
   collegeCount: number;
   /** "Oct 3, 2026": when the research was done. */
   capturedOn: string;
+  /**
+   * Whether the commits file holds research (lib/schema-primitives.ts isResearched): false for a placeholder no round
+   * has filled yet, which no page dates.
+   */
+  researched: boolean;
 }
 
 function commitRow(c: Commitment): CommitRow {
@@ -477,6 +483,7 @@ export function buildCommitsView(): CommitsView {
     schoolCount: new Set(commitments.map((c) => c.teamSlug)).size,
     collegeCount: new Set(commitments.map((c) => c.college)).size,
     capturedOn: dateWithYear(file.capturedAt),
+    researched: isResearched(file.notes, file.commitments.length),
   };
 }
 

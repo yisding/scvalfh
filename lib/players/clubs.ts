@@ -48,7 +48,8 @@ import {
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import type { TeamSlug } from '../types';
-import { HAS_RECRUITING, IS_VOLLEYBALL } from '../sports/current';
+import { HAS_RECRUITING, bySport } from '../sports/current';
+import { isResearched } from '../schema-primitives';
 
 /** This build's copy (data/<sport>/: lib/sports/current.ts DATA_DIR). */
 const bundled = process.env.SCVAL_SPORT === 'basketball' ? bundledBasketball : process.env.SCVAL_SPORT === 'volleyball' ? bundledVolleyball : process.env.SCVAL_SPORT === 'val-soccer' ? bundledValSoccer : process.env.SCVAL_SPORT === 'soccer' ? bundledSoccer : bundledFieldHockey;
@@ -103,9 +104,9 @@ function loadAndJoin(
 }
 
 /** The file, and the merged roster row each tied player joined to at load time, by `playerKey`. */
-// Club affiliations are researched for field hockey and volleyball (lib/sports/current.ts HAS_RECRUITING): the
-// soccer and basketball builds' files are empty placeholders (data/soccer/clubs.json) that the schema's
-// at-least-one-club rule would refuse, so they are served as they are.
+// Club affiliations are researched for every build with the recruiting pages (lib/sports/current.ts HAS_RECRUITING),
+// so each such build validates and joins its file, a placeholder with no club yet included (a round not yet run).
+// The VAL's middle school build lists no players and has no recruiting pages: its file is served as it is.
 const { file, rows: ROW_BY_PLAYER } = HAS_RECRUITING
   ? loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season)
   : { file: bundled as unknown as ClubsFile, rows: new Map<string, MergedPlayer>() };
@@ -214,24 +215,44 @@ export function getAffiliatedPlayer(a: Pick<ClubAffiliation, 'teamSlug' | 'athle
 }
 
 /**
- * The areas the notes say were swept for clubs. Field hockey's: the six of notes[4] and the five Southern
+ * The areas the notes say were swept for clubs, by sport. Field hockey's: the six of notes[4] and the five Southern
  * California areas of the 2026-10-06 sweep. Volleyball's: the South Bay and the Peninsula, the area of the 41
  * SCVAL and BVAL schools (data/volleyball/clubs.json's notes). /clubs names those that hold none; a region that
  * holds a club but is not here (field hockey's sacramento and north-state; volleyball's east-bay and
- * central-coast) is said not to have been searched for every club.
+ * central-coast) is said not to have been searched for every club. A build whose clubs file is still a placeholder
+ * (isResearched) names none of them: nothing was searched yet (components/clubs/club-view.ts).
  */
-export const SEARCHED_REGIONS: readonly ClubRegion[] = IS_VOLLEYBALL
-  ? ['peninsula', 'south-bay']
-  : [
-      'san-francisco',
-      'peninsula',
-      'south-bay',
-      'east-bay',
-      'marin',
-      'central-coast',
-      'ventura',
-      'los-angeles',
-      'orange-county',
-      'inland-empire',
-      'san-diego',
-    ];
+export const SEARCHED_REGIONS: readonly ClubRegion[] = bySport<readonly ClubRegion[]>({
+  'field-hockey': [
+    'san-francisco',
+    'peninsula',
+    'south-bay',
+    'east-bay',
+    'marin',
+    'central-coast',
+    'ventura',
+    'los-angeles',
+    'orange-county',
+    'inland-empire',
+    'san-diego',
+  ],
+  // 2026-11-21 round: girls soccer and boys basketball, provisional. The research round of 2026-11-21 fills
+  // data/soccer/clubs.json and data/basketball/clubs.json; until its report says which areas it swept for every
+  // club, these are the volleyball round's two (the SCVAL and BVAL schools' area). Both builds also hold the WCAL
+  // (San Francisco schools among them), the PAL (San Mateo County) and the SCCAL (Santa Cruz County): add
+  // 'san-francisco' and 'central-coast' here if the round searched them, or a club based there is said to be in an
+  // area not searched for every club.
+  soccer: ['peninsula', 'south-bay'],
+  basketball: ['peninsula', 'south-bay'],
+  volleyball: ['peninsula', 'south-bay'],
+  // No recruiting pages (lib/sports/current.ts SPORT_FEATURES): nothing reads this.
+  'val-soccer': [],
+});
+
+/**
+ * Whether this build's clubs file holds research (lib/schema-primitives.ts isResearched): false for a placeholder no
+ * round has filled yet, whose pages then say no club is listed yet rather than name an area as searched.
+ */
+export function clubsResearched(): boolean {
+  return isResearched(file.notes, file.clubs.length);
+}

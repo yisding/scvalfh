@@ -27,7 +27,8 @@
  *     each school's heading links, says where each came from.
  */
 
-import { getClubsFile } from '../../lib/players/clubs';
+import { clubsResearched, getClubsFile } from '../../lib/players/clubs';
+import { isResearched } from '../../lib/schema-primitives';
 import { getCommitsFile } from '../../lib/players/commits';
 import { getTeamsGrouped } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
@@ -103,6 +104,11 @@ export interface RecruitingView {
   profilesCheckedOn: string;
   clubsCheckedOn: string;
   commitsCheckedOn: string;
+  /**
+   * Whether each file holds research (lib/schema-primitives.ts isResearched): false for a placeholder no round has
+   * filled yet, whose date above is the placeholder's and is never printed.
+   */
+  researched: { profiles: boolean; clubs: boolean; commits: boolean };
 }
 
 function recruitingRow(row: RosterRow): RecruitingRow {
@@ -244,5 +250,13 @@ export function buildRecruitingView(): RecruitingView {
     profilesCheckedOn: dateWithYear(getRosterEnrichment().capturedAt),
     clubsCheckedOn: dateWithYear(getClubsFile().capturedAt),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
+    researched: {
+      profiles: isResearched(
+        getRosterEnrichment().notes,
+        getRosterEnrichment().teams.reduce((n, t) => n + t.players.reduce((m, p) => m + p.profiles.length, 0), 0),
+      ),
+      clubs: clubsResearched(),
+      commits: isResearched(getCommitsFile().notes, getCommitsFile().commitments.length),
+    },
   };
 }

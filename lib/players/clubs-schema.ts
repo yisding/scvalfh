@@ -304,7 +304,8 @@ const ClubsFileObject = z.object({
   season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
   /** Method, rules and recall, in words. */
   notes: z.array(text),
-  clubs: z.array(ClubSchema).min(1),
+  /** Empty only in a placeholder no research round has filled yet (lib/schema-primitives.ts isResearched). */
+  clubs: z.array(ClubSchema),
   affiliations: z.array(ClubAffiliationSchema),
   /**
    * Ties for players on JV rows (the overlay's `level`), kept apart from `affiliations`, which list

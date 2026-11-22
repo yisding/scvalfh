@@ -88,16 +88,19 @@ export const DATA_DIR = `data/${SPORT_ID}`;
  * The pages and sections a sport has beyond the ones every build has (the 2025-26 archive, /jv and the rest).
  *
  * - `recruiting`: the hand-researched recruiting pages (/clubs, /clubs/[slug], /commits, /recruiting): field
- *   hockey's, and since 2026-11-13 volleyball's (docs/MULTI-SPORT.md, "one sport per build"). A build without them
- *   renders each as a 404 and links to none of them.
+ *   hockey's, volleyball's since 2026-11-13, and girls soccer's and boys basketball's since 2026-11-21
+ *   (docs/MULTI-SPORT.md, "one sport per build"). Every high school build has them; the VAL's middle school build,
+ *   which lists no players (SPORT_LISTS_PLAYERS), does not, and renders each as a 404 and links to none of them.
+ *   A recruiting build's data files may hold nothing yet (a file with no `notes` is a placeholder no research has
+ *   filled), and the pages say so rather than report a search that was not made.
  * - `clubCalendar`: /club-calendar and the club pages' "Tournaments and leagues" section.
  *   data/field-hockey/club-events.json is field hockey's research alone, so every other build renders the page as a
  *   404 and links to it from nowhere.
  */
 export const SPORT_FEATURES = bySport<{ readonly recruiting: boolean; readonly clubCalendar: boolean }>({
   'field-hockey': { recruiting: true, clubCalendar: true },
-  soccer: { recruiting: false, clubCalendar: false },
-  basketball: { recruiting: false, clubCalendar: false },
+  soccer: { recruiting: true, clubCalendar: false },
+  basketball: { recruiting: true, clubCalendar: false },
   volleyball: { recruiting: true, clubCalendar: false },
   'val-soccer': { recruiting: false, clubCalendar: false },
 });

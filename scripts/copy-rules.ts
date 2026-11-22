@@ -297,8 +297,8 @@ export const NO_TIES_SPORT_CLAIMS: ReadonlyArray<{ what: string; pattern: RegExp
 /**
  * A player's tie to a club, as the recruiting pages word it (/clubs, /clubs/<slug>, /about#recruiting: "a public
  * page ties to it", "pages that tie them to", "each tie checked twice", "every tie", "most ties rest on", "such a
- * tie is never shown as current"). The volleyball build has those pages (lib/sports/current.ts HAS_RECRUITING) and
- * no tied game, so these phrases, and only these, are taken out before the tied-game pattern reads the text: "a
+ * tie is never shown as current"). The volleyball and basketball builds have those pages (lib/sports/current.ts
+ * HAS_RECRUITING) and no tied game, so these phrases, and only these, are taken out before the tied-game pattern reads the text: "a
  * tie", "1 for a tie", "1 point for every tie" and "each tie awards a point" are still found.
  */
 export const CLUB_TIE_WORDS =

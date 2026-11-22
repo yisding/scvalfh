@@ -2,7 +2,9 @@
  * data/soccer/prior-commits.json and data/basketball/prior-commits.json: last season's sophomores and
  * juniors who a public page says committed to a college team. Each committed file validates
  * (lib/players/prior-commits-schema.ts) and joins to the player registry; a bad file, built in memory,
- * is refused with a message that names what is wrong; and no page reads the files yet.
+ * is refused with a message that names what is wrong. The files are the 2026-11-18 research record: the
+ * commitments of its players on a 2026-27 roster were copied into data/soccer/commits.json on 2026-11-21, and the
+ * pages read that file.
  */
 
 import { readFileSync } from 'node:fs';
@@ -244,21 +246,5 @@ describe('prior-commits checks', () => {
     const f = goodFile();
     f.commitments[0].sources[0].url = 'https://www.instagram.com/someplayer/p/abc/';
     expect(PriorCommitsFileSchema.safeParse(f).success).toBe(false);
-  });
-});
-
-// ---------------------------------------------------------------- not on the pages yet
-
-describe('no page reads the prior-commits files', () => {
-  it('nothing under app/ or components/ names them or their schema', async () => {
-    const { readdirSync, statSync } = await import('node:fs');
-    const walk = (dir: string): string[] =>
-      readdirSync(dir).flatMap((name) => {
-        const full = path.join(dir, name);
-        return statSync(full).isDirectory() ? walk(full) : /\.(ts|tsx)$/.test(name) ? [full] : [];
-      });
-    for (const file of [...walk(path.join(ROOT, 'app')), ...walk(path.join(ROOT, 'components'))]) {
-      expect(/prior-commits/.test(readFileSync(file, 'utf8')), path.relative(ROOT, file)).toBe(false);
-    }
   });
 });

@@ -108,8 +108,8 @@ console.log(`prerendered: ${routes.length} routes; ${counts.join('; ')} ` +
 // The prerendered sitemap lists exactly the prerendered pages (every page but the 404 and the
 // pages whose prerender ended in notFound()), one for one: a page left out of either is one a crawler
 // never finds or one the server renders on request. vinext 1.4.5 stores a notFound() page with its
-// 404 and serves it from the build (the field-hockey-only pages of a soccer or basketball build:
-// lib/sports/current.ts HAS_HISTORY, HAS_RECRUITING); such a page is no sitemap entry.
+// 404 and serves it from the build (a page this sport's build does not have: lib/sports/current.ts
+// HAS_CLUB_CALENDAR, HAS_RECRUITING, the field hockey draft); such a page is no sitemap entry.
 const sitemapPaths = fileSet.has('sitemap.xml.route')
   ? [...fs.readFileSync(`${dir}/sitemap.xml.route`, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, loc]) => new URL(loc).pathname)
   : [];

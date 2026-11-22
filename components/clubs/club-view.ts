@@ -22,6 +22,7 @@ import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
+  clubsResearched,
   getAffiliatedPlayer,
   getClub,
   getClubAffiliations,
@@ -297,6 +298,11 @@ export interface ClubRegionGroup {
 
 export interface ClubsIndexView {
   lede: string;
+  /**
+   * Whether the clubs file holds research (lib/players/clubs.ts clubsResearched): false for a placeholder no round
+   * has filled yet, when the region sentences are null (nothing was searched) and the pages date no sweep.
+   */
+  researched: boolean;
   /** The regions that have a club, in CLUB_REGIONS order; clubs in getClubs() order (DESIGN §17.5). */
   regions: ClubRegionGroup[];
   /** The searched areas (lib/players/clubs.ts SEARCHED_REGIONS) with no club, as headings: ['Peninsula', 'Central Coast']. */
@@ -378,7 +384,9 @@ export function buildClubsIndexView(): ClubsIndexView {
           },
         ];
   });
-  const empty = SEARCHED_REGIONS.filter((r) => !clubs.some((c) => c.region === r));
+  const researched = clubsResearched();
+  // A placeholder was searched nowhere, so it names no area as searched and holding no club.
+  const empty = researched ? SEARCHED_REGIONS.filter((r) => !clubs.some((c) => c.region === r)) : [];
   const notSearched = CLUB_REGIONS.filter(
     (r) => r !== 'elsewhere' && !SEARCHED_REGIONS.includes(r) && clubs.some((c) => c.region === r),
   );
@@ -392,6 +400,7 @@ export function buildClubsIndexView(): ClubsIndexView {
 
   return {
     lede: lede(trackedTeams, playerCount, schoolCount, clubs.length, withPlayers),
+    researched,
     regions,
     regionsWithoutClubs: empty.map((r) => REGION_WORDS[r].label),
     regionsWithoutClubsSentence: empty.length > 0 ? `This list has no club based ${basedWords(empty)}.` : null,
@@ -431,6 +440,7 @@ function lede(
   const opening = `Which youth clubs players on this site’s ${trackedTeams} varsity rosters play for, or played for, according to public pages that name both.`;
   const count = (r: ClubIndexRow) => `${r.name} (${r.current + r.other})`;
   const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'is' : 'are'} tied to`;
+  if (clubCount === 0) return `${opening} No club is listed yet.`;
   if (withPlayers.length === 0) return `${opening} No public page we found ties a player here to one of these ${clubCount} clubs yet.`;
   if (withPlayers.length === 1) return `${opening} ${who} one of these ${clubCount} clubs, ${count(withPlayers[0])}.`;
   return `${opening} ${who} ${withPlayers.length} of these ${clubCount} clubs, the most to ${count(withPlayers[0])} and ${count(withPlayers[1])}.`;

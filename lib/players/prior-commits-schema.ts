@@ -3,9 +3,10 @@
  * LAST season's (2025-26) varsity sophomores and juniors a public page says have committed to, signed with
  * or joined a college team, in their own sport or any other, and those colleges.
  *
- * Data only, for now: no page reads these files (tests/prior-commits.test.ts holds that nothing under
- * app/ or components/ names them). They are research, written by hand like data/field-hockey/commits.json, under its
- * rules (README "College commitments"), with three differences:
+ * The files are the 2026-11-18 research record. The commitments of their players who are on a 2026-27 roster were
+ * copied into data/soccer/commits.json on 2026-11-21 as ordinary commitments, and the pages read that file, not
+ * these. They are research, written by hand like data/field-hockey/commits.json, under its rules (README "College
+ * commitments"), with three differences:
  *
  *   - The players are last season's, not this season's roster rows. A commitment names its player by
  *     the player registry's id (data/players.json, `playerId`), which outlasts MaxPreps' per-season
