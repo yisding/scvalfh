@@ -39,7 +39,7 @@
     "multiSeason": 1172,
     "multiSport": 62,
     "nameOnly": 593,
-    "observations": 14605,
+    "observations": 14615,
     "players": 6905,
     "review": 98,
     "stintConflicts": 172,
@@ -44127,6 +44127,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "44",
+              "name": "K. Islamov",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "maxpreps",
               "src": "profile",
@@ -47921,6 +47926,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "4",
+              "name": "C. Arcangel",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -77195,6 +77205,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "5",
+              "name": "S. Birch",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -95362,6 +95377,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "30",
+              "name": "B. Wu",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -146937,6 +146957,11 @@
                 "C"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "33",
+              "name": "S. Skelley",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -224262,6 +224287,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "15",
+              "name": "A. Ganev",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -234406,6 +234436,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "11",
+              "name": "T. Facelo",
+              "src": "maxpreps-stats"
             },
             {
               "classOf": 2028,
@@ -263593,6 +263628,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "1",
+              "name": "J. Ngai",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [
@@ -345937,6 +345977,11 @@
               "src": "maxpreps-roster"
             },
             {
+              "jersey": "12",
+              "name": "K. Ge",
+              "src": "maxpreps-stats"
+            },
+            {
               "classOf": 2027,
               "kind": "hudl",
               "src": "profile",
@@ -346933,6 +346978,11 @@
                 "G"
               ],
               "src": "maxpreps-roster"
+            },
+            {
+              "jersey": "20",
+              "name": "S. Pisani",
+              "src": "maxpreps-stats"
             }
           ],
           "positions": [

@@ -562,18 +562,19 @@ describe('the volleyball recruiting research (data/volleyball/{clubs,commits,ros
     }
   });
 
-  it('lists the ten commitments found, one signed, and names a sport only when it is not volleyball', () => {
+  it('lists the eleven commitments found, two signed, and names a sport only when it is not volleyball', () => {
     const commitments = m.commits.getCommitments();
     expect(commitments.map((c) => `${c.fullName}: ${c.college} ${c.sport} ${c.status}`).sort()).toEqual([
       'Aanya Hotha: penn volleyball committed',
       'Abby Cardenas: uc-irvine volleyball committed',
       'Chayse Courtney: stanford volleyball committed',
-      'Eileen Pfeffer: nevada volleyball committed',
+      'Eileen Pfeffer: nevada volleyball signed',
       'Emi Yu-Yang: hamilton volleyball committed',
       'Katie Hamburger: tulane beach-volleyball committed',
       'Kylee Mark: cal-poly volleyball committed',
       'Maura Hambly: cal volleyball signed',
       'Orli Jones: portland volleyball committed',
+      'Stella Broshear: loyola-marymount beach-volleyball committed',
       'Whitney Fleming: uc-riverside volleyball committed',
     ]);
     // The WCAL and the WBAL, added on 2026-11-14, hold five of them.

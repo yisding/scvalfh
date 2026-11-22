@@ -1,12 +1,13 @@
 {
-  "builtBy": "Research by hand, 2026-11-13 and 2026-11-14, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, Vision Volleyball Club's College Bound page, SportsRecruits' commits feed for program ids 6 to 453), college athletics sites' news feeds from 2026-11-11 on (292 on the first day, about 890 on the second), school and local papers, the clubs' commitment pages, the players' own recruiting pages and name-by-name web searches. Every quote was checked against its page as served that day, twice.",
-  "capturedAt": "2026-11-14",
+  "builtBy": "Research by hand, 2026-11-13 and 2026-11-14, for the girls volleyball build: commitment lists (Prep Dig, PrepVolleyball, Vision Volleyball Club's College Bound page, SportsRecruits' commits feed for program ids 6 to 453), college athletics sites' news feeds from 2026-11-11 on (292 on the first day, about 890 on the second), school and local papers, the clubs' commitment pages, the players' own recruiting pages and name-by-name web searches. Every quote was checked against its page as served that day, twice. A third round on 2026-11-22 re-read the lists, the clubs' pages, the colleges' signing releases, school and local news and SportsRecruits; its coverage is in the notes.",
+  "capturedAt": "2026-11-22",
   "season": "26-27",
   "notes": [
     "Players on the 60 tracked varsity rosters a public page says have committed to, or signed with, a college team, in volleyball or any other sport. The rules are field hockey's (README, \"College commitments\"): the page names the player, the college and the sport, and either names her high school or gives the roster's class year with a hometown in the school's own area; offers, interests, visits and camps are not commitments; a social-media post counts only from an official college, school or club account (none is cited here).",
     "Ten commitments: nine in volleyball and one in beach volleyball. Maura Hambly's is signed: Cal's own release of 2026-11-11 names her with Palo Alto High School. Aanya Hotha's (Penn), Kylee Mark's (Cal Poly) and Katie Hamburger's (Tulane, beach) rest on their schools' student papers, with Prep Dig or PrepVolleyball agreeing for the first two; neither Penn nor Cal Poly had posted a signing release by 2026-11-14, and Tulane's beach release of 2026-11-12 names five other signees, so those three stay committed. Emi Yu-Yang's (Hamilton) is medium: her own SportsRecruits page gives the class year, Palo Alto and the commitment but no school. The 2026-11-14 round added five: Chayse Courtney (Mitty, Stanford) and Abby Cardenas (Saint Francis, UC Irvine), both class of 2028, Eileen Pfeffer (St. Ignatius, Nevada) and Whitney Fleming (Valley Christian, UC Riverside), from Prep Dig's player pages with its California list (and PrepVolleyball or Vision's College Bound page agreeing for Courtney and Fleming), and Orli Jones (Notre Dame San Jose, Portland) from her own SportsRecruits page. Nevada's and UC Riverside's sites refused automated reads on 2026-11-14, so a signing release naming Pfeffer or Fleming was not checked; both stay committed.",
     "Recall is partial. The fall signing period opened three days before the second round and many colleges had posted nothing; 72 college sites refused automated reads (among them Cal, UC Irvine, UC Riverside, Nevada and Tulane). SportsRecruits' commits feed was read for 434 of about 3,700 programs. Name-by-name web searches covered every senior at the 60 schools and 40 of the 271 juniors; every named junior, senior and ungraded row was looked up on Prep Dig and PrepVolleyball, and on NCSA, where no commitment turned up.",
-    "Tulane's beach volleyball conference is left blank: the schedule page read on 2026-11-13 was an earlier season's."
+    "Tulane's beach volleyball conference is left blank: the schedule page read on 2026-11-13 was an earlier season's.",
+    "On 2026-11-22 another round over the 876 varsity rows and 473 JV players, by the same rules. It added one commitment, Stella Broshear (Mitty, class of 2028) to Loyola Marymount in beach volleyball, medium: Vision Volleyball Club's College Bound page lists her under its class of 2028 with 'LMU (Beach)' and names no school, and Prep Dig's player page ties her name, class and Vision to Archbishop Mitty; Vision's line was on its page on 2026-11-14 and was not matched then. Eileen Pfeffer's is now signed: Nevada's own signing-day release of 2026-11-11 names her with Saint Ignatius College Preparatory (Nevada's site answered this round). New sources: the Mercury News' story of 2026-11-07, whose headline and deck call Mitty's Chayse Courtney 'Stanford-bound' (only the parts shown without a subscription are quoted), and Vision's College Bound lines for Maura Hambly and Aanya Hotha. So the file holds eleven commitments, two of them signed. College releases: 1,070 college athletics sites' news feeds (950 answered), 13,739 stories of Nov 10 to 22 opened and matched against every varsity and JV name, 139 of the 141 women's and beach volleyball signing releases among them; Penn, Cal Poly (whose beach release of Nov 16 names five others; Kylee Mark's commitment is indoor), Hamilton, UC Riverside and Portland had posted no volleyball signing release, so Hotha, Mark, Yu-Yang, Fleming and Jones stay committed, and no posted release omits a player listed here. 76 sites refused and were not read; Santa Clara's began answering with a bot check, so its volleyball signing story of Nov 11 (read on 2026-11-13 against varsity names only), its beach volleyball story of Nov 16 and its other sports' signing stories were not read. Lists: Prep Dig's California list (163 rows), its team pages for 58 of the 60 schools and a player-page probe for all 589 class-of-2027, class-of-2028 and ungraded varsity rows; PrepVolleyball's master list (836 rows) and California player database (1,050 players); the sites of 36 of the 37 clubs in clubs.json; the Prep Network's other-sport lists, TopDrawerSoccer, MileSplit and ADVNC; the 83 linked NCSA pages of seniors, juniors and ungraded rows (none shows a commitment). All 17 Prep Dig, PrepVolleyball and Vision quotes already here were found on their pages. News: 2,838 posts on 29 student-paper sites (The Catalyst at Notre Dame Belmont and The Halo Tribune at Santa Teresa are new this round), 3,887 posts of Nov 1 to 22 on 12 local news sites, the WCAL and WBAL schools' own news and athletics pages, and the 41 public schools' home pages; the signing posts found (Saint Francis' of Nov 12, Menlo's, King's Academy's page, St. Ignatius' list of 19 seniors, on which no volleyball player appears) name no rostered player. Web searches: one each for 60 class-of-2028 varsity players at 17 schools, and eight more by the list pass; none found a commitment, and the other 208 juniors not in the file were covered through the lists and the papers, not one by one. SportsRecruits: all 94 linked profiles re-read twice (two show a commitment, both in this file); an address probe for all 512 class-of-2027 and class-of-2028 rows with no linked profile (2,673 addresses, 619 live pages, no commitment by a rostered player); its commits feed for program ids 1 to 112, 454 to 474 and 1,045 to 3,700 (ids 475 to 1,044 have never been read for this build). Not read: the Mercury News' and San Francisco Chronicle's subscriber-only article text, Saint Francis' school site, STEPS Lacrosse, SwimCloud and a beach club's site (a bot check in the browser too), The Bear Witness at Branham (no answer), 31 NCSA pages of freshmen and sophomores, Instagram; no student paper was found for 32 schools."
   ],
   "colleges": [
     {
@@ -256,6 +257,28 @@
         }
       ],
       "checkedOn": "2026-11-14"
+    },
+    {
+      "slug": "loyola-marymount",
+      "name": "Loyola Marymount University",
+      "shortName": "LMU",
+      "city": "Los Angeles",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "beach-volleyball",
+          "division": "ncaa-d1",
+          "conference": "West Coast Conference",
+          "url": "https://lmulions.com/sports/beach-volleyball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://lmulions.com/sports/beach-volleyball",
+          "what": "Loyola Marymount University Athletics' beach volleyball page (HTTP 200, read 2026-11-22). Embedded Sidearm metadata reads school_division DI and school_conference West Coast; both are the school's values, and the beach team's own conference was not read from a schedule."
+        }
+      ],
+      "checkedOn": "2026-11-22"
     }
   ],
   "commitments": [
@@ -407,6 +430,14 @@
           "statedSchool": null,
           "statedClassYear": null,
           "sourceDate": "2026-11-11"
+        },
+        {
+          "url": "https://visionvolleyball.com/college-bound",
+          "kind": "club-site",
+          "quote": "Class of 2027 … Maura Hambly 16G OH 5'10\" CAL",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
       "basis": "Cal's own signing release of 2026-11-11 (headline 'Cal Volleyball Officially Signs Nationally Ranked Class', 'inking a four-player class') names Maura Hambly, outside hitter, with 'Palo Alto High School/Vision Volleyball Club'. Viking Magazine (Palo Alto High's sports magazine, 2025-10-21) reports the commitment and the class of 2027. Prep Dig's player page, its California commitments list and its Palo Alto team roster (Palo Alto, CA) show the same college; on the list and roster the college is a logo link titled 'California' (https://prepdig.com/college/california/). Prep Dig's list date (4/14/26) and its player page's 'Committed on 07/10/2025' are entry dates and are not used. The release gives her hometown as Stanford, CA."
@@ -437,6 +468,14 @@
           "statedSchool": null,
           "statedClassYear": 2027,
           "sourceDate": "2026-03-31"
+        },
+        {
+          "url": "https://visionvolleyball.com/college-bound",
+          "kind": "club-site",
+          "quote": "Class of 2027 … Aanya Hotha 17G MB 6'1\" Penn",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": null
         }
       ],
       "basis": "The Saratoga Falcon, Saratoga High's student newspaper (its footer: 'the student journalists of Saratoga High School'), reported on 2026-05-20 that junior Aanya Hotha committed on March 16 to play volleyball at Penn ('will play middle for the Quakers'); a junior in May 2026 is the class of 2027, the roster's class. PrepVolleyball lists 'Aanya Hotha | 2027 MB | Vision' among the players featured in its commitment update of April 1, 2026 (the article body is for subscribers and the college is not shown), which agrees on class year, position and timing. Penn's site had no signing release as of 2026-11-13 (the Ivy League does not use the National Letter of Intent)."
@@ -449,7 +488,7 @@
       "college": "stanford",
       "sport": "volleyball",
       "status": "committed",
-      "asOf": null,
+      "asOf": "2026-11-07",
       "confidence": "high",
       "sources": [
         {
@@ -491,9 +530,17 @@
           "statedSchool": null,
           "statedClassYear": 2028,
           "sourceDate": null
+        },
+        {
+          "url": "https://www.mercurynews.com/2026/11/07/mitty-ace-chayse-courtney-leads-monarchs-to-second-straight-ccs-open-title-over-st-francis/",
+          "kind": "news",
+          "quote": "Mitty ace Chayse Courtney leads Monarchs to second straight CCS Open title over St. Francis … The Monarchs pulled off a thrilling five-set comeback win thanks to their Stanford-bound junior star and a resolute response after falling behind",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": null,
+          "sourceDate": "2026-11-07"
         }
       ],
-      "basis": "PrepVolleyball's player page (position, class of 2028, college, club Vision 17 Gold, high school Archbishop Mitty) and its Archbishop Mitty school page (Commitments: 'Chayse Courtney Stanford'); Prep Dig's player page (attends Archbishop Mitty, its school link going to Prep Dig's team page for the school in San Jose, CA) with 'Stanford Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Vision Volleyball Club's College Bound list agrees (class of 2028, Stanford; no school). A class-of-2028 player cannot sign before November 2027. Found by the 2026-11-14 round (Prep Dig, PrepVolleyball and name passes), every page read twice."
+      "basis": "PrepVolleyball's player page (position, class of 2028, college, club Vision 17 Gold, high school Archbishop Mitty) and its Archbishop Mitty school page (Commitments: 'Chayse Courtney Stanford'); Prep Dig's player page (attends Archbishop Mitty, its school link going to Prep Dig's team page for the school in San Jose, CA) with 'Stanford Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Vision Volleyball Club's College Bound list agrees (class of 2028, Stanford; no school). A class-of-2028 player cannot sign before November 2027. Found by the 2026-11-14 round (Prep Dig, PrepVolleyball and name passes), every page read twice. Since 2026-11-22: the Mercury News' story of 2026-11-07 on the CCS Open final calls Mitty's Chayse Courtney the Monarchs' 'Stanford-bound junior star' in its headline and deck (the parts the page shows without a subscription, read in a browser twice by the news pass and again at assembly)."
     },
     {
       "teamSlug": "saint-francis",
@@ -532,10 +579,18 @@
       "fullName": "Eileen Pfeffer",
       "college": "nevada",
       "sport": "volleyball",
-      "status": "committed",
-      "asOf": null,
+      "status": "signed",
+      "asOf": "2026-11-11",
       "confidence": "high",
       "sources": [
+        {
+          "url": "https://nevadawolfpack.com/news/2026/11/11/womens-volleyball-nevada-volleyball-announces-2026-national-signing-day-class.aspx",
+          "kind": "college",
+          "quote": "Eileen Pfeffer / Middle Blocker / San Francisco, Calif. / Saint Ignatius College Preparatory Pfeffer joins the Wolf Pack from Saint Ignatius College Preparatory in San Francisco, where she competed in both volleyball and basketball.",
+          "statedSchool": "Saint Ignatius College Preparatory",
+          "statedClassYear": null,
+          "sourceDate": "2026-11-11"
+        },
         {
           "url": "https://prepdig.com/player/eileen-pfeffer/",
           "kind": "other",
@@ -553,7 +608,7 @@
           "sourceDate": null
         }
       ],
-      "basis": "Prep Dig's player page: class of 2027 (the roster's), attends St. Ignatius College Prep (its school link goes to Prep Dig's team page for the school in San Francisco, CA), and 'Nevada Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Nevada posted a volleyball signing-day release on 2026-11-11, but its site refused automated reads on 2026-11-14, so whether it names her was not checked and the status stays 'committed'. Undated. Found by the 2026-11-14 Prep Dig pass and read twice."
+      "basis": "Prep Dig's player page: class of 2027 (the roster's), attends St. Ignatius College Prep (its school link goes to Prep Dig's team page for the school in San Francisco, CA), and 'Nevada Committed' in its recruiting table. Prep Dig's California commitments list shows the same college as a logo link; its date is an entry date and, like the player page's 'Committed on' date, is not used (as in the 2026-11-13 round). Nevada posted a volleyball signing-day release on 2026-11-11, but its site refused automated reads on 2026-11-14, so whether it names her was not checked and the status stays 'committed'. Undated. Found by the 2026-11-14 Prep Dig pass and read twice. Signed since 2026-11-22: Nevada's own release of 2026-11-11 ('Nevada Volleyball announces 2026 national signing day class') names her with Saint Ignatius College Preparatory, San Francisco; read by the college pass and again at assembly."
     },
     {
       "teamSlug": "valley-christian",
@@ -614,6 +669,36 @@
         }
       ],
       "basis": "Her own SportsRecruits volleyball profile: the served page's description gives the class of 2027 (the roster's), Santa Clara, CA and 'Committed to University of Portland'; its TEAMS block, drawn by script from the profile JSON and read in two separate fetches that agree, names Notre Dame San Jose. The commitment entry was created on 2026-07-14, an entry date, so it is not used. Found by the 2026-11-14 SportsRecruits probe."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "98c9916e-0ba6-4bc2-a929-3a8978a134ff",
+      "playerId": "p058003c0d5",
+      "fullName": "Stella Broshear",
+      "college": "loyola-marymount",
+      "sport": "beach-volleyball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://visionvolleyball.com/college-bound",
+          "kind": "club-site",
+          "quote": "Those listed committed to college while playing for Vision (noted by the team they were on at the time of their commitment) … Class of 2028 … Stella Broshear 16G, OH 5'10\" LMU (Beach)",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://prepdig.com/player/regina-stella-broshear/",
+          "kind": "other",
+          "quote": "Regina Stella Broshear is a 5'10\" Right-Side Hitter/Outside Hitter in the 2028 class. Stella Broshear attends Archbishop Mitty in California and plays club volleyball for Vision Volleyball Club.",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Medium: no one page states it all. Vision Volleyball Club's College Bound page lists 'Stella Broshear 16G, OH 5'10\" LMU (Beach)' under its class of 2028, among players who 'committed to college while playing for Vision'; it names no high school. Prep Dig's player page says Stella Broshear, class of 2028, attends Archbishop Mitty and plays for Vision Volleyball Club (the club tie already in clubs.json), and a scout's note there speaks of 'LMU Beach', but the page does not say committed. So the match rests on the name, the class year and the club she is tied to, as field hockey's club-table matches do. 'LMU' is read as Loyola Marymount, whose beach volleyball team the scout's note names. Vision's line was on its page in the 2026-11-14 round, which did not match it; found by the 2026-11-22 list pass, both pages read twice and again at assembly. No date; a class-of-2028 player cannot sign before November 2027."
     }
   ]
 }
